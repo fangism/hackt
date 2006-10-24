@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.12.2.1 2006/10/23 06:51:13 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.12.2.2 2006/10/24 05:16:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -45,10 +45,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_instance_collection,
 		"bool_instance_collection")
-#if DENSE_FORMAL_COLLECTIONS
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_port_formal_array,
 		"bool_port_formal_array")
-#endif
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_scalar, "bool_scalar")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_1D, "bool_array_1D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_2D, "bool_array_2D")
@@ -68,11 +66,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_array_3D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_array_4D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
-#if DENSE_FORMAL_COLLECTIONS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_port_formal_array, 
 	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-#endif
 
 namespace memory {
 	// can we still lazy destroy with instance aliases?
@@ -108,9 +104,7 @@ template class instance_array<bool_tag, 1>;
 template class instance_array<bool_tag, 2>;
 template class instance_array<bool_tag, 3>;
 template class instance_array<bool_tag, 4>;
-#if DENSE_FORMAL_COLLECTIONS
 template class port_formal_array<bool_tag>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

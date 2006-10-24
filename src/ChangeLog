@@ -5,6 +5,11 @@
 
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-14:
+	  Perm'd DENSE_FORMAL_COLLECTIONS (-100 LoC).
+	  End of branch.  Merge to trunk.  
+
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-13:
 	  Perm'd COLLECTION_SEPARATE_KEY_FROM_VALUE.  (-1000 LoC)
 		Entire instance_alias class template is GONE, 

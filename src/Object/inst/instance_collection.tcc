@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.36.2.6 2006/10/24 04:24:34 fang Exp $
+	$Id: instance_collection.tcc,v 1.36.2.7 2006/10/24 05:16:17 fang Exp $
 	TODO: trim includes
  */
 
@@ -55,9 +55,7 @@
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/inst/sparse_collection.tcc"
 #include "Object/inst/element_key_dumper.h"
-#if DENSE_FORMAL_COLLECTIONS
 #include "Object/inst/port_formal_array.tcc"
-#endif
 #include "common/ICE.h"
 
 #include "util/multikey_assoc.tcc"
@@ -247,7 +245,6 @@ INSTANCE_COLLECTION_CLASS::make_array(const instance_placeholder_ptr_type p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if DENSE_FORMAL_COLLECTIONS
 /**
 	\param p the placeholder back-reference pointer, 
 		from which dimensions are inferred.  
@@ -270,7 +267,6 @@ INSTANCE_COLLECTION_CLASS::make_port_array(
 			return NULL;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.25.2.6 2006/10/24 04:24:33 fang Exp $
+	$Id: instance_collection.h,v 1.25.2.7 2006/10/24 05:16:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -147,7 +147,7 @@ protected:
 	explicit
 	instance_collection(const instance_placeholder_ptr_type);
 
-#if DENSE_FORMAL_COLLECTIONS
+#if 0
 	instance_collection(const instance_placeholder_ptr_type, 
 		const instance_collection_parameter_type&);
 #endif
@@ -268,11 +268,9 @@ virtual	instance_alias_base_type&
 	this_type*
 	make_array(const instance_placeholder_ptr_type);
 
-#if DENSE_FORMAL_COLLECTIONS
 	static
 	this_type*
 	make_port_array(const instance_placeholder_ptr_type);
-#endif
 
 	static
 	persistent*

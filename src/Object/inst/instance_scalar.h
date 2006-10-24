@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.1.2.3 2006/10/24 04:24:34 fang Exp $
+	$Id: instance_scalar.h,v 1.1.2.4 2006/10/24 05:16:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -47,10 +47,6 @@ public:
 	typedef	instance_alias_base_type		instance_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
-#if DENSE_FORMAL_COLLECTIONS
-	typedef	typename parent_type::instance_collection_parameter_type
-					instance_collection_parameter_type;
-#endif
 	typedef	typename parent_type::instance_placeholder_type
 					instance_placeholder_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
@@ -65,13 +61,6 @@ private:
 public:
 	explicit
 	instance_array(const instance_placeholder_ptr_type);
-
-#if DENSE_FORMAL_COLLECTIONS
-	instance_array(const instance_placeholder_ptr_type, 
-		const instance_collection_parameter_type&, 
-		const count_ptr<const const_param_expr_list>&, 
-		const unroll_context&);
-#endif
 
 	~instance_array();
 

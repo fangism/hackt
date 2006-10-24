@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.29.2.6 2006/10/24 04:24:19 fang Exp $
+	$Id: devel_switches.h,v 1.29.2.7 2006/10/24 05:16:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -64,13 +64,6 @@
 #define	SUPPORT_NESTED_DEFINITIONS	1
 
 /**
-	Define to 1 to use dense collection structures for ports.
-	Goal: 1
-	Status: complete, basically tested.
- */
-#define	DENSE_FORMAL_COLLECTIONS	1
-
-/**
 	Define to 1 to introduce and use dense formal value collections.
 	Not critical since they are not replicated much, 
 	may help performance in lookup a bit, save a little memory
@@ -78,7 +71,7 @@
 	Goal: 1
 	Status: not begun
  */
-#define	DENSE_FORMAL_VALUE_COLLECTIONS		(0 && DENSE_FORMAL_COLLECTIONS)
+#define	DENSE_FORMAL_VALUE_COLLECTIONS		0
 
 /**
 	Define to 1 to have port collections use light-weight back-references
@@ -88,7 +81,7 @@
 	Goal: 1?
 	Status: not begun
  */
-#define	PORT_COLLECTIONS_USE_BACK_REFERENCE	(0 && DENSE_FORMAL_COLLECTIONS)
+#define	PORT_COLLECTIONS_USE_BACK_REFERENCE	0
 
 /**
 	Define to 1 to use per-module allocated pools of subinstance lists.
