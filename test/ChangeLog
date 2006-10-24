@@ -1,5 +1,17 @@
 # "test/ChangeLog"
 
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45:
+	  Make.test-tail: Now every test directory evaluates dependencies
+		for all test cases, so 'made' objects are correctly
+		re-built when dependent sources are updated.  
+		This reduced the number of false-positive errors reported
+		between updates.  
+	  TODO: restructure tests to use make for concurrency, 
+		and efficient and incremental re-test evaluation.  
+
+
 2006-10-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-42:

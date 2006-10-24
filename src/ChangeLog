@@ -5,6 +5,19 @@
 
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45:
+	  No source revision.  Test suite now enabled use of automatic
+		dependency generation.  
+
+
+	* HACKT-00-01-04-main-00-80-44:
+	  New configure option to enable/disable serialization object
+		padding/alignment checking.  Doesn't save much memory, 
+		due to per-heap-object header overhead.  
+
+
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-43-merged-instance-01-14:
 	  Branch merge.  Summary:
 		Sparse instance collections no longer keep keys with

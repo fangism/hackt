@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.54 2006/10/24 18:39:06 fang Exp $
+#	$Id: Make.test-tail,v 1.55 2006/10/24 21:34:56 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -46,6 +46,7 @@ HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
+SPACESTONEWLINE = $(AWK) -f $(TEST_SRCDIR)/spacestonewline.awk
 ALLOC_FILTER = $(SED) -f $(TEST_SRCDIR)/alloc_filter.sed
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
@@ -62,7 +63,10 @@ HACO_FLAGS += -I$(srcdir)
 # this dependency generator assymes default target suffix .haco
 # caution: concurrent builds of .haco and .depend may clobber this
 .hac.depend:
-	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@ $<
+	@$(ECHO) "Generating automatic dependencies $@ ..."
+	@$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $<
+	@$(SED) '/haco:/s|^$(srcdir)\/|$@ |g' $@-tmp > $@
+	@$(RM) $@-tmp
 
 # dependency tracking enabled by default
 # TODO: consider adding .depend to the generated dependency targets
@@ -582,6 +586,16 @@ HAC_OBJECT_TARGETS = $(HACKT_PARSE_TEST_SUBJECTS:=.haco) \
 
 # executable dependence: if executable is more recent, also rebuild
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
+
+# source dependencies
+test.autodepend: Makefile.in
+	$(ECHO) "$(HACKT_PARSE_TEST_PASSES) $(HACKT_PRSIMRC_TEST_SUBJECTS)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print "-include " $$1 ".depend"; }' > $@
+
+-include test.autodepend
+
+DISTCLEANFILES += test.autodepend
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
