@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.20 2006/10/18 20:57:35 fang Exp $
+	$Id: expr.cc,v 1.20.2.1 2006/10/24 04:24:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -28,7 +28,6 @@
 #include "AST/parse_context.h"
 
 // will need these come time for type-checking
-#include "Object/devel_switches.h"
 #include "Object/inst/instance_placeholder_base.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/param_value_placeholder.h"

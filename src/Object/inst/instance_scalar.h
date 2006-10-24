@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.1.2.2 2006/10/23 06:51:17 fang Exp $
+	$Id: instance_scalar.h,v 1.1.2.3 2006/10/24 04:24:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -44,13 +44,7 @@ public:
 						instance_alias_base_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	typedef	instance_alias_base_type		instance_type;
-#else
-	// template explicitly required by g++-4.0
-	typedef	typename traits_type::template instance_alias<0>::type
-							instance_type;
-#endif
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
 #if DENSE_FORMAL_COLLECTIONS
@@ -87,7 +81,6 @@ public:
 	bool
 	is_partially_unrolled(void) const;
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	ostream&
 	dump_element_key(ostream&, const instance_alias_base_type&) const;
 
@@ -100,7 +93,6 @@ public:
 	instance_alias_base_type&
 	get_corresponding_element(const parent_type&,
 		const instance_alias_base_type&);
-#endif
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
@@ -127,11 +119,7 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	instance_type&
-#else
-	typename instance_type::parent_type&
-#endif
 	get_the_instance(void) { return this->the_instance; }
 
 	CREATE_DEPENDENT_TYPES_PROTO;

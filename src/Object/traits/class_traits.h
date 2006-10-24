@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.8.2.2 2006/10/24 00:56:40 fang Exp $
+	$Id: class_traits.h,v 1.8.2.3 2006/10/24 04:24:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -13,7 +13,6 @@
 #include "Object/object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
-#include "Object/devel_switches.h"
 
 
 namespace HAC {

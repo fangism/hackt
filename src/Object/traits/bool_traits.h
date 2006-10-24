@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.16.2.2 2006/10/24 00:56:37 fang Exp $
+	$Id: bool_traits.h,v 1.16.2.3 2006/10/24 04:24:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -44,12 +44,6 @@ struct class_traits<bool_tag> {
 		typedef	typename meta_traits_type::
 			template value_array<D>::type		type;
 	};
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-	template <size_t D>
-	struct instance_alias {
-		typedef	entity::instance_alias<tag_type,D>	type;
-	};
-#endif
 	enum { instance_pool_chunk_size = 1024 };
 
 	typedef	bool_instance_collection	instance_collection_generic_type;

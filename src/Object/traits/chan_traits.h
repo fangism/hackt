@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.17.2.2 2006/10/24 00:56:38 fang Exp $
+	$Id: chan_traits.h,v 1.17.2.3 2006/10/24 04:24:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -55,12 +55,6 @@ struct class_traits<channel_tag> {
 					instance_alias_relaxed_actuals_type;
 	/// defined in "Object/inst/channel_instance.h"
 	class state_instance_base;
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-	template <size_t D>
-	struct instance_alias {
-		typedef	entity::instance_alias<tag_type,D>	type;
-	};
-#endif
 	enum { instance_pool_chunk_size = 128 };
 
 	typedef	channel_instance_collection	instance_collection_generic_type;

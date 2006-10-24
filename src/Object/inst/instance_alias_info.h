@@ -4,13 +4,12 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.16.2.3 2006/10/24 00:56:36 fang Exp $
+	$Id: instance_alias_info.h,v 1.16.2.4 2006/10/24 04:24:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 #define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 
-#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
@@ -40,16 +39,6 @@ template <class Tag>
 
 #define	INSTANCE_ALIAS_INFO_CLASS					\
 instance_alias_info<Tag>
-
-/**
-	The instance_alias_info class is final with the new
-	sparse collection structures.  
- */
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-#define	VIRTUAL
-#else
-#define	VIRTUAL		virtual
-#endif
 
 /**
 	Information structure for a heirarchical name for a bool.  
@@ -165,7 +154,7 @@ public:
 	// default copy-constructor
 
 	// default destructor, non-virtual? yes, but protected.
-VIRTUAL	~instance_alias_info();
+	~instance_alias_info();
 
 	// default assignment
 
@@ -201,18 +190,12 @@ public:
 	pseudo_iterator
 	find(void);
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	size_t
 	get_index(void) const;
 
 	ostream&
 	dump_key(ostream&) const;
 
-#if 0
-	multikey_generic
-	get_key(void) const;
-#endif
-#endif
 
 public:
 	/**
@@ -246,11 +229,9 @@ public:
 private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 public:	// assignment needs to be accessible to std::vector
 	// for push_back -- but we guarantee that it is never called at
 	// run-time, because this class is not assignable.  
-#endif
 	/**
 		Make this unassignable.  Assignment is an error, 
 		because this has alias semantics.  
@@ -277,8 +258,8 @@ public:
 	instance_alias_info<Tag>&					\
 	trace_alias(const substructure_alias&) const
 
-VIRTUAL	TRACE_ALIAS_BASE_PROTO;
-VIRTUAL	TRACE_ALIAS_PROTO;
+	TRACE_ALIAS_BASE_PROTO;
+	TRACE_ALIAS_PROTO;
 
 public:
 	bool
@@ -299,7 +280,7 @@ public:
 	bool
 	is_port_alias(void) const;
 
-VIRTUAL	ostream&
+	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
 
 	ostream&
@@ -353,12 +334,12 @@ public:
 	checked_connect_alias(this_type&, this_type&);
 
 	/// counterpart to load_alias_reference (should be pure virtual)
-VIRTUAL	void
+	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
 
 // probably need not be virtual, same for all children classes.
-VIRTUAL	void
+	void
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
 
@@ -377,7 +358,6 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	void
 	collect_transient_info(persistent_object_manager& m) const {
 		this->collect_transient_info_base(m);
@@ -392,7 +372,6 @@ public:
 	load_object(const persistent_object_manager& m, istream& i) {
 		this->load_object_base(m, i);
 	}
-#endif
 
 	class transient_info_collector {
 		persistent_object_manager&	manager;
@@ -406,8 +385,6 @@ public:
 	};	// end class transient_info_collector
 
 };	// end class instance_alias_info
-
-#undef	VIRTUAL
 
 //-----------------------------------------------------------------------------
 

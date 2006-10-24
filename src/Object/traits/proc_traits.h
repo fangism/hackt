@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.16.2.2 2006/10/24 00:56:44 fang Exp $
+	$Id: proc_traits.h,v 1.16.2.3 2006/10/24 04:24:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -49,12 +49,6 @@ struct class_traits<process_tag> {
 	typedef	process_instance_alias_info	instance_alias_info_type;
 	/// defined in "Object/inst/process_instance.h"
 	class state_instance_base;
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-	template <size_t D>
-	struct instance_alias {
-		typedef	entity::instance_alias<tag_type,D>	type;
-	};
-#endif
 	enum { instance_pool_chunk_size = 256 };
 
 	typedef	process_instance_collection	instance_collection_generic_type;

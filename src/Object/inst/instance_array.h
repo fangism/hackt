@@ -3,28 +3,18 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.1.2.3 2006/10/23 06:51:16 fang Exp $
+	$Id: instance_array.h,v 1.1.2.4 2006/10/24 04:24:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
 #define	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
 
-#include <set>
 #include "Object/inst/instance_collection.h"
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 #include "Object/inst/sparse_collection.h"
-#else
-#include "util/multikey_set.h"
-#endif
 #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
-using std::set;
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-using util::default_multikey_set;
-using util::multikey_set_element_derived;
-#endif
 
 //=============================================================================
 #define	INSTANCE_ARRAY_TEMPLATE_SIGNATURE				\
@@ -59,7 +49,6 @@ public:
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	typedef	instance_alias_base_type		element_type;
 	/**
 		The simple_type meta type is specially optimized and 
@@ -68,17 +57,6 @@ public:
 	typedef typename util::multikey<D, pint_value_type>::simple_type
 							key_type;
 	typedef	sparse_collection<key_type, element_type>	collection_type;
-#else
-	// template explicitly required by g++-4.0
-	typedef	typename traits_type::template instance_alias<D>::type
-							element_type;
-	/**
-		This is the data structure used to implement the collection.  
-	 */
-	typedef	typename default_multikey_set<D, element_type>::type
-							collection_type;
-	typedef	typename element_type::key_type		key_type;
-#endif
 	typedef	typename collection_type::value_type	value_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
@@ -111,7 +89,6 @@ public:
 	bool
 	is_partially_unrolled(void) const;
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	ostream&
 	dump_element_key(ostream&, const instance_alias_base_type&) const;
 
@@ -124,7 +101,6 @@ public:
 	instance_alias_base_type&
 	get_corresponding_element(const parent_type&,
 		const instance_alias_base_type&);
-#endif
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
@@ -165,16 +141,6 @@ public:
 
 	void
 	accept(alias_visitor&) const;
-
-private:
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-	class element_collector;
-	class element_writer;
-	class connection_writer;
-	class connection_loader;
-	struct key_dumper;
-	class element_loader;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

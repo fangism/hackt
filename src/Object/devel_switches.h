@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.29.2.5 2006/10/24 00:56:34 fang Exp $
+	$Id: devel_switches.h,v 1.29.2.6 2006/10/24 04:24:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -64,28 +64,11 @@
 #define	SUPPORT_NESTED_DEFINITIONS	1
 
 /**
-	Define to 1 to use new data structures that maintain key-values
-	of instance alias collections separate.  
-	Goal: 1
-	Status: done for instance-collections and aliases,
-		not going to bother for value collections.  
- */
-#define	COLLECTION_SEPARATE_KEY_FROM_VALUE	1
-
-/**
-	Define to 1 to use std::map instead of util::qmap
-	in value_arrays.  
-	Goal: 1
-	Status: done
- */
-#define	VALUE_COLLECTION_MAP		1
-
-/**
 	Define to 1 to use dense collection structures for ports.
 	Goal: 1
 	Status: complete, basically tested.
  */
-#define	DENSE_FORMAL_COLLECTIONS	(1 && COLLECTION_SEPARATE_KEY_FROM_VALUE)
+#define	DENSE_FORMAL_COLLECTIONS	1
 
 /**
 	Define to 1 to introduce and use dense formal value collections.
@@ -95,7 +78,7 @@
 	Goal: 1
 	Status: not begun
  */
-#define	DENSE_FORMAL_VALUE_COLLECTIONS		0
+#define	DENSE_FORMAL_VALUE_COLLECTIONS		(0 && DENSE_FORMAL_COLLECTIONS)
 
 /**
 	Define to 1 to have port collections use light-weight back-references

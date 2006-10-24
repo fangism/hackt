@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.139.2.4 2006/10/24 03:11:30 fang Exp $
+#	$Id: Makefile.am,v 1.139.2.5 2006/10/24 04:24:16 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -306,7 +306,6 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/datatype_instance_placeholder.h \
 	Object/inst/param_value_placeholder.h \
 	Object/inst/instance_alias_info.h \
-	Object/inst/instance_alias.h \
 	Object/inst/internal_aliases_policy_fwd.h \
 	Object/inst/internal_aliases_policy.h \
 	Object/inst/alias_empty.h \

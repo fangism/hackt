@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.13 2006/10/18 19:08:00 fang Exp $
+	$Id: alias_actuals.tcc,v 1.13.2.1 2006/10/24 04:24:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include "Object/inst/alias_actuals.h"
-#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_alias_info.h"
 #include "Object/type/canonical_type.h"
 #include "util/stacktrace.h"
 #include "Object/expr/expr_dump_context.h"

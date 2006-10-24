@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.14 2006/10/19 03:30:26 fang Exp $
+	$Id: unroll_context.h,v 1.14.2.1 2006/10/24 04:24:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -11,7 +11,6 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {

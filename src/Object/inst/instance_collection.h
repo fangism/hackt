@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.25.2.5 2006/10/23 06:51:16 fang Exp $
+	$Id: instance_collection.h,v 1.25.2.6 2006/10/24 04:24:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -161,7 +161,6 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream&) const;
 
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 virtual	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
 
@@ -174,7 +173,6 @@ virtual	size_t
 virtual	instance_alias_info_type&
 	get_corresponding_element(const this_type&,
 		const instance_alias_info_type&) = 0;
-#endif
 
 	never_ptr<const physical_instance_placeholder>
 	get_placeholder_base(void) const;
@@ -281,7 +279,6 @@ virtual	instance_alias_base_type&
 	construct_empty(const int);
 
 protected:
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	// not that all alias elements are equal, 
 	// we can factor out common functionality
 	/**
@@ -353,21 +350,6 @@ protected:
 		ostream&
 		operator () (const instance_alias_info_type&);
 	};	// end struct key_dumper
-
-#define	COLLECTION_HELPER_TEMPLATE_SIGNATURE				\
-	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-#define	COLLECTION_HELPER_CLASS						\
-	INSTANCE_COLLECTION_CLASS
-#define	COLLECTION_HELPER_ARG_TYPE					\
-	instance_alias_info_type
-#else
-#define	COLLECTION_HELPER_TEMPLATE_SIGNATURE				\
-	INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-#define	COLLECTION_HELPER_CLASS						\
-	INSTANCE_ARRAY_CLASS
-#define	COLLECTION_HELPER_ARG_TYPE					\
-	element_type
-#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

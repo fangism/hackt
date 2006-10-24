@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/simple_meta_indexed_reference_base.h"
 	Base implementation class for meta-indexed references in HAC.  
-	$Id: simple_meta_indexed_reference_base.h,v 1.5 2006/10/18 05:32:51 fang Exp $
+	$Id: simple_meta_indexed_reference_base.h,v 1.5.2.1 2006/10/24 04:24:38 fang Exp $
 	This file was "Object/simple_meta_instance_reference_base.h"
 		in a previous life.  
 	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
@@ -13,7 +13,6 @@
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"

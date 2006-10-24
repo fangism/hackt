@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.12.2.1 2006/10/20 04:43:48 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.12.2.2 2006/10/24 04:24:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -180,13 +180,7 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	iterator ii(alias_array.begin());
 	// const iterator ee(alias_array.end());
 	for ( ; ii!=e; ++ii) {
-		(*ii)->finalize_canonicalize(
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-			*__shortest_alias
-#else
-			IS_A(alias_base_type&, *__shortest_alias)
-#endif
-			);
+		(*ii)->finalize_canonicalize(*__shortest_alias);
 	}
 }
 	// pardon the const_cast :S, we intend to modify, yes
