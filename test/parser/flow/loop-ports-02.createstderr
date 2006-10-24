@@ -102,7 +102,7 @@ In namespace "", we have: {
         )
         ce = process dcelm<>^1
           {
-            0 = lut::ce[0] (2) (
+            [0] = lut::ce[0] (2) (
               a = bool^0 = lut::ad.d (1) 
             )
           }

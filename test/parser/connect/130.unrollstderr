@@ -21,7 +21,7 @@ Persistent Object Manager text dump:
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	20	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	23	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -45,7 +45,7 @@ Persistent Object Manager text dump:
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	44	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	29
 	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	29
@@ -80,9 +80,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           l = bool^1
             {
-              0 = ass::l[0] 
-              1 = ass::l[1] 
-              2 = ass::l[2] 
+              [0] = ass::l[0] 
+              [1] = ass::l[1] 
+              [2] = ass::l[2] 
             }
           r = bool^0 = ass::r 
         }
@@ -104,9 +104,9 @@ footprint: {
   myass = process ass<3>^0 = myass (
     l = bool^1
       {
-        0 = myass.l[0] 
-        1 = myass.l[1] 
-        2 = myass.l[2] 
+        [0] = myass.l[0] 
+        [1] = myass.l[1] 
+        [2] = myass.l[2] 
       }
     r = bool^0 = myass.r 
   )

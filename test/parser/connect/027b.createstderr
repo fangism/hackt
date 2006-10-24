@@ -14,7 +14,7 @@ Persistent Object Manager text dump:
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	13	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	13	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -34,7 +34,7 @@ Persistent Object Manager text dump:
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	33	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	46
+	33	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	42
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -59,8 +59,8 @@ In namespace "", we have: {
         a = bool^0 = bar::a (1) 
         b = bool^1
           {
-            0 = bar::b[0] (2) 
-            1 = bar::b[1] (3) 
+            [0] = bar::b[0] (2) 
+            [1] = bar::b[1] (3) 
           }
         Created state:
         bool instance pool:
@@ -81,8 +81,8 @@ footprint: {
     a = bool^0 = foo (1) 
     b = bool^1
       {
-        0 = foo (1) 
-        1 = none.b[1] (2) 
+        [0] = foo (1) 
+        [1] = none.b[1] (2) 
       }
   )
   Created state:

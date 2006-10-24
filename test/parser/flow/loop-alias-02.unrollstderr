@@ -69,8 +69,8 @@ In namespace "", we have: {
       footprint: {
         p = bool^1
           {
-            0 = lt::x 
-            1 = lt::x 
+            [0] = lt::x 
+            [1] = lt::x 
           }
         x = bool^0 = lt::x 
       }

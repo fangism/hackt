@@ -64,7 +64,7 @@ Persistent Object Manager text dump:
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	63	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	63	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	64	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	65	##ADDR##	procdefn	0	#HEAD#	#TAIL#	222
 	66	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
@@ -110,7 +110,7 @@ Persistent Object Manager text dump:
 	106	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	109	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	109	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	110	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	111	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	112	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -158,7 +158,7 @@ Persistent Object Manager text dump:
 	154	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	155	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	156	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	157	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	157	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	158	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	159	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	160	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
@@ -184,17 +184,17 @@ Persistent Object Manager text dump:
 	180	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	181	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	182	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	183	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	183	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	184	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	185	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	186	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	187	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	188	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	189	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	191	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	192	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	193	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	185	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	186	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	187	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	188	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	189	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	190	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	191	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	192	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	193	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -227,8 +227,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           in = bool^1
             {
-              0 = celem::in[0] 
-              1 = celem::in[1] 
+              [0] = celem::in[0] 
+              [1] = celem::in[1] 
             }
           out = bool^0 = celem::out 
         }
@@ -274,10 +274,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           in = bool^1
             {
-              0 = nand::in[0] 
-              1 = nand::in[1] 
-              2 = nand::in[2] 
-              3 = nand::in[3] 
+              [0] = nand::in[0] 
+              [1] = nand::in[1] 
+              [2] = nand::in[2] 
+              [3] = nand::in[3] 
             }
           out = bool^0 = nand::out 
         }
@@ -307,10 +307,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           in = bool^1
             {
-              0 = nor::in[0] 
-              1 = nor::in[1] 
-              2 = nor::in[2] 
-              3 = nor::in[3] 
+              [0] = nor::in[0] 
+              [1] = nor::in[1] 
+              [2] = nor::in[2] 
+              [3] = nor::in[3] 
             }
           out = bool^0 = nor::out 
         }
@@ -328,28 +328,28 @@ footprint: {
   _c = process celem<2>^0 = _c (
     in = bool^1
       {
-        0 = _c.in[0] 
-        1 = _c.in[1] 
+        [0] = _c.in[0] 
+        [1] = _c.in[1] 
       }
     out = bool^0 = _c.out 
   )
   _nand = process nand<4>^0 = _nand (
     in = bool^1
       {
-        0 = _nand.in[0] 
-        1 = _nand.in[1] 
-        2 = _nand.in[2] 
-        3 = _nand.in[3] 
+        [0] = _nand.in[0] 
+        [1] = _nand.in[1] 
+        [2] = _nand.in[2] 
+        [3] = _nand.in[3] 
       }
     out = bool^0 = _nor.out 
   )
   _nor = process nor<4>^0 = _nor (
     in = bool^1
       {
-        0 = _nor.in[0] 
-        1 = _nor.in[1] 
-        2 = _nor.in[2] 
-        3 = _nor.in[3] 
+        [0] = _nor.in[0] 
+        [1] = _nor.in[1] 
+        [2] = _nor.in[2] 
+        [3] = _nor.in[3] 
       }
     out = bool^0 = _c.out 
   )

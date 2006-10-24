@@ -48,16 +48,16 @@ Persistent Object Manager text dump:
 	44	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	47	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

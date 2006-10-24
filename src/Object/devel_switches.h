@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.29 2006/10/19 03:30:23 fang Exp $
+	$Id: devel_switches.h,v 1.30 2006/10/24 07:26:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -62,6 +62,36 @@
 	Status: complete, basically tested.
  */
 #define	SUPPORT_NESTED_DEFINITIONS	1
+
+/**
+	Define to 1 to introduce and use dense formal value collections.
+	Not critical since they are not replicated much, 
+	may help performance in lookup a bit, save a little memory
+	from sparse structures.  
+	Goal: 1
+	Status: not begun
+ */
+#define	DENSE_FORMAL_VALUE_COLLECTIONS		0
+
+/**
+	Define to 1 to have port collections use light-weight back-references
+	to footprint's internal collection maps.  
+	This way port instance collections don't need to contain
+	collection mapping information, just refer to footprint.  
+	Goal: 1?
+	Status: not begun
+ */
+#define	PORT_COLLECTIONS_USE_BACK_REFERENCE	0
+
+/**
+	Define to 1 to use per-module allocated pools of subinstance lists.
+	Purpose: turn individually heap-allocated structures into
+		a pseudo-dense collection, referenced by indices.  
+	Affects: instance_alias_info's substructure, subinstance_manager.
+	Goal: ?
+	Status: not begun
+ */
+#define	MODULE_POOLED_SUBINSTANCE_STRUCTURE	0
 
 //=============================================================================
 

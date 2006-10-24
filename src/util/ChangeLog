@@ -1,5 +1,49 @@
 # "src/util/ChangeLog"
 
+2006-10-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-09:
+	  util/packed_array.tcc: fixed key translation, once again.  
+
+
+2006-10-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-08:
+	  util/packed_array.tcc: packed_array_generic::index_to_key()
+		tested and fixed key translation algorithm.  
+
+
+2006-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-06:
+	  multikey_assoc.tcc: std::accumulate is in <numeric>, so include it.
+	  Also implemented a lookup_index policy to 'handle' vector<bool> case.
+		also added index_to_key translation member function.
+
+
+2006-10-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-05:
+	  1-D specialization of multikey is-compact algorithms greatly
+		simplified to O(N) as opposed to O(N lg N).
+		Empty detection, no longer depends on the mapped_type, ever.
+		Added iterator tests to util/test/sparse_collection_test.cc.
+
+
+2006-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-04:
+	   multikey_assoc.{h,tcc}: factored out member functions
+		is_compact and is_compact_slice to make them readily available
+		for use with any multikey associative containers.  
+
+
+2006-10-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-01:
+	  list_vector: now uses internal map instead of qmap, simplified. 
+
+
 2006-09-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-20:

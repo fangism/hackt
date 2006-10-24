@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.8 2006/10/18 01:19:54 fang Exp $
+	$Id: class_traits.h,v 1.9 2006/10/24 07:27:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -13,18 +13,13 @@
 #include "Object/object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
-#include "Object/devel_switches.h"
 
-namespace util {
-	template <class> class union_find_derived;
-}
 
 namespace HAC {
 namespace entity {
 using std::istream;
 using std::ostream;
 using util::packed_array_generic;
-using util::union_find_derived;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -63,6 +58,8 @@ struct class_traits {
 		dimension-specific subclasses are derived.  
 	 */
 	typedef	void				instance_alias_base_type;
+
+	typedef	instance_alias_info<Tag>	instance_alias_info_type;
 	/// a non-owned, modifiable pointer reference to instance_alias_base_type
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
@@ -130,7 +127,8 @@ struct class_traits {
 		These are passed around during unroll time to
 		manipulate references and connections.  
 	 */
-	typedef	packed_array_generic<pint_value_type, instance_alias_base_type>
+	typedef	packed_array_generic<pint_value_type,
+			never_ptr<instance_alias_info_type> >
 						alias_collection_type;
 
 	/**
@@ -172,18 +170,13 @@ typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
 typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
 typedef	instance_alias_info<process_tag>	process_instance_alias_info;
 
-typedef union_find_derived<bool_instance_alias_info>
-						bool_instance_alias_base;
-typedef union_find_derived<int_instance_alias_info>
-						int_instance_alias_base;
-typedef union_find_derived<enum_instance_alias_info>
-						enum_instance_alias_base;
-typedef union_find_derived<datastruct_instance_alias_info>
-						struct_instance_alias_base;
-typedef union_find_derived<channel_instance_alias_info>
-						channel_instance_alias_base;
-typedef union_find_derived<process_instance_alias_info>
-						process_instance_alias_base;
+// TODO: clean up confusion, eliminate unnecessary type aliases
+typedef bool_instance_alias_info	bool_instance_alias_base;
+typedef int_instance_alias_info		int_instance_alias_base;
+typedef enum_instance_alias_info	enum_instance_alias_base;
+typedef datastruct_instance_alias_info	struct_instance_alias_base;
+typedef channel_instance_alias_info	channel_instance_alias_base;
+typedef process_instance_alias_info	process_instance_alias_base;
 
 //=============================================================================
 // useful base templates

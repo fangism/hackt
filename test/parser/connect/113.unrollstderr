@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	11	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -30,10 +30,10 @@ Persistent Object Manager text dump:
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	29	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	32	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -54,8 +54,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = wrap::a[0] 
-            1 = wrap::a[1] 
+            [0] = wrap::a[0] 
+            [1] = wrap::a[1] 
           }
       }
       }
@@ -69,15 +69,15 @@ footprint: {
   j = process wrap<>^0 = k (
     a = bool^1
       {
-        0 = j.a[1] 
-        1 = j.a[1] 
+        [0] = j.a[1] 
+        [1] = j.a[1] 
       }
   )
   k = process wrap<>^0 = k (
     a = bool^1
       {
-        0 = j.a[0] 
-        1 = j.a[1] 
+        [0] = j.a[0] 
+        [1] = j.a[1] 
       }
   )
 }

@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.8 2006/10/18 08:52:10 fang Exp $
+	$Id: template_actuals.h,v 1.9 2006/10/24 07:27:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -12,7 +12,6 @@
 #include <iosfwd>
 #include "util/string_fwd.h"
 #include "util/memory/count_ptr.h"
-#include "Object/devel_switches.h"
 
 namespace util {
 class persistent_object_manager;

@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	15	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -38,7 +38,7 @@ Persistent Object Manager text dump:
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	33
-	37	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	37	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -63,8 +63,8 @@ In namespace "", we have: {
         a = int<32>^0 = bar::a 
         b = int<32>^1
           {
-            0 = bar::b[0] 
-            1 = bar::b[1] 
+            [0] = bar::b[0] 
+            [1] = bar::b[1] 
           }
       }
       }
@@ -77,15 +77,15 @@ In namespace "", we have: {
 footprint: {
   foo = int<32>^1
     {
-      0 = none.b[0] 
-      1 = none.b[1] 
+      [0] = none.b[0] 
+      [1] = none.b[1] 
     }
   none = process bar<>^0 = none (
     a = int<32>^0 = foo[0] 
     b = int<32>^1
       {
-        0 = none.b[0] 
-        1 = none.b[1] 
+        [0] = none.b[0] 
+        [1] = none.b[1] 
       }
   )
 }

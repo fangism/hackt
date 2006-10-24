@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.12 2006/10/18 20:58:07 fang Exp $
+	$Id: CHP.cc,v 1.13 2006/10/24 07:27:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -28,6 +28,7 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/inst/value_scalar.h"
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"

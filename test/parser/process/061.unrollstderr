@@ -25,14 +25,14 @@ Persistent Object Manager text dump:
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	24	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	31	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -62,8 +62,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           x = int<3>^1
             {
-              0 = bar::x[0] 
-              1 = bar::x[1] 
+              [0] = bar::x[0] 
+              [1] = bar::x[1] 
             }
         }
       }
@@ -77,8 +77,8 @@ footprint: {
   poo = process bar<3, 2>^0 = poo (
     x = int<3>^1
       {
-        0 = poo.x[0] 
-        1 = poo.x[1] 
+        [0] = poo.x[0] 
+        [1] = poo.x[1] 
       }
   )
 }

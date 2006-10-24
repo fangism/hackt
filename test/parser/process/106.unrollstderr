@@ -45,15 +45,15 @@ Persistent Object Manager text dump:
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
+	44	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	55
 	45	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	37
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	76
+	48	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	64
 	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	89
+	52	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	73
 	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
 	54	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	55	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -66,13 +66,13 @@ Persistent Object Manager text dump:
 	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	65	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	68	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	65
 	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -102,44 +102,44 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              0 = foo::a[1] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
+              [0] = foo::a[1] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
             }
           q = bool^1
             {
-              0 = foo::a[0] 
+              [0] = foo::a[0] 
             }
         }
         <4> {
           N = pint^0 value: 4
           a = bool^1
             {
-              0 = foo::a[2] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
-              3 = foo::a[3] 
+              [0] = foo::a[2] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
+              [3] = foo::a[3] 
             }
           q = bool^1
             {
-              0 = foo::a[0] 
-              1 = foo::q[1] 
+              [0] = foo::a[0] 
+              [1] = foo::q[1] 
             }
         }
         <5> {
           N = pint^0 value: 5
           a = bool^1
             {
-              0 = foo::a[2] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
-              3 = foo::a[3] 
-              4 = foo::a[4] 
+              [0] = foo::a[2] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
+              [3] = foo::a[3] 
+              [4] = foo::a[4] 
             }
           q = bool^1
             {
-              0 = foo::a[0] 
-              1 = foo::q[1] 
+              [0] = foo::a[0] 
+              [1] = foo::q[1] 
             }
         }
       }
@@ -155,28 +155,28 @@ footprint: {
   blinky = process foo<3>^0 = blinky (
     a = bool^1
       {
-        0 = blinky.a[0] 
-        1 = blinky.a[1] 
-        2 = blinky.a[2] 
+        [0] = blinky.a[0] 
+        [1] = blinky.a[1] 
+        [2] = blinky.a[2] 
       }
   )
   clyde = process foo<5>^0 = clyde (
     a = bool^1
       {
-        0 = clyde.a[0] 
-        1 = clyde.a[1] 
-        2 = clyde.a[2] 
-        3 = clyde.a[3] 
-        4 = clyde.a[4] 
+        [0] = clyde.a[0] 
+        [1] = clyde.a[1] 
+        [2] = clyde.a[2] 
+        [3] = clyde.a[3] 
+        [4] = clyde.a[4] 
       }
   )
   inky = process foo<4>^0 = inky (
     a = bool^1
       {
-        0 = inky.a[0] 
-        1 = inky.a[1] 
-        2 = inky.a[2] 
-        3 = inky.a[3] 
+        [0] = inky.a[0] 
+        [1] = inky.a[1] 
+        [2] = inky.a[2] 
+        [3] = inky.a[3] 
       }
   )
 }

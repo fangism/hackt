@@ -34,12 +34,12 @@ Persistent Object Manager text dump:
 	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	33	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	38	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
@@ -68,8 +68,8 @@ In namespace "", we have: {
         _o = bool^0 = celem2inv::_o 
         a = bool^1
           {
-            0 = celem2inv::a[0] 
-            1 = celem2inv::a[1] 
+            [0] = celem2inv::a[0] 
+            [1] = celem2inv::a[1] 
           }
       }
       }
@@ -82,8 +82,8 @@ footprint: {
   c = process celem2inv<>^0 = c (
     a = bool^1
       {
-        0 = c.a[0] 
-        1 = c.a[1] 
+        [0] = c.a[0] 
+        [1] = c.a[1] 
       }
     _o = bool^0 = c._o 
   )

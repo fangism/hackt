@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.139 2006/10/18 01:18:54 fang Exp $
+#	$Id: Makefile.am,v 1.140 2006/10/24 07:26:51 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -272,7 +272,9 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \
+	Object/inst/sparse_collection.tcc \
 	Object/inst/instance_collection.tcc \
+	Object/inst/port_formal_array.tcc \
 	Object/inst/instance_placeholder.tcc \
 	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \
@@ -293,6 +295,10 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
+	Object/inst/sparse_collection.h \
+	Object/inst/instance_array.h \
+	Object/inst/instance_scalar.h \
+	Object/inst/port_formal_array.h \
 	Object/inst/instance_placeholder_base.h \
 	Object/inst/instance_placeholder.h \
 	Object/inst/value_placeholder.h \
@@ -300,11 +306,13 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/datatype_instance_placeholder.h \
 	Object/inst/param_value_placeholder.h \
 	Object/inst/instance_alias_info.h \
-	Object/inst/instance_alias.h \
 	Object/inst/internal_aliases_policy_fwd.h \
 	Object/inst/internal_aliases_policy.h \
 	Object/inst/alias_empty.h \
+	Object/inst/element_key_dumper.h \
 	Object/inst/value_collection.h \
+	Object/inst/value_array.h \
+	Object/inst/value_scalar.h \
 	Object/inst/instance_pool_fwd.h \
 	Object/inst/instance_pool.h \
 	Object/inst/state_instance.h \

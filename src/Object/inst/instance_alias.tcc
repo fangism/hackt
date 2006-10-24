@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.24 2006/10/18 20:58:01 fang Exp $
+	$Id: instance_alias.tcc,v 1.25 2006/10/24 07:27:10 fang Exp $
 	TODO: trim includes
  */
 
@@ -55,7 +55,6 @@
 #include "Object/inst/alias_printer.h"
 #include "common/ICE.h"
 
-#include "util/multikey_set.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/sstream.h"
@@ -90,6 +89,22 @@ using util::persistent_traits;
 //=============================================================================
 // class instance_alias_info method definitions
 
+/**
+	The only time a copy-contructor is allowed is on a new-born
+	instance alias.  
+	The next pointer is never copied, but re-established. 
+	\param t the source instance_alias_info, should be empty.
+	\pre nothing points to t, because its life is short.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) : 
+		substructure_parent_type(t), 
+		actuals_parent_type(t),
+		next(this), container(t.container) {
+	INVARIANT(t.next == &t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this destructor is non-virtual (protected too) because 
 	deleting this type directly is strictly forbidden and prevented.  
@@ -330,6 +345,27 @@ INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Alias object assignment should never be called at run-time
+	(e.g. due to a realloc) because the address of these alias
+	must be stationary.  (non-movable, non-copiable).
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_INFO_CLASS::operator = (const this_type& r) {
+	ICE_NEVER_CALL(cerr);
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
+	NEVER_NULL(this->container);
+	return this->container->dump_element_key(o, *this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This version of connect is symmetric and tailored to port connections,
 	and is called from simple_meta_instance_reference::connect_port.  
 	This effectively checks for connectible-type-equivalence.  
@@ -339,13 +375,12 @@ INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
+	// TODO: check relaxed actuals
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
-	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
-	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
-	ll = rr;			// union
+	l.unite(r);
 	return l.connect_port_aliases_recursive(r);
 }
 
@@ -365,13 +400,12 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
+	// TODO: check relaxed actuals
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
-	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
-	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
-	ll = rr;	// union
+	l.unite(r);
 	return l.connect_port_aliases_recursive(r);
 }
 
@@ -475,9 +509,9 @@ INSTANCE_ALIAS_INFO_CLASS::hierarchical_depth(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o, const dump_flags&) const {
-	ICE_NEVER_CALL(cerr);
-	return o;
+INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
+	NEVER_NULL(this->container);
+	return this->dump_key(this->container->dump_hierarchical_name(o, df));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -515,39 +549,79 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
+	STACKTRACE_VERBOSE;
+	this->find()->next = &*r.find();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) {
-	ICE_NEVER_CALL(cerr);
-	return pseudo_iterator();
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+	NEVER_NULL(this->next);
+	if (this->next != this->next->next) {
+		this->next = &*this->next->find();
+	}
+	return pseudo_iterator(this->next);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) const {
-	ICE_NEVER_CALL(cerr);
-	return pseudo_const_iterator();
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+	const this_type* tmp = this;
+	while (tmp != tmp->next) {
+		tmp = tmp->next;
+	}
+	return pseudo_const_iterator(tmp);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(instance_alias_base_type&) {
-	ICE_NEVER_CALL(cerr);
+INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(this_type& n) {
+	this->next = &n;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename instance_alias_info<Tag>::substructure_parent_type&
-INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(const substructure_alias&) const {
-	ICE_NEVER_CALL(cerr);
+INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(
+		const substructure_alias& p) const {
+	return this->trace_alias(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need comment, what is this used for again? diagnostics?
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias&) const {
-	ICE_NEVER_CALL(cerr);
+INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias& a) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	physical_instance_collection& pp(this->trace_collection(a));
+#if ENABLE_STACKTRACE
+	pp.dump(STACKTRACE_INDENT << "got: ",
+		dump_flags::default_value) << endl;
+	this->dump_key(STACKTRACE_INDENT << "key: ") << endl;
+#endif
+	// this seems wasteful but is required for correctness, 
+	// as explained in the comments.  
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, pp));
+	this_type& ret(c.get_corresponding_element(*this->container, *this));
+#if ENABLE_STACKTRACE
+	ret.dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
+#endif
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -576,6 +650,13 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Now instance aliases are dimension-agnostic, so they must infer
+	their position and key from the parent container.  
+	The multikey index is translated into a single-valued index.
+	The index is omitted for scalar aliases.  
+	The index is read back in instance_array::load_reference().
+
+	Comment is obsolete (20061020):
 	Virtually pure virtual.  Never supposed to be called, 
 	yet this definition must exist to allow construction
 	of the types that immedately derived from this type.  
@@ -583,28 +664,53 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
-		const persistent_object_manager&, ostream&) const {
-	ICE_NEVER_CALL(cerr);
+		const persistent_object_manager& m, ostream& o) const {
+	NEVER_NULL(this->container);
+	m.write_pointer(o, this->container);
+	if (this->container->get_dimensions()) {
+		const size_t index = this->container->lookup_index(*this);
+		// 1-indexed for sparse collections, 0-indexed for dense!
+		write_value(o, index);
+	}
+	// else scalar alias reference doesn't need index
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Really, pure virtual.  
+	\pre everything but the next pointer is already loaded, 
+		including the parent container pointer.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
-		const persistent_object_manager&, istream&) {
-	ICE_NEVER_CALL(cerr);
+		const persistent_object_manager& m, istream& i) {
+	NEVER_NULL(this->container);
+if (this->container->get_dimensions()) {
+	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
+	this_type& n(this->load_alias_reference(m, i));
+	this->next = &n;
+} else {
+	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
+	instance_collection_generic_type* next_container;
+	m.read_pointer(i, next_container);
+	NEVER_NULL(next_container);	// true?
+	// no key to read!
+	// problem: container is a never_ptr<const ...>, yucky
+	m.load_object_once(next_container);
+	this_type& n(next_container->load_reference(i));
+	this->next = &n;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Called during loading of the state instances' back-references.  
 	Also is counterpart to load_next_connection.
+	The key/index load is finished by the call to load_reference.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type&
+INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 		const persistent_object_manager& m, istream& i) {
 	never_ptr<container_type> next_container;
@@ -625,6 +731,10 @@ INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: factor out into scalar and non-scalar version
+	to avoid repeated if branching in write-loop.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_object_base(
@@ -635,9 +745,25 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
+if (!this->container->get_dimensions()) {
+	if (this->next == this) {
+		write_value<char>(o, 0);
+	} else {
+#if STACKTRACE_PERSISTENTS
+		cerr << "Writing a real connection!" << endl;
+#endif
+		write_value<char>(o, 1);
+		this->peek()->write_next_connection(m, o);
+	}
+}
+//	else skip, collection will write connections later...
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: factor out into scalar and non-scalar version
+	to avoid repeated if branching in load-loop.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
@@ -646,8 +772,22 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 	// let the module take care of restoring the state information
 	read_value(i, this->instance_index);
 	m.read_pointer(i, this->container);
+	NEVER_NULL(this->container);
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);
+	m.load_object_once(&const_cast<container_type&>(*this->container));
+if (!this->container->get_dimensions()) {
+	// no key to load!
+	char c;
+	read_value(i, c);
+	if (c) {
+#if STACKTRACE_PERSISTENTS
+		cerr << "Loading a real connection!" << endl;
+#endif
+		this->load_next_connection(m, i);
+	}
+}
+//	else skip, collection will load connections later...
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -670,322 +810,6 @@ operator << (ostream& o,
 	const typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type& i) {
 	typedef	class_traits<Tag>	traits_type;
 	return o << traits_type::tag_name << "-alias @ " << &i;
-}
-
-//=============================================================================
-// class instance_alias method definitions
-
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-INSTANCE_ALIAS_CLASS::~instance_alias() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-        Prints out the next instance alias in the connected set.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-ostream&
-INSTANCE_ALIAS_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
-	// STACKTRACE_VERBOSE;
-	NEVER_NULL(this->container);
-	this->container->dump_hierarchical_name(o, df) <<
-		multikey<D, pint_value_type>(this->key);
-		// casting to multikey for the sake of printing [i] for D==1.
-		// could use specialization to accomplish this...
-		// bah, not important
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_CLASS::pseudo_iterator
-INSTANCE_ALIAS_CLASS::find(void) {
-	return instance_alias_base_type::find();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_CLASS::pseudo_const_iterator
-INSTANCE_ALIAS_CLASS::find(void) const {
-	return instance_alias_base_type::find();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Manually update the next pointer of the union-find.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::finalize_canonicalize(instance_alias_base_type& n) {
-	this->set(&n);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& a) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
-#endif
-	physical_instance_collection& pp(this->trace_collection(a));
-#if ENABLE_STACKTRACE
-	pp.dump(STACKTRACE_INDENT << "got: ",
-		dump_flags::default_value) << endl;
-	STACKTRACE_INDENT_PRINT("key: " << this->key << endl);
-#endif
-	// this seems wasteful but is required for correctness, 
-	// as explained in the comments.  
-	// assert dynamic cast
-	container_type& c(IS_A(container_type&, pp));
-	this_type& ret(*c[this->key]);		// asserts validity
-#if ENABLE_STACKTRACE
-	ret.dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
-#endif
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Uses self key to retrace an indentical hierarchical structure.
-	\pre type-checked.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
-INSTANCE_ALIAS_CLASS::__trace_alias_base(const substructure_alias& p) const {
-	// NOTE: this will never be called for non-structured types (like bool)
-	// because it is always called through parent (substructure_alias)
-	return this->trace_alias(p);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Saves alias connection information persistently.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::write_next_connection(
-		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::write_next_connection()");
-	NEVER_NULL(this->container);
-	m.write_pointer(o, this->container);
-	value_writer<key_type> write_key(o);
-	write_key(this->key);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Re-links connection.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::load_next_connection(
-		const persistent_object_manager& m, istream& i) {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	instance_alias_base_type& n(this->load_alias_reference(m, i));
-	this->set(&n);	// manual unionization without path compression
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::collect_transient_info(
-		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::collect_transients()");
-	// this isn't truly a persistent type, so we don't register this addr.
-	INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(m);
-	if (this->next != this)
-		this->next->collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Saves persistent information for reconstruction.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::write_object(const persistent_object_manager& m,
-		ostream& o) const {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::write_object()");
-	// DO NOT write out key now, that is the job of the next phase!
-	INSTANCE_ALIAS_INFO_CLASS::write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
-		istream& i) {
-	STACKTRACE_PERSISTENT("int_alias::load_object()");
-	// DO NOT load in key now, that is the job of the next phase!
-	INSTANCE_ALIAS_INFO_CLASS::load_object_base(m, i);
-}
-
-//=============================================================================
-// class KEYLESS_INSTANCE_ALIAS_CLASS method definitions
-
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-KEYLESS_INSTANCE_ALIAS_CLASS::~instance_alias() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-ostream&
-KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o,
-		const dump_flags& df) const {
-	NEVER_NULL(this->container);
-	return this->container->dump_hierarchical_name(o, df);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_iterator
-KEYLESS_INSTANCE_ALIAS_CLASS::find(void) {
-	return instance_alias_base_type::find();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_const_iterator
-KEYLESS_INSTANCE_ALIAS_CLASS::find(void) const {
-	return instance_alias_base_type::find();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Manually update the next pointer of the union-find.  
- */
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::finalize_canonicalize(
-		instance_alias_base_type& n) {
-	this->set(&n);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-INSTANCE_ALIAS_INFO_CLASS&
-KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& p) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
-#endif
-	physical_instance_collection& pp(this->trace_collection(p));
-#if ENABLE_STACKTRACE
-	pp.dump(STACKTRACE_INDENT << "got: ",
-		dump_flags::default_value) << endl;
-#endif
-	container_type& c(IS_A(container_type&, pp));
-	return c.get_the_instance();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	NOTE: physical instance collection is not const in this case.  
- */
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
-KEYLESS_INSTANCE_ALIAS_CLASS::__trace_alias_base(
-		const substructure_alias& p) const {
-	// NOTE: this will never be called for non-structured types (like bool)
-	// because it is always called through parent (substructure_alias)
-	return this->trace_alias(p);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::write_next_connection(
-		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::write_next_connection()");
-	m.write_pointer(o, this->container);
-	// no key to write!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	If this is the SAME as template version, this function need not be
-	virtual!  
-	Only issue: merge is a member function of bool_instance_alias_base, 
-	which is a ring_node_derived<...>.
-	May require another argument with a safe up-cast?
-	Or just have this return the bool_instance_alias_base?
- */
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
-		const persistent_object_manager& m, istream& i) {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
-	instance_collection_generic_type* next_container;
-	m.read_pointer(i, next_container);
-	NEVER_NULL(next_container);	// true?
-	// no key to read!
-	// problem: container is a never_ptr<const ...>, yucky
-	m.load_object_once(next_container);
-	instance_alias_base_type& n(next_container->load_reference(i));
-	this->set(&n);	// manual unionization without path compression
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::collect_transient_info(
-		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::collect_transients()");
-	// this isn't truly a persistent type, so we don't register this addr.
-	INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(m);
-	if (this->next != this) {
-		this->peek()->collect_transient_info_base(m);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::write_object(const persistent_object_manager& m,
-		ostream& o) const {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::write_object()");
-	INSTANCE_ALIAS_INFO_CLASS::write_object_base(m, o);
-	// no key to write!
-	// continuation pointer?
-	NEVER_NULL(this->next);
-	if (this->next == this) {
-		write_value<char>(o, 0);
-	} else {
-#if STACKTRACE_PERSISTENTS
-		cerr << "Writing a real connection!" << endl;
-#endif
-		write_value<char>(o, 1);
-		this->peek()->write_next_connection(m, o);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
-		istream& i) {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_object()");
-	INSTANCE_ALIAS_INFO_CLASS::load_object_base(m, i);
-	// no key to load!
-	char c;
-	read_value(i, c);
-	if (c) {
-#if STACKTRACE_PERSISTENTS
-		cerr << "Loading a real connection!" << endl;
-#endif
-		this->load_next_connection(m, i);
-	}
-}
-
-//=============================================================================
-// class instance_alias method definitions
-
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-ostream&
-operator << (ostream& o, const instance_alias<Tag,D>& b) {
-	typedef	class_traits<Tag>	traits_type;
-	INVARIANT(b.valid());
-	return o << '(' << traits_type::tag_name << "-alias-" << D << ')';
 }
 
 //=============================================================================

@@ -52,11 +52,11 @@ Persistent Object Manager text dump:
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	51	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	51	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	52	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	55	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	56	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	58	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -74,12 +74,12 @@ Persistent Object Manager text dump:
 	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	73	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	73	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	75	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	75	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
@@ -113,8 +113,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           in = bool^1
             {
-              0 = nor::in[0] 
-              1 = nor::in[1] 
+              [0] = nor::in[0] 
+              [1] = nor::in[1] 
             }
           out = bool^0 = nor::out 
         }
@@ -122,10 +122,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           in = bool^1
             {
-              0 = nor::in[0] 
-              1 = nor::in[1] 
-              2 = nor::in[2] 
-              3 = nor::in[3] 
+              [0] = nor::in[0] 
+              [1] = nor::in[1] 
+              [2] = nor::in[2] 
+              [3] = nor::in[3] 
             }
           out = bool^0 = nor::out 
         }
@@ -142,18 +142,18 @@ footprint: {
   a = process nor<2>^0 = a (
     in = bool^1
       {
-        0 = a.in[0] 
-        1 = a.in[1] 
+        [0] = a.in[0] 
+        [1] = a.in[1] 
       }
     out = bool^0 = b.out 
   )
   b = process nor<4>^0 = b (
     in = bool^1
       {
-        0 = b.in[0] 
-        1 = b.in[1] 
-        2 = b.in[2] 
-        3 = b.in[3] 
+        [0] = b.in[0] 
+        [1] = b.in[1] 
+        [2] = b.in[2] 
+        [3] = b.in[3] 
       }
     out = bool^0 = b.out 
   )

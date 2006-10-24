@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	9	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	300
 	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -19,10 +19,10 @@ Persistent Object Manager text dump:
 	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	18	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -30,10 +30,10 @@ Persistent Object Manager text dump:
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	29	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	32	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -58,15 +58,15 @@ In namespace "", we have: {
         x = process foo<>^0 = bar::x (1) (
           a = bool^1
             {
-              0 = bar::x.a[0] (1) 
-              1 = bar::x.a[1] (2) 
+              [0] = bar::x.a[0] (1) 
+              [1] = bar::x.a[1] (2) 
             }
         )
         y = process foo<>^0 = bar::y (2) (
           a = bool^1
             {
-              0 = bar::y.a[0] (3) 
-              1 = bar::y.a[1] (4) 
+              [0] = bar::y.a[0] (3) 
+              [1] = bar::y.a[1] (4) 
             }
         )
         Created state:
@@ -92,8 +92,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = foo::a[0] (1) 
-            1 = foo::a[1] (2) 
+            [0] = foo::a[0] (1) 
+            [1] = foo::a[1] (2) 
           }
         Created state:
         bool instance pool:
@@ -111,15 +111,15 @@ footprint: {
     x = process foo<>^0 = poo.x (2) (
       a = bool^1
         {
-          0 = poo.x.a[0] (1) 
-          1 = poo.x.a[1] (2) 
+          [0] = poo.x.a[0] (1) 
+          [1] = poo.x.a[1] (2) 
         }
     )
     y = process foo<>^0 = poo.y (3) (
       a = bool^1
         {
-          0 = poo.y.a[0] (3) 
-          1 = poo.y.a[1] (4) 
+          [0] = poo.y.a[0] (3) 
+          [1] = poo.y.a[1] (4) 
         }
     )
   )

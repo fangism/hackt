@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	15	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -37,7 +37,7 @@ Persistent Object Manager text dump:
 	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	36	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	50
+	36	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	46
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -62,8 +62,8 @@ In namespace "", we have: {
         a = int<32>^0 = bar::a (1) 
         b = int<32>^1
           {
-            0 = bar::b[0] (2) 
-            1 = bar::b[1] (3) 
+            [0] = bar::b[0] (2) 
+            [1] = bar::b[1] (3) 
           }
         Created state:
         int instance pool:
@@ -84,8 +84,8 @@ footprint: {
     a = int<32>^0 = foo (1) 
     b = int<32>^1
       {
-        0 = foo (1) 
-        1 = none.b[1] (2) 
+        [0] = foo (1) 
+        [1] = none.b[1] (2) 
       }
   )
   Created state:

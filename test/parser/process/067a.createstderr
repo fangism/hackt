@@ -28,7 +28,7 @@ Persistent Object Manager text dump:
 	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	90
+	27	##ADDR##	procpfar	0	#HEAD#	#TAIL#	86
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	proccoll	1	#HEAD#	#TAIL#	90
+	38	##ADDR##	procpfar	0	#HEAD#	#TAIL#	86
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
@@ -66,11 +66,11 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            0 = bar::x[0] (1) (
+            [0] = bar::x[0] (1) (
               a = bool^0 = bar::x[0].a (1) 
               b = bool^0 = bar::x[0].a (1) 
             )
-            1 = bar::x[0] (1) (
+            [1] = bar::x[0] (1) (
               a = bool^0 = bar::x[0].a (1) 
               b = bool^0 = bar::x[0].a (1) 
             )
@@ -118,11 +118,11 @@ footprint: {
   poo = process bar<>^0 = poo (1) (
     x = process foo<>^1
       {
-        0 = poo.x[0] (2) (
+        [0] = poo.x[0] (2) (
           a = bool^0 = poo.x[0].a (1) 
           b = bool^0 = poo.x[0].a (1) 
         )
-        1 = poo.x[0] (2) (
+        [1] = poo.x[0] (2) (
           a = bool^0 = poo.x[0].a (1) 
           b = bool^0 = poo.x[0].a (1) 
         )

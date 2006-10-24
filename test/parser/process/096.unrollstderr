@@ -39,11 +39,11 @@ Persistent Object Manager text dump:
 	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25

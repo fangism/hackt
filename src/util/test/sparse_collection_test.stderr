@@ -1,0 +1,14 @@
+adding first key-value pair.
+beta == beta
+checking for failure to insert.
+adding second key-value pair.
+delta == delta
+adding four more key-value pairs.
+c["unos"] = eins
+c["dos"] = zwei
+c["tres"] = drei
+c["quatro"] = vier
+testing lookup invariants.
+Testing iterator interface.
+beta, zwei, delta, vier, drei, eins, 
+End of tests.

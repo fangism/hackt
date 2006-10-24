@@ -22,9 +22,9 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -64,17 +64,17 @@ Persistent Object Manager text dump:
 	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	29
-	63	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	63	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	64	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	33
-	65	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	65	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	58
 	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	73	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	96
 
 In module created from: ##FILE## (unrolled)
@@ -106,16 +106,16 @@ In namespace "", we have: {
         b = bool^0 = portaproc::b 
         c = bool^1
           {
-            0 = portaproc::c[0] 
-            1 = portaproc::c[1] 
-            2 = portaproc::c[2] 
-            3 = portaproc::c[3] 
+            [0] = portaproc::c[0] 
+            [1] = portaproc::c[1] 
+            [2] = portaproc::c[2] 
+            [3] = portaproc::c[3] 
           }
         i = int<32>^0 = portaproc::i 
         j = int<32>^1
           {
-            0 = portaproc::j[0] 
-            1 = portaproc::j[1] 
+            [0] = portaproc::j[0] 
+            [1] = portaproc::j[1] 
           }
       }
       }
@@ -135,45 +135,45 @@ footprint: {
     b = bool^0 = p.c[2] 
     c = bool^1
       {
-        0 = p.c[0] 
-        1 = p.c[1] 
-        2 = p.c[2] 
-        3 = p.c[3] 
+        [0] = p.c[0] 
+        [1] = p.c[1] 
+        [2] = p.c[2] 
+        [3] = p.c[3] 
       }
     i = int<32>^0 = p.j[1] 
     j = int<32>^1
       {
-        0 = p.j[0] 
-        1 = p.j[1] 
+        [0] = p.j[0] 
+        [1] = p.j[1] 
       }
   )
   q = int<32>^0 = q 
   r = int<32>^1
     {
-      0 = p.j[0] 
-      1 = p.i 
+      [0] = p.j[0] 
+      [1] = p.i 
     }
   s = process portaproc<>^0 = s (
     b = bool^0 = s.b 
     c = bool^1
       {
-        0 = s.c[0] 
-        1 = s.c[1] 
-        2 = s.c[2] 
-        3 = s.c[3] 
+        [0] = s.c[0] 
+        [1] = s.c[1] 
+        [2] = s.c[2] 
+        [3] = s.c[3] 
       }
     i = int<32>^0 = s.i 
     j = int<32>^1
       {
-        0 = s.j[0] 
-        1 = s.j[1] 
+        [0] = s.j[0] 
+        [1] = s.j[1] 
       }
   )
   x = bool^1
     {
-      0 = p.c[0] 
-      1 = p.c[1] 
-      2 = p.b 
-      3 = p.c[3] 
+      [0] = p.c[0] 
+      [1] = p.c[1] 
+      [2] = p.b 
+      [3] = p.c[3] 
     }
 }

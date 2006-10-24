@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	31	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	29
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	33	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	39	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	29
 	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
@@ -73,7 +73,7 @@ In namespace "", we have: {
           N = pint^0 value: 1
           d = bool^1
             {
-              0 = e1of::d[0] 
+              [0] = e1of::d[0] 
             }
           e = bool^0 = e1of::e 
         }
@@ -88,7 +88,7 @@ footprint: {
   foo = process e1of<1>^0 = foo (
     d = bool^1
       {
-        0 = foo.d[0] 
+        [0] = foo.d[0] 
       }
     e = bool^0 = foo.e 
   )

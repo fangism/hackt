@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.11 2006/10/18 01:19:05 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.12 2006/10/24 07:26:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -74,6 +74,14 @@
 #define	PBOOL_INSTANCE_COLLECTION_TYPE_KEY			"pboolcol"
 #define	PINT_INSTANCE_COLLECTION_TYPE_KEY			"pintcoll"
 #define	PREAL_INSTANCE_COLLECTION_TYPE_KEY			"prealcol"
+
+// dense port collections
+#define	PROCESS_PORT_FORMAL_ARRAY_TYPE_KEY			"procpfar"
+#define	CHANNEL_PORT_FORMAL_ARRAY_TYPE_KEY			"chanpfar"
+#define	STRUCT_PORT_FORMAL_ARRAY_TYPE_KEY			"dstrpfar"
+#define	ENUM_PORT_FORMAL_ARRAY_TYPE_KEY				"enumpfar"
+#define	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY			"dboolpfa"
+#define	DINT_PORT_FORMAL_ARRAY_TYPE_KEY				"dintpfar"
 
 // Unique instances, post-unrolling:
 #define	UNIQUE_PROCESS_INSTANCE_TYPE_KEY			"procunis"

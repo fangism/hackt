@@ -3,11 +3,166 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-43-merged-instance-01-14:
+	  Branch merge.  Summary:
+		Sparse instance collections no longer keep keys with
+			values; they are now separated (much simpler).
+		Union-find functionality written directly into
+			instance_alias_info, no more inheritance.  
+		Introduced dense collections for fast and efficient storage
+			of packed multidimensional alias collections.  
+		All resulting in simpler, cleaner, even faster code.
+	  Next branch: reworking subinstance hierarchy for serialization
+		and memory efficiency.  
+
+
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-14:
+	  Perm'd DENSE_FORMAL_COLLECTIONS (-100 LoC).
+	  End of branch.  Merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-13:
+	  Perm'd COLLECTION_SEPARATE_KEY_FROM_VALUE.  (-1000 LoC)
+		Entire instance_alias class template is GONE, 
+		also removed Object/inst/instance_alias.h.
+	  Removed references to devel_switches where not needed.  
+
+
 2006-10-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-42:
 	  No source revision, just global makefile, distribution, 
 		and packaging maintainence.  
+
+
+2006-10-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-12:
+	  Perm'd VALUE_COLLECTION_MAP, and also split up value_collection.h
+		into _array and _scalar, analogous to instances.  
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-11:
+	  Clean-up phase before merging to trunk, one flag at a time.  
+	  Perm'd EMBED_UNION_FIND -- no reason ever to go back.  (-300 LoC)
+	  Preparator developer comments in "Object/devel_switches.h"
+	  Going to punt subinstance_manager rework until next branch, 
+		which concludes development on this branch.  
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-10:
+	  instance_placeholder::make_collection(): now creates a dense
+		collection if it is known to belong to a port formal.
+	  Test suite updated accordingly, only header diffs found in
+		unroll and create tests.  
+	  Next: rework subinstance_manager to use more efficient
+		elements and members, perhaps moving away from 
+		heap-allocations.  (should experiment some)
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-09:
+	  Minor source revision, only in util/packed_array.tcc (fix).
+	  No other source touched.
+	  All unroll/create regression tests have been re-confirmed, 
+		only differences occurred in persistent object headers.  
+	  Next: footprint-local ports should be dense.  
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-08:
+	  Completed and enabled DENSE_FORMAL_COLLECTIONS for instantiating
+		ports in the public subinstance hierarchy with 
+		densely packed multidimensional arrays, instead of sparse.
+		Includes many minor fixes in port_formal_array.tcc.
+	  Object/common/extern_templates.cc: added some more common
+		multikey_generic-related symbols.  
+	  Added instance_collection lookup_key method.  
+	  Added instance_collection::make_port_array to spawn 
+		dense collections, but scalars still remain scalars.  
+	  Cleanup in Object/inst/instance_placeholder.h.
+	  util/packed_array.tcc: fixed index-to-key translation.  
+	  Test suite has NOT been updated yet -- next revision.  
+		So far, only unroll/create header differences found.
+		No fatal deaths.  No differences beyond the create phase!
+	  How much memory does this save?  Stay tuned.
+	  TODO: footprint-local instantiations can also take advantage
+		of densely packed arrays.  
+
+
+2006-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-07:
+	  Added (but not yet used) Object/inst/port_formal_array.{h,tcc}
+		which serves the purpose of containing dense collections of 
+		aliases, using packed_array_generic representation internally.  
+	  Factored out functor classes of instance_array to the parent
+		instance_collection, to re-used in port_formal_array.
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-06:
+	  Minor source pecking:
+		Split up instance_collection.h into instance_array.h and
+		instance_scalar.h to reduce include material and clean up
+		headers.  Turns out most other classes don't need to know
+		about the actual arrays.  
+	  Factored multikey key-dumper helper into own file. 
+	  value_array now uses std::map instead of util::qmap internally.  
+	  Checked against gcc-4.1 while we were at it.  
+
+
+2006-10-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-05:
+	  Major changes to instance-collection structure:
+		Flag: COLLECTION_SEPARATE_KEY_FROM_VALUE (true)
+		Uses new sparse_collection to manage alias collections.  
+		No longer uses multikey_set and friends.  
+	  sparse_collection: wrote iterator class to traverse elements
+		in key-sorted order, whose dereference access is cached
+		and takes O(lg lg N) to re-cache after invalidation.  
+		Also added more find methods, including non-const accessors.  
+	  No more dimension-specific instance_alias, derived from 
+		instance_alias_info -- obsolete!  Functionality has been folded
+		into the base class, also eliminating many virtual calls.  
+	  Alias connections (next) are written more efficiently, using
+		a single internal index instead of a multikey.
+		Again, scalars aliases do not need indexing.  
+		Serialized object binary is smaller as a result.  
+	  instance_array::resolve_indices now makes better use of
+		multikey_assoc's compact-related template routines.  
+	  Updated regression test stderrs to reflect improved index dumping, 
+		where 1D indices were printed 'k' are now '[k]'.
+	  TODO: also apply same transformations to value_collections.
+	  TODO: port collections -- key to eliminating map replication
+		by using back-reference from port actuals to formals.
+	  TODO: dense collections -- enhancement
+
+
+2006-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-04:
+	  util/ChangeLog: update to multikey_assoc member functions.  
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-03:
+	  Replaced the union_find_derived business with a much simpler,
+		cleaner embedded union-find functions into instance_alias_info.
+		Uses switch EMBED_UNION_FIND.
+	  Next phase: decoupling multikey key from instance_alias value
+		using new sparse collection structure.  
+
+
+2006-10-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-02:
+	  New sparse collection data structure, with basic tests.  
+
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-01:
+	  util/ChangeLog: list_vector now uses std::map.
 
 
 2006-10-19	David Fang		<fangism@users.sourceforge.net>

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.11 2006/10/18 20:58:06 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.12 2006/10/24 07:27:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -34,6 +34,8 @@
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_instance_collection,
 		"struct_instance_collection")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_port_formal_array,
+		"struct_port_formal_array")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_scalar, "struct_scalar")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_1D, "struct_array_1D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_2D, "struct_array_2D")
@@ -53,6 +55,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_array_3D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_array_4D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 4)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::struct_port_formal_array, 
+	STRUCT_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
 
 }	// end namespace util
 
@@ -71,6 +76,7 @@ template class instance_array<datastruct_tag, 1>;
 template class instance_array<datastruct_tag, 2>;
 template class instance_array<datastruct_tag, 3>;
 template class instance_array<datastruct_tag, 4>;
+template class port_formal_array<datastruct_tag>;
 
 //=============================================================================
 }	// end namespace entity

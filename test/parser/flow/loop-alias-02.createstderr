@@ -69,8 +69,8 @@ In namespace "", we have: {
       footprint: {
         p = bool^1
           {
-            0 = lt::p[0] (1) 
-            1 = lt::p[0] (1) 
+            [0] = lt::p[0] (1) 
+            [1] = lt::p[0] (1) 
           }
         x = bool^0 = lt::p[0] (1) 
         Created state:

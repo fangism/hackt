@@ -45,10 +45,10 @@ Persistent Object Manager text dump:
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	48	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	50	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

@@ -22,9 +22,9 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -55,26 +55,26 @@ Persistent Object Manager text dump:
 	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	57	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	59	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	59	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	60	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
 	61	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
 	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	65	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	65	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	67	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	73	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
 
 In module created from: ##FILE## (unrolled)
@@ -106,16 +106,16 @@ In namespace "", we have: {
         b = bool^0 = portaproc::b 
         c = bool^1
           {
-            0 = portaproc::c[0] 
-            1 = portaproc::c[1] 
-            2 = portaproc::c[2] 
-            3 = portaproc::c[3] 
+            [0] = portaproc::c[0] 
+            [1] = portaproc::c[1] 
+            [2] = portaproc::c[2] 
+            [3] = portaproc::c[3] 
           }
         i = int<32>^0 = portaproc::i 
         j = int<32>^1
           {
-            0 = portaproc::j[0] 
-            1 = portaproc::j[1] 
+            [0] = portaproc::j[0] 
+            [1] = portaproc::j[1] 
           }
       }
       }
@@ -136,61 +136,61 @@ footprint: {
     b = bool^0 = p.b 
     c = bool^1
       {
-        0 = p.c[0] 
-        1 = p.c[1] 
-        2 = p.c[2] 
-        3 = p.c[3] 
+        [0] = p.c[0] 
+        [1] = p.c[1] 
+        [2] = p.c[2] 
+        [3] = p.c[3] 
       }
     i = int<32>^0 = p.i 
     j = int<32>^1
       {
-        0 = p.j[0] 
-        1 = p.j[1] 
+        [0] = p.j[0] 
+        [1] = p.j[1] 
       }
   )
   q = int<32>^0 = p.i 
   r = int<32>^1
     {
-      0 = p.j[0] 
-      1 = p.j[1] 
+      [0] = p.j[0] 
+      [1] = p.j[1] 
     }
   s = process portaproc<>^0 = s (
     b = bool^0 = s.b 
     c = bool^1
       {
-        0 = s.c[0] 
-        1 = s.c[1] 
-        2 = s.c[2] 
-        3 = s.c[3] 
+        [0] = s.c[0] 
+        [1] = s.c[1] 
+        [2] = s.c[2] 
+        [3] = s.c[3] 
       }
     i = int<32>^0 = s.i 
     j = int<32>^1
       {
-        0 = s.j[0] 
-        1 = s.j[1] 
+        [0] = s.j[0] 
+        [1] = s.j[1] 
       }
   )
   t = process portaproc<>^0 = t (
     b = bool^0 = t.b 
     c = bool^1
       {
-        0 = t.c[0] 
-        1 = t.c[1] 
-        2 = t.c[2] 
-        3 = t.c[3] 
+        [0] = t.c[0] 
+        [1] = t.c[1] 
+        [2] = t.c[2] 
+        [3] = t.c[3] 
       }
     i = int<32>^0 = t.i 
     j = int<32>^1
       {
-        0 = t.j[0] 
-        1 = t.j[1] 
+        [0] = t.j[0] 
+        [1] = t.j[1] 
       }
   )
   x = bool^1
     {
-      0 = p.c[0] 
-      1 = p.c[1] 
-      2 = p.c[2] 
-      3 = p.c[3] 
+      [0] = p.c[0] 
+      [1] = p.c[1] 
+      [2] = p.c[2] 
+      [3] = p.c[3] 
     }
 }

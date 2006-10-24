@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.15 2006/10/18 20:57:56 fang Exp $
+	$Id: param_expr_list.h,v 1.16 2006/10/24 07:27:04 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -15,7 +15,6 @@
 #include "util/boolean_types.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_ptr.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {

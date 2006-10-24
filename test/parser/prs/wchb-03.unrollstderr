@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	28	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	222
 	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
@@ -174,38 +174,38 @@ Persistent Object Manager text dump:
 	170	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	171	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	172	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	173	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	174	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	175	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	176	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	177	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	178	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	179	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	180	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	181	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
-	182	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	183	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	184	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	185	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	186	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	187	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	188	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	189	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	190	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	191	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	173	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	174	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	175	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	177	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	178	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	179	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	180	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	181	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	182	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	183	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	184	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	185	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	186	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	187	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	188	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	189	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	191	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	192	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	193	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	194	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	195	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	195	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
 	196	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	197	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	198	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	199	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	200	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
-	201	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	202	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	203	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	204	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	197	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	198	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	199	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
+	200	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	201	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	202	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	203	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	204	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	205	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	206	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	207	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -218,22 +218,22 @@ Persistent Object Manager text dump:
 	214	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	215	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	216	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	217	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	217	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	218	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	219	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	219	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	220	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	221	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	222	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	223	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	221	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	222	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	223	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	224	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	225	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
-	226	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	227	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	228	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	229	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	230	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	231	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	232	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	225	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	226	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	227	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
+	228	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	229	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	230	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	231	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
+	232	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -281,8 +281,8 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = e1of2::d[0] 
-            1 = e1of2::d[1] 
+            [0] = e1of2::d[0] 
+            [1] = e1of2::d[1] 
           }
         e = bool^0 = e1of2::e 
       }
@@ -369,23 +369,23 @@ In namespace "", we have: {
         L = process e1of2<>^0 = wchb_e1of2::L (
           d = bool^1
             {
-              0 = wchb_e1of2::l0.a 
-              1 = wchb_e1of2::l1.a 
+              [0] = wchb_e1of2::l0.a 
+              [1] = wchb_e1of2::l1.a 
             }
           e = bool^0 = wchb_e1of2::re.b 
         )
         R = process e1of2<>^0 = wchb_e1of2::R (
           d = bool^1
             {
-              0 = wchb_e1of2::r0.b 
-              1 = wchb_e1of2::r1.b 
+              [0] = wchb_e1of2::r0.b 
+              [1] = wchb_e1of2::r1.b 
             }
           e = bool^0 = wchb_e1of2::l0.b 
         )
         _r = bool^1
           {
-            0 = wchb_e1of2::l0._o 
-            1 = wchb_e1of2::l1._o 
+            [0] = wchb_e1of2::l0._o 
+            [1] = wchb_e1of2::l1._o 
           }
         l0 = process celem2inv<>^0 = wchb_e1of2::l0 (
           a = bool^0 = wchb_e1of2::l0.a 
@@ -428,16 +428,16 @@ footprint: {
   L = process e1of2<>^0 = b.L (
     d = bool^1
       {
-        0 = L.d[0] 
-        1 = L.d[1] 
+        [0] = L.d[0] 
+        [1] = L.d[1] 
       }
     e = bool^0 = L.e 
   )
   R = process e1of2<>^0 = b.R (
     d = bool^1
       {
-        0 = R.d[0] 
-        1 = R.d[1] 
+        [0] = R.d[0] 
+        [1] = R.d[1] 
       }
     e = bool^0 = R.e 
   )
@@ -445,16 +445,16 @@ footprint: {
     L = process e1of2<>^0 = b.L (
       d = bool^1
         {
-          0 = L.d[0] 
-          1 = L.d[1] 
+          [0] = L.d[0] 
+          [1] = L.d[1] 
         }
       e = bool^0 = L.e 
     )
     R = process e1of2<>^0 = b.R (
       d = bool^1
         {
-          0 = R.d[0] 
-          1 = R.d[1] 
+          [0] = R.d[0] 
+          [1] = R.d[1] 
         }
       e = bool^0 = R.e 
     )

@@ -49,7 +49,7 @@ Persistent Object Manager text dump:
 	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	48	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	49	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	50	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	51	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -68,12 +68,12 @@ Persistent Object Manager text dump:
 	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	67	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
@@ -107,8 +107,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           in = bool^1
             {
-              0 = celem::in[0] 
-              1 = celem::in[1] 
+              [0] = celem::in[0] 
+              [1] = celem::in[1] 
             }
           out = bool^0 = celem::out 
         }
@@ -125,16 +125,16 @@ footprint: {
   a = process celem<2>^0 = a (
     in = bool^1
       {
-        0 = a.in[0] 
-        1 = a.in[1] 
+        [0] = a.in[0] 
+        [1] = a.in[1] 
       }
     out = bool^0 = b.out 
   )
   b = process celem<2>^0 = b (
     in = bool^1
       {
-        0 = b.in[0] 
-        1 = b.in[1] 
+        [0] = b.in[0] 
+        [1] = b.in[1] 
       }
     out = bool^0 = b.out 
   )

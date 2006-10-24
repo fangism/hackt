@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.49 2006/10/07 20:58:29 fang Exp $
+#	$Id: Makefile.am,v 1.50 2006/10/24 07:27:47 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -61,7 +61,8 @@ noinst_PROGRAMS = \
 	multikey_set_derived_test \
 	packed_array_test \
 	ring_node_test \
-	union_find_test
+	union_find_test \
+	sparse_collection_test
 
 
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
@@ -133,6 +134,8 @@ static_count_ptr_test_SOURCES = static_count_ptr_test.cc named_pooled_thing.cc
 static_count_ptr_test_LDADD = libfangutil.la
 ring_node_test_SOURCES = ring_node_test.cc
 union_find_test_SOURCES = union_find_test.cc
+sparse_collection_test_SOURCES = sparse_collection_test.cc
+sparse_collection_test_LDADD = libfangutil.la
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
 	ref_count_pool.cc

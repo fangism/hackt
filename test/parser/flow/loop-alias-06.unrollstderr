@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	39	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -56,7 +56,7 @@ Persistent Object Manager text dump:
 	52	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	55	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -89,21 +89,21 @@ In namespace "", we have: {
       footprint: {
         p = process pbit<>^1
           {
-            0 = lut::p[0] (
+            [0] = lut::p[0] (
               t = bool^0 = lut::pbint[0].pb.t 
             )
-            1 = lut::p[1] (
+            [1] = lut::p[1] (
               t = bool^0 = lut::pbint[1].pb.t 
             )
           }
         pbint = process pbitint<>^1
           {
-            0 = lut::pbint[0] (
+            [0] = lut::pbint[0] (
               pb = process pbit<>^0 = lut::pbint[0].pb (
                 t = bool^0 = lut::pbint[0].pb.t 
               )
             )
-            1 = lut::pbint[1] (
+            [1] = lut::pbint[1] (
               pb = process pbit<>^0 = lut::pbint[1].pb (
                 t = bool^0 = lut::pbint[1].pb.t 
               )
@@ -148,12 +148,12 @@ footprint: {
   l = process lut<>^0 = l (
     pbint = process pbitint<>^1
       {
-        0 = l.pbint[0] (
+        [0] = l.pbint[0] (
           pb = process pbit<>^0 = l.pbint[0].pb (
             t = bool^0 = l.pbint[0].pb.t 
           )
         )
-        1 = l.pbint[1] (
+        [1] = l.pbint[1] (
           pb = process pbit<>^0 = l.pbint[1].pb (
             t = bool^0 = l.pbint[1].pb.t 
           )

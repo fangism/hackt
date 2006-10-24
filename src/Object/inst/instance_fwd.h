@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_fwd.h"
 	Forward declarations for all instance and alias classes.  
-	$Id: instance_fwd.h,v 1.2 2006/04/12 08:53:14 fang Exp $
+	$Id: instance_fwd.h,v 1.3 2006/10/24 07:27:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_FWD_H__
@@ -27,7 +27,6 @@ typedef state_instance<channel_tag>	channel_instance;
 typedef state_instance<process_tag>	process_instance;
 
 template <class>		class instance_alias_info;
-template <class, size_t>	class instance_alias;
 
 }	// end namespace entity
 }	// end namespace HAC

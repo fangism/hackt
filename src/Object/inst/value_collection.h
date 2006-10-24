@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.19 2006/10/18 20:58:06 fang Exp $
+	$Id: value_collection.h,v 1.20 2006/10/24 07:27:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -19,11 +19,6 @@
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"
-#include "util/persistent_fwd.h"
-#include "util/new_functor_fwd.h"
-#include "util/multikey_fwd.h"
-#include "util/multikey_qmap_fwd.h"
-#include "util/memory/chunk_map_pool_fwd.h"
 
 /**
 	Define to 1 to enable pool-allocations of value-arrays and scalars.  
@@ -48,19 +43,26 @@ class const_index_list;
 class scopespace;
 class unroll_context;
 class param_value_placeholder;
-template <class> class param_instantiation_statement;
+// template <class> class param_instantiation_statement;
 using std::list;
 using std::istream;
 using std::ostream;
 using std::string;
 using util::memory::count_ptr;	// for experimental pointer classes
-using util::qmap;
-using util::default_multikey_map;
 using util::bad_bool;
 using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
 
+
+//=============================================================================
+// foward declaration of general template
+template <class, size_t>
+class value_array;
+
+// forward declaration of partial specialization
+template <class Tag>
+class value_array<Tag,0>;
 
 //=============================================================================
 #define	VALUE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -224,199 +226,9 @@ protected:
 	// write_object and load_object.
 };	// end class value_collection
 
-//-----------------------------------------------------------------------------
-#define VALUE_ARRAY_TEMPLATE_SIGNATURE					\
-template <class Tag, size_t D>
-
-#define	VALUE_ARRAY_CLASS						\
-value_array<Tag,D>
-
-/**
-	Dimension-specific array of parameters.
- */
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-class value_array : public value_collection<Tag> {
-private:
-	typedef VALUE_ARRAY_CLASS			this_type;
-	typedef	value_collection<Tag>			parent_type;
-friend class value_collection<Tag>;
-public:
-	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::value_type	value_type;
-	typedef	typename traits_type::instance_type	element_type;
-
-	// later change this to multikey_set or not?
-	/// Type for actual values, including validity and status.
-private:
-	typedef	default_multikey_map<D, pint_value_type, element_type>
-							__helper_map_type;
-	typedef	typename __helper_map_type::template rebind_default_map_type<
-				util::default_qmap>::type
-							qmap_type;
-public:
-	typedef	util::multikey_map<D, pint_value_type, element_type, qmap_type>
-							collection_type;
-	typedef	typename collection_type::key_type	key_type;
-	typedef	typename traits_type::const_collection_type
-							const_collection_type;
-	typedef	typename traits_type::value_reference_collection_type
-					value_reference_collection_type;
-	typedef	typename parent_type::value_placeholder_type
-							value_placeholder_type;
-	typedef typename parent_type::value_placeholder_ptr_type
-						value_placeholder_ptr_type;
-private:
-	/// the collection of boolean instances
-	collection_type					collection;
-	// value cache is not persistent
-	const_collection_type				cached_values;
-	// tracking validity and density of the value cache?
-
-	value_array();
-
-public:
-	explicit
-	value_array(const value_placeholder_ptr_type);
-
-	~value_array();
-
-	ostream&
-	what(ostream&) const;
-
-	bool
-	is_partially_unrolled(void) const;
-
-	ostream&
-	dump_unrolled_values(ostream& o) const;
-
-	// update this to accept const_range_list instead
-	good_bool
-	instantiate_indices(const const_range_list&);
-
-	const_index_list
-	resolve_indices(const const_index_list& l) const;
-
-	LOOKUP_VALUE_INDEXED_PROTO;
-
-	UNROLL_LVALUE_REFERENCES_PROTO;
-
-	/// helper functor for dumping values
-	struct key_value_dumper {
-		ostream& os;
-		key_value_dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const typename collection_type::value_type&);
-	};      // end struct key_value_dumper
-
-public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
-};	// end class value_array
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#define	VALUE_SCALAR_TEMPLATE_SIGNATURE					\
-template <class Tag>
-
-#define	VALUE_SCALAR_CLASS						\
-value_array<Tag,0>
-
-/**
-	Specialization of scalar parameter.
- */
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-class VALUE_SCALAR_CLASS : public value_collection<Tag> {
-private:
-	typedef	value_collection<Tag>			parent_type;
-	typedef	VALUE_SCALAR_CLASS			this_type;
-public:
-	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::instance_type	instance_type;
-	typedef	instance_type				element_type;
-	typedef	typename traits_type::value_type	value_type;
-	typedef	typename traits_type::expr_base_type	expr_type;
-	typedef	typename traits_type::const_expr_type	const_expr_type;
-	typedef	typename traits_type::value_reference_collection_type
-					value_reference_collection_type;
-	typedef	typename parent_type::value_placeholder_type
-							value_placeholder_type;
-	typedef typename parent_type::value_placeholder_ptr_type
-						value_placeholder_ptr_type;
-private:
-	instance_type					the_instance;
-	const_expr_type					cached_value;
-	bool						cache_validity;
-public:
-	value_array();
-
-	explicit
-	value_array(const value_placeholder_ptr_type);
-public:
-	~value_array();
-
-	instance_type&
-	get_instance(void) { return this->the_instance; }
-
-	const instance_type&
-	get_instance(void) const { return this->the_instance; }
-
-	ostream&
-	what(ostream& ) const;
-
-	bool
-	is_partially_unrolled(void) const;
-
-	ostream&
-	dump_unrolled_values(ostream& o) const;
-
-	good_bool
-	lookup_value(value_type&) const;
-
-// there are implemented to do nothing but sanity check, 
-// since it doesn't even make sense to call these.  
-	// update this to accept a const_range_list
-	good_bool
-	instantiate_indices(const const_range_list&);
-
-	LOOKUP_VALUE_INDEXED_PROTO;
-	// need methods for looking up dense sub-collections of values?
-	// what should they return?
-
-	UNROLL_LVALUE_REFERENCES_PROTO;
-
-	const_index_list
-	resolve_indices(const const_index_list& l) const;
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
-};	// end class value_array specialization
-
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#undef	LOOKUP_VALUE_INDEXED_PROTO
-#undef	UNROLL_LVALUE_REFERENCES_PROTO
 
 #endif	// __HAC_OBJECT_INST_VALUE_COLLECTION_H__
 

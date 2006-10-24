@@ -34,14 +34,14 @@ Persistent Object Manager text dump:
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	54
+	33	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	50
 	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	54
+	40	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	50
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -72,8 +72,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           x = int<3>^1
             {
-              0 = bar::x[0] (1) 
-              1 = bar::x[0] (1) 
+              [0] = bar::x[0] (1) 
+              [1] = bar::x[0] (1) 
             }
           Created state:
           int instance pool:
@@ -92,8 +92,8 @@ footprint: {
   poo = process bar<3, 2>^0 = poo (1) (
     x = int<3>^1
       {
-        0 = poo.x[0] (1) 
-        1 = poo.x[0] (1) 
+        [0] = poo.x[0] (1) 
+        [1] = poo.x[0] (1) 
       }
   )
   Created state:

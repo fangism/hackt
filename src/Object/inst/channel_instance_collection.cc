@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.12 2006/10/18 20:57:58 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.13 2006/10/24 07:27:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -36,6 +36,8 @@ namespace util {
 
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instance_collection,
 		"channel_instance_collection")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_port_formal_array,
+		"channel_port_formal_array")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_scalar, "channel_scalar")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_1D, "channel_array_1D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_2D, "channel_array_2D")
@@ -55,6 +57,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_array_3D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_array_4D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 4)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::channel_port_formal_array, 
+	CHANNEL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -72,6 +77,7 @@ template class instance_array<channel_tag, 1>;
 template class instance_array<channel_tag, 2>;
 template class instance_array<channel_tag, 3>;
 template class instance_array<channel_tag, 4>;
+template class port_formal_array<channel_tag>;
 
 //=============================================================================
 }	// end namespace entity

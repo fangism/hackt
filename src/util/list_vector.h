@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.14 2006/04/27 00:17:00 fang Exp $
+	$Id: list_vector.h,v 1.15 2006/10/24 07:27:40 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -17,7 +17,8 @@
 #include "util/list_vector_fwd.h"
 #include <list>
 #include <vector>
-#include "util/qmap.h"
+#include <map>
+// #include "util/qmap.h"
 #include "util/nested_iterator.h"
 
 #define	LIST_VECTOR_CLASS	list_vector<T,ValAlloc,VecAlloc>
@@ -127,7 +128,7 @@ private:
 		Note that since the key type is size_type, 
 		it cannot be negative, thus 0 is the absolute lowest bound.  
 	 */
-	typedef	typename default_qmap<size_type, vector_type*>::type
+	typedef	typename std::map<size_type, vector_type*>
 							vec_map_type;
 	typedef	typename vec_map_type::iterator		vec_map_iterator;
 	typedef	typename vec_map_type::const_iterator	const_vec_map_iterator;
@@ -166,7 +167,6 @@ private:
 		\return modifiable iterator to the end sentinel chunk, 
 		which is always empty.  
 	 */
-	inline
 	list_iterator
 	end_sentinel_iter(void) { return --vec_list.end(); }
 
@@ -175,7 +175,6 @@ private:
 		which is always empty.  
 		Note: should point to the head sentinel chunk.  
 	 */
-	inline
 	reverse_list_iterator
 	rend_sentinel_iter(void) { return --vec_list.rend(); }
 
@@ -183,7 +182,6 @@ private:
 		\return read-only iterator to the end sentinel chunk, 
 		which is always empty.  
 	 */
-	inline
 	const_list_iterator
 	end_sentinel_iter(void) const { return --vec_list.end(); }
 
@@ -192,45 +190,36 @@ private:
 		which is always empty.  
 		Note: should point to the head sentinel chunk.  
 	 */
-	inline
 	const_reverse_list_iterator
 	rend_sentinel_iter(void) const { return --vec_list.rend(); }
 
-	inline
 	list_iterator
 	vec_list_front(void) { return ++vec_list.begin(); }
 
-	inline
 	const_list_iterator
 	vec_list_front(void) const { return ++vec_list.begin(); }
 
-	inline
 	list_iterator
 	vec_list_back(void) { return --this->end_sentinel_iter(); }
 
-	inline
 	const_list_iterator
 	vec_list_back(void) const { return --this->end_sentinel_iter(); }
 
 	/**
 		Reverse iterator pointing to the front of the chunk list.  
 	 */
-	inline
 	reverse_list_iterator
 	vec_list_rfront(void) { return --this->rend_sentinel_iter(); }
 
-	inline
 	const_reverse_list_iterator
 	vec_list_rfront(void) const { return --this->rend_sentinel_iter(); }
 
 	/**
 		Reverse iterator pointing to the back of the chunk list.  
 	 */
-	inline
 	reverse_list_iterator
 	vec_list_rback(void) { return ++vec_list.rbegin(); }
 
-	inline
 	const_reverse_list_iterator
 	vec_list_rback(void) const { return ++vec_list.rbegin(); }
 

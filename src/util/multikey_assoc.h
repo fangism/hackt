@@ -2,7 +2,7 @@
 	\file "util/multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.5 2006/02/01 06:11:46 fang Exp $
+	$Id: multikey_assoc.h,v 1.6 2006/10/24 07:27:42 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -18,6 +18,78 @@ namespace util {
 using std::pair;
 using std::list;
 using std::default_list;
+
+template <size_t, class>
+class multikey;
+
+//=============================================================================
+/**
+	The purpose of this class is to export the is_compact
+	and is_compact_slice functionality to other multikey-associative
+	(ordered) containers.  
+	The nice thing about this is that it doesn't care what the 
+	value type of the container is, just the key.  
+ */
+template <size_t D, class K>
+struct multikey_assoc_compact_helper {
+	typedef	multikey<D,K>				key_type;
+	typedef	typename key_type::value_type		index_type;
+	typedef	typename default_list<index_type>::type	key_list_type;
+	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
+	typedef	pair<key_type, key_type>		key_pair_type;
+
+	template <class A>
+	static
+	key_list_pair_type
+	is_compact_slice(const A&, 
+		const key_list_type& l, const key_list_type& u);
+
+	template <class A>
+	static
+	key_list_pair_type
+	is_compact(const A&);
+
+	template <class A>
+	static
+	key_list_pair_type
+	index_extremities(const A&);
+
+private:
+	template <class A>
+	static
+	key_list_pair_type
+	__is_dense_subslice(const A&, const key_list_type&);
+
+};	// end class multikey_assoc_compact_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial specialization.
+ */
+template <class K>
+struct multikey_assoc_compact_helper<1,K> {
+	typedef	K					key_type;
+	typedef	key_type				index_type;
+//	typedef	typename key_type::simple_type		index_type;
+	typedef	typename default_list<index_type>::type	key_list_type;
+	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
+	typedef	pair<key_type, key_type>		key_pair_type;
+
+	template <class A>
+	static
+	key_list_pair_type
+	is_compact_slice(const A&, 
+		const key_list_type& l, const key_list_type& u);
+
+	template <class A>
+	static
+	key_list_pair_type
+	is_compact(const A&);
+
+};	// end class multikey_assoc_compact_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// template functions, using template argument deduction
 
 //=============================================================================
 /**
@@ -71,6 +143,9 @@ public:
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 
+protected:
+	typedef	multikey_assoc_compact_helper<D, index_type>
+							compact_helper_type;
 public:
 	// for array_traits<> interface
 	enum { dim = D };
@@ -230,9 +305,11 @@ public:
 	key_list_pair_type
 	index_extremities(void) const;
 
+#if 0
 private:
 	key_list_pair_type
 	__is_dense_subslice(const key_list_type&) const;
+#endif
 
 };	// end class multikey_assoc
 
@@ -273,6 +350,9 @@ public:
 
 	// for array_traits<>
 	enum { dim = 1 };
+private:
+	typedef	multikey_assoc_compact_helper<1,index_type>
+						compact_helper_type;
 public:
 	multikey_assoc();
 

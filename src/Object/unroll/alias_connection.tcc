@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.14 2006/08/08 05:46:43 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.15 2006/10/24 07:27:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -246,7 +246,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 		// first packed alias collection
 		const iter_iter_type ref_iter_head(ref_iter_array.begin());
 		const iter_iter_type ref_iter_end(ref_iter_array.end());
-		const never_ptr<instance_alias_base_type> head(**ref_iter_head);
+		const never_ptr<instance_alias_info_type> head(**ref_iter_head);
 		NEVER_NULL(head);
 		// ref_iter_iter will walk along the array of references
 		// starting with the second packed collection
@@ -261,12 +261,12 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			// HOWEVER, we need to check actuals for against 
 			// all connectees, not just the first.
 			// make the connection!
-			const never_ptr<instance_alias_base_type>
+			const never_ptr<instance_alias_info_type>
 				connectee(**ref_iter_iter);
 			NEVER_NULL(connectee);
 			// all type-checking is done in this call:
 			// punt relaxed type checking until create
-			if (!instance_alias_base_type::checked_connect_alias(
+			if (!instance_alias_info_type::checked_connect_alias(
 					*head, *connectee).good) {
 				// already have error message
 				return good_bool(false);

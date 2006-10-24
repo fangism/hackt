@@ -52,11 +52,11 @@ footprint: {
   bag = process barf<>^0 = sack[0] (1) 
   sack = process barf<>^1
     {
-      0 = sack[0] (1) 
-      1 = sack[1] (2) 
-      2 = sack[2] (3) 
-      3 = sack[3] (4) 
-      4 = sack[0] (1) 
+      [0] = sack[0] (1) 
+      [1] = sack[1] (2) 
+      [2] = sack[2] (3) 
+      [3] = sack[3] (4) 
+      [4] = sack[0] (1) 
     }
   Created state:
   process instance pool:

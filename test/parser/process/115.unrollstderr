@@ -92,13 +92,13 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              0 = foo::b[0] 
-              1 = foo::b[1] 
+              [0] = foo::b[0] 
+              [1] = foo::b[1] 
             }
           b = bool^1
             {
-              0 = foo::b[0] 
-              1 = foo::b[1] 
+              [0] = foo::b[0] 
+              [1] = foo::b[1] 
             }
         }
       }

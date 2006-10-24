@@ -167,8 +167,8 @@ In namespace "", we have: {
           y = int<1>^0 = send_indexed::y (1) 
           z = int<32>^1
             {
-              0 = send_indexed::z[0] (2) 
-              1 = send_indexed::z[1] (3) 
+              [0] = send_indexed::z[0] (2) 
+              [1] = send_indexed::z[1] (3) 
             }
           Created state:
           channel instance pool:
@@ -198,8 +198,8 @@ In namespace "", we have: {
           y = int<1>^0 = send_indexed::y (1) 
           z = int<32>^1
             {
-              0 = send_indexed::z[0] (2) 
-              1 = send_indexed::z[1] (3) 
+              [0] = send_indexed::z[0] (2) 
+              [1] = send_indexed::z[1] (3) 
             }
           Created state:
           channel instance pool:

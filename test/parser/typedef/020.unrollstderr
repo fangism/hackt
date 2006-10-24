@@ -29,12 +29,12 @@ Persistent Object Manager text dump:
 	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	28	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	33	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -59,12 +59,12 @@ Persistent Object Manager text dump:
 	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	76
+	58	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	64
 	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	63	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	63	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -99,9 +99,9 @@ In namespace "", we have: {
           y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = baz::z[0] 
-              1 = baz::z[1] 
-              2 = baz::z[2] 
+              [0] = baz::z[0] 
+              [1] = baz::z[1] 
+              [2] = baz::z[2] 
             }
         }
         <4> {
@@ -110,10 +110,10 @@ In namespace "", we have: {
           y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = baz::z[0] 
-              1 = baz::z[1] 
-              2 = baz::z[2] 
-              3 = baz::z[3] 
+              [0] = baz::z[0] 
+              [1] = baz::z[1] 
+              [2] = baz::z[2] 
+              [3] = baz::z[3] 
             }
         }
       }
@@ -135,10 +135,10 @@ footprint: {
     y = bool^0 = P.y 
     z = bool^1
       {
-        0 = P.z[0] 
-        1 = P.z[1] 
-        2 = P.z[2] 
-        3 = Q.z[2] 
+        [0] = P.z[0] 
+        [1] = P.z[1] 
+        [2] = P.z[2] 
+        [3] = Q.z[2] 
       }
   )
   Q = process baz<3>^0 = Q (
@@ -146,9 +146,9 @@ footprint: {
     y = bool^0 = Q.y 
     z = bool^1
       {
-        0 = Q.z[0] 
-        1 = Q.z[1] 
-        2 = Q.z[2] 
+        [0] = Q.z[0] 
+        [1] = Q.z[1] 
+        [2] = Q.z[2] 
       }
   )
 }

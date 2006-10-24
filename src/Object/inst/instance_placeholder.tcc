@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.3 2006/10/18 19:08:02 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4 2006/10/24 07:27:15 fang Exp $
 	TODO: trim includes
  */
 
@@ -211,10 +211,10 @@ INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	const count_ptr<instance_collection_generic_type>
-		ret(instance_collection_generic_type::make_array(
-			never_ptr<const this_type>(this)));
 	INVARIANT(this->initial_instantiation_statement_ptr);
+	const count_ptr<instance_collection_generic_type>
+		ret(instance_collection_generic_type::make_port_array(
+			never_ptr<const this_type>(this)));
 	if (this->initial_instantiation_statement_ptr->
 			instantiate_port(c, *ret).good) {
 		return ret;
@@ -283,11 +283,19 @@ INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\returns a new collection.  
+ */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 INSTANCE_PLACEHOLDER_CLASS::make_collection(void) const {
-	return instance_collection_generic_type::make_array(
-		never_ptr<const this_type>(this));
+	if (this->is_port_formal()) {
+		return instance_collection_generic_type::make_port_array(
+			never_ptr<const this_type>(this));
+	} else {
+		return instance_collection_generic_type::make_array(
+			never_ptr<const this_type>(this));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

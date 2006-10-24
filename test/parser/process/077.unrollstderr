@@ -38,8 +38,8 @@ Persistent Object Manager text dump:
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
 	36	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	37	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
+	38	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	40	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -58,8 +58,8 @@ Persistent Object Manager text dump:
 	54	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
 	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
-	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	57	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	58	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -96,13 +96,13 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              0 = foo::b[0] 
-              1 = foo::b[1] 
+              [0] = foo::b[0] 
+              [1] = foo::b[1] 
             }
           b = bool^1
             {
-              0 = foo::b[0] 
-              1 = foo::b[1] 
+              [0] = foo::b[0] 
+              [1] = foo::b[1] 
             }
         }
       }
@@ -121,13 +121,13 @@ footprint: {
   poo = process foo<{2,2}>^0 = poo (
     a = bool^1
       {
-        0 = poo.a[0] 
-        1 = poo.a[1] 
+        [0] = poo.a[0] 
+        [1] = poo.a[1] 
       }
     b = bool^1
       {
-        0 = poo.b[0] 
-        1 = poo.b[1] 
+        [0] = poo.b[0] 
+        [1] = poo.b[1] 
       }
   )
 }

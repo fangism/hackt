@@ -19,7 +19,7 @@ Persistent Object Manager text dump:
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	18	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	428
 	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -75,9 +75,9 @@ Persistent Object Manager text dump:
 	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	72	##ADDR##	proccoll	1	#HEAD#	#TAIL#	99
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
-	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
-	76	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	71
+	74	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	55
+	75	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
+	76	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	63
 	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -113,28 +113,28 @@ In namespace "", we have: {
           N = pint^0 value: 3
           x = process foo<3>^1
             {
-              0 = bar::x[0] (1) (
+              [0] = bar::x[0] (1) (
                 a = bool^1
                   {
-                    0 = bar::x[0].a[0] (1) 
-                    1 = bar::x[0].a[1] (2) 
-                    2 = bar::x[0].a[0] (1) 
+                    [0] = bar::x[0].a[0] (1) 
+                    [1] = bar::x[0].a[1] (2) 
+                    [2] = bar::x[0].a[0] (1) 
                   }
               )
-              1 = bar::x[1] (2) (
+              [1] = bar::x[1] (2) (
                 a = bool^1
                   {
-                    0 = bar::x[1].a[0] (3) 
-                    1 = bar::x[1].a[1] (4) 
-                    2 = bar::x[1].a[2] (5) 
+                    [0] = bar::x[1].a[0] (3) 
+                    [1] = bar::x[1].a[1] (4) 
+                    [2] = bar::x[1].a[2] (5) 
                   }
               )
-              2 = bar::x[2] (3) (
+              [2] = bar::x[2] (3) (
                 a = bool^1
                   {
-                    0 = bar::x[0].a[0] (1) 
-                    1 = bar::x[2].a[1] (6) 
-                    2 = bar::x[0].a[0] (1) 
+                    [0] = bar::x[0].a[0] (1) 
+                    [1] = bar::x[2].a[1] (6) 
+                    [2] = bar::x[0].a[0] (1) 
                   }
               )
             }
@@ -171,9 +171,9 @@ In namespace "", we have: {
           D = pint^0 value: 3
           a = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[1] (2) 
-              2 = foo::a[2] (3) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[1] (2) 
+              [2] = foo::a[2] (3) 
             }
           Created state:
           bool instance pool:

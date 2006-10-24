@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	25	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	28	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	65
 	29	##ADDR##	procdefn	0	#HEAD#	#TAIL#	212
 	30	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	31	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -54,10 +54,10 @@ Persistent Object Manager text dump:
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	52	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	53	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
-	56	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	55	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	65
+	56	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	65
 	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	58	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	apimvref	0	#HEAD#	#TAIL#	37
@@ -74,12 +74,12 @@ Persistent Object Manager text dump:
 	70	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	92
 	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	73	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	76	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	24
-	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
-	78	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	77	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	65
+	78	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	65
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -111,24 +111,24 @@ In namespace "", we have: {
           N = pint^0 value: 2
           x = process foo<5, 1>^1
             {
-              0 = bar::x[0] (
+              [0] = bar::x[0] (
                 a = bool^1
                   {
-                    0 = bar::x[0].a[0] 
-                    1 = bar::x[0].a[1] 
-                    2 = bar::x[0].a[2] 
-                    3 = bar::x[0].a[3] 
-                    4 = bar::x[0].a[4] 
+                    [0] = bar::x[0].a[0] 
+                    [1] = bar::x[0].a[1] 
+                    [2] = bar::x[0].a[2] 
+                    [3] = bar::x[0].a[3] 
+                    [4] = bar::x[0].a[4] 
                   }
               )
-              1 = bar::x[1] (
+              [1] = bar::x[1] (
                 a = bool^1
                   {
-                    0 = bar::x[1].a[0] 
-                    1 = bar::x[1].a[1] 
-                    2 = bar::x[1].a[2] 
-                    3 = bar::x[1].a[3] 
-                    4 = bar::x[1].a[4] 
+                    [0] = bar::x[1].a[0] 
+                    [1] = bar::x[1].a[1] 
+                    [2] = bar::x[1].a[2] 
+                    [3] = bar::x[1].a[3] 
+                    [4] = bar::x[1].a[4] 
                   }
               )
             }
@@ -156,11 +156,11 @@ In namespace "", we have: {
           E = pint^0 value: 1
           a = bool^1
             {
-              0 = foo::a[0] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
-              3 = foo::a[3] 
-              4 = foo::a[4] 
+              [0] = foo::a[0] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
+              [3] = foo::a[3] 
+              [4] = foo::a[4] 
             }
         }
       }
@@ -183,24 +183,24 @@ footprint: {
   poo = process bar<3, 2>^0 = poo (
     x = process foo<5, 1>^1
       {
-        0 = poo.x[0] (
+        [0] = poo.x[0] (
           a = bool^1
             {
-              0 = poo.x[0].a[0] 
-              1 = poo.x[0].a[1] 
-              2 = poo.x[0].a[2] 
-              3 = poo.x[0].a[3] 
-              4 = poo.x[0].a[4] 
+              [0] = poo.x[0].a[0] 
+              [1] = poo.x[0].a[1] 
+              [2] = poo.x[0].a[2] 
+              [3] = poo.x[0].a[3] 
+              [4] = poo.x[0].a[4] 
             }
         )
-        1 = poo.x[1] (
+        [1] = poo.x[1] (
           a = bool^1
             {
-              0 = poo.x[1].a[0] 
-              1 = poo.x[1].a[1] 
-              2 = poo.x[1].a[2] 
-              3 = poo.x[1].a[3] 
-              4 = poo.x[1].a[4] 
+              [0] = poo.x[1].a[0] 
+              [1] = poo.x[1].a[1] 
+              [2] = poo.x[1].a[2] 
+              [3] = poo.x[1].a[3] 
+              [4] = poo.x[1].a[4] 
             }
         )
       }

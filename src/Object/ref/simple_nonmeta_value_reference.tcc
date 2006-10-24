@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.14 2006/10/18 22:31:51 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.15 2006/10/24 07:27:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -32,7 +32,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/inst/param_value_collection.h"
-#include "Object/inst/value_collection.h"
+#include "Object/inst/value_scalar.h"
 #include "Object/common/dump_flags.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/nonmeta_index_list.h"

@@ -72,22 +72,22 @@ Persistent Object Manager text dump:
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	69	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	70	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	71	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	253
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	161
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	76	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	340
+	76	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	212
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	80	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	81	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	340
+	81	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	212
 	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	83	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	84	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	85	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	86	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	456
+	86	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	280
 	87	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	88	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	89	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -106,16 +106,16 @@ Persistent Object Manager text dump:
 	102	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	103	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	104	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	105	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	169
+	105	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	105
 	106	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	108	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	220
+	108	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	132
 	109	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	110	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	111	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	220
+	111	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	132
 	112	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	114	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	288
+	114	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	168
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

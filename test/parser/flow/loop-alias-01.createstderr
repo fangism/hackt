@@ -41,8 +41,8 @@ Persistent Object Manager text dump:
 	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	43	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -78,10 +78,10 @@ In namespace "", we have: {
       footprint: {
         p = process pb<>^1
           {
-            0 = lt::p[0] (1) (
+            [0] = lt::p[0] (1) (
               t = bool^0 = lt::x (1) 
             )
-            1 = lt::p[1] (2) (
+            [1] = lt::p[1] (2) (
               t = bool^0 = lt::x (1) 
             )
           }

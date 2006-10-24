@@ -29,12 +29,12 @@ Persistent Object Manager text dump:
 	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	28	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	33	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -55,12 +55,12 @@ Persistent Object Manager text dump:
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	54	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	54	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	59	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	59	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -95,9 +95,9 @@ In namespace "", we have: {
           y = bool^0 = baz::y (2) 
           z = bool^1
             {
-              0 = baz::z[0] (3) 
-              1 = baz::z[1] (4) 
-              2 = baz::z[2] (5) 
+              [0] = baz::z[0] (3) 
+              [1] = baz::z[1] (4) 
+              [2] = baz::z[2] (5) 
             }
           Created state:
           bool instance pool:
@@ -113,10 +113,10 @@ In namespace "", we have: {
           y = bool^0 = baz::y (2) 
           z = bool^1
             {
-              0 = baz::z[0] (3) 
-              1 = baz::z[1] (4) 
-              2 = baz::z[2] (5) 
-              3 = baz::z[3] (6) 
+              [0] = baz::z[0] (3) 
+              [1] = baz::z[1] (4) 
+              [2] = baz::z[2] (5) 
+              [3] = baz::z[3] (6) 
             }
           Created state:
           bool instance pool:
@@ -146,10 +146,10 @@ footprint: {
     y = bool^0 = P.y (2) 
     z = bool^1
       {
-        0 = P.z[0] (3) 
-        1 = P.z[1] (4) 
-        2 = P.z[2] (5) 
-        3 = P.z[3] (6) 
+        [0] = P.z[0] (3) 
+        [1] = P.z[1] (4) 
+        [2] = P.z[2] (5) 
+        [3] = P.z[3] (6) 
       }
   )
   Q = process baz<3>^0 = Q (2) (
@@ -157,9 +157,9 @@ footprint: {
     y = bool^0 = P.x (1) 
     z = bool^1
       {
-        0 = Q.z[0] (8) 
-        1 = Q.z[1] (9) 
-        2 = Q.z[2] (10) 
+        [0] = Q.z[0] (8) 
+        [1] = Q.z[1] (9) 
+        [2] = Q.z[2] (10) 
       }
   )
   Created state:

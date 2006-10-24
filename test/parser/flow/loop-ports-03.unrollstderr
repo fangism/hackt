@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	29	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -50,7 +50,7 @@ Persistent Object Manager text dump:
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
+	49	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	60
 	50	##ADDR##	proccoll	1	#HEAD#	#TAIL#	49
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
@@ -84,10 +84,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ch1of::d[0] 
-              1 = ch1of::d[1] 
-              2 = ch1of::d[2] 
-              3 = ch1of::d[3] 
+              [0] = ch1of::d[0] 
+              [1] = ch1of::d[1] 
+              [2] = ch1of::d[2] 
+              [3] = ch1of::d[3] 
             }
         }
       }
@@ -122,15 +122,15 @@ In namespace "", we have: {
         ad = process ch1of<4>^0 = lut::ad (
           d = bool^1
             {
-              0 = lut::ce[0].a 
-              1 = lut::ad.d[1] 
-              2 = lut::ad.d[2] 
-              3 = lut::ad.d[3] 
+              [0] = lut::ce[0].a 
+              [1] = lut::ad.d[1] 
+              [2] = lut::ad.d[2] 
+              [3] = lut::ad.d[3] 
             }
         )
         ce = process dcelm<>^1
           {
-            0 = lut::ce[0] (
+            [0] = lut::ce[0] (
               a = bool^0 = lut::ce[0].a 
             )
           }

@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	14	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
@@ -24,7 +24,7 @@ Persistent Object Manager text dump:
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	23	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
@@ -48,10 +48,10 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            0 = bar::x[0] (1) (
+            [0] = bar::x[0] (1) (
               a = bool^0 = bar::x[0].a (1) 
             )
-            1 = bar::x[1] (2) (
+            [1] = bar::x[1] (2) (
               a = bool^0 = bar::x[1].a (2) 
             )
           }
@@ -89,10 +89,10 @@ footprint: {
   poo = process bar<>^0 = poo (1) (
     x = process foo<>^1
       {
-        0 = poo.x[0] (2) (
+        [0] = poo.x[0] (2) (
           a = bool^0 = poo.x[0].a (1) 
         )
-        1 = poo.x[1] (3) (
+        [1] = poo.x[1] (3) (
           a = bool^0 = poo.x[1].a (2) 
         )
       }

@@ -66,11 +66,11 @@ Persistent Object Manager text dump:
 	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12

@@ -22,9 +22,9 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -67,66 +67,66 @@ Persistent Object Manager text dump:
 	63	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	66	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	69	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	71	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	71	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
 	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
 	74	##ADDR##	proccoll	2	#HEAD#	#TAIL#	393
 	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	77	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	78	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
-	79	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	80	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	81	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
-	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	84	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
-	85	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	86	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	87	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
-	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	89	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	90	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
-	91	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	92	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	93	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
-	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	95	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	96	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	97	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	98	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	99	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	100	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	101	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	102	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	103	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	104	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	105	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	106	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	107	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	108	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	109	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	110	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	111	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	112	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	113	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	77	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	88
+	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	79	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	58
+	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	81	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	88
+	82	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	83	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	58
+	84	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	85	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	88
+	86	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	87	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	58
+	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	89	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	90	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	91	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	93	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	94	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	95	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	97	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	98	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	100	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	101	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	102	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	103	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	104	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	105	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	106	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	107	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	109	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	110	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	111	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	112	##ADDR##	proccoll	1	#HEAD#	#TAIL#	159
+	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	114	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	115	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	115	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	116	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	117	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	118	##ADDR##	proccoll	1	#HEAD#	#TAIL#	171
-	119	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	120	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	121	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	122	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	123	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	124	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	125	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	117	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	118	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	119	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	120	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	121	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	122	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	123	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	124	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	125	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	126	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
 
 In module created from: ##FILE## (unrolled)
@@ -158,16 +158,16 @@ In namespace "", we have: {
         b = bool^0 = portaproc::b 
         c = bool^1
           {
-            0 = portaproc::c[0] 
-            1 = portaproc::c[1] 
-            2 = portaproc::c[2] 
-            3 = portaproc::c[3] 
+            [0] = portaproc::c[0] 
+            [1] = portaproc::c[1] 
+            [2] = portaproc::c[2] 
+            [3] = portaproc::c[3] 
           }
         i = int<32>^0 = portaproc::i 
         j = int<32>^1
           {
-            0 = portaproc::j[0] 
-            1 = portaproc::j[1] 
+            [0] = portaproc::j[0] 
+            [1] = portaproc::j[1] 
           }
       }
       }
@@ -188,23 +188,23 @@ footprint: {
     b = bool^0 = p.b 
     c = bool^1
       {
-        0 = p.c[0] 
-        1 = p.c[1] 
-        2 = p.c[2] 
-        3 = p.c[3] 
+        [0] = p.c[0] 
+        [1] = p.c[1] 
+        [2] = p.c[2] 
+        [3] = p.c[3] 
       }
     i = int<32>^0 = p.i 
     j = int<32>^1
       {
-        0 = p.j[0] 
-        1 = p.j[1] 
+        [0] = p.j[0] 
+        [1] = p.j[1] 
       }
   )
   q = int<32>^0 = p.i 
   r = int<32>^1
     {
-      0 = p.j[0] 
-      1 = p.j[1] 
+      [0] = p.j[0] 
+      [1] = p.j[1] 
     }
   s = process portaproc<>^2
     {
@@ -212,203 +212,203 @@ footprint: {
         b = bool^0 = t[2].b 
         c = bool^1
           {
-            0 = t[2].c[0] 
-            1 = t[2].c[1] 
-            2 = t[2].c[2] 
-            3 = t[2].c[3] 
+            [0] = t[2].c[0] 
+            [1] = t[2].c[1] 
+            [2] = t[2].c[2] 
+            [3] = t[2].c[3] 
           }
         i = int<32>^0 = t[2].i 
         j = int<32>^1
           {
-            0 = t[2].j[0] 
-            1 = t[2].j[1] 
+            [0] = t[2].j[0] 
+            [1] = t[2].j[1] 
           }
       )
       [1][2] = s[1][2] (
         b = bool^0 = t[3].b 
         c = bool^1
           {
-            0 = t[3].c[0] 
-            1 = t[3].c[1] 
-            2 = t[3].c[2] 
-            3 = t[3].c[3] 
+            [0] = t[3].c[0] 
+            [1] = t[3].c[1] 
+            [2] = t[3].c[2] 
+            [3] = t[3].c[3] 
           }
         i = int<32>^0 = t[3].i 
         j = int<32>^1
           {
-            0 = t[3].j[0] 
-            1 = t[3].j[1] 
+            [0] = t[3].j[0] 
+            [1] = t[3].j[1] 
           }
       )
       [1][3] = s[1][3] (
         b = bool^0 = t[4].b 
         c = bool^1
           {
-            0 = t[4].c[0] 
-            1 = t[4].c[1] 
-            2 = t[4].c[2] 
-            3 = t[4].c[3] 
+            [0] = t[4].c[0] 
+            [1] = t[4].c[1] 
+            [2] = t[4].c[2] 
+            [3] = t[4].c[3] 
           }
         i = int<32>^0 = t[4].i 
         j = int<32>^1
           {
-            0 = t[4].j[0] 
-            1 = t[4].j[1] 
+            [0] = t[4].j[0] 
+            [1] = t[4].j[1] 
           }
       )
       [2][1] = s[2][1] (
         b = bool^0 = s[2][1].b 
         c = bool^1
           {
-            0 = s[2][1].c[0] 
-            1 = s[2][1].c[1] 
-            2 = s[2][1].c[2] 
-            3 = s[2][1].c[3] 
+            [0] = s[2][1].c[0] 
+            [1] = s[2][1].c[1] 
+            [2] = s[2][1].c[2] 
+            [3] = s[2][1].c[3] 
           }
         i = int<32>^0 = s[2][1].i 
         j = int<32>^1
           {
-            0 = s[2][1].j[0] 
-            1 = s[2][1].j[1] 
+            [0] = s[2][1].j[0] 
+            [1] = s[2][1].j[1] 
           }
       )
       [2][2] = s[2][2] (
         b = bool^0 = s[2][2].b 
         c = bool^1
           {
-            0 = s[2][2].c[0] 
-            1 = s[2][2].c[1] 
-            2 = s[2][2].c[2] 
-            3 = s[2][2].c[3] 
+            [0] = s[2][2].c[0] 
+            [1] = s[2][2].c[1] 
+            [2] = s[2][2].c[2] 
+            [3] = s[2][2].c[3] 
           }
         i = int<32>^0 = s[2][2].i 
         j = int<32>^1
           {
-            0 = s[2][2].j[0] 
-            1 = s[2][2].j[1] 
+            [0] = s[2][2].j[0] 
+            [1] = s[2][2].j[1] 
           }
       )
       [2][3] = s[2][3] (
         b = bool^0 = s[2][3].b 
         c = bool^1
           {
-            0 = s[2][3].c[0] 
-            1 = s[2][3].c[1] 
-            2 = s[2][3].c[2] 
-            3 = s[2][3].c[3] 
+            [0] = s[2][3].c[0] 
+            [1] = s[2][3].c[1] 
+            [2] = s[2][3].c[2] 
+            [3] = s[2][3].c[3] 
           }
         i = int<32>^0 = s[2][3].i 
         j = int<32>^1
           {
-            0 = s[2][3].j[0] 
-            1 = s[2][3].j[1] 
+            [0] = s[2][3].j[0] 
+            [1] = s[2][3].j[1] 
           }
       )
       [3][1] = s[3][1] (
         b = bool^0 = s[3][1].b 
         c = bool^1
           {
-            0 = s[3][1].c[0] 
-            1 = s[3][1].c[1] 
-            2 = s[3][1].c[2] 
-            3 = s[3][1].c[3] 
+            [0] = s[3][1].c[0] 
+            [1] = s[3][1].c[1] 
+            [2] = s[3][1].c[2] 
+            [3] = s[3][1].c[3] 
           }
         i = int<32>^0 = s[3][1].i 
         j = int<32>^1
           {
-            0 = s[3][1].j[0] 
-            1 = s[3][1].j[1] 
+            [0] = s[3][1].j[0] 
+            [1] = s[3][1].j[1] 
           }
       )
       [3][2] = s[3][2] (
         b = bool^0 = s[3][2].b 
         c = bool^1
           {
-            0 = s[3][2].c[0] 
-            1 = s[3][2].c[1] 
-            2 = s[3][2].c[2] 
-            3 = s[3][2].c[3] 
+            [0] = s[3][2].c[0] 
+            [1] = s[3][2].c[1] 
+            [2] = s[3][2].c[2] 
+            [3] = s[3][2].c[3] 
           }
         i = int<32>^0 = s[3][2].i 
         j = int<32>^1
           {
-            0 = s[3][2].j[0] 
-            1 = s[3][2].j[1] 
+            [0] = s[3][2].j[0] 
+            [1] = s[3][2].j[1] 
           }
       )
       [3][3] = s[3][3] (
         b = bool^0 = s[3][3].b 
         c = bool^1
           {
-            0 = s[3][3].c[0] 
-            1 = s[3][3].c[1] 
-            2 = s[3][3].c[2] 
-            3 = s[3][3].c[3] 
+            [0] = s[3][3].c[0] 
+            [1] = s[3][3].c[1] 
+            [2] = s[3][3].c[2] 
+            [3] = s[3][3].c[3] 
           }
         i = int<32>^0 = s[3][3].i 
         j = int<32>^1
           {
-            0 = s[3][3].j[0] 
-            1 = s[3][3].j[1] 
+            [0] = s[3][3].j[0] 
+            [1] = s[3][3].j[1] 
           }
       )
     }
   t = process portaproc<>^1
     {
-      2 = s[1][1] (
+      [2] = s[1][1] (
         b = bool^0 = t[2].b 
         c = bool^1
           {
-            0 = t[2].c[0] 
-            1 = t[2].c[1] 
-            2 = t[2].c[2] 
-            3 = t[2].c[3] 
+            [0] = t[2].c[0] 
+            [1] = t[2].c[1] 
+            [2] = t[2].c[2] 
+            [3] = t[2].c[3] 
           }
         i = int<32>^0 = t[2].i 
         j = int<32>^1
           {
-            0 = t[2].j[0] 
-            1 = t[2].j[1] 
+            [0] = t[2].j[0] 
+            [1] = t[2].j[1] 
           }
       )
-      3 = s[1][2] (
+      [3] = s[1][2] (
         b = bool^0 = t[3].b 
         c = bool^1
           {
-            0 = t[3].c[0] 
-            1 = t[3].c[1] 
-            2 = t[3].c[2] 
-            3 = t[3].c[3] 
+            [0] = t[3].c[0] 
+            [1] = t[3].c[1] 
+            [2] = t[3].c[2] 
+            [3] = t[3].c[3] 
           }
         i = int<32>^0 = t[3].i 
         j = int<32>^1
           {
-            0 = t[3].j[0] 
-            1 = t[3].j[1] 
+            [0] = t[3].j[0] 
+            [1] = t[3].j[1] 
           }
       )
-      4 = s[1][3] (
+      [4] = s[1][3] (
         b = bool^0 = t[4].b 
         c = bool^1
           {
-            0 = t[4].c[0] 
-            1 = t[4].c[1] 
-            2 = t[4].c[2] 
-            3 = t[4].c[3] 
+            [0] = t[4].c[0] 
+            [1] = t[4].c[1] 
+            [2] = t[4].c[2] 
+            [3] = t[4].c[3] 
           }
         i = int<32>^0 = t[4].i 
         j = int<32>^1
           {
-            0 = t[4].j[0] 
-            1 = t[4].j[1] 
+            [0] = t[4].j[0] 
+            [1] = t[4].j[1] 
           }
       )
     }
   x = bool^1
     {
-      0 = p.c[0] 
-      1 = p.c[1] 
-      2 = p.c[2] 
-      3 = p.c[3] 
+      [0] = p.c[0] 
+      [1] = p.c[1] 
+      [2] = p.c[2] 
+      [3] = p.c[3] 
     }
 }

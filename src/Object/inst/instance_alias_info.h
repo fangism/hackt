@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.16 2006/10/18 01:19:29 fang Exp $
+	$Id: instance_alias_info.h,v 1.17 2006/10/24 07:27:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -12,7 +12,6 @@
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "util/union_find.h"
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -80,16 +79,50 @@ public:
 					instance_collection_generic_type;
 	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
-	typedef	util::union_find_derived<this_type>
-						instance_alias_base_type;
-	// we won't have iterator interface anymore!
-	typedef	util::union_find_derived_pseudo_iterator_default<this_type>
-						iterator_policy;
-	typedef	typename iterator_policy::type	pseudo_iterator;
-	typedef	typename iterator_policy::const_type
-						pseudo_const_iterator;
+
+	template <class T>
+	class _iterator {
+	public:
+		typedef	T&		reference;
+		typedef	T*		pointer;
+		typedef	T		value_type;
+	private:
+		T*	ptr;
+	public:
+		explicit
+		_iterator(T* s) : ptr(s) { }
+
+		template <class S>
+		_iterator(const _iterator<S>& i) : ptr(i.ptr) { }
+
+		reference
+		operator * () const { return *this->ptr; }
+
+		pointer
+		operator -> () const { return this->ptr; }
+
+		this_type&
+		operator ++ () {
+			this->ptr = this->ptr->next;
+			return *this;
+		}
+
+		this_type
+		operator ++ (int) {
+			const _iterator temp(*this);
+			this->ptr = this->ptr->next;
+			return temp;
+		}
+	};	// end struct _iterator
+
+	typedef	_iterator<this_type>		pseudo_iterator;
+	typedef	_iterator<const this_type>	pseudo_const_iterator;
+	typedef	this_type			instance_alias_base_type;
+
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
+protected:
+	this_type*					next;
 public:
 	// size_t instance_index; // was moved to substructure_base class
 	/**
@@ -100,22 +133,28 @@ public:
 	 */
 	container_ptr_type				container;
 
-protected:
+	// cannot use default copy-ctor
+	// explicit		// need implicit for vector use
+	instance_alias_info(const this_type&);
+
 	// constructors only intended for children classes
-	instance_alias_info() : container(NULL) { }
+	instance_alias_info() : 
+		next(this), 
+		container(NULL) { }
 
 	/**
 		Plain constructor initializing with container back-ptr.
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
+		next(this), 
 		container(m) {
 	}
 
 	// default copy-constructor
 
 	// default destructor, non-virtual? yes, but protected.
-virtual	~instance_alias_info();
+	~instance_alias_info();
 
 	// default assignment
 
@@ -139,11 +178,24 @@ public:
 	void
 	check(const container_type* p) const;
 
-virtual	pseudo_const_iterator
+	const this_type*
+	peek(void) const { return this->next; }
+
+	void
+	unite(this_type&);
+
+	pseudo_const_iterator
 	find(void) const;
 
-virtual	pseudo_iterator
+	pseudo_iterator
 	find(void);
+
+	size_t
+	get_index(void) const;
+
+	ostream&
+	dump_key(ostream&) const;
+
 
 public:
 	/**
@@ -154,8 +206,8 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-virtual	void
-	finalize_canonicalize(instance_alias_base_type&);
+	void
+	finalize_canonicalize(this_type&);
 
 	size_t
 	assign_local_instance_id(footprint&);
@@ -177,6 +229,16 @@ virtual	void
 private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;
 
+public:	// assignment needs to be accessible to std::vector
+	// for push_back -- but we guarantee that it is never called at
+	// run-time, because this class is not assignable.  
+	/**
+		Make this unassignable.  Assignment is an error, 
+		because this has alias semantics.  
+	 */
+	this_type&
+	operator = (const this_type&);
+
 protected:
 	physical_instance_collection&
 	trace_collection(const substructure_alias&) const;
@@ -196,8 +258,8 @@ public:
 	instance_alias_info<Tag>&					\
 	trace_alias(const substructure_alias&) const
 
-virtual	TRACE_ALIAS_BASE_PROTO;
-virtual	TRACE_ALIAS_PROTO;
+	TRACE_ALIAS_BASE_PROTO;
+	TRACE_ALIAS_PROTO;
 
 public:
 	bool
@@ -218,7 +280,7 @@ public:
 	bool
 	is_port_alias(void) const;
 
-virtual	ostream&
+	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
 
 	ostream&
@@ -272,18 +334,18 @@ public:
 	checked_connect_alias(this_type&, this_type&);
 
 	/// counterpart to load_alias_reference (should be pure virtual)
-virtual	void
+	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
 
 // probably need not be virtual, same for all children classes.
-virtual	void
+	void
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
 
 	/// counterpart to write_next_connection
 	static
-	instance_alias_base_type&
+	this_type&
 	load_alias_reference(const persistent_object_manager& m, istream& i);
 
 public:
@@ -295,6 +357,21 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+	void
+	collect_transient_info(persistent_object_manager& m) const {
+		this->collect_transient_info_base(m);
+	}
+
+	void
+	write_object(const persistent_object_manager& m, ostream& o) const {
+		this->write_object_base(m, o);
+	}
+
+	void
+	load_object(const persistent_object_manager& m, istream& i) {
+		this->load_object_base(m, i);
+	}
 
 	class transient_info_collector {
 		persistent_object_manager&	manager;

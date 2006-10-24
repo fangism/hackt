@@ -58,8 +58,8 @@ In namespace "", we have: {
         o = bool^0 = null::o 
         z = bool^1
           {
-            0 = null::z[0] 
-            1 = null::z[1] 
+            [0] = null::z[0] 
+            [1] = null::z[1] 
           }
       }
       }

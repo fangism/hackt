@@ -54,7 +54,7 @@ Persistent Object Manager text dump:
 	50	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	chancoll	1	#HEAD#	#TAIL#	71
+	53	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	56	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
@@ -62,7 +62,7 @@ Persistent Object Manager text dump:
 	58	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
 	59	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	chancoll	1	#HEAD#	#TAIL#	71
+	61	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	64	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
@@ -79,13 +79,13 @@ Persistent Object Manager text dump:
 	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	76	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	chancoll	1	#HEAD#	#TAIL#	71
+	78	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
 	79	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	80	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	81	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	82	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	84	##ADDR##	chancoll	1	#HEAD#	#TAIL#	71
+	84	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
 	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
@@ -132,8 +132,8 @@ In namespace "", we have: {
           index = channel chan?(int<1>)^0 = send_indexed::index 
           out = channel chan!(int<32>)^1
             {
-              0 = send_indexed::out[0] 
-              1 = send_indexed::out[1] 
+              [0] = send_indexed::out[0] 
+              [1] = send_indexed::out[1] 
             }
           x = pint^1
             unrolled index-value pairs: {
@@ -147,8 +147,8 @@ In namespace "", we have: {
           index = channel chan?(int<1>)^0 = send_indexed::index 
           out = channel chan!(int<32>)^1
             {
-              0 = send_indexed::out[0] 
-              1 = send_indexed::out[1] 
+              [0] = send_indexed::out[0] 
+              [1] = send_indexed::out[1] 
             }
           x = pint^1
             unrolled index-value pairs: {
@@ -170,16 +170,16 @@ footprint: {
     index = channel chan?(int<1>)^0 = bar.index 
     out = channel chan!(int<32>)^1
       {
-        0 = bar.out[0] 
-        1 = bar.out[1] 
+        [0] = bar.out[0] 
+        [1] = bar.out[1] 
       }
   )
   foo = process send_indexed<0>^0 = foo (
     index = channel chan?(int<1>)^0 = foo.index 
     out = channel chan!(int<32>)^1
       {
-        0 = foo.out[0] 
-        1 = foo.out[1] 
+        [0] = foo.out[0] 
+        [1] = foo.out[1] 
       }
   )
 }

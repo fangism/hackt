@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	35	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
 	38	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -65,7 +65,7 @@ Persistent Object Manager text dump:
 	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	64	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	65	##ADDR##	proccoll	1	#HEAD#	#TAIL#	552
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	29
@@ -146,10 +146,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ch1of::d[0] (1) 
-              1 = ch1of::d[1] (2) 
-              2 = ch1of::d[2] (3) 
-              3 = ch1of::d[3] (4) 
+              [0] = ch1of::d[0] (1) 
+              [1] = ch1of::d[1] (2) 
+              [2] = ch1of::d[2] (3) 
+              [3] = ch1of::d[3] (4) 
             }
           Created state:
           bool instance pool:
@@ -203,90 +203,90 @@ In namespace "", we have: {
         ad = process ch1of<4>^0 = lut::ad (1) (
           d = bool^1
             {
-              0 = lut::ad.d[0] (1) 
-              1 = lut::ad.d[1] (2) 
-              2 = lut::ad.d[2] (3) 
-              3 = lut::ad.d[3] (4) 
+              [0] = lut::ad.d[0] (1) 
+              [1] = lut::ad.d[1] (2) 
+              [2] = lut::ad.d[2] (3) 
+              [3] = lut::ad.d[3] (4) 
             }
         )
         ce = process dcelm<>^1
           {
-            0 = lut::ce[0] (2) (
+            [0] = lut::ce[0] (2) (
               a = bool^0 = lut::ad.d[0] (1) 
               b = bool^0 = lut::ad.d[0] (1) 
               c = bool^0 = lut::ce[0].c (5) 
             )
-            1 = lut::ce[1] (3) (
+            [1] = lut::ce[1] (3) (
               a = bool^0 = lut::ad.d[0] (1) 
               b = bool^0 = lut::ad.d[1] (2) 
               c = bool^0 = lut::ce[1].c (6) 
             )
-            2 = lut::ce[2] (4) (
+            [2] = lut::ce[2] (4) (
               a = bool^0 = lut::ad.d[0] (1) 
               b = bool^0 = lut::ad.d[2] (3) 
               c = bool^0 = lut::ce[2].c (7) 
             )
-            3 = lut::ce[3] (5) (
+            [3] = lut::ce[3] (5) (
               a = bool^0 = lut::ad.d[0] (1) 
               b = bool^0 = lut::ad.d[3] (4) 
               c = bool^0 = lut::ce[3].c (8) 
             )
-            4 = lut::ce[4] (6) (
+            [4] = lut::ce[4] (6) (
               a = bool^0 = lut::ad.d[1] (2) 
               b = bool^0 = lut::ad.d[0] (1) 
               c = bool^0 = lut::ce[4].c (9) 
             )
-            5 = lut::ce[5] (7) (
+            [5] = lut::ce[5] (7) (
               a = bool^0 = lut::ad.d[1] (2) 
               b = bool^0 = lut::ad.d[1] (2) 
               c = bool^0 = lut::ce[5].c (10) 
             )
-            6 = lut::ce[6] (8) (
+            [6] = lut::ce[6] (8) (
               a = bool^0 = lut::ad.d[1] (2) 
               b = bool^0 = lut::ad.d[2] (3) 
               c = bool^0 = lut::ce[6].c (11) 
             )
-            7 = lut::ce[7] (9) (
+            [7] = lut::ce[7] (9) (
               a = bool^0 = lut::ad.d[1] (2) 
               b = bool^0 = lut::ad.d[3] (4) 
               c = bool^0 = lut::ce[7].c (12) 
             )
-            8 = lut::ce[8] (10) (
+            [8] = lut::ce[8] (10) (
               a = bool^0 = lut::ad.d[2] (3) 
               b = bool^0 = lut::ad.d[0] (1) 
               c = bool^0 = lut::ce[8].c (13) 
             )
-            9 = lut::ce[9] (11) (
+            [9] = lut::ce[9] (11) (
               a = bool^0 = lut::ad.d[2] (3) 
               b = bool^0 = lut::ad.d[1] (2) 
               c = bool^0 = lut::ce[9].c (14) 
             )
-            10 = lut::ce[10] (12) (
+            [10] = lut::ce[10] (12) (
               a = bool^0 = lut::ad.d[2] (3) 
               b = bool^0 = lut::ad.d[2] (3) 
               c = bool^0 = lut::ce[10].c (15) 
             )
-            11 = lut::ce[11] (13) (
+            [11] = lut::ce[11] (13) (
               a = bool^0 = lut::ad.d[2] (3) 
               b = bool^0 = lut::ad.d[3] (4) 
               c = bool^0 = lut::ce[11].c (16) 
             )
-            12 = lut::ce[12] (14) (
+            [12] = lut::ce[12] (14) (
               a = bool^0 = lut::ad.d[3] (4) 
               b = bool^0 = lut::ad.d[0] (1) 
               c = bool^0 = lut::ce[12].c (17) 
             )
-            13 = lut::ce[13] (15) (
+            [13] = lut::ce[13] (15) (
               a = bool^0 = lut::ad.d[3] (4) 
               b = bool^0 = lut::ad.d[1] (2) 
               c = bool^0 = lut::ce[13].c (18) 
             )
-            14 = lut::ce[14] (16) (
+            [14] = lut::ce[14] (16) (
               a = bool^0 = lut::ad.d[3] (4) 
               b = bool^0 = lut::ad.d[2] (3) 
               c = bool^0 = lut::ce[14].c (19) 
             )
-            15 = lut::ce[15] (17) (
+            [15] = lut::ce[15] (17) (
               a = bool^0 = lut::ad.d[3] (4) 
               b = bool^0 = lut::ad.d[3] (4) 
               c = bool^0 = lut::ce[15].c (20) 

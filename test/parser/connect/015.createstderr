@@ -53,15 +53,15 @@ In namespace "", we have: {
 footprint: {
   bar = process foo<>^1
     {
-      0 = blah[0] (1) 
-      1 = blah[1] (2) 
-      2 = blah[2] (3) 
+      [0] = blah[0] (1) 
+      [1] = blah[1] (2) 
+      [2] = blah[2] (3) 
     }
   blah = process foo<>^1
     {
-      0 = blah[0] (1) 
-      1 = blah[1] (2) 
-      2 = blah[2] (3) 
+      [0] = blah[0] (1) 
+      [1] = blah[1] (2) 
+      [2] = blah[2] (3) 
     }
   Created state:
   process instance pool:

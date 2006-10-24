@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.27 2006/10/18 22:31:50 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.28 2006/10/24 07:27:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -38,6 +38,7 @@
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/inst/value_scalar.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 
 #include "common/ICE.h"

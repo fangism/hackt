@@ -109,10 +109,10 @@ In namespace "", we have: {
           N = pbool^0 value: 1
           b = process bar<>^1
             {
-              0 = foo::b[0] (
+              [0] = foo::b[0] (
                 q = bool^0 = foo::b[0].q 
               )
-              1 = foo::b[1] (
+              [1] = foo::b[1] (
                 q = bool^0 = foo::b[1].q 
               )
             }

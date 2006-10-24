@@ -60,9 +60,9 @@ footprint: {
   N = pint^0 value: 3
   b = bool^1
     {
-      0 = b[0] (1) 
-      6 = b[6] (2) 
-      12 = b[12] (3) 
+      [0] = b[0] (1) 
+      [6] = b[6] (2) 
+      [12] = b[12] (3) 
     }
   Created state:
   bool instance pool:

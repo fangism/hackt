@@ -22,18 +22,18 @@ Persistent Object Manager text dump:
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	21	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	26	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	28	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	32	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
@@ -60,18 +60,18 @@ Persistent Object Manager text dump:
 	56	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
 	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	59	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	63	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
-	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	67	##ADDR##	proccoll	1	#HEAD#	#TAIL#	78
-	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	procpfar	0	#HEAD#	#TAIL#	74
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	69	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	70	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	70	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	73	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
@@ -95,10 +95,10 @@ In namespace "", we have: {
       footprint: {
         egg_array = process egg<>^1
           {
-            0 = basket::egg_array[0] (
+            [0] = basket::egg_array[0] (
               yolk = int<32>^0 = basket::egg_array[0].yolk 
             )
-            1 = basket::egg_array[1] (
+            [1] = basket::egg_array[1] (
               yolk = int<32>^0 = basket::egg_array[1].yolk 
             )
           }
@@ -116,24 +116,24 @@ In namespace "", we have: {
       footprint: {
         c = process basket<>^1
           {
-            0 = bundle::c[0] (
+            [0] = bundle::c[0] (
               egg_array = process egg<>^1
                 {
-                  0 = bundle::c[0].egg_array[0] (
+                  [0] = bundle::c[0].egg_array[0] (
                     yolk = int<32>^0 = bundle::c[0].egg_array[0].yolk 
                   )
-                  1 = bundle::c[0].egg_array[1] (
+                  [1] = bundle::c[0].egg_array[1] (
                     yolk = int<32>^0 = bundle::c[0].egg_array[1].yolk 
                   )
                 }
             )
-            1 = bundle::c[1] (
+            [1] = bundle::c[1] (
               egg_array = process egg<>^1
                 {
-                  0 = bundle::c[1].egg_array[0] (
+                  [0] = bundle::c[1].egg_array[0] (
                     yolk = int<32>^0 = bundle::c[1].egg_array[0].yolk 
                   )
-                  1 = bundle::c[1].egg_array[1] (
+                  [1] = bundle::c[1].egg_array[1] (
                     yolk = int<32>^0 = bundle::c[1].egg_array[1].yolk 
                   )
                 }
@@ -169,24 +169,24 @@ footprint: {
   load = process bundle<>^0 = load (
     c = process basket<>^1
       {
-        0 = load.c[0] (
+        [0] = load.c[0] (
           egg_array = process egg<>^1
             {
-              0 = load.c[0].egg_array[0] (
+              [0] = load.c[0].egg_array[0] (
                 yolk = int<32>^0 = load.c[0].egg_array[0].yolk 
               )
-              1 = golden (
+              [1] = golden (
                 yolk = int<32>^0 = load.c[0].egg_array[1].yolk 
               )
             }
         )
-        1 = load.c[1] (
+        [1] = load.c[1] (
           egg_array = process egg<>^1
             {
-              0 = load.c[1].egg_array[0] (
+              [0] = load.c[1].egg_array[0] (
                 yolk = int<32>^0 = load.c[1].egg_array[0].yolk 
               )
-              1 = load.c[1].egg_array[1] (
+              [1] = load.c[1].egg_array[1] (
                 yolk = int<32>^0 = load.c[1].egg_array[1].yolk 
               )
             }

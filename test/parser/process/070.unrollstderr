@@ -26,14 +26,14 @@ Persistent Object Manager text dump:
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	102
+	25	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	82
 	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	94
+	32	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	74
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -61,12 +61,12 @@ In namespace "", we have: {
           N = pint^0 value: 6
           a = bool^1
             {
-              0 = foo::a[4] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
-              3 = foo::a[3] 
-              4 = foo::a[4] 
-              5 = foo::a[5] 
+              [0] = foo::a[4] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
+              [3] = foo::a[3] 
+              [4] = foo::a[4] 
+              [5] = foo::a[5] 
             }
         }
       }
@@ -80,12 +80,12 @@ footprint: {
   poo = process foo<6>^0 = poo (
     a = bool^1
       {
-        0 = poo.a[0] 
-        1 = poo.a[1] 
-        2 = poo.a[2] 
-        3 = poo.a[3] 
-        4 = poo.a[4] 
-        5 = poo.a[5] 
+        [0] = poo.a[0] 
+        [1] = poo.a[1] 
+        [2] = poo.a[2] 
+        [3] = poo.a[3] 
+        [4] = poo.a[4] 
+        [5] = poo.a[5] 
       }
   )
 }

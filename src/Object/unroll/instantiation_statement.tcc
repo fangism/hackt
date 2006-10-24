@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.22 2006/10/18 21:38:54 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.23 2006/10/24 07:27:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -38,6 +38,8 @@
 #include "Object/common/dump_flags.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
+
+#include "common/ICE.h"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -199,18 +201,11 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	NEVER_NULL(this->inst_base);
 
-	// TODO: currently will not work with instances inside namespaces
-	// may require qualified names in top-level footprint search!
 	// TODO: this is a modifying lookup, using target_footprint
 	count_ptr<collection_type>
 		inst_ptr(c.lookup_collection(*this->inst_base)
 			.template is_a<collection_type>());
 	if (!inst_ptr) {
-#if 0
-		this->inst_base->dump(cerr << "ERROR: ", dump_flags::verbose)
-			<< " not found." << endl;
-		return good_bool(false);
-#else
 		// then we need to instantiate it
 		inst_ptr = count_ptr<collection_type>(
 			IS_A(collection_type*,
@@ -220,7 +215,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		// but type is still incomplete until type committed, below.  
 		c.instantiate_collection(inst_ptr);
 		// could handle first-time type checking work here...
-#endif
 	}
 	collection_type& _inst(*inst_ptr);
 	// 2005-07-07:
@@ -357,39 +351,38 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	INVARIANT(good);
 	// everything below is copied from unroll(), above
 	// TODO: factor out common code.  
+	// TODO: anything related to relaxed actuals should be policy-determined
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
-	if (rr.good) {
-		// passing in relaxed arguments from final_type_ref!
-		const count_ptr<const dynamic_param_expr_list>
-			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
-		count_ptr<const const_param_expr_list>
-			relaxed_const_actuals;
-		if (relaxed_actuals) {
-			relaxed_const_actuals =
-				relaxed_actuals->unroll_resolve_rvalues(c, 
-					relaxed_actuals);
-			if (!relaxed_const_actuals) {
-				cerr << "ERROR: unable to resolve relaxed "
-					"actual parameters in " <<
-					util::what<this_type>::name() <<
-					"::unroll()." << endl;
-				return good_bool(false);
-			}
-		}
-		// actuals are allowed to be NULL, and in some cases,
-		// will be required to be NULL, e.g. for types that never
-		// have relaxed actuals.  
-		return type_ref_parent_type::instantiate_indices_with_actuals(
-				coll, crl, c, relaxed_const_actuals);
-	} else {
+	if (!rr.good) {
 		// consider different message
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
 		return good_bool(false);
 	}
-	return good_bool(true);
-}
+	// passing in relaxed arguments from final_type_ref!
+	const count_ptr<const dynamic_param_expr_list>
+		relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
+	count_ptr<const const_param_expr_list>
+		relaxed_const_actuals;	// initially NULL
+	if (relaxed_actuals) {
+		relaxed_const_actuals =
+			relaxed_actuals->unroll_resolve_rvalues(c, 
+				relaxed_actuals);
+		if (!relaxed_const_actuals) {
+			cerr << "ERROR: unable to resolve relaxed "
+				"actual parameters in " <<
+				util::what<this_type>::name() <<
+				"::unroll()." << endl;
+			return good_bool(false);
+		}
+	}
+	// actuals are allowed to be NULL, and in some cases,
+	// will be required to be NULL, e.g. for types that never
+	// have relaxed actuals.  
+	return type_ref_parent_type::instantiate_indices_with_actuals(
+			coll, crl, c, relaxed_const_actuals);
+}	// end method instantiate_port
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE

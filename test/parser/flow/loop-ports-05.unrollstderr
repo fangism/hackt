@@ -62,7 +62,7 @@ Persistent Object Manager text dump:
 	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	61	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	61	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
@@ -96,67 +96,67 @@ Persistent Object Manager text dump:
 	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	93	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
 	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	95	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	84
-	96	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	84
+	95	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	72
+	96	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	72
 	97	##ADDR##	proccoll	1	#HEAD#	#TAIL#	616
 	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	99	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	100	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	101	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	101	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	102	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	103	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	104	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	105	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	105	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	106	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	107	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	109	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	110	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	111	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	107	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	109	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	110	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	111	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	113	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	114	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	115	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	116	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	117	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	117	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	118	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	119	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	120	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	121	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	122	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	119	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	120	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	121	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	122	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	123	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	124	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	124	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	125	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	126	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	127	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	127	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	128	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	129	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	129	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	130	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	131	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	132	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	131	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	132	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	133	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	134	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	135	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	136	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	135	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	136	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	137	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	138	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	139	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	140	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	141	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	141	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	142	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	143	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	144	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	144	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	145	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	146	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	147	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	147	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	148	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	149	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	150	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	151	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	152	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	153	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	152	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	153	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	154	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	155	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	155	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	156	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	157	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	158	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
@@ -194,10 +194,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ch1of::d[0] 
-              1 = ch1of::d[1] 
-              2 = ch1of::d[2] 
-              3 = ch1of::d[3] 
+              [0] = ch1of::d[0] 
+              [1] = ch1of::d[1] 
+              [2] = ch1of::d[2] 
+              [3] = ch1of::d[3] 
             }
         }
       }
@@ -248,118 +248,118 @@ In namespace "", we have: {
       footprint: {
         ad = process ch1of<4>^1
           {
-            0 = lut::ad[0] (
+            [0] = lut::ad[0] (
               d = bool^1
                 {
-                  0 = lut::ce[8].b 
-                  1 = lut::ce[9].b 
-                  2 = lut::ce[10].b 
-                  3 = lut::ce[11].b 
+                  [0] = lut::ce[8].b 
+                  [1] = lut::ce[9].b 
+                  [2] = lut::ce[10].b 
+                  [3] = lut::ce[11].b 
                 }
             )
-            1 = lut::ad[1] (
+            [1] = lut::ad[1] (
               d = bool^1
                 {
-                  0 = lut::ce[2].a 
-                  1 = lut::ce[6].a 
-                  2 = lut::ce[10].a 
-                  3 = lut::ce[14].a 
+                  [0] = lut::ce[2].a 
+                  [1] = lut::ce[6].a 
+                  [2] = lut::ce[10].a 
+                  [3] = lut::ce[14].a 
                 }
             )
           }
         ce = process dcelm<>^1
           {
-            0 = lut::ce[0] (
+            [0] = lut::ce[0] (
               a = bool^0 = lut::ce[1].a 
               b = bool^0 = lut::ce[4].b 
               _out = bool^0 = lut::ce[0]._out 
               out = bool^0 = lut::ce[0].out 
             )
-            1 = lut::ce[1] (
+            [1] = lut::ce[1] (
               a = bool^0 = lut::ce[2].a 
               b = bool^0 = lut::ce[5].b 
               _out = bool^0 = lut::ce[1]._out 
               out = bool^0 = lut::ce[1].out 
             )
-            2 = lut::ce[2] (
+            [2] = lut::ce[2] (
               a = bool^0 = lut::ce[3].a 
               b = bool^0 = lut::ce[6].b 
               _out = bool^0 = lut::ce[2]._out 
               out = bool^0 = lut::ce[2].out 
             )
-            3 = lut::ce[3] (
+            [3] = lut::ce[3] (
               a = bool^0 = lut::ce[3].a 
               b = bool^0 = lut::ce[7].b 
               _out = bool^0 = lut::ce[3]._out 
               out = bool^0 = lut::ce[3].out 
             )
-            4 = lut::ce[4] (
+            [4] = lut::ce[4] (
               a = bool^0 = lut::ce[5].a 
               b = bool^0 = lut::ce[8].b 
               _out = bool^0 = lut::ce[4]._out 
               out = bool^0 = lut::ce[4].out 
             )
-            5 = lut::ce[5] (
+            [5] = lut::ce[5] (
               a = bool^0 = lut::ce[6].a 
               b = bool^0 = lut::ce[9].b 
               _out = bool^0 = lut::ce[5]._out 
               out = bool^0 = lut::ce[5].out 
             )
-            6 = lut::ce[6] (
+            [6] = lut::ce[6] (
               a = bool^0 = lut::ce[7].a 
               b = bool^0 = lut::ce[10].b 
               _out = bool^0 = lut::ce[6]._out 
               out = bool^0 = lut::ce[6].out 
             )
-            7 = lut::ce[7] (
+            [7] = lut::ce[7] (
               a = bool^0 = lut::ce[7].a 
               b = bool^0 = lut::ce[11].b 
               _out = bool^0 = lut::ce[7]._out 
               out = bool^0 = lut::ce[7].out 
             )
-            8 = lut::ce[8] (
+            [8] = lut::ce[8] (
               a = bool^0 = lut::ce[9].a 
               b = bool^0 = lut::ce[12].b 
               _out = bool^0 = lut::ce[8]._out 
               out = bool^0 = lut::ce[8].out 
             )
-            9 = lut::ce[9] (
+            [9] = lut::ce[9] (
               a = bool^0 = lut::ce[10].a 
               b = bool^0 = lut::ce[13].b 
               _out = bool^0 = lut::ce[9]._out 
               out = bool^0 = lut::ce[9].out 
             )
-            10 = lut::ce[10] (
+            [10] = lut::ce[10] (
               a = bool^0 = lut::ce[11].a 
               b = bool^0 = lut::ce[14].b 
               _out = bool^0 = lut::ce[10]._out 
               out = bool^0 = lut::ce[10].out 
             )
-            11 = lut::ce[11] (
+            [11] = lut::ce[11] (
               a = bool^0 = lut::ce[11].a 
               b = bool^0 = lut::ce[15].b 
               _out = bool^0 = lut::ce[11]._out 
               out = bool^0 = lut::ce[11].out 
             )
-            12 = lut::ce[12] (
+            [12] = lut::ce[12] (
               a = bool^0 = lut::ce[13].a 
               b = bool^0 = lut::ce[12].b 
               _out = bool^0 = lut::ce[12]._out 
               out = bool^0 = lut::ce[12].out 
             )
-            13 = lut::ce[13] (
+            [13] = lut::ce[13] (
               a = bool^0 = lut::ce[14].a 
               b = bool^0 = lut::ce[13].b 
               _out = bool^0 = lut::ce[13]._out 
               out = bool^0 = lut::ce[13].out 
             )
-            14 = lut::ce[14] (
+            [14] = lut::ce[14] (
               a = bool^0 = lut::ce[15].a 
               b = bool^0 = lut::ce[14].b 
               _out = bool^0 = lut::ce[14]._out 
               out = bool^0 = lut::ce[14].out 
             )
-            15 = lut::ce[15] (
+            [15] = lut::ce[15] (
               a = bool^0 = lut::ce[15].a 
               b = bool^0 = lut::ce[15].b 
               _out = bool^0 = lut::ce[15]._out 

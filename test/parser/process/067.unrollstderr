@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	16	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
 	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
 	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -29,10 +29,10 @@ Persistent Object Manager text dump:
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	28	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	31	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -40,10 +40,10 @@ Persistent Object Manager text dump:
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	39	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	42	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -69,15 +69,15 @@ In namespace "", we have: {
         x = process foo<>^0 = bar::y (
           a = bool^1
             {
-              0 = bar::x.a[0] 
-              1 = bar::x.a[1] 
+              [0] = bar::x.a[0] 
+              [1] = bar::x.a[1] 
             }
         )
         y = process foo<>^0 = bar::y (
           a = bool^1
             {
-              0 = bar::x.a[0] 
-              1 = bar::x.a[1] 
+              [0] = bar::x.a[0] 
+              [1] = bar::x.a[1] 
             }
         )
       }
@@ -95,8 +95,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = foo::a[1] 
-            1 = foo::a[1] 
+            [0] = foo::a[1] 
+            [1] = foo::a[1] 
           }
       }
       }
@@ -110,15 +110,15 @@ footprint: {
     x = process foo<>^0 = poo.x (
       a = bool^1
         {
-          0 = poo.x.a[0] 
-          1 = poo.x.a[1] 
+          [0] = poo.x.a[0] 
+          [1] = poo.x.a[1] 
         }
     )
     y = process foo<>^0 = poo.y (
       a = bool^1
         {
-          0 = poo.y.a[0] 
-          1 = poo.y.a[1] 
+          [0] = poo.y.a[0] 
+          [1] = poo.y.a[1] 
         }
     )
   )
