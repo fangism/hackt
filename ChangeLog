@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2006-10-23	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-42:
+	  Make.global: 
+		new srcdir_EXTRA_DIST variable, which works similar to
+			EXTRA_DIST but looks only in the $(srcdir) for files.
+		new echo targets: distfiles, disthook-cleanfiles,
+			and srcdir-extra-dist (all listed in make help).
+		Added more commends on usage of special global targets.  
+	  Is now distcheck-able from a VPATH build.  
+		And there was much rejoicing.  
+
+
 2006-10-17	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-30-merged-instance-00-39:

@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2006/07/26 22:48:51 fang Exp $
+#	$Id: Makefile.am,v 1.13 2006/10/24 02:52:40 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -31,7 +31,7 @@ HACKT_PARSE_TEST_SUBJECTS = \
 # HACKT_UNROLL_TEST_SUBJECTS = $(HACKT_OBJ_TEST_SUBJECTS)
 
 # additional sources included by other test cases
-EXTRA_DIST += empty.hac \
+srcdir_EXTRA_DIST += empty.hac \
 	import-014-a.hac import-014-b.hac \
 	import-015-b.hac import-015-c.hac import-015-e.hac \
 	import-015-g.hac import-015-p.hac

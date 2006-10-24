@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2006/10/04 23:18:32 fang Exp $
+#	$Id: Makefile.am,v 1.28 2006/10/24 02:52:51 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -131,10 +131,10 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	top-level-03
 
 # includes other sources files used by test-cases (but aren't cases themselves)
-EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac
+srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac
 
 # pending test cases
-EXTRA_DIST +=
+srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

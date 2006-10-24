@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2006/07/04 07:26:49 fang Exp $
+#	$Id: Makefile.am,v 1.17 2006/10/24 02:52:42 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -55,12 +55,12 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 
 # test-cases to process
 # many of these are pending construction of higher dimension arrays
-EXTRA_DIST += \
+srcdir_EXTRA_DIST += \
 	050.hac
 
 # the following test cases should pass everything, 
 # just need to update expected outputs at earliest convenience
-EXTRA_DIST += 061.hac
+srcdir_EXTRA_DIST += 061.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -1,5 +1,16 @@
 # "test/ChangeLog"
 
+2006-10-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-42:
+	  Now uses srcdir_EXTRA_DIST variable to distribute test cases, 
+		to prevent accidentl building and dependence on generated
+		versions in the build-dir.  This now allows the test sub-tree
+		to be distributable *even under a VPATH build*.  
+	  Now recommend using EXTRA_DIST only for built targets that 
+		should be distributed.  
+
+
 2006-10-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-41:

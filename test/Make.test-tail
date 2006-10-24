@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.52 2006/10/19 17:01:59 fang Exp $
+#	$Id: Make.test-tail,v 1.53 2006/10/24 02:52:39 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -529,14 +529,13 @@ check-summaries: $(CHECK_SUMMARIES)
 
 # must be previously defined to use +=
 # assuming HACKT_OBJ_TEST_SUBJECTS is subset of HACKT_PARSE_TEST_SUBJECTS
-EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
+srcdir_EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
 	$(HACKT_PARSE_TEST_FAILURES:=.stderr) \
 	$(HACKT_PARSE_TEST_WARNINGS:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison) \
 	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrollstderr) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocstderr) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hac) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.expect-lvsprs) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.expect-prsseu) \
@@ -545,6 +544,9 @@ EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.hac) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc-expect)
+
+# this contains empty files to be removed, listed in EMPTY_CFLAT_PRS
+EXTRA_DIST += $(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs)
 
 # all alloc tests and prsimrc tests are candidates for prs-dot tests
 HACKT_PRS_DOT_TEST_SUBJECTS =
@@ -656,9 +658,11 @@ echo-prsimckpt-tests: force
 #	$($(filter-out $(HACKT_PARSE_TEST_PASSES), $(HACKT_PARSE_TEST_SUBJECTS)):=.stderr)
 
 # must be previously defined
-CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
-	$(EMPTY_CFLAT_PRS) \
-	$(HACKT_PARSE_TEST_PASSES:=.stderr)
+# CLEANFILES += $(TESTS)
+# removed in favor of using pattern removes, for the sake of shortening
+# shell commands' lengths, as some weaker shells have trouble with long cmds.
+CLEANFILES += $(CHECK_SUMMARIES) \
+	$(EMPTY_CFLAT_PRS)
 
 # just using pattern to delete generated files from now on
 # running into command-line length limits on various platforms
@@ -707,13 +711,19 @@ if NO_VPATH
 ALL_LOCAL += .cvsignore
 endif
 
+HACKT_PARSE_TEST_PASSES_STDERR = $(HACKT_PARSE_TEST_PASSES:=.stderr)
+
+CLEANFILES += $(HACKT_PARSE_TEST_PASSES_STDERR)
+
 all-local: $(ALL_LOCAL) \
-	$(HACKT_PARSE_TEST_PASSES:=.stderr) $(TESTS) \
+	$(HACKT_PARSE_TEST_PASSES_STDERR) $(TESTS) \
 	$(EMPTY_CFLAT_PRS)
+
+DISTHOOK_CLEANFILES += $(HACKT_PARSE_TEST_PASSES_STDERR) $(EMPTY_CFLAT_PRS)
 
 # consider using CLEANFILES
 AUTO_IGNORE += local.cvsignore \
-	$(HACKT_PARSE_TEST_PASSES:=.stderr) \
+	$(HACKT_PARSE_TEST_PASSES_STDERR) \
 	$(EMPTY_CFLAT_PRS) \
 	$(CHECK_SUMMARIES)
 #	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest) \
@@ -813,6 +823,7 @@ clean-cflattests:
 	-$(RM_PATTERN) "*.hacktsprstest"
 	-$(RM_PATTERN) "*.hacktcflatseutest"
 	-$(RM_PATTERN) "*.hacktprsimexprtest"
+	-$(RM_PATTERN) "*.hacktprsdottest"
 	-$(RM_PATTERN) "*.prs"
 	-$(RM_PATTERN) "*.prsdiff"
 	-$(RM_PATTERN) "*.prsdiff.sort"

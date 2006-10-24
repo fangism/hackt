@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2006/10/18 01:24:00 fang Exp $
+#	$Id: Makefile.am,v 1.16 2006/10/24 02:52:50 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -91,7 +91,7 @@ BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \
 	011 012 013 014 015 016 017 018 019 021 023
 
 # tests pending new features
-EXTRA_DIST += 119.hac 120.hac
+srcdir_EXTRA_DIST += 119.hac 120.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

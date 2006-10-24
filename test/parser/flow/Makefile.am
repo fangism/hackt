@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2006/03/15 04:38:55 fang Exp $
+#	$Id: Makefile.am,v 1.13 2006/10/24 02:52:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -52,7 +52,7 @@ EMPTY_CFLAT_PRS_TESTS += \
 BISON_OUTPUTS +=
 
 # TODO:
-EXTRA_DIST +=
+srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

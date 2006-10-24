@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2006/10/18 00:03:53 fang Exp $
+#	$Id: Makefile.am,v 1.24 2006/10/24 02:52:40 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -158,7 +158,7 @@ HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
-EXTRA_DIST += README \
+srcdir_EXTRA_DIST += README \
 	reset-test.prsimrc \
 	reset-test-short.prsimrc \
 	reset-test-medium.prsimrc \
@@ -166,7 +166,7 @@ EXTRA_DIST += README \
 	stable-test-medium.prsimrc
 
 # unprocessed test cases
-# EXTRA_DIST +=
+# srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

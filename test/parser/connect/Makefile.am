@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2006/07/04 07:27:39 fang Exp $
+#	$Id: Makefile.am,v 1.22 2006/10/24 02:52:45 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -119,7 +119,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 BISON_OUTPUTS += 032 076 077
 
 # pending test cases
-EXTRA_DIST += 093.hac 094.hac 095.hac 096.hac 097.hac 098.hac \
+srcdir_EXTRA_DIST += 093.hac 094.hac 095.hac 096.hac 097.hac 098.hac \
 	114.hac 114a.hac 115.hac 116.hac 117.hac 120.hac 121.hac
 
 include $(top_srcdir)/test/Make.test-tail
