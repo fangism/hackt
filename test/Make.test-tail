@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.53 2006/10/24 02:52:39 fang Exp $
+#	$Id: Make.test-tail,v 1.54 2006/10/24 18:39:06 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -43,7 +43,7 @@ HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 		-f $(TEST_SRCDIR)/hackt-parse-expect-filter.awk \
 		-f $(TEST_SRCDIR)/state_enum_filter.awk \
 		-f $(TEST_SRCDIR)/vpath_file_filter.awk
-POM_HEADER_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-header-filter.awk
+POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
 ALLOC_FILTER = $(SED) -f $(TEST_SRCDIR)/alloc_filter.sed

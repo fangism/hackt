@@ -2,6 +2,11 @@
 
 2006-10-24	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-44:
+	  config/hackt.m4: arg-enable option to turn off object alignment
+		padding markers to reduce space.  
+
+
 	* HACKT-00-01-04-main-00-80-43-merged-instance-01-14:
 	  Branch merge, summary in src/ChangeLog.
 

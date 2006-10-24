@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.97 2006/10/24 02:52:31 fang Exp $
+#	$Id: configure.ac,v 1.98 2006/10/24 18:39:01 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -122,6 +122,7 @@ HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 AC_SUBST(LIBTOOL_DEPS)
 
 dnl defined in config.hackt.m4
+HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
 HACKT_ARG_ENABLE_GOD_MODE
 dnl defined in config/header_validation.m4
 FANG_ARG_ENABLE_HEADER_VALIDATION
@@ -413,6 +414,8 @@ AC_CONFIG_FILES([src/scripts/deps_to_dot.awk],
 	[chmod +x src/scripts/deps_to_dot.awk])
 AC_CONFIG_FILES([install_transform.sh],
 	[chmod +x install_transform.sh])
+AC_CONFIG_FILES([test/POM-header-filter.awk],
+	[chmod +x test/POM-header-filter.awk])
 AC_CONFIG_FILES([test/parse-test-expect.sh],
 	[chmod +x test/parse-test-expect.sh])
 AC_CONFIG_FILES([test/hackt-obj-diff.sh],

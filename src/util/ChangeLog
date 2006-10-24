@@ -1,4 +1,14 @@
 # "src/util/ChangeLog"
+#	$Id: ChangeLog,v 1.57 2006/10/24 18:39:03 fang Exp $
+
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-44:
+	  util/persistent_object_manager.cc: object padding and alignment
+		is now a configure --enable option, for when object size
+		is of greater importance.  
+		Expects ENABLE_OBJECT_ALIGN_CHECKING in __config__.h.
+
 
 2006-10-23	David Fang		<fangism@users.sourceforge.net>
 

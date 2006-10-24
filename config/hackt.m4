@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.5 2006/05/09 05:39:17 fang Exp $
+dnl	$Id: hackt.m4,v 1.6 2006/10/24 18:39:02 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -278,6 +278,41 @@ AC_SUBST(GMP_LDPATH)
 AC_SUBST(GMP_LIB)
 ])dnl
 
+
+dnl @synopsis HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
+dnl
+dnl Whether or not serialized objects should be padded with additional words
+dnl for object alignment checking.  
+dnl When enabled, small object increase dramatically in size.  
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-10-23
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING],
+[AC_MSG_CHECKING([whether to pad serialized objects with alignment markers])
+AC_ARG_ENABLE(object_align_checking,
+AS_HELP_STRING([--disable-object-align-checking],
+	[Removes binary alignment markers around every serialized object [(default=enabled)]]),
+[if test "$enable_object_align_checking" = "yes"
+then	AC_MSG_RESULT([yes])
+else	AC_MSG_RESULT([no])
+fi
+],
+[AC_MSG_RESULT([yes (default)])
+enable_object_align_checking="yes"
+])
+AM_CONDITIONAL(OBJECT_ALIGN_CHECKING, test "$enable_object_align_checking" = "yes")
+if test "$enable_object_align_checking" = "yes"
+then
+AC_DEFINE(ENABLE_OBJECT_ALIGN_CHECKING, 1,
+[Define to 1 to book-end every serialized object with alignment markers.])
+else
+AC_DEFINE(ENABLE_OBJECT_ALIGN_CHECKING, 0,
+[Define to 1 to book-end every serialized object with alignment markers.])
+fi
+])dnl
 
 dnl @synopsis HACKT_ARG_EMABLE_GOD_MODE
 dnl

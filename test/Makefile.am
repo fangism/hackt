@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2006/09/03 22:03:22 fang Exp $
+#	$Id: Makefile.am,v 1.35 2006/10/24 18:39:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -54,7 +54,7 @@ dist_noinst_SCRIPTS = \
 	state_enum_filter.awk \
 	address_filter.sed \
 	alloc_filter.sed \
-	POM-header-filter.awk \
+	POM-header-filter.awk.in \
 	POM-index-filter.awk \
 	vpath_file_filter.awk \
 	hackt-parse-expect-filter.awk \
@@ -62,6 +62,8 @@ dist_noinst_SCRIPTS = \
 	prsimrc-filter.awk \
 	prsimrc-random-time-filter.awk \
 	spacestonewline.awk
+
+all-local: POM-header-filter.awk
 
 DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
 

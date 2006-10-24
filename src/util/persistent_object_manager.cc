@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.32 2006/05/06 22:08:36 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.33 2006/10/24 18:39:04 fang Exp $
  */
 
 // flags and switches
@@ -10,6 +10,7 @@
 
 #include <fstream>
 
+#include "config.h"		// for ENABLE_OBJECT_ALIGN_CHECKING
 #include "util/hash_specializations.h"	// include this first
 	// for hash specialization to take effect
 #include "util/new_functor.tcc"
@@ -30,10 +31,9 @@
 // with another switch.
 
 
-// sanity check switch is overrideable by the includer
-#ifndef NO_OBJECT_SANITY
-#define NO_OBJECT_SANITY	0	// default 0, keep sanity checks
-#endif
+// #ifndef ENABLE_OBJECT_ALIGN_CHECKING
+// #define ENABLE_OBJECT_ALIGN_CHECKING	1	// default 1, keep sanity checks
+// #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -49,11 +49,11 @@
 	\param f the output stream.
 	\param p pointer to the object being written.
  */
-#if NO_OBJECT_SANITY
-#define WRITE_POINTER_INDEX(f, p)
-#else
+#if ENABLE_OBJECT_ALIGN_CHECKING
 #define WRITE_POINTER_INDEX(f, p)					\
 	write_value(f, lookup_ptr_index(p))
+#else
+#define WRITE_POINTER_INDEX(f, p)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,9 +66,7 @@
 	\param f the input stream.
 	\param p pointer to the object read.  
  */
-#if NO_OBJECT_SANITY
-#define STRIP_POINTER_INDEX(f, p)
-#else
+#if ENABLE_OBJECT_ALIGN_CHECKING
 #define STRIP_POINTER_INDEX(f, p)                                       \
 	{								\
         size_t index;							\
@@ -81,6 +79,8 @@
                 INVARIANT(index == lookup_ptr_index(p));		\
         }								\
         }
+#else
+#define STRIP_POINTER_INDEX(f, p)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,25 +88,25 @@
         Sanity check value for end-of-object.
         To be complemented by STRIP_OBJECT_FOOTER.  
  */
-#if NO_OBJECT_SANITY
-#define WRITE_OBJECT_FOOTER(f)
-#else
+#if ENABLE_OBJECT_ALIGN_CHECKING
 #define WRITE_OBJECT_FOOTER(f)			write_value(f, -1L)
+#else
+#define WRITE_OBJECT_FOOTER(f)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
         Sanity check for object alignment.  
  */
-#if NO_OBJECT_SANITY
-#define STRIP_OBJECT_FOOTER(f)
-#else
+#if ENABLE_OBJECT_ALIGN_CHECKING
 #define STRIP_OBJECT_FOOTER(f)						\
 	{								\
 	long neg_one;							\
 	read_value(f, neg_one);						\
 	INVARIANT(neg_one == -1L);					\
 	}
+#else
+#define STRIP_OBJECT_FOOTER(f)
 #endif
 
 
