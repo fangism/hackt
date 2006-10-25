@@ -65,6 +65,7 @@ core.*
 *.nowarn
 *.tmpd
 *.depend
+test.autodepend
 ignore
 Makefile
 Makefile.in
