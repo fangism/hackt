@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26 2006/10/24 07:27:12 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.1 2006/10/25 19:26:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -97,10 +97,8 @@ public:
 					collection_type_manager_parent_type;
 	typedef	typename traits_type::instance_alias_info_type
 						instance_alias_info_type;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	typename traits_type::instance_placeholder_type
@@ -232,12 +230,12 @@ public:
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
 
-virtual instance_alias_base_ptr_type
+virtual instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
+		typename default_list<instance_alias_info_ptr_type>::type& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
@@ -261,7 +259,7 @@ virtual	void
 	accept(alias_visitor&) const = 0;
 
 public:
-virtual	instance_alias_base_type&
+virtual	instance_alias_info_type&
 	load_reference(istream& i) = 0;
 
 	static

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25 2006/10/24 07:27:10 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.1 2006/10/25 19:26:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -802,12 +802,11 @@ INSTANCE_ALIAS_INFO_CLASS::transient_info_collector::operator () (
 }
 
 //=============================================================================
-// typedef instance_alias_base function definitions
+// typedef instance_alias_info function definitions
 
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
-operator << (ostream& o,
-	const typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type& i) {
+operator << (ostream& o, const INSTANCE_ALIAS_INFO_CLASS& i) {
 	typedef	class_traits<Tag>	traits_type;
 	return o << traits_type::tag_name << "-alias @ " << &i;
 }

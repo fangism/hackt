@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.9 2006/10/24 07:27:31 fang Exp $
+	$Id: class_traits.h,v 1.9.2.1 2006/10/25 19:26:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -57,12 +57,12 @@ struct class_traits {
 		This is most likely a base type from which 
 		dimension-specific subclasses are derived.  
 	 */
-	typedef	void				instance_alias_base_type;
+	typedef	void				instance_alias_info_type;
 
 	typedef	instance_alias_info<Tag>	instance_alias_info_type;
-	/// a non-owned, modifiable pointer reference to instance_alias_base_type
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
+	/// a non-owned, modifiable pointer reference to instance_alias_info_type
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
 
 	/**
 		This determines which alias classes contain relaxed
@@ -169,14 +169,6 @@ typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
 typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
 typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
 typedef	instance_alias_info<process_tag>	process_instance_alias_info;
-
-// TODO: clean up confusion, eliminate unnecessary type aliases
-typedef bool_instance_alias_info	bool_instance_alias_base;
-typedef int_instance_alias_info		int_instance_alias_base;
-typedef enum_instance_alias_info	enum_instance_alias_base;
-typedef datastruct_instance_alias_info	struct_instance_alias_base;
-typedef channel_instance_alias_info	channel_instance_alias_base;
-typedef process_instance_alias_info	process_instance_alias_base;
 
 //=============================================================================
 // useful base templates

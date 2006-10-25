@@ -5,6 +5,15 @@
 
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-01:
+	  The final branch for reworking the instance-hierarchy for 
+		large-scale memory reduction.  
+	  This revision: replaced references to instance_alias_base*
+		with instance_alias_info (to avoid confusion).  
+
+
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-45:
 	  No source revision.  Test suite now enabled use of automatic
 		dependency generation.  

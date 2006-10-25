@@ -3,7 +3,7 @@
 	Class declarations for built-in boolean data instances
 	and instance collections.  
 	This file was "Object/art_object_instance_bool.h" in a previous life.  
-	$Id: bool_instance_collection.h,v 1.6 2006/01/22 18:19:58 fang Exp $
+	$Id: bool_instance_collection.h,v 1.6.66.1 2006/10/25 19:26:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_H__
@@ -25,7 +25,7 @@ namespace entity {
 //=============================================================================
 
 ostream&
-operator << (ostream&, const bool_instance_alias_base&);
+operator << (ostream&, const bool_instance_alias_info&);
 
 //-----------------------------------------------------------------------------
 // convenient typedefs

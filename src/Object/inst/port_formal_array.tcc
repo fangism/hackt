@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2 2006/10/24 07:27:18 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.1 2006/10/25 19:26:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -299,9 +299,9 @@ PORT_FORMAL_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-typename PORT_FORMAL_ARRAY_CLASS::instance_alias_base_ptr_type
+typename PORT_FORMAL_ARRAY_CLASS::instance_alias_info_ptr_type
 PORT_FORMAL_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
-	typedef	instance_alias_base_ptr_type		return_type;
+	typedef	instance_alias_info_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
 	if (this->value_array.range_check(i)) {
 		return return_type(&const_cast<instance_alias_info_type&>(
@@ -319,7 +319,7 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 bool
 PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l,
+		typename default_list<instance_alias_info_ptr_type>::type& l,
 		const const_range_list& r) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!r.empty());
@@ -335,7 +335,7 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
 	key_gen.initialize();
 	// TODO: consider a subroutine to grab entire subslice efficiently
 	do {
-		const instance_alias_base_ptr_type
+		const instance_alias_info_ptr_type
 			pi(&const_cast<instance_alias_info_type&>(
 				value_array[key_gen]));
 		NEVER_NULL(pi);
@@ -370,7 +370,7 @@ PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 	alias_collection_iterator a_iter(a.begin());
 //	const const_iterator collection_end(this->value_array.end());
 	do {
-		const instance_alias_base_ptr_type
+		const instance_alias_info_ptr_type
 			pi(&const_cast<instance_alias_info_type&>(
 				value_array[key_gen]));
 		NEVER_NULL(pi);

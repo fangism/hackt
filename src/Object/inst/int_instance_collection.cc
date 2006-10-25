@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.12 2006/10/24 07:27:16 fang Exp $
+	$Id: int_instance_collection.cc,v 1.12.2.1 2006/10/25 19:26:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -75,10 +75,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 //=============================================================================
-// typedef int_instance_alias_base function definitions
+// typedef int_instance_alias_info function definitions
 
 ostream&
-operator << (ostream& o, const int_instance_alias_base& i) {
+operator << (ostream& o, const int_instance_alias_info& i) {
 	return o << "int-alias @ " << &i;
 }
 

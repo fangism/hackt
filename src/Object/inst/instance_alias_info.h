@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17 2006/10/24 07:27:11 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.1 2006/10/25 19:26:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -117,7 +117,6 @@ public:
 
 	typedef	_iterator<this_type>		pseudo_iterator;
 	typedef	_iterator<const this_type>	pseudo_const_iterator;
-	typedef	this_type			instance_alias_base_type;
 
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
@@ -390,8 +389,7 @@ public:
 
 template <class Tag>
 ostream&
-operator << (ostream&,
-	const typename instance_alias_info<Tag>::instance_alias_base_type&);
+operator << (ostream&, const instance_alias_info<Tag>&);
 
 //=============================================================================
 }	// end namespace entity

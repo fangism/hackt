@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.18 2006/10/18 22:52:56 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.18.4.1 2006/10/25 19:26:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -70,12 +70,12 @@ public:
 	typedef	never_ptr<const instance_placeholder_type>
 					instance_placeholder_ptr_type;
 	/// the type of alias element contained by instance collections
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
-	typedef	never_ptr<const instance_alias_base_type>
-					const_instance_alias_base_ptr_type;
+	typedef	typename traits_type::instance_alias_info_type
+						instance_alias_info_type;
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
+	typedef	never_ptr<const instance_alias_info_type>
+					const_instance_alias_info_ptr_type;
 	/// the type of connections formed by the alias type
 	typedef	typename traits_type::alias_connection_type
 						alias_connection_type;
@@ -138,7 +138,7 @@ virtual	bad_bool
 
 virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
-virtual	instance_alias_base_ptr_type
+virtual	instance_alias_info_ptr_type
 	unroll_generic_scalar_reference(const unroll_context&) const;
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
@@ -158,14 +158,14 @@ private:
 protected:
 	// helper function, also used by member
 	static
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	__unroll_generic_scalar_reference(
 		const instance_placeholder_type&, 
 		const count_ptr<const index_list_type>&,
 		const unroll_context&);
 
 	static
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	__unroll_generic_scalar_reference_no_lookup(
 		const instance_collection_generic_type&, 
 		const count_ptr<const index_list_type>&,

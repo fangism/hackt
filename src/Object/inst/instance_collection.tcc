@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37 2006/10/24 07:27:13 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.1 2006/10/25 19:26:34 fang Exp $
 	TODO: trim includes
  */
 
@@ -376,7 +376,7 @@ INSTANCE_ARRAY_CLASS::what(ostream& o) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
-		const instance_alias_base_type& a) const {
+		const instance_alias_info_type& a) const {
 	const key_type& k(this->collection.lookup_key(a));
 	return element_key_dumper<D>()(o, k);
 }
@@ -387,7 +387,7 @@ INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 multikey_index_type
-INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_base_type& a) const {
+INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
 	// NB: specialized to scalar pint_value_type for D == 1!
 	return multikey<D,pint_value_type>(this->collection.lookup_key(a));
 	// convert
@@ -400,7 +400,7 @@ INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_base_type& a) const {
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 size_t
-INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_base_type& a) const {
+INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 	return this->collection.lookup_index(a);
 }
 
@@ -412,9 +412,9 @@ INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_base_type& a) const {
 	Will assert fail if not found.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_base_type&
+typename INSTANCE_ARRAY_CLASS::instance_alias_info_type&
 INSTANCE_ARRAY_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_base_type& a) {
+		const parent_type& p, const instance_alias_info_type& a) {
 	const this_type& t(IS_A(const this_type&, p));	// assert dynamic cast
 	const key_type& k(t.collection.lookup_key(a));
 	return this->collection[k];
@@ -489,8 +489,8 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	key_gen.initialize();
 	bool err = false;
 	do {
-		instance_alias_base_type* const new_elem =
-			collection.insert(key_gen, instance_alias_base_type());
+		instance_alias_info_type* const new_elem =
+			collection.insert(key_gen, instance_alias_info_type());
 		if (new_elem) {
 			// ALERT: shouldn't relaxed actuals be attached
 			// before calling recursive instantiate?
@@ -625,7 +625,7 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_base_ptr_type
+typename INSTANCE_ARRAY_CLASS::instance_alias_info_ptr_type
 INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
@@ -644,7 +644,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l,
+		typename default_list<instance_alias_info_ptr_type>::type& l,
 		const const_range_list& r) const {
 	INVARIANT(!r.empty());
 	key_generator_type key_gen;
@@ -658,19 +658,19 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 			this->type_dump(
 				cerr << "FATAL: reference to uninstantiated ")
 					<< " index " << key_gen << endl;
-			l.push_back(instance_alias_base_ptr_type(NULL));
+			l.push_back(instance_alias_info_ptr_type(NULL));
 			ret = false;
 		} else {
 		const element_type& pi(*it);
 		// pi MUST be valid if it belongs to an array
 		if (pi.valid()) {
-			l.push_back(instance_alias_base_ptr_type(
+			l.push_back(instance_alias_info_ptr_type(
 				const_cast<element_type*>(&pi)));
 		} else {
 			this->type_dump(
 				cerr << "FATAL: reference to uninstantiated ")
 					<< " index " << key_gen << endl;
-			l.push_back(instance_alias_base_ptr_type(NULL));
+			l.push_back(instance_alias_info_ptr_type(NULL));
 			ret = false;
 		}
 		}
@@ -838,7 +838,7 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	instance_alias_info::write_next_connection().  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_base_type&
+typename INSTANCE_ARRAY_CLASS::instance_alias_info_type&
 INSTANCE_ARRAY_CLASS::load_reference(istream& i) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_reference()");
 	size_t index;		// 1-indexed
@@ -897,7 +897,7 @@ void
 INSTANCE_COLLECTION_CLASS::connection_writer::operator() (
 		const instance_alias_info_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-	const instance_alias_base_type* const next(e.peek());
+	const instance_alias_info_type* const next(e.peek());
 	NEVER_NULL(next);
 	if (next != &e) {
 		write_value<char>(os, 1);
@@ -1132,7 +1132,7 @@ INSTANCE_SCALAR_CLASS::what(ostream& o) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
-		const instance_alias_base_type& a) const {
+		const instance_alias_info_type& a) const {
 	INVARIANT(&a == &this->the_instance);
 	return o;
 }
@@ -1143,7 +1143,7 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 multikey_index_type
-INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_base_type& a) const {
+INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type& a) const {
 	return multikey_index_type();
 }
 
@@ -1155,7 +1155,7 @@ INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_base_type& a) const {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 size_t
-INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_base_type& a) const {
+INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
 	ICE_NEVER_CALL(cerr);
 	return 0;
 }
@@ -1166,9 +1166,9 @@ INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_base_type& a) const {
 		in a different collection (same population).  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_base_type&
+typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
 INSTANCE_SCALAR_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_base_type& a) {
+		const parent_type& p, const instance_alias_info_type& a) {
 	const this_type& t(IS_A(const this_type&, p));
 	INVARIANT(&t.the_instance == &a);
 	return this->the_instance;
@@ -1287,17 +1287,17 @@ INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
+typename INSTANCE_SCALAR_CLASS::instance_alias_info_ptr_type
 INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
-	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
+	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_info_ptr_type
 						ptr_return_type;
 	if (!this->the_instance.valid()) {
 		this->type_dump(cerr << "ERROR: Reference to uninstantiated ")
 			<< "!" << endl;
 		return ptr_return_type(NULL);
 	} else	return ptr_return_type(
-		const_cast<instance_alias_base_type*>(
-			&static_cast<const instance_alias_base_type&>(
+		const_cast<instance_alias_info_type*>(
+			&static_cast<const instance_alias_info_type&>(
 				this->the_instance)));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
@@ -1311,7 +1311,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l,
+		typename default_list<instance_alias_info_ptr_type>::type& l,
 		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;
@@ -1329,9 +1329,9 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 		const multikey_index_type& u, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
 	if (this->the_instance.valid()) {
-		*(a.begin()) = instance_alias_base_ptr_type(
-			const_cast<instance_alias_base_type*>(
-				&static_cast<const instance_alias_base_type&>(
+		*(a.begin()) = instance_alias_info_ptr_type(
+			const_cast<instance_alias_info_type*>(
+				&static_cast<const instance_alias_info_type&>(
 					this->the_instance)));
 		return bad_bool(false);
 	} else {
@@ -1407,7 +1407,7 @@ if (this->the_instance.valid()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_base_type&
+typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
 INSTANCE_SCALAR_CLASS::load_reference(istream& i) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_reference()");
 	// no key to read!

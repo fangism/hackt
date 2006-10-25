@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.13 2006/10/24 07:27:07 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.13.2.1 2006/10/25 19:26:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -84,10 +84,10 @@ namespace HAC {
 namespace entity {
 
 //=============================================================================
-// typedef bool_instance_alias_base function definitions
+// typedef bool_instance_alias_info function definitions
 
 ostream&
-operator << (ostream& o, const bool_instance_alias_base& b) {
+operator << (ostream& o, const bool_instance_alias_info& b) {
 	return o << "bool-alias @ " << &b;
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.19 2006/10/18 22:52:54 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.19.4.1 2006/10/25 19:26:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -188,7 +188,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
 	const unroll_context uc(&top, &top);
-	const instance_alias_base_ptr_type
+	const instance_alias_info_ptr_type
 		local_alias(__unroll_generic_scalar_reference_no_lookup(
 			pi, this->array_indices, uc));
 	if (!local_alias) {
@@ -245,7 +245,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
@@ -253,7 +253,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
-		return instance_alias_base_ptr_type(NULL);
+		return instance_alias_info_ptr_type(NULL);
 	}
 	const unroll_context cc(c.make_member_context());
 	// The following call should NOT be doing extra lookup! (pass false)

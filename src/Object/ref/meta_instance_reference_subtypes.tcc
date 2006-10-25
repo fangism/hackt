@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.16 2006/10/18 22:52:55 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.16.4.1 2006/10/25 19:26:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -375,11 +375,11 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	alias_iterator ri(port_aliases.begin());
 	// the following copied from alias_connection::unroll's do-loop
 	for ( ; li!=le; li++, ri++) {
-		const never_ptr<instance_alias_base_type> lp(*li);
-		const never_ptr<instance_alias_base_type> rp(*ri);
+		const never_ptr<instance_alias_info_type> lp(*li);
+		const never_ptr<instance_alias_info_type> rp(*ri);
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
-		if (!instance_alias_base_type::checked_connect_port(
+		if (!instance_alias_info_type::checked_connect_port(
 				*lp, *rp).good) {
 			// already have error message
 			return bad_bool(true);

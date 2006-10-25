@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2 2006/10/24 07:27:11 fang Exp $
+	$Id: instance_array.h,v 1.2.2.1 2006/10/25 19:26:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -28,9 +28,7 @@ instance_array<Tag,D>
 	\param D the number of dimensions (max. 4).  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-class instance_array :
-	// this is the same as instance_collection<Tag>
-	public class_traits<Tag>::instance_collection_generic_type {
+class instance_array : public instance_collection<Tag> {
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
 public:
@@ -41,15 +39,14 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-//	typedef	typename parent_type::instance_alias_base_ptr_type
-	typedef	typename traits_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
+	typedef	typename traits_type::instance_alias_info_type
+						instance_alias_info_type;
+	typedef	typename traits_type::instance_alias_info_ptr_type
+						instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 
-	typedef	instance_alias_base_type		element_type;
+	typedef	instance_alias_info_type		element_type;
 	/**
 		The simple_type meta type is specially optimized and 
 		simplified for D == 1.  
@@ -90,17 +87,17 @@ public:
 	is_partially_unrolled(void) const;
 
 	ostream&
-	dump_element_key(ostream&, const instance_alias_base_type&) const;
+	dump_element_key(ostream&, const instance_alias_info_type&) const;
 
 	multikey_index_type
-	lookup_key(const instance_alias_base_type&) const;
+	lookup_key(const instance_alias_info_type&) const;
 
 	size_t
-	lookup_index(const instance_alias_base_type&) const;
+	lookup_index(const instance_alias_info_type&) const;
 
-	instance_alias_base_type&
+	instance_alias_info_type&
 	get_corresponding_element(const parent_type&,
-		const instance_alias_base_type&);
+		const instance_alias_info_type&);
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
@@ -114,7 +111,7 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
 	never_ptr<element_type>
@@ -123,12 +120,12 @@ public:
 	// is this used? or can it be replaced by unroll_aliases?
 	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
+		typename default_list<instance_alias_info_ptr_type>::type& l, 
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
 
-	instance_alias_base_type&
+	instance_alias_info_type&
 	load_reference(istream& i);
 
 	CREATE_DEPENDENT_TYPES_PROTO;

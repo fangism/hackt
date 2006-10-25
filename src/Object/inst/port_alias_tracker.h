@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.8 2006/03/15 04:38:19 fang Exp $
+	$Id: port_alias_tracker.h,v 1.8.44.1 2006/10/25 19:26:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -61,7 +61,6 @@ public:
 	typedef	Tag					tag_type;
 	typedef	class_traits<Tag>			traits_type;
 	typedef typename traits_type::instance_alias_info_type	alias_type;
-	typedef typename traits_type::instance_alias_base_type	alias_base_type;
 	typedef never_ptr<const alias_type>		const_alias_ptr_type;
 	typedef never_ptr<alias_type>			alias_ptr_type;
 #if USE_ALIAS_STRING_CACHE

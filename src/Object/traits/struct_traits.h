@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.19 2006/10/24 07:27:33 fang Exp $
+	$Id: struct_traits.h,v 1.19.2.1 2006/10/25 19:26:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -26,10 +26,10 @@ struct class_traits<datastruct_tag> {
 	enum { type_tag_enum_value = TYPE_STRUCT };
 	typedef	struct_instance			instance_type;
 
-	typedef	struct_instance_alias_base	instance_alias_base_type;
+	typedef	datastruct_instance_alias_info	instance_alias_info_type;
 
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;

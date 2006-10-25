@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2 2006/10/24 07:27:18 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.1 2006/10/25 19:26:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -53,8 +53,8 @@ public:
 	typedef	typename array_type::size_type	size_type;
 	typedef	typename array_type::key_type	key_type;
 	typedef	typename key_type::generator_type	key_generator_type;
-	typedef	typename parent_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
+	typedef	typename parent_type::instance_alias_info_ptr_type
+						instance_alias_info_ptr_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
 	typedef	typename parent_type::collection_type_manager_parent_type
@@ -114,12 +114,12 @@ public:
 	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
 
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type&) const;
 
 	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type&, 
+		typename default_list<instance_alias_info_ptr_type>::type&, 
 		const const_range_list&) const;
 
 	const_index_list

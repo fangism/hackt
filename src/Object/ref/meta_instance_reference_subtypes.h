@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.11 2006/10/18 20:58:15 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.11.4.1 2006/10/25 19:26:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -32,12 +32,12 @@ class meta_instance_reference : public meta_instance_reference_base {
 	typedef	META_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
-	typedef typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
-	typedef never_ptr<const instance_alias_base_type>
-					const_instance_alias_base_ptr_type;
+	typedef typename traits_type::instance_alias_info_type
+						instance_alias_info_type;
+	typedef never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
+	typedef never_ptr<const instance_alias_info_type>
+					const_instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	typename traits_type::alias_connection_type

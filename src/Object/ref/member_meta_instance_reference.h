@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.15 2006/10/18 22:52:53 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.15.4.1 2006/10/25 19:26:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -54,8 +54,8 @@ public:
 						alias_collection_type;
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
-	typedef	typename parent_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
+	typedef	typename parent_type::instance_alias_info_ptr_type
+						instance_alias_info_ptr_type;
 	/// the containing type, whose member is referenced
 	typedef	meta_instance_reference_base		base_inst_type;
 	// should be kept consistent with
@@ -90,7 +90,7 @@ public:
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 	// overrides simple_meta...
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	unroll_generic_scalar_reference(const unroll_context&) const;
 
 	using parent_type::connect_port;

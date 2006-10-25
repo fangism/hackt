@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.26 2006/10/18 22:52:56 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.26.4.1 2006/10/25 19:26:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -184,7 +184,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm, footprint& top) const {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
-	const instance_alias_base_ptr_type
+	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,
 			uc));
@@ -284,12 +284,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	NOTE: not used anymore with placeholders!
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 		const instance_placeholder_type& inst, 
 		const count_ptr<const index_list_type>& ind, 
 		const unroll_context& c) {
-	typedef instance_alias_base_ptr_type 	return_type;
+	typedef instance_alias_info_ptr_type 	return_type;
 	STACKTRACE_VERBOSE;
 	alias_collection_type aliases;
 	const bad_bool
@@ -308,12 +308,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference_no_lookup(
 		const instance_collection_generic_type& inst, 
 		const count_ptr<const index_list_type>& ind, 
 		const unroll_context& c) {
-	typedef instance_alias_base_ptr_type 	return_type;
+	typedef instance_alias_info_ptr_type 	return_type;
 	STACKTRACE_VERBOSE;
 	alias_collection_type aliases;
 	const bad_bool
@@ -373,7 +373,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references_no_look
 	\return a single instance alias to a substructure_alias.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
