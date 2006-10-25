@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.55 2006/10/24 21:34:56 fang Exp $
+#	$Id: Make.test-tail,v 1.56 2006/10/25 00:48:01 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -62,11 +62,14 @@ HACO_FLAGS += -I$(srcdir)
 
 # this dependency generator assymes default target suffix .haco
 # caution: concurrent builds of .haco and .depend may clobber this
+# if executable did not successfully build, then skip.
 .hac.depend:
-	@$(ECHO) "Generating automatic dependencies $@ ..."
-	@$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $<
-	@$(SED) '/haco:/s|^$(srcdir)\/|$@ |g' $@-tmp > $@
-	@$(RM) $@-tmp
+	@if test -x $(HACKT_EXE) ; then \
+		$(ECHO) "Generating automatic dependencies $@ ..." ; \
+		$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $< ; \
+		$(SED) '/haco:/s|^$(srcdir)\/|$@ |g' $@-tmp > $@ ; \
+		$(RM) $@-tmp ; \
+	fi
 
 # dependency tracking enabled by default
 # TODO: consider adding .depend to the generated dependency targets
@@ -588,10 +591,11 @@ HAC_OBJECT_TARGETS = $(HACKT_PARSE_TEST_SUBJECTS:=.haco) \
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 
 # source dependencies
-test.autodepend: Makefile.in
+test.autodepend: Makefile
 	$(ECHO) "$(HACKT_PARSE_TEST_PASSES) $(HACKT_PRSIMRC_TEST_SUBJECTS)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
 		$(AWK) '{print "-include " $$1 ".depend"; }' > $@
+	@$(TOUCH) $@
 
 -include test.autodepend
 
