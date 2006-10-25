@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.31 2006/10/25 03:35:17 fang Exp $
+	$Id: BUILDS,v 1.32 2006/10/25 17:30:10 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -87,8 +87,8 @@ yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 
 
-Version: hackt 0.1.4-devel-20061017
-CVS Tag: HACKT-00-01-04-main-00-80-30-merged-instance-00-39
+Version: hackt 0.1.4-devel-20061023
+CVS Tag: HACKT-00-01-04-main-00-80-45
 Configured with: '--prefix=/usr/local/cad' '--with-editline' '-C'
 build-triplet: powerpc-apple-darwin8.7.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5341)
