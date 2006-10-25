@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.56 2006/10/25 00:48:01 fang Exp $
+#	$Id: Make.test-tail,v 1.57 2006/10/25 02:18:58 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -67,7 +67,8 @@ HACO_FLAGS += -I$(srcdir)
 	@if test -x $(HACKT_EXE) ; then \
 		$(ECHO) "Generating automatic dependencies $@ ..." ; \
 		$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $< ; \
-		$(SED) '/haco:/s|^$(srcdir)\/|$@ |g' $@-tmp > $@ ; \
+		$(SED) '/haco:/s|^$(srcdir)\/||g' $@-tmp | \
+			$(SED) 's/haco:/haco $@:/g' > $@ ; \
 		$(RM) $@-tmp ; \
 	fi
 
