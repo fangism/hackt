@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.32 2006/10/25 17:30:10 fang Exp $
+	$Id: BUILDS,v 1.33 2006/10/25 18:23:12 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -18,8 +18,8 @@ powerpc-apple-darwin*
 
 NOTE: the following builds are on a G5 (powerpc970), but only built as 32b.  
 
-Version: hackt 0.1.4-devel-20061017
-CVS Tag: HACKT-00-01-04-main-00-80-30-merged-instance-00-39
+Version: hackt 0.1.4-devel-20061023
+CVS Tag: HACKT-00-01-04-main-00-80-45
 Configured with: '--with-readline' '--prefix=/Users/davidfang/local' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: powerpc-apple-darwin7.9.0
 c++: g++ (GCC) 3.3 20030304 (Apple Computer, Inc. build 1640)
