@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.3 2006/05/01 06:36:15 fang Exp $
+	$Id: readline_wrap.h,v 1.4 2006/10/26 18:38:32 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -82,19 +82,23 @@ private:
 	typedef	excl_malloc_ptr<const_char_type>::type	hold_line_type;
 #endif
 #ifdef	USE_HISTEDIT
+	// was __VISIBILITY_HIDDEN__, but cannot because _editline field
+	// would be less visible than wrapping class.  
 	struct editline_tag {
 		void
 		operator () (EditLine* e) const {
 			el_end(e);
 		}
-	} __VISIBILITY_HIDDEN__;
+	};
 
+	// was __VISIBILITY_HIDDEN__
 	struct editline_history_tag {
 		void
 		operator () (History* h) const {
 			history_end(h);
 		}
-	} __VISIBILITY_HIDDEN__;
+	};
+
 	typedef	excl_ptr<EditLine, editline_tag>::type	editline_ptr_type;
 	typedef	excl_ptr<History, editline_history_tag>::type
 							history_ptr_type;

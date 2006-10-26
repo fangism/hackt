@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.57 2006/10/24 18:39:03 fang Exp $
+#	$Id: ChangeLog,v 1.58 2006/10/26 18:38:30 fang Exp $
+
+2006-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-46:
+	  util/readline_wrap.h: visibility attribute removed, 
+		as usage was incorrect according to g++-4.2.  
+
 
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 

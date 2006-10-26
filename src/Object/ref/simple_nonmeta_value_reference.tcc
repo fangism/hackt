@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.15 2006/10/24 07:27:29 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.16 2006/10/26 18:38:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -54,7 +54,7 @@ using util::persistent_traits;
 // defined by specializations only, 
 // in "Object/ref/instance_reference_datatype.cc"
 template <class>
-struct nonmeta_reference_type_check_policy;
+struct nonmeta_reference_type_check_policy ;
 
 //=============================================================================
 /**
@@ -62,7 +62,7 @@ struct nonmeta_reference_type_check_policy;
 	meta type, like enum and struct.  
  */
 template <class Tag>
-struct nonmeta_unroll_resolve_copy_policy<Tag, datatype_tag> {
+struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, datatype_tag> {
 	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
 	typedef	typename reference_type::index_list_type
 							index_list_type;
@@ -71,7 +71,7 @@ struct nonmeta_unroll_resolve_copy_policy<Tag, datatype_tag> {
 
 static
 return_type
-unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
+unroll_resolve_copy (const reference_type& _this, const unroll_context& c,
 		const return_type& p) {
 	typedef	reference_type				this_type;
 	if (_this.array_indices) {
@@ -111,7 +111,7 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 	}
 }	// end method unroll_resolve_copy
 
-} __VISIBILITY_HIDDEN__ ;	// end struct nonmeta_unroll_resolve_copy_policy
+};	// end struct nonmeta_unroll_resolve_copy_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /**
@@ -119,7 +119,7 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 	meta type, like bool and int.  
  */
 template <class Tag>
-struct nonmeta_unroll_resolve_copy_policy<Tag, parameter_value_tag> {
+struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, parameter_value_tag> {
 	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
 	typedef	typename reference_type::index_list_type
 							index_list_type;
@@ -243,7 +243,7 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		}
 	}
 }	// end method unroll_resolve_copy
-} __VISIBILITY_HIDDEN__ ;	// end struct nonmeta_unroll_resolve_copy_policy
+};	// end struct nonmeta_unroll_resolve_copy_policy
 
 //=============================================================================
 // class simple_nonmeta_value_reference method definitions
