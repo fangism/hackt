@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.1 2006/10/25 19:26:36 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.2 2006/10/26 22:32:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -95,6 +95,14 @@ public:
 
 	multikey_index_type
 	lookup_key(const instance_alias_info_type&) const;
+
+#if USE_COLLECTION_INTERFACES
+	ostream&
+	dump_element_key(ostream&, const size_t) const;
+
+	multikey_index_type
+	lookup_key(const size_t) const;
+#endif
 
 	size_t
 	lookup_index(const instance_alias_info_type&) const;

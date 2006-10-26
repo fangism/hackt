@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.1 2006/10/25 19:26:34 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.2 2006/10/26 22:32:06 fang Exp $
 	TODO: trim includes
  */
 
@@ -382,6 +382,20 @@ INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\pre the alias a MUST belong to this collection!
+		Will assert fail if this is not the case.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o, const size_t i) const {
+	const key_type& k(this->collection.lookup_key(i));
+	return element_key_dumper<D>()(o, k);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the key corresponding to the referenced element.  
  */
@@ -392,6 +406,20 @@ INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
 	return multikey<D,pint_value_type>(this->collection.lookup_key(a));
 	// convert
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\return the key corresponding to the referenced element.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+multikey_index_type
+INSTANCE_ARRAY_CLASS::lookup_key(const size_t i) const {
+	// NB: specialized to scalar pint_value_type for D == 1!
+	return multikey<D,pint_value_type>(this->collection.lookup_key(i));
+	// convert
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -843,6 +871,7 @@ INSTANCE_ARRAY_CLASS::load_reference(istream& i) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_reference()");
 	size_t index;		// 1-indexed
 	read_value(i, index);
+	INVARIANT(index);
 	element_type* const e = this->collection.find(index);
 	NEVER_NULL(e);
 	return *e;
@@ -1138,6 +1167,20 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\param i internal index.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
+		const size_t i) const {
+	INVARIANT(!i);
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return an empty multikey index because scalars aren't indexed.  
  */
@@ -1146,6 +1189,18 @@ multikey_index_type
 INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type& a) const {
 	return multikey_index_type();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\return an empty multikey index because scalars aren't indexed.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+multikey_index_type
+INSTANCE_SCALAR_CLASS::lookup_key(const size_t i) const {
+	return multikey_index_type();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

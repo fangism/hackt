@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2.2.1 2006/10/25 19:26:32 fang Exp $
+	$Id: instance_array.h,v 1.2.2.2 2006/10/26 22:32:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -88,6 +88,14 @@ public:
 
 	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const;
+
+#if USE_COLLECTION_INTERFACES
+	ostream&
+	dump_element_key(ostream&, const size_t) const;
+
+	multikey_index_type
+	lookup_key(const size_t) const;
+#endif
 
 	multikey_index_type
 	lookup_key(const instance_alias_info_type&) const;

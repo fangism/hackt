@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.1 2006/10/25 19:26:30 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.2 2006/10/26 22:32:02 fang Exp $
 	TODO: trim includes
  */
 
@@ -669,7 +669,8 @@ INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 	m.write_pointer(o, this->container);
 	if (this->container->get_dimensions()) {
 		const size_t index = this->container->lookup_index(*this);
-		// 1-indexed for sparse collections, 0-indexed for dense!
+		// 1-indexed for ALL collections
+		INVARIANT(index);
 		write_value(o, index);
 	}
 	// else scalar alias reference doesn't need index

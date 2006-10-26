@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-02:
+	  Re-indexed dense collection (port_formal_array) to be interfaced
+		using 1-based indices for consistency with the sparse 
+		collection counterparts, re-enabled non-zero assertion check.  
+		Adjustments are made internally in port_formal_array.  
+	  Proposed some code for abstracting away 'collection_interfaces'
+		to cover both formal and actual collections.  
+		Not yet enabled.  
+
+
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-01:

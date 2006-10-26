@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.1 2006/10/25 19:26:38 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.2 2006/10/26 22:32:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -129,37 +129,72 @@ PORT_FORMAL_ARRAY_CLASS::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param a reference to alias belonging to this collection.  
+ */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
 		const instance_alias_info_type& a) const {
 	STACKTRACE_VERBOSE;
+	// internally uses 0-based indices, no correction needed.
 	const key_type k(this->value_array.index_to_key(
 		this->value_array.lookup_index(a)));
 	return o << k;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\param i 1-based indexed into collection.  
+ */
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
+		const size_t i) const {
+	STACKTRACE_VERBOSE;
+	// internally 0-based index, adjusted for 1-based parameter
+	const key_type k(this->value_array.index_to_key(i -1));
+	return o << k;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 multikey_index_type
 PORT_FORMAL_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
 	STACKTRACE_VERBOSE;
+	// internally uses 0-based indices, no correction needed.
 	return this->value_array.index_to_key(
 		this->value_array.lookup_index(a));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\param i 1-based index into collection.  
+ */
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+multikey_index_type
+PORT_FORMAL_ARRAY_CLASS::lookup_key(const size_t i) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(i);
+	return this->value_array.index_to_key(i -1);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre a's address must fall in the range spanned by the value_array,
 		i.e. it must be an element of the array.  
 	Very efficient, pointer subtraction.  
-	\return 0-based internal index.  (add 1?)
+	\return 1-based internal index.
  */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 size_t
 PORT_FORMAL_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 	STACKTRACE_VERBOSE;
-	return this->value_array.lookup_index(a);
+	return this->value_array.lookup_index(a) +1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,6 +210,7 @@ PORT_FORMAL_ARRAY_CLASS::get_corresponding_element(
 		const parent_type& p, const instance_alias_info_type& a) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->value_array.dimensions());
+	// why not just p.lookup_index(a); ?
 	const this_type* t(IS_A(const this_type*, &p));
 	if (t) {
 		const size_t o = t->value_array.lookup_index(a);
@@ -474,7 +510,8 @@ PORT_FORMAL_ARRAY_CLASS::load_reference(istream& i) {
 	size_t index;		// 1-indexed
 	read_value(i, index);
 //	return this->value_array.find(this->value_array.index_to_key(index));
-	return *(this->value_array.begin() +index);	// array-access
+	INVARIANT(index);
+	return *(this->value_array.begin() +(index -1));	// array-access
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
