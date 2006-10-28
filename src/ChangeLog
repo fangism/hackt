@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-03:
+	  Enabled collection_interface classes.
+	  Enabled/added port_actual_collection classes with back references to
+		corresponding instance_collections (which should really
+		be just port_formal_arrays).  They're not used anywhere yet.  
+	  Added private iterator interface to formal_array classes.
+	  Cleaned up traits_class headers' instance_alias_info typedefs.  
+	  Next: use port_actual classes but heap-allocated initially.  
+
+
 2006-10-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-02:

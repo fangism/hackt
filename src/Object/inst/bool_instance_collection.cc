@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.13.2.1 2006/10/25 19:26:28 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.13.2.2 2006/10/28 03:03:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -69,6 +69,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_port_formal_array, 
 	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
+#if ENABLE_PORT_ACTUAL_COLLECTIONS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::port_actual_collection<HAC::entity::bool_tag>, 
+	DBOOL_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
+#endif
 
 namespace memory {
 	// can we still lazy destroy with instance aliases?
@@ -105,6 +110,9 @@ template class instance_array<bool_tag, 2>;
 template class instance_array<bool_tag, 3>;
 template class instance_array<bool_tag, 4>;
 template class port_formal_array<bool_tag>;
+#if ENABLE_PORT_ACTUAL_COLLECTIONS
+template class port_actual_collection<bool_tag>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

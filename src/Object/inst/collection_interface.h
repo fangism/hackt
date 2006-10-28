@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.1 2006/10/26 22:32:01 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.2 2006/10/28 03:03:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -153,6 +153,7 @@ virtual	bool
 	get_unresolved_type_ref(void) const;
 #endif
 
+#if 0
 	bool
 	must_be_collectibly_type_equivalent(const this_type&) const;
 
@@ -161,13 +162,16 @@ virtual	bool
 	// strictly typed.  
 	good_bool
 	establish_collection_type(const instance_collection_parameter_type&);
+#endif
 
-	bool
-	has_relaxed_type(void) const;
+//	bool
+//	has_relaxed_type(void) const;
 
+#if 0
 	// 2005-07-07: now intended for use AFTER collection type is established
 	bad_bool
 	check_established_type(const instance_collection_parameter_type&) const;
+#endif
 
 /**
 	Prototype for instantiating alias indices during unroll phase.  

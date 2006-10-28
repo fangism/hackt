@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.12.2.1 2006/10/25 19:26:36 fang Exp $
+	$Id: int_instance_collection.cc,v 1.12.2.2 2006/10/28 03:03:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -69,6 +69,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_port_formal_array, 
 	DINT_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
+#if ENABLE_PORT_ACTUAL_COLLECTIONS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::port_actual_collection<HAC::entity::int_tag>, 
+	DINT_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 
@@ -96,6 +101,9 @@ template class instance_array<int_tag, 2>;
 template class instance_array<int_tag, 3>;
 template class instance_array<int_tag, 4>;
 template class port_formal_array<int_tag>;
+#if ENABLE_PORT_ACTUAL_COLLECTIONS
+template class port_actual_collection<int_tag>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

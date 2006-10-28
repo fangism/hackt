@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.2 2006/10/26 22:32:09 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.3 2006/10/28 03:03:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -100,7 +100,7 @@ PORT_FORMAL_ARRAY_CLASS::port_formal_array(
 	// should instantiate all members without relaxed actuals
 	// TODO: instantiate!
 	// and complete type at the same time?
-	iterator i(this->value_array.begin()), e(this->value_array.end());
+	iterator i(this->begin()), e(this->end());
 	for ( ; i!=e; ++i) {
 		i->attach_actuals(r);
 		i->instantiate(never_ptr<const this_type>(this), c);
@@ -117,6 +117,34 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+typename PORT_FORMAL_ARRAY_CLASS::iterator
+PORT_FORMAL_ARRAY_CLASS::begin(void) {
+	return this->value_array.begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+typename PORT_FORMAL_ARRAY_CLASS::const_iterator
+PORT_FORMAL_ARRAY_CLASS::begin(void) const {
+	return this->value_array.begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+typename PORT_FORMAL_ARRAY_CLASS::iterator
+PORT_FORMAL_ARRAY_CLASS::end(void) {
+	return this->value_array.end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+typename PORT_FORMAL_ARRAY_CLASS::const_iterator
+PORT_FORMAL_ARRAY_CLASS::end(void) const {
+	return this->value_array.end();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -198,6 +226,28 @@ PORT_FORMAL_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	Error handling?
+	\pre k must be valid.
+ */
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+size_t
+PORT_FORMAL_ARRAY_CLASS::lookup_index(const multikey_index_type& k) const {
+	STACKTRACE_VERBOSE;
+//	return this->value_array.key_to_index(k) +1;	// protected
+	return distance(this->begin(), const_iterator(&this->value_array[k]));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+size_t
+PORT_FORMAL_ARRAY_CLASS::collection_size(void) const {
+	return array_type::sizes_product(this->value_array.size());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: what if param p is of sparse collection type?
 	\pre this and p must be same type and same size (all dimensions).  
@@ -207,7 +257,8 @@ PORT_FORMAL_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 typename PORT_FORMAL_ARRAY_CLASS::instance_alias_info_type&
 PORT_FORMAL_ARRAY_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_info_type& a) {
+		const collection_interface_type& p, 
+		const instance_alias_info_type& a) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->value_array.dimensions());
 	// why not just p.lookup_index(a); ?
@@ -218,7 +269,7 @@ PORT_FORMAL_ARRAY_CLASS::get_corresponding_element(
 		const key_type k(t.index_to_key(o));
 		return this->value_array[k];
 #else
-		return *(this->value_array.begin() +o);
+		return *(this->begin() +o);
 #endif
 	} else {
 		// is a sparse collection
@@ -237,7 +288,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o, 
 		const dump_flags& df) const {
-	for_each(this->value_array.begin(), this->value_array.end(), 
+	for_each(this->begin(), this->end(), 
 		typename parent_type::key_dumper(o, df));
 	return o;
 }
@@ -256,7 +307,7 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	INVARIANT(!this->value_array.dimensions());
 	const key_type k(ranges.resolve_sizes());
 	this->value_array.resize(k);
-	iterator i(this->value_array.begin()), e(this->value_array.end());
+	iterator i(this->begin()), e(this->end());
 	if (actuals) {
 		// if ports are ever allowed to depend on relaxed parameters,
 		// then must attach actuals first before instantiating.  
@@ -278,7 +329,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::allocate_local_instance_ids(footprint& f) {
 	STACKTRACE_VERBOSE;
-	iterator i(this->value_array.begin()), e(this->value_array.end());
+	iterator i(this->begin()), e(this->end());
 	for ( ; i!=e; ++i) {
 		if (!i->assign_local_instance_id(f)) {
 			return good_bool(false);
@@ -427,8 +478,8 @@ PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
-	iterator i(this->value_array.begin());
-	iterator j(t.value_array.begin());
+	iterator i(this->begin());
+	iterator j(t.begin());
 	const iterator e(this->value_array.end());
 	for ( ; i!=e; ++i, ++j) {
 		// unfortunately, set iterators only return const refs
@@ -450,8 +501,8 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
-	iterator i(this->value_array.begin());
-	const iterator e(this->value_array.end());
+	iterator i(this->begin());
+	const iterator e(this->end());
 if (i == e) {
 	// no instances in this collection were instantiated (conditional)
 	return good_bool(true);
@@ -490,8 +541,8 @@ void
 PORT_FORMAL_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
 	// TODO fix const_cast
-	const_iterator i(this->value_array.begin());
-	const const_iterator e(this->value_array.end());
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
 		element_type& ii(const_cast<element_type&>(*i));
 		INVARIANT(ii.instance_index);
@@ -511,7 +562,7 @@ PORT_FORMAL_ARRAY_CLASS::load_reference(istream& i) {
 	read_value(i, index);
 //	return this->value_array.find(this->value_array.index_to_key(index));
 	INVARIANT(index);
-	return *(this->value_array.begin() +(index -1));	// array-access
+	return *(this->begin() +(index -1));	// array-access
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -520,9 +571,9 @@ void
 PORT_FORMAL_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
 		const footprint_frame& ff) const {
 	STACKTRACE_VERBOSE;
-	const_iterator i(this->value_array.begin());
-	const const_iterator e(this->value_array.end());
-	pcc.resize(array_type::sizes_product(this->value_array.size()));
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	pcc.resize(this->collection_size());
 	size_t j = 0;
 	for ( ; i!=e; ++i, ++j) {
 		i->construct_port_context(pcc, ff, j);
@@ -535,10 +586,9 @@ void
 PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
 		const port_collection_context& pcc) const {
 	STACKTRACE_VERBOSE;
-	INVARIANT(size_t(array_type::sizes_product(this->value_array.size()))
-		== pcc.size());
-	const_iterator i(this->value_array.begin());
-	const const_iterator e(this->value_array.end());
+	INVARIANT(this->collection_size() == pcc.size());
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
 	size_t j = 0;
 	for ( ; i!=e; ++i, ++j) {
 		i->assign_footprint_frame(ff, pcc, j);
@@ -552,7 +602,7 @@ PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::accept(alias_visitor& v) const {
-	for_each(this->value_array.begin(), this->value_array.end(),
+	for_each(this->begin(), this->end(),
 		bind2nd_argval(mem_fun_ref(&element_type::accept), v)
 	);
 }
@@ -565,7 +615,7 @@ PORT_FORMAL_ARRAY_CLASS::collect_transient_info(
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key, 0)) {
 	parent_type::collect_transient_info_base(m);
-	for_each(this->value_array.begin(), this->value_array.end(),
+	for_each(this->begin(), this->end(),
 		bind2nd_argval(mem_fun_ref(
 			&element_type::collect_transient_info_base), m)
 	);
@@ -585,8 +635,7 @@ PORT_FORMAL_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	const key_type& k(this->value_array.size());
 	value_writer<key_type> write_key(f);
 	write_key(k);
-	const const_iterator b(this->value_array.begin()),
-		e(this->value_array.end());
+	const const_iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_writer(m, f));
 	for_each(b, e, typename parent_type::connection_writer(m, f));
 }
@@ -601,8 +650,7 @@ PORT_FORMAL_ARRAY_CLASS::load_object(const persistent_object_manager& m,
 	value_reader<key_type> read_key(f);
 	read_key(k);
 	this->value_array.resize(k);
-	const iterator b(this->value_array.begin()),
-		e(this->value_array.end());
+	const iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_loader(m, f));
 	for_each(b, e, typename parent_type::connection_loader(m, f));
 }

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.1 2006/10/26 22:31:59 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.2 2006/10/28 03:03:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -82,9 +82,25 @@
 	Goal: 1
 	Status: just beginning
  */
-#define	USE_COLLECTION_INTERFACES		0
+#define	USE_COLLECTION_INTERFACES		1
 
-// TODO: push super_instance down to instance_collection's.
+// TODO: push super_instance down to instance_collection's?
+
+/**
+	Define to 1 to use port_actual_collections in subinstances.
+	Nothing more specific about HOW they are used is implied by
+	this switch.  
+	Goal: 1
+	Status: just begun
+ */
+#define	ENABLE_PORT_ACTUAL_COLLECTIONS		(1 && USE_COLLECTION_INTERFACES)
+
+/**
+	Define to 1 to allocate port_actual_collections on the heap.
+	Goal: 0 -- pool them
+	Status: not yet
+ */
+#define	HEAP_ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ENABLE_PORT_ACTUAL_COLLECTIONS)
 
 /**
 	Define to 1 to use per-footprint pools to allocate

@@ -1,65 +1,63 @@
 /**
-	\file "Object/inst/port_formal_array.h"
-	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.3 2006/10/28 03:03:11 fang Exp $
+	\file "Object/inst/port_actual_collection.h"
+	$Id: port_actual_collection.h,v 1.1.2.1 2006/10/28 03:03:10 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
-#define	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
+#ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
+#define	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
 
-#include "Object/inst/instance_collection.h"
-#include "util/packed_array.h"
-#include "util/memory/chunk_map_pool_fwd.h"
+#include <valarray>
+#include "Object/inst/collection_interface.h"
 
 namespace HAC {
 namespace entity {
 template <class>
 class instance_alias_info;
 
+template <class>
+class instance_collection;
+
 //=============================================================================
 
-#define	PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE	template <class Tag>
-#define	PORT_FORMAL_ARRAY_CLASS			port_formal_array<Tag>
+#define	PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE	template <class Tag>
+#define	PORT_ACTUAL_COLLECTION_CLASS		port_actual_collection<Tag>
 
 /**
-	Dense container, for very efficient storage and retrieval, using
-	multidimensional indices.  
-	Based on util::packed_array_generic, whose internal implementation
-	is a 1D vector.  
+	This is a lightweight subinstance collection that contains
+	a plain array of instance_aliases.  
+	The interpretation of the array is determined by the formal collection
+	to which this corresponds -- it may be scalar or multidimensional.  
+	(It could even be sparse, but the language precludes this.)
+	The formal collection is referenced with a pointer.  
+	This effectively avoids replicating structural information.  
 
-	This is intended for use as top-level instances in footprints, 
-	but nothing prevents it from being used as general purposes
-	dense collections.  
-	This is meant to be used to unroll collections of port-formal
-	instances local to a definition's footprint.  
-
-	Subinstances should (recommended) be unrolled using the
-	indirect: port_actuals_array, which back-links to a port_formal_array, 
-	to avoid replicating data.  
-
-	NOTE: this is not really necessary for scalar instances, just arrays.  
+	This structure is allocation-critical!  Allocations are not done 
+	directly by the heap -- instead, they are pool-allocated and mapped
+	by the footprint in-charge, be it top-level or definition-local.  
  */
 template <class Tag>
-class port_formal_array : public instance_collection<Tag> {
-	typedef	port_formal_array		this_type;
+class port_actual_collection : public collection_interface<Tag> {
+	typedef	port_actual_collection		this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
-	typedef	instance_collection<Tag>	parent_type;
+	typedef	collection_interface<Tag>	parent_type;
+	typedef	parent_type			collection_interface_type;
+	typedef	instance_collection<Tag>	formal_collection_type;
+	typedef	never_ptr<const formal_collection_type>
+						formal_collection_ptr_type;
 	typedef	instance_alias_info<Tag>	instance_alias_info_type;
 	typedef	instance_alias_info_type	element_type;
-	typedef	util::packed_array_generic<
-			pint_value_type, instance_alias_info_type>
+	typedef	std::valarray<instance_alias_info_type>
 						array_type;
-	typedef	typename array_type::size_type	size_type;
-	typedef	typename array_type::key_type	key_type;
-	typedef	typename key_type::generator_type	key_generator_type;
+//	typedef	typename array_type::size_type	size_type;
+	typedef	size_t				size_type;
+//	typedef	typename array_type::key_type	key_type;
+//	typedef	typename key_type::generator_type	key_generator_type;
 	typedef	typename parent_type::instance_alias_info_ptr_type
 						instance_alias_info_ptr_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename parent_type::collection_interface_type
-						collection_interface_type;
-	typedef	typename parent_type::collection_type_manager_parent_type
+	typedef	typename traits_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
 						instance_placeholder_ptr_type;
@@ -70,47 +68,49 @@ public:
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
 private:
+#if 0
 	typedef	typename array_type::iterator	iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
+#else
+	// valarray iterator
+	typedef	element_type*			iterator;
+	typedef	const element_type*		const_iterator;
+#endif
 private:
+	// super_instance? for now use instance_collection_base::super_instance
+	formal_collection_ptr_type		formal_collection;
 	array_type				value_array;
 private:
-	port_formal_array();
+	port_actual_collection();
 public:
 	explicit
-	port_formal_array(const instance_placeholder_ptr_type);
+	port_actual_collection(const formal_collection_ptr_type);
 
-#if 0
-	port_formal_array(const instance_placeholder_ptr_type, const key_type&,
-		const instance_collection_parameter_type&, 
-		const count_ptr<const const_param_expr_list>&, 
-		const unroll_context&);
-#endif
-
-	~port_formal_array();
+	~port_actual_collection();
 
 	ostream&
 	what(ostream&) const;
 
 	ostream&
+	type_dump(ostream&) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_unresolved_type_ref(void) const;
+
+	never_ptr<const physical_instance_placeholder>
+	get_placeholder_base(void) const;
+
+	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const;
 
-	multikey_index_type
-	lookup_key(const instance_alias_info_type&) const;
-
-#if USE_COLLECTION_INTERFACES
 	ostream&
 	dump_element_key(ostream&, const size_t) const;
 
 	multikey_index_type
 	lookup_key(const size_t) const;
 
-	size_t
-	lookup_index(const multikey_index_type&) const;
-
-	size_t
-	collection_size(void) const;
-#endif
+	multikey_index_type
+	lookup_key(const instance_alias_info_type&) const;
 
 	size_t
 	lookup_index(const instance_alias_info_type&) const;
@@ -153,6 +153,9 @@ public:
 	instance_alias_info_type&
 	load_reference(istream&);
 
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+
 private:
 	iterator
 	begin(void);
@@ -166,11 +169,7 @@ private:
 	const_iterator
 	end(void) const;
 
-public:
-
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-
+#if 0
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {
 #ifdef	HAVE_UINT64_TYPE
@@ -181,12 +180,12 @@ public:
 	};
 	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
 #endif
-
-};	// end class port_formal_array
+#endif
+};	// end class port_actual_collection
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
+#endif	// __HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
 

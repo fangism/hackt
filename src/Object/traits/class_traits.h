@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.9.2.1 2006/10/25 19:26:42 fang Exp $
+	$Id: class_traits.h,v 1.9.2.2 2006/10/28 03:03:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -57,8 +57,6 @@ struct class_traits {
 		This is most likely a base type from which 
 		dimension-specific subclasses are derived.  
 	 */
-	typedef	void				instance_alias_info_type;
-
 	typedef	instance_alias_info<Tag>	instance_alias_info_type;
 	/// a non-owned, modifiable pointer reference to instance_alias_info_type
 	typedef	never_ptr<instance_alias_info_type>

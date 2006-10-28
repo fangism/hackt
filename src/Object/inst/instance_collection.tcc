@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.2 2006/10/26 22:32:06 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.3 2006/10/28 03:03:09 fang Exp $
 	TODO: trim includes
  */
 
@@ -56,6 +56,9 @@
 #include "Object/inst/sparse_collection.tcc"
 #include "Object/inst/element_key_dumper.h"
 #include "Object/inst/port_formal_array.tcc"
+#if USE_COLLECTION_INTERFACES
+#include "Object/inst/port_actual_collection.tcc"
+#endif
 #include "common/ICE.h"
 
 #include "util/multikey_assoc.tcc"
@@ -424,13 +427,34 @@ INSTANCE_ARRAY_CLASS::lookup_key(const size_t i) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the internal unique nonzero ID number corresponding
-	to the alias argument.  
+	to the alias argument, zero to signal not found.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 size_t
 INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
-	return this->collection.lookup_index(a);
+	return this->collection.lookup_index(a);	// already 1-based
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+/**
+	\return 0 if not found.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ARRAY_CLASS::lookup_index(const multikey_index_type& k) const {
+	INVARIANT(k.dimensions() == D);
+	return this->collection.lookup_index(key_type(k));
+	// already 1-based
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ARRAY_CLASS::collection_size(void) const {
+	return this->collection.size();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -442,7 +466,8 @@ INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 typename INSTANCE_ARRAY_CLASS::instance_alias_info_type&
 INSTANCE_ARRAY_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_info_type& a) {
+		const collection_interface_type& p, 
+		const instance_alias_info_type& a) {
 	const this_type& t(IS_A(const this_type&, p));	// assert dynamic cast
 	const key_type& k(t.collection.lookup_key(a));
 	return this->collection[k];
@@ -1068,15 +1093,15 @@ INSTANCE_ARRAY_CLASS::load_object(
 	//      let them start out pointing to themselves.  
 	// 2) each element contains information to reconstruct, 
 	//      we need temporary local storage for it.
-	size_t collection_size;
-	read_value(f, collection_size);
+	size_t _collection_size;
+	read_value(f, _collection_size);
 {
 	size_t i = 0;
 	// populate collection by key and index first, with default initialized
 	// element values.  
 	key_type temp_key;
 	value_reader<key_type> read_key(f);
-	for ( ; i < collection_size; ++i) {
+	for ( ; i < _collection_size; ++i) {
 		read_key(temp_key);
 		const element_type* const v =
 			collection.insert(temp_key, element_type());
@@ -1216,6 +1241,22 @@ INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_SCALAR_CLASS::lookup_index(const multikey_index_type& k) const {
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_SCALAR_CLASS::collection_size(void) const {
+	return 1;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the corresponding instance referenced by an alias
 		in a different collection (same population).  
@@ -1223,7 +1264,8 @@ INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
 INSTANCE_SCALAR_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_info_type& a) {
+		const collection_interface_type& p, 
+		const instance_alias_info_type& a) {
 	const this_type& t(IS_A(const this_type&, p));
 	INVARIANT(&t.the_instance == &a);
 	return this->the_instance;

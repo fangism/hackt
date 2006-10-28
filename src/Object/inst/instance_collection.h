@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.2 2006/10/26 22:32:06 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.3 2006/10/28 03:03:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -95,13 +95,18 @@ public:
 private:
 	typedef	Tag					category_type;
 #if USE_COLLECTION_INTERFACES
-	typedef	collection_interface<Tag>		parent_type;
+	typedef	collection_interface<Tag>
 #else
 	typedef	typename traits_type::instance_collection_parent_type
 #endif
 							parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
 public:
+#if USE_COLLECTION_INTERFACES
+	typedef	parent_type			collection_interface_type;
+#else
+	typedef	this_type			collection_interface_type;
+#endif
 	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	typedef	typename traits_type::resolved_type_ref_type
@@ -181,6 +186,13 @@ virtual	ostream&
 
 virtual	multikey_index_type
 	lookup_key(const size_t) const = 0;
+
+	// translate multikey index to internal index
+virtual	size_t
+	lookup_index(const multikey_index_type&) const = 0;
+
+virtual	size_t
+	collection_size(void) const = 0;
 #endif
 
 virtual	multikey_index_type
@@ -190,7 +202,7 @@ virtual	size_t
 	lookup_index(const instance_alias_info_type&) const = 0;
 
 virtual	instance_alias_info_type&
-	get_corresponding_element(const this_type&,
+	get_corresponding_element(const collection_interface_type&,
 		const instance_alias_info_type&) = 0;
 
 	never_ptr<const physical_instance_placeholder>
@@ -299,7 +311,11 @@ virtual	instance_alias_info_type&
 	persistent*
 	construct_empty(const int);
 
+#if USE_COLLECTION_INTERFACES
+public:
+#else
 protected:
+#endif
 	// not that all alias elements are equal, 
 	// we can factor out common functionality
 	/**
@@ -372,6 +388,7 @@ protected:
 		operator () (const instance_alias_info_type&);
 	};	// end struct key_dumper
 
+protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 

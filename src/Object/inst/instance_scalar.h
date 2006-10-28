@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2.2.2 2006/10/26 22:32:08 fang Exp $
+	$Id: instance_scalar.h,v 1.2.2.3 2006/10/28 03:03:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -37,6 +37,8 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
+	typedef	typename parent_type::collection_interface_type
+						collection_interface_type;
 	typedef	typename traits_type::instance_alias_info_type
 						instance_alias_info_type;
 	typedef	typename traits_type::instance_alias_info_ptr_type
@@ -81,13 +83,19 @@ public:
 
 	multikey_index_type
 	lookup_key(const size_t) const;
+
+	size_t
+	lookup_index(const multikey_index_type&) const;
+
+	size_t
+	collection_size(void) const;
 #endif
 
 	size_t
 	lookup_index(const instance_alias_info_type&) const;
 
 	instance_alias_info_type&
-	get_corresponding_element(const parent_type&,
+	get_corresponding_element(const collection_interface_type&,
 		const instance_alias_info_type&);
 
 	ostream&
