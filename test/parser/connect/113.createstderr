@@ -30,10 +30,10 @@ Persistent Object Manager text dump:
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
+	29	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	38
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
+	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

@@ -75,9 +75,9 @@ Persistent Object Manager text dump:
 	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	72	##ADDR##	proccoll	1	#HEAD#	#TAIL#	99
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	63
-	75	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
-	76	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	55
+	74	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	55
+	75	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	39
+	76	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	47
 	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

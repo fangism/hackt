@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

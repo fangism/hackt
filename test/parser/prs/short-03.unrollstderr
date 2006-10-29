@@ -74,12 +74,12 @@ Persistent Object Manager text dump:
 	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	73	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	73	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	74	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
 	75	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	77	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	77	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	78	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)

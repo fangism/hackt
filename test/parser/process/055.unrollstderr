@@ -19,21 +19,19 @@ Persistent Object Manager text dump:
 	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	18	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
 	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	21	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	27	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	28	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	30	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

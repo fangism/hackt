@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.4 2006/10/24 21:15:51 fang Exp $
+	$Id: mem-01.hac,v 1.4.2.1 2006/10/29 20:58:55 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -137,5 +137,17 @@ hohoho rum[10][10];
 -rw-r--r-- 1 davidfang 151814027 Oct 24 17:12 mem-01.haco-a
 -rw-r--r-- 1 davidfang 138467127 Oct 24 17:11 mem-01.haco-c
 -rw-r--r-- 1 davidfang 130130846 Oct 24 17:10 mem-01.haco-u
+**/
+
+/** FILE SIZES as of HACKT-00-01-04-main-00-80-45-instance-02-05
+// having replaced port (formal) collections with lightweight 
+// port_actual_collections using back-references.  
+// significant speedup: 11/22/26 s
+// peak memory reduced about 10%, closer to 1G each
+// benefits attributed to reduced number of heap-allocated objects
+-rw-r--r-- 1 davidfang     82380 Oct 29 15:50 mem-01.haco
+-rw-r--r-- 1 davidfang 130072574 Oct 29 15:51 mem-01.haco-a
+-rw-r--r-- 1 davidfang 116725674 Oct 29 15:51 mem-01.haco-c
+-rw-r--r-- 1 davidfang 108389393 Oct 29 15:50 mem-01.haco-u
 **/
 

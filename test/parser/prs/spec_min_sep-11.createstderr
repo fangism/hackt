@@ -41,7 +41,7 @@ Persistent Object Manager text dump:
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
 	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 

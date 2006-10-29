@@ -55,10 +55,7 @@ Persistent Object Manager text dump:
 	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	54	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

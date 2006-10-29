@@ -62,30 +62,30 @@ Persistent Object Manager text dump:
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	59	##ADDR##	proccoll	2	#HEAD#	#TAIL#	270
 	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	62	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	63	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	64	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	66	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	88
-	67	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	68	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	58
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	70	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	71	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	72	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	74	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	75	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	76	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	77	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	78	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	79	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	80	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	82	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	83	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	84	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	61	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	62	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	63	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	64	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
+	65	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	66	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	80
+	67	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	25
+	68	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	46
+	69	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	70	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	71	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	72	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
+	73	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	74	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	75	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	76	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
+	77	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	78	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	79	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	80	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
+	81	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	82	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	83	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	84	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
 	85	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	86	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
 	87	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68

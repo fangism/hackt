@@ -80,16 +80,12 @@ Persistent Object Manager text dump:
 	76	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	79	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	80	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	81	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	79	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	80	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	81	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	85	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	87	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	84	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

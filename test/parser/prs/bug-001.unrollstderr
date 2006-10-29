@@ -92,9 +92,9 @@ Persistent Object Manager text dump:
 	88	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	89	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	91	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
-	92	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	91	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
+	92	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	93	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	94	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 	95	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	96	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -134,15 +134,15 @@ Persistent Object Manager text dump:
 	130	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	131	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	132	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	133	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	134	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	133	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	134	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	135	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
 	136	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	137	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	138	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	139	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	140	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	141	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	137	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	138	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	139	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	140	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	141	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

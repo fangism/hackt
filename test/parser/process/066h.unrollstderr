@@ -24,21 +24,16 @@ Persistent Object Manager text dump:
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	24	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
+	31	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	32	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

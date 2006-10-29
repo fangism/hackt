@@ -41,8 +41,8 @@ Persistent Object Manager text dump:
 	37	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
-	41	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
+	40	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
 	42	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	43	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 

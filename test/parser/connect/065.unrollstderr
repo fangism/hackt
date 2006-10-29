@@ -60,14 +60,14 @@ Persistent Object Manager text dump:
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	57	##ADDR##	proccoll	1	#HEAD#	#TAIL#	98
 	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	60	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	61	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	62	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	64	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	65	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	66	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	59	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	60	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	61	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	62	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
+	63	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	64	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	65	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	66	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
 	67	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
 	68	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
 	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100

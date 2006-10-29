@@ -35,10 +35,10 @@ Persistent Object Manager text dump:
 	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	34	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
 	35	##ADDR##	proccoll	1	#HEAD#	#TAIL#	49
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37

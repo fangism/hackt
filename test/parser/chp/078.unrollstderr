@@ -186,38 +186,38 @@ Persistent Object Manager text dump:
 	182	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	183	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	184	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	185	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	185	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	186	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	187	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	188	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	188	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	189	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	190	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	191	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	191	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	192	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	193	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	194	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	194	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	195	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	196	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	197	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	197	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	198	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	199	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	200	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	200	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	201	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	202	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	203	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	203	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	204	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	205	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	206	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	206	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	207	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	92
 	208	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	209	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	210	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	210	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	211	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	212	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	213	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	213	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 	214	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	215	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	216	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	216	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

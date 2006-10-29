@@ -47,20 +47,12 @@ Persistent Object Manager text dump:
 	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	47	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	51	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

@@ -63,20 +63,12 @@ Persistent Object Manager text dump:
 	59	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	73	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	63	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
+	64	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	67	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

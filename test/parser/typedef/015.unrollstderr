@@ -29,14 +29,14 @@ Persistent Object Manager text dump:
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
 	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

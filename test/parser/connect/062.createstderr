@@ -57,18 +57,18 @@ Persistent Object Manager text dump:
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	57	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	88
-	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	59	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	58
+	56	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	57	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	80
+	58	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	25
+	59	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	46
 	60	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	61	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
 	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	65	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	67	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	64	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	65	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
+	66	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	67	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
 	68	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
 
 In module created from: ##FILE## (unrolled) (created)

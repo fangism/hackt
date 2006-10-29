@@ -36,8 +36,8 @@ Persistent Object Manager text dump:
 	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	33
 	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	36	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	35	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

@@ -99,20 +99,16 @@ Persistent Object Manager text dump:
 	95	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	96	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	97	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	98	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	99	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	100	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	101	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	102	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	103	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	104	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	105	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	106	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	108	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	109	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	110	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	111	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	100	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	102	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	103	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	105	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

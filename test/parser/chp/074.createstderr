@@ -37,10 +37,10 @@ Persistent Object Manager text dump:
 	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

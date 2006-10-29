@@ -5,6 +5,15 @@
 
 2006-10-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-06:
+	  No source revision: all regression tests reconfirmed!
+		unroll and create tests' headers were updated accordingly.  
+	  test/quarantine/mem-01.hac: test case shows significant 
+		improvement in speed and reduction in memory, by virtue
+		of reducing number of heap allocated objects (persistent).  
+		Comments inside test case.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-05:
 	  Enabled ALLOCATE_PORT_ACTUAL_COLLECTIONS for testing, includes 
 		bunch of small fixes, many relative to the last branch.  

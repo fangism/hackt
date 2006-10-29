@@ -33,12 +33,12 @@ Persistent Object Manager text dump:
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -50,22 +50,20 @@ Persistent Object Manager text dump:
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	49	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	50	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	53	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
+	54	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	59	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
-	60	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	61	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	57	##ADDR##	procpacc	0	#HEAD#	#TAIL#	41
+	58	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
+	59	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	60	##ADDR##	procpacc	0	#HEAD#	#TAIL#	41
+	61	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
+	62	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

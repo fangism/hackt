@@ -26,19 +26,18 @@ Persistent Object Manager text dump:
 	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
+	34	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

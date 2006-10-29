@@ -84,10 +84,8 @@ Persistent Object Manager text dump:
 	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	83	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
-	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	85	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	38
+	84	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
