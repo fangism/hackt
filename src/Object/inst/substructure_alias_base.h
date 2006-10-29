@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.18 2006/10/18 20:58:06 fang Exp $
+	$Id: substructure_alias_base.h,v 1.18.4.1 2006/10/29 02:25:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,6 +11,7 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -66,7 +67,12 @@ virtual	~substructure_alias_base() { }
 
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>& p, 
+	unroll_port_instances(
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+			const collection_interface<Tag>& p, 
+#else
+			const instance_collection<Tag>& p, 
+#endif
 			const unroll_context& c) {
 		subinstances.unroll_port_instances(p, c);
 		restore_parent_child_links();
@@ -155,7 +161,12 @@ protected:
 	 */
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>&, 
+	unroll_port_instances(
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+			const collection_interface<Tag>&, 
+#else
+			const instance_collection<Tag>&, 
+#endif
 		const unroll_context&) const { }
 
 	void

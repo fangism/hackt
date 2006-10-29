@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.3 2006/10/28 03:03:09 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.4 2006/10/29 02:25:14 fang Exp $
 	TODO: trim includes
  */
 
@@ -129,6 +129,15 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::~instance_collection() {
 	STACKTRACE_DTOR("~instance_collection<>()");
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_COLLECTION_INTERFACES
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+const INSTANCE_COLLECTION_CLASS&
+INSTANCE_COLLECTION_CLASS::get_canonical_collection(void) const {
+	return *this;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -255,7 +264,7 @@ INSTANCE_COLLECTION_CLASS::make_array(const instance_placeholder_ptr_type p) {
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS*
-INSTANCE_COLLECTION_CLASS::make_port_array(
+INSTANCE_COLLECTION_CLASS::make_port_formal_array(
 		const instance_placeholder_ptr_type p) {
 	const size_t d = p->get_dimensions();
 	switch(d) {
@@ -474,6 +483,9 @@ INSTANCE_ARRAY_CLASS::get_corresponding_element(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps all instances recursively, including subinstances (ports).  
+ */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
@@ -493,9 +505,13 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 		const instance_alias_info_type& p) {
-	p.dump_key(os << auto_indent);
 	NEVER_NULL(p.container);
+	p.dump_key(os << auto_indent);
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	if (p.container->get_canonical_collection().has_relaxed_type())
+#else
 	if (p.container->has_relaxed_type())
+#endif
 		p.dump_actuals(os);
 	os << " = ";
 	NEVER_NULL(p.peek());
@@ -941,6 +957,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::element_loader::operator () (
 		instance_alias_info_type& e) {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_loader::operator()");
 	e.load_object_base(this->pom, this->is);
 }
 
@@ -1194,13 +1211,13 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_COLLECTION_INTERFACES
 /**
-	\param i internal index.  
+	\param i public 1-based index, must be 1!
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
 		const size_t i) const {
-	INVARIANT(!i);
+	INVARIANT(i == 1);
 	return o;
 }
 #endif
@@ -1280,7 +1297,12 @@ if (this->the_instance.container) {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
 //	if (this->the_instance.container->is_complete_type()) {
-	if (this->the_instance.container->has_relaxed_type()) {
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	if (this->has_relaxed_type())	// meaning "the container"
+#else
+	if (this->the_instance.container->has_relaxed_type())
+#endif
+	{
 		this->the_instance.dump_actuals(o);
 	}
 //	}
@@ -1567,7 +1589,12 @@ INSTANCE_SCALAR_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_scalar::write_object()");
 	parent_type::write_object_base(m, f);
+#if 0
 	this->the_instance.write_object(m, f);
+#else
+	typename parent_type::element_writer(m, f)(this->the_instance);
+	typename parent_type::connection_writer(m, f)(this->the_instance);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1577,7 +1604,12 @@ INSTANCE_SCALAR_CLASS::load_object(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
+#if 0
 	this->the_instance.load_object(m, f);		// problem?
+#else
+	typename parent_type::element_loader(m, f)(this->the_instance);
+	typename parent_type::connection_loader(m, f)(this->the_instance);
+#endif
 	this->the_instance.check(this);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.2 2006/10/28 03:03:08 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.3 2006/10/29 02:25:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -44,6 +44,7 @@ class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
+template <class> class instance_collection;
 // template <class> class instantiation_statement;
 
 //=============================================================================
@@ -115,8 +116,8 @@ virtual	~collection_interface() { }
 virtual	ostream&
 	what(ostream&) const = 0;
 
-//	ostream&
-//	type_dump(ostream&) const;
+virtual	const instance_collection<Tag>&
+	get_canonical_collection(void) const = 0;
 
 virtual	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
@@ -131,47 +132,9 @@ virtual	instance_alias_info_type&
 	get_corresponding_element(const this_type&,
 		const instance_alias_info_type&) = 0;
 
-//	never_ptr<const physical_instance_placeholder>
-//	get_placeholder_base(void) const;
-
-#if 0
-// maybe virtual
-	instance_placeholder_ptr_type
-	get_placeholder(void) const {
-		return this->source_placeholder;
-	}
-#endif
-
 	// TODO: substitute/rename as collection_type_established()
 virtual	bool
 	is_partially_unrolled(void) const = 0;
-
-#if 0
-	// this could just return hard-coded built-in type...
-	// this returns the type as given by the first instantiation statement
-	count_ptr<const fundamental_type_reference>
-	get_unresolved_type_ref(void) const;
-#endif
-
-#if 0
-	bool
-	must_be_collectibly_type_equivalent(const this_type&) const;
-
-	// 2005-07-07: intended for first-time type establishment, 
-	// which determines whether or not the collection is relaxed or 
-	// strictly typed.  
-	good_bool
-	establish_collection_type(const instance_collection_parameter_type&);
-#endif
-
-//	bool
-//	has_relaxed_type(void) const;
-
-#if 0
-	// 2005-07-07: now intended for use AFTER collection type is established
-	bad_bool
-	check_established_type(const instance_collection_parameter_type&) const;
-#endif
 
 /**
 	Prototype for instantiating alias indices during unroll phase.  
@@ -192,10 +155,6 @@ protected:
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
 public:
-#if 0
-	never_ptr<const const_param_expr_list>
-	get_actual_param_list(void) const;
-#endif
 
 virtual instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& i) const = 0;
@@ -228,22 +187,6 @@ virtual	void
 public:
 virtual	instance_alias_info_type&
 	load_reference(istream& i) = 0;
-
-#if 0
-	static
-	this_type*
-	make_array(const instance_placeholder_ptr_type);
-
-	static
-	this_type*
-	make_port_array(const instance_placeholder_ptr_type);
-#endif
-
-#if 0
-	static
-	persistent*
-	construct_empty(const int);
-#endif
 
 #if 0
 // maybe...

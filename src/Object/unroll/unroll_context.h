@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.15 2006/10/24 07:27:38 fang Exp $
+	$Id: unroll_context.h,v 1.15.2.1 2006/10/29 02:25:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -124,6 +125,11 @@ public:
 
 	count_ptr<physical_instance_collection>
 	lookup_instance_collection(const physical_instance_placeholder&) const;
+
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	count_ptr<physical_instance_collection>
+	lookup_port_collection(const physical_instance_placeholder&) const;
+#endif
 
 	count_ptr<param_value_collection>
 	lookup_lvalue_collection(const param_value_placeholder&) const;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.1 2006/10/28 03:03:10 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.2 2006/10/29 02:25:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -43,7 +43,14 @@ public:
 	typedef	collection_interface<Tag>	parent_type;
 	typedef	parent_type			collection_interface_type;
 	typedef	instance_collection<Tag>	formal_collection_type;
-	typedef	never_ptr<const formal_collection_type>
+/**
+	We conservatively use a reference-count pointer for now, 
+	though we are considering a never_ptr.  
+	reference-counting should not result in cycles, as cyclic
+	type references (specifically footprint) are forbidden and rejected.  
+ */
+//	typedef	never_ptr<const formal_collection_type>
+	typedef	count_ptr<const formal_collection_type>
 						formal_collection_ptr_type;
 	typedef	instance_alias_info<Tag>	instance_alias_info_type;
 	typedef	instance_alias_info_type	element_type;
@@ -84,9 +91,18 @@ private:
 	port_actual_collection();
 public:
 	explicit
-	port_actual_collection(const formal_collection_ptr_type);
+	port_actual_collection(const formal_collection_ptr_type&, 
+		const unroll_context&);
 
 	~port_actual_collection();
+
+	const formal_collection_type&
+	get_canonical_collection(void) const;
+
+	formal_collection_ptr_type
+	get_formal_collection(void) const {
+		return this->formal_collection;
+	}
 
 	ostream&
 	what(ostream&) const;

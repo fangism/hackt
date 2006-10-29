@@ -3,6 +3,28 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-04:
+	  Wrote most of code for flag ALLOCATE_PORT_ACTUAL_COLLECTIONS, 
+		but left flag disabled for this revision.  
+		Updated many member typedefs in class templates.  
+	  Simplified instance_alias_info::{write,load}_object_base to 
+		NOT deal with connections, but leave for a separate phase.
+		So now the scalar collection explicitly invokes the 
+		relevant alias write/load functors.  
+	  Changed back-reference pointer from actual_collection to 
+		formal_collection to reference-counted, 
+		tentatively, conservatively.  
+	  Renamed instance_collection::make_port_array()
+		to make_port_formal_array, to avoid confusion with 
+		upcoming allocation methods.
+	  unroll_context: added lookup_port_collection method as a 
+		special case of lookup_instance_collection.  
+	  Bunch of debugging diagnostic code added to instance_alias_info.
+	  Maybe goes without saying, but re-confirmed all regression tests.  
+
+
 2006-10-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-03:

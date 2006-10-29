@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4 2006/10/24 07:27:15 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.1 2006/10/29 02:25:14 fang Exp $
 	TODO: trim includes
  */
 
@@ -39,6 +39,10 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+#include "Object/unroll/unroll_context.h"
+#include "Object/inst/port_actual_collection.h"
+#endif
 #include "common/ICE.h"
 
 #include "util/memory/count_ptr.tcc"
@@ -205,15 +209,29 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: make packed array!
+	TODO: make packed actuals array!
+	\param c the unroll_context, whose (read-only) lookup footprint 
+	is that of the super-instance's type.  
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->initial_instantiation_statement_ptr);
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	typedef	port_actual_collection<Tag>	port_collection_type;
+	const count_ptr<const instance_collection_generic_type>
+		back_ref(c.lookup_port_collection(*this)
+			.template is_a<const instance_collection_generic_type>());
+	NEVER_NULL(back_ref);
+	// pass unroll_context to instantiate recursively
+	const count_ptr<port_collection_type>
+		ret(new port_collection_type(back_ref, c));
+	// TODO: attach relaxed parameters
+	return ret;
+#else
 	const count_ptr<instance_collection_generic_type>
-		ret(instance_collection_generic_type::make_port_array(
+		ret(instance_collection_generic_type::make_port_formal_array(
 			never_ptr<const this_type>(this)));
 	if (this->initial_instantiation_statement_ptr->
 			instantiate_port(c, *ret).good) {
@@ -221,6 +239,7 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	} else {
 		return count_ptr<physical_instance_collection>(NULL);
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,7 +309,7 @@ INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 INSTANCE_PLACEHOLDER_CLASS::make_collection(void) const {
 	if (this->is_port_formal()) {
-		return instance_collection_generic_type::make_port_array(
+		return instance_collection_generic_type::make_port_formal_array(
 			never_ptr<const this_type>(this));
 	} else {
 		return instance_collection_generic_type::make_array(

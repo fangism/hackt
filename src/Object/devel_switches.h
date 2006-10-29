@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.2 2006/10/28 03:03:01 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.3 2006/10/29 02:25:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -87,20 +87,28 @@
 // TODO: push super_instance down to instance_collection's?
 
 /**
-	Define to 1 to use port_actual_collections in subinstances.
+	Define to 1 to instantiate port_actual_collections. 
 	Nothing more specific about HOW they are used is implied by
 	this switch.  
 	Goal: 1
-	Status: just begun
+	Status: instantiations done
  */
 #define	ENABLE_PORT_ACTUAL_COLLECTIONS		(1 && USE_COLLECTION_INTERFACES)
+
+/**
+	Define to 1 to *use* port_actual_collections in subinstances.  
+	Doesn't specify how they are allocated, see next flags.  
+	Goal: 1
+	Status: in progress
+ */
+#define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	(0 && ENABLE_PORT_ACTUAL_COLLECTIONS)
 
 /**
 	Define to 1 to allocate port_actual_collections on the heap.
 	Goal: 0 -- pool them
 	Status: not yet
  */
-#define	HEAP_ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ENABLE_PORT_ACTUAL_COLLECTIONS)
+#define	HEAP_ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ALLOCATE_PORT_ACTUAL_COLLECTIONS)
 
 /**
 	Define to 1 to use per-footprint pools to allocate
@@ -108,7 +116,7 @@
 	Goal: 1?
 	Status: conception
  */
-#define	PER_FOOTPRINT_PORT_ACTUAL_COLLECTION_POOLS	0
+#define	PER_FOOTPRINT_PORT_ACTUAL_COLLECTION_POOLS	(0 && ALLOCATE_PORT_ACTUAL_COLLECTIONS)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

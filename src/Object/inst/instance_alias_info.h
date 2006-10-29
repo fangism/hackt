@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17.2.1 2006/10/25 19:26:31 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.2 2006/10/29 02:25:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -27,6 +27,9 @@ class instance_alias_info_actuals;
 struct alias_visitor;
 struct alias_printer;
 template <class> struct alias_matcher;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+template <class> class collection_interface;
+#endif
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -77,7 +80,13 @@ public:
 	 */
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	typedef	collection_interface<Tag>		container_type;
+	typedef	instance_collection_generic_type	canonical_container_type;
+#else
+	typedef	instance_collection_generic_type	canonical_container_type;
 	typedef	instance_collection_generic_type	container_type;
+#endif
 	typedef	never_ptr<const container_type>	container_ptr_type;
 
 	template <class T>
@@ -129,6 +138,9 @@ public:
 		Consider using this to determine "instantiated" state.  
 		NOTE: this could be pushed to children, and replaced
 			with virtual interface.  
+		It is through this pointer that an instance is able to
+		deduce its position and key within a collection without
+		containing the actual key!
 	 */
 	container_ptr_type				container;
 

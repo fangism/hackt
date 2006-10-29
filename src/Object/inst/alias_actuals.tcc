@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.14 2006/10/24 07:27:06 fang Exp $
+	$Id: alias_actuals.tcc,v 1.14.2.1 2006/10/29 02:25:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -16,6 +16,7 @@
 #include "Object/type/canonical_type.h"
 #include "util/stacktrace.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -41,7 +42,11 @@ instance_alias_info_actuals::complete_type_actuals(
 	STACKTRACE_VERBOSE;
 	typedef	typename InstColl::instance_collection_parameter_type
 						canonical_type_type;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	canonical_type_type _type(_inst.get_canonical_collection().__get_raw_type());
+#else
 	canonical_type_type _type(_inst.__get_raw_type());
+#endif
 	if (_type.is_relaxed()) {
 		if (actuals) {
 			// then merge actuals and return
@@ -78,7 +83,7 @@ template <class AliasType>
 good_bool
 instance_alias_info_actuals::create_dependent_types(const AliasType& _alias, 
 		const footprint& top) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	STACKTRACE_VERBOSE;
@@ -111,7 +116,7 @@ template <class AliasType>
 ostream&
 instance_alias_info_actuals::dump_complete_type(const AliasType& _alias, 
 		ostream& o, const footprint* const f) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type
@@ -144,7 +149,7 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 		const AliasType& _alias, footprint_frame& ff, 
 		state_manager& sm, const port_member_context& pmc, 
 		const size_t ind) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type
@@ -166,7 +171,7 @@ template <class AliasType>
 void
 instance_alias_info_actuals::collect_canonical_footprint(
 		const AliasType& _alias, persistent_object_manager& m) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	STACKTRACE_VERBOSE;
@@ -203,7 +208,7 @@ void
 instance_alias_info_actuals::save_canonical_footprint(const AliasType& _alias, 
 		const persistent_object_manager& m, ostream& o, 
 		const footprint* const _f) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type
@@ -230,7 +235,7 @@ void
 instance_alias_info_actuals::restore_canonical_footprint(
 		const AliasType& _alias, const persistent_object_manager& m, 
 		istream& i, const footprint*& _f) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type

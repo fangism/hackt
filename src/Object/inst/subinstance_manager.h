@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.15 2006/10/18 20:58:06 fang Exp $
+	$Id: subinstance_manager.h,v 1.15.4.1 2006/10/29 02:25:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -11,6 +11,7 @@
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -26,7 +27,11 @@ class port_alias_tracker;
 class port_member_context;
 class state_manager;
 class footprint_frame;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+template <class> class collection_interface;
+#else
 template <class> class instance_collection;
+#endif
 class cflat_visitor;
 struct dump_flags;
 using std::ostream;
@@ -101,7 +106,12 @@ public:
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>&, 
+	unroll_port_instances(
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+		const collection_interface<Tag>&, 
+#else
+		const instance_collection<Tag>&, 
+#endif
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
 

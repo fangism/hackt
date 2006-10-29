@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.9 2006/10/18 19:08:01 fang Exp $
+	$Id: alias_empty.tcc,v 1.9.4.1 2006/10/29 02:25:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -93,12 +93,16 @@ template <class AliasType>
 good_bool
 instance_alias_info_empty::create_dependent_types(const AliasType& _alias, 
 		const footprint& top) {
-	typedef	typename AliasType::container_type	container_type;
+	typedef	typename AliasType::canonical_container_type	container_type;
 	typedef typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	STACKTRACE_VERBOSE;
 	const complete_type_type
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+		_type(_alias.container->get_canonical_collection().__get_raw_type());
+#else
 		_type(_alias.container->__get_raw_type());
+#endif
 	if (!_type) {
 		// already have error message
 		_alias.dump_hierarchical_name(cerr << "Failed to instantiate ", 

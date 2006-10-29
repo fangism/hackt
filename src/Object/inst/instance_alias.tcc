@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.2 2006/10/26 22:32:02 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.3 2006/10/29 02:25:12 fang Exp $
 	TODO: trim includes
  */
 
@@ -339,8 +339,14 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	return this->container->get_canonical_collection()
+		.must_be_collectibly_type_equivalent(
+			a.container->get_canonical_collection());
+#else
 	return this->container->must_be_collectibly_type_equivalent(
 		*a.container);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -485,11 +491,14 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 	// shouldn't need to re-visit parent pointer, 
 	// UNLESS it is visited from an alias cycle, 
 	// in which case, the parent may not have been visited before...
-
+#if 0
 	// this is allowed to be null ONLY if it belongs to a scalar
 	// in which case it is not yet unrolled.  
 	// recall: null container => uninstantiated (or !valid())
 	if (this->container)
+#else
+	NEVER_NULL(this->container);
+#endif
 		this->container->collect_transient_info(m);
 	actuals_parent_type::collect_transient_info_base(m);
 	substructure_parent_type::collect_transient_info_base(m);
@@ -665,9 +674,12 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
 	m.write_pointer(o, this->container);
-	if (this->container->get_dimensions()) {
+	const size_t dim = this->container->get_dimensions();
+	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
+	if (dim) {
 		const size_t index = this->container->lookup_index(*this);
 		// 1-indexed for ALL collections
 		INVARIANT(index);
@@ -686,14 +698,20 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_VERBOSE;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 	NEVER_NULL(this->container);
-if (this->container->get_dimensions()) {
+	const size_t dim = this->container->get_dimensions();
+	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
+if (dim) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
 	this_type& n(this->load_alias_reference(m, i));
 	this->next = &n;
 } else {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
-	instance_collection_generic_type* next_container;
+	container_type* next_container;
 	m.read_pointer(i, next_container);
 	NEVER_NULL(next_container);	// true?
 	// no key to read!
@@ -714,6 +732,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_VERBOSE;
 	never_ptr<container_type> next_container;
 	m.read_pointer(i, next_container);
 	// reconstruction ordering problem:
@@ -746,17 +765,24 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
-if (!this->container->get_dimensions()) {
+#if 0
+	const size_t dim = this->container->get_dimensions();
+	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
+if (!dim) {
 	if (this->next == this) {
+#if STACKTRACE_PERSISTENTS
+		STACKTRACE_INDENT_PRINT("Self-connection only." << endl);
+#endif
 		write_value<char>(o, 0);
 	} else {
 #if STACKTRACE_PERSISTENTS
-		cerr << "Writing a real connection!" << endl;
+		STACKTRACE_INDENT_PRINT("Writing a real connection!" << endl);
 #endif
 		write_value<char>(o, 1);
 		this->peek()->write_next_connection(m, o);
 	}
 }
+#endif
 //	else skip, collection will write connections later...
 }
 
@@ -777,17 +803,21 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);
 	m.load_object_once(&const_cast<container_type&>(*this->container));
-if (!this->container->get_dimensions()) {
+#if 0
+	const size_t dim = this->container->get_dimensions();
+	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
+if (!dim) {
 	// no key to load!
 	char c;
 	read_value(i, c);
 	if (c) {
 #if STACKTRACE_PERSISTENTS
-		cerr << "Loading a real connection!" << endl;
+		STACKTRACE_INDENT_PRINT("Loading a real connection!" << endl);
 #endif
 		this->load_next_connection(m, i);
 	}
 }
+#endif
 //	else skip, collection will load connections later...
 }
 

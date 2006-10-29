@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.3 2006/10/28 03:03:09 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.4 2006/10/29 02:25:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -171,6 +171,7 @@ public:
 
 virtual	~instance_collection();
 
+
 virtual	ostream&
 	what(ostream&) const = 0;
 
@@ -181,6 +182,9 @@ virtual	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
 
 #if USE_COLLECTION_INTERFACES
+	const this_type&
+	get_canonical_collection(void) const;
+
 virtual	ostream&
 	dump_element_key(ostream&, const size_t) const = 0;
 
@@ -305,7 +309,7 @@ virtual	instance_alias_info_type&
 
 	static
 	this_type*
-	make_port_array(const instance_placeholder_ptr_type);
+	make_port_formal_array(const instance_placeholder_ptr_type);
 
 	static
 	persistent*

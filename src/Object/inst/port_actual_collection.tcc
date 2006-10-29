@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.1 2006/10/28 03:03:11 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.2 2006/10/29 02:25:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -15,6 +15,7 @@
 #include <algorithm>
 #include "Object/inst/port_actual_collection.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/instance_alias_info.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/port_context.h"
 #include "Object/expr/const_index_list.h"
@@ -40,7 +41,26 @@ using util::value_writer;
 
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection() :
-		parent_type() {
+		parent_type(), formal_collection(), value_array(0) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This constructor should never throw.  
+ */
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
+		const formal_collection_ptr_type& f, 
+		const unroll_context& c) :
+		parent_type(), 
+		formal_collection(f), 
+		value_array(f->collection_size()) {
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	iterator i(this->begin()), e(this->end());
+	for ( ; i!=e; ++i) {
+		i->instantiate(never_ptr<const this_type>(this), c);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -90,6 +110,14 @@ PORT_ACTUAL_COLLECTION_CLASS::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+const instance_collection<Tag>&
+PORT_ACTUAL_COLLECTION_CLASS::get_canonical_collection(void) const {
+	NEVER_NULL(this->formal_collection);
+	return *this->formal_collection;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
  	\return 1-based index.  
  */
@@ -97,8 +125,12 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 size_t
 PORT_ACTUAL_COLLECTION_CLASS::lookup_index(
 		const instance_alias_info_type& a) const {
+	STACKTRACE_VERBOSE;
 	const size_t offset = distance(this->begin(), &a);
 	INVARIANT(offset < this->value_array.size());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("return " << offset +1);
+#endif
 	return offset +1;
 }
 
@@ -132,6 +164,7 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 multikey_index_type
 PORT_ACTUAL_COLLECTION_CLASS::lookup_key(
 		const instance_alias_info_type& a) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->formal_collection);
 	// internally uses 1-based index
 	return this->formal_collection->lookup_key(this->lookup_index(a));
@@ -141,6 +174,7 @@ PORT_ACTUAL_COLLECTION_CLASS::lookup_key(
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 multikey_index_type
 PORT_ACTUAL_COLLECTION_CLASS::lookup_key(const size_t i) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->formal_collection);
 	return this->formal_collection->lookup_key(i);
 }
@@ -151,6 +185,7 @@ typename PORT_ACTUAL_COLLECTION_CLASS::instance_alias_info_type&
 PORT_ACTUAL_COLLECTION_CLASS::get_corresponding_element(
 		const collection_interface_type& p, 
 		const instance_alias_info_type& a) {
+	STACKTRACE_VERBOSE;
 	const size_t offset = p.lookup_index(a);
 	INVARIANT(offset);
 	return this->value_array[offset -1];
@@ -177,6 +212,7 @@ PORT_ACTUAL_COLLECTION_CLASS::type_dump(ostream& o) const {
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 PORT_ACTUAL_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
+	STACKTRACE_VERBOSE;
 	return this->formal_collection->get_unresolved_type_ref();
 }
 
@@ -184,6 +220,7 @@ PORT_ACTUAL_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 never_ptr<const physical_instance_placeholder>
 PORT_ACTUAL_COLLECTION_CLASS::get_placeholder_base(void) const {
+	STACKTRACE_VERBOSE;
 	return this->formal_collection->get_placeholder_base();
 }
 
@@ -212,6 +249,7 @@ PORT_ACTUAL_COLLECTION_CLASS::instantiate_indices(
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::allocate_local_instance_ids(footprint& f) {
+	STACKTRACE_VERBOSE;
 	iterator i(this->begin()), e(this->end());
 	for ( ; i!=e; ++i) {
 		if (!i->assign_local_instance_id(f)) {
@@ -425,7 +463,6 @@ PORT_ACTUAL_COLLECTION_CLASS::load_reference(istream& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::construct_port_context(
@@ -500,7 +537,14 @@ PORT_ACTUAL_COLLECTION_CLASS::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, this->formal_collection);
+	// size is deduced from the formal_collection
+	const size_t k = this->formal_collection->collection_size();
+#if ENABLE_STACKTRACE
+	cerr << "collection-size = " << k << endl;
+#endif
+	INVARIANT(k == this->value_array.size());
 	const const_iterator b(this->begin()), e(this->end());
+	INVARIANT(k == size_t(distance(b, e)));
 	for_each(b, e, typename formal_collection_type::element_writer(m, f));
 	for_each(b, e, typename formal_collection_type::connection_writer(m, f));
 }
@@ -510,14 +554,21 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::load_object(const persistent_object_manager& m, 
 		istream& f) {
+#if ENABLE_STACKTRACE
+	cerr << "this (port-actual-collection) @ " << this << endl;
+#endif
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, this->formal_collection);
 	NEVER_NULL(this->formal_collection);
 	m.load_object_once(&const_cast<formal_collection_type&>(
 		*this->formal_collection));
 	const size_t k = this->formal_collection->collection_size();
+#if ENABLE_STACKTRACE
+	cerr << "collection-size = " << k << endl;
+#endif
 	this->value_array.resize(k);
 	const iterator b(this->begin()), e(this->end());
+	INVARIANT(k == size_t(distance(b, e)));
 	for_each(b, e, typename formal_collection_type::element_loader(m, f));
 	for_each(b, e, typename formal_collection_type::connection_loader(m, f));
 }
