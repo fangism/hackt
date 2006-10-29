@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.21 2006/10/18 21:38:52 fang Exp $
+ 	$Id: type_reference.cc,v 1.21.4.1 2006/10/29 20:05:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -605,11 +605,13 @@ data_type_reference::may_be_binop_type_equivalent(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Static helper function.
+	NOTE: data types cannot be relaxed; they must be strict.  
  */
 void
 data_type_reference::unroll_port_instances(
 		const never_ptr<const definition_type> def, 
-		const template_actuals& ta, 
+//		const template_actuals& ta, 
+		const count_ptr<const const_param_expr_list>& ta, 
 		const unroll_context& c, subinstance_manager& sub) {
 	if (def == &bool_traits::built_in_definition) {
 		// do nothing!
@@ -628,17 +630,24 @@ data_type_reference::unroll_port_instances(
 	const port_formals_manager& port_formals(data_def->get_port_formals());
 	{
 		STACKTRACE("local context");
+#if 0
 		const template_actuals
 			resolved_template_args(ta.unroll_resolve(c));
 		const unroll_context& cc(c);
 		// should the contexts be chained?
 		// or can the actuals always be resolved one scope at a time?
+#else
+		const footprint& f(data_def->get_footprint(ta));
+		const unroll_context cc(&f, c);
+#endif
 		port_formals.unroll_ports(cc, sub);
 	}
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// unused?
 /**
 	Transient work around for special cases only.  
 	TODO (2005-07-12): implement for real.
@@ -650,6 +659,7 @@ data_type_reference::unroll_port_instances(const unroll_context& c,
 	INVARIANT(is_canonical());
 	unroll_port_instances(base_type_def, template_args, c, sub);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

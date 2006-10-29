@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.15.4.1 2006/10/25 19:26:38 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.15.4.2 2006/10/29 20:05:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -46,6 +46,8 @@ public:
 							parent_type;
 	typedef	typename traits_type::instance_collection_generic_type
 						instance_collection_generic_type;
+	typedef	typename parent_type::collection_interface_type
+						collection_interface_type;
 	typedef	typename traits_type::instance_placeholder_type
 						instance_placeholder_type;
 	typedef	never_ptr<const instance_placeholder_type>
@@ -107,7 +109,7 @@ protected:
 	using parent_type::unroll_references_packed_helper_no_lookup;
 
 private:
-	count_ptr<instance_collection_generic_type>
+	count_ptr<collection_interface_type>
 	resolve_parent_member_helper(const unroll_context&) const;
 
 public:

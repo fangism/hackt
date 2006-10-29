@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.2 2006/10/29 02:25:16 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.3 2006/10/29 20:04:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -20,6 +20,8 @@
 #include "Object/port_context.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+
+#include "common/TODO.h"
 
 #include "util/multikey.h"
 #include "util/IO_utils.h"
@@ -344,28 +346,43 @@ PORT_ACTUAL_COLLECTION_CLASS::unroll_aliases(const multikey_index_type& l,
 	typedef	multikey_index_type 		key_type;
 	typedef	key_type::generator_type	key_generator_type;
 	STACKTRACE_VERBOSE;
-	const key_type lower(l), upper(u);
+	// const key_type lower(l), upper(u);
 	// else we know that every key is valid (since whole range is valid)
-	key_generator_type key_gen(lower, upper);
+	key_generator_type key_gen(l, u);
 	key_gen.initialize();
 	alias_collection_iterator a_iter(a.begin());
+	bool ret = false;
+	const size_t max = this->value_array.size();
 	do {
 		const size_t offset = 
 			this->formal_collection->lookup_index(key_gen);
-		if (!offset) {
-			return bad_bool(true);
+		// 1-based index
+		if (!offset || offset > max) {
+			this->formal_collection->type_dump(
+				cerr << "FATAL: reference to uninstantiated ")
+					<< " index " << key_gen << endl;
+			ret = true;
+		} else {
+			const instance_alias_info_ptr_type
+				pi(&const_cast<instance_alias_info_type&>(
+					value_array[offset -1]));
+			NEVER_NULL(pi);
+			INVARIANT(pi->valid());
+			// port must already be instantiated
+			*a_iter = pi;
 		}
-		const instance_alias_info_ptr_type
-			pi(&const_cast<instance_alias_info_type&>(
-				value_array[offset -1]));
-		NEVER_NULL(pi);
-		INVARIANT(pi->valid());	// port must already be instantiated
-		*a_iter = pi;
 		++a_iter;
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
-	return bad_bool(false);
+#if 0
+	if (ret) {
+		cerr << "Error referencing " <<
+			this->formal_collection->get_hierarchical_name()
+			<< "." << endl;
+	}
+#endif
+	return bad_bool(ret);
 }	// end method unroll_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -452,14 +469,24 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(port_alias_tracker& t) const 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to distinguish between scalar and array, just like is
+	done with instance_array and instance_scalar::load_reference.  
+ */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 typename PORT_ACTUAL_COLLECTION_CLASS::instance_alias_info_type&
 PORT_ACTUAL_COLLECTION_CLASS::load_reference(istream& i) {
 	STACKTRACE_VERBOSE;
+if (this->get_dimensions()) {
 	size_t index;		// 1-indexed
 	read_value(i, index);
 	INVARIANT(index);
 	return *(this->begin() +(index -1));	// array-access
+} else {
+	// nothing to load!
+	INVARIANT(this->value_array.size() == 1);
+	return *this->begin();
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -516,6 +543,8 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key, 0)) {
+	// since this is a port collection, there MUST be a super-instance.
+	NEVER_NULL(this->super_instance);
 	parent_type::collect_transient_info_base(m);
 	this->formal_collection->collect_transient_info(m);
 	for_each(this->begin(), this->end(),

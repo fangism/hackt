@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.12 2006/10/18 21:38:48 fang Exp $
+	$Id: canonical_type.cc,v 1.12.4.1 2006/10/29 20:05:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -53,7 +53,7 @@ struct unroll_port_instances_policy<datatype_definition_base> {
 		// temporary
 		// eventually will need template arguments
 		data_type_reference::unroll_port_instances(
-			d.get_base_def(), d.get_template_params(), c, sub);
+			d.get_base_def(), d.get_raw_template_params(), c, sub);
 	}
 };	// end struct unroll_port_instances_policy
 
@@ -66,7 +66,7 @@ struct unroll_port_instances_policy<user_def_datatype> {
 			subinstance_manager& sub) const {
 		// temporary
 		data_type_reference::unroll_port_instances(
-			d.get_base_def(), d.get_template_params(), c, sub);
+			d.get_base_def(), d.get_raw_template_params(), c, sub);
 		// FINISH_ME(Fang);
 	}
 };	// end struct unroll_port_instances_policy

@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.9 2006/10/18 20:58:25 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.9.4.1 2006/10/29 20:05:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -159,6 +159,9 @@ public:
 
 virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 
+/**
+	This is no longer virtual.  
+ */
 #define	UNROLL_PORT_INSTANCES_PROTO					\
 	void								\
 	unroll_port_instances(const unroll_context&, 			\

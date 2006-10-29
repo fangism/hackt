@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.16.4.1 2006/10/25 19:26:40 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.16.4.2 2006/10/29 20:05:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -177,7 +177,7 @@ META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper_no_lookup(
 		const unroll_context& c,
-		const instance_collection_generic_type& inst,
+		const collection_interface_type& inst,
 		const count_ptr<const index_list_type>& ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
@@ -287,8 +287,8 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		inst_p(c.lookup_instance_collection(_inst));
 	NEVER_NULL(inst_p);
 	// assert dynamic_cast
-	const instance_collection_generic_type&
-		inst(IS_A(const instance_collection_generic_type&, *inst_p));
+	const collection_interface_type&
+		inst(IS_A(const collection_interface_type&, *inst_p));
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
 
@@ -315,8 +315,8 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// assert checked-cast, will throw bad_cast upon error
-	instance_collection_generic_type&
-		coll(IS_A(instance_collection_generic_type&, cl));
+	collection_interface_type&
+		coll(IS_A(collection_interface_type&, cl));
 
 	alias_collection_type this_aliases;
 	const bad_bool unroll_err(this->unroll_references_packed(c, this_aliases));

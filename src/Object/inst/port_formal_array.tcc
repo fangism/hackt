@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.3 2006/10/28 03:03:11 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.4 2006/10/29 20:05:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -230,13 +230,14 @@ PORT_FORMAL_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 /**
 	Error handling?
 	\pre k must be valid.
+	\return 1-based index.  
  */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 size_t
 PORT_FORMAL_ARRAY_CLASS::lookup_index(const multikey_index_type& k) const {
 	STACKTRACE_VERBOSE;
 //	return this->value_array.key_to_index(k) +1;	// protected
-	return distance(this->begin(), const_iterator(&this->value_array[k]));
+	return distance(this->begin(), const_iterator(&this->value_array[k])) +1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

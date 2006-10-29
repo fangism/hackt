@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.28 2006/10/24 07:27:28 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.28.2.1 2006/10/29 20:05:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -793,7 +793,7 @@ if (_vals.get_dimensions()) {
 	const multikey_index_type upper(full_indices.upper_multikey());
 	// this will set the size and dimensions of packed_array a
 	if (_vals.unroll_lvalue_references(lower, upper, a).bad) {
-		cerr << "ERROR: unrolling aliases." << endl;
+		cerr << "ERROR: unrolling values." << endl;
 		return bad_bool(true);
 	}
 	// success!
@@ -805,7 +805,7 @@ if (_vals.get_dimensions()) {
 	a.resize();             // empty
 	const multikey_index_type bogus;
 	if (_vals.unroll_lvalue_references(bogus, bogus, a).bad) {
-		cerr << "ERROR: unrolling aliases." << endl;
+		cerr << "ERROR: unrolling values." << endl;
 		return bad_bool(true);
 	}
 	return bad_bool(false);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4.2.1 2006/10/29 02:25:14 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.2 2006/10/29 20:04:58 fang Exp $
 	TODO: trim includes
  */
 
@@ -220,9 +220,11 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	INVARIANT(this->initial_instantiation_statement_ptr);
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	typedef	port_actual_collection<Tag>	port_collection_type;
+	const count_ptr<const physical_instance_collection>
+		b(c.lookup_port_collection(*this));
+	NEVER_NULL(b);
 	const count_ptr<const instance_collection_generic_type>
-		back_ref(c.lookup_port_collection(*this)
-			.template is_a<const instance_collection_generic_type>());
+		back_ref(b.template is_a<const instance_collection_generic_type>());
 	NEVER_NULL(back_ref);
 	// pass unroll_context to instantiate recursively
 	const count_ptr<port_collection_type>

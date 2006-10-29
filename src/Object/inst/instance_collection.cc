@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.25 2006/10/18 20:58:01 fang Exp $
+ 	$Id: instance_collection.cc,v 1.25.4.1 2006/10/29 20:04:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -151,8 +151,10 @@ instance_collection_base::dump_hierarchical_name(ostream& o) const {
 		return super_instance->dump_hierarchical_name(o,
 			dump_flags::default_value) << '.' << get_name();
 	} else {
-		return __get_placeholder_base()->
-			dump_qualified_name(o, dump_flags::default_value);
+		const never_ptr<const instance_placeholder_base>
+			p(__get_placeholder_base());
+		NEVER_NULL(p);
+		return p->dump_qualified_name(o, dump_flags::default_value);
 	}
 }
 
@@ -165,7 +167,10 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 		return super_instance->dump_hierarchical_name(o, df)
 			<< '.' << get_name();
 	} else {
-		return __get_placeholder_base()->dump_qualified_name(o, df);
+		const never_ptr<const instance_placeholder_base>
+			p(__get_placeholder_base());
+		NEVER_NULL(p);
+		return p->dump_qualified_name(o, df);
 	}
 }
 
@@ -267,6 +272,7 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 	// it IS partially unrolled
 		const size_t dimensions = get_dimensions();
 		if (dimensions) {
+			// then is an array
 			INDENT_SECTION(o);
 			o << auto_indent << "{" << endl;
 			{

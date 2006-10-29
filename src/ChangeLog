@@ -3,6 +3,35 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-05:
+	  Enabled ALLOCATE_PORT_ACTUAL_COLLECTIONS for testing, includes 
+		bunch of small fixes, many relative to the last branch.  
+	  Added stronger assertion checks in instance_alias and collection
+		class methods.  
+	  instance_collection::key_dumper::operator():
+		key printing, auto-indent, and auto-endl, are now
+		conditional upon the dimension being non-zero (array), 
+		for convenient re-use between different collection types.
+	  Fixes: instance_scalar::lookup_index(), can now be called, 
+		and always returns 1 (1-based indexing).  
+	  port_actual_collection::load_reference() is now conditional
+		on the dimension of its referenced formal_collection.  
+	  port_actual_collection::lookup_index(): off-by-1 fixed.  
+	  Dynanmic cast checks updated to use collection_interfaces
+		rather than isntance_collection_generic_types (formals).
+		Affects: instance_placeholder, instance_reference (simple, 
+		member, aggregate) classes.  
+	  Improved diagnostic in port_actual_collection::unroll_aliases().
+	  data_type_reference::unroll_port_instances():
+		now takes resolved template parameters, and uses
+		looked-up footprint for recursive unrolling.  
+	  Test suite: most/all unroll/create tests have header-only 
+		differences, but none were updated this revision. 
+		Next revision will start sifting through and updating.  
+
+
 2006-10-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-04:

@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.11.4.1 2006/10/25 19:26:39 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.11.4.2 2006/10/29 20:05:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -12,6 +12,7 @@
 #include "Object/ref/meta_index_list_fwd.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +21,9 @@ template <class>
 class simple_meta_instance_reference;
 template <class>
 class aggregate_meta_instance_reference;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+template <class> class collection_interface;
+#endif
 using util::bad_bool;
 
 //=============================================================================
@@ -45,6 +49,11 @@ public:
 	/// the instance collection base type
 	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	typedef	collection_interface<Tag>	collection_interface_type;
+#else
+	typedef	instance_collection_generic_type	collection_interface_type;
+#endif
 	typedef typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
 
@@ -93,7 +102,7 @@ protected:
 	static
 	bad_bool
 	unroll_references_packed_helper_no_lookup(const unroll_context&,
-		const instance_collection_generic_type&,
+		const collection_interface_type&,
 		const count_ptr<const index_list_type>&,
 		alias_collection_type&);
 

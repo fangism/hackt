@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.23.4.1 2006/10/29 02:25:19 fang Exp $
+	$Id: unroll_context.cc,v 1.23.4.2 2006/10/29 20:05:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -179,14 +179,14 @@ unroll_context::lookup_instance_collection(
 	This only uses the outermost lookup footprint. 
 	Called from instance_placeholder::unroll_port_only().  
  */
-count_ptr<physical_instance_collection>
+count_ptr<const physical_instance_collection>
 unroll_context::lookup_port_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(lookup_footprint);
 	return (*lookup_footprint)[p.get_footprint_key()]
-		.is_a<physical_instance_collection>();
+		.is_a<const physical_instance_collection>();
 }
 #endif
 

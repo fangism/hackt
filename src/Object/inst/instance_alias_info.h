@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17.2.2 2006/10/29 02:25:12 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.3 2006/10/29 20:04:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -104,6 +104,8 @@ public:
 		template <class S>
 		_iterator(const _iterator<S>& i) : ptr(i.ptr) { }
 
+		operator bool () const { return this->ptr; }
+
 		reference
 		operator * () const { return *this->ptr; }
 
@@ -150,6 +152,8 @@ public:
 
 	// constructors only intended for children classes
 	instance_alias_info() : 
+		substructure_parent_type(), 
+		actuals_parent_type(), 
 		next(this), 
 		container(NULL) { }
 
@@ -158,6 +162,8 @@ public:
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
+		substructure_parent_type(), 
+		actuals_parent_type(), 
 		next(this), 
 		container(m) {
 	}

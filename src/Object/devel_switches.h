@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.3 2006/10/29 02:25:04 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.4 2006/10/29 20:04:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -101,7 +101,7 @@
 	Goal: 1
 	Status: in progress
  */
-#define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	(0 && ENABLE_PORT_ACTUAL_COLLECTIONS)
+#define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ENABLE_PORT_ACTUAL_COLLECTIONS)
 
 /**
 	Define to 1 to allocate port_actual_collections on the heap.

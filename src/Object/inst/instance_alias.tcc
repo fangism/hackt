@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.3 2006/10/29 02:25:12 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.4 2006/10/29 20:04:54 fang Exp $
 	TODO: trim includes
  */
 
@@ -100,7 +100,8 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) : 
 		substructure_parent_type(t), 
 		actuals_parent_type(t),
-		next(this), container(t.container) {
+		next(this), 
+		container(t.container) {
 	INVARIANT(t.next == &t);
 }
 
@@ -535,7 +536,9 @@ ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	this->dump_hierarchical_name(o);
 	// use non-path-conmpressing find() because of const qualifier
-	this->find()->dump_hierarchical_name(o << " = ");
+	const pseudo_const_iterator f(this->find());
+	INVARIANT(f);
+	f->dump_hierarchical_name(o << " = ");
 	return o;
 }
 
@@ -587,6 +590,7 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) const {
 	while (tmp != tmp->next) {
 		tmp = tmp->next;
 	}
+	NEVER_NULL(tmp);	// every union-find element must terminate!
 	return pseudo_const_iterator(tmp);
 }
 
@@ -663,7 +667,9 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 	their position and key from the parent container.  
 	The multikey index is translated into a single-valued index.
 	The index is omitted for scalar aliases.  
-	The index is read back in instance_array::load_reference().
+	The index is read back in instance_array::load_reference(), 
+		also instance_scalar, port_formal_array, 
+		and port_actual_collection.
 
 	Comment is obsolete (20061020):
 	Virtually pure virtual.  Never supposed to be called, 

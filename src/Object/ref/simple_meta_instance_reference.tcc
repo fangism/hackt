@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.26.4.1 2006/10/25 19:26:40 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.26.4.2 2006/10/29 20:05:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -310,7 +310,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference_no_lookup(
-		const instance_collection_generic_type& inst, 
+		const collection_interface_type& inst, 
 		const count_ptr<const index_list_type>& ind, 
 		const unroll_context& c) {
 	typedef instance_alias_info_ptr_type 	return_type;
@@ -357,7 +357,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references_no_lookup(
-		const instance_collection_generic_type& inst, 
+		const collection_interface_type& inst, 
 		const count_ptr<const index_list_type>& ind, 
 		const unroll_context& c, 
 		alias_collection_type& aliases) {

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.4 2006/10/29 02:25:14 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.5 2006/10/29 20:04:57 fang Exp $
 	TODO: trim includes
  */
 
@@ -501,12 +501,18 @@ INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is smart enough to distinguish between scalar (keyless)
+	instance dumping and indexed dumping. 
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE 
 ostream&
 INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 		const instance_alias_info_type& p) {
 	NEVER_NULL(p.container);
-	p.dump_key(os << auto_indent);
+	const size_t dim = p.container->get_dimensions();
+	if (dim)
+		p.dump_key(os << auto_indent);
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	if (p.container->get_canonical_collection().has_relaxed_type())
 #else
@@ -519,7 +525,9 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ', df);
-	return os << endl;
+	if (dim)
+		os << endl;
+	return os;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -787,7 +795,7 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 			*a_iter = never_ptr<element_type>(
 				const_cast<element_type*>(&pi));
 		}
-		a_iter++;
+		++a_iter;
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
@@ -996,6 +1004,8 @@ INSTANCE_COLLECTION_CLASS::connection_loader::operator() (
 		// lookup the instance in the collection referenced
 		// and connect them
 		elem.load_next_connection(this->pom, this->is);
+	} else {
+		INVARIANT(elem.peek() == &elem);
 	}
 	// else just leave it pointing to itself, 
 	// which was how it was constructed
@@ -1136,7 +1146,7 @@ INSTANCE_ARRAY_CLASS::load_object(
 		element_type& v(*i);
 		v.load_object_base(m, f);
 	}
-	for_each(b, e, typename parent_type:: connection_loader(m, f));
+	for_each(b, e, typename parent_type::connection_loader(m, f));
 }
 
 //=============================================================================
@@ -1253,16 +1263,26 @@ INSTANCE_SCALAR_CLASS::lookup_key(const size_t i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 size_t
 INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+	INVARIANT(&this->the_instance == &a);
+	return 1;
+#else
 	ICE_NEVER_CALL(cerr);
 	return 0;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_COLLECTION_INTERFACES
+/**
+	\param k multikey_index, which should always be empty (0 dimensions).
+	\return 1 always.  
+ */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 size_t
 INSTANCE_SCALAR_CLASS::lookup_index(const multikey_index_type& k) const {
-	return 0;
+	INVARIANT(!k.size());
+	return 1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1296,6 +1316,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 if (this->the_instance.container) {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
+#if 0
 //	if (this->the_instance.container->is_complete_type()) {
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	if (this->has_relaxed_type())	// meaning "the container"
@@ -1315,6 +1336,9 @@ if (this->the_instance.container) {
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ', df);
+#else
+	typename parent_type::key_dumper(o, df)(this->the_instance);
+#endif
 } else {
 	// this only happens when dumping the collection before
 	// it is complete.
@@ -1324,7 +1348,6 @@ if (this->the_instance.container) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 /**
 	Instantiates the_instance of integer datatype.
 	Ideally, the error should never trigger because
@@ -1335,6 +1358,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 		Consider looking for SPEC-assert directives?
 	\param i indices must be NULL because this is not an array.
  */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const const_range_list& r, 
@@ -1589,12 +1613,8 @@ INSTANCE_SCALAR_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_scalar::write_object()");
 	parent_type::write_object_base(m, f);
-#if 0
-	this->the_instance.write_object(m, f);
-#else
 	typename parent_type::element_writer(m, f)(this->the_instance);
 	typename parent_type::connection_writer(m, f)(this->the_instance);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1604,12 +1624,8 @@ INSTANCE_SCALAR_CLASS::load_object(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
-#if 0
-	this->the_instance.load_object(m, f);		// problem?
-#else
 	typename parent_type::element_loader(m, f)(this->the_instance);
 	typename parent_type::connection_loader(m, f)(this->the_instance);
-#endif
 	this->the_instance.check(this);
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.19.4.1 2006/10/25 19:26:39 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.19.4.2 2006/10/29 20:05:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -86,10 +86,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 		belonging to the footprint being unrolled.  
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_collection_generic_type>
+count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::collection_interface_type>
 MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		const unroll_context& c) const {
-	typedef	count_ptr<instance_collection_generic_type>	return_type;
+	typedef	count_ptr<collection_interface_type>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "ref: ",
@@ -129,7 +129,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	}
 	const return_type
 		inst_base(resolved_instance
-			.template is_a<instance_collection_generic_type>());
+			.template is_a<collection_interface_type>());
 	// expecting the right type!
 	INVARIANT(inst_base);
 #if ENABLE_STACKTRACE
@@ -178,8 +178,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		return 0;
 	}
 	// if found, we assert-cast its type: same as what we used to lookup
-	const instance_collection_generic_type&
-		pi(IS_A(const instance_collection_generic_type&, *fi));
+	const collection_interface_type&
+		pi(IS_A(const collection_interface_type&, *fi));
 	// if not, we have a serious inconsistency (throw bad_cast)
 	// now we can get the local frame offset from an index
 	// lookup with this collection.  
@@ -224,7 +224,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
 	c.dump(cerr) << endl;
 #endif
-	const count_ptr<instance_collection_generic_type>
+	const count_ptr<collection_interface_type>
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
@@ -249,7 +249,7 @@ typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	const count_ptr<instance_collection_generic_type>
+	const count_ptr<collection_interface_type>
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
@@ -270,7 +270,7 @@ never_ptr<substructure_alias>
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	const count_ptr<instance_collection_generic_type>
+	const count_ptr<collection_interface_type>
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
