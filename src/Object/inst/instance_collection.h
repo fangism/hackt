@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.4 2006/10/29 02:25:13 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.5 2006/10/31 00:28:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -23,12 +23,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/inttypes.h"
-
-/**
-	Define to 1 if you want instance_arrays and scalars pool-allocated.  
-	Causes regression in one strange test case, needs debugging.  
- */
-#define	POOL_ALLOCATE_INSTANCE_COLLECTIONS		1
 
 namespace HAC {
 namespace entity {

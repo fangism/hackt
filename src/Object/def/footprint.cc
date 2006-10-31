@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27 2006/10/18 20:57:48 fang Exp $
+	$Id: footprint.cc,v 1.27.4.1 2006/10/31 00:28:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -25,6 +25,9 @@
 #include "Object/common/dump_flags.h"
 #include "Object/inst/alias_printer.h"
 #include "Object/inst/physical_instance_placeholder.h"
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/instance_collection_pool_bundle.tcc"
+#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -52,12 +55,22 @@ using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 //=============================================================================
 // class footprint_base method definitions
 
+/**
+	Default constructor.  
+	Sets the instance pool chunk size, but does not pre-allocate.  
+ */
 template <class Tag>
 footprint_base<Tag>::footprint_base() :
-		_pool(class_traits<Tag>::instance_pool_chunk_size >> 1) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	collection_pool_bundle(), 
+#endif
+	_instance_pool(class_traits<Tag>::instance_pool_chunk_size >> 1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default destructor.  
+ */
 template <class Tag>
 footprint_base<Tag>::~footprint_base() { }
 
@@ -70,8 +83,8 @@ template <class Tag>
 good_bool
 footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	STACKTRACE_VERBOSE;
-	const_iterator i(++_pool.begin());
-	const const_iterator e(_pool.end());
+	const_iterator i(++_instance_pool.begin());
+	const const_iterator e(_instance_pool.end());
 	for ( ; i!=e; i++) {
 		const size_t j = sm.template allocate<Tag>();
 		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
@@ -107,8 +120,8 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	STACKTRACE_VERBOSE;
 	size_t j = o;
 	global_pool_type& gpool(sm.template get_pool<Tag>());
-	const_iterator i(++_pool.begin());
-	const const_iterator e(_pool.end());
+	const_iterator i(++_instance_pool.begin());
+	const const_iterator e(_instance_pool.end());
 	for ( ; i!=e; i++, j++) {
 		global_entry<Tag>& ref(gpool[j]);
 		/***
@@ -184,6 +197,39 @@ footprint_base<Tag>::__expand_production_rules(const footprint_frame& ff,
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_base<Tag>::collect_transient_info_base(
+		persistent_object_manager& m) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->collection_pool_bundle.collect_transient_info_base(m);
+#endif
+	this->_instance_pool.collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_base<Tag>::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->collection_pool_bundle.write_object_base(m, o);
+#endif
+	this->_instance_pool.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_base<Tag>::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->collection_pool_bundle.load_object_base(m, i);
+#endif
+	this->_instance_pool.load_object_base(m, i);
+}
+
 //=============================================================================
 // class footprint method definitions
 
@@ -215,12 +261,12 @@ ostream&
 footprint::dump(ostream& o) const {
 	// unrolled? created?
 	// instance_collection_map ?
-	footprint_base<process_tag>::_pool.dump(o);
-	footprint_base<channel_tag>::_pool.dump(o);
-	footprint_base<datastruct_tag>::_pool.dump(o);
-	footprint_base<enum_tag>::_pool.dump(o);
-	footprint_base<int_tag>::_pool.dump(o);
-	footprint_base<bool_tag>::_pool.dump(o);
+	footprint_base<process_tag>::_instance_pool.dump(o);
+	footprint_base<channel_tag>::_instance_pool.dump(o);
+	footprint_base<datastruct_tag>::_instance_pool.dump(o);
+	footprint_base<enum_tag>::_instance_pool.dump(o);
+	footprint_base<int_tag>::_instance_pool.dump(o);
+	footprint_base<bool_tag>::_instance_pool.dump(o);
 	return o;
 }
 
@@ -599,12 +645,12 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 		coll_ptr->collect_transient_info(m);
 	}
 }
-	footprint_base<process_tag>::_pool.collect_transient_info_base(m);
-	footprint_base<channel_tag>::_pool.collect_transient_info_base(m);
-	footprint_base<datastruct_tag>::_pool.collect_transient_info_base(m);
-	footprint_base<enum_tag>::_pool.collect_transient_info_base(m);
-	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
-	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<process_tag>::collect_transient_info_base(m);
+	footprint_base<channel_tag>::collect_transient_info_base(m);
+	footprint_base<datastruct_tag>::collect_transient_info_base(m);
+	footprint_base<enum_tag>::collect_transient_info_base(m);
+	footprint_base<int_tag>::collect_transient_info_base(m);
+	footprint_base<bool_tag>::collect_transient_info_base(m);
 	prs_footprint.collect_transient_info_base(m);
 	chp_footprint.collect_transient_info_base(m);
 	spec_footprint.collect_transient_info_base(m);
@@ -636,12 +682,12 @@ footprint::write_object_base(const persistent_object_manager& m,
 		m.write_pointer(o, coll_ptr);
 	}
 }
-	footprint_base<process_tag>::_pool.write_object_base(m, o);
-	footprint_base<channel_tag>::_pool.write_object_base(m, o);
-	footprint_base<datastruct_tag>::_pool.write_object_base(m, o);
-	footprint_base<enum_tag>::_pool.write_object_base(m, o);
-	footprint_base<int_tag>::_pool.write_object_base(m, o);
-	footprint_base<bool_tag>::_pool.write_object_base(m, o);
+	footprint_base<process_tag>::write_object_base(m, o);
+	footprint_base<channel_tag>::write_object_base(m, o);
+	footprint_base<datastruct_tag>::write_object_base(m, o);
+	footprint_base<enum_tag>::write_object_base(m, o);
+	footprint_base<int_tag>::write_object_base(m, o);
+	footprint_base<bool_tag>::write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
 	scope_aliases.write_object_base(m, o);
 	prs_footprint.write_object_base(m, o);
@@ -670,12 +716,12 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		instance_collection_map[coll_ptr->get_footprint_key()] = coll_ptr;
 	}
 }
-	footprint_base<process_tag>::_pool.load_object_base(m, i);
-	footprint_base<channel_tag>::_pool.load_object_base(m, i);
-	footprint_base<datastruct_tag>::_pool.load_object_base(m, i);
-	footprint_base<enum_tag>::_pool.load_object_base(m, i);
-	footprint_base<int_tag>::_pool.load_object_base(m, i);
-	footprint_base<bool_tag>::_pool.load_object_base(m, i);
+	footprint_base<process_tag>::load_object_base(m, i);
+	footprint_base<channel_tag>::load_object_base(m, i);
+	footprint_base<datastruct_tag>::load_object_base(m, i);
+	footprint_base<enum_tag>::load_object_base(m, i);
+	footprint_base<int_tag>::load_object_base(m, i);
+	footprint_base<bool_tag>::load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
 	scope_aliases.load_object_base(m, i);
 	prs_footprint.load_object_base(m, i);

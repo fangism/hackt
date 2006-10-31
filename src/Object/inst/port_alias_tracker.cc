@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.13 2006/10/24 07:27:17 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.13.2.1 2006/10/31 00:28:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,7 +13,7 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/common/dump_flags.h"
-
+#include "Object/def/footprint.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/struct_traits.h"
@@ -416,17 +416,17 @@ port_alias_tracker::shorten_canonical_aliases(footprint& f) {
 	STACKTRACE_VERBOSE;
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::
-		__shorten_canonical_aliases(f.get_pool<process_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<process_tag>());
 	port_alias_tracker_base<channel_tag>::
-		__shorten_canonical_aliases(f.get_pool<channel_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<channel_tag>());
 	port_alias_tracker_base<datastruct_tag>::
-		__shorten_canonical_aliases(f.get_pool<datastruct_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<datastruct_tag>());
 	port_alias_tracker_base<enum_tag>::
-		__shorten_canonical_aliases(f.get_pool<enum_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<enum_tag>());
 	port_alias_tracker_base<int_tag>::
-		__shorten_canonical_aliases(f.get_pool<int_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<int_tag>());
 	port_alias_tracker_base<bool_tag>::
-		__shorten_canonical_aliases(f.get_pool<bool_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<bool_tag>());
 }
 }
 

@@ -4,7 +4,7 @@
 	resolution.  
 	NOTE: method definitions moved to .cc file to prevent premature
 	instantiation before complete types are available.  
-	$Id: unroll_context_value_resolver.h,v 1.10 2006/10/18 20:58:31 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.10.4.1 2006/10/31 00:28:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
@@ -17,7 +17,6 @@
 #include "Object/traits/preal_traits.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
-#include "Object/def/footprint.h"
 
 namespace HAC {
 namespace entity {

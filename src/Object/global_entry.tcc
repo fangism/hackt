@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.14 2006/10/18 01:19:02 fang Exp $
+	$Id: global_entry.tcc,v 1.14.4.1 2006/10/31 00:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -89,7 +89,7 @@ extract_parent_formal_instance_alias(const state_manager& sm,
 		p_ent(extract_parent_entry<Tag>(sm, gec));
 	const footprint& pfp(*p_ent._frame._footprint);
 	const typename state_instance<Tag>::pool_type&
-		local_placeholder_pool(pfp.template get_pool<Tag>());
+		local_placeholder_pool(pfp.template get_instance_pool<Tag>());
 	const state_instance<Tag>&
 		_inst(local_placeholder_pool[gec.local_offset]);
 	return *_inst.get_back_ref();
@@ -113,7 +113,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 	const size_t ind(gec.index);
 	const footprint& topfp(*gec.fp);
 	const state_manager& sm(*gec.sm);
-	const pool_type& _pool(topfp.template get_pool<Tag>());
+	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	if (ind >= _pool.size()) {
 		// then this isn't top-level
 		const global_entry_pool<Tag>&
@@ -195,7 +195,7 @@ global_entry_base<true>::collect_transient_info_base(
 	typedef	instance_alias_info<Tag>	alias_type;
 	STACKTRACE_PERSISTENT_VERBOSE;
 	INVARIANT(_frame._footprint);
-	const pool_type& _pool(topfp.template get_pool<Tag>());
+	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	if (ind >= _pool.size()) {
 		const global_entry_pool<Tag>&
 			gpool(sm.template get_pool<Tag>());
@@ -250,7 +250,7 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
 	INVARIANT(_frame._footprint);
-	const pool_type& _pool(topfp.template get_pool<Tag>());
+	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	if (ind >= _pool.size()) {
 		const global_entry_pool<Tag>&
 			gpool(sm.template get_pool<Tag>());
@@ -305,7 +305,7 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 	// restore _footprint pointer some how
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
-	const pool_type& _pool(topfp.template get_pool<Tag>());
+	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	if (ind >= _pool.size()) {
 		const global_entry_pool<Tag>&
 			gpool(sm.template get_pool<Tag>());
@@ -389,7 +389,7 @@ ostream&
 global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df, 
 		const footprint& topfp, const state_manager& sm) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	const pool_type& _pool(topfp.template get_pool<Tag>());
+	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	// dump canonical name
 	const state_instance<Tag>* _inst;
 	switch (parent_tag_value) {
@@ -403,7 +403,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		// partial, omit formal type parent
 		const pool_type&
 			_lpool(p_ent._frame._footprint
-				->template get_pool<Tag>());
+				->template get_instance_pool<Tag>());
 		_inst = &_lpool[local_offset];
 		break;
 	}
@@ -414,7 +414,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		// partial, omit formal type parent
 		const pool_type&
 			_lpool(p_ent._frame._footprint
-				->template get_pool<Tag>());
+				->template get_instance_pool<Tag>());
 		_inst = &_lpool[local_offset];
 		break;
 	}
@@ -425,7 +425,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		// partial, omit formal type parent
 		const pool_type&
 			_lpool(p_ent._frame._footprint
-				->template get_pool<Tag>());
+				->template get_instance_pool<Tag>());
 		_inst = &_lpool[local_offset];
 		break;
 	}

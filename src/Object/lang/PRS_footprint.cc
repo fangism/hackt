@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.15 2006/04/24 00:28:06 fang Exp $
+	$Id: PRS_footprint.cc,v 1.15.34.1 2006/10/31 00:28:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -224,7 +224,7 @@ footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 ostream&
 footprint::dump(ostream& o, const entity::footprint& f) const {
 	const state_instance<bool_tag>::pool_type&
-		bpool(f.get_pool<bool_tag>());
+		bpool(f.get_instance_pool<bool_tag>());
 if (rule_pool.size()) {
 	o << auto_indent << "resolved prs:" << endl;
 	typedef	rule_pool_type::const_iterator	const_rule_iterator;

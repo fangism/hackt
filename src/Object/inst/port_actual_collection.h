@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.2 2006/10/29 02:25:16 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.3 2006/10/31 00:28:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -8,6 +8,9 @@
 
 #include <valarray>
 #include "Object/inst/collection_interface.h"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "util/memory/chunk_map_pool_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -75,19 +78,18 @@ public:
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
 private:
-#if 0
-	typedef	typename array_type::iterator	iterator;
-	typedef	typename array_type::const_iterator	const_iterator;
-#else
 	// valarray iterator
 	typedef	element_type*			iterator;
 	typedef	const element_type*		const_iterator;
-#endif
 private:
 	// super_instance? for now use instance_collection_base::super_instance
 	formal_collection_ptr_type		formal_collection;
 	array_type				value_array;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+public:
+#else
 private:
+#endif
 	port_actual_collection();
 public:
 	explicit
@@ -172,6 +174,15 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_connections(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_connections(const persistent_object_manager&, istream&);
+
 private:
 	iterator
 	begin(void);
@@ -185,7 +196,7 @@ private:
 	const_iterator
 	end(void) const;
 
-#if 0
+public:
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {
 #ifdef	HAVE_UINT64_TYPE
@@ -195,7 +206,6 @@ private:
 #endif
 	};
 	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
 #endif
 };	// end class port_actual_collection
 

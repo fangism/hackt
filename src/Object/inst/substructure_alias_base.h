@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.18.4.1 2006/10/29 02:25:17 fang Exp $
+	$Id: substructure_alias_base.h,v 1.18.4.2 2006/10/31 00:28:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -10,7 +10,7 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
-#include "Object/def/footprint.h"
+#include "util/memory/excl_ptr.h"
 #include "Object/devel_switches.h"
 
 namespace HAC {
@@ -30,6 +30,7 @@ struct alias_printer;
 struct alias_matcher_base;
 using std::istream;
 using std::ostream;
+using util::memory::never_ptr;
 using util::persistent_object_manager;
 //=============================================================================
 /**

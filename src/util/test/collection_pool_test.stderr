@@ -1,0 +1,11 @@
+adding first value.
+adding second value.
+adding four more key-value pairs.
+c[3] = eins
+c[4] = zwei
+c[5] = drei
+c[6] = vier
+testing lookup invariants.
+Testing iterator interface.
+beta, delta, eins, zwei, drei, vier, 
+End of tests.

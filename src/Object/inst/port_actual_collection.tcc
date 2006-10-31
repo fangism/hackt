@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.3 2006/10/29 20:04:59 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.4 2006/10/31 00:28:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -27,6 +27,9 @@
 #include "util/IO_utils.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "util/memory/chunk_map_pool.tcc"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -41,6 +44,24 @@ using util::value_writer;
 //=============================================================================
 // class port_actual_collection method definitions
 
+#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, PORT_ACTUAL_COLLECTION_CLASS)
+
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, PORT_ACTUAL_COLLECTION_CLASS)
+
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, PORT_ACTUAL_COLLECTION_CLASS)
+
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, PORT_ACTUAL_COLLECTION_CLASS)
+
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, PORT_ACTUAL_COLLECTION_CLASS)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection() :
 		parent_type(), formal_collection(), value_array(0) {
@@ -533,6 +554,21 @@ PORT_ACTUAL_COLLECTION_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+void
+PORT_ACTUAL_COLLECTION_CLASS::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	// since this is a port collection, there MUST be a super-instance.
+	NEVER_NULL(this->super_instance);
+	parent_type::collect_transient_info_base(m);
+	this->formal_collection->collect_transient_info(m);
+	for_each(this->begin(), this->end(),
+		bind2nd_argval(mem_fun_ref(
+			&element_type::collect_transient_info_base), m)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Shouldn't call this because these containers will not be allocated
 	directly on the heap.  
@@ -543,14 +579,7 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key, 0)) {
-	// since this is a port collection, there MUST be a super-instance.
-	NEVER_NULL(this->super_instance);
-	parent_type::collect_transient_info_base(m);
-	this->formal_collection->collect_transient_info(m);
-	for_each(this->begin(), this->end(),
-		bind2nd_argval(mem_fun_ref(
-			&element_type::collect_transient_info_base), m)
-	);
+	this->collect_transient_info_base(m);
 }
 }
 
@@ -575,7 +604,18 @@ PORT_ACTUAL_COLLECTION_CLASS::write_object(const persistent_object_manager& m,
 	const const_iterator b(this->begin()), e(this->end());
 	INVARIANT(k == size_t(distance(b, e)));
 	for_each(b, e, typename formal_collection_type::element_writer(m, f));
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename formal_collection_type::connection_writer(m, f));
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+void
+PORT_ACTUAL_COLLECTION_CLASS::write_connections(
+		const persistent_object_manager& m, ostream& f) const {
+	for_each(this->begin(), this->end(), 
+		typename formal_collection_type::connection_writer(m, f));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -599,7 +639,21 @@ PORT_ACTUAL_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 	const iterator b(this->begin()), e(this->end());
 	INVARIANT(k == size_t(distance(b, e)));
 	for_each(b, e, typename formal_collection_type::element_loader(m, f));
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename formal_collection_type::connection_loader(m, f));
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Connections are loaded in a separate phase.   
+ */
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+void
+PORT_ACTUAL_COLLECTION_CLASS::load_connections(
+		const persistent_object_manager& m, istream& f) {
+	for_each(this->begin(), this->end(), 
+		typename formal_collection_type::connection_loader(m, f));
 }
 
 //=============================================================================

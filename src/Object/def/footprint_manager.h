@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.7 2006/10/18 01:19:11 fang Exp $
+	$Id: footprint_manager.h,v 1.7.4.1 2006/10/31 00:28:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -9,12 +9,18 @@
 
 #include <iosfwd>
 #include <map>
+#include "Object/devel_switches.h"
 #include "Object/expr/const_param_expr_list.h"
+#if !HEAP_ALLOCATE_FOOTPRINTS
 #include "Object/def/footprint.h"
+#endif
 #include "util/persistent_fwd.h"
 
 namespace HAC {
 namespace entity {
+#if HEAP_ALLOCATE_FOOTPRINTS
+class footprint;
+#endif
 struct dump_flags;
 struct expr_dump_context;
 using std::istream;

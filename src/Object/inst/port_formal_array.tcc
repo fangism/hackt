@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.4 2006/10/29 20:05:00 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.5 2006/10/31 00:28:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -16,7 +16,7 @@
 
 #include "Object/inst/port_formal_array.h"
 #include "Object/inst/instance_alias_info.h"
-// #include "Object/inst/element_key_dumper.h"
+#include "Object/inst/port_alias_tracker.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/port_context.h"
@@ -25,7 +25,9 @@
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/memory/chunk_map_pool.tcc"
+#endif
 #include "util/compose.h"
 #include "util/dereference.h"
 #include "util/indent.h"
@@ -611,15 +613,23 @@ PORT_FORMAL_ARRAY_CLASS::accept(alias_visitor& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
-PORT_FORMAL_ARRAY_CLASS::collect_transient_info(
+PORT_FORMAL_ARRAY_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		util::persistent_traits<this_type>::type_key, 0)) {
 	parent_type::collect_transient_info_base(m);
 	for_each(this->begin(), this->end(),
 		bind2nd_argval(mem_fun_ref(
 			&element_type::collect_transient_info_base), m)
 	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		util::persistent_traits<this_type>::type_key, 0)) {
+	this->collect_transient_info_base(m);
 }
 }
 
@@ -638,7 +648,18 @@ PORT_FORMAL_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	write_key(k);
 	const const_iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_writer(m, f));
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_writer(m, f));
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::write_connections(const persistent_object_manager& m, 
+		ostream& f) const {
+	for_each(this->begin(), this->end(), 
+		typename parent_type::connection_writer(m, f));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -653,7 +674,18 @@ PORT_FORMAL_ARRAY_CLASS::load_object(const persistent_object_manager& m,
 	this->value_array.resize(k);
 	const iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_loader(m, f));
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_loader(m, f));
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::load_connections(const persistent_object_manager& m, 
+		istream& f) {
+	for_each(this->begin(), this->end(), 
+		typename parent_type::connection_loader(m, f));
 }
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.32 2006/10/18 21:38:38 fang Exp $
+ 	$Id: definition.cc,v 1.32.4.1 2006/10/31 00:28:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3092,12 +3092,12 @@ process_definition::__create_complete_type(
 		}
 		// after all aliases have been successfully assigned local IDs
 		// then process the PRS and CHP bodies
-		if (!prs.unroll(c, f.get_pool<bool_tag>(), 
+		if (!prs.unroll(c, f.get_instance_pool<bool_tag>(), 
 				f.get_prs_footprint()).good) {
 			// already have error message
 			return good_bool(false);
 		}
-		if (!spec.unroll(c, f.get_pool<bool_tag>(), 
+		if (!spec.unroll(c, f.get_instance_pool<bool_tag>(), 
 				f.get_spec_footprint()).good) {
 			// already have error message
 			return good_bool(false);

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.5 2006/10/29 20:04:57 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.6 2006/10/31 00:28:20 fang Exp $
 	TODO: trim includes
  */
 
@@ -64,7 +64,9 @@
 #include "util/multikey_assoc.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/memory/chunk_map_pool.tcc"
+#endif
 
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
@@ -1063,10 +1065,8 @@ INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::collect_transient_info(
+INSTANCE_ARRAY_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	for_each(this->collection.begin(), this->collection.end(), 
@@ -1074,6 +1074,16 @@ if (!m.register_transient_object(this,
 	// optimization for later: factor this out into a policy
 	// so that collections without pointers to collect
 	// may be skipped.
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key, D)) {
+	this->collect_transient_info_base(m);
 }
 }
 
@@ -1105,7 +1115,22 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	const const_iterator
 		b(this->collection.begin()), e(this->collection.end());
 	for_each(b, e, typename parent_type::element_writer(m, f));
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_writer(m, f));
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only writes out connections.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::write_connections(const persistent_object_manager& m, 
+		ostream& f) const {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::write_connections()");
+	for_each(collection.begin(), collection.end(), 
+		typename parent_type::connection_writer(m, f));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1146,7 +1171,22 @@ INSTANCE_ARRAY_CLASS::load_object(
 		element_type& v(*i);
 		v.load_object_base(m, f);
 	}
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_loader(m, f));
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only loads in connections
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::load_connections(
+		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_connections()");
+	for_each(collection.begin(), collection.end(), 
+		typename parent_type::connection_loader(m, f));
 }
 
 //=============================================================================
@@ -1595,14 +1635,22 @@ INSTANCE_SCALAR_CLASS::accept(alias_visitor& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::collect_transient_info(
+INSTANCE_SCALAR_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("instance_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	this->the_instance.check(this);
 	this->the_instance.collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key, 0)) {
+	this->collect_transient_info_base(m);
 }
 }
 
@@ -1614,6 +1662,17 @@ INSTANCE_SCALAR_CLASS::write_object(
 	STACKTRACE_PERSISTENT("instance_scalar::write_object()");
 	parent_type::write_object_base(m, f);
 	typename parent_type::element_writer(m, f)(this->the_instance);
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typename parent_type::connection_writer(m, f)(this->the_instance);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::write_connections(
+		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT("instance_scalar::write_connections()");
 	typename parent_type::connection_writer(m, f)(this->the_instance);
 }
 
@@ -1625,8 +1684,19 @@ INSTANCE_SCALAR_CLASS::load_object(
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
 	typename parent_type::element_loader(m, f)(this->the_instance);
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typename parent_type::connection_loader(m, f)(this->the_instance);
+#endif
 	this->the_instance.check(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::load_connections(
+		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("instance_scalar::load_connections()");
+	typename parent_type::connection_loader(m, f)(this->the_instance);
 }
 
 //=============================================================================

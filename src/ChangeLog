@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-07:
+	  Added: Object/inst/{collection_pool,
+		instance_collection_pool_bundle}.{h,tcc}, preparing to 
+		pool-allocate all collections per footprint.
+		Need to do the same for value collections.  
+		Also added data structure test to util/test.  
+	  Bunch of (disabled) conditional code in preparation
+		for per-footprint pool allocations.  
+	  instance-collections: connections can now be separated from
+		the serialization of the rest of the collection.  
+	  footprint: instance_pool-related members renamed to avoid
+		ambiguity with upcoming collection pools.  
+	  Makefile.am: propagate header-check time stamps for
+		exceptional headers.  
+	  Next: privatize implementation of footprint_base's members
+		to break structural dependency chain (affects includes).  
+
+
 2006-10-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-06:

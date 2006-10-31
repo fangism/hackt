@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.57 2006/10/24 18:39:03 fang Exp $
+#	$Id: ChangeLog,v 1.57.2.1 2006/10/31 00:28:35 fang Exp $
+
+2006-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-07:
+	  util/persistent_functor.h: write generalized functors with
+		customizable member functions.  
+
 
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 

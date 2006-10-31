@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.3 2006/10/28 03:03:11 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.4 2006/10/31 00:28:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -9,7 +9,9 @@
 
 #include "Object/inst/instance_collection.h"
 #include "util/packed_array.h"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/memory/chunk_map_pool_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -74,7 +76,11 @@ private:
 	typedef	typename array_type::const_iterator	const_iterator;
 private:
 	array_type				value_array;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+public:
+#else
 private:
+#endif
 	port_formal_array();
 public:
 	explicit
@@ -167,9 +173,17 @@ private:
 	end(void) const;
 
 public:
-
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_connections(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_connections(const persistent_object_manager&, istream&);
 
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {

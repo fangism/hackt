@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.4 2006/10/24 07:27:24 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.4.2.1 2006/10/31 00:28:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -43,6 +43,7 @@
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
+#include "Object/traits/classification_tags.h"
 #include "Object/type/param_type_reference.h"
 // #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"

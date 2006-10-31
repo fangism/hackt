@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/sparse_collection.tcc"
-	$Id: sparse_collection.tcc,v 1.2 2006/10/24 07:27:21 fang Exp $
+	$Id: sparse_collection.tcc,v 1.2.2.1 2006/10/31 00:28:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SPARSE_COLLECTION_TCC__
@@ -40,6 +40,22 @@ SPARSE_COLLECTION_CLASS::sparse_collection() :
 		r(index_value_map.insert(p));
 	INVARIANT(r.second);	// was successfully inserted
 	address_chunk_map[&value_pool.front().front()] = r.first;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copy constructor never supposed to be called, but we define it
+	for the sake of containee requirements for the STL library.
+	Reaching this at run-time is detected as an error.  
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+SPARSE_COLLECTION_CLASS::sparse_collection(const this_type& t) :
+		key_index_map(), 
+		key_index_array(), 
+		value_pool(), 
+		index_value_map(), 
+		address_chunk_map() {
+	INVARIANT(!t.size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

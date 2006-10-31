@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.13 2006/10/18 20:58:26 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.13.4.1 2006/10/31 00:28:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -19,7 +19,6 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/inst/alias_empty.h"
-#include "Object/def/footprint.h"
 #include "util/persistent_object_manager.h"
 
 namespace HAC {

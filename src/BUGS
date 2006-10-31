@@ -1,20 +1,12 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.8 2006/07/18 04:09:08 fang Exp $
+	$Id: BUGS,v 1.8.20.1 2006/10/31 00:28:04 fang Exp $
 
 editline: 2006-07-09
 	piping or redirecting script into editline-histedit
 		doesn't terminate properly on end-of-file/stream.
 	workaround: pass the -b flag (batch mode, non-interactive)
 		to bypass editline.
-
-
-minor detail in type information dumping:
-	parser/connect/130.hac
-	port dump of definition should at least contain dimensionality
-		of collection (type^dim), but is missing.  
-	is probably to be fixed in port_manager's call to 
-		instance_collection::dump or dump_collection_only.
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals
@@ -30,7 +22,7 @@ Hierarchical connections:
 
 Global references from with definition-scopes:
 	Out-of-scope references are simply not implemented yet, 
-	which means, everyhing should be passed in through
+	which means, everything should be passed in through
 	public ports or template arguments.  
 	Currently, the compiler bombs because I haven't bothered to
 	trap out-of-scope references yet.  
@@ -46,6 +38,14 @@ Relaxed actuals:
 
 -------------------------------------------------------------------------------
 CLOSED BUGS:
+
+minor detail in type information dumping:
+	parser/connect/130.hac
+	port dump of definition should at least contain dimensionality
+		of collection (type^dim), but is missing.  
+	is probably to be fixed in port_manager's call to 
+		instance_collection::dump or dump_collection_only.
+	status: FIXED
 
 readline and command-line interpreters: (2006-03-29)
 	readline eats '\t' characters, duh!

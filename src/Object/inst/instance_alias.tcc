@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.4 2006/10/29 20:04:54 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.5 2006/10/31 00:28:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -309,7 +309,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		// union-find set, otherwise, just copy.
 		// for now the creator will be the canonical back-reference
 		typename instance_type::pool_type&
-			the_pool(f.template get_pool<Tag>());
+			the_pool(f.template get_instance_pool<Tag>());
 		i->instance_index = the_pool.allocate(instance_type(*i));
 		// also need to recursively allocate subinstances ids
 		i->allocate_subinstances(f);

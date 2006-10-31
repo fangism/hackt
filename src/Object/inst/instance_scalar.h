@@ -3,15 +3,16 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2.2.3 2006/10/28 03:03:09 fang Exp $
+	$Id: instance_scalar.h,v 1.2.2.4 2006/10/31 00:28:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
 #define	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
 
 #include "Object/inst/instance_collection.h"
-// #include "Object/type/canonical_type_fwd.h"	// for conditional
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/memory/chunk_map_pool_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -56,7 +57,11 @@ public:
 private:
 	instance_type					the_instance;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+public:
+#else
 private:
+#endif
 	instance_array();
 
 public:
@@ -140,6 +145,16 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_connections(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_connections(const persistent_object_manager&, istream&);
+
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {
 #ifdef	HAVE_UINT64_TYPE

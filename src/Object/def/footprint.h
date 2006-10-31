@@ -1,13 +1,14 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19 2006/10/18 20:57:48 fang Exp $
+	$Id: footprint.h,v 1.19.4.1 2006/10/31 00:28:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
+#include "Object/devel_switches.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/process_instance.h"
@@ -22,11 +23,20 @@
 #include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
 // #include "Object/inst/alias_visitee.h"
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/instance_collection_pool_bundle.h"
+#include "Object/inst/datatype_instance_collection.h"
+#include "Object/inst/collection_interface.h"
+#include "Object/inst/instance_alias_info.h"
+#endif
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
 #include "util/STL/hash_map.h"
 #include "util/memory/count_ptr.h"
+#if HEAP_ALLOCATE_FOOTPRINTS
+#include "util/memory/chunk_map_pool_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -49,16 +59,32 @@ using util::persistent_object_manager;
 
 //=============================================================================
 /**
+	TODO: consider the private implementation "pimpl" idiom, 
+		whereby certain details of implementation are abstracted 
+		away to reduce compile time definition dependencies.  
 	Meta-type specific base class.  
+	This is a meta-tagged wrapper around the instance pool
+	that contains a collection of *unique* instances.  
+	This covers all public port instances of the collections
+	in the footprint, but not private instances.  
+	This also wraps around the instance_collection pools used to
+	allocate all instance collections.  
  */
 template <class Tag>
 class footprint_base {
 protected:
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
+	typedef	typename state_instance<Tag>::pool_type	instance_pool_type;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	instance_collection_pool_bundle<Tag>
+					collection_pool_bundle_type;
+#endif
 private:
-	typedef	typename pool_type::const_iterator	const_iterator;
+	typedef	typename instance_pool_type::const_iterator	const_iterator;
 protected:
-	pool_type					_pool;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	collection_pool_bundle_type		collection_pool_bundle;
+#endif
+	instance_pool_type				_instance_pool;
 
 	footprint_base();
 	~footprint_base();
@@ -73,6 +99,15 @@ protected:
 	good_bool
 	__expand_production_rules(const footprint_frame&, 
 		state_manager&) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class footprint_base
 
@@ -129,13 +164,13 @@ private:
 					const_instance_map_iterator;
 	typedef	instance_collection_map_type::iterator
 					instance_map_iterator;
-	typedef	footprint_base<process_tag>::pool_type	process_pool_type;
-	typedef	footprint_base<channel_tag>::pool_type	channel_pool_type;
-	typedef	footprint_base<datastruct_tag>::pool_type
-							struct_pool_type;
-	typedef	footprint_base<enum_tag>::pool_type	enum_pool_type;
-	typedef	footprint_base<int_tag>::pool_type	int_pool_type;
-	typedef	footprint_base<bool_tag>::pool_type	bool_pool_type;
+	typedef	footprint_base<process_tag>::instance_pool_type	process_instance_pool_type;
+	typedef	footprint_base<channel_tag>::instance_pool_type	channel_instance_pool_type;
+	typedef	footprint_base<datastruct_tag>::instance_pool_type
+							struct_instance_pool_type;
+	typedef	footprint_base<enum_tag>::instance_pool_type	enum_instance_pool_type;
+	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
+	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;
 private:
 	// state information
 	// a place to unroll instances and connections
@@ -251,15 +286,29 @@ public:
 
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&
-	get_pool(void) {
-		return footprint_base<Tag>::_pool;
+	get_instance_pool(void) {
+		return footprint_base<Tag>::_instance_pool;
 	}
 
 	template <class Tag>
 	const typename state_instance<Tag>::pool_type&
-	get_pool(void) const {
-		return footprint_base<Tag>::_pool;
+	get_instance_pool(void) const {
+		return footprint_base<Tag>::_instance_pool;
 	}
+
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	template <class Tag>
+	instance_collection_pool_bundle<Tag>&
+	get_instance_collection_pool_bundle(void) {
+		return footprint_base<Tag>::collection_pool_bundle;
+	}
+
+	template <class Tag>
+	const instance_collection_pool_bundle<Tag>&
+	get_instance_collection_pool_bundle(void) const {
+		return footprint_base<Tag>::collection_pool_bundle;
+	}
+#endif
 
 	void
 	import_scopespace(const scopespace&);
@@ -325,7 +374,7 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if 0
+#if HEAP_ALLOCATE_FOOTPRINTS
 private:
 	/**
 		Don't want footprint to be copy-constructed.  

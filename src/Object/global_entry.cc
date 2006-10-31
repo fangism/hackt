@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.7 2006/04/11 07:54:37 fang Exp $
+	$Id: global_entry.cc,v 1.7.36.1 2006/10/31 00:28:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -30,7 +30,7 @@ footprint_frame_map<Tag>::footprint_frame_map() : id_map() { }
  */
 template <class Tag>
 footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
-		id_map(f.template get_pool<Tag>().size() -1) {
+		id_map(f.template get_instance_pool<Tag>().size() -1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,7 +97,7 @@ footprint_frame_map<Tag>::__expand_subinstances(const footprint& fp,
 	size_t j = offset;
 	const footprint_frame& extframe(AS_A(const footprint_frame&, *this));
 	global_pool_type& gpool(sm.template get_pool<Tag>());
-	const placeholder_pool_type& ppool(fp.template get_pool<Tag>());
+	const placeholder_pool_type& ppool(fp.template get_instance_pool<Tag>());
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "offset = " << offset << endl;
 	fp.dump(cerr << "fp: ");

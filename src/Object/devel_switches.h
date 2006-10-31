@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.4 2006/10/29 20:04:53 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.5 2006/10/31 00:28:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -91,7 +91,7 @@
 	Nothing more specific about HOW they are used is implied by
 	this switch.  
 	Goal: 1
-	Status: instantiations done
+	Status: completed, tested
  */
 #define	ENABLE_PORT_ACTUAL_COLLECTIONS		(1 && USE_COLLECTION_INTERFACES)
 
@@ -99,24 +99,41 @@
 	Define to 1 to *use* port_actual_collections in subinstances.  
 	Doesn't specify how they are allocated, see next flags.  
 	Goal: 1
-	Status: in progress
+	Status: completed, tested, using heap allocation
  */
 #define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ENABLE_PORT_ACTUAL_COLLECTIONS)
 
 /**
-	Define to 1 to allocate port_actual_collections on the heap.
-	Goal: 0 -- pool them
-	Status: not yet
+	Define to 1 to pool-allocate ALL instance collections, on a 
+	*per-footprint* basis (using the target footprint in context).  
+	This is really orthogonal to whether or not port_actual_collections
+	are used.  
+	Goal: 1?
+	Status: planning and testing
  */
-#define	HEAP_ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ALLOCATE_PORT_ACTUAL_COLLECTIONS)
+#ifndef	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#define	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT	0
+#endif
 
 /**
-	Define to 1 to use per-footprint pools to allocate
-	collections of public substructures (subinstances' port aliases).  
-	Goal: 1?
-	Status: conception
+	Define to 1 to heap-allocate footprints. 
+	Rationale, makes persistence and back-referencing easier.
+	Also footprint_manager.h need not include footprint.h, 
+	which carries a lot of weight.  
+	Footprints are not replication critical.  
+	Goal: ?
+	Status:
  */
-#define	PER_FOOTPRINT_PORT_ACTUAL_COLLECTION_POOLS	(0 && ALLOCATE_PORT_ACTUAL_COLLECTIONS)
+#define	HEAP_ALLOCATE_FOOTPRINTS		0
+
+/**
+	Define to 1 to you private-implementation "pimpl" on
+	footprint_base's members.  
+	Rationale: cut down strcture definition dependencies of footprint.  
+	Goal: ?
+	Status:
+ */
+#define	PRIVATE_IMPL_FOOTPRINT_BASE		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -125,7 +142,7 @@
 	This way port instance collections don't need to contain
 	collection mapping information, just refer to footprint.  
 	Goal: 1?
-	Status: not begun
+	Status: obsolete
  */
 #define	PORT_COLLECTIONS_USE_BACK_REFERENCE	0
 
@@ -136,7 +153,7 @@
 	Affects: instance_alias_info's substructure, subinstance_manager.
 	Better idea: per *footprint* pools.  
 	Goal: ?
-	Status: not begun, likely abandoned.
+	Status: obsolete
  */
 #define	MODULE_POOLED_SUBINSTANCE_STRUCTURE	0
 

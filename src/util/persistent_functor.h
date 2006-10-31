@@ -1,6 +1,6 @@
 /**
 	\file "util/persistent_functor.h"
-	$Id: persistent_functor.h,v 1.4 2006/04/12 08:53:22 fang Exp $
+	$Id: persistent_functor.h,v 1.4.36.1 2006/10/31 00:28:36 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_H__
@@ -49,6 +49,7 @@ struct persistent_collector_ref : public persistent_visitor_base {
 	}
 };	// end struct persistent_collector_ref
 
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Functor for when the elements of a collection are, themselves, 
@@ -69,6 +70,26 @@ struct persistent_sequence_collector_ref : public persistent_visitor_base {
 	}
 
 };	// end struct persistent_sequence_collector_ref
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Can override 
+ */
+template <class T>
+struct persistent_collector : public persistent_visitor_base {
+	typedef	void (T::*collector_func) (persistent_object_manager&) const;
+	collector_func				collector;
+
+	persistent_collector(const collector_func f, 
+			persistent_object_manager& m) :
+			persistent_visitor_base(m), collector(f) { }
+
+	void
+	operator () (const T& t) {
+		t.*collector(this->pom);
+	}
+
+};	// end struct persistent_collector
 
 //-----------------------------------------------------------------------------
 /**
@@ -111,17 +132,45 @@ struct persistent_sequence_collector_ptr : public persistent_visitor_base {
 };	// end struct persistent_sequence_collector_ptr
 
 //=============================================================================
-struct persistent_writer_ref : public persistent_const_visitor_base {
+struct persistent_writer_base : public persistent_const_visitor_base {
 	std::ostream&			os;
+
+	persistent_writer_base(const persistent_object_manager& m, 
+		std::ostream& o)
+		: persistent_const_visitor_base(m), os(o) { }
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor with customizable member function.  
+ */
+template <class T>
+struct persistent_writer : public persistent_writer_base {
+	typedef	void (T::*writer_func) (
+			const persistent_object_manager&, std::ostream&) const;
+	writer_func				writer;
+
+	persistent_writer(const writer_func f, 
+		const persistent_object_manager& m, std::ostream& o)
+		: persistent_writer_base(m, o), writer(f) { }
+
+	void
+	operator () (const T& t) {
+		(t.*writer)(this->pom, this->os);
+	}
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct persistent_writer_ref : public persistent_writer_base {
 
 	persistent_writer_ref(const persistent_object_manager& m, 
 		std::ostream& o)
-		: persistent_const_visitor_base(m), os(o) { }
+		: persistent_writer_base(m, o) { }
 
 	template <class T>
 	void
 	operator () (const T& t) {
-		t.write_object(pom, os);
+		t.write_object(this->pom, this->os);
 	}
 };
 
@@ -147,17 +196,46 @@ struct persistent_writer_ptr : public persistent_const_visitor_base {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct persistent_loader_ref : public persistent_const_visitor_base {
+struct persistent_loader_base : public persistent_const_visitor_base {
 	std::istream&			is;
+
+	persistent_loader_base(const persistent_object_manager& m, 
+		std::istream& i)
+		: persistent_const_visitor_base(m), is(i) { }
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Member-function customizable functor.  
+ */
+template <class T>
+struct persistent_loader : public persistent_loader_base {
+	typedef	void (T::*loader_func) (
+			const persistent_object_manager&, std::istream&);
+	loader_func				loader;
+
+	persistent_loader(const loader_func f, 
+		const persistent_object_manager& m, 
+		std::istream& i)
+		: persistent_loader_base(m, i), loader(f) { }
+
+	void
+	operator () (T& t) {
+		(t.*loader)(this->pom, this->is);
+	}
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct persistent_loader_ref : public persistent_loader_base {
 
 	persistent_loader_ref(const persistent_object_manager& m, 
 		std::istream& i)
-		: persistent_const_visitor_base(m), is(i) { }
+		: persistent_loader_base(m, i) { }
 
 	template <class T>
 	void
 	operator () (T& t) {
-		t.load_object(pom, is);
+		t.load_object(this->pom, this->is);
 	}
 };
 

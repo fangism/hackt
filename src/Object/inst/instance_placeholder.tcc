@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4.2.2 2006/10/29 20:04:58 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.3 2006/10/31 00:28:24 fang Exp $
 	TODO: trim includes
  */
 
@@ -229,6 +229,7 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	// pass unroll_context to instantiate recursively
 	const count_ptr<port_collection_type>
 		ret(new port_collection_type(back_ref, c));
+	NEVER_NULL(ret);
 	// TODO: attach relaxed parameters
 	return ret;
 #else

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2.2.3 2006/10/28 03:03:09 fang Exp $
+	$Id: instance_array.h,v 1.2.2.4 2006/10/31 00:28:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -11,7 +11,9 @@
 
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/sparse_collection.h"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/memory/chunk_map_pool_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -72,7 +74,11 @@ private:
 							const_iterator;
 private:
 	collection_type					collection;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+public:
+#else
 private:
+#endif
 	instance_array();
 
 public:
@@ -157,6 +163,16 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_connections(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_connections(const persistent_object_manager&, istream&);
+
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {
 #ifdef	HAVE_UINT64_TYPE
