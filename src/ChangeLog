@@ -5,6 +5,10 @@
 
 2006-10-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-09:
+	  Perm'd PRIVATE_IMPL_FOOTPRINT_BASE.
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-08:
 	  Resorted to private implementation of footprint_base struct template, 
 		breaking many unnecessary dependencies on definitions.  

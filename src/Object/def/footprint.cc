@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.2 2006/10/31 03:51:31 fang Exp $
+	$Id: footprint.cc,v 1.27.4.3 2006/10/31 04:07:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,8 +27,12 @@
 #include "Object/inst/physical_instance_placeholder.h"
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/instance_collection_pool_bundle.tcc"
+#include "Object/inst/datatype_instance_collection.h"
+#include "Object/inst/instance_scalar.h"
+#include "Object/inst/instance_array.h"
+#include "Object/inst/port_formal_array.h"
+#include "Object/inst/port_actual_collection.h"
 #endif
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/process_instance.h"
 #include "Object/inst/channel_instance.h"
@@ -36,7 +40,6 @@
 #include "Object/inst/enum_instance.h"
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
-#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -70,45 +73,17 @@ using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
  */
 template <class Tag>
 footprint_base<Tag>::footprint_base() :
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	collection_pool_bundle(new collection_pool_bundle_type), 
 #endif
 	_instance_pool(new instance_pool_type(
 		class_traits<Tag>::instance_pool_chunk_size >> 1))
-#else
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	collection_pool_bundle(), 
-#endif
-	_instance_pool(class_traits<Tag>::instance_pool_chunk_size >> 1)
-#endif
 	{
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	NEVER_NULL(collection_pool_bundle);
 #endif
 	NEVER_NULL(_instance_pool);
-#endif
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && PRIVATE_IMPL_FOOTPRINT_BASE
-/**
-	Protected copy-constructor, that doesn't really copy.  
-	Never transfer ownership.  
-	\pre source is also empty, and going to be discarded.
- */
-template <class Tag>
-footprint_base<Tag>::footprint_base(const this_type& t) :
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	collection_pool_bundle(new collection_pool_bundle_type), 
-#endif
-	_instance_pool(new instance_pool_type(
-		class_traits<Tag>::instance_pool_chunk_size >> 1))
-{
-
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -126,13 +101,8 @@ template <class Tag>
 good_bool
 footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	STACKTRACE_VERBOSE;
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 	const_iterator i(++_instance_pool->begin());
 	const const_iterator e(_instance_pool->end());
-#else
-	const_iterator i(++_instance_pool.begin());
-	const const_iterator e(_instance_pool.end());
-#endif
 	for ( ; i!=e; i++) {
 		const size_t j = sm.template allocate<Tag>();
 		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
@@ -168,13 +138,8 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	STACKTRACE_VERBOSE;
 	size_t j = o;
 	global_pool_type& gpool(sm.template get_pool<Tag>());
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 	const_iterator i(++_instance_pool->begin());
 	const const_iterator e(_instance_pool->end());
-#else
-	const_iterator i(++_instance_pool.begin());
-	const const_iterator e(_instance_pool.end());
-#endif
 	for ( ; i!=e; i++, j++) {
 		global_entry<Tag>& ref(gpool[j]);
 		/***
@@ -255,17 +220,10 @@ template <class Tag>
 void
 footprint_base<Tag>::collect_transient_info_base(
 		persistent_object_manager& m) const {
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	this->collection_pool_bundle->collect_transient_info_base(m);
 #endif
 	this->_instance_pool->collect_transient_info_base(m);
-#else
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	this->collection_pool_bundle.collect_transient_info_base(m);
-#endif
-	this->_instance_pool.collect_transient_info_base(m);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -273,17 +231,10 @@ template <class Tag>
 void
 footprint_base<Tag>::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	this->collection_pool_bundle->write_object_base(m, o);
 #endif
 	this->_instance_pool->write_object_base(m, o);
-#else
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	this->collection_pool_bundle.write_object_base(m, o);
-#endif
-	this->_instance_pool.write_object_base(m, o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -291,17 +242,10 @@ template <class Tag>
 void
 footprint_base<Tag>::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	this->collection_pool_bundle->load_object_base(m, i);
 #endif
 	this->_instance_pool->load_object_base(m, i);
-#else
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	this->collection_pool_bundle.load_object_base(m, i);
-#endif
-	this->_instance_pool.load_object_base(m, i);
-#endif
 }
 
 //=============================================================================
@@ -358,21 +302,12 @@ ostream&
 footprint::dump(ostream& o) const {
 	// unrolled? created?
 	// instance_collection_map ?
-#if PRIVATE_IMPL_FOOTPRINT_BASE
 	footprint_base<process_tag>::_instance_pool->dump(o);
 	footprint_base<channel_tag>::_instance_pool->dump(o);
 	footprint_base<datastruct_tag>::_instance_pool->dump(o);
 	footprint_base<enum_tag>::_instance_pool->dump(o);
 	footprint_base<int_tag>::_instance_pool->dump(o);
 	footprint_base<bool_tag>::_instance_pool->dump(o);
-#else
-	footprint_base<process_tag>::_instance_pool.dump(o);
-	footprint_base<channel_tag>::_instance_pool.dump(o);
-	footprint_base<datastruct_tag>::_instance_pool.dump(o);
-	footprint_base<enum_tag>::_instance_pool.dump(o);
-	footprint_base<int_tag>::_instance_pool.dump(o);
-	footprint_base<bool_tag>::_instance_pool.dump(o);
-#endif
 	return o;
 }
 
