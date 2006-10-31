@@ -1,10 +1,10 @@
 /**
-	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.2 2006/10/31 05:23:51 fang Exp $
+	\file "Object/inst/value_collection_pool_bundle.h"
+	$Id: value_collection_pool_bundle.h,v 1.1.2.1 2006/10/31 05:23:56 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
-#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
+#ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
+#define	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
 
 #include <iosfwd>
 #include "util/persistent_fwd.h"
@@ -15,10 +15,8 @@ namespace entity {
 using std::ostream;
 using std::istream;
 // forward declarations
-template <class, size_t> class instance_array;
-template <class Tag> class instance_array<Tag,0>;
-template <class> class port_formal_array;
-template <class> class port_actual_collection;
+template <class, size_t> class value_array;
+template <class Tag> class value_array<Tag,0>;
 using util::persistent_object_manager;
 
 //=============================================================================
@@ -28,7 +26,7 @@ using util::persistent_object_manager;
 	Also re-usable for value_collections.  
  */
 template <class T>
-class instance_collection_pool_wrapper {
+class value_collection_pool_wrapper {
 public:
 	typedef	T				collection_type;
 	typedef	collection_pool<T>		pool_type;
@@ -40,19 +38,10 @@ protected:
 	// serialization helper routines
 
 	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
-
-	void
-	write_connections(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_connections(const persistent_object_manager&, istream&);
 
 };	// end class sparse_pool_bundle
 
@@ -68,17 +57,17 @@ protected:
 		expand with pooled allocations (more than 4).  
  */
 template <class Tag>
-struct instance_collection_pool_bundle :
-	public instance_collection_pool_wrapper<instance_array<Tag, 0> >, 
-	public instance_collection_pool_wrapper<instance_array<Tag, 1> >, 
-	public instance_collection_pool_wrapper<instance_array<Tag, 2> >, 
-	public instance_collection_pool_wrapper<instance_array<Tag, 3> >, 
-	public instance_collection_pool_wrapper<instance_array<Tag, 4> >, 
-	public instance_collection_pool_wrapper<port_formal_array<Tag> >, 
-	public instance_collection_pool_wrapper<port_actual_collection<Tag> > {
+struct value_collection_pool_bundle :
+	public value_collection_pool_wrapper<value_array<Tag, 0> >, 
+	public value_collection_pool_wrapper<value_array<Tag, 1> >, 
+	public value_collection_pool_wrapper<value_array<Tag, 2> >, 
+	public value_collection_pool_wrapper<value_array<Tag, 3> >, 
+	public value_collection_pool_wrapper<value_array<Tag, 4> >
+//	public value_collection_pool_wrapper<value_formal_array<Tag> >
+{
 
-	instance_collection_pool_bundle();
-	~instance_collection_pool_bundle();
+	value_collection_pool_bundle();
+	~value_collection_pool_bundle();
 
 	/**
 		\param S the type of the pool referenced.  S must be one 
@@ -88,23 +77,20 @@ struct instance_collection_pool_bundle :
 	template <class S>
 	collection_pool<S>&
 	get_collection_pool(void) {
-		return instance_collection_pool_wrapper<S>::pool;
+		return value_collection_pool_wrapper<S>::pool;
 	}
 
 	// serialization routines
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
 	void
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
-};	// end class instance_collection_pool_bundle
+};	// end class value_collection_pool_bundle
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
+#endif	// __HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
 

@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.20 2006/10/24 07:27:22 fang Exp $
+	$Id: value_collection.h,v 1.20.2.1 2006/10/31 05:23:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -16,6 +16,7 @@
 #include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"
@@ -23,7 +24,11 @@
 /**
 	Define to 1 to enable pool-allocations of value-arrays and scalars.  
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#define	POOL_ALLOCATE_VALUE_COLLECTIONS			0
+#else
 #define	POOL_ALLOCATE_VALUE_COLLECTIONS			1
+#endif
 
 namespace HAC {
 namespace entity {

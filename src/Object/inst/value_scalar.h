@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_scalar.h"
-	$Id: value_scalar.h,v 1.2 2006/10/24 07:27:25 fang Exp $
+	$Id: value_scalar.h,v 1.2.2.1 2006/10/31 05:23:58 fang Exp $
 	This file spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -9,9 +9,10 @@
 #define	__HAC_OBJECT_INST_VALUE_SCALAR_H__
 
 #include "Object/inst/value_collection.h"
-
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/new_functor_fwd.h"
 #include "util/memory/chunk_map_pool_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {

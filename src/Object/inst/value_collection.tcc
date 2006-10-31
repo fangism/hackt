@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.24 2006/10/24 07:27:23 fang Exp $
+ 	$Id: value_collection.tcc,v 1.24.2.1 2006/10/31 05:23:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -45,8 +45,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 #include "Object/type/param_type_reference.h"
-// #include "Object/unroll/unroll_context.h"
-#include "Object/unroll/unroll_context_value_resolver.h"
+#include "Object/unroll/unroll_context_value_resolver.h"	// phase out
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
@@ -55,8 +54,10 @@
 
 #include "common/ICE.h"
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 // #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/chunk_map_pool.tcc"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 #include "util/multikey_map.tcc"
