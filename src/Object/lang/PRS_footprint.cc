@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.15.34.1 2006/10/31 00:28:31 fang Exp $
+	$Id: PRS_footprint.cc,v 1.15.34.2 2006/10/31 03:51:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,6 +21,7 @@
 #include "Object/expr/const_param.h"
 #include "Object/lang/cflat_visitor.h"
 #include "Object/lang/directive_base.h"
+#include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"

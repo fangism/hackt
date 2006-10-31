@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.1 2006/10/31 00:28:12 fang Exp $
+	$Id: footprint.h,v 1.19.4.2 2006/10/31 03:51:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -10,6 +10,9 @@
 #include <iosfwd>
 #include "Object/devel_switches.h"
 #include "Object/inst/instance_pool.h"
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+#include "Object/inst/state_instance.h"
+#else
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/process_instance.h"
 #include "Object/inst/channel_instance.h"
@@ -17,23 +20,30 @@
 #include "Object/inst/enum_instance.h"
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
+#endif
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
 // #include "Object/inst/alias_visitee.h"
+#if !PRIVATE_IMPL_FOOTPRINT_BASE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/instance_collection_pool_bundle.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/collection_interface.h"
 #include "Object/inst/instance_alias_info.h"
 #endif
+#endif
+
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
 #include "util/STL/hash_map.h"
 #include "util/memory/count_ptr.h"
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+#include "util/memory/excl_ptr.h"
+#endif
 #if HEAP_ALLOCATE_FOOTPRINTS
 #include "util/memory/chunk_map_pool_fwd.h"
 #endif
@@ -49,12 +59,20 @@ class port_member_context;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class> class instance_collection_pool_bundle;
+#endif
+#endif
 
 using std::string;
 using std::istream;
 using std::ostream;
 using util::good_bool;
 using util::memory::count_ptr;
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+using util::memory::excl_ptr;
+#endif
 using util::persistent_object_manager;
 
 //=============================================================================
@@ -69,9 +87,11 @@ using util::persistent_object_manager;
 	in the footprint, but not private instances.  
 	This also wraps around the instance_collection pools used to
 	allocate all instance collections.  
+	TODO: consider pool allocating pool_bundle and instance_pools.  
  */
 template <class Tag>
 class footprint_base {
+	typedef	footprint_base<Tag>			this_type;
 protected:
 	typedef	typename state_instance<Tag>::pool_type	instance_pool_type;
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
@@ -81,12 +101,22 @@ protected:
 private:
 	typedef	typename instance_pool_type::const_iterator	const_iterator;
 protected:
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const excl_ptr<collection_pool_bundle_type>	collection_pool_bundle;
+#endif
+	const excl_ptr<instance_pool_type>		_instance_pool;
+#else
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	collection_pool_bundle_type		collection_pool_bundle;
 #endif
 	instance_pool_type				_instance_pool;
+#endif
 
 	footprint_base();
+#if 0 && PRIVATE_IMPL_FOOTPRINT_BASE
+	footprint_base(const this_type&);
+#endif
 	~footprint_base();
 
 	good_bool
@@ -287,26 +317,42 @@ public:
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&
 	get_instance_pool(void) {
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+		return *footprint_base<Tag>::_instance_pool;
+#else
 		return footprint_base<Tag>::_instance_pool;
+#endif
 	}
 
 	template <class Tag>
 	const typename state_instance<Tag>::pool_type&
 	get_instance_pool(void) const {
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+		return *footprint_base<Tag>::_instance_pool;
+#else
 		return footprint_base<Tag>::_instance_pool;
+#endif
 	}
 
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	template <class Tag>
 	instance_collection_pool_bundle<Tag>&
 	get_instance_collection_pool_bundle(void) {
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+		return *footprint_base<Tag>::collection_pool_bundle;
+#else
 		return footprint_base<Tag>::collection_pool_bundle;
+#endif
 	}
 
 	template <class Tag>
 	const instance_collection_pool_bundle<Tag>&
 	get_instance_collection_pool_bundle(void) const {
+#if PRIVATE_IMPL_FOOTPRINT_BASE
+		return *footprint_base<Tag>::collection_pool_bundle;
+#else
 		return footprint_base<Tag>::collection_pool_bundle;
+#endif
 	}
 #endif
 
@@ -374,8 +420,8 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if HEAP_ALLOCATE_FOOTPRINTS
-private:
+#if 1
+// private:
 	/**
 		Don't want footprint to be copy-constructed.  
 		But std::pair requires it in the footprint_manager.

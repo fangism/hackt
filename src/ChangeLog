@@ -5,6 +5,12 @@
 
 2006-10-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-08:
+	  Resorted to private implementation of footprint_base struct template, 
+		breaking many unnecessary dependencies on definitions.  
+	  Next: perm this switch, clean, for sake of maintainability.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-07:
 	  Added: Object/inst/{collection_pool,
 		instance_collection_pool_bundle}.{h,tcc}, preparing to 

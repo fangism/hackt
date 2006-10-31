@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.5 2006/10/31 00:28:05 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.6 2006/10/31 03:51:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -130,22 +130,12 @@
 	Define to 1 to you private-implementation "pimpl" on
 	footprint_base's members.  
 	Rationale: cut down strcture definition dependencies of footprint.  
-	Goal: ?
-	Status:
+	Goal: 1
+	Status: in progress
  */
-#define	PRIVATE_IMPL_FOOTPRINT_BASE		0
+#define	PRIVATE_IMPL_FOOTPRINT_BASE		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to have port collections use light-weight back-references
-	to footprint's internal collection maps.  
-	This way port instance collections don't need to contain
-	collection mapping information, just refer to footprint.  
-	Goal: 1?
-	Status: obsolete
- */
-#define	PORT_COLLECTIONS_USE_BACK_REFERENCE	0
-
 /**
 	Define to 1 to use per-module allocated pools of subinstance lists.
 	Purpose: turn individually heap-allocated structures into

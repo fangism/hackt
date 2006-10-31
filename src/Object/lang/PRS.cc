@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.22 2006/10/24 07:27:26 fang Exp $
+	$Id: PRS.cc,v 1.22.2.1 2006/10/31 03:51:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -33,6 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/traits/bool_traits.h"
 #include "Object/def/footprint.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/common/dump_flags.h"

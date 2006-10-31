@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.7.36.1 2006/10/31 00:28:07 fang Exp $
+	$Id: global_entry.cc,v 1.7.36.2 2006/10/31 03:51:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,9 @@
 #include "Object/def/footprint.h"
 #include "Object/port_context.h"
 #include "Object/state_manager.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/enum_traits.h"
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.14.4.1 2006/10/31 00:28:08 fang Exp $
+	$Id: global_entry.tcc,v 1.14.4.2 2006/10/31 03:51:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -24,6 +24,9 @@
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/def/footprint.h"
+#include "Object/traits/proc_traits.h"
+#include "Object/traits/struct_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.tcc"
 #include "Object/inst/alias_actuals.tcc"	// for dump_complete_type
@@ -34,7 +37,6 @@
 #include "Object/cflat_context.h"
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
-// #include "Object/lang/cflat_printer.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/def/process_definition.h"

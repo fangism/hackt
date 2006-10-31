@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.140.2.3 2006/10/31 00:28:05 fang Exp $
+#	$Id: Makefile.am,v 1.140.2.4 2006/10/31 03:51:24 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -482,6 +482,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
+	Object/traits/instance_traits.h \
 	Object/traits/type_tag_enum.h \
 	Object/def/definition_fwd.h \
 	Object/def/built_in_datatype_def.h \

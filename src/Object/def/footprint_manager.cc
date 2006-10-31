@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.10 2006/10/18 01:19:10 fang Exp $
+	$Id: footprint_manager.cc,v 1.10.4.1 2006/10/31 03:51:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,15 @@
 #include "Object/def/footprint_manager.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
+
+// need these until footprint is heap allocated
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/enum_traits.h"
+#include "Object/traits/struct_traits.h"
+#include "Object/traits/chan_traits.h"
+#include "Object/traits/proc_traits.h"
+
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.11 2006/10/18 21:38:49 fang Exp $
+	$Id: canonical_type.tcc,v 1.11.4.1 2006/10/31 03:51:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -11,7 +11,6 @@
 #include "Object/type/canonical_type.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/def/typedef_base.h"
-#include "Object/def/footprint.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param_expr_list.h"

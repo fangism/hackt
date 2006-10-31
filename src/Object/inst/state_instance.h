@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.10 2006/03/15 04:38:19 fang Exp $
+	$Id: state_instance.h,v 1.10.44.1 2006/10/31 03:51:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -25,6 +25,7 @@ using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+template <class> class instance_alias_info;
 
 #define	STATE_INSTANCE_TEMPLATE_SIGNATURE	template <class Tag>
 #define	STATE_INSTANCE_CLASS			state_instance<Tag>
@@ -45,7 +46,11 @@ class state_instance {
 public:
 	typedef	class_traits<Tag>		traits_type;
 private:
+#if 0
 	typedef	typename traits_type::instance_alias_info_type
+#else
+	typedef	instance_alias_info<Tag>
+#endif
 						alias_info_type;
 public:
 	typedef	never_ptr<const alias_info_type>	back_ref_type;

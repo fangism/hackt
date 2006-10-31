@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.5 2006/10/31 00:28:18 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.6 2006/10/31 03:51:34 fang Exp $
 	TODO: trim includes
  */
 
@@ -53,6 +53,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/common/cflat_args.h"
 #include "Object/inst/alias_printer.h"
+#include "Object/traits/instance_traits.h"	// need for alias visitor :-/
 #include "common/ICE.h"
 
 #include "util/packed_array.tcc"
