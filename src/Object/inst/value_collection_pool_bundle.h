@@ -1,23 +1,27 @@
 /**
 	\file "Object/inst/value_collection_pool_bundle.h"
-	$Id: value_collection_pool_bundle.h,v 1.1.2.1 2006/10/31 05:23:56 fang Exp $
+	$Id: value_collection_pool_bundle.h,v 1.1.2.2 2006/10/31 21:16:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
 #define	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
 
 #include <iosfwd>
+#include "util/size_t.h"
 #include "util/persistent_fwd.h"
 #include "Object/inst/collection_pool.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace entity {
 using std::ostream;
 using std::istream;
 // forward declarations
+template <class> class value_collection;
 template <class, size_t> class value_array;
 template <class Tag> class value_array<Tag,0>;
 using util::persistent_object_manager;
+using util::memory::never_ptr;
 
 //=============================================================================
 /**
@@ -65,6 +69,7 @@ struct value_collection_pool_bundle :
 	public value_collection_pool_wrapper<value_array<Tag, 4> >
 //	public value_collection_pool_wrapper<value_formal_array<Tag> >
 {
+	typedef	value_collection<Tag>		collection_base_type;
 
 	value_collection_pool_bundle();
 	~value_collection_pool_bundle();
@@ -79,6 +84,9 @@ struct value_collection_pool_bundle :
 	get_collection_pool(void) {
 		return value_collection_pool_wrapper<S>::pool;
 	}
+
+	never_ptr<collection_base_type>
+	lookup_collection(const unsigned char, const unsigned short);
 
 	// serialization routines
 	void

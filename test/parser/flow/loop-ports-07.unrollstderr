@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	9	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	30
 	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -29,13 +29,13 @@ Persistent Object Manager text dump:
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	124
+	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	108
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	34	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	216
+	30	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	31	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	34	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	184
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

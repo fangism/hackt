@@ -1,25 +1,32 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.2 2006/10/31 05:23:51 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.3 2006/10/31 21:15:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
 
 #include <iosfwd>
+#include "util/size_t.h"
 #include "util/persistent_fwd.h"
 #include "Object/inst/collection_pool.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace entity {
 using std::ostream;
 using std::istream;
 // forward declarations
+class unroll_context;
+template <class> class instance_placeholder;
+template <class> class collection_interface;
+template <class> class instance_collection;
 template <class, size_t> class instance_array;
 template <class Tag> class instance_array<Tag,0>;
 template <class> class port_formal_array;
 template <class> class port_actual_collection;
 using util::persistent_object_manager;
+using util::memory::never_ptr;
 
 //=============================================================================
 /**
@@ -77,6 +84,12 @@ struct instance_collection_pool_bundle :
 	public instance_collection_pool_wrapper<port_formal_array<Tag> >, 
 	public instance_collection_pool_wrapper<port_actual_collection<Tag> > {
 
+	/**
+		This is the common base type to all collections, 
+		handled by this pool manager.  
+	 */
+	typedef	collection_interface<Tag>	collection_interface_type;
+
 	instance_collection_pool_bundle();
 	~instance_collection_pool_bundle();
 
@@ -90,6 +103,23 @@ struct instance_collection_pool_bundle :
 	get_collection_pool(void) {
 		return instance_collection_pool_wrapper<S>::pool;
 	}
+
+	never_ptr<collection_interface_type>
+	lookup_collection(const unsigned char, const unsigned short);
+
+// allocation
+	port_actual_collection<Tag>*
+	allocate_port_collection(
+		const never_ptr<const instance_collection<Tag> >, 
+		const unroll_context&);
+
+	instance_collection<Tag>*
+	allocate_port_formal(
+		const never_ptr<const instance_placeholder<Tag> >);
+
+	instance_collection<Tag>*
+	allocate_local_collection(
+		const never_ptr<const instance_placeholder<Tag> >);
 
 	// serialization routines
 	void

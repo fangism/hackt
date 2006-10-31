@@ -22,35 +22,35 @@ Persistent Object Manager text dump:
 	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	25	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
 	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	38	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	45	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	46	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	47	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	48	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	49	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	45	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	46	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	48	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	49	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

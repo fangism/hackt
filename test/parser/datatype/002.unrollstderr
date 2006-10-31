@@ -22,12 +22,12 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	16	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -38,11 +38,11 @@ Persistent Object Manager text dump:
 	34	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	66
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	42	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	43	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -50,7 +50,7 @@ Persistent Object Manager text dump:
 	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)

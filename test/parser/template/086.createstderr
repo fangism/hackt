@@ -41,14 +41,14 @@ Persistent Object Manager text dump:
 	37	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
 	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	32
 	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	apimvref	0	#HEAD#	#TAIL#	17
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)

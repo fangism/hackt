@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.5 2006/10/31 00:28:28 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.6 2006/10/31 21:16:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -673,7 +673,8 @@ PORT_FORMAL_ARRAY_CLASS::load_object(const persistent_object_manager& m,
 	read_key(k);
 	this->value_array.resize(k);
 	const iterator b(this->begin()), e(this->end());
-	for_each(b, e, typename parent_type::element_loader(m, f));
+	for_each(b, e, typename parent_type::element_loader(m, f, 
+			never_ptr<const this_type>(this)));
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_loader(m, f));
 #endif

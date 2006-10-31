@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	proccoll	1	#HEAD#	#TAIL#	213
+	34	##ADDR##	proccoll	1	#HEAD#	#TAIL#	177
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16

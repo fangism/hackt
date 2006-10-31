@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.6 2006/10/31 03:51:34 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.7 2006/10/31 21:15:51 fang Exp $
 	TODO: trim includes
  */
 
@@ -769,27 +769,12 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
 	// let the module take care of saving the state information
 	write_value(o, this->instance_index);
+	NEVER_NULL(this->container);
+#if 0
 	m.write_pointer(o, this->container);
+#endif
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
-#if 0
-	const size_t dim = this->container->get_dimensions();
-	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
-if (!dim) {
-	if (this->next == this) {
-#if STACKTRACE_PERSISTENTS
-		STACKTRACE_INDENT_PRINT("Self-connection only." << endl);
-#endif
-		write_value<char>(o, 0);
-	} else {
-#if STACKTRACE_PERSISTENTS
-		STACKTRACE_INDENT_PRINT("Writing a real connection!" << endl);
-#endif
-		write_value<char>(o, 1);
-		this->peek()->write_next_connection(m, o);
-	}
-}
-#endif
 //	else skip, collection will write connections later...
 }
 
@@ -803,27 +788,16 @@ void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
+	NEVER_NULL(this->container);	// already set by container!
 	// let the module take care of restoring the state information
 	read_value(i, this->instance_index);
+#if 0
 	m.read_pointer(i, this->container);
-	NEVER_NULL(this->container);
+#endif
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);
-	m.load_object_once(&const_cast<container_type&>(*this->container));
 #if 0
-	const size_t dim = this->container->get_dimensions();
-	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
-if (!dim) {
-	// no key to load!
-	char c;
-	read_value(i, c);
-	if (c) {
-#if STACKTRACE_PERSISTENTS
-		STACKTRACE_INDENT_PRINT("Loading a real connection!" << endl);
-#endif
-		this->load_next_connection(m, i);
-	}
-}
+	m.load_object_once(&const_cast<container_type&>(*this->container));
 #endif
 //	else skip, collection will load connections later...
 }

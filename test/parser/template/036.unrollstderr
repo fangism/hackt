@@ -37,7 +37,7 @@ Persistent Object Manager text dump:
 	33	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)

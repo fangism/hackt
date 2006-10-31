@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4.2.3 2006/10/31 00:28:24 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.4 2006/10/31 21:15:59 fang Exp $
 	TODO: trim includes
  */
 
@@ -42,6 +42,9 @@
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 #include "Object/unroll/unroll_context.h"
 #include "Object/inst/port_actual_collection.h"
+#endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/instance_collection_pool_bundle.h"
 #endif
 #include "common/ICE.h"
 
@@ -220,19 +223,35 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	INVARIANT(this->initial_instantiation_statement_ptr);
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	typedef	port_actual_collection<Tag>	port_collection_type;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<const physical_instance_collection>
+#else
 	const count_ptr<const physical_instance_collection>
+#endif
 		b(c.lookup_port_collection(*this));
 	NEVER_NULL(b);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<const instance_collection_generic_type>
+#else
 	const count_ptr<const instance_collection_generic_type>
+#endif
 		back_ref(b.template is_a<const instance_collection_generic_type>());
 	NEVER_NULL(back_ref);
 	// pass unroll_context to instantiate recursively
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	instance_collection_pool_bundle<Tag>&
+		pool(c.get_target_footprint().
+			template get_instance_collection_pool_bundle<Tag>());
+	const never_ptr<port_collection_type>
+		ret(pool.allocate_port_collection(back_ref, c));
+#else
 	const count_ptr<port_collection_type>
 		ret(new port_collection_type(back_ref, c));
+#endif
 	NEVER_NULL(ret);
 	// TODO: attach relaxed parameters
 	return ret;
-#else
+#else	// ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	const count_ptr<instance_collection_generic_type>
 		ret(instance_collection_generic_type::make_port_formal_array(
 			never_ptr<const this_type>(this)));
@@ -242,7 +261,7 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	} else {
 		return count_ptr<physical_instance_collection>(NULL);
 	}
-#endif
+#endif	// ALLOCATE_PORT_ACTUAL_COLLECTIONS
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,13 +329,33 @@ INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const 
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
-INSTANCE_PLACEHOLDER_CLASS::make_collection(void) const {
+INSTANCE_PLACEHOLDER_CLASS::make_collection(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	instance_collection_pool_bundle<Tag>&
+		pool(f.template get_instance_collection_pool_bundle<Tag>());
+#endif
 	if (this->is_port_formal()) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		return pool.allocate_port_formal(
+			never_ptr<const this_type>(this));
+#else
 		return instance_collection_generic_type::make_port_formal_array(
 			never_ptr<const this_type>(this));
+#endif
 	} else {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		return pool.allocate_local_collection(
+			never_ptr<const this_type>(this));
+#else
 		return instance_collection_generic_type::make_array(
 			never_ptr<const this_type>(this));
+#endif
 	}
 }
 

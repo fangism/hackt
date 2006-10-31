@@ -27,10 +27,10 @@ Persistent Object Manager text dump:
 	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	213
 	31	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	32	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -47,8 +47,8 @@ Persistent Object Manager text dump:
 	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	48	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
 	49	##ADDR##	procdefn	0	#HEAD#	#TAIL#	280
 	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
@@ -79,12 +79,12 @@ Persistent Object Manager text dump:
 	75	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	76	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	84	##ADDR##	procdefn	0	#HEAD#	#TAIL#	249
 	85	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	86	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -112,19 +112,19 @@ Persistent Object Manager text dump:
 	108	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	109	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	110	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	80
-	111	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
+	111	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
 	112	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	113	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	114	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	115	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	116	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	117	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	118	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	119	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	113	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	114	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	115	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	116	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	117	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	118	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	119	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	120	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	121	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	122	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	123	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	122	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	123	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 	124	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	125	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	126	##ADDR##	procdefn	0	#HEAD#	#TAIL#	282
@@ -185,36 +185,36 @@ Persistent Object Manager text dump:
 	181	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	182	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	183	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	184	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	184	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	185	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	186	##ADDR##	procpacc	0	#HEAD#	#TAIL#	53
-	187	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	188	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	189	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	190	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	191	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	192	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	193	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	194	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
-	195	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	196	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
+	186	##ADDR##	procpacc	0	#HEAD#	#TAIL#	49
+	187	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	188	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	189	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	190	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	191	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	192	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	193	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	194	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	38
+	195	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	196	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
 	197	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	198	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	199	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	200	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	201	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	202	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	203	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	204	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	198	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	199	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	200	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	201	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	202	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	203	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	204	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	205	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	206	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	207	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	208	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	209	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	210	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	206	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	207	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	208	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	209	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	210	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	211	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	212	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
-	213	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	212	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	38
+	213	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	214	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	80
 	215	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	31
 	216	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -252,36 +252,36 @@ Persistent Object Manager text dump:
 	248	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	249	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	250	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	251	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	252	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	251	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	252	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	253	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	254	##ADDR##	procpacc	0	#HEAD#	#TAIL#	53
-	255	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	256	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	257	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	258	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	259	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	260	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	261	##ADDR##	procpacc	0	#HEAD#	#TAIL#	45
-	262	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	46
-	263	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	264	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	265	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	266	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
+	254	##ADDR##	procpacc	0	#HEAD#	#TAIL#	49
+	255	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	256	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	257	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	258	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	259	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	260	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	261	##ADDR##	procpacc	0	#HEAD#	#TAIL#	41
+	262	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	38
+	263	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	264	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	265	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	266	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
 	267	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	268	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	269	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	270	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	271	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	272	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	273	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	274	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	275	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
+	268	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	269	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	270	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	271	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	272	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	273	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	274	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	275	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
 	276	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	277	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	30
-	278	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	279	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	280	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	277	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	22
+	278	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	279	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	280	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

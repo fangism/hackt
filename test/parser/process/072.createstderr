@@ -23,12 +23,12 @@ Persistent Object Manager text dump:
 	19	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -37,12 +37,12 @@ Persistent Object Manager text dump:
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	38	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

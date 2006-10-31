@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.3 2006/10/31 04:07:39 fang Exp $
+	$Id: footprint.h,v 1.19.4.4 2006/10/31 21:15:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -41,6 +41,7 @@ struct dump_flags;
 struct expr_dump_context;
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
+template <class> class value_collection_pool_bundle;
 #endif
 
 using std::string;
@@ -53,9 +54,6 @@ using util::persistent_object_manager;
 
 //=============================================================================
 /**
-	TODO: consider the private implementation "pimpl" idiom, 
-		whereby certain details of implementation are abstracted 
-		away to reduce compile time definition dependencies.  
 	Meta-type specific base class.  
 	This is a meta-tagged wrapper around the instance pool
 	that contains a collection of *unique* instances.  
@@ -63,6 +61,9 @@ using util::persistent_object_manager;
 	in the footprint, but not private instances.  
 	This also wraps around the instance_collection pools used to
 	allocate all instance collections.  
+	NOTE: this uses the private-implementation "pimpl" idiom, 
+		that hides the implementation, by using a pointer
+		to the underlying implementations.  
 	TODO: consider pool allocating pool_bundle and instance_pools.  
  */
 template <class Tag>
@@ -108,6 +109,33 @@ protected:
 };	// end class footprint_base
 
 //=============================================================================
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+/**
+	This wrapper class is in charge of allocation pools for
+	value collections.  
+	NOTE: also uses "pimpl" idiom.  
+ */
+template <class Tag>
+class value_footprint_base {
+	typedef	value_footprint_base<Tag>	this_type;
+protected:
+	typedef	value_collection_pool_bundle<Tag>
+						collection_pool_bundle_type;
+	const excl_ptr<collection_pool_bundle_type>
+						collection_pool_bundle;
+	value_footprint_base();
+	~value_footprint_base();
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+};	// end class value_footprint_base
+#endif
+
+//=============================================================================
 /**
 	Manages the unroll and creation information for a particular
 	complete definition (type).  
@@ -136,15 +164,36 @@ class footprint :
 	private	footprint_base<datastruct_tag>, 
 	private	footprint_base<enum_tag>, 
 	private	footprint_base<int_tag>, 
-	private	footprint_base<bool_tag> {
+	private	footprint_base<bool_tag>
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	, private	value_footprint_base<pbool_tag>
+	, private	value_footprint_base<pint_tag>
+	, private	value_footprint_base<preal_tag>
+#endif
+	{
 public:
 	/**
 		This must remain an instance_collection_base because
 		this manages parameter values as well as physical instances.  
 	 */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	never_ptr<instance_collection_base>
+#else
 	typedef	count_ptr<instance_collection_base>
+#endif
 					instance_collection_ptr_type;
 private:
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	/**
+		The information needed to encode which pool to 
+		fetch the pointer from.  
+	 */
+	struct collection_map_entry_type {
+		unsigned char		meta_type;
+		unsigned char		pool_type;
+		unsigned short		index;
+	};
+#endif
 	/**
 		The type of map used to maintain local copy of instances.  
 		Instances contained herein will have no parent scopespace?
@@ -153,8 +202,12 @@ private:
 		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
 	 */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	std::map<string, collection_map_entry_type>
+#else
 	typedef	HASH_MAP_NAMESPACE::hash_map<string,
 			instance_collection_ptr_type>
+#endif
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
@@ -304,6 +357,18 @@ public:
 	get_instance_collection_pool_bundle(void) const {
 		return *footprint_base<Tag>::collection_pool_bundle;
 	}
+
+	template <class Tag>
+	value_collection_pool_bundle<Tag>&
+	get_value_collection_pool_bundle(void) {
+		return *value_footprint_base<Tag>::collection_pool_bundle;
+	}
+
+	template <class Tag>
+	const value_collection_pool_bundle<Tag>&
+	get_value_collection_pool_bundle(void) const {
+		return *value_footprint_base<Tag>::collection_pool_bundle;
+	}
 #endif
 
 	void
@@ -318,8 +383,10 @@ public:
 	void
 	clear_instance_collection_map(void);
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	good_bool
 	register_collection(const count_ptr<instance_collection_base>&);
+#endif
 
 	good_bool
 	create_dependent_types(const footprint&);

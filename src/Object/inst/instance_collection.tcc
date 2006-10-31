@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.6 2006/10/31 00:28:20 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.7 2006/10/31 21:15:55 fang Exp $
 	TODO: trim includes
  */
 
@@ -237,6 +237,7 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 /**
 	\param p the placeholder back-reference pointer, 
 		from which dimensions are inferred.  
@@ -244,7 +245,8 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS*
-INSTANCE_COLLECTION_CLASS::make_array(const instance_placeholder_ptr_type p) {
+INSTANCE_COLLECTION_CLASS::make_array(
+		const instance_placeholder_ptr_type p) {
 	const size_t d = p->get_dimensions();
 	switch(d) {
 		case 0: return new instance_array<Tag,0>(p);
@@ -281,6 +283,7 @@ INSTANCE_COLLECTION_CLASS::make_port_formal_array(
 			return NULL;
 	}
 }
+#endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -968,6 +971,7 @@ void
 INSTANCE_COLLECTION_CLASS::element_loader::operator () (
 		instance_alias_info_type& e) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_loader::operator()");
+	e.container = this->back_ref;
 	e.load_object_base(this->pom, this->is);
 }
 
@@ -1165,12 +1169,17 @@ INSTANCE_ARRAY_CLASS::load_object(
 }
 	// now can we load connections at the same time?
 	const iterator b(collection.begin()), e(collection.end());
+#if 0
 	iterator i(b);
 	// can now use element_loader() functor
 	for ( ; i!=e; ++i) {
 		element_type& v(*i);
 		v.load_object_base(m, f);
 	}
+#else
+	for_each(b, e, typename parent_type::element_loader(m, f, 
+			never_ptr<const this_type>(this)));
+#endif
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_loader(m, f));
 #endif
@@ -1683,7 +1692,8 @@ INSTANCE_SCALAR_CLASS::load_object(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
-	typename parent_type::element_loader(m, f)(this->the_instance);
+	typename parent_type::element_loader(m, f, 
+			never_ptr<const this_type>(this))(this->the_instance);
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typename parent_type::connection_loader(m, f)(this->the_instance);
 #endif

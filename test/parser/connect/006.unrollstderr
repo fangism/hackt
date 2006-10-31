@@ -28,9 +28,9 @@ Persistent Object Manager text dump:
 	24	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

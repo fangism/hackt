@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.4 2006/10/24 07:27:15 fang Exp $
+	$Id: instance_placeholder.h,v 1.4.2.1 2006/10/31 21:15:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -14,8 +14,8 @@
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_placeholder.h"	// for macros
-// #include "Object/inst/instance_placeholder_base.h"
 #include "Object/common/multikey_index.h"
+#include "Object/devel_switches.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -133,8 +133,13 @@ public:
 
 	~instance_placeholder();
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	instance_collection_generic_type*
+	make_collection(footprint&) const;
+#else
 	instance_collection_generic_type*
 	make_collection(void) const;
+#endif
 
 	ostream&
 	what(ostream&) const;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.4 2006/10/31 00:28:26 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.5 2006/10/31 21:16:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -638,7 +638,8 @@ PORT_ACTUAL_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 	this->value_array.resize(k);
 	const iterator b(this->begin()), e(this->end());
 	INVARIANT(k == size_t(distance(b, e)));
-	for_each(b, e, typename formal_collection_type::element_loader(m, f));
+	for_each(b, e, typename formal_collection_type::element_loader(m, f, 
+			never_ptr<const this_type>(this)));
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename formal_collection_type::connection_loader(m, f));
 #endif

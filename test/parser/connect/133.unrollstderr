@@ -41,14 +41,14 @@ Persistent Object Manager text dump:
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

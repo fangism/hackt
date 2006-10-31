@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.15.2.2 2006/10/29 20:05:12 fang Exp $
+	$Id: unroll_context.h,v 1.15.2.3 2006/10/31 21:16:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -110,6 +110,11 @@ public:
 	const footprint*
 	get_top_footprint(void) const { return top_footprint; }
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	footprint&
+	get_target_footprint(void) const;
+#endif
+
 	bool
 	in_definition_context(void) const { return target_footprint; }
 
@@ -119,35 +124,62 @@ public:
 	void
 	chain_context(const this_type&);
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	void
 	instantiate_collection(
 		const count_ptr<instance_collection_base>&) const;
+#endif
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<physical_instance_collection>
+#else
 	count_ptr<physical_instance_collection>
+#endif
 	lookup_instance_collection(const physical_instance_placeholder&) const;
 
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<const physical_instance_collection>
+#else
 	count_ptr<const physical_instance_collection>
+#endif
 	lookup_port_collection(const physical_instance_placeholder&) const;
 #endif
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<param_value_collection>
+#else
 	count_ptr<param_value_collection>
+#endif
 	lookup_lvalue_collection(const param_value_placeholder&) const;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<param_value_collection>
+#else
 	count_ptr<param_value_collection>
+#endif
 	lookup_rvalue_collection(const param_value_placeholder&) const;
 
 	/// overloaded name call-forwarding for the lazy...
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<physical_instance_collection>
+#else
 	count_ptr<physical_instance_collection>
+#endif
 	lookup_collection(const physical_instance_placeholder& p) const;
 
 	/// overloaded name call-forwarding for the lazy...
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<param_value_collection>
+#else
 	count_ptr<param_value_collection>
+#endif
 	lookup_collection(const param_value_placeholder& p) const;
 
+#if 0
 	count_ptr<const const_param>
 	lookup_actual(const param_value_placeholder&) const;
-
+#endif
 private:
 	static
 	void

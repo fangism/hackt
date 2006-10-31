@@ -5,6 +5,24 @@
 
 2006-10-31	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-11:
+	  instance collections and aliases:
+		aliases no longer write the back-reference container 
+		pointer during serialization; it is now reconstructed by
+		the loading container.  Rationale: soon the containers
+		will no longer be heap-allocated, and thus will not be
+		translatable by the persistent object manager, and this saves
+		space in the binary (noticeable savings, actually).  
+		unroll and create test-expects updated accordingly.  
+	  The following revisions have been added, but left *disabled*:
+	  footprint: added value_footprint_base for value collection pools
+		to the footprint base classes.  
+		Begun to re-write instance_collection_map-related methods.  
+	  added allocation interfaces to instance_collection_pool_bundle
+	  Many general provisions for switching over to footprint-allocation
+		of instance_alias collections: placeholders, unroll_context.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-10:
 	  "Allow me to introduce you my children of the night..."
 	  Added value_collection_pool_bundle class templates.  

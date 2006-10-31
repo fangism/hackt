@@ -38,10 +38,10 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	35	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	41	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	42	##ADDR##	procdefn	0	#HEAD#	#TAIL#	1428
 	43	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
@@ -62,7 +62,7 @@ Persistent Object Manager text dump:
 	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	61	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
+	61	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	40
 	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
@@ -94,79 +94,79 @@ Persistent Object Manager text dump:
 	90	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	91	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	93	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	93	##ADDR##	proccoll	1	#HEAD#	#TAIL#	66
 	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	95	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
-	96	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
-	97	##ADDR##	proccoll	1	#HEAD#	#TAIL#	616
+	95	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
+	96	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
+	97	##ADDR##	proccoll	1	#HEAD#	#TAIL#	552
 	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	99	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	100	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	101	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	102	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	103	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	104	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	105	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	106	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	107	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	108	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	109	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	110	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	111	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	112	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	113	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	114	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	115	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	116	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	117	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	118	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	119	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	120	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	121	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	122	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	123	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	124	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	125	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	126	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	127	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	128	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	129	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	130	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	131	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	132	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	133	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	134	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	135	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	136	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	137	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	138	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	139	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	140	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	141	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	142	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	143	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	144	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	145	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	146	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	147	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	148	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	149	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	150	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	151	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	152	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	153	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	154	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	155	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	156	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	157	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	158	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	159	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	160	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	161	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	162	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	99	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	100	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	101	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	102	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	103	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	104	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	105	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	106	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	107	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	108	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	109	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	110	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	111	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	112	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	113	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	114	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	115	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	116	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	117	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	118	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	119	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	120	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	121	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	122	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	123	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	124	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	125	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	126	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	127	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	128	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	129	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	130	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	131	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	132	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	133	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	134	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	135	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	136	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	137	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	138	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	139	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	140	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	141	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	142	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	143	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	144	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	145	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	146	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	147	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	148	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	149	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	150	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	151	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	152	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	153	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	154	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	155	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	156	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	157	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	158	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	159	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	160	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	161	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	162	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 	163	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	164	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	165	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	165	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	166	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

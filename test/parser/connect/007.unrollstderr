@@ -31,10 +31,10 @@ Persistent Object Manager text dump:
 	27	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

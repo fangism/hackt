@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.3 2006/10/31 04:07:39 fang Exp $
+	$Id: footprint.cc,v 1.27.4.4 2006/10/31 21:15:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -249,6 +249,35 @@ footprint_base<Tag>::load_object_base(
 }
 
 //=============================================================================
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class Tag>
+value_footprint_base<Tag>::value_footprint_base() :
+		collection_pool_bundle(new collection_pool_bundle_type) {
+	NEVER_NULL(collection_pool_bundle);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+value_footprint_base<Tag>::~value_footprint_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+value_footprint_base<Tag>::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	this->collection_pool_bundle->write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+value_footprint_base<Tag>::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	this->collection_pool_bundle->load_object_base(m, i);
+}
+#endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+
+//=============================================================================
 // class footprint method definitions
 
 footprint::footprint() :
@@ -258,6 +287,11 @@ footprint::footprint() :
 	footprint_base<enum_tag>(), 
 	footprint_base<int_tag>(), 
 	footprint_base<bool_tag>(), 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	value_footprint_base<pbool_tag>(), 
+	value_footprint_base<pint_tag>(), 
+	value_footprint_base<preal_tag>(), 
+#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -281,6 +315,11 @@ footprint::footprint(const footprint& t) :
 	footprint_base<enum_tag>(), 
 	footprint_base<int_tag>(), 
 	footprint_base<bool_tag>(), 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	value_footprint_base<pbool_tag>(), 
+	value_footprint_base<pint_tag>(), 
+	value_footprint_base<preal_tag>(), 
+#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -390,10 +429,52 @@ footprint::operator [] (const string& k) const {
 		cerr << "NOT FOUND" << endl;
 	}
 #endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	if (f == e) {
+		return instance_collection_ptr_type(NULL);
+	}
+	// this internal number table should be documented somewhere...
+	// because it needs to be kept consistent.
+	// don't use magic numbers, encode in traits!
+	switch (f->second.meta_type) {
+	case 1: return footprint_base<process_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 2: return footprint_base<channel_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 3: return footprint_base<datastruct_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 4: return footprint_base<enum_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 5: return footprint_base<int_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 6: return footprint_base<bool_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 7: return value_footprint_base<pbool_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 8: return value_footprint_base<pint_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	case 9: return value_footprint_base<preal_tag>::
+		collection_pool_bundle->lookup_collection(
+			f->second.pool_type, f->second.index);
+	default:
+		return instance_collection_ptr_type(NULL);
+	}
+#else
 	return (f != e) ? f->second : instance_collection_ptr_type(NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE
 /**
 	Why would you ever want to clear the collection map?
 	See import_hierarchical_scopespace comments about hack.  
@@ -403,8 +484,11 @@ footprint::clear_instance_collection_map(void) {
 	STACKTRACE_VERBOSE;
 	instance_collection_map.clear();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+// Can't do this when pool allocating...
 /**
 	TODO: qualified names needed for top-level footprint. 
 	\pre Not already registered.  
@@ -421,6 +505,7 @@ footprint::register_collection(const count_ptr<instance_collection_base>& p) {
 	instance_collection_map[key] = p;
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -729,6 +814,11 @@ footprint::write_object_base(const persistent_object_manager& m,
 	footprint_base<enum_tag>::write_object_base(m, o);
 	footprint_base<int_tag>::write_object_base(m, o);
 	footprint_base<bool_tag>::write_object_base(m, o);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	value_footprint_base<pbool_tag>::write_object_base(m, o);
+	value_footprint_base<pint_tag>::write_object_base(m, o);
+	value_footprint_base<preal_tag>::write_object_base(m, o);
+#endif
 	port_aliases.write_object_base(m, o);
 	scope_aliases.write_object_base(m, o);
 	prs_footprint.write_object_base(m, o);
@@ -763,6 +853,11 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	footprint_base<enum_tag>::load_object_base(m, i);
 	footprint_base<int_tag>::load_object_base(m, i);
 	footprint_base<bool_tag>::load_object_base(m, i);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	value_footprint_base<pbool_tag>::load_object_base(m, i);
+	value_footprint_base<pint_tag>::load_object_base(m, i);
+	value_footprint_base<preal_tag>::load_object_base(m, i);
+#endif
 	port_aliases.load_object_base(m, i);
 	scope_aliases.load_object_base(m, i);
 	prs_footprint.load_object_base(m, i);

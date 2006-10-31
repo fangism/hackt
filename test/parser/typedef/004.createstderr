@@ -18,10 +18,10 @@ Persistent Object Manager text dump:
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

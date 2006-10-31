@@ -57,13 +57,13 @@ Persistent Object Manager text dump:
 	53	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	56	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	59	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	59	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	62	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	62	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
 	63	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
@@ -73,13 +73,13 @@ Persistent Object Manager text dump:
 	69	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	72	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	75	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	75	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	77	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
 	79	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	80	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
@@ -94,14 +94,14 @@ Persistent Object Manager text dump:
 	90	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	91	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	92	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	93	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	95	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
-	96	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
-	97	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	95	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
+	96	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
+	97	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	99	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
-	100	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
+	100	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

@@ -21,10 +21,10 @@ Persistent Object Manager text dump:
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	40
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	34
 	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -60,22 +60,22 @@ Persistent Object Manager text dump:
 	56	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	29
-	63	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
-	64	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	29
-	65	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
-	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	58
-	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	62	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	63	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
+	64	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	25
+	65	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
+	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	50
+	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	71	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	48
-	72	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
-	73	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	30
-	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	96
+	70	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	71	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
+	72	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
+	73	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
+	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.23 2006/10/24 07:27:37 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.23.2.1 2006/10/31 21:16:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -201,6 +201,16 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	NEVER_NULL(this->inst_base);
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	never_ptr<collection_type>
+		inst_ptr(c.lookup_collection(*this->inst_base)
+			.template is_a<collection_type>());
+	if (!inst_ptr) {
+		inst_ptr = this->inst_base->make_collection(
+			c.get_target_footprint());
+		NEVER_NULL(inst_ptr);
+	}
+#else
 	// TODO: this is a modifying lookup, using target_footprint
 	count_ptr<collection_type>
 		inst_ptr(c.lookup_collection(*this->inst_base)
@@ -216,6 +226,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		c.instantiate_collection(inst_ptr);
 		// could handle first-time type checking work here...
 	}
+#endif
 	collection_type& _inst(*inst_ptr);
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 

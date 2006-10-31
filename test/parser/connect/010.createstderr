@@ -14,9 +14,9 @@ Persistent Object Manager text dump:
 	10	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

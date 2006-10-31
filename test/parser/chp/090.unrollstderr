@@ -62,37 +62,37 @@ Persistent Object Manager text dump:
 	58	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	61	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	64	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	64	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	67	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	68	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	67	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	68	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	38
 	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	70	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	72	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	73	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	73	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	75	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	76	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	77	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	76	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	77	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	38
 	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	80	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	83	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	84	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	84	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	86	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
-	87	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
-	88	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	86	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
+	87	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
+	88	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	90	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
-	91	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	25
+	90	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
+	91	##ADDR##	chanpacc	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

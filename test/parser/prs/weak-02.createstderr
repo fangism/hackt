@@ -38,10 +38,10 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	46
 	35	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -53,10 +53,10 @@ Persistent Object Manager text dump:
 	49	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	54	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	55	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

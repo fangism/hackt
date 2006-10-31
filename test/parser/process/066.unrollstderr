@@ -14,8 +14,8 @@ Persistent Object Manager text dump:
 	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
 	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -30,53 +30,53 @@ Persistent Object Manager text dump:
 	26	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	31	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	36	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	44	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	45	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	47	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	48	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	25
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	43	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	44	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	45	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	47	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	procpacc	0	#HEAD#	#TAIL#	41
-	52	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	53	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	54	##ADDR##	procpacc	0	#HEAD#	#TAIL#	41
-	55	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	56	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
+	52	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	53	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	54	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
+	55	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	56	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	63	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	64	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	65	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	66	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	67	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	68	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	69	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	70	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	71	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	72	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	73	##ADDR##	procpacc	0	#HEAD#	#TAIL#	37
-	74	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	75	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	62	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	63	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	64	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	65	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	66	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	67	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	68	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	69	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	70	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	71	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	72	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	73	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
+	74	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	75	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

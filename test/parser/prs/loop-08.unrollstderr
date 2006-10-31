@@ -36,12 +36,12 @@ Persistent Object Manager text dump:
 	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)

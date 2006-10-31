@@ -22,28 +22,28 @@ Persistent Object Manager text dump:
 	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	22	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	26	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
 	28	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	29	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)

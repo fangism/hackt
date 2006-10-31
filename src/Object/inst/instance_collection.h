@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.5 2006/10/31 00:28:19 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.6 2006/10/31 21:15:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -52,6 +52,9 @@ class subinstance_manager;
 template <bool> class internal_aliases_policy;
 #endif
 template <class> class instantiation_statement;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class> class instance_collection_pool_bundle;
+#endif
 
 //=============================================================================
 template <class, size_t>
@@ -297,6 +300,7 @@ public:
 virtual	instance_alias_info_type&
 	load_reference(istream& i) = 0;
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	static
 	this_type*
 	make_array(const instance_placeholder_ptr_type);
@@ -304,7 +308,9 @@ virtual	instance_alias_info_type&
 	static
 	this_type*
 	make_port_formal_array(const instance_placeholder_ptr_type);
+#endif
 
+// probably won't need this after pool-allocation
 	static
 	persistent*
 	construct_empty(const int);
@@ -342,12 +348,18 @@ protected:
 		operator () (const instance_alias_info_type&) const;
 	};	// end class element_writer
 
+	/**
+		Now, this also re-links element to parent container.  
+	 */
 	class element_loader {
 		istream& is;
 		const persistent_object_manager& pom;
+		const never_ptr<const parent_type>	back_ref;
 	public:
 		element_loader(const persistent_object_manager& m,
-			istream& i) : is(i), pom(m) { }
+			istream& i, 
+			const never_ptr<const parent_type> b) : 
+			is(i), pom(m), back_ref(b) { }
 
 		void
 		operator () (instance_alias_info_type&);	// const?

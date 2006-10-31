@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.23.4.2 2006/10/29 20:05:11 fang Exp $
+	$Id: unroll_context.cc,v 1.23.4.3 2006/10/31 21:16:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -160,7 +160,11 @@ unroll_context::make_member_context(void) const {
 		and NOT the lookup-footprint.  
 		Lookup should never look out-of-context.  
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<physical_instance_collection>
+#else
 count_ptr<physical_instance_collection>
+#endif
 unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
@@ -179,7 +183,11 @@ unroll_context::lookup_instance_collection(
 	This only uses the outermost lookup footprint. 
 	Called from instance_placeholder::unroll_port_only().  
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<const physical_instance_collection>
+#else
 count_ptr<const physical_instance_collection>
+#endif
 unroll_context::lookup_port_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
@@ -200,7 +208,11 @@ unroll_context::lookup_port_collection(
 		but lvalues may NOT.  
 	TODO: distinguish lvalue from rvalue lookups?
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<param_value_collection>
+#else
 count_ptr<param_value_collection>
+#endif
 unroll_context::lookup_rvalue_collection
 		(const param_value_placeholder& p) const {
 	typedef	count_ptr<param_value_collection>	return_type;
@@ -248,7 +260,11 @@ unroll_context::lookup_rvalue_collection
 /**
 	Lookup reserved for lvalues, which uses the target footprint.  
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<param_value_collection>
+#else
 count_ptr<param_value_collection>
+#endif
 unroll_context::lookup_lvalue_collection(
 		const param_value_placeholder& p) const {
 	typedef	count_ptr<param_value_collection>	return_type;
@@ -273,14 +289,22 @@ unroll_context::lookup_lvalue_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<physical_instance_collection>
+#else
 count_ptr<physical_instance_collection>
+#endif
 unroll_context::lookup_collection(
 		const physical_instance_placeholder& p) const {
 	return lookup_instance_collection(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<param_value_collection>
+#else
 count_ptr<param_value_collection>
+#endif
 unroll_context::lookup_collection(
 		const param_value_placeholder& p) const {
 	// defaults to using rvalue lookup, is this "the right thing"?
@@ -288,6 +312,7 @@ unroll_context::lookup_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 /**
 	TODO: fix so that target (instantiating) footprints (writable)
 	can be distinguished from read-only footprints.  
@@ -306,8 +331,10 @@ unroll_context::instantiate_collection(
 	const good_bool g(f->register_collection(p));
 	INVARIANT(g.good);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Another typical panic message.
  */
@@ -318,6 +345,7 @@ unroll_context::lookup_panic(ostream& o) {
 			"Help me, Obi-fang Kenobi!" << endl;
 	)
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
