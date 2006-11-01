@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.6 2006/10/31 21:15:54 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.7 2006/11/01 07:52:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -399,6 +399,12 @@ protected:
 	};	// end struct key_dumper
 
 protected:
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+virtual	void
+	write_pointer(ostream&, 
+		const instance_collection_pool_bundle<Tag>&) const = 0;
+#endif
+
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 

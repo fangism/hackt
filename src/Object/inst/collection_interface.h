@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.4 2006/10/31 00:28:15 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.5 2006/11/01 07:52:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -12,12 +12,12 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
-#include "Object/devel_switches.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/inttypes.h"
+#include "util/persistent_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -45,7 +45,9 @@ class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instance_collection;
-// template <class> class instantiation_statement;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class> class instance_collection_pool_bundle;
+#endif
 
 //=============================================================================
 /**
@@ -172,11 +174,11 @@ virtual instance_alias_info_ptr_type
 
 virtual	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l, 
-		const const_range_list& r) const = 0;
+		typename default_list<instance_alias_info_ptr_type>::type&, 
+		const const_range_list&) const = 0;
 
 virtual	const_index_list
-	resolve_indices(const const_index_list& l) const = 0;
+	resolve_indices(const const_index_list&) const = 0;
 
 #define	UNROLL_ALIASES_PROTO						\
 	bad_bool							\
@@ -197,96 +199,25 @@ virtual	void
 
 public:
 virtual	instance_alias_info_type&
-	load_reference(istream& i) = 0;
+	load_reference(istream&) = 0;
 
-#if 0
-// maybe...
-protected:
-	// not that all alias elements are equal, 
-	// we can factor out common functionality
-	/**
-		Functor to collect transient info in the aliases.  
-	 */
-	class element_collector {
-		persistent_object_manager& pom;
-	public:
-		element_collector(persistent_object_manager& m) : pom(m) { }
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+virtual	void
+	write_pointer(ostream&, 
+		const instance_collection_pool_bundle<Tag>&) const = 0;
 
-		void
-		operator () (const instance_alias_info_type&) const;
-	};	// end class element_collector
+virtual	void
+	collect_transient_info_base(persistent_object_manager&) const = 0;
 
-	/**
-		Functor to write alias elements.  
-	 */
-	class element_writer {
-		ostream& os;
-		const persistent_object_manager& pom;
-	public:
-		element_writer(const persistent_object_manager& m,
-			ostream& o) : os(o), pom(m) { }
+virtual	void
+	write_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, ostream&) const = 0;
 
-		void
-		operator () (const instance_alias_info_type&) const;
-	};	// end class element_writer
-
-	class element_loader {
-		istream& is;
-		const persistent_object_manager& pom;
-	public:
-		element_loader(const persistent_object_manager& m,
-			istream& i) : is(i), pom(m) { }
-
-		void
-		operator () (instance_alias_info_type&);	// const?
-	};	// end class connection_loader
-
-	class connection_writer {
-		ostream& os;
-		const persistent_object_manager& pom;
-	public:
-		connection_writer(const persistent_object_manager& m,
-			ostream& o) : os(o), pom(m) { }
-
-		void
-		operator () (const instance_alias_info_type&) const;
-	};	// end class connection_writer
-
-	class connection_loader {
-		istream& is;
-		const persistent_object_manager& pom;
-	public:
-		connection_loader(const persistent_object_manager& m,
-			istream& i) : is(i), pom(m) { }
-
-		void
-		operator () (instance_alias_info_type&);	// const?
-	};	// end class connection_loader
-
-	struct key_dumper {
-		ostream& os;
-		const dump_flags& df;
-
-		key_dumper(ostream& o, const dump_flags& _df) :
-			os(o), df(_df) { }
-
-		ostream&
-		operator () (const instance_alias_info_type&);
-	};	// end struct key_dumper
+virtual	void
+	load_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, istream&) = 0;
 #endif
-
-#if 0
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
-
-};	// end class instance_collection
+};	// end class collection_interface
 
 //=============================================================================
 }	// end namespace entity

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_collection_pool_bundle.h"
-	$Id: value_collection_pool_bundle.h,v 1.1.2.2 2006/10/31 21:16:02 fang Exp $
+	$Id: value_collection_pool_bundle.h,v 1.1.2.3 2006/11/01 07:52:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
@@ -17,6 +17,7 @@ namespace entity {
 using std::ostream;
 using std::istream;
 // forward declarations
+template <class> class value_placeholder;
 template <class> class value_collection;
 template <class, size_t> class value_array;
 template <class Tag> class value_array<Tag,0>;
@@ -88,12 +89,18 @@ struct value_collection_pool_bundle :
 	never_ptr<collection_base_type>
 	lookup_collection(const unsigned char, const unsigned short);
 
+	// allocation
+	collection_base_type*
+	allocate_local_collection(
+		const never_ptr<const value_placeholder<Tag> >);
+
 	// serialization routines
 	void
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
 };	// end class value_collection_pool_bundle
 
 //=============================================================================

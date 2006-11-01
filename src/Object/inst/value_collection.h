@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.20.2.1 2006/10/31 05:23:53 fang Exp $
+	$Id: value_collection.h,v 1.20.2.2 2006/11/01 07:52:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -20,6 +20,7 @@
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"
+#include "util/persistent_fwd.h"
 
 /**
 	Define to 1 to enable pool-allocations of value-arrays and scalars.  

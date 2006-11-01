@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.4 2006/10/31 21:15:49 fang Exp $
+	$Id: footprint.cc,v 1.27.4.5 2006/11/01 07:52:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,11 +27,17 @@
 #include "Object/inst/physical_instance_placeholder.h"
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/instance_collection_pool_bundle.tcc"
+#include "Object/inst/value_collection_pool_bundle.tcc"
 #include "Object/inst/datatype_instance_collection.h"
+#include "Object/inst/general_collection_type_manager.h"
+#include "Object/inst/parameterless_collection_type_manager.h"
+#include "Object/inst/int_collection_type_manager.h"
+#include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/instance_array.h"
 #include "Object/inst/port_formal_array.h"
 #include "Object/inst/port_actual_collection.h"
+#include "Object/inst/value_collection.h"
 #endif
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/process_instance.h"
@@ -106,7 +112,7 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	for ( ; i!=e; i++) {
 		const size_t j = sm.template allocate<Tag>();
 		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
-		g.parent_tag_value = TYPE_NONE;
+		g.parent_tag_value = PARENT_TYPE_NONE;
 		/***
 			The parent_tag_value is one of the enumerations
 			in "Object/traits/type_tag_enum.h"
@@ -363,6 +369,17 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		for ( ; i!=e; ++i) {
+			const const_instance_map_iterator
+				j(instance_collection_map.find(*ii));
+			// TODO: translate entry to pointer
+			// NEVER_NULL(j->second);
+			// o << auto_indent << j->first << " = ";
+			// j->second->dump(o, df) << endl;
+			finish_me(j);
+		}
+#else
 		set<string> keys;
 		for ( ; i!=e; ++i) {
 			keys.insert(i->first);
@@ -376,6 +393,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			o << auto_indent << j->first << " = ";
 			j->second->dump(o, df) << endl;
 		}
+#endif
 	if (is_created()) {
 		o << auto_indent << "Created state:" << endl;
 		dump(o);
@@ -528,6 +546,7 @@ footprint::create_dependent_types(const footprint& top) {
 	// instance_map_iterator i(b);
 	instance_map_iterator i(instance_collection_map.begin());
 	for ( ; i!=e; ++i) {
+		// TODO: translate map_entry to pointer
 		const count_ptr<physical_instance_collection>
 			pic(i->second.is_a<physical_instance_collection>());
 		// not only does this create dependent types, but it also

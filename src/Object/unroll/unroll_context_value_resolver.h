@@ -4,11 +4,14 @@
 	resolution.  
 	NOTE: method definitions moved to .cc file to prevent premature
 	instantiation before complete types are available.  
-	$Id: unroll_context_value_resolver.h,v 1.10.4.1 2006/10/31 00:28:35 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.10.4.2 2006/11/01 07:52:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
 #define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
+
+// THIS ENTIRE FILE IS NOW OBSOLETE
+#if 0
 
 #include <utility>		// for std::pair
 #include "Object/unroll/unroll_context.h"
@@ -102,6 +105,8 @@ public:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif
 
 #endif	// __HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
 

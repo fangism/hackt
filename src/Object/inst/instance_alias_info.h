@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17.2.3 2006/10/29 20:04:55 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.4 2006/11/01 07:52:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -29,6 +29,9 @@ struct alias_printer;
 template <class> struct alias_matcher;
 #if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 template <class> class collection_interface;
+#endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class> class instance_collection_pool_bundle;
 #endif
 using std::ostream;
 using std::istream;
@@ -350,20 +353,35 @@ public:
 	good_bool
 	checked_connect_alias(this_type&, this_type&);
 
-	/// counterpart to load_alias_reference (should be pure virtual)
+	/// counterpart to load_next_connection
 	void
-	write_next_connection(const persistent_object_manager& m, 
+	write_next_connection(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		ostream& o) const;
 
-// probably need not be virtual, same for all children classes.
 	void
-	load_next_connection(const persistent_object_manager& m, 
+	load_next_connection(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		istream& i);
 
-	/// counterpart to write_next_connection
+	/// static version of load_next_connection
 	static
 	this_type&
-	load_alias_reference(const persistent_object_manager& m, istream& i);
+	load_alias_reference(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		istream& i);
 
 public:
 	void

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.28.2.1 2006/10/29 20:05:07 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.28.2.2 2006/11/01 07:52:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -34,10 +34,11 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/unroll/unroll_context_value_resolver.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 
@@ -284,6 +285,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	STACKTRACE_VERBOSE;
 	// using a policy to specialize for lookups covering
 	// local loop variables
+#if 0
 	const pair<bool, const value_collection_type*>
 		_v(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref, i));
@@ -300,6 +302,21 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		return good_bool(false);
 	}
 	const value_collection_type& _vals(*_v.second);
+#else
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<const value_collection_type>
+#else
+	const count_ptr<const value_collection_type>
+#endif
+	       _v(c.lookup_rvalue_collection(*value_collection_ref)
+			.template is_a<const value_collection_type>());
+	if (!_v) {
+		cerr << "Failed to resolve value reference: ";
+		this->dump(cerr, expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
+	const value_collection_type& _vals(*_v);
+#endif
 
 	if (this->array_indices) {
 		STACKTRACE_INDENT_PRINT("checking indices..." << endl);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.3 2006/10/31 21:15:56 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.4 2006/11/01 07:52:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -104,8 +104,13 @@ struct instance_collection_pool_bundle :
 		return instance_collection_pool_wrapper<S>::pool;
 	}
 
+// translation
 	never_ptr<collection_interface_type>
 	lookup_collection(const unsigned char, const unsigned short);
+
+	// counterpart: collection_interface_type::write_pointer()
+	collection_interface_type*
+	read_pointer(istream&) const;
 
 // allocation
 	port_actual_collection<Tag>*

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.24.2.1 2006/10/31 05:23:54 fang Exp $
+ 	$Id: value_collection.tcc,v 1.24.2.2 2006/11/01 07:52:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -45,7 +45,6 @@
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 #include "Object/type/param_type_reference.h"
-#include "Object/unroll/unroll_context_value_resolver.h"	// phase out
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.7 2006/10/31 21:15:55 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.8 2006/11/01 07:52:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -1067,6 +1067,7 @@ INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_transient_info_base(
@@ -1090,6 +1091,7 @@ if (!m.register_transient_object(this,
 	this->collect_transient_info_base(m);
 }
 }
+#endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1098,8 +1100,11 @@ if (!m.register_transient_object(this,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
-		ostream& f) const {
+INSTANCE_ARRAY_CLASS::write_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool_unused, 
+#endif
+		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::write_object()");
 	parent_type::write_object_base(m, f);
 	// need to know how many members to expect
@@ -1109,6 +1114,7 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	// by order of index, which may not be sorted w.r.t. keys.  
 {
 	// sparse_collections' public indices are 1-indexed
+	// write sparse keys in order of index
 	size_t i = 1;
 	value_writer<key_type> write_key(f);
 	for ( ; i<=s; ++i) {
@@ -1130,7 +1136,12 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::write_connections(const persistent_object_manager& m, 
+INSTANCE_ARRAY_CLASS::write_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::write_connections()");
 	for_each(collection.begin(), collection.end(), 
@@ -1141,6 +1152,9 @@ INSTANCE_ARRAY_CLASS::write_connections(const persistent_object_manager& m,
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool_unused, 
+#endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_object()");
 	parent_type::load_object_base(m, f);
@@ -1169,17 +1183,8 @@ INSTANCE_ARRAY_CLASS::load_object(
 }
 	// now can we load connections at the same time?
 	const iterator b(collection.begin()), e(collection.end());
-#if 0
-	iterator i(b);
-	// can now use element_loader() functor
-	for ( ; i!=e; ++i) {
-		element_type& v(*i);
-		v.load_object_base(m, f);
-	}
-#else
 	for_each(b, e, typename parent_type::element_loader(m, f, 
 			never_ptr<const this_type>(this)));
-#endif
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_loader(m, f));
 #endif
@@ -1192,7 +1197,12 @@ INSTANCE_ARRAY_CLASS::load_object(
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::load_connections(
-		const persistent_object_manager& m, istream& f) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m,
+#endif
+		istream& f) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_connections()");
 	for_each(collection.begin(), collection.end(), 
 		typename parent_type::connection_loader(m, f));
@@ -1603,10 +1613,6 @@ typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
 INSTANCE_SCALAR_CLASS::load_reference(istream& i) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_reference()");
 	// no key to read!
-	// const_cast: have to modify next pointers to re-establish connection, 
-	// which is semantically allowed because we allow the alias pointers
-	// to be mutable.  
-//	return const_cast<instance_type&>(this->the_instance);
 	return this->the_instance;
 }
 
@@ -1642,6 +1648,7 @@ INSTANCE_SCALAR_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_transient_info_base(
@@ -1662,11 +1669,15 @@ if (!m.register_transient_object(this,
 	this->collect_transient_info_base(m);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::write_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool_unused, 
+#endif
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_scalar::write_object()");
 	parent_type::write_object_base(m, f);
@@ -1680,7 +1691,12 @@ INSTANCE_SCALAR_CLASS::write_object(
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::write_connections(
-		const persistent_object_manager& m, ostream& f) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_scalar::write_connections()");
 	typename parent_type::connection_writer(m, f)(this->the_instance);
 }
@@ -1689,6 +1705,9 @@ INSTANCE_SCALAR_CLASS::write_connections(
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool_unused, 
+#endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
@@ -1704,7 +1723,12 @@ INSTANCE_SCALAR_CLASS::load_object(
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::load_connections(
-		const persistent_object_manager& m, istream& f) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_connections()");
 	typename parent_type::connection_loader(m, f)(this->the_instance);
 }

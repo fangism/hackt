@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.14.4.2 2006/10/31 03:51:29 fang Exp $
+	$Id: global_entry.tcc,v 1.14.4.3 2006/11/01 07:52:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -103,6 +103,7 @@ extract_parent_formal_instance_alias(const state_manager& sm,
 /**
 	Prints the canonical type associated with this footprint_frame's
 	reference footprint.  
+	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
 	\param ind the globally assigned index (top-level) for state.  
  */
 template <class Tag>
@@ -124,14 +125,14 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case TYPE_PROCESS: {
+		case PARENT_TYPE_PROCESS: {
 			instance_alias_info<process_tag>::dump_complete_type(
 				extract_parent_formal_instance_alias<
 					process_tag>(sm, ent),
 				o, _footprint);
 			break;
 		}
-		case TYPE_STRUCT: {
+		case PARENT_TYPE_STRUCT: {
 			instance_alias_info<datastruct_tag>::dump_complete_type(
 				extract_parent_formal_instance_alias<
 					datastruct_tag>(sm, ent),
@@ -186,6 +187,7 @@ global_entry_base<true>::dump(global_entry_dumper& ged) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Collects pointers needed for save/restoration of footprint pointers.  
+	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
  */
 template <class Tag>
 void
@@ -205,7 +207,7 @@ global_entry_base<true>::collect_transient_info_base(
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case TYPE_PROCESS: {
+		case PARENT_TYPE_PROCESS: {
 			instance_alias_info<process_tag>::
 				collect_canonical_footprint(
 				extract_parent_formal_instance_alias<
@@ -213,7 +215,7 @@ global_entry_base<true>::collect_transient_info_base(
 				m);
 			break;
 		}
-		case TYPE_STRUCT: {
+		case PARENT_TYPE_STRUCT: {
 			// Q: can datatypes have relaxed parameters?
 			instance_alias_info<datastruct_tag>::
 				collect_canonical_footprint(
@@ -260,7 +262,7 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case TYPE_PROCESS: {
+		case PARENT_TYPE_PROCESS: {
 			instance_alias_info<process_tag>::
 				save_canonical_footprint(
 				extract_parent_formal_instance_alias<
@@ -268,7 +270,7 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 				m, o, _frame._footprint);
 			break;
 		}
-		case TYPE_STRUCT: {
+		case PARENT_TYPE_STRUCT: {
 			instance_alias_info<datastruct_tag>::
 				save_canonical_footprint(
 				extract_parent_formal_instance_alias<
@@ -315,7 +317,7 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case TYPE_PROCESS: {
+		case PARENT_TYPE_PROCESS: {
 			instance_alias_info<process_tag>::
 				restore_canonical_footprint(
 				extract_parent_formal_instance_alias<
@@ -323,7 +325,7 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 				m, i, _frame._footprint);
 			break;
 		}
-		case TYPE_STRUCT: {
+		case PARENT_TYPE_STRUCT: {
 			instance_alias_info<datastruct_tag>::
 				restore_canonical_footprint(
 				extract_parent_formal_instance_alias<
@@ -395,10 +397,10 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 	// dump canonical name
 	const state_instance<Tag>* _inst;
 	switch (parent_tag_value) {
-	case TYPE_NONE:
+	case PARENT_TYPE_NONE:
 		_inst = &_pool[local_offset];
 		break;
-	case TYPE_PROCESS: {
+	case PARENT_TYPE_PROCESS: {
 		const global_entry<process_tag>&
 			p_ent(extract_parent_entry<process_tag>(sm, *this));
 		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
@@ -409,7 +411,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
-	case TYPE_CHANNEL: {
+	case PARENT_TYPE_CHANNEL: {
 		const global_entry<channel_tag>&
 			p_ent(extract_parent_entry<channel_tag>(sm, *this));
 		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
@@ -420,7 +422,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
-	case TYPE_STRUCT: {
+	case PARENT_TYPE_STRUCT: {
 		const global_entry<datastruct_tag>&
 			p_ent(extract_parent_entry<datastruct_tag>(sm, *this));
 		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
@@ -469,16 +471,16 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	ostream& o(ged.os);
 	o << ged.index << '\t';
 	switch(parent_tag_value) {
-	case TYPE_NONE:
+	case PARENT_TYPE_NONE:
 		o << "(top)\t-\t";
 		break;
-	case TYPE_PROCESS:
+	case PARENT_TYPE_PROCESS:
 		o << "process\t" << parent_id << '\t';
 		break;
-	case TYPE_CHANNEL:
+	case PARENT_TYPE_CHANNEL:
 		o << "channel\t" << parent_id << '\t';
 		break;
-	case TYPE_STRUCT:
+	case PARENT_TYPE_STRUCT:
 		o << "struct\t" << parent_id << '\t';
 		break;
 	default:

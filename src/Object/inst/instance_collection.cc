@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.25.4.1 2006/10/29 20:04:56 fang Exp $
+ 	$Id: instance_collection.cc,v 1.25.4.2 2006/11/01 07:52:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -207,6 +207,7 @@ instance_collection_base::create_super_instance(footprint& f) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -228,6 +229,7 @@ instance_collection_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	// m.read_pointer(i, super_instance);
 }
+#endif
 
 //=============================================================================
 // class physical_instance_collection method definitions

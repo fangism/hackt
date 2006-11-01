@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.16.2.2 2006/10/28 03:03:14 fang Exp $
+	$Id: int_traits.h,v 1.16.2.3 2006/11/01 07:52:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
@@ -25,6 +25,7 @@ struct class_traits<int_tag> {
 	typedef	pint_tag			meta_tag_type;
 	typedef	class_traits<meta_tag_type>	meta_traits_type;
 	static const char			tag_name[];
+	enum { type_tag_enum_value = META_TYPE_INT };
 	typedef	int_instance			instance_type;
 	typedef	int_instance_alias_info		instance_alias_info_type;
 	typedef	never_ptr<instance_alias_info_type>

@@ -3,6 +3,32 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-12:
+	  Lots more hacking at POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, 
+		but still left disabled for now.
+	  instance/value collection prototypes updated to reflect how
+		collections and aliases will be serialized with new
+		pool-managed collection scheme: pool_bundle will take the
+		place of persistent_object_manager in many instances, since 
+		all pointers of interest will belong to the same footprint.  
+		Need to update pool functor calls accordingly.  
+	  instance_collection_base will no longer be : persistent!  whoa.
+	  instance_alias_info::load_next_connection(), now simply forwards
+		call to ::load_alias_reference, no more separate casing.  
+	  Object/traits/type_tag_enum.h: renamed some enumerations to 
+		be unambiguous, and also defined reverse-mapping policy
+		to translate from enumeration to tag type.  
+		Also added META_TYPE_ enums to all traits classes.  
+	  Phased out unroll_context_value_resolver, good-bye hack, 
+		replaced with simple consistent call in
+		simple_meta_value_reference::unroll_resolve...
+	  TODO: write footprint translator from index entry to pointer, 
+		convert subinstance_manager's members to never_ptrs, 
+		permanently remove unroll_context_value_resolver.  
+
+
 2006-10-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-11:

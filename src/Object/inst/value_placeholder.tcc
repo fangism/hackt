@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.4.2.1 2006/10/31 00:28:30 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.4.2.2 2006/11/01 07:52:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -42,15 +42,17 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/def/definition_base.h"
+#include "Object/def/footprint.h"
 #include "Object/common/namespace.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/type/param_type_reference.h"
-// #include "Object/unroll/unroll_context.h"
-#include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/unroll/expression_assignment.h"
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/value_collection_pool_bundle.h"
+#endif
 
 #include "common/ICE.h"
 
@@ -482,12 +484,28 @@ VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: distinguish between template formals and locals, 
+		for sparse vs. dense collections.  
+ */
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
-VALUE_PLACEHOLDER_CLASS::make_collection(void) const {
-	NEVER_NULL(this);	// WTF?
+VALUE_PLACEHOLDER_CLASS::make_collection(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	value_collection_pool_bundle<Tag>&
+		pool(f. template get_value_collection_pool_bundle<Tag>());
+	// if (this->is_template_formal()) ...
+	return pool.allocate_local_collection(never_ptr<const this_type>(this));
+#else
 	return value_collection_generic_type::make_array(
 		never_ptr<const this_type>(this));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

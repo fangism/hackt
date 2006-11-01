@@ -1,9 +1,12 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.9 2006/10/19 03:30:27 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.9.4.1 2006/11/01 07:52:45 fang Exp $
  */
 
+// THIS FILE IS NOW OBSOLETE
+
+#if 0
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_placeholder.h"
@@ -75,4 +78,5 @@ unroll_context_value_resolver<preal_tag>::operator ()
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+#endif
 

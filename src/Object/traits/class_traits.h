@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.9.2.2 2006/10/28 03:03:13 fang Exp $
+	$Id: class_traits.h,v 1.9.2.3 2006/11/01 07:52:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -13,7 +13,7 @@
 #include "Object/object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
-
+#include "Object/traits/type_tag_enum.h"
 
 namespace HAC {
 namespace entity {
@@ -47,6 +47,7 @@ struct class_traits {
 	struct rebind {	typedef	class_traits<Tag2>	type; };
 
 	typedef	Tag				tag_type;
+	enum { type_tag_enum_value = META_TYPE_NONE };
 	/**
 		The type of uniquely created object with possible aliases
 	 */

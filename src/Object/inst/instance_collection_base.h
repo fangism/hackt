@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.14 2006/10/18 20:58:02 fang Exp $
+	$Id: instance_collection_base.h,v 1.14.4.1 2006/11/01 07:52:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -15,7 +15,10 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/persistent.h"		// for persistent object interface
+#endif
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -41,8 +44,10 @@ using std::istream;
 using std::string;
 using util::bad_bool;
 using util::good_bool;
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 using util::persistent;
 using util::persistent_object_manager;
+#endif
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -68,7 +73,11 @@ using util::memory::count_ptr;
 		statements per collection, but they were removed on the
 		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
-class instance_collection_base : public persistent {
+class instance_collection_base
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		: public persistent
+#endif
+		{
 	typedef	instance_collection_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
@@ -107,7 +116,11 @@ protected:
 	 */
 	super_instance_ptr_type		super_instance;
 protected:
-	instance_collection_base() : persistent(), super_instance() { }
+	instance_collection_base() : 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		persistent(), 
+#endif
+		super_instance() { }
 
 public:
 
@@ -212,6 +225,8 @@ virtual	owner_ptr_type
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
 
+#if 0
+// been obsolete for a long time
 private:
 	// utility functions for handling index collection (inlined)
 	void
@@ -224,6 +239,8 @@ private:
 	void
 	load_index_collection_pointers(
 		const persistent_object_manager& m, istream&);
+#endif
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 protected:
 	// wrappers to provide consistent interface to children
 	void
@@ -234,6 +251,7 @@ protected:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+#endif
 
 public:
 	/** just for convenience */

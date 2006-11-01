@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.23.4.3 2006/10/31 21:16:05 fang Exp $
+	$Id: unroll_context.cc,v 1.23.4.4 2006/11/01 07:52:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -215,7 +215,11 @@ count_ptr<param_value_collection>
 #endif
 unroll_context::lookup_rvalue_collection
 		(const param_value_placeholder& p) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	never_ptr<param_value_collection>	return_type;
+#else
 	typedef	count_ptr<param_value_collection>	return_type;
+#endif
 	STACKTRACE_VERBOSE;
 	const string key(p.get_footprint_key());
 #if ENABLE_STACKTRACE
@@ -267,7 +271,11 @@ count_ptr<param_value_collection>
 #endif
 unroll_context::lookup_lvalue_collection(
 		const param_value_placeholder& p) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	never_ptr<param_value_collection>	return_type;
+#else
 	typedef	count_ptr<param_value_collection>	return_type;
+#endif
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	dump(cerr << "looking up in context:") << endl;

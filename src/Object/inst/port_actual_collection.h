@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.3 2006/10/31 00:28:25 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.4 2006/11/01 07:52:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -171,17 +171,46 @@ public:
 	instance_alias_info_type&
 	load_reference(istream&);
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#else
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_connections(const persistent_object_manager&, ostream&) const;
+	write_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_connections(const persistent_object_manager&, istream&);
+	load_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
+
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	void
+	write_pointer(ostream&, 
+		const instance_collection_pool_bundle<Tag>&) const;
+
+	void
+	write_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, istream&);
+#endif
 
 private:
 	iterator

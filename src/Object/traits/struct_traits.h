@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.19.2.2 2006/10/28 03:03:14 fang Exp $
+	$Id: struct_traits.h,v 1.19.2.3 2006/11/01 07:52:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -10,7 +10,6 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
-#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -23,7 +22,7 @@ struct class_traits<datastruct_tag> {
 
 	typedef	datastruct_tag			tag_type;
 	static const char			tag_name[];
-	enum { type_tag_enum_value = TYPE_STRUCT };
+	enum { type_tag_enum_value = META_TYPE_STRUCT };
 	typedef	struct_instance			instance_type;
 
 	typedef	datastruct_instance_alias_info	instance_alias_info_type;

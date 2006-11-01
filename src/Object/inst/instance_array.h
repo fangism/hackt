@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2.2.4 2006/10/31 00:28:19 fang Exp $
+	$Id: instance_array.h,v 1.2.2.5 2006/11/01 07:52:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -161,17 +161,43 @@ public:
 	accept(alias_visitor&) const;
 
 public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	void
+	write_pointer(ostream&, 
+		const instance_collection_pool_bundle<Tag>&) const;
 
+	void
+	write_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, istream&);
+#else
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
-	void
-	write_connections(const persistent_object_manager&, ostream&) const;
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+#endif
 
 	void
-	load_connections(const persistent_object_manager&, istream&);
+	write_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
+
+	void
+	load_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {

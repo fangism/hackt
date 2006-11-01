@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.4 2006/10/31 00:28:27 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.5 2006/11/01 07:52:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -173,17 +173,44 @@ private:
 	end(void) const;
 
 public:
+
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	void
+	write_pointer(ostream&, 
+		const instance_collection_pool_bundle<Tag>&) const;
+
+	void
+	write_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const instance_collection_pool_bundle<Tag>&, 
+		const persistent_object_manager&, istream&);
+#else
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
+#endif
 
 	void
-	write_connections(const persistent_object_manager&, ostream&) const;
+	write_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_connections(const persistent_object_manager&, istream&);
+	load_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {

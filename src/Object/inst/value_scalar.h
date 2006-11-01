@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_scalar.h"
-	$Id: value_scalar.h,v 1.2.2.1 2006/10/31 05:23:58 fang Exp $
+	$Id: value_scalar.h,v 1.2.2.2 2006/11/01 07:52:35 fang Exp $
 	This file spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -94,6 +94,7 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+
 #if POOL_ALLOCATE_VALUE_COLLECTIONS
 	enum {
 #ifdef	HAVE_UINT64_TYPE

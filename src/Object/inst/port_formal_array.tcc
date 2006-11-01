@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.6 2006/10/31 21:16:01 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.7 2006/11/01 07:52:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -611,6 +611,7 @@ PORT_FORMAL_ARRAY_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::collect_transient_info_base(
@@ -632,6 +633,7 @@ if (!m.register_transient_object(this,
 	this->collect_transient_info_base(m);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -640,8 +642,11 @@ if (!m.register_transient_object(this,
  */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
-PORT_FORMAL_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
-		ostream& f) const {
+PORT_FORMAL_ARRAY_CLASS::write_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool_unused, 
+#endif
+		const persistent_object_manager& m, ostream& f) const {
 	parent_type::write_object_base(m, f);
 	const key_type& k(this->value_array.size());
 	value_writer<key_type> write_key(f);
@@ -656,7 +661,12 @@ PORT_FORMAL_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
-PORT_FORMAL_ARRAY_CLASS::write_connections(const persistent_object_manager& m, 
+PORT_FORMAL_ARRAY_CLASS::write_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		ostream& f) const {
 	for_each(this->begin(), this->end(), 
 		typename parent_type::connection_writer(m, f));
@@ -665,8 +675,11 @@ PORT_FORMAL_ARRAY_CLASS::write_connections(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
-PORT_FORMAL_ARRAY_CLASS::load_object(const persistent_object_manager& m, 
-		istream& f) {
+PORT_FORMAL_ARRAY_CLASS::load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool_unused, 
+#endif
+		const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 	key_type k;
 	value_reader<key_type> read_key(f);
@@ -683,7 +696,12 @@ PORT_FORMAL_ARRAY_CLASS::load_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
-PORT_FORMAL_ARRAY_CLASS::load_connections(const persistent_object_manager& m, 
+PORT_FORMAL_ARRAY_CLASS::load_connections(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		istream& f) {
 	for_each(this->begin(), this->end(), 
 		typename parent_type::connection_loader(m, f));

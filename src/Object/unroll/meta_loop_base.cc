@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.8 2006/10/24 07:27:38 fang Exp $
+	$Id: meta_loop_base.cc,v 1.8.2.1 2006/11/01 07:52:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -55,7 +55,11 @@ meta_loop_base::~meta_loop_base() { }
 	variable and returns a pointer to the scalar variable 
 	for the caller to manipulate in a loop. 
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<pint_scalar>
+#else
 count_ptr<pint_scalar>
+#endif
 meta_loop_base::initialize_footprint(footprint& f) const {
 	// temporary instantiation statement
 	const never_ptr<const pint_value_placeholder> ivr(&*ind_var);
@@ -68,7 +72,12 @@ meta_loop_base::initialize_footprint(footprint& f) const {
 	// doesn't assign init. value
 	INVARIANT(g.good);
 	const string& key(ind_var->get_name());
-	const count_ptr<pint_scalar> ret(f[key].is_a<pint_scalar>());
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<pint_scalar>
+#else
+	const count_ptr<pint_scalar>
+#endif
+		ret(f[key].is_a<pint_scalar>());
 	NEVER_NULL(ret);
 	// other back-linking collection to placeholder? for diagnostics?
 	// assign it some value to make it valid initially

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.7 2006/10/31 21:15:51 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.8 2006/11/01 07:52:25 fang Exp $
 	TODO: trim includes
  */
 
@@ -680,10 +680,19 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
-		const persistent_object_manager& m, ostream& o) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		ostream& o) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->container->write_pointer(o, pool);
+#else
 	m.write_pointer(o, this->container);
+#endif
 	const size_t dim = this->container->get_dimensions();
 	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
 	if (dim) {
@@ -697,36 +706,28 @@ INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Really, pure virtual.  
 	\pre everything but the next pointer is already loaded, 
 		including the parent container pointer.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
-		const persistent_object_manager& m, istream& i) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		istream& i) {
 	STACKTRACE_VERBOSE;
 #if STACKTRACE_PERSISTENTS
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 #endif
 	NEVER_NULL(this->container);
-	const size_t dim = this->container->get_dimensions();
-	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
-if (dim) {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	this_type& n(this->load_alias_reference(m, i));
-	this->next = &n;
-} else {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
-	container_type* next_container;
-	m.read_pointer(i, next_container);
-	NEVER_NULL(next_container);	// true?
-	// no key to read!
-	// problem: container is a never_ptr<const ...>, yucky
-	m.load_object_once(next_container);
-	this_type& n(next_container->load_reference(i));
-	this->next = &n;
-}
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->next = &load_alias_reference(pool, i);
+#else
+	this->next = &load_alias_reference(m, i);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -738,10 +739,19 @@ if (dim) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
-		const persistent_object_manager& m, istream& i) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		istream& i) {
 	STACKTRACE_VERBOSE;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<container_type> next_container(pool.read_pointer(i));
+#else
 	never_ptr<container_type> next_container;
 	m.read_pointer(i, next_container);
+#endif
 	// reconstruction ordering problem:
 	// container must have its instances already loaded, though 
 	// not necessarily constructed.
@@ -750,7 +760,12 @@ INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 	// See? there's a reason for everything.  
 	NEVER_NULL(next_container);
 	// this is the safe way of ensuring that object is loaded once only.
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// collections of like meta-type have already been loaded
+	// as guaranteed by the instance_collection_pool_bundle.  
+#else
 	m.load_object_once(next_container);
+#endif
 	// the CONTAINER should read the key, because it is dimension-specific!
 	// it should return a reference to the alias node, 
 	// which can then be linked.  
@@ -761,6 +776,8 @@ INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 /**
 	TODO: factor out into scalar and non-scalar version
 	to avoid repeated if branching in write-loop.  
+	NOTE: container back-reference is not written anymore, it is the
+		responsibility of the container.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -769,10 +786,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
 	// let the module take care of saving the state information
 	write_value(o, this->instance_index);
-	NEVER_NULL(this->container);
-#if 0
-	m.write_pointer(o, this->container);
-#endif
+	NEVER_NULL(this->container);	// no need to write out
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
 //	else skip, collection will write connections later...
@@ -782,6 +796,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 /**
 	TODO: factor out into scalar and non-scalar version
 	to avoid repeated if branching in load-loop.  
+	NOTE: container back-reference is loaded by the container now.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -791,14 +806,8 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 	NEVER_NULL(this->container);	// already set by container!
 	// let the module take care of restoring the state information
 	read_value(i, this->instance_index);
-#if 0
-	m.read_pointer(i, this->container);
-#endif
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);
-#if 0
-	m.load_object_once(&const_cast<container_type&>(*this->container));
-#endif
 //	else skip, collection will load connections later...
 }
 

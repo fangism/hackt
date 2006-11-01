@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.22.2.1 2006/10/31 03:51:35 fang Exp $
+	$Id: PRS.cc,v 1.22.2.2 2006/11/01 07:52:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -949,7 +949,11 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	//	using unroll_context's template_formal/actual mechanism.  
 	// copied from loop_scope::unroll()
 	entity::footprint f;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<pint_scalar>
+#else
 	const count_ptr<pint_scalar>
+#endif
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 
 	// induction variable into the footprint as an actual variable

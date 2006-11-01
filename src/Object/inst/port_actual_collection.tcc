@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.5 2006/10/31 21:16:00 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.6 2006/11/01 07:52:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -569,6 +569,7 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 /**
 	Shouldn't call this because these containers will not be allocated
 	directly on the heap.  
@@ -582,6 +583,7 @@ if (!m.register_transient_object(this,
 	this->collect_transient_info_base(m);
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -591,10 +593,17 @@ if (!m.register_transient_object(this,
  */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
-PORT_ACTUAL_COLLECTION_CLASS::write_object(const persistent_object_manager& m, 
-		ostream& f) const {
+PORT_ACTUAL_COLLECTION_CLASS::write_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool, 
+#endif
+		const persistent_object_manager& m, ostream& f) const {
 	parent_type::write_object_base(m, f);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->formal_collection->write_pointer(f, pool);
+#else
 	m.write_pointer(f, this->formal_collection);
+#endif
 	// size is deduced from the formal_collection
 	const size_t k = this->formal_collection->collection_size();
 #if ENABLE_STACKTRACE
@@ -613,7 +622,12 @@ PORT_ACTUAL_COLLECTION_CLASS::write_object(const persistent_object_manager& m,
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::write_connections(
-		const persistent_object_manager& m, ostream& f) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		ostream& f) const {
 	for_each(this->begin(), this->end(), 
 		typename formal_collection_type::connection_writer(m, f));
 }
@@ -621,16 +635,28 @@ PORT_ACTUAL_COLLECTION_CLASS::write_connections(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
-PORT_ACTUAL_COLLECTION_CLASS::load_object(const persistent_object_manager& m, 
-		istream& f) {
+PORT_ACTUAL_COLLECTION_CLASS::load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pool, 
+#endif
+		const persistent_object_manager& m, istream& f) {
 #if ENABLE_STACKTRACE
 	cerr << "this (port-actual-collection) @ " << this << endl;
 #endif
 	parent_type::load_object_base(m, f);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->formal_collection =
+		never_ptr<typename element_type::container_type>(pool.read_pointer(f));
+#else
 	m.read_pointer(f, this->formal_collection);
+#endif
 	NEVER_NULL(this->formal_collection);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// not necessary anymore
+#else
 	m.load_object_once(&const_cast<formal_collection_type&>(
 		*this->formal_collection));
+#endif
 	const size_t k = this->formal_collection->collection_size();
 #if ENABLE_STACKTRACE
 	cerr << "collection-size = " << k << endl;
@@ -652,7 +678,12 @@ PORT_ACTUAL_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::load_connections(
-		const persistent_object_manager& m, istream& f) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
+		istream& f) {
 	for_each(this->begin(), this->end(), 
 		typename formal_collection_type::connection_loader(m, f));
 }
