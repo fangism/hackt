@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.4 2006/11/01 07:52:32 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.5 2006/11/02 06:18:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -52,8 +52,11 @@ public:
 	reference-counting should not result in cycles, as cyclic
 	type references (specifically footprint) are forbidden and rejected.  
  */
-//	typedef	never_ptr<const formal_collection_type>
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	never_ptr<const formal_collection_type>
+#else
 	typedef	count_ptr<const formal_collection_type>
+#endif
 						formal_collection_ptr_type;
 	typedef	instance_alias_info<Tag>	instance_alias_info_type;
 	typedef	instance_alias_info_type	element_type;
@@ -93,7 +96,12 @@ private:
 	port_actual_collection();
 public:
 	explicit
-	port_actual_collection(const formal_collection_ptr_type&, 
+	port_actual_collection(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const formal_collection_ptr_type, 
+#else
+		const formal_collection_ptr_type&, 
+#endif
 		const unroll_context&);
 
 	~port_actual_collection();
@@ -101,7 +109,11 @@ public:
 	const formal_collection_type&
 	get_canonical_collection(void) const;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const formal_collection_ptr_type&
+#else
 	formal_collection_ptr_type
+#endif
 	get_formal_collection(void) const {
 		return this->formal_collection;
 	}
@@ -203,12 +215,14 @@ public:
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const;
 
+	using parent_type::write_pointer;
+
 	void
-	write_object(const instance_collection_pool_bundle<Tag>&, 
+	write_object(const footprint&, 
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object(const instance_collection_pool_bundle<Tag>&, 
+	load_object(const footprint&, 
 		const persistent_object_manager&, istream&);
 #endif
 

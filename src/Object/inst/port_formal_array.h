@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.5 2006/11/01 07:52:33 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.6 2006/11/02 06:18:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -175,16 +175,18 @@ private:
 public:
 
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	using parent_type::collect_transient_info_base;
+
 	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const;
 
 	void
-	write_object(const instance_collection_pool_bundle<Tag>&, 
+	write_object(const footprint&, 
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object(const instance_collection_pool_bundle<Tag>&, 
+	load_object(const footprint&, 
 		const persistent_object_manager&, istream&);
 #else
 	FRIEND_PERSISTENT_TRAITS

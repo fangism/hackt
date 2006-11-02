@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.5 2006/11/01 07:52:19 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.6 2006/11/02 06:18:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -202,19 +202,24 @@ virtual	instance_alias_info_type&
 	load_reference(istream&) = 0;
 
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// this excludes type_tag_enum
 virtual	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const = 0;
+
+	// this variation includes the type_tag_enum
+	void
+	write_pointer(const footprint&, ostream&) const;
 
 virtual	void
 	collect_transient_info_base(persistent_object_manager&) const = 0;
 
 virtual	void
-	write_object(const instance_collection_pool_bundle<Tag>&, 
+	write_object(const footprint&, 
 		const persistent_object_manager&, ostream&) const = 0;
 
 virtual	void
-	load_object(const instance_collection_pool_bundle<Tag>&, 
+	load_object(const footprint&, 
 		const persistent_object_manager&, istream&) = 0;
 #endif
 };	// end class collection_interface

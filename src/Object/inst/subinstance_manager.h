@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.15.4.1 2006/10/29 02:25:17 fang Exp $
+	$Id: subinstance_manager.h,v 1.15.4.2 2006/11/02 06:18:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -12,6 +12,9 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
 #include "Object/devel_switches.h"
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+#include "util/memory/excl_ptr.h"
+#endif
 
 namespace HAC {
 class cflat_options;
@@ -39,6 +42,9 @@ using std::istream;
 using std::string;
 using std::vector;
 using util::good_bool;
+#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
+using util::memory::never_ptr;
+#endif
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
@@ -63,9 +69,16 @@ friend class substructure_manager;
 	typedef	physical_instance_collection	instance_collection_type;
 	typedef	physical_instance_placeholder		lookup_arg_type;
 public:
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	never_ptr<instance_collection_type>	entry_value_type;
+#else
 	typedef	count_ptr<instance_collection_type>	entry_value_type;
+#endif
 	// just a synonym
 	typedef	entry_value_type			value_type;
+	/**
+		TODO: use lightweight valarray.
+	 */
 	typedef	vector<value_type>			array_type;
 	typedef	vector<count_ptr<const meta_instance_reference_base> >
 						connection_references_type;
@@ -95,6 +108,14 @@ public:
 
 	void
 	push_back(const entry_value_type&);
+
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	array_type&
+	get_array(void) { return subinstance_array; }
+
+	const array_type&
+	get_array(void) const { return subinstance_array; }
+#endif
 
 	ostream&
 	dump(ostream&, const dump_flags&) const;
@@ -146,10 +167,22 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 
 };	// end class subinstance_manager
 

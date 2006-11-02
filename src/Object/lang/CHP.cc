@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.13 2006/10/24 07:27:25 fang Exp $
+	$Id: CHP.cc,v 1.13.2.1 2006/11/02 06:18:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -719,7 +719,11 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 	}
 	selection_list_type result;	// unroll into here
 	entity::footprint f;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<pint_scalar>
+#else
 	const count_ptr<pint_scalar>
+#endif
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 
 	// induction variable into the footprint as an actual variable

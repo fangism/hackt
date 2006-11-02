@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.12 2006/04/24 00:28:05 fang Exp $
+	$Id: instance_pool.tcc,v 1.12.34.1 2006/11/02 06:18:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -114,7 +114,12 @@ instance_pool<T>::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
-instance_pool<T>::write_object_base(const persistent_object_manager& m, 
+instance_pool<T>::write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(++this->begin());	// skip first element (NULL)
@@ -137,7 +142,12 @@ instance_pool<T>::write_object_base(const persistent_object_manager& m,
  */
 template <class T>
 void
-instance_pool<T>::load_object_base(const persistent_object_manager& m, 
+instance_pool<T>::load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type& m, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s;

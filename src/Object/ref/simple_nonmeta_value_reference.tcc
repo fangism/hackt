@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.15 2006/10/24 07:27:29 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.15.2.1 2006/11/02 06:18:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -152,12 +152,20 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	multikey_index_type k(i.size());	// pre-size
 	if (i.make_const_index_list(k).good) {
 		data_value_type _val;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const param_value_collection>
+#else
 		const count_ptr<const param_value_collection>
+#endif
 			pvc(c.lookup_rvalue_collection(vc));
 		if (!pvc) {
 			return return_type(NULL);
 		}
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const value_array_generic_type>
+#else
 		const count_ptr<const value_array_generic_type>
+#endif
 			va(pvc.template is_a<const value_array_generic_type>());
 		if (!va) {
 			return return_type(NULL);
@@ -224,14 +232,22 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		// therefore, just look this up
 		// code ripped from:
 		// simple_meta_value_reference::unroll_resolve_rvalues
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const param_value_collection>
+#else
 		const count_ptr<const param_value_collection>
+#endif
 			pvc(c.lookup_rvalue_collection(
 				*_this.value_collection_ref));
 		if (!pvc) {
 			return error;
 		}
 		data_value_type _val;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const value_scalar_type>
+#else
 		const count_ptr<const value_scalar_type>
+#endif
 			va(pvc.template is_a<const value_scalar_type>());
 		if (va && va->lookup_value(_val).good) {
 			return return_type(new const_expr_type(_val));

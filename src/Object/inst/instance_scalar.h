@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2.2.5 2006/11/01 07:52:31 fang Exp $
+	$Id: instance_scalar.h,v 1.2.2.6 2006/11/02 06:18:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -144,16 +144,18 @@ public:
 
 public:
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	using parent_type::collect_transient_info_base;
+
 	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const;
 
 	void
-	write_object(const instance_collection_pool_bundle<Tag>&, 
+	write_object(const footprint&, 
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object(const instance_collection_pool_bundle<Tag>&, 
+	load_object(const footprint&, 
 		const persistent_object_manager&, istream&);
 #else
 	FRIEND_PERSISTENT_TRAITS

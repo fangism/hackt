@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.4 2006/11/01 07:52:30 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.5 2006/11/02 06:18:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -18,6 +18,7 @@ using std::ostream;
 using std::istream;
 // forward declarations
 class unroll_context;
+class footprint;
 template <class> class instance_placeholder;
 template <class> class collection_interface;
 template <class> class instance_collection;
@@ -25,6 +26,7 @@ template <class, size_t> class instance_array;
 template <class Tag> class instance_array<Tag,0>;
 template <class> class port_formal_array;
 template <class> class port_actual_collection;
+template <class> class instance_collection_pool_bundle;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 
@@ -38,7 +40,11 @@ template <class T>
 class instance_collection_pool_wrapper {
 public:
 	typedef	T				collection_type;
+	typedef	typename collection_type::traits_type::tag_type
+						tag_type;
 	typedef	collection_pool<T>		pool_type;
+	typedef	instance_collection_pool_bundle<tag_type>
+						pool_bundle_type;
 protected:
 	pool_type				pool;
 	// default ctors and dtor
@@ -50,16 +56,25 @@ protected:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const footprint&,
+		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const footprint&,
+		const persistent_object_manager&, istream&);
 
 	void
-	write_connections(const persistent_object_manager&, ostream&) const;
+	write_connections(const pool_bundle_type&, ostream&) const;
 
 	void
-	load_connections(const persistent_object_manager&, istream&);
+	load_connections(const pool_bundle_type&, istream&);
+
+private:
+	// helper functors
+	struct collection_writer;
+	struct collection_loader;
+	struct connection_writer;
+	struct connection_loader;
 
 };	// end class sparse_pool_bundle
 
@@ -131,10 +146,16 @@ struct instance_collection_pool_bundle :
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const footprint&, 
+		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const footprint&, 
+		const persistent_object_manager&, istream&);
+
+	// load everything but actual_collections into footprint's map.
+	void
+	load_footprint(footprint&) const;
 };	// end class instance_collection_pool_bundle
 
 //=============================================================================

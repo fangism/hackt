@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.4 2006/10/31 21:15:50 fang Exp $
+	$Id: footprint.h,v 1.19.4.5 2006/11/02 06:18:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -316,6 +316,12 @@ public:
 	instance_collection_ptr_type
 	operator [] (const string&) const;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// lookup by index and tag
+	instance_collection_ptr_type
+	operator [] (const collection_map_entry_type&) const;
+#endif
+
 	ostream&
 	dump(ostream&) const;
 
@@ -427,6 +433,10 @@ public:
 	accept(alias_visitor&) const;
 
 public:
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	instance_collection_ptr_type
+	read_pointer(istream&) const;
+#endif
 // persistent information management
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

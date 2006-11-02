@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.21.4.1 2006/10/29 20:05:11 fang Exp $
+ 	$Id: type_reference.cc,v 1.21.4.2 2006/11/02 06:18:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -640,7 +640,11 @@ data_type_reference::unroll_port_instances(
 		const footprint& f(data_def->get_footprint(ta));
 		const unroll_context cc(&f, c);
 #endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		port_formals.unroll_ports(cc, sub.get_array());
+#else
 		port_formals.unroll_ports(cc, sub);
+#endif
 	}
 	}
 }
@@ -1782,7 +1786,11 @@ process_type_reference::unroll_port_instances(
 		const unroll_context& cc(c);
 		// should the contexts be chained?
 		// or can the actuals always be resolved one scope at a time?
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		port_formals.unroll_ports(cc, sub.get_array());
+#else
 		port_formals.unroll_ports(cc, sub);
+#endif
 	}
 }
 

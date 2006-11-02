@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.4 2006/10/18 20:58:02 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.4.4.1 2006/11/02 06:18:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -15,6 +15,7 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -161,9 +162,15 @@ virtual	~instance_placeholder_base();
 	The footprint argument WAS just for distiguishing constructors.  
 	NOTE: not any more! TODO: delete comment
  */
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
+	instance_collection_base*					\
+	make_instance_collection_footprint_copy(footprint&) const
+#else
 #define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
 	instance_collection_base*					\
 	make_instance_collection_footprint_copy(void) const
+#endif
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 

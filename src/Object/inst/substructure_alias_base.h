@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.18.4.2 2006/10/31 00:28:29 fang Exp $
+	$Id: substructure_alias_base.h,v 1.18.4.3 2006/11/02 06:18:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -137,10 +137,22 @@ protected:
 	collect_transient_info_base(persistent_object_manager& m) const;
 
 	void
-	write_object_base(const persistent_object_manager& m, ostream& o) const;
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager& m, istream& i);
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 
 };	// end class substructure_alias_base
 
@@ -219,11 +231,21 @@ protected:
 	collect_transient_info_base(const persistent_object_manager&) const { }
 
 	void
-	write_object_base(const persistent_object_manager&, 
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
 		const ostream&) const { }
 
 	void
-	load_object_base(const persistent_object_manager&, 
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
 		const istream&) const { }
 
 };	// end class substructure_alias_base

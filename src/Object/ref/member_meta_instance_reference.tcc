@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.19.4.3 2006/10/31 00:28:32 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.19.4.4 2006/11/02 06:18:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -87,10 +87,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 		belonging to the footprint being unrolled.  
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::collection_interface_type>
+typename MEMBER_INSTANCE_REFERENCE_CLASS::parent_member_ptr_type
 MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		const unroll_context& c) const {
-	typedef	count_ptr<collection_interface_type>	return_type;
+	typedef	parent_member_ptr_type			return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "ref: ",
@@ -121,7 +121,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	const physical_instance_placeholder&
 		phys_inst(IS_A(const physical_instance_placeholder&, 
 			*this->get_inst_base()));
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const never_ptr<instance_collection_base>
+#else
 	const count_ptr<instance_collection_base>
+#endif
 		resolved_instance(
 			parent_struct->lookup_port_instance(phys_inst));
 	if (!resolved_instance) {
@@ -225,7 +229,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
 	c.dump(cerr) << endl;
 #endif
-	const count_ptr<collection_interface_type>
+	const parent_member_ptr_type
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
@@ -250,7 +254,7 @@ typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_info_ptr_type
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	const count_ptr<collection_interface_type>
+	const parent_member_ptr_type
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
@@ -271,7 +275,7 @@ never_ptr<substructure_alias>
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-	const count_ptr<collection_interface_type>
+	const parent_member_ptr_type
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message

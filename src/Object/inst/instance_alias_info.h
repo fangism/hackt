@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17.2.4 2006/11/01 07:52:26 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.5 2006/11/02 06:18:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -388,10 +388,18 @@ public:
 	collect_transient_info_base(persistent_object_manager& m) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#endif
+		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#endif
+		const persistent_object_manager&, istream&);
 
 	void
 	collect_transient_info(persistent_object_manager& m) const {
@@ -399,13 +407,29 @@ public:
 	}
 
 	void
-	write_object(const persistent_object_manager& m, ostream& o) const {
+	write_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			const footprint& f, 
+#endif
+			const persistent_object_manager& m, ostream& o) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		this->write_object_base(f, m, o);
+#else
 		this->write_object_base(m, o);
+#endif
 	}
 
 	void
-	load_object(const persistent_object_manager& m, istream& i) {
+	load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			const footprint& f, 
+#endif
+			const persistent_object_manager& m, istream& i) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		this->load_object_base(f, m, i);
+#else
 		this->load_object_base(m, i);
+#endif
 	}
 
 	class transient_info_collector {

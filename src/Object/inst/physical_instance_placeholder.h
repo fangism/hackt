@@ -1,12 +1,13 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.3 2006/10/18 20:58:05 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.3.4.1 2006/11/02 06:18:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
 
 #include "Object/inst/instance_placeholder_base.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -64,9 +65,15 @@ virtual	ostream&
 	size_t
 	is_port_formal(void) const;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#define	UNROLL_PORT_ONLY_PROTO						\
+	never_ptr<physical_instance_collection>				\
+	unroll_port_only(const unroll_context&) const
+#else
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
+#endif
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
 

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.4.2.2 2006/11/01 07:52:34 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.4.2.3 2006/11/02 06:18:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -479,8 +479,18 @@ VALUE_PLACEHOLDER_CLASS::must_type_check_actual_param_expr(
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 // typename VALUE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 instance_collection_base*
-VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
+VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	return this->make_collection(f);
+#else
 	return this->make_collection();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

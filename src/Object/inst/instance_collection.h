@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.7 2006/11/01 07:52:29 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.8 2006/11/02 06:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -18,6 +18,7 @@
 #if USE_COLLECTION_INTERFACES
 #include "Object/inst/collection_interface.h"
 #endif
+#include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -320,11 +321,13 @@ public:
 #else
 protected:
 #endif
+	// NOTE: these really belong to instance_alias_info...
 	// not that all alias elements are equal, 
 	// we can factor out common functionality
 	/**
 		Functor to collect transient info in the aliases.  
 	 */
+#if 0
 	class element_collector {
 		persistent_object_manager& pom;
 	public:
@@ -333,16 +336,28 @@ protected:
 		void
 		operator () (const instance_alias_info_type&) const;
 	};	// end class element_collector
+#else
+	typedef	util::persistent_collector_ref	element_collector;
+#endif
 
 	/**
 		Functor to write alias elements.  
 	 */
-	class element_writer {
-		ostream& os;
-		const persistent_object_manager& pom;
+	class element_writer : public util::persistent_writer_base {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&		fp;
+#endif
 	public:
-		element_writer(const persistent_object_manager& m,
-			ostream& o) : os(o), pom(m) { }
+		element_writer(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			const footprint& f, 
+#endif
+			const persistent_object_manager& m,
+			ostream& o) : util::persistent_writer_base(m, o)
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+				, fp(f)
+#endif
+				{ }
 
 		void
 		operator () (const instance_alias_info_type&) const;
@@ -351,15 +366,23 @@ protected:
 	/**
 		Now, this also re-links element to parent container.  
 	 */
-	class element_loader {
-		istream& is;
-		const persistent_object_manager& pom;
+	class element_loader : public util::persistent_loader_base {
 		const never_ptr<const parent_type>	back_ref;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&		fp;
+#endif
 	public:
-		element_loader(const persistent_object_manager& m,
-			istream& i, 
-			const never_ptr<const parent_type> b) : 
-			is(i), pom(m), back_ref(b) { }
+		element_loader(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			const footprint& f, 
+#endif
+			const persistent_object_manager& m,
+			istream& i, const never_ptr<const parent_type> b) : 
+			persistent_loader_base(m, i), back_ref(b)
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			, fp(f)
+#endif
+			{ }
 
 		void
 		operator () (instance_alias_info_type&);	// const?
@@ -367,9 +390,18 @@ protected:
 
 	class connection_writer {
 		ostream& os;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pom;
+#else
 		const persistent_object_manager& pom;
+#endif
 	public:
-		connection_writer(const persistent_object_manager& m,
+		connection_writer(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			const instance_collection_pool_bundle<Tag>& m, 
+#else
+			const persistent_object_manager& m,
+#endif
 			ostream& o) : os(o), pom(m) { }
 
 		void
@@ -378,9 +410,18 @@ protected:
 
 	class connection_loader {
 		istream& is;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const instance_collection_pool_bundle<Tag>& pom;
+#else
 		const persistent_object_manager& pom;
+#endif
 	public:
-		connection_loader(const persistent_object_manager& m,
+		connection_loader(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			const instance_collection_pool_bundle<Tag>& m, 
+#else
+			const persistent_object_manager& m,
+#endif
 			istream& i) : is(i), pom(m) { }
 
 		void
@@ -398,13 +439,15 @@ protected:
 		operator () (const instance_alias_info_type&);
 	};	// end struct key_dumper
 
-protected:
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 virtual	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const = 0;
+
+	using parent_type::write_pointer;
 #endif
 
+protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 

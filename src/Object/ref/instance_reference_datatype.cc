@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.12 2006/10/18 20:58:13 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.12.4.1 2006/11/02 06:18:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -215,11 +215,19 @@ struct data_type_resolver<int_tag> {
 		// need to do some real work... 
 		// extract parameter from collection
 		// which needs to be translated from the placeholder
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const physical_instance_collection>
+#else
 		const count_ptr<const physical_instance_collection>
+#endif
 			pc(c.lookup_instance_collection(
 				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const instance_collection_type>
+#else
 		const count_ptr<const instance_collection_type>
+#endif
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return data_type_reference::make_canonical_int_type_ref(
@@ -252,11 +260,19 @@ struct data_type_resolver<enum_tag> {
 	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
 			const unroll_context& c) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const physical_instance_collection>
+#else
 		const count_ptr<const physical_instance_collection>
+#endif
 			pc(c.lookup_instance_collection(
 				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const instance_collection_type>
+#else
 		const count_ptr<const instance_collection_type>
+#endif
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return dc->get_resolved_canonical_type();
@@ -285,11 +301,19 @@ struct data_type_resolver<datastruct_tag> {
 	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
 			const unroll_context& c) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const physical_instance_collection>
+#else
 		const count_ptr<const physical_instance_collection>
+#endif
 			pc(c.lookup_instance_collection(
 				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<const instance_collection_type>
+#else
 		const count_ptr<const instance_collection_type>
+#endif
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return dc->get_resolved_canonical_type();

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.2 2006/10/31 05:23:51 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.3 2006/11/02 06:18:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -26,6 +26,72 @@ using util::write_value;
 using util::read_value;
 
 //=============================================================================
+// class instance_collection_pool_wrapper helper structs
+
+/**
+	Binding functor.  
+ */
+template <class T>
+struct instance_collection_pool_wrapper<T>::collection_writer : 
+		public util::persistent_writer_base {
+	const footprint&	fp;
+	collection_writer(const footprint& f, 
+		const persistent_object_manager& m, ostream& o) :
+		util::persistent_writer_base(m, o), fp(f) { }
+
+	void
+	operator () (const T& t) {
+		t.write_object(fp, pom, os);
+	}
+};	// end struct collection_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Binding functor.  
+ */
+template <class T>
+struct instance_collection_pool_wrapper<T>::collection_loader :
+		public util::persistent_loader_base {
+	const footprint&	fp;
+	collection_loader(const footprint& f, 
+		const persistent_object_manager& m, istream& i) :
+		util::persistent_loader_base(m, i), fp(f) { }
+
+	void
+	operator () (T& t) {
+		t.load_object(fp, pom, is);
+	}
+};	// end struct collection_loader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+struct instance_collection_pool_wrapper<T>::connection_writer {
+	const pool_bundle_type&		pool_bundle;
+	ostream&			os;
+	connection_writer(const pool_bundle_type& p, ostream& o) :
+		pool_bundle(p), os(o) { }
+
+	void
+	operator () (const T& t) {
+		t.write_connections(pool_bundle, os);
+	}
+};	// end struct connection_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+struct instance_collection_pool_wrapper<T>::connection_loader {
+	const pool_bundle_type&		pool_bundle;
+	istream&			is;
+	connection_loader(const pool_bundle_type& p, istream& i) :
+		pool_bundle(p), is(i) { }
+
+	void
+	operator () (T& t) {
+		t.load_connections(pool_bundle, is);
+	}
+};	// end struct connection_loader
+
+//=============================================================================
 // class instance_collection_pool_wrapper method definitions
 
 template <class T>
@@ -40,48 +106,50 @@ instance_collection_pool_wrapper<T>::collect_transient_info_base(
 template <class T>
 void
 instance_collection_pool_wrapper<T>::write_object_base(
+		const footprint& f, 
 		const persistent_object_manager& m, ostream& o) const {
 	const size_t s = this->pool.size();
 	write_value(o, s);
 	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_writer_ref(m, o));
+		collection_writer(f, m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
 instance_collection_pool_wrapper<T>::load_object_base(
+		const footprint& f,
 		const persistent_object_manager& m, istream& i) {
 	size_t s;
 	read_value(i, s);
 	this->pool.allocate(s);		// will be contiguous! (first chunk)
 	INVARIANT(this->pool.size() == s);
 	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_loader_ref(m, i));
+		collection_loader(f, m, i));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
 instance_collection_pool_wrapper<T>::write_connections(
-		const persistent_object_manager& m, ostream& o) const {
+		const pool_bundle_type& m, ostream& o) const {
 	const size_t s = this->pool.size();
 	write_value(o, s);
 	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_writer<T>(&T::write_connections, m, o));
+		connection_writer(m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
 instance_collection_pool_wrapper<T>::load_connections(
-		const persistent_object_manager& m, istream& i) {
+		const pool_bundle_type& m, istream& i) {
 	size_t s;
 	read_value(i, s);
 	this->pool.allocate(s);		// will be contiguous! (first chunk)
 	INVARIANT(this->pool.size() == s);
 	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_loader<T>(&T::load_connections, m, i));
+		connection_loader(m, i));
 }
 
 //=============================================================================
@@ -139,72 +207,74 @@ instance_collection_pool_bundle<Tag>::collect_transient_info_base(
 template <class Tag>
 void
 instance_collection_pool_bundle<Tag>::write_object_base(
+		const footprint& f, 
 		const persistent_object_manager& m, ostream& o) const {
 	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
-		::write_object_base(m, o);
+		::write_object_base(f, m, o);
 
 	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
-		::write_connections(m, o);
+		::write_connections(*this, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
 instance_collection_pool_bundle<Tag>::load_object_base(
+		const footprint& f, 
 		const persistent_object_manager& m, istream& i) {
 	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 
 	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
-		::load_connections(m, i);
+		::load_connections(*this, i);
 }
 
 //=============================================================================

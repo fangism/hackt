@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.13.2.1 2006/10/28 03:03:07 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.13.2.2 2006/11/02 06:18:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -47,6 +47,7 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_instance_placeholder, 
 	CHANNEL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -64,6 +65,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::port_actual_collection<HAC::entity::channel_tag>, 
 	CHANNEL_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
+#endif
 #endif
 }	// end namespace util
 

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.25.4.2 2006/11/01 07:52:28 fang Exp $
+ 	$Id: instance_collection.cc,v 1.25.4.3 2006/11/02 06:18:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -961,10 +961,24 @@ datatype_instance_placeholder::datatype_instance_placeholder(
 datatype_instance_placeholder::~datatype_instance_placeholder() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: rename, and be able to call parent's pure-virtual.  
+ */
 datatype_instance_collection*
-datatype_instance_placeholder::make_collection(void) const {
+datatype_instance_placeholder::make_collection(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	return IS_A(datatype_instance_collection*,
+		make_instance_collection_footprint_copy(f));
+#else
 	return IS_A(datatype_instance_collection*,
 		make_instance_collection_footprint_copy());
+#endif
 }
 
 //=============================================================================

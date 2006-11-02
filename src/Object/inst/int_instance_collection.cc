@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.12.2.2 2006/10/28 03:03:10 fang Exp $
+	$Id: int_instance_collection.cc,v 1.12.2.3 2006/11/02 06:18:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -56,6 +56,7 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_instance_placeholder, 
 	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -73,6 +74,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::port_actual_collection<HAC::entity::int_tag>, 
 	DINT_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
+#endif
 #endif
 }	// end namespace util
 

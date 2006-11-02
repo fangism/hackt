@@ -2,13 +2,14 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.16.4.1 2006/11/01 07:52:32 fang Exp $
+	$Id: physical_instance_collection.h,v 1.16.4.2 2006/11/02 06:18:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
+#include "util/persistent_fwd.h"
 // #include "Object/inst/alias_visitee.h"
 
 namespace HAC {
@@ -21,6 +22,7 @@ class port_collection_context;
 class physical_instance_placeholder;
 struct alias_visitor;
 struct dump_flags;
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -115,7 +117,13 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 virtual	void
 	accept(alias_visitor&) const = 0;
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+virtual	void
+	collect_transient_info_base(persistent_object_manager&) const = 0;
+
+virtual	void
+	write_pointer(const footprint&, ostream&) const = 0;
+#else
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;

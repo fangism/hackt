@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.8.44.1 2006/10/25 19:26:36 fang Exp $
+	$Id: port_alias_tracker.h,v 1.8.44.2 2006/11/02 06:18:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -15,6 +15,7 @@
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/substructure_alias_fwd.h"
 
@@ -51,6 +52,11 @@ class state_instance;
 template <class T>
 class instance_pool;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class>
+class instance_collection_pool_bundle;
+#endif
+
 //=============================================================================
 /**
 	Keeps track of sets of aliases with same ID.  
@@ -73,6 +79,10 @@ public:
 private:
 	typedef	std::vector<alias_ptr_type>		alias_array_type;
 	typedef	typename alias_array_type::iterator	iterator;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	instance_collection_pool_bundle<Tag>
+						collection_pool_bundle_type;
+#endif
 public:
 	typedef	typename alias_array_type::const_iterator
 							const_iterator;
@@ -122,14 +132,28 @@ public:
 	get_string_cache(void) const { return cache; }
 #endif
 
+#if 0
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
+#endif
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type&, 
+#else
+		const persistent_object_manager&,
+#endif
+		istream&);
 
 };	// end class alias_reference_set
 
@@ -145,6 +169,10 @@ protected:
 	typedef	std::map<size_t, alias_reference_set<Tag> >	map_type;
 	typedef	typename map_type::const_iterator		const_iterator;
 	typedef	typename map_type::iterator			iterator;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	instance_collection_pool_bundle<Tag>
+						collection_pool_bundle_type;
+#endif
 
 	map_type					_ids;
 
@@ -164,14 +192,28 @@ protected:
 	__shorten_canonical_aliases(
 		instance_pool<state_instance<Tag> >&);
 
+#if 0
 	void
 	collect_map(persistent_object_manager&) const;
+#endif
 
 	void
-	write_map(const persistent_object_manager&, ostream&) const;
+	write_map(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_map(const persistent_object_manager&, istream&);
+	load_map(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 
 };	// end class port_alias_tracker_base
 
@@ -233,10 +275,22 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 
 };	// end struct port_alias_tracker
 

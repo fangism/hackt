@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.7 2006/11/01 07:52:33 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.8 2006/11/02 06:18:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -644,7 +644,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::write_object(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>& pool_unused, 
+		const footprint& fp, 
 #endif
 		const persistent_object_manager& m, ostream& f) const {
 	parent_type::write_object_base(m, f);
@@ -652,7 +652,11 @@ PORT_FORMAL_ARRAY_CLASS::write_object(
 	value_writer<key_type> write_key(f);
 	write_key(k);
 	const const_iterator b(this->begin()), e(this->end());
-	for_each(b, e, typename parent_type::element_writer(m, f));
+	for_each(b, e, typename parent_type::element_writer(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			fp, 
+#endif
+			m, f));
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_writer(m, f));
 #endif
@@ -677,7 +681,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::load_object(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>& pool_unused, 
+		const footprint& fp, 
 #endif
 		const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
@@ -686,8 +690,11 @@ PORT_FORMAL_ARRAY_CLASS::load_object(
 	read_key(k);
 	this->value_array.resize(k);
 	const iterator b(this->begin()), e(this->end());
-	for_each(b, e, typename parent_type::element_loader(m, f, 
-			never_ptr<const this_type>(this)));
+	for_each(b, e, typename parent_type::element_loader(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+			fp, 
+#endif
+			m, f, never_ptr<const this_type>(this)));
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	for_each(b, e, typename parent_type::connection_loader(m, f));
 #endif

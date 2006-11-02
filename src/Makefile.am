@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.140.2.5 2006/10/31 05:23:50 fang Exp $
+#	$Id: Makefile.am,v 1.140.2.6 2006/11/02 06:18:13 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -394,7 +394,6 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_conditional_base.cc \
 	Object/unroll/meta_loop_base.cc \
 	Object/unroll/unroll_context.cc \
-	Object/unroll/unroll_context_value_resolver.cc \
 	Object/module.cc \
 	Object/global_entry.cc \
 	Object/port_context.cc \

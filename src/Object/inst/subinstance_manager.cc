@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.19 2006/10/18 20:58:06 fang Exp $
+	$Id: subinstance_manager.cc,v 1.19.4.1 2006/11/02 06:18:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,10 @@
 #include "Object/common/dump_flags.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "common/ICE.h"
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/def/footprint.h"
+#include "util/IO_utils.h"
+#endif
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
@@ -26,6 +30,10 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::auto_indent;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+using util::read_value;
+using util::write_value;
+#endif
 
 //=============================================================================
 // class subinstance_manager method definitions
@@ -256,37 +264,96 @@ subinstance_manager::accept(alias_visitor& v) const {
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const never_ptr<physical_instance_collection> pi(*i);
+#else
 		const count_ptr<physical_instance_collection>& pi(*i);
+#endif
 		pi->accept(v);
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is there really a need for this when collections are managed by 
+	the footprint's pool bundles?  Probably not.  
+ */
 void
 subinstance_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	STACKTRACE_PERSISTENT_PRINT("collected " << subinstance_array.size() <<
 		" subinstances." << endl);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e; ++i) {
+		(*i)->collect_transient_info_base(m);
+	}
+#else
 	m.collect_pointer_list(subinstance_array);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need footprint to manage and translate pooled collections.  
+ */
 void
-subinstance_manager::write_object_base(const persistent_object_manager& m, 
+subinstance_manager::write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint& f, 
+#else
+		const persistent_object_manager& m, 
+#endif
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	const size_t s = subinstance_array.size();
+	write_value(o, s);
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e; ++i) {
+		// doesn't raelly write a pointer, but index
+		(*i)->write_pointer(f, o);
+	}
+#else
 	m.write_pointer_list(o, subinstance_array);
+#endif
 	STACKTRACE_PERSISTENT_PRINT("wrote " << subinstance_array.size() <<
 		" subinstances." << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is there a potential ordering problem with loading?
+	Might loading have to be broken up into more phases?
+	Load subinstances AFTER collections have been loaded, 
+	or at least allocated?
+	Footprint should probably pre-allocate before loading...
+ */
 void
-subinstance_manager::load_object_base(const persistent_object_manager& m,
+subinstance_manager::load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint& f, 
+#else
+		const persistent_object_manager& m,
+#endif
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	size_t s;
+	read_value(i, s);
+	subinstance_array.resize(s);
+	iterator j(subinstance_array.begin());
+	const iterator e(subinstance_array.end());
+	for ( ; j!=e; ++j) {
+		*j = f.read_pointer(i).is_a<physical_instance_collection>();
+		NEVER_NULL(*j);
+	}
+#else
 	m.read_pointer_list(i, subinstance_array);
+#endif
 	STACKTRACE_INDENT_PRINT("loaded " << subinstance_array.size() <<
 		" subinstances." << endl);
 }

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_collection_pool_bundle.h"
-	$Id: value_collection_pool_bundle.h,v 1.1.2.3 2006/11/01 07:52:34 fang Exp $
+	$Id: value_collection_pool_bundle.h,v 1.1.2.4 2006/11/02 06:18:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
@@ -17,6 +17,7 @@ namespace entity {
 using std::ostream;
 using std::istream;
 // forward declarations
+class footprint;
 template <class> class value_placeholder;
 template <class> class value_collection;
 template <class, size_t> class value_array;
@@ -101,6 +102,9 @@ struct value_collection_pool_bundle :
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+	// load everything but actual_collections into footprint's map.
+	void
+	load_footprint(footprint&) const;
 };	// end class value_collection_pool_bundle
 
 //=============================================================================

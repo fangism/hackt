@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.6 2006/01/22 18:20:12 fang Exp $
+	$Id: state_instance.tcc,v 1.6.66.1 2006/11/02 06:18:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
@@ -65,7 +65,12 @@ STATE_INSTANCE_CLASS::collect_transient_info_base(
  */
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 void
-STATE_INSTANCE_CLASS::write_object_base(const persistent_object_manager& m,
+STATE_INSTANCE_CLASS::write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type& m, 
+#else
+		const persistent_object_manager& m,
+#endif
 		ostream& o) const {
 	NEVER_NULL(back_ref);
 	back_ref->write_next_connection(m, o);
@@ -77,7 +82,12 @@ STATE_INSTANCE_CLASS::write_object_base(const persistent_object_manager& m,
  */
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 void
-STATE_INSTANCE_CLASS::load_object_base(const persistent_object_manager& m,
+STATE_INSTANCE_CLASS::load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type& m, 
+#else
+		const persistent_object_manager& m,
+#endif
 		istream& i) {
 	this->back_ref = never_ptr<const alias_info_type>(
 		&alias_info_type::load_alias_reference(m, i));

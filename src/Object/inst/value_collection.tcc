@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.24.2.2 2006/11/01 07:52:34 fang Exp $
+ 	$Id: value_collection.tcc,v 1.24.2.3 2006/11/02 06:18:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -252,14 +252,13 @@ VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
-VALUE_COLLECTION_CLASS::collect_transient_info(
+VALUE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key, 
-			this->source_placeholder->get_dimensions())) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::collect_transient_info_base(m);
+#endif
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
@@ -267,8 +266,20 @@ if (!m.register_transient_object(this,
 		source_placeholder->collect_transient_info(m);
 	}
 }
-// else already visited
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+void
+VALUE_COLLECTION_CLASS::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this,
+		persistent_traits<this_type>::type_key, 
+			this->source_placeholder->get_dimensions())) {
+	this->collect_transient_info_base(m);
 }
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -295,7 +306,9 @@ void
 VALUE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("value_collection<>::write_object_base()");
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::write_object_base(m, f);
+#endif
 	m.write_pointer(f, ival);
 	m.write_pointer(f, this->source_placeholder);
 }
@@ -306,7 +319,9 @@ void
 VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	STACKTRACE("value_collection<>::load_object_base()");
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::load_object_base(m, f);
+#endif
 	m.read_pointer(f, ival);
 	m.read_pointer(f, this->source_placeholder);
 	// TODO: need to load in advance to make the key available

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.11 2006/03/15 04:38:18 fang Exp $
+	$Id: instance_pool.h,v 1.11.44.1 2006/11/02 06:18:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -13,6 +13,7 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/index_pool.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -23,6 +24,9 @@ using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::index_pool;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class> class instance_collection_pool_bundle;
+#endif
 
 //=============================================================================
 /**
@@ -40,6 +44,10 @@ public:
 	typedef	typename parent_type::const_iterator	const_iterator;
 	typedef	typename parent_type::size_type		size_type;
 	typedef	typename parent_type::value_type	value_type;
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	instance_collection_pool_bundle<tag_type>
+				collection_pool_bundle_type;
+#endif
 private:
 	/**
 		Default chunk size when not specified.  
@@ -72,10 +80,22 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const collection_pool_bundle_type&, 
+#else
+		const persistent_object_manager&, 
+#endif
+		istream&);
 };	// end class instance_pool
 
 //=============================================================================

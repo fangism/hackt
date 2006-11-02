@@ -5,6 +5,25 @@
 
 2006-11-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-13:
+	  Continued work on POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, 
+		still disabled; the following modifications are thus guarded:
+	  footprint's instance_collection_map will be map-sorted, 
+		and entries will be index-stubs to be translated by
+		the various collection pools.  
+	  instance_collection serialization completely re-done to use
+		footprints and collection pool bundles to encode and
+		restore pointers.  
+	  Serialization functors re-written to bind different argument
+		types for the pool-managed implementations.  
+	  subinstance_manager now uses never-ptr, and serializes 
+		instance_collection references using the footprint.  
+	  Tons of ref-count pointers demoted to never-ptr (shallow) pointers
+		everywhere in instance and reference methods.  
+	  Removed traces of unroll_context_value_resolver.  
+	  Summary: compiles, but some undefined references remain.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-12:
 	  Lots more hacking at POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, 
 		but still left disabled for now.

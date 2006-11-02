@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4.2.5 2006/11/01 07:52:31 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.6 2006/11/02 06:18:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -218,7 +218,11 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 	is that of the super-instance's type.  
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+never_ptr<physical_instance_collection>
+#else
 count_ptr<physical_instance_collection>
+#endif
 INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->initial_instantiation_statement_ptr);
@@ -320,8 +324,18 @@ INSTANCE_PLACEHOLDER_CLASS::make_member_meta_instance_reference(
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 // typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 instance_collection_base*
-INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
+INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) const {
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	return this->make_collection(f);
+#else
 	return this->make_collection();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.8 2006/11/01 07:52:25 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.9 2006/11/02 06:18:22 fang Exp $
 	TODO: trim includes
  */
 
@@ -501,7 +501,9 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 #else
 	NEVER_NULL(this->container);
 #endif
-		this->container->collect_transient_info(m);
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	this->container->collect_transient_info(m);
+#endif
 	actuals_parent_type::collect_transient_info_base(m);
 	substructure_parent_type::collect_transient_info_base(m);
 }
@@ -782,13 +784,20 @@ INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint& f, 
+#endif
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
 	// let the module take care of saving the state information
 	write_value(o, this->instance_index);
 	NEVER_NULL(this->container);	// no need to write out
 	actuals_parent_type::write_object_base(m, o);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	substructure_parent_type::write_object_base(f, o);
+#else
 	substructure_parent_type::write_object_base(m, o);
+#endif
 //	else skip, collection will write connections later...
 }
 
@@ -801,13 +810,20 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		const footprint& f, 
+#endif
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
 	NEVER_NULL(this->container);	// already set by container!
 	// let the module take care of restoring the state information
 	read_value(i, this->instance_index);
 	actuals_parent_type::load_object_base(m, i);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	substructure_parent_type::load_object_base(f, i);
+#else
 	substructure_parent_type::load_object_base(m, i);
+#endif
 //	else skip, collection will load connections later...
 }
 
