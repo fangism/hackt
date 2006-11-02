@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.21 2006/10/24 07:26:53 fang Exp $
+	$Id: expr.cc,v 1.22 2006/11/02 22:01:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -73,6 +73,8 @@
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/qmap.tcc"
+	// qmap for operator maps, alternative: explicit template instantiation
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -2445,12 +2447,36 @@ ostream&
 node_list<const token_identifier>::what(ostream&) const;
 
 template
+line_position
+node_list<const token_identifier>::leftmost(void) const;
+
+template
+line_position
+node_list<const token_identifier>::rightmost(void) const;
+
+template
 ostream&
 node_list<const inst_ref_expr>::what(ostream&) const;
 
 template
 line_position
 node_list<const inst_ref_expr>::leftmost(void) const;
+
+template
+line_position
+node_list<const inst_ref_expr>::rightmost(void) const;
+
+template
+ostream&
+node_list<const expr>::what(ostream&) const;
+
+template
+line_position
+node_list<const expr>::leftmost(void) const;
+
+template
+line_position
+node_list<const expr>::rightmost(void) const;
 
 //=============================================================================
 }	// end namespace parser

@@ -1,7 +1,7 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range.h,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: range.h,v 1.4 2006/11/02 22:01:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_range.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp
  */
@@ -10,6 +10,7 @@
 #define __HAC_AST_RANGE_H__
 
 #include "AST/expr_base.h"
+#include "util/what_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -63,6 +64,10 @@ public:
 //=============================================================================
 }	// end namespace parser
 }	// end namespace HAC
+
+namespace util {
+SPECIALIZE_UTIL_WHAT_DECLARATION(HAC::parser::range)
+}
 
 #endif	// __HAC_AST_RANGE_H__
 

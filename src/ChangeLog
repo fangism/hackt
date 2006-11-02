@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-47:
+	  For the first time, validated using -O3 (more aggressively
+		optimized), even using a beta compiler: g++-4.2.
+	  Issues encountered: as a result of optimizations, compiler
+		often drops template symbols b/c it thinks it is locally 
+		unused, but is in fact depended upon from another 
+		translation unit.  This patch mostly ensures that many of the
+		needed symbols are preserved, and also publicizes more
+		template methods in .tcc files.  
+	  Makefile.am: factored out new small core convenience library, 
+		libhacktcommon.la, also the home of exported template
+		definitions shared all over the place.  Also added new
+		.tcc files to source lists.  
+
+
 2006-10-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-46:

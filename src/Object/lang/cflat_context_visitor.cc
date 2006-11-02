@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.4 2006/08/02 21:10:35 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.5 2006/11/02 22:02:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,7 +10,7 @@
 #include <set>
 #include "Object/lang/cflat_context_visitor.h"
 #include "Object/lang/SPEC_footprint.h"
-#include "Object/global_entry.h"
+#include "Object/global_entry.tcc"
 #include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
 #include "util/stacktrace.h"

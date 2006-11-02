@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition_item.h"
 	Base set of classes for the HAC parser.  
-	$Id: definition_item.h,v 1.4 2006/07/31 22:22:22 fang Exp $
+	$Id: definition_item.h,v 1.5 2006/11/02 22:01:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition_item.h,v 1.7.48.1 2005/12/11 00:45:04 fang Exp
  */
@@ -10,6 +10,7 @@
 #define __HAC_AST_DEFINITION_ITEM_H__
 
 #include "AST/root.h"
+#include "util/what_fwd.h"
 
 namespace HAC {
 namespace parser {
@@ -71,6 +72,10 @@ virtual	ROOT_CHECK_PROTO = 0;
 //=============================================================================
 }	// end namespace parser
 }	// end namespace HAC
+
+namespace util {
+SPECIALIZE_UTIL_WHAT_DECLARATION(HAC::parser::def_body_item)
+}
 
 #endif	// __HAC_AST_DEFINITION_ITEM_H__
 

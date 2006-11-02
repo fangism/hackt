@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.3 2006/08/28 20:22:38 fang Exp $
+	$Id: alias_matcher.cc,v 1.4 2006/11/02 22:01:59 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -15,7 +15,7 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/def/footprint.h"
-#include "Object/global_entry.h"
+#include "Object/global_entry.tcc"	// for get_frame_map
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "util/macros.h"

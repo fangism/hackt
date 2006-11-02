@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.10 2006/10/18 01:19:10 fang Exp $
+	$Id: footprint_manager.cc,v 1.11 2006/11/02 22:01:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,8 +11,10 @@
 #include <set>
 #include "util/macros.h"
 #include "Object/def/footprint_manager.h"
+#include "Object/def/footprint.tcc"		// where is dtor ref'd?
 #include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
+#include "Object/inst/port_alias_tracker.tcc"	// why are symbols ref'd?
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"

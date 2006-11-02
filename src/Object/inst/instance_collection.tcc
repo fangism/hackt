@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37 2006/10/24 07:27:13 fang Exp $
+	$Id: instance_collection.tcc,v 1.38 2006/11/02 22:02:00 fang Exp $
 	TODO: trim includes
  */
 
@@ -36,7 +36,7 @@
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"
-#include "Object/inst/port_alias_tracker.h"
+#include "Object/inst/port_alias_tracker.tcc"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"		// for debug only
@@ -50,7 +50,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
-#include "Object/global_entry.h"
+#include "Object/global_entry.tcc"
 #include "Object/port_context.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/inst/sparse_collection.tcc"

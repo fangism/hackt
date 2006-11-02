@@ -1,16 +1,15 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.13 2006/10/24 07:27:17 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.14 2006/11/02 22:02:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include <functional>
-#include "Object/inst/port_alias_tracker.h"
+#include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
-#include "Object/inst/instance_alias_info.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/common/dump_flags.h"
 
@@ -21,7 +20,6 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 
-#include "util/macros.h"
 #include "util/persistent_object_manager.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
@@ -47,31 +45,6 @@ struct second_is_unique {
 //=============================================================================
 // class alias_reference_set method definitions
 
-template <class Tag>
-alias_reference_set<Tag>::alias_reference_set() : alias_array()
-#if USE_ALIAS_STRING_CACHE
-	, cache()
-#endif
-	{
-	alias_array.reserve(2);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-alias_reference_set<Tag>::~alias_reference_set() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-alias_reference_set<Tag>::push_back(const alias_ptr_type a) {
-	NEVER_NULL(a);
-	alias_array.push_back(a);
-#if USE_ALIAS_STRING_CACHE
-	cache.valid = false;
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_ALIAS_STRING_CACHE
 template <class Tag>
 struct alias_reference_set<Tag>::alias_to_string_transformer :
@@ -228,14 +201,6 @@ alias_reference_set<Tag>::load_object_base(
 //=============================================================================
 // class port_alias_tracker_base method definitions
 
-template <class Tag>
-port_alias_tracker_base<Tag>::port_alias_tracker_base() : _ids() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-port_alias_tracker_base<Tag>::~port_alias_tracker_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Removes all unique entries of the alias map, i.e. all alias sets
 	with only one alias.  

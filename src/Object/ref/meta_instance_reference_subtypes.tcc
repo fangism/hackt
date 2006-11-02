@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.16 2006/10/18 22:52:55 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.17 2006/11/02 22:02:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -22,6 +22,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
+#include "Object/state_manager.tcc"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 #include "util/stacktrace.h"
 #include "Object/inst/alias_matcher.h"

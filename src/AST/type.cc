@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.6 2006/10/18 01:19:00 fang Exp $
+	$Id: type.cc,v 1.7 2006/11/02 22:01:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -391,8 +391,8 @@ template class node_list<const generic_type_ref>;
 #else
 // template node_list<const concrete_type_ref>::node_list(const concrete_type_ref*);
 template ostream& node_list<const concrete_type_ref>::what(ostream&) const;
-// template line_position node_list<const concrete_type_ref>::leftmost() const;
-// template line_position node_list<const concrete_type_ref>::rightmost() const;
+template line_position node_list<const concrete_type_ref>::leftmost(void) const;
+template line_position node_list<const concrete_type_ref>::rightmost(void) const;
 template ostream& node_list<const generic_type_ref>::what(ostream&) const;
 // template line_position node_list<const generic_type_ref>::leftmost() const;
 // template line_position node_list<const generic_type_ref>::rightmost() const;

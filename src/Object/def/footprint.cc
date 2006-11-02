@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27 2006/10/18 20:57:48 fang Exp $
+	$Id: footprint.cc,v 1.28 2006/11/02 22:01:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,14 +11,14 @@
 #include <iterator>
 #include <set>				// to sort keys
 #include "util/hash_specializations.h"
-#include "Object/def/footprint.h"
+#include "Object/def/footprint.tcc"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
-#include "Object/state_manager.h"
-#include "Object/global_entry.h"
+#include "Object/state_manager.tcc"
+#include "Object/global_entry.tcc"
 #include "Object/port_context.h"
 #include "Object/common/cflat_args.h"
 #include "Object/common/alias_string_cache.h"
@@ -52,16 +52,6 @@ using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 //=============================================================================
 // class footprint_base method definitions
 
-template <class Tag>
-footprint_base<Tag>::footprint_base() :
-		_pool(class_traits<Tag>::instance_pool_chunk_size >> 1) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-footprint_base<Tag>::~footprint_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Top-level global state allocation.  
 	Parent tag and id are all zero.  

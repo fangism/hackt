@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.14 2006/10/18 01:19:02 fang Exp $
+	$Id: global_entry.tcc,v 1.15 2006/11/02 22:01:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -43,6 +43,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
+#include "util/memory/index_pool.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
 
@@ -54,6 +55,12 @@ using std::transform;
 using std::back_inserter;
 using util::read_value;
 using util::write_value;
+
+//=============================================================================
+// class footprint_frame_map method definitions
+
+template <class Tag>
+footprint_frame_map<Tag>::~footprint_frame_map() { }
 
 //=============================================================================
 /**
@@ -379,6 +386,20 @@ global_entry<Tag>::global_entry() : parent_type(), prs_parent_type(),
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 global_entry<Tag>::~global_entry() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+footprint_frame_map_type&
+footprint_frame::get_frame_map(void) {
+	return footprint_frame_map<Tag>::id_map;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+const footprint_frame_map_type&
+footprint_frame::get_frame_map(void) const {
+	return footprint_frame_map<Tag>::id_map;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

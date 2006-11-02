@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.14 2006/05/06 04:18:39 fang Exp $
+	$Id: state_manager.cc,v 1.15 2006/11/02 22:01:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,7 +10,7 @@
 
 #include <iostream>
 #include <functional>
-#include "Object/state_manager.h"
+#include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
@@ -196,31 +196,6 @@ state_manager::accept(PRS::cflat_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-size_t
-state_manager::allocate(void) {
-	return global_entry_pool<Tag>::allocate();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-size_t
-state_manager::allocate(const typename global_entry_pool<Tag>::entry_type& t) {
-	return global_entry_pool<Tag>::allocate(t);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Never called, just written to assist instantiation.  
- */
-template <class Tag>
-void
-state_manager::__allocate_test(void) {
-	const typename global_entry_pool<Tag>::entry_type	_e;
-	allocate<Tag>();
-	allocate<Tag>(_e);
-}
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Never called, just written to force instantiation.  
  */
@@ -232,26 +207,6 @@ state_manager::allocate_test(void) {
 	__allocate_test<enum_tag>();
 	__allocate_test<int_tag>();
 	__allocate_test<bool_tag>();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	For now, quick and recursive implementation, 
-	could do this in a worklist fashion if performance really mattered.  
- */
-template <class Tag>
-void
-state_manager::collect_subentries(entry_collection& e, const size_t i) const {
-	const global_entry_pool<Tag>& p(get_pool<Tag>());
-	// already bounds checked?
-	INVARIANT(i);
-	const global_entry<Tag>& g(p[i]);
-	index_set_type& v(e.template get_index_set<Tag>());
-	// insert returns .second=true if new element was inserted
-	// otherwise, we've already visited this substructure.  
-	if (v.insert(i).second) {
-		g.collect_subentries(e, *this);
-	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

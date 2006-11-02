@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.3 2006/08/18 23:56:12 fang Exp $
+	$Id: alias_printer.cc,v 1.4 2006/11/02 22:02:00 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -14,7 +14,7 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/def/footprint.h"
-#include "Object/global_entry.h"
+#include "Object/global_entry.tcc"
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/common/alias_string_cache.h"

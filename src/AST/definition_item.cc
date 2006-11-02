@@ -1,7 +1,7 @@
 /**
 	\file "AST/namespace.cc"
 	Class method definitions for namespace and other root item classes.
-	$Id: definition_item.cc,v 1.4 2006/07/17 02:53:31 fang Exp $
+	$Id: definition_item.cc,v 1.5 2006/11/02 22:01:45 fang Exp $
  */
 
 #ifndef	__HAC_AST_DEFINITION_ITEM_CC__
@@ -29,7 +29,7 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::parser::def_body_item, "(def-body-item)")
+SPECIALIZE_UTIL_WHAT_DEFINITION(HAC::parser::def_body_item, "(def-body-item)")
 }
 
 //=============================================================================

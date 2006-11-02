@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.140 2006/10/24 07:26:51 fang Exp $
+#	$Id: Makefile.am,v 1.141 2006/11/02 22:01:42 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -89,7 +89,7 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
 	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
-	libhacktsim.la $(FUNLIBS) \
+	libhacktcommon.la libhacktsim.la $(FUNLIBS) \
 	libbogus.la libbogus2.la libbogus3.la
 
 # this name is needed for libtool objects
@@ -103,7 +103,8 @@ LIBBOGUS3_LA = libbogus3_la
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhacktast.la libhackt.la libhacktinstref.la $(LIBFANGUTIL)
+	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
+	$(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -267,6 +268,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/null_collection_type_manager.tcc \
 	Object/inst/int_collection_type_manager.tcc \
 	Object/inst/parameterless_collection_type_manager.tcc \
+	Object/inst/port_alias_tracker.tcc \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/substructure_alias_base.tcc \
 	Object/inst/alias_actuals.tcc \
@@ -369,11 +371,21 @@ OBJECT_REF_H_FILES = \
 	Object/ref/inst_ref_implementation.h
 
 # all these must have corresponding .h file
-OBJECT_CC_FILES = \
+OBJECT_COMMON_CC_FILES = \
 	Object/common/object_base.cc \
-	Object/common/namespace.cc \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
+	common/ICE.cc \
+	common/TODO.cc
+
+OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
+	Object/common/alias_string_cache.h \
+	Object/common/multikey_index.h \
+	Object/common/util_types.h \
+	common/devel_switches.h
+
+OBJECT_CC_FILES = \
+	Object/common/namespace.cc \
 	Object/expr/expr_dump_context.cc \
 	Object/traits/class_traits.cc \
 	Object/unroll/conditional_scope.cc \
@@ -436,6 +448,7 @@ OBJECT_CC_NO_H_FILES = \
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
+	Object/def/footprint.tcc \
 	Object/expr/const_collection.tcc \
 	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
@@ -447,6 +460,7 @@ OBJECT_TCC_FILES = \
 	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \
 	Object/global_entry.tcc \
+	Object/state_manager.tcc \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
 
@@ -456,10 +470,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/persistent_type_hash.h \
 	Object/cflat_context.h \
 	Object/entry_collection.h \
-	Object/common/alias_string_cache.h \
 	Object/common/cflat_args.h \
-	Object/common/multikey_index.h \
-	Object/common/util_types.h \
 	Object/common/scopespace.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags_fwd.h \
@@ -680,15 +691,10 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/compile_options.h
 
 COMMON_H_FILES = \
-	common/sizes.h \
-	common/ICE.h \
-	common/TODO.h \
-	common/devel_switches.h
+	common/sizes.h
 
 COMMON_FILES = $(COMMON_H_FILES) \
-	common/sizes.cc \
-	common/ICE.cc \
-	common/TODO.cc
+	common/sizes.cc
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(HACKT_PARSE_ROOT)-real.cc
@@ -700,6 +706,11 @@ libhackt_la_SOURCES = \
 	$(OBJECT_CC_NO_H_FILES) \
 	$(COMMON_FILES) \
 	config.h
+
+libhacktcommon_la_SOURCES = \
+	$(OBJECT_COMMON_CC_FILES) \
+	$(OBJECT_COMMON_TCC_FILES) \
+	$(OBJECT_COMMON_H_FILES)
 
 # combined library of instances and references
 libhacktinstref_la_SOURCES = \
@@ -786,6 +797,7 @@ ALL_HEADER_FILES += \
 	$(CONFIG_HEADERS) \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
+	$(OBJECT_COMMON_H_FILES) \
 	$(OBJECT_INST_H_FILES) \
 	$(OBJECT_REF_H_FILES) \
 	$(AST_H_FILES) \

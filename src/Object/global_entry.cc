@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.7 2006/04/11 07:54:37 fang Exp $
+	$Id: global_entry.cc,v 1.8 2006/11/02 22:01:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,7 +9,7 @@
 #include "Object/global_entry.tcc"
 #include "Object/def/footprint.h"
 #include "Object/port_context.h"
-#include "Object/state_manager.h"
+#include "Object/state_manager.tcc"
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
@@ -32,10 +32,6 @@ template <class Tag>
 footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 		id_map(f.template get_pool<Tag>().size() -1) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-footprint_frame_map<Tag>::~footprint_frame_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -147,20 +143,6 @@ footprint_frame::footprint_frame(const footprint& f) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_frame::~footprint_frame() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-footprint_frame_map_type&
-footprint_frame::get_frame_map(void) {
-	return footprint_frame_map<Tag>::id_map;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-const footprint_frame_map_type&
-footprint_frame::get_frame_map(void) const {
-	return footprint_frame_map<Tag>::id_map;
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -369,6 +351,12 @@ footprint_frame::get_frame_map_test(void) const {
 
 //=============================================================================
 // class global_entry_base method definitions
+
+//=============================================================================
+// explicit template instantiations
+// sometimes needed with aggressive optimizations
+
+template class global_entry<bool_tag>;
 
 //=============================================================================
 }	// end namespace entity

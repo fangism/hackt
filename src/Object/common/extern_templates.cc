@@ -4,16 +4,18 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.10 2006/10/24 07:26:57 fang Exp $
+	$Id: extern_templates.cc,v 1.11 2006/11/02 22:01:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 #define	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include <list>
+#include <iostream>
 #include "Object/expr/types.h"
 #include "util/multikey.tcc"
 #include "util/packed_array.tcc"
+#include "util/IO_utils.tcc"
 
 // since namespace doesn't affect instantiation, this is convenient
 namespace util {
@@ -21,6 +23,8 @@ using HAC::entity::pint_value_type;
 using HAC::entity::pbool_value_type;
 using HAC::entity::preal_value_type;
 using std::list;
+using std::istream;
+using std::ostream;
 
 // template class multikey_base<pint_value_type>;
 template class multikey_generic<pint_value_type>;
@@ -43,6 +47,9 @@ INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(2, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(3, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(4, pint_value_type)
 
+template
+ostream& operator << (ostream&, const multikey_generic<pint_value_type>&);
+
 template multikey<2, pint_value_type>::multikey(
 	const multikey_generator_generic<pint_value_type>&, pint_value_type);
 template multikey<3, pint_value_type>::multikey(
@@ -56,6 +63,9 @@ template class packed_array_generic<pint_value_type, preal_value_type>;
 
 template struct value_reader<multikey_generic<pint_value_type> >;
 template struct value_writer<multikey_generic<pint_value_type> >;
+
+template void read_value(istream&, size_t&);
+template void write_value(ostream&, const size_t&);
 
 }	// end namespace util
 

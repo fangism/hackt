@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.12 2006/08/02 21:10:38 fang Exp $
+	$Id: cflat_printer.cc,v 1.13 2006/11/02 22:02:02 fang Exp $
  */
 
 #include <iostream>
@@ -23,6 +23,7 @@
 #include "common/TODO.h"
 #include "util/offset_array.h"
 #include "util/member_saver.h"
+#include "util/qmap.tcc"		// for const_assoc_query symbols??
 
 namespace HAC {
 namespace entity {
