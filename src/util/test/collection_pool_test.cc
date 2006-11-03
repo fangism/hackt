@@ -1,7 +1,7 @@
 /**
 	\file "collection_pool_test.cc"
 	NOTE: this tests a structure in the HAC library, not in util.  
-	$Id: collection_pool_test.cc,v 1.1.2.1 2006/10/31 00:28:39 fang Exp $
+	$Id: collection_pool_test.cc,v 1.1.2.2 2006/11/03 07:07:35 fang Exp $
  */
 
 // always debug with asserts
@@ -38,15 +38,18 @@ typedef	collection_pool<string>	collection_type;
 int
 main(int argc, char* argv[]) {
 	collection_type c;
+	std::ostream_iterator<string> osi(cout, ", ");
 {
 	cout << "adding first value." << endl;
 	assert(c.empty());
 	assert(c.size() == 0);
 	assert(!c.find(1));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("beta"));
 	assert(c.size() == 1);
 	assert(!c.empty());
 	assert(c.find(1));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 }
 {
 	cout << "adding second value." << endl;
@@ -54,13 +57,18 @@ main(int argc, char* argv[]) {
 	assert(c.push_back("delta"));
 	assert(c.size() == 2);
 	assert(c.find(2));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 }
 {
 	cout << "adding four more key-value pairs." << endl;
 	assert(c.push_back("eins"));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("zwei"));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("drei"));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("vier"));
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.size() == 6);
 	cout << "c[3] = " << c[3] << endl;
 	cout << "c[4] = " << c[4] << endl;
@@ -84,9 +92,8 @@ main(int argc, char* argv[]) {
 }
 {
 	cout << "Testing iterator interface." << endl;
-	std::ostream_iterator<string> osi(cout, ", ");
-	std::copy(c.begin(), c.end(), osi);
-	cout << endl;
+	std::copy(c.begin(), c.end(), osi); cout << endl;
+	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 }
 	cout << "End of tests." << endl;
 	return 0;

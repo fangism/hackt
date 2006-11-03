@@ -1,16 +1,14 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.6 2006/11/03 05:22:14 fang Exp $
+	$Id: footprint.h,v 1.19.4.7 2006/11/03 07:07:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
-#include "Object/inst/instance_pool.h"
-#include "Object/inst/state_instance.h"
+#include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
@@ -22,11 +20,11 @@
 #endif
 
 #include "util/boolean_types.h"
-#include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/STL/hash_map.h"
+#endif
 #include "util/memory/count_ptr.h"
-#include "util/memory/excl_ptr.h"
 #if HEAP_ALLOCATE_FOOTPRINTS
 #include "util/memory/chunk_map_pool_fwd.h"
 #endif
@@ -36,107 +34,14 @@ namespace entity {
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
-class state_manager;
-class footprint_frame;
 class port_member_context;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-template <class> class instance_collection_pool_bundle;
-template <class> class value_collection_pool_bundle;
-#endif
 
 using std::string;
-using std::istream;
-using std::ostream;
 using util::good_bool;
 using util::memory::count_ptr;
-using util::memory::excl_ptr;
-using util::persistent_object_manager;
-
-//=============================================================================
-/**
-	Meta-type specific base class.  
-	This is a meta-tagged wrapper around the instance pool
-	that contains a collection of *unique* instances.  
-	This covers all public port instances of the collections
-	in the footprint, but not private instances.  
-	This also wraps around the instance_collection pools used to
-	allocate all instance collections.  
-	NOTE: this uses the private-implementation "pimpl" idiom, 
-		that hides the implementation, by using a pointer
-		to the underlying implementations.  
-	TODO: consider pool allocating pool_bundle and instance_pools.  
- */
-template <class Tag>
-class footprint_base {
-	typedef	footprint_base<Tag>			this_type;
-protected:
-	typedef	typename state_instance<Tag>::pool_type	instance_pool_type;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	typedef	instance_collection_pool_bundle<Tag>
-					collection_pool_bundle_type;
-#endif
-private:
-	typedef	typename instance_pool_type::const_iterator	const_iterator;
-protected:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	const excl_ptr<collection_pool_bundle_type>	collection_pool_bundle;
-#endif
-	const excl_ptr<instance_pool_type>		_instance_pool;
-
-	footprint_base();
-	~footprint_base();
-
-	good_bool
-	__allocate_global_state(state_manager&) const;
-
-	good_bool
-	__expand_unique_subinstances(const footprint_frame&,
-		state_manager&, const size_t) const;
-
-	good_bool
-	__expand_production_rules(const footprint_frame&, 
-		state_manager&) const;
-
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-
-};	// end class footprint_base
-
-//=============================================================================
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-/**
-	This wrapper class is in charge of allocation pools for
-	value collections.  
-	NOTE: also uses "pimpl" idiom.  
- */
-template <class Tag>
-class value_footprint_base {
-	typedef	value_footprint_base<Tag>	this_type;
-protected:
-	typedef	value_collection_pool_bundle<Tag>
-						collection_pool_bundle_type;
-	const excl_ptr<collection_pool_bundle_type>
-						collection_pool_bundle;
-	value_footprint_base();
-	~value_footprint_base();
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-
-};	// end class value_footprint_base
-#endif
 
 //=============================================================================
 /**

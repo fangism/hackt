@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.8 2006/11/03 05:22:32 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.9 2006/11/03 07:07:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -626,6 +626,9 @@ PORT_ACTUAL_COLLECTION_CLASS::write_object(
 #endif
 		const persistent_object_manager& m, ostream& f) const {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// WRONG! the formal collection belongs to a DIFFERENT footprint!
+	// TODO: formal collections should have back-ref to footprint
+	// and also omit super instance pointer from base class.
 	this->formal_collection->write_pointer(f,
 		fp.template get_instance_collection_pool_bundle<Tag>());
 #else

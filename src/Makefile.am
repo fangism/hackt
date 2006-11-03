@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.140.2.7 2006/11/03 05:22:10 fang Exp $
+#	$Id: Makefile.am,v 1.140.2.8 2006/11/03 07:07:21 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -389,6 +389,9 @@ OBJECT_CC_FILES = \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
+	Object/def/footprint_struct_base.cc \
+	Object/def/footprint_basic_base.cc \
+	Object/def/footprint_value_base.cc \
 	Object/def/footprint_manager.cc \
 	Object/traits/class_traits.cc \
 	Object/unroll/conditional_scope.cc \
@@ -447,6 +450,7 @@ OBJECT_CC_NO_H_FILES = \
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
 	Object/expr/const_collection.tcc \
+	Object/def/footprint_base.tcc \
 	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
@@ -502,6 +506,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/typedef_base.h \
 	Object/def/user_def_chan.h \
 	Object/def/user_def_datatype.h \
+	Object/def/footprint_base.h \
 	Object/expr/expr_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \

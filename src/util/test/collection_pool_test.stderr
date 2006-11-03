@@ -1,6 +1,13 @@
 adding first value.
+list = 
+list = beta, 
 adding second value.
+list = beta, delta, 
 adding four more key-value pairs.
+list = beta, delta, eins, 
+list = beta, delta, eins, zwei, 
+list = beta, delta, eins, zwei, drei, 
+list = beta, delta, eins, zwei, drei, vier, 
 c[3] = eins
 c[4] = zwei
 c[5] = drei
@@ -8,4 +15,5 @@ c[6] = vier
 testing lookup invariants.
 Testing iterator interface.
 beta, delta, eins, zwei, drei, vier, 
+list = beta, delta, eins, zwei, drei, vier, 
 End of tests.

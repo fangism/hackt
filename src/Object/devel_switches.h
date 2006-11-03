@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.8 2006/11/03 05:22:10 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.9 2006/11/03 07:07:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -121,8 +121,13 @@
 	Also footprint_manager.h need not include footprint.h, 
 	which carries a lot of weight.  
 	Footprints are not replication critical.  
-	Goal: ?
-	Status:
+	UPDATE: this will be needed because of footprint-dependent 
+		de-serialization ordering!  port_actual_collections'
+		have back-references to formal_collections that belong to
+		other footprints!
+	Can also pool-allocate footprints.
+	Goal: 1
+	Status: not begun
  */
 #define	HEAP_ALLOCATE_FOOTPRINTS		0
 

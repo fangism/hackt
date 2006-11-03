@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-15:
+	  Minor change: broke up footprint.cc into new base components:
+		footprint_{struct,basic,value}_base.{h,cc}, 
+		using footprint_base.{h,tcc}, factored headers.  
+		Much better compile parallelism.  
+	  NOTED that current implementation is flawed:
+		port_actual_collections reference formal_collections
+		belonging to OTHER footprints, which means we now 
+		require acyclic ordered construction of footprints, 
+		which is now moved up the TODO queue.  
+	  Still debugging previous problem before moving on...
+
+
 2006-11-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-14:

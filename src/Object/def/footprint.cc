@@ -1,10 +1,10 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.7 2006/11/03 05:22:11 fang Exp $
+	$Id: footprint.cc,v 1.27.4.8 2006/11/03 07:07:23 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE			1
+#define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
@@ -25,31 +25,39 @@
 #include "Object/inst/alias_printer.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/instance_collection_pool_bundle.h"
+#include "Object/inst/value_collection_pool_bundle.h"
+#include "Object/inst/state_instance.h"
+#include "Object/inst/instance_scalar.h"
+#include "Object/inst/instance_array.h"
+#include "Object/inst/port_formal_array.h"
+#include "Object/inst/port_actual_collection.h"
+#include "Object/inst/datatype_instance_collection.h"
+#include "Object/inst/param_value_collection.h"
+#include "Object/inst/value_array.h"
+#include "Object/inst/value_scalar.h"
+#include "Object/traits/instance_traits.h"
+#include "Object/traits/pbool_traits.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/preal_traits.h"
+#include "Object/expr/const_collection.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/preal_const.h"
+#if 1
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/process_definition.h"
-#include "Object/inst/instance_collection_pool_bundle.tcc"
-#include "Object/inst/value_collection_pool_bundle.tcc"
-#include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/channel_instance_collection.h"
-#include "Object/inst/instance_scalar.h"
-#include "Object/inst/instance_array.h"
-#include "Object/inst/port_formal_array.h"
-#include "Object/inst/port_actual_collection.h"
-#include "Object/inst/value_collection.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/preal_traits.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/pint_const.h"
-#include "Object/expr/preal_const.h"
+#endif
 #else
 #include <set>				// to sort keys
 #endif
 #include "Object/traits/classification_tags.h"
+#if 1
 #include "Object/inst/process_instance.h"
 #include "Object/inst/channel_instance.h"
 #include "Object/inst/struct_instance.h"
@@ -59,6 +67,7 @@
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
+#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -67,7 +76,9 @@
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "util/STL/hash_map_utils.h"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
@@ -82,38 +93,12 @@ using std::ostream_iterator;
 using std::copy;
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 using std::set;
-#endif
 using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
+#endif
 
 //=============================================================================
 // class footprint_base method definitions
 
-/**
-	Default constructor.  
-	Sets the instance pool chunk size, but does not pre-allocate.  
- */
-template <class Tag>
-footprint_base<Tag>::footprint_base() :
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	collection_pool_bundle(new collection_pool_bundle_type), 
-#endif
-	_instance_pool(new instance_pool_type(
-		class_traits<Tag>::instance_pool_chunk_size >> 1))
-	{
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	NEVER_NULL(collection_pool_bundle);
-#endif
-	NEVER_NULL(_instance_pool);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Default destructor.  
- */
-template <class Tag>
-footprint_base<Tag>::~footprint_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Top-level global state allocation.  
 	Parent tag and id are all zero.  
@@ -235,86 +220,6 @@ footprint_base<Tag>::__expand_production_rules(const footprint_frame& ff,
 	return good_bool(true);
 }
 #endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-footprint_base<Tag>::collect_transient_info_base(
-		persistent_object_manager& m) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	NEVER_NULL(this->collection_pool_bundle);
-	this->collection_pool_bundle->collect_transient_info_base(m);
-#endif
-	NEVER_NULL(this->_instance_pool);
-	this->_instance_pool->collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-footprint_base<Tag>::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	NEVER_NULL(this->collection_pool_bundle);
-	this->collection_pool_bundle->write_object_base(
-		AS_A(const footprint&, *this), m, o);
-	NEVER_NULL(this->_instance_pool);
-	this->_instance_pool->write_object_base(
-		*this->collection_pool_bundle, o);
-#else
-	NEVER_NULL(this->_instance_pool);
-	this->_instance_pool->write_object_base(m, o);
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-footprint_base<Tag>::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	NEVER_NULL(this->collection_pool_bundle);
-	this->collection_pool_bundle->load_object_base(
-		AS_A(footprint&, *this), m, i);
-	NEVER_NULL(this->_instance_pool);
-	this->_instance_pool->load_object_base(
-		*this->collection_pool_bundle, i);
-#else
-	NEVER_NULL(this->_instance_pool);
-	this->_instance_pool->load_object_base(m, i);
-#endif
-}
-
-//=============================================================================
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-template <class Tag>
-value_footprint_base<Tag>::value_footprint_base() :
-		collection_pool_bundle(new collection_pool_bundle_type) {
-	NEVER_NULL(collection_pool_bundle);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-value_footprint_base<Tag>::~value_footprint_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-value_footprint_base<Tag>::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	NEVER_NULL(this->collection_pool_bundle);
-	this->collection_pool_bundle->write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-value_footprint_base<Tag>::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-	NEVER_NULL(this->collection_pool_bundle);
-	this->collection_pool_bundle->load_object_base(m, i);
-}
-#endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 
 //=============================================================================
 // class footprint method definitions
