@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.8 2006/11/02 06:18:26 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.9 2006/11/03 05:22:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -55,6 +55,7 @@ template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
+class collection_index_entry;
 #endif
 
 //=============================================================================

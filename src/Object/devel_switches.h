@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.7 2006/10/31 04:07:37 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.8 2006/11/03 05:22:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -112,7 +112,7 @@
 	Status: planning and testing
  */
 #ifndef	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#define	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT	0
+#define	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT	1
 #endif
 
 /**

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.25.4.3 2006/11/02 06:18:25 fang Exp $
+ 	$Id: instance_collection.cc,v 1.25.4.4 2006/11/03 05:22:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -447,6 +447,23 @@ datatype_instance_collection::check_established_type(
 		cerr << "Unhandled case in this function." << endl;
 	)
 	return bad_bool(true);
+}
+
+//=============================================================================
+// class footprint method definitions
+
+/**
+	This is defined in "Object/inst/instance_collection.cc"
+	to break a cyclic library dependency.  
+ */
+void
+footprint::register_collection_map_entry(const string& k, 
+		const collection_map_entry_type& v) {
+	typedef	instance_collection_map_type::value_type	pair_type;
+	pair_type p(k, v);
+	const std::pair<instance_map_iterator, bool>
+		i(instance_collection_map.insert(p));
+	INVARIANT(i.second);	// MUST have succeeded, else we forgot to check
 }
 
 //=============================================================================

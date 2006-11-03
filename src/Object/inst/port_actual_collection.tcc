@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.7 2006/11/02 06:18:39 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.8 2006/11/03 05:22:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -28,7 +28,10 @@
 #include "util/IO_utils.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_pool.tcc"	// for lookup_index
+#else
 #include "util/memory/chunk_map_pool.tcc"
 #endif
 
@@ -565,7 +568,7 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// since this is a port collection, there MUST be a super-instance.
 	NEVER_NULL(this->super_instance);
-	parent_type::collect_transient_info_base(m);
+//	parent_type::collect_transient_info_base(m);	// pure virt.
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// pool collection manager will take care of it already.
 #else
@@ -591,6 +594,21 @@ if (!m.register_transient_object(this,
 		util::persistent_traits<this_type>::type_key, 0)) {
 	this->collect_transient_info_base(m);
 }
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+void
+PORT_ACTUAL_COLLECTION_CLASS::write_pointer(ostream& o, 
+		const instance_collection_pool_bundle<Tag>& pb) const {
+	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
+	write_value(o, e);
+	const collection_index_entry::index_type index =
+		pb.template get_collection_pool<this_type>()
+			.lookup_index(*this);
+	write_value(o, index);
 }
 #endif
 
@@ -647,11 +665,15 @@ PORT_ACTUAL_COLLECTION_CLASS::write_connections(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Actual collections do not need to be registered with 
+	the containing footprint; they have hierarchical names.
+ */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::load_object(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& fp, 
+		footprint& fp, 
 #endif
 		const persistent_object_manager& m, istream& f) {
 #if ENABLE_STACKTRACE

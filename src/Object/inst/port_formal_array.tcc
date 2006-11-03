@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.8 2006/11/02 06:18:42 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.9 2006/11/03 05:22:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -20,12 +20,16 @@
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/port_context.h"
+#include "Object/def/footprint.h"
 #include "common/ICE.h"
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_pool.tcc"	// for lookup_index
+#else
 #include "util/memory/chunk_map_pool.tcc"
 #endif
 #include "util/compose.h"
@@ -636,6 +640,21 @@ if (!m.register_transient_object(this,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::write_pointer(ostream& o, 
+		const instance_collection_pool_bundle<Tag>& pb) const {
+	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
+	write_value(o, e);
+	const collection_index_entry::index_type index =
+		pb.template get_collection_pool<this_type>()
+			.lookup_index(*this);
+	write_value(o, index);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	No need to write keys in dense collection!
 	Very efficient.  
@@ -681,14 +700,22 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::load_object(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& fp, 
+		footprint& fp, 
 #endif
 		const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+	// placeholder MUST already be loaded now, can use its key
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(),
+		lookup_collection_pool_index_entry(
+		fp.template get_instance_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
+{
 	key_type k;
 	value_reader<key_type> read_key(f);
 	read_key(k);
 	this->value_array.resize(k);
+}
 	const iterator b(this->begin()), e(this->end());
 	for_each(b, e, typename parent_type::element_loader(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT

@@ -1,10 +1,10 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.6 2006/11/02 06:18:14 fang Exp $
+	$Id: footprint.cc,v 1.27.4.7 2006/11/03 05:22:11 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE			0
+#define	ENABLE_STACKTRACE			1
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
@@ -242,8 +242,10 @@ void
 footprint_base<Tag>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	NEVER_NULL(this->collection_pool_bundle);
 	this->collection_pool_bundle->collect_transient_info_base(m);
 #endif
+	NEVER_NULL(this->_instance_pool);
 	this->_instance_pool->collect_transient_info_base(m);
 }
 
@@ -253,11 +255,14 @@ void
 footprint_base<Tag>::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	NEVER_NULL(this->collection_pool_bundle);
 	this->collection_pool_bundle->write_object_base(
 		AS_A(const footprint&, *this), m, o);
+	NEVER_NULL(this->_instance_pool);
 	this->_instance_pool->write_object_base(
 		*this->collection_pool_bundle, o);
 #else
+	NEVER_NULL(this->_instance_pool);
 	this->_instance_pool->write_object_base(m, o);
 #endif
 }
@@ -268,11 +273,14 @@ void
 footprint_base<Tag>::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	NEVER_NULL(this->collection_pool_bundle);
 	this->collection_pool_bundle->load_object_base(
-		AS_A(const footprint&, *this), m, i);
+		AS_A(footprint&, *this), m, i);
+	NEVER_NULL(this->_instance_pool);
 	this->_instance_pool->load_object_base(
 		*this->collection_pool_bundle, i);
 #else
+	NEVER_NULL(this->_instance_pool);
 	this->_instance_pool->load_object_base(m, i);
 #endif
 }
@@ -294,6 +302,7 @@ template <class Tag>
 void
 value_footprint_base<Tag>::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	NEVER_NULL(this->collection_pool_bundle);
 	this->collection_pool_bundle->write_object_base(m, o);
 }
 
@@ -302,6 +311,7 @@ template <class Tag>
 void
 value_footprint_base<Tag>::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+	NEVER_NULL(this->collection_pool_bundle);
 	this->collection_pool_bundle->load_object_base(m, i);
 }
 #endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
@@ -358,6 +368,7 @@ footprint::footprint(const footprint& t) :
 	prs_footprint(), 
 	spec_footprint() {
 	STACKTRACE_CTOR_VERBOSE;
+	INVARIANT(t.instance_collection_map.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -456,7 +467,7 @@ footprint::operator [] (const string& k) const {
 	const const_instance_map_iterator
 		e(instance_collection_map.end()),
 		f(instance_collection_map.find(k));
-#if ENABLE_STACKTRACE
+#if ENABLE_STACKTRACE && !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const_instance_map_iterator i(instance_collection_map.begin());
 	for ( ; i!=e; ++i) {
 		cerr << "key = " << i->first << endl;
@@ -981,6 +992,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	value_footprint_base<preal_tag>::load_object_base(m, i);
 	// TODO: reconstruct the map from all collections
 	// \pre placeholders have aleady been loaded
+#if 0
 	footprint_base<process_tag>::collection_pool_bundle->load_footprint(*this);
 	footprint_base<channel_tag>::collection_pool_bundle->load_footprint(*this);
 	footprint_base<datastruct_tag>::collection_pool_bundle->load_footprint(*this);
@@ -990,6 +1002,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	value_footprint_base<pbool_tag>::collection_pool_bundle->load_footprint(*this);
 	value_footprint_base<pint_tag>::collection_pool_bundle->load_footprint(*this);
 	value_footprint_base<preal_tag>::collection_pool_bundle->load_footprint(*this);
+#endif
 #endif
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	port_aliases.load_object_base(*this, i);

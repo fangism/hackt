@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4.2.6 2006/11/02 06:18:30 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.7 2006/11/03 05:22:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -45,7 +45,7 @@
 #include "Object/inst/port_actual_collection.h"
 #endif
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "Object/inst/instance_collection_pool_bundle.h"
+#include "Object/inst/instance_collection_pool_bundle.tcc"	// for allocate
 #endif
 #include "common/ICE.h"
 
@@ -352,21 +352,26 @@ INSTANCE_PLACEHOLDER_CLASS::make_collection(
 #endif
 		) const {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	instance_collection_generic_type*	return_type;
 	instance_collection_pool_bundle<Tag>&
 		pool(f.template get_instance_collection_pool_bundle<Tag>());
 #endif
 	if (this->is_port_formal()) {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		return pool.allocate_port_formal(
-			never_ptr<const this_type>(this));
+		const return_type ret = pool.allocate_port_formal(
+			f, never_ptr<const this_type>(this));
+		NEVER_NULL(ret);
+		return ret;
 #else
 		return instance_collection_generic_type::make_port_formal_array(
 			never_ptr<const this_type>(this));
 #endif
 	} else {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		return pool.allocate_local_collection(
-			never_ptr<const this_type>(this));
+		const return_type ret = pool.allocate_local_collection(
+			f, never_ptr<const this_type>(this));
+		NEVER_NULL(ret);
+		return ret;
 #else
 		return instance_collection_generic_type::make_array(
 			never_ptr<const this_type>(this));

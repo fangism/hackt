@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_collection_pool_bundle.h"
-	$Id: value_collection_pool_bundle.h,v 1.1.2.4 2006/11/02 06:18:49 fang Exp $
+	$Id: value_collection_pool_bundle.h,v 1.1.2.5 2006/11/03 05:22:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
@@ -10,6 +10,7 @@
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
 #include "Object/inst/collection_pool.h"
+#include "Object/inst/collection_index_entry.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -88,11 +89,12 @@ struct value_collection_pool_bundle :
 	}
 
 	never_ptr<collection_base_type>
-	lookup_collection(const unsigned char, const unsigned short);
+	lookup_collection(const unsigned char, 
+		const collection_index_entry::index_type) const;
 
 	// allocation
 	collection_base_type*
-	allocate_local_collection(
+	allocate_local_collection(footprint& f, 
 		const never_ptr<const value_placeholder<Tag> >);
 
 	// serialization routines

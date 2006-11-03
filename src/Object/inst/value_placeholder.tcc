@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.4.2.3 2006/11/02 06:18:49 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.4.2.4 2006/11/03 05:22:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -51,7 +51,7 @@
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/unroll/expression_assignment.h"
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "Object/inst/value_collection_pool_bundle.h"
+#include "Object/inst/value_collection_pool_bundle.tcc"	// for allocate
 #endif
 
 #include "common/ICE.h"
@@ -511,7 +511,8 @@ VALUE_PLACEHOLDER_CLASS::make_collection(
 	value_collection_pool_bundle<Tag>&
 		pool(f. template get_value_collection_pool_bundle<Tag>());
 	// if (this->is_template_formal()) ...
-	return pool.allocate_local_collection(never_ptr<const this_type>(this));
+	return pool.allocate_local_collection(
+		f, never_ptr<const this_type>(this));
 #else
 	return value_collection_generic_type::make_array(
 		never_ptr<const this_type>(this));

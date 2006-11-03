@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.9 2006/11/02 06:18:27 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.10 2006/11/03 05:22:27 fang Exp $
 	TODO: trim includes
  */
 
@@ -58,6 +58,10 @@
 #include "Object/inst/port_formal_array.tcc"
 #if USE_COLLECTION_INTERFACES
 #include "Object/inst/port_actual_collection.tcc"
+#endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_pool.tcc"		// for lookup_index
 #endif
 #include "common/ICE.h"
 
@@ -381,6 +385,16 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array() : 
 		parent_type(), 
 		collection() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) : 
+		parent_type(t), 
+		collection() {		// don't copy
+	INVARIANT(t.collection.empty());
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -1125,6 +1139,21 @@ if (!m.register_transient_object(this,
 #endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::write_pointer(ostream& o, 
+		const instance_collection_pool_bundle<Tag>& pb) const {
+	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
+	write_value(o, e);
+	const collection_index_entry::index_type index =
+		pb.template get_collection_pool<this_type>()
+			.lookup_index(*this);
+	write_value(o, index);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is a sparse collection, thus, we need to write out keys along 
 	with values.  
@@ -1184,15 +1213,23 @@ INSTANCE_ARRAY_CLASS::write_connections(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this also re-registers with the footprint's collection map.  
+ */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::load_object(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& fp, 
+		footprint& fp, 
 #endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_object()");
 	parent_type::load_object_base(m, f);
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_instance_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
 	// procedure:
 	// 1) load all instantiated indices *without* their connections
 	//      let them start out pointing to themselves.  
@@ -1710,6 +1747,25 @@ if (!m.register_transient_object(this,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+/**
+	Counterpart is footprint::read_pointer, 
+	and collection_pool_bundle::read_pointer.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::write_pointer(ostream& o, 
+		const instance_collection_pool_bundle<Tag>& pb) const {
+	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
+	write_value(o, e);
+	const collection_index_entry::index_type index = 
+		pb.template get_collection_pool<this_type>()
+			.lookup_index(*this);
+	write_value(o, index);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::write_object(
@@ -1744,15 +1800,23 @@ INSTANCE_SCALAR_CLASS::write_connections(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this also re-registers with the footprint's collection map.  
+ */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::load_object(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& fp, 
+		footprint& fp, 
 #endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
 	parent_type::load_object_base(m, f);
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_instance_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
 	typename parent_type::element_loader(
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		fp, 

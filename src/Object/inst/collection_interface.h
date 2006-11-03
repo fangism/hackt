@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.6 2006/11/02 06:18:20 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.7 2006/11/03 05:22:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -46,6 +46,7 @@ class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instance_collection;
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class> class collection_pool;
 template <class> class instance_collection_pool_bundle;
 #endif
 
@@ -219,7 +220,7 @@ virtual	void
 		const persistent_object_manager&, ostream&) const = 0;
 
 virtual	void
-	load_object(const footprint&, 
+	load_object(footprint&, 
 		const persistent_object_manager&, istream&) = 0;
 #endif
 };	// end class collection_interface

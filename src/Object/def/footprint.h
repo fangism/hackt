@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.5 2006/11/02 06:18:15 fang Exp $
+	$Id: footprint.h,v 1.19.4.6 2006/11/03 05:22:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -17,6 +17,9 @@
 #include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
 // #include "Object/inst/alias_visitee.h"
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#include "Object/inst/collection_index_entry.h"
+#endif
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -171,6 +174,11 @@ class footprint :
 	, private	value_footprint_base<preal_tag>
 #endif
 	{
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+// make accessible to base class
+template <class> friend class footprint_base;
+template <class> friend class value_footprint_base;
+#endif
 public:
 	/**
 		This must remain an instance_collection_base because
@@ -188,11 +196,7 @@ private:
 		The information needed to encode which pool to 
 		fetch the pointer from.  
 	 */
-	struct collection_map_entry_type {
-		unsigned char		meta_type;
-		unsigned char		pool_type;
-		unsigned short		index;
-	};
+	typedef	collection_index_entry	collection_map_entry_type;
 #endif
 	/**
 		The type of map used to maintain local copy of instances.  
@@ -389,7 +393,13 @@ public:
 	void
 	clear_instance_collection_map(void);
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// this is defined in Object/inst/instance_collection.cc
+	// to break a cyclic library dependence.  :-/
+	void
+	register_collection_map_entry(const string&, 
+		const collection_map_entry_type&);
+#else
 	good_bool
 	register_collection(const count_ptr<instance_collection_base>&);
 #endif
@@ -454,7 +464,6 @@ public:
 		But std::pair requires it in the footprint_manager.
 		TODO: allow only a few friends in STL to use it.  
 	 */
-	explicit
 	footprint(const footprint&);
 #endif
 };	// end class footprint

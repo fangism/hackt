@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-14:
+	  Defined the remaining undefined references for
+		POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, now enabled.
+	  Added: Object/inst/collection_traits.h -- compile-time associative
+			templates and enumerations for distinguishing
+			different collection subtypes for different pools.  
+		Object/inst/collection_index_entry.h -- structure that encodes
+			an instance-collection pointer for serialization.
+	  Now pass footprint down deeper for use when allocating and
+		registering a new collection, now done atomically.
+		Footprint also used to load instance collection pointers, 
+		and is registered at the same time as de-serialization.
+	  Next: debugging -- this revision compiles, links, but dies.  :-/
+	  TODO: consider breaking up footprint.cc into smaller 
+		translation units, for compiling... it's ginormous.  
+
+
 2006-11-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-13:

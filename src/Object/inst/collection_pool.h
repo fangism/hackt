@@ -2,7 +2,7 @@
 	\file "Object/inst/collection_pool.h"
 	This bears much resemblance to util::list_vector!
 	However, no free-list is required.  
-	$Id: collection_pool.h,v 1.1.2.1 2006/10/31 00:28:17 fang Exp $
+	$Id: collection_pool.h,v 1.1.2.2 2006/11/03 05:22:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_H__
@@ -18,6 +18,8 @@
 
 namespace HAC {
 namespace entity {
+struct collection_index_entry;
+
 //=============================================================================
 #define	COLLECTION_POOL_TEMPLATE_SIGNATURE				\
 template <typename Value>
@@ -174,21 +176,25 @@ public:
 
 // accessors: precondition -- element must already exist
 
-	const value_type&
+	value_type&
 	operator [] (const size_type) const;
 
+#if 0
 	value_type&
 	operator [] (const size_type);
+#endif
 
 private:
 	index_value_map_const_iterator
 	__find_index_value_map_iterator(const size_type) const;
 
-	const value_type*
+	value_type*
 	__find(const size_type) const;
 
+#if 0
 	value_type*
 	__find(const size_type);
+#endif
 
 	size_type
 	__lookup_index(const value_type&) const;
@@ -197,11 +203,13 @@ private:
 	__new_chunk(const size_type);
 
 public:
-	const value_type*
+	value_type*
 	find(const size_type) const;
 
+#if 0
 	value_type*
 	find(const size_type);
+#endif
 
 	size_type
 	lookup_index(const value_type&) const;
@@ -248,8 +256,13 @@ public:
 	dump(std::ostream&) const;
 
 // serialization
-
 };	// end class collection_pool
+
+COLLECTION_POOL_TEMPLATE_SIGNATURE
+collection_index_entry
+lookup_collection_pool_index_entry(
+	const collection_pool<Value>&, const Value&);
+
 
 //=============================================================================
 }	// end namespace entity

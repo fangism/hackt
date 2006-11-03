@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.5 2006/11/02 06:18:38 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.6 2006/11/03 05:22:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -222,7 +222,7 @@ public:
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object(const footprint&, 
+	load_object(footprint&, 
 		const persistent_object_manager&, istream&);
 #endif
 

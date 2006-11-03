@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.5 2006/11/02 06:18:29 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.6 2006/11/03 05:22:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -10,6 +10,7 @@
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
 #include "Object/inst/collection_pool.h"
+#include "Object/inst/collection_index_entry.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -60,7 +61,7 @@ protected:
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const footprint&,
+	load_object_base(footprint&,
 		const persistent_object_manager&, istream&);
 
 	void
@@ -119,9 +120,16 @@ struct instance_collection_pool_bundle :
 		return instance_collection_pool_wrapper<S>::pool;
 	}
 
+	template <class S>
+	const collection_pool<S>&
+	get_collection_pool(void) const {
+		return instance_collection_pool_wrapper<S>::pool;
+	}
+
 // translation
 	never_ptr<collection_interface_type>
-	lookup_collection(const unsigned char, const unsigned short);
+	lookup_collection(const unsigned char, 
+		const collection_index_entry::index_type) const;
 
 	// counterpart: collection_interface_type::write_pointer()
 	collection_interface_type*
@@ -134,11 +142,11 @@ struct instance_collection_pool_bundle :
 		const unroll_context&);
 
 	instance_collection<Tag>*
-	allocate_port_formal(
+	allocate_port_formal(footprint&, 
 		const never_ptr<const instance_placeholder<Tag> >);
 
 	instance_collection<Tag>*
-	allocate_local_collection(
+	allocate_local_collection(footprint&, 
 		const never_ptr<const instance_placeholder<Tag> >);
 
 	// serialization routines
@@ -150,12 +158,14 @@ struct instance_collection_pool_bundle :
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const footprint&, 
+	load_object_base(footprint&, 
 		const persistent_object_manager&, istream&);
 
+#if 0
 	// load everything but actual_collections into footprint's map.
 	void
 	load_footprint(footprint&) const;
+#endif
 };	// end class instance_collection_pool_bundle
 
 //=============================================================================

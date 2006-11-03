@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/collection_pool.tcc"
-	$Id: collection_pool.tcc,v 1.1.2.1 2006/10/31 00:28:18 fang Exp $
+	$Id: collection_pool.tcc,v 1.1.2.2 2006/11/03 05:22:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_TCC__
@@ -11,6 +11,8 @@
 // #include <algorithm>
 
 #include "Object/inst/collection_pool.h"
+#include "Object/inst/collection_index_entry.h"
+#include "Object/inst/collection_traits.h"
 #include "util/likely.h"
 #include "util/stacktrace.h"
 
@@ -21,6 +23,9 @@ namespace entity {
 //=============================================================================
 // class collection_pool method definitions
 
+/**
+	Alias to default constructed value.  
+ */
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 const typename COLLECTION_POOL_CLASS::value_type
 COLLECTION_POOL_CLASS::default_value;
@@ -93,7 +98,7 @@ COLLECTION_POOL_CLASS::__find_index_value_map_iterator(
 	The returned pointer need not be memory-managed.  
  */
 COLLECTION_POOL_TEMPLATE_SIGNATURE
-const typename COLLECTION_POOL_CLASS::value_type*
+typename COLLECTION_POOL_CLASS::value_type*
 COLLECTION_POOL_CLASS::__find(const size_type i) const {
 	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("i = " << i << endl);
@@ -109,6 +114,7 @@ COLLECTION_POOL_CLASS::__find(const size_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\param i the internal index (0-indexed).
 	\return reference to indexed element.
@@ -129,19 +135,21 @@ COLLECTION_POOL_CLASS::__find(const size_type i) {
 	INVARIANT(remainder < p->size());
 	return &(*p)[remainder];
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param i the 1-based indexed.
  */
 COLLECTION_POOL_TEMPLATE_SIGNATURE
-const typename COLLECTION_POOL_CLASS::value_type*
+typename COLLECTION_POOL_CLASS::value_type*
 COLLECTION_POOL_CLASS::find(const size_type i) const {
 	INVARIANT(i);
 	return this->__find(i -1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\param i the 1-based indexed.
  */
@@ -151,6 +159,7 @@ COLLECTION_POOL_CLASS::find(const size_type i) {
 	INVARIANT(i);
 	return this->__find(i -1);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -158,13 +167,14 @@ COLLECTION_POOL_CLASS::find(const size_type i) {
 	\pre the referenced element must exist.  
  */
 COLLECTION_POOL_TEMPLATE_SIGNATURE
-const typename COLLECTION_POOL_CLASS::value_type&
+typename COLLECTION_POOL_CLASS::value_type&
 COLLECTION_POOL_CLASS::operator [] (const size_type i) const {
 	INVARIANT(i);
 	return *this->__find(i -1);	// expects 0-based
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\param i the internal index (1-indexed)
 	\pre the referenced element must exist.  
@@ -175,6 +185,7 @@ COLLECTION_POOL_CLASS::operator [] (const size_type i) {
 	INVARIANT(i);
 	return *this->__find(i -1);	// expects 0-based
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -314,6 +325,26 @@ COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::value_type*
 COLLECTION_POOL_CLASS::allocate(void) {
 	return this->push_back(default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param p the pool that contains element v.  
+	\param v a reference to an element in the pool.  
+	\return the index stub that references the argument in this pool.  
+ */
+COLLECTION_POOL_TEMPLATE_SIGNATURE
+collection_index_entry
+lookup_collection_pool_index_entry(
+		const collection_pool<Value>& p, const Value& v) {
+	typedef	Value			value_type;
+	typedef	collection_pool<value_type>	pool_type;
+	collection_index_entry ret;
+	ret.meta_type = value_type::traits_type::type_tag_enum_value;
+	ret.pool_type = collection_traits<value_type>::ENUM_VALUE;
+	ret.index = p.lookup_index(v);
+	INVARIANT(ret.index);
+	return ret;
 }
 
 //=============================================================================

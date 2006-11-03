@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2.2.6 2006/11/02 06:18:24 fang Exp $
+	$Id: instance_array.h,v 1.2.2.7 2006/11/03 05:22:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -11,7 +11,8 @@
 
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/sparse_collection.h"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#else
 #include "util/memory/chunk_map_pool_fwd.h"
 #endif
 
@@ -80,6 +81,10 @@ public:
 private:
 #endif
 	instance_array();
+
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	instance_array(const this_type&);
+#endif
 
 public:
 	explicit
@@ -163,6 +168,7 @@ public:
 public:
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	using parent_type::collect_transient_info_base;
+	using parent_type::write_pointer;
 
 	void
 	write_pointer(ostream&, 
@@ -173,7 +179,7 @@ public:
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object(const footprint&, 
+	load_object(footprint&, 
 		const persistent_object_manager&, istream&);
 #else
 	void

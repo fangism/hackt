@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.140.2.6 2006/11/02 06:18:13 fang Exp $
+#	$Id: Makefile.am,v 1.140.2.7 2006/11/03 05:22:10 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -299,6 +299,8 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
+	Object/inst/collection_index_entry.h \
+	Object/inst/collection_traits.h \
 	Object/inst/sparse_collection.h \
 	Object/inst/collection_pool.h \
 	Object/inst/collection_interface.h \
@@ -384,6 +386,10 @@ OBJECT_CC_FILES = \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
 	Object/expr/expr_dump_context.cc \
+	Object/def/template_formals_manager.cc \
+	Object/def/port_formals_manager.cc \
+	Object/def/footprint.cc \
+	Object/def/footprint_manager.cc \
 	Object/traits/class_traits.cc \
 	Object/unroll/conditional_scope.cc \
 	Object/unroll/expression_assignment.cc \
@@ -404,10 +410,6 @@ OBJECT_CC_FILES = \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
 	Object/type/canonical_generic_chan_type.cc \
-	Object/def/template_formals_manager.cc \
-	Object/def/port_formals_manager.cc \
-	Object/def/footprint.cc \
-	Object/def/footprint_manager.cc \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \

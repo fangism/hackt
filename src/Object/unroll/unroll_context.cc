@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.23.4.4 2006/11/01 07:52:45 fang Exp $
+	$Id: unroll_context.cc,v 1.23.4.5 2006/11/03 05:22:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -318,6 +318,21 @@ unroll_context::lookup_collection(
 	// defaults to using rvalue lookup, is this "the right thing"?
 	return lookup_rvalue_collection(p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+footprint&
+unroll_context::get_target_footprint(void) const {
+	footprint* f = target_footprint;
+	never_ptr<const this_type> c(this);
+	do {
+		f = c->target_footprint;
+		c = c->next;
+	} while (!f && c);
+	NEVER_NULL(f);
+	return *f;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
