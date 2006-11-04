@@ -2,7 +2,7 @@
 # "bootstrap" 
 # Maintainer script for regenerating Makefiles and configure scripts.
 # (also known as autogen.sh in some conventions)
-#	$Id: bootstrap,v 1.4 2006/04/28 22:57:22 fang Exp $
+#	$Id: bootstrap,v 1.5 2006/11/04 03:21:41 fang Exp $
 
 # this regenerates some critical files
 # run this after "make maintainer-clean" or "make distclean"
@@ -17,26 +17,28 @@ touch src/headers_deps.make
 DIE=0
 ACLOCAL_FLAGS="-I config"
 
+# TODO: version compare
+
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
         echo
-        echo "You must have autoconf installed to compile $PROJECT."
+        echo "You must have autoconf installed to bootstrap $PROJECT from CVS."
         echo "Download the appropriate package for your distribution,"
         echo "or get the source tarball at: "
-	echo "http://ftp.gnu.org/gnu/autoconf/autoconf-2.59.tar.gz"
+	echo "http://ftp.gnu.org/gnu/autoconf/autoconf-2.60.tar.gz"
         DIE=1
 }
 
 (libtoolize --version) < /dev/null > /dev/null 2>&1 || {
         echo
-        echo "You must have libtool installed to compile $PROJECT."
-	echo "Get ftp://ftp.gnu.org/gnu/libtool/libtool-1.5.20.tar.gz"
+        echo "You must have libtool installed to bootstrap $PROJECT from CVS."
+	echo "Get ftp://ftp.gnu.org/gnu/libtool/libtool-1.5.22.tar.gz"
         echo "(or a newer version if it is available)"
         DIE=1
 }
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
         echo
-        echo "You must have automake installed to compile $PROJECT."
+        echo "You must have automake installed to bootstrap $PROJECT from CVS."
         echo "Get http://ftp.gnu.org/gnu/automake/automake-1.9.6.tar.gz"
         echo "(or a newer version if it is available)"
         DIE=1
@@ -58,6 +60,7 @@ aclocal $ACLOCAL_FLAGS
 (autoheader --version)  < /dev/null > /dev/null 2>&1 && autoheader $ACLOCAL_FLAGS
 automake --copy --add-missing --verbose --gnu $am_opt
 autoconf $ACLOCAL_FLAGS
+# really, 'autoreconf' with flags should suffice
 
 # may not want verbose for autoconf, aclocal, and autoheader
 

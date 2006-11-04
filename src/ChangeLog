@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-48:
+	  One awk-script revision: in parse/common-output-to-C.awk:
+		Dropped one string substitution because the version
+		of awk on i686-apple-darwin8 is buggy (on "\\").  :(
+		This caused compile expect differences in test suite, 
+		which were harmless, but annoying nonetheless.  
+
+
 2006-11-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-47:

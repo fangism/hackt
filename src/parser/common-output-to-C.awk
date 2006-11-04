@@ -1,7 +1,7 @@
 #! `which awk` -f
 # "common-output-to-C.awk"
 # by Fang
-#	$Id: common-output-to-C.awk,v 1.3 2006/07/26 22:46:29 fang Exp $
+#	$Id: common-output-to-C.awk,v 1.4 2006/11/04 03:21:43 fang Exp $
 # TODO: take advantage of string tables already present in bison parser.
 #	will save a ton of string memory.  
 
@@ -60,7 +60,8 @@ function string_to_Cstring(str) {
 	gsub("\n","\\n",str);
 	gsub("'","\\'",str);
 	gsub("\"","\\\"",str);
-	gsub("\\","\\\\",str);
+#	gsub("\\","\\\\",str);		# buggy version of awk gets this wrong!
+	# so we drop it for now, until we actually expect '\' in grammar
 	return "\"" str "\"";
 }
 
