@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.tcc"
 	Implementation of footprint class. 
-	$Id: footprint_base.tcc,v 1.1.2.1 2006/11/03 07:07:30 fang Exp $
+	$Id: footprint_base.tcc,v 1.1.2.2 2006/11/04 09:23:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_TCC__
@@ -126,7 +126,8 @@ void
 value_footprint_base<Tag>::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	NEVER_NULL(this->collection_pool_bundle);
-	this->collection_pool_bundle->load_object_base(m, i);
+	this->collection_pool_bundle->load_object_base(
+		AS_A(footprint&, *this), m, i);
 }
 #endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 

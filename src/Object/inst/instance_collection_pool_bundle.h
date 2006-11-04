@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.6 2006/11/03 05:22:28 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.7 2006/11/04 09:23:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -46,6 +46,9 @@ public:
 	typedef	collection_pool<T>		pool_type;
 	typedef	instance_collection_pool_bundle<tag_type>
 						pool_bundle_type;
+protected:
+	typedef	typename pool_type::iterator		iterator;
+	typedef	typename pool_type::const_iterator	const_iterator;
 protected:
 	pool_type				pool;
 	// default ctors and dtor

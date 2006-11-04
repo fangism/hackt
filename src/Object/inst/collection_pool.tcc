@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/collection_pool.tcc"
-	$Id: collection_pool.tcc,v 1.1.2.2 2006/11/03 05:22:21 fang Exp $
+	$Id: collection_pool.tcc,v 1.1.2.3 2006/11/04 09:23:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_TCC__
@@ -36,13 +36,15 @@ COLLECTION_POOL_CLASS::default_value;
 	The space is reserved but unoccupied.  
 	The index-value map is populated with its first entry.
 	The address_chunk_map is also mapped with its first entry.  
+	NOTE: the unused tail sentinel is not mapped.  
  */
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 COLLECTION_POOL_CLASS::collection_pool() :
-		value_pool(), 
+		value_pool(2), 	// one real chunk, one unused tail-sentinel
 		index_value_map(), 
-		address_chunk_map() {
-	value_pool.push_back(value_chunk_type());
+		address_chunk_map(), 
+		__back(value_pool.begin()) {
+//	value_pool.push_back(value_chunk_type());
 	value_pool.front().reserve(INITIAL_RESERVE);	// pre-allocate
 	const typename index_value_map_type::value_type
 		p(0, value_pool.begin());
@@ -58,14 +60,30 @@ COLLECTION_POOL_CLASS::~collection_pool() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 ostream&
 COLLECTION_POOL_CLASS::dump(ostream& o) const {
-	// TODO: finish me
-	return o;
+{
+	o << "collection_pool: {" << endl << "index_map: " << endl;
+	index_value_map_const_iterator
+		i(index_value_map.begin()), e(index_value_map.end());
+	for ( ; i!=e; ++i) {
+		o << "\t[" << i->first << ",+" << i->second->size() << "/" <<
+			i->second->capacity() << "]:@" <<
+			&i->second->front() << endl;
+	}
+}{
+	o << "address_map: " << endl;
+	address_chunk_map_const_iterator
+		i(address_chunk_map.begin()), e(address_chunk_map.end());
+	for ( ; i!=e; ++i) {
+		o << "\t@" << i->first << ":[" << i->second->first <<
+			",+" << i->second->second->size() << "/" <<
+			i->second->second->capacity() << "]" << endl;
+	}
 }
-#endif
+	return o << "}";
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -225,18 +243,22 @@ COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::value_chunk_type*
 COLLECTION_POOL_CLASS::__new_chunk(const size_type n) {
 	STACKTRACE_INDENT_PRINT("allocating new chunk." << endl);
-	// then last chunk is full, allocate another
+	// then last real chunk is full, allocate another
+	// re-use the last chunk, and create a new tail-sentinel
+	++this->__back;
 	value_pool.push_back(value_chunk_type());
-	value_chunk_type* pb(&value_pool.back());
+	value_chunk_type* pb(&*this->__back);
+	INVARIANT(!pb->capacity());	// was empty
 	pb->reserve(n);
 
-	const value_pool_iterator ve(--value_pool.end());
-	const typename index_value_map_type::value_type p(this->size(), ve);
+	const typename index_value_map_type::value_type
+		p(this->size(), this->__back);
 	// use insert-pair with iterator return to save second lookup
 	const std::pair<index_value_map_iterator, bool>
 		r(index_value_map.insert(p));
 	INVARIANT(r.second);	// was successfully inserted
 	address_chunk_map[&pb->front()] = r.first;
+	INVARIANT(this->__back == ----value_pool.end());
 	return pb;
 }
 
@@ -259,7 +281,7 @@ COLLECTION_POOL_CLASS::push_back(const value_type& v) {
 	STACKTRACE_BRIEF;
 	const size_type new_index = this->size();
 	STACKTRACE_INDENT_PRINT("new_index(0) = " << new_index << endl);
-	value_chunk_type* pb(&value_pool.back());
+	value_chunk_type* pb(&*this->__back);
 	if (!(pb->capacity() -pb->size())) {
 		pb = this->__new_chunk(new_index);
 	}
@@ -282,18 +304,35 @@ COLLECTION_POOL_CLASS::push_back(const value_type& v) {
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 void
 COLLECTION_POOL_CLASS::allocate(const size_type n) {
-	value_chunk_type* pb(&value_pool.back());
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("n = " << n << endl);
+#if ENABLE_STACKTRACE
+	this->dump(cerr << "before ") << endl;
+#endif
+	value_chunk_type* pb(&*this->__back);
+	const size_type sz = this->size();	// used for debugging only
 	const size_type pbs = pb->size();
+	const size_type pbc = pb->capacity();
 if (!pbs) {
+	STACKTRACE_INDENT_PRINT("current chunk size 0" << endl);
+	if (pbc) {
+		STACKTRACE_INDENT_PRINT("reallocating..." << endl);
+		// was already allocated, need to remove map entry
+		const size_type e = address_chunk_map.erase(&pb->front());
+		INVARIANT(e == 1);
+	}
 	// can just resize this current chunk, and we're done
 	pb->resize(n, default_value);
+	address_chunk_map[&pb->front()] = --index_value_map.end();
+	// index_value_map unchanged
 } else {
-	const size_type pbc = pb->capacity();
+	STACKTRACE_INDENT_PRINT("current chunk size " << pbs << endl);
 	const size_type d = pbc -pbs;	// remaining
 	size_type i;
 	size_type r;
 	if (d >= n) {
-		i = (d-n);	// current chunk has enough capacity
+		STACKTRACE_INDENT_PRINT("d = " << d << endl);
+		i = n;		// current chunk has enough capacity
 		r = 0;
 	} else {
 		i = d;		// will need second chunk
@@ -312,6 +351,10 @@ if (!pbs) {
 		//	pb->push_back(default_value);
 	}
 }
+#if ENABLE_STACKTRACE
+	this->dump(cerr << "after ") << endl;
+#endif
+	INVARIANT(this->size() == sz +n);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

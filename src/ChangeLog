@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-16:
+	  Latest crash bug fixed, mishaps in collection_pool class template
+		with goof-ups in iterators and allocation.  
+		Mostly fixes in Object/inst/collection_pool.{h,tcc}
+		More rigorous testing in util/test/collection_pool_test.cc.
+	  Value collections now re-register themselves to footprint on load.
+	  Basic tests now pass with expected header differences.  
+	  Tests begin to fail (as expected) when footprints are 
+		referenced by collections, so now we need them to
+		be serialized and heap-allocated.  
+
+
 2006-11-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-15:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_collection_pool_bundle.h"
-	$Id: value_collection_pool_bundle.h,v 1.1.2.5 2006/11/03 05:22:33 fang Exp $
+	$Id: value_collection_pool_bundle.h,v 1.1.2.6 2006/11/04 09:23:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_H__
@@ -38,6 +38,9 @@ public:
 	typedef	T				collection_type;
 	typedef	collection_pool<T>		pool_type;
 protected:
+	typedef	typename pool_type::iterator		iterator;
+	typedef	typename pool_type::const_iterator	const_iterator;
+protected:
 	pool_type				pool;
 	// default ctors and dtor
 	// non-copyable (guaranteed by pool_type)
@@ -48,7 +51,11 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(footprint&, 
+		const persistent_object_manager&, istream&);
+
+private:
+	struct collection_loader;
 
 };	// end class sparse_pool_bundle
 
@@ -102,7 +109,8 @@ struct value_collection_pool_bundle :
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(footprint&, 
+		const persistent_object_manager&, istream&);
 
 	// load everything but actual_collections into footprint's map.
 	void

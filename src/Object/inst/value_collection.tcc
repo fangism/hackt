@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.24.2.3 2006/11/02 06:18:49 fang Exp $
+ 	$Id: value_collection.tcc,v 1.24.2.4 2006/11/04 09:23:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -582,7 +582,8 @@ VALUE_ARRAY_CLASS::unroll_lvalue_references(const multikey_index_type& l,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
+VALUE_ARRAY_CLASS::write_object(
+		const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
 	// write out the instance map
@@ -592,8 +593,21 @@ VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
+VALUE_ARRAY_CLASS::load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& fp, 
+#endif
+		const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// register this collection with the footprint
+	// placeholder must already be loaded, to access its key
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_value_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
+#endif
 	// load the instance map
 	this->collection.read(f);
 }
@@ -781,9 +795,22 @@ VALUE_SCALAR_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) {
+VALUE_SCALAR_CLASS::load_object(
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& fp, 
+#endif
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("value_scalar::load_object()");
 	parent_type::load_object_base(m, f);
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// register this collection with the footprint
+	// placeholder must already be loaded, to access its key
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_value_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
+#endif
 	// load the instance
 	read_value(f, the_instance);
 }

@@ -1,7 +1,7 @@
 /**
 	\file "collection_pool_test.cc"
 	NOTE: this tests a structure in the HAC library, not in util.  
-	$Id: collection_pool_test.cc,v 1.1.2.2 2006/11/03 07:07:35 fang Exp $
+	$Id: collection_pool_test.cc,v 1.1.2.3 2006/11/04 09:23:25 fang Exp $
  */
 
 // always debug with asserts
@@ -27,13 +27,23 @@ using HAC::entity::collection_pool;
 
 namespace HAC {
 namespace entity {
-
 template class collection_pool<string>;
-
 }
 }
 
 typedef	collection_pool<string>	collection_type;
+typedef	collection_type::iterator		iterator;
+typedef	collection_type::const_iterator		const_iterator;
+typedef	const_iterator::outer_iterator_type	outer_iterator;
+typedef	const_iterator::inner_iterator_type	inner_iterator;
+
+template <class Iter>
+ostream&
+dump_nested_iterator(ostream& o, const Iter& i) {
+	o << "outer = " << &*i.outer_iterator() <<
+		", inner = " << &*i.inner_iterator();
+	return o;
+}
 
 int
 main(int argc, char* argv[]) {
@@ -44,11 +54,21 @@ main(int argc, char* argv[]) {
 	assert(c.empty());
 	assert(c.size() == 0);
 	assert(!c.find(1));
+	assert(c.begin() == c.end());
+	assert(!(c.begin() != c.end()));
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("beta"));
 	assert(c.size() == 1);
 	assert(!c.empty());
 	assert(c.find(1));
+	assert(c.begin() != c.end());
+	assert(!(c.begin() == c.end()));
+#if 0
+	dump_nested_iterator(cout << "begin: ", c.begin()) << endl;
+	dump_nested_iterator(cout << "end: ", c.end()) << endl;
+	dump_nested_iterator(cout << "begin+1: ", ++c.begin()) << endl;
+#endif
+	assert(++c.begin() == c.end());
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 }
 {
@@ -57,19 +77,30 @@ main(int argc, char* argv[]) {
 	assert(c.push_back("delta"));
 	assert(c.size() == 2);
 	assert(c.find(2));
+	assert(c.begin() != c.end());
+	assert(++++c.begin() == c.end());
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 }
 {
 	cout << "adding four more key-value pairs." << endl;
 	assert(c.push_back("eins"));
+	assert(c.begin() != c.end());
+	assert(++++++c.begin() == c.end());
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("zwei"));
+	assert(c.begin() != c.end());
+	assert(++++++++c.begin() == c.end());
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("drei"));
+	assert(c.begin() != c.end());
+	assert(++++++++++c.begin() == c.end());
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.push_back("vier"));
+	assert(c.begin() != c.end());
+	assert(++++++++++++c.begin() == c.end());
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
 	assert(c.size() == 6);
+	assert(c.begin() != c.end());
 	cout << "c[3] = " << c[3] << endl;
 	cout << "c[4] = " << c[4] << endl;
 	cout << "c[5] = " << c[5] << endl;
@@ -94,6 +125,31 @@ main(int argc, char* argv[]) {
 	cout << "Testing iterator interface." << endl;
 	std::copy(c.begin(), c.end(), osi); cout << endl;
 	cout << "list = "; std::copy(c.begin(), c.end(), osi); cout << endl;
+	// c.dump(cout) << endl;
+}
+{
+	// bulk allocation tests
+	collection_type d;
+	size_t j = 0;
+	for ( ; j<50; ++j) {
+		d.allocate(j);
+		assert(d.size() == j*(j+1)/2);
+	}
+}{
+	// bulk allocation tests
+	collection_type d;
+	size_t j = 4;
+	for ( ; j<300; j<<=1) {
+		d.allocate(j);
+	}
+}{
+	// bulk allocation tests
+	size_t j = 0;
+	for ( ; j<50; ++j) {
+		collection_type d;
+		d.allocate(j);
+		assert(d.size() == j);
+	}
 }
 	cout << "End of tests." << endl;
 	return 0;

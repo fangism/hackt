@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.10 2006/11/03 05:22:27 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.11 2006/11/04 09:23:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -313,7 +313,9 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
+	STACKTRACE_VERBOSE;
+//	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
+	STACKTRACE_INDENT_PRINT("this @ " << this << endl);
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::collect_transient_info_base(m);
 #endif

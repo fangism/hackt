@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_array.h"
-	$Id: value_array.h,v 1.2.2.2 2006/11/01 07:52:33 fang Exp $
+	$Id: value_array.h,v 1.2.2.3 2006/11/04 09:23:21 fang Exp $
 	This fail spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -110,10 +110,15 @@ public:
 
 public:
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(footprint&, const persistent_object_manager&, istream&);
 #else
 	FRIEND_PERSISTENT_TRAITS
-#endif
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+#endif
 
 #if POOL_ALLOCATE_VALUE_COLLECTIONS
 	enum {

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_scalar.h"
-	$Id: value_scalar.h,v 1.2.2.2 2006/11/01 07:52:35 fang Exp $
+	$Id: value_scalar.h,v 1.2.2.3 2006/11/04 09:23:22 fang Exp $
 	This file spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -93,7 +93,15 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(footprint&, const persistent_object_manager&, istream&);
+#else
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
+#endif
 
 #if POOL_ALLOCATE_VALUE_COLLECTIONS
 	enum {

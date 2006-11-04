@@ -2,7 +2,7 @@
 	\file "Object/inst/footprint_value_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage value-collections.  
-	$Id: footprint_value_base.cc,v 1.1.2.1 2006/11/03 07:07:33 fang Exp $
+	$Id: footprint_value_base.cc,v 1.1.2.2 2006/11/04 09:23:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,6 +24,10 @@
 
 namespace HAC {
 namespace entity {
+
+template class value_collection_pool_bundle<pbool_tag>;
+template class value_collection_pool_bundle<pint_tag>;
+template class value_collection_pool_bundle<preal_tag>;
 
 template class value_footprint_base<pbool_tag>;
 template class value_footprint_base<pint_tag>;

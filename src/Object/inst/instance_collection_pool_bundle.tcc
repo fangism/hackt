@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.4 2006/11/03 05:22:29 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.5 2006/11/04 09:23:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -10,6 +10,7 @@
 #include <algorithm>
 #include "Object/inst/instance_collection_pool_bundle.h"
 #include "Object/inst/collection_pool.tcc"
+#include "Object/inst/instance_placeholder.h"
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/instance_array.h"
 #include "Object/inst/port_formal_array.h"
@@ -112,8 +113,8 @@ instance_collection_pool_wrapper<T>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
-	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_collector_ref(m));
+	const const_iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, util::persistent_collector_ref(m));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -126,8 +127,8 @@ instance_collection_pool_wrapper<T>::write_object_base(
 	STACKTRACE_THIS
 	const size_t s = this->pool.size();
 	write_value(o, s);
-	for_each(this->pool.begin(), this->pool.end(), 
-		collection_writer(f, m, o));
+	const const_iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, collection_writer(f, m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,36 +143,36 @@ instance_collection_pool_wrapper<T>::load_object_base(
 	read_value(i, s);
 	this->pool.allocate(s);		// will be contiguous! (first chunk)
 	INVARIANT(this->pool.size() == s);
-	for_each(this->pool.begin(), this->pool.end(), 
-		collection_loader(f, m, i));
+	const iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, collection_loader(f, m, i));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre size has not changed since write_object_base
+ */
 template <class T>
 void
 instance_collection_pool_wrapper<T>::write_connections(
 		const pool_bundle_type& m, ostream& o) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
-	const size_t s = this->pool.size();
-	write_value(o, s);
-	for_each(this->pool.begin(), this->pool.end(), 
-		connection_writer(m, o));
+	const const_iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, connection_writer(m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre collection has already been allocated to correct size.  
+ */
 template <class T>
 void
 instance_collection_pool_wrapper<T>::load_connections(
 		const pool_bundle_type& m, istream& i) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
-	size_t s;
-	read_value(i, s);
-	this->pool.allocate(s);		// will be contiguous! (first chunk)
-	INVARIANT(this->pool.size() == s);
-	for_each(this->pool.begin(), this->pool.end(), 
-		connection_loader(m, i));
+	const iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, connection_loader(m, i));
 }
 
 //=============================================================================

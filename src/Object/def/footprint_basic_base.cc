@@ -2,11 +2,11 @@
 	\file "Object/inst/footprint_basic_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage non-structured meta-types.  
-	$Id: footprint_basic_base.cc,v 1.1.2.1 2006/11/03 07:07:31 fang Exp $
+	$Id: footprint_basic_base.cc,v 1.1.2.2 2006/11/04 09:23:11 fang Exp $
  */
 
 
-#define	ENABLE_STACKTRACE			1
+#define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include "Object/def/footprint_basic_base.h"

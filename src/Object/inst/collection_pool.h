@@ -2,7 +2,7 @@
 	\file "Object/inst/collection_pool.h"
 	This bears much resemblance to util::list_vector!
 	However, no free-list is required.  
-	$Id: collection_pool.h,v 1.1.2.2 2006/11/03 05:22:20 fang Exp $
+	$Id: collection_pool.h,v 1.1.2.3 2006/11/04 09:23:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_H__
@@ -99,6 +99,10 @@ protected:
 						value_pool_iterator;
 	typedef	typename value_pool_type::const_iterator
 						value_pool_const_iterator;
+	// just synonym
+	typedef	value_pool_iterator		list_iterator;
+	// just synonym
+	typedef	value_pool_const_iterator	const_list_iterator;
 
 	/**
 		The key of this map is the lowest index corresponding
@@ -143,6 +147,12 @@ private:
 	value_pool_type				value_pool;
 	index_value_map_type			index_value_map;
 	address_chunk_map_type			address_chunk_map;
+	/**
+		Cached iterator to last active chunk.  
+		Is automatically updated an maintained.  
+		This replaces the end_sentinel iterator.  
+	 */
+	value_pool_iterator			__back;
 protected:
 	/**
 		One default-constructed value, to avoid repetitive
@@ -202,6 +212,30 @@ private:
 	value_chunk_type*
 	__new_chunk(const size_type);
 
+#if 0
+	/**
+		\return modifiable iterator to the end sentinel chunk, 
+		which is always empty.  
+	 */
+	list_iterator
+	end_sentinel_iter(void) { 
+		return this->__back;
+	}
+
+	const_list_iterator
+	end_sentinel_iter(void) const {
+		return this->__back;
+	}
+#endif
+
+	/// NOTE: NOT the same as list_vector, forward_iterator only
+	list_iterator
+	vec_list_front(void) { return value_pool.begin(); }
+
+	/// NOTE: NOT the same as list_vector, forward_iterator only
+	const_list_iterator
+	vec_list_front(void) const { return value_pool.begin(); }
+
 public:
 	value_type*
 	find(const size_type) const;
@@ -227,6 +261,7 @@ public:
 	push_back(const value_type&);
 
 // iterators
+#if 0
 	iterator
 	begin(void) {
 		return iterator(this->value_pool.begin(), 
@@ -250,6 +285,71 @@ public:
 		return const_iterator(--this->value_pool.end(), 
 			this->value_pool.back().end());
 	}
+#else
+	// ripped from util::list_vector, comments too...
+
+        /// Modifiable iterator to first element
+        iterator
+        begin(void) {
+                // const list_iterator b = vec_list.begin();
+                // return iterator(b, b->begin());
+	if (this->empty()) {
+		// special case
+		return this->end();
+	} else {
+                const list_iterator lf(this->vec_list_front());
+                return iterator(lf, lf->begin());
+	}
+        }
+
+        /**
+                Read-only iterator to first element.
+                Note that for an empty list_vector,
+		vec_list_front points to the end-sentinel.  
+                At all other times, it should point to the 
+                front (valid) chunk.
+	 */
+        const_iterator
+        begin(void) const {
+                // const const_list_iterator b = vec_list.begin();
+                // return const_iterator(b, b->begin());
+	if (this->empty()) {
+		// special case
+		return this->end();
+	} else {
+                const const_list_iterator lf(this->vec_list_front());
+                return const_iterator(lf, lf->begin());
+	}
+        }
+
+	/**
+		Modifiable iterator to one-past-last element
+		The outer iterator used is the sentinel, 
+		which is a dummy chunk after the last valid chunk.  
+		(It is the true end of the chunk-list.)
+		\pre vec_list is not empty.
+	 */
+	iterator
+	end(void) {
+		const list_iterator lb(--this->value_pool.end());
+		return iterator(lb, lb->begin());
+		// should be same as begin() because end sentinel is empty
+	}
+
+	/**
+		Read-only iterator to one-past-last element
+		The outer iterator used is the sentinel, 
+		which is a dummy chunk after the last valid chunk.  
+		(It is the true end of the chunk-list.)
+		\pre vec_list is not empty.
+	 */
+	const_iterator
+	end(void) const {
+		const const_list_iterator lb(--this->value_pool.end());
+		return const_iterator(lb, lb->begin());
+		// should be same as begin() because end sentinel is empty
+	}
+#endif
 
 // diagnostic
 	std::ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.8 2006/11/03 07:07:23 fang Exp $
+	$Id: footprint.cc,v 1.27.4.9 2006/11/04 09:23:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -797,6 +797,11 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::collect_transient_info_base(m);
 	footprint_base<bool_tag>::collect_transient_info_base(m);
 	// value_footprint_bases don't have pointers
+#if 0
+	value_footprint_base<pbool_tag>::collect_transient_info_base(m);
+	value_footprint_base<pint_tag>::collect_transient_info_base(m);
+	value_footprint_base<preal_tag>::collect_transient_info_base(m);
+#endif
 	prs_footprint.collect_transient_info_base(m);
 	chp_footprint.collect_transient_info_base(m);
 	spec_footprint.collect_transient_info_base(m);

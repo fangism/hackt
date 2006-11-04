@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.15.4.1 2006/11/01 07:52:32 fang Exp $
+	$Id: param_value_collection.h,v 1.15.4.2 2006/11/04 09:23:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -13,6 +13,7 @@
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
+#include "util/persistent_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -23,6 +24,7 @@ class param_value_placeholder;
 using util::memory::count_ptr;
 using util::bad_bool;
 using util::good_bool;
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -107,7 +109,13 @@ NOTE: these functions should only be applicable to simple_param_meta_value_refer
 
 	bool is_unconditional(void) const;
 #endif
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+virtual	void
+	write_object(const persistent_object_manager&, ostream&) const = 0;
+
+virtual	void
+	load_object(footprint&, const persistent_object_manager&, istream&) = 0;
+#else
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;

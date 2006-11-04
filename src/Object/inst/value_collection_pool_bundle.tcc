@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_collection_pool_bundle.h"
-	$Id: value_collection_pool_bundle.tcc,v 1.1.2.2 2006/11/03 05:22:34 fang Exp $
+	$Id: value_collection_pool_bundle.tcc,v 1.1.2.3 2006/11/04 09:23:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_POOL_BUNDLE_TCC__
@@ -11,6 +11,7 @@
 #include "Object/inst/value_collection_pool_bundle.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/collection_pool.tcc"
+#include "Object/inst/value_placeholder.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/inst/value_array.h"
 #include "Object/expr/const_collection.h"
@@ -38,6 +39,25 @@ using util::read_value;
 #include "util/using_ostream.h"
 
 //=============================================================================
+/**
+	Binding functor.  
+	Also loads footprint's map!
+ */
+template <class T>
+struct value_collection_pool_wrapper<T>::collection_loader :
+		public util::persistent_loader_base {
+	footprint&	fp;
+	collection_loader(footprint& f, 
+		const persistent_object_manager& m, istream& i) :
+		util::persistent_loader_base(m, i), fp(f) { }
+
+	void
+	operator () (T& t) {
+		t.load_object(fp, pom, is);
+	}
+};	// end struct collection_loader
+
+//=============================================================================
 // class value_collection_pool_wrapper method definitions
 
 template <class T>
@@ -48,14 +68,15 @@ value_collection_pool_wrapper<T>::write_object_base(
 	STACKTRACE_THIS
 	const size_t s = this->pool.size();
 	write_value(o, s);
-	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_writer_ref(m, o));
+	const const_iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, util::persistent_writer_ref(m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
 value_collection_pool_wrapper<T>::load_object_base(
+		footprint& f, 
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
@@ -63,8 +84,8 @@ value_collection_pool_wrapper<T>::load_object_base(
 	read_value(i, s);
 	this->pool.allocate(s);		// will be contiguous! (first chunk)
 	INVARIANT(this->pool.size() == s);
-	for_each(this->pool.begin(), this->pool.end(), 
-		util::persistent_loader_ref(m, i));
+	const iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, collection_loader(f, m, i));
 }
 
 //=============================================================================
@@ -173,19 +194,20 @@ value_collection_pool_bundle<Tag>::write_object_base(
 template <class Tag>
 void
 value_collection_pool_bundle<Tag>::load_object_base(
+		footprint& f, 
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
 	value_collection_pool_wrapper<value_array<Tag, 0> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	value_collection_pool_wrapper<value_array<Tag, 1> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	value_collection_pool_wrapper<value_array<Tag, 2> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	value_collection_pool_wrapper<value_array<Tag, 3> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 	value_collection_pool_wrapper<value_array<Tag, 4> >
-		::load_object_base(m, i);
+		::load_object_base(f, m, i);
 }
 
 //=============================================================================
