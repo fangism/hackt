@@ -1,16 +1,17 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.7 2006/11/04 09:23:21 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.8 2006/11/04 21:59:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
 
 #include <iosfwd>
-#include "util/size_t.h"
-#include "util/persistent_fwd.h"
 #include "Object/inst/collection_pool.h"
 #include "Object/inst/collection_index_entry.h"
+#include "util/boolean_types.h"
+#include "util/size_t.h"
+#include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -20,6 +21,9 @@ using std::istream;
 // forward declarations
 class unroll_context;
 class footprint;
+class footprint_frame;
+class port_alias_tracker;
+class port_member_context;
 template <class> class instance_placeholder;
 template <class> class collection_interface;
 template <class> class instance_collection;
@@ -30,6 +34,7 @@ template <class> class port_actual_collection;
 template <class> class instance_collection_pool_bundle;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
+using util::good_bool;
 
 //=============================================================================
 /**
@@ -54,8 +59,30 @@ protected:
 	// default ctors and dtor
 	// non-copyable (guaranteed by pool_type)
 
-	// serialization helper routines
 
+	good_bool
+	create_dependent_types(const footprint&);
+
+	good_bool
+	allocate_local_instance_ids(footprint&);
+
+	// iterate over port-pools (scalar and port_formal_array)
+	void
+	collect_port_aliases(port_alias_tracker&) const;
+
+	void
+	assign_footprint_frame(footprint_frame&, 
+		const port_member_context&) const;
+
+private:
+	// helper functors... "I want tr1/functional binders!!!"
+	struct dependent_creator;
+	struct index_allocator;
+	struct port_alias_collector;
+	struct footprint_frame_assigner;
+
+// serialization helper routines
+protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -74,7 +101,7 @@ protected:
 	load_connections(const pool_bundle_type&, istream&);
 
 private:
-	// helper functors
+	// helper functors... "I want tr1/functional binders!!!"
 	struct collection_writer;
 	struct collection_loader;
 	struct connection_writer;
@@ -152,7 +179,22 @@ struct instance_collection_pool_bundle :
 	allocate_local_collection(footprint&, 
 		const never_ptr<const instance_placeholder<Tag> >);
 
-	// serialization routines
+// unroll/creation/allocation
+	good_bool
+	create_dependent_types(const footprint&);
+
+	good_bool
+	allocate_local_instance_ids(footprint&);
+
+	// iterate over port-pools (scalar and port_formal_array)
+	void
+	collect_port_aliases(port_alias_tracker&) const;
+
+	void
+	assign_footprint_frame(footprint_frame&, 
+		const port_member_context&) const;
+
+// serialization routines
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -164,11 +206,6 @@ struct instance_collection_pool_bundle :
 	load_object_base(footprint&, 
 		const persistent_object_manager&, istream&);
 
-#if 0
-	// load everything but actual_collections into footprint's map.
-	void
-	load_footprint(footprint&) const;
-#endif
 };	// end class instance_collection_pool_bundle
 
 //=============================================================================

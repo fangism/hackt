@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.14.4.1 2006/11/01 07:52:30 fang Exp $
+	$Id: instance_collection_base.h,v 1.14.4.2 2006/11/04 21:59:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -122,7 +122,12 @@ protected:
 #endif
 		super_instance() { }
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	// we don't destroy via virtual base anymore
+protected:
+#else
 public:
+#endif
 
 virtual	~instance_collection_base();
 

@@ -5,6 +5,16 @@
 
 2006-11-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-17:
+	  Rewrite many create/alloc -related footprint member functions
+		to iterate through collection pools, rather than
+		using the collection_map to avoid repeated lookups.  
+		Marked certain corresponding instance_collection
+		member functions as never-call.  
+	  Make.hchk-head: added .h, .hh, .tcc SUFFIXES.  
+	  Next: heap-allocate footprint and serialize pointers hitherto.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-16:
 	  Latest crash bug fixed, mishaps in collection_pool class template
 		with goof-ups in iterators and allocation.  

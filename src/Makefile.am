@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.140.2.8 2006/11/03 07:07:21 fang Exp $
+#	$Id: Makefile.am,v 1.140.2.9 2006/11/04 21:59:11 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -278,6 +278,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/port_formal_array.tcc \
 	Object/inst/port_actual_collection.tcc \
 	Object/inst/instance_collection_pool_bundle.tcc \
+	Object/inst/instance_collection_pool_bundle_footprint.tcc \
 	Object/inst/value_collection_pool_bundle.tcc \
 	Object/inst/instance_placeholder.tcc \
 	Object/inst/internal_aliases_policy.tcc \

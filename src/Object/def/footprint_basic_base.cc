@@ -2,7 +2,7 @@
 	\file "Object/inst/footprint_basic_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage non-structured meta-types.  
-	$Id: footprint_basic_base.cc,v 1.1.2.2 2006/11/04 09:23:11 fang Exp $
+	$Id: footprint_basic_base.cc,v 1.1.2.3 2006/11/04 21:59:14 fang Exp $
  */
 
 
@@ -27,6 +27,12 @@
 
 namespace HAC {
 namespace entity {
+
+#if 0
+template class instance_collection_pool_bundle<bool_tag>;
+template class instance_collection_pool_bundle<int_tag>;
+template class instance_collection_pool_bundle<enum_tag>;
+#endif
 
 template class footprint_base<bool_tag>;
 template class footprint_base<int_tag>;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.5 2006/11/04 09:23:21 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.6 2006/11/04 21:59:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -40,6 +40,7 @@ using util::read_value;
 //=============================================================================
 // class instance_collection_pool_wrapper helper structs
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Binding functor.  
  */
@@ -234,30 +235,6 @@ instance_collection_pool_bundle<Tag>::read_pointer(istream& i) const {
 	read_value(i, ci);
 	return &*this->lookup_collection(ct, ci);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Populates the footprint's instance_collection_map.  
-	Traverses local and formal collections only.  
- */
-template <class Tag>
-void
-instance_collection_pool_bundle<Tag>::load_footprint(footprint& f) const {
-	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::pool.load_footprint(f);
-	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::pool.load_footprint(f);
-	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::pool.load_footprint(f);
-	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::pool.load_footprint(f);
-	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::pool.load_footprint(f);
-	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::pool.load_footprint(f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
