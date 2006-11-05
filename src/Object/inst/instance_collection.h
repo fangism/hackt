@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.9 2006/11/03 05:22:26 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.10 2006/11/05 01:23:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -147,6 +147,13 @@ public:
 	typedef	never_ptr<const instance_placeholder_type>
 				instance_placeholder_ptr_type;
 protected:
+#if HEAP_ALLOCATE_FOOTPRINTS
+	/**
+		Back-reference to owning footprint.  
+		Always a weak-pointer, even if footprints ref-counted. 
+	 */
+	never_ptr<const footprint>		footprint_ref;
+#endif
 	/**
 		TODO: consider pushing to instance_array to avoid
 			replicating between formals and actual collections.  
@@ -166,11 +173,12 @@ protected:
 	instance_collection(const instance_placeholder_ptr_type, 
 		const instance_collection_parameter_type&);
 #endif
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
-
+#endif
 virtual	~instance_collection();
 
-
+public:
 virtual	ostream&
 	what(ostream&) const = 0;
 

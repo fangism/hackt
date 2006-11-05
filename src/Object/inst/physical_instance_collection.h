@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.16.4.2 2006/11/02 06:18:37 fang Exp $
+	$Id: physical_instance_collection.h,v 1.16.4.3 2006/11/05 01:23:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -46,7 +46,9 @@ protected:
 protected:
 	physical_instance_collection() : parent_type() { }
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
+#endif
 virtual	~physical_instance_collection();
 
 private:

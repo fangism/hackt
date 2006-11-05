@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.10 2006/11/04 21:59:12 fang Exp $
+	$Id: footprint.cc,v 1.27.4.11 2006/11/05 01:23:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -44,7 +44,6 @@
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/preal_const.h"
-#if 1
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
@@ -52,12 +51,10 @@
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/channel_instance_collection.h"
-#endif
 #else
 #include <set>				// to sort keys
 #endif
 #include "Object/traits/classification_tags.h"
-#if 1
 #include "Object/inst/process_instance.h"
 #include "Object/inst/channel_instance.h"
 #include "Object/inst/struct_instance.h"
@@ -67,6 +64,8 @@
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
+#if HEAP_ALLOCATE_FOOTPRINTS
+#include "Object/persistent_type_hash.h"
 #endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
@@ -82,6 +81,13 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
+
+#if HEAP_ALLOCATE_FOOTPRINTS
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+        HAC::entity::footprint, GENERIC_FOOTPRINT_TYPE_KEY, 0)
+}
+#endif
 
 namespace HAC {
 namespace entity {
@@ -253,6 +259,9 @@ footprint::footprint() :
 	\pre source footprint must be default constructed (empty).
  */
 footprint::footprint(const footprint& t) :
+#if HEAP_ALLOCATE_FOOTPRINTS
+	persistent(), 
+#endif
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
 	footprint_base<datastruct_tag>(), 
@@ -279,6 +288,12 @@ footprint::footprint(const footprint& t) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint::~footprint() {
 	STACKTRACE_DTOR_VERBOSE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint::what(ostream& o) const {
+	return o << "footprint";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -884,6 +899,18 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HEAP_ALLOCATE_FOOTPRINTS
+void
+footprint::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+if (!m.register_transient_object(this,
+		util::persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
+}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: to preserve precise hash_table ordering, we use a copy
 	of the hash-table with its internal buckets reversed, 
@@ -935,6 +962,14 @@ footprint::write_object_base(const persistent_object_manager& m,
 	chp_footprint.write_object_base(m, o);
 	spec_footprint.write_object_base(m, o);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HEAP_ALLOCATE_FOOTPRINTS
+void
+footprint::write_object(const persistent_object_manager& m, ostream& o) const {
+	write_object_base(m, o);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -990,6 +1025,14 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	chp_footprint.load_object_base(m, i);
 	spec_footprint.load_object_base(m, i);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HEAP_ALLOCATE_FOOTPRINTS
+void
+footprint::load_object(const persistent_object_manager& m, istream& i) {
+	load_object_base(m, i);
+}
+#endif
 
 //=============================================================================
 }	// end namespace entity

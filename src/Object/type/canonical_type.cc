@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.12.4.3 2006/11/02 06:18:54 fang Exp $
+	$Id: canonical_type.cc,v 1.12.4.4 2006/11/05 01:23:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,6 +19,7 @@
 #include "Object/inst/subinstance_manager.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/struct_traits.h"
+#include "Object/def/footprint.h"
 #include "common/TODO.h"
 
 namespace HAC {

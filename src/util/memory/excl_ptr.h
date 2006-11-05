@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.13 2006/07/26 19:27:45 fang Exp $
+	$Id: excl_ptr.h,v 1.13.20.1 2006/11/05 01:23:14 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -266,6 +266,17 @@ public:
 	operator -> () const throw() { EXCL_PTR_NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
+
+	/**
+		Swap pointers and ownership.  
+	 */
+	void
+	swap(this_type& e) {
+		// std::swap or XOR trick, not crucial
+		pointer p = this->ptr;
+		this->ptr = e.ptr;
+		e.ptr = p;
+	}
 
 /**
 	Will not accept const pointer of p.  

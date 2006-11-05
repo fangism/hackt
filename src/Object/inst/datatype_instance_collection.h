@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.12.4.1 2006/11/01 07:52:23 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.12.4.2 2006/11/05 01:23:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -42,9 +42,12 @@ protected:
 protected:
 	datatype_instance_collection() : parent_type() { }
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
+#endif
 virtual	~datatype_instance_collection();
 
+public:
 virtual	ostream&
 	what(ostream& o) const = 0;
 

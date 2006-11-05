@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.57.2.1 2006/10/31 00:28:35 fang Exp $
+#	$Id: ChangeLog,v 1.57.2.2 2006/11/05 01:23:13 fang Exp $
+
+2006-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-18:
+	  util/memory/excl_ptr.h: added swap() member function.  
+
 
 2006-10-29	David Fang		<fangism@users.sourceforge.net>
 

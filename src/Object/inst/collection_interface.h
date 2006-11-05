@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.7 2006/11/03 05:22:19 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.8 2006/11/05 01:23:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -123,10 +123,12 @@ protected:
 protected:
 	collection_interface() : parent_type() { }
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
-
+#endif
 virtual	~collection_interface() { }
 
+public:
 virtual	ostream&
 	what(ostream&) const = 0;
 

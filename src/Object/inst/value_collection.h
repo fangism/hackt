@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.20.2.3 2006/11/02 06:18:49 fang Exp $
+	$Id: value_collection.h,v 1.20.2.4 2006/11/05 01:23:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -144,10 +144,12 @@ protected:
 	explicit
 	value_collection(const value_placeholder_ptr_type);
 
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
-
+#endif
 virtual	~value_collection();
 
+public:
 virtual	ostream&
 	what(ostream& o) const = 0;
 

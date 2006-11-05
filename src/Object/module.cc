@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.26 2006/10/18 18:38:13 fang Exp $
+ 	$Id: module.cc,v 1.26.4.1 2006/11/05 01:22:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -326,7 +326,7 @@ module::cflat_process_type(const process_type_reference& pt, ostream& o,
 		return good_bool(false);
 	}
 #if ENABLE_STACKTRACE
-	_footprint.dump_with_collections(cerr << "module\'s footprint: ", 
+	get_footprint().dump_with_collections(cerr << "module\'s footprint: ", 
 		dump_flags::default_value,
 		expr_dump_context::default_value) << endl;
 #endif

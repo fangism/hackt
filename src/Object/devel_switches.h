@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.9 2006/11/03 07:07:22 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.10 2006/11/05 01:22:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -129,7 +129,17 @@
 	Goal: 1
 	Status: not begun
  */
-#define	HEAP_ALLOCATE_FOOTPRINTS		0
+#define	HEAP_ALLOCATE_FOOTPRINTS		1
+
+/**
+	Define to 1 to reference-count footprints. 
+	Don't know if this is necessary, or a good idea, but it is an option.
+	Purpose: Could use this to validate acylic dependencies...
+	Goal: ?
+ */
+#if	HEAP_ALLOCATE_FOOTPRINTS
+#define	REF_COUNT_FOOTPRINTS			0
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

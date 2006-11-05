@@ -5,6 +5,14 @@
 
 2006-11-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-18:
+	  Converted footprint_manager to use heap-allocated footprints.
+	  Basic tests pass with expected header differences.  
+	  Next: give instance_collections back references to owning footprint, 
+		and correctly track formal_collection references.  
+	  Maybe push super_instance pointer down to port_actual_collections.
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-17:
 	  Rewrite many create/alloc -related footprint member functions
 		to iterate through collection pools, rather than

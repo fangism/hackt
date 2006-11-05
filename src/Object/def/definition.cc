@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.32.4.1 2006/10/31 00:28:09 fang Exp $
+ 	$Id: definition.cc,v 1.32.4.2 2006/11/05 01:23:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -36,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/channel_definition_alias.h"
 #include "Object/def/process_definition.h"
 #include "Object/def/process_definition_alias.h"
+#include "Object/def/footprint.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/channel_type_reference.h"
@@ -2632,6 +2633,7 @@ process_definition::process_definition() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This constructor is reserved for the module.  
+	NOTE: module is always nullary (template)
  */
 process_definition::process_definition(const string& s) :
 		definition_base(), 
@@ -2642,7 +2644,11 @@ process_definition::process_definition(const string& s) :
 		parent(), 
 		port_formals(), 
 		prs(), chp(), 
-		footprint_map() {
+		footprint_map(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		0
+#endif
+		) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3145,6 +3151,7 @@ if (defined) {
 void
 process_definition::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 #if 0
 	cerr << "registering definition: " << key << endl;
 #endif
