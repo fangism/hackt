@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.6 2006/11/04 21:59:22 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.7 2006/11/05 07:21:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -270,6 +270,19 @@ instance_collection_pool_bundle<Tag>::allocate_port_formal(
 	switch (dim) {
 	case 0: {
 		typedef	instance_array<Tag, 0>	array_type;
+#if HEAP_ALLOCATE_FOOTPRINTS
+// passes additional read-only footprint back-reference
+#define	ALLOCATE_AND_REGISTER_IT					\
+		collection_pool<array_type>&				\
+			_pool(this->get_collection_pool<array_type>());	\
+		array_type* const ret = _pool.allocate();		\
+		ret->~array_type();					\
+		new (ret) array_type(f, p);				\
+		f.register_collection_map_entry(			\
+			ret->get_footprint_key(), 			\
+			lookup_collection_pool_index_entry(_pool, *ret)); \
+		return ret;
+#else
 #define	ALLOCATE_AND_REGISTER_IT					\
 		collection_pool<array_type>&				\
 			_pool(this->get_collection_pool<array_type>());	\
@@ -280,6 +293,7 @@ instance_collection_pool_bundle<Tag>::allocate_port_formal(
 			ret->get_footprint_key(), 			\
 			lookup_collection_pool_index_entry(_pool, *ret)); \
 		return ret;
+#endif
 		ALLOCATE_AND_REGISTER_IT
 	}
 	case 1:

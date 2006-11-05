@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2.2.7 2006/11/03 05:22:23 fang Exp $
+	$Id: instance_array.h,v 1.2.2.8 2006/11/05 07:21:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -88,7 +88,11 @@ private:
 
 public:
 	explicit
-	instance_array(const instance_placeholder_ptr_type);
+	instance_array(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		const footprint&, 
+#endif
+		const instance_placeholder_ptr_type);
 
 	~instance_array();
 
@@ -168,7 +172,6 @@ public:
 public:
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	using parent_type::collect_transient_info_base;
-	using parent_type::write_pointer;
 
 	void
 	write_pointer(ostream&, 

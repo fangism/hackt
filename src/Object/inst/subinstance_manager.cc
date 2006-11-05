@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.19.4.1 2006/11/02 06:18:47 fang Exp $
+	$Id: subinstance_manager.cc,v 1.19.4.2 2006/11/05 07:21:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -315,7 +315,7 @@ subinstance_manager::write_object_base(
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; ++i) {
 		// doesn't raelly write a pointer, but index
-		(*i)->write_pointer(f, o);
+		(*i)->write_local_pointer(f, o);
 	}
 #else
 	m.write_pointer_list(o, subinstance_array);
@@ -331,6 +331,8 @@ subinstance_manager::write_object_base(
 	Load subinstances AFTER collections have been loaded, 
 	or at least allocated?
 	Footprint should probably pre-allocate before loading...
+	\pre footprint needs to be mapped out already, may need a 
+		two-pass implementation.  
  */
 void
 subinstance_manager::load_object_base(

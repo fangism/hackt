@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.16.4.3 2006/11/05 01:23:11 fang Exp $
+	$Id: physical_instance_collection.h,v 1.16.4.4 2006/11/05 07:21:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -124,7 +124,7 @@ virtual	void
 	collect_transient_info_base(persistent_object_manager&) const = 0;
 
 virtual	void
-	write_pointer(const footprint&, ostream&) const = 0;
+	write_local_pointer(const footprint&, ostream&) const = 0;
 #else
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

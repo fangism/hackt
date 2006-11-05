@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.10 2006/11/05 01:23:11 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.11 2006/11/05 07:21:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -167,7 +167,11 @@ protected:
 
 	/// requires a back-reference to the source collection placeholder
 	explicit
-	instance_collection(const instance_placeholder_ptr_type);
+	instance_collection(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		const footprint&, 
+#endif
+		const instance_placeholder_ptr_type);
 
 #if 0
 	instance_collection(const instance_placeholder_ptr_type, 
@@ -187,6 +191,11 @@ virtual	ostream&
 
 virtual	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
+
+#if HEAP_ALLOCATE_FOOTPRINTS
+	const footprint&
+	get_footprint_owner(void) const { return *this->footprint_ref; }
+#endif
 
 #if USE_COLLECTION_INTERFACES
 	const this_type&
@@ -453,7 +462,15 @@ virtual	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const = 0;
 
-	using parent_type::write_pointer;
+#if HEAP_ALLOCATE_FOOTPRINTS
+	void
+	write_external_pointer(const persistent_object_manager&,
+		ostream&) const;
+
+	static
+	never_ptr<const this_type>
+	read_external_pointer(const persistent_object_manager&, istream&);
+#endif
 #endif
 
 protected:
@@ -464,7 +481,11 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		const footprint&, 
+#endif
+		const persistent_object_manager&, istream&);
 
 };	// end class instance_collection
 

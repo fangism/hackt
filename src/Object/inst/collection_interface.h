@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.8 2006/11/05 01:23:09 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.9 2006/11/05 07:21:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -212,7 +212,7 @@ virtual	void
 
 	// this variation includes the type_tag_enum
 	void
-	write_pointer(const footprint&, ostream&) const;
+	write_local_pointer(const footprint&, ostream&) const;
 
 virtual	void
 	collect_transient_info_base(persistent_object_manager&) const = 0;

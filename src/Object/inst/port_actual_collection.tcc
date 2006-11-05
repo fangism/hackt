@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.9 2006/11/03 07:07:34 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.10 2006/11/05 07:21:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -626,15 +626,19 @@ PORT_ACTUAL_COLLECTION_CLASS::write_object(
 #endif
 		const persistent_object_manager& m, ostream& f) const {
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if HEAP_ALLOCATE_FOOTPRINTS
+	this->formal_collection->write_external_pointer(m, f);
+#else
 	// WRONG! the formal collection belongs to a DIFFERENT footprint!
 	// TODO: formal collections should have back-ref to footprint
 	// and also omit super instance pointer from base class.
 	this->formal_collection->write_pointer(f,
 		fp.template get_instance_collection_pool_bundle<Tag>());
-#else
+#endif	// HEAP_ALLOCATE_FOOTPRINTS
+#else	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, this->formal_collection);
-#endif
+#endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// size is deduced from the formal_collection
 	const size_t k = this->formal_collection->collection_size();
 #if ENABLE_STACKTRACE
@@ -683,11 +687,16 @@ PORT_ACTUAL_COLLECTION_CLASS::load_object(
 	cerr << "this (port-actual-collection) @ " << this << endl;
 #endif
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+#if HEAP_ALLOCATE_FOOTPRINTS
+	// read_external_pointer, this must be counterpart to 
+	// instance_collection::write_external_pointer()
 	this->formal_collection =
-		never_ptr<const collection_interface<Tag> >(
-			fp.template get_instance_collection_pool_bundle<Tag>()
-				.read_pointer(f))
-			.template is_a<const formal_collection_type>();
+		formal_collection_type::read_external_pointer(m, f);
+#else
+	this->formal_collection = never_ptr<const collection_interface<Tag> >(
+		fp.template get_instance_collection_pool_bundle<Tag>()
+		.read_pointer(f)).template is_a<const formal_collection_type>();
+#endif
 #else
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, this->formal_collection);

@@ -3,6 +3,28 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-19:
+	  More modifications based on heap-allocated footprints.
+		All instance_collections (and sub-types) are initialized
+		with a back-reference member to the in-charge footprint.  
+	  Fixed incorrect code in port_actual_collections by distinguishing
+		between writes withing the footprint (local) vs.
+		references to external footprints.  
+		instance_collection now distinguishes write_local_pointer
+		from write_external_pointer, which just loads an additional
+		pointer to a heap-allocated footprint.  
+	  Q: do value collections need footprint?  Probably not, unless
+		we have cross-footprint references (post-unroll).  
+	  TODO: global_entries' footprint reference can now be serialized
+		and de-serialized using the persistent_object_manager.
+	  Next to fix: subisntance_manager's loading of pointers to
+		physical_instance_collections sometimes fails because
+		dependent pointees have not been pool-allocated yet during
+		reconstruction, so we may need a two phase reconstruction.  
+
+
 2006-11-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-18:

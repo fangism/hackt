@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/collection_pool.tcc"
-	$Id: collection_pool.tcc,v 1.1.2.3 2006/11/04 09:23:17 fang Exp $
+	$Id: collection_pool.tcc,v 1.1.2.4 2006/11/05 07:21:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_TCC__
@@ -209,7 +209,7 @@ COLLECTION_POOL_CLASS::operator [] (const size_type i) {
 /**
 	\param v reference of value to lookup, by address.
 	\pre v must be a member of this collection.  
-	\return 
+	\return 0-based index that references the argument.  
  */
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::size_type

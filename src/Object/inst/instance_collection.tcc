@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.12 2006/11/04 21:59:18 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.13 2006/11/05 07:21:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -113,7 +113,7 @@ using util::persistent_traits;
 
 COLLECTION_INTERFACE_TEMPLATE_SIGNATURE
 void
-COLLECTION_INTERFACE_CLASS::write_pointer(
+COLLECTION_INTERFACE_CLASS::write_local_pointer(
 		const footprint& f, ostream& o) const {
 	const unsigned char t = traits_type::type_tag_enum_value;
 	write_value(o, t);
@@ -133,15 +133,24 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection() :
 		parent_type(), 
 		collection_type_manager_parent_type(), 
+#if HEAP_ALLOCATE_FOOTPRINTS
+		footprint_ref(NULL), 
+#endif
 		source_placeholder(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(
+#if HEAP_ALLOCATE_FOOTPRINTS
+			const footprint& f, 
+#endif
 			const instance_placeholder_ptr_type p) :
 		parent_type(), 
 		collection_type_manager_parent_type(), 
+#if HEAP_ALLOCATE_FOOTPRINTS
+		footprint_ref(&f), 
+#endif
 		source_placeholder(p) {
 }
 
@@ -305,6 +314,49 @@ INSTANCE_COLLECTION_CLASS::make_port_formal_array(
 #endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HEAP_ALLOCATE_FOOTPRINTS
+/**
+	This prefixes a footprint-translated pointer with a reference
+	to the external footprint.  
+	Called by port_actual_collection.  
+	TODO: consider an abbreviated form just uses a port_formal 
+	positional number.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+void
+INSTANCE_COLLECTION_CLASS::write_external_pointer(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, this->footprint_ref);
+	const instance_collection_pool_bundle<Tag>&
+		pb(this->footprint_ref->
+			template get_instance_collection_pool_bundle<Tag>());
+	this->write_pointer(o, pb);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Counterpart to instance_collection::write_external_pointer()
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+never_ptr<const INSTANCE_COLLECTION_CLASS>
+INSTANCE_COLLECTION_CLASS::read_external_pointer(
+		const persistent_object_manager& m, istream& i) {
+	never_ptr<footprint> ext_fp;
+	m.read_pointer(i, ext_fp);
+	NEVER_NULL(ext_fp);
+	m.load_object_once(&*ext_fp);	// must load before looking up!
+	const never_ptr<const parent_type>
+		p(ext_fp->template get_instance_collection_pool_bundle<Tag>()
+		.read_pointer(i));
+	NEVER_NULL(p);
+	const never_ptr<const this_type>
+		ret(p.template is_a<const this_type>());
+	NEVER_NULL(ret);
+	return ret;
+}
+#endif	// HEAP_ALLOCATE_FOOTPRINTS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	initial_instantiation_statement_ptr is permitted to be NULL
 	for instance collections that belong to footprints.  
@@ -319,6 +371,7 @@ INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::collect_transient_info_base(m);
 #endif
+	// don't bother visiting parent footprint?
 	collection_type_manager_parent_type::collect_transient_info_base(m);
 	if (this->source_placeholder) {
 		source_placeholder->collect_transient_info(m);
@@ -334,18 +387,30 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::write_object_base(m, o);
 #endif
+	// owning footprint? -- responsibility of owner footprint
+	// to restores back-references
 	collection_type_manager_parent_type::write_object_base(m, o);
 	m.write_pointer(o, this->source_placeholder);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param f is the owning footprint to re-establish back-reference.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::load_object_base(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		const footprint& f, 
+#endif
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::load_object_base(m, i);
+#endif
+#if HEAP_ALLOCATE_FOOTPRINTS
+	// owning footprint? re-establish back-reference
+	this->footprint_ref = never_ptr<const footprint>(&f);
 #endif
 	collection_type_manager_parent_type::load_object_base(m, i);
 	m.read_pointer(i, this->source_placeholder);
@@ -400,8 +465,17 @@ INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array(const instance_placeholder_ptr_type p) :
-		parent_type(p), collection() {
+INSTANCE_ARRAY_CLASS::instance_array(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		const footprint& f, 
+#endif
+		const instance_placeholder_ptr_type p) :
+#if HEAP_ALLOCATE_FOOTPRINTS
+		parent_type(f, p), 
+#else
+		parent_type(p), 
+#endif
+		collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1237,7 +1311,11 @@ INSTANCE_ARRAY_CLASS::load_object(
 #endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_object()");
-	parent_type::load_object_base(m, f);
+	parent_type::load_object_base(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		fp, 
+#endif
+		m, f);
 	fp.register_collection_map_entry(
 		this->source_placeholder->get_footprint_key(), 
 		lookup_collection_pool_index_entry(
@@ -1331,8 +1409,17 @@ INSTANCE_SCALAR_CLASS::instance_array() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array(const instance_placeholder_ptr_type p) :
-		parent_type(p), the_instance() {
+INSTANCE_SCALAR_CLASS::instance_array(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		const footprint& f, 
+#endif 
+		const instance_placeholder_ptr_type p) :
+#if HEAP_ALLOCATE_FOOTPRINTS
+		parent_type(f, p), 
+#else
+		parent_type(p),
+#endif
+		the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1830,7 +1917,11 @@ INSTANCE_SCALAR_CLASS::load_object(
 #endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
-	parent_type::load_object_base(m, f);
+	parent_type::load_object_base(
+#if HEAP_ALLOCATE_FOOTPRINTS
+		fp, 
+#endif
+		m, f);
 	fp.register_collection_map_entry(
 		this->source_placeholder->get_footprint_key(), 
 		lookup_collection_pool_index_entry(

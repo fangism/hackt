@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.6 2006/11/03 05:22:31 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.7 2006/11/05 07:21:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -214,8 +214,6 @@ public:
 	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const;
-
-	using parent_type::write_pointer;
 
 	void
 	write_object(const footprint&, 
