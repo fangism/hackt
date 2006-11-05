@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.12.4.4 2006/11/05 01:23:12 fang Exp $
+	$Id: canonical_type.cc,v 1.12.4.5 2006/11/05 22:29:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -172,6 +172,7 @@ canonical_type_footprint_frame_policy<process_definition>::
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !HEAP_ALLOCATE_FOOTPRINTS
 void
 canonical_type_footprint_frame_policy<process_definition>::
 		initialize_frame_pointer_only(
@@ -181,6 +182,7 @@ canonical_type_footprint_frame_policy<process_definition>::
 			cpt.get_raw_template_params()));
 	f = &_f;
 }
+#endif
 
 //=============================================================================
 /**
@@ -228,6 +230,7 @@ canonical_type_footprint_frame_policy<user_def_datatype>::
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !HEAP_ALLOCATE_FOOTPRINTS
 void
 canonical_type_footprint_frame_policy<user_def_datatype>::
 		initialize_frame_pointer_only(
@@ -237,6 +240,7 @@ canonical_type_footprint_frame_policy<user_def_datatype>::
 			cpt.get_raw_template_params()));
 	f = &_f;
 }
+#endif
 
 //=============================================================================
 /**

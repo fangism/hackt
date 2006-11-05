@@ -5,7 +5,7 @@
 
 	\todo Specify all pre-conditions, post-conditions, and semantics.  
 
-	$Id: nested_iterator.h,v 1.6.28.1 2006/11/04 09:23:24 fang Exp $
+	$Id: nested_iterator.h,v 1.6.28.2 2006/11/05 22:29:19 fang Exp $
  */
 
 #ifndef	__UTIL_NESTED_ITERATOR_H__
@@ -100,7 +100,7 @@ private:
 			typename inner_iterator_traits::pointer, 
 			typename inner_iterator_traits::reference>
 							interface_type;
-public:	// temporary
+// public:	// temporary for debugging
 	typedef	OuterIter				outer_iterator_type;
 	typedef	InnerIter				inner_iterator_type;
 public:

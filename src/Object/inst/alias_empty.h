@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.10.4.1 2006/10/29 02:25:09 fang Exp $
+	$Id: alias_empty.h,v 1.10.4.2 2006/11/05 22:29:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -138,6 +138,7 @@ public:
 #endif
 	}
 
+#if !HEAP_ALLOCATE_FOOTPRINTS
 public:
 	template <class AliasType>
 	static
@@ -158,6 +159,7 @@ public:
 	restore_canonical_footprint(const AliasType&,
 		const persistent_object_manager&,
 		istream&, const footprint*&);
+#endif
 
 protected:
 	void

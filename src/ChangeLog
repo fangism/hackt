@@ -5,6 +5,17 @@
 
 2006-11-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-21:
+	  Post-alloc reconstruction death fixed, by simply maintaining
+		the footprint pointers with trivial serialization.  
+		Bunch of obsolete code slated for removal.  
+	  Test suite: no ICEs, many header-only differences, many
+		differences due to ordering and differently chosen
+		canonical names in equivalent sets.
+	  TODO: re-validate all affected tests by hand.  *sigh*
+		Will try to reduce/minimize differences first.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-20:
 	  Split collection loading into two phases: allocate, then load, 
 		for the purpose of being able to load footprint-translated

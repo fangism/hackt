@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.9.4.1 2006/10/29 02:25:10 fang Exp $
+	$Id: alias_empty.tcc,v 1.9.4.2 2006/11/05 22:29:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -176,6 +176,7 @@ instance_alias_info_empty::__initialize_assign_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !HEAP_ALLOCATE_FOOTPRINTS
 /**
         This simply does not work because we're collecting a 
         pointer of a temporarily created complete canonical type.  
@@ -267,6 +268,7 @@ instance_alias_info_empty::restore_canonical_footprint(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // end of code blatantly ripped from instance_alias_info_actuals
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// HEAP_ALLOCATE_FOOTPRINTS
 
 //=============================================================================
 }	// end namespace entity

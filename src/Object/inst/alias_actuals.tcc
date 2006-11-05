@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.14.2.1 2006/10/29 02:25:08 fang Exp $
+	$Id: alias_actuals.tcc,v 1.14.2.2 2006/11/05 22:29:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -163,6 +163,7 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !HEAP_ALLOCATE_FOOTPRINTS
 /**
 	This simply does not work because we're collecting a 
 	pointer of a temporarily created complete canonical type.  
@@ -248,6 +249,7 @@ instance_alias_info_actuals::restore_canonical_footprint(
 	canonical_type_footprint_frame_policy<canonical_definition_type>
 		::initialize_frame_pointer_only(_type, _f);
 }
+#endif	// HEAP_ALLOCATE_FOOTPRINTS
 
 //=============================================================================
 }	// end namespace entity

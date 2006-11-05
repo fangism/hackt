@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.11.44.1 2006/11/02 06:18:34 fang Exp $
+	$Id: instance_pool.h,v 1.11.44.2 2006/11/05 22:29:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -33,6 +33,7 @@ template <class> class instance_collection_pool_bundle;
 	Wrapped interface to list_vector being used as an indexable pool, 
 	intended for use of pseudo-allocating instances.  
 	Consider adding this as an index_vector_pool to the util library.  
+	TODO: consider using collection_pool.
  */
 template <class T>
 class instance_pool : private index_pool<util::list_vector<T> > {

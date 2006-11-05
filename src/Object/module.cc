@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.26.4.1 2006/11/05 01:22:59 fang Exp $
+ 	$Id: module.cc,v 1.26.4.2 2006/11/05 22:29:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -10,8 +10,8 @@
 
 // code debugging switches
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 #include "Object/module.tcc"
 #include <iostream>

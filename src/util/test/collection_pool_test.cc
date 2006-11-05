@@ -1,7 +1,7 @@
 /**
 	\file "collection_pool_test.cc"
 	NOTE: this tests a structure in the HAC library, not in util.  
-	$Id: collection_pool_test.cc,v 1.1.2.3 2006/11/04 09:23:25 fang Exp $
+	$Id: collection_pool_test.cc,v 1.1.2.4 2006/11/05 22:29:20 fang Exp $
  */
 
 // always debug with asserts
@@ -34,8 +34,10 @@ template class collection_pool<string>;
 typedef	collection_pool<string>	collection_type;
 typedef	collection_type::iterator		iterator;
 typedef	collection_type::const_iterator		const_iterator;
+#if 0
 typedef	const_iterator::outer_iterator_type	outer_iterator;
 typedef	const_iterator::inner_iterator_type	inner_iterator;
+#endif
 
 template <class Iter>
 ostream&
