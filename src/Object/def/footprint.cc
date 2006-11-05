@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.11 2006/11/05 01:23:04 fang Exp $
+	$Id: footprint.cc,v 1.27.4.12 2006/11/05 19:37:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -940,6 +940,14 @@ footprint::write_object_base(const persistent_object_manager& m,
 	}
 }
 #endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	footprint_base<process_tag>::write_reserve_sizes(o);
+	footprint_base<channel_tag>::write_reserve_sizes(o);
+	footprint_base<datastruct_tag>::write_reserve_sizes(o);
+	footprint_base<enum_tag>::write_reserve_sizes(o);
+	footprint_base<int_tag>::write_reserve_sizes(o);
+	footprint_base<bool_tag>::write_reserve_sizes(o);
+#endif
 	footprint_base<process_tag>::write_object_base(m, o);
 	footprint_base<channel_tag>::write_object_base(m, o);
 	footprint_base<datastruct_tag>::write_object_base(m, o);
@@ -1000,6 +1008,14 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		instance_collection_map[coll_ptr->get_footprint_key()] = coll_ptr;
 	}
 }
+#endif
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	footprint_base<process_tag>::load_reserve_sizes(i);
+	footprint_base<channel_tag>::load_reserve_sizes(i);
+	footprint_base<datastruct_tag>::load_reserve_sizes(i);
+	footprint_base<enum_tag>::load_reserve_sizes(i);
+	footprint_base<int_tag>::load_reserve_sizes(i);
+	footprint_base<bool_tag>::load_reserve_sizes(i);
 #endif
 	footprint_base<process_tag>::load_object_base(m, i);
 	footprint_base<channel_tag>::load_object_base(m, i);

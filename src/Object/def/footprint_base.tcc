@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.tcc"
 	Implementation of footprint class. 
-	$Id: footprint_base.tcc,v 1.1.2.2 2006/11/04 09:23:10 fang Exp $
+	$Id: footprint_base.tcc,v 1.1.2.3 2006/11/05 19:37:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_TCC__
@@ -62,6 +62,24 @@ footprint_base<Tag>::collect_transient_info_base(
 	NEVER_NULL(this->_instance_pool);
 	this->_instance_pool->collect_transient_info_base(m);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+template <class Tag>
+void
+footprint_base<Tag>::write_reserve_sizes(ostream& o) const {
+	NEVER_NULL(this->collection_pool_bundle);
+	this->collection_pool_bundle->write_reserve_sizes(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_base<Tag>::load_reserve_sizes(istream& i) {
+	NEVER_NULL(this->collection_pool_bundle);
+	this->collection_pool_bundle->load_reserve_sizes(i);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>

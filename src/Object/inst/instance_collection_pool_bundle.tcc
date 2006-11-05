@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.7 2006/11/05 07:21:29 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.1.2.8 2006/11/05 19:37:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -121,18 +121,42 @@ instance_collection_pool_wrapper<T>::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
+instance_collection_pool_wrapper<T>::write_reserve_size(ostream& o) const {
+	STACKTRACE_VERBOSE;
+	const size_t s = this->pool.size();
+	write_value(o, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+void
+instance_collection_pool_wrapper<T>::load_reserve_size(istream& i) {
+	STACKTRACE_VERBOSE;
+	size_t s;
+	read_value(i, s);
+	this->pool.allocate(s);		// will be contiguous! (first chunk)
+	INVARIANT(this->pool.size() == s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: split into two phases: allocation, then content preservation.
+ */
+template <class T>
+void
 instance_collection_pool_wrapper<T>::write_object_base(
 		const footprint& f, 
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
-	const size_t s = this->pool.size();
-	write_value(o, s);
 	const const_iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, collection_writer(f, m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collection already allocated to correct size by load_reserve_size().  
+ */
 template <class T>
 void
 instance_collection_pool_wrapper<T>::load_object_base(
@@ -140,10 +164,6 @@ instance_collection_pool_wrapper<T>::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
-	size_t s;
-	read_value(i, s);
-	this->pool.allocate(s);		// will be contiguous! (first chunk)
-	INVARIANT(this->pool.size() == s);
 	const iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, collection_loader(f, m, i));
 }
@@ -363,6 +383,57 @@ instance_collection_pool_bundle<Tag>::collect_transient_info_base(
 		::collect_transient_info_base(m);
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
 		::collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only records sizes of collections. 
+ */
+template <class Tag>
+void
+instance_collection_pool_bundle<Tag>::write_reserve_sizes(ostream& o) const {
+	STACKTRACE_VERBOSE;
+	instance_collection_pool_wrapper<instance_array<Tag, 0> >
+		::write_reserve_size(o);
+	instance_collection_pool_wrapper<instance_array<Tag, 1> >
+		::write_reserve_size(o);
+	instance_collection_pool_wrapper<instance_array<Tag, 2> >
+		::write_reserve_size(o);
+	instance_collection_pool_wrapper<instance_array<Tag, 3> >
+		::write_reserve_size(o);
+	instance_collection_pool_wrapper<instance_array<Tag, 4> >
+		::write_reserve_size(o);
+	instance_collection_pool_wrapper<port_formal_array<Tag> >
+		::write_reserve_size(o);
+	instance_collection_pool_wrapper<port_actual_collection<Tag> >
+		::write_reserve_size(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only allocates collections to their respective sizes, 
+	without further initialization.  
+	This is done for the sake of being able to translate
+	indices to pointers using footprint-lookup.  
+ */
+template <class Tag>
+void
+instance_collection_pool_bundle<Tag>::load_reserve_sizes(istream& i) {
+	STACKTRACE_VERBOSE;
+	instance_collection_pool_wrapper<instance_array<Tag, 0> >
+		::load_reserve_size(i);
+	instance_collection_pool_wrapper<instance_array<Tag, 1> >
+		::load_reserve_size(i);
+	instance_collection_pool_wrapper<instance_array<Tag, 2> >
+		::load_reserve_size(i);
+	instance_collection_pool_wrapper<instance_array<Tag, 3> >
+		::load_reserve_size(i);
+	instance_collection_pool_wrapper<instance_array<Tag, 4> >
+		::load_reserve_size(i);
+	instance_collection_pool_wrapper<port_formal_array<Tag> >
+		::load_reserve_size(i);
+	instance_collection_pool_wrapper<port_actual_collection<Tag> >
+		::load_reserve_size(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

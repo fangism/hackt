@@ -5,6 +5,14 @@
 
 2006-11-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-20:
+	  Split collection loading into two phases: allocate, then load, 
+		for the purpose of being able to load footprint-translated
+		pointers in the subinstance manager before pointees are loaded.
+		This fixes unroll/create/objdump-ing.
+	  Next regression to fix: deaths in post-alloc objdump.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-19:
 	  More modifications based on heap-allocated footprints.
 		All instance_collections (and sub-types) are initialized
@@ -19,7 +27,7 @@
 		we have cross-footprint references (post-unroll).  
 	  TODO: global_entries' footprint reference can now be serialized
 		and de-serialized using the persistent_object_manager.
-	  Next to fix: subisntance_manager's loading of pointers to
+	  Next to fix: subinstance_manager's loading of pointers to
 		physical_instance_collections sometimes fails because
 		dependent pointees have not been pool-allocated yet during
 		reconstruction, so we may need a two phase reconstruction.  

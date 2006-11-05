@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.8 2006/11/04 21:59:21 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.9 2006/11/05 19:37:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -85,6 +85,12 @@ private:
 protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_reserve_size(ostream&) const;
+
+	void
+	load_reserve_size(istream&);
 
 	void
 	write_object_base(const footprint&,
@@ -197,6 +203,12 @@ struct instance_collection_pool_bundle :
 // serialization routines
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_reserve_sizes(ostream&) const;
+
+	void
+	load_reserve_sizes(istream&);
 
 	void
 	write_object_base(const footprint&, 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.1.2.1 2006/11/03 07:07:28 fang Exp $
+	$Id: footprint_base.h,v 1.1.2.2 2006/11/05 19:37:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
@@ -76,6 +76,14 @@ protected:
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
+
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	void
+	write_reserve_sizes(ostream&) const;
+
+	void
+	load_reserve_sizes(istream&);
+#endif
 
 	void
 	write_object_base(const persistent_object_manager&, ostream&) const;
