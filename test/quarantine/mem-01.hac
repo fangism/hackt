@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.4.2.2 2006/10/31 21:20:49 fang Exp $
+	$Id: mem-01.hac,v 1.4.2.3 2006/11/05 23:19:20 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -99,6 +99,8 @@ defproc hohoho (
 }
 
 // enlarge to test memory
+
+// The following tests are benchmarked on a 2.5 GHz dual G5, apple-gcc-3.3.
 // 10x10 take 1G+ of memory, 
 // ~20 sec to unroll, ~30 s to create, ~35 s to alloc.
 hohoho rum[10][10];
@@ -133,10 +135,10 @@ hohoho rum[10][10];
 // but configured with --disable-object-align-checking
 // conclusion: doesn't save much because of header entry overhead
 // per heap-allocated object
--rw-r--r-- 1 davidfang     80220 Oct 24 17:10 mem-01.haco
--rw-r--r-- 1 davidfang 151814027 Oct 24 17:12 mem-01.haco-a
--rw-r--r-- 1 davidfang 138467127 Oct 24 17:11 mem-01.haco-c
--rw-r--r-- 1 davidfang 130130846 Oct 24 17:10 mem-01.haco-u
+-rw-r--r-- 1 user     80220 Oct 24 17:10 mem-01.haco
+-rw-r--r-- 1 user 151814027 Oct 24 17:12 mem-01.haco-a
+-rw-r--r-- 1 user 138467127 Oct 24 17:11 mem-01.haco-c
+-rw-r--r-- 1 user 130130846 Oct 24 17:10 mem-01.haco-u
 **/
 
 /** FILE SIZES as of HACKT-00-01-04-main-00-80-45-instance-02-05
@@ -145,19 +147,19 @@ hohoho rum[10][10];
 // significant speedup: 11/22/26 s
 // peak memory reduced about 10%, closer to 1G each
 // benefits attributed to reduced number of heap-allocated objects
--rw-r--r-- 1 davidfang     82380 Oct 29 15:50 mem-01.haco
--rw-r--r-- 1 davidfang 130072574 Oct 29 15:51 mem-01.haco-a
--rw-r--r-- 1 davidfang 116725674 Oct 29 15:51 mem-01.haco-c
--rw-r--r-- 1 davidfang 108389393 Oct 29 15:50 mem-01.haco-u
+-rw-r--r-- 1 user     82380 Oct 29 15:50 mem-01.haco
+-rw-r--r-- 1 user 130072574 Oct 29 15:51 mem-01.haco-a
+-rw-r--r-- 1 user 116725674 Oct 29 15:51 mem-01.haco-c
+-rw-r--r-- 1 user 108389393 Oct 29 15:50 mem-01.haco-u
 **/
 
 /** FILE SIZES as of HACKT-00-01-04-main-00-80-45-instance-02-11
 // after omitting back-ref pointers from instance_alias to container:
 // speedup due to size reduction: 11/21/24 s
 // didn't check peak memory usage
--rw-r--r-- 1 davidfang     82380 Oct 31 15:57 mem-01.haco
--rw-r--r-- 1 davidfang 128230038 Oct 31 15:58 mem-01.haco-a
--rw-r--r-- 1 davidfang 114883138 Oct 31 15:58 mem-01.haco-c
--rw-r--r-- 1 davidfang 106546857 Oct 31 15:58 mem-01.haco-u
+-rw-r--r-- 1 user     82380 Oct 31 15:57 mem-01.haco
+-rw-r--r-- 1 user 128230038 Oct 31 15:58 mem-01.haco-a
+-rw-r--r-- 1 user 114883138 Oct 31 15:58 mem-01.haco-c
+-rw-r--r-- 1 user 106546857 Oct 31 15:58 mem-01.haco-u
 **/
 
