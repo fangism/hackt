@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.11 2006/11/05 07:21:28 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.12 2006/11/05 23:29:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -345,18 +345,7 @@ protected:
 	/**
 		Functor to collect transient info in the aliases.  
 	 */
-#if 0
-	class element_collector {
-		persistent_object_manager& pom;
-	public:
-		element_collector(persistent_object_manager& m) : pom(m) { }
-
-		void
-		operator () (const instance_alias_info_type&) const;
-	};	// end class element_collector
-#else
 	typedef	util::persistent_collector_ref	element_collector;
-#endif
 
 	/**
 		Functor to write alias elements.  

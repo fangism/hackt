@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.10 2006/11/05 07:21:34 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.11 2006/11/05 23:29:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -623,19 +623,23 @@ PORT_FORMAL_ARRAY_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	parent_type::collect_transient_info_base(m);
 	for_each(this->begin(), this->end(),
+#if 0
 		bind2nd_argval(mem_fun_ref(
 			&element_type::collect_transient_info_base), m)
+#else
+		typename parent_type::element_collector(m)
+#endif
 	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::collect_transient_info(

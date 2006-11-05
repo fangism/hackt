@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.13 2006/11/05 07:21:29 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.14 2006/11/05 23:29:36 fang Exp $
 	TODO: trim includes
  */
 
@@ -1199,7 +1199,6 @@ INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_transient_info_base(
@@ -1214,6 +1213,7 @@ INSTANCE_ARRAY_CLASS::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_transient_info(
@@ -1829,7 +1829,6 @@ INSTANCE_SCALAR_CLASS::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_transient_info_base(
@@ -1841,6 +1840,7 @@ INSTANCE_SCALAR_CLASS::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_transient_info(

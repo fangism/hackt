@@ -5,6 +5,15 @@
 
 2006-11-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-22:
+	  Last commit too hasty!
+	  Fixed failure to collect instance_collections' relaxed 
+		actual parameters in the alias sets.  
+	  Now, no tests ICE.  
+	  Also noted near ORDER OF MAGNITUDE reduction in memory, 
+		and massive (5x) speedup. 
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-21:
 	  Post-alloc reconstruction death fixed, by simply maintaining
 		the footprint pointers with trivial serialization.  

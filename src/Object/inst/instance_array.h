@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2.2.8 2006/11/05 07:21:27 fang Exp $
+	$Id: instance_array.h,v 1.2.2.9 2006/11/05 23:29:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -170,9 +170,10 @@ public:
 	accept(alias_visitor&) const;
 
 public:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	using parent_type::collect_transient_info_base;
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
 
+#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const;
@@ -185,9 +186,6 @@ public:
 	load_object(footprint&, 
 		const persistent_object_manager&, istream&);
 #else
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 #endif
