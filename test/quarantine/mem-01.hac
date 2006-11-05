@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.4.2.3 2006/11/05 23:19:20 fang Exp $
+	$Id: mem-01.hac,v 1.4.2.4 2006/11/05 23:25:44 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -161,5 +161,16 @@ hohoho rum[10][10];
 -rw-r--r-- 1 user 128230038 Oct 31 15:58 mem-01.haco-a
 -rw-r--r-- 1 user 114883138 Oct 31 15:58 mem-01.haco-c
 -rw-r--r-- 1 user 106546857 Oct 31 15:58 mem-01.haco-u
+**/
+
+/** FILE SIZES as of HACKT-00-01-04-main-00-80-45-instance-02-21
+// heap-allocated footprints, and pool-allocated collections per footprint
+// This is what we've been waiting for:
+// speedup due to size reduction: 2/5/4 s (NOT a typo)
+-rw-r--r-- 1 user    82893 Nov  5 18:22 mem-01.haco
+-rw-r--r-- 1 user 23939803 Nov  5 18:22 mem-01.haco-a
+-rw-r--r-- 1 user 11138503 Nov  5 18:22 mem-01.haco-c
+-rw-r--r-- 1 user  8612588 Nov  5 18:22 mem-01.haco-u
+// NOTE the (near) order of magnitude improvement in size and speed.  
 **/
 
