@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.10 2006/11/05 07:21:32 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.11 2006/11/06 03:12:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -482,7 +482,8 @@ if (this->formal_collection->has_relaxed_type()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
-PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(port_alias_tracker& t) const {
+PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(
+		port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
 	// TODO fix const_cast
 	const_iterator i(this->begin());

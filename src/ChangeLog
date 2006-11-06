@@ -5,6 +5,13 @@
 
 2006-11-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-23:
+	  Fixed footprint::evaluate_scope_aliases, a badly botched 
+		transformation to use instance_collection_pool_bundles.  
+		Test suite results in fewer naming differences.
+	  Next: large batches of regression test updates.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-22:
 	  Last commit too hasty!
 	  Fixed failure to collect instance_collections' relaxed 

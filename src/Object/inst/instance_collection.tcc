@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.14 2006/11/05 23:29:36 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.15 2006/11/06 03:12:19 fang Exp $
 	TODO: trim includes
  */
 
@@ -1010,11 +1010,6 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	ICE_NEVER_CALL(cerr);
-	// this is now only called by the pool-manager per footprint.  
-	// local dense-arrays should never play a part in port-aliases.  
-#else
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	for ( ; i!=e; i++) {
@@ -1026,7 +1021,6 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 			.push_back(never_ptr<element_type>(&ii));
 		ii.collect_port_aliases(t);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1772,9 +1766,6 @@ if (this->has_relaxed_type()) {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-if (this->source_placeholder->is_port_formal()) {
-#endif
 if (this->the_instance.valid()) {
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
@@ -1783,9 +1774,6 @@ if (this->the_instance.valid()) {
 			&const_cast<instance_type&>(this->the_instance)));
 	this->the_instance.collect_port_aliases(t);
 }
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-}	// end if is_port_formal
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.1.2.1 2006/11/04 21:59:24 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.1.2.2 2006/11/06 03:12:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -66,7 +66,26 @@ struct instance_collection_pool_wrapper<T>::index_allocator {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Functor for collecting port_aliases
+	Functor for collecting scope_aliases.
+	Unconditionally collects aliases.  
+ */
+template <class T>
+struct instance_collection_pool_wrapper<T>::scope_alias_collector {
+	port_alias_tracker&		pt;
+
+	explicit
+	scope_alias_collector(port_alias_tracker& p) : pt(p) { }
+
+	void
+	operator () (const T& t) {
+		t.collect_port_aliases(pt);
+	}
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor for collecting port_aliases, conditional upon collection
+	being a port-formal, of course.  
  */
 template <class T>
 struct instance_collection_pool_wrapper<T>::port_alias_collector {
@@ -77,7 +96,9 @@ struct instance_collection_pool_wrapper<T>::port_alias_collector {
 
 	void
 	operator () (const T& t) {
-		t.collect_port_aliases(pt);
+		if (t.get_placeholder()->is_port_formal()) {
+			t.collect_port_aliases(pt);
+		}
 	}
 };
 
@@ -123,6 +144,16 @@ instance_collection_pool_wrapper<T>::allocate_local_instance_ids(footprint& f) {
 	STACKTRACE_VERBOSE;
 	const iterator b(this->pool.begin()), e(this->pool.end());
 	return for_each(b, e, index_allocator(f)).g;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+void
+instance_collection_pool_wrapper<T>::collect_scope_aliases(
+		port_alias_tracker& pt) const {
+	STACKTRACE_VERBOSE;
+	const const_iterator b(this->pool.begin()), e(this->pool.end());
+	for_each(b, e, scope_alias_collector(pt));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -197,31 +228,36 @@ instance_collection_pool_bundle<Tag>::allocate_local_instance_ids(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Only visit port-formals.  
+	Only visit port-formals for port aliases.  
+	\param spt scope_alias set (entire footprint)
+	\param ppt port_alias set (footprint's ports only)
  */
 template <class Tag>
 void
-instance_collection_pool_bundle<Tag>::collect_port_aliases(
-		port_alias_tracker& pt) const {
+instance_collection_pool_bundle<Tag>::collect_scope_and_port_aliases(
+		port_alias_tracker& spt, port_alias_tracker& ppt) const {
 	STACKTRACE_VERBOSE;
 	instance_collection_pool_wrapper<instance_array<Tag, 0> >
-		::collect_port_aliases(pt);
-#if 0
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<instance_array<Tag, 0> >
+		::collect_port_aliases(ppt);
+
 	instance_collection_pool_wrapper<instance_array<Tag, 1> >
-		::collect_port_aliases(pt);
+		::collect_scope_aliases(spt);
 	instance_collection_pool_wrapper<instance_array<Tag, 2> >
-		::collect_port_aliases(pt);
+		::collect_scope_aliases(spt);
 	instance_collection_pool_wrapper<instance_array<Tag, 3> >
-		::collect_port_aliases(pt);
+		::collect_scope_aliases(spt);
 	instance_collection_pool_wrapper<instance_array<Tag, 4> >
-		::collect_port_aliases(pt);
-#endif
+		::collect_scope_aliases(spt);
+
 	instance_collection_pool_wrapper<port_formal_array<Tag> >
-		::collect_port_aliases(pt);
-#if 0
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<port_formal_array<Tag> >
+		::collect_port_aliases(ppt);
+
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
-		::collect_port_aliases(pt);
-#endif
+		::collect_scope_aliases(spt);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

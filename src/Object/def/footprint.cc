@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.12 2006/11/05 19:37:45 fang Exp $
+	$Id: footprint.cc,v 1.27.4.13 2006/11/06 03:12:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -617,17 +617,17 @@ footprint::evaluate_scope_aliases(void) {
 		<< " entries." << endl);
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	get_instance_collection_pool_bundle<process_tag>()
-		.collect_port_aliases(port_aliases);
+		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<channel_tag>()
-		.collect_port_aliases(port_aliases);
+		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<datastruct_tag>()
-		.collect_port_aliases(port_aliases);
+		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<int_tag>()
-		.collect_port_aliases(port_aliases);
+		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<enum_tag>()
-		.collect_port_aliases(port_aliases);
+		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<bool_tag>()
-		.collect_port_aliases(port_aliases);
+		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 #else
 	const_instance_map_iterator i(instance_collection_map.begin());
 	const const_instance_map_iterator e(instance_collection_map.end());

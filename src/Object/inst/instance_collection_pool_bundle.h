@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.1.2.9 2006/11/05 19:37:48 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.1.2.10 2006/11/06 03:12:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -71,6 +71,9 @@ protected:
 	collect_port_aliases(port_alias_tracker&) const;
 
 	void
+	collect_scope_aliases(port_alias_tracker&) const;
+
+	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
 
@@ -78,6 +81,7 @@ private:
 	// helper functors... "I want tr1/functional binders!!!"
 	struct dependent_creator;
 	struct index_allocator;
+	struct scope_alias_collector;
 	struct port_alias_collector;
 	struct footprint_frame_assigner;
 
@@ -194,7 +198,8 @@ struct instance_collection_pool_bundle :
 
 	// iterate over port-pools (scalar and port_formal_array)
 	void
-	collect_port_aliases(port_alias_tracker&) const;
+	collect_scope_and_port_aliases(
+		port_alias_tracker&, port_alias_tracker&) const;
 
 	void
 	assign_footprint_frame(footprint_frame&, 
