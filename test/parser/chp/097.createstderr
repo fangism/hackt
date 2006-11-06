@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	260
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
 	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -26,14 +26,11 @@ Persistent Object Manager text dump:
 	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	436
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -66,16 +63,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        w = int<32>^0 = foo::w (1) 
-        x = int<32>^0 = foo::x (2) 
-        y = int<32>^0 = foo::y (3) 
-        z = int<32>^0 = foo::z (4) 
+        w = int<32>^0 = foo::w (4) 
+        x = int<32>^0 = foo::x (1) 
+        y = int<32>^0 = foo::y (2) 
+        z = int<32>^0 = foo::z (3) 
         Created state:
         int instance pool:
-        1	foo::w
-        2	foo::x
-        3	foo::y
-        4	foo::z
+        1	foo::x
+        2	foo::y
+        3	foo::z
+        4	foo::w
         resolved concurrent actions:
           *[
             concurrent: {

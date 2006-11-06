@@ -3,13 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2006-11-05	David Fang		<fangism@users.sourceforge.net>
+2006-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-25:
+	  No source revision.
+	  Finished re-verifying all remaining create/alloc/cflat tests.
+	  Branch is stable, and nearly complete.
+	  TODO: Clean-up and touch-ups (and comment-up)
+
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-24:
 	  No source revision, updated all unroll test expects, 
 		and only trivial (header-only diff) create test expects.
-	  The remaining will be scrutinzed more carefully, and tediously...
+	  The remaining 213 will be scrutinzed more carefully, and tediously...
 
+
+2006-11-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45-instance-02-23:
 	  Fixed footprint::evaluate_scope_aliases, a badly botched 

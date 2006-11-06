@@ -1,5 +1,5 @@
 ERROR: complete type required for instantiation
 	have: foo<1>
-Failed to instantiate ick
+Failed to instantiate bar
 Error during create_unique.
 ERROR in creating.  Aborting.

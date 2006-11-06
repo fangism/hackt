@@ -6,29 +6,26 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	268
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
 	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -68,10 +65,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  p = process foo<12, 34>^0 = p (1) 
-  q = process foo<12, 12>^0 = q (2) 
+  p = process foo<12, 34>^0 = p (2) 
+  q = process foo<12, 12>^0 = q (1) 
   Created state:
   process instance pool:
-  1	p
-  2	q
+  1	q
+  2	p
 }

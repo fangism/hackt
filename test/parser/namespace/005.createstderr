@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	339
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -51,7 +51,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  yo::whazzup = int<32>^0 = yo::yo::yo::whazzup (1) 
+  yo::yo::yo::whazzup = int<32>^0 = yo::yo::yo::whazzup (1) 
   Created state:
   int instance pool:
   1	yo::yo::yo::whazzup

@@ -6,12 +6,12 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	212
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	33
 	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -22,33 +22,25 @@ Persistent Object Manager text dump:
 	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	354
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	464
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
-	47	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -70,11 +62,11 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        composite = bool^0 = array::composite (1) 
-        x = bool^0 = array::composite (1) 
+        composite = bool^0 = array::x (1) 
+        x = bool^0 = array::x (1) 
         Created state:
         bool instance pool:
-        1	array::composite
+        1	array::x
       }
       }
 
@@ -90,17 +82,17 @@ In namespace "", we have: {
         array<> p
         p = q;
       footprint: {
-        p = process array<>^0 = foo::p (1) (
-          x = bool^0 = foo::p.x (1) 
+        p = process array<>^0 = foo::q (1) (
+          x = bool^0 = foo::q.x (1) 
         )
-        q = process array<>^0 = foo::p (1) (
-          x = bool^0 = foo::p.x (1) 
+        q = process array<>^0 = foo::q (1) (
+          x = bool^0 = foo::q.x (1) 
         )
         Created state:
         process instance pool:
-        1	foo::p
+        1	foo::q
         bool instance pool:
-        1	foo::p.x
+        1	foo::q.x
       }
       }
 

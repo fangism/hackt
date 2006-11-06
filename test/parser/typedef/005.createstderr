@@ -21,8 +21,7 @@ Persistent Object Manager text dump:
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -59,10 +58,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  fang::crazy = bool^0 = fang::crazy (1) 
-  tada = bool^0 = tada (2) 
+  fang::crazy = bool^0 = fang::crazy (2) 
+  tada = bool^0 = tada (1) 
   Created state:
   bool instance pool:
-  1	fang::crazy
-  2	tada
+  1	tada
+  2	fang::crazy
 }

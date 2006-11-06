@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	372
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -30,16 +30,11 @@ Persistent Object Manager text dump:
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	37	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	38	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	511
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	480
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -67,14 +62,14 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        _o = bool^0 = celem2inv::_o (1) 
-        a = bool^0 = celem2inv::a (2) 
-        b = bool^0 = celem2inv::b (3) 
+        _o = bool^0 = celem2inv::_o (3) 
+        a = bool^0 = celem2inv::a (1) 
+        b = bool^0 = celem2inv::b (2) 
         Created state:
         bool instance pool:
-        1	celem2inv::_o
-        2	celem2inv::a
-        3	celem2inv::b
+        1	celem2inv::a
+        2	celem2inv::b
+        3	celem2inv::_o
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+

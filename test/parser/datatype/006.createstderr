@@ -15,8 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	370
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -40,10 +39,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar::foo = int<32>^0 = bar::foo (1) 
-  foo = int<32>^0 = foo (2) 
+  bar::foo = int<32>^0 = bar::foo (2) 
+  foo = int<32>^0 = foo (1) 
   Created state:
   int instance pool:
-  1	bar::foo
-  2	foo
+  1	foo
+  2	bar::foo
 }

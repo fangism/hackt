@@ -28,9 +28,7 @@ Persistent Object Manager text dump:
 	24	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	385
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -46,10 +44,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  blah = int<32>^0 = sneeze (1) 
-  copier = int<32>^0 = sneeze (1) 
-  sneeze = int<32>^0 = sneeze (1) 
+  blah = int<32>^0 = blah (1) 
+  copier = int<32>^0 = blah (1) 
+  sneeze = int<32>^0 = blah (1) 
   Created state:
   int instance pool:
-  1	sneeze
+  1	blah
 }

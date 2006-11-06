@@ -1,22 +1,22 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	src	pseudo_rsource_e1of2a<>
-	process: 4,2,5,3
-	bool: 2,3,4,1,5,6,7
+1	(top)	-	1	x	e1of2<>
+	bool: 2,1,3
 2	(top)	-	2	g	globals<>
-	bool: 1,2,3,4
-3	(top)	-	3	x	e1of2<>
-	bool: 5,6,7
-4	process	1	1	src.src	source_e<5, 2, {0,1,1,0,1}>
-	process: 2,5
-	bool: 2,3,4,1,5,6,7
-5	process	1	3	src.s	e1of<2>
-	bool: 5,6,7
+	bool: 4,5,6,7
+3	(top)	-	3	src	pseudo_rsource_e1of2a<>
+	process: 2,1,4,5
+	bool: 4,5,6,7,1,2,3
+4	process	3	3	src.s	e1of<2>
+	bool: 3,1,2
+5	process	3	4	src.src	source_e<5, 2, {0,1,1,0,1}>
+	process: 2,4
+	bool: 4,5,6,7,1,2,3
 [global bool entries]
-1	(top)	-	1	_sReset	
-2	(top)	-	2	g.Vdd	
-3	(top)	-	3	g.GND	
-4	(top)	-	4	_pReset	
-5	(top)	-	5	x.d[0]	
-6	(top)	-	6	x.d[1]	
-7	(top)	-	7	x.e	
+1	(top)	-	1	x.d[0]	
+2	(top)	-	2	x.d[1]	
+3	(top)	-	3	x.e	
+4	(top)	-	4	g.Vdd	
+5	(top)	-	5	g.GND	
+6	(top)	-	6	_pReset	
+7	(top)	-	7	_sReset	

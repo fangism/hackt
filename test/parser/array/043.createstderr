@@ -21,10 +21,7 @@ Persistent Object Manager text dump:
 	17	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	34
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	443
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -43,15 +40,15 @@ In namespace "", we have: {
 footprint: {
   w = bool^1
     {
-      [0] = w[0] (1) 
-      [1] = w[1] (2) 
+      [0] = x (1) 
+      [1] = y (2) 
     }
-  x = bool^0 = w[0] (1) 
-  y = bool^0 = w[1] (2) 
+  x = bool^0 = x (1) 
+  y = bool^0 = y (2) 
   z = bool^0 = z (3) 
   Created state:
   bool instance pool:
-  1	w[0]
-  2	w[1]
+  1	x
+  2	y
   3	z
 }

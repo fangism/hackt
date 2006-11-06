@@ -3,7 +3,7 @@ aliases of "R":
 R 
 _Reset refers to bool-inst-ref bool<>
 aliases of "_Reset":
-_Reset R._Reset 
+R._Reset _Reset 
 Fanouts of node `_Reset':
 [after 10]	R.x[12] & _Reset -> R.x[0]-
 [after 10]	~R.x[12] | ~_Reset -> R.x[0]+

@@ -5,7 +5,7 @@ globID	super		localID	canonical	footprint-frame
 2	(top)	-	2	y	ass<2>
 	bool: 3,4
 [global bool entries]
-1	process	1	1	x.a	
-2	process	1	2	x.x	
-3	process	2	1	y.a	
-4	process	2	2	y.x	
+1	process	1	1	x.x	
+2	process	1	2	x.a	
+3	process	2	1	y.x	
+4	process	2	2	y.a	

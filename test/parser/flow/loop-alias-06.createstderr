@@ -4,61 +4,48 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	192
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	173
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	81
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	335
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	340
-	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	28	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	procpfar	0	#HEAD#	#TAIL#	62
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	776
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
-	42	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	43	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
-	44	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	45	##ADDR##	proccoll	1	#HEAD#	#TAIL#	66
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	48	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	50	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	procpacc	0	#HEAD#	#TAIL#	46
-	54	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
-	55	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	56	##ADDR##	procpacc	0	#HEAD#	#TAIL#	29
-	57	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	footprnt	0	#HEAD#	#TAIL#	680
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -84,34 +71,34 @@ In namespace "", we have: {
       footprint: {
         p = process pbit<>^1
           {
-            [0] = lut::p[0] (5) (
+            [0] = lut::p[0] (1) (
               t = bool^0 = lut::p[0].t (1) 
             )
-            [1] = lut::p[1] (6) (
+            [1] = lut::p[1] (2) (
               t = bool^0 = lut::p[1].t (2) 
             )
           }
         pbint = process pbitint<>^1
           {
-            [0] = lut::pbint[0] (1) (
-              pb = process pbit<>^0 = lut::pbint[0].pb (2) (
+            [0] = lut::pbint[0] (3) (
+              pb = process pbit<>^0 = lut::pbint[0].pb (4) (
                 t = bool^0 = lut::p[0].t (1) 
               )
             )
-            [1] = lut::pbint[1] (3) (
-              pb = process pbit<>^0 = lut::pbint[1].pb (4) (
+            [1] = lut::pbint[1] (5) (
+              pb = process pbit<>^0 = lut::pbint[1].pb (6) (
                 t = bool^0 = lut::p[1].t (2) 
               )
             )
           }
         Created state:
         process instance pool:
-        1	lut::pbint[0]
-        2	lut::pbint[0].pb
-        3	lut::pbint[1]
-        4	lut::pbint[1].pb
-        5	lut::p[0]
-        6	lut::p[1]
+        1	lut::p[0]
+        2	lut::p[1]
+        3	lut::pbint[0]
+        4	lut::pbint[0].pb
+        5	lut::pbint[1]
+        6	lut::pbint[1].pb
         bool instance pool:
         1	lut::p[0].t
         2	lut::p[1].t

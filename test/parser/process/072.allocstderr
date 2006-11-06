@@ -1,9 +1,9 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	pew	foo<16>
+1	(top)	-	1	poo	foo<8>
 	int: 1
-2	(top)	-	2	poo	foo<8>
+2	(top)	-	2	pew	foo<16>
 	int: 2
 [global int entries]
-1	(top)	-	1	pew.a	
-2	(top)	-	2	poo.a	
+1	(top)	-	1	poo.a	
+2	(top)	-	2	pew.a	

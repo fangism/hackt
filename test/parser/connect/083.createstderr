@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	386
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -21,105 +21,52 @@ Persistent Object Manager text dump:
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	40
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	34
-	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	580
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	27	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	54	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	59	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	69	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	64
-	70	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
-	71	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	38
-	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	38
-	74	##ADDR##	proccoll	2	#HEAD#	#TAIL#	357
-	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	77	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	78	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	79	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	80	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	81	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	82	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	83	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	84	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	85	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	86	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	87	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	88	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	89	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	90	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	91	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	92	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	93	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	94	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	95	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	96	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	97	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	98	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	99	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	100	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	101	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	102	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	103	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	104	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	105	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	106	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	107	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	108	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	109	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	32
-	110	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	17
-	111	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	22
-	112	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	114	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	21
-	115	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	64
-	116	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
-	117	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	38
-	118	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
+	39	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	4897
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -211,84 +158,84 @@ footprint: {
     }
   s = process portaproc<>^2
     {
-      [0][0] = s[0][0] (2) (
-        b = bool^0 = s[0][0].b (6) 
+      [0][0] = s[0][0] (3) (
+        b = bool^0 = s[0][0].b (11) 
         c = bool^1
           {
-            [0] = s[0][0].c[0] (7) 
-            [1] = s[0][0].c[1] (8) 
-            [2] = s[0][0].c[2] (9) 
-            [3] = s[0][0].c[3] (10) 
+            [0] = s[0][0].c[0] (12) 
+            [1] = s[0][0].c[1] (13) 
+            [2] = s[0][0].c[2] (14) 
+            [3] = s[0][0].c[3] (15) 
           }
-        i = int<32>^0 = s[0][0].i (4) 
+        i = int<32>^0 = s[0][0].i (7) 
         j = int<32>^1
           {
-            [0] = s[0][0].j[0] (5) 
-            [1] = s[0][0].j[1] (6) 
+            [0] = s[0][0].j[0] (8) 
+            [1] = s[0][0].j[1] (9) 
           }
       )
-      [0][1] = s[0][1] (3) (
-        b = bool^0 = s[0][1].b (11) 
+      [0][1] = s[0][1] (4) (
+        b = bool^0 = s[0][1].b (16) 
         c = bool^1
           {
-            [0] = s[0][1].c[0] (12) 
-            [1] = s[0][1].c[1] (13) 
-            [2] = s[0][1].c[2] (14) 
-            [3] = s[0][1].c[3] (15) 
+            [0] = s[0][1].c[0] (17) 
+            [1] = s[0][1].c[1] (18) 
+            [2] = s[0][1].c[2] (19) 
+            [3] = s[0][1].c[3] (20) 
           }
-        i = int<32>^0 = s[0][1].i (7) 
+        i = int<32>^0 = s[0][1].i (10) 
         j = int<32>^1
           {
-            [0] = s[0][1].j[0] (8) 
-            [1] = s[0][1].j[1] (9) 
+            [0] = s[0][1].j[0] (11) 
+            [1] = s[0][1].j[1] (12) 
           }
       )
-      [0][2] = s[0][2] (4) (
-        b = bool^0 = s[0][2].b (16) 
+      [0][2] = s[0][2] (5) (
+        b = bool^0 = s[0][2].b (21) 
         c = bool^1
           {
-            [0] = s[0][2].c[0] (17) 
-            [1] = s[0][2].c[1] (18) 
-            [2] = s[0][2].c[2] (19) 
-            [3] = s[0][2].c[3] (20) 
+            [0] = s[0][2].c[0] (22) 
+            [1] = s[0][2].c[1] (23) 
+            [2] = s[0][2].c[2] (24) 
+            [3] = s[0][2].c[3] (25) 
           }
-        i = int<32>^0 = s[0][2].i (10) 
+        i = int<32>^0 = s[0][2].i (13) 
         j = int<32>^1
           {
-            [0] = s[0][2].j[0] (11) 
-            [1] = s[0][2].j[1] (12) 
+            [0] = s[0][2].j[0] (14) 
+            [1] = s[0][2].j[1] (15) 
           }
       )
-      [1][0] = s[1][0] (5) (
-        b = bool^0 = s[1][0].b (21) 
+      [1][0] = s[1][0] (6) (
+        b = bool^0 = s[1][0].b (26) 
         c = bool^1
           {
-            [0] = s[1][0].c[0] (22) 
-            [1] = s[1][0].c[1] (23) 
-            [2] = s[1][0].c[2] (24) 
-            [3] = s[1][0].c[3] (25) 
+            [0] = s[1][0].c[0] (27) 
+            [1] = s[1][0].c[1] (28) 
+            [2] = s[1][0].c[2] (29) 
+            [3] = s[1][0].c[3] (30) 
           }
-        i = int<32>^0 = s[1][0].i (13) 
+        i = int<32>^0 = s[1][0].i (16) 
         j = int<32>^1
           {
-            [0] = s[1][0].j[0] (14) 
-            [1] = s[1][0].j[1] (15) 
+            [0] = s[1][0].j[0] (17) 
+            [1] = s[1][0].j[1] (18) 
           }
       )
-      [1][1] = s[1][1] (6) (
-        b = bool^0 = s[1][1].b (26) 
+      [1][1] = t (2) (
+        b = bool^0 = t.b (6) 
         c = bool^1
           {
-            [0] = s[1][1].c[0] (27) 
-            [1] = s[1][1].c[1] (28) 
-            [2] = s[1][1].c[2] (29) 
-            [3] = s[1][1].c[3] (30) 
+            [0] = t.c[0] (7) 
+            [1] = t.c[1] (8) 
+            [2] = t.c[2] (9) 
+            [3] = t.c[3] (10) 
           }
-        i = int<32>^0 = s[1][1].i (16) 
+        i = int<32>^0 = t.i (4) 
         j = int<32>^1
           {
-            [0] = s[1][1].j[0] (17) 
-            [1] = s[1][1].j[1] (18) 
+            [0] = t.j[0] (5) 
+            [1] = t.j[1] (6) 
           }
       )
       [1][2] = s[1][2] (7) (
@@ -356,20 +303,20 @@ footprint: {
           }
       )
     }
-  t = process portaproc<>^0 = s[1][1] (6) (
-    b = bool^0 = s[1][1].b (26) 
+  t = process portaproc<>^0 = t (2) (
+    b = bool^0 = t.b (6) 
     c = bool^1
       {
-        [0] = s[1][1].c[0] (27) 
-        [1] = s[1][1].c[1] (28) 
-        [2] = s[1][1].c[2] (29) 
-        [3] = s[1][1].c[3] (30) 
+        [0] = t.c[0] (7) 
+        [1] = t.c[1] (8) 
+        [2] = t.c[2] (9) 
+        [3] = t.c[3] (10) 
       }
-    i = int<32>^0 = s[1][1].i (16) 
+    i = int<32>^0 = t.i (4) 
     j = int<32>^1
       {
-        [0] = s[1][1].j[0] (17) 
-        [1] = s[1][1].j[1] (18) 
+        [0] = t.j[0] (5) 
+        [1] = t.j[1] (6) 
       }
   )
   x = bool^1
@@ -382,11 +329,11 @@ footprint: {
   Created state:
   process instance pool:
   1	p
-  2	s[0][0]
-  3	s[0][1]
-  4	s[0][2]
-  5	s[1][0]
-  6	s[1][1]
+  2	t
+  3	s[0][0]
+  4	s[0][1]
+  5	s[0][2]
+  6	s[1][0]
   7	s[1][2]
   8	s[2][0]
   9	s[2][1]
@@ -395,21 +342,21 @@ footprint: {
   1	q
   2	r[0]
   3	r[1]
-  4	s[0][0].i
-  5	s[0][0].j[0]
-  6	s[0][0].j[1]
-  7	s[0][1].i
-  8	s[0][1].j[0]
-  9	s[0][1].j[1]
-  10	s[0][2].i
-  11	s[0][2].j[0]
-  12	s[0][2].j[1]
-  13	s[1][0].i
-  14	s[1][0].j[0]
-  15	s[1][0].j[1]
-  16	s[1][1].i
-  17	s[1][1].j[0]
-  18	s[1][1].j[1]
+  4	t.i
+  5	t.j[0]
+  6	t.j[1]
+  7	s[0][0].i
+  8	s[0][0].j[0]
+  9	s[0][0].j[1]
+  10	s[0][1].i
+  11	s[0][1].j[0]
+  12	s[0][1].j[1]
+  13	s[0][2].i
+  14	s[0][2].j[0]
+  15	s[0][2].j[1]
+  16	s[1][0].i
+  17	s[1][0].j[0]
+  18	s[1][0].j[1]
   19	s[1][2].i
   20	s[1][2].j[0]
   21	s[1][2].j[1]
@@ -428,31 +375,31 @@ footprint: {
   3	x[1]
   4	x[2]
   5	x[3]
-  6	s[0][0].b
-  7	s[0][0].c[0]
-  8	s[0][0].c[1]
-  9	s[0][0].c[2]
-  10	s[0][0].c[3]
-  11	s[0][1].b
-  12	s[0][1].c[0]
-  13	s[0][1].c[1]
-  14	s[0][1].c[2]
-  15	s[0][1].c[3]
-  16	s[0][2].b
-  17	s[0][2].c[0]
-  18	s[0][2].c[1]
-  19	s[0][2].c[2]
-  20	s[0][2].c[3]
-  21	s[1][0].b
-  22	s[1][0].c[0]
-  23	s[1][0].c[1]
-  24	s[1][0].c[2]
-  25	s[1][0].c[3]
-  26	s[1][1].b
-  27	s[1][1].c[0]
-  28	s[1][1].c[1]
-  29	s[1][1].c[2]
-  30	s[1][1].c[3]
+  6	t.b
+  7	t.c[0]
+  8	t.c[1]
+  9	t.c[2]
+  10	t.c[3]
+  11	s[0][0].b
+  12	s[0][0].c[0]
+  13	s[0][0].c[1]
+  14	s[0][0].c[2]
+  15	s[0][0].c[3]
+  16	s[0][1].b
+  17	s[0][1].c[0]
+  18	s[0][1].c[1]
+  19	s[0][1].c[2]
+  20	s[0][1].c[3]
+  21	s[0][2].b
+  22	s[0][2].c[0]
+  23	s[0][2].c[1]
+  24	s[0][2].c[2]
+  25	s[0][2].c[3]
+  26	s[1][0].b
+  27	s[1][0].c[0]
+  28	s[1][0].c[1]
+  29	s[1][0].c[2]
+  30	s[1][0].c[3]
   31	s[1][2].b
   32	s[1][2].c[0]
   33	s[1][2].c[1]

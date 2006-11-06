@@ -24,9 +24,7 @@ Persistent Object Manager text dump:
 	20	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	373
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -42,10 +40,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  blah = bool^0 = sneeze (1) 
-  copier = bool^0 = sneeze (1) 
-  sneeze = bool^0 = sneeze (1) 
+  blah = bool^0 = blah (1) 
+  copier = bool^0 = blah (1) 
+  sneeze = bool^0 = blah (1) 
   Created state:
   bool instance pool:
-  1	sneeze
+  1	blah
 }

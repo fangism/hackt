@@ -27,14 +27,14 @@ a[0] : 0
 b[0] : 1
 c : 0
 All subnodes of 'x':
+c : 0
 a[1] : 0
 b[1] : 1
-c : 0
 All subnodes of 'y':
+c : 0
 a[2] : 0
 b[2] : 1
-c : 0
 All subnodes of 'z':
+c : 0
 a[3] : 1
 b[3] : 1
-c : 0

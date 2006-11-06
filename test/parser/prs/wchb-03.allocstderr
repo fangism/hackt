@@ -1,24 +1,24 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	L	e1of2<>
-	bool: 1,2,3
+	bool: 3,1,2
 2	(top)	-	2	R	e1of2<>
-	bool: 4,5,6
+	bool: 6,4,5
 3	(top)	-	3	b	wchb_e1of2<>
-	process: 4,5,6,7,8,1,2,9
-	bool: 1,6,7,2,8,4,5,9,3
-4	process	3	1	b.l0	celem2inv<>
-	bool: 7,1,6
-5	process	3	2	b.l1	celem2inv<>
-	bool: 8,2,6
-6	process	3	3	b.r0	inv<>
+	process: 1,2,4,5,6,7,8,9
+	bool: 1,2,3,4,5,6,7,8,9
+4	process	3	3	b.r0	inv<>
 	bool: 7,4
-7	process	3	4	b.r1	inv<>
+5	process	3	4	b.r1	inv<>
 	bool: 8,5
-8	process	3	5	b.la	nand2<>
-	bool: 9,7,8
-9	process	3	8	b.re	inv<>
+6	process	3	5	b.re	inv<>
 	bool: 9,3
+7	process	3	6	b.l0	celem2inv<>
+	bool: 1,6,7
+8	process	3	7	b.l1	celem2inv<>
+	bool: 2,6,8
+9	process	3	8	b.la	nand2<>
+	bool: 7,8,9
 [global bool entries]
 1	(top)	-	1	L.d[0]	
 2	(top)	-	2	L.d[1]	
@@ -26,6 +26,6 @@ globID	super		localID	canonical	footprint-frame
 4	(top)	-	4	R.d[0]	
 5	(top)	-	5	R.d[1]	
 6	(top)	-	6	R.e	
-7	process	3	3	b._r[0]	
-8	process	3	5	b._r[1]	
-9	process	3	8	b.rv	
+7	process	3	7	b._r[0]	
+8	process	3	8	b._r[1]	
+9	process	3	9	b.rv	

@@ -1,8 +1,8 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	that[0][0]	fang<>
-2	(top)	-	2	that[0][1]	fang<>
-3	(top)	-	3	that[1][0]	fang<>
-4	(top)	-	4	that[1][1]	fang<>
-5	(top)	-	5	this[0][2]	fang<>
+1	(top)	-	1	this[0][0]	fang<>
+2	(top)	-	2	this[0][1]	fang<>
+3	(top)	-	3	this[0][2]	fang<>
+4	(top)	-	4	this[1][0]	fang<>
+5	(top)	-	5	this[1][1]	fang<>
 6	(top)	-	6	this[1][2]	fang<>
