@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.14.2.4 2006/11/05 22:29:16 fang Exp $
+	$Id: process_instance_collection.cc,v 1.14.2.5 2006/11/06 20:54:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -67,11 +67,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_port_formal_array, 
 	PROCESS_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::port_actual_collection<HAC::entity::process_tag>, 
 	PROCESS_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 #endif
 }	// end namespace util
 
@@ -91,9 +89,7 @@ template class instance_array<process_tag, 2>;
 template class instance_array<process_tag, 3>;
 template class instance_array<process_tag, 4>;
 template class port_formal_array<process_tag>;
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 template class port_actual_collection<process_tag>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

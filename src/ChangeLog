@@ -5,6 +5,14 @@
 
 2006-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-27:
+	  Perm'd ENABLE_PORT_ACTUAL_COLLECTIONS, the collections used
+		by subinstances and public port collections, with 
+		back-references to formal member collections in 
+		other footprints.  This significantly reduced the amount of
+		structural replication in the instance hierarchy.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-26:
 	  Perm'd USE_COLLECTION_INTERFACES.
 	  Summary: from these base classes are derived formal and local

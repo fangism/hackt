@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.12.2.2 2006/11/02 06:18:46 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.12.2.3 2006/11/06 20:54:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -15,7 +15,6 @@
 #include <algorithm>
 
 #include "Object/inst/struct_instance_collection.h"
-// #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.tcc"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
@@ -59,11 +58,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_port_formal_array, 
 	STRUCT_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::port_actual_collection<HAC::entity::datastruct_tag>, 
 	STRUCT_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 #endif
 }	// end namespace util
 
@@ -83,9 +80,7 @@ template class instance_array<datastruct_tag, 2>;
 template class instance_array<datastruct_tag, 3>;
 template class instance_array<datastruct_tag, 4>;
 template class port_formal_array<datastruct_tag>;
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 template class port_actual_collection<datastruct_tag>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

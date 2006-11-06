@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.11 2006/11/06 20:40:43 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.12 2006/11/06 20:54:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -40,6 +40,7 @@
 	Rationale: remove duplicates
 	Goal: 0
 	Status: applied to templates, haven't applied to ports yet
+	Priority: low (if it ain't broke...), matter of consistency
  */
 #define	SEQUENTIAL_SCOPE_INCLUDES_FORMALS	0
 
@@ -49,6 +50,9 @@
 	compile-time static analysis anymore.
 	Goal: 1
 	Status: not begun
+	Priority: low
+	NOTE: can also replace const_param_expr_list-pointers with
+	non-pointers to reduce heap-allocations.  
  */
 #define	ALWAYS_USE_DYNAMIC_INDEX_LIST		0
 
@@ -87,21 +91,12 @@
 #define	SUPER_INSTANCES_IN_ACTUALS_ONLY		0
 
 /**
-	Define to 1 to instantiate port_actual_collections. 
-	Nothing more specific about HOW they are used is implied by
-	this switch.  
-	Goal: 1
-	Status: completed, tested
- */
-#define	ENABLE_PORT_ACTUAL_COLLECTIONS		1
-
-/**
 	Define to 1 to *use* port_actual_collections in subinstances.  
 	Doesn't specify how they are allocated, see next flags.  
 	Goal: 1
 	Status: completed, tested, using heap allocation
  */
-#define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	(1 && ENABLE_PORT_ACTUAL_COLLECTIONS)
+#define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	1
 
 /**
 	Define to 1 to pool-allocate ALL instance collections, on a 
@@ -111,9 +106,15 @@
 	Goal: 1?
 	Status: complete and tested
  */
-#ifndef	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #define	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT	1
-#endif
+
+/**
+	Define to 1 to pool-allocate collection pool bundles.
+	Goal: 1
+	Status: not begun
+	Priority: low, non-critical enhancement
+ */
+#define	POOL_ALLOCATE_POOL_BUNDLES		0
 
 /**
 	Define to 1 to heap-allocate footprints. 
@@ -147,6 +148,7 @@
 	between footprints.  
 	Goal: 1
 	Status: not begun
+	Priority: low-medium, for stronger invariant checking.  
  */
 #define	FOOTPRINT_LOCKS				0
 

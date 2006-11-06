@@ -2,7 +2,7 @@
 	\file "Object/sizes.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.6.2.1 2006/10/28 03:03:04 fang Exp $
+	$Id: sizes.cc,v 1.6.2.2 2006/11/06 20:54:51 fang Exp $
  */
 
 #include <iostream>
@@ -268,9 +268,7 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<substructure_alias_base<false> >(o);
 	__dump_class_size<subinstance_manager>(o);
 	__dump_class_size<bool_instance_collection>(o);
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 	__dump_class_size<port_actual_collection<bool_tag> >(o);
-#endif
 	__dump_class_size<bool_instance>(o);
 	__dump_class_size<instance_alias_info<bool_tag> >(o);
 	__dump_class_size<bool_scalar>(o);
@@ -278,9 +276,7 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<bool_array_4D>(o);
 	__dump_class_size<bool_port_formal_array>(o);
 	__dump_class_size<process_instance_collection>(o);
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 	__dump_class_size<port_actual_collection<process_tag> >(o);
-#endif
 	__dump_class_size<process_instance>(o);
 	__dump_class_size<instance_alias_info<process_tag> >(o);
 	__dump_class_size<process_scalar>(o);

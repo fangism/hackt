@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.11.2.2 2006/11/02 06:18:21 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.11.2.3 2006/11/06 20:54:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -61,11 +61,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::enum_port_formal_array, 
 	ENUM_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::port_actual_collection<HAC::entity::enum_tag>, 
 	ENUM_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 #endif
 }	// end namespace util
 
@@ -85,9 +83,7 @@ template class instance_array<enum_tag, 2>;
 template class instance_array<enum_tag, 3>;
 template class instance_array<enum_tag, 4>;
 template class port_formal_array<enum_tag>;
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 template class port_actual_collection<enum_tag>;
-#endif
 
 //=============================================================================
 }	// end namespace entity

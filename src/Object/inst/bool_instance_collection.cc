@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.13.2.4 2006/11/02 06:18:17 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.13.2.5 2006/11/06 20:54:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -35,7 +35,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_placeholder.tcc"
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/state_instance.tcc"
-// #include "util/memory/chunk_map_pool.tcc"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/null_parameter_type.h"
 
@@ -70,11 +69,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_port_formal_array, 
 	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::port_actual_collection<HAC::entity::bool_tag>, 
 	DBOOL_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 #endif
 
 namespace memory {
@@ -112,9 +109,7 @@ template class instance_array<bool_tag, 2>;
 template class instance_array<bool_tag, 3>;
 template class instance_array<bool_tag, 4>;
 template class port_formal_array<bool_tag>;
-#if ENABLE_PORT_ACTUAL_COLLECTIONS
 template class port_actual_collection<bool_tag>;
-#endif
 
 //=============================================================================
 }	// end namespace entity
