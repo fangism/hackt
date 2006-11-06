@@ -5,6 +5,14 @@
 
 2006-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-29:
+	  Perm'd HEAP_ALLOCATE_FOOTPRINTS (-650 LoC).
+	  Good news: much of the deleted code was dirty and unmaintainable
+		code to work around the difficulty of re-establishing
+		footprint pointers without persistence management.  
+		Most affected: global_entry.tcc and alias_{actuals,empty}.tcc.
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-28:
 	  Perm'd ALLOCATE_PORT_ACTUAL_COLLECTIONS.
 

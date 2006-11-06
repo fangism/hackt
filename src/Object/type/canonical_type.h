@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.8.4.1 2006/11/05 22:29:18 fang Exp $
+	$Id: canonical_type.h,v 1.8.4.2 2006/11/06 21:45:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -8,7 +8,6 @@
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
-#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
@@ -182,13 +181,6 @@ struct canonical_definition_load_policy<datatype_definition_base> {
 //-----------------------------------------------------------------------------
 template <class DefType>
 struct canonical_type_footprint_frame_policy {
-#if !HEAP_ALLOCATE_FOOTPRINTS
-	static
-	void
-	initialize_frame_pointer_only(const canonical_type<DefType>&,
-		const footprint* const) {
-	}
-#endif
 
 	static
 	good_bool
@@ -202,12 +194,6 @@ struct canonical_type_footprint_frame_policy {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct canonical_type_footprint_frame_policy<process_definition> {
-#if !HEAP_ALLOCATE_FOOTPRINTS
-	static
-	void
-	initialize_frame_pointer_only(const canonical_process_type&,
-		const footprint*&);
-#endif
 
 	static
 	good_bool
@@ -218,12 +204,6 @@ struct canonical_type_footprint_frame_policy<process_definition> {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct canonical_type_footprint_frame_policy<user_def_datatype> {
-#if !HEAP_ALLOCATE_FOOTPRINTS
-	static
-	void
-	initialize_frame_pointer_only(const canonical_user_def_data_type&,
-		const footprint*&);
-#endif
 
 	static
 	good_bool

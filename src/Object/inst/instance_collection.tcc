@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.17 2006/11/06 21:15:50 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.18 2006/11/06 21:45:49 fang Exp $
 	TODO: trim includes
  */
 
@@ -131,24 +131,17 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection() :
 		parent_type(), 
 		collection_type_manager_parent_type(), 
-#if HEAP_ALLOCATE_FOOTPRINTS
 		footprint_ref(NULL), 
-#endif
 		source_placeholder(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-INSTANCE_COLLECTION_CLASS::instance_collection(
-#if HEAP_ALLOCATE_FOOTPRINTS
-			const footprint& f, 
-#endif
+INSTANCE_COLLECTION_CLASS::instance_collection(const footprint& f, 
 			const instance_placeholder_ptr_type p) :
 		parent_type(), 
 		collection_type_manager_parent_type(), 
-#if HEAP_ALLOCATE_FOOTPRINTS
 		footprint_ref(&f), 
-#endif
 		source_placeholder(p) {
 }
 
@@ -310,7 +303,6 @@ INSTANCE_COLLECTION_CLASS::make_port_formal_array(
 #endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HEAP_ALLOCATE_FOOTPRINTS
 /**
 	This prefixes a footprint-translated pointer with a reference
 	to the external footprint.  
@@ -350,7 +342,6 @@ INSTANCE_COLLECTION_CLASS::read_external_pointer(
 	NEVER_NULL(ret);
 	return ret;
 }
-#endif	// HEAP_ALLOCATE_FOOTPRINTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -396,18 +387,14 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::load_object_base(
-#if HEAP_ALLOCATE_FOOTPRINTS
 		const footprint& f, 
-#endif
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
 #if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	parent_type::load_object_base(m, i);
 #endif
-#if HEAP_ALLOCATE_FOOTPRINTS
 	// owning footprint? re-establish back-reference
 	this->footprint_ref = never_ptr<const footprint>(&f);
-#endif
 	collection_type_manager_parent_type::load_object_base(m, i);
 	m.read_pointer(i, this->source_placeholder);
 	// TODO: need to load in advance to make the key available
@@ -461,16 +448,9 @@ INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		const footprint& f, 
-#endif
+INSTANCE_ARRAY_CLASS::instance_array(const footprint& f, 
 		const instance_placeholder_ptr_type p) :
-#if HEAP_ALLOCATE_FOOTPRINTS
 		parent_type(f, p), 
-#else
-		parent_type(p), 
-#endif
 		collection() {
 }
 
@@ -1291,11 +1271,7 @@ INSTANCE_ARRAY_CLASS::load_object(
 #endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_object()");
-	parent_type::load_object_base(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		fp, 
-#endif
-		m, f);
+	parent_type::load_object_base(fp, m, f);
 	fp.register_collection_map_entry(
 		this->source_placeholder->get_footprint_key(), 
 		lookup_collection_pool_index_entry(
@@ -1389,16 +1365,9 @@ INSTANCE_SCALAR_CLASS::instance_array() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		const footprint& f, 
-#endif 
+INSTANCE_SCALAR_CLASS::instance_array(const footprint& f, 
 		const instance_placeholder_ptr_type p) :
-#if HEAP_ALLOCATE_FOOTPRINTS
 		parent_type(f, p), 
-#else
-		parent_type(p),
-#endif
 		the_instance() {
 }
 
@@ -1858,11 +1827,7 @@ INSTANCE_SCALAR_CLASS::load_object(
 #endif
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
-	parent_type::load_object_base(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		fp, 
-#endif
-		m, f);
+	parent_type::load_object_base(fp, m, f);
 	fp.register_collection_map_entry(
 		this->source_placeholder->get_footprint_key(), 
 		lookup_collection_pool_index_entry(

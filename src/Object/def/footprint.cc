@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.13 2006/11/06 03:12:18 fang Exp $
+	$Id: footprint.cc,v 1.27.4.14 2006/11/06 21:45:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -64,9 +64,7 @@
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
-#if HEAP_ALLOCATE_FOOTPRINTS
 #include "Object/persistent_type_hash.h"
-#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -82,12 +80,10 @@
 #include "util/IO_utils.h"
 #include "util/indent.h"
 
-#if HEAP_ALLOCATE_FOOTPRINTS
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
         HAC::entity::footprint, GENERIC_FOOTPRINT_TYPE_KEY, 0)
 }
-#endif
 
 namespace HAC {
 namespace entity {
@@ -259,9 +255,7 @@ footprint::footprint() :
 	\pre source footprint must be default constructed (empty).
  */
 footprint::footprint(const footprint& t) :
-#if HEAP_ALLOCATE_FOOTPRINTS
 	persistent(), 
-#endif
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
 	footprint_base<datastruct_tag>(), 
@@ -899,7 +893,6 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HEAP_ALLOCATE_FOOTPRINTS
 void
 footprint::collect_transient_info(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
@@ -908,7 +901,6 @@ if (!m.register_transient_object(this,
 	collect_transient_info_base(m);
 }
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -972,12 +964,10 @@ footprint::write_object_base(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HEAP_ALLOCATE_FOOTPRINTS
 void
 footprint::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_object_base(m, o);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1043,12 +1033,10 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HEAP_ALLOCATE_FOOTPRINTS
 void
 footprint::load_object(const persistent_object_manager& m, istream& i) {
 	load_object_base(m, i);
 }
-#endif
 
 //=============================================================================
 }	// end namespace entity

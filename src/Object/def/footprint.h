@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.8 2006/11/05 01:23:06 fang Exp $
+	$Id: footprint.h,v 1.19.4.9 2006/11/06 21:45:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -25,10 +25,8 @@
 #include "util/STL/hash_map.h"
 #endif
 #include "util/memory/count_ptr.h"
-#if HEAP_ALLOCATE_FOOTPRINTS
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -67,9 +65,7 @@ using util::memory::count_ptr;
 	CONSIDER: adding definition/canonical type back reference?
  */
 class footprint :
-#if HEAP_ALLOCATE_FOOTPRINTS
 	public util::persistent, 
-#endif
 	// public alias_visitee, 	// not needed
 	private	footprint_base<process_tag>, 
 	private	footprint_base<channel_tag>, 
@@ -361,9 +357,7 @@ public:
 	read_pointer(istream&) const;
 #endif
 // persistent information management
-#if HEAP_ALLOCATE_FOOTPRINTS
 protected:
-#endif
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -373,7 +367,6 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if HEAP_ALLOCATE_FOOTPRINTS
 public:
 	void
 	collect_transient_info(persistent_object_manager&) const;
@@ -383,15 +376,12 @@ public:
 
 	void
 	load_object(const persistent_object_manager&, istream&);
-#endif
-#if HEAP_ALLOCATE_FOOTPRINTS
+
 private:
-#endif
 	/**
 		Don't want footprint to be copy-constructed.  
-		But std::pair requires it in the footprint_manager.
-		TODO: allow only a few friends in STL to use it.  
 	 */
+	explicit
 	footprint(const footprint&);
 };	// end class footprint
 

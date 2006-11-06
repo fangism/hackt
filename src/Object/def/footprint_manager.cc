@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.10.4.2 2006/11/05 01:23:07 fang Exp $
+	$Id: footprint_manager.cc,v 1.10.4.3 2006/11/06 21:45:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,9 +11,7 @@
 #include <set>
 #include "util/macros.h"
 #include "Object/def/footprint_manager.h"
-#if HEAP_ALLOCATE_FOOTPRINTS
 #include "Object/def/footprint.h"
-#endif
 #include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
 
@@ -41,7 +39,6 @@ using util::auto_indent;
 //=============================================================================
 // class footprint_entry method definitions
 
-#if HEAP_ALLOCATE_FOOTPRINTS
 footprint_entry::footprint_entry() : ptr_type(new footprint) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -55,13 +52,16 @@ footprint_entry::footprint_entry(const footprint_entry& t) :
 footprint_entry::~footprint_entry() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intentional transfer of ownership, as this copy-constructor
+	is only ever supposed to be called upon insertion into
+	footprint_manager's footprint map.  
+ */
 footprint_entry&
 footprint_entry::operator = (ptr_type& p) {
 	static_cast<ptr_type&>(*this) = p;
 	return *this;
 }
-
-#endif	// HEAP_ALLOCATE_FOOTPRINTS
 
 //=============================================================================
 // class footprint_manager method definitions
@@ -72,13 +72,14 @@ footprint_manager::footprint_manager() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	if 0-dimensions, then initialize with exactly one footprint.  
+ */
 footprint_manager::footprint_manager(const size_t N) :
 		parent_type(), _arity(N) {
-#if HEAP_ALLOCATE_FOOTPRINTS
 	if (!_arity) {
 		parent_type::operator[](key_type());
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -86,6 +87,7 @@ footprint_manager::~footprint_manager() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This resets the arith of the footprint map keys.  
 	Warning: calling this will always clear the map!
  */
 void
@@ -93,12 +95,10 @@ footprint_manager::set_arity(const size_t a) {
 	INVARIANT(!size());
 	INVARIANT(!_arity);
 	_arity = a;
-#if HEAP_ALLOCATE_FOOTPRINTS
 	clear();
 	if (!_arity) {
 		parent_type::operator[](key_type());
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,12 +118,8 @@ if (_arity) {
 				<< "> {" << endl;
 			{
 				INDENT_SECTION(o);
-#if HEAP_ALLOCATE_FOOTPRINTS
 				NEVER_NULL(i->second);
 				i->second->dump_with_collections(o, df, dc);
-#else
-				i->second.dump_with_collections(o, df, dc);
-#endif
 			}
 			o << auto_indent << '}' << endl;
 		}
@@ -157,12 +153,8 @@ if (_arity) {
 				<< "> {" << endl;
 			{
 				INDENT_SECTION(o);
-#if HEAP_ALLOCATE_FOOTPRINTS
 				NEVER_NULL(i->second);
 				i->second->dump_with_collections(o, df, dc);
-#else
-				i->second.dump_with_collections(o, df, dc);
-#endif
 			}
 			o << auto_indent << '}' << endl;
 		}
@@ -191,11 +183,7 @@ if (_arity) {
 footprint_manager::mapped_type&
 footprint_manager::operator [] (const key_type& k) {
 	INVARIANT(k.size() == _arity);
-#if HEAP_ALLOCATE_FOOTPRINTS
 	return *(parent_type::operator[](k));
-#else
-	return parent_type::operator[](k);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -209,11 +197,7 @@ footprint_manager::only(void) {
 	if (!size()) {
 		(*this)[key_type()];
 	}
-#if HEAP_ALLOCATE_FOOTPRINTS
 	return *(begin()->second);
-#else
-	return begin()->second;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -239,11 +223,7 @@ const footprint_manager::mapped_type&
 footprint_manager::only(void) const {
 	INVARIANT(!_arity);
 	INVARIANT(size() == 1);
-#if HEAP_ALLOCATE_FOOTPRINTS
 	return *(begin()->second);
-#else
-	return begin()->second;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -259,12 +239,8 @@ footprint_manager::collect_transient_info_base(
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
 		i->first.collect_transient_info_base(m);
-#if HEAP_ALLOCATE_FOOTPRINTS
 		NEVER_NULL(i->second);
 		i->second->collect_transient_info(m);
-#else
-		i->second.collect_transient_info_base(m);
-#endif
 	}
 }
 
@@ -283,12 +259,8 @@ footprint_manager::write_object_base(
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
 		i->first.write_object(m, o);	// same as write_object_base
-#if HEAP_ALLOCATE_FOOTPRINTS
 		const excl_ptr<footprint>& p(i->second);
 		m.write_pointer(o, p);
-#else
-		i->second.write_object_base(m, o);
-#endif
 	}
 }
 
@@ -310,15 +282,11 @@ footprint_manager::load_object_base(
 		temp_key.load_object(m, i);
 		// load value in-place
 		INVARIANT(temp_key.size() == _arity);
-#if HEAP_ALLOCATE_FOOTPRINTS
 		excl_ptr<footprint> f;
 		m.read_pointer(i, f);
 		parent_type::operator[](temp_key) = f;
 		// transfer ownership
 		// let persistent_object_manager to the loading
-#else
-		(*this)[temp_key].load_object_base(m, i);
-#endif
 	}
 	INVARIANT(size() == s);
 }

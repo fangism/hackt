@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.12.4.5 2006/11/05 22:29:17 fang Exp $
+	$Id: canonical_type.cc,v 1.12.4.6 2006/11/06 21:45:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -171,19 +171,6 @@ canonical_type_footprint_frame_policy<process_definition>::
 	return good_bool(true);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !HEAP_ALLOCATE_FOOTPRINTS
-void
-canonical_type_footprint_frame_policy<process_definition>::
-		initialize_frame_pointer_only(
-		const canonical_process_type& cpt, const footprint*& f) {
-	const footprint&
-		_f(cpt.get_base_def()->get_footprint(
-			cpt.get_raw_template_params()));
-	f = &_f;
-}
-#endif
-
 //=============================================================================
 /**
 	\param cpt the canonical_process_type whose footprint is checked.  
@@ -228,19 +215,6 @@ canonical_type_footprint_frame_policy<user_def_datatype>::
 		ind);
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !HEAP_ALLOCATE_FOOTPRINTS
-void
-canonical_type_footprint_frame_policy<user_def_datatype>::
-		initialize_frame_pointer_only(
-		const canonical_user_def_data_type& cpt, const footprint*& f) {
-	const footprint&
-		_f(cpt.get_base_def()->get_footprint(
-			cpt.get_raw_template_params()));
-	f = &_f;
-}
-#endif
 
 //=============================================================================
 /**

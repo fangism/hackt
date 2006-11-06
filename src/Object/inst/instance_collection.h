@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.13 2006/11/06 20:40:50 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.14 2006/11/06 21:45:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -105,13 +105,11 @@ public:
 	typedef	never_ptr<const instance_placeholder_type>
 				instance_placeholder_ptr_type;
 protected:
-#if HEAP_ALLOCATE_FOOTPRINTS
 	/**
 		Back-reference to owning footprint.  
 		Always a weak-pointer, even if footprints ref-counted. 
 	 */
 	never_ptr<const footprint>		footprint_ref;
-#endif
 	/**
 		TODO: consider pushing to instance_array to avoid
 			replicating between formals and actual collections.  
@@ -124,11 +122,7 @@ protected:
 	instance_collection();
 
 	/// requires a back-reference to the source collection placeholder
-	explicit
-	instance_collection(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		const footprint&, 
-#endif
+	instance_collection(const footprint&, 
 		const instance_placeholder_ptr_type);
 
 #if 0
@@ -150,10 +144,8 @@ virtual	ostream&
 virtual	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
 
-#if HEAP_ALLOCATE_FOOTPRINTS
 	const footprint&
 	get_footprint_owner(void) const { return *this->footprint_ref; }
-#endif
 
 	const this_type&
 	get_canonical_collection(void) const;
@@ -387,7 +379,6 @@ virtual	void
 	write_pointer(ostream&, 
 		const instance_collection_pool_bundle<Tag>&) const = 0;
 
-#if HEAP_ALLOCATE_FOOTPRINTS
 	void
 	write_external_pointer(const persistent_object_manager&,
 		ostream&) const;
@@ -395,7 +386,6 @@ virtual	void
 	static
 	never_ptr<const this_type>
 	read_external_pointer(const persistent_object_manager&, istream&);
-#endif
 #endif
 
 protected:
@@ -406,10 +396,7 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		const footprint&, 
-#endif
+	load_object_base(const footprint&, 
 		const persistent_object_manager&, istream&);
 
 };	// end class instance_collection

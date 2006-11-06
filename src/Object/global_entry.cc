@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.7.36.3 2006/11/05 22:29:05 fang Exp $
+	$Id: global_entry.cc,v 1.7.36.4 2006/11/06 21:45:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -304,18 +304,17 @@ footprint_frame::collect_subentries(entry_collection& e,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: now footprints are heap-allocated and persistently managed, 
+	which greatly simplifies footprint pointer serialization and
+	reconstruction.  
+ */
 void
 footprint_frame::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if HEAP_ALLOCATE_FOOTPRINTS
 	if (_footprint)
 		_footprint->collect_transient_info(m);
-#else
-	// footprint pointer is not persistently managed, 
-	// and thus needs to be reconstructed by other means
-	// need to infer canonical_type and go from there.
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -324,9 +323,7 @@ footprint_frame::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	// see note in collect_transient_info: footprint pointer reconstruction
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if HEAP_ALLOCATE_FOOTPRINTS
 	m.write_pointer(o, _footprint);
-#endif
 	write_id_map(footprint_frame_map<process_tag>::id_map, o);
 	write_id_map(footprint_frame_map<channel_tag>::id_map, o);
 	write_id_map(footprint_frame_map<datastruct_tag>::id_map, o);
@@ -336,17 +333,19 @@ footprint_frame::write_object_base(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The footprint must be guaranteed to be loaded before 
+	loading the id_maps.  
+ */
 void
 footprint_frame::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	// see note in collect_transient_info: footprint pointer reconstruction
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if HEAP_ALLOCATE_FOOTPRINTS
 	m.read_pointer(i, _footprint);
 	if (_footprint) {
 		m.load_object_once(const_cast<footprint*>(_footprint));
 	}
-#endif
 	load_id_map(footprint_frame_map<process_tag>::id_map, i);
 	load_id_map(footprint_frame_map<channel_tag>::id_map, i);
 	load_id_map(footprint_frame_map<datastruct_tag>::id_map, i);

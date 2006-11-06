@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2.2.10 2006/11/06 20:40:50 fang Exp $
+	$Id: instance_scalar.h,v 1.2.2.11 2006/11/06 21:45:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -65,12 +65,7 @@ private:
 	instance_array();
 
 public:
-	explicit
-	instance_array(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		const footprint&, 
-#endif
-		const instance_placeholder_ptr_type);
+	instance_array(const footprint&, const instance_placeholder_ptr_type);
 
 	~instance_array();
 

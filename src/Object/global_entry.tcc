@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.14.4.4 2006/11/05 22:29:06 fang Exp $
+	$Id: global_entry.tcc,v 1.14.4.5 2006/11/06 21:45:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -195,48 +195,6 @@ global_entry_base<true>::collect_transient_info_base(
 		persistent_object_manager& m, 
 		const size_t ind, const footprint& topfp, 
 		const state_manager& sm) const {
-#if !HEAP_ALLOCATE_FOOTPRINTS
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	typedef	instance_alias_info<Tag>	alias_type;
-	STACKTRACE_PERSISTENT_VERBOSE;
-	INVARIANT(_frame._footprint);
-	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
-	STACKTRACE_PERSISTENT_PRINT("ind = " << ind << endl);
-	STACKTRACE_PERSISTENT_PRINT("_pool.size() = " << _pool.size() << endl);
-	if (ind >= _pool.size()) {
-		const global_entry_pool<Tag>&
-			gpool(sm.template get_pool<Tag>());
-		const global_entry<Tag>& ent(gpool[ind]);
-		INVARIANT(ent.parent_tag_value);
-		INVARIANT(ent.parent_id);
-		switch (ent.parent_tag_value) {
-		case PARENT_TYPE_PROCESS: {
-			instance_alias_info<process_tag>::
-				collect_canonical_footprint(
-				extract_parent_formal_instance_alias<
-					process_tag>(sm, ent),
-				m);
-			break;
-		}
-		case PARENT_TYPE_STRUCT: {
-			// Q: can datatypes have relaxed parameters?
-			instance_alias_info<datastruct_tag>::
-				collect_canonical_footprint(
-				extract_parent_formal_instance_alias<
-					datastruct_tag>(sm, ent),
-				m);
-			break;
-		}
-		default:
-			// append cases later...
-			FINISH_ME_EXIT(Fang);
-		}
-	} else {
-		const state_instance<Tag>& _inst(_pool[ind]);
-		alias_type::collect_canonical_footprint(*_inst.get_back_ref(),
-			m);
-	}
-#endif	// HEAP_ALLOCATE_FOOTPRINTS
 	_frame.collect_transient_info_base(m);
 }
 
@@ -254,48 +212,6 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 		ostream& o, const size_t ind, const footprint& topfp,
 		const state_manager& sm) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if !HEAP_ALLOCATE_FOOTPRINTS
-	// save away _footprint pointer somehow
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	typedef	instance_alias_info<Tag>	alias_type;
-	INVARIANT(_frame._footprint);
-	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
-	STACKTRACE_PERSISTENT_PRINT("ind = " << ind << endl);
-	STACKTRACE_PERSISTENT_PRINT("_pool.size() = " << _pool.size() << endl);
-	if (ind >= _pool.size()) {
-		const global_entry_pool<Tag>&
-			gpool(sm.template get_pool<Tag>());
-		const global_entry<Tag>& ent(gpool[ind]);
-		INVARIANT(ent.parent_tag_value);
-		INVARIANT(ent.parent_id);
-		switch (ent.parent_tag_value) {
-		case PARENT_TYPE_PROCESS: {
-			instance_alias_info<process_tag>::
-				save_canonical_footprint(
-				extract_parent_formal_instance_alias<
-					process_tag>(sm, ent),
-				m, o, _frame._footprint);
-			break;
-		}
-		case PARENT_TYPE_STRUCT: {
-			instance_alias_info<datastruct_tag>::
-				save_canonical_footprint(
-				extract_parent_formal_instance_alias<
-					datastruct_tag>(sm, ent),
-				m, o, _frame._footprint);
-			break;
-		}
-		default:
-			// for now, the only thing that can be parent
-			// is process, append cases later...
-			FINISH_ME_EXIT(Fang);
-		}
-	} else {
-		const state_instance<Tag>& _inst(_pool[ind]);
-		alias_type::save_canonical_footprint(*_inst.get_back_ref(),
-			m, o, _frame._footprint);
-	}
-#endif // HEAP_ALLOCATE_FOOTPRINTS
 	_frame.write_object_base(m, o);
 }
 
@@ -303,7 +219,7 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 /**
 	Dependent reconstruction ordering:
 	\pre all footprints (top-level and asssociated with complete ypes)
-		have been restored prior to callilng this.  
+		have been restored prior to calling this.  
 		Thus it is safe to reference instance placeholders'
 		back-references.  
 		See the reconstruction ordering in module::load_object_base().  
@@ -314,48 +230,6 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 		istream& i, const size_t ind, const footprint& topfp,
 		const state_manager& sm) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if !HEAP_ALLOCATE_FOOTPRINTS
-	// restore _footprint pointer some how
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	typedef	instance_alias_info<Tag>	alias_type;
-	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
-	STACKTRACE_PERSISTENT_PRINT("ind = " << ind << endl);
-	STACKTRACE_PERSISTENT_PRINT("_pool.size() = " << _pool.size() << endl);
-	if (ind >= _pool.size()) {
-		const global_entry_pool<Tag>&
-			gpool(sm.template get_pool<Tag>());
-		const global_entry<Tag>& ent(gpool[ind]);
-		INVARIANT(ent.parent_tag_value);
-		INVARIANT(ent.parent_id);
-		switch (ent.parent_tag_value) {
-		case PARENT_TYPE_PROCESS: {
-			instance_alias_info<process_tag>::
-				restore_canonical_footprint(
-				extract_parent_formal_instance_alias<
-					process_tag>(sm, ent),
-				m, i, _frame._footprint);
-			break;
-		}
-		case PARENT_TYPE_STRUCT: {
-			instance_alias_info<datastruct_tag>::
-				restore_canonical_footprint(
-				extract_parent_formal_instance_alias<
-					datastruct_tag>(sm, ent),
-				m, i, _frame._footprint);
-			break;
-		}
-		default:
-			// for now, the only thing that can be parent
-			// is process, append cases later...
-			FINISH_ME_EXIT(Fang);
-		}
-	} else {
-		const state_instance<Tag>& _inst(_pool[ind]);
-		// restores _footprint
-		alias_type::restore_canonical_footprint(*_inst.get_back_ref(),
-			m, i, _frame._footprint);
-	}
-#endif // HEAP_ALLOCATE_FOOTPRINTS
 	_frame.load_object_base(m, i);
 }
 

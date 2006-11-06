@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.32.4.2 2006/11/05 01:23:03 fang Exp $
+ 	$Id: definition.cc,v 1.32.4.3 2006/11/06 21:45:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2644,11 +2644,7 @@ process_definition::process_definition(const string& s) :
 		parent(), 
 		port_formals(), 
 		prs(), chp(), 
-		footprint_map(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		0
-#endif
-		) {
+		footprint_map(0) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

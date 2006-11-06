@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.10.4.3 2006/11/06 21:15:46 fang Exp $
+	$Id: alias_empty.h,v 1.10.4.4 2006/11/06 21:45:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -15,7 +15,6 @@
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -133,29 +132,6 @@ public:
 	complete_type_actuals(const InstColl& _inst) const {
 		return _inst.get_canonical_collection().__get_raw_type();
 	}
-
-#if !HEAP_ALLOCATE_FOOTPRINTS
-public:
-	template <class AliasType>
-	static
-	void
-	collect_canonical_footprint(const AliasType&,
-		persistent_object_manager&);
-
-	template <class AliasType>
-	static
-	void
-	save_canonical_footprint(const AliasType&,
-		const persistent_object_manager&,
-		ostream&, const footprint* const);
-
-	template <class AliasType>
-	static
-	void
-	restore_canonical_footprint(const AliasType&,
-		const persistent_object_manager&,
-		istream&, const footprint*&);
-#endif
 
 protected:
 	void

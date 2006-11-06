@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.12 2006/11/06 20:40:51 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.13 2006/11/06 21:45:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -78,16 +78,9 @@ PORT_FORMAL_ARRAY_CLASS::port_formal_array() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-PORT_FORMAL_ARRAY_CLASS::port_formal_array(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		const footprint& f, 
-#endif
+PORT_FORMAL_ARRAY_CLASS::port_formal_array(const footprint& f, 
 		const instance_placeholder_ptr_type p) :
-#if HEAP_ALLOCATE_FOOTPRINTS
 		parent_type(f, p),
-#else
-		parent_type(p),
-#endif
 		value_array() {
 }
 
@@ -709,11 +702,7 @@ PORT_FORMAL_ARRAY_CLASS::load_object(
 		footprint& fp, 
 #endif
 		const persistent_object_manager& m, istream& f) {
-	parent_type::load_object_base(
-#if HEAP_ALLOCATE_FOOTPRINTS
-		fp, 
-#endif
-		m, f);
+	parent_type::load_object_base(fp, m, f);
 	// placeholder MUST already be loaded now, can use its key
 	fp.register_collection_map_entry(
 		this->source_placeholder->get_footprint_key(),

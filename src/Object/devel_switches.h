@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.13 2006/11/06 21:15:44 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.14 2006/11/06 21:45:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -106,34 +106,27 @@
 	Status: not begun
 	Priority: low, non-critical enhancement
  */
-#define	POOL_ALLOCATE_POOL_BUNDLES		0
+#define	POOL_ALLOCATE_COLLECTION_POOL_BUNDLES		0
 
 /**
-	Define to 1 to heap-allocate footprints. 
-	Rationale, makes persistence and back-referencing easier.
-	Also footprint_manager.h need not include footprint.h, 
-	which carries a lot of weight.  
-	Footprints are not replication critical.  
-	UPDATE: this will be needed because of footprint-dependent 
-		de-serialization ordering!  port_actual_collections'
-		have back-references to formal_collections that belong to
-		other footprints!
-	Can also pool-allocate footprints.
+	Define to 1 to pool-allocate footprints. 
+	Prerequisite: Depends on footprints being heap-allocated, of course
+	Rationale: faster heap allocation, of course.  
 	Goal: 1
-	Status: complete, and tested
+	Status: not begun
+	Priority: low (enhancement, non-critical)
  */
-#define	HEAP_ALLOCATE_FOOTPRINTS		1
+#define	POOL_ALLOCATE_FOOTPRINTS		1
 
 /**
 	Define to 1 to reference-count footprints. 
 	Don't know if this is necessary, or a good idea, but it is an option.
 	Purpose: Could use this to validate acylic dependencies...
+	Prerequisite: heap-allocating footprints (done)
 	Goal: ?
 	Status: not begun
  */
-#if	HEAP_ALLOCATE_FOOTPRINTS
 #define	REF_COUNT_FOOTPRINTS			0
-#endif
 
 /**
 	Define to 1 to employ locks to check acyclic dependencies 
