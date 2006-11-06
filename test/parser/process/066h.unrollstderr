@@ -4,36 +4,31 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	68
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	413
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	procpacc	0	#HEAD#	#TAIL#	25
-	24	##ADDR##	procpacc	0	#HEAD#	#TAIL#	25
-	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procpacc	0	#HEAD#	#TAIL#	33
-	31	##ADDR##	procpacc	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	procpacc	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	441
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

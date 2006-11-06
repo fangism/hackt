@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	236
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
 	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -15,29 +15,25 @@ Persistent Object Manager text dump:
 	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	15	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	34
-	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	dintpacc	0	#HEAD#	#TAIL#	26
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	500
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

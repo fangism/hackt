@@ -9,8 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	80
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	396
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

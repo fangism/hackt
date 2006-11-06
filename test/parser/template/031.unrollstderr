@@ -7,12 +7,12 @@ Persistent Object Manager text dump:
 	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
-	11	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	368
 	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	13	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -28,9 +28,8 @@ Persistent Object Manager text dump:
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	33
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	393
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

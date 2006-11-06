@@ -28,10 +28,7 @@ Persistent Object Manager text dump:
 	24	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
 	25	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	30
-	28	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
-	29	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
-	30	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	381
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

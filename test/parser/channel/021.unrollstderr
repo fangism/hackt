@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
 	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)

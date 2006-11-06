@@ -57,15 +57,7 @@ Persistent Object Manager text dump:
 	53	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	57	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	58	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	59	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	61	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	63	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	64	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	180
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	632
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

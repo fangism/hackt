@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	258
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -27,20 +27,12 @@ Persistent Object Manager text dump:
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	17
-	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	38	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
-	39	##ADDR##	dboolpac	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
