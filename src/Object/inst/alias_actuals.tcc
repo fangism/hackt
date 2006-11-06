@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.14.2.2 2006/11/05 22:29:11 fang Exp $
+	$Id: alias_actuals.tcc,v 1.14.2.3 2006/11/06 21:15:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -16,7 +16,6 @@
 #include "Object/type/canonical_type.h"
 #include "util/stacktrace.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -42,11 +41,8 @@ instance_alias_info_actuals::complete_type_actuals(
 	STACKTRACE_VERBOSE;
 	typedef	typename InstColl::instance_collection_parameter_type
 						canonical_type_type;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
-	canonical_type_type _type(_inst.get_canonical_collection().__get_raw_type());
-#else
-	canonical_type_type _type(_inst.__get_raw_type());
-#endif
+	canonical_type_type
+		_type(_inst.get_canonical_collection().__get_raw_type());
 	if (_type.is_relaxed()) {
 		if (actuals) {
 			// then merge actuals and return

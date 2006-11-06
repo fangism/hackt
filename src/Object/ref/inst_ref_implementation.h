@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.18.2.1 2006/10/29 20:05:03 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.18.2.2 2006/11/06 21:15:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -47,24 +47,9 @@ struct simple_meta_instance_reference_implementation<true> {
 					type;
 	};
 
-#if !ALLOCATE_PORT_ACTUAL_COLLECTIONS
-	template <class Tag>
-	struct instance_collection_generic_type {
-		typedef	typename
-			class_traits<Tag>::instance_collection_generic_type
-					type;
-	};
-#endif
-
 	template <class Tag>
 	struct collection_interface_type {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
-		typedef	collection_interface<Tag>
-#else
-		typedef	typename
-			class_traits<Tag>::instance_collection_generic_type
-#endif
-					type;
+		typedef	collection_interface<Tag>	type;
 	};
 
 	typedef	const count_ptr<
@@ -191,24 +176,9 @@ struct simple_meta_instance_reference_implementation<false> {
 					type;
 	};
 
-#if !ALLOCATE_PORT_ACTUAL_COLLECTIONS
-	template <class Tag>
-	struct instance_collection_generic_type {
-		typedef	typename
-			class_traits<Tag>::instance_collection_generic_type
-					type;
-	};
-#endif
-
 	template <class Tag>
 	struct collection_interface_type {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
-		typedef	collection_interface<Tag>
-#else
-		typedef	typename
-			class_traits<Tag>::instance_collection_generic_type
-#endif
-					type;
+		typedef	collection_interface<Tag>	type;
 	};
 
 	typedef	const count_ptr<

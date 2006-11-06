@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.18.4.3 2006/11/02 06:18:48 fang Exp $
+	$Id: substructure_alias_base.h,v 1.18.4.4 2006/11/06 21:15:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -69,11 +69,7 @@ virtual	~substructure_alias_base() { }
 	template <class Tag>
 	void
 	unroll_port_instances(
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 			const collection_interface<Tag>& p, 
-#else
-			const instance_collection<Tag>& p, 
-#endif
 			const unroll_context& c) {
 		subinstances.unroll_port_instances(p, c);
 		restore_parent_child_links();
@@ -174,12 +170,7 @@ protected:
 	 */
 	template <class Tag>
 	void
-	unroll_port_instances(
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
-			const collection_interface<Tag>&, 
-#else
-			const instance_collection<Tag>&, 
-#endif
+	unroll_port_instances(const collection_interface<Tag>&, 
 		const unroll_context&) const { }
 
 	void

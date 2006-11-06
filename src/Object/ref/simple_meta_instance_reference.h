@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.18.4.2 2006/10/29 20:05:06 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.18.4.3 2006/11/06 21:15:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -12,7 +12,6 @@
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "util/STL/vector_fwd.h"
@@ -21,9 +20,7 @@ namespace HAC {
 namespace entity {
 using util::packed_array_generic;
 class instance_placeholder_base;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 template <class> class collection_interface;
-#endif
 
 template <bool>	struct simple_meta_instance_reference_implementation;
 
@@ -69,12 +66,7 @@ public:
 	/// the instance collection base type
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	typedef	collection_interface<Tag>	collection_interface_type;
-#else
-	typedef	instance_collection_generic_type
-						collection_interface_type;
-#endif
 	typedef	typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
 	typedef	never_ptr<const instance_placeholder_type>

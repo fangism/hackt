@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.15.4.2 2006/11/02 06:18:47 fang Exp $
+	$Id: subinstance_manager.h,v 1.15.4.3 2006/11/06 21:15:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -12,9 +12,7 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
 #include "Object/devel_switches.h"
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 #include "util/memory/excl_ptr.h"
-#endif
 
 namespace HAC {
 class cflat_options;
@@ -30,11 +28,7 @@ class port_alias_tracker;
 class port_member_context;
 class state_manager;
 class footprint_frame;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 template <class> class collection_interface;
-#else
-template <class> class instance_collection;
-#endif
 class cflat_visitor;
 struct dump_flags;
 using std::ostream;
@@ -42,9 +36,7 @@ using std::istream;
 using std::string;
 using std::vector;
 using util::good_bool;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 using util::memory::never_ptr;
-#endif
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
@@ -128,11 +120,7 @@ public:
 	template <class Tag>
 	void
 	unroll_port_instances(
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 		const collection_interface<Tag>&, 
-#else
-		const instance_collection<Tag>&, 
-#endif
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
 

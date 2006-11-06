@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.12 2006/11/06 20:54:50 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.13 2006/11/06 21:15:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -91,14 +91,6 @@
 #define	SUPER_INSTANCES_IN_ACTUALS_ONLY		0
 
 /**
-	Define to 1 to *use* port_actual_collections in subinstances.  
-	Doesn't specify how they are allocated, see next flags.  
-	Goal: 1
-	Status: completed, tested, using heap allocation
- */
-#define	ALLOCATE_PORT_ACTUAL_COLLECTIONS	1
-
-/**
 	Define to 1 to pool-allocate ALL instance collections, on a 
 	*per-footprint* basis (using the target footprint in context).  
 	This is really orthogonal to whether or not port_actual_collections
@@ -151,6 +143,16 @@
 	Priority: low-medium, for stronger invariant checking.  
  */
 #define	FOOTPRINT_LOCKS				0
+
+/**
+	Define to 1 to use footprint sub-types, distinguishing between
+	process, datastruct, and channel footprints.  
+	Currently footprint is generic union of needed features, bloated.  
+	Rationale: memory reduction and stronger static typing.  
+	Goal: ?
+	Priority: low
+ */
+#define	SUBTYPE_FOOTPRINTS			0
 
 //=============================================================================
 

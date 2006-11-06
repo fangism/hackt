@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25.2.9 2006/11/02 06:18:22 fang Exp $
+	$Id: instance_alias.tcc,v 1.25.2.10 2006/11/06 21:15:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -341,14 +341,9 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	return this->container->get_canonical_collection()
 		.must_be_collectibly_type_equivalent(
 			a.container->get_canonical_collection());
-#else
-	return this->container->must_be_collectibly_type_equivalent(
-		*a.container);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

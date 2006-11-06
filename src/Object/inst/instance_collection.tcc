@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.16 2006/11/06 20:40:50 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.17 2006/11/06 21:15:50 fang Exp $
 	TODO: trim includes
  */
 
@@ -619,11 +619,7 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 	const size_t dim = p.container->get_dimensions();
 	if (dim)
 		p.dump_key(os << auto_indent);
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	if (p.container->get_canonical_collection().has_relaxed_type())
-#else
-	if (p.container->has_relaxed_type())
-#endif
 		p.dump_actuals(os);
 	os << " = ";
 	NEVER_NULL(p.peek());
@@ -1477,13 +1473,8 @@ INSTANCE_SCALAR_CLASS::lookup_key(const size_t i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 size_t
 INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
-	INVARIANT(&this->the_instance == &a);
+	INVARIANT(&this->the_instance == &a);	// must be back-reference
 	return 1;
-#else
-	ICE_NEVER_CALL(cerr);
-	return 0;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1528,29 +1519,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 if (this->the_instance.container) {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
-#if 0
-//	if (this->the_instance.container->is_complete_type()) {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
-	if (this->has_relaxed_type())	// meaning "the container"
-#else
-	if (this->the_instance.container->has_relaxed_type())
-#endif
-	{
-		this->the_instance.dump_actuals(o);
-	}
-//	}
-#if 0
-	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
-		(df.show_namespace_owner ? "(ns) " : " ") <<
-		(df.show_leading_scope ? "(::)]" : "]");
-#endif
-	this->the_instance.peek()->dump_hierarchical_name(o << " = ", df);
-	if (this->the_instance.instance_index)
-		o << " (" << this->the_instance.instance_index << ')';
-	this->the_instance.dump_ports(o << ' ', df);
-#else
 	typename parent_type::key_dumper(o, df)(this->the_instance);
-#endif
 } else {
 	// this only happens when dumping the collection before
 	// it is complete.

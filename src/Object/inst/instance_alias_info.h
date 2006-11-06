@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17.2.5 2006/11/02 06:18:23 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.6 2006/11/06 21:15:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -27,9 +27,7 @@ class instance_alias_info_actuals;
 struct alias_visitor;
 struct alias_printer;
 template <class> struct alias_matcher;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 template <class> class collection_interface;
-#endif
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
 #endif
@@ -83,13 +81,8 @@ public:
 	 */
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	typedef	collection_interface<Tag>		container_type;
 	typedef	instance_collection_generic_type	canonical_container_type;
-#else
-	typedef	instance_collection_generic_type	canonical_container_type;
-	typedef	instance_collection_generic_type	container_type;
-#endif
 	typedef	never_ptr<const container_type>	container_ptr_type;
 
 	template <class T>

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.23.4.5 2006/11/03 05:22:34 fang Exp $
+	$Id: unroll_context.cc,v 1.23.4.6 2006/11/06 21:15:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -175,7 +175,6 @@ unroll_context::lookup_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 /**
 	Intended for use with looking up canonical_collection belonging
 	for footprint for the type that is being recursively unrolled
@@ -196,7 +195,6 @@ unroll_context::lookup_port_collection(
 	return (*lookup_footprint)[p.get_footprint_key()]
 		.is_a<const physical_instance_collection>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.5.44.1 2006/10/29 02:25:14 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.5.44.2 2006/11/06 21:15:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
@@ -11,10 +11,8 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/def/footprint.h"
 #include "Object/type/canonical_type.h"
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/collection_interface.h"
-#endif
 #include "util/memory/excl_ptr.h"
 #include "util/stacktrace.h"
 
@@ -37,22 +35,14 @@ namespace entity {
 template <class AliasType>
 good_bool
 internal_aliases_policy<true>::connect(AliasType& _alias) {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	typedef	typename AliasType::canonical_container_type
-#else
-	typedef	typename AliasType::instance_collection_generic_type
-#endif
 						container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 						canonical_type_type;
 	typedef	typename canonical_type_type::canonical_definition_type
 						definition_type;
 	STACKTRACE_VERBOSE;
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	const container_type& c(_alias.container->get_canonical_collection());
-#else
-	const container_type& c(*_alias.container);
-#endif
 	const canonical_type_type
 		_type(_alias.complete_type_actuals(c));
 #if ENABLE_STACKTRACE

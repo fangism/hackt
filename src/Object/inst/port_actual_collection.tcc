@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.11 2006/11/06 03:12:24 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.12 2006/11/06 21:15:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -86,12 +86,10 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
 		parent_type(), 
 		formal_collection(f), 
 		value_array(f->collection_size()) {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	iterator i(this->begin()), e(this->end());
 	for ( ; i!=e; ++i) {
 		i->instantiate(never_ptr<const this_type>(this), c);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

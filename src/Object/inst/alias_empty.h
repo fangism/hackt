@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.10.4.2 2006/11/05 22:29:13 fang Exp $
+	$Id: alias_empty.h,v 1.10.4.3 2006/11/06 21:15:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -131,11 +131,7 @@ public:
 	template <class InstColl>
 	typename InstColl::instance_collection_parameter_type
 	complete_type_actuals(const InstColl& _inst) const {
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 		return _inst.get_canonical_collection().__get_raw_type();
-#else
-		return _inst.__get_raw_type();
-#endif
 	}
 
 #if !HEAP_ALLOCATE_FOOTPRINTS

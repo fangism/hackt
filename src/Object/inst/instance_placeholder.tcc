@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.4.2.7 2006/11/03 05:22:30 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.4.2.8 2006/11/06 21:15:51 fang Exp $
 	TODO: trim includes
  */
 
@@ -40,10 +40,8 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 #include "Object/unroll/unroll_context.h"
 #include "Object/inst/port_actual_collection.h"
-#endif
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/instance_collection_pool_bundle.tcc"	// for allocate
 #endif
@@ -213,9 +211,10 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: make packed actuals array!
 	\param c the unroll_context, whose (read-only) lookup footprint 
-	is that of the super-instance's type.  
+		is that of the super-instance's type.  
+	\return pointer to new-allocated collection, that is memory-owned
+		by the managing (target) footprint.  
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
@@ -226,7 +225,6 @@ count_ptr<physical_instance_collection>
 INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->initial_instantiation_statement_ptr);
-#if ALLOCATE_PORT_ACTUAL_COLLECTIONS
 	typedef	port_actual_collection<Tag>	port_collection_type;
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<const physical_instance_collection>
@@ -256,17 +254,6 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	NEVER_NULL(ret);
 	// TODO: attach relaxed parameters
 	return ret;
-#else	// ALLOCATE_PORT_ACTUAL_COLLECTIONS
-	const count_ptr<instance_collection_generic_type>
-		ret(instance_collection_generic_type::make_port_formal_array(
-			never_ptr<const this_type>(this)));
-	if (this->initial_instantiation_statement_ptr->
-			instantiate_port(c, *ret).good) {
-		return ret;
-	} else {
-		return count_ptr<physical_instance_collection>(NULL);
-	}
-#endif	// ALLOCATE_PORT_ACTUAL_COLLECTIONS
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
