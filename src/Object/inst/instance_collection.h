@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.12 2006/11/05 23:29:36 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.13 2006/11/06 20:40:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -15,9 +15,7 @@
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/devel_switches.h"
-#if USE_COLLECTION_INTERFACES
 #include "Object/inst/collection_interface.h"
-#endif
 #include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -27,31 +25,6 @@
 
 namespace HAC {
 namespace entity {
-#if !USE_COLLECTION_INTERFACES
-using std::list;
-using std::default_list;
-using std::istream;
-using std::ostream;
-using std::string;
-using util::memory::count_ptr;
-using util::memory::never_ptr;
-using util::good_bool;
-using util::bad_bool;
-using util::persistent;
-using util::persistent_object_manager;
-
-class scopespace;
-class footprint;
-class physical_instance_collection;
-class meta_instance_reference_base;
-class nonmeta_instance_reference_base;
-class const_index_list;
-class const_range_list;
-class const_param_expr_list;
-class unroll_context;
-class subinstance_manager;
-template <bool> class internal_aliases_policy;
-#endif
 template <class> class instantiation_statement;
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
@@ -79,13 +52,7 @@ instance_collection<Tag>
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
-#if USE_COLLECTION_INTERFACES
 	public collection_interface<Tag>, 
-#else
-	public class_traits<Tag>::instance_collection_parent_type, 
-#endif
-	// TODO: consider pushing down to instance_array_class
-	// to avoid replication between formals and actuals.
 	public class_traits<Tag>::collection_type_manager_parent_type {
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
@@ -93,19 +60,10 @@ public:
 	typedef	class_traits<Tag>			traits_type;
 private:
 	typedef	Tag					category_type;
-#if USE_COLLECTION_INTERFACES
-	typedef	collection_interface<Tag>
-#else
-	typedef	typename traits_type::instance_collection_parent_type
-#endif
-							parent_type;
+	typedef	collection_interface<Tag>		parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
 public:
-#if USE_COLLECTION_INTERFACES
 	typedef	parent_type			collection_interface_type;
-#else
-	typedef	this_type			collection_interface_type;
-#endif
 	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	typedef	typename traits_type::resolved_type_ref_type
@@ -197,7 +155,6 @@ virtual	ostream&
 	get_footprint_owner(void) const { return *this->footprint_ref; }
 #endif
 
-#if USE_COLLECTION_INTERFACES
 	const this_type&
 	get_canonical_collection(void) const;
 
@@ -213,7 +170,6 @@ virtual	size_t
 
 virtual	size_t
 	collection_size(void) const = 0;
-#endif
 
 virtual	multikey_index_type
 	lookup_key(const instance_alias_info_type&) const = 0;
@@ -265,14 +221,6 @@ virtual	bool
 	NOTE: context shouldn't be necessary at the collection, 
 	only needed to resolved placeholders!
  */
-#if !USE_COLLECTION_INTERFACES
-#define	INSTANTIATE_INDICES_PROTO					\
-	good_bool							\
-	instantiate_indices(const const_range_list& i, 			\
-		const instance_relaxed_actuals_type&, 			\
-		const unroll_context&)
-#endif
-
 virtual	INSTANTIATE_INDICES_PROTO = 0;
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
@@ -295,14 +243,6 @@ virtual	bool
 
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
-
-#if !USE_COLLECTION_INTERFACES
-#define	UNROLL_ALIASES_PROTO						\
-	bad_bool							\
-	unroll_aliases(const multikey_index_type&, 			\
-		const multikey_index_type&, 				\
-		alias_collection_type&) const
-#endif
 
 virtual	UNROLL_ALIASES_PROTO = 0;
 
@@ -334,11 +274,7 @@ virtual	instance_alias_info_type&
 	persistent*
 	construct_empty(const int);
 
-#if USE_COLLECTION_INTERFACES
 public:
-#else
-protected:
-#endif
 	// NOTE: these really belong to instance_alias_info...
 	// not that all alias elements are equal, 
 	// we can factor out common functionality

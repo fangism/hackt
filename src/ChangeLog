@@ -5,6 +5,14 @@
 
 2006-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-26:
+	  Perm'd USE_COLLECTION_INTERFACES.
+	  Summary: from these base classes are derived formal and local
+		collections with positional alias information, and
+		actual collections which are lighter weight representations
+		back-referencing formal collections.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-25:
 	  No source revision.
 	  Finished re-verifying all remaining create/alloc/cflat tests.

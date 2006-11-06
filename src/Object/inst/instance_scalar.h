@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2.2.9 2006/11/05 23:29:37 fang Exp $
+	$Id: instance_scalar.h,v 1.2.2.10 2006/11/06 20:40:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -86,7 +86,6 @@ public:
 	multikey_index_type
 	lookup_key(const instance_alias_info_type&) const;
 
-#if USE_COLLECTION_INTERFACES
 	ostream&
 	dump_element_key(ostream&, const size_t) const;
 
@@ -98,7 +97,6 @@ public:
 
 	size_t
 	collection_size(void) const;
-#endif
 
 	size_t
 	lookup_index(const instance_alias_info_type&) const;

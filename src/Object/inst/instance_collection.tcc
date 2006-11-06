@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.37.2.15 2006/11/06 03:12:19 fang Exp $
+	$Id: instance_collection.tcc,v 1.37.2.16 2006/11/06 20:40:50 fang Exp $
 	TODO: trim includes
  */
 
@@ -56,9 +56,7 @@
 #include "Object/inst/sparse_collection.tcc"
 #include "Object/inst/element_key_dumper.h"
 #include "Object/inst/port_formal_array.tcc"
-#if USE_COLLECTION_INTERFACES
 #include "Object/inst/port_actual_collection.tcc"
-#endif
 #if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/collection_traits.h"
 #include "Object/inst/collection_pool.tcc"		// for lookup_index
@@ -161,13 +159,11 @@ INSTANCE_COLLECTION_CLASS::~instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 const INSTANCE_COLLECTION_CLASS&
 INSTANCE_COLLECTION_CLASS::get_canonical_collection(void) const {
 	return *this;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -510,7 +506,6 @@ INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\pre the alias a MUST belong to this collection!
 		Will assert fail if this is not the case.  
@@ -521,7 +516,6 @@ INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o, const size_t i) const {
 	const key_type& k(this->collection.lookup_key(i));
 	return element_key_dumper<D>()(o, k);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -536,7 +530,6 @@ INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\return the key corresponding to the referenced element.  
  */
@@ -547,7 +540,6 @@ INSTANCE_ARRAY_CLASS::lookup_key(const size_t i) const {
 	return multikey<D,pint_value_type>(this->collection.lookup_key(i));
 	// convert
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -561,7 +553,6 @@ INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\return 0 if not found.
  */
@@ -579,7 +570,6 @@ size_t
 INSTANCE_ARRAY_CLASS::collection_size(void) const {
 	return this->collection.size();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1447,7 +1437,6 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\param i public 1-based index, must be 1!
  */
@@ -1458,7 +1447,6 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
 	INVARIANT(i == 1);
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1471,7 +1459,6 @@ INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\return an empty multikey index because scalars aren't indexed.  
  */
@@ -1480,7 +1467,6 @@ multikey_index_type
 INSTANCE_SCALAR_CLASS::lookup_key(const size_t i) const {
 	return multikey_index_type();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1501,10 +1487,9 @@ INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\param k multikey_index, which should always be empty (0 dimensions).
-	\return 1 always.  
+	\return 1 always (1-based index).  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 size_t
@@ -1519,7 +1504,6 @@ size_t
 INSTANCE_SCALAR_CLASS::collection_size(void) const {
 	return 1;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.10 2006/11/05 01:22:58 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.11 2006/11/06 20:40:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -70,21 +70,21 @@
 	from sparse structures.  
 	Goal: 1
 	Status: not begun
+	Priority: low, not memory critical
  */
 #define	DENSE_FORMAL_VALUE_COLLECTIONS		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to insert the new collection_interface class into the
-	instance collection class hierarchy.  
-	Purpose: to provide an interface for instance_actual_collections.  
-	Affects (also): instance references.  
-	Goal: 1
-	Status: just beginning
+	Define to 1 to remove super_instance pointers from 
+	instance_collection_base, and push them down to 
+	port_actual_collections only.  
+	Rationale: to save some memory on structures that don't need it.  
+	Goal: 1?
+	Status: not begun
+	Priority: low, slightly memory critical
  */
-#define	USE_COLLECTION_INTERFACES		1
-
-// TODO: push super_instance down to instance_collection's?
+#define	SUPER_INSTANCES_IN_ACTUALS_ONLY		0
 
 /**
 	Define to 1 to instantiate port_actual_collections. 
@@ -93,7 +93,7 @@
 	Goal: 1
 	Status: completed, tested
  */
-#define	ENABLE_PORT_ACTUAL_COLLECTIONS		(1 && USE_COLLECTION_INTERFACES)
+#define	ENABLE_PORT_ACTUAL_COLLECTIONS		1
 
 /**
 	Define to 1 to *use* port_actual_collections in subinstances.  
@@ -109,7 +109,7 @@
 	This is really orthogonal to whether or not port_actual_collections
 	are used.  
 	Goal: 1?
-	Status: planning and testing
+	Status: complete and tested
  */
 #ifndef	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #define	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT	1
@@ -127,7 +127,7 @@
 		other footprints!
 	Can also pool-allocate footprints.
 	Goal: 1
-	Status: not begun
+	Status: complete, and tested
  */
 #define	HEAP_ALLOCATE_FOOTPRINTS		1
 
@@ -136,22 +136,19 @@
 	Don't know if this is necessary, or a good idea, but it is an option.
 	Purpose: Could use this to validate acylic dependencies...
 	Goal: ?
+	Status: not begun
  */
 #if	HEAP_ALLOCATE_FOOTPRINTS
 #define	REF_COUNT_FOOTPRINTS			0
 #endif
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to use per-module allocated pools of subinstance lists.
-	Purpose: turn individually heap-allocated structures into
-		a pseudo-dense collection, referenced by indices.  
-	Affects: instance_alias_info's substructure, subinstance_manager.
-	Better idea: per *footprint* pools.  
-	Goal: ?
-	Status: obsolete
+	Define to 1 to employ locks to check acyclic dependencies 
+	between footprints.  
+	Goal: 1
+	Status: not begun
  */
-#define	MODULE_POOLED_SUBINSTANCE_STRUCTURE	0
+#define	FOOTPRINT_LOCKS				0
 
 //=============================================================================
 

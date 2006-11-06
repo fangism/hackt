@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.11 2006/11/05 23:29:39 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.12 2006/11/06 20:40:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -186,7 +186,6 @@ PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\param i 1-based indexed into collection.  
  */
@@ -199,7 +198,6 @@ PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o,
 	const key_type k(this->value_array.index_to_key(i -1));
 	return o << k;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
@@ -212,7 +210,6 @@ PORT_FORMAL_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	\param i 1-based index into collection.  
  */
@@ -223,7 +220,6 @@ PORT_FORMAL_ARRAY_CLASS::lookup_key(const size_t i) const {
 	INVARIANT(i);
 	return this->value_array.index_to_key(i -1);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -240,7 +236,6 @@ PORT_FORMAL_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_COLLECTION_INTERFACES
 /**
 	Error handling?
 	\pre k must be valid.
@@ -260,7 +255,6 @@ size_t
 PORT_FORMAL_ARRAY_CLASS::collection_size(void) const {
 	return array_type::sizes_product(this->value_array.size());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
