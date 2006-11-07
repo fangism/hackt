@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.39 2006/11/07 20:11:03 fang Exp $
+	$Id: BUILDS,v 1.40 2006/11/07 20:36:53 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -145,7 +145,8 @@ yacc: bison (GNU Bison) 2.0
 readline: none
 
 (Fang)
-CVS Tag: HACKT-00-01-04-main-00-80-49-merged-instance-02-31
+Version: hackt 0.1.4-devel-20061107
+CVS Tag: HACKT-00-01-04-main-00-80-50
 Configured with: '--prefix=/Users/davidfang/local' '--enable-fun' '--with-readline' '--disable-docs' 'YACC=/usr/bin/yacc' '-C' 'CC=gcc' 'CXX=g++'
 build-triplet: i686-apple-darwin8.7.3
 c++: i686-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)

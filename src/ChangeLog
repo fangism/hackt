@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50:
+	  No source revision.  Top-level configure patches Makefile to
+		make it safer to "test && mkdir" during parallel installs.  
+
+
 2006-11-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-49-merged-instance-02-31:

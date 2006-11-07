@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.101 2006/11/07 06:34:00 fang Exp $
+#	$Id: configure.ac,v 1.102 2006/11/07 20:36:54 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20061106, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20061107, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -369,9 +369,11 @@ AC_SUBST(CONFIGDATE)
 # recursive rm may fail if too many files in particular subdir.
 AC_CONFIG_FILES([Makefile], 
 	[patch -p0 < $srcdir/config/am__remove_distdir.diff])
+dnl ignore errors during attempt to make directories in parallel
+AC_CONFIG_FILES([src/Makefile],
+	[sed '/test.*mkdir.*DESTDIR/s/test/-test/g' src/Makefile > src/Makefile.tmp && mv src/Makefile.tmp src/Makefile])
 AC_CONFIG_FILES([
 	scripts/Makefile
-	src/Makefile
 	src/util/test/Makefile
 	test/Makefile
 	test/lexer/Makefile

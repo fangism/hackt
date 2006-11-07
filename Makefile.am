@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.36 2006/10/24 07:26:45 fang Exp $
+#	$Id: Makefile.am,v 1.37 2006/11/07 20:36:53 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -106,7 +106,7 @@ dist-hook:
 
 # for recursive make to not parallelize these
 .NOTPARALLEL: pdf ps
-
+# .NOTPARALLEL: install
 .NOTPARALLEL: commit
 if HAVE_CVS
 commit: cvsdiffs distcheck

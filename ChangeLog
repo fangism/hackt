@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-11-07	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50:
+	  configure.ac: patch src/Makefile to ignore errors on "test && mkdir"
+		during parallel installs.  
+
+
 2006-11-06	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-49-merged-instance-02-31:
