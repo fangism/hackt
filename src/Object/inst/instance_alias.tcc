@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.25 2006/10/24 07:27:10 fang Exp $
+	$Id: instance_alias.tcc,v 1.26 2006/11/07 06:34:43 fang Exp $
 	TODO: trim includes
  */
 
@@ -53,6 +53,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/common/cflat_args.h"
 #include "Object/inst/alias_printer.h"
+#include "Object/traits/instance_traits.h"	// need for alias visitor :-/
 #include "common/ICE.h"
 
 #include "util/packed_array.tcc"
@@ -100,7 +101,8 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) : 
 		substructure_parent_type(t), 
 		actuals_parent_type(t),
-		next(this), container(t.container) {
+		next(this), 
+		container(t.container) {
 	INVARIANT(t.next == &t);
 }
 
@@ -308,7 +310,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 		// union-find set, otherwise, just copy.
 		// for now the creator will be the canonical back-reference
 		typename instance_type::pool_type&
-			the_pool(f.template get_pool<Tag>());
+			the_pool(f.template get_instance_pool<Tag>());
 		i->instance_index = the_pool.allocate(instance_type(*i));
 		// also need to recursively allocate subinstances ids
 		i->allocate_subinstances(f);
@@ -339,8 +341,9 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
-	return this->container->must_be_collectibly_type_equivalent(
-		*a.container);
+	return this->container->get_canonical_collection()
+		.must_be_collectibly_type_equivalent(
+			a.container->get_canonical_collection());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -485,12 +488,7 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 	// shouldn't need to re-visit parent pointer, 
 	// UNLESS it is visited from an alias cycle, 
 	// in which case, the parent may not have been visited before...
-
-	// this is allowed to be null ONLY if it belongs to a scalar
-	// in which case it is not yet unrolled.  
-	// recall: null container => uninstantiated (or !valid())
-	if (this->container)
-		this->container->collect_transient_info(m);
+	NEVER_NULL(this->container);
 	actuals_parent_type::collect_transient_info_base(m);
 	substructure_parent_type::collect_transient_info_base(m);
 }
@@ -526,7 +524,9 @@ ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	this->dump_hierarchical_name(o);
 	// use non-path-conmpressing find() because of const qualifier
-	this->find()->dump_hierarchical_name(o << " = ");
+	const pseudo_const_iterator f(this->find());
+	INVARIANT(f);
+	f->dump_hierarchical_name(o << " = ");
 	return o;
 }
 
@@ -578,6 +578,7 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) const {
 	while (tmp != tmp->next) {
 		tmp = tmp->next;
 	}
+	NEVER_NULL(tmp);	// every union-find element must terminate!
 	return pseudo_const_iterator(tmp);
 }
 
@@ -654,7 +655,9 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 	their position and key from the parent container.  
 	The multikey index is translated into a single-valued index.
 	The index is omitted for scalar aliases.  
-	The index is read back in instance_array::load_reference().
+	The index is read back in instance_array::load_reference(), 
+		also instance_scalar, port_formal_array, 
+		and port_actual_collection.
 
 	Comment is obsolete (20061020):
 	Virtually pure virtual.  Never supposed to be called, 
@@ -664,12 +667,16 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
-		const persistent_object_manager& m, ostream& o) const {
+		const collection_pool_bundle_type& pool, ostream& o) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
-	m.write_pointer(o, this->container);
-	if (this->container->get_dimensions()) {
+	this->container->write_pointer(o, pool);
+	const size_t dim = this->container->get_dimensions();
+	STACKTRACE_INDENT_PRINT("dim = " << dim << endl);
+	if (dim) {
 		const size_t index = this->container->lookup_index(*this);
-		// 1-indexed for sparse collections, 0-indexed for dense!
+		// 1-indexed for ALL collections
+		INVARIANT(index);
 		write_value(o, index);
 	}
 	// else scalar alias reference doesn't need index
@@ -677,30 +684,19 @@ INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Really, pure virtual.  
 	\pre everything but the next pointer is already loaded, 
 		including the parent container pointer.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
-		const persistent_object_manager& m, istream& i) {
+		const collection_pool_bundle_type& pool, istream& i) {
+	STACKTRACE_VERBOSE;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 	NEVER_NULL(this->container);
-if (this->container->get_dimensions()) {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	this_type& n(this->load_alias_reference(m, i));
-	this->next = &n;
-} else {
-	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
-	instance_collection_generic_type* next_container;
-	m.read_pointer(i, next_container);
-	NEVER_NULL(next_container);	// true?
-	// no key to read!
-	// problem: container is a never_ptr<const ...>, yucky
-	m.load_object_once(next_container);
-	this_type& n(next_container->load_reference(i));
-	this->next = &n;
-}
+	this->next = &load_alias_reference(pool, i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -712,9 +708,9 @@ if (this->container->get_dimensions()) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
-		const persistent_object_manager& m, istream& i) {
-	never_ptr<container_type> next_container;
-	m.read_pointer(i, next_container);
+		const collection_pool_bundle_type& pool, istream& i) {
+	STACKTRACE_VERBOSE;
+	const never_ptr<container_type> next_container(pool.read_pointer(i));
 	// reconstruction ordering problem:
 	// container must have its instances already loaded, though 
 	// not necessarily constructed.
@@ -723,7 +719,8 @@ INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 	// See? there's a reason for everything.  
 	NEVER_NULL(next_container);
 	// this is the safe way of ensuring that object is loaded once only.
-	m.load_object_once(next_container);
+	// collections of like meta-type have already been loaded
+	// as guaranteed by the instance_collection_pool_bundle.  
 	// the CONTAINER should read the key, because it is dimension-specific!
 	// it should return a reference to the alias node, 
 	// which can then be linked.  
@@ -734,28 +731,19 @@ INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 /**
 	TODO: factor out into scalar and non-scalar version
 	to avoid repeated if branching in write-loop.  
+	NOTE: container back-reference is not written anymore, it is the
+		responsibility of the container.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::write_object_base(
+INSTANCE_ALIAS_INFO_CLASS::write_object_base(const footprint& f, 
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
 	// let the module take care of saving the state information
 	write_value(o, this->instance_index);
-	m.write_pointer(o, this->container);
+	NEVER_NULL(this->container);	// no need to write out
 	actuals_parent_type::write_object_base(m, o);
-	substructure_parent_type::write_object_base(m, o);
-if (!this->container->get_dimensions()) {
-	if (this->next == this) {
-		write_value<char>(o, 0);
-	} else {
-#if STACKTRACE_PERSISTENTS
-		cerr << "Writing a real connection!" << endl;
-#endif
-		write_value<char>(o, 1);
-		this->peek()->write_next_connection(m, o);
-	}
-}
+	substructure_parent_type::write_object_base(f, o);
 //	else skip, collection will write connections later...
 }
 
@@ -763,30 +751,18 @@ if (!this->container->get_dimensions()) {
 /**
 	TODO: factor out into scalar and non-scalar version
 	to avoid repeated if branching in load-loop.  
+	NOTE: container back-reference is loaded by the container now.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::load_object_base(
+INSTANCE_ALIAS_INFO_CLASS::load_object_base(const footprint& f, 
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
+	NEVER_NULL(this->container);	// already set by container!
 	// let the module take care of restoring the state information
 	read_value(i, this->instance_index);
-	m.read_pointer(i, this->container);
-	NEVER_NULL(this->container);
 	actuals_parent_type::load_object_base(m, i);
-	substructure_parent_type::load_object_base(m, i);
-	m.load_object_once(&const_cast<container_type&>(*this->container));
-if (!this->container->get_dimensions()) {
-	// no key to load!
-	char c;
-	read_value(i, c);
-	if (c) {
-#if STACKTRACE_PERSISTENTS
-		cerr << "Loading a real connection!" << endl;
-#endif
-		this->load_next_connection(m, i);
-	}
-}
+	substructure_parent_type::load_object_base(f, i);
 //	else skip, collection will load connections later...
 }
 
@@ -802,12 +778,11 @@ INSTANCE_ALIAS_INFO_CLASS::transient_info_collector::operator () (
 }
 
 //=============================================================================
-// typedef instance_alias_base function definitions
+// typedef instance_alias_info function definitions
 
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
-operator << (ostream& o,
-	const typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type& i) {
+operator << (ostream& o, const INSTANCE_ALIAS_INFO_CLASS& i) {
 	typedef	class_traits<Tag>	traits_type;
 	return o << traits_type::tag_name << "-alias @ " << &i;
 }

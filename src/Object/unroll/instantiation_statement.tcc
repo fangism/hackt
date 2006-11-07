@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.23 2006/10/24 07:27:37 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.24 2006/11/07 06:35:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -201,20 +201,17 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	NEVER_NULL(this->inst_base);
 
-	// TODO: this is a modifying lookup, using target_footprint
-	count_ptr<collection_type>
+	never_ptr<collection_type>
 		inst_ptr(c.lookup_collection(*this->inst_base)
 			.template is_a<collection_type>());
 	if (!inst_ptr) {
-		// then we need to instantiate it
-		inst_ptr = count_ptr<collection_type>(
-			IS_A(collection_type*,
-				this->inst_base->make_collection()));
+		// we pass the whole footprint because only the caller
+		// knows whether to allocate a value_collection 
+		// vs. instance_collection
+		inst_ptr = never_ptr<collection_type>(
+			this->inst_base->make_collection(
+				c.get_target_footprint()));
 		NEVER_NULL(inst_ptr);
-		// NOTE: instantiated here just registers the footprint entry, 
-		// but type is still incomplete until type committed, below.  
-		c.instantiate_collection(inst_ptr);
-		// could handle first-time type checking work here...
 	}
 	collection_type& _inst(*inst_ptr);
 	// 2005-07-07:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.8 2006/10/18 19:08:03 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.9 2006/11/07 06:35:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
@@ -29,23 +29,25 @@ namespace entity {
 template <class Tag>
 void
 subinstance_manager::unroll_port_instances(
-		const instance_collection<Tag>& inst, 
+		const collection_interface<Tag>& inst, 
 		const unroll_context& c) {
-	typedef	instance_collection<Tag>	collection_type;
-	typedef	typename collection_type::collection_type_manager_parent_type
+	typedef	collection_interface<Tag>	collection_type;
+	typedef	instance_collection<Tag>	canonical_collection_type;
+	typedef	typename canonical_collection_type::collection_type_manager_parent_type
 						type_manager_type;
-	typedef	typename collection_type::instance_collection_parameter_type
+	typedef	typename canonical_collection_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	typedef	typename collection_type::type_ref_ptr_type
+	typedef	typename canonical_collection_type::type_ref_ptr_type
 						type_ref_ptr_type;
-	typedef	typename collection_type::resolved_type_ref_type
+	typedef	typename canonical_collection_type::resolved_type_ref_type
 						resolved_type_ref_type;
 	typedef	typename type_ref_ptr_type::element_type
 						type_ref_pointee_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->empty());
 	const resolved_type_ref_type
-		resolved_super_type(inst.get_resolved_canonical_type());
+		resolved_super_type(inst.get_canonical_collection()
+			.get_resolved_canonical_type());
 		// TODO: this needs to print error message on failure?
 	if (!resolved_super_type) {
 		cerr << "Error resolving type during "

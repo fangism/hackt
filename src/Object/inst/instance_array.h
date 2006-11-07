@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.2 2006/10/24 07:27:11 fang Exp $
+	$Id: instance_array.h,v 1.3 2006/11/07 06:34:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -11,7 +11,6 @@
 
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/sparse_collection.h"
-#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -28,9 +27,7 @@ instance_array<Tag,D>
 	\param D the number of dimensions (max. 4).  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-class instance_array :
-	// this is the same as instance_collection<Tag>
-	public class_traits<Tag>::instance_collection_generic_type {
+class instance_array : public instance_collection<Tag> {
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
 public:
@@ -41,15 +38,17 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-//	typedef	typename parent_type::instance_alias_base_ptr_type
-	typedef	typename traits_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
+	typedef	typename traits_type::instance_alias_info_type
+						instance_alias_info_type;
+	typedef	typename traits_type::instance_alias_info_ptr_type
+						instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
-
-	typedef	instance_alias_base_type		element_type;
+	typedef	typename parent_type::collection_interface_type
+						collection_interface_type;
+	typedef	instance_alias_info_type		element_type;
+	typedef instance_collection_pool_bundle<Tag>
+					collection_pool_bundle_type;
 	/**
 		The simple_type meta type is specially optimized and 
 		simplified for D == 1.  
@@ -74,12 +73,13 @@ private:
 							const_iterator;
 private:
 	collection_type					collection;
-private:
+public:
 	instance_array();
 
+	instance_array(const this_type&);
+
 public:
-	explicit
-	instance_array(const instance_placeholder_ptr_type);
+	instance_array(const footprint&, const instance_placeholder_ptr_type);
 
 	~instance_array();
 
@@ -90,17 +90,29 @@ public:
 	is_partially_unrolled(void) const;
 
 	ostream&
-	dump_element_key(ostream&, const instance_alias_base_type&) const;
+	dump_element_key(ostream&, const instance_alias_info_type&) const;
+
+	ostream&
+	dump_element_key(ostream&, const size_t) const;
 
 	multikey_index_type
-	lookup_key(const instance_alias_base_type&) const;
+	lookup_key(const size_t) const;
 
 	size_t
-	lookup_index(const instance_alias_base_type&) const;
+	lookup_index(const multikey_index_type&) const;
 
-	instance_alias_base_type&
-	get_corresponding_element(const parent_type&,
-		const instance_alias_base_type&);
+	size_t
+	collection_size(void) const;
+
+	multikey_index_type
+	lookup_key(const instance_alias_info_type&) const;
+
+	size_t
+	lookup_index(const instance_alias_info_type&) const;
+
+	instance_alias_info_type&
+	get_corresponding_element(const collection_interface_type&,
+		const instance_alias_info_type&);
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
@@ -114,7 +126,7 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
 	never_ptr<element_type>
@@ -123,12 +135,12 @@ public:
 	// is this used? or can it be replaced by unroll_aliases?
 	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
+		typename default_list<instance_alias_info_ptr_type>::type& l, 
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
 
-	instance_alias_base_type&
+	instance_alias_info_type&
 	load_reference(istream& i);
 
 	CREATE_DEPENDENT_TYPES_PROTO;
@@ -143,18 +155,29 @@ public:
 	accept(alias_visitor&) const;
 
 public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_pointer(ostream&, 
+		const collection_pool_bundle_type&) const;
+
+	void
+	write_object(const footprint&, 
+		const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(footprint&, 
+		const persistent_object_manager&, istream&);
+
+	void
+	write_connections(const collection_pool_bundle_type&, 
+		ostream&) const;
+
+	void
+	load_connections(const collection_pool_bundle_type&, 
+		istream&);
+
 };	// end class instance_array
 
 //=============================================================================

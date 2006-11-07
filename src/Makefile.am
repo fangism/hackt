@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.141 2006/11/02 22:01:42 fang Exp $
+#	$Id: Makefile.am,v 1.142 2006/11/07 06:34:03 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -275,8 +275,13 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \
 	Object/inst/sparse_collection.tcc \
+	Object/inst/collection_pool.tcc \
 	Object/inst/instance_collection.tcc \
 	Object/inst/port_formal_array.tcc \
+	Object/inst/port_actual_collection.tcc \
+	Object/inst/instance_collection_pool_bundle.tcc \
+	Object/inst/instance_collection_pool_bundle_footprint.tcc \
+	Object/inst/value_collection_pool_bundle.tcc \
 	Object/inst/instance_placeholder.tcc \
 	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \
@@ -297,10 +302,17 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
+	Object/inst/collection_index_entry.h \
+	Object/inst/collection_traits.h \
 	Object/inst/sparse_collection.h \
+	Object/inst/collection_pool.h \
+	Object/inst/collection_interface.h \
 	Object/inst/instance_array.h \
 	Object/inst/instance_scalar.h \
 	Object/inst/port_formal_array.h \
+	Object/inst/port_actual_collection.h \
+	Object/inst/instance_collection_pool_bundle.h \
+	Object/inst/value_collection_pool_bundle.h \
 	Object/inst/instance_placeholder_base.h \
 	Object/inst/instance_placeholder.h \
 	Object/inst/value_placeholder.h \
@@ -387,6 +399,13 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
 	Object/expr/expr_dump_context.cc \
+	Object/def/template_formals_manager.cc \
+	Object/def/port_formals_manager.cc \
+	Object/def/footprint.cc \
+	Object/def/footprint_struct_base.cc \
+	Object/def/footprint_basic_base.cc \
+	Object/def/footprint_value_base.cc \
+	Object/def/footprint_manager.cc \
 	Object/traits/class_traits.cc \
 	Object/unroll/conditional_scope.cc \
 	Object/unroll/expression_assignment.cc \
@@ -397,7 +416,6 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_conditional_base.cc \
 	Object/unroll/meta_loop_base.cc \
 	Object/unroll/unroll_context.cc \
-	Object/unroll/unroll_context_value_resolver.cc \
 	Object/module.cc \
 	Object/global_entry.cc \
 	Object/port_context.cc \
@@ -408,10 +426,6 @@ OBJECT_CC_FILES = \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
 	Object/type/canonical_generic_chan_type.cc \
-	Object/def/template_formals_manager.cc \
-	Object/def/port_formals_manager.cc \
-	Object/def/footprint.cc \
-	Object/def/footprint_manager.cc \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \
@@ -450,6 +464,7 @@ OBJECT_CC_NO_H_FILES = \
 OBJECT_TCC_FILES = \
 	Object/def/footprint.tcc \
 	Object/expr/const_collection.tcc \
+	Object/def/footprint_base.tcc \
 	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
@@ -486,6 +501,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
+	Object/traits/instance_traits.h \
 	Object/traits/type_tag_enum.h \
 	Object/def/definition_fwd.h \
 	Object/def/built_in_datatype_def.h \
@@ -502,6 +518,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/typedef_base.h \
 	Object/def/user_def_chan.h \
 	Object/def/user_def_datatype.h \
+	Object/def/footprint_base.h \
 	Object/expr/expr_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
@@ -1208,20 +1225,20 @@ EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 # automake produces empty placeholders (never updated) for them initially, 
 # so make will not die.
 
-common/devel_switches.hchk:
+common/devel_switches.hchk: common/devel_switches.h
 	@$(TOUCH) $@
 
-Object/devel_switches.hchk:
+Object/devel_switches.hchk: Object/devel_switches.h
 	@$(TOUCH) $@
 
-sim/devel_switches.hchk:
+sim/devel_switches.hchk: sim/devel_switches.h
 	@$(TOUCH) $@
 
-sim/prsim/devel_switches.hchk:
+sim/prsim/devel_switches.hchk: sim/prsim/devel_switches.h
 	@$(TOUCH) $@
 
-# __config__.hchk:
-#	@$(TOUCH) $@
+__config__.hchk: __config__.h
+	@$(TOUCH) $@
 
 EXTRA_DIST += local.cvsignore \
 	parser/local.cvsignore \

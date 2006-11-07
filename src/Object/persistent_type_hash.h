@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.12 2006/10/24 07:26:56 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.13 2006/11/07 06:34:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -44,6 +44,9 @@
 #define	ENUM_DEFINITION_TYPE_KEY				"enumdefn"
 #define	DATA_TYPEDEF_TYPE_KEY					"datatpdf"
 //	no built-in definition types, like params
+
+// for heap-allocated footprints
+#define	GENERIC_FOOTPRINT_TYPE_KEY				"footprnt"
 
 // Type references:
 #define	PROCESS_TYPE_REFERENCE_TYPE_KEY				"proctprf"
@@ -82,6 +85,14 @@
 #define	ENUM_PORT_FORMAL_ARRAY_TYPE_KEY				"enumpfar"
 #define	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY			"dboolpfa"
 #define	DINT_PORT_FORMAL_ARRAY_TYPE_KEY				"dintpfar"
+
+// dense port collections
+#define	PROCESS_PORT_ACTUAL_COLLECTION_TYPE_KEY			"procpacc"
+#define	CHANNEL_PORT_ACTUAL_COLLECTION_TYPE_KEY			"chanpacc"
+#define	STRUCT_PORT_ACTUAL_COLLECTION_TYPE_KEY			"dstrpacc"
+#define	ENUM_PORT_ACTUAL_COLLECTION_TYPE_KEY			"enumpacc"
+#define	DBOOL_PORT_ACTUAL_COLLECTION_TYPE_KEY			"dboolpac"
+#define	DINT_PORT_ACTUAL_COLLECTION_TYPE_KEY			"dintpacc"
 
 // Unique instances, post-unrolling:
 #define	UNIQUE_PROCESS_INSTANCE_TYPE_KEY			"procunis"

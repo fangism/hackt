@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.20 2006/10/24 07:27:22 fang Exp $
+	$Id: value_collection.h,v 1.21 2006/11/07 06:35:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -19,11 +19,7 @@
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"
-
-/**
-	Define to 1 to enable pool-allocations of value-arrays and scalars.  
- */
-#define	POOL_ALLOCATE_VALUE_COLLECTIONS			1
+#include "util/persistent_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -138,10 +134,9 @@ protected:
 	explicit
 	value_collection(const value_placeholder_ptr_type);
 
-public:
-
 virtual	~value_collection();
 
+public:
 virtual	ostream&
 	what(ostream& o) const = 0;
 
@@ -213,7 +208,7 @@ public:
 	make_array(const value_placeholder_ptr_type);
 public:
 	void
-	collect_transient_info(persistent_object_manager& m) const;
+	collect_transient_info_base(persistent_object_manager& m) const;
 
 protected:
 	void

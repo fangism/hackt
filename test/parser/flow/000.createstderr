@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	14	##ADDR##	footprnt	0	#HEAD#	#TAIL#	386
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

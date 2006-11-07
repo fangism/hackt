@@ -2,7 +2,7 @@
 	\file "Object/traits/preal_traits.h"
 	Traits and policies for parameter floats.  
 	This file used to be "Object/art_object_preal_traits.h".
-	$Id: preal_traits.h,v 1.10 2006/10/18 20:58:22 fang Exp $
+	$Id: preal_traits.h,v 1.11 2006/11/07 06:35:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PREAL_TRAITS_H__
@@ -25,6 +25,7 @@ struct class_traits<preal_tag> {
 	typedef	preal_tag			tag_type;
 	static const char			tag_name[];
 	static const char			value_type_name[];
+	enum { type_tag_enum_value = META_TYPE_PREAL };
 	typedef	preal_instance			instance_type;
 	typedef	preal_value_type		value_type;
 	typedef	real_value_type			data_value_type;

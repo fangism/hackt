@@ -11,8 +11,7 @@ Persistent Object Manager text dump:
 	7	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	prealcol	0	#HEAD#	#TAIL#	21
-	11	##ADDR##	prealcol	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

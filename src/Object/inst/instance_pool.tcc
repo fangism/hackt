@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.12 2006/04/24 00:28:05 fang Exp $
+	$Id: instance_pool.tcc,v 1.13 2006/11/07 06:34:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -114,13 +114,14 @@ instance_pool<T>::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 void
-instance_pool<T>::write_object_base(const persistent_object_manager& m, 
+instance_pool<T>::write_object_base(const collection_pool_bundle_type& m, 
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(++this->begin());	// skip first element (NULL)
 	const const_iterator e(this->end());
 	const size_t s = this->size();
 	INVARIANT(s);
+	STACKTRACE_PERSISTENT_PRINT("size = " << s << endl);
 	write_value(o, s-1);
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
@@ -137,11 +138,12 @@ instance_pool<T>::write_object_base(const persistent_object_manager& m,
  */
 template <class T>
 void
-instance_pool<T>::load_object_base(const persistent_object_manager& m, 
+instance_pool<T>::load_object_base(const collection_pool_bundle_type& m, 
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s;
 	read_value(i, s);
+	STACKTRACE_PERSISTENT_PRINT("size = " << s << endl);
 	size_t j=0;
 	for ( ; j<s; j++) {
 		T temp;

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.26 2006/10/18 18:38:13 fang Exp $
+ 	$Id: module.cc,v 1.27 2006/11/07 06:34:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -10,8 +10,8 @@
 
 // code debugging switches
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 #include "Object/module.tcc"
 #include <iostream>
@@ -326,7 +326,7 @@ module::cflat_process_type(const process_type_reference& pt, ostream& o,
 		return good_bool(false);
 	}
 #if ENABLE_STACKTRACE
-	_footprint.dump_with_collections(cerr << "module\'s footprint: ", 
+	get_footprint().dump_with_collections(cerr << "module\'s footprint: ", 
 		dump_flags::default_value,
 		expr_dump_context::default_value) << endl;
 #endif

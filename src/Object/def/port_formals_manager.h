@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.9 2006/10/18 20:57:48 fang Exp $
+	$Id: port_formals_manager.h,v 1.10 2006/11/07 06:34:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -116,7 +116,8 @@ public:
 	equivalent_port_formals(const port_formals_manager&) const;
 
 	void
-	unroll_ports(const unroll_context&, subinstance_manager&) const;
+	unroll_ports(const unroll_context&, 
+		vector<never_ptr<physical_instance_collection> >&) const;
 
 public:
 	void

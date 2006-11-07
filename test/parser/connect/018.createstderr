@@ -5,29 +5,29 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
-	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	12	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	69
+	5	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	proccoll	2	#HEAD#	#TAIL#	673
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	111
+	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1596
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -54,56 +54,56 @@ In namespace "", we have: {
 footprint: {
   bag = process barf<>^1
     {
-      [2] = sack[1][0] (6) 
-      [3] = sack[2][0] (11) 
-      [4] = sack[3][0] (16) 
+      [2] = bag[2] (1) 
+      [3] = bag[3] (2) 
+      [4] = bag[4] (3) 
     }
   sack = process barf<>^2
     {
-      [0][0] = sack[0][0] (1) 
-      [0][1] = sack[0][1] (2) 
-      [0][2] = sack[0][2] (3) 
-      [0][3] = sack[0][3] (4) 
-      [0][4] = sack[0][4] (5) 
-      [1][0] = sack[1][0] (6) 
-      [1][1] = sack[1][1] (7) 
-      [1][2] = sack[1][2] (8) 
-      [1][3] = sack[1][3] (9) 
-      [1][4] = sack[1][4] (10) 
-      [2][0] = sack[2][0] (11) 
-      [2][1] = sack[2][1] (12) 
-      [2][2] = sack[2][2] (13) 
-      [2][3] = sack[2][3] (14) 
-      [2][4] = sack[2][4] (15) 
-      [3][0] = sack[3][0] (16) 
+      [0][0] = sack[0][0] (4) 
+      [0][1] = sack[0][1] (5) 
+      [0][2] = sack[0][2] (6) 
+      [0][3] = sack[0][3] (7) 
+      [0][4] = sack[0][4] (8) 
+      [1][0] = bag[2] (1) 
+      [1][1] = sack[1][1] (9) 
+      [1][2] = sack[1][2] (10) 
+      [1][3] = sack[1][3] (11) 
+      [1][4] = sack[1][4] (12) 
+      [2][0] = bag[3] (2) 
+      [2][1] = sack[2][1] (13) 
+      [2][2] = sack[2][2] (14) 
+      [2][3] = sack[2][3] (15) 
+      [2][4] = sack[2][4] (16) 
+      [3][0] = bag[4] (3) 
       [3][1] = sack[3][1] (17) 
       [3][2] = sack[3][2] (18) 
       [3][3] = sack[3][3] (19) 
       [3][4] = sack[3][4] (20) 
-      [4][0] = sack[1][0] (6) 
-      [4][1] = sack[2][0] (11) 
-      [4][2] = sack[3][0] (16) 
+      [4][0] = bag[2] (1) 
+      [4][1] = bag[3] (2) 
+      [4][2] = bag[4] (3) 
       [4][3] = sack[4][3] (21) 
       [4][4] = sack[4][4] (22) 
     }
   Created state:
   process instance pool:
-  1	sack[0][0]
-  2	sack[0][1]
-  3	sack[0][2]
-  4	sack[0][3]
-  5	sack[0][4]
-  6	sack[1][0]
-  7	sack[1][1]
-  8	sack[1][2]
-  9	sack[1][3]
-  10	sack[1][4]
-  11	sack[2][0]
-  12	sack[2][1]
-  13	sack[2][2]
-  14	sack[2][3]
-  15	sack[2][4]
-  16	sack[3][0]
+  1	bag[2]
+  2	bag[3]
+  3	bag[4]
+  4	sack[0][0]
+  5	sack[0][1]
+  6	sack[0][2]
+  7	sack[0][3]
+  8	sack[0][4]
+  9	sack[1][1]
+  10	sack[1][2]
+  11	sack[1][3]
+  12	sack[1][4]
+  13	sack[2][1]
+  14	sack[2][2]
+  15	sack[2][3]
+  16	sack[2][4]
   17	sack[3][1]
   18	sack[3][2]
   19	sack[3][3]

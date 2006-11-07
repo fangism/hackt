@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.4 2006/10/18 20:58:02 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.5 2006/11/07 06:34:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -163,7 +163,7 @@ virtual	~instance_placeholder_base();
  */
 #define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
 	instance_collection_base*					\
-	make_instance_collection_footprint_copy(void) const
+	make_instance_collection_footprint_copy(footprint&) const
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.10 2006/10/18 20:58:05 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.11 2006/11/07 06:34:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -50,20 +50,6 @@ struct persistent_traits<HAC::entity::pint_instance_collection> {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_value_placeholder, 
 	PINT_VALUE_PLACEHOLDER_TYPE_KEY, 0)
-const persistent::hash_key
-persistent_traits<HAC::entity::pint_instance_collection>::type_key(
-	PINT_INSTANCE_COLLECTION_TYPE_KEY);
-
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_scalar, PINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_array_1D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_array_2D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_array_3D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::pint_array_4D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
 
 // TODO: specialize value_reader and value_writer
 #if 0

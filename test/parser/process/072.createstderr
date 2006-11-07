@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	324
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -22,27 +22,20 @@ Persistent Object Manager text dump:
 	18	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
+	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	480
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -93,17 +86,17 @@ In namespace "", we have: {
 }
 
 footprint: {
-  pew = process foo<16>^0 = pew (1) (
-    a = int<16>^0 = pew.a (1) 
+  pew = process foo<16>^0 = pew (2) (
+    a = int<16>^0 = pew.a (2) 
   )
-  poo = process foo<8>^0 = poo (2) (
-    a = int<8>^0 = poo.a (2) 
+  poo = process foo<8>^0 = poo (1) (
+    a = int<8>^0 = poo.a (1) 
   )
   Created state:
   process instance pool:
-  1	pew
-  2	poo
+  1	poo
+  2	pew
   int instance pool:
-  1	pew.a
-  2	poo.a
+  1	poo.a
+  2	pew.a
 }

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.12 2006/10/18 20:58:01 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.13 2006/11/07 06:34:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -17,6 +17,7 @@
 #include "util/boolean_types.h"
 
 #if	ENABLE_STACKTRACE
+#include <iostream>
 #include "util/stacktrace.h"
 #endif
 
@@ -27,6 +28,9 @@ using std::ostream;
 using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
+#if	ENABLE_STACKTRACE
+#include "util/using_ostream.h"
+#endif
 class const_param_expr_list;
 template <class> class class_traits;
 

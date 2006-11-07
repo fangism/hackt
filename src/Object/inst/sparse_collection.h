@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/sparse_collection.h"
-	$Id: sparse_collection.h,v 1.2 2006/10/24 07:27:20 fang Exp $
+	$Id: sparse_collection.h,v 1.3 2006/11/07 06:35:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SPARSE_COLLECTION_H__
@@ -292,12 +292,14 @@ private:
 	value_pool_type				value_pool;
 	index_value_map_type			index_value_map;
 	address_chunk_map_type			address_chunk_map;
-private:
+// protected:
+public:
 	/**
 		Since this container deals with raw pointers
 		and internal memory allocation, copy-constructing
 		correctly would be non-trivial (but possible).  
 		For now, we just forbid it.  
+		Error out if this is ever reached at run-time.  
 	 */
 	explicit
 	sparse_collection(const this_type&);

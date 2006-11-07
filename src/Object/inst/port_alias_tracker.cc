@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.14 2006/11/02 22:02:01 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.15 2006/11/07 06:34:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,7 +12,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/common/dump_flags.h"
-
+#include "Object/def/footprint.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/struct_traits.h"
@@ -162,6 +162,7 @@ alias_reference_set<Tag>::shortest_alias(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template <class Tag>
 void
 alias_reference_set<Tag>::collect_transient_info_base(
@@ -169,12 +170,14 @@ alias_reference_set<Tag>::collect_transient_info_base(
 	// shouldn't have to do anything
 	// containers of aliases already belong to definition scopes
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
 alias_reference_set<Tag>::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
+		const collection_pool_bundle_type& m, 
+		ostream& o) const {
 	const size_t s = alias_array.size();
 	write_value(o, s);
 	size_t i = 0;
@@ -187,7 +190,8 @@ alias_reference_set<Tag>::write_object_base(
 template <class Tag>
 void
 alias_reference_set<Tag>::load_object_base(
-		const persistent_object_manager& m, istream& i) {
+		const collection_pool_bundle_type& m, 
+		istream& i) {
 	size_t s;
 	read_value(i, s);
 	size_t j = 0;
@@ -280,6 +284,7 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template <class Tag>
 void
 port_alias_tracker_base<Tag>::collect_map(persistent_object_manager& m) const {
@@ -289,12 +294,15 @@ port_alias_tracker_base<Tag>::collect_map(persistent_object_manager& m) const {
 		i->second.collect_transient_info_base(m);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
-port_alias_tracker_base<Tag>::write_map(const persistent_object_manager& m, 
+port_alias_tracker_base<Tag>::write_map(const footprint& f, 
 		ostream& o) const {
+	const collection_pool_bundle_type&
+		m(f.template get_instance_collection_pool_bundle<Tag>());
 	write_value(o, _ids.size());
 	const_iterator i(_ids.begin());
 	const const_iterator e(_ids.end());
@@ -307,8 +315,9 @@ port_alias_tracker_base<Tag>::write_map(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
-port_alias_tracker_base<Tag>::load_map(const persistent_object_manager& m, 
-		istream& i) {
+port_alias_tracker_base<Tag>::load_map(const footprint& f, istream& i) {
+	const collection_pool_bundle_type&
+		m(f.template get_instance_collection_pool_bundle<Tag>());
 	size_t s;
 	read_value(i, s);
 	size_t j = 0;
@@ -381,17 +390,17 @@ port_alias_tracker::shorten_canonical_aliases(footprint& f) {
 	STACKTRACE_VERBOSE;
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::
-		__shorten_canonical_aliases(f.get_pool<process_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<process_tag>());
 	port_alias_tracker_base<channel_tag>::
-		__shorten_canonical_aliases(f.get_pool<channel_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<channel_tag>());
 	port_alias_tracker_base<datastruct_tag>::
-		__shorten_canonical_aliases(f.get_pool<datastruct_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<datastruct_tag>());
 	port_alias_tracker_base<enum_tag>::
-		__shorten_canonical_aliases(f.get_pool<enum_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<enum_tag>());
 	port_alias_tracker_base<int_tag>::
-		__shorten_canonical_aliases(f.get_pool<int_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<int_tag>());
 	port_alias_tracker_base<bool_tag>::
-		__shorten_canonical_aliases(f.get_pool<bool_tag>());
+		__shorten_canonical_aliases(f.get_instance_pool<bool_tag>());
 }
 }
 
@@ -415,19 +424,20 @@ port_alias_tracker::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// these are all no-ops
 if (has_internal_aliases) {
+#if 0
 	port_alias_tracker_base<process_tag>::collect_map(m);
 	port_alias_tracker_base<channel_tag>::collect_map(m);
 	port_alias_tracker_base<datastruct_tag>::collect_map(m);
 	port_alias_tracker_base<enum_tag>::collect_map(m);
 	port_alias_tracker_base<int_tag>::collect_map(m);
 	port_alias_tracker_base<bool_tag>::collect_map(m);
+#endif
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_alias_tracker::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
+port_alias_tracker::write_object_base(const footprint& m, ostream& o) const {
 	write_value(o, has_internal_aliases);
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::write_map(m, o);
@@ -441,8 +451,7 @@ if (has_internal_aliases) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_alias_tracker::load_object_base(
-		const persistent_object_manager& m, istream& i) {
+port_alias_tracker::load_object_base(const footprint& m, istream& i) {
 	read_value(i, has_internal_aliases);
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::load_map(m, i);

@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.16 2006/10/24 07:27:32 fang Exp $
+	$Id: enum_traits.h,v 1.17 2006/11/07 06:35:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -21,19 +21,19 @@ struct class_traits<enum_tag> {
 
 	typedef	enum_tag			tag_type;
 	static const char			tag_name[];
+	enum { type_tag_enum_value = META_TYPE_ENUM };
 	typedef	enum_instance			instance_type;
 
-	typedef	enum_instance_alias_base	instance_alias_base_type;
+	typedef	enum_instance_alias_info	instance_alias_info_type;
 
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
 	static const bool		has_substructure = false;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
 	enum {		is_nonmeta_data_lvalue = true		};
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
-	typedef	enum_instance_alias_info	instance_alias_info_type;
 	/// defined in "Object/inst/enum_instance_collection.h"
 	class state_instance_base;
 

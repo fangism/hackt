@@ -14,8 +14,7 @@ Persistent Object Manager text dump:
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	354
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

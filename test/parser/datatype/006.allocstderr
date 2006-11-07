@@ -1,4 +1,4 @@
 globID	super		localID	canonical	footprint-frame
 [global int entries]
-1	(top)	-	1	bar::foo	
-2	(top)	-	2	foo	
+1	(top)	-	1	foo	
+2	(top)	-	2	bar::foo	

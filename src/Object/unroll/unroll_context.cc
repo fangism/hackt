@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.23 2006/10/19 03:30:24 fang Exp $
+	$Id: unroll_context.cc,v 1.24 2006/11/07 06:35:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -160,7 +160,7 @@ unroll_context::make_member_context(void) const {
 		and NOT the lookup-footprint.  
 		Lookup should never look out-of-context.  
  */
-count_ptr<physical_instance_collection>
+never_ptr<physical_instance_collection>
 unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
@@ -168,6 +168,24 @@ unroll_context::lookup_instance_collection(
 	NEVER_NULL(target_footprint);
 	return (*target_footprint)[p.get_footprint_key()]
 		.is_a<physical_instance_collection>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for use with looking up canonical_collection belonging
+	for footprint for the type that is being recursively unrolled
+	(instantiating public ports).  
+	This only uses the outermost lookup footprint. 
+	Called from instance_placeholder::unroll_port_only().  
+ */
+never_ptr<const physical_instance_collection>
+unroll_context::lookup_port_collection(
+		const physical_instance_placeholder& p) const {
+	typedef	count_ptr<physical_instance_collection>	return_type;
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(lookup_footprint);
+	return (*lookup_footprint)[p.get_footprint_key()]
+		.is_a<const physical_instance_collection>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -180,10 +198,10 @@ unroll_context::lookup_instance_collection(
 		but lvalues may NOT.  
 	TODO: distinguish lvalue from rvalue lookups?
  */
-count_ptr<param_value_collection>
+never_ptr<param_value_collection>
 unroll_context::lookup_rvalue_collection
 		(const param_value_placeholder& p) const {
-	typedef	count_ptr<param_value_collection>	return_type;
+	typedef	never_ptr<param_value_collection>	return_type;
 	STACKTRACE_VERBOSE;
 	const string key(p.get_footprint_key());
 #if ENABLE_STACKTRACE
@@ -228,10 +246,10 @@ unroll_context::lookup_rvalue_collection
 /**
 	Lookup reserved for lvalues, which uses the target footprint.  
  */
-count_ptr<param_value_collection>
+never_ptr<param_value_collection>
 unroll_context::lookup_lvalue_collection(
 		const param_value_placeholder& p) const {
-	typedef	count_ptr<param_value_collection>	return_type;
+	typedef	never_ptr<param_value_collection>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	dump(cerr << "looking up in context:") << endl;
@@ -253,14 +271,14 @@ unroll_context::lookup_lvalue_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<physical_instance_collection>
+never_ptr<physical_instance_collection>
 unroll_context::lookup_collection(
 		const physical_instance_placeholder& p) const {
 	return lookup_instance_collection(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<param_value_collection>
+never_ptr<param_value_collection>
 unroll_context::lookup_collection(
 		const param_value_placeholder& p) const {
 	// defaults to using rvalue lookup, is this "the right thing"?
@@ -268,14 +286,8 @@ unroll_context::lookup_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: fix so that target (instantiating) footprints (writable)
-	can be distinguished from read-only footprints.  
- */
-void
-unroll_context::instantiate_collection(
-		const count_ptr<instance_collection_base>& p) const {
-	STACKTRACE_VERBOSE;
+footprint&
+unroll_context::get_target_footprint(void) const {
 	footprint* f = target_footprint;
 	never_ptr<const this_type> c(this);
 	do {
@@ -283,20 +295,7 @@ unroll_context::instantiate_collection(
 		c = c->next;
 	} while (!f && c);
 	NEVER_NULL(f);
-	const good_bool g(f->register_collection(p));
-	INVARIANT(g.good);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Another typical panic message.
- */
-void
-unroll_context::lookup_panic(ostream& o) {
-	ICE(o, 
-		o << "In unroll_context::lookup_actual(): " << endl <<
-			"Help me, Obi-fang Kenobi!" << endl;
-	)
+	return *f;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

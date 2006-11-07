@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_int.h"
 		in a previous life.  
-	$Id: int_instance_collection.h,v 1.6 2006/01/22 18:20:07 fang Exp $
+	$Id: int_instance_collection.h,v 1.7 2006/11/07 06:34:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_H__
@@ -22,7 +22,7 @@ namespace entity {
 //=============================================================================
 
 ostream&
-operator << (ostream&, const int_instance_alias_base&);
+operator << (ostream&, const int_instance_alias_info&);
 
 //-----------------------------------------------------------------------------
 // convenient typedefs

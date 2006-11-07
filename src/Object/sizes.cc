@@ -2,7 +2,7 @@
 	\file "Object/sizes.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.6 2006/10/24 07:26:56 fang Exp $
+	$Id: sizes.cc,v 1.7 2006/11/07 06:34:15 fang Exp $
  */
 
 #include <iostream>
@@ -90,6 +90,7 @@
 #include "Object/inst/instance_array.h"
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/port_formal_array.h"
+#include "Object/inst/port_actual_collection.h"
 #include "Object/inst/instance_fwd.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/int_collection_type_manager.h"
@@ -267,6 +268,7 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<substructure_alias_base<false> >(o);
 	__dump_class_size<subinstance_manager>(o);
 	__dump_class_size<bool_instance_collection>(o);
+	__dump_class_size<port_actual_collection<bool_tag> >(o);
 	__dump_class_size<bool_instance>(o);
 	__dump_class_size<instance_alias_info<bool_tag> >(o);
 	__dump_class_size<bool_scalar>(o);
@@ -274,6 +276,7 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<bool_array_4D>(o);
 	__dump_class_size<bool_port_formal_array>(o);
 	__dump_class_size<process_instance_collection>(o);
+	__dump_class_size<port_actual_collection<process_tag> >(o);
 	__dump_class_size<process_instance>(o);
 	__dump_class_size<instance_alias_info<process_tag> >(o);
 	__dump_class_size<process_scalar>(o);

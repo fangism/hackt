@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.12 2006/10/18 20:58:13 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.13 2006/11/07 06:35:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -215,11 +215,11 @@ struct data_type_resolver<int_tag> {
 		// need to do some real work... 
 		// extract parameter from collection
 		// which needs to be translated from the placeholder
-		const count_ptr<const physical_instance_collection>
+		const never_ptr<const physical_instance_collection>
 			pc(c.lookup_instance_collection(
 				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
-		const count_ptr<const instance_collection_type>
+		const never_ptr<const instance_collection_type>
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return data_type_reference::make_canonical_int_type_ref(
@@ -252,11 +252,11 @@ struct data_type_resolver<enum_tag> {
 	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
 			const unroll_context& c) const {
-		const count_ptr<const physical_instance_collection>
+		const never_ptr<const physical_instance_collection>
 			pc(c.lookup_instance_collection(
 				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
-		const count_ptr<const instance_collection_type>
+		const never_ptr<const instance_collection_type>
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return dc->get_resolved_canonical_type();
@@ -285,11 +285,11 @@ struct data_type_resolver<datastruct_tag> {
 	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
 			const unroll_context& c) const {
-		const count_ptr<const physical_instance_collection>
+		const never_ptr<const physical_instance_collection>
 			pc(c.lookup_instance_collection(
 				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
-		const count_ptr<const instance_collection_type>
+		const never_ptr<const instance_collection_type>
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return dc->get_resolved_canonical_type();

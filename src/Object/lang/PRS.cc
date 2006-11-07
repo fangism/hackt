@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.22 2006/10/24 07:27:26 fang Exp $
+	$Id: PRS.cc,v 1.23 2006/11/07 06:35:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -33,6 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/traits/bool_traits.h"
 #include "Object/def/footprint.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/common/dump_flags.h"
@@ -948,7 +949,7 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	//	using unroll_context's template_formal/actual mechanism.  
 	// copied from loop_scope::unroll()
 	entity::footprint f;
-	const count_ptr<pint_scalar>
+	const never_ptr<pint_scalar>
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 
 	// induction variable into the footprint as an actual variable
@@ -1073,7 +1074,7 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	//	using unroll_context's template_formal/actual mechanism.  
 	// copied from loop_scope::unroll()
 	entity::footprint f;
-	const count_ptr<pint_scalar>
+	const never_ptr<pint_scalar>
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 
 	// induction variable into the footprint as an actual variable

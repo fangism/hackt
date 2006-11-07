@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_preal.cc"
 		in a previous life.  
- 	$Id: preal_value_collection.cc,v 1.5 2006/10/18 20:58:05 fang Exp $
+ 	$Id: preal_value_collection.cc,v 1.6 2006/11/07 06:34:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
@@ -85,21 +85,6 @@ struct persistent_traits<HAC::entity::preal_instance_collection> {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::preal_value_placeholder, 
 	PREAL_VALUE_PLACEHOLDER_TYPE_KEY, 0)
-const persistent::hash_key
-persistent_traits<HAC::entity::preal_instance_collection>::type_key(
-	PREAL_INSTANCE_COLLECTION_TYPE_KEY);
-
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_scalar, PREAL_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_array_1D, PREAL_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_array_2D, PREAL_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_array_3D, PREAL_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::preal_array_4D, PREAL_INSTANCE_COLLECTION_TYPE_KEY, 4)
-
 }	// end namespace util
 
 //=============================================================================

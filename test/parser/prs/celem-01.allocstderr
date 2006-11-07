@@ -1,7 +1,7 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
 1	(top)	-	1	c	celem2inv<>
-	bool: 3,1,2
+	bool: 1,2,3
 [global bool entries]
 1	(top)	-	1	c.a	
 2	(top)	-	2	c.b	

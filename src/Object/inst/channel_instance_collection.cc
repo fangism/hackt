@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.13 2006/10/24 07:27:08 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.14 2006/11/07 06:34:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -15,7 +15,6 @@
 #include <algorithm>
 
 #include "Object/inst/channel_instance_collection.h"
-// #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/alias_empty.tcc"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/member_meta_instance_reference.h"
@@ -47,19 +46,6 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_instance_placeholder, 
 	CHANNEL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_array_1D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_array_2D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_array_3D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_array_4D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::channel_port_formal_array, 
-	CHANNEL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -78,6 +64,7 @@ template class instance_array<channel_tag, 2>;
 template class instance_array<channel_tag, 3>;
 template class instance_array<channel_tag, 4>;
 template class port_formal_array<channel_tag>;
+template class port_actual_collection<channel_tag>;
 
 //=============================================================================
 }	// end namespace entity

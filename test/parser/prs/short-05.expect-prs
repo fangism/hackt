@@ -1,9 +1,9 @@
-"_nor.in[0]" | "_nor.in[1]" | "_nor.in[2]" | "_nor.in[3]" -> "z"-
-~"_nor.in[0]" & ~"_nor.in[1]" & ~"_nor.in[2]" & ~"_nor.in[3]" -> "z"+
 "_nand.in[0]" & "_nand.in[1]" & "_nand.in[2]" & "_nand.in[3]" -> "z"-
 ~"_nand.in[0]" | ~"_nand.in[1]" | ~"_nand.in[2]" | ~"_nand.in[3]" -> "z"+
+"_nor.in[0]" | "_nor.in[1]" | "_nor.in[2]" | "_nor.in[3]" -> "z"-
+~"_nor.in[0]" & ~"_nor.in[1]" & ~"_nor.in[2]" & ~"_nor.in[3]" -> "z"+
 "_c.in[0]" & "_c.in[1]" -> "z"-
 ~"_c.in[0]" & ~"_c.in[1]" -> "z"+
-= "z" "_nor.out"
-= "z" "_nand.out"
 = "z" "_c.out"
+= "z" "_nand.out"
+= "z" "_nor.out"

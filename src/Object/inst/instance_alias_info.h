@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17 2006/10/24 07:27:11 fang Exp $
+	$Id: instance_alias_info.h,v 1.18 2006/11/07 06:34:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -27,6 +27,8 @@ class instance_alias_info_actuals;
 struct alias_visitor;
 struct alias_printer;
 template <class> struct alias_matcher;
+template <class> class collection_interface;
+template <class> class instance_collection_pool_bundle;
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -64,6 +66,8 @@ public:
 						substructure_parent_type;
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
+	typedef	instance_collection_pool_bundle<Tag>
+						collection_pool_bundle_type;
 	typedef	typename traits_type::instance_type
 						instance_type;
 	/**
@@ -77,7 +81,8 @@ public:
 	 */
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef	instance_collection_generic_type	container_type;
+	typedef	collection_interface<Tag>		container_type;
+	typedef	instance_collection_generic_type	canonical_container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 
 	template <class T>
@@ -94,6 +99,8 @@ public:
 
 		template <class S>
 		_iterator(const _iterator<S>& i) : ptr(i.ptr) { }
+
+		operator bool () const { return this->ptr; }
 
 		reference
 		operator * () const { return *this->ptr; }
@@ -117,7 +124,6 @@ public:
 
 	typedef	_iterator<this_type>		pseudo_iterator;
 	typedef	_iterator<const this_type>	pseudo_const_iterator;
-	typedef	this_type			instance_alias_base_type;
 
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
@@ -130,6 +136,9 @@ public:
 		Consider using this to determine "instantiated" state.  
 		NOTE: this could be pushed to children, and replaced
 			with virtual interface.  
+		It is through this pointer that an instance is able to
+		deduce its position and key within a collection without
+		containing the actual key!
 	 */
 	container_ptr_type				container;
 
@@ -139,6 +148,8 @@ public:
 
 	// constructors only intended for children classes
 	instance_alias_info() : 
+		substructure_parent_type(), 
+		actuals_parent_type(), 
 		next(this), 
 		container(NULL) { }
 
@@ -147,6 +158,8 @@ public:
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
+		substructure_parent_type(), 
+		actuals_parent_type(), 
 		next(this), 
 		container(m) {
 	}
@@ -333,30 +346,30 @@ public:
 	good_bool
 	checked_connect_alias(this_type&, this_type&);
 
-	/// counterpart to load_alias_reference (should be pure virtual)
+	/// counterpart to load_next_connection
 	void
-	write_next_connection(const persistent_object_manager& m, 
+	write_next_connection(const collection_pool_bundle_type&, 
 		ostream& o) const;
 
-// probably need not be virtual, same for all children classes.
 	void
-	load_next_connection(const persistent_object_manager& m, 
-		istream& i);
+	load_next_connection(const collection_pool_bundle_type&, istream& i);
 
-	/// counterpart to write_next_connection
+	/// static version of load_next_connection
 	static
 	this_type&
-	load_alias_reference(const persistent_object_manager& m, istream& i);
+	load_alias_reference(const collection_pool_bundle_type&, istream& i);
 
 public:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const footprint&, 
+		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const footprint&, 
+		const persistent_object_manager&, istream&);
 
 	void
 	collect_transient_info(persistent_object_manager& m) const {
@@ -364,13 +377,15 @@ public:
 	}
 
 	void
-	write_object(const persistent_object_manager& m, ostream& o) const {
-		this->write_object_base(m, o);
+	write_object(const footprint& f, 
+			const persistent_object_manager& m, ostream& o) const {
+		this->write_object_base(f, m, o);
 	}
 
 	void
-	load_object(const persistent_object_manager& m, istream& i) {
-		this->load_object_base(m, i);
+	load_object(const footprint& f, 
+			const persistent_object_manager& m, istream& i) {
+		this->load_object_base(f, m, i);
 	}
 
 	class transient_info_collector {
@@ -390,8 +405,7 @@ public:
 
 template <class Tag>
 ostream&
-operator << (ostream&,
-	const typename instance_alias_info<Tag>::instance_alias_base_type&);
+operator << (ostream&, const instance_alias_info<Tag>&);
 
 //=============================================================================
 }	// end namespace entity

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.4 2006/04/12 08:53:16 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.5 2006/11/07 06:35:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -107,7 +107,7 @@ footprint::dump_directive(const footprint_directive& d, ostream& o,
 ostream&
 footprint::dump(ostream& o, const entity::footprint& f) const {
 if (size()) {
-	const node_pool_type& bpool(f.get_pool<bool_tag>());
+	const node_pool_type& bpool(f.get_instance_pool<bool_tag>());
 	o << auto_indent << "resolved specs:" << endl;
 	const_iterator i(begin());
 	const const_iterator e(end());

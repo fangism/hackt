@@ -4,16 +4,16 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	footprnt	0	#HEAD#	#TAIL#	324
 	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	351
 	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)

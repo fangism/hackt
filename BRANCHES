@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.3 2006/10/28 02:31:00 fang Exp $
+	$Id: BRANCHES,v 1.4 2006/11/07 06:33:59 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -9,5 +9,4 @@ When a branch is merged for the last time, delete the entry from this file.
 
 Open branches:
 
-HACKT-00-01-04-main-00-80-45-instance-02
 

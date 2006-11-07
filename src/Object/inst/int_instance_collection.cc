@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.12 2006/10/24 07:27:16 fang Exp $
+	$Id: int_instance_collection.cc,v 1.13 2006/11/07 06:34:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -56,29 +56,16 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_instance_placeholder, 
 	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_1D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_2D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_3D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_4D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_port_formal_array, 
-	DINT_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
 }	// end namespace util
 
 
 namespace HAC {
 namespace entity {
 //=============================================================================
-// typedef int_instance_alias_base function definitions
+// typedef int_instance_alias_info function definitions
 
 ostream&
-operator << (ostream& o, const int_instance_alias_base& i) {
+operator << (ostream& o, const int_instance_alias_info& i) {
 	return o << "int-alias @ " << &i;
 }
 
@@ -96,6 +83,7 @@ template class instance_array<int_tag, 2>;
 template class instance_array<int_tag, 3>;
 template class instance_array<int_tag, 4>;
 template class port_formal_array<int_tag>;
+template class port_actual_collection<int_tag>;
 
 //=============================================================================
 }	// end namespace entity

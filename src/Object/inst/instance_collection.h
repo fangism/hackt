@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26 2006/10/24 07:27:12 fang Exp $
+	$Id: instance_collection.h,v 1.27 2006/11/07 06:34:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -14,45 +14,19 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
-#include "Object/devel_switches.h"
+#include "Object/inst/collection_interface.h"
+#include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/inttypes.h"
 
-/**
-	Define to 1 if you want instance_arrays and scalars pool-allocated.  
-	Causes regression in one strange test case, needs debugging.  
- */
-#define	POOL_ALLOCATE_INSTANCE_COLLECTIONS		1
-
 namespace HAC {
 namespace entity {
-using std::list;
-using std::default_list;
-using std::istream;
-using std::ostream;
-using std::string;
-using util::memory::count_ptr;
-using util::memory::never_ptr;
-using util::good_bool;
-using util::bad_bool;
-using util::persistent;
-using util::persistent_object_manager;
-
-class scopespace;
-class footprint;
-class physical_instance_collection;
-class meta_instance_reference_base;
-class nonmeta_instance_reference_base;
-class const_index_list;
-class const_range_list;
-class const_param_expr_list;
-class unroll_context;
-class subinstance_manager;
-template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
+template <class> class instance_collection_pool_bundle;
+class collection_index_entry;
 
 //=============================================================================
 template <class, size_t>
@@ -75,9 +49,7 @@ instance_collection<Tag>
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
-	public class_traits<Tag>::instance_collection_parent_type, 
-	// TODO: consider pushing down to instance_array_class
-	// to avoid replication between formals and actuals.
+	public collection_interface<Tag>, 
 	public class_traits<Tag>::collection_type_manager_parent_type {
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
@@ -85,10 +57,12 @@ public:
 	typedef	class_traits<Tag>			traits_type;
 private:
 	typedef	Tag					category_type;
-	typedef	typename traits_type::instance_collection_parent_type
-							parent_type;
+	typedef	collection_interface<Tag>		parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
 public:
+	typedef	parent_type			collection_interface_type;
+	typedef	typename parent_type::collection_pool_bundle_type
+						collection_pool_bundle_type;
 	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	typedef	typename traits_type::resolved_type_ref_type
@@ -97,10 +71,8 @@ public:
 					collection_type_manager_parent_type;
 	typedef	typename traits_type::instance_alias_info_type
 						instance_alias_info_type;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	typename traits_type::instance_placeholder_type
@@ -133,6 +105,11 @@ public:
 				instance_placeholder_ptr_type;
 protected:
 	/**
+		Back-reference to owning footprint.  
+		Always a weak-pointer, even if footprints ref-counted. 
+	 */
+	never_ptr<const footprint>		footprint_ref;
+	/**
 		TODO: consider pushing to instance_array to avoid
 			replicating between formals and actual collections.  
 		This is a back-reference to the placeholder that resides
@@ -144,17 +121,12 @@ protected:
 	instance_collection();
 
 	/// requires a back-reference to the source collection placeholder
-	explicit
-	instance_collection(const instance_placeholder_ptr_type);
-
-#if 0
-	instance_collection(const instance_placeholder_ptr_type, 
-		const instance_collection_parameter_type&);
-#endif
-public:
+	instance_collection(const footprint&, 
+		const instance_placeholder_ptr_type);
 
 virtual	~instance_collection();
 
+public:
 virtual	ostream&
 	what(ostream&) const = 0;
 
@@ -164,6 +136,25 @@ virtual	ostream&
 virtual	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
 
+	const footprint&
+	get_footprint_owner(void) const { return *this->footprint_ref; }
+
+	const this_type&
+	get_canonical_collection(void) const;
+
+virtual	ostream&
+	dump_element_key(ostream&, const size_t) const = 0;
+
+virtual	multikey_index_type
+	lookup_key(const size_t) const = 0;
+
+	// translate multikey index to internal index
+virtual	size_t
+	lookup_index(const multikey_index_type&) const = 0;
+
+virtual	size_t
+	collection_size(void) const = 0;
+
 virtual	multikey_index_type
 	lookup_key(const instance_alias_info_type&) const = 0;
 
@@ -171,7 +162,7 @@ virtual	size_t
 	lookup_index(const instance_alias_info_type&) const = 0;
 
 virtual	instance_alias_info_type&
-	get_corresponding_element(const this_type&,
+	get_corresponding_element(const collection_interface_type&,
 		const instance_alias_info_type&) = 0;
 
 	never_ptr<const physical_instance_placeholder>
@@ -214,12 +205,6 @@ virtual	bool
 	NOTE: context shouldn't be necessary at the collection, 
 	only needed to resolved placeholders!
  */
-#define	INSTANTIATE_INDICES_PROTO					\
-	good_bool							\
-	instantiate_indices(const const_range_list& i, 			\
-		const instance_relaxed_actuals_type&, 			\
-		const unroll_context&)
-
 virtual	INSTANTIATE_INDICES_PROTO = 0;
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
@@ -232,22 +217,16 @@ public:
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
 
-virtual instance_alias_base_ptr_type
+virtual instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
+		typename default_list<instance_alias_info_ptr_type>::type& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
-
-#define	UNROLL_ALIASES_PROTO						\
-	bad_bool							\
-	unroll_aliases(const multikey_index_type&, 			\
-		const multikey_index_type&, 				\
-		alias_collection_type&) const
 
 virtual	UNROLL_ALIASES_PROTO = 0;
 
@@ -261,56 +240,48 @@ virtual	void
 	accept(alias_visitor&) const = 0;
 
 public:
-virtual	instance_alias_base_type&
+virtual	instance_alias_info_type&
 	load_reference(istream& i) = 0;
 
-	static
-	this_type*
-	make_array(const instance_placeholder_ptr_type);
-
-	static
-	this_type*
-	make_port_array(const instance_placeholder_ptr_type);
-
+// probably won't need this after pool-allocation
 	static
 	persistent*
 	construct_empty(const int);
 
-protected:
+public:
+	// NOTE: these really belong to instance_alias_info...
 	// not that all alias elements are equal, 
 	// we can factor out common functionality
 	/**
 		Functor to collect transient info in the aliases.  
 	 */
-	class element_collector {
-		persistent_object_manager& pom;
-	public:
-		element_collector(persistent_object_manager& m) : pom(m) { }
-
-		void
-		operator () (const instance_alias_info_type&) const;
-	};	// end class element_collector
+	typedef	util::persistent_collector_ref	element_collector;
 
 	/**
 		Functor to write alias elements.  
 	 */
-	class element_writer {
-		ostream& os;
-		const persistent_object_manager& pom;
+	class element_writer : public util::persistent_writer_base {
+		const footprint&		fp;
 	public:
-		element_writer(const persistent_object_manager& m,
-			ostream& o) : os(o), pom(m) { }
+		element_writer(const footprint& f, 
+			const persistent_object_manager& m, ostream& o) : 
+			util::persistent_writer_base(m, o), fp(f) { }
 
 		void
 		operator () (const instance_alias_info_type&) const;
 	};	// end class element_writer
 
-	class element_loader {
-		istream& is;
-		const persistent_object_manager& pom;
+	/**
+		Now, this also re-links element to parent container.  
+	 */
+	class element_loader : public util::persistent_loader_base {
+		const never_ptr<const parent_type>	back_ref;
+		const footprint&		fp;
 	public:
-		element_loader(const persistent_object_manager& m,
-			istream& i) : is(i), pom(m) { }
+		element_loader(const footprint& f, 
+			const persistent_object_manager& m,
+			istream& i, const never_ptr<const parent_type> b) : 
+			persistent_loader_base(m, i), back_ref(b), fp(f) { }
 
 		void
 		operator () (instance_alias_info_type&);	// const?
@@ -318,9 +289,10 @@ protected:
 
 	class connection_writer {
 		ostream& os;
-		const persistent_object_manager& pom;
+		const collection_pool_bundle_type& pom;
 	public:
-		connection_writer(const persistent_object_manager& m,
+		connection_writer(
+			const collection_pool_bundle_type& m, 
 			ostream& o) : os(o), pom(m) { }
 
 		void
@@ -329,9 +301,10 @@ protected:
 
 	class connection_loader {
 		istream& is;
-		const persistent_object_manager& pom;
+		const collection_pool_bundle_type& pom;
 	public:
-		connection_loader(const persistent_object_manager& m,
+		connection_loader(
+			const collection_pool_bundle_type& m, 
 			istream& i) : is(i), pom(m) { }
 
 		void
@@ -349,6 +322,19 @@ protected:
 		operator () (const instance_alias_info_type&);
 	};	// end struct key_dumper
 
+virtual	void
+	write_pointer(ostream&, 
+		const collection_pool_bundle_type&) const = 0;
+
+	void
+	write_external_pointer(const persistent_object_manager&,
+		ostream&) const;
+
+	static
+	never_ptr<const this_type>
+	read_external_pointer(const persistent_object_manager&, istream&);
+
+protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -356,7 +342,8 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const footprint&, 
+		const persistent_object_manager&, istream&);
 
 };	// end class instance_collection
 

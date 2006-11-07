@@ -43,6 +43,7 @@ Persistent Object Manager text dump:
 	39	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

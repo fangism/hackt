@@ -1,80 +1,41 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19 2006/10/18 20:57:48 fang Exp $
+	$Id: footprint.h,v 1.20 2006/11/07 06:34:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
-#include "Object/inst/instance_pool.h"
-#include "Object/traits/classification_tags.h"
-#include "Object/inst/process_instance.h"
-#include "Object/inst/channel_instance.h"
-#include "Object/inst/struct_instance.h"
-#include "Object/inst/enum_instance.h"
-#include "Object/inst/int_instance.h"
-#include "Object/inst/bool_instance.h"
+#include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
 // #include "Object/inst/alias_visitee.h"
+#include "Object/inst/collection_index_entry.h"
+
 #include "util/boolean_types.h"
-#include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
-#include "util/STL/hash_map.h"
 #include "util/memory/count_ptr.h"
+#include "util/persistent.h"
+#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
-class state_manager;
-class footprint_frame;
 class port_member_context;
 struct alias_visitor;
 struct dump_flags;
 struct expr_dump_context;
 
 using std::string;
-using std::istream;
-using std::ostream;
 using util::good_bool;
 using util::memory::count_ptr;
-using util::persistent_object_manager;
-
-//=============================================================================
-/**
-	Meta-type specific base class.  
- */
-template <class Tag>
-class footprint_base {
-protected:
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-private:
-	typedef	typename pool_type::const_iterator	const_iterator;
-protected:
-	pool_type					_pool;
-
-	footprint_base();
-	~footprint_base();
-
-	good_bool
-	__allocate_global_state(state_manager&) const;
-
-	good_bool
-	__expand_unique_subinstances(const footprint_frame&,
-		state_manager&, const size_t) const;
-
-	good_bool
-	__expand_production_rules(const footprint_frame&, 
-		state_manager&) const;
-
-};	// end class footprint_base
 
 //=============================================================================
 /**
@@ -99,21 +60,34 @@ protected:
 	CONSIDER: adding definition/canonical type back reference?
  */
 class footprint :
+	public util::persistent, 
 	// public alias_visitee, 	// not needed
 	private	footprint_base<process_tag>, 
 	private	footprint_base<channel_tag>, 
 	private	footprint_base<datastruct_tag>, 
 	private	footprint_base<enum_tag>, 
 	private	footprint_base<int_tag>, 
-	private	footprint_base<bool_tag> {
+	private	footprint_base<bool_tag>, 
+	private	value_footprint_base<pbool_tag>, 
+	private	value_footprint_base<pint_tag>, 
+	private	value_footprint_base<preal_tag> {
+// make accessible to base class
+template <class> friend class footprint_base;
+template <class> friend class value_footprint_base;
+	typedef	footprint			this_type;
 public:
 	/**
 		This must remain an instance_collection_base because
 		this manages parameter values as well as physical instances.  
 	 */
-	typedef	count_ptr<instance_collection_base>
+	typedef	never_ptr<instance_collection_base>
 					instance_collection_ptr_type;
 private:
+	/**
+		The information needed to encode which pool to 
+		fetch the pointer from.  
+	 */
+	typedef	collection_index_entry	collection_map_entry_type;
 	/**
 		The type of map used to maintain local copy of instances.  
 		Instances contained herein will have no parent scopespace?
@@ -122,20 +96,19 @@ private:
 		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
 	 */
-	typedef	HASH_MAP_NAMESPACE::hash_map<string,
-			instance_collection_ptr_type>
+	typedef	std::map<string, collection_map_entry_type>
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
 	typedef	instance_collection_map_type::iterator
 					instance_map_iterator;
-	typedef	footprint_base<process_tag>::pool_type	process_pool_type;
-	typedef	footprint_base<channel_tag>::pool_type	channel_pool_type;
-	typedef	footprint_base<datastruct_tag>::pool_type
-							struct_pool_type;
-	typedef	footprint_base<enum_tag>::pool_type	enum_pool_type;
-	typedef	footprint_base<int_tag>::pool_type	int_pool_type;
-	typedef	footprint_base<bool_tag>::pool_type	bool_pool_type;
+	typedef	footprint_base<process_tag>::instance_pool_type	process_instance_pool_type;
+	typedef	footprint_base<channel_tag>::instance_pool_type	channel_instance_pool_type;
+	typedef	footprint_base<datastruct_tag>::instance_pool_type
+							struct_instance_pool_type;
+	typedef	footprint_base<enum_tag>::instance_pool_type	enum_instance_pool_type;
+	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
+	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;
 private:
 	// state information
 	// a place to unroll instances and connections
@@ -232,6 +205,13 @@ public:
 	instance_collection_ptr_type
 	operator [] (const string&) const;
 
+	// lookup by index and tag
+	instance_collection_ptr_type
+	operator [] (const collection_map_entry_type&) const;
+
+	ostream&
+	what(ostream&) const;
+
 	ostream&
 	dump(ostream&) const;
 
@@ -251,14 +231,38 @@ public:
 
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&
-	get_pool(void) {
-		return footprint_base<Tag>::_pool;
+	get_instance_pool(void) {
+		return *footprint_base<Tag>::_instance_pool;
 	}
 
 	template <class Tag>
 	const typename state_instance<Tag>::pool_type&
-	get_pool(void) const {
-		return footprint_base<Tag>::_pool;
+	get_instance_pool(void) const {
+		return *footprint_base<Tag>::_instance_pool;
+	}
+
+	template <class Tag>
+	instance_collection_pool_bundle<Tag>&
+	get_instance_collection_pool_bundle(void) {
+		return *footprint_base<Tag>::collection_pool_bundle;
+	}
+
+	template <class Tag>
+	const instance_collection_pool_bundle<Tag>&
+	get_instance_collection_pool_bundle(void) const {
+		return *footprint_base<Tag>::collection_pool_bundle;
+	}
+
+	template <class Tag>
+	value_collection_pool_bundle<Tag>&
+	get_value_collection_pool_bundle(void) {
+		return *value_footprint_base<Tag>::collection_pool_bundle;
+	}
+
+	template <class Tag>
+	const value_collection_pool_bundle<Tag>&
+	get_value_collection_pool_bundle(void) const {
+		return *value_footprint_base<Tag>::collection_pool_bundle;
 	}
 
 	void
@@ -273,8 +277,11 @@ public:
 	void
 	clear_instance_collection_map(void);
 
-	good_bool
-	register_collection(const count_ptr<instance_collection_base>&);
+	// this is defined in Object/inst/instance_collection.cc
+	// to break a cyclic library dependence.  :-/
+	void
+	register_collection_map_entry(const string&, 
+		const collection_map_entry_type&);
 
 	good_bool
 	create_dependent_types(const footprint&);
@@ -315,7 +322,11 @@ public:
 	accept(alias_visitor&) const;
 
 public:
+	instance_collection_ptr_type
+	read_pointer(istream&) const;
+
 // persistent information management
+protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -325,16 +336,22 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if 0
+public:
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+
 private:
 	/**
 		Don't want footprint to be copy-constructed.  
-		But std::pair requires it in the footprint_manager.
-		TODO: allow only a few friends in STL to use it.  
 	 */
 	explicit
 	footprint(const footprint&);
-#endif
 };	// end class footprint
 
 //=============================================================================

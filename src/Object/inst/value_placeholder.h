@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.5 2006/10/24 07:27:24 fang Exp $
+	$Id: value_placeholder.h,v 1.6 2006/11/07 06:35:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -11,7 +11,6 @@
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
-// #include "Object/inst/instance_placeholder_base.h"	// for macros
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -143,7 +142,7 @@ public:
 	~value_placeholder();
 
 	value_collection_generic_type*
-	make_collection(void) const;
+	make_collection(footprint&) const;
 
 	ostream&
 	what(ostream& o) const;

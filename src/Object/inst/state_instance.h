@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.10 2006/03/15 04:38:19 fang Exp $
+	$Id: state_instance.h,v 1.11 2006/11/07 06:35:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -25,6 +25,8 @@ using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+template <class> class instance_alias_info;
+template <class> class instance_collection_pool_bundle;
 
 #define	STATE_INSTANCE_TEMPLATE_SIGNATURE	template <class Tag>
 #define	STATE_INSTANCE_CLASS			state_instance<Tag>
@@ -45,8 +47,9 @@ class state_instance {
 public:
 	typedef	class_traits<Tag>		traits_type;
 private:
-	typedef	typename traits_type::instance_alias_info_type
-						alias_info_type;
+	typedef	instance_alias_info<Tag>	alias_info_type;
+	typedef	instance_collection_pool_bundle<Tag>
+					collection_pool_bundle_type;
 public:
 	typedef	never_ptr<const alias_info_type>	back_ref_type;
 	typedef	Tag				tag_type;
@@ -73,9 +76,9 @@ public:
 	void								\
 	collect_transient_info_base(persistent_object_manager&) const;	\
 	void								\
-	write_object_base(const persistent_object_manager&, ostream&) const; \
+	write_object_base(const collection_pool_bundle_type&, ostream&) const; \
 	void								\
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const collection_pool_bundle_type&, istream&);
 
 	STATE_INSTANCE_PERSISTENCE_PROTOS
 

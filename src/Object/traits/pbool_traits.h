@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.15 2006/10/18 20:58:21 fang Exp $
+	$Id: pbool_traits.h,v 1.16 2006/11/07 06:35:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -21,6 +21,7 @@ struct class_traits<pbool_tag> {
 	typedef	pbool_tag			tag_type;
 	static const char			tag_name[];
 	static const char			value_type_name[];
+	enum { type_tag_enum_value = META_TYPE_PBOOL };
 	typedef	pbool_instance			instance_type;
 	typedef	pbool_value_type		value_type;
 	typedef	bool_value_type			data_value_type;

@@ -5,59 +5,47 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
 	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	207
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	83
 	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	191
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	83
 	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
 	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	13	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	339
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
 	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
-	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	604
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -134,21 +122,21 @@ In namespace "", we have: {
 
 footprint: {
   count = int<32>^0 = count (1) 
-  golden = process egg<>^0 = golden (1) (
+  golden = process egg<>^0 = golden (3) (
     yolk = int<32>^0 = count (1) 
   )
-  load = process bundle<>^0 = load (2) (
-    c = process basket<>^0 = load.c (3) (
-      egg_array = process egg<>^0 = golden (1) (
+  load = process bundle<>^0 = load (1) (
+    c = process basket<>^0 = load.c (2) (
+      egg_array = process egg<>^0 = golden (3) (
         yolk = int<32>^0 = count (1) 
       )
     )
   )
   Created state:
   process instance pool:
-  1	golden
-  2	load
-  3	load.c
+  1	load
+  2	load.c
+  3	golden
   int instance pool:
   1	count
 }

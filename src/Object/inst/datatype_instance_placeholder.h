@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_placeholder.h"
 	Instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_placeholder.h,v 1.3 2006/10/18 05:32:45 fang Exp $
+	$Id: datatype_instance_placeholder.h,v 1.4 2006/11/07 06:34:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_PLACEHOLDER_H__
@@ -47,7 +47,7 @@ public:
 virtual	~datatype_instance_placeholder();
 
 	datatype_instance_collection*
-	make_collection(void) const;
+	make_collection(footprint&) const;
 
 virtual	ostream&
 	what(ostream& o) const = 0;

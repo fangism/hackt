@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.10 2006/10/18 19:08:01 fang Exp $
+	$Id: alias_empty.h,v 1.11 2006/11/07 06:34:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -130,29 +130,8 @@ public:
 	template <class InstColl>
 	typename InstColl::instance_collection_parameter_type
 	complete_type_actuals(const InstColl& _inst) const {
-		return _inst.__get_raw_type();
+		return _inst.get_canonical_collection().__get_raw_type();
 	}
-
-public:
-	template <class AliasType>
-	static
-	void
-	collect_canonical_footprint(const AliasType&,
-		persistent_object_manager&);
-
-	template <class AliasType>
-	static
-	void
-	save_canonical_footprint(const AliasType&,
-		const persistent_object_manager&,
-		ostream&, const footprint* const);
-
-	template <class AliasType>
-	static
-	void
-	restore_canonical_footprint(const AliasType&,
-		const persistent_object_manager&,
-		istream&, const footprint*&);
 
 protected:
 	void

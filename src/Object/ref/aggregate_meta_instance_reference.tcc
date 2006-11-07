@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.10 2006/10/18 22:52:51 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.11 2006/11/07 06:35:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -14,6 +14,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/inst/collection_interface.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/persistent_object_manager.tcc"
@@ -199,27 +200,27 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	// just copy pointer value-references over
 	const const_coll_coll_iterator b(temp.begin()), e(temp.end());
 	const alias_ptr_type ba(b->front());
-	const never_ptr<const instance_collection_generic_type>
-		bc(ba->container);
+	const instance_collection_generic_type&
+		bc(ba->container->get_canonical_collection());
 	const_coll_coll_iterator i(b);
 	bool err = false;
 	for ( ; i!=e; ++i) {
 		// type check: collectibly_type_equivalent
 		const alias_ptr_type ia(i->front());
-		const never_ptr<const instance_collection_generic_type>
-			ic(ia->container);
+		const instance_collection_generic_type&
+			ic(ia->container->get_canonical_collection());
 		// this should be trivially fast for meta-classes
 		// that need minimal or zero checking :)
 		// we only need to check the container type, 
 		// since relaxed actuals will never matter for
 		// collectible type equivalence.  
-		if (!bc->must_be_collectibly_type_equivalent(*ic)) {
+		if (!bc.must_be_collectibly_type_equivalent(ic)) {
 			// may already come with partial error msg.
 			cerr << "Type mismatch in aggregate " <<
 				traits_type::tag_name << " reference."
 				<< endl;
-			bc->type_dump(cerr << "\tgot: ") << endl;
-			ic->type_dump(cerr << "\tand: ") << endl;
+			bc.type_dump(cerr << "\tgot: ") << endl;
+			ic.type_dump(cerr << "\tand: ") << endl;
 			err = true;
 		}
 		// operator overload to do pointer collection copying

@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.12 2006/10/18 20:57:48 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.13 2006/11/07 06:34:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -226,7 +226,7 @@ port_formals_manager::equivalent_port_formals(
  */
 void
 port_formals_manager::unroll_ports(const unroll_context& c, 
-		subinstance_manager& sub) const {
+		vector<never_ptr<physical_instance_collection> >& sub) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(sub.empty());
 	sub.reserve(size());		// pre-allocate
@@ -236,7 +236,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 		const port_formals_value_type pcb(*i);
 		NEVER_NULL(pcb);
 		// supposed to return a new copy of instance-collection
-		const count_ptr<physical_instance_collection>
+		const never_ptr<physical_instance_collection>
 			new_port(pcb->unroll_port_only(c));
 		NEVER_NULL(new_port);
 #if ENABLE_STACKTRACE
@@ -258,7 +258,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 void
 port_formals_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	// no need to visit template formals, port formals, separately, 
+	// no need to visit port formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
 }
 

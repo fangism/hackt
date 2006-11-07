@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.13 2006/10/24 07:27:07 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.14 2006/11/07 06:34:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -13,7 +13,7 @@
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
-#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(1 && ENABLE_STACKTRACE)
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -35,7 +35,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_placeholder.tcc"
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/state_instance.tcc"
-// #include "util/memory/chunk_map_pool.tcc"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/null_parameter_type.h"
 
@@ -56,19 +55,6 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_instance_placeholder, 
 	DBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_scalar, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_1D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_2D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_3D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_4D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_port_formal_array, 
-	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
 
 namespace memory {
 	// can we still lazy destroy with instance aliases?
@@ -84,10 +70,10 @@ namespace HAC {
 namespace entity {
 
 //=============================================================================
-// typedef bool_instance_alias_base function definitions
+// typedef bool_instance_alias_info function definitions
 
 ostream&
-operator << (ostream& o, const bool_instance_alias_base& b) {
+operator << (ostream& o, const bool_instance_alias_info& b) {
 	return o << "bool-alias @ " << &b;
 }
 
@@ -105,6 +91,7 @@ template class instance_array<bool_tag, 2>;
 template class instance_array<bool_tag, 3>;
 template class instance_array<bool_tag, 4>;
 template class port_formal_array<bool_tag>;
+template class port_actual_collection<bool_tag>;
 
 //=============================================================================
 }	// end namespace entity

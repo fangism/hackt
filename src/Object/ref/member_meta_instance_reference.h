@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.15 2006/10/18 22:52:53 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.16 2006/11/07 06:35:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -46,6 +46,8 @@ public:
 							parent_type;
 	typedef	typename traits_type::instance_collection_generic_type
 						instance_collection_generic_type;
+	typedef	typename parent_type::collection_interface_type
+						collection_interface_type;
 	typedef	typename traits_type::instance_placeholder_type
 						instance_placeholder_type;
 	typedef	never_ptr<const instance_placeholder_type>
@@ -54,13 +56,15 @@ public:
 						alias_collection_type;
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
-	typedef	typename parent_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
+	typedef	typename parent_type::instance_alias_info_ptr_type
+						instance_alias_info_ptr_type;
 	/// the containing type, whose member is referenced
 	typedef	meta_instance_reference_base		base_inst_type;
 	// should be kept consistent with
 	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
+	typedef	never_ptr<collection_interface_type>
+						parent_member_ptr_type;
 protected:
 	/**
 		The owning base instance reference, 
@@ -90,7 +94,7 @@ public:
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 	// overrides simple_meta...
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	unroll_generic_scalar_reference(const unroll_context&) const;
 
 	using parent_type::connect_port;
@@ -107,7 +111,7 @@ protected:
 	using parent_type::unroll_references_packed_helper_no_lookup;
 
 private:
-	count_ptr<instance_collection_generic_type>
+	parent_member_ptr_type
 	resolve_parent_member_helper(const unroll_context&) const;
 
 public:

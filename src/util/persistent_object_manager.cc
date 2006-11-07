@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.33 2006/10/24 18:39:04 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.34 2006/11/07 06:35:40 fang Exp $
  */
 
 // flags and switches
@@ -642,9 +642,13 @@ persistent_object_manager::lookup_ptr_visit_info(const size_t i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if index is valid, falls in table range.  
+ */
 bool
 persistent_object_manager::check_reconstruction_table_range(
 		const size_t i) const {
+	// cerr << "i = " << i << endl;
 	return (i < reconstruction_table.size());
 }
 
@@ -969,7 +973,7 @@ persistent_object_manager::finish_write(ofstream& f) {
 		NEVER_NULL(sb);
 		const int size = sb->in_avail();	// characters available
 		INVARIANT(size == e.tail_pos() -e.head_pos());
-#if 0
+#if DEBUG_ME
 		cerr << "entry " << i << " wrote " << size << " bytes." << endl;
 #endif
 		const string str(sb->str());
@@ -991,6 +995,9 @@ persistent_object_manager::collect_objects(void) {
 	size_t i = 1;			// don't initialize the 0th one!
 //	dump_text(cerr);		// DEBUG
 	for ( ; i<max; i++) {
+#if DEBUG_ME
+		cerr << "write-buffering entry " << i << endl;
+#endif
 		reconstruction_table_entry& e(reconstruction_table[i]);
 		const persistent* const o(e.addr());
 		NEVER_NULL(o);
@@ -1142,7 +1149,7 @@ persistent_object_manager::load_objects(void) {
 	// 0th object is reserved NULL, skip it
 	size_t i = 1;
 	for ( ; i<max; i++) {
-#if 0
+#if DEBUG_ME
 		cerr << "Loading object number " << i << "!!!" << endl;
 #endif
 #if 0
@@ -1161,7 +1168,7 @@ persistent_object_manager::load_objects(void) {
 			member function, because load_object is allowed
 			to call load_object recursively.
 		***/
-#if 0
+#if DEBUG_ME
 			o->what(cerr << i << " @ " << o << ", ") << endl;
 #endif
 			__load_object_once(o, raw_pointer_tag());

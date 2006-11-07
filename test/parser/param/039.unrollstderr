@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
@@ -18,13 +18,12 @@ Persistent Object Manager text dump:
 	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	56
-	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	396
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	357
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

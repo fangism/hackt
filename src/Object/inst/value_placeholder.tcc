@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.4 2006/10/24 07:27:24 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.5 2006/11/07 06:35:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -42,14 +42,15 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/def/definition_base.h"
+#include "Object/def/footprint.h"
 #include "Object/common/namespace.h"
+#include "Object/traits/classification_tags.h"
 #include "Object/type/param_type_reference.h"
-// #include "Object/unroll/unroll_context.h"
-#include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/unroll/expression_assignment.h"
+#include "Object/inst/value_collection_pool_bundle.tcc"	// for allocate
 
 #include "common/ICE.h"
 
@@ -476,17 +477,24 @@ VALUE_PLACEHOLDER_CLASS::must_type_check_actual_param_expr(
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 // typename VALUE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 instance_collection_base*
-VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
-	return this->make_collection();
+VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
+		footprint& f) const {
+	return this->make_collection(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: distinguish between template formals and locals, 
+		for sparse vs. dense collections.  
+ */
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
-VALUE_PLACEHOLDER_CLASS::make_collection(void) const {
-	NEVER_NULL(this);	// WTF?
-	return value_collection_generic_type::make_array(
-		never_ptr<const this_type>(this));
+VALUE_PLACEHOLDER_CLASS::make_collection(footprint& f) const {
+	value_collection_pool_bundle<Tag>&
+		pool(f. template get_value_collection_pool_bundle<Tag>());
+	// if (this->is_template_formal()) ...
+	return pool.allocate_local_collection(
+		f, never_ptr<const this_type>(this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.24 2006/10/24 07:27:23 fang Exp $
+ 	$Id: value_collection.tcc,v 1.25 2006/11/07 06:35:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -38,6 +38,7 @@
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/def/footprint.h"
 #include "Object/common/dump_flags.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
@@ -45,8 +46,6 @@
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 #include "Object/type/param_type_reference.h"
-// #include "Object/unroll/unroll_context.h"
-#include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
@@ -55,8 +54,6 @@
 
 #include "common/ICE.h"
 
-// #include "util/memory/list_vector_pool.tcc"
-#include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 #include "util/multikey_map.tcc"
@@ -252,22 +249,16 @@ VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
-VALUE_COLLECTION_CLASS::collect_transient_info(
+VALUE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key, 
-			this->source_placeholder->get_dimensions())) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
-	parent_type::collect_transient_info_base(m);
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
 	if (this->source_placeholder) {
 		source_placeholder->collect_transient_info(m);
 	}
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -295,7 +286,6 @@ void
 VALUE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("value_collection<>::write_object_base()");
-	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
 	m.write_pointer(f, this->source_placeholder);
 }
@@ -306,7 +296,6 @@ void
 VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	STACKTRACE("value_collection<>::load_object_base()");
-	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
 	m.read_pointer(f, this->source_placeholder);
 	// TODO: need to load in advance to make the key available
@@ -319,30 +308,6 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // class value_array method_definitions
 
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-// The following macro calls are intended to be equivalent to:
-// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
-//      VALUE_ARRAY_TEMPLATE_SIGNATURE, VALUE_ARRAY_CLASS)
-// but the preprocessor is retarded about arguments with commas in them, 
-// so we forced to expand this macro by hand.  :S
-
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, VALUE_ARRAY_CLASS)
-
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, VALUE_ARRAY_CLASS)
-
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, VALUE_ARRAY_CLASS)
-
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, VALUE_ARRAY_CLASS)
-
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, VALUE_ARRAY_CLASS)
-#endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array() :
 	parent_type(), 
@@ -567,7 +532,8 @@ VALUE_ARRAY_CLASS::unroll_lvalue_references(const multikey_index_type& l,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
+VALUE_ARRAY_CLASS::write_object(
+		const persistent_object_manager& m, 
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
 	// write out the instance map
@@ -577,8 +543,16 @@ VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
+VALUE_ARRAY_CLASS::load_object(footprint& fp, 
+		const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
+	// register this collection with the footprint
+	// placeholder must already be loaded, to access its key
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_value_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
 	// load the instance map
 	this->collection.read(f);
 }
@@ -586,30 +560,6 @@ VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 //-----------------------------------------------------------------------------
 // class value_array<Tag,0> specialization method definitions
 
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-// The following macro calls are intended to be equivalent to:
-// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
-//      VALUE_SCALAR_TEMPLATE_SIGNATURE, VALUE_SCALAR_CLASS)
-// but the preprocessor is retarded about arguments with commas in them, 
-// so we forced to expand this macro by hand.  :S
-
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, VALUE_SCALAR_CLASS)
-        
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, VALUE_SCALAR_CLASS)
-
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, VALUE_SCALAR_CLASS)
-
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, VALUE_SCALAR_CLASS)
-        
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, VALUE_SCALAR_CLASS)
-#endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array() :
 		parent_type(), 
@@ -766,9 +716,17 @@ VALUE_SCALAR_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) {
+VALUE_SCALAR_CLASS::load_object(footprint& fp, 
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("value_scalar::load_object()");
 	parent_type::load_object_base(m, f);
+	// register this collection with the footprint
+	// placeholder must already be loaded, to access its key
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_value_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
 	// load the instance
 	read_value(f, the_instance);
 }

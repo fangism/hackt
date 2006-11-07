@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	386
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
@@ -21,61 +21,40 @@ Persistent Object Manager text dump:
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	580
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	27	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	57	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	88
-	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
-	59	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	58
-	60	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	61	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
-	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	65	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	67	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
-	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	73	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
-	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	39	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1729
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

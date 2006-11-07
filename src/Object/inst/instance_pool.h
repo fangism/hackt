@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.11 2006/03/15 04:38:18 fang Exp $
+	$Id: instance_pool.h,v 1.12 2006/11/07 06:34:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -23,12 +23,14 @@ using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::index_pool;
+template <class> class instance_collection_pool_bundle;
 
 //=============================================================================
 /**
 	Wrapped interface to list_vector being used as an indexable pool, 
 	intended for use of pseudo-allocating instances.  
 	Consider adding this as an index_vector_pool to the util library.  
+	TODO: consider using collection_pool.
  */
 template <class T>
 class instance_pool : private index_pool<util::list_vector<T> > {
@@ -40,6 +42,8 @@ public:
 	typedef	typename parent_type::const_iterator	const_iterator;
 	typedef	typename parent_type::size_type		size_type;
 	typedef	typename parent_type::value_type	value_type;
+	typedef	instance_collection_pool_bundle<tag_type>
+				collection_pool_bundle_type;
 private:
 	/**
 		Default chunk size when not specified.  
@@ -72,10 +76,12 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const collection_pool_bundle_type&, 
+		ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const collection_pool_bundle_type&, 
+		istream&);
 };	// end class instance_pool
 
 //=============================================================================

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.25 2006/10/18 20:58:01 fang Exp $
+ 	$Id: instance_collection.cc,v 1.26 2006/11/07 06:34:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -151,8 +151,10 @@ instance_collection_base::dump_hierarchical_name(ostream& o) const {
 		return super_instance->dump_hierarchical_name(o,
 			dump_flags::default_value) << '.' << get_name();
 	} else {
-		return __get_placeholder_base()->
-			dump_qualified_name(o, dump_flags::default_value);
+		const never_ptr<const instance_placeholder_base>
+			p(__get_placeholder_base());
+		NEVER_NULL(p);
+		return p->dump_qualified_name(o, dump_flags::default_value);
 	}
 }
 
@@ -165,7 +167,10 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 		return super_instance->dump_hierarchical_name(o, df)
 			<< '.' << get_name();
 	} else {
-		return __get_placeholder_base()->dump_qualified_name(o, df);
+		const never_ptr<const instance_placeholder_base>
+			p(__get_placeholder_base());
+		NEVER_NULL(p);
+		return p->dump_qualified_name(o, df);
 	}
 }
 
@@ -184,44 +189,6 @@ bool
 instance_collection_base::is_local_to_definition(void) const {
 	const owner_ptr_type owner(get_owner());
 	return owner.is_a<const definition_base>();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Upward recursive: find top-most super-instance and allocate 
-	state from there top-down.  
- */
-good_bool
-instance_collection_base::create_super_instance(footprint& f) {
-	// super-instance corresponds to a substructure alias
-	// some traversal similar to dump_hierarchical_name.
-	INVARIANT(super_instance);
-	return good_bool(super_instance->allocate_state(f) != 0);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-instance_collection_base::collect_transient_info_base(
-		persistent_object_manager& m) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Q: Where and when was the super_instance pointer tracked?
- */
-void
-instance_collection_base::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	// m.write_pointer(o, super_instance);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-instance_collection_base::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-	// m.read_pointer(i, super_instance);
 }
 
 //=============================================================================
@@ -267,6 +234,7 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 	// it IS partially unrolled
 		const size_t dimensions = get_dimensions();
 		if (dimensions) {
+			// then is an array
 			INDENT_SECTION(o);
 			o << auto_indent << "{" << endl;
 			{
@@ -439,6 +407,23 @@ datatype_instance_collection::check_established_type(
 		cerr << "Unhandled case in this function." << endl;
 	)
 	return bad_bool(true);
+}
+
+//=============================================================================
+// class footprint method definitions
+
+/**
+	This is defined in "Object/inst/instance_collection.cc"
+	to break a cyclic library dependency.  
+ */
+void
+footprint::register_collection_map_entry(const string& k, 
+		const collection_map_entry_type& v) {
+	typedef	instance_collection_map_type::value_type	pair_type;
+	pair_type p(k, v);
+	const std::pair<instance_map_iterator, bool>
+		i(instance_collection_map.insert(p));
+	INVARIANT(i.second);	// MUST have succeeded, else we forgot to check
 }
 
 //=============================================================================
@@ -953,10 +938,13 @@ datatype_instance_placeholder::datatype_instance_placeholder(
 datatype_instance_placeholder::~datatype_instance_placeholder() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: rename, and be able to call parent's pure-virtual.  
+ */
 datatype_instance_collection*
-datatype_instance_placeholder::make_collection(void) const {
+datatype_instance_placeholder::make_collection(footprint& f) const {
 	return IS_A(datatype_instance_collection*,
-		make_instance_collection_footprint_copy());
+		make_instance_collection_footprint_copy(f));
 }
 
 //=============================================================================

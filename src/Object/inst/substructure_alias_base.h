@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.18 2006/10/18 20:58:06 fang Exp $
+	$Id: substructure_alias_base.h,v 1.19 2006/11/07 06:35:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -10,7 +10,7 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
-#include "Object/def/footprint.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace entity {
@@ -29,6 +29,7 @@ struct alias_printer;
 struct alias_matcher_base;
 using std::istream;
 using std::ostream;
+using util::memory::never_ptr;
 using util::persistent_object_manager;
 //=============================================================================
 /**
@@ -66,7 +67,8 @@ virtual	~substructure_alias_base() { }
 
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>& p, 
+	unroll_port_instances(
+			const collection_interface<Tag>& p, 
 			const unroll_context& c) {
 		subinstances.unroll_port_instances(p, c);
 		restore_parent_child_links();
@@ -130,10 +132,10 @@ protected:
 	collect_transient_info_base(persistent_object_manager& m) const;
 
 	void
-	write_object_base(const persistent_object_manager& m, ostream& o) const;
+	write_object_base(const footprint&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager& m, istream& i);
+	load_object_base(const footprint&, istream&);
 
 };	// end class substructure_alias_base
 
@@ -155,7 +157,7 @@ protected:
 	 */
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>&, 
+	unroll_port_instances(const collection_interface<Tag>&, 
 		const unroll_context&) const { }
 
 	void
@@ -207,12 +209,10 @@ protected:
 	collect_transient_info_base(const persistent_object_manager&) const { }
 
 	void
-	write_object_base(const persistent_object_manager&, 
-		const ostream&) const { }
+	write_object_base(const footprint&, const ostream&) const { }
 
 	void
-	load_object_base(const persistent_object_manager&, 
-		const istream&) const { }
+	load_object_base(const footprint&, const istream&) const { }
 
 };	// end class substructure_alias_base
 

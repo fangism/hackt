@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.3 2006/10/18 20:58:05 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.4 2006/11/07 06:34:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
@@ -65,7 +65,7 @@ virtual	ostream&
 	is_port_formal(void) const;
 
 #define	UNROLL_PORT_ONLY_PROTO						\
-	count_ptr<physical_instance_collection>				\
+	never_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;

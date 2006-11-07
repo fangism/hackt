@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.4 2006/10/24 07:27:15 fang Exp $
+	$Id: instance_placeholder.h,v 1.5 2006/11/07 06:34:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -14,7 +14,6 @@
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_placeholder.h"	// for macros
-// #include "Object/inst/instance_placeholder_base.h"
 #include "Object/common/multikey_index.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -60,6 +59,7 @@ class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
+template <class> class instance_collection_pool_bundle;
 
 //=============================================================================
 #define	INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE				\
@@ -96,6 +96,8 @@ public:
 				member_simple_meta_instance_reference_type;
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	instance_collection_pool_bundle<Tag>
+					collection_pool_bundle_type;
 protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	typename parent_type::member_inst_ref_ptr_type
@@ -134,7 +136,7 @@ public:
 	~instance_placeholder();
 
 	instance_collection_generic_type*
-	make_collection(void) const;
+	make_collection(footprint&) const;
 
 	ostream&
 	what(ostream&) const;
@@ -177,13 +179,6 @@ public:
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
 
 	UNROLL_PORT_ONLY_PROTO;
-
-#if 0
-	static
-	// won't be this_type anymore!
-	instance_collection_generic_type*
-	make_array(const scopespace& o, const string& n, const size_t d);
-#endif
 
 	static
 	persistent*

@@ -10,6 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

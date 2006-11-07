@@ -3,15 +3,13 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2 2006/10/24 07:27:16 fang Exp $
+	$Id: instance_scalar.h,v 1.3 2006/11/07 06:34:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
 #define	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
 
 #include "Object/inst/instance_collection.h"
-// #include "Object/type/canonical_type_fwd.h"	// for conditional
-#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -26,8 +24,7 @@ instance_array<Tag,0>
 	Scalar specialization of an instance collection.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-class instance_array<Tag,0> :
-		public class_traits<Tag>::instance_collection_generic_type {
+class instance_array<Tag,0> : public instance_collection<Tag> {
 friend class instance_collection<Tag>;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
@@ -38,13 +35,17 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef	typename traits_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
+	typedef	typename parent_type::collection_interface_type
+						collection_interface_type;
+	typedef	typename traits_type::instance_alias_info_type
+						instance_alias_info_type;
+	typedef	typename traits_type::instance_alias_info_ptr_type
+						instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
-	typedef	instance_alias_base_type		instance_type;
+	typedef	instance_alias_info_type		instance_type;
+	typedef	typename parent_type::collection_pool_bundle_type
+					collection_pool_bundle_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
 	typedef	typename parent_type::instance_placeholder_type
@@ -55,12 +56,11 @@ public:
 private:
 	instance_type					the_instance;
 
-private:
+public:
 	instance_array();
 
 public:
-	explicit
-	instance_array(const instance_placeholder_ptr_type);
+	instance_array(const footprint&, const instance_placeholder_ptr_type);
 
 	~instance_array();
 
@@ -71,17 +71,29 @@ public:
 	is_partially_unrolled(void) const;
 
 	ostream&
-	dump_element_key(ostream&, const instance_alias_base_type&) const;
+	dump_element_key(ostream&, const instance_alias_info_type&) const;
 
 	multikey_index_type
-	lookup_key(const instance_alias_base_type&) const;
+	lookup_key(const instance_alias_info_type&) const;
+
+	ostream&
+	dump_element_key(ostream&, const size_t) const;
+
+	multikey_index_type
+	lookup_key(const size_t) const;
 
 	size_t
-	lookup_index(const instance_alias_base_type&) const;
+	lookup_index(const multikey_index_type&) const;
 
-	instance_alias_base_type&
-	get_corresponding_element(const parent_type&,
-		const instance_alias_base_type&);
+	size_t
+	collection_size(void) const;
+
+	size_t
+	lookup_index(const instance_alias_info_type&) const;
+
+	instance_alias_info_type&
+	get_corresponding_element(const collection_interface_type&,
+		const instance_alias_info_type&);
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
@@ -92,17 +104,17 @@ public:
 
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
 
-	instance_alias_base_ptr_type
+	instance_alias_info_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
 	bool
 	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
+		typename default_list<instance_alias_info_ptr_type>::type& l, 
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
 
-	instance_alias_base_type&
+	instance_alias_info_type&
 	load_reference(istream& i);
 
 	const_index_list
@@ -123,18 +135,26 @@ public:
 	accept(alias_visitor&) const;
 
 public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
+	void
+	write_pointer(ostream&, const collection_pool_bundle_type&) const;
+
+	void
+	write_object(const footprint&, 
+		const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(footprint&, 
+		const persistent_object_manager&, istream&);
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_connections(const collection_pool_bundle_type&, ostream&) const;
+
+	void
+	load_connections(const collection_pool_bundle_type&, istream&);
+
 };	// end class instance_array (specialized)
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_scalar.h"
-	$Id: value_scalar.h,v 1.2 2006/10/24 07:27:25 fang Exp $
+	$Id: value_scalar.h,v 1.3 2006/11/07 06:35:08 fang Exp $
 	This file spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -9,9 +9,6 @@
 #define	__HAC_OBJECT_INST_VALUE_SCALAR_H__
 
 #include "Object/inst/value_collection.h"
-
-#include "util/new_functor_fwd.h"
-#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -92,17 +89,12 @@ public:
 	resolve_indices(const const_index_list& l) const;
 
 public:
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(footprint&, const persistent_object_manager&, istream&);
+
 };	// end class value_array specialization
 
 //=============================================================================

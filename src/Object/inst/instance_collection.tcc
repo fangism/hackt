@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.38 2006/11/02 22:02:00 fang Exp $
+	$Id: instance_collection.tcc,v 1.39 2006/11/07 06:34:46 fang Exp $
 	TODO: trim includes
  */
 
@@ -56,12 +56,14 @@
 #include "Object/inst/sparse_collection.tcc"
 #include "Object/inst/element_key_dumper.h"
 #include "Object/inst/port_formal_array.tcc"
+#include "Object/inst/port_actual_collection.tcc"
+#include "Object/inst/collection_traits.h"
+#include "Object/inst/collection_pool.tcc"		// for lookup_index
 #include "common/ICE.h"
 
 #include "util/multikey_assoc.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/memory/chunk_map_pool.tcc"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
@@ -99,6 +101,19 @@ using util::auto_indent;
 using util::persistent_traits;
 
 //=============================================================================
+// class collection_interface method definitions
+
+COLLECTION_INTERFACE_TEMPLATE_SIGNATURE
+void
+COLLECTION_INTERFACE_CLASS::write_local_pointer(
+		const footprint& f, ostream& o) const {
+	const unsigned char t = traits_type::type_tag_enum_value;
+	write_value(o, t);
+	this->write_pointer(o,
+		f.template get_instance_collection_pool_bundle<Tag>());
+}
+
+//=============================================================================
 // class instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,15 +124,17 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection() :
 		parent_type(), 
 		collection_type_manager_parent_type(), 
+		footprint_ref(NULL), 
 		source_placeholder(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-INSTANCE_COLLECTION_CLASS::instance_collection(
+INSTANCE_COLLECTION_CLASS::instance_collection(const footprint& f, 
 			const instance_placeholder_ptr_type p) :
 		parent_type(), 
 		collection_type_manager_parent_type(), 
+		footprint_ref(&f), 
 		source_placeholder(p) {
 }
 
@@ -125,6 +142,13 @@ INSTANCE_COLLECTION_CLASS::instance_collection(
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::~instance_collection() {
 	STACKTRACE_DTOR("~instance_collection<>()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+const INSTANCE_COLLECTION_CLASS&
+INSTANCE_COLLECTION_CLASS::get_canonical_collection(void) const {
+	return *this;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -224,48 +248,43 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param p the placeholder back-reference pointer, 
-		from which dimensions are inferred.  
-	\return newly constructed d-dimensional array.  
+	This prefixes a footprint-translated pointer with a reference
+	to the external footprint.  
+	Called by port_actual_collection.  
+	TODO: consider an abbreviated form just uses a port_formal 
+	positional number.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-INSTANCE_COLLECTION_CLASS*
-INSTANCE_COLLECTION_CLASS::make_array(const instance_placeholder_ptr_type p) {
-	const size_t d = p->get_dimensions();
-	switch(d) {
-		case 0: return new instance_array<Tag,0>(p);
-		case 1: return new instance_array<Tag,1>(p);
-		case 2: return new instance_array<Tag,2>(p);
-		case 3: return new instance_array<Tag,3>(p);
-		case 4: return new instance_array<Tag,4>(p);
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
+void
+INSTANCE_COLLECTION_CLASS::write_external_pointer(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, this->footprint_ref);
+	const collection_pool_bundle_type&
+		pb(this->footprint_ref->
+			template get_instance_collection_pool_bundle<Tag>());
+	this->write_pointer(o, pb);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param p the placeholder back-reference pointer, 
-		from which dimensions are inferred.  
-	\return newly constructed d-dimensional array.  
+	Counterpart to instance_collection::write_external_pointer()
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-INSTANCE_COLLECTION_CLASS*
-INSTANCE_COLLECTION_CLASS::make_port_array(
-		const instance_placeholder_ptr_type p) {
-	const size_t d = p->get_dimensions();
-	switch(d) {
-		case 0: return new instance_array<Tag,0>(p);
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-			return new port_formal_array<Tag>(p);
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
+never_ptr<const INSTANCE_COLLECTION_CLASS>
+INSTANCE_COLLECTION_CLASS::read_external_pointer(
+		const persistent_object_manager& m, istream& i) {
+	never_ptr<footprint> ext_fp;
+	m.read_pointer(i, ext_fp);
+	NEVER_NULL(ext_fp);
+	m.load_object_once(&*ext_fp);	// must load before looking up!
+	const never_ptr<const parent_type>
+		p(ext_fp->template get_instance_collection_pool_bundle<Tag>()
+		.read_pointer(i));
+	NEVER_NULL(p);
+	const never_ptr<const this_type>
+		ret(p.template is_a<const this_type>());
+	NEVER_NULL(ret);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -277,8 +296,10 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
-	parent_type::collect_transient_info_base(m);
+	STACKTRACE_VERBOSE;
+//	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
+	STACKTRACE_INDENT_PRINT("this @ " << this << endl);
+	// don't bother visiting parent footprint?
 	collection_type_manager_parent_type::collect_transient_info_base(m);
 	if (this->source_placeholder) {
 		source_placeholder->collect_transient_info(m);
@@ -291,18 +312,24 @@ void
 INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::write_base()");
-	parent_type::write_object_base(m, o);
+	// owning footprint? -- responsibility of owner footprint
+	// to restores back-references
 	collection_type_manager_parent_type::write_object_base(m, o);
 	m.write_pointer(o, this->source_placeholder);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param f is the owning footprint to re-establish back-reference.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::load_object_base(
+		const footprint& f, 
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
-	parent_type::load_object_base(m, i);
+	// owning footprint? re-establish back-reference
+	this->footprint_ref = never_ptr<const footprint>(&f);
 	collection_type_manager_parent_type::load_object_base(m, i);
 	m.read_pointer(i, this->source_placeholder);
 	// TODO: need to load in advance to make the key available
@@ -315,30 +342,6 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 //=============================================================================
 // class array method definitions
 
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-// The following macro calls are intended to be equivalent to:
-// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
-//	INSTANCE_ARRAY_TEMPLATE_SIGNATURE, INSTANCE_ARRAY_CLASS)
-// but the preprocessor is retarded about arguments with commas in them, 
-// so we forced to expand this macro by hand.  :S
-
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, INSTANCE_ARRAY_CLASS)
-
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, INSTANCE_ARRAY_CLASS)
-
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, INSTANCE_ARRAY_CLASS)
-
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, INSTANCE_ARRAY_CLASS)
-
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, INSTANCE_ARRAY_CLASS)
-#endif	// POOL_ALLOCATE_INSTANCE_COLLECTIONS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array() : 
 		parent_type(), 
@@ -346,8 +349,18 @@ INSTANCE_ARRAY_CLASS::instance_array() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array(const instance_placeholder_ptr_type p) :
-		parent_type(p), collection() {
+INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) : 
+		parent_type(t), 
+		collection() {		// don't copy
+	INVARIANT(t.collection.empty());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+INSTANCE_ARRAY_CLASS::instance_array(const footprint& f, 
+		const instance_placeholder_ptr_type p) :
+		parent_type(f, p), 
+		collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -376,8 +389,20 @@ INSTANCE_ARRAY_CLASS::what(ostream& o) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
-		const instance_alias_base_type& a) const {
+		const instance_alias_info_type& a) const {
 	const key_type& k(this->collection.lookup_key(a));
+	return element_key_dumper<D>()(o, k);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre the alias a MUST belong to this collection!
+		Will assert fail if this is not the case.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o, const size_t i) const {
+	const key_type& k(this->collection.lookup_key(i));
 	return element_key_dumper<D>()(o, k);
 }
 
@@ -387,7 +412,7 @@ INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 multikey_index_type
-INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_base_type& a) const {
+INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
 	// NB: specialized to scalar pint_value_type for D == 1!
 	return multikey<D,pint_value_type>(this->collection.lookup_key(a));
 	// convert
@@ -395,13 +420,44 @@ INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_base_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return the key corresponding to the referenced element.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+multikey_index_type
+INSTANCE_ARRAY_CLASS::lookup_key(const size_t i) const {
+	// NB: specialized to scalar pint_value_type for D == 1!
+	return multikey<D,pint_value_type>(this->collection.lookup_key(i));
+	// convert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return the internal unique nonzero ID number corresponding
-	to the alias argument.  
+	to the alias argument, zero to signal not found.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 size_t
-INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_base_type& a) const {
-	return this->collection.lookup_index(a);
+INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_info_type& a) const {
+	return this->collection.lookup_index(a);	// already 1-based
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return 0 if not found.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ARRAY_CLASS::lookup_index(const multikey_index_type& k) const {
+	INVARIANT(k.dimensions() == D);
+	return this->collection.lookup_index(key_type(k));
+	// already 1-based
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ARRAY_CLASS::collection_size(void) const {
+	return this->collection.size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -412,15 +468,19 @@ INSTANCE_ARRAY_CLASS::lookup_index(const instance_alias_base_type& a) const {
 	Will assert fail if not found.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_base_type&
+typename INSTANCE_ARRAY_CLASS::instance_alias_info_type&
 INSTANCE_ARRAY_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_base_type& a) {
+		const collection_interface_type& p, 
+		const instance_alias_info_type& a) {
 	const this_type& t(IS_A(const this_type&, p));	// assert dynamic cast
 	const key_type& k(t.collection.lookup_key(a));
 	return this->collection[k];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps all instances recursively, including subinstances (ports).  
+ */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
@@ -436,13 +496,19 @@ INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is smart enough to distinguish between scalar (keyless)
+	instance dumping and indexed dumping. 
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE 
 ostream&
 INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 		const instance_alias_info_type& p) {
-	p.dump_key(os << auto_indent);
 	NEVER_NULL(p.container);
-	if (p.container->has_relaxed_type())
+	const size_t dim = p.container->get_dimensions();
+	if (dim)
+		p.dump_key(os << auto_indent);
+	if (p.container->get_canonical_collection().has_relaxed_type())
 		p.dump_actuals(os);
 	os << " = ";
 	NEVER_NULL(p.peek());
@@ -450,7 +516,9 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ', df);
-	return os << endl;
+	if (dim)
+		os << endl;
+	return os;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -489,8 +557,8 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	key_gen.initialize();
 	bool err = false;
 	do {
-		instance_alias_base_type* const new_elem =
-			collection.insert(key_gen, instance_alias_base_type());
+		instance_alias_info_type* const new_elem =
+			collection.insert(key_gen, instance_alias_info_type());
 		if (new_elem) {
 			// ALERT: shouldn't relaxed actuals be attached
 			// before calling recursive instantiate?
@@ -625,7 +693,7 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_base_ptr_type
+typename INSTANCE_ARRAY_CLASS::instance_alias_info_ptr_type
 INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
@@ -644,7 +712,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l,
+		typename default_list<instance_alias_info_ptr_type>::type& l,
 		const const_range_list& r) const {
 	INVARIANT(!r.empty());
 	key_generator_type key_gen;
@@ -658,19 +726,19 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 			this->type_dump(
 				cerr << "FATAL: reference to uninstantiated ")
 					<< " index " << key_gen << endl;
-			l.push_back(instance_alias_base_ptr_type(NULL));
+			l.push_back(instance_alias_info_ptr_type(NULL));
 			ret = false;
 		} else {
 		const element_type& pi(*it);
 		// pi MUST be valid if it belongs to an array
 		if (pi.valid()) {
-			l.push_back(instance_alias_base_ptr_type(
+			l.push_back(instance_alias_info_ptr_type(
 				const_cast<element_type*>(&pi)));
 		} else {
 			this->type_dump(
 				cerr << "FATAL: reference to uninstantiated ")
 					<< " index " << key_gen << endl;
-			l.push_back(instance_alias_base_ptr_type(NULL));
+			l.push_back(instance_alias_info_ptr_type(NULL));
 			ret = false;
 		}
 		}
@@ -718,7 +786,7 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 			*a_iter = never_ptr<element_type>(
 				const_cast<element_type*>(&pi));
 		}
-		a_iter++;
+		++a_iter;
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
@@ -838,17 +906,19 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	instance_alias_info::write_next_connection().  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-typename INSTANCE_ARRAY_CLASS::instance_alias_base_type&
+typename INSTANCE_ARRAY_CLASS::instance_alias_info_type&
 INSTANCE_ARRAY_CLASS::load_reference(istream& i) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_reference()");
 	size_t index;		// 1-indexed
 	read_value(i, index);
+	INVARIANT(index);
 	element_type* const e = this->collection.find(index);
 	NEVER_NULL(e);
 	return *e;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Going to need some sort of element_reader counterpart.
 	\param e is a reference to a INSTANCE_ALIAS_CLASS.
@@ -861,6 +931,7 @@ INSTANCE_COLLECTION_CLASS::element_collector::operator ()
 	e.collect_transient_info_base(pom);
 	// postpone connection writing until next phase
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -873,7 +944,7 @@ INSTANCE_COLLECTION_CLASS::element_writer::operator () (
 		const instance_alias_info_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_writer::operator()");
 	// elements don't come with keys anymore, keys are managed separately
-	e.write_object_base(pom, os);
+	e.write_object_base(fp, pom, os);
 	// postpone connection writing until next phase
 }
 
@@ -887,7 +958,9 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::element_loader::operator () (
 		instance_alias_info_type& e) {
-	e.load_object_base(this->pom, this->is);
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_loader::operator()");
+	e.container = this->back_ref;
+	e.load_object_base(this->fp, this->pom, this->is);
 }
 
 
@@ -897,7 +970,7 @@ void
 INSTANCE_COLLECTION_CLASS::connection_writer::operator() (
 		const instance_alias_info_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-	const instance_alias_base_type* const next(e.peek());
+	const instance_alias_info_type* const next(e.peek());
 	NEVER_NULL(next);
 	if (next != &e) {
 		write_value<char>(os, 1);
@@ -925,6 +998,8 @@ INSTANCE_COLLECTION_CLASS::connection_loader::operator() (
 		// lookup the instance in the collection referenced
 		// and connect them
 		elem.load_next_connection(this->pom, this->is);
+	} else {
+		INVARIANT(elem.peek() == &elem);
 	}
 	// else just leave it pointing to itself, 
 	// which was how it was constructed
@@ -957,14 +1032,8 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
 		const port_collection_context& pcc) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(this->collection.size() == pcc.size());
-	const_iterator i(this->collection.begin());
-	const const_iterator e(this->collection.end());
-	size_t j = 0;
-	for ( ; i!=e; i++, j++) {
-		i->assign_footprint_frame(ff, pcc, j);
-	}
+	// only called and managed by the footprint's pools
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -982,10 +1051,8 @@ INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::collect_transient_info(
+INSTANCE_ARRAY_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	for_each(this->collection.begin(), this->collection.end(), 
@@ -994,6 +1061,18 @@ if (!m.register_transient_object(this,
 	// so that collections without pointers to collect
 	// may be skipped.
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::write_pointer(ostream& o, 
+		const collection_pool_bundle_type& pb) const {
+	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
+	write_value(o, e);
+	const collection_index_entry::index_type index =
+		pb.template get_collection_pool<this_type>()
+			.lookup_index(*this);
+	write_value(o, index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1003,8 +1082,8 @@ if (!m.register_transient_object(this,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
-		ostream& f) const {
+INSTANCE_ARRAY_CLASS::write_object(const footprint& fp, 
+		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::write_object()");
 	parent_type::write_object_base(m, f);
 	// need to know how many members to expect
@@ -1014,6 +1093,7 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	// by order of index, which may not be sorted w.r.t. keys.  
 {
 	// sparse_collections' public indices are 1-indexed
+	// write sparse keys in order of index
 	size_t i = 1;
 	value_writer<key_type> write_key(f);
 	for ( ; i<=s; ++i) {
@@ -1023,31 +1103,51 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 }
 	const const_iterator
 		b(this->collection.begin()), e(this->collection.end());
-	for_each(b, e, typename parent_type::element_writer(m, f));
-	for_each(b, e, typename parent_type::connection_writer(m, f));
+	for_each(b, e, typename parent_type::element_writer(fp, m, f));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only writes out connections.  
+ */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::load_object(
+INSTANCE_ARRAY_CLASS::write_connections(const collection_pool_bundle_type& m, 
+		ostream& f) const {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::write_connections()");
+	for_each(collection.begin(), collection.end(), 
+		typename parent_type::connection_writer(m, f));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this also re-registers with the footprint's collection map.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::load_object(footprint& fp, 
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_object()");
-	parent_type::load_object_base(m, f);
+	parent_type::load_object_base(fp, m, f);
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_instance_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
 	// procedure:
 	// 1) load all instantiated indices *without* their connections
 	//      let them start out pointing to themselves.  
 	// 2) each element contains information to reconstruct, 
 	//      we need temporary local storage for it.
-	size_t collection_size;
-	read_value(f, collection_size);
+	size_t _collection_size;
+	read_value(f, _collection_size);
 {
 	size_t i = 0;
 	// populate collection by key and index first, with default initialized
 	// element values.  
 	key_type temp_key;
 	value_reader<key_type> read_key(f);
-	for ( ; i < collection_size; ++i) {
+	for ( ; i < _collection_size; ++i) {
 		read_key(temp_key);
 		const element_type* const v =
 			collection.insert(temp_key, element_type());
@@ -1059,42 +1159,26 @@ INSTANCE_ARRAY_CLASS::load_object(
 }
 	// now can we load connections at the same time?
 	const iterator b(collection.begin()), e(collection.end());
-	iterator i(b);
-	// can now use element_loader() functor
-	for ( ; i!=e; ++i) {
-		element_type& v(*i);
-		v.load_object_base(m, f);
-	}
-	for_each(b, e, typename parent_type:: connection_loader(m, f));
+	for_each(b, e, typename parent_type::element_loader(
+			fp, m, f, never_ptr<const this_type>(this)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only loads in connections
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::load_connections(const collection_pool_bundle_type& m, 
+		istream& f) {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_connections()");
+	for_each(collection.begin(), collection.end(), 
+		typename parent_type::connection_loader(m, f));
 }
 
 //=============================================================================
 // class array method definitions (specialized)
 
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-// The following macro calls are intended to be equivalent to:
-// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
-//	INSTANCE_SCALAR_TEMPLATE_SIGNATURE, INSTANCE_SCALAR_CLASS)
-// but the preprocessor is retarded about arguments with commas in them, 
-// so we forced to expand this macro by hand.  :S
-
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, INSTANCE_SCALAR_CLASS)
-
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, INSTANCE_SCALAR_CLASS)
-
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, INSTANCE_SCALAR_CLASS)
-
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, INSTANCE_SCALAR_CLASS)
-
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, INSTANCE_SCALAR_CLASS)
-#endif	// POOL_ALLOCATE_INSTANCE_COLLECTIONS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array() : 
 		parent_type(), 
@@ -1103,8 +1187,10 @@ INSTANCE_SCALAR_CLASS::instance_array() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array(const instance_placeholder_ptr_type p) :
-		parent_type(p), the_instance() {
+INSTANCE_SCALAR_CLASS::instance_array(const footprint& f, 
+		const instance_placeholder_ptr_type p) :
+		parent_type(f, p), 
+		the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1132,8 +1218,20 @@ INSTANCE_SCALAR_CLASS::what(ostream& o) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
-		const instance_alias_base_type& a) const {
+		const instance_alias_info_type& a) const {
 	INVARIANT(&a == &this->the_instance);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i public 1-based index, must be 1!
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
+		const size_t i) const {
+	INVARIANT(i == 1);
 	return o;
 }
 
@@ -1143,7 +1241,17 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 multikey_index_type
-INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_base_type& a) const {
+INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type& a) const {
+	return multikey_index_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return an empty multikey index because scalars aren't indexed.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+multikey_index_type
+INSTANCE_SCALAR_CLASS::lookup_key(const size_t i) const {
 	return multikey_index_type();
 }
 
@@ -1155,9 +1263,28 @@ INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_base_type& a) const {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 size_t
-INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_base_type& a) const {
-	ICE_NEVER_CALL(cerr);
-	return 0;
+INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_info_type& a) const {
+	INVARIANT(&this->the_instance == &a);	// must be back-reference
+	return 1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param k multikey_index, which should always be empty (0 dimensions).
+	\return 1 always (1-based index).  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_SCALAR_CLASS::lookup_index(const multikey_index_type& k) const {
+	INVARIANT(!k.size());
+	return 1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_SCALAR_CLASS::collection_size(void) const {
+	return 1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1166,9 +1293,10 @@ INSTANCE_SCALAR_CLASS::lookup_index(const instance_alias_base_type& a) const {
 		in a different collection (same population).  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_base_type&
+typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
 INSTANCE_SCALAR_CLASS::get_corresponding_element(
-		const parent_type& p, const instance_alias_base_type& a) {
+		const collection_interface_type& p, 
+		const instance_alias_info_type& a) {
 	const this_type& t(IS_A(const this_type&, p));
 	INVARIANT(&t.the_instance == &a);
 	return this->the_instance;
@@ -1182,20 +1310,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 if (this->the_instance.container) {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
-//	if (this->the_instance.container->is_complete_type()) {
-	if (this->the_instance.container->has_relaxed_type()) {
-		this->the_instance.dump_actuals(o);
-	}
-//	}
-#if 0
-	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
-		(df.show_namespace_owner ? "(ns) " : " ") <<
-		(df.show_leading_scope ? "(::)]" : "]");
-#endif
-	this->the_instance.peek()->dump_hierarchical_name(o << " = ", df);
-	if (this->the_instance.instance_index)
-		o << " (" << this->the_instance.instance_index << ')';
-	this->the_instance.dump_ports(o << ' ', df);
+	typename parent_type::key_dumper(o, df)(this->the_instance);
 } else {
 	// this only happens when dumping the collection before
 	// it is complete.
@@ -1205,7 +1320,6 @@ if (this->the_instance.container) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 /**
 	Instantiates the_instance of integer datatype.
 	Ideally, the error should never trigger because
@@ -1216,6 +1330,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 		Consider looking for SPEC-assert directives?
 	\param i indices must be NULL because this is not an array.
  */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const const_range_list& r, 
@@ -1287,17 +1402,17 @@ INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 	Caller is responsible for checking return.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
+typename INSTANCE_SCALAR_CLASS::instance_alias_info_ptr_type
 INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
-	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
+	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_info_ptr_type
 						ptr_return_type;
 	if (!this->the_instance.valid()) {
 		this->type_dump(cerr << "ERROR: Reference to uninstantiated ")
 			<< "!" << endl;
 		return ptr_return_type(NULL);
 	} else	return ptr_return_type(
-		const_cast<instance_alias_base_type*>(
-			&static_cast<const instance_alias_base_type&>(
+		const_cast<instance_alias_info_type*>(
+			&static_cast<const instance_alias_info_type&>(
 				this->the_instance)));
 	// ok to return non-const reference to the type, 
 	// perhaps it should be declared mutable?
@@ -1311,7 +1426,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l,
+		typename default_list<instance_alias_info_ptr_type>::type& l,
 		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;
@@ -1329,9 +1444,9 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 		const multikey_index_type& u, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
 	if (this->the_instance.valid()) {
-		*(a.begin()) = instance_alias_base_ptr_type(
-			const_cast<instance_alias_base_type*>(
-				&static_cast<const instance_alias_base_type&>(
+		*(a.begin()) = instance_alias_info_ptr_type(
+			const_cast<instance_alias_info_type*>(
+				&static_cast<const instance_alias_info_type&>(
 					this->the_instance)));
 		return bad_bool(false);
 	} else {
@@ -1407,14 +1522,10 @@ if (this->the_instance.valid()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-typename INSTANCE_SCALAR_CLASS::instance_alias_base_type&
+typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
 INSTANCE_SCALAR_CLASS::load_reference(istream& i) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_reference()");
 	// no key to read!
-	// const_cast: have to modify next pointers to re-establish connection, 
-	// which is semantically allowed because we allow the alias pointers
-	// to be mutable.  
-//	return const_cast<instance_type&>(this->the_instance);
 	return this->the_instance;
 }
 
@@ -1452,36 +1563,79 @@ INSTANCE_SCALAR_CLASS::accept(alias_visitor& v) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::collect_transient_info(
+INSTANCE_SCALAR_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("instance_scalar::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	this->the_instance.check(this);
 	this->the_instance.collect_transient_info(m);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Counterpart is footprint::read_pointer, 
+	and collection_pool_bundle::read_pointer.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::write_pointer(ostream& o, 
+		const collection_pool_bundle_type& pb) const {
+	const unsigned char e = collection_traits<this_type>::ENUM_VALUE;
+	write_value(o, e);
+	const collection_index_entry::index_type index = 
+		pb.template get_collection_pool<this_type>()
+			.lookup_index(*this);
+	write_value(o, index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::write_object(
+INSTANCE_SCALAR_CLASS::write_object(const footprint& fp, 
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("instance_scalar::write_object()");
 	parent_type::write_object_base(m, f);
-	this->the_instance.write_object(m, f);
+	typename parent_type::element_writer(fp, m, f)(this->the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::load_object(
+INSTANCE_SCALAR_CLASS::write_connections(
+		const collection_pool_bundle_type& m, 
+		ostream& f) const {
+	STACKTRACE_PERSISTENT("instance_scalar::write_connections()");
+	typename parent_type::connection_writer(m, f)(this->the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this also re-registers with the footprint's collection map.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::load_object(footprint& fp, 
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_object()");
-	parent_type::load_object_base(m, f);
-	this->the_instance.load_object(m, f);		// problem?
+	parent_type::load_object_base(fp, m, f);
+	fp.register_collection_map_entry(
+		this->source_placeholder->get_footprint_key(), 
+		lookup_collection_pool_index_entry(
+		fp.template get_instance_collection_pool_bundle<Tag>()
+			.template get_collection_pool<this_type>(), *this));
+	typename parent_type::element_loader(
+		fp, m, f, never_ptr<const this_type>(this))(this->the_instance);
 	this->the_instance.check(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::load_connections(
+		const collection_pool_bundle_type& m, 
+		istream& f) {
+	STACKTRACE_PERSISTENT("instance_scalar::load_connections()");
+	typename parent_type::connection_loader(m, f)(this->the_instance);
 }
 
 //=============================================================================

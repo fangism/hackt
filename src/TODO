@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.44 2006/10/18 01:18:55 fang Exp $
+#	$Id: TODO,v 1.45 2006/11/07 06:34:04 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -83,38 +83,15 @@ conditional instance management: (BUG, easy)
 	also implement same semantics for PRS conditionals
 
 ===============================================================================
-PRIORITY HIGH: MEMORY HOG
-	in progress...
+MEMORY HOG (FIXED: 00-01-04-main-00-80-45-instance-02 branch)
+Summary:
+	instance collection were split into placeholders
+	used dense collections in addition to sparse collections
+	port actual collections back-referenced port-formal collections.  
+	collections are all pool-allocated PER footprint.
 
-instance collections (OVERLOADED CLASS):
-	instance_collections and their contents are being 
-		replicated too many places.  
-	Unrolled instance collections should just reference source
-		collection declarations for information like dimensionality
-		name, scope, parent...  
-	Port instance collections should be dense to not pay expense
-		of keeping sparse maps.  packed_array_generic!
-	But then what will instance references refer to?
-	Member instance references? public vs. generic (private)
-	Possibly introduce use of placeholders.   
-	This fix will be highly invasive.  
-
-Once placeholders are distinguished from actualy collections, 
-	also introduce packed_array collections (in addition to the 
-	current sparse-only representations), which is useful for compacting
-	deduced dense arrays post-unrolling.  
-	Packed arrays: able to compute key from position! (huge save)
-	(prerequisite random iterable container in internal representation)
-	Compare the structure size difference.
-	Exclude those with non-zero offset?
-	IDEA: use a flat sorted-vector representation of map,
-		and perform lookups using std::binary_search (lexicographical)
-		on random-access iterators.  
-		Should take far less memory than red-black tree (true map).
-
-diagnostic statistics:
+diagnostic statistics: (low priority TODO)
 	memory self-profiling statistics from pooled-allocators, etc.
-
 
 ===============================================================================
 preprocessor:
@@ -125,6 +102,8 @@ preprocessor:
 		using unique file-manager again.
 	Doesn't check grammar, just echoes input to stdout.  
 	support #line directives, perhaps just // comments? (enter/leave)
+	Just write a script that passes through cpp, after munging
+		imports to includes and passing include flags.  
 
 ===============================================================================
 production rule templates and macro types

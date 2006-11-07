@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.12 2006/10/18 01:19:41 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.13 2006/11/07 06:35:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -139,8 +139,7 @@ substructure_alias::collect_transient_info_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-substructure_alias::write_object_base(const persistent_object_manager& m,
-		ostream& o) const {
+substructure_alias::write_object_base(const footprint& m, ostream& o) const {
 	subinstances.write_object_base(m, o);
 }
 
@@ -150,8 +149,7 @@ substructure_alias::write_object_base(const persistent_object_manager& m,
 	go in and restore the link to the parents (this).  
  */
 void
-substructure_alias::load_object_base(const persistent_object_manager& m,
-		istream& i) {
+substructure_alias::load_object_base(const footprint& m, istream& i) {
 	subinstances.load_object_base(m, i);
 	subinstances.relink_super_instance_alias(*this);
 }

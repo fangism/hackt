@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	503
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	129
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -38,25 +38,20 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	46
 	35	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	638
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	437
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

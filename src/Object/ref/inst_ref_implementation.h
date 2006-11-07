@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.18 2006/10/24 07:27:27 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.19 2006/11/07 06:35:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -48,10 +48,8 @@ struct simple_meta_instance_reference_implementation<true> {
 	};
 
 	template <class Tag>
-	struct instance_collection_generic_type {
-		typedef	typename
-			class_traits<Tag>::instance_collection_generic_type
-					type;
+	struct collection_interface_type {
+		typedef	collection_interface<Tag>	type;
 	};
 
 	typedef	const count_ptr<
@@ -82,7 +80,7 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
-			instance_collection_generic_type<Tag>::type& inst, 
+			collection_interface_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
 		const unroll_context& c) {
 	return simple_meta_instance_reference<Tag>::
@@ -179,10 +177,8 @@ struct simple_meta_instance_reference_implementation<false> {
 	};
 
 	template <class Tag>
-	struct instance_collection_generic_type {
-		typedef	typename
-			class_traits<Tag>::instance_collection_generic_type
-					type;
+	struct collection_interface_type {
+		typedef	collection_interface<Tag>	type;
 	};
 
 	typedef	const count_ptr<
@@ -208,7 +204,7 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
-			instance_collection_generic_type<Tag>::type& inst, 
+			collection_interface_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
 		const unroll_context&) {
 	STACKTRACE_VERBOSE;

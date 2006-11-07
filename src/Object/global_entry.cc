@@ -1,15 +1,19 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.8 2006/11/02 22:01:49 fang Exp $
+	$Id: global_entry.cc,v 1.9 2006/11/07 06:34:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
 #include "Object/global_entry.tcc"
 #include "Object/def/footprint.h"
 #include "Object/port_context.h"
 #include "Object/state_manager.tcc"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/enum_traits.h"
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
@@ -30,7 +34,7 @@ footprint_frame_map<Tag>::footprint_frame_map() : id_map() { }
  */
 template <class Tag>
 footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
-		id_map(f.template get_pool<Tag>().size() -1) {
+		id_map(f.template get_instance_pool<Tag>().size() -1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -93,7 +97,7 @@ footprint_frame_map<Tag>::__expand_subinstances(const footprint& fp,
 	size_t j = offset;
 	const footprint_frame& extframe(AS_A(const footprint_frame&, *this));
 	global_pool_type& gpool(sm.template get_pool<Tag>());
-	const placeholder_pool_type& ppool(fp.template get_pool<Tag>());
+	const placeholder_pool_type& ppool(fp.template get_instance_pool<Tag>());
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "offset = " << offset << endl;
 	fp.dump(cerr << "fp: ");
@@ -282,13 +286,17 @@ footprint_frame::collect_subentries(entry_collection& e,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: now footprints are heap-allocated and persistently managed, 
+	which greatly simplifies footprint pointer serialization and
+	reconstruction.  
+ */
 void
 footprint_frame::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	// footprint pointer is not persistently managed, 
-	// and thus needs to be reconstructed by other means
-	// need to infer canonical_type and go from there.
 	STACKTRACE_PERSISTENT_VERBOSE;
+	if (_footprint)
+		_footprint->collect_transient_info(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,6 +305,7 @@ footprint_frame::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	// see note in collect_transient_info: footprint pointer reconstruction
 	STACKTRACE_PERSISTENT_VERBOSE;
+	m.write_pointer(o, _footprint);
 	write_id_map(footprint_frame_map<process_tag>::id_map, o);
 	write_id_map(footprint_frame_map<channel_tag>::id_map, o);
 	write_id_map(footprint_frame_map<datastruct_tag>::id_map, o);
@@ -306,11 +315,19 @@ footprint_frame::write_object_base(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The footprint must be guaranteed to be loaded before 
+	loading the id_maps.  
+ */
 void
 footprint_frame::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	// see note in collect_transient_info: footprint pointer reconstruction
 	STACKTRACE_PERSISTENT_VERBOSE;
+	m.read_pointer(i, _footprint);
+	if (_footprint) {
+		m.load_object_once(const_cast<footprint*>(_footprint));
+	}
 	load_id_map(footprint_frame_map<process_tag>::id_map, i);
 	load_id_map(footprint_frame_map<channel_tag>::id_map, i);
 	load_id_map(footprint_frame_map<datastruct_tag>::id_map, i);

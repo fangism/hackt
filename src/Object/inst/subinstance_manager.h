@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.15 2006/10/18 20:58:06 fang Exp $
+	$Id: subinstance_manager.h,v 1.16 2006/11/07 06:35:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -11,6 +11,7 @@
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 class cflat_options;
@@ -26,7 +27,7 @@ class port_alias_tracker;
 class port_member_context;
 class state_manager;
 class footprint_frame;
-template <class> class instance_collection;
+template <class> class collection_interface;
 class cflat_visitor;
 struct dump_flags;
 using std::ostream;
@@ -34,6 +35,7 @@ using std::istream;
 using std::string;
 using std::vector;
 using util::good_bool;
+using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
@@ -58,9 +60,12 @@ friend class substructure_manager;
 	typedef	physical_instance_collection	instance_collection_type;
 	typedef	physical_instance_placeholder		lookup_arg_type;
 public:
-	typedef	count_ptr<instance_collection_type>	entry_value_type;
+	typedef	never_ptr<instance_collection_type>	entry_value_type;
 	// just a synonym
 	typedef	entry_value_type			value_type;
+	/**
+		TODO: use lightweight valarray.
+	 */
 	typedef	vector<value_type>			array_type;
 	typedef	vector<count_ptr<const meta_instance_reference_base> >
 						connection_references_type;
@@ -91,6 +96,12 @@ public:
 	void
 	push_back(const entry_value_type&);
 
+	array_type&
+	get_array(void) { return subinstance_array; }
+
+	const array_type&
+	get_array(void) const { return subinstance_array; }
+
 	ostream&
 	dump(ostream&, const dump_flags&) const;
 
@@ -101,7 +112,8 @@ public:
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>&, 
+	unroll_port_instances(
+		const collection_interface<Tag>&, 
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
 
@@ -136,10 +148,10 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const footprint&, ostream&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const footprint&, istream&);
 
 };	// end class subinstance_manager
 

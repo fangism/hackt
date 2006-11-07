@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	31
 	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
@@ -22,15 +22,14 @@ Persistent Object Manager text dump:
 	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	176
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	500
 	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	373
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

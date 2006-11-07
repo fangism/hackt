@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.15 2006/10/24 07:27:40 fang Exp $
+	$Id: list_vector.h,v 1.16 2006/11/07 06:35:39 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -361,7 +361,7 @@ public:
 	end(void) {
 		const list_iterator b(this->end_sentinel_iter());
 		return iterator(b, b->end());
-		// should be same as begin() wbecause end sentinel is empty
+		// should be same as begin() because end sentinel is empty
 	}
 
 	/**

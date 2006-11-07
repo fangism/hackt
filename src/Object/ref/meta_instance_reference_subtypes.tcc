@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.17 2006/11/02 22:02:05 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.18 2006/11/07 06:35:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -178,7 +178,7 @@ META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper_no_lookup(
 		const unroll_context& c,
-		const instance_collection_generic_type& inst,
+		const collection_interface_type& inst,
 		const count_ptr<const index_list_type>& ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
@@ -284,12 +284,12 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const count_ptr<const index_list_type>& ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
-	const count_ptr<physical_instance_collection>
+	const never_ptr<physical_instance_collection>
 		inst_p(c.lookup_instance_collection(_inst));
 	NEVER_NULL(inst_p);
 	// assert dynamic_cast
-	const instance_collection_generic_type&
-		inst(IS_A(const instance_collection_generic_type&, *inst_p));
+	const collection_interface_type&
+		inst(IS_A(const collection_interface_type&, *inst_p));
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
 
@@ -316,8 +316,8 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// assert checked-cast, will throw bad_cast upon error
-	instance_collection_generic_type&
-		coll(IS_A(instance_collection_generic_type&, cl));
+	collection_interface_type&
+		coll(IS_A(collection_interface_type&, cl));
 
 	alias_collection_type this_aliases;
 	const bad_bool unroll_err(this->unroll_references_packed(c, this_aliases));
@@ -376,11 +376,11 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	alias_iterator ri(port_aliases.begin());
 	// the following copied from alias_connection::unroll's do-loop
 	for ( ; li!=le; li++, ri++) {
-		const never_ptr<instance_alias_base_type> lp(*li);
-		const never_ptr<instance_alias_base_type> rp(*ri);
+		const never_ptr<instance_alias_info_type> lp(*li);
+		const never_ptr<instance_alias_info_type> rp(*ri);
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
-		if (!instance_alias_base_type::checked_connect_port(
+		if (!instance_alias_info_type::checked_connect_port(
 				*lp, *rp).good) {
 			// already have error message
 			return bad_bool(true);

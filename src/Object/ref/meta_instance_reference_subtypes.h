@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.11 2006/10/18 20:58:15 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.12 2006/11/07 06:35:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -16,10 +16,9 @@
 namespace HAC {
 namespace entity {
 class unroll_context;
-template <class>
-class simple_meta_instance_reference;
-template <class>
-class aggregate_meta_instance_reference;
+template <class> class simple_meta_instance_reference;
+template <class> class aggregate_meta_instance_reference;
+template <class> class collection_interface;
 using util::bad_bool;
 
 //=============================================================================
@@ -32,12 +31,12 @@ class meta_instance_reference : public meta_instance_reference_base {
 	typedef	META_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
-	typedef typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
-	typedef never_ptr<const instance_alias_base_type>
-					const_instance_alias_base_ptr_type;
+	typedef typename traits_type::instance_alias_info_type
+						instance_alias_info_type;
+	typedef never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
+	typedef never_ptr<const instance_alias_info_type>
+					const_instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	typename traits_type::alias_connection_type
@@ -45,6 +44,7 @@ public:
 	/// the instance collection base type
 	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	collection_interface<Tag>	collection_interface_type;
 	typedef typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
 
@@ -93,7 +93,7 @@ protected:
 	static
 	bad_bool
 	unroll_references_packed_helper_no_lookup(const unroll_context&,
-		const instance_collection_generic_type&,
+		const collection_interface_type&,
 		const count_ptr<const index_list_type>&,
 		alias_collection_type&);
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.11 2006/04/11 07:54:38 fang Exp $
+	$Id: global_entry.h,v 1.12 2006/11/07 06:34:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -285,7 +285,7 @@ struct global_entry_common {
 	 */
 	size_t		local_offset;
 
-	global_entry_common() : parent_tag_value(TYPE_NONE), parent_id(0),
+	global_entry_common() : parent_tag_value(META_TYPE_NONE), parent_id(0),
 			local_offset(0) { }
 };	// end struct global_entry_common
 

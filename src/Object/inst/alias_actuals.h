@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.9 2006/10/18 01:19:25 fang Exp $
+	$Id: alias_actuals.h,v 1.10 2006/11/07 06:34:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -107,26 +107,6 @@ public:
 	static
 	ostream&
 	dump_complete_type(const AliasType&, ostream&, const footprint* const);
-
-	template <class AliasType>
-	static
-	void
-	collect_canonical_footprint(const AliasType&,
-		persistent_object_manager&);
-
-	template <class AliasType>
-	static
-	void
-	save_canonical_footprint(const AliasType&,
-		const persistent_object_manager&, 
-		ostream&, const footprint* const);
-
-	template <class AliasType>
-	static
-	void
-	restore_canonical_footprint(const AliasType&,
-		const persistent_object_manager&, 
-		istream&, const footprint*&);
 
 protected:
 	void

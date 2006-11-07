@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.14 2006/10/24 07:27:19 fang Exp $
+	$Id: process_instance_collection.cc,v 1.15 2006/11/07 06:35:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -49,24 +49,6 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_instance_placeholder, 
 	PROCESS_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#if 0
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)
-#endif
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_scalar, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_array_1D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_array_2D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_array_3D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_array_4D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::process_port_formal_array, 
-	PROCESS_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-
 }	// end namespace util
 
 namespace HAC {
@@ -85,6 +67,7 @@ template class instance_array<process_tag, 2>;
 template class instance_array<process_tag, 3>;
 template class instance_array<process_tag, 4>;
 template class port_formal_array<process_tag>;
+template class port_actual_collection<process_tag>;
 
 //=============================================================================
 }	// end namespace entity

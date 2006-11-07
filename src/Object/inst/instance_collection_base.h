@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.14 2006/10/18 20:58:02 fang Exp $
+	$Id: instance_collection_base.h,v 1.15 2006/11/07 06:34:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -15,7 +15,6 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -41,8 +40,6 @@ using std::istream;
 using std::string;
 using util::bad_bool;
 using util::good_bool;
-using util::persistent;
-using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -68,7 +65,7 @@ using util::memory::count_ptr;
 		statements per collection, but they were removed on the
 		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
-class instance_collection_base : public persistent {
+class instance_collection_base {
 	typedef	instance_collection_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
@@ -107,9 +104,10 @@ protected:
 	 */
 	super_instance_ptr_type		super_instance;
 protected:
-	instance_collection_base() : persistent(), super_instance() { }
+	instance_collection_base() : super_instance() { }
 
-public:
+	// we don't destroy via virtual base anymore
+protected:
 
 virtual	~instance_collection_base();
 
@@ -133,11 +131,6 @@ virtual	size_t
 		INVARIANT(!super_instance);
 		super_instance = super_instance_ptr_type(&a);
 	}
-
-#if 0
-	good_bool
-	create_super_instance(footprint&);
-#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -211,29 +204,6 @@ virtual	owner_ptr_type
 
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
-
-private:
-	// utility functions for handling index collection (inlined)
-	void
-	collect_index_collection_pointers(persistent_object_manager& m) const;
-
-	void
-	write_index_collection_pointers(
-		const persistent_object_manager& m, ostream&) const;
-
-	void
-	load_index_collection_pointers(
-		const persistent_object_manager& m, istream&);
-protected:
-	// wrappers to provide consistent interface to children
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
 
 public:
 	/** just for convenience */

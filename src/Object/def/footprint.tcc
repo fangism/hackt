@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.tcc"
 	Exported template implementation of footprint base class. 
-	$Id: footprint.tcc,v 1.1 2006/11/02 22:01:58 fang Exp $
+	$Id: footprint.tcc,v 1.2 2006/11/07 06:34:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_TCC__
@@ -14,6 +14,8 @@ namespace entity {
 //=============================================================================
 // class footprint_base method definitions
 
+#if 0
+// may not be needed after the last branch merge
 template <class Tag>
 footprint_base<Tag>::footprint_base() :
 		_pool(class_traits<Tag>::instance_pool_chunk_size >> 1) {
@@ -22,6 +24,7 @@ footprint_base<Tag>::footprint_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 footprint_base<Tag>::~footprint_base() { }
+#endif
 
 //=============================================================================
 }	// end namespace entity

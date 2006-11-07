@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.13 2006/10/24 07:27:37 fang Exp $
+ 	$Id: loop_scope.cc,v 1.14 2006/11/07 06:35:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -102,7 +102,7 @@ loop_scope::unroll(const unroll_context& c) const {
 	// a placeholder for the pint variable...
 	// new unroll_context lookup searches footprints
 	footprint f;
-	const count_ptr<pint_scalar>
+	const never_ptr<pint_scalar>
 		var(initialize_footprint(f));
 	// create a temporary by unrolling the placeholder 
 	// induction variable into the footprint as an actual variable

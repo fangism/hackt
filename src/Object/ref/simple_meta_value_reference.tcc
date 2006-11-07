@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.28 2006/10/24 07:27:28 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.29 2006/11/07 06:35:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -34,10 +34,11 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/unroll/unroll_context_value_resolver.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 
@@ -284,6 +285,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	STACKTRACE_VERBOSE;
 	// using a policy to specialize for lookups covering
 	// local loop variables
+#if 0
 	const pair<bool, const value_collection_type*>
 		_v(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref, i));
@@ -300,6 +302,17 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		return good_bool(false);
 	}
 	const value_collection_type& _vals(*_v.second);
+#else
+	const never_ptr<const value_collection_type>
+	       _v(c.lookup_rvalue_collection(*value_collection_ref)
+			.template is_a<const value_collection_type>());
+	if (!_v) {
+		cerr << "Failed to resolve value reference: ";
+		this->dump(cerr, expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
+	const value_collection_type& _vals(*_v);
+#endif
 
 	if (this->array_indices) {
 		STACKTRACE_INDENT_PRINT("checking indices..." << endl);
@@ -364,7 +377,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// This depends on the values being unrolled in the footprint's 
 	// collection of value collections!
 	// unroll_context::lookup_value_collection
-	const count_ptr<const param_value_collection>
+	const never_ptr<const param_value_collection>
 		pvc(c.lookup_rvalue_collection(*this->value_collection_ref));
 		// is it ok to always lookup rvalue for dimension resolving?
 	if (!pvc) {
@@ -449,13 +462,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	// this replaces template formal references with template
 	// actuals from the context where necessary (2005-06-30)
 	// this is where argument-dependent lookup occurs
-	const count_ptr<const param_value_collection>
+	const never_ptr<const param_value_collection>
 		cpptr(c.lookup_rvalue_collection(*value_collection_ref));
 	if (!cpptr) {
 		cerr << "Error unroll-resolving parameter values." << endl;
 		return return_type(NULL);
 	}
-	const count_ptr<const value_collection_type>
+	const never_ptr<const value_collection_type>
 		ce(cpptr.template is_a<const value_collection_type>());
 	INVARIANT(ce);
 	const value_collection_type& vcref(*ce);
@@ -735,7 +748,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		const unroll_context& c, 
 		value_reference_collection_type& a) const {
 	STACKTRACE_VERBOSE;
-	const count_ptr<value_collection_type>
+	const never_ptr<value_collection_type>
 		vals_ptr(c.lookup_lvalue_collection(*this->value_collection_ref)
 				.template is_a<value_collection_type>());
 	NEVER_NULL(vals_ptr);
@@ -793,7 +806,7 @@ if (_vals.get_dimensions()) {
 	const multikey_index_type upper(full_indices.upper_multikey());
 	// this will set the size and dimensions of packed_array a
 	if (_vals.unroll_lvalue_references(lower, upper, a).bad) {
-		cerr << "ERROR: unrolling aliases." << endl;
+		cerr << "ERROR: unrolling values." << endl;
 		return bad_bool(true);
 	}
 	// success!
@@ -805,7 +818,7 @@ if (_vals.get_dimensions()) {
 	a.resize();             // empty
 	const multikey_index_type bogus;
 	if (_vals.unroll_lvalue_references(bogus, bogus, a).bad) {
-		cerr << "ERROR: unrolling aliases." << endl;
+		cerr << "ERROR: unrolling values." << endl;
 		return bad_bool(true);
 	}
 	return bad_bool(false);

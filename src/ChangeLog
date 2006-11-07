@@ -3,6 +3,178 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-49-merged-instance-02-31:
+	  Branch merge.
+	  Summary: major memory reduction in run-time and object binary size.  
+		Added collection_interface as root abstract class per meta
+		type of collection.  From this spawn the former 
+		instance_collection and port_actuals_collection.
+		port_actuals_collection is lightweight collection that uses 
+		a reference to a formal collection for size/type information.  
+	  Footprints are now heap-allocated making life much simpler/easier.  
+	  Footprints are now responsible for allocating all collections
+		in pools (called collection-pool-bundles).  
+		Consequently, footprints are used to translate between
+		pointers and indices.  
+	  test/quarantine/mem-01.hac shows object size reduction of
+		5x to 10x depending on the phase.  
+
+
+2006-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-31:
+	  Perm'd !POOL_ALLOCATE_{INSTANCE,VALUE}_COLLECTIONS, because 
+		they are no longer relevant, pool-management is done
+		by collection pool bundles.  (-200 LoC)
+	  Branch status: complete, ready to merge up.
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-30:
+	  Perm'd POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT (-2000 LoC).
+		Summary: All instance/value collections (formal or actual, 
+		sparse or dense) are now managed by the footprint_base
+		class which is a wrapper around collection pool bundles. 
+		By managing these collections with pool bundles, this saves
+		from having to allocate them onto the heap, which is where
+		the massive savings in object serialization comes from.  
+	  No longer specializing persistent type-keys for these
+		collection template classes.  
+	  Also: footprint's collection map is now a sorted tree, instead
+		of the old hash_map.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-29:
+	  Perm'd HEAP_ALLOCATE_FOOTPRINTS (-650 LoC).
+	  Good news: much of the deleted code was dirty and unmaintainable
+		code to work around the difficulty of re-establishing
+		footprint pointers without persistence management.  
+		Most affected: global_entry.tcc and alias_{actuals,empty}.tcc.
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-28:
+	  Perm'd ALLOCATE_PORT_ACTUAL_COLLECTIONS.
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-27:
+	  Perm'd ENABLE_PORT_ACTUAL_COLLECTIONS, the collections used
+		by subinstances and public port collections, with 
+		back-references to formal member collections in 
+		other footprints.  This significantly reduced the amount of
+		structural replication in the instance hierarchy.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-26:
+	  Perm'd USE_COLLECTION_INTERFACES.
+	  Summary: from these base classes are derived formal and local
+		collections with positional alias information, and
+		actual collections which are lighter weight representations
+		back-referencing formal collections.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-25:
+	  No source revision.
+	  Finished re-verifying all remaining create/alloc/cflat tests.
+	  Branch is stable, and nearly complete.
+	  TODO: Clean-up and touch-ups (and comment-up)
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-24:
+	  No source revision, updated all unroll test expects, 
+		and only trivial (header-only diff) create test expects.
+	  The remaining 213 will be scrutinzed more carefully, and tediously...
+
+
+2006-11-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-23:
+	  Fixed footprint::evaluate_scope_aliases, a badly botched 
+		transformation to use instance_collection_pool_bundles.  
+		Test suite results in fewer naming differences.
+	  Next: large batches of regression test updates.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-22:
+	  Last commit too hasty!
+	  Fixed failure to collect instance_collections' relaxed 
+		actual parameters in the alias sets.  
+	  Now, no tests ICE.  
+	  Also noted near ORDER OF MAGNITUDE reduction in memory, 
+		and massive (5x) speedup. 
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-21:
+	  Post-alloc reconstruction death fixed, by simply maintaining
+		the footprint pointers with trivial serialization.  
+		Bunch of obsolete code slated for removal.  
+	  Test suite: no ICEs, many header-only differences, many
+		differences due to ordering and differently chosen
+		canonical names in equivalent sets.
+	  TODO: re-validate all affected tests by hand.  *sigh*
+		Will try to reduce/minimize differences first.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-20:
+	  Split collection loading into two phases: allocate, then load, 
+		for the purpose of being able to load footprint-translated
+		pointers in the subinstance manager before pointees are loaded.
+		This fixes unroll/create/objdump-ing.
+	  Next regression to fix: deaths in post-alloc objdump.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-19:
+	  More modifications based on heap-allocated footprints.
+		All instance_collections (and sub-types) are initialized
+		with a back-reference member to the in-charge footprint.  
+	  Fixed incorrect code in port_actual_collections by distinguishing
+		between writes withing the footprint (local) vs.
+		references to external footprints.  
+		instance_collection now distinguishes write_local_pointer
+		from write_external_pointer, which just loads an additional
+		pointer to a heap-allocated footprint.  
+	  Q: do value collections need footprint?  Probably not, unless
+		we have cross-footprint references (post-unroll).  
+	  TODO: global_entries' footprint reference can now be serialized
+		and de-serialized using the persistent_object_manager.
+	  Next to fix: subinstance_manager's loading of pointers to
+		physical_instance_collections sometimes fails because
+		dependent pointees have not been pool-allocated yet during
+		reconstruction, so we may need a two phase reconstruction.  
+
+
+2006-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-18:
+	  Converted footprint_manager to use heap-allocated footprints.
+	  Basic tests pass with expected header differences.  
+	  Next: give instance_collections back references to owning footprint, 
+		and correctly track formal_collection references.  
+	  Maybe push super_instance pointer down to port_actual_collections.
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-17:
+	  Rewrite many create/alloc -related footprint member functions
+		to iterate through collection pools, rather than
+		using the collection_map to avoid repeated lookups.  
+		Marked certain corresponding instance_collection
+		member functions as never-call.  
+	  Make.hchk-head: added .h, .hh, .tcc SUFFIXES.  
+	  Next: heap-allocate footprint and serialize pointers hitherto.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-16:
+	  Latest crash bug fixed, mishaps in collection_pool class template
+		with goof-ups in iterators and allocation.  
+		Mostly fixes in Object/inst/collection_pool.{h,tcc}
+		More rigorous testing in util/test/collection_pool_test.cc.
+	  Value collections now re-register themselves to footprint on load.
+	  Basic tests now pass with expected header differences.  
+	  Tests begin to fail (as expected) when footprints are 
+		referenced by collections, so now we need them to
+		be serialized and heap-allocated.  
+
+
 2006-11-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-48:
@@ -11,6 +183,40 @@
 		of awk on i686-apple-darwin8 is buggy (on "\\").  :(
 		This caused compile expect differences in test suite, 
 		which were harmless, but annoying nonetheless.  
+
+
+2006-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-15:
+	  Minor change: broke up footprint.cc into new base components:
+		footprint_{struct,basic,value}_base.{h,cc}, 
+		using footprint_base.{h,tcc}, factored headers.  
+		Much better compile parallelism.  
+	  NOTED that current implementation is flawed:
+		port_actual_collections reference formal_collections
+		belonging to OTHER footprints, which means we now 
+		require acyclic ordered construction of footprints, 
+		which is now moved up the TODO queue.  
+	  Still debugging previous problem before moving on...
+
+
+2006-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-14:
+	  Defined the remaining undefined references for
+		POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, now enabled.
+	  Added: Object/inst/collection_traits.h -- compile-time associative
+			templates and enumerations for distinguishing
+			different collection subtypes for different pools.  
+		Object/inst/collection_index_entry.h -- structure that encodes
+			an instance-collection pointer for serialization.
+	  Now pass footprint down deeper for use when allocating and
+		registering a new collection, now done atomically.
+		Footprint also used to load instance collection pointers, 
+		and is registered at the same time as de-serialization.
+	  Next: debugging -- this revision compiles, links, but dies.  :-/
+	  TODO: consider breaking up footprint.cc into smaller 
+		translation units, for compiling... it's ginormous.  
 
 
 2006-11-02	David Fang		<fangism@users.sourceforge.net>
@@ -30,11 +236,207 @@
 		.tcc files to source lists.  
 
 
+2006-11-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-13:
+	  Continued work on POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, 
+		still disabled; the following modifications are thus guarded:
+	  footprint's instance_collection_map will be map-sorted, 
+		and entries will be index-stubs to be translated by
+		the various collection pools.  
+	  instance_collection serialization completely re-done to use
+		footprints and collection pool bundles to encode and
+		restore pointers.  
+	  Serialization functors re-written to bind different argument
+		types for the pool-managed implementations.  
+	  subinstance_manager now uses never-ptr, and serializes 
+		instance_collection references using the footprint.  
+	  Tons of ref-count pointers demoted to never-ptr (shallow) pointers
+		everywhere in instance and reference methods.  
+	  Removed traces of unroll_context_value_resolver.  
+	  Summary: compiles, but some undefined references remain.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-12:
+	  Lots more hacking at POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT, 
+		but still left disabled for now.
+	  instance/value collection prototypes updated to reflect how
+		collections and aliases will be serialized with new
+		pool-managed collection scheme: pool_bundle will take the
+		place of persistent_object_manager in many instances, since 
+		all pointers of interest will belong to the same footprint.  
+		Need to update pool functor calls accordingly.  
+	  instance_collection_base will no longer be : persistent!  whoa.
+	  instance_alias_info::load_next_connection(), now simply forwards
+		call to ::load_alias_reference, no more separate casing.  
+	  Object/traits/type_tag_enum.h: renamed some enumerations to 
+		be unambiguous, and also defined reverse-mapping policy
+		to translate from enumeration to tag type.  
+		Also added META_TYPE_ enums to all traits classes.  
+	  Phased out unroll_context_value_resolver, good-bye hack, 
+		replaced with simple consistent call in
+		simple_meta_value_reference::unroll_resolve...
+	  TODO: write footprint translator from index entry to pointer, 
+		convert subinstance_manager's members to never_ptrs, 
+		permanently remove unroll_context_value_resolver.  
+
+
+2006-10-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-11:
+	  instance collections and aliases:
+		aliases no longer write the back-reference container 
+		pointer during serialization; it is now reconstructed by
+		the loading container.  Rationale: soon the containers
+		will no longer be heap-allocated, and thus will not be
+		translatable by the persistent object manager, and this saves
+		space in the binary (noticeable savings, actually).  
+		unroll and create test-expects updated accordingly.  
+	  The following revisions have been added, but left *disabled*:
+	  footprint: added value_footprint_base for value collection pools
+		to the footprint base classes.  
+		Begun to re-write instance_collection_map-related methods.  
+	  added allocation interfaces to instance_collection_pool_bundle
+	  Many general provisions for switching over to footprint-allocation
+		of instance_alias collections: placeholders, unroll_context.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-10:
+	  "Allow me to introduce you my children of the night..."
+	  Added value_collection_pool_bundle class templates.  
+		TODO later: dense value arrays (not critical)
+	  Next: massive footprint interface surgery to facilitate
+		pool allocation, including collection pointer class changes.  
+
+
+2006-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-09:
+	  Perm'd PRIVATE_IMPL_FOOTPRINT_BASE.
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-08:
+	  Resorted to private implementation of footprint_base struct template, 
+		breaking many unnecessary dependencies on definitions.  
+	  Next: perm this switch, clean, for sake of maintainability.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-07:
+	  Added: Object/inst/{collection_pool,
+		instance_collection_pool_bundle}.{h,tcc}, preparing to 
+		pool-allocate all collections per footprint.
+		Need to do the same for value collections.  
+		Also added data structure test to util/test.  
+	  Bunch of (disabled) conditional code in preparation
+		for per-footprint pool allocations.  
+	  instance-collections: connections can now be separated from
+		the serialization of the rest of the collection.  
+	  footprint: instance_pool-related members renamed to avoid
+		ambiguity with upcoming collection pools.  
+	  Makefile.am: propagate header-check time stamps for
+		exceptional headers.  
+	  Next: privatize implementation of footprint_base's members
+		to break structural dependency chain (affects includes).  
+
+
+2006-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-06:
+	  No source revision: all regression tests reconfirmed!
+		unroll and create tests' headers were updated accordingly.  
+	  test/quarantine/mem-01.hac: test case shows significant 
+		improvement in speed and reduction in memory, by virtue
+		of reducing number of heap allocated objects (persistent).  
+		Comments inside test case.  
+
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-05:
+	  Enabled ALLOCATE_PORT_ACTUAL_COLLECTIONS for testing, includes 
+		bunch of small fixes, many relative to the last branch.  
+	  Added stronger assertion checks in instance_alias and collection
+		class methods.  
+	  instance_collection::key_dumper::operator():
+		key printing, auto-indent, and auto-endl, are now
+		conditional upon the dimension being non-zero (array), 
+		for convenient re-use between different collection types.
+	  Fixes: instance_scalar::lookup_index(), can now be called, 
+		and always returns 1 (1-based indexing).  
+	  port_actual_collection::load_reference() is now conditional
+		on the dimension of its referenced formal_collection.  
+	  port_actual_collection::lookup_index(): off-by-1 fixed.  
+	  Dynanmic cast checks updated to use collection_interfaces
+		rather than isntance_collection_generic_types (formals).
+		Affects: instance_placeholder, instance_reference (simple, 
+		member, aggregate) classes.  
+	  Improved diagnostic in port_actual_collection::unroll_aliases().
+	  data_type_reference::unroll_port_instances():
+		now takes resolved template parameters, and uses
+		looked-up footprint for recursive unrolling.  
+	  Test suite: most/all unroll/create tests have header-only 
+		differences, but none were updated this revision. 
+		Next revision will start sifting through and updating.  
+
+
+2006-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-04:
+	  Wrote most of code for flag ALLOCATE_PORT_ACTUAL_COLLECTIONS, 
+		but left flag disabled for this revision.  
+		Updated many member typedefs in class templates.  
+	  Simplified instance_alias_info::{write,load}_object_base to 
+		NOT deal with connections, but leave for a separate phase.
+		So now the scalar collection explicitly invokes the 
+		relevant alias write/load functors.  
+	  Changed back-reference pointer from actual_collection to 
+		formal_collection to reference-counted, 
+		tentatively, conservatively.  
+	  Renamed instance_collection::make_port_array()
+		to make_port_formal_array, to avoid confusion with 
+		upcoming allocation methods.
+	  unroll_context: added lookup_port_collection method as a 
+		special case of lookup_instance_collection.  
+	  Bunch of debugging diagnostic code added to instance_alias_info.
+	  Maybe goes without saying, but re-confirmed all regression tests.  
+
+
+2006-10-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-03:
+	  Enabled collection_interface classes.
+	  Enabled/added port_actual_collection classes with back references to
+		corresponding instance_collections (which should really
+		be just port_formal_arrays).  They're not used anywhere yet.  
+	  Added private iterator interface to formal_array classes.
+	  Cleaned up traits_class headers' instance_alias_info typedefs.  
+	  Next: use port_actual classes but heap-allocated initially.  
+
+
 2006-10-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-46:
 	  Checked against gcc-4.2-20061024, with a few visibility
 		attribute corrections.  
+
+
+2006-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-02:
+	  Re-indexed dense collection (port_formal_array) to be interfaced
+		using 1-based indices for consistency with the sparse 
+		collection counterparts, re-enabled non-zero assertion check.  
+		Adjustments are made internally in port_formal_array.  
+	  Proposed some code for abstracting away 'collection_interfaces'
+		to cover both formal and actual collections.  
+		Not yet enabled.  
+
+
+2006-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-01:
+	  The final branch for reworking the instance-hierarchy for 
+		large-scale memory reduction.  
+	  This revision: replaced references to instance_alias_base*
+		with instance_alias_info (to avoid confusion).  
 
 
 2006-10-24	David Fang		<fangism@users.sourceforge.net>

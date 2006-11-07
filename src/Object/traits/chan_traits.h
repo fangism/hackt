@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.18 2006/10/24 07:27:31 fang Exp $
+	$Id: chan_traits.h,v 1.19 2006/11/07 06:35:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -10,7 +10,6 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
-#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -29,14 +28,13 @@ struct class_traits<channel_tag> {
 
 	typedef	channel_tag			tag_type;
 	static const char			tag_name[];
-	enum { type_tag_enum_value = TYPE_CHANNEL };
+	enum { type_tag_enum_value = META_TYPE_CHANNEL };
 	typedef	channel_instance		instance_type;
 
-	typedef	channel_instance_alias_base	instance_alias_base_type;
-
-	typedef	never_ptr<instance_alias_base_type>
-						instance_alias_base_ptr_type;
 	typedef	channel_instance_alias_info	instance_alias_info_type;
+
+	typedef	never_ptr<instance_alias_info_type>
+						instance_alias_info_ptr_type;
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;

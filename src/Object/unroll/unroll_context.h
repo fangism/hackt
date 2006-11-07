@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.15 2006/10/24 07:27:38 fang Exp $
+	$Id: unroll_context.h,v 1.16 2006/11/07 06:35:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -109,6 +109,9 @@ public:
 	const footprint*
 	get_top_footprint(void) const { return top_footprint; }
 
+	footprint&
+	get_target_footprint(void) const;
+
 	bool
 	in_definition_context(void) const { return target_footprint; }
 
@@ -118,30 +121,30 @@ public:
 	void
 	chain_context(const this_type&);
 
-	void
-	instantiate_collection(
-		const count_ptr<instance_collection_base>&) const;
-
-	count_ptr<physical_instance_collection>
+	never_ptr<physical_instance_collection>
 	lookup_instance_collection(const physical_instance_placeholder&) const;
 
-	count_ptr<param_value_collection>
+	never_ptr<const physical_instance_collection>
+	lookup_port_collection(const physical_instance_placeholder&) const;
+
+	never_ptr<param_value_collection>
 	lookup_lvalue_collection(const param_value_placeholder&) const;
 
-	count_ptr<param_value_collection>
+	never_ptr<param_value_collection>
 	lookup_rvalue_collection(const param_value_placeholder&) const;
 
 	/// overloaded name call-forwarding for the lazy...
-	count_ptr<physical_instance_collection>
+	never_ptr<physical_instance_collection>
 	lookup_collection(const physical_instance_placeholder& p) const;
 
 	/// overloaded name call-forwarding for the lazy...
-	count_ptr<param_value_collection>
+	never_ptr<param_value_collection>
 	lookup_collection(const param_value_placeholder& p) const;
 
+#if 0
 	count_ptr<const const_param>
 	lookup_actual(const param_value_placeholder&) const;
-
+#endif
 private:
 	static
 	void
