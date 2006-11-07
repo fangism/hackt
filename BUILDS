@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.37 2006/11/07 06:33:59 fang Exp $
+	$Id: BUILDS,v 1.38 2006/11/07 20:09:03 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -157,8 +157,8 @@ readline: GNU readline EditLine wrapper
 ===============================================================================
 i686-*-linux-gnu
 
-Version: hackt 0.1.4-devel-20061023
-CVS Tag: HACKT-00-01-04-main-00-80-45
+Version: hackt 0.1.4-devel-20061106
+CVS Tag: HACKT-00-01-04-main-00-80-49-merged-instance-02-31
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: i686-pc-linux-gnu
 c++: g++ (GCC) 3.3.3 (SuSE Linux)
@@ -204,8 +204,7 @@ readline: none
 ===============================================================================
 i386-unknown-freebsd
 
-Version: hackt 0.1.4-devel-20061017
-CVS Tag: HACKT-00-01-04-main-00-80-30-merged-instance-00-39
+CVS Tag: HACKT-00-01-04-main-00-80-49-merged-instance-02-31
 Configured with: '--disable-docs' '--prefix=/usr/local/compiler' '--with-readline' 'CFLAGS=-g0 -O2 -Wno-undef' 'CXXFLAGS=-g0 -O2 -Wno-undef' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
