@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.18.4.4 2006/11/06 21:15:52 fang Exp $
+	$Id: substructure_alias_base.h,v 1.18.4.5 2006/11/07 00:47:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,7 +11,6 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -133,22 +132,10 @@ protected:
 	collect_transient_info_base(persistent_object_manager& m) const;
 
 	void
-	write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		ostream&) const;
+	write_object_base(const footprint&, ostream&) const;
 
 	void
-	load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		istream&);
+	load_object_base(const footprint&, istream&);
 
 };	// end class substructure_alias_base
 
@@ -222,22 +209,10 @@ protected:
 	collect_transient_info_base(const persistent_object_manager&) const { }
 
 	void
-	write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		const ostream&) const { }
+	write_object_base(const footprint&, const ostream&) const { }
 
 	void
-	load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		const istream&) const { }
+	load_object_base(const footprint&, const istream&) const { }
 
 };	// end class substructure_alias_base
 

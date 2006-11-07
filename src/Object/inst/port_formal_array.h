@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.11 2006/11/06 21:45:50 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.12 2006/11/07 00:47:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -9,9 +9,6 @@
 
 #include "Object/inst/instance_collection.h"
 #include "util/packed_array.h"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "util/memory/chunk_map_pool_fwd.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -71,16 +68,14 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
+	typedef	typename parent_type::collection_pool_bundle_type
+					collection_pool_bundle_type;
 private:
 	typedef	typename array_type::iterator	iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
 private:
 	array_type				value_array;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
-#else
-private:
-#endif
 	port_formal_array();
 public:
 	port_formal_array(const footprint&, 
@@ -172,10 +167,8 @@ private:
 
 public:
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	void
-	write_pointer(ostream&, 
-		const instance_collection_pool_bundle<Tag>&) const;
+	write_pointer(ostream&, const collection_pool_bundle_type&) const;
 
 	void
 	write_object(const footprint&, 
@@ -184,31 +177,15 @@ public:
 	void
 	load_object(footprint&, 
 		const persistent_object_manager&, istream&);
-#else
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_connections(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		ostream&) const;
+	write_connections(const collection_pool_bundle_type&, ostream&) const;
 
 	void
-	load_connections(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		istream&);
+	load_connections(const collection_pool_bundle_type&, istream&);
 
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
 	enum {

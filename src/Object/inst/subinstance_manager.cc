@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.19.4.2 2006/11/05 07:21:34 fang Exp $
+	$Id: subinstance_manager.cc,v 1.19.4.3 2006/11/07 00:47:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,10 +16,8 @@
 #include "Object/common/dump_flags.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "common/ICE.h"
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/def/footprint.h"
 #include "util/IO_utils.h"
-#endif
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
@@ -30,10 +28,8 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::auto_indent;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 using util::read_value;
 using util::write_value;
-#endif
 
 //=============================================================================
 // class subinstance_manager method definitions
@@ -264,11 +260,7 @@ subinstance_manager::accept(alias_visitor& v) const {
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		const never_ptr<physical_instance_collection> pi(*i);
-#else
-		const count_ptr<physical_instance_collection>& pi(*i);
-#endif
 		pi->accept(v);
 	}
 }
@@ -284,15 +276,11 @@ subinstance_manager::collect_transient_info_base(
 	STACKTRACE_PERSISTENT_VERBOSE;
 	STACKTRACE_PERSISTENT_PRINT("collected " << subinstance_array.size() <<
 		" subinstances." << endl);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; ++i) {
 		(*i)->collect_transient_info_base(m);
 	}
-#else
-	m.collect_pointer_list(subinstance_array);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -300,15 +288,8 @@ subinstance_manager::collect_transient_info_base(
 	Need footprint to manage and translate pooled collections.  
  */
 void
-subinstance_manager::write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& f, 
-#else
-		const persistent_object_manager& m, 
-#endif
-		ostream& o) const {
+subinstance_manager::write_object_base(const footprint& f, ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const size_t s = subinstance_array.size();
 	write_value(o, s);
 	const_iterator i(subinstance_array.begin());
@@ -317,9 +298,6 @@ subinstance_manager::write_object_base(
 		// doesn't raelly write a pointer, but index
 		(*i)->write_local_pointer(f, o);
 	}
-#else
-	m.write_pointer_list(o, subinstance_array);
-#endif
 	STACKTRACE_PERSISTENT_PRINT("wrote " << subinstance_array.size() <<
 		" subinstances." << endl);
 }
@@ -335,15 +313,8 @@ subinstance_manager::write_object_base(
 		two-pass implementation.  
  */
 void
-subinstance_manager::load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& f, 
-#else
-		const persistent_object_manager& m,
-#endif
-		istream& i) {
+subinstance_manager::load_object_base(const footprint& f, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	size_t s;
 	read_value(i, s);
 	subinstance_array.resize(s);
@@ -353,9 +324,6 @@ subinstance_manager::load_object_base(
 		*j = f.read_pointer(i).is_a<physical_instance_collection>();
 		NEVER_NULL(*j);
 	}
-#else
-	m.read_pointer_list(i, subinstance_array);
-#endif
 	STACKTRACE_INDENT_PRINT("loaded " << subinstance_array.size() <<
 		" subinstances." << endl);
 }

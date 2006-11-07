@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.16.4.4 2006/11/05 07:21:31 fang Exp $
+	$Id: physical_instance_collection.h,v 1.16.4.5 2006/11/07 00:47:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -46,9 +46,6 @@ protected:
 protected:
 	physical_instance_collection() : parent_type() { }
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-public:
-#endif
 virtual	~physical_instance_collection();
 
 private:
@@ -119,18 +116,11 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 virtual	void
 	accept(alias_visitor&) const = 0;
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 virtual	void
 	collect_transient_info_base(persistent_object_manager&) const = 0;
 
 virtual	void
 	write_local_pointer(const footprint&, ostream&) const = 0;
-#else
-protected:	// propagate to children
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-#endif
 };	// end class physical_instance_collection
 
 //=============================================================================

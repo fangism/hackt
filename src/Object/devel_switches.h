@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.30.2.14 2006/11/06 21:45:39 fang Exp $
+	$Id: devel_switches.h,v 1.30.2.15 2006/11/07 00:47:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -91,16 +91,6 @@
 #define	SUPER_INSTANCES_IN_ACTUALS_ONLY		0
 
 /**
-	Define to 1 to pool-allocate ALL instance collections, on a 
-	*per-footprint* basis (using the target footprint in context).  
-	This is really orthogonal to whether or not port_actual_collections
-	are used.  
-	Goal: 1?
-	Status: complete and tested
- */
-#define	POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT	1
-
-/**
 	Define to 1 to pool-allocate collection pool bundles.
 	Goal: 1
 	Status: not begun
@@ -116,7 +106,7 @@
 	Status: not begun
 	Priority: low (enhancement, non-critical)
  */
-#define	POOL_ALLOCATE_FOOTPRINTS		1
+#define	POOL_ALLOCATE_FOOTPRINTS		0
 
 /**
 	Define to 1 to reference-count footprints. 

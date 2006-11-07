@@ -5,6 +5,18 @@
 
 2006-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-30:
+	  Perm'd POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT (-2000 LoC).
+		Summary: All instance/value collections (formal or actual, 
+		sparse or dense) are now managed by the footprint_base
+		class which is a wrapper around collection pool bundles. 
+		By managing these collections with pool bundles, this saves
+		from having to allocate them onto the heap, which is where
+		the massive savings in object serialization comes from.  
+	  Also: footprint's collection map is now a sorted tree, instead
+		of the old hash_map.  
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-29:
 	  Perm'd HEAP_ALLOCATE_FOOTPRINTS (-650 LoC).
 	  Good news: much of the deleted code was dirty and unmaintainable

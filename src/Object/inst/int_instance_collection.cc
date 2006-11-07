@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.12.2.4 2006/11/06 20:54:55 fang Exp $
+	$Id: int_instance_collection.cc,v 1.12.2.5 2006/11/07 00:47:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -56,24 +56,6 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_instance_placeholder, 
 	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_1D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_2D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_3D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_array_4D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::int_port_formal_array, 
-	DINT_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::port_actual_collection<HAC::entity::int_tag>, 
-	DINT_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 }	// end namespace util
 
 

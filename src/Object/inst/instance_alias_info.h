@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.17.2.6 2006/11/06 21:15:49 fang Exp $
+	$Id: instance_alias_info.h,v 1.17.2.7 2006/11/07 00:47:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -28,9 +28,7 @@ struct alias_visitor;
 struct alias_printer;
 template <class> struct alias_matcher;
 template <class> class collection_interface;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
-#endif
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -68,6 +66,8 @@ public:
 						substructure_parent_type;
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
+	typedef	instance_collection_pool_bundle<Tag>
+						collection_pool_bundle_type;
 	typedef	typename traits_type::instance_type
 						instance_type;
 	/**
@@ -348,50 +348,27 @@ public:
 
 	/// counterpart to load_next_connection
 	void
-	write_next_connection(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager& m, 
-#endif
+	write_next_connection(const collection_pool_bundle_type&, 
 		ostream& o) const;
 
 	void
-	load_next_connection(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager& m, 
-#endif
-		istream& i);
+	load_next_connection(const collection_pool_bundle_type&, istream& i);
 
 	/// static version of load_next_connection
 	static
 	this_type&
-	load_alias_reference(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager& m, 
-#endif
-		istream& i);
+	load_alias_reference(const collection_pool_bundle_type&, istream& i);
 
 public:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
 
 	void
-	write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#endif
+	write_object_base(const footprint&, 
 		const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#endif
+	load_object_base(const footprint&, 
 		const persistent_object_manager&, istream&);
 
 	void
@@ -400,29 +377,15 @@ public:
 	}
 
 	void
-	write_object(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			const footprint& f, 
-#endif
+	write_object(const footprint& f, 
 			const persistent_object_manager& m, ostream& o) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		this->write_object_base(f, m, o);
-#else
-		this->write_object_base(m, o);
-#endif
 	}
 
 	void
-	load_object(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			const footprint& f, 
-#endif
+	load_object(const footprint& f, 
 			const persistent_object_manager& m, istream& i) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		this->load_object_base(f, m, i);
-#else
-		this->load_object_base(m, i);
-#endif
 	}
 
 	class transient_info_collector {

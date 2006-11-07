@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.4.2.1 2006/10/31 21:15:58 fang Exp $
+	$Id: instance_placeholder.h,v 1.4.2.2 2006/11/07 00:47:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -60,6 +60,7 @@ class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
+template <class> class instance_collection_pool_bundle;
 
 //=============================================================================
 #define	INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE				\
@@ -96,6 +97,8 @@ public:
 				member_simple_meta_instance_reference_type;
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	instance_collection_pool_bundle<Tag>
+					collection_pool_bundle_type;
 protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	typename parent_type::member_inst_ref_ptr_type
@@ -133,13 +136,8 @@ public:
 
 	~instance_placeholder();
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	instance_collection_generic_type*
 	make_collection(footprint&) const;
-#else
-	instance_collection_generic_type*
-	make_collection(void) const;
-#endif
 
 	ostream&
 	what(ostream&) const;

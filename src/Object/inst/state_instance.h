@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.10.44.2 2006/11/02 06:18:45 fang Exp $
+	$Id: state_instance.h,v 1.10.44.3 2006/11/07 00:47:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -12,7 +12,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 #include "Object/inst/instance_pool_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace util {
 	class persistent_object_manager;
@@ -27,9 +26,7 @@ using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 template <class> class instance_alias_info;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
-#endif
 
 #define	STATE_INSTANCE_TEMPLATE_SIGNATURE	template <class Tag>
 #define	STATE_INSTANCE_CLASS			state_instance<Tag>
@@ -50,16 +47,9 @@ class state_instance {
 public:
 	typedef	class_traits<Tag>		traits_type;
 private:
-#if 0
-	typedef	typename traits_type::instance_alias_info_type
-#else
-	typedef	instance_alias_info<Tag>
-#endif
-						alias_info_type;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	typedef	instance_alias_info<Tag>	alias_info_type;
 	typedef	instance_collection_pool_bundle<Tag>
 					collection_pool_bundle_type;
-#endif
 public:
 	typedef	never_ptr<const alias_info_type>	back_ref_type;
 	typedef	Tag				tag_type;
@@ -82,7 +72,6 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #define	STATE_INSTANCE_PERSISTENCE_PROTOS				\
 	void								\
 	collect_transient_info_base(persistent_object_manager&) const;	\
@@ -90,15 +79,6 @@ public:
 	write_object_base(const collection_pool_bundle_type&, ostream&) const; \
 	void								\
 	load_object_base(const collection_pool_bundle_type&, istream&);
-#else
-#define	STATE_INSTANCE_PERSISTENCE_PROTOS				\
-	void								\
-	collect_transient_info_base(persistent_object_manager&) const;	\
-	void								\
-	write_object_base(const persistent_object_manager&, ostream&) const; \
-	void								\
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
 
 	STATE_INSTANCE_PERSISTENCE_PROTOS
 

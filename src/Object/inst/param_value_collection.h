@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.15.4.3 2006/11/05 01:23:11 fang Exp $
+	$Id: param_value_collection.h,v 1.15.4.4 2006/11/07 00:47:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -44,9 +44,6 @@ public:
 protected:
 	param_value_collection() : parent_type() { }
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-public:
-#endif
 virtual	~param_value_collection();
 
 public:
@@ -111,18 +108,11 @@ NOTE: these functions should only be applicable to simple_param_meta_value_refer
 
 	bool is_unconditional(void) const;
 #endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 virtual	void
 	write_object(const persistent_object_manager&, ostream&) const = 0;
 
 virtual	void
 	load_object(footprint&, const persistent_object_manager&, istream&) = 0;
-#else
-protected:
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-#endif
 };	// end class param_value_collection
 
 //=============================================================================

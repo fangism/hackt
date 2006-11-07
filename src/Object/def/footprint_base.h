@@ -1,14 +1,13 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.1.2.2 2006/11/05 19:37:46 fang Exp $
+	$Id: footprint_base.h,v 1.1.2.3 2006/11/07 00:47:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
 #define	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/state_instance.h"
 
@@ -19,10 +18,8 @@ namespace HAC {
 namespace entity {
 class state_manager;
 class footprint_frame;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
 template <class> class value_collection_pool_bundle;
-#endif
 
 using std::istream;
 using std::ostream;
@@ -48,16 +45,12 @@ class footprint_base {
 	typedef	footprint_base<Tag>			this_type;
 protected:
 	typedef	typename state_instance<Tag>::pool_type	instance_pool_type;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	instance_collection_pool_bundle<Tag>
 					collection_pool_bundle_type;
-#endif
 private:
 	typedef	typename instance_pool_type::const_iterator	const_iterator;
 protected:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const excl_ptr<collection_pool_bundle_type>	collection_pool_bundle;
-#endif
 	const excl_ptr<instance_pool_type>		_instance_pool;
 
 	footprint_base();
@@ -77,13 +70,11 @@ protected:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	void
 	write_reserve_sizes(ostream&) const;
 
 	void
 	load_reserve_sizes(istream&);
-#endif
 
 	void
 	write_object_base(const persistent_object_manager&, ostream&) const;
@@ -94,7 +85,6 @@ protected:
 };	// end class footprint_base
 
 //=============================================================================
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 /**
 	This wrapper class is in charge of allocation pools for
 	value collections.  
@@ -118,7 +108,6 @@ protected:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class value_footprint_base
-#endif
 
 //=============================================================================
 }	// end namespace entity

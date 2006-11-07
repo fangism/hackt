@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.26.2.14 2006/11/06 21:45:49 fang Exp $
+	$Id: instance_collection.h,v 1.26.2.15 2006/11/07 00:47:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -14,7 +14,6 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
-#include "Object/devel_switches.h"
 #include "Object/inst/collection_interface.h"
 #include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
@@ -26,10 +25,8 @@
 namespace HAC {
 namespace entity {
 template <class> class instantiation_statement;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
 class collection_index_entry;
-#endif
 
 //=============================================================================
 template <class, size_t>
@@ -64,6 +61,8 @@ private:
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
 public:
 	typedef	parent_type			collection_interface_type;
+	typedef	typename parent_type::collection_pool_bundle_type
+						collection_pool_bundle_type;
 	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	typedef	typename traits_type::resolved_type_ref_type
@@ -125,13 +124,6 @@ protected:
 	instance_collection(const footprint&, 
 		const instance_placeholder_ptr_type);
 
-#if 0
-	instance_collection(const instance_placeholder_ptr_type, 
-		const instance_collection_parameter_type&);
-#endif
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-public:
-#endif
 virtual	~instance_collection();
 
 public:
@@ -251,16 +243,6 @@ public:
 virtual	instance_alias_info_type&
 	load_reference(istream& i) = 0;
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	static
-	this_type*
-	make_array(const instance_placeholder_ptr_type);
-
-	static
-	this_type*
-	make_port_formal_array(const instance_placeholder_ptr_type);
-#endif
-
 // probably won't need this after pool-allocation
 	static
 	persistent*
@@ -279,20 +261,11 @@ public:
 		Functor to write alias elements.  
 	 */
 	class element_writer : public util::persistent_writer_base {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		const footprint&		fp;
-#endif
 	public:
-		element_writer(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			const footprint& f, 
-#endif
-			const persistent_object_manager& m,
-			ostream& o) : util::persistent_writer_base(m, o)
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-				, fp(f)
-#endif
-				{ }
+		element_writer(const footprint& f, 
+			const persistent_object_manager& m, ostream& o) : 
+			util::persistent_writer_base(m, o), fp(f) { }
 
 		void
 		operator () (const instance_alias_info_type&) const;
@@ -303,21 +276,12 @@ public:
 	 */
 	class element_loader : public util::persistent_loader_base {
 		const never_ptr<const parent_type>	back_ref;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		const footprint&		fp;
-#endif
 	public:
-		element_loader(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			const footprint& f, 
-#endif
+		element_loader(const footprint& f, 
 			const persistent_object_manager& m,
 			istream& i, const never_ptr<const parent_type> b) : 
-			persistent_loader_base(m, i), back_ref(b)
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			, fp(f)
-#endif
-			{ }
+			persistent_loader_base(m, i), back_ref(b), fp(f) { }
 
 		void
 		operator () (instance_alias_info_type&);	// const?
@@ -325,18 +289,10 @@ public:
 
 	class connection_writer {
 		ostream& os;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>& pom;
-#else
-		const persistent_object_manager& pom;
-#endif
+		const collection_pool_bundle_type& pom;
 	public:
 		connection_writer(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			const instance_collection_pool_bundle<Tag>& m, 
-#else
-			const persistent_object_manager& m,
-#endif
+			const collection_pool_bundle_type& m, 
 			ostream& o) : os(o), pom(m) { }
 
 		void
@@ -345,18 +301,10 @@ public:
 
 	class connection_loader {
 		istream& is;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>& pom;
-#else
-		const persistent_object_manager& pom;
-#endif
+		const collection_pool_bundle_type& pom;
 	public:
 		connection_loader(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-			const instance_collection_pool_bundle<Tag>& m, 
-#else
-			const persistent_object_manager& m,
-#endif
+			const collection_pool_bundle_type& m, 
 			istream& i) : is(i), pom(m) { }
 
 		void
@@ -374,10 +322,9 @@ public:
 		operator () (const instance_alias_info_type&);
 	};	// end struct key_dumper
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 virtual	void
 	write_pointer(ostream&, 
-		const instance_collection_pool_bundle<Tag>&) const = 0;
+		const collection_pool_bundle_type&) const = 0;
 
 	void
 	write_external_pointer(const persistent_object_manager&,
@@ -386,7 +333,6 @@ virtual	void
 	static
 	never_ptr<const this_type>
 	read_external_pointer(const persistent_object_manager&, istream&);
-#endif
 
 protected:
 	void

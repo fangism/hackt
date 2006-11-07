@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.11.44.2 2006/11/05 22:29:15 fang Exp $
+	$Id: instance_pool.h,v 1.11.44.3 2006/11/07 00:47:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -24,9 +24,7 @@ using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::index_pool;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class instance_collection_pool_bundle;
-#endif
 
 //=============================================================================
 /**
@@ -45,10 +43,8 @@ public:
 	typedef	typename parent_type::const_iterator	const_iterator;
 	typedef	typename parent_type::size_type		size_type;
 	typedef	typename parent_type::value_type	value_type;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	instance_collection_pool_bundle<tag_type>
 				collection_pool_bundle_type;
-#endif
 private:
 	/**
 		Default chunk size when not specified.  
@@ -81,21 +77,11 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const collection_pool_bundle_type&, 
-#else
-		const persistent_object_manager&, 
-#endif
+	write_object_base(const collection_pool_bundle_type&, 
 		ostream&) const;
 
 	void
-	load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const collection_pool_bundle_type&, 
-#else
-		const persistent_object_manager&, 
-#endif
+	load_object_base(const collection_pool_bundle_type&, 
 		istream&);
 };	// end class instance_pool
 

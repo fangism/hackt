@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.27.4.14 2006/11/06 21:45:43 fang Exp $
+	$Id: footprint.cc,v 1.27.4.15 2006/11/07 00:47:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,7 +24,6 @@
 #include "Object/common/dump_flags.h"
 #include "Object/inst/alias_printer.h"
 #include "Object/inst/physical_instance_placeholder.h"
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 #include "Object/inst/value_collection_pool_bundle.h"
 #include "Object/inst/state_instance.h"
@@ -51,9 +50,6 @@
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/channel_instance_collection.h"
-#else
-#include <set>				// to sort keys
-#endif
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/process_instance.h"
 #include "Object/inst/channel_instance.h"
@@ -68,14 +64,10 @@
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
-
 #include "main/cflat_options.h"
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "util/STL/hash_map_utils.h"
-#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
@@ -93,10 +85,6 @@ using util::read_value;
 using util::auto_indent;
 using std::ostream_iterator;
 using std::copy;
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-using std::set;
-using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
-#endif
 
 //=============================================================================
 // class footprint_base method definitions
@@ -233,11 +221,9 @@ footprint::footprint() :
 	footprint_base<enum_tag>(), 
 	footprint_base<int_tag>(), 
 	footprint_base<bool_tag>(), 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
-#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -262,11 +248,9 @@ footprint::footprint(const footprint& t) :
 	footprint_base<enum_tag>(), 
 	footprint_base<int_tag>(), 
 	footprint_base<bool_tag>(), 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	value_footprint_base<pbool_tag>(), 
 	value_footprint_base<pint_tag>(), 
 	value_footprint_base<preal_tag>(), 
-#endif
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
@@ -318,7 +302,6 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		for ( ; i!=e; ++i) {
 			o << auto_indent << i->first << " = ";
 			const instance_collection_ptr_type
@@ -326,21 +309,6 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			NEVER_NULL(p);
 			p->dump(o, df) << endl;
 		}
-#else
-		set<string> keys;
-		for ( ; i!=e; ++i) {
-			keys.insert(i->first);
-		}
-		set<string>::const_iterator
-			ii(keys.begin()), ee(keys.end());
-		for ( ; ii!=ee; ++ii) {
-			const const_instance_map_iterator
-				j(instance_collection_map.find(*ii));
-			NEVER_NULL(j->second);
-			o << auto_indent << j->first << " = ";
-			j->second->dump(o, df) << endl;
-		}
-#endif
 	if (is_created()) {
 		o << auto_indent << "Created state:" << endl;
 		dump(o);
@@ -382,31 +350,14 @@ footprint::operator [] (const string& k) const {
 	const const_instance_map_iterator
 		e(instance_collection_map.end()),
 		f(instance_collection_map.find(k));
-#if ENABLE_STACKTRACE && !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	const_instance_map_iterator i(instance_collection_map.begin());
-	for ( ; i!=e; ++i) {
-		cerr << "key = " << i->first << endl;
-	}
-	if (f != e) {
-		f->second->dump(cerr << "found: ", dump_flags::default_value)
-			<< endl;
-	} else {
-		cerr << "NOT FOUND" << endl;
-	}
-#endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	if (f == e) {
 		// not found
 		return instance_collection_ptr_type(NULL);
 	}
 	return (*this)[f->second];
-#else
-	return (f != e) ? f->second : instance_collection_ptr_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 footprint::instance_collection_ptr_type
 footprint::operator [] (const collection_map_entry_type& e) const {
 	STACKTRACE_VERBOSE;
@@ -444,42 +395,6 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 		return instance_collection_ptr_type(NULL);
 	}
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// OBSOLETE
-/**
-	Why would you ever want to clear the collection map?
-	See import_hierarchical_scopespace comments about hack.  
- */
-void
-footprint::clear_instance_collection_map(void) {
-	STACKTRACE_VERBOSE;
-	instance_collection_map.clear();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-// Can't do this when pool allocating...
-/**
-	TODO: qualified names needed for top-level footprint. 
-	\pre Not already registered.  
- */
-good_bool
-footprint::register_collection(const count_ptr<instance_collection_base>& p) {
-	STACKTRACE_VERBOSE;
-	NEVER_NULL(p);
-	// will want hash_string() or get_footprint_key()
-	const string key(p->get_footprint_key());
-	STACKTRACE_INDENT_PRINT("whoami: \"" << key << "\"" << endl);
-	INVARIANT(instance_collection_map.find(key)
-		== instance_collection_map.end());
-	instance_collection_map[key] = p;
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -498,11 +413,6 @@ footprint::create_dependent_types(const footprint& top) {
 	const instance_map_iterator
 		// b(instance_collection_map.begin()),
 		e(instance_collection_map.end());
-#if 0 && ENABLE_STACKTRACE
-	STACKTRACE_INDENT("instance_collection_map.size() = " <<
-		instance_collection_map.size() << endl);
-#endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 {
 	const good_bool g(
 		get_instance_collection_pool_bundle<process_tag>()
@@ -521,36 +431,11 @@ footprint::create_dependent_types(const footprint& top) {
 		return g;
 	}
 }
-#else
-{
-	// Apple's g++-3.3 -O2 breaks this!
-	// instance_map_iterator i(b);
-	instance_map_iterator i(instance_collection_map.begin());
-	for ( ; i!=e; ++i) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		// for now preserve the same order as before...
-		// except that this is now alphabetical, not hashed :-/
-		const never_ptr<physical_instance_collection>
-			pic((*this)[i->second].
-				is_a<physical_instance_collection>());
-#else
-		const count_ptr<physical_instance_collection>
-			pic(i->second.is_a<physical_instance_collection>());
-#endif
-		// not only does this create dependent types, but it also
-		// replays all internal aliases as well.
-		if (pic && !pic->create_dependent_types(top).good) {
-			return good_bool(false);
-		}
-	}
-}
-#endif
 #if ENABLE_STACKTRACE
 	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
 		dump_flags::default_value, 
 		expr_dump_context::default_value) << endl;
 #endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 {
 	const good_bool g(
 		get_instance_collection_pool_bundle<process_tag>()
@@ -569,29 +454,6 @@ footprint::create_dependent_types(const footprint& top) {
 		return g;
 	}
 }
-#else
-{
-	// having replayed all necessary aliases, it is safe and correct
-	// to allocate-assign local instance_id's and evaluate_scope_aliases
-	// we assign ID's based on overall union-find structure.
-	// instance_map_iterator i(b);
-	instance_map_iterator i(instance_collection_map.begin());
-	for ( ; i!=e; ++i) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const never_ptr<physical_instance_collection>
-			pic((*this)[i->second].
-				is_a<physical_instance_collection>());
-#else
-		const count_ptr<physical_instance_collection>
-			pic(i->second.is_a<physical_instance_collection>());
-#endif
-		if (pic && !pic->allocate_local_instance_ids(*this).good) {
-			// have error message already?
-			return good_bool(false);
-		}
-	}
-}
-#endif
 	evaluate_scope_aliases();
 	mark_created();
 	return good_bool(true);
@@ -609,7 +471,6 @@ footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("got " << instance_collection_map.size()
 		<< " entries." << endl);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	get_instance_collection_pool_bundle<process_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<channel_tag>()
@@ -622,33 +483,6 @@ footprint::evaluate_scope_aliases(void) {
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<bool_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
-#else
-	const_instance_map_iterator i(instance_collection_map.begin());
-	const const_instance_map_iterator e(instance_collection_map.end());
-	for ( ; i!=e; i++) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		// for now preserve the same order as before
-		const never_ptr<const physical_instance_collection>
-			pic((*this)[i->second].
-				is_a<const physical_instance_collection>());
-#else
-		const count_ptr<const physical_instance_collection>
-			pic(i->second.is_a<const physical_instance_collection>());
-#endif
-		if (pic) {
-#if ENABLE_STACKTRACE
-			pic->dump(STACKTRACE_INDENT << "collecting: ", 
-				dump_flags::default_value) << endl;
-#endif
-			// method is called collect_port,
-			// but it collects everything in scope
-			// good re-use of function!
-			pic->collect_port_aliases(scope_aliases);
-			if (pic->get_placeholder_base()->is_port_formal())
-				pic->collect_port_aliases(port_aliases);
-		}
-	}
-#endif
 	// don't filter for scope, want to keep around unique entries
 	// scope_aliases.filter_uniques();
 #if ENABLE_STACKTRACE
@@ -733,7 +567,6 @@ void
 footprint::assign_footprint_frame(footprint_frame& ff, 
 		const port_member_context& pmc) const {
 	STACKTRACE_VERBOSE;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	get_instance_collection_pool_bundle<process_tag>()
 		.assign_footprint_frame(ff, pmc);
 	get_instance_collection_pool_bundle<channel_tag>()
@@ -746,33 +579,6 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		.assign_footprint_frame(ff, pmc);
 	get_instance_collection_pool_bundle<bool_tag>()
 		.assign_footprint_frame(ff, pmc);
-#else
-	const_instance_map_iterator i(instance_collection_map.begin());
-	const const_instance_map_iterator e(instance_collection_map.end());
-	for ( ; i!=e; i++) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		// for now preserve the same order as before
-		const never_ptr<const physical_instance_collection>
-			coll_ptr((*this)[i->second].
-				is_a<const physical_instance_collection>());
-#else
-		const count_ptr<const physical_instance_collection>
-		coll_ptr(i->second.is_a<const physical_instance_collection>());
-#endif
-		if (coll_ptr) {
-			// note: port formal is 1-indexed
-			// where as member array is 0-indexed
-			const size_t pfp = 
-				coll_ptr->get_placeholder_base()->is_port_formal();
-			if (pfp) {
-				coll_ptr->assign_footprint_frame(
-					ff, pmc.member_array[pfp -1]);
-			}
-			// else is not port formal, skip
-		}
-		// else is a param_value_collection, skip
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -828,17 +634,12 @@ footprint::accept(alias_visitor& v) const {
 	const const_instance_map_iterator e(instance_collection_map.end());
 	// cerr << instance_collection_map.size() << " collections." << endl;
 	for ( ; i!=e; i++) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		// for now preserve the same order as before
 		// even if less efficient... until everything re-verified
 		// then we can iterate more efficiently through the pools.
 		const never_ptr<const physical_instance_collection>
 			coll_ptr((*this)[i->second].
 				is_a<const physical_instance_collection>());
-#else
-		const count_ptr<const physical_instance_collection>
-		coll_ptr(i->second.is_a<const physical_instance_collection>());
-#endif
 		if (coll_ptr) {
 			coll_ptr->accept(v);
 		}
@@ -847,7 +648,6 @@ footprint::accept(alias_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 /**
 	Counterpart to this is physical_instance_collection::write_pointer.
  */
@@ -860,26 +660,11 @@ footprint::read_pointer(istream& i) const {
 	return (*this)[e];
 }
 
-#endif	// POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	// no need to visit def_back_ref
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-{
-	// instance_collection_map
-	const_instance_map_iterator i(instance_collection_map.begin());
-	const const_instance_map_iterator e(instance_collection_map.end());
-	for ( ; i!=e; i++) {
-		const instance_collection_map_type::mapped_type&
-			coll_ptr(i->second);
-		NEVER_NULL(coll_ptr);
-		coll_ptr->collect_transient_info(m);
-	}
-}
-#endif
 	footprint_base<process_tag>::collect_transient_info_base(m);
 	footprint_base<channel_tag>::collect_transient_info_base(m);
 	footprint_base<datastruct_tag>::collect_transient_info_base(m);
@@ -914,50 +699,28 @@ footprint::write_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, unrolled);
 	write_value(o, created);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// reconstruct the map AFTER all collections are loaded
-#else
-{
-	// instance_collection_map
-	write_value(o, instance_collection_map.size());
-	instance_collection_map_type temp;
-	copy_map_reverse_bucket(instance_collection_map, temp);
-	const_instance_map_iterator i(temp.begin());
-	const const_instance_map_iterator e(temp.end());
-	for ( ; i!=e; i++) {
-		// remember, the keys are stored in the instance_collections
-		const instance_collection_map_type::mapped_type&
-			coll_ptr(i->second);
-		m.write_pointer(o, coll_ptr);
-	}
-}
-#endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	footprint_base<process_tag>::write_reserve_sizes(o);
 	footprint_base<channel_tag>::write_reserve_sizes(o);
 	footprint_base<datastruct_tag>::write_reserve_sizes(o);
 	footprint_base<enum_tag>::write_reserve_sizes(o);
 	footprint_base<int_tag>::write_reserve_sizes(o);
 	footprint_base<bool_tag>::write_reserve_sizes(o);
-#endif
+
 	footprint_base<process_tag>::write_object_base(m, o);
 	footprint_base<channel_tag>::write_object_base(m, o);
 	footprint_base<datastruct_tag>::write_object_base(m, o);
 	footprint_base<enum_tag>::write_object_base(m, o);
 	footprint_base<int_tag>::write_object_base(m, o);
 	footprint_base<bool_tag>::write_object_base(m, o);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+
 	value_footprint_base<pbool_tag>::write_object_base(m, o);
 	value_footprint_base<pint_tag>::write_object_base(m, o);
 	value_footprint_base<preal_tag>::write_object_base(m, o);
-#endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+
 	port_aliases.write_object_base(*this, o);
 	scope_aliases.write_object_base(*this, o);
-#else
-	port_aliases.write_object_base(m, o);
-	scope_aliases.write_object_base(m, o);
-#endif
+
 	prs_footprint.write_object_base(m, o);
 	chp_footprint.write_object_base(m, o);
 	spec_footprint.write_object_base(m, o);
@@ -981,52 +744,29 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, unrolled);
 	read_value(i, created);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// load all collections first, THEN reconstruct the local map
-#else
-{
-	// instance_collection_map
-	size_t coll_map_size;
-	read_value(i, coll_map_size);
-	size_t j = 0;
-	for ( ; j<coll_map_size; j++) {
-		instance_collection_map_type::mapped_type coll_ptr;
-		m.read_pointer(i, coll_ptr);
-		NEVER_NULL(coll_ptr);
-		// need to load the collection to get its key.  
-		m.load_object_once(coll_ptr);
-		instance_collection_map[coll_ptr->get_footprint_key()] = coll_ptr;
-	}
-}
-#endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	footprint_base<process_tag>::load_reserve_sizes(i);
 	footprint_base<channel_tag>::load_reserve_sizes(i);
 	footprint_base<datastruct_tag>::load_reserve_sizes(i);
 	footprint_base<enum_tag>::load_reserve_sizes(i);
 	footprint_base<int_tag>::load_reserve_sizes(i);
 	footprint_base<bool_tag>::load_reserve_sizes(i);
-#endif
+
 	footprint_base<process_tag>::load_object_base(m, i);
 	footprint_base<channel_tag>::load_object_base(m, i);
 	footprint_base<datastruct_tag>::load_object_base(m, i);
 	footprint_base<enum_tag>::load_object_base(m, i);
 	footprint_base<int_tag>::load_object_base(m, i);
 	footprint_base<bool_tag>::load_object_base(m, i);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+
 	value_footprint_base<pbool_tag>::load_object_base(m, i);
 	value_footprint_base<pint_tag>::load_object_base(m, i);
 	value_footprint_base<preal_tag>::load_object_base(m, i);
-	// TODO: reconstruct the map from all collections
 	// \pre placeholders have aleady been loaded
-#endif
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+
 	port_aliases.load_object_base(*this, i);
 	scope_aliases.load_object_base(*this, i);
-#else
-	port_aliases.load_object_base(m, i);
-	scope_aliases.load_object_base(m, i);
-#endif
+
 	prs_footprint.load_object_base(m, i);
 	chp_footprint.load_object_base(m, i);
 	spec_footprint.load_object_base(m, i);

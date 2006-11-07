@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.19.4.4 2006/11/02 06:18:52 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.19.4.5 2006/11/07 00:48:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -121,11 +121,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	const physical_instance_placeholder&
 		phys_inst(IS_A(const physical_instance_placeholder&, 
 			*this->get_inst_base()));
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<instance_collection_base>
-#else
-	const count_ptr<instance_collection_base>
-#endif
 		resolved_instance(
 			parent_struct->lookup_port_instance(phys_inst));
 	if (!resolved_instance) {

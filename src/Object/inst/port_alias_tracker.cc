@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.13.2.2 2006/11/02 06:18:40 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.13.2.3 2006/11/07 00:47:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -203,11 +203,7 @@ alias_reference_set<Tag>::collect_transient_info_base(
 template <class Tag>
 void
 alias_reference_set<Tag>::write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		const collection_pool_bundle_type& m, 
-#else
-		const persistent_object_manager& m, 
-#endif
 		ostream& o) const {
 	const size_t s = alias_array.size();
 	write_value(o, s);
@@ -221,11 +217,7 @@ alias_reference_set<Tag>::write_object_base(
 template <class Tag>
 void
 alias_reference_set<Tag>::load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		const collection_pool_bundle_type& m, 
-#else
-		const persistent_object_manager& m, 
-#endif
 		istream& i) {
 	size_t s;
 	read_value(i, s);
@@ -342,17 +334,10 @@ port_alias_tracker_base<Tag>::collect_map(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
-port_alias_tracker_base<Tag>::write_map(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& f, 
-#else
-		const persistent_object_manager& m, 
-#endif
+port_alias_tracker_base<Tag>::write_map(const footprint& f, 
 		ostream& o) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const collection_pool_bundle_type&
 		m(f.template get_instance_collection_pool_bundle<Tag>());
-#endif
 	write_value(o, _ids.size());
 	const_iterator i(_ids.begin());
 	const const_iterator e(_ids.end());
@@ -365,17 +350,9 @@ port_alias_tracker_base<Tag>::write_map(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
-port_alias_tracker_base<Tag>::load_map(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& f, 
-#else
-		const persistent_object_manager& m, 
-#endif
-		istream& i) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+port_alias_tracker_base<Tag>::load_map(const footprint& f, istream& i) {
 	const collection_pool_bundle_type&
 		m(f.template get_instance_collection_pool_bundle<Tag>());
-#endif
 	size_t s;
 	read_value(i, s);
 	size_t j = 0;
@@ -495,13 +472,7 @@ if (has_internal_aliases) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_alias_tracker::write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& m, 
-#else
-		const persistent_object_manager& m, 
-#endif
-		ostream& o) const {
+port_alias_tracker::write_object_base(const footprint& m, ostream& o) const {
 	write_value(o, has_internal_aliases);
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::write_map(m, o);
@@ -515,13 +486,7 @@ if (has_internal_aliases) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_alias_tracker::load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint& m, 
-#else
-		const persistent_object_manager& m, 
-#endif
-		istream& i) {
+port_alias_tracker::load_object_base(const footprint& m, istream& i) {
 	read_value(i, has_internal_aliases);
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::load_map(m, i);

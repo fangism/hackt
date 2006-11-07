@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.15.4.3 2006/11/02 06:18:52 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.15.4.4 2006/11/07 00:48:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -63,11 +63,7 @@ public:
 	// should be kept consistent with
 	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	never_ptr<collection_interface_type>
-#else
-	typedef	count_ptr<collection_interface_type>
-#endif
 						parent_member_ptr_type;
 protected:
 	/**

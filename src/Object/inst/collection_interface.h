@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.9 2006/11/05 07:21:25 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.10 2006/11/07 00:47:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -45,21 +45,15 @@ class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instance_collection;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 template <class> class collection_pool;
 template <class> class instance_collection_pool_bundle;
-#endif
 
 //=============================================================================
 /**
 	Define to 1 if you want instance_arrays and scalars pool-allocated.  
 	Causes regression in one strange test case, needs debugging.  
  */
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #define	POOL_ALLOCATE_INSTANCE_COLLECTIONS		0
-#else
-#define	POOL_ALLOCATE_INSTANCE_COLLECTIONS		1
-#endif
 
 //=============================================================================
 #define	COLLECTION_INTERFACE_TEMPLATE_SIGNATURE				\
@@ -109,6 +103,8 @@ public:
 	typedef	typename traits_type::member_simple_meta_instance_reference_type
 				member_simple_meta_instance_reference_type;
 //	typedef	meta_instance_reference_base		meta_instance_reference_base_type;
+	typedef	instance_collection_pool_bundle<Tag>
+					collection_pool_bundle_type;
 protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	typename parent_type::member_inst_ref_ptr_type
@@ -123,9 +119,6 @@ protected:
 protected:
 	collection_interface() : parent_type() { }
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-public:
-#endif
 virtual	~collection_interface() { }
 
 public:
@@ -204,11 +197,8 @@ public:
 virtual	instance_alias_info_type&
 	load_reference(istream&) = 0;
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	// this excludes type_tag_enum
 virtual	void
-	write_pointer(ostream&, 
-		const instance_collection_pool_bundle<Tag>&) const = 0;
+	write_pointer(ostream&, const collection_pool_bundle_type&) const = 0;
 
 	// this variation includes the type_tag_enum
 	void
@@ -224,7 +214,7 @@ virtual	void
 virtual	void
 	load_object(footprint&, 
 		const persistent_object_manager&, istream&) = 0;
-#endif
+
 };	// end class collection_interface
 
 //=============================================================================

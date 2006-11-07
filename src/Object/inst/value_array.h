@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_array.h"
-	$Id: value_array.h,v 1.2.2.3 2006/11/04 09:23:21 fang Exp $
+	$Id: value_array.h,v 1.2.2.4 2006/11/07 00:47:56 fang Exp $
 	This fail spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -9,12 +9,7 @@
 #define	__HAC_OBJECT_INST_VALUE_ARRAY_H__
 
 #include "Object/inst/value_collection.h"
-
 #include "util/multikey_map.h"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "util/new_functor_fwd.h"
-#include "util/memory/chunk_map_pool_fwd.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -68,9 +63,7 @@ private:
 	// value cache is not persistent
 	const_collection_type				cached_values;
 	// tracking validity and density of the value cache?
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
-#endif
 	value_array();
 
 public:
@@ -109,16 +102,11 @@ public:
 	};      // end struct key_value_dumper
 
 public:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	void
 	write_object(const persistent_object_manager&, ostream&) const;
 
 	void
 	load_object(footprint&, const persistent_object_manager&, istream&);
-#else
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
-#endif
 
 #if POOL_ALLOCATE_VALUE_COLLECTIONS
 	enum {

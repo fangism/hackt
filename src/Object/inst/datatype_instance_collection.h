@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.12.4.2 2006/11/05 01:23:10 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.12.4.3 2006/11/07 00:47:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -42,9 +42,6 @@ protected:
 protected:
 	datatype_instance_collection() : parent_type() { }
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-public:
-#endif
 virtual	~datatype_instance_collection();
 
 public:
@@ -76,12 +73,6 @@ virtual good_bool
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;
 	
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-protected:	// propagate to children
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-#endif
 };	// end class datatype_instance_collection
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_placeholder.h"
 	Instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_placeholder.h,v 1.3.4.1 2006/11/01 07:52:24 fang Exp $
+	$Id: datatype_instance_placeholder.h,v 1.3.4.2 2006/11/07 00:47:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_PLACEHOLDER_H__
@@ -11,7 +11,6 @@
 #include "Object/type/canonical_type_fwd.h"		// for conditional
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/traits/data_traits.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -47,13 +46,8 @@ public:
 
 virtual	~datatype_instance_placeholder();
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	datatype_instance_collection*
 	make_collection(footprint&) const;
-#else
-	datatype_instance_collection*
-	make_collection(void) const;
-#endif
 
 virtual	ostream&
 	what(ostream& o) const = 0;

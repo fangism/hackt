@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.15.4.3 2006/11/06 21:15:52 fang Exp $
+	$Id: subinstance_manager.h,v 1.15.4.4 2006/11/07 00:47:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -11,7 +11,6 @@
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
-#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -61,11 +60,7 @@ friend class substructure_manager;
 	typedef	physical_instance_collection	instance_collection_type;
 	typedef	physical_instance_placeholder		lookup_arg_type;
 public:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	never_ptr<instance_collection_type>	entry_value_type;
-#else
-	typedef	count_ptr<instance_collection_type>	entry_value_type;
-#endif
 	// just a synonym
 	typedef	entry_value_type			value_type;
 	/**
@@ -101,13 +96,11 @@ public:
 	void
 	push_back(const entry_value_type&);
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	array_type&
 	get_array(void) { return subinstance_array; }
 
 	const array_type&
 	get_array(void) const { return subinstance_array; }
-#endif
 
 	ostream&
 	dump(ostream&, const dump_flags&) const;
@@ -155,22 +148,10 @@ public:
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		ostream&) const;
+	write_object_base(const footprint&, ostream&) const;
 
 	void
-	load_object_base(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const footprint&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		istream&);
+	load_object_base(const footprint&, istream&);
 
 };	// end class subinstance_manager
 

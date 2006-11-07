@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.4.2.4 2006/11/03 05:22:34 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.4.2.5 2006/11/07 00:47:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -50,9 +50,7 @@
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/unroll/expression_assignment.h"
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/value_collection_pool_bundle.tcc"	// for allocate
-#endif
 
 #include "common/ICE.h"
 
@@ -480,17 +478,8 @@ VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 // typename VALUE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 instance_collection_base*
 VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		footprint& f
-#else
-		void
-#endif
-		) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+		footprint& f) const {
 	return this->make_collection(f);
-#else
-	return this->make_collection();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -500,23 +489,12 @@ VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(
  */
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
-VALUE_PLACEHOLDER_CLASS::make_collection(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		footprint& f
-#else
-		void
-#endif
-		) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+VALUE_PLACEHOLDER_CLASS::make_collection(footprint& f) const {
 	value_collection_pool_bundle<Tag>&
 		pool(f. template get_value_collection_pool_bundle<Tag>());
 	// if (this->is_template_formal()) ...
 	return pool.allocate_local_collection(
 		f, never_ptr<const this_type>(this));
-#else
-	return value_collection_generic_type::make_array(
-		never_ptr<const this_type>(this));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

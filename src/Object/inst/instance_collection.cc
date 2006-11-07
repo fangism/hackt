@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.25.4.4 2006/11/03 05:22:24 fang Exp $
+ 	$Id: instance_collection.cc,v 1.25.4.5 2006/11/07 00:47:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -190,46 +190,6 @@ instance_collection_base::is_local_to_definition(void) const {
 	const owner_ptr_type owner(get_owner());
 	return owner.is_a<const definition_base>();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Upward recursive: find top-most super-instance and allocate 
-	state from there top-down.  
- */
-good_bool
-instance_collection_base::create_super_instance(footprint& f) {
-	// super-instance corresponds to a substructure alias
-	// some traversal similar to dump_hierarchical_name.
-	INVARIANT(super_instance);
-	return good_bool(super_instance->allocate_state(f) != 0);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-void
-instance_collection_base::collect_transient_info_base(
-		persistent_object_manager& m) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Q: Where and when was the super_instance pointer tracked?
- */
-void
-instance_collection_base::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	// m.write_pointer(o, super_instance);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-instance_collection_base::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-	// m.read_pointer(i, super_instance);
-}
-#endif
 
 //=============================================================================
 // class physical_instance_collection method definitions
@@ -982,20 +942,9 @@ datatype_instance_placeholder::~datatype_instance_placeholder() { }
 	TODO: rename, and be able to call parent's pure-virtual.  
  */
 datatype_instance_collection*
-datatype_instance_placeholder::make_collection(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		footprint& f
-#else
-		void
-#endif
-		) const {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+datatype_instance_placeholder::make_collection(footprint& f) const {
 	return IS_A(datatype_instance_collection*,
 		make_instance_collection_footprint_copy(f));
-#else
-	return IS_A(datatype_instance_collection*,
-		make_instance_collection_footprint_copy());
-#endif
 }
 
 //=============================================================================

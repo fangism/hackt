@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.h"
-	$Id: meta_loop_base.h,v 1.6.4.1 2006/11/01 07:52:45 fang Exp $
+	$Id: meta_loop_base.h,v 1.6.4.2 2006/11/07 00:48:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
@@ -20,9 +20,7 @@ class footprint;
 template <class, size_t> class value_array;
 using std::ostream;
 using std::istream;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 using util::memory::never_ptr;
-#endif
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
@@ -51,11 +49,7 @@ protected:
 	~meta_loop_base();
 
 	// instantiates an actual variable into the footprint
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	never_ptr<pint_scalar>
-#else
-	count_ptr<pint_scalar>
-#endif
 	initialize_footprint(footprint&) const;
 
 	void

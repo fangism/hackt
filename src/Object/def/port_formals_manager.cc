@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.12.4.2 2006/11/02 06:18:16 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.12.4.3 2006/11/07 00:47:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -226,12 +226,7 @@ port_formals_manager::equivalent_port_formals(
  */
 void
 port_formals_manager::unroll_ports(const unroll_context& c, 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		vector<never_ptr<physical_instance_collection> >& sub
-#else
-		subinstance_manager& sub
-#endif
-		) const {
+		vector<never_ptr<physical_instance_collection> >& sub) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(sub.empty());
 	sub.reserve(size());		// pre-allocate
@@ -241,11 +236,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 		const port_formals_value_type pcb(*i);
 		NEVER_NULL(pcb);
 		// supposed to return a new copy of instance-collection
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		const never_ptr<physical_instance_collection>
-#else
-		const count_ptr<physical_instance_collection>
-#endif
 			new_port(pcb->unroll_port_only(c));
 		NEVER_NULL(new_port);
 #if ENABLE_STACKTRACE

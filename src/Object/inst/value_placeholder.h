@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.5.2.1 2006/11/01 07:52:34 fang Exp $
+	$Id: value_placeholder.h,v 1.5.2.2 2006/11/07 00:47:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -142,13 +142,8 @@ public:
 
 	~value_placeholder();
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	value_collection_generic_type*
 	make_collection(footprint&) const;
-#else
-	value_collection_generic_type*
-	make_collection(void) const;
-#endif
 
 	ostream&
 	what(ostream& o) const;

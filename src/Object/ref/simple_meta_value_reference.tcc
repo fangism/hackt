@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.28.2.3 2006/11/02 06:18:53 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.28.2.4 2006/11/07 00:48:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -303,11 +303,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	}
 	const value_collection_type& _vals(*_v.second);
 #else
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<const value_collection_type>
-#else
-	const count_ptr<const value_collection_type>
-#endif
 	       _v(c.lookup_rvalue_collection(*value_collection_ref)
 			.template is_a<const value_collection_type>());
 	if (!_v) {
@@ -381,11 +377,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// This depends on the values being unrolled in the footprint's 
 	// collection of value collections!
 	// unroll_context::lookup_value_collection
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<const param_value_collection>
-#else
-	const count_ptr<const param_value_collection>
-#endif
 		pvc(c.lookup_rvalue_collection(*this->value_collection_ref));
 		// is it ok to always lookup rvalue for dimension resolving?
 	if (!pvc) {
@@ -470,21 +462,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	// this replaces template formal references with template
 	// actuals from the context where necessary (2005-06-30)
 	// this is where argument-dependent lookup occurs
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<const param_value_collection>
-#else
-	const count_ptr<const param_value_collection>
-#endif
 		cpptr(c.lookup_rvalue_collection(*value_collection_ref));
 	if (!cpptr) {
 		cerr << "Error unroll-resolving parameter values." << endl;
 		return return_type(NULL);
 	}
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<const value_collection_type>
-#else
-	const count_ptr<const value_collection_type>
-#endif
 		ce(cpptr.template is_a<const value_collection_type>());
 	INVARIANT(ce);
 	const value_collection_type& vcref(*ce);
@@ -764,11 +748,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		const unroll_context& c, 
 		value_reference_collection_type& a) const {
 	STACKTRACE_VERBOSE;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const never_ptr<value_collection_type>
-#else
-	const count_ptr<value_collection_type>
-#endif
 		vals_ptr(c.lookup_lvalue_collection(*this->value_collection_ref)
 				.template is_a<value_collection_type>());
 	NEVER_NULL(vals_ptr);

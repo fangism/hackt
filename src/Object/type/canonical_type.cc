@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.12.4.6 2006/11/06 21:45:51 fang Exp $
+	$Id: canonical_type.cc,v 1.12.4.7 2006/11/07 00:48:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -112,11 +112,7 @@ struct unroll_port_instances_policy<process_definition> {
 			f(p.canonical_definition_ptr->get_footprint(
 				p.param_list_ptr));
 		const unroll_context cc(&f, c);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 		pf.unroll_ports(cc, sub.get_array());
-#else
-		pf.unroll_ports(cc, sub);
-#endif
 	} else {
 		STACKTRACE_INDENT_PRINT("have relaxed type." << endl);
 		// unroll temporary footprint using partial template params
@@ -130,11 +126,7 @@ struct unroll_port_instances_policy<process_definition> {
 			cc(&f, c, unroll_context::auxiliary_target_tag());
 		if (p.canonical_definition_ptr->get_template_formals_manager()
 				.unroll_formal_parameters(cc, a).good) {
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 			pf.unroll_ports(cc, sub.get_array());
-#else
-			pf.unroll_ports(cc, sub);
-#endif
 		} else {
 			cerr << "FATAL: unexpected error unrolling temporary "
 				"parameter-only footprint." << endl;

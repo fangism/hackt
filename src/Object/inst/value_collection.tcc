@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.24.2.5 2006/11/04 18:43:23 fang Exp $
+ 	$Id: value_collection.tcc,v 1.24.2.6 2006/11/07 00:47:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -54,10 +54,6 @@
 
 #include "common/ICE.h"
 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-// #include "util/memory/list_vector_pool.tcc"
-#include "util/memory/chunk_map_pool.tcc"
-#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 #include "util/multikey_map.tcc"
@@ -257,9 +253,6 @@ VALUE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	parent_type::collect_transient_info_base(m);
-#endif
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
@@ -267,20 +260,6 @@ VALUE_COLLECTION_CLASS::collect_transient_info_base(
 		source_placeholder->collect_transient_info(m);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-void
-VALUE_COLLECTION_CLASS::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key, 
-			this->source_placeholder->get_dimensions())) {
-	this->collect_transient_info_base(m);
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -307,9 +286,6 @@ void
 VALUE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("value_collection<>::write_object_base()");
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	parent_type::write_object_base(m, f);
-#endif
 	m.write_pointer(f, ival);
 	m.write_pointer(f, this->source_placeholder);
 }
@@ -320,9 +296,6 @@ void
 VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& f) {
 	STACKTRACE("value_collection<>::load_object_base()");
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	parent_type::load_object_base(m, f);
-#endif
 	m.read_pointer(f, ival);
 	m.read_pointer(f, this->source_placeholder);
 	// TODO: need to load in advance to make the key available
@@ -594,13 +567,9 @@ VALUE_ARRAY_CLASS::write_object(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 void
-VALUE_ARRAY_CLASS::load_object(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		footprint& fp, 
-#endif
+VALUE_ARRAY_CLASS::load_object(footprint& fp, 
 		const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// register this collection with the footprint
 	// placeholder must already be loaded, to access its key
 	fp.register_collection_map_entry(
@@ -608,7 +577,6 @@ VALUE_ARRAY_CLASS::load_object(
 		lookup_collection_pool_index_entry(
 		fp.template get_value_collection_pool_bundle<Tag>()
 			.template get_collection_pool<this_type>(), *this));
-#endif
 	// load the instance map
 	this->collection.read(f);
 }
@@ -796,14 +764,10 @@ VALUE_SCALAR_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 void
-VALUE_SCALAR_CLASS::load_object(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		footprint& fp, 
-#endif
+VALUE_SCALAR_CLASS::load_object(footprint& fp, 
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("value_scalar::load_object()");
 	parent_type::load_object_base(m, f);
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// register this collection with the footprint
 	// placeholder must already be loaded, to access its key
 	fp.register_collection_map_entry(
@@ -811,7 +775,6 @@ VALUE_SCALAR_CLASS::load_object(
 		lookup_collection_pool_index_entry(
 		fp.template get_value_collection_pool_bundle<Tag>()
 			.template get_collection_pool<this_type>(), *this));
-#endif
 	// load the instance
 	read_value(f, the_instance);
 }

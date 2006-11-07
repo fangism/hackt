@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.23.2.2 2006/11/01 07:52:44 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.23.2.3 2006/11/07 00:48:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -201,7 +201,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	NEVER_NULL(this->inst_base);
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	never_ptr<collection_type>
 		inst_ptr(c.lookup_collection(*this->inst_base)
 			.template is_a<collection_type>());
@@ -214,23 +213,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 				c.get_target_footprint()));
 		NEVER_NULL(inst_ptr);
 	}
-#else
-	// TODO: this is a modifying lookup, using target_footprint
-	count_ptr<collection_type>
-		inst_ptr(c.lookup_collection(*this->inst_base)
-			.template is_a<collection_type>());
-	if (!inst_ptr) {
-		// then we need to instantiate it
-		inst_ptr = count_ptr<collection_type>(
-			IS_A(collection_type*,
-				this->inst_base->make_collection()));
-		NEVER_NULL(inst_ptr);
-		// NOTE: instantiated here just registers the footprint entry, 
-		// but type is still incomplete until type committed, below.  
-		c.instantiate_collection(inst_ptr);
-		// could handle first-time type checking work here...
-	}
-#endif
 	collection_type& _inst(*inst_ptr);
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 

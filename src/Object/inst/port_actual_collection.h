@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.7 2006/11/05 07:21:31 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.8 2006/11/07 00:47:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -8,9 +8,6 @@
 
 #include <valarray>
 #include "Object/inst/collection_interface.h"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "util/memory/chunk_map_pool_fwd.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -52,11 +49,7 @@ public:
 	reference-counting should not result in cycles, as cyclic
 	type references (specifically footprint) are forbidden and rejected.  
  */
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	never_ptr<const formal_collection_type>
-#else
-	typedef	count_ptr<const formal_collection_type>
-#endif
 						formal_collection_ptr_type;
 	typedef	instance_alias_info<Tag>	instance_alias_info_type;
 	typedef	instance_alias_info_type	element_type;
@@ -80,6 +73,8 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
+	typedef	typename parent_type::collection_pool_bundle_type
+					collection_pool_bundle_type;
 private:
 	// valarray iterator
 	typedef	element_type*			iterator;
@@ -88,20 +83,10 @@ private:
 	// super_instance? for now use instance_collection_base::super_instance
 	formal_collection_ptr_type		formal_collection;
 	array_type				value_array;
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 public:
-#else
-private:
-#endif
 	port_actual_collection();
 public:
-	explicit
-	port_actual_collection(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const formal_collection_ptr_type, 
-#else
-		const formal_collection_ptr_type&, 
-#endif
+	port_actual_collection(const formal_collection_ptr_type, 
 		const unroll_context&);
 
 	~port_actual_collection();
@@ -109,11 +94,7 @@ public:
 	const formal_collection_type&
 	get_canonical_collection(void) const;
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	const formal_collection_ptr_type&
-#else
-	formal_collection_ptr_type
-#endif
 	get_formal_collection(void) const {
 		return this->formal_collection;
 	}
@@ -183,37 +164,18 @@ public:
 	instance_alias_info_type&
 	load_reference(istream&);
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#else
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_connections(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		ostream&) const;
+	write_connections(const collection_pool_bundle_type&, ostream&) const;
 
 	void
-	load_connections(
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		const instance_collection_pool_bundle<Tag>&, 
-#else
-		const persistent_object_manager&, 
-#endif
-		istream&);
+	load_connections(const collection_pool_bundle_type&, istream&);
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	void
-	write_pointer(ostream&, 
-		const instance_collection_pool_bundle<Tag>&) const;
+	write_pointer(ostream&, const collection_pool_bundle_type&) const;
 
 	void
 	write_object(const footprint&, 
@@ -222,7 +184,6 @@ public:
 	void
 	load_object(footprint&, 
 		const persistent_object_manager&, istream&);
-#endif
 
 private:
 	iterator

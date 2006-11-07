@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.19.4.9 2006/11/06 21:45:44 fang Exp $
+	$Id: footprint.h,v 1.19.4.10 2006/11/07 00:47:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -15,15 +15,10 @@
 #include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
 // #include "Object/inst/alias_visitee.h"
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 #include "Object/inst/collection_index_entry.h"
-#endif
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "util/STL/hash_map.h"
-#endif
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
@@ -72,38 +67,27 @@ class footprint :
 	private	footprint_base<datastruct_tag>, 
 	private	footprint_base<enum_tag>, 
 	private	footprint_base<int_tag>, 
-	private	footprint_base<bool_tag>
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-	, private	value_footprint_base<pbool_tag>
-	, private	value_footprint_base<pint_tag>
-	, private	value_footprint_base<preal_tag>
-#endif
-	{
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
+	private	footprint_base<bool_tag>, 
+	private	value_footprint_base<pbool_tag>, 
+	private	value_footprint_base<pint_tag>, 
+	private	value_footprint_base<preal_tag> {
 // make accessible to base class
 template <class> friend class footprint_base;
 template <class> friend class value_footprint_base;
-#endif
 	typedef	footprint			this_type;
 public:
 	/**
 		This must remain an instance_collection_base because
 		this manages parameter values as well as physical instances.  
 	 */
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	never_ptr<instance_collection_base>
-#else
-	typedef	count_ptr<instance_collection_base>
-#endif
 					instance_collection_ptr_type;
 private:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	/**
 		The information needed to encode which pool to 
 		fetch the pointer from.  
 	 */
 	typedef	collection_index_entry	collection_map_entry_type;
-#endif
 	/**
 		The type of map used to maintain local copy of instances.  
 		Instances contained herein will have no parent scopespace?
@@ -112,12 +96,7 @@ private:
 		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
 	 */
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	typedef	std::map<string, collection_map_entry_type>
-#else
-	typedef	HASH_MAP_NAMESPACE::hash_map<string,
-			instance_collection_ptr_type>
-#endif
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
@@ -226,11 +205,9 @@ public:
 	instance_collection_ptr_type
 	operator [] (const string&) const;
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// lookup by index and tag
 	instance_collection_ptr_type
 	operator [] (const collection_map_entry_type&) const;
-#endif
 
 	ostream&
 	what(ostream&) const;
@@ -264,7 +241,6 @@ public:
 		return *footprint_base<Tag>::_instance_pool;
 	}
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	template <class Tag>
 	instance_collection_pool_bundle<Tag>&
 	get_instance_collection_pool_bundle(void) {
@@ -288,7 +264,6 @@ public:
 	get_value_collection_pool_bundle(void) const {
 		return *value_footprint_base<Tag>::collection_pool_bundle;
 	}
-#endif
 
 	void
 	import_scopespace(const scopespace&);
@@ -302,16 +277,11 @@ public:
 	void
 	clear_instance_collection_map(void);
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// this is defined in Object/inst/instance_collection.cc
 	// to break a cyclic library dependence.  :-/
 	void
 	register_collection_map_entry(const string&, 
 		const collection_map_entry_type&);
-#else
-	good_bool
-	register_collection(const count_ptr<instance_collection_base>&);
-#endif
 
 	good_bool
 	create_dependent_types(const footprint&);
@@ -352,10 +322,9 @@ public:
 	accept(alias_visitor&) const;
 
 public:
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	instance_collection_ptr_type
 	read_pointer(istream&) const;
-#endif
+
 // persistent information management
 protected:
 	void

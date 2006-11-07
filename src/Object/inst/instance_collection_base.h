@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.14.4.2 2006/11/04 21:59:20 fang Exp $
+	$Id: instance_collection_base.h,v 1.14.4.3 2006/11/07 00:47:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -16,9 +16,6 @@
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/devel_switches.h"
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-#include "util/persistent.h"		// for persistent object interface
-#endif
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -44,10 +41,6 @@ using std::istream;
 using std::string;
 using util::bad_bool;
 using util::good_bool;
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-using util::persistent;
-using util::persistent_object_manager;
-#endif
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -73,11 +66,7 @@ using util::memory::count_ptr;
 		statements per collection, but they were removed on the
 		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
-class instance_collection_base
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		: public persistent
-#endif
-		{
+class instance_collection_base {
 	typedef	instance_collection_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
@@ -116,18 +105,10 @@ protected:
 	 */
 	super_instance_ptr_type		super_instance;
 protected:
-	instance_collection_base() : 
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-		persistent(), 
-#endif
-		super_instance() { }
+	instance_collection_base() : super_instance() { }
 
-#if POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
 	// we don't destroy via virtual base anymore
 protected:
-#else
-public:
-#endif
 
 virtual	~instance_collection_base();
 
@@ -229,34 +210,6 @@ virtual	owner_ptr_type
 
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
-
-#if 0
-// been obsolete for a long time
-private:
-	// utility functions for handling index collection (inlined)
-	void
-	collect_index_collection_pointers(persistent_object_manager& m) const;
-
-	void
-	write_index_collection_pointers(
-		const persistent_object_manager& m, ostream&) const;
-
-	void
-	load_index_collection_pointers(
-		const persistent_object_manager& m, istream&);
-#endif
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-protected:
-	// wrappers to provide consistent interface to children
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
 
 public:
 	/** just for convenience */

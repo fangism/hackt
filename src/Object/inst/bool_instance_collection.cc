@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.13.2.5 2006/11/06 20:54:52 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.13.2.6 2006/11/07 00:47:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -55,24 +55,6 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_instance_placeholder, 
 	DBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_scalar, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_1D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_2D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_3D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_array_4D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::bool_port_formal_array, 
-	DBOOL_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::port_actual_collection<HAC::entity::bool_tag>, 
-	DBOOL_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 
 namespace memory {
 	// can we still lazy destroy with instance aliases?

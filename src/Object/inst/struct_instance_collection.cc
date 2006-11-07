@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.12.2.3 2006/11/06 20:54:57 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.12.2.4 2006/11/07 00:47:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -44,24 +44,6 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_instance_placeholder, 
 	STRUCT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#if !POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::struct_scalar, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::struct_array_1D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 1)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::struct_array_2D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 2)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::struct_array_3D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 3)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::struct_array_4D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 4)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::struct_port_formal_array, 
-	STRUCT_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
-SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::port_actual_collection<HAC::entity::datastruct_tag>, 
-	STRUCT_PORT_ACTUAL_COLLECTION_TYPE_KEY, 0)
-#endif
 }	// end namespace util
 
 namespace HAC {
