@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.44.4.1 2006/11/06 20:40:42 fang Exp $
+#	$Id: TODO,v 1.44.4.2 2006/11/07 01:07:50 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -83,7 +83,7 @@ conditional instance management: (BUG, easy)
 	also implement same semantics for PRS conditionals
 
 ===============================================================================
-PRIORITY HIGH: MEMORY HOG (FIXED: 00-01-04-main-00-80-45-instance-02 branch)
+MEMORY HOG (FIXED: 00-01-04-main-00-80-45-instance-02 branch)
 Summary:
 	instance collection were split into placeholders
 	used dense collections in addition to sparse collections

@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.4.2.2 2006/11/07 00:47:47 fang Exp $
+	$Id: instance_placeholder.h,v 1.4.2.3 2006/11/07 01:07:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -15,7 +15,6 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_placeholder.h"	// for macros
 #include "Object/common/multikey_index.h"
-#include "Object/devel_switches.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -180,13 +179,6 @@ public:
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
 
 	UNROLL_PORT_ONLY_PROTO;
-
-#if 0
-	static
-	// won't be this_type anymore!
-	instance_collection_generic_type*
-	make_array(const scopespace& o, const string& n, const size_t d);
-#endif
 
 	static
 	persistent*

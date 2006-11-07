@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.2.2.12 2006/11/07 00:47:52 fang Exp $
+	$Id: port_formal_array.h,v 1.2.2.13 2006/11/07 01:07:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -186,17 +186,6 @@ public:
 
 	void
 	load_connections(const collection_pool_bundle_type&, istream&);
-
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
 
 };	// end class port_formal_array
 

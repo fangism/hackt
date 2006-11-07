@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.17 2006/10/24 07:27:31 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.17.2.1 2006/11/07 01:08:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -17,7 +17,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/attributes.h"
-// #include "util/memory/list_vector_pool.h"
 #include "util/memory/chunk_map_pool.h"
 #include "Object/def/built_in_datatype_def.h"
 #include "Object/def/param_definition.h"
@@ -54,10 +53,6 @@ namespace entity {
 // becaused of reverse-order static destruction.
 // REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
 REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(pint_const)
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-// re-enable this when it switches back to pooled...
-REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(pint_scalar)
-#endif
 // this early because int_def contains a pint_scalar, 
 // and built_in_namespace contains the int_def.
 

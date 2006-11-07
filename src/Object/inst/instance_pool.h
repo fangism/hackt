@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.11.44.3 2006/11/07 00:47:48 fang Exp $
+	$Id: instance_pool.h,v 1.11.44.4 2006/11/07 01:07:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -13,7 +13,6 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/index_pool.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {

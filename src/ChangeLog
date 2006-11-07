@@ -5,6 +5,13 @@
 
 2006-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-45-instance-02-31:
+	  Perm'd !POOL_ALLOCATE_{INSTANCE,VALUE}_COLLECTIONS, because 
+		they are no longer relevant, pool-management is done
+		by collection pool bundles.  (-200 LoC)
+	  Branch status: complete, ready to merge up.
+
+
 	* HACKT-00-01-04-main-00-80-45-instance-02-30:
 	  Perm'd POOL_ALLOCATE_ALL_COLLECTIONS_PER_FOOTPRINT (-2000 LoC).
 		Summary: All instance/value collections (formal or actual, 
@@ -13,6 +20,8 @@
 		By managing these collections with pool bundles, this saves
 		from having to allocate them onto the heap, which is where
 		the massive savings in object serialization comes from.  
+	  No longer specializing persistent type-keys for these
+		collection template classes.  
 	  Also: footprint's collection map is now a sorted tree, instead
 		of the old hash_map.  
 

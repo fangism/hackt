@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.1.2.14 2006/11/07 00:47:51 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.1.2.15 2006/11/07 01:07:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -44,24 +44,6 @@ using util::value_writer;
 //=============================================================================
 // class port_actual_collection method definitions
 
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, PORT_ACTUAL_COLLECTION_CLASS)
-
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, PORT_ACTUAL_COLLECTION_CLASS)
-
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, PORT_ACTUAL_COLLECTION_CLASS)
-
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, PORT_ACTUAL_COLLECTION_CLASS)
-
-PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, PORT_ACTUAL_COLLECTION_CLASS)
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection() :
 		parent_type(), formal_collection(), value_array(0) {

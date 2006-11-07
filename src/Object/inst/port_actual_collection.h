@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.1.2.8 2006/11/07 00:47:51 fang Exp $
+	$Id: port_actual_collection.h,v 1.1.2.9 2006/11/07 01:07:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -198,17 +198,6 @@ private:
 	const_iterator
 	end(void) const;
 
-public:
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
 };	// end class port_actual_collection
 
 //=============================================================================

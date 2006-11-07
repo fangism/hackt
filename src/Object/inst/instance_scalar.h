@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.2.2.12 2006/11/07 00:47:48 fang Exp $
+	$Id: instance_scalar.h,v 1.2.2.13 2006/11/07 01:07:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -155,16 +155,6 @@ public:
 	void
 	load_connections(const collection_pool_bundle_type&, istream&);
 
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
 };	// end class instance_array (specialized)
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.h"
-	$Id: meta_loop_base.h,v 1.6.4.2 2006/11/07 00:48:08 fang Exp $
+	$Id: meta_loop_base.h,v 1.6.4.3 2006/11/07 01:08:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
@@ -9,7 +9,6 @@
 #include <iosfwd>
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {

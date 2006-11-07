@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.14.4.3 2006/11/07 00:47:47 fang Exp $
+	$Id: instance_collection_base.h,v 1.14.4.4 2006/11/07 01:07:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -15,7 +15,6 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -132,11 +131,6 @@ virtual	size_t
 		INVARIANT(!super_instance);
 		super_instance = super_instance_ptr_type(&a);
 	}
-
-#if 0
-	good_bool
-	create_super_instance(footprint&);
-#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;

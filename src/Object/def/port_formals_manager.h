@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.9.4.2 2006/11/07 00:47:42 fang Exp $
+	$Id: port_formals_manager.h,v 1.9.4.3 2006/11/07 01:07:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -13,7 +13,6 @@
 #include <vector>
 #include "util/macros.h"
 #include "Object/common/util_types.h"	// for checked_refs_type
-#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"

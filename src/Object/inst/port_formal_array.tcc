@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.2.2.14 2006/11/07 00:47:52 fang Exp $
+	$Id: port_formal_array.tcc,v 1.2.2.15 2006/11/07 01:07:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -49,24 +49,6 @@ using util::auto_indent;
 //=============================================================================
 // class port_formal_array method definitions
 
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, PORT_FORMAL_ARRAY_CLASS)
-
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, PORT_FORMAL_ARRAY_CLASS)
-
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, PORT_FORMAL_ARRAY_CLASS)
-
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, PORT_FORMAL_ARRAY_CLASS)
-
-PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, PORT_FORMAL_ARRAY_CLASS)
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 PORT_FORMAL_ARRAY_CLASS::port_formal_array() :
 		parent_type(), value_array() {

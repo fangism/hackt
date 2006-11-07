@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.1.2.10 2006/11/07 00:47:44 fang Exp $
+	$Id: collection_interface.h,v 1.1.2.11 2006/11/07 01:07:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -47,13 +47,6 @@ template <bool> class internal_aliases_policy;
 template <class> class instance_collection;
 template <class> class collection_pool;
 template <class> class instance_collection_pool_bundle;
-
-//=============================================================================
-/**
-	Define to 1 if you want instance_arrays and scalars pool-allocated.  
-	Causes regression in one strange test case, needs debugging.  
- */
-#define	POOL_ALLOCATE_INSTANCE_COLLECTIONS		0
 
 //=============================================================================
 #define	COLLECTION_INTERFACE_TEMPLATE_SIGNATURE				\

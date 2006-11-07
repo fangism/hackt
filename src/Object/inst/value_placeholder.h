@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.5.2.2 2006/11/07 00:47:57 fang Exp $
+	$Id: value_placeholder.h,v 1.5.2.3 2006/11/07 01:08:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -14,7 +14,6 @@
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"

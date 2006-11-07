@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.4.4.2 2006/11/07 00:47:48 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.4.4.3 2006/11/07 01:07:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -15,7 +15,6 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_array.h"
-	$Id: value_array.h,v 1.2.2.4 2006/11/07 00:47:56 fang Exp $
+	$Id: value_array.h,v 1.2.2.5 2006/11/07 01:07:59 fang Exp $
 	This fail spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -108,16 +108,6 @@ public:
 	void
 	load_object(footprint&, const persistent_object_manager&, istream&);
 
-#if POOL_ALLOCATE_VALUE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
 };	// end class value_array
 
 //=============================================================================
