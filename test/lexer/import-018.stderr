@@ -1,4 +1,4 @@
-At: "-stdin-":4:
+At: "import-018.hac":4:
 At: "import-000.hac":5:
 At: "badid-000.hac":1:
 bad identifier: "1bad_identifier" on line 1:1

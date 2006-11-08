@@ -1,3 +1,3 @@
-At: "-stdin-":3:
+At: "import-011.hac":3:
 Unable to open file: bogus-file.hac
 Caught exception from lexer, aborting parsing.

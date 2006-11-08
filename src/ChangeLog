@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-01:
+	  Branch for parallelizing regression test suite.  
+	  No source revision.  
+	  Compile-tests parallelized so far, and distchecked.  
+
+
 2006-11-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-50:

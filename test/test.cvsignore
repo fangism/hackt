@@ -8,8 +8,13 @@ core.*
 *.filter
 *.artctest
 *.hacktcmpltest
+*.hacktcmplwarntest
+*.hacktcmplfailtest
+*.compiledump
+*.compiledump-filter
 *.artobjtest
 *.hacktobjtest
+*.compileobjdiff
 *.haco*
 *.artobj
 *.indump
@@ -65,7 +70,7 @@ core.*
 *.nowarn
 *.tmpd
 *.depend
-test.autodepend
+*.autodepend
 ignore
 Makefile
 Makefile.in

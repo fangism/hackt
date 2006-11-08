@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.102 2006/11/07 20:36:54 fang Exp $
+#	$Id: configure.ac,v 1.102.2.1 2006/11/08 19:45:05 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -418,10 +418,10 @@ AC_CONFIG_FILES([install_transform.sh],
 	[chmod +x install_transform.sh])
 AC_CONFIG_FILES([test/POM-header-filter.awk],
 	[chmod +x test/POM-header-filter.awk])
-AC_CONFIG_FILES([test/parse-test-expect.sh],
-	[chmod +x test/parse-test-expect.sh])
-AC_CONFIG_FILES([test/hackt-obj-diff.sh],
-	[chmod +x test/hackt-obj-diff.sh])
+dnl AC_CONFIG_FILES([test/parse-test-expect.sh],
+dnl	[chmod +x test/parse-test-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-obj-diff.sh],
+dnl	[chmod +x test/hackt-obj-diff.sh])
 AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
 	[chmod +x test/hackt-unroll-expect.sh])
 AC_CONFIG_FILES([test/hackt-create-expect.sh],

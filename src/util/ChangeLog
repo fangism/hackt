@@ -1,5 +1,18 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.58 2006/10/26 18:38:30 fang Exp $
+#	$Id: ChangeLog,v 1.58.2.1 2006/11/08 19:45:09 fang Exp $
+
+2006-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-18:
+	  util/memory/excl_ptr.h: added swap() member function.  
+
+
+2006-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-45-instance-02-07:
+	  util/persistent_functor.h: write generalized functors with
+		customizable member functions.  
+
 
 2006-10-26	David Fang		<fangism@users.sourceforge.net>
 

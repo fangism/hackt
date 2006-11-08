@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.24 2006/10/24 02:52:31 fang Exp $
+#	$Id: Make.global,v 1.24.4.1 2006/11/08 19:45:05 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
@@ -250,7 +250,7 @@ check.log: force
 	@$(ECHO) Tests finished `$(DATE)` >> $@.tmp
 	-$(MV) $@.tmp $@
 # dump failures
-	-$(GREP) -v "^PASS" $@
+	-$(GREP) -v "^PASS" $@ | $(GREP) -v "ignored"
 	-$(GREP) "^Tests" $@
 #	@$(ECHO) `$(GREP) "Abort trap" $@ | wc -l` cases crashed.
 #	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.

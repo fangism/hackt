@@ -1,4 +1,4 @@
-At: "-stdin-":4:
+At: "import-008.hac":4:
 At: "import-006.hac":4:
 Detected cyclic file dependency: import-006.hac
 Caught exception from lexer, aborting parsing.

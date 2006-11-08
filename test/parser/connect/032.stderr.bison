@@ -1,4 +1,4 @@
-At: "-stdin-":7:
+At: "032.hac":7:
 parse error: syntax error
 parser stacks:
 state	value

@@ -1,6 +1,6 @@
 #!/bin/sh
 # "update-compilestderr.sh"
-#	$Id: update-compilestderr.sh,v 1.3 2006/05/06 04:19:06 fang Exp $
+#	$Id: update-compilestderr.sh,v 1.3.30.1 2006/11/08 19:45:20 fang Exp $
 # convenient maintainer script for updating expected outputs
 # use this script for updating yacc test outputs, not bison
 
@@ -29,7 +29,8 @@ done
 
 for i
 do
-	cp -f $i.test.filter $srcdir/$i.stderr
+#	cp -f $i.test.filter $srcdir/$i.stderr
+	cp -f $i.compiledump-filter $srcdir/$i.stderr
 	echo "Updated $srcdir/$i.stderr"
 done
 

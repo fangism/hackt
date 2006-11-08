@@ -1,4 +1,4 @@
-At: "-stdin-":9:
+At: "spec_min_sep-09.hac":9:
 parse error: syntax error
 parser stacks:
 state	value

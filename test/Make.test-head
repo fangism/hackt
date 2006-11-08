@@ -1,13 +1,18 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23 2006/10/04 23:18:29 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.1 2006/11/08 19:45:15 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
-SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
+SUFFIXES = .hac \
+	.hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
+	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
+	.hacktobjtest .outdump .indump \
+	.outdump-filter .indump-filter .compileobjdiff \
+	.hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
 	.hacktcflatseutest \
 	.depend \
@@ -19,7 +24,7 @@ SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
 	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
-	.outdump .indump .unrolldump .createdump .allocdump \
+	.unrolldump .createdump .allocdump \
 	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
 	.hacktcreatefromhacotest .hacktallocfromhacotest \
 	.prsimrc .prsimtest .prsimckpttest .prsimopttest \

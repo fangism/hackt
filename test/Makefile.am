@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2006/10/24 18:39:08 fang Exp $
+#	$Id: Makefile.am,v 1.35.4.1 2006/11/08 19:45:19 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,10 +9,12 @@ SUBDIRS = . lexer parser prsim lib benchmarks quarantine
 # bogus test
 TESTS +=
 
+OBSOLETE_TESTSCRIPTS = \
+	parse-test-expect.sh.in \
+	hackt-obj-diff.sh.in
+
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
-	parse-test-expect.sh.in \
-	hackt-obj-diff.sh.in \
 	hackt-unroll-expect.sh.in \
 	hackt-create-expect.sh.in \
 	check-create-consistency.sh.in \
