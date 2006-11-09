@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.12.4.2 2006/11/09 05:11:06 fang Exp $
+#	$Id: Makefile.am,v 1.12.4.3 2006/11/09 18:47:40 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -66,8 +66,8 @@ HACKT_CREATE_TEST_SUBJECTS = \
 # several tests are not ready because we haven't defined
 # footprint frames for built-in channel types yet.  
 # They result in an assertion failure on the frame pointer.  
-# HACKT_ALLOC_TEST_SUBJECTS = \
-#	$(HACKT_CREATE_TEST_SUBJECTS)
+# HACKT_ALLOC_TEST_PASSES = \
+#	$(HACKT_CREATE_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 019b \

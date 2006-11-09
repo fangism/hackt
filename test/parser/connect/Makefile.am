@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.22.4.2 2006/11/09 05:11:07 fang Exp $
+#	$Id: Makefile.am,v 1.22.4.3 2006/11/09 18:47:43 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -118,7 +118,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 # 117 passes unrolling, but fails during create's hierarchical type check, neat!
 # KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)
 
-HACKT_ALLOC_TEST_SUBJECTS = \
+HACKT_ALLOC_TEST_PASSES = \
 	001 006 006b 007 \
 	010 011 014 017 018 019 \
 	021 022 025 025b 027 027b \

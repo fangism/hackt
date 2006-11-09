@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57.4.4 2006/11/09 05:31:18 fang Exp $
+#	$Id: Make.test-tail,v 1.57.4.5 2006/11/09 18:47:32 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -28,8 +28,8 @@ TEST_BUILDDIR = $(top_builddir)/test
 # HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
 # HACKT_CREATE_TEST_SH = $(TEST_BUILDDIR)/hackt-create-expect.sh
 # HACKT_CREATE_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-create-consistency.sh
-HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
-HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
+# HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
+# HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
 HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
 HACKT_CFLAT_LVS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-lvs-expect.sh
 HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
@@ -58,8 +58,8 @@ DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 
 HACO_FLAGS += -I$(srcdir)
 
-.hac.stderr:
-	@$(TOUCH) $@
+# .hac.stderr:
+#	@$(TOUCH) $@
 
 # this dependency generator assymes default target suffix .haco
 # caution: concurrent builds of .haco and .depend may clobber this
@@ -499,6 +499,7 @@ createfromhaco.autodepend: Makefile
 .hacktcreatefromhacotest:
 	@$(DUMMY_TEST_SCRIPT)
 
+# ALLOC tests
 .haco-c.haco-a:
 	$(HACKT_ALLOC_EXE) $< $@
 
@@ -514,38 +515,152 @@ createfromhaco.autodepend: Makefile
 .haco-a.allocdump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
-.hac.hacktalloctest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_ALLOC_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ALLOC_FILTER)\"" \
-		"\"$(ANALYZE_DIFF_AWK)\"" \
-		"\"$(POM_INDEX_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
+.haco-a-from-haco.haco-a-from-haco-dump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+.haco-a-from-u.haco-a-from-u-dump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+.haco-a-dump.haco-a-dump-filter:
+	$(CAT) $< | $(ALLOC_FILTER) > $@
+
+.allocdump.allocdump-filter:
+	$(CAT) $< | $(ALLOC_FILTER) > $@
+
+.haco-a-from-haco-dump.haco-a-from-haco-filter:
+	$(CAT) $< | $(ALLOC_FILTER) > $@
+
+.haco-a-from-u-dump.haco-a-from-u-filter:
+	$(CAT) $< | $(ALLOC_FILTER) > $@
+
+.allocdump-filter.allocdiff:
+	@stderr=`echo $@ | $(SED) 's/\.allocdiff$$/.allocstderr/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then $(ECHO) "$@ is non-empty!" ; fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi
+
+.allocdiff.hacktalloctest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+alloctest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print $$1 ".allocdiff: $(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include alloctest.autodepend
+
+.hacktalloctest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.haco-c.allocfaildump:
+	-@failobj=`echo $@ | $(SED) 's/\.allocfaildump$$/.haco-a-fail/g'` ; \
+	$(ECHO) $(HACKT_ALLOC_EXE) $< "$$failobj" ; \
+	$(HACKT_ALLOC_EXE) $< "$$failobj" > $@ 2>&1
+
+.allocfaildump.allocfaildiff:
+	@stderr=`echo $@ | $(SED) 's/\.allocfaildiff$$/.allocstderr/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi
+
+.allocfaildiff.hacktallocfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+allocfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_ALLOC_TEST_FAILURES)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print $$1 ".allocfaildiff: $(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include allocfailtest.autodepend
+
+
+# .hac.hacktalloctest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_ALLOC_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
+#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
+#		$* "\"$(ALLOC_FILTER)\"" \
+#		"\"$(ANALYZE_DIFF_AWK)\"" \
+#		"\"$(POM_INDEX_FILTER)\"" >> $@
+#	@$(CHMOD) +x $@
 
 # dummy test for when make variable is empty
-.hacktalloctest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
 .allocstderr:
 	@$(TOUCH) $@
 
 # does a 3-way difference test
-.hac.hacktallocfromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_ALLOC_FROM_HACO_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ALLOC_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
+# .hac.hacktallocfromhacotest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_ALLOC_FROM_HACO_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
+#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
+#		$* "\"$(ALLOC_FILTER)\"" >> $@
+#	@$(CHMOD) +x $@
+
+.haco-a-from-haco.alloc-from-haco-dump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+.haco-a-from-u.alloc-from-u-dump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+.alloc-from-haco-dump.alloc-from-haco-dump-filter:
+	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
+	$(ECHO) "Filtered $@"
+
+.alloc-from-u-dump.alloc-from-u-dump-filter:
+	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
+	$(ECHO) "Filtered $@"
+
+# unifies 3-way diff
+.alloc-from-haco-dump-filter.alloc-from-haco-diff:
+	@expect1=`echo $@ | $(SED) 's/\.alloc-from-haco-diff$$/.allocdump-filter/g'` ; \
+	expect2=`echo $@ | $(SED) 's/\.alloc-from-haco-diff$$/.alloc-from-u-dump-filter/g'` ; \
+	$(ECHO) -n "" > $@ ; \
+	if test -f "$$expect1" ; then \
+	  if test -f "$$expect2" ; then \
+	    $(ECHO) "$(DIFF) -bu $$expect1 $<" ; \
+	    $(ECHO) "$(DIFF) -bu $$expect2 $<" ; \
+	    $(DIFF) -bu "$$expect1" $< >> $@ 2>&1 ; \
+	    $(DIFF) -bu "$$expect2" $< >> $@ 2>&1 ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is non-empty!" ; \
+	    fi ; \
+	  else $(ECHO) "Missing $$expect2." | $(TEE) $@ ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect1." | $(TEE) $@ ; \
+	fi
+
+allocfromhaco.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter " $$1 ".alloc-from-u-dump-filter"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include allocfromhaco.autodepend
+
+.alloc-from-haco-diff.hacktallocfromhacotest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
 
 .hacktallocfromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
+	@$(DUMMY_TEST_SCRIPT)
 
 
+# CFLAT tests
 .expect-prs:
 	@$(TOUCH) $@
 
@@ -858,6 +973,10 @@ sprsdiffs.sort: force
 check-summaries: $(CHECK_SUMMARIES)
 	-@ls -l $(CHECK_SUMMARIES)
 
+HACKT_ALLOC_TEST_SUBJECTS = \
+	$(HACKT_ALLOC_TEST_PASSES) \
+	$(HACKT_ALLOC_TEST_FAILURES)
+
 # must be previously defined to use +=
 # assuming HACKT_OBJ_TEST_SUBJECTS is subset of HACKT_PARSE_TEST_SUBJECTS
 srcdir_EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
@@ -894,8 +1013,9 @@ TESTS += $(HACKT_PARSE_TEST_PASSES:=.hacktcmpltest) \
 	$(HACKT_CREATE_TEST_PASSES:=.hacktcreatetest) \
 	$(HACKT_CREATE_TEST_FAILURES:=.hacktcreatefailtest) \
 	$(HACKT_CREATE_TEST_PASSES:=.hacktcreatefromhacotest) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktallocfromhacotest) \
+	$(HACKT_ALLOC_TEST_PASSES:=.hacktalloctest) \
+	$(HACKT_ALLOC_TEST_FAILURES:=.hacktallocfailtest) \
+	$(HACKT_ALLOC_TEST_PASSES:=.hacktallocfromhacotest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hacktcflatlvstest) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
@@ -947,6 +1067,19 @@ build-check: \
 	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-dump) \
 	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-dump-filter) \
 	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-diff) \
+	$(HACKT_ALLOC_TEST_PASSES:=.haco-a) \
+	$(HACKT_ALLOC_TEST_PASSES:=.allocdump) \
+	$(HACKT_ALLOC_TEST_PASSES:=.allocdump-filter) \
+	$(HACKT_ALLOC_TEST_PASSES:=.allocdiff) \
+	$(HACKT_ALLOC_TEST_FAILURES:=.allocfaildump) \
+	$(HACKT_ALLOC_TEST_FAILURES:=.allocfaildiff) \
+	$(HACKT_ALLOC_TEST_PASSES:=.haco-a-from-haco) \
+	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-haco-dump) \
+	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-haco-dump-filter) \
+	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-haco-diff) \
+	$(HACKT_ALLOC_TEST_PASSES:=.haco-a-from-u) \
+	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-u-dump) \
+	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-u-dump-filter) \
 	$(TESTS)
 
 # executable dependence: if executable is more recent, also rebuild
@@ -968,7 +1101,8 @@ test.autodepend: Makefile
 AUTODEPENDS = test.autodepend compilewarntest.autodepend \
 	compilefailtest.autodepend compileobjdiff.autodepend \
 	unrolltest.autodepend unrollfailtest.autodepend \
-	createtest.autodepend createfailtest.autodepend
+	createtest.autodepend createfailtest.autodepend \
+	alloctest.autodepend allocfailtest.autodepend
 	
 
 DISTCLEANFILES += $(AUTODEPENDS)
@@ -1034,6 +1168,12 @@ echo-create-failures: force
 
 echo-create-tests: force
 	@$(ECHO) $(HACKT_CREATE_TEST_SUBJECTS)
+
+echo-alloc-passes: force
+	@$(ECHO) $(HACKT_ALLOC_TEST_PASSES)
+
+echo-alloc-failures: force
+	@$(ECHO) $(HACKT_ALLOC_TEST_FAILURES)
 
 echo-alloc-tests: force
 	@$(ECHO) $(HACKT_ALLOC_TEST_SUBJECTS)
@@ -1217,23 +1357,29 @@ clean-unrolltests:
 
 clean-createtests:
 	-$(RM_PATTERN) "*.hacktcreatetest"
+	-$(RM_PATTERN) "*.hacktcreatefailtest"
 	-$(RM_PATTERN) "*.hacktcreatefromhacotest"
 	-$(RM_PATTERN) "*.haco-c"
 	-$(RM_PATTERN) "*.createdump"
 	-$(RM_PATTERN) "*.creatediff"
+	-$(RM_PATTERN) "*.createfaildump"
+	-$(RM_PATTERN) "*.createfaildiff"
 	-$(RM_PATTERN) "*.haco-c-dump"
 	-$(RM_PATTERN) "*.createdump-filter"
 	-$(RM_PATTERN) "*.createdump.filter"
-	-$(RM_PATTERN) "*.createfaildump"
 	-$(RM_PATTERN) "*.create-from*"
 
 clean-alloctests:
 	-$(RM_PATTERN) "*.hacktalloctest"
+	-$(RM_PATTERN) "*.hacktallocfailtest"
 	-$(RM_PATTERN) "*.hacktallocfromhacotest"
 	-$(RM_PATTERN) "*.haco-a"
 	-$(RM_PATTERN) "*.allocdump"
+	-$(RM_PATTERN) "*.allocdump-filter"
 	-$(RM_PATTERN) "*.allocdump.filter"
+	-$(RM_PATTERN) "*.allocfaildump"
 	-$(RM_PATTERN) "*.allocdiff"
+	-$(RM_PATTERN) "*.allocfaildiff"
 	-$(RM_PATTERN) "*.haco-a-dump"
 	-$(RM_PATTERN) "*.alloc-from*"
 	-$(RM_PATTERN) "*.prsimexpr-O1"

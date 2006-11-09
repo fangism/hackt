@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.24.4.2 2006/11/09 05:11:03 fang Exp $
+#	$Id: Makefile.am,v 1.24.4.3 2006/11/09 18:47:38 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -41,7 +41,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	$(HACKT_CREATE_TEST_PASSES) \
 	$(HACKT_CREATE_TEST_FAILURES)
 
-HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 # .hac inputs (no suffix)
 HACKT_PRSIMRC_TEST_SUBJECTS = \

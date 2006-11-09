@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.28.4.2 2006/11/09 05:11:16 fang Exp $
+#	$Id: Makefile.am,v 1.28.4.3 2006/11/09 18:47:56 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -93,7 +93,6 @@ HACKT_CREATE_TEST_SUBJECTS = \
 # null-01: waiting for null-expression resolution
 # loop-01: (same)
 
-# HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
@@ -121,7 +120,7 @@ HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11
 
-HACKT_ALLOC_TEST_SUBJECTS = \
+HACKT_ALLOC_TEST_PASSES = \
 	$(HACKT_CFLAT_TEST_SUBJECTS) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS)
 

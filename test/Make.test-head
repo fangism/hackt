@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.3 2006/11/09 05:10:57 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.4 2006/11/09 18:47:31 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -10,7 +10,7 @@ include $(top_srcdir)/Make.stddef
 SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
 	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
-	.hacktobjtest .outdump .indump \
+	.hacktobjtest .outdump .indump .haco-dump \
 	.outdump-filter .indump-filter .compileobjdiff \
 	.hacktunrolltest .unrolldump .unrolldump-filter \
 	.haco-u-dump .haco-u-dump-filter .unrolldiff \
@@ -20,7 +20,14 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.createdump .createdump-filter .createfaildump .haco-c-dump \
 	.haco-c-from-haco .create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
-	.hacktalloctest .hacktcflattest .hacktsprstest \
+	.hacktcreatefromhacotest \
+	.hacktalloctest .haco-a-dump .haco-a-dump-filter \
+	.allocdump .allocfaildump .allocdump-filter \
+	.haco-a-from-haco .haco-a-from-u \
+	.haco-a-from-haco-dump .haco-a-from-u-dump \
+	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
+	.hacktallocfromhacotest \
+	.hacktcflattest .hacktsprstest \
 	.hacktcflatseutest \
 	.prs .sprs .prsseu .lvsprs .lvssprs \
 	.prsimexpr .prsimexpr-O1 \
@@ -28,11 +35,6 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
-	.haco-dump \
-	.haco-a-dump \
-	.allocdump \
-	.haco-a-from-haco .haco-a-from-u \
-	.hacktcreatefromhacotest .hacktallocfromhacotest \
 	.prsimrc .prsimtest .prsimckpttest .prsimopttest \
 	.hacktprsdottest
 

@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.22.6.3 2006/11/09 06:41:59 fang Exp $
+#	$Id: Makefile.am,v 1.22.6.4 2006/11/09 18:47:57 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -85,7 +85,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	$(HACKT_CREATE_TEST_PASSES) \
 	$(HACKT_CREATE_TEST_FAILURES)
 
-HACKT_ALLOC_TEST_SUBJECTS = \
+HACKT_ALLOC_TEST_PASSES = \
 	008 009 \
 	011 012 \
 	029 \

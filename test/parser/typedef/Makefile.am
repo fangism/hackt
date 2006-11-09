@@ -1,5 +1,5 @@
 # "test/parser/typedef/Makefile.am"
-#	$Id: Makefile.am,v 1.11.68.2 2006/11/09 05:11:18 fang Exp $
+#	$Id: Makefile.am,v 1.11.68.3 2006/11/09 18:47:59 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -44,7 +44,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	$(HACKT_CREATE_TEST_PASSES) \
 	$(HACKT_CREATE_TEST_FAILURES)
 
-HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 # no cflat/prs tests yet
 

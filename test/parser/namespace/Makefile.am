@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.11.22.2 2006/11/09 05:11:11 fang Exp $
+#	$Id: Makefile.am,v 1.11.22.3 2006/11/09 18:47:50 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -37,7 +37,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	$(HACKT_CREATE_TEST_PASSES) \
 	$(HACKT_CREATE_TEST_FAILURES)
 
-HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 026
