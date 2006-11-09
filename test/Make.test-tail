@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57.4.3 2006/11/09 05:10:58 fang Exp $
+#	$Id: Make.test-tail,v 1.57.4.4 2006/11/09 05:31:18 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -285,6 +285,9 @@ compilefailtest.autodepend: Makefile
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
 	$(ECHO) "Filtered $@"
 
+.unrollstderr:
+	@$(TOUCH) $@
+
 .unrolldump-filter.unrolldiff:
 	@stderr=`echo $@ | $(SED) 's/\.unrolldiff$$/.unrollstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
@@ -365,6 +368,9 @@ unrollfailtest.autodepend: Makefile
 .haco-c-dump.haco-c-dump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
 	$(ECHO) "Filtered $@"
+
+.createstderr:
+	@$(TOUCH) $@
 
 .createdump-filter.creatediff:
 	@stderr=`echo $@ | $(SED) 's/\.creatediff$$/.createstderr/g'` ; \
@@ -539,6 +545,9 @@ createfromhaco.autodepend: Makefile
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(CHMOD) +x $@
 
+
+.expect-prs:
+	@$(TOUCH) $@
 
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
@@ -756,7 +765,7 @@ BOGUS_TESTS = .hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
 	.prsimtest .prsimckpttest .prsimopttest
 
 BOGUS_TARGETS = .hac .unrollstderr .createstderr .allocstderr \
-	.hac .hac.hacktcmpltest \
+	.hac .hac.hacktcmpltest .expect-prs \
 	$(BOGUS_TESTS)
 
 CLEANFILES += $(BOGUS_TARGETS)
