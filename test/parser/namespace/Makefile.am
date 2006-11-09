@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/08/04 02:15:18 fang Exp $
+#	$Id: Makefile.am,v 1.11.22.1 2006/11/09 03:08:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,8 +20,12 @@ HACKT_PARSE_TEST_SUBJECTS = \
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)
 
-HACKT_UNROLL_TEST_SUBJECTS = \
+HACKT_UNROLL_TEST_PASSES = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
+
+HACKT_UNROLL_TEST_SUBJECTS = \
+	$(HACKT_UNROLL_TEST_PASSES) \
+	$(HACKT_UNROLL_TEST_FAILURES)
 
 # the other tests have no instances and are uninteresting
 HACKT_CREATE_TEST_SUBJECTS = \

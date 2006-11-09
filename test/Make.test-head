@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.1 2006/11/08 19:45:15 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.2 2006/11/09 03:07:46 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -12,7 +12,10 @@ SUFFIXES = .hac \
 	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
 	.hacktobjtest .outdump .indump \
 	.outdump-filter .indump-filter .compileobjdiff \
-	.hacktunrolltest \
+	.hacktunrolltest .unrolldump .unrolldump-filter \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.hacktunrollfailtest .unrollfaildump .unrollfaildump-filter \
+	.unrollfaildiff \
 	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
 	.hacktcflatseutest \
 	.depend \
@@ -23,8 +26,9 @@ SUFFIXES = .hac \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
-	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
-	.unrolldump .createdump .allocdump \
+	.haco-dump \
+	.haco-c-dump .haco-a-dump \
+	.createdump .allocdump \
 	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
 	.hacktcreatefromhacotest .hacktallocfromhacotest \
 	.prsimrc .prsimtest .prsimckpttest .prsimopttest \

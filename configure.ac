@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.102.2.1 2006/11/08 19:45:05 fang Exp $
+#	$Id: configure.ac,v 1.102.2.2 2006/11/09 03:07:41 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -61,6 +61,7 @@ AC_CHECK_PROG([CUT], cut, cut)
 AC_CHECK_PROG([PASTE], paste, paste)
 AC_CHECK_PROG([HEAD], head, head)
 AC_CHECK_PROG([TAIL], tail, tail)
+AC_CHECK_PROG([TEE], tee, tee)
 # AC_CHECK_PROG([PWD], pwd, pwd)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
@@ -422,8 +423,8 @@ dnl AC_CONFIG_FILES([test/parse-test-expect.sh],
 dnl	[chmod +x test/parse-test-expect.sh])
 dnl AC_CONFIG_FILES([test/hackt-obj-diff.sh],
 dnl	[chmod +x test/hackt-obj-diff.sh])
-AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
-	[chmod +x test/hackt-unroll-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
+dnl	[chmod +x test/hackt-unroll-expect.sh])
 AC_CONFIG_FILES([test/hackt-create-expect.sh],
 	[chmod +x test/hackt-create-expect.sh])
 AC_CONFIG_FILES([test/check-create-consistency.sh],

@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2006/10/24 02:52:43 fang Exp $
+#	$Id: Makefile.am,v 1.19.4.1 2006/11/09 03:07:52 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -30,8 +30,13 @@ HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)
 
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
-HACKT_UNROLL_TEST_SUBJECTS = \
+
+HACKT_UNROLL_TEST_PASSES = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
+
+HACKT_UNROLL_TEST_SUBJECTS = \
+	$(HACKT_UNROLL_TEST_PASSES) \
+	$(HACKT_UNROLL_TEST_FAILURES)
 
 HACKT_CREATE_TEST_SUBJECTS = \
 	$(HACKT_UNROLL_TEST_SUBJECTS)

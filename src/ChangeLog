@@ -5,6 +5,11 @@
 
 2006-11-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-02:
+	  No source revision.
+	  Parallelized unroll tests.  
+
+
 	* HACKT-00-01-04-main-00-80-50-test-01:
 	  Branch for parallelizing regression test suite.  
 	  No source revision.  

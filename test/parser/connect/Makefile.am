@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2006/10/24 02:52:45 fang Exp $
+#	$Id: Makefile.am,v 1.22.4.1 2006/11/09 03:07:57 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -43,8 +43,38 @@ HACKT_PARSE_TEST_SUBJECTS = \
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)
 
+# TODO: matches CREATE_TEST_SUBJECTS
+HACKT_UNROLL_TEST_PASSES = \
+	001 006 006b 007 \
+	010 011 012 013 014 015 017 018 019 \
+	021 022 025 025b 027 027b \
+	030 030b 031 031a 031b \
+	046 047 049 \
+	051 057 058 \
+	062 063 064 065 067 069 \
+	078 \
+	083 084 085 086 086b 087 088 089 \
+	092 099 \
+	100 101 102 103 104 106 107 109 \
+	111 112 113 118 119 \
+	122 123 124 125 126 127 128 129 \
+	130 131 132 133 134 136 137 139
+
+HACKT_UNROLL_TEST_FAILURES = \
+	020 020a 023 023a 024 \
+	034 037 038 \
+	052 053 059 \
+	060 066 068 \
+	071 074 075 \
+	086a \
+	091 \
+	103a 105 108 \
+	110 \
+	135
+
 HACKT_UNROLL_TEST_SUBJECTS = \
-	$(HACKT_OBJ_TEST_SUBJECTS)
+	$(HACKT_UNROLL_TEST_PASSES) \
+	$(HACKT_UNROLL_TEST_FAILURES)
 
 # the following tests are disabled until relaxed actuals are handled properly:
 # 093 094 095
