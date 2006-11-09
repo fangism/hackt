@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.17.4.1 2006/11/09 03:07:51 fang Exp $
+#	$Id: Makefile.am,v 1.17.4.2 2006/11/09 05:11:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -56,7 +56,7 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 # The following fail during unrolling:
 # 041
 # Many other tests are just uninteresting beyond unrolling.
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	001 002 007 \
 	010 013 015 016 \
 	029 \
@@ -64,6 +64,12 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	040 043 044 046 \
 	054 \
 	060
+
+HACKT_CREATE_TEST_FAILURES =
+
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 

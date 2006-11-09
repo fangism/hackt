@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.22.4.1 2006/11/09 03:07:57 fang Exp $
+#	$Id: Makefile.am,v 1.22.4.2 2006/11/09 05:11:07 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -89,7 +89,7 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 # 105 108 110 115
 
 # adding tests one-by-one, should be subset of HACKT_UNROLL_TEST_SUBJECTS
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	001 006 006b 007 \
 	010 011 012 013 014 015 017 018 019 \
 	021 022 025 025b 027 027b \
@@ -99,11 +99,18 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	062 063 064 065 067 069 \
 	078 \
 	083 084 085 088 089 \
-	092 099 \
+	099 \
 	100 102 103 104 106 107 109 \
 	111 112 113 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139
+
+HACKT_CREATE_TEST_FAILURES = \
+	092
+
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
 
 # punted until unroll tests are restored: 114 114a
 # KNOWN BUG: 116 117: doesn't handle creation of bar

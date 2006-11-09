@@ -1,5 +1,5 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.13.26.1 2006/11/09 03:07:59 fang Exp $
+#	$Id: Makefile.am,v 1.13.26.2 2006/11/09 05:11:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -36,10 +36,16 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 	$(HACKT_UNROLL_TEST_FAILURES)
 
 # omitted tests are uninteresting
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	001 002 006 007 008 \
 	023 026 029 \
 	030 031 032 033 036
+
+HACKT_CREATE_TEST_FAILURES =
+
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 

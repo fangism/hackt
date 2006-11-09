@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.1 2006/11/09 03:08:05 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.2 2006/11/09 05:11:15 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -62,7 +62,7 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 # should be a subset of $(HACKT_UNROLL_TEST_SUBJECTS)
 # the omitted unroll tests either have no instances, 
 # fail unrolling, or are just uninteresting
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	024 \
 	054 055 056 057 058 059 \
 	060 061 062 063 064 065 \
@@ -73,6 +73,12 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	094 095 096 097 098 099 \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 115 117 118
+
+HACKT_CREATE_TEST_FAILURES =
+
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
 
 # should be a subset of $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_ALLOC_TEST_SUBJECTS = \

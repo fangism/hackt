@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.19.4.1 2006/11/09 03:07:52 fang Exp $
+#	$Id: Makefile.am,v 1.19.4.2 2006/11/09 05:11:05 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -38,8 +38,14 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 	$(HACKT_UNROLL_TEST_PASSES) \
 	$(HACKT_UNROLL_TEST_FAILURES)
 
+HACKT_CREATE_TEST_PASSES = \
+	$(HACKT_UNROLL_TEST_PASSES)
+
+HACKT_CREATE_TEST_FAILURES =
+
 HACKT_CREATE_TEST_SUBJECTS = \
-	$(HACKT_UNROLL_TEST_SUBJECTS)
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 004 005 008 010 017 018 \

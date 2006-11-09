@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.102.2.2 2006/11/09 03:07:41 fang Exp $
+#	$Id: configure.ac,v 1.102.2.3 2006/11/09 05:10:51 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -425,10 +425,10 @@ dnl AC_CONFIG_FILES([test/hackt-obj-diff.sh],
 dnl	[chmod +x test/hackt-obj-diff.sh])
 dnl AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
 dnl	[chmod +x test/hackt-unroll-expect.sh])
-AC_CONFIG_FILES([test/hackt-create-expect.sh],
-	[chmod +x test/hackt-create-expect.sh])
-AC_CONFIG_FILES([test/check-create-consistency.sh],
-	[chmod +x test/check-create-consistency.sh])
+dnl AC_CONFIG_FILES([test/hackt-create-expect.sh],
+dnl	[chmod +x test/hackt-create-expect.sh])
+dnl AC_CONFIG_FILES([test/check-create-consistency.sh],
+dnl	[chmod +x test/check-create-consistency.sh])
 AC_CONFIG_FILES([test/check-alloc-consistency.sh],
 	[chmod +x test/check-alloc-consistency.sh])
 AC_CONFIG_FILES([test/hackt-alloc-expect.sh],

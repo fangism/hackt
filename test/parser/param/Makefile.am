@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.17.6.1 2006/11/09 03:08:04 fang Exp $
+#	$Id: Makefile.am,v 1.17.6.2 2006/11/09 05:11:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -78,7 +78,7 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 # KNOWN BUG:
 # 049 -- reference to out-of-scope value (global) is yet unsupported.
 
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	001 002 003 004 008 \
 	014 017 019 \
 	036 037 038 039 \
@@ -91,6 +91,12 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	102 103 104 105 106 108 109 \
 	110 111 116 \
 	121
+
+HACKT_CREATE_TEST_FAILURES =
+
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 

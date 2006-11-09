@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.35.4.2 2006/11/09 03:07:48 fang Exp $
+#	$Id: Makefile.am,v 1.35.4.3 2006/11/09 05:11:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,12 +12,12 @@ TESTS +=
 OBSOLETE_TESTSCRIPTS = \
 	parse-test-expect.sh.in \
 	hackt-obj-diff.sh.in \
-	hackt-unroll-expect.sh.in
+	hackt-unroll-expect.sh.in \
+	hackt-create-expect.sh.in \
+	check-create-consistency.sh.in
 
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
-	hackt-create-expect.sh.in \
-	check-create-consistency.sh.in \
 	check-alloc-consistency.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \

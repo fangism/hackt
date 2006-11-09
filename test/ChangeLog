@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2006-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-03:
+	  Parallelized create-tests.
+
+
 2006-11-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-50-test-02:

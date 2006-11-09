@@ -1,25 +1,27 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.2 2006/11/09 03:07:46 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.3 2006/11/09 05:10:57 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
-SUFFIXES = .hac \
+SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
 	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
 	.hacktobjtest .outdump .indump \
 	.outdump-filter .indump-filter .compileobjdiff \
 	.hacktunrolltest .unrolldump .unrolldump-filter \
 	.haco-u-dump .haco-u-dump-filter .unrolldiff \
-	.hacktunrollfailtest .unrollfaildump .unrollfaildump-filter \
+	.hacktunrollfailtest .unrollfaildump \
 	.unrollfaildiff \
-	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
+	.hacktcreatetest .hacktcreatefailtest \
+	.createdump .createdump-filter .createfaildump .haco-c-dump \
+	.haco-c-from-haco .create-from-haco-dump \
+	.create-from-haco-dump-filter .create-from-haco-diff \
+	.hacktalloctest .hacktcflattest .hacktsprstest \
 	.hacktcflatseutest \
-	.depend \
-	.haco .haco-u .haco-c .haco-a \
 	.prs .sprs .prsseu .lvsprs .lvssprs \
 	.prsimexpr .prsimexpr-O1 \
 	.prs-dot .prs-dot-O1 \
@@ -27,9 +29,9 @@ SUFFIXES = .hac \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
 	.haco-dump \
-	.haco-c-dump .haco-a-dump \
-	.createdump .allocdump \
-	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
+	.haco-a-dump \
+	.allocdump \
+	.haco-a-from-haco .haco-a-from-u \
 	.hacktcreatefromhacotest .hacktallocfromhacotest \
 	.prsimrc .prsimtest .prsimckpttest .prsimopttest \
 	.hacktprsdottest

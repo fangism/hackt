@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57.4.2 2006/11/09 03:07:47 fang Exp $
+#	$Id: Make.test-tail,v 1.57.4.3 2006/11/09 05:10:58 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -23,11 +23,11 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 TEST_SRCDIR = $(top_srcdir)/test
 TEST_BUILDDIR = $(top_builddir)/test
 # test scripts may be obsolete after folding into Makefile...
-HACKT_PARSE_TEST_SH = $(TEST_BUILDDIR)/parse-test-expect.sh
-HACKT_OBJ_TEST_SH = $(TEST_BUILDDIR)/hackt-obj-diff.sh
-HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
-HACKT_CREATE_TEST_SH = $(TEST_BUILDDIR)/hackt-create-expect.sh
-HACKT_CREATE_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-create-consistency.sh
+# HACKT_PARSE_TEST_SH = $(TEST_BUILDDIR)/parse-test-expect.sh
+# HACKT_OBJ_TEST_SH = $(TEST_BUILDDIR)/hackt-obj-diff.sh
+# HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
+# HACKT_CREATE_TEST_SH = $(TEST_BUILDDIR)/hackt-create-expect.sh
+# HACKT_CREATE_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-create-consistency.sh
 HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
 HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
 HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
@@ -264,10 +264,6 @@ compilefailtest.autodepend: Makefile
 .compileobjdiff.hacktobjtest:
 	@$(DEFAULT_DIFF_TEST_SCRIPT)
 
-#	@$(ECHO) $(HACKT_OBJ_TEST_SH) "\"$(HACKT_COMPILE_EXE) $(HACO_FLAGS)\"" \
-#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-#		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
-
 # dummy test for when make variable is empty
 .hacktobjtest:
 	@$(DUMMY_TEST_SCRIPT)
@@ -323,17 +319,6 @@ unrolltest.autodepend: Makefile
 
 -include unrolltest.autodepend
 
-# .hac.hacktunrolltest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_UNROLL_TEST_SH) "\"$(HACKT_UNROLL_EXE)\"" \
-#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-#		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
-#		"\"$(ANALYZE_DIFF_AWK)\"" \
-#		"\"$(POM_INDEX_FILTER)\"" >> $@
-#	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
 .hacktunrolltest:
 	@$(DUMMY_TEST_SCRIPT)
 
@@ -366,8 +351,87 @@ unrollfailtest.autodepend: Makefile
 
 -include unrollfailtest.autodepend
 
-# .unrollstderr:
-#	@$(TOUCH) $@
+# CREATE tests
+.haco-c.createdump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+.haco-c.haco-c-dump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+.createdump.createdump-filter:
+	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	$(ECHO) "Filtered $@"
+
+.haco-c-dump.haco-c-dump-filter:
+	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	$(ECHO) "Filtered $@"
+
+.createdump-filter.creatediff:
+	@stderr=`echo $@ | $(SED) 's/\.creatediff$$/.createstderr/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	    $(ANALYZE_DIFF_AWK) -v quiet=2 $@ > $@-anal ; \
+	    if $(GREP) "OK" $@-anal ; then \
+	      filtered=`echo $@ | $(SED) 's/\.creatediff$$/.createstderr-noindex/g'` ; \
+	      diffout=`echo $@ | $(SED) 's/\.creatediff$$/.creatediff-noindex/g'` ; \
+	      $(CAT) "$$expect" | $(POM_INDEX_FILTER) > $$filtered ; \
+	      $(CAT) $< | $(POM_INDEX_FILTER) > $<-noindex ; \
+	      $(DIFF) -buw "$$filtered" $<-noindex > "$$diffout" 2>&1 ; \
+	      $(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout" ; \
+	    fi ; \
+	    $(RM) $@-anal ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi
+
+.creatediff.hacktcreatetest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+createtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CREATE_TEST_PASSES)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print $$1 ".creatediff: $(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include createtest.autodepend
+
+.hacktcreatetest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.haco-u.createfaildump:
+	-@failobj=`echo $@ | $(SED) 's/\.createfaildump$$/.haco-c-fail/g'` ; \
+	$(ECHO) $(HACKT_CREATE_EXE) $< "$$failobj" ; \
+	$(HACKT_CREATE_EXE) $< "$$failobj" > $@ 2>&1
+
+.createfaildump.createfaildiff:
+	@stderr=`echo $@ | $(SED) 's/\.createfaildiff$$/.createstderr/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi
+
+.createfaildiff.hacktcreatefailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+createfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CREATE_TEST_FAILURES)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print $$1 ".createfaildiff: $(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include createfailtest.autodepend
+
 
 .haco-u.haco-c:
 	$(HACKT_CREATE_EXE) $< $@
@@ -375,41 +439,59 @@ unrollfailtest.autodepend: Makefile
 .haco.haco-c-from-haco:
 	$(HACKT_CREATE_EXE) $< $@
 
-.haco-c.haco-c-dump:
+# .hac.hacktcreatetest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
+#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
+#		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
+#		"\"$(ANALYZE_DIFF_AWK)\"" \
+#		"\"$(POM_INDEX_FILTER)\"" >> $@
+#	@$(CHMOD) +x $@
+
+# .createstderr:
+#	@$(TOUCH) $@
+
+.haco-c-from-haco.create-from-haco-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
-.haco-c.createdump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
+.create-from-haco-dump.create-from-haco-dump-filter:
+	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	$(ECHO) "Filtered $@"
 
-.hac.hacktcreatetest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
-		"\"$(ANALYZE_DIFF_AWK)\"" \
-		"\"$(POM_INDEX_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
+.create-from-haco-dump-filter.create-from-haco-diff:
+	@expect=`echo $@ | $(SED) 's/\.create-from-haco-diff$$/.createdump-filter/g'` ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO) "$(DIFF) -bu $$expect $<" ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi
 
-# dummy test for when make variable is empty
-.hacktcreatetest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
+createfromhaco.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CREATE_TEST_PASSES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".create-from-haco-diff: " $$1 ".createdump-filter"; }' > $@ ; \
+	$(TOUCH) $@
 
-.createstderr:
-	@$(TOUCH) $@
+-include createfromhaco.autodepend
 
-.hac.hacktcreatefromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CREATE_FROM_HACO_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
+.create-from-haco-diff.hacktcreatefromhacotest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+# .hac.hacktcreatefromhacotest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_CREATE_FROM_HACO_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
+#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
+#		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
+#	@$(CHMOD) +x $@
 
 .hacktcreatefromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
+	@$(DUMMY_TEST_SCRIPT)
 
 .haco-c.haco-a:
 	$(HACKT_ALLOC_EXE) $< $@
@@ -457,14 +539,6 @@ unrollfailtest.autodepend: Makefile
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(CHMOD) +x $@
 
-
-# .hac.hacktallocfromunrolltest:
-# 	@$(ECHO) "#!$(SHELL)" > $@
-# 	@$(ECHO) "# \"$@\"" >> $@
-# 	@$(ECHO) $(HACKT_ALLOC_FROM_UNROLL_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-# 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-# 		$* "\"$(ALLOC_FILTER)\"" >> $@
-# 	@$(CHMOD) +x $@
 
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
@@ -675,8 +749,8 @@ endif
 
 
 BOGUS_TESTS = .hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
-	.hacktobjtest .hacktunrolltest \
-	.hacktcreatefromhacotest .hacktcreatetest \
+	.hacktobjtest .hacktunrolltest .hacktunrollfailtest \
+	.hacktcreatefromhacotest .hacktcreatetest .hacktcreatefailtest \
 	.hacktallocfromhacotest .hacktalloctest \
 	.hacktcflattest .hacktprsdottest \
 	.prsimtest .prsimckpttest .prsimopttest
@@ -689,7 +763,8 @@ CLEANFILES += $(BOGUS_TARGETS)
 DISTHOOK_CLEANFILES += $(BOGUS_TARGETS)
 
 CHECK_SUMMARIES = compilediffs compilewarndiffs compilefaildiffs \
-	objdiffs unrolldiffs unrollfaildiffs creatediffs allocdiffs \
+	objdiffs unrolldiffs unrollfaildiffs creatediffs createfaildiffs \
+	allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
 	prsdiffs prsdiffs.sort prsimexprdiffs \
 	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort \
@@ -717,6 +792,9 @@ unrollfaildiffs: force
 
 creatediffs: force
 	-$(CAT) *.creatediff > $@
+
+createfaildiffs: force
+	-$(CAT) *.createfaildiff > $@
 
 createfromhacodiffs: force
 	-$(CAT) *.create-from-haco-diff > $@
@@ -804,8 +882,9 @@ TESTS += $(HACKT_PARSE_TEST_PASSES:=.hacktcmpltest) \
 	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest) \
 	$(HACKT_UNROLL_TEST_PASSES:=.hacktunrolltest) \
 	$(HACKT_UNROLL_TEST_FAILURES:=.hacktunrollfailtest) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatefromhacotest) \
+	$(HACKT_CREATE_TEST_PASSES:=.hacktcreatetest) \
+	$(HACKT_CREATE_TEST_FAILURES:=.hacktcreatefailtest) \
+	$(HACKT_CREATE_TEST_PASSES:=.hacktcreatefromhacotest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktallocfromhacotest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
@@ -849,6 +928,16 @@ build-check: \
 	$(HACKT_UNROLL_TEST_PASSES:=.unrolldiff) \
 	$(HACKT_UNROLL_TEST_FAILURES:=.unrollfaildump) \
 	$(HACKT_UNROLL_TEST_FAILURES:=.unrollfaildiff) \
+	$(HACKT_CREATE_TEST_PASSES:=.haco-c) \
+	$(HACKT_CREATE_TEST_PASSES:=.createdump) \
+	$(HACKT_CREATE_TEST_PASSES:=.createdump-filter) \
+	$(HACKT_CREATE_TEST_PASSES:=.creatediff) \
+	$(HACKT_CREATE_TEST_FAILURES:=.createfaildump) \
+	$(HACKT_CREATE_TEST_FAILURES:=.createfaildiff) \
+	$(HACKT_CREATE_TEST_PASSES:=.haco-c-from-haco) \
+	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-dump) \
+	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-dump-filter) \
+	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-diff) \
 	$(TESTS)
 
 # executable dependence: if executable is more recent, also rebuild
@@ -869,7 +958,9 @@ test.autodepend: Makefile
 
 AUTODEPENDS = test.autodepend compilewarntest.autodepend \
 	compilefailtest.autodepend compileobjdiff.autodepend \
-	unrolltest.autodepend unrollfailtest.autodepend
+	unrolltest.autodepend unrollfailtest.autodepend \
+	createtest.autodepend createfailtest.autodepend
+	
 
 DISTCLEANFILES += $(AUTODEPENDS)
 
@@ -925,6 +1016,12 @@ echo-unroll-failures: force
 
 echo-unroll-tests: force
 	@$(ECHO) $(HACKT_UNROLL_TEST_SUBJECTS)
+
+echo-create-passes: force
+	@$(ECHO) $(HACKT_CREATE_TEST_PASSES)
+
+echo-create-failures: force
+	@$(ECHO) $(HACKT_CREATE_TEST_FAILURES)
 
 echo-create-tests: force
 	@$(ECHO) $(HACKT_CREATE_TEST_SUBJECTS)
@@ -1065,6 +1162,7 @@ clean-summaries:
 	$(RM) $(CHECK_SUMMARIES)
 
 distclean-depend:
+	-$(RM_PATTERN) "*.autodepend"
 	-$(RM_PATTERN) "*.depend"
 
 clean-compiletests:
@@ -1107,7 +1205,6 @@ clean-unrolltests:
 	-$(RM_PATTERN) "*.unrolldump.filter"
 	-$(RM_PATTERN) "*.unrolldump-filter"
 	-$(RM_PATTERN) "*.unrollfaildump"
-	-$(RM_PATTERN) "*.unrollfaildump-filter"
 
 clean-createtests:
 	-$(RM_PATTERN) "*.hacktcreatetest"
@@ -1116,7 +1213,9 @@ clean-createtests:
 	-$(RM_PATTERN) "*.createdump"
 	-$(RM_PATTERN) "*.creatediff"
 	-$(RM_PATTERN) "*.haco-c-dump"
+	-$(RM_PATTERN) "*.createdump-filter"
 	-$(RM_PATTERN) "*.createdump.filter"
+	-$(RM_PATTERN) "*.createfaildump"
 	-$(RM_PATTERN) "*.create-from*"
 
 clean-alloctests:

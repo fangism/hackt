@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.22.6.1 2006/11/09 03:08:10 fang Exp $
+#	$Id: Makefile.am,v 1.22.6.2 2006/11/09 05:11:17 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -65,16 +65,21 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 # KNOWN BUGS:
 
 # omitted tests are just uninteresting
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	008 009 \
 	011 012 \
 	029 \
 	038 \
-	045 046 049 \
+	049 \
 	059 \
-	061 062 063 064a 068 \
+	063 068 \
 	070 073 074 075 076 077 079 \
-	081 086 087 088 089
+	081 086 088
+
+HACKT_CREATE_TEST_FAILURES = \
+	045 046 \
+	061 062 064a \
+	087 089
 
 HACKT_ALLOC_TEST_SUBJECTS = \
 	008 009 \
