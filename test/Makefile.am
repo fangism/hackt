@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.35.4.4 2006/11/09 18:47:33 fang Exp $
+#	$Id: Makefile.am,v 1.35.4.5 2006/11/09 23:27:54 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,8 @@ OBSOLETE_TESTSCRIPTS = \
 	hackt-create-expect.sh.in \
 	check-create-consistency.sh.in \
 	check-alloc-consistency.sh.in \
-	hackt-alloc-expect.sh.in
+	hackt-alloc-expect.sh.in \
+	hackt-prsimrc-expect.sh.in
 
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
@@ -25,7 +26,6 @@ PRECONFIGURED_TESTSCRIPTS = \
 	hackt-cflat-seu-expect.sh.in \
 	hackt-cflat-sprs-expect.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in \
-	hackt-prsimrc-expect.sh.in \
 	hackt-prsim-ckpt.sh.in \
 	hackt-prsim-opt.sh.in \
 	hackt-prs-dot-test.sh.in \

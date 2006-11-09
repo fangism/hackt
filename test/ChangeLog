@@ -2,6 +2,10 @@
 
 2006-11-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-05:
+	  Parallelized prsim-tests (basic only).  
+
+
 	* HACKT-00-01-04-main-00-80-50-test-04:
 	  Parallelized alloc-tests.
 

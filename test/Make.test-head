@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.4 2006/11/09 18:47:31 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.5 2006/11/09 23:27:50 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -14,8 +14,7 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.outdump-filter .indump-filter .compileobjdiff \
 	.hacktunrolltest .unrolldump .unrolldump-filter \
 	.haco-u-dump .haco-u-dump-filter .unrolldiff \
-	.hacktunrollfailtest .unrollfaildump \
-	.unrollfaildiff \
+	.hacktunrollfailtest .unrollfaildump .unrollfaildiff \
 	.hacktcreatetest .hacktcreatefailtest \
 	.createdump .createdump-filter .createfaildump .haco-c-dump \
 	.haco-c-from-haco .create-from-haco-dump \
@@ -26,21 +25,55 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.haco-a-from-haco .haco-a-from-u \
 	.haco-a-from-haco-dump .haco-a-from-u-dump \
 	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
+	.alloc-from-haco-dump .alloc-from-u-dump \
+	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
 	.hacktallocfromhacotest \
-	.hacktcflattest .hacktsprstest \
+	.hacktcflattest \
+	.hacktsprstest \
 	.hacktcflatseutest \
 	.prs .sprs .prsseu .lvsprs .lvssprs \
+	.prsimrc .prisimtest .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
 	.prsimexpr .prsimexpr-O1 \
 	.prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
-	.prsimrc .prsimtest .prsimckpttest .prsimopttest \
+	.prsimckpttest .prsimopttest \
 	.hacktprsdottest
+
+# if suffix substitutions ever result in target names with just the suffix
+# then just touch empty files with name.
+# NOTE: built test script should not be named here, as then need to be
+# chmod-ed to be executable.  
+BOGUS_SUFFIX_TARGETS = \
+	.hac .depend .haco .haco-u .haco-c .haco-a \
+	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
+	.stderr .outdump .indump .haco-dump \
+	.outdump-filter .indump-filter .compileobjdiff \
+	.unrolldump .unrolldump-filter .unrollstderr \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.createstderr .unrollfaildump .unrollfaildiff \
+	.createdump .createdump-filter .createfaildump .haco-c-dump \
+	.haco-c-from-haco .create-from-haco-dump \
+	.create-from-haco-dump-filter .create-from-haco-diff \
+	.haco-a-dump .haco-a-dump-filter \
+	.allocdump .allocfaildump .allocdump-filter \
+	.haco-a-from-haco .haco-a-from-u \
+	.haco-a-from-haco-dump .haco-a-from-u-dump \
+	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
+	.alloc-from-haco-dump .alloc-from-u-dump \
+	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
+	.prs .expect-prs .sprs .prsseu .lvsprs .lvssprs \
+	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
+	.prsimexpr .prsimexpr-O1
 
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs
+BOGUS_SUFFIX_TARGETS += .cast .castprs
 endif
+
+$(BOGUS_SUFFIX_TARGETS):
+	@$(TOUCH) $@
 
 # for compile include paths
 HACO_FLAGS =

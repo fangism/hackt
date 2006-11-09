@@ -1,5 +1,5 @@
 # "test/quarantine/Makefile.am"
-#	$Id: Makefile.am,v 1.3.4.1 2006/11/09 18:48:00 fang Exp $
+#	$Id: Makefile.am,v 1.3.4.2 2006/11/09 23:28:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -27,7 +27,7 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_SUBJECTS)
 
 HACKT_PRSIMRC_TEST_SUBJECTS =
 
-HACKT_PRSIMRC_TEST_SCRIPTS_BASES =
+HACKT_PRSIMRC_TEST_SCRIPTS_PASSES =
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS =
 

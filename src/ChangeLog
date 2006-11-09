@@ -5,6 +5,11 @@
 
 2006-11-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-05:
+	  No source revision.
+	  Parallelized prsim tests.
+
+
 	* HACKT-00-01-04-main-00-80-50-test-04:
 	  No source revision.
 	  Parallelized alloc tests.  

@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.24.4.3 2006/11/09 18:47:38 fang Exp $
+#	$Id: Makefile.am,v 1.24.4.4 2006/11/09 23:27:55 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -103,7 +103,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	copy-wchb_copy-03 copy-wchb_copy-04
 
 # .prsimrc inputs (no suffix)
-HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
+HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
@@ -160,6 +160,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
 	copy-wchb_copy-03 copy-wchb_copy-04
+
+HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES =
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01
