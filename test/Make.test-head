@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.6 2006/11/10 00:50:20 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.7 2006/11/10 07:48:19 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -16,12 +16,14 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.haco-u-dump .haco-u-dump-filter .unrolldiff \
 	.hacktunrollfailtest .unrollfaildump .unrollfaildiff \
 	.hacktcreatetest .hacktcreatefailtest \
-	.createdump .createdump-filter .createfaildump .haco-c-dump \
+	.createdump .createdump-filter .creatediff \
+	.createfaildump .haco-c-dump \
 	.haco-c-from-haco .create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
 	.hacktcreatefromhacotest \
 	.hacktalloctest .haco-a-dump .haco-a-dump-filter \
 	.allocdump .allocfaildump .allocdump-filter \
+	.allocdiff .alloc-from-haco-diff \
 	.haco-a-from-haco .haco-a-from-u \
 	.haco-a-from-haco-dump .haco-a-from-u-dump \
 	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
@@ -35,12 +37,15 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.prsimrc .prisimtest .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
 	.prsimfailtest .prsimrcfail-out \
 	.prsimrcfail-out-filter .prsimrcfail-diff \
-	.prsimexpr .prsimexpr-O1 \
+	.hacktprsimexprtest .prsimexpr .prsimexprdiff .prsimexpr-O1 \
 	.prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
-	.prsimckpttest .prsimopttest \
+	.prsimckpttest .prsimckpt .prsimckpt-dump \
+	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
+	.prsimckpt-dupe .prsimckpt-dupe-dump \
+	.prsimopttest \
 	.hacktprsdottest
 
 # if suffix substitutions ever result in target names with just the suffix
@@ -68,7 +73,10 @@ BOGUS_SUFFIX_TARGETS = \
 	.prs .expect-prs .sprs .prsseu .lvsprs .lvssprs \
 	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
 	.prsimrcfail-out .prsimrcfail-out-filter .prsimrcfail-diff \
-	.prsimexpr .prsimexpr-O1
+	.prsimexpr .prsimexprdiff .prsimexpr-O1 \
+	.prsimckpt .prsimckpt-dump \
+	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
+	.prsimckpt-dupe .prsimckpt-dupe-dump
 
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs

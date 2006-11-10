@@ -1,5 +1,21 @@
 # "test/ChangeLog"
 
+2006-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-05:
+	  Parallelized prsimexpr tests and prsim-checkpoint tests.  
+	  Added new template test scripts:
+		prsimckpt-template.prsimrc, prsimckpt-load-template.prsimrc
+	  TODO: cleanup: test dependencies that reference a file
+		added by the auto-dependency generator need not 
+		be tested, e.g. .stderr files.  
+		They are an unnecessary safety measure.  
+	  TODO: maybe replace srcdir paths in autodepend's with
+		just '$(srcdir)' which is defined by the includer.  
+	  TODO: Make.test-tail getting to be unwieldly, split up
+		rules by group before branch is over.  
+
+
 2006-11-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-50-test-05:

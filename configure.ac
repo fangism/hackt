@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.102.2.5 2006/11/09 23:27:46 fang Exp $
+#	$Id: configure.ac,v 1.102.2.6 2006/11/10 07:48:14 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -442,12 +442,12 @@ AC_CONFIG_FILES([test/hackt-cflat-seu-expect.sh],
 	[chmod +x test/hackt-cflat-seu-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
 	[chmod +x test/hackt-cflat-sprs-expect.sh])
-AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
-	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
+dnl	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
 dnl AC_CONFIG_FILES([test/hackt-prsimrc-expect.sh],
 dnl	[chmod +x test/hackt-prsimrc-expect.sh])
-AC_CONFIG_FILES([test/hackt-prsim-ckpt.sh],
-	[chmod +x test/hackt-prsim-ckpt.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsim-ckpt.sh],
+dnl	[chmod +x test/hackt-prsim-ckpt.sh])
 AC_CONFIG_FILES([test/hackt-prsim-opt.sh],
 	[chmod +x test/hackt-prsim-opt.sh])
 AC_CONFIG_FILES([test/hackt-prs-dot-test.sh],

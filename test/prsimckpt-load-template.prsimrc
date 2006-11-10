@@ -1,0 +1,11 @@
+# "prsimckpt-load-template.prsimrc"
+#	$Id: prsimckpt-load-template.prsimrc,v 1.1.2.1 2006/11/10 07:48:23 fang Exp $
+
+load LOAD
+status 0
+status 1
+status X
+queue
+time
+save SAVE
+
