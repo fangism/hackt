@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.35.4.6 2006/11/10 07:48:22 fang Exp $
+#	$Id: Makefile.am,v 1.35.4.7 2006/11/10 23:34:02 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -17,17 +17,17 @@ OBSOLETE_TESTSCRIPTS = \
 	check-create-consistency.sh.in \
 	check-alloc-consistency.sh.in \
 	hackt-alloc-expect.sh.in \
+	hackt-cflat-expect.sh.in \
+	hackt-cflat-lvs-expect.sh.in \
 	hackt-prsimrc-expect.sh.in \
 	hackt-prsim-ckpt.sh.in \
+	hackt-prsim-opt.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in
 
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
-	hackt-cflat-expect.sh.in \
-	hackt-cflat-lvs-expect.sh.in \
 	hackt-cflat-seu-expect.sh.in \
 	hackt-cflat-sprs-expect.sh.in \
-	hackt-prsim-opt.sh.in \
 	hackt-prs-dot-test.sh.in \
 	test-series.sh.in
 
@@ -65,7 +65,8 @@ dist_noinst_SCRIPTS = \
 	prsimrc-random-time-filter.awk \
 	spacestonewline.awk \
 	prsimckpt-template.prsimrc \
-	prsimckpt-load-template.prsimrc
+	prsimckpt-load-template.prsimrc \
+	prsimopt-template.prsimrc
 
 all-local: POM-header-filter.awk
 

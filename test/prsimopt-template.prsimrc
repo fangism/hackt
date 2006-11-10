@@ -1,0 +1,6 @@
+# "prsimopt-template.prsimrc"
+#	$Id: prsimopt-template.prsimrc,v 1.1.2.1 2006/11/10 23:34:03 fang Exp $
+
+source SOURCE
+save CHECKPOINT
+

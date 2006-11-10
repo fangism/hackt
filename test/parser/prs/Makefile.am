@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.28.4.3 2006/11/09 18:47:56 fang Exp $
+#	$Id: Makefile.am,v 1.28.4.4 2006/11/10 23:34:05 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -111,10 +111,13 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	bug-001 \
 	top-level-01
 
-HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 \
-	lvs-order-01 lvs-order-02 lvs-order-03 \
+	lvs-order-01 lvs-order-03 \
 	lvs-xcpl-inv-01
+
+HACKT_CFLAT_LVS_TEST_FAILURES = \
+	lvs-order-02
 
 HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
@@ -123,8 +126,7 @@ HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 HACKT_ALLOC_TEST_PASSES = \
 	$(HACKT_CFLAT_TEST_SUBJECTS) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS)
-
-#	$(HACKT_CFLAT_LVS_TEST_SUBJECTS)
+#	$(HACKT_CFLAT_LVS_TEST_PASSES)
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05

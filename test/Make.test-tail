@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57.4.8 2006/11/10 07:48:20 fang Exp $
+#	$Id: Make.test-tail,v 1.57.4.9 2006/11/10 23:34:02 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -30,14 +30,14 @@ TEST_BUILDDIR = $(top_builddir)/test
 # HACKT_CREATE_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-create-consistency.sh
 # HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
 # HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
-HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
-HACKT_CFLAT_LVS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-lvs-expect.sh
+# HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
+# HACKT_CFLAT_LVS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-lvs-expect.sh
 HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
 HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
 # HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
 # HACKT_PRSIMRC_TEST_SH = $(TEST_BUILDDIR)/hackt-prsimrc-expect.sh
 # HACKT_PRSIM_CKPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-ckpt.sh
-HACKT_PRSIM_OPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-opt.sh
+# HACKT_PRSIM_OPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-opt.sh
 HACKT_PRS_DOT_TEST_SH = $(TEST_BUILDDIR)/hackt-prs-dot-test.sh
 
 HACKT_COMPILE_ERROR_FILTER = $(AWK) \
@@ -201,7 +201,7 @@ compilewarntest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_WARNINGS)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".compilewarndiff: $(srcdir)/" $$1 ".stderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".compilewarndiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include compilewarntest.autodepend
@@ -248,7 +248,7 @@ compilefailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_FAILURES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".compilefaildiff: $(srcdir)/" $$1 ".stderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".compilefaildiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include compilefailtest.autodepend
@@ -318,7 +318,7 @@ unrolltest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_UNROLL_TEST_PASSES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".unrolldiff: $(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".unrolldiff: $$(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include unrolltest.autodepend
@@ -351,7 +351,7 @@ unrollfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_UNROLL_TEST_FAILURES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".unrollfaildiff: $(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".unrollfaildiff: $$(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include unrollfailtest.autodepend
@@ -401,7 +401,7 @@ createtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_PASSES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".creatediff: $(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".creatediff: $$(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include createtest.autodepend
@@ -434,7 +434,7 @@ createfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_FAILURES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".createfaildiff: $(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".createfaildiff: $$(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include createfailtest.autodepend
@@ -553,7 +553,7 @@ alloctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".allocdiff: $(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".allocdiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include alloctest.autodepend
@@ -586,7 +586,7 @@ allocfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_FAILURES)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".allocfaildiff: $(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
+		$(AWK) '{print $$1 ".allocfaildiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include allocfailtest.autodepend
@@ -665,36 +665,106 @@ allocfromhaco.autodepend: Makefile
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
 
-.hac.hacktcflattest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
+# .hac.hacktcflattest:
+# 	@$(ECHO) "#!$(SHELL)" > $@
+# 	@$(ECHO) "# \"$@\"" >> $@
+# 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
+# 		$(srcdir) $* >> $@
+# 	@$(CHMOD) +x $@
+
+OLD_PRSIM_TEST_SCRIPT =
+if HAVE_PRSIM
+OLD_PRSIM_TEST_SCRIPT += \
+	else \
+	case $* in \
+	echo* ) break ;; \
+	macro* ) break ;; \
+	spec* ) break ;; \
+	weak* ) break ;; \
+	*) @PRSIM@ "$$out" < /dev/null > /dev/null 2>&1 || \
+	  $(ECHO) "Error: @PRSIM@ rejected $$out." ;; \
+	esac
+else
+OLD_PRSIM_TEST_SCRIPT += :
+endif
+
+DEFAULT_SORT_SCRIPT = $(SORT) $< > $@
+
+.prs.prs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-prs.expect-prs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-prs-sort.prsdiff-sort:
+	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff-sort$$/.prs-sort/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test ! -s $@ ; then \
+	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-prs.prsdiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff$$/.prs/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is non-empty!" ; \
+	      $(MAKE) $@-sort ; \
+	      $(OLD_PRSIM_TEST_SCRIPT) ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.prsdiff.hacktcflattest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
 
 .hacktcflattest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
+	@$(DUMMY_TEST_SCRIPT)
 
-.hac.hacktcflatlvstest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SH) "\"$(HACKT_CFLAT_LVS_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
+cflatprstest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_TEST_SUBJECTS)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".prsdiff: " $$1 ".prs"; print $$1 ".prsdiff-sort: " $$1 ".prs-sort"; }' > $@ ; \
+	$(TOUCH) $@
+
+
+-include cflatprstest.autodepend
+
+
+# .hac.hacktcflatlvstest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SH) "\"$(HACKT_CFLAT_LVS_EXE)\"" \
+#		$(srcdir) $* >> $@
+#	@$(CHMOD) +x $@
+
+HACKT_CFLAT_LVS_SCRIPT = \
+	srcfile=$(srcdir)/$*.hac ; \
+	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
+	if test -n "$$type" ; then \
+		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ 2>&1 ; \
+	else \
+		$(HACKT_CFLAT_LVS_EXE) $< > $@ 2>&1 ; \
+	fi
+
 
 # if the source file has a magic line @hflat-type@, then extract it
 # as the type to process for cflatting.
 # The hflat-type string must not contain any spaces!
 .haco-a.lvsprs:
-	@srcfile=$(srcdir)/$*.hac ; \
-	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
-		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
-	if test -n "$$type" ; then \
-		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ ; \
-	else \
-		$(HACKT_CFLAT_LVS_EXE) $< > $@ ; \
-	fi
+	@$(HACKT_CFLAT_LVS_SCRIPT)
+
+.haco-a.lvsfail:
+	-@$(HACKT_CFLAT_LVS_SCRIPT)
 
 .haco-a.lvssprs:
 	@srcfile=$(srcdir)/$*.hac ; \
@@ -705,6 +775,77 @@ allocfromhaco.autodepend: Makefile
 	else \
 		$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@ ; \
 	fi
+
+.lvsprs.lvsprs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-lvsprs.expect-lvsprs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-lvsprs-sort.lvsprsdiff-sort:
+	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff-sort$$/.lvsprs-sort/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test ! -s $@ ; then \
+	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-lvsprs.lvsprsdiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff$$/.lvsprs/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is non-empty!" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-lvsprs.lvsfaildiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.lvsfaildiff$$/.lvsfail/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is non-empty!" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.lvsprsdiff.hacktcflatlvstest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.lvsfaildiff.hacktcflatlvsfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacktcflatlvstest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hacktcflatlvsfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+cflatlvstest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_PASSES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".lvsprsdiff: " $$1 ".lvsprs"; print $$1 ".lvsprsdiff-sort: " $$1 ".lvsprs-sort"; }' > $@ ; \
+	$(TOUCH) $@
+
+cflatlvsfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_FAILURES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".lvsfaildiff: " $$1 ".lvsfail"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include cflatlvstest.autodepend
+-include cflatlvsfailtest.autodepend
 
 .haco-a.prsseu:
 	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
@@ -888,7 +1029,7 @@ prsimrc-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) -n "" > $@ ; \
 	list='$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)' ; \
-	exts='prsimrc-out prsimckpt prsimckpt-outdump' ; \
+	exts='prsimrc-out prsimckpt prsimckpt-outdump prsimckpt-O1-err' ; \
 	test -z "$$list" || \
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.prsimrc ; \
@@ -975,14 +1116,14 @@ prsimtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)" | \
 	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimrc-diff: $(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
+	  $(AWK) '{print $$1 ".prsimrc-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 prsimfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES)" | \
 	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimrcfail-diff: $(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
+	  $(AWK) '{print $$1 ".prsimrcfail-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimtest.autodepend
@@ -998,6 +1139,8 @@ prsimfailtest.autodepend: Makefile
 PRSIMCKPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-template.prsimrc
 PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
 
+NO_OP_SCRIPT = test -f $< && test -f $@
+
 .prsimrc.prsimckpt-outdump:
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-outdump$$//g'` ; \
@@ -1009,7 +1152,7 @@ PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
 
 # no-op: simultaneously produced target
 .prsimckpt-outdump.prsimckpt:
-	@:
+	@$(NO_OP_SCRIPT)
 
 #	rc=$(srcdir)/`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimrc/g'` ; \
 #	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)`
@@ -1029,7 +1172,7 @@ PRSIM_CHECKPOINT_DUMP_SCRIPT = $(HACKT_PRSIM_EXE) -d $< > $@
 
 # no-op: simultaneously produced target
 .prsimckpt-indump.prsimckpt-dupe:
-	@:
+	@$(NO_OP_SCRIPT)
 
 .prsimckpt-dupe.prsimckpt-dupe-dump:
 	$(PRSIM_CHECKPOINT_DUMP_SCRIPT)
@@ -1067,17 +1210,57 @@ prsimckpttest.autodepend:
 
 -include prsimckpttest.autodepend
 
-# TODO: continue here
-.prsimrc.prsimopttest:
-	@$(ECHO) "#!$(SHELL)" > $@ ; \
-	$(ECHO) "# \"$@\"" >> $@ ; \
-	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@ ; \
-	$(CHMOD) +x $@
+# .prsimrc.prsimopttest:
+# 	@$(ECHO) "#!$(SHELL)" > $@ ; \
+# 	$(ECHO) "# \"$@\"" >> $@ ; \
+# 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+# 	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@ ; \
+# 	$(CHMOD) +x $@
+
+PRSIMOPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimopt-template.prsimrc
+PRSIMOPT_FLAG = -O1
+
+.prsimrc.prsimckpt-O1-err:
+	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+	ckpt=`$(ECHO) $@ | $(SED) 's/-err$$//g'` ; \
+	$(ECHO) "checkpointing: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) $$obj" ; \
+	$(CAT) $(PRSIMOPT_TEMPLATE_SCRIPT) | \
+	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
+	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) "$$obj" > $@ 2>&1
+
+# no-op: simultaneously produced target
+.prsimckpt-O1-err.prsimckpt-O1:
+	@$(NO_OP_SCRIPT)
+
+# also depends on .prsimckpt
+# consider looking at hexdump too
+.prsimckpt-O1.prsimopt-diff:
+	@unopt=`$(ECHO) $< | $(SED) 's/-O1$$//g'` ; \
+	if test -f "$$unopt" ; then \
+	  if $(DIFF) -q "$$unopt" $< ; then \
+	    $(RM) $@ ; \
+	  else $(MAKE) $<-dump "$$unopt"-dump && \
+	    $(DIFF) -u $<-dump "$$unopt"-dump > $@ ; \
+	    $(ECHO) "$@ is non-empty! (checkpoint binaries differ)" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$unopt." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.prsimopt-diff.prsimopttest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
 
 .prsimopttest:
 	@$(DUMMY_TEST_SCRIPT)
 
+prsimopttest.autodepend:
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".prsimopt-diff: " $$1 ".prsimckpt"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include prsimopttest.autodepend
 
 BOGUS_TESTS = .hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
 	.hacktobjtest .hacktunrolltest .hacktunrollfailtest \
@@ -1189,6 +1372,10 @@ HACKT_ALLOC_TEST_SUBJECTS = \
 	$(HACKT_ALLOC_TEST_PASSES) \
 	$(HACKT_ALLOC_TEST_FAILURES)
 
+HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+	$(HACKT_CFLAT_LVS_TEST_PASSES) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES)
+
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES)
@@ -1233,7 +1420,8 @@ TESTS += $(HACKT_PARSE_TEST_PASSES:=.hacktcmpltest) \
 	$(HACKT_ALLOC_TEST_FAILURES:=.hacktallocfailtest) \
 	$(HACKT_ALLOC_TEST_PASSES:=.hacktallocfromhacotest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hacktcflatlvstest) \
+	$(HACKT_CFLAT_LVS_TEST_PASSES:=.hacktcflatlvstest) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.hacktcflatlvsfailtest) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
@@ -1297,6 +1485,17 @@ build-check: \
 	$(HACKT_ALLOC_TEST_PASSES:=.haco-a-from-u) \
 	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-u-dump) \
 	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-u-dump-filter) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-u) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprs) \
+	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprsdiff) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfail) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfaildiff) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out-filter) \
@@ -1312,6 +1511,10 @@ build-check: \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt-dupe) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt-indump) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt-diff) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1-err) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopt-diff) \
 	$(TESTS)
 
 # executable dependence: if executable is more recent, also rebuild
@@ -1412,6 +1615,12 @@ echo-alloc-tests: force
 
 echo-cflat-tests: force
 	@$(ECHO) $(HACKT_CFLAT_TEST_SUBJECTS)
+
+echo-cflat-lvs-passes: force
+	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_PASSES)
+
+echo-cflat-lvs-failures: force
+	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_FAILURES)
 
 echo-cflat-lvs-tests: force
 	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SUBJECTS)
@@ -1629,6 +1838,7 @@ clean-alloctests:
 clean-cflattests:
 	-$(RM_PATTERN) "*.hacktcflattest"
 	-$(RM_PATTERN) "*.hacktcflatlvstest"
+	-$(RM_PATTERN) "*.hacktcflatlvsfailtest"
 	-$(RM_PATTERN) "*.hacktsprstest"
 	-$(RM_PATTERN) "*.hacktcflatseutest"
 	-$(RM_PATTERN) "*.hacktprsimexprtest"
@@ -1640,6 +1850,8 @@ clean-cflattests:
 	-$(RM_PATTERN) "*.lvsprs"
 	-$(RM_PATTERN) "*.lvsprsdiff"
 	-$(RM_PATTERN) "*.lvsprsdiff.sort"
+	-$(RM_PATTERN) "*.lvsfail"
+	-$(RM_PATTERN) "*.lvsfaildiff"
 	-$(RM_PATTERN) "*.prsseu"
 	-$(RM_PATTERN) "*.prsseu-diff"
 	-$(RM_PATTERN) "*.prsimexpr"
@@ -1666,6 +1878,7 @@ clean-prsimtests:
 	-$(RM_PATTERN) "*.prsimckpttest"
 	-$(RM_PATTERN) "*.prsimckpt-dump"
 	-$(RM_PATTERN) "*.prsimckpt-dupe"
+	-$(RM_PATTERN) "*.prsimckpt-dupe-dump"
 	-$(RM_PATTERN) "*.prsimckpt-outdump"
 	-$(RM_PATTERN) "*.prsimckpt-indump"
 	-$(RM_PATTERN) "*.prsimckpt-diff"

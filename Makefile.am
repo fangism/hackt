@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.37 2006/11/07 20:36:53 fang Exp $
+#	$Id: Makefile.am,v 1.37.2.1 2006/11/10 23:33:53 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -98,7 +98,8 @@ distcheck.log: force
 	@$(ECHO) Tests started `$(DATE)` > $@.tmp
 	-$(MAKE) DISTCHECK_CONFIGURE_FLAGS="$(DISTCHECK_CONFIGURE_FLAGS)" distcheck >> $@.tmp 2>&1
 	-$(MV) $@.tmp $@
-	$(TAIL) -n 5 $@
+	@$(ECHO) Tests finished `$(DATE)` >> $@
+	$(TAIL) -n 6 $@
 
 # don't include CVS directories in distribution
 dist-hook:

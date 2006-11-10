@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.102.2.6 2006/11/10 07:48:14 fang Exp $
+#	$Id: configure.ac,v 1.102.2.7 2006/11/10 23:33:54 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -135,11 +135,13 @@ HACKT_ARG_WITH_XDR
 
 dnl whether or not to build universal binary (config/hackt.m4)
 dnl not actually implemented yet
-HACKT_ARG_ENABLE_UNIVERSAL_BINARY
+HACKT_ARG_ENABLE_MULTILIB
 
 dnl AC_ARG_ENABLE for building documentation (on by default)
 dnl from "config/documentation.m4"
 DOC_ARG_ENABLE_DOCS
+
+HACKT_ARG_ENABLE_VERBOSE_CHECK
 
 dnl enable or disable fun modules ("config/hackt.m4")
 HACKT_ARG_ENABLE_FUN
@@ -434,10 +436,10 @@ dnl AC_CONFIG_FILES([test/check-alloc-consistency.sh],
 dnl	[chmod +x test/check-alloc-consistency.sh])
 dnl AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
 dnl	[chmod +x test/hackt-alloc-expect.sh])
-AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
-	[chmod +x test/hackt-cflat-expect.sh])
-AC_CONFIG_FILES([test/hackt-cflat-lvs-expect.sh],
-	[chmod +x test/hackt-cflat-lvs-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
+dnl	[chmod +x test/hackt-cflat-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-cflat-lvs-expect.sh],
+dnl	[chmod +x test/hackt-cflat-lvs-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-seu-expect.sh],
 	[chmod +x test/hackt-cflat-seu-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
@@ -448,8 +450,8 @@ dnl AC_CONFIG_FILES([test/hackt-prsimrc-expect.sh],
 dnl	[chmod +x test/hackt-prsimrc-expect.sh])
 dnl AC_CONFIG_FILES([test/hackt-prsim-ckpt.sh],
 dnl	[chmod +x test/hackt-prsim-ckpt.sh])
-AC_CONFIG_FILES([test/hackt-prsim-opt.sh],
-	[chmod +x test/hackt-prsim-opt.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsim-opt.sh],
+dnl	[chmod +x test/hackt-prsim-opt.sh])
 AC_CONFIG_FILES([test/hackt-prs-dot-test.sh],
 	[chmod +x test/hackt-prs-dot-test.sh])
 AC_CONFIG_FILES([test/test-series.sh],

@@ -2,7 +2,14 @@
 
 2006-11-10	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-80-50-test-05:
+	* HACKT-00-01-04-main-00-80-50-test-07:
+	  Parallelized cflat-prs, cflat-lvs, and prsim-opt tests.  
+		LVS tests are now divided into pass/fails.  
+	  Unexpanded $(srcdir) references in auto-dependencies.  
+	  One more batch of parallelization, then clean-up.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-06:
 	  Parallelized prsimexpr tests and prsim-checkpoint tests.  
 	  Added new template test scripts:
 		prsimckpt-template.prsimrc, prsimckpt-load-template.prsimrc

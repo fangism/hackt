@@ -5,6 +5,11 @@
 
 2006-11-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-07:
+	  No source revision.
+	  More test suite parallelization.  
+
+
 	* HACKT-00-01-04-main-00-80-50-test-06:
 	  No source revision.
 	  Parallelized prsimexpr and prsim-checkpoint tests.  

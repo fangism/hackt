@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.24.4.5 2006/11/10 00:50:21 fang Exp $
+#	$Id: Makefile.am,v 1.24.4.6 2006/11/10 23:34:04 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -163,7 +163,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES =
 
-HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-lvs-01
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
