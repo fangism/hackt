@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.5 2006/11/09 23:27:50 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.6 2006/11/10 00:50:20 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -33,6 +33,8 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacktcflatseutest \
 	.prs .sprs .prsseu .lvsprs .lvssprs \
 	.prsimrc .prisimtest .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
+	.prsimfailtest .prsimrcfail-out \
+	.prsimrcfail-out-filter .prsimrcfail-diff \
 	.prsimexpr .prsimexpr-O1 \
 	.prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
@@ -65,6 +67,7 @@ BOGUS_SUFFIX_TARGETS = \
 	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
 	.prs .expect-prs .sprs .prsseu .lvsprs .lvssprs \
 	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
+	.prsimrcfail-out .prsimrcfail-out-filter .prsimrcfail-diff \
 	.prsimexpr .prsimexpr-O1
 
 if HAVE_CFLAT
@@ -74,6 +77,8 @@ endif
 
 $(BOGUS_SUFFIX_TARGETS):
 	@$(TOUCH) $@
+
+CLEANFILES += $(BOGUS_SUFFIX_TARGETS)
 
 # for compile include paths
 HACO_FLAGS =
