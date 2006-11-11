@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/value_array.h"
-	$Id: value_array.h,v 1.3 2006/11/07 06:35:04 fang Exp $
+	$Id: value_array.h,v 1.4 2006/11/11 02:20:13 fang Exp $
 	This fail spawned from:
 	Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp
  */
@@ -45,9 +45,9 @@ private:
 	typedef	default_multikey_map<D, pint_value_type, element_type>
 							__helper_map_type;
 	typedef	typename __helper_map_type::type	map_type;
-public:
 	typedef	util::multikey_map<D, pint_value_type, element_type, map_type>
 							collection_type;
+public:
 	typedef	typename collection_type::key_type	key_type;
 	typedef	typename traits_type::const_collection_type
 							const_collection_type;

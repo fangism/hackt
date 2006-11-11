@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.6 2006/11/07 06:35:07 fang Exp $
+	$Id: value_placeholder.h,v 1.7 2006/11/11 02:20:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -19,8 +19,6 @@
 #include "util/inttypes.h"
 #include "util/persistent_fwd.h"
 #include "util/new_functor_fwd.h"
-#include "util/multikey_fwd.h"
-#include "util/multikey_qmap_fwd.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
 /**
@@ -51,8 +49,6 @@ using std::istream;
 using std::ostream;
 using std::string;
 using util::memory::count_ptr;	// for experimental pointer classes
-using util::qmap;
-using util::default_multikey_map;
 using util::bad_bool;
 using util::good_bool;
 using util::persistent;
