@@ -2,6 +2,11 @@
 
 2006-11-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-08:
+	  Parallelized cflat-seu, cflat-sprs, and prs-dot tests.
+	  Only clean-up remains.  
+
+
 	* HACKT-00-01-04-main-00-80-50-test-07:
 	  Parallelized cflat-prs, cflat-lvs, and prsim-opt tests.  
 		LVS tests are now divided into pass/fails.  

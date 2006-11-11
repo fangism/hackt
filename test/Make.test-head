@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23.6.8 2006/11/10 23:34:02 fang Exp $
+#	$Id: Make.test-head,v 1.23.6.9 2006/11/11 01:24:12 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -34,9 +34,10 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacktcflatlvstest \
 	.hacktcflatlvsfailtest \
 	.hacktsprstest \
+	.sprs .sprs-sort .sprsdiff .sprsdiff-sort \
 	.hacktcflatseutest \
 	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
-	.sprs .prsseu \
+	.prsseu .prsseu-sort .prsseudiff .prsseudiff-sort \
 	.lvsprs .expect-lvsprs .lvsprsdiff .lvsprs-sort \
 	.expect-lvsprs-sort .lvsprsdiff-sort \
 	.lvsfail .lvsfaildiff \
@@ -79,10 +80,13 @@ BOGUS_SUFFIX_TARGETS = \
 	.alloc-from-haco-dump .alloc-from-u-dump \
 	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
 	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
-	.sprs .prsseu .lvssprs \
+	.sprs .sprs-sort .sprsdiff .sprsdiff-sort \
+	.prsseu .prsseu-sort .prsseudiff .prsseudiff-sort \
+	.lvssprs \
 	.lvsprs .expect-lvsprs .lvsprsdiff .lvsprs-sort \
 	.expect-lvsprs-sort .lvsprsdiff-sort \
 	.lvsfail .lvsfaildiff \
+	.prs-dot .prs-dot-O1 \
 	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
 	.prsimrcfail-out .prsimrcfail-out-filter .prsimrcfail-diff \
 	.prsimexpr .prsimexprdiff .prsimexpr-O1 \
