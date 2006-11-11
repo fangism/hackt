@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.6.4.1 2006/11/10 23:33:54 fang Exp $
+dnl	$Id: hackt.m4,v 1.6.4.2 2006/11/11 21:57:59 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -39,7 +39,7 @@ dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_AUTO_CVSIGNORE],
-[AM_CONDITIONAL(NO_VPATH, test "$srcdir" = ".")]
+[AM_CONDITIONAL(NO_VPATH, test "$srcdir" = "." && test -w "$srcdir/writeable")]
 )dnl
 
 dnl @synopsis FANG_CONFEST_FLAGS

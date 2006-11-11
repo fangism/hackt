@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.24.4.2 2006/11/11 06:27:47 fang Exp $
+#	$Id: Make.global,v 1.24.4.3 2006/11/11 21:57:58 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
@@ -91,6 +91,14 @@ DISTCLEANFILES += .cvsignore
 endif
 
 all-local: $(ALL_CVSIGNORE)
+
+MORE_RECURSIVE_TARGETS += build-check-recursive
+
+build-check: build-check-recursive
+
+build-check-am: build-check-local
+
+build-check-local:
 
 # convenient target for building subtree of the distribution
 # not a recursive target
@@ -322,6 +330,7 @@ if NO_VPATH
 	@$(ECHO) "    clean-cvsignore: cleans .cvsignore (recursive)"
 endif
 	@$(ECHO) "    check: runs tests (recursive)"
+        @$(ECHO) "    build-check: create/run tests, without check (recursive)"
 	@$(ECHO) "    check.log: logs make check -k"
 	@$(ECHO) "    distdir-subdir: packages subtree of distribution"
 	@$(ECHO) "    pdf: builds PDFs (recursive)"
@@ -353,5 +362,5 @@ force:
 .PHONY: force $(PHONY_CVSIGNORE) \
 	$(MORE_RECURSIVE_TARGETS) $(MORE_CLEAN_RECURSIVE_TARGETS) \
 	help help-local help-global dist-hook dist-hook-autoclean \
-	srcdir-distfiles
+	srcdir-distfiles build-check build-check-am build-check-local
 
