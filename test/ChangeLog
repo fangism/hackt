@@ -1,5 +1,17 @@
 # "test/ChangeLog"
 
+2006-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-09:
+	  Make.test-tail:
+		new recursive targets: build-check, cleaner.
+		Now uses AUTO_DEPENDS variable from project-wide top-level.  
+		Now uses AM_CONDITIONAL(VERBOSE_CHECK) to control
+		  some of the echoing during build-check.  
+		SUBJECTS = PASSES + FAILURES variable aggregation now
+		  done in this template, not in includers.  
+
+
 2006-11-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-50-test-08:

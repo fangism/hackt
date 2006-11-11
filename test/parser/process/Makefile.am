@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.3 2006/11/09 18:47:54 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.4 2006/11/11 06:28:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -29,13 +29,6 @@ HACKT_PARSE_TEST_PASSES = \
 # 107,109: known bugs in progress
 # 089-093: known bugs, haven't decided when to reject
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_PASSES)
-
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES)
-
 HACKT_UNROLL_TEST_PASSES = \
 	020 022 024 027 028 029 \
 	030 035 036 037 \
@@ -55,10 +48,6 @@ HACKT_UNROLL_TEST_FAILURES = \
 	071 073 074 076 078 \
 	114 116
 
-HACKT_UNROLL_TEST_SUBJECTS = \
-	$(HACKT_UNROLL_TEST_PASSES) \
-	$(HACKT_UNROLL_TEST_FAILURES)
-
 # should be a subset of $(HACKT_UNROLL_TEST_SUBJECTS)
 # the omitted unroll tests either have no instances, 
 # fail unrolling, or are just uninteresting
@@ -75,10 +64,6 @@ HACKT_CREATE_TEST_PASSES = \
 	110 111 112 113 115 117 118
 
 HACKT_CREATE_TEST_FAILURES =
-
-HACKT_CREATE_TEST_SUBJECTS = \
-	$(HACKT_CREATE_TEST_PASSES) \
-	$(HACKT_CREATE_TEST_FAILURES)
 
 # should be a subset of $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_ALLOC_TEST_PASSES = \

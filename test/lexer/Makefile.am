@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/10/24 02:52:40 fang Exp $
+#	$Id: Makefile.am,v 1.13.4.1 2006/11/11 06:28:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -19,10 +19,6 @@ HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 comment-005 comment-006 \
 	import-004 import-012 import-013 import-015-t \
 	hex-01
-
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_PASSES)
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 # HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)

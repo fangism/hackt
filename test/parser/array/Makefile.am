@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.17.4.4 2006/11/09 18:47:38 fang Exp $
+#	$Id: Makefile.am,v 1.17.4.5 2006/11/11 06:28:14 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,14 +24,6 @@ HACKT_PARSE_TEST_PASSES = \
 	054 055 056 058 059 \
 	060
 
-# unfortunately is out of order... to bad $(sort ...) is non-posix
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES) \
-	$(HACKT_PARSE_TEST_FAILURES)
-
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES)
-
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 007 \
 	010 013 015 016 \
@@ -48,10 +40,6 @@ HACKT_UNROLL_TEST_FAILURES = \
 	041 \
 	055 058 059
 
-HACKT_UNROLL_TEST_SUBJECTS = \
-	$(HACKT_UNROLL_TEST_PASSES) \
-	$(HACKT_UNROLL_TEST_FAILURES)
-
 # The following fail during unrolling:
 # 041
 # Many other tests are just uninteresting beyond unrolling.
@@ -65,10 +53,6 @@ HACKT_CREATE_TEST_PASSES = \
 	060
 
 HACKT_CREATE_TEST_FAILURES =
-
-HACKT_CREATE_TEST_SUBJECTS = \
-	$(HACKT_CREATE_TEST_PASSES) \
-	$(HACKT_CREATE_TEST_FAILURES)
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 

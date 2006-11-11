@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.22.4.3 2006/11/09 18:47:43 fang Exp $
+#	$Id: Makefile.am,v 1.22.4.4 2006/11/11 06:28:27 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -36,13 +36,6 @@ HACKT_PARSE_TEST_PASSES = \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 135 136 137 139
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_PASSES)
-
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES)
-
 # TODO: matches CREATE_TEST_SUBJECTS
 HACKT_UNROLL_TEST_PASSES = \
 	001 006 006b 007 \
@@ -71,10 +64,6 @@ HACKT_UNROLL_TEST_FAILURES = \
 	103a 105 108 \
 	110 \
 	135
-
-HACKT_UNROLL_TEST_SUBJECTS = \
-	$(HACKT_UNROLL_TEST_PASSES) \
-	$(HACKT_UNROLL_TEST_FAILURES)
 
 # the following tests are disabled until relaxed actuals are handled properly:
 # 093 094 095
@@ -107,10 +96,6 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	092
-
-HACKT_CREATE_TEST_SUBJECTS = \
-	$(HACKT_CREATE_TEST_PASSES) \
-	$(HACKT_CREATE_TEST_FAILURES)
 
 # punted until unroll tests are restored: 114 114a
 # KNOWN BUG: 116 117: doesn't handle creation of bar

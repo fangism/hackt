@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.9.26.1 2006/11/09 03:07:54 fang Exp $
+#	$Id: Makefile.am,v 1.9.26.2 2006/11/11 06:28:21 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,14 +12,6 @@ HACKT_PARSE_TEST_PASSES = \
 	011 012 014 015 016 017 018 019 \
 	020 021 024
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_PASSES)
-
-# should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES)
-
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 005 008 009 010 \
@@ -28,10 +20,6 @@ HACKT_UNROLL_TEST_PASSES = \
 
 HACKT_UNROLL_TEST_FAILURES = \
 	024
-
-HACKT_UNROLL_TEST_SUBJECTS = \
-	$(HACKT_UNROLL_TEST_PASSES) \
-	$(HACKT_UNROLL_TEST_FAILURES)
 
 # expected to fail unroll: 024
 

@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2006-11-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-09:
+	  Make.stddef,.global: new AUTO_DEPENDS variable for generated
+		dependencies, removed by distclean.  
+	  Earlier in branch, phased out sequential test scripts in favor
+		of Makefile-controlled concurrency in regression test suite.
+	  configure.ac: new --enable-verbose-check configure option.  
+
+
 2006-11-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-50:

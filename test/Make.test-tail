@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57.4.11 2006/11/11 02:21:11 fang Exp $
+#	$Id: Make.test-tail,v 1.57.4.12 2006/11/11 06:28:07 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -104,40 +104,63 @@ DUMMY_TEST_SCRIPT = $(ECHO) "$(SHELL_INTERPRETER)" > $@ ; $(CHMOD) +x $@
 	fi
 #	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
 
+if VERBOSE_CHECK
+ECHO_COMPILEDUMP_COMMAND = $(ECHO) "Compile-dumping $< to .compiledump (expect-fail)"
+else
+ECHO_COMPILEDUMP_COMMAND = :
+endif
+
 # for expect-fail tests: ignore exit status
 .hac.compiledump:
 	-@obj=`$(ECHO) $@ | $(SED) 's/\.compiledump$$/.haco/g'` ; \
-	$(ECHO) "Compile-dumping $< to .compiledump (expect-fail)" ; \
+	$(ECHO_COMPILEDUMP_COMMAND) ; \
 	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< "$$obj" > $@ 2>&1
 
 .compiledump.compiledump-filter:
 	@$(CAT) $< | $(HACKT_COMPILE_ERROR_FILTER) > $@
 
+if VERBOSE_CHECK
+ECHO_OUTDUMP_COMMAND = $(ECHO) "Compile-dumping $< to .outdump"
+else
+ECHO_OUTDUMP_COMMAND = :
+endif
 
 .hac.outdump:
 	@depbase=`$(ECHO) $@ | $(SED) 's/\.outdump$$//g'` ; \
-	$(ECHO) "Compile-dumping $< to .outdump" ; \
+	$(ECHO_OUTDUMP_COMMAND) ; \
 	$(HACKT_COMPILE_EXE) -d -fdump-object-header $(HACO_FLAGS) \
 		$< "$$depbase".hacod > $@ 2>&1
 
 .haco.indump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
+if VERBOSE_CHECK
+ECHO_FILTERED = $(ECHO) "Filtered $@"
+else
+ECHO_FILTERED = :
+endif
+
 .outdump.outdump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
 
 .indump.indump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
 
 .haco.haco-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
+if VERBOSE_CHECK
+ECHO_OBJDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$odump $<"
+else
+ECHO_OBJDUMP_DIFF_COMMAND = :
+endif
+
 .indump-filter.compileobjdiff:
 	@odump=`$(ECHO) $@ | $(SED) 's/\.compileobjdiff$$/.outdump-filter/g'` ; \
 	if test -f "$$odump" ; then \
-	  $(ECHO) "$(DIFF) -bu $$odump $<" ; \
+	  $(ECHO_OBJDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$odump" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then $(ECHO) "Object differences in $@!" ; fi ; \
 	else exit 1 ; \
@@ -182,13 +205,19 @@ compileobjdiff.autodepend: Makefile
 # additional dependencies:
 # .compilewarndiff.stderr (srcdir)
 
+if VERBOSE_CHECK
+ECHO_COMPILEWARN_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $$log"
+else
+ECHO_COMPILEWARN_DIFF_COMMAND = :
+endif
+
 .haco.compilewarndiff:
 	@log=`$(ECHO) $@ | $(SED) 's/\.compilewarndiff$$/.compiledump/g'` ; \
 	stderr=`$(ECHO) $@ | $(SED) 's/\.compilewarndiff$$/.stderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
 	  if test -f "$$log" ; then \
-	    $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $$log" ; \
+	    $(ECHO_COMPILEWARN_DIFF_COMMAND) ; \
 	    $(DIFF) -bu "$$expect" "$$log" > $@ 2>&1 ; \
 	    if test -s $@ ; then $(ECHO) "$@ is non-empty!" ; fi ; \
 	  else $(ECHO) "Missing $$log." | $(TEE) $@ ; \
@@ -212,11 +241,17 @@ compilewarntest.autodepend: Makefile
 BISON_COMPILE_DIFF_SCRIPT =
 
 if HAVE_BISON
+if VERBOSE_CHECK
+ECHO_BISON_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr.bison $<"
+else
+ECHO_BISON_DIFF_COMMAND = :
+endif
+
 BISON_COMPILE_DIFF_SCRIPT += \
 	if test -s $@ ; then \
 	  expect="$$expect".bison ; \
 	  if test -f "$$expect" ; then \
-	    $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr.bison $<" ; \
+	    $(ECHO_BISON_DIFF_COMMAND) ; \
 	    $(DIFF) -bu "$$expect" $< > $@-bison 2>&1 ; \
 	    if test ! -s $@-bison ; then $(MV) $@-bison $@ ; \
 	    else $(ECHO) "$@-bison is non-empty!" | $(TEE) $@ ; \
@@ -230,13 +265,19 @@ else
 BISON_COMPILE_DIFF_SCRIPT += :
 endif
 
+if VERBOSE_CHECK
+ECHO_COMPILEDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_COMPILEDUMP_DIFF_COMMAND = :
+endif
+
 # additional dependencies:
 # .stderr.compilefaildirr
 .compiledump-filter.compilefaildiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.compilefaildiff$$/.stderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_COMPILEDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  $(BISON_COMPILE_DIFF_SCRIPT) ; \
 	  if test -s $@ ; then $(ECHO) "$@ is non-empty!" ; fi ; \
@@ -282,17 +323,23 @@ compilefailtest.autodepend: Makefile
 
 .unrolldump.unrolldump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
 
 .haco-u-dump.haco-u-dump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
+
+if VERBOSE_CHECK
+ECHO_UNROLLDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_UNROLLDUMP_DIFF_COMMAND = :
+endif
 
 .unrolldump-filter.unrolldiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.unrolldiff$$/.unrollstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_UNROLLDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -326,6 +373,12 @@ unrolltest.autodepend: Makefile
 .hacktunrolltest:
 	@$(DUMMY_TEST_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_UNROLLFAIL_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_UNROLLFAIL_DIFF_COMMAND = :
+endif
+
 .haco.unrollfaildump:
 	-@failobj=`$(ECHO) $@ | $(SED) 's/\.unrollfaildump$$/.haco-u-fail/g'` ; \
 	$(ECHO) $(HACKT_UNROLL_EXE) $< "$$failobj" ; \
@@ -335,7 +388,7 @@ unrolltest.autodepend: Makefile
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.unrollfaildiff$$/.unrollstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_UNROLLFAIL_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -365,17 +418,23 @@ unrollfailtest.autodepend: Makefile
 
 .createdump.createdump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
 
 .haco-c-dump.haco-c-dump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
+
+if VERBOSE_CHECK
+ECHO_CREATEDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_CREATEDUMP_DIFF_COMMAND = :
+endif
 
 .createdump-filter.creatediff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_CREATEDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -414,11 +473,17 @@ createtest.autodepend: Makefile
 	$(ECHO) $(HACKT_CREATE_EXE) $< "$$failobj" ; \
 	$(HACKT_CREATE_EXE) $< "$$failobj" > $@ 2>&1
 
+if VERBOSE_CHECK
+ECHO_CREATEFAIL_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_CREATEFAIL_DIFF_COMMAND = :
+endif
+
 .createfaildump.createfaildiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.createfaildiff$$/.createstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_CREATEFAIL_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -464,12 +529,18 @@ createfailtest.autodepend: Makefile
 
 .create-from-haco-dump.create-from-haco-dump-filter:
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
+
+if VERBOSE_CHECK
+ECHO_CREATEFROMHACO_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+else
+ECHO_CREATEFROMHACO_DIFF_COMMAND = :
+endif
 
 .create-from-haco-dump-filter.create-from-haco-diff:
 	@expect=`$(ECHO) $@ | $(SED) 's/\.create-from-haco-diff$$/.createdump-filter/g'` ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$expect $<" ; \
+	  $(ECHO_CREATEFROMHACO_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -523,23 +594,35 @@ createfromhaco.autodepend: Makefile
 .haco-a-from-u.haco-a-from-u-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
+if VERBOSE_CHECK
+ALLOCDUMP_FILTER_SCRIPT = $(CAT) $< | $(ALLOC_FILTER) > $@
+else
+ALLOCDUMP_FILTER_SCRIPT = @$(CAT) $< | $(ALLOC_FILTER) > $@
+endif
+
 .haco-a-dump.haco-a-dump-filter:
-	$(CAT) $< | $(ALLOC_FILTER) > $@
+	$(ALLOCDUMP_FILTER_SCRIPT)
 
 .allocdump.allocdump-filter:
-	$(CAT) $< | $(ALLOC_FILTER) > $@
+	$(ALLOCDUMP_FILTER_SCRIPT)
 
 .haco-a-from-haco-dump.haco-a-from-haco-filter:
-	$(CAT) $< | $(ALLOC_FILTER) > $@
+	$(ALLOCDUMP_FILTER_SCRIPT)
 
 .haco-a-from-u-dump.haco-a-from-u-filter:
-	$(CAT) $< | $(ALLOC_FILTER) > $@
+	$(ALLOCDUMP_FILTER_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_ALLOCDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_ALLOCDUMP_DIFF_COMMAND = :
+endif
 
 .allocdump-filter.allocdiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.allocdiff$$/.allocstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_ALLOCDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then $(ECHO) "$@ is non-empty!" ; fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
@@ -566,11 +649,17 @@ alloctest.autodepend: Makefile
 	$(ECHO) $(HACKT_ALLOC_EXE) $< "$$failobj" ; \
 	$(HACKT_ALLOC_EXE) $< "$$failobj" > $@ 2>&1
 
+if VERBOSE_CHECK
+ECHO_ALLOCFAIL_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_ALLOCFAIL_DIFF_COMMAND = :
+endif
+
 .allocfaildump.allocfaildiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.allocfaildiff$$/.allocstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_ALLOCFAIL_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -619,11 +708,18 @@ allocfailtest.autodepend: Makefile
 
 .alloc-from-haco-dump.alloc-from-haco-dump-filter:
 	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
 
 .alloc-from-u-dump.alloc-from-u-dump-filter:
 	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
-	$(ECHO) "Filtered $@"
+	$(ECHO_FILTERED)
+
+if VERBOSE_CHECK
+ECHO_ALLOCFROMHACO_DIFF_COMMAND = \
+	$(ECHO) "$(DIFF) -bu $$expect1 $<" ; $(ECHO) "$(DIFF) -bu $$expect2 $<"
+else
+ECHO_ALLOCFROMHACO_DIFF_COMMAND = :
+endif
 
 # unifies 3-way diff
 .alloc-from-haco-dump-filter.alloc-from-haco-diff:
@@ -632,8 +728,7 @@ allocfailtest.autodepend: Makefile
 	$(ECHO) -n "" > $@ ; \
 	if test -f "$$expect1" ; then \
 	  if test -f "$$expect2" ; then \
-	    $(ECHO) "$(DIFF) -bu $$expect1 $<" ; \
-	    $(ECHO) "$(DIFF) -bu $$expect2 $<" ; \
+	    $(ECHO_ALLOCFROMHACO_DIFF_COMMAND) ; \
 	    $(DIFF) -bu "$$expect1" $< >> $@ 2>&1 ; \
 	    $(DIFF) -bu "$$expect2" $< >> $@ 2>&1 ; \
 	    if test -s $@ ; then \
@@ -696,14 +791,20 @@ DEFAULT_SORT_SCRIPT = $(SORT) $< > $@
 .expect-prs.expect-prs-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_CFLATPRS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_CFLATPRS_DIFF_COMMAND = :
+endif
+
 .expect-prs-sort.prsdiff-sort:
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff-sort$$/.prs-sort/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test ! -s $@ ; then \
-	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
-	    fi ; \
+	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test ! -s $@ ; then \
+	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -711,13 +812,13 @@ DEFAULT_SORT_SCRIPT = $(SORT) $< > $@
 .expect-prs.prsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff$$/.prs/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test -s $@ ; then \
-	      $(ECHO) "$@ is non-empty!" ; \
-	      $(MAKE) $@-sort ; \
-	      $(OLD_PRSIM_TEST_SCRIPT) ; \
-	    fi ; \
+	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	    $(MAKE) $@-sort ; \
+	    $(OLD_PRSIM_TEST_SCRIPT) ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -746,13 +847,23 @@ cflatprstest.autodepend: Makefile
 #		$(srcdir) $* >> $@
 #	@$(CHMOD) +x $@
 
+if VERBOSE_CHECK
+ECHO_CFLAT_LVS_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@"
+ECHO_CFLAT_LVS_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) $< > $@"
+else
+ECHO_CFLAT_LVS_TYPE_COMMAND = :
+ECHO_CFLAT_LVS_COMMAND = :
+endif
+
 HACKT_CFLAT_LVS_SCRIPT = \
 	srcfile=$(srcdir)/$*.hac ; \
 	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
 		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
 	if test -n "$$type" ; then \
+		$(ECHO_CFLAT_LVS_TYPE_COMMAND) ; \
 		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ 2>&1 ; \
 	else \
+		$(ECHO_CFLAT_LVS_COMMAND) ; \
 		$(HACKT_CFLAT_LVS_EXE) $< > $@ 2>&1 ; \
 	fi
 
@@ -766,13 +877,23 @@ HACKT_CFLAT_LVS_SCRIPT = \
 .haco-a.lvsfail:
 	-@$(HACKT_CFLAT_LVS_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@"
+ECHO_CFLAT_LVS_SIZE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@"
+else
+ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND = :
+ECHO_CFLAT_LVS_SIZE_COMMAND = :
+endif
+
 .haco-a.lvssprs:
 	@srcfile=$(srcdir)/$*.hac ; \
 	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
 		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
 	if test -n "$$type" ; then \
+		$(ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND) ; \
 		$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@ ; \
 	else \
+		$(ECHO_CFLAT_LVS_SIZE_COMMAND) ; \
 		$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@ ; \
 	fi
 
@@ -782,14 +903,20 @@ HACKT_CFLAT_LVS_SCRIPT = \
 .expect-lvsprs.expect-lvsprs-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_CFLATLVS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_CFLATLVS_DIFF_COMMAND = :
+endif
+
 .expect-lvsprs-sort.lvsprsdiff-sort:
 	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff-sort$$/.lvsprs-sort/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test ! -s $@ ; then \
-	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
-	    fi ; \
+	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test ! -s $@ ; then \
+	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -797,11 +924,11 @@ HACKT_CFLAT_LVS_SCRIPT = \
 .expect-lvsprs.lvsprsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff$$/.lvsprs/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test -s $@ ; then \
-	      $(ECHO) "$@ is non-empty!" ; \
-	    fi ; \
+	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -809,11 +936,11 @@ HACKT_CFLAT_LVS_SCRIPT = \
 .expect-lvsprs.lvsfaildiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.lvsfaildiff$$/.lvsfail/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test -s $@ ; then \
-	      $(ECHO) "$@ is non-empty!" ; \
-	    fi ; \
+	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -863,14 +990,20 @@ cflatlvsfailtest.autodepend: Makefile
 .expect-prsseu.expect-prsseu-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_CFLATPRSSEU_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_CFLATPRSSEU_DIFF_COMMAND = :
+endif
+
 .expect-prsseu-sort.prsseudiff-sort:
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsseudiff-sort$$/.prsseu-sort/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test ! -s $@ ; then \
-	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
-	    fi ; \
+	  $(ECHO_CFLATPRSSEU_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test ! -s $@ ; then \
+	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -878,11 +1011,11 @@ cflatlvsfailtest.autodepend: Makefile
 .expect-prsseu.prsseudiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsseudiff$$/.prsseu/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
-	    if test -s $@ ; then \
-	      $(ECHO) "$@ is non-empty!" ; \
-	    fi ; \
+	  $(ECHO_CFLATPRSSEU_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
 	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
@@ -1003,11 +1136,17 @@ endif
 #		$(srcdir) $* >> $@
 #	@$(CHMOD) +x $@
 
+if VERBOSE_CHECK
+ECHO_PRSIMEXPR_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_PRSIMEXPR_DIFF_COMMAND = :
+endif
+
 .prsimexpr.prsimexprdiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.prsimexprdiff$$/.expect-prsimexpr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_PRSIMEXPR_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -1047,10 +1186,16 @@ prsimexprtest.autodepend: Makefile
 .expect-sprs.expect-sprs-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_SPRS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_SPRS_DIFF_COMMAND = :
+endif
+
 .expect-sprs-sort.sprsdiff-sort:
 	@out=`$(ECHO) $@ | $(SED) 's/\.sprsdiff-sort$$/.sprs-sort/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(ECHO_SPRS_DIFF_COMMAND) ; \
 	    $(DIFF) -bu $< "$$out" > $@ ; \
 	    if test ! -s $@ ; then \
 	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
@@ -1062,7 +1207,7 @@ prsimexprtest.autodepend: Makefile
 .expect-sprs.sprsdiff:
 	@out=`$(ECHO) $@ | $(SED) 's/\.sprsdiff$$/.sprs/g'` ; \
 	if test -f "$$out" ; then \
-	    $(ECHO) "$(DIFF) -bu $< $$out" ; \
+	    $(ECHO_SPRS_DIFF_COMMAND) ; \
 	    $(DIFF) -bu $< "$$out" > $@ ; \
 	    if test -s $@ ; then \
 	      $(ECHO) "$@ is non-empty!" ; \
@@ -1162,14 +1307,14 @@ prsimrcfail-out.autodepend: Makefile
 -include prsimrcfail-out.autodepend
 
 PRSIMRC_TEST_FILTER_SCRIPT = \
-	$(ECHO) "Filtering $@" ; \
 	$(CAT) $< | $(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
 	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) > $@.tmp ; \
 	    $(MV) $@.tmp $@ ; \
 	    break ;; \
 	  *) break ;; \
-	esac
+	esac ; \
+	$(ECHO_FILTERED)
 
 .prsimrc-out.prsimrc-out-filter:
 	@$(PRSIMRC_TEST_FILTER_SCRIPT)
@@ -1177,11 +1322,17 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 .prsimrcfail-out.prsimrcfail-out-filter:
 	@$(PRSIMRC_TEST_FILTER_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+else
+ECHO_PRSIMRC_DIFF_COMMAND = :
+endif
+
 .prsimrc-out-filter.prsimrc-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.prsimrc-diff$$/.prsimrc-expect/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_PRSIMRC_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -1194,7 +1345,7 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.prsimrcfail-diff$$/.prsimrc-expect/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<" ; \
+	  $(ECHO_PRSIMRC_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
@@ -1247,7 +1398,7 @@ NO_OP_SCRIPT = test -f $< && test -f $@
 .prsimrc.prsimckpt-outdump:
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-outdump$$//g'` ; \
-	$(ECHO) "checkpointing: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
 	$(CAT) $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
 	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" 2>&1 | \
@@ -1268,7 +1419,7 @@ PRSIM_CHECKPOINT_DUMP_SCRIPT = $(HACKT_PRSIM_EXE) -d $< > $@
 	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.prsimckpt$$/.prsimrc/g'` ; \
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
-	$(ECHO) "loading checkpoint: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	$(ECHO) "load: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
 	$(CAT) $(PRSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|LOAD|$<|g' -e 's|SAVE|'"$$ckpt"'|g' | \
 	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1
@@ -1280,10 +1431,16 @@ PRSIM_CHECKPOINT_DUMP_SCRIPT = $(HACKT_PRSIM_EXE) -d $< > $@
 .prsimckpt-dupe.prsimckpt-dupe-dump:
 	$(PRSIM_CHECKPOINT_DUMP_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_PRSIMCKPT_DIFF_COMMAND = $(ECHO) "$(DIFF) -u $$expect $<"
+else
+ECHO_PRSIMCKPT_DIFF_COMMAND = :
+endif
+
 .prsimckpt-outdump.prsimckpt-diff:
 	@expect=`$(ECHO) $@ | $(SED) 's/\.prsimckpt-diff$$/.prsimckpt-indump/g'` ; \
 	if test -f "$$expect" ; then \
-	  $(ECHO) "$(DIFF) -u $$expect $<" ; \
+	  $(ECHO_PRSIMCKPT_DIFF_COMMAND) ; \
 	  $(DIFF) -u "$$expect" $< > $@ 2>&1 ; \
 	  ca=`$(ECHO) $@ | $(SED) 's/-diff$$//g'` ; \
 	  cb=`$(ECHO) $@ | $(SED) 's/-diff$$/-dupe/g'` ; \
@@ -1326,7 +1483,7 @@ PRSIMOPT_FLAG = -O1
 .prsimrc.prsimckpt-O1-err:
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-err$$//g'` ; \
-	$(ECHO) "checkpointing: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) $$obj" ; \
+	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) $$obj" ; \
 	$(CAT) $(PRSIMOPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
 	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) "$$obj" > $@ 2>&1
@@ -1335,11 +1492,18 @@ PRSIMOPT_FLAG = -O1
 .prsimckpt-O1-err.prsimckpt-O1:
 	@$(NO_OP_SCRIPT)
 
+if VERBOSE_CHECK
+ECHO_PRSIMCKPT_OPT_DIFF_COMMAND = $(ECHO) "$(DIFF) -q $$unopt $<"
+else
+ECHO_PRSIMCKPT_OPT_DIFF_COMMAND = :
+endif
+
 # also depends on .prsimckpt
 # consider looking at hexdump too
 .prsimckpt-O1.prsimopt-diff:
 	@unopt=`$(ECHO) $< | $(SED) 's/-O1$$//g'` ; \
 	if test -f "$$unopt" ; then \
+	  $(ECHO_PRSIMCKPT_OPT_DIFF_COMMAND) ; \
 	  if $(DIFF) -q "$$unopt" $< ; then \
 	    $(RM) $@ ; \
 	  else $(MAKE) $<-dump "$$unopt"-dump && \
@@ -1471,6 +1635,23 @@ sprsdiffs.sort: force
 check-summaries: $(CHECK_SUMMARIES)
 	-@ls -l $(CHECK_SUMMARIES)
 
+HACKT_PARSE_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_PASSES) \
+	$(HACKT_PARSE_TEST_WARNINGS) \
+	$(HACKT_PARSE_TEST_FAILURES)
+
+HACKT_OBJ_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_PASSES) \
+	$(HACKT_PARSE_TEST_WARNINGS)
+
+HACKT_UNROLL_TEST_SUBJECTS = \
+	$(HACKT_UNROLL_TEST_PASSES) \
+	$(HACKT_UNROLL_TEST_FAILURES)
+
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(HACKT_CREATE_TEST_PASSES) \
+	$(HACKT_CREATE_TEST_FAILURES)
+
 HACKT_ALLOC_TEST_SUBJECTS = \
 	$(HACKT_ALLOC_TEST_PASSES) \
 	$(HACKT_ALLOC_TEST_FAILURES)
@@ -1544,8 +1725,14 @@ HAC_OBJECT_TARGETS = $(HACKT_PARSE_TEST_SUBJECTS:=.haco) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a)
 
+MORE_RECURSIVE_TARGETS += build-check-recursive
+
+build-check: build-check-recursive
+
 # build all tests, but don't run the resulting test scripts
-build-check: \
+build-check-am: build-check-local
+
+build-check-local: \
 	$(HACKT_PARSE_TEST_PASSES:=.haco) \
 	$(HACKT_PARSE_TEST_WARNINGS:=.haco) \
 	$(HACKT_PARSE_TEST_WARNINGS:=.compiledump) \
@@ -1641,14 +1828,12 @@ test.autodepend: Makefile
 
 -include test.autodepend
 
-AUTODEPENDS = test.autodepend compilewarntest.autodepend \
+AUTO_DEPENDS += test.autodepend compilewarntest.autodepend \
 	compilefailtest.autodepend compileobjdiff.autodepend \
 	unrolltest.autodepend unrollfailtest.autodepend \
 	createtest.autodepend createfailtest.autodepend \
 	alloctest.autodepend allocfailtest.autodepend
-	
-
-DISTCLEANFILES += $(AUTODEPENDS)
+# missing a bunch
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
@@ -2007,34 +2192,22 @@ clean-local: clean-summaries clean-compiletests clean-unrolltests \
 	-$(RM_PATTERN) "*.test" "*.diff"
 	-$(RM_PATTERN) "*.sort"
 	-$(RM_PATTERN) "*.noindex"
-	-$(RM_PATTERN) "*-from-haco" "*.haco*"
+	-$(RM_PATTERN) "*-from-haco"
+	-$(RM_PATTERN) "*.*haco*"
 	-$(RM_PATTERN) "*.*-from-*-dump"
 	-$(RM_PATTERN) "*.*-from-*-diff"
 # repeat some rm's to cover spilling command-line arguments
 
-# really remove these files!
-cleaner: clean cleaner-recursive cleaner-local
+cleaner: cleaner-recursive cleaner-am
 
-cleaner-local:
-# legacy object files
-	-$(RM_PATTERN) "*.artobj" "*.artobjunroll"
-	-$(RM_PATTERN) "*.hacktobjcreate" "*.hacktobjalloc"
+cleaner-am: cleaner-local clean-am
 
 distclean-local: cleaner-local distclean-depend
-	-$(RM_PATTERN) "*.*haco*"
 
 #TODO: use RECURSIVE_TARGET_SCRIPT
-cleaner-recursive:
-	@subdirs='$(SUBDIRS)'; \
-	for d in $$subdirs ; do \
-		if test $$d != . ; then \
-			if test -d $$d ; then \
-				$(MAKE) -C $$d cleaner ; \
-			fi ; \
-		fi ; \
-	done
+MORE_CLEAN_RECURSIVE_TARGETS += cleaner-recursive
 
-.PHONY: cleaner cleaner-local cleaner-recursive \
+.PHONY: cleaner cleaner-am cleaner-local \
 	clean-tests clean-tests-recursive help-test \
 	clean-summaries clean-compiletests clean-unrolltests \
 	clean-createtests clean-alloctests \
@@ -2045,6 +2218,7 @@ help-local: help-test
 
 help-test:
 	@$(ECHO) "Test make targets:"
+	@$(ECHO) "    build-check: create/run tests, without check (recursive)"
 	@$(ECHO) "    cleaner: also cleans *.<ext> files (recursive)"
 	@$(ECHO) "    check-summaries: summaries of test difference into patch file"
 	@$(ECHO) "	(produces: $(CHECK_SUMMARIES))"
@@ -2061,6 +2235,7 @@ help-test:
 	@$(ECHO) "	prsimexpr-tests: lists HACKT_PRSIMEXPR_TEST_SUBJECTS"
 	@$(ECHO) "	prsimrc-tests: lists HACKT_PRSIMRC_TEST_SCRIPTS_BASES"
 	@$(ECHO) "	prsimckpt-tests: lists HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES"
+	@$(ECHO) "	prsimopt-tests: lists HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES"
 	@$(ECHO) "	compile-passes: lists TESTS that pass parsing"
 	@$(ECHO) "	bison-outputs: list TESTS whose output is bison-specific"
 	@$(ECHO) "	empty-cflat-prs: list of tests whose cflat-output is empty"
