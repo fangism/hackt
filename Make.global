@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.24.4.3 2006/11/11 21:57:58 fang Exp $
+#	$Id: Make.global,v 1.24.4.4 2006/11/12 03:27:05 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
@@ -60,25 +60,25 @@ CLEAN_RECURSIVE_TARGET_SCRIPT = \
 	done && test -z "$$fail"
 
 
-if NO_VPATH
+if AUTO_CVSIGNORE
 # .cvsignore for this project will always be semi-automatically generated
 # .cvsignore is never needed for VPATH builds, duh!
-.cvsignore: $(srcdir)/Makefile.am $(top_srcdir)/Make.global
+$(srcdir)/.cvsignore: $(srcdir)/Makefile.am $(top_srcdir)/Make.global
 
 # make cvsignore by default
 ALL_CVSIGNORE += cvsignore-am
 
 # phony recursive target
-cvsignore-recursive: .cvsignore force
+cvsignore-recursive: $(srcdir)/.cvsignore force
 
 cvsignore: cvsignore-recursive
 
-cvsignore-am: .cvsignore cvsignore-local
+cvsignore-am: $(srcdir)/.cvsignore cvsignore-local
 
 clean-cvsignore: clean-cvsignore-recursive
 
 clean-cvsignore-am: clean-cvsignore-local
-	-$(RM) .cvsignore
+	-$(RM) $(srcdir)/.cvsignore
 
 PHONY_CVSIGNORE = clean-cvsignore-local clean-cvsignore-am cvsignore \
 	clean-cvsignore cvsignore-local cvsignore-am
@@ -87,7 +87,7 @@ PHONY_CVSIGNORE = clean-cvsignore-local clean-cvsignore-am cvsignore \
 MORE_RECURSIVE_TARGETS += cvsignore-recursive
 MORE_CLEAN_RECURSIVE_TARGETS += clean-cvsignore-recursive
 
-DISTCLEANFILES += .cvsignore
+# DISTCLEANFILES += $(srcdir)/.cvsignore
 endif
 
 all-local: $(ALL_CVSIGNORE)
@@ -147,7 +147,7 @@ dist-hook-autoclean:
 dist-hook: dist-hook-autoclean
 
 # list of files to automatically CVS ignore, accumulated over Makefile
-AUTO_IGNORE += .gdb_history \
+AUTO_IGNORE += .gdb_history .cvsignore \
 	Makefile.in Makefile make.log ignore backup temp \
 	$(CLEANFILES) $(DISTCLEANFILES)
 
@@ -268,8 +268,8 @@ echo-LIBS: force
 # again, can't append to file with cat redirection because distclean
 # sets permissions of new files as read-only
 # NOTE: local.cvsignore may be normal or automatically generated
-if NO_VPATH
-.cvsignore: local.cvsignore
+if AUTO_CVSIGNORE
+$(srcdir)/.cvsignore: local.cvsignore
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	-$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
@@ -325,9 +325,9 @@ help-global:
 	@$(ECHO) "    clean: removes make targets (recursive)"
 	@$(ECHO) "    distclean: removes configure targets (recursive)"
 	@$(ECHO) "    cvsdiffs: creates difference patch from CVS"
-if NO_VPATH
-	@$(ECHO) "    cvsignore: generates .cvsignore (recursive)"
-	@$(ECHO) "    clean-cvsignore: cleans .cvsignore (recursive)"
+if AUTO_CVSIGNORE
+	@$(ECHO) "    cvsignore: generates $$(srcdir)/.cvsignore (recursive)"
+	@$(ECHO) "    clean-cvsignore: cleans $$(srcdir)/.cvsignore (recursive)"
 endif
 	@$(ECHO) "    check: runs tests (recursive)"
         @$(ECHO) "    build-check: create/run tests, without check (recursive)"

@@ -2,6 +2,12 @@
 
 2006-11-11	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-11:
+	  config/hackt.m4: renamed NO_VPATH to AUTO_CVSIGNORE, also 
+		added to it a test if srcdir is writeable.
+	  Make.global: now generates .cvsignore in the $(srcdir) if permitted.
+
+
 	* HACKT-00-01-04-main-00-80-50-test-09:
 	  Make.stddef,.global: new AUTO_DEPENDS variable for generated
 		dependencies, removed by distclean.  

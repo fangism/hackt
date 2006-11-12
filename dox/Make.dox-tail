@@ -1,9 +1,9 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.6 2006/06/26 01:45:23 fang Exp $
+#	$Id: Make.dox-tail,v 1.6.26.1 2006/11/12 03:27:07 fang Exp $
 #	vim: ft=automake
 
-if NO_VPATH
+if AUTO_CVSIGNORE
 local.cvsignore: $(top_srcdir)/dox/local.cvsignore
 	$(CP) $? $@
 

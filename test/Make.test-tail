@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57.4.13 2006/11/11 21:58:11 fang Exp $
+#	$Id: Make.test-tail,v 1.57.4.14 2006/11/12 03:27:15 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -137,7 +137,7 @@ CLEANFILES += $(CHECK_SUMMARIES)
 DISTCLEANFILES += local.cvsignore
 
 ALL_LOCAL =
-if NO_VPATH
+if AUTO_CVSIGNORE
 ALL_LOCAL += .cvsignore
 endif
 
@@ -150,7 +150,7 @@ DISTHOOK_CLEANFILES += $(EMPTY_CFLAT_PRS)
 AUTO_IGNORE += local.cvsignore \
 	$(CHECK_SUMMARIES)
 
-if NO_VPATH
+if AUTO_CVSIGNORE
 # we generate all the local.cvsignore's in the test directories
 local.cvsignore: $(TEST_SRCDIR)/test.cvsignore
 	$(CP) $? $@
@@ -194,15 +194,14 @@ cleaner: cleaner-recursive cleaner-am
 
 cleaner-am: cleaner-local clean-am
 
-distclean-local: cleaner-local distclean-depend
+distclean-local: cleaner-local distclean-depend-local
 
 #TODO: use RECURSIVE_TARGET_SCRIPT
 MORE_CLEAN_RECURSIVE_TARGETS += cleaner-recursive
 
 .PHONY: cleaner cleaner-am cleaner-local \
-	clean-tests help-test \
-	clean-summaries \
-	distclean-depend
+	clean-tests help-test clean-summaries \
+	distclean-depend distclean-depend-local
 
 help-local: help-test
 
