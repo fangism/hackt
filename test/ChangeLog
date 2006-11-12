@@ -2,6 +2,12 @@
 
 2006-11-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-50-test-12:
+	  Re-factored test dependencies in Make.test-prsim to re-use
+		the checkpoint from the basic (pass) test for multiple tests.
+		Cuts a chunk of simulation time down by factor of 2.  
+
+
 	* HACKT-00-01-04-main-00-80-50-test-11:
 	  distclean: distclean-depend-local (don't recurse)
 
