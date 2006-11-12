@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.19 2006/10/24 02:52:31 fang Exp $
+#	$Id: Make.stddef,v 1.20 2006/11/12 05:57:39 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -33,6 +33,8 @@ HEAD = @HEAD@
 SED = sed
 SORT = @SORT@
 TAIL = @TAIL@
+TEE = @TEE@
+TEA = $(TEE) -a
 PASTE = @PASTE@
 PATCH = @PATCH@
 PWD = @PWD@
@@ -77,10 +79,15 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 # NOTE: only directory and file names here, no wild-cards
 AUTO_IGNORE =
 
+# automatically built dependencies
+AUTO_DEPENDS =
+
 # since automake doesn't allow appending RECURSIVE_TARGETS, we define our own:
 MORE_RECURSIVE_TARGETS = force-recursive
 force-am:
 force:
+
+MORE_CLEAN_RECURSIVE_TARGETS =
 
 # This helper script is built by the top-level Makefile
 # This is useful self-contained script for transforming program names

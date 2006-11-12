@@ -3,12 +3,83 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-52-merged-test-12:
+	  Merged test-parallelization branch, no source revision.  
+
+
+2006-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-12:
+	  No source revision.  (test/ChangeLog)
+
+
+	* HACKT-00-01-04-main-00-80-50-test-11:
+	  No source revision.  (ChangeLog, test/ChangeLog)
+
+
+	* HACKT-00-01-04-main-00-80-50-test-10:
+	  No source revision.  (test/ChangeLog)
+
+
+	* HACKT-00-01-04-main-00-80-50-test-09:
+	  No source revision, round of Makefile touch-ups (test/ChangeLog).
+
+
+2006-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-08:
+	  No source revision.
+	  Done parallelizing tests, only clean-up remains.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-07:
+	  No source revision.
+	  More test suite parallelization.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-06:
+	  No source revision.
+	  Parallelized prsimexpr and prsim-checkpoint tests.  
+
+
 2006-11-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-51:
 	  Checked against g++-4.2-20061107, with -O3.
 		Included multikey_map.tcc in footprint_value_base.cc
 		for an optimized-away destructor symbol.
+
+
+2006-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-05:
+	  No source revision.
+	  Parallelized prsim tests.
+
+
+	* HACKT-00-01-04-main-00-80-50-test-04:
+	  No source revision.
+	  Parallelized alloc tests.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-03:
+	  No source revision.
+	  Parallelized create tests.  
+
+
+2006-11-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-02:
+	  No source revision.
+	  Parallelized unroll tests.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-01:
+	  Branch for parallelizing regression test suite.  
+	  No source revision.  
+	  Compile-tests parallelized so far, and distchecked.  
 
 
 2006-11-07	David Fang		<fangism@users.sourceforge.net>

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.57 2006/10/25 02:18:58 fang Exp $
+#	$Id: Make.test-tail,v 1.58 2006/11/12 05:58:14 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -22,656 +22,107 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 # NOTE: these scripts are configure-generated from their .hac files.  
 TEST_SRCDIR = $(top_srcdir)/test
 TEST_BUILDDIR = $(top_builddir)/test
-HACKT_PARSE_TEST_SH = $(TEST_BUILDDIR)/parse-test-expect.sh
-HACKT_OBJ_TEST_SH = $(TEST_BUILDDIR)/hackt-obj-diff.sh
-HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
-HACKT_CREATE_TEST_SH = $(TEST_BUILDDIR)/hackt-create-expect.sh
-HACKT_CREATE_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-create-consistency.sh
-HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
-HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
-HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
-HACKT_CFLAT_LVS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-lvs-expect.sh
-HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
-HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
-HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
-HACKT_PRSIMRC_TEST_SH = $(TEST_BUILDDIR)/hackt-prsimrc-expect.sh
-HACKT_PRSIM_CKPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-ckpt.sh
-HACKT_PRSIM_OPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-opt.sh
-HACKT_PRS_DOT_TEST_SH = $(TEST_BUILDDIR)/hackt-prs-dot-test.sh
 
-HACKT_COMPILE_ERROR_FILTER = $(AWK) \
-		-f $(TEST_SRCDIR)/hackt-parse-expect-filter.awk \
-		-f $(TEST_SRCDIR)/state_enum_filter.awk \
-		-f $(TEST_SRCDIR)/vpath_file_filter.awk
 POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
 SPACESTONEWLINE = $(AWK) -f $(TEST_SRCDIR)/spacestonewline.awk
-ALLOC_FILTER = $(SED) -f $(TEST_SRCDIR)/alloc_filter.sed
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
-PRSIMRC_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-filter.awk
-PRSIMRC_TIME_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-time-filter.awk
 
 DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 
 HACO_FLAGS += -I$(srcdir)
 
-.hac.stderr:
-	@$(TOUCH) $@
-
 # this dependency generator assymes default target suffix .haco
 # caution: concurrent builds of .haco and .depend may clobber this
 # if executable did not successfully build, then skip.
+
+HAC_DEPEND_FILTER = $(SED) '/haco:/s|^$(srcdir)\/||g' | \
+	$(SED) 's/haco:/haco $@:/g'
+
+# arg, need to escape the friggin' hash!
+SHELL_INTERPRETER = "\#!$(SHELL)"
+
+DEFAULT_DIFF_TEST_SCRIPT = \
+	$(ECHO) "Summarizing $@ ..." ; \
+	$(ECHO) $(SHELL_INTERPRETER) > $@ ; \
+	$(ECHO) "\# \"$@\"" >> $@ ; \
+	if test -s $< ; then \
+	  $(ECHO) "$(ECHO) $< is non-empty!" >> $@ ; \
+	  $(ECHO) "exit 1" >> $@ ; \
+	fi ; \
+	$(CHMOD) +x $@
+
+DUMMY_TEST_SCRIPT = $(ECHO) "$(SHELL_INTERPRETER)" > $@ ; $(CHMOD) +x $@
+
 .hac.depend:
 	@if test -x $(HACKT_EXE) ; then \
 		$(ECHO) "Generating automatic dependencies $@ ..." ; \
 		$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@-tmp $< ; \
-		$(SED) '/haco:/s|^$(srcdir)\/||g' $@-tmp | \
-			$(SED) 's/haco:/haco $@:/g' > $@ ; \
+		$(CAT) $@-tmp | $(HAC_DEPEND_FILTER) > $@ ; \
 		$(RM) $@-tmp ; \
 	fi
 
-# dependency tracking enabled by default
-# TODO: consider adding .depend to the generated dependency targets
-.hac.haco:
-	depbase=`echo $@ | $(SED) 's/\.haco$$//g'` ; \
-	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ ; \
-	then $(MV) "$$depbase.tmpd" "$$depbase.depend" ; \
-	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
-	fi
-#	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
-
-.hac.outdump:
-	$(HACKT_COMPILE_EXE) -d $(HACO_FLAGS) $< > $@ 2>&1
-
-.haco.indump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.haco.haco-dump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-
-.hac.hacktcmpltest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_PARSE_TEST_SH) "\"$(PARSE_TEST_EXE) $(HACO_FLAGS)\"" $(srcdir) $* \
-		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
-.hacktcmpltest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.hac.hacktobjtest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_OBJ_TEST_SH) "\"$(HACKT_COMPILE_EXE) $(HACO_FLAGS)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
-.hacktobjtest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.haco.haco-u:
-	$(HACKT_UNROLL_EXE) $< $@
-
-.haco-u.haco-u-dump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.haco-u.unrolldump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.hac.hacktunrolltest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_UNROLL_TEST_SH) "\"$(HACKT_UNROLL_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
-		"\"$(ANALYZE_DIFF_AWK)\"" \
-		"\"$(POM_INDEX_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
-.hacktunrolltest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.unrollstderr:
-	@$(TOUCH) $@
-
-.haco-u.haco-c:
-	$(HACKT_CREATE_EXE) $< $@
-
-.haco.haco-c-from-haco:
-	$(HACKT_CREATE_EXE) $< $@
-
-.haco-c.haco-c-dump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.haco-c.createdump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.hac.hacktcreatetest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
-		"\"$(ANALYZE_DIFF_AWK)\"" \
-		"\"$(POM_INDEX_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
-.hacktcreatetest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.createstderr:
-	@$(TOUCH) $@
-
-.hac.hacktcreatefromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CREATE_FROM_HACO_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-.hacktcreatefromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.haco-c.haco-a:
-	$(HACKT_ALLOC_EXE) $< $@
-
-.haco.haco-a-from-haco:
-	$(HACKT_ALLOC_EXE) $< $@
-
-.haco-u.haco-a-from-u:
-	$(HACKT_ALLOC_EXE) $< $@
-
-.haco-a.haco-a-dump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.haco-a.allocdump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-.hac.hacktalloctest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_ALLOC_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ALLOC_FILTER)\"" \
-		"\"$(ANALYZE_DIFF_AWK)\"" \
-		"\"$(POM_INDEX_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
-.hacktalloctest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.allocstderr:
-	@$(TOUCH) $@
-
-# does a 3-way difference test
-.hac.hacktallocfromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_ALLOC_FROM_HACO_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ALLOC_FILTER)\"" >> $@
-	@$(CHMOD) +x $@
-
-.hacktallocfromhacotest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-
-# .hac.hacktallocfromunrolltest:
-# 	@$(ECHO) "#!$(SHELL)" > $@
-# 	@$(ECHO) "# \"$@\"" >> $@
-# 	@$(ECHO) $(HACKT_ALLOC_FROM_UNROLL_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-# 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-# 		$* "\"$(ALLOC_FILTER)\"" >> $@
-# 	@$(CHMOD) +x $@
-
-.haco-a.prs:
-	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
-
-.hac.hacktcflattest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
-
-.hacktcflattest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.hac.hacktcflatlvstest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SH) "\"$(HACKT_CFLAT_LVS_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
-
-# if the source file has a magic line @hflat-type@, then extract it
-# as the type to process for cflatting.
-# The hflat-type string must not contain any spaces!
-.haco-a.lvsprs:
-	@srcfile=$(srcdir)/$*.hac ; \
-	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
-		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
-	if test -n "$$type" ; then \
-		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ ; \
-	else \
-		$(HACKT_CFLAT_LVS_EXE) $< > $@ ; \
-	fi
-
-.haco-a.lvssprs:
-	@srcfile=$(srcdir)/$*.hac ; \
-	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
-		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
-	if test -n "$$type" ; then \
-		$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@ ; \
-	else \
-		$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@ ; \
-	fi
-
-.haco-a.prsseu:
-	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
-
-.hac.hacktcflatseutest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CFLAT_SEU_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_SEU_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
-
-.haco-a.prsimexpr:
-	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
-
-.haco-a.prs-dot:
-	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
-
-.haco-a.prsimexpr-O1:
-	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -O1 $< > $@
-
-.haco-a.prs-dot-O1:
-	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
-
-.hac.hacktprsdottest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_PRS_DOT_TEST_SH) $* >> $@
-	@$(CHMOD) +x $@
-
-# dummy test for when make variable is empty
-.hacktprsdottest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-# by default we produce the figures using optimized expression netlists -O1
-# All thevarious graphviz filter programs accept the DOT language for input.  
-if HAVE_DOT
-.prs-dot-O1.prs-dot-ps:
-	$(DOT) -Tps $< -o $@
-
-.prs-dot-O1.prs-dot-fig:
-	$(DOT) -Tfig $< -o $@
-endif
-
-if HAVE_NEATO
-.prs-dot-O1.prs-neato-ps:
-	$(NEATO) -Tps $< -o $@
-
-.prs-dot-O1.prs-neato-fig:
-	$(NEATO) -Tfig $< -o $@
-endif
-
-if HAVE_CIRCO
-.prs-dot-O1.prs-circo-ps:
-	$(CIRCO) -Tps $< -o $@
-
-.prs-dot-O1.prs-circo-fig:
-	$(CIRCO) -Tfig $< -o $@
-endif
-
-if HAVE_TWOPI
-.prs-dot-O1.prs-twopi-ps:
-	$(TWOPI) -Tps $< -o $@
-
-.prs-dot-O1.prs-twopi-fig:
-	$(TWOPI) -Tfig $< -o $@
-endif
-
-if HAVE_FDP
-.prs-dot-O1.prs-fdp-ps:
-	$(FDP) -Tps $< -o $@
-
-.prs-dot-O1.prs-fdp-fig:
-	$(FDP) -Tfig $< -o $@
-endif
-
-if HAVE_FIG2DEV
-.prs-dot-fig.prs-dot-pdf:
-	$(FIG2DEV) -Lpdf $< $@
-
-.prs-neato-fig.prs-neato-pdf:
-	$(FIG2DEV) -Lpdf $< $@
-
-.prs-circo-fig.prs-circo-pdf:
-	$(FIG2DEV) -Lpdf $< $@
-
-.prs-twopi-fig.prs-twopi-pdf:
-	$(FIG2DEV) -Lpdf $< $@
-
-.prs-fdp-fig.prs-fdp-pdf:
-	$(FIG2DEV) -Lpdf $< $@
-endif
-
-.hac.hacktprsimexprtest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_PRSIMEXPR_TEST_SH) "\"$(HACKT_PRSIM_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
-
-.haco-a.sprs:
-	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
-
-.hac.hacktsprstest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SH) "\"$(HACKT_CFLAT_SPRS_EXE)\"" \
-		$(srcdir) $* >> $@
-	@$(CHMOD) +x $@
-
-if HAVE_CFLAT
-.cast.castprs:
-	$(CFLAT) -prsim $< > $@
+if VERBOSE_CHECK
+ECHO_FILTERED = $(ECHO) "Filtered $@"
 else
-.cast.castprs:
-	@$(ECHO) "Sorry, no cflat found in path." ; exit 1
+ECHO_FILTERED = :
 endif
 
+BOGUS_TESTS =
+BOGUS_TARGETS =
+HAC_OBJECT_TARGETS =
+CHECK_SUMMARIES =
 
-# Each run-commands script should include the command to invoke
-# for loading the object, e.g.: hackt prsim foo.haco-a
-# This rule should deduce the input object from the source script.  
+# These included templates contain all the rules
+include $(top_srcdir)/test/Make.test-compile
+include $(top_srcdir)/test/Make.test-unroll
+include $(top_srcdir)/test/Make.test-create
+include $(top_srcdir)/test/Make.test-alloc
+include $(top_srcdir)/test/Make.test-cflat
+include $(top_srcdir)/test/Make.test-graph
+include $(top_srcdir)/test/Make.test-prsim
 
-# doesn't work :S
-# EXTRACT_HACO_PIPE = $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
-#	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
-#	$(AWK) -f $(top_srcdir)/test/extract-haco.awk
-# @obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ;
+BOGUS_TESTS +=
 
-.prsimrc.prsimtest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@obj=`$(CAT) $< | $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
-		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
-	$(ECHO) "$(HACKT_PRSIMRC_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" \
-		"\"$(PRSIMRC_FILTER_AWK)\"" \
-		"\"$(PRSIMRC_TIME_FILTER_AWK)\"" >> $@
-	@$(CHMOD) +x $@
-
-
-.prsimrc.prsimckpttest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@obj=`$(CAT) $< | $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
-		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
-	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
-	@$(CHMOD) +x $@
-
-.prsimckpttest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-.prsimrc.prsimopttest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@obj=`$(CAT) $< | $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
-		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
-	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
-	@$(CHMOD) +x $@
-
-.prsimopttest:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(CHMOD) +x $@
-
-
-BOGUS_TESTS = .hacktcmpltest .hacktobjtest .hacktunrolltest \
-	.hacktcreatefromhacotest .hacktcreatetest \
-	.hacktallocfromhacotest .hacktalloctest \
-	.hacktcflattest .hacktprsdottest \
-	.prsimtest .prsimckpttest .prsimopttest
-
-BOGUS_TARGETS = .hac .unrollstderr .createstderr .allocstderr \
-	.hac .hac.hacktcmpltest \
-	$(BOGUS_TESTS)
+BOGUS_TARGETS += $(BOGUS_TESTS)
 
 CLEANFILES += $(BOGUS_TARGETS)
 DISTHOOK_CLEANFILES += $(BOGUS_TARGETS)
 
-CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
-	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
-	prsdiffs prsdiffs.sort prsimexprdiffs \
-	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort \
-	createfromhacodiffs allocfromhacodiffs \
-	prsimrcdiffs prsimckptdiffs prsimoptdiffs
-# need prs summaries? nah...
-
-compilediffs: force
-	-$(CAT) *.diff > $@
-
-objdiffs: force
-	-$(CAT) *.objdiff > $@
-
-unrolldiffs: force
-	-$(CAT) *.unrolldiff > $@
-
-creatediffs: force
-	-$(CAT) *.creatediff > $@
-
-createfromhacodiffs: force
-	-$(CAT) *.create-from-haco-diff > $@
-
-allocfromhacodiffs: force
-	-$(CAT) *.alloc-from-haco-diff > $@
-	-$(CAT) *.alloc-from-haco-u-diff >> $@
-	-$(CAT) *.alloc-from-haco-c-from-haco-diff >> $@
-
-allocdiffs: force
-	-$(CAT) *.allocdiff > $@
-
-prsdiffs: force
-	-$(CAT) *.prsdiff > $@
-
-prsseudiffs: force
-	-$(CAT) *.prsseu-diff > $@
-
-sprsdiffs: force
-	-$(CAT) *.sprsdiff > $@
-
-unrolldiffs.noindex: force
-	-$(CAT) *.unrolldiff.noindex > $@
-
-creatediffs.noindex: force
-	-$(CAT) *.creatediff.noindex > $@
-
-allocdiffs.noindex: force
-	-$(CAT) *.allocdiff.noindex > $@
-
-prsdiffs.sort: force
-	-$(CAT) *.prsdiff.sort > $@
-
-prsseudiffs.sort: force
-	-$(CAT) *.prsseu-diff.sort > $@
-
-prsimrcdiffs: force
-	-$(CAT) *.prsimrc-diff > $@
-
-prsimckptdiffs: force
-	-$(CAT) *.prsimckpt-diff > $@
-
-prsimoptdiffs: force
-	-$(CAT) *.prsimopt-diff > $@
-
-prsimexprdiffs: force
-	-$(CAT) *.prsimexprdiff > $@
-
-sprsdiffs.sort: force
-	-$(CAT) *.sprsdiff.sort > $@
+CHECK_SUMMARIES +=
 
 check-summaries: $(CHECK_SUMMARIES)
 	-@ls -l $(CHECK_SUMMARIES)
 
-# must be previously defined to use +=
-# assuming HACKT_OBJ_TEST_SUBJECTS is subset of HACKT_PARSE_TEST_SUBJECTS
-srcdir_EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
-	$(HACKT_PARSE_TEST_FAILURES:=.stderr) \
-	$(HACKT_PARSE_TEST_WARNINGS:=.stderr) \
-	$(BISON_OUTPUTS:=.stderr.bison) \
-	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrollstderr) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocstderr) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hac) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.expect-lvsprs) \
-	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.expect-prsseu) \
-	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.expect-sprs) \
-	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.expect-prsimexpr) \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.hac) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc-expect)
+srcdir_EXTRA_DIST +=
 
-# this contains empty files to be removed, listed in EMPTY_CFLAT_PRS
-EXTRA_DIST += $(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs)
+TESTS +=
 
-# all alloc tests and prsimrc tests are candidates for prs-dot tests
-HACKT_PRS_DOT_TEST_SUBJECTS =
-HACKT_PRS_DOT_TEST_SUBJECTS += $(HACKT_ALLOC_TEST_SUBJECTS)
-HACKT_PRS_DOT_TEST_SUBJECTS += $(HACKT_PRSIMRC_TEST_SUBJECTS)
+HAC_OBJECT_TARGETS +=
 
-TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest) \
-	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatefromhacotest) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktallocfromhacotest) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hacktcflatlvstest) \
-	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
-	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
-	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
-	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
-	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest) \
-	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.hacktprsdottest)
-# end temporary quarantine
-
-HAC_OBJECT_TARGETS = $(HACKT_PARSE_TEST_SUBJECTS:=.haco) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.haco-u) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.haco-c) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.haco-a) \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco) \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-u) \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-c) \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a)
+# build all tests, but don't run the resulting test scripts
+build-check-local: $(TESTS)
 
 # executable dependence: if executable is more recent, also rebuild
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 
 # source dependencies
 test.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_PASSES) $(HACKT_PRSIMRC_TEST_SUBJECTS)" | \
 		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print "-include " $$1 ".depend"; }' > $@
-	@$(TOUCH) $@
+		$(AWK) '{print "-include " $$1 ".depend"; }' > $@ ; \
+	$(TOUCH) $@
 
 -include test.autodepend
 
-DISTCLEANFILES += test.autodepend
-
-EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
-
-clean-empty-cflat-prs:
-	-test -z "$(EMPTY_CFLAT_PRS)" || $(RM) $(EMPTY_CFLAT_PRS)
-
-# need a bogus dependency to make it work... ?
-$(EMPTY_CFLAT_PRS): Makefile
-	@$(TOUCH) $@
-
-ALL_PRSIMEXPR_DOT = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot) 
-ALL_PRS_DOT_PS = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot-ps) 
-
-all-prs-dot: $(ALL_PRSIMEXPR_DOT)
-
-all-prs-dot-ps: $(ALL_PRS_DOT_PS)
-
-clean-prs-dot:
-	$(RM) $(ALL_PRSIMEXPR_DOT)
-
-clean-prs-dot-ps:
-	$(RM) $(ALL_PRS_DOT_PS)
+AUTO_DEPENDS += test.autodepend
 
 # echo-style Makefile debugging
 echo-tests: force
 	@$(ECHO) $(TESTS)
-
-echo-compile-passes: force
-	@$(ECHO) $(HACKT_PARSE_TEST_PASSES)
-
-echo-compile-warnings: force
-	@$(ECHO) $(HACKT_PARSE_TEST_WARNINGS)
-
-echo-compile-failures: force
-	@$(ECHO) $(HACKT_PARSE_TEST_FAILURES)
-
-echo-bison-outputs: force
-	@$(ECHO) $(BISON_OUTPUTS)
-
-echo-empty-cflat-prs: force
-	@$(ECHO) $(EMPTY_CFLAT_PRS)
-
-echo-parse-tests: force
-	@$(ECHO) $(HACKT_PARSE_TEST_SUBJECTS)
-
-echo-unroll-tests: force
-	@$(ECHO) $(HACKT_UNROLL_TEST_SUBJECTS)
-
-echo-create-tests: force
-	@$(ECHO) $(HACKT_CREATE_TEST_SUBJECTS)
-
-echo-alloc-tests: force
-	@$(ECHO) $(HACKT_ALLOC_TEST_SUBJECTS)
-
-echo-cflat-tests: force
-	@$(ECHO) $(HACKT_CFLAT_TEST_SUBJECTS)
-
-echo-cflat-lvs-tests: force
-	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SUBJECTS)
-
-echo-cflat-sprs-tests: force
-	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SUBJECTS)
-
-echo-prsimexpr-tests: force
-	@$(ECHO) $(HACKT_PRSIMEXPR_TEST_SUBJECTS)
-
-echo-prsimrc-tests: force
-	@$(ECHO) $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
-
-echo-prsimckpt-tests: force
-	@$(ECHO) $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 # filter-out is GNUMake feature
 #	$($(filter-out $(HACKT_PARSE_TEST_PASSES), $(HACKT_PARSE_TEST_SUBJECTS)):=.stderr)
@@ -680,84 +131,26 @@ echo-prsimckpt-tests: force
 # CLEANFILES += $(TESTS)
 # removed in favor of using pattern removes, for the sake of shortening
 # shell commands' lengths, as some weaker shells have trouble with long cmds.
-CLEANFILES += $(CHECK_SUMMARIES) \
-	$(EMPTY_CFLAT_PRS)
-
-# just using pattern to delete generated files from now on
-# running into command-line length limits on various platforms
-EXPLICIT_CLEANFILES = \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.diff) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.test) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.test.filter) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.stderr.filter) \
-	$(BISON_OUTPUTS:=.stderr.bison.filter) \
-	$(BISON_OUTPUTS:=.bison.diff) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.outdump) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.indump) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.outdump.filter) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.indump.filter) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.haco) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.objdiff) \
-	$(HACKT_UNROLL_TEST_SUBJECTS:=.haco-u) \
-	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrolldump) \
-	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrolldump.filter) \
-	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrolldiff) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.haco-c) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.createdump) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.createdump.filter) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.creatediff) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.haco-a) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdump) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdump.filter) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdiff) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.lvsprs) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.lvsprsdiff) \
-	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu) \
-	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu-diff) \
-	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
-	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
-	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
-	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest)
+CLEANFILES += $(CHECK_SUMMARIES)
 
 
 DISTCLEANFILES += local.cvsignore
 
 ALL_LOCAL =
-if NO_VPATH
+if AUTO_CVSIGNORE
 ALL_LOCAL += .cvsignore
 endif
 
-HACKT_PARSE_TEST_PASSES_STDERR = $(HACKT_PARSE_TEST_PASSES:=.stderr)
 
-CLEANFILES += $(HACKT_PARSE_TEST_PASSES_STDERR)
+all-local: $(ALL_LOCAL)
 
-all-local: $(ALL_LOCAL) \
-	$(HACKT_PARSE_TEST_PASSES_STDERR) $(TESTS) \
-	$(EMPTY_CFLAT_PRS)
-
-DISTHOOK_CLEANFILES += $(HACKT_PARSE_TEST_PASSES_STDERR) $(EMPTY_CFLAT_PRS)
+DISTHOOK_CLEANFILES += $(EMPTY_CFLAT_PRS)
 
 # consider using CLEANFILES
 AUTO_IGNORE += local.cvsignore \
-	$(HACKT_PARSE_TEST_PASSES_STDERR) \
-	$(EMPTY_CFLAT_PRS) \
 	$(CHECK_SUMMARIES)
-#	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest) \
-#	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
-#	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
-#	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
-#	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hacktcflatlvstest) \
-#	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
-#	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktcflattest) \
-#	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
-#	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
-#	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
-#	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest)
 
-if NO_VPATH
+if AUTO_CVSIGNORE
 # we generate all the local.cvsignore's in the test directories
 local.cvsignore: $(TEST_SRCDIR)/test.cvsignore
 	$(CP) $? $@
@@ -767,162 +160,48 @@ local.cvsignore: $(TEST_SRCDIR)/test.cvsignore
 endif
 
 # clean tests only
-clean-tests: clean-tests-recursive
+clean-tests: clean-tests-recursive clean-tests-local
+
+clean-tests-local:
 	-$(RM) $(TESTS)
 
-# doesn't work... consider recursive automake for EXTRA_RECURSIVE_TARGETS
-# RECURSIVE_TARGETS += clean-tests-recursive
-
-clean-tests-recursive:
-	@for d in $(SUBDIRS) ; do \
-		if test $$d != . ; then \
-			if test -d $$d ; then \
-				$(MAKE) -C $$d clean-tests ; \
-			fi ; \
-		fi ; \
-	done
+MORE_CLEAN_RECURSIVE_TARGETS += clean-tests-recursive
 
 clean-summaries:
 	$(RM) $(CHECK_SUMMARIES)
 
-distclean-depend:
+MORE_CLEAN_RECURSIVE_TARGETS += distclean-depend-recursive
+
+distclean-depend: distclean-depend-recursive distclean-depend-local
+
+distclean-depend-local:
+	-$(RM_PATTERN) "*.autodepend"
 	-$(RM_PATTERN) "*.depend"
 
-clean-compiletests:
-	-$(RM_PATTERN) "*.test"
-	-$(RM_PATTERN) "*.nowarn"
-	-$(RM_PATTERN) "*.diff"
-	-$(RM_PATTERN) "*.test.filter"
-	-$(RM_PATTERN) "*.hacktcmpltest"
-	-$(RM_PATTERN) "*.stderr.filter"
-	-$(RM_PATTERN) "*.stderr.bison.filter"
-	-$(RM_PATTERN) "*.bison.diff"
-
-clean-unrolltests:
-	-$(RM_PATTERN) "*.hacktobjtest"
-	-$(RM_PATTERN) "*.hacktunrolltest"
-	-$(RM_PATTERN) "*.indump"
-	-$(RM_PATTERN) "*.outdump"
-	-$(RM_PATTERN) "*.objdiff"
-	-$(RM_PATTERN) "*.indump.filter"
-	-$(RM_PATTERN) "*.outdump.filter"
-	-$(RM_PATTERN) "*.haco"
-	-$(RM_PATTERN) "*.haco-dump"
-	-$(RM_PATTERN) "*.haco-u"
-	-$(RM_PATTERN) "*.haco-u-dump"
-	-$(RM_PATTERN) "*.unrolldiff"
-	-$(RM_PATTERN) "*.unrolldump"
-	-$(RM_PATTERN) "*.unrolldump.filter"
-
-clean-createtests:
-	-$(RM_PATTERN) "*.hacktcreatetest"
-	-$(RM_PATTERN) "*.hacktcreatefromhacotest"
-	-$(RM_PATTERN) "*.haco-c"
-	-$(RM_PATTERN) "*.createdump"
-	-$(RM_PATTERN) "*.creatediff"
-	-$(RM_PATTERN) "*.haco-c-dump"
-	-$(RM_PATTERN) "*.createdump.filter"
-	-$(RM_PATTERN) "*.create-from*"
-
-clean-alloctests:
-	-$(RM_PATTERN) "*.hacktalloctest"
-	-$(RM_PATTERN) "*.hacktallocfromhacotest"
-	-$(RM_PATTERN) "*.haco-a"
-	-$(RM_PATTERN) "*.allocdump"
-	-$(RM_PATTERN) "*.allocdump.filter"
-	-$(RM_PATTERN) "*.allocdiff"
-	-$(RM_PATTERN) "*.haco-a-dump"
-	-$(RM_PATTERN) "*.alloc-from*"
-	-$(RM_PATTERN) "*.prsimexpr-O1"
-	-$(RM_PATTERN) "*.prs-dot-O1"
-
-clean-cflattests:
-	-$(RM_PATTERN) "*.hacktcflattest"
-	-$(RM_PATTERN) "*.hacktcflatlvstest"
-	-$(RM_PATTERN) "*.hacktsprstest"
-	-$(RM_PATTERN) "*.hacktcflatseutest"
-	-$(RM_PATTERN) "*.hacktprsimexprtest"
-	-$(RM_PATTERN) "*.hacktprsdottest"
-	-$(RM_PATTERN) "*.prs"
-	-$(RM_PATTERN) "*.prsdiff"
-	-$(RM_PATTERN) "*.prsdiff.sort"
-	-$(RM_PATTERN) "*.lvssprs"
-	-$(RM_PATTERN) "*.lvsprs"
-	-$(RM_PATTERN) "*.lvsprsdiff"
-	-$(RM_PATTERN) "*.lvsprsdiff.sort"
-	-$(RM_PATTERN) "*.prsseu"
-	-$(RM_PATTERN) "*.prsseu-diff"
-	-$(RM_PATTERN) "*.prsimexpr"
-	-$(RM_PATTERN) "*.prsimexprdiff"
-	-$(RM_PATTERN) "*.prs-dot"
-	-$(RM_PATTERN) "*.prs-dot-O1"
-	-$(RM_PATTERN) "*.prs-*-ps"
-	-$(RM_PATTERN) "*.prs-*-fig"
-	-$(RM_PATTERN) "*.prs-*-pdf"
-	-$(RM_PATTERN) "*.sprs"
-	-$(RM_PATTERN) "*.sprsdiff"
-	-$(RM_PATTERN) "*.sprsdiff.sort"
-
-clean-prsimtests:
-	-$(RM_PATTERN) "*.prsimtest"
-	-$(RM_PATTERN) "*.prsimrc-out"
-	-$(RM_PATTERN) "*.prsimrc-out-filter"
-	-$(RM_PATTERN) "*.prsimrc-diff"
-	-$(RM_PATTERN) "*.prsimckpt"
-	-$(RM_PATTERN) "*.prsimckpttest"
-	-$(RM_PATTERN) "*.prsimckpt-dump"
-	-$(RM_PATTERN) "*.prsimckpt-dupe"
-	-$(RM_PATTERN) "*.prsimckpt-outdump"
-	-$(RM_PATTERN) "*.prsimckpt-indump"
-	-$(RM_PATTERN) "*.prsimckpt-diff"
-	-$(RM_PATTERN) "*.prsimopttest"
-	-$(RM_PATTERN) "*.prsimckpt-O1"
-	-$(RM_PATTERN) "*.prsimckpt-O1-err"
-	-$(RM_PATTERN) "*.prsimckpt-O1-dump"
-	-$(RM_PATTERN) "*.prsimopt-diff"
-	-$(RM_PATTERN) "*.prsimexpr-O1"
-	-$(RM_PATTERN) "*.prs-dot-O1"
-
 # automatically removes $(CLEANFILES)
-clean-local: clean-summaries clean-compiletests clean-unrolltests \
-		clean-createtests clean-alloctests \
-		clean-cflattests clean-prsimtests
+clean-local: clean-summaries
 	-$(RM_PATTERN) "*.core" "core.*"
 	-$(RM_PATTERN) "*.test" "*.diff"
 	-$(RM_PATTERN) "*.sort"
 	-$(RM_PATTERN) "*.noindex"
-	-$(RM_PATTERN) "*-from-haco" "*.haco*"
+	-$(RM_PATTERN) "*-from-haco"
+	-$(RM_PATTERN) "*.*haco*"
 	-$(RM_PATTERN) "*.*-from-*-dump"
 	-$(RM_PATTERN) "*.*-from-*-diff"
 # repeat some rm's to cover spilling command-line arguments
 
-# really remove these files!
-cleaner: clean cleaner-recursive cleaner-local
+cleaner: cleaner-recursive cleaner-am
 
-cleaner-local:
-# legacy object files
-	-$(RM_PATTERN) "*.artobj" "*.artobjunroll"
-	-$(RM_PATTERN) "*.hacktobjcreate" "*.hacktobjalloc"
+cleaner-am: cleaner-local clean-am
 
-distclean-local: cleaner-local distclean-depend
-	-$(RM_PATTERN) "*.*haco*"
+distclean-local: cleaner-local distclean-depend-local
 
-cleaner-recursive:
-	@subdirs='$(SUBDIRS)'; \
-	for d in $$subdirs ; do \
-		if test $$d != . ; then \
-			if test -d $$d ; then \
-				$(MAKE) -C $$d cleaner ; \
-			fi ; \
-		fi ; \
-	done
+#TODO: use RECURSIVE_TARGET_SCRIPT
+MORE_CLEAN_RECURSIVE_TARGETS += cleaner-recursive
 
-.PHONY: cleaner cleaner-local cleaner-recursive \
-	clean-tests clean-tests-recursive help-test \
-	clean-summaries clean-compiletests clean-unrolltests \
-	clean-createtests clean-alloctests \
-	clean-cflattests clean-prsimtests \
-	distclean-depend
+.PHONY: cleaner cleaner-am cleaner-local \
+	clean-tests help-test clean-summaries \
+	distclean-depend distclean-depend-local
 
 help-local: help-test
 
@@ -944,6 +223,7 @@ help-test:
 	@$(ECHO) "	prsimexpr-tests: lists HACKT_PRSIMEXPR_TEST_SUBJECTS"
 	@$(ECHO) "	prsimrc-tests: lists HACKT_PRSIMRC_TEST_SCRIPTS_BASES"
 	@$(ECHO) "	prsimckpt-tests: lists HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES"
+	@$(ECHO) "	prsimopt-tests: lists HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES"
 	@$(ECHO) "	compile-passes: lists TESTS that pass parsing"
 	@$(ECHO) "	bison-outputs: list TESTS whose output is bison-specific"
 	@$(ECHO) "	empty-cflat-prs: list of tests whose cflat-output is empty"

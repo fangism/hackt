@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2006/10/24 02:52:44 fang Exp $
+#	$Id: Makefile.am,v 1.13 2006/11/12 05:58:48 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -30,33 +30,26 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_PARSE_TEST_WARNINGS = \
 	101 103
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_WARNINGS) \
-	$(HACKT_PARSE_TEST_PASSES)
-
-# should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_WARNINGS) \
-	$(HACKT_PARSE_TEST_PASSES)
-
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
-HACKT_UNROLL_TEST_SUBJECTS = \
+HACKT_UNROLL_TEST_PASSES = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	064 \
 	074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
 	090 091 092 093 094 097 098 099 \
 	100 101 102 103
 
+HACKT_CREATE_TEST_FAILURES =
+
+
 # TODO: alloc phase
 # several tests are not ready because we haven't defined
 # footprint frames for built-in channel types yet.  
 # They result in an assertion failure on the frame pointer.  
-# HACKT_ALLOC_TEST_SUBJECTS = \
-#	$(HACKT_CREATE_TEST_SUBJECTS)
+# HACKT_ALLOC_TEST_PASSES = \
+#	$(HACKT_CREATE_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 019b \

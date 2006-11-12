@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/08/04 02:15:18 fang Exp $
+#	$Id: Makefile.am,v 1.12 2006/11/12 05:59:02 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -14,20 +14,16 @@ HACKT_PARSE_TEST_PASSES = \
 	010 014 015 016 017 018 019 \
 	020 022 025 027 029
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
-
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES)
-
-HACKT_UNROLL_TEST_SUBJECTS = \
+HACKT_UNROLL_TEST_PASSES = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
 # the other tests have no instances and are uninteresting
-HACKT_CREATE_TEST_SUBJECTS = \
+HACKT_CREATE_TEST_PASSES = \
 	003 004 005 027
 
-HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+HACKT_CREATE_TEST_FAILURES =
+
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 026

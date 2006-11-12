@@ -1,5 +1,28 @@
 "ChangeLog"
 
+2006-11-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-52-merged-test-12:
+	  Merged branch for test parallelization and other miscellaneous
+		Makefile maintainence.  
+
+
+2006-11-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-11:
+	  config/hackt.m4: renamed NO_VPATH to AUTO_CVSIGNORE, also 
+		added to it a test if srcdir is writeable.
+	  Make.global: now generates .cvsignore in the $(srcdir) if permitted.
+
+
+	* HACKT-00-01-04-main-00-80-50-test-09:
+	  Make.stddef,.global: new AUTO_DEPENDS variable for generated
+		dependencies, removed by distclean.  
+	  Earlier in branch, phased out sequential test scripts in favor
+		of Makefile-controlled concurrency in regression test suite.
+	  configure.ac: new --enable-verbose-check configure option.  
+
+
 2006-11-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-50:

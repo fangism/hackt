@@ -1,0 +1,13 @@
+# "prsimckpt-template.prsimrc"
+#	$Id: prsimckpt-template.prsimrc,v 1.2 2006/11/12 05:58:16 fang Exp $
+
+echo DELETE FROM HERE
+source SOURCE
+echo DELETE TO HERE
+status 0
+status 1
+status X
+queue
+time
+save CHECKPOINT
+

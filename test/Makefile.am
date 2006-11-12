@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.35 2006/10/24 18:39:08 fang Exp $
+#	$Id: Makefile.am,v 1.36 2006/11/12 05:58:15 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,8 +9,7 @@ SUBDIRS = . lexer parser prsim lib benchmarks quarantine
 # bogus test
 TESTS +=
 
-# configure-input scripts
-PRECONFIGURED_TESTSCRIPTS = \
+OBSOLETE_TESTSCRIPTS = \
 	parse-test-expect.sh.in \
 	hackt-obj-diff.sh.in \
 	hackt-unroll-expect.sh.in \
@@ -22,11 +21,14 @@ PRECONFIGURED_TESTSCRIPTS = \
 	hackt-cflat-lvs-expect.sh.in \
 	hackt-cflat-seu-expect.sh.in \
 	hackt-cflat-sprs-expect.sh.in \
-	hackt-prsim-expr-alloc-expect.sh.in \
 	hackt-prsimrc-expect.sh.in \
 	hackt-prsim-ckpt.sh.in \
 	hackt-prsim-opt.sh.in \
-	hackt-prs-dot-test.sh.in \
+	hackt-prsim-expr-alloc-expect.sh.in \
+	hackt-prs-dot-test.sh.in
+
+# configure-input scripts
+PRECONFIGURED_TESTSCRIPTS = \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
@@ -61,7 +63,10 @@ dist_noinst_SCRIPTS = \
 	analyze-dump-diff.awk \
 	prsimrc-filter.awk \
 	prsimrc-random-time-filter.awk \
-	spacestonewline.awk
+	spacestonewline.awk \
+	prsimckpt-template.prsimrc \
+	prsimckpt-load-template.prsimrc \
+	prsimopt-template.prsimrc
 
 all-local: POM-header-filter.awk
 

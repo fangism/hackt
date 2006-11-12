@@ -1,5 +1,5 @@
 # "dox/util/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2006/02/06 00:04:32 fang Exp $
+#	$Id: Makefile.am,v 1.6 2006/11/12 05:57:56 fang Exp $
 
 PDFS = fangutil.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -13,6 +13,7 @@ EXTRA_DIST += fangutil.tex fangutil.bib \
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
 -include fangutil.depend
+AUTO_DEPENDS += fangutil.depend
 
 include $(top_srcdir)/dox/Make.dox-tail
 

@@ -1,0 +1,506 @@
+# "Make.test-cflat"
+#	vi: ft=automake
+#	$Id: Make.test-cflat,v 1.2 2006/11/12 05:58:07 fang Exp $
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+# obsolete:
+# HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
+# HACKT_CFLAT_LVS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-lvs-expect.sh
+# HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
+# HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
+
+
+# CFLAT tests
+.haco-a.prs:
+	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
+
+# .hac.hacktcflattest:
+# 	@$(ECHO) "#!$(SHELL)" > $@
+# 	@$(ECHO) "# \"$@\"" >> $@
+# 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
+# 		$(srcdir) $* >> $@
+# 	@$(CHMOD) +x $@
+
+OLD_PRSIM_TEST_SCRIPT =
+if HAVE_PRSIM
+OLD_PRSIM_TEST_SCRIPT += \
+	else \
+	case $* in \
+	echo* ) break ;; \
+	macro* ) break ;; \
+	spec* ) break ;; \
+	weak* ) break ;; \
+	*) @PRSIM@ "$$out" < /dev/null > /dev/null 2>&1 || \
+	  $(ECHO) "Error: @PRSIM@ rejected $$out." ;; \
+	esac
+else
+OLD_PRSIM_TEST_SCRIPT += :
+endif
+
+DEFAULT_SORT_SCRIPT = $(SORT) $< > $@
+
+.prs.prs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-prs.expect-prs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_CFLATPRS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_CFLATPRS_DIFF_COMMAND = :
+endif
+
+.expect-prs-sort.prsdiff-sort:
+	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff-sort$$/.prs-sort/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test ! -s $@ ; then \
+	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-prs.prsdiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff$$/.prs/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	    $(MAKE) $@-sort ; \
+	    $(OLD_PRSIM_TEST_SCRIPT) ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.prsdiff.hacktcflattest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacktcflattest:
+	@$(DUMMY_TEST_SCRIPT)
+
+cflatprstest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_TEST_SUBJECTS)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".prsdiff: " $$1 ".prs"; print $$1 ".prsdiff-sort: " $$1 ".prs-sort"; }' > $@ ; \
+	$(TOUCH) $@
+
+
+-include cflatprstest.autodepend
+
+
+# .hac.hacktcflatlvstest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SH) "\"$(HACKT_CFLAT_LVS_EXE)\"" \
+#		$(srcdir) $* >> $@
+#	@$(CHMOD) +x $@
+
+if VERBOSE_CHECK
+ECHO_CFLAT_LVS_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@"
+ECHO_CFLAT_LVS_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) $< > $@"
+else
+ECHO_CFLAT_LVS_TYPE_COMMAND = :
+ECHO_CFLAT_LVS_COMMAND = :
+endif
+
+HACKT_CFLAT_LVS_SCRIPT = \
+	srcfile=$(srcdir)/$*.hac ; \
+	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
+	if test -n "$$type" ; then \
+		$(ECHO_CFLAT_LVS_TYPE_COMMAND) ; \
+		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ 2>&1 ; \
+	else \
+		$(ECHO_CFLAT_LVS_COMMAND) ; \
+		$(HACKT_CFLAT_LVS_EXE) $< > $@ 2>&1 ; \
+	fi
+
+
+# if the source file has a magic line @hflat-type@, then extract it
+# as the type to process for cflatting.
+# The hflat-type string must not contain any spaces!
+.haco-a.lvsprs:
+	@$(HACKT_CFLAT_LVS_SCRIPT)
+
+.haco-a.lvsfail:
+	-@$(HACKT_CFLAT_LVS_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@"
+ECHO_CFLAT_LVS_SIZE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@"
+else
+ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND = :
+ECHO_CFLAT_LVS_SIZE_COMMAND = :
+endif
+
+.haco-a.lvssprs:
+	@srcfile=$(srcdir)/$*.hac ; \
+	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
+	if test -n "$$type" ; then \
+		$(ECHO_CFLAT_LVS_SIZE_TYPE_COMMAND) ; \
+		$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@ ; \
+	else \
+		$(ECHO_CFLAT_LVS_SIZE_COMMAND) ; \
+		$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@ ; \
+	fi
+
+.lvsprs.lvsprs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-lvsprs.expect-lvsprs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_CFLATLVS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_CFLATLVS_DIFF_COMMAND = :
+endif
+
+.expect-lvsprs-sort.lvsprsdiff-sort:
+	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff-sort$$/.lvsprs-sort/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test ! -s $@ ; then \
+	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-lvsprs.lvsprsdiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.lvsprsdiff$$/.lvsprs/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-lvsprs.lvsfaildiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.lvsfaildiff$$/.lvsfail/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATLVS_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.lvsprsdiff.hacktcflatlvstest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.lvsfaildiff.hacktcflatlvsfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacktcflatlvstest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hacktcflatlvsfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+cflatlvstest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_PASSES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".lvsprsdiff: " $$1 ".lvsprs"; print $$1 ".lvsprsdiff-sort: " $$1 ".lvsprs-sort"; }' > $@ ; \
+	$(TOUCH) $@
+
+cflatlvsfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_FAILURES)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".lvsfaildiff: " $$1 ".lvsfail"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include cflatlvstest.autodepend
+-include cflatlvsfailtest.autodepend
+
+.haco-a.prsseu:
+	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
+
+# .hac.hacktcflatseutest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_CFLAT_SEU_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_SEU_EXE)\"" \
+#		$(srcdir) $* >> $@
+#	@$(CHMOD) +x $@
+
+.prsseu.prsseu-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-prsseu.expect-prsseu-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_CFLATPRSSEU_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_CFLATPRSSEU_DIFF_COMMAND = :
+endif
+
+.expect-prsseu-sort.prsseudiff-sort:
+	@out=`$(ECHO) $@ | $(SED) 's/\.prsseudiff-sort$$/.prsseu-sort/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATPRSSEU_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test ! -s $@ ; then \
+	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-prsseu.prsseudiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.prsseudiff$$/.prsseu/g'` ; \
+	if test -f "$$out" ; then \
+	  $(ECHO_CFLATPRSSEU_DIFF_COMMAND) ; \
+	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.prsseudiff.hacktcflatseutest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacktcflatseutest:
+	@$(DUMMY_TEST_SCRIPT)
+
+cflatprsseutest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_SEU_TEST_SUBJECTS)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".prsseudiff: " $$1 ".prsseu"; print $$1 ".prsseudiff-sort: " $$1 ".prsseu-sort"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include cflatprsseutest.autodepend
+
+
+.haco-a.sprs:
+	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
+
+# .hac.hacktsprstest:
+#	@$(ECHO) "#!$(SHELL)" > $@
+#	@$(ECHO) "# \"$@\"" >> $@
+#	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SH) "\"$(HACKT_CFLAT_SPRS_EXE)\"" \
+#		$(srcdir) $* >> $@
+#	@$(CHMOD) +x $@
+
+.sprs.sprs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+.expect-sprs.expect-sprs-sort:
+	$(DEFAULT_SORT_SCRIPT)
+
+if VERBOSE_CHECK
+ECHO_SPRS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+else
+ECHO_SPRS_DIFF_COMMAND = :
+endif
+
+.expect-sprs-sort.sprsdiff-sort:
+	@out=`$(ECHO) $@ | $(SED) 's/\.sprsdiff-sort$$/.sprs-sort/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO_SPRS_DIFF_COMMAND) ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test ! -s $@ ; then \
+	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.expect-sprs.sprsdiff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.sprsdiff$$/.sprs/g'` ; \
+	if test -f "$$out" ; then \
+	    $(ECHO_SPRS_DIFF_COMMAND) ; \
+	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is non-empty!" ; \
+	    fi ; \
+	else $(ECHO) "Missing $$out." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.sprsdiff.hacktsprstest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacktsprstest:
+	@$(DUMMY_TEST_SCRIPT)
+
+cflatsprstest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CFLAT_SPRS_TEST_SUBJECTS)" | \
+	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(AWK) '{print $$1 ".sprsdiff: " $$1 ".sprs"; print $$1 ".sprsdiff-sort: " $$1 ".sprs-sort"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include cflatsprstest.autodepend
+
+
+if HAVE_CFLAT
+.cast.castprs:
+	$(CFLAT) -prsim $< > $@
+else
+.cast.castprs:
+	@$(ECHO) "Sorry, no cflat found in path." ; exit 1
+endif
+
+
+AUTO_DEPENDS += cflatprstest.autodepend \
+	cflatlvstest.autodepend \
+	cflatlvsfailtest.autodepend \
+	cflatprsseutest.autodepend \
+	cflatsprstest.autodepend
+
+BOGUS_TESTS += .hacktcflattest .hacktcflatlvstest .hacktcflatlvsfailtest \
+	.hacktcflatseutest .hacktsprstest
+BOGUS_TARGETS += .expect-prs
+
+CHECK_SUMMARIES += prsdiffs prsdiffs.sort \
+	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort
+
+
+prsdiffs: force
+	-$(CAT) *.prsdiff > $@
+
+prsseudiffs: force
+	-$(CAT) *.prsseu-diff > $@
+
+sprsdiffs: force
+	-$(CAT) *.sprsdiff > $@
+
+prsdiffs.sort: force
+	-$(CAT) *.prsdiff-sort > $@
+
+prsseudiffs.sort: force
+	-$(CAT) *.prsseu-diff-sort > $@
+
+sprsdiffs.sort: force
+	-$(CAT) *.sprsdiff.sort > $@
+
+
+HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+	$(HACKT_CFLAT_LVS_TEST_PASSES) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES)
+
+srcdir_EXTRA_DIST += \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hac) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.expect-lvsprs) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.expect-prsseu) \
+	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.expect-sprs)
+
+# this contains empty files to be removed, listed in EMPTY_CFLAT_PRS
+EXTRA_DIST += $(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs)
+
+TESTS += \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
+	$(HACKT_CFLAT_LVS_TEST_PASSES:=.hacktcflatlvstest) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.hacktcflatlvsfailtest) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
+	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest)
+
+
+build-check-local: \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseudiff) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-u) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprs) \
+	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprsdiff) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfail) \
+	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfaildiff)
+
+
+EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
+
+clean-empty-cflat-prs:
+	-test -z "$(EMPTY_CFLAT_PRS)" || $(RM) $(EMPTY_CFLAT_PRS)
+
+# need a bogus dependency to make it work... ?
+$(EMPTY_CFLAT_PRS): Makefile
+	@$(TOUCH) $@
+
+CLEANFILES += $(EMPTY_CFLAT_PRS)
+AUTO_IGNORE += $(EMPTY_CFLAT_PRS)
+
+all-local: $(EMPTY_CFLAT_PRS)
+
+echo-empty-cflat-prs: force
+	@$(ECHO) $(EMPTY_CFLAT_PRS)
+
+echo-cflat-tests: force
+	@$(ECHO) $(HACKT_CFLAT_TEST_SUBJECTS)
+
+echo-cflat-lvs-passes: force
+	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_PASSES)
+
+echo-cflat-lvs-failures: force
+	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_FAILURES)
+
+echo-cflat-lvs-tests: force
+	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SUBJECTS)
+
+echo-cflat-sprs-tests: force
+	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SUBJECTS)
+
+
+
+clean-cflattests:
+	-$(RM_PATTERN) "*.hacktcflattest"
+	-$(RM_PATTERN) "*.hacktcflatlvstest"
+	-$(RM_PATTERN) "*.hacktcflatlvsfailtest"
+	-$(RM_PATTERN) "*.hacktsprstest"
+	-$(RM_PATTERN) "*.hacktcflatseutest"
+	-$(RM_PATTERN) "*.hacktprsimexprtest"
+	-$(RM_PATTERN) "*.hacktprsdottest"
+	-$(RM_PATTERN) "*.prs"
+	-$(RM_PATTERN) "*.prsdiff"
+	-$(RM_PATTERN) "*.prsdiff-sort"
+	-$(RM_PATTERN) "*.lvssprs"
+	-$(RM_PATTERN) "*.lvsprs"
+	-$(RM_PATTERN) "*.lvsprsdiff"
+	-$(RM_PATTERN) "*.lvsprsdiff-sort"
+	-$(RM_PATTERN) "*.lvsfail"
+	-$(RM_PATTERN) "*.lvsfaildiff"
+	-$(RM_PATTERN) "*.prsseu"
+	-$(RM_PATTERN) "*.prsseudiff"
+	-$(RM_PATTERN) "*.prsseu-diff"
+	-$(RM_PATTERN) "*.prsimexpr"
+	-$(RM_PATTERN) "*.prsimexprdiff"
+	-$(RM_PATTERN) "*.prs-dot"
+	-$(RM_PATTERN) "*.prs-dot-O1"
+	-$(RM_PATTERN) "*.prs-*-ps"
+	-$(RM_PATTERN) "*.prs-*-fig"
+	-$(RM_PATTERN) "*.prs-*-pdf"
+	-$(RM_PATTERN) "*.sprs"
+	-$(RM_PATTERN) "*.sprsdiff"
+	-$(RM_PATTERN) "*.sprsdiff-sort"
+
+clean-local: clean-cflattests
+
+.PHONY: clean-cflattests
+

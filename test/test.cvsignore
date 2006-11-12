@@ -6,10 +6,16 @@ core.*
 *.hackt*test
 *.diff
 *.filter
+*-filter
 *.artctest
 *.hacktcmpltest
+*.hacktcmplwarntest
+*.hacktcmplfailtest
+*.compiledump
+*.compiledump-filter
 *.artobjtest
 *.hacktobjtest
+*.compileobjdiff
 *.haco*
 *.artobj
 *.indump
@@ -58,6 +64,7 @@ core.*
 *.prsimopttest
 *.prsimopt-diff
 *.sort
+*-sort
 *.sprs
 *.sprsdiff
 *-dump
@@ -65,7 +72,7 @@ core.*
 *.nowarn
 *.tmpd
 *.depend
-test.autodepend
+*.autodepend
 ignore
 Makefile
 Makefile.in

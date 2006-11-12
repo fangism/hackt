@@ -1,6 +1,6 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.5 2006/05/26 07:46:01 fang Exp $
+#	$Id: Makefile.am,v 1.6 2006/11/12 05:57:51 fang Exp $
 
 PDFS = hackt.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -16,6 +16,7 @@ EXTRA_DIST += README ChangeLog \
 	hackt/legacy.tex
 
 -include hackt.depend
+AUTO_DEPENDS += hackt.depend
 
 include $(top_srcdir)/dox/Make.dox-tail
 

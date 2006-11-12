@@ -1,5 +1,87 @@
 # "test/ChangeLog"
 
+2006-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-52-merged-test-12:
+	  Merged test parallelization branch to trunk.  
+
+
+2006-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-12:
+	  Re-factored test dependencies in Make.test-prsim to re-use
+		the checkpoint from the basic (pass) test for multiple tests.
+		Cuts a chunk of simulation time down by factor of 2.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-11:
+	  distclean: distclean-depend-local (don't recurse)
+
+
+	* HACKT-00-01-04-main-00-80-50-test-10:
+	  Partitioned Make.test-tail.
+	  distclean-depend is now recursive.
+	  build-check is now recursive from the top-level directory.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-09:
+	  Make.test-tail:
+		new recursive targets: build-check, cleaner.
+		Now uses AUTO_DEPENDS variable from project-wide top-level.  
+		Now uses AM_CONDITIONAL(VERBOSE_CHECK) to control
+		  some of the echoing during build-check.  
+		SUBJECTS = PASSES + FAILURES variable aggregation now
+		  done in this template, not in includers.  
+
+
+2006-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-08:
+	  Parallelized cflat-seu, cflat-sprs, and prs-dot tests.
+	  Only clean-up remains.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-07:
+	  Parallelized cflat-prs, cflat-lvs, and prsim-opt tests.  
+		LVS tests are now divided into pass/fails.  
+	  Unexpanded $(srcdir) references in auto-dependencies.  
+	  One more batch of parallelization, then clean-up.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-06:
+	  Parallelized prsimexpr tests and prsim-checkpoint tests.  
+	  Added new template test scripts:
+		prsimckpt-template.prsimrc, prsimckpt-load-template.prsimrc
+	  TODO: cleanup: test dependencies that reference a file
+		added by the auto-dependency generator need not 
+		be tested, e.g. .stderr files.  
+		They are an unnecessary safety measure.  
+	  TODO: maybe replace srcdir paths in autodepend's with
+		just '$(srcdir)' which is defined by the includer.  
+	  TODO: Make.test-tail getting to be unwieldly, split up
+		rules by group before branch is over.  
+
+
+2006-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-05:
+	  Parallelized prsim-tests (basic only).  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-04:
+	  Parallelized alloc-tests.
+
+
+2006-11-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-50-test-02:
+	  Parallelized unroll-tests.  
+
+
+	* HACKT-00-01-04-main-00-80-50-test-01:
+	  Parallelized compile-tests.  
+
+
 2006-10-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-45:

@@ -1,33 +1,109 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.23 2006/10/04 23:18:29 fang Exp $
+#	$Id: Make.test-head,v 1.24 2006/11/12 05:58:13 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
-SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
-	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
+SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
+	.hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
+	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
+	.hacktobjtest .outdump .indump .haco-dump \
+	.outdump-filter .indump-filter .compileobjdiff \
+	.hacktunrolltest .unrolldump .unrolldump-filter \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.hacktunrollfailtest .unrollfaildump .unrollfaildiff \
+	.hacktcreatetest .hacktcreatefailtest \
+	.createdump .createdump-filter .creatediff \
+	.createfaildump .haco-c-dump \
+	.haco-c-from-haco .create-from-haco-dump \
+	.create-from-haco-dump-filter .create-from-haco-diff \
+	.hacktcreatefromhacotest \
+	.hacktalloctest .haco-a-dump .haco-a-dump-filter \
+	.allocdump .allocfaildump .allocdump-filter \
+	.allocdiff .alloc-from-haco-diff \
+	.haco-a-from-haco .haco-a-from-u \
+	.haco-a-from-haco-dump .haco-a-from-u-dump \
+	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
+	.alloc-from-haco-dump .alloc-from-u-dump \
+	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
+	.hacktallocfromhacotest \
+	.hacktcflattest \
+	.hacktcflatlvstest \
+	.hacktcflatlvsfailtest \
+	.hacktsprstest \
+	.sprs .sprs-sort .sprsdiff .sprsdiff-sort \
 	.hacktcflatseutest \
-	.depend \
-	.haco .haco-u .haco-c .haco-a \
-	.prs .sprs .prsseu .lvsprs .lvssprs \
-	.prsimexpr .prsimexpr-O1 \
+	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
+	.prsseu .prsseu-sort .prsseudiff .prsseudiff-sort \
+	.lvsprs .expect-lvsprs .lvsprsdiff .lvsprs-sort \
+	.expect-lvsprs-sort .lvsprsdiff-sort \
+	.lvsfail .lvsfaildiff \
+	.lvssprs \
+	.prsimrc .prisimtest .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
+	.prsimfailtest .prsimrcfail-out \
+	.prsimrcfail-out-filter .prsimrcfail-diff \
+	.hacktprsimexprtest .prsimexpr .prsimexprdiff .prsimexpr-O1 \
 	.prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
 	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
-	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
-	.outdump .indump .unrolldump .createdump .allocdump \
-	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
-	.hacktcreatefromhacotest .hacktallocfromhacotest \
-	.prsimrc .prsimtest .prsimckpttest .prsimopttest \
+	.prsimckpttest .prsimckpt .prsimckpt-dump \
+	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
+	.prsimckpt-dupe .prsimckpt-dupe-dump \
+	.prsimopttest .prsimckpt-O1 .prsimckpt-O1-err \
+	.prsimckpt-01-dump .prsimopt-diff \
 	.hacktprsdottest
+
+# if suffix substitutions ever result in target names with just the suffix
+# then just touch empty files with name.
+# NOTE: built test script should not be named here, as then need to be
+# chmod-ed to be executable.  
+BOGUS_SUFFIX_TARGETS = \
+	.hac .depend .haco .haco-u .haco-c .haco-a \
+	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
+	.stderr .outdump .indump .haco-dump \
+	.outdump-filter .indump-filter .compileobjdiff \
+	.unrolldump .unrolldump-filter .unrollstderr \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.createstderr .unrollfaildump .unrollfaildiff \
+	.createdump .createdump-filter .createfaildump .haco-c-dump \
+	.haco-c-from-haco .create-from-haco-dump \
+	.create-from-haco-dump-filter .create-from-haco-diff \
+	.haco-a-dump .haco-a-dump-filter \
+	.allocdump .allocfaildump .allocdump-filter \
+	.haco-a-from-haco .haco-a-from-u \
+	.haco-a-from-haco-dump .haco-a-from-u-dump \
+	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
+	.alloc-from-haco-dump .alloc-from-u-dump \
+	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
+	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
+	.sprs .sprs-sort .sprsdiff .sprsdiff-sort \
+	.prsseu .prsseu-sort .prsseudiff .prsseudiff-sort \
+	.lvssprs \
+	.lvsprs .expect-lvsprs .lvsprsdiff .lvsprs-sort \
+	.expect-lvsprs-sort .lvsprsdiff-sort \
+	.lvsfail .lvsfaildiff \
+	.prs-dot .prs-dot-O1 \
+	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
+	.prsimrcfail-out .prsimrcfail-out-filter .prsimrcfail-diff \
+	.prsimexpr .prsimexprdiff .prsimexpr-O1 \
+	.prsimckpt .prsimckpt-dump \
+	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
+	.prsimckpt-dupe .prsimckpt-dupe-dump \
+	.prsimckpt-O1 .prsimckpt-O1-err .prsimckpt-01-dump .prsimopt-diff
 
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs
+BOGUS_SUFFIX_TARGETS += .cast .castprs
 endif
+
+$(BOGUS_SUFFIX_TARGETS):
+	@$(TOUCH) $@
+
+CLEANFILES += $(BOGUS_SUFFIX_TARGETS)
 
 # for compile include paths
 HACO_FLAGS =

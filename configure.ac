@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.103 2006/11/11 02:20:10 fang Exp $
+#	$Id: configure.ac,v 1.104 2006/11/12 05:57:40 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20061110, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20061112, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -61,6 +61,7 @@ AC_CHECK_PROG([CUT], cut, cut)
 AC_CHECK_PROG([PASTE], paste, paste)
 AC_CHECK_PROG([HEAD], head, head)
 AC_CHECK_PROG([TAIL], tail, tail)
+AC_CHECK_PROG([TEE], tee, tee)
 # AC_CHECK_PROG([PWD], pwd, pwd)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
@@ -68,6 +69,7 @@ AC_CHECK_PROG([TOUCH], touch, touch)
 FANG_PROG_SLEEP
 AC_CHECK_PROG([INDENT], indent, indent)
 AC_CHECK_PROGS([M4], gm4 m4, m4)
+AC_CHECK_PROGS([XARGS], xargs, xargs)
 
 # AC_PROG_PERL
 AC_CHECK_PROG([PERL], perl, perl)
@@ -133,11 +135,13 @@ HACKT_ARG_WITH_XDR
 
 dnl whether or not to build universal binary (config/hackt.m4)
 dnl not actually implemented yet
-HACKT_ARG_ENABLE_UNIVERSAL_BINARY
+HACKT_ARG_ENABLE_MULTILIB
 
 dnl AC_ARG_ENABLE for building documentation (on by default)
 dnl from "config/documentation.m4"
 DOC_ARG_ENABLE_DOCS
+
+HACKT_ARG_ENABLE_VERBOSE_CHECK
 
 dnl enable or disable fun modules ("config/hackt.m4")
 HACKT_ARG_ENABLE_FUN
@@ -418,38 +422,38 @@ AC_CONFIG_FILES([install_transform.sh],
 	[chmod +x install_transform.sh])
 AC_CONFIG_FILES([test/POM-header-filter.awk],
 	[chmod +x test/POM-header-filter.awk])
-AC_CONFIG_FILES([test/parse-test-expect.sh],
-	[chmod +x test/parse-test-expect.sh])
-AC_CONFIG_FILES([test/hackt-obj-diff.sh],
-	[chmod +x test/hackt-obj-diff.sh])
-AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
-	[chmod +x test/hackt-unroll-expect.sh])
-AC_CONFIG_FILES([test/hackt-create-expect.sh],
-	[chmod +x test/hackt-create-expect.sh])
-AC_CONFIG_FILES([test/check-create-consistency.sh],
-	[chmod +x test/check-create-consistency.sh])
-AC_CONFIG_FILES([test/check-alloc-consistency.sh],
-	[chmod +x test/check-alloc-consistency.sh])
-AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
-	[chmod +x test/hackt-alloc-expect.sh])
-AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
-	[chmod +x test/hackt-cflat-expect.sh])
-AC_CONFIG_FILES([test/hackt-cflat-lvs-expect.sh],
-	[chmod +x test/hackt-cflat-lvs-expect.sh])
-AC_CONFIG_FILES([test/hackt-cflat-seu-expect.sh],
-	[chmod +x test/hackt-cflat-seu-expect.sh])
-AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
-	[chmod +x test/hackt-cflat-sprs-expect.sh])
-AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
-	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
-AC_CONFIG_FILES([test/hackt-prsimrc-expect.sh],
-	[chmod +x test/hackt-prsimrc-expect.sh])
-AC_CONFIG_FILES([test/hackt-prsim-ckpt.sh],
-	[chmod +x test/hackt-prsim-ckpt.sh])
-AC_CONFIG_FILES([test/hackt-prsim-opt.sh],
-	[chmod +x test/hackt-prsim-opt.sh])
-AC_CONFIG_FILES([test/hackt-prs-dot-test.sh],
-	[chmod +x test/hackt-prs-dot-test.sh])
+dnl AC_CONFIG_FILES([test/parse-test-expect.sh],
+dnl	[chmod +x test/parse-test-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-obj-diff.sh],
+dnl	[chmod +x test/hackt-obj-diff.sh])
+dnl AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
+dnl	[chmod +x test/hackt-unroll-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-create-expect.sh],
+dnl	[chmod +x test/hackt-create-expect.sh])
+dnl AC_CONFIG_FILES([test/check-create-consistency.sh],
+dnl	[chmod +x test/check-create-consistency.sh])
+dnl AC_CONFIG_FILES([test/check-alloc-consistency.sh],
+dnl	[chmod +x test/check-alloc-consistency.sh])
+dnl AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
+dnl	[chmod +x test/hackt-alloc-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
+dnl	[chmod +x test/hackt-cflat-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-cflat-lvs-expect.sh],
+dnl	[chmod +x test/hackt-cflat-lvs-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-cflat-seu-expect.sh],
+dnl	[chmod +x test/hackt-cflat-seu-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
+dnl	[chmod +x test/hackt-cflat-sprs-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
+dnl	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsimrc-expect.sh],
+dnl	[chmod +x test/hackt-prsimrc-expect.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsim-ckpt.sh],
+dnl	[chmod +x test/hackt-prsim-ckpt.sh])
+dnl AC_CONFIG_FILES([test/hackt-prsim-opt.sh],
+dnl	[chmod +x test/hackt-prsim-opt.sh])
+dnl AC_CONFIG_FILES([test/hackt-prs-dot-test.sh],
+dnl	[chmod +x test/hackt-prs-dot-test.sh])
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
 

@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2006/10/24 02:52:40 fang Exp $
+#	$Id: Makefile.am,v 1.25 2006/11/12 05:58:22 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -19,20 +19,16 @@ HACKT_PARSE_TEST_PASSES = \
 	e1ofN-01 e1ofN-02 \
 	logic-01
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_PASSES)
-
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_PASSES)
-
 # where there are actual instantiations
 # 20061017: removed these tests, too much of a pain to update
 # will re-instate later with a better testing strategy.  
-HACKT_UNROLL_TEST_SUBJECTS =
-# $(HACKT_PARSE_TEST_PASSES)
-HACKT_CREATE_TEST_SUBJECTS = $(HACKT_UNROLL_TEST_SUBJECTS)
-HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+HACKT_UNROLL_TEST_PASSES =
+HACKT_UNROLL_TEST_FAILURES =
+
+HACKT_CREATE_TEST_PASSES = $(HACKT_UNROLL_TEST_PASSES)
+HACKT_CREATE_TEST_FAILURES =
+
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 # .hac inputs (no suffix)
 HACKT_PRSIMRC_TEST_SUBJECTS = \
@@ -94,7 +90,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	copy-wchb_copy-03 copy-wchb_copy-04
 
 # .prsimrc inputs (no suffix)
-HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
+HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
@@ -152,10 +148,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
 	copy-wchb_copy-03 copy-wchb_copy-04
 
-HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES =
+
+HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-lvs-01
 
-HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
+HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 srcdir_EXTRA_DIST += README \

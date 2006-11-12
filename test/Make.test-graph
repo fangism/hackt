@@ -1,0 +1,69 @@
+# "Make.test-graph"
+#	vi: ft=automake
+#	$Id: Make.test-graph,v 1.2 2006/11/12 05:58:12 fang Exp $
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+
+# by default we produce the figures using optimized expression netlists -O1
+# All thevarious graphviz filter programs accept the DOT language for input.  
+if HAVE_DOT
+.prs-dot-O1.prs-dot-ps:
+	$(DOT) -Tps $< -o $@
+
+.prs-dot-O1.prs-dot-fig:
+	$(DOT) -Tfig $< -o $@
+endif
+
+if HAVE_NEATO
+.prs-dot-O1.prs-neato-ps:
+	$(NEATO) -Tps $< -o $@
+
+.prs-dot-O1.prs-neato-fig:
+	$(NEATO) -Tfig $< -o $@
+endif
+
+if HAVE_CIRCO
+.prs-dot-O1.prs-circo-ps:
+	$(CIRCO) -Tps $< -o $@
+
+.prs-dot-O1.prs-circo-fig:
+	$(CIRCO) -Tfig $< -o $@
+endif
+
+if HAVE_TWOPI
+.prs-dot-O1.prs-twopi-ps:
+	$(TWOPI) -Tps $< -o $@
+
+.prs-dot-O1.prs-twopi-fig:
+	$(TWOPI) -Tfig $< -o $@
+endif
+
+if HAVE_FDP
+.prs-dot-O1.prs-fdp-ps:
+	$(FDP) -Tps $< -o $@
+
+.prs-dot-O1.prs-fdp-fig:
+	$(FDP) -Tfig $< -o $@
+endif
+
+if HAVE_FIG2DEV
+.prs-dot-fig.prs-dot-pdf:
+	$(FIG2DEV) -Lpdf $< $@
+
+.prs-neato-fig.prs-neato-pdf:
+	$(FIG2DEV) -Lpdf $< $@
+
+.prs-circo-fig.prs-circo-pdf:
+	$(FIG2DEV) -Lpdf $< $@
+
+.prs-twopi-fig.prs-twopi-pdf:
+	$(FIG2DEV) -Lpdf $< $@
+
+.prs-fdp-fig.prs-fdp-pdf:
+	$(FIG2DEV) -Lpdf $< $@
+endif
+
+

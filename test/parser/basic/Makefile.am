@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2006/10/24 02:52:43 fang Exp $
+#	$Id: Makefile.am,v 1.20 2006/11/12 05:58:34 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -19,22 +19,15 @@ HACKT_PARSE_TEST_WARNINGS = \
 	oper-01
 # NOTE: oper-01 passes with a warning for now
 
-HACKT_PARSE_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_FAILURES) \
-	$(HACKT_PARSE_TEST_WARNINGS) \
-	$(HACKT_PARSE_TEST_PASSES)
-
-# should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
-HACKT_OBJ_TEST_SUBJECTS = \
-	$(HACKT_PARSE_TEST_WARNINGS) \
-	$(HACKT_PARSE_TEST_PASSES)
-
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
-HACKT_UNROLL_TEST_SUBJECTS = \
+
+HACKT_UNROLL_TEST_PASSES = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
-HACKT_CREATE_TEST_SUBJECTS = \
-	$(HACKT_UNROLL_TEST_SUBJECTS)
+HACKT_CREATE_TEST_PASSES = \
+	$(HACKT_UNROLL_TEST_PASSES)
+
+HACKT_CREATE_TEST_FAILURES =
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 004 005 008 010 017 018 \

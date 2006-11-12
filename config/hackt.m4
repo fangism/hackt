@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.6 2006/10/24 18:39:02 fang Exp $
+dnl	$Id: hackt.m4,v 1.7 2006/11/12 05:57:40 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -30,17 +30,41 @@ fi
 
 dnl @synopsis HACKT_AUTO_CVSIGNORE
 dnl
-dnl Define an AM_CONDITIONAL NO_VPATH flag for VPATH-specific options.
+dnl Define an AM_CONDITIONAL AUTO_CVSIGNORE flag to build cvsignore
 dnl For example, don't bother generating .cvsignore.
+dnl Building cvsignores is enabled by default, but disabled if the
+dnl srcdir is not writeable, e.g. during a distcheck.  
 dnl
 dnl @category ProjectSpecific
-dnl @version 2006-05-08
+dnl @version 2006-11-11
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_AUTO_CVSIGNORE],
-[AM_CONDITIONAL(NO_VPATH, test "$srcdir" = ".")]
-)dnl
+[AC_MSG_CHECKING([whether to make .cvsignores])
+AC_ARG_ENABLE(auto-cvsignore, 
+	AS_HELP_STRING([--disable-auto-cvsignore],
+		[Suppress automatic generation of srcdir's .cvsignores]),
+	[],
+	[enable_auto_cvsignore=yes]
+)
+if test -w "$srcdir/configure.ac" ; then
+  srcw="yes"
+else
+  srcw="no"
+fi
+AM_CONDITIONAL(AUTO_CVSIGNORE, 
+	[test "$enable_auto_cvsignore" = yes && test "$srcw" = yes])
+if test "$enable_auto_cvsignore" = yes ; then
+	if test "$srcw" = yes ; then
+		AC_MSG_RESULT([yes])
+	else
+		AC_MSG_RESULT([no (cannot write srcdir)])
+	fi
+else
+	AC_MSG_RESULT([no])
+fi
+])dnl
 
 dnl @synopsis FANG_CONFEST_FLAGS
 dnl
@@ -367,7 +391,31 @@ else    AC_MSG_RESULT([not yet])
 fi
 ])dnl
 
-dnl @synopsis HACKT_ARG_ENABLE_UNIVERSAL_BINARY
+dnl @synopsis HACKT_ARG_ENABLE_VERBOSE_CHECK
+dnl
+dnl Enable to see more output dumped to stdout during make check.  
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-11-10
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_VERBOSE_CHECK],
+[AC_MSG_CHECKING([for requested make-check verbosity])
+AC_ARG_ENABLE(verbose_check,
+	AS_HELP_STRING([--enable-verbose-check],
+		[Verbose make 'check'. (default=disabled)]),
+	[if test "$enable_verbose_check" = "yes"
+	then    AC_MSG_RESULT([yes])
+	else    AC_MSG_RESULT([no])
+	fi
+	],
+	AC_MSG_RESULT([no (default)])
+)
+AM_CONDITIONAL(VERBOSE_CHECK, test x"$enable_verbose_check" = "xyes")
+])dnl
+
+dnl @synopsis HACKT_ARG_ENABLE_MULTILIB
 dnl
 dnl This macro doesn't really belong here, whatever...
 dnl TODO: complete me!  (See example in GMP package.)
@@ -377,10 +425,10 @@ dnl @version 2006-05-08
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
-AC_DEFUN([HACKT_ARG_ENABLE_UNIVERSAL_BINARY],
-[AC_MSG_CHECKING([whether universal binaries are requested])
-AC_ARG_ENABLE(fat_binary,
-	AS_HELP_STRING([--enable-fat-binary],
+AC_DEFUN([HACKT_ARG_ENABLE_MULTILIB],
+[AC_MSG_CHECKING([whether multi-arch binaries are requested])
+AC_ARG_ENABLE(multilib,
+	AS_HELP_STRING([--enable-multilib],
 		[Compile programs for multiple architectures.]),
 	[AC_MSG_RESULT([yes, but...])
 	dnl AC_CHECK_PROG(lipo)

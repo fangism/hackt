@@ -38,10 +38,10 @@ do
 	fi
 done
 
-reference=$bldroot.allocdump.filter
+reference=$bldroot.allocdump-filter
 if test ! -s $reference
 then
-	@ECHO@ "$bldroot.allocdump.filter doesn't exist or is empty."
+	@ECHO@ "$bldroot.allocdump-filter doesn't exist or is empty."
 	exit 1
 fi
 
@@ -51,7 +51,7 @@ for i in $test_exts
 do
 	outobj=$bldroot.haco-a-from-$i
 	outdump=$bldroot.alloc-from-$i-dump
-	outfilt=$outdump.filter
+	outfilt=$outdump-filter
 	outdiff=$bldroot.alloc-from-$i-diff
 	$alloc $bldroot.$i $outobj > $outdump 2>&1
 	case $? in
