@@ -23,7 +23,7 @@ done
 
 for i
 do
-	cp -f $i.allocdump.filter $srcdir/$i.allocstderr
+	cp -f $i.allocdump-filter $srcdir/$i.allocstderr
 	echo "Updated $srcdir/$i.allocstderr"
 done
 

@@ -1,0 +1,18 @@
+// "top-level-03.hac"
+// copy-modified from "top-level-02.hac"
+// should top-level CHP bodies be accepted?
+
+bool x;
+bool y;
+
+// two infinite loops will be represented concurrently, not sequentially
+
+chp {
+*[ x+ ]
+}
+
+chp {
+*[ y- ]
+}
+
+

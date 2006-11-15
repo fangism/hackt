@@ -1,0 +1,10 @@
+// "bool-source.hac"
+// boolean-valued channel source
+
+template <pbool B>
+defproc chp_bool_source (chan!(bool) S) {
+chp {
+	*[ S!(B) ]
+}
+}
+

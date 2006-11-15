@@ -1,0 +1,52 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	4	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    chp_bool_source = process-definition (defined) chp_bool_source<
+      pbool<> B
+      >(
+        chan!(bool<>) S
+      )
+      In definition "chp_bool_source", we have: {
+      Parameters:
+        B = pbool<> chp_bool_source::B
+      Instances:
+        S = chan!(bool<>) chp_bool_source::S
+      unroll sequence: 
+        chan!(bool<>) S
+      chp:
+        concurrent: {
+          *[
+            S!(B)
+          ]
+        }
+      }
+
+}
+
+footprint: {
+}

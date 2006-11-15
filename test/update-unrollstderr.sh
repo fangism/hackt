@@ -23,7 +23,7 @@ done
 
 for i
 do
-	cp -f $i.unrolldump.filter $srcdir/$i.unrollstderr
+	cp -f $i.unrolldump-filter $srcdir/$i.unrollstderr
 	echo "Updated $srcdir/$i.unrollstderr"
 done
 

@@ -1,5 +1,17 @@
 # "test/ChangeLog"
 
+2006-11-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54:
+	  Make.test-*: appended touch commands to many rules that may
+		otherwise result in timestamps not updating, due to 
+		empty results in redirections.  
+		This reduces unnecessary rebuilds.  
+		Added some missing .autodepend: Makefile dependencies.
+	  Test update scripts updated.  
+	  Added new test cases to parser/{chp,channel}.  
+
+
 2006-11-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-53:

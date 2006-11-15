@@ -1,10 +1,14 @@
 #!@SH_PATH@
 # "test-series.sh.in"
 # convenience script for running a sequence of tests on one input file.
-#	$Id: test-series.sh.in,v 1.10 2006/07/28 03:31:14 fang Exp $
+#	$Id: test-series.sh.in,v 1.11 2006/11/15 21:56:59 fang Exp $
 # This file originally came from "test-series.sh" in revision prehistory.  
 
 # usage: pass in the root names of the test cases (without the .hac extension)
+
+# TODO: this script is become obsolete after parallelizing tests
+# and with explicit dependence chaining.  
+# Either update this or remove it.  (2006-11-14)
 
 for t in $@
 do

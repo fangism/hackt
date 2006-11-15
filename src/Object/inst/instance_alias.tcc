@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.26 2006/11/07 06:34:43 fang Exp $
+	$Id: instance_alias.tcc,v 1.27 2006/11/15 21:56:53 fang Exp $
 	TODO: trim includes
  */
 
@@ -378,11 +378,12 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
-	// TODO: check relaxed actuals
+	// TODO: check relaxed actuals, and propagate
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
+	// TODO: policy-based check of directions, (channels-only)
 	l.unite(r);
 	return l.connect_port_aliases_recursive(r);
 }
@@ -403,11 +404,12 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
-	// TODO: check relaxed actuals
+	// TODO: check relaxed actuals, and propagate
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
+	// TODO: policy-based check of directions, (channels-only)
 	l.unite(r);
 	return l.connect_port_aliases_recursive(r);
 }

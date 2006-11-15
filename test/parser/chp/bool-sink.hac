@@ -1,0 +1,10 @@
+// "bool-sink.hac"
+// boolean-valued consumer
+
+defproc chp_bool_sink(chan?(bool) S) {
+bool x;
+chp {
+	*[ S?(x) ]
+}
+}
+

@@ -1,0 +1,128 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	375
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
+	20	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	21	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	375
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	474
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    chp_bool_sink = process-definition (defined) chp_bool_sink(
+        chan?(bool<>) S
+      )
+      In definition "chp_bool_sink", we have: {
+      Instances:
+        S = chan?(bool<>) chp_bool_sink::S
+        x = bool<> chp_bool_sink::x
+      unroll sequence: 
+        chan?(bool<>) S
+        bool<> x
+      chp:
+        concurrent: {
+          *[
+            S?(x)
+          ]
+        }
+      footprint: {
+        S = channel chan?(bool<>)^0 = chp_bool_sink::S 
+        x = bool^0 = chp_bool_sink::x 
+      }
+      }
+
+    chp_bool_source = process-definition (defined) chp_bool_source<
+      pbool<> B
+      >(
+        chan!(bool<>) S
+      )
+      In definition "chp_bool_source", we have: {
+      Parameters:
+        B = pbool<> chp_bool_source::B
+      Instances:
+        S = chan!(bool<>) chp_bool_source::S
+      unroll sequence: 
+        chan!(bool<>) S
+      chp:
+        concurrent: {
+          *[
+            S!(B)
+          ]
+        }
+      footprint collection: {
+        <true> {
+          B = pbool^0 value: 1
+          S = channel chan!(bool<>)^0 = chp_bool_source::S 
+        }
+      }
+      }
+
+  Instances:
+    B = chan(bool<>) B
+    b = chp_bool_sink<> b
+    s = chp_bool_source<true> s
+}
+
+footprint: {
+  B = channel chan(bool<>)^0 = s.S 
+  b = process chp_bool_sink<>^0 = b (
+    S = channel chan?(bool<>)^0 = b.S 
+  )
+  s = process chp_bool_source<true>^0 = s (
+    S = channel chan!(bool<>)^0 = b.S 
+  )
+}

@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.2 2006/11/12 05:58:13 fang Exp $
+#	$Id: Make.test-prsim,v 1.3 2006/11/15 21:56:57 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -116,13 +116,15 @@ EXTRACT_HACO_PIPE = $(GREP) "^\#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
 
 # semi-hackish way to conditionally filter random timing
 
+# touch is needed if the redirected output is empty
 PRSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.prsim.*$$/.prsimckpt/g'` ; \
 	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj < $<" ; \
 	$(CAT) $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
-	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1
+	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1 ; \
+	$(TOUCH) $@
 
 PRSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
@@ -326,7 +328,7 @@ endif
 .prsimckpttest:
 	@$(DUMMY_TEST_SCRIPT)
 
-prsimckpttest.autodepend:
+prsimckpttest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)" | \
 	  $(SPACESTONEWLINE) | $(SORT) -u | \
@@ -345,13 +347,16 @@ prsimckpttest.autodepend:
 PRSIMOPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimopt-template.prsimrc
 PRSIMOPT_FLAG = -O1
 
+# touch needed for empty outputs
 .prsimrc.prsimckpt-O1-err:
 	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-err$$//g'` ; \
 	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) $$obj" ; \
 	$(CAT) $(PRSIMOPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
-	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) "$$obj" > $@ 2>&1
+	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) $(PRSIMOPT_FLAG) "$$obj" \
+	    > $@ 2>&1 ; \
+	$(TOUCH) $@
 
 # no-op: simultaneously produced target
 .prsimckpt-O1-err.prsimckpt-O1:
@@ -385,7 +390,7 @@ endif
 .prsimopttest:
 	@$(DUMMY_TEST_SCRIPT)
 
-prsimopttest.autodepend:
+prsimopttest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES)" | \
 	  $(SPACESTONEWLINE) | $(SORT) -u | \
@@ -460,6 +465,7 @@ HAC_OBJECT_TARGETS += \
 
 build-check-local: \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimckpt) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out-filter) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-diff) \

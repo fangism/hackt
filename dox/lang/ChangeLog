@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-11-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54:
+	  Added notes about channels (connections and directions) 
+		and issues with booleans (type ambiguity).  
+
+
 2006-06-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-19:

@@ -23,7 +23,7 @@ done
 
 for i
 do
-	cp -f $i.createdump.filter $srcdir/$i.createstderr
+	cp -f $i.createdump-filter $srcdir/$i.createstderr
 	echo "Updated $srcdir/$i.createstderr"
 done
 

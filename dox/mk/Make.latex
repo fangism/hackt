@@ -4,7 +4,7 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.9 2006/06/26 01:45:24 fang Exp $
+#	$Id: Make.latex,v 1.10 2006/11/15 21:56:46 fang Exp $
 
 # useful macros
 # some of these are defined to be specific to this (hackt) project
@@ -64,7 +64,7 @@ if HAVE_LATEX
 	$(MAKE) $$bldroot.ind ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
-		$(LATEX) $< > /dev/null < /dev/null; \
+		TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null; \
 		$(MAKE) $$bldroot.ind ; \
 		if $(GREP) "TeX capacity" $$bldroot.log; \
 			then $(ECHO) SHIT; \
@@ -121,6 +121,15 @@ endif
 # files that may conflict between latex and pdflatex
 # may add .lof, .lot, for list of ...
 
+echo-autotexinputs: force
+	@$(ECHO) $(AUTOTEXINPUTS)
+
+echo-autobibinputs: force
+	@$(ECHO) $(AUTOBIBINPUTS)
+
+echo-commoninputs: force
+	@$(ECHO) $(COMMONINPUTS)
+
 clean-temps: clean-bib clean-index clean-aux
 	-$(RM) *.stamp
 
@@ -151,6 +160,10 @@ help-latex:
 	@$(ECHO) "	aux: removes LaTeX auxiliary files"
 	@$(ECHO) "	docs: removes output files"
 	@$(ECHO) "	depend: removes .depend dependency files"
+	@$(ECHO) "    echo-*: print some variables passed to LaTeX and friends"
+	@$(ECHO) "	commoninputs: COMMONINPUTS"
+	@$(ECHO) "	autotexinputs: AUTOTEXINPUTS"
+	@$(ECHO) "	autobibinputs: AUTOBIBINPUTS"
 
 # help: help-latex
 

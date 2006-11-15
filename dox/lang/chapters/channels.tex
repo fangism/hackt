@@ -1,6 +1,6 @@
 % "chapters/channels.tex"
 
-%	$Id: channels.tex,v 1.4 2006/06/28 22:17:39 fang Exp $
+%	$Id: channels.tex,v 1.5 2006/11/15 21:56:44 fang Exp $
 
 \chapter{Channels}
 \label{sec:channels}
@@ -71,14 +71,16 @@ defproc outer(chan(bool) P; chan?(bool) Q; chan!(bool) R) {
 Goal: precise set of rules for channel connections.
 Q: does it depend on whether or not referenced channel is local vs. port?
 
-Proposal: a read-only port can take a directionless or 
+\tbf{Proposal}: a read-only port can take a directionless or 
 read-only port (forwarded) channel as an argumnent.  
 (Likewise for send-only ports.)  
+(Update: accepted.)
 
 Should we allow alias connection syntax for channels?
 Aliasing is a symmetric relation, whereas port connections \emph{need not} be.  
+Yes, but with the following additional semantic constraints:
 
-Proposal:
+\tbf{Proposal}:
 Unidirectional channels should not be referenceable as aliases, only
 connected through ports.  
 Only nondirectional channels may use alias syntax.  
@@ -87,10 +89,13 @@ Consequences: every physical channel must be connected to at least one
 nondirectional channel.  
 A send-receive pair must be connected using a nondirectional channel
 of the same type.  
+(Status: obsolete, in favor of the proposals below)
 
-Proposal:
+\tbf{Proposal}:
 A nondirectional channel may be connected to only one read-only channel
 and only one send-only channel.  
+(Update: accepted, with possible exception of explicitly shared channels, 
+proposed below.)
 The following example would be rejected:
 
 \begin{verbatim}
@@ -102,6 +107,58 @@ bucket a(R), b(R);
 Implementation detail: 
 As aliases are built using a union-find, make sure the canonical node
 always knows what direction of channels have been connected (propagation).  
+We will track this with a set of flags indicating whether a channel
+is already connected to a producer or consumer.  
+Note, however, that send/receive use of a channel in CHP body counts as 
+connecting a consumer/producer, respectively.  
+Thus, channel connection checking should include a final pass over
+the CHP's unrolled footprint.  
+
+\tbf{Proposal}: 
+Reject local channel declarations with directional qualifiers.  
+Rationale: It doesn't make sense to have a uni-directional channel
+in a local scope because any connection or use thereof would result
+in a block.  
+(Could this be useful for debugging, e.g. causing intentional deadlock?)
+
+\tbf{Proposal}: Reject dangling channels.  
+Channels that are missing connection to a producer or consumer
+should be rejected.  Basically, when a channel is deduced as dangling, 
+at least a diagnostic should be issued.  
+
+\tbf{Proposal}: Shared channels:
+Thus far, we've described one-to-one channels where producers
+and consumers are exclusively paired.  
+In some exceptional circumstances one might desire to share a 
+channel among multiple senders or multiple receivers, 
+where exclusive access is to be guaranteed by the programmer.  
+The following semantics are proposed for sharing channels:
+A channel is allowed to be connected to multiple receivers, if and only if
+all participating receivers agree to share, 
+by some implementation of `agree.'
+Likewise, multiple senders may share a channel, if and only if
+all participating senders agree to share.  
+One end of communication on a channel is indifferent
+to whether or not the other end is shared; 
+a non-shared sender however may connect to shared receivers, 
+and a non-shared receiver may connect to shared senders;
+To mix shared and non-shared uses on the same end is considered
+an error.  
+
+Rationale: Since channel sharing is exceptional, we want to prevent
+inadvertent sharing of channels.  Non-shared channels expect 
+exclusive use of the channel, so to share them would violate
+the fundamental assumption.  
+
+Syntax: a port declared with \ttt{??} or \ttt{!!} indicates that
+the channel may be shared (by receiving or sending).  
+A \ttt{??} port channel may be connected locally to multiple receivers, 
+and a \ttt{!!} port channel may be connected locally to multiple senders.  
+When referenced externally, as a member of process, 
+\ttt{??} ports may share the same channel as multiple receivers, and 
+\ttt{!!} ports may share the same channel as multiple senders.  
+
+TODO: examples.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fundamental Channel Types}

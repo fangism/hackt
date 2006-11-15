@@ -1,0 +1,10 @@
+// "top-level-01.hac"
+// should top-level CHP bodies be accepted?
+
+bool x;
+
+chp {
+*[ x+ ]
+}
+
+

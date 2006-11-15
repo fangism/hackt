@@ -1,7 +1,42 @@
 # "NOTES"
-#	$Id: NOTES,v 1.17 2006/11/15 00:08:46 fang Exp $
+#	$Id: NOTES,v 1.18 2006/11/15 21:56:50 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
+
+//=============================================================================
+2006-11-14:
+	more on channels:
+	can directional (send-only, receive-only) channels be declared
+		in any scope or only in ports?  Doesn't make sense for
+		ports to have direction in scope, since channels
+		cannot dangle, must eventually connect up.  
+		Proposal: reject scope-local directional channel decls.  
+
+	Defect report: original grammar never allowed arrays in channel's
+		data type specifiers, e.g. chan(bool[2]) rejected. 
+		This was accidental, and arrays should be allowed.
+	enqueue TODO list.  
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2006-11-14:
+	channels: for now, enforce 1-to-1 sender-receiver connectivity
+		and reject shared sending/receiving, and dangling channels.
+	Future: provisions for shared channels (requiring use to 
+		guarantee exclusive use)
+		semantics: allow multiple senders to connect iff all
+		participating senders (aware) agree to share.
+		Connecting to a non-sharing terminal is rejected.
+	Syntax proposal: something like ?? and !!
+
+	connection checking: a channel send-only port are considered produced
+		if it appears as a sent-literal in some CHP action
+		in the CHP body.  In other words, the CHP body is like a
+		process whose interface is given in the way channels
+		are referenced (send vs. receive).  Connection checking
+		should account for the CHP definition.  
+
+	CHP: should there be a top-level CHP body?  Currently, syntax 
+		forbids, but internal representation allows. 
 
 //=============================================================================
 2006-11-12:

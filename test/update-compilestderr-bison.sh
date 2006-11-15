@@ -1,6 +1,6 @@
 #!/bin/sh
 # "update-compilestderr-bison.sh"
-#	$Id: update-compilestderr-bison.sh,v 1.3 2006/05/06 04:19:06 fang Exp $
+#	$Id: update-compilestderr-bison.sh,v 1.4 2006/11/15 21:57:00 fang Exp $
 # convenient maintainer script for updating expected outputs
 # use this script when updating bison tests
 
@@ -29,7 +29,7 @@ done
 
 for i
 do
-	cp -f $i.test.filter $srcdir/$i.stderr.bison
+	cp -f $i.compiledump-filter $srcdir/$i.stderr.bison
 	echo "Updated $srcdir/$i.stderr.bison"
 done
 
