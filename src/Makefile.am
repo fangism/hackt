@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.144 2006/11/15 00:08:45 fang Exp $
+#	$Id: Makefile.am,v 1.145 2006/11/15 01:43:19 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -90,13 +90,14 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
 	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
 	libhacktcommon.la libhacktsim.la $(FUNLIBS) \
-	libbogus.la libbogus2.la libbogus3.la
+	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
 LIBBOGUS_LA = libbogus_la
 LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
+LIBBOGUS4_LA = libbogus4_la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -194,6 +195,9 @@ libbogus2_la_SOURCES = \
 libbogus3_la_SOURCES = \
 	lexer/type-lex.ll \
 	parser/type-parse.yy
+
+libbogus4_la_SOURCES = \
+	lexer/hacflat-lex.ll
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
@@ -1221,6 +1225,7 @@ libbogus2_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus3_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
 	-include parser/type-prefix.h
 libbogus3_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
+libbogus4_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
 # traditional C compilers.  (Not the cleanest code ever generated.)
