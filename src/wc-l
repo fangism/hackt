@@ -1,5 +1,5 @@
 #!/bin/sh
 # NOTE: this script only works on the source directory
 
-wc -l {main,AST,util{,/memory,/STL,/numeric,/lang},Object{,/common,/def,/expr,/inst,/lang,/ref,/traits,/type,/unroll},sim{,/prsim}}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy.in,awk}
+wc -l {main,AST,util{,/memory,/STL,/numeric,/lang},Object{,/common,/def,/expr,/inst,/lang,/ref,/traits,/type,/unroll},sim{,/prsim,/chpsim}}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy.in,awk}
 

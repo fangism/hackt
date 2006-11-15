@@ -1,0 +1,22 @@
+// enter: "import-003.hac"
+// "import-003.hac"
+// should die on bad included file
+
+
+
+
+// enter: "import-001.hac"
+// "import-001.hac"
+// should die on bad included file
+
+// enter: "comment-000.hac"
+// "comment-000.hac"
+// should die, unterminated comment
+
+/***
+where's the end?
+** / ** OMG !!! ////
+
+
+From: "comment-000.hac":9:
+unterminated comment, starting on line 4, got <<EOF>>

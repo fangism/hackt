@@ -1,0 +1,23 @@
+// "021.hac" 
+// should fail, and print file stack.  
+
+// enter: "017.hac"
+// "017.hac"
+// copy-modified from "016.hac", order reversed
+// should fail, no imports allowed after non-imports appear
+
+bool Q;
+
+// enter: "001.hac"
+/* "001.hac" this should pass */
+
+int N;
+
+
+// leave: "001.hac"
+
+
+// leave: "017.hac"
+
+
+

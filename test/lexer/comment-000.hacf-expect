@@ -1,0 +1,10 @@
+// "comment-000.hac"
+// should die, unterminated comment
+
+/***
+where's the end?
+** / ** OMG !!! ////
+
+
+From: "comment-000.hac":9:
+unterminated comment, starting on line 4, got <<EOF>>

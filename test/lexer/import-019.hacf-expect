@@ -1,0 +1,10 @@
+// "import-019.hac"
+// copy-modified from "import-018.hac"
+// testing proper token deallocation upon import error
+
+// enter: "empty.hac"
+// "empty.hac" -- empty
+
+// leave: "empty.hac"
+Expecting "file" after import.
+From: "import-019.hac":5:

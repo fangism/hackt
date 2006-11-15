@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2006-11-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-53:
+	  configure.ac: test for more libc functions, many related to 
+		streams, pipes and process control.  
+	  Make.global: fixed help echo entry for build-check.
+
+
 2006-11-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-52-merged-test-12:

@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.25 2006/11/12 05:57:39 fang Exp $
+#	$Id: Make.global,v 1.26 2006/11/15 00:08:41 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
@@ -330,7 +330,7 @@ if AUTO_CVSIGNORE
 	@$(ECHO) "    clean-cvsignore: cleans $$(srcdir)/.cvsignore (recursive)"
 endif
 	@$(ECHO) "    check: runs tests (recursive)"
-        @$(ECHO) "    build-check: create/run tests, without check (recursive)"
+	@$(ECHO) "    build-check: create/run tests, without check (recursive)"
 	@$(ECHO) "    check.log: logs make check -k"
 	@$(ECHO) "    distdir-subdir: packages subtree of distribution"
 	@$(ECHO) "    pdf: builds PDFs (recursive)"

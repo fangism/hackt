@@ -1,0 +1,4 @@
+// "import-010.hac"
+
+At: "import-010.hac":3:
+Detected cyclic file dependency: import-010.hac

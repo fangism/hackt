@@ -1,0 +1,13 @@
+// "016.hac"
+
+// enter: "001.hac"
+/* "001.hac" this should pass */
+
+int N;
+
+
+// leave: "001.hac"
+
+
+bool Q;
+

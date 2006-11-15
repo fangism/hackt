@@ -1,6 +1,6 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.4 2005/12/13 04:15:45 fang Exp $
+	$Id: yyin_manager.cc,v 1.5 2006/11/15 00:08:55 fang Exp $
  */
 
 #include <iostream>
@@ -24,6 +24,8 @@ namespace lexer {
  */
 yyin_manager::yyin_manager(file_manager& fm, const char* fn, 
 		const bool b) : _yyin(NULL), _file_manager(fm) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("b = " << (b ? "true" : "false") << endl);
 	_status = enter_file(_yyin, fm, fn, NULL, b);
 	if (_status == file_status::NEW_FILE)
 		_yyin = fm.current_FILE()->file;
@@ -34,6 +36,7 @@ yyin_manager::yyin_manager(file_manager& fm, const char* fn,
 	Restore the yyin from previous file.  
  */
 yyin_manager::~yyin_manager() {
+	STACKTRACE_VERBOSE;
 if (_status == file_status::NEW_FILE) {
 	// close the current file and restore the last stream
 	leave_file(_yyin, _file_manager);
@@ -44,6 +47,8 @@ if (_status == file_status::NEW_FILE) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param b true if search paths are to be used in opening the file.
+		The top-level file should be opened without searching.  
 	\return the error status of attempting to open the file.  
  */
 yyin_manager::status

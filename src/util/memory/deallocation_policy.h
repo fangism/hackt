@@ -1,12 +1,13 @@
 /**
 	\file "util/memory/deallocation_policy.h"
 	Definition of frequently used deallocation policies.  
-	$Id: deallocation_policy.h,v 1.2 2006/01/22 06:53:42 fang Exp $
+	$Id: deallocation_policy.h,v 1.3 2006/11/15 00:09:15 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
 #define	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
 
+#include <cassert>
 #include "util/memory/deallocation_policy_fwd.h"
 #include "util/FILE_fwd.h"
 #include "util/free.h"
@@ -14,6 +15,7 @@
 
 BEGIN_C_DECLS
 extern	int fclose(FILE*);
+extern	int pclose(FILE*);
 END_C_DECLS
 
 namespace util {
@@ -75,7 +77,21 @@ struct fclose_tag {
 	inline
 	void
 	operator () (FILE* t) const {
-		fclose(t);
+		const int err = fclose(t);
+		assert(!err);
+	}
+};	// end struct FILE_tag
+
+//-----------------------------------------------------------------------------
+/**
+	Close a stream opened by popen().
+ */
+struct pclose_tag {
+	inline
+	void
+	operator () (FILE* t) const {
+		const int err = pclose(t);
+		assert(!err);
 	}
 };	// end struct FILE_tag
 

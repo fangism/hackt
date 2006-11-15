@@ -5,5 +5,13 @@ subprograms and objects.
 
 Contents:
 
+prsim/ -- basic production rule simulator, based largely on older
+	cflat-based version, but with improvements and new features.
 
+chpsim/ -- CHP mixed-level simulator, integrating PRS and CHP in a 
+	single event-driven simulator.  
+
+TODO:
+
+sprsim/ -- sizing-based PRS-simulator
 

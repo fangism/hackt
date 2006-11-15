@@ -1,0 +1,6 @@
+// "import-021.hac"
+// copy-modified from "import-018.hac"
+// testing proper token deallocation upon import error
+
+Expecting ';' after import "...".
+From: "import-021.hac":6:

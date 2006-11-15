@@ -1,0 +1,5 @@
+// "string-003.hac"
+// testing escape sequences, should pass lexing, fail parsing.
+
+"abcdef... \"Quote\" \'quote\' the end is near!\\\\"
+

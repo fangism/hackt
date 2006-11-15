@@ -1,0 +1,6 @@
+// "string-002.hac"
+// should pass lexing: comments are ignored in strings
+// should fail parsing.
+
+"NOTE: /** this string is out of place */ Ahem, I heard that!"
+

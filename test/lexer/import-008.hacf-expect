@@ -1,0 +1,10 @@
+// "import-008.hac"
+// including file that includes itself, should be handled correctly
+
+// enter: "import-006.hac"
+// "import-006.hac"
+// self-import should be detected as an error
+
+At: "import-008.hac":4:
+At: "import-006.hac":4:
+Detected cyclic file dependency: import-006.hac

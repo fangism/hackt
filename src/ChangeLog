@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-53:
+	  Implemented an import preprocessor called 'flatten', which simply
+		expands imports recursively, with implicit pragma-once
+		behavior (visit files once only).  Does not do *any*
+		grammar checking other than what is needed to process
+		import directives.  If you want to use cpp directives, 
+		then pass the result to cpp, driver does not support
+		direct use of cpp yet.  
+	  The flattener is useful for generating single-filed test cases, 
+		and producing output suitable for cpp.  
+	  TODO: driver: pass preprocessor options, possible integration
+		with 'compile'.
+	  TODO: enable dependency generation in flatten
+	  NOTES: summarized chp-bool discussion.
+	  Seeded sim/chpsim directory.
+
+
 2006-11-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-52-merged-test-12:

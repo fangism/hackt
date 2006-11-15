@@ -1,0 +1,16 @@
+// "import-018.hac"
+// testing proper token deallocation upon import error
+
+// enter: "import-000.hac"
+// "import-000.hac"
+// should fail, importing a file with errors
+// testing reporting
+
+// enter: "badid-000.hac"
+1bad_identifier
+
+// leave: "badid-000.hac"
+
+// leave: "import-000.hac"
+Expecting "file" after import.
+From: "import-018.hac":4:

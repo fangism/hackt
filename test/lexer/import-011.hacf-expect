@@ -1,0 +1,4 @@
+// "import-011.hac"
+
+At: "import-011.hac":3:
+Unable to open file: bogus-file.hac

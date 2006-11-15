@@ -3,13 +3,14 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.8 2006/01/27 08:07:21 fang Exp $
+	$Id: force_load.cc,v 1.9 2006/11/15 00:09:00 fang Exp $
  */
 
 #include "config.h"
 #include "main/force_load.h"
 #include "Object/module.h"
 #include "main/compile.h"
+#include "main/flatten.h"
 #include "main/parse_test.h"
 #include "main/unroll.h"
 #include "main/create.h"
@@ -54,6 +55,7 @@ force_load(void) {
 	// if declared const, compiler will complain uninitialized
 	// unless a custom empty constructor is available
 	const compile compiler;
+	const flatten flattener;
 	const parse_test parse_tester;
 	const unroll unroller;
 	const create creator;

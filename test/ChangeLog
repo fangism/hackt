@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-11-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-53:
+	  Added Make.test-flatten for preprocessor tests.  
+	  Make.test-{head,tail} support for flatten tests.  
+	  Added hackt-flatten-expect-filter.awk.
+	  Added bunch of flatten test cases in lexer/ and parser/basic/.  
+
+
 2006-11-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-52-merged-test-12:

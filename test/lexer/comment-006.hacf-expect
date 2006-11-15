@@ -1,0 +1,10 @@
+// "comment-006.in" -- should pass
+/**
+	blah
+*/
+
+/*
+	ass	// clint's favorite identifier
+*/
+
+bool x;

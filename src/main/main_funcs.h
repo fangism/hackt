@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.6 2006/07/30 05:49:42 fang Exp $
+	$Id: main_funcs.h,v 1.7 2006/11/15 00:09:02 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
@@ -29,6 +29,10 @@ check_object_loadable(const char*);
 extern
 good_bool
 check_file_writeable(const char*);
+
+extern
+good_bool
+flatten_source(const char*);
 
 extern
 excl_ptr<module>

@@ -1,0 +1,6 @@
+// "string-001.hac"
+// should die on non-terminated string
+
+"somewhere over the rainbow...
+At: "string-001.hac":4:
+unterminated quoted-string on line 4, got \n

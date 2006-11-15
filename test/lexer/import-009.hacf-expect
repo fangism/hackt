@@ -1,0 +1,9 @@
+// "import-009.hac"
+// including file that includes non-existent file
+
+// enter: "import-007.hac"
+// "import-007.hac"
+
+At: "import-009.hac":4:
+At: "import-007.hac":3:
+Unable to open file: 404-file-not-found.html

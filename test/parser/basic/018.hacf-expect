@@ -1,0 +1,28 @@
+// "018.hac"
+// copy-extended from "016.hac"
+// should this be allowed?
+// if not, how do we keep track whether each file level has seen
+// a non-import?
+// consider making parser re-entrant? (bye-bye yacc...)
+
+// enter: "001.hac"
+/* "001.hac" this should pass */
+
+int N;
+
+
+// leave: "001.hac"
+
+
+bool Q;
+
+// enter: "003.hac"
+// "003.hac" this should pass
+
+namespace rajit {
+int parser;
+}
+
+// leave: "003.hac"
+
+

@@ -1,0 +1,6 @@
+// "commment-002.hac"
+// should die: nested comments not allowed
+
+/** level 1
+At: "comment-002.hac":5:
+nested comments forbidden, found /* on line 5:2

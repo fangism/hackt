@@ -1,19 +1,11 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.4 2006/05/06 22:08:30 fang Exp $
+	$Id: flex_lexer_state.h,v 1.5 2006/11/15 00:08:54 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
 #define	__LEXER_FLEX_LEXER_STATE_H__
-
-/**
-	Only enable this header inside a flex-generated scanner.  
-	No one else has any business using this.  
-	Well, except the parser, because it needs to create one
-	and pass in the state...
- */
-#if	defined(FLEX_SCANNER) || defined(YYBISON) || defined(YYBYACC)
 
 #include "util/FILE_fwd.h"
 #include "util/NULL.h"
@@ -45,10 +37,17 @@ struct lexer_state {
 	YY_BUFFER_STATE		yy_current_buffer;	// = NULL;
 	char			yy_hold_char;
 	int			yy_n_chars;
+	/**
+		Should this char buffer be freed?  by whom?
+	 */
 	char*			yy_c_buf_p;		// = NULL;
 	int			yy_init;		// = 1;
 	int			yy_start;		// = 0; state number
 	int			yy_did_buffer_switch_on_eof;
+	/**
+		Trusting the lexer to free this upon EOF.
+		TODO: But what if lexer error is encountered?
+	 */
 	char*			yytext;
 	yy_state_type		yy_last_accepting_state;
 	char*			yy_last_accepting_cpos;
@@ -103,8 +102,6 @@ struct lexer_state {
 };	// end struct lexer_state
 
 }	// end namespace flex
-
-#endif	// FLEX_SCANNER
 
 #endif	// __LEXER_FLEX_LEXER_STATE_H__
 

@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.104 2006/11/12 05:57:40 fang Exp $
+#	$Id: configure.ac,v 1.105 2006/11/15 00:08:42 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -215,6 +215,8 @@ AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 AC_CHECK_HEADERS([signal.h sys/signal.h])
+AC_CHECK_HEADERS([sys/stat.h])
+AC_CHECK_HEADERS([fcntl.h sys/fcntl.h])
 
 AC_CACHE_SAVE
 
@@ -252,6 +254,7 @@ CFLAGS="$CONFTEST_CFLAGS -Wno-error"
 CXXFLAGS="$CONFTEST_CXXFLAGS -Wno-error"
 
 AC_CHECK_TYPES([ptrdiff_t])
+AC_CHECK_TYPES([pid_t])
 dnl AC_CHECK_FUNCS([sqrt])
 FANG_FUNC_SQRT
 dnl AC_CHECK_FUNCS([fmod fmodf])
@@ -263,6 +266,7 @@ AC_CHECK_FUNCS([strdup])
 dnl <stdio.h>
 AC_CHECK_FUNCS([fgets fputs fputc fgetc fopen fclose fflush])
 AC_CHECK_FUNCS([ferror feof clearerr])
+AC_CHECK_FUNCS([open close])
 AC_CHECK_FUNCS([fseek ftell rewind fgetpos fsetpos])
 AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
 AC_CHECK_FUNCS([remove rename])
@@ -273,8 +277,15 @@ AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
 AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
 AC_CHECK_FUNCS([drand48 erand48 lrand48 nrand48])
 AC_CHECK_FUNCS([mrand48 jrand48 srand48 seed48 lcong48])
-AC_CHECK_FUNCS([system])
+AC_CHECK_FUNCS([system exec])
 AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
+AC_CHECK_FUNCS([pipe fork vfork popen pclose dup dup2])
+dnl vfork is not always available
+AC_CHECK_FUNCS([wait waitpid wait3 wait4])
+dnl wait3 and wait4 are not specificed by POSIX, avoid using them if possible
+
+dnl the following are expected to be in glibc
+AC_CHECK_FUNCS([fmemopen open_memstream])
 
 dnl but keep errors for type checks.  
 CFLAGS="$CONFTEST_CFLAGS"

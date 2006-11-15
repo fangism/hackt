@@ -21,6 +21,9 @@ core.*
 *.indump
 *.outdump
 *.objdiff
+*.hacf
+*.hacf-*-filter
+*.hacf*diff
 *.artobjunroll
 *.unrolldump
 *.unrolldiff

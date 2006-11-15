@@ -1,0 +1,162 @@
+# "Make.test-flatten"
+#	vi: ft=automake
+#	$Id: Make.test-flatten,v 1.1 2006/11/15 00:09:21 fang Exp $
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+
+
+HACKT_FLATTEN_ERROR_FILTER = $(AWK) \
+		-f $(TEST_SRCDIR)/hackt-flatten-expect-filter.awk \
+		-f $(TEST_SRCDIR)/vpath_file_filter.awk
+
+
+# dependency tracking enabled by default
+.hac.hacf:
+	$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@
+#	@depbase=`$(ECHO) $@ | $(SED) 's/\.haco$$//g'` ; \
+#	log="$$depbase.compiledump" ; \
+#	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $$depbase.depend $< $@" ; \
+#	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ > "$$log" 2>&1 ; \
+#	then $(CAT) "$$depbase.tmpd" | \
+#		$(HAC_DEPEND_FILTER) > "$$depbase.depend" ; \
+#		$(RM) "$$depbase.tmpd" ; \
+#	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
+#	fi
+
+.hacf.hacf-filter:
+	@$(CAT) $< | $(HACKT_FLATTEN_ERROR_FILTER) > $@
+
+if VERBOSE_CHECK
+ECHO_FLATTEN_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+else
+ECHO_FLATTEN_DIFF_COMMAND = :
+endif
+
+.hacf-filter.hacf-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.hacf-diff$$/.hacf-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_FLATTEN_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ ; \
+	  if test -s $@ ; then $(ECHO) "Differences in $@!" ; fi ; \
+	else exit 1 ; \
+	fi ; \
+	$(TOUCH) $@
+
+.hacf-diff.hacflattest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+hacflattest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_FLATTEN_TEST_PASSES)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print $$1 ".hacf-diff: $$(srcdir)/" $$1 ".hacf-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hacflattest.autodepend
+
+.hac.hacf-fail:
+	-$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@ 2> $@-stderr ; \
+	$(CAT) $@-stderr >> $@ ; \
+	$(RM) $@-stderr
+
+
+.hacf-fail.hacf-fail-filter:
+	@$(CAT) $< | $(HACKT_FLATTEN_ERROR_FILTER) > $@
+
+.hacf-fail-filter.hacf-fail-diff:
+	@stderr=`$(ECHO) $@ | $(SED) 's/\.hacf-fail-diff$$/.hacf-expect/g'` ; \
+	expect=$(srcdir)/$$stderr ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_FLATTEN_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ ; \
+	  if test -s $@ ; then $(ECHO) "Differences in $@!" ; fi ; \
+	else exit 1 ; \
+	fi ; \
+	$(TOUCH) $@
+
+.hacf-fail-diff.hacflatfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+hacflatfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_FLATTEN_TEST_FAILURES)" | \
+		$(SPACESTONEWLINE) | $(SORT) -u | \
+		$(AWK) '{print $$1 ".hacf-fail-diff: $$(srcdir)/" $$1 ".hacf-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hacflatfailtest.autodepend
+
+
+# dummy test for when make variable is empty
+.hacflattest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hacflatfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+
+BOGUS_TESTS += .hacflattest .hacflatfailtest
+
+BOGUS_TARGETS += .hac .hacf .hacf-fail .hacf-filter .hacf-fail-filter
+
+AUTO_DEPENDS += hacflattest.autodepend \
+	hacflatfailtest.autodepend
+
+hacflatdiffs: force
+	-$(CAT) *.hacf-diff > $@
+
+hacflatfaildiffs: force
+	-$(CAT) *.hacf-fail-diff > $@
+
+
+CHECK_SUMMARIES += hacflatdiffs hacflatfaildiffs
+
+
+HACKT_FLATTEN_TEST_SUBJECTS = \
+	$(HACKT_FLATTEN_TEST_PASSES) \
+	$(HACKT_FLATTEN_TEST_WARNINGS) \
+	$(HACKT_FLATTEN_TEST_FAILURES)
+
+srcdir_EXTRA_DIST += $(HACKT_FLATTEN_TEST_SUBJECTS:=.hac) \
+	$(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf-expect)
+
+TESTS += $(HACKT_FLATTEN_TEST_PASSES:=.hacflattest) \
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacflatfailtest)
+
+
+HACKT_FLATTEN_DUMPS = $(HACKT_FLATTEN_TEST_PASSES:=.hacf) \
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail)
+$(HACKT_FLATTEN_DUMPS): $(HACKT_EXE)
+
+build-check-local: \
+	$(HACKT_FLATTEN_TEST_PASSES:=.hacf) \
+	$(HACKT_FLATTEN_TEST_PASSES:=.hacf-filter) \
+	$(HACKT_FLATTEN_TEST_PASSES:=.hacf-diff) \
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail) \
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail-filter) \
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail-diff)
+
+
+echo-flatten-passes: force
+	@$(ECHO) $(HACKT_FLATTEN_TEST_PASSES)
+
+echo-flatten-failures: force
+	@$(ECHO) $(HACKT_FLATTEN_TEST_FAILURES)
+
+echo-flatten-tests: force
+	@$(ECHO) $(HACKT_FLATTEN_TEST_SUBJECTS)
+
+
+clean-flattentests:
+	-$(RM_PATTERN) "*.hacf*"
+	-$(RM_PATTERN) "*.hacflattest"
+	-$(RM_PATTERN) "*.hacflatfailtest"
+
+clean-local: clean-flattentests
+
+.PHONY: clean-flattentests
+

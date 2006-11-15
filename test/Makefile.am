@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.36 2006/11/12 05:58:15 fang Exp $
+#	$Id: Makefile.am,v 1.37 2006/11/15 00:09:22 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -42,6 +42,7 @@ AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
 NONCONFIGURED_UPDATESCRIPTS = \
 	update-compilestderr.sh \
 	update-compilestderr-bison.sh \
+	update-flatten-expect.sh \
 	update-unrollstderr.sh \
 	update-createstderr.sh \
 	update-allocstderr.sh \
@@ -60,6 +61,7 @@ dist_noinst_SCRIPTS = \
 	POM-index-filter.awk \
 	vpath_file_filter.awk \
 	hackt-parse-expect-filter.awk \
+	hackt-flatten-expect-filter.awk \
 	analyze-dump-diff.awk \
 	prsimrc-filter.awk \
 	prsimrc-random-time-filter.awk \

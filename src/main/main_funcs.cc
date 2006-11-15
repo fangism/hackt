@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.11 2006/07/30 05:49:42 fang Exp $
+	$Id: main_funcs.cc,v 1.12 2006/11/15 00:09:00 fang Exp $
  */
 
 #include <iostream>
@@ -31,6 +31,8 @@ using util::memory::excl_ptr;
 
 #include "lexer/file_manager.h"
 #include "lexer/yyin_manager.h"
+#include "lexer/flex_lexer_state.h"
+#include "lexer/hacflat-yystype.h"
 #include "util/libc.h"			// for remove
 #if 0
 /**
@@ -45,6 +47,13 @@ extern	FILE*	hackt_in;
  */
 extern	int	hackt_parse(void*, YYSTYPE&, FILE*);
 extern	HAC::lexer::file_manager	hackt_parse_file_manager;
+extern	int	__hacflat_lex(std::string&, flex::lexer_state&);
+
+namespace HAC {
+namespace lexer {
+extern	good_bool	__flatten_source(FILE*);
+}	// end namespace lexer
+}	// end namespace HAC
 
 #include "util/stacktrace.h"
 
@@ -223,6 +232,48 @@ check_AST(const root_body& r, const char* name) {
 		return return_type(NULL);
 	}
 	return mod;
+}
+
+//=============================================================================
+/**
+	Prints flattened source (expanding imports) to stdout.  
+	NOTE: uses global hackt_parse_file_manager.  :/
+	TODO: move this to "lexer/hacflat-lex.ll"
+	NOTE: we don't use a parser because there is no grammar 
+		associated with preprocessing.  
+	\param b pass true to use search paths, 
+		false to use path to file as is.  
+ */
+good_bool
+flatten_source(const char* name) {
+	STACKTRACE_VERBOSE;
+	const yyin_manager ym(hackt_parse_file_manager, name, false);
+	FILE* yyin = ym.get_file();
+	if (yyin) {
+		const bool need_to_clean_up_file_manager =
+			!lexer::__flatten_source(yyin).good;
+#if 0
+		if (opt.make_depend) {
+			const char* const md = opt.make_depend_target.c_str();
+		if (check_file_writeable(md).good) {
+			ofstream mtf(md);
+			mtf << opt.target_object << ": " << opt.source_file;
+			// list all seen files' full paths
+			hackt_parse_file_manager.make_depend(mtf, opt.source_file);
+		} else {
+			// already have error message
+			return return_type(NULL);
+		}
+		}
+#endif
+		if (need_to_clean_up_file_manager) {
+			// hackt_parse_file_manager.reset();
+			return good_bool(false);
+		}
+		return good_bool(true);
+	} else {
+		return good_bool(false);
+	}
 }
 
 //=============================================================================

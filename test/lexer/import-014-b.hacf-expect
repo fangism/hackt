@@ -1,0 +1,43 @@
+/**
+	"import-014-b.hac"
+	contributed by: Clint Kelly
+	reduced by: David Fang
+*/
+
+// enter: "import-014-a.hac"
+// "import-014-a.hac"
+// contributed by: Clint Kelly
+// reduced by: David Fang
+
+defproc ch1of2 (bool d[2]; bool t,f)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+defproc pbit (bool d[2]; bool t,f)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+defproc e1of2 (bool d[2]; bool t,f,e)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+
+// leave: "import-014-a.hac"
+
+
+defproc srambit (pbit pb; ch1of2 b, w)
+{
+	prs {
+		w & b.t -> pb.t+				
+		w & b.t -> pb.f-				
+		w & b.f -> pb.f+				
+		w & b.f -> pb.t-				
+	}
+}
+

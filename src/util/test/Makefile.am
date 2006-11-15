@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.51 2006/11/07 06:35:44 fang Exp $
+#	$Id: Makefile.am,v 1.52 2006/11/15 00:09:15 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -27,6 +27,8 @@ check_SCRIPTS = $(TEST_EXPECT_SH)
 # these are all test programs, not to be installed
 noinst_PROGRAMS = \
 	exit_test \
+	pipe_fork_test \
+	popen_test \
 	throw_test \
 	what_test \
 	pretty_function_test \
@@ -119,6 +121,10 @@ new_functor_test_SOURCES = new_functor_test.cc
 packed_array_test_SOURCES = packed_array_test.cc
 exit_test_SOURCES = exit_test.cc pooled_thing.cc pooled_thing.h
 exit_test_LDADD = libfangutil.la
+pipe_fork_test_SOURCES = pipe_fork_test.cc
+# pipe_fork_test_LDADD = libfangutil.la
+popen_test_SOURCES = popen_test.cc
+# popen_test_LDADD = libfangutil.la
 throw_test_SOURCES = throw_test.cc pooled_thing.cc pooled_thing.h
 throw_test_LDADD = libfangutil.la
 stacktrace_test_SOURCES = stacktrace_test.cc

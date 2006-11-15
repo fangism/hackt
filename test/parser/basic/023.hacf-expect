@@ -1,0 +1,22 @@
+// "023.hac"
+// should fail, conflicting declarations from different files.
+
+// enter: "022.hac"
+/* "022.hac" dupe of "001.hac" */
+
+int N;
+
+
+// leave: "022.hac"
+
+// enter: "001.hac"
+/* "001.hac" this should pass */
+
+int N;
+
+
+// leave: "001.hac"
+		// death
+
+int fail;
+

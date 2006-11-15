@@ -1,0 +1,8 @@
+// "comment-001.hac"
+// should die, end-comment found outside comment
+
+int foo;
+
+end comment ***/
+At: "comment-001.hac":6:
+*/ (close-comment) found outside of <comment> on line 6:13

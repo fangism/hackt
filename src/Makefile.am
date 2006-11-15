@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.143 2006/11/12 05:58:01 fang Exp $
+#	$Id: Makefile.am,v 1.144 2006/11/15 00:08:45 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -171,6 +171,7 @@ VERSIONHEADERS = buildhost.h cxxflags.h cxx_version.h
 CONFIGHEADERS = config.h __config__.h
 IGNOREHEADERS = __config__.h __config__.h.in
 
+HACFLAT_LEX_ROOT = hacflat-lex
 HACKT_PARSE_ROOT = hackt-parse
 HACKT_LEX_ROOT = hackt-lex
 INSTREF_PARSE_ROOT = instref-parse
@@ -631,6 +632,9 @@ PARSER_H_FILES = \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
 	lexer/$(TYPE_LEX_ROOT)-options.h \
+	lexer/$(HACFLAT_LEX_ROOT)-options.h \
+	lexer/hacflat-lex-options.h \
+	lexer/hacflat-yystype.h \
 	lexer/file_manager.h \
 	lexer/input_manager.h \
 	lexer/yyin_manager.h \
@@ -649,6 +653,7 @@ PARSER_CC_FILES = \
 	parser/type-union.cc \
 	parser/type.cc \
 	lexer/type-lex-real.cc \
+	lexer/hacflat-lex-real.cc \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
@@ -683,6 +688,7 @@ MAIN_EXEC_CC_FILES = \
 	main/program_registry.cc \
 	main/main_funcs.cc \
 	main/parse_test.cc \
+	main/flatten.cc \
 	main/compile.cc \
 	main/unroll.cc \
 	main/create.cc \
@@ -960,6 +966,9 @@ lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 	$(ECHO) "#include \"parser/type-prefix.h\"" > $@
 	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 
+lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc
+	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) > $@
+
 $(srcdir)/lexer/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
 
 $(srcdir)/lexer/type.cc: parser/$(TYPE_PARSE_ROOT)-real.h
@@ -1012,6 +1021,8 @@ $(INSTREF_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 lexer/$(TYPE_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
 parser/$(TYPE_PARSE_ROOT).cc: $(CONFIGHEADERS) parser/yacc_version.h
 $(TYPE_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
+
+lexer/$(HACFLAT_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
 
 # why doesn't this work?
 PARSER_TYPES_PIPE = $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
@@ -1285,7 +1296,8 @@ EXTRA_DIST += local.cvsignore \
 	TODO \
 	wc-l \
 	sim/README \
-	sim/prsim/README
+	sim/prsim/README \
+	sim/chpsim/README
 
 TESTS += hackt_persistent_table.sh test/getopt_test.test
 
@@ -1375,6 +1387,8 @@ CLEANPARSER = \
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \
 	lexer/$(HACKT_LEX_ROOT).cc \
+	lexer/$(HACFLAT_LEX_ROOT)-real.cc \
+	lexer/$(HACFLAT_LEX_ROOT).cc \
 	lexer/$(INSTREF_LEX_ROOT)-real.cc \
 	lexer/$(INSTREF_LEX_ROOT).cc \
 	lexer/$(TYPE_LEX_ROOT)-real.cc \

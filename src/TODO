@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.45 2006/11/07 06:34:04 fang Exp $
+#	$Id: TODO,v 1.46 2006/11/15 00:08:47 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -95,6 +95,10 @@ diagnostic statistics: (low priority TODO)
 
 ===============================================================================
 preprocessor:
+	Status: begun, subprogram called flatten to process imports.  
+	Should accept some preprocessor compile options...
+	Unfortunately, allows import declarations anywhere, not just
+		beginning of the file as specified by the HAC language.  
 	equivalent of compile -E with conventional compilers
 	using -I include paths
 	flatten the input into one file, just echoing contents recursively

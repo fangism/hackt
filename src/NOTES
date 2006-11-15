@@ -1,7 +1,24 @@
 # "NOTES"
-#	$Id: NOTES,v 1.16 2006/06/28 22:17:42 fang Exp $
+#	$Id: NOTES,v 1.17 2006/11/15 00:08:46 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
+
+//=============================================================================
+2006-11-12:
+	CHP: bool vs. bool (discussion with Rajit)
+	Q: need to distinguish betwen physical 'bool' and abstract datatype
+		bool, which is synonymous with int<1>.  
+		e.g. ambiguity of "defproc blah(bool a) ..."
+	Considering a 'dbool' typedef to int<1>.  
+	However, would like CHP to evaluate expressions and manipulate
+		physical bools directly, since there's no interface-to-
+		implementation mechanism in-place yet.  Eventually, will be 
+		able to "deftype dual_rail <: bool" to describe 
+		physical implementations.  
+	Semantics for CHP operations on physical bools is as expected,
+		nothing tricky.  
+	Rationale: want to punt implementation/interface work, but still
+		allow CHP to handle physical bools directly.  
 
 //=============================================================================
 2006-05-14:
