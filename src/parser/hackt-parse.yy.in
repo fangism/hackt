@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.20 2006/10/18 01:20:09 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.20.8.1 2006/11/16 20:28:48 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1102,6 +1102,8 @@ base_chan_type
 		{ $$ = $1; $$->attach_data_types($2); }
 	;
 
+/* NOTE: now directions are only allowed to be associated with ports, 
+	and forbidden in scope-local declarations (check in AST) */
 chan_or_port
 	: CHANNEL optional_chan_dir		/* a channel, input or output */
 		{ $$ = new chan_type($1, $2); }

@@ -1,0 +1,7 @@
+// "connect-003.hac"
+// should error out connecting two send-only channels
+
+defproc senders(chan!(bool) a, b) {
+	a = b;
+}
+

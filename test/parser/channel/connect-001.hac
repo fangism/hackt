@@ -1,0 +1,9 @@
+// "connect-001.hac"
+// testing channel connections
+// should error out at allocate time as having no receivers/senders
+// or should unused channels be accepted?
+
+chan(bool) X;
+
+// expected to error out at create time
+

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.27 2006/11/15 21:56:53 fang Exp $
+	$Id: instance_alias.tcc,v 1.27.2.1 2006/11/16 20:28:45 fang Exp $
 	TODO: trim includes
  */
 
@@ -101,6 +101,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) : 
 		substructure_parent_type(t), 
 		actuals_parent_type(t),
+		direction_connection_policy(t), 
 		next(this), 
 		container(t.container) {
 	INVARIANT(t.next == &t);
@@ -384,8 +385,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 		return good_bool(false);
 	}
 	// TODO: policy-based check of directions, (channels-only)
-	l.unite(r);
-	return l.connect_port_aliases_recursive(r);
+	return good_bool(l.unite(r).good &&
+		l.connect_port_aliases_recursive(r).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -410,8 +411,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
 		return good_bool(false);
 	}
 	// TODO: policy-based check of directions, (channels-only)
-	l.unite(r);
-	return l.connect_port_aliases_recursive(r);
+	return good_bool(l.unite(r).good &&
+		l.connect_port_aliases_recursive(r).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -538,7 +539,6 @@ ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o,
 		const dump_flags& df) const {
 	return dump_alias(o, df);
-	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -546,15 +546,23 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 	return dump_alias(o, dump_flags::default_value);
-	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to check for pointer equality?  Same result either way.
+	TODO: return an error if applicable
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 	STACKTRACE_VERBOSE;
-	this->find()->next = &*r.find();
+	const pseudo_iterator lc(this->find());
+	this_type* const rc = &*r.find();
+	lc->next = rc;
+	// synchronize direction_connection_flags
+	return direction_connection_policy::synchronize_flags(*lc, *rc);
+		// commutative
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -746,6 +754,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(const footprint& f,
 	NEVER_NULL(this->container);	// no need to write out
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(f, o);
+	direction_connection_policy::write_flags(o);
 //	else skip, collection will write connections later...
 }
 
@@ -765,6 +774,7 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(const footprint& f,
 	read_value(i, this->instance_index);
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(f, i);
+	direction_connection_policy::read_flags(i);
 //	else skip, collection will load connections later...
 }
 

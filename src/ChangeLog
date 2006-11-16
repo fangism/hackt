@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-01:
+	  New branch for updates to channel semantics: type-checking
+		and connection checking.
+	  AST/instance.cc: reject non-port directional channel declarations.  
+	  Added Object/inst/connection_policy.{h,tcc,cc}:
+		implements direction-connection semantics for channels
+		with additional direction flags per alias,  
+		not yet complete.  (Introduces 43 temporary regressions, 
+		cause by change in footprint size for channels.)
+	  Written and added bunch of test-cases to parser/channel: 
+		goal is to pass all of them before branch is over.  
+
+
 2006-11-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54:

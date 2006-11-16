@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.19 2006/10/24 07:26:54 fang Exp $
+	$Id: instance.cc,v 1.19.6.1 2006/11/16 20:28:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -31,6 +31,7 @@
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/type/channel_type_reference_base.h"	// reject directions
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/ref/meta_value_reference_base.h"
 #include "Object/expr/pbool_const.h"
@@ -99,6 +100,7 @@ using std::accumulate;
 // using std::_Select1st;
 // using std::_Select2nd;
 using std::find;
+using entity::channel_type_reference_base;
 using entity::meta_instance_reference_base;
 using entity::meta_value_reference_base;
 using entity::simple_meta_indexed_reference_base;
@@ -651,6 +653,16 @@ instance_declaration::check_build(context& c) const {
 	STACKTRACE("instance_declaration::check_build()");
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
+	// hack in: reject channels with directions (allow only in ports)
+{
+	const count_ptr<const channel_type_reference_base>
+		ctr(ftr.is_a<const channel_type_reference_base>());
+	if (ctr && ctr->get_direction()) {
+		cerr << "Error: channel types cannot be declared with "
+			"directionality in a non-formal context.  "
+			<< where(*type) << endl;
+	}
+}
 	const context::fundamental_type_frame _ftf(c, ftr);
 
 	if (ftr) {
