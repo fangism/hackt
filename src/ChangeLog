@@ -5,6 +5,11 @@
 
 2006-11-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-54-channel-01-02:
+	  No source revision.  
+	  Updated regression test cases, to reflect new footprint size.  
+
+
 	* HACKT-00-01-04-main-00-80-54-channel-01-01:
 	  New branch for updates to channel semantics: type-checking
 		and connection checking.
