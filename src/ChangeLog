@@ -5,6 +5,13 @@
 
 2006-11-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-54-channel-01-03:
+	  Implemented a connection direction checking policy in
+		Object/inst/connection_policy.tcc.
+		Correctly rejects mis-connections of channels.  
+	  Tested (successfully) new test cases for directional connections.  
+
+
 	* HACKT-00-01-04-main-00-80-54-channel-01-02:
 	  No source revision.  
 	  Updated regression test cases, to reflect new footprint size.  

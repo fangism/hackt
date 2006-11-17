@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.3 2006/11/07 06:34:52 fang Exp $
+	$Id: instance_scalar.h,v 1.3.4.1 2006/11/17 01:47:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -69,6 +69,9 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;
+
+	bool
+	is_formal(void) const;			// depends
 
 	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const;

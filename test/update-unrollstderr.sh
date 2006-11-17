@@ -23,7 +23,16 @@ done
 
 for i
 do
-	cp -f $i.unrolldump-filter $srcdir/$i.unrollstderr
-	echo "Updated $srcdir/$i.unrollstderr"
+	if test -f $i.unrolldump-filter
+	then
+		cp -f $i.unrolldump-filter $srcdir/$i.unrollstderr
+		echo "Updated $srcdir/$i.unrollstderr"
+	elif test -f $i.unrollfaildump
+	then
+		cp -f $i.unrollfaildump $srcdir/$i.unrollstderr
+		echo "Updated $srcdir/$i.unrollstderr"
+	else
+		echo "$i.unrolldump-filter or $i.unrollfaildump required but missing."
+	fi
 done
 

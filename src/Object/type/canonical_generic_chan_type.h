@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.9 2006/10/18 21:38:48 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.9.8.1 2006/11/17 01:47:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -108,6 +108,9 @@ public:
 	/// \param d is '!' or '?' or other
 	void
 	set_direction(const char d) { direction = d; }
+
+	char
+	get_direction(void) const { return direction; }
 
 	count_ptr<const type_reference_type>
 	make_type_reference(void) const;

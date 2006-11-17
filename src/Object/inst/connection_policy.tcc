@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.1.2.1 2006/11/16 20:28:45 fang Exp $
+	$Id: connection_policy.tcc,v 1.1.2.2 2006/11/17 01:47:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -8,6 +8,10 @@
 
 #include <iostream>
 #include "Object/inst/connection_policy.h"
+#include "Object/inst/instance_collection.h"
+#include "util/macros.h"
+#include "util/memory/excl_ptr.h"
+#include "common/ICE.h"
 
 namespace HAC {
 namespace entity {
@@ -54,6 +58,45 @@ directional_connect_policy<true>::synchronize_flags(AliasType& l, AliasType& r) 
 		rr.direction_flags = _or;
 	}
 	return good_bool(good);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Currently does NOT handle shared channels.  
+ */
+template <class ContainerPtrType>
+void
+directional_connect_policy<true>::initialize_direction(
+		const ContainerPtrType p) {
+	typedef	typename ContainerPtrType::element_type
+					collection_interface_type;
+	typedef	typename collection_interface_type::traits_type
+					traits_type;
+	typedef	typename traits_type::tag_type		tag_type;
+	typedef	instance_collection<tag_type>	instance_collection_type;
+	NEVER_NULL(p);
+	const bool f = p->is_formal();
+	const instance_collection_type& c(p->get_canonical_collection());
+	const char d = c.__get_raw_type().get_direction();
+	switch (d) {
+	case '\0': break;		// leave as initial value
+	case '?':
+		if (f) {
+			direction_flags |= CONNECTED_TO_PRODUCER;
+		} else {
+			direction_flags |= CONNECTED_TO_CONSUMER;
+		}
+		break;
+	case '!':
+		if (f) {
+			direction_flags |= CONNECTED_TO_CONSUMER;
+		} else {
+			direction_flags |= CONNECTED_TO_PRODUCER;
+		}
+		break;
+	default:
+		ICE(cerr, cerr << "Invalid direction.";)
+	}
 }
 
 //=============================================================================

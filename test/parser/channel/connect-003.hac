@@ -5,3 +5,5 @@ defproc senders(chan!(bool) a, b) {
 	a = b;
 }
 
+senders z;
+

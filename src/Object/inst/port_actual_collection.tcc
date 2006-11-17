@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.2 2006/11/07 06:34:57 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.2.4.1 2006/11/17 01:47:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -110,6 +110,17 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 bool
 PORT_ACTUAL_COLLECTION_CLASS::is_partially_unrolled(void) const {
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false.  By definition, these collections are actuals,
+		not formals.  
+ */
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+bool
+PORT_ACTUAL_COLLECTION_CLASS::is_formal(void) const {
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

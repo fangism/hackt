@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.60 2006/11/15 21:56:58 fang Exp $
+#	$Id: Make.test-tail,v 1.60.2.1 2006/11/17 01:47:48 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -128,6 +128,9 @@ AUTO_DEPENDS += test.autodepend
 echo-tests: force
 	@$(ECHO) $(TESTS)
 
+echo-hackt: force
+	@$(ECHO) $(HACKT_EXE)
+
 # filter-out is GNUMake feature
 #	$($(filter-out $(HACKT_PARSE_TEST_PASSES), $(HACKT_PARSE_TEST_SUBJECTS)):=.stderr)
 
@@ -217,6 +220,7 @@ help-test:
 	@$(ECHO) "    echo-*:"
 	@$(ECHO) "	hackt: path to the built hackt executable"
 	@$(ECHO) "	tests: lists TESTS"
+	@$(ECHO) "	(-tests may be substituted with -passes, -failures)"
 	@$(ECHO) "	parse-tests: lists HACKT_PARSE_TEST_SUBJECTS"
 	@$(ECHO) "	flatten-tests: lists HACKT_FLATTEN_TEST_SUBJECTS"
 	@$(ECHO) "	unroll-tests: lists HACKT_UNROLL_TEST_SUBJECTS"

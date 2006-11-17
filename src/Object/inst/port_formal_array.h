@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.3 2006/11/07 06:34:59 fang Exp $
+	$Id: port_formal_array.h,v 1.3.4.1 2006/11/17 01:47:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -120,6 +120,9 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;	// true
+
+	bool
+	is_formal(void) const;			// true
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;

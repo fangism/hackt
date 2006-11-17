@@ -15,6 +15,6 @@ one_shot a(x);
 // sink one token
 bool y;
 chp {
-a?(y)
+x?(y)
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_interface.h"
 	Abstract class defining the interface for an instance collection.  
-	$Id: collection_interface.h,v 1.2 2006/11/07 06:34:37 fang Exp $
+	$Id: collection_interface.h,v 1.2.4.1 2006/11/17 01:47:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_INTERFACE_H__
@@ -137,6 +137,9 @@ virtual	instance_alias_info_type&
 	// TODO: substitute/rename as collection_type_established()
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+
+virtual	bool
+	is_formal(void) const = 0;
 
 /**
 	Prototype for instantiating alias indices during unroll phase.  

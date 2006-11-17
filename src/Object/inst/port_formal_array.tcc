@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.3 2006/11/07 06:34:59 fang Exp $
+	$Id: port_formal_array.tcc,v 1.3.4.1 2006/11/17 01:47:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -139,6 +139,16 @@ PORT_FORMAL_ARRAY_CLASS::is_partially_unrolled(void) const {
 	// we use 0-dimensions to indicate that the array
 	// has not yet been populated.  
 	return this->value_array.dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true.  By definition, this class is reserver for formals.  
+ */
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+bool
+PORT_FORMAL_ARRAY_CLASS::is_formal(void) const {
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

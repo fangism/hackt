@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.2 2006/11/07 06:34:57 fang Exp $
+	$Id: port_actual_collection.h,v 1.2.4.1 2006/11/17 01:47:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -132,6 +132,9 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;	// true
+
+	bool
+	is_formal(void) const;			// false
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;

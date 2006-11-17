@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.27.2.1 2006/11/16 20:28:45 fang Exp $
+	$Id: instance_alias.tcc,v 1.27.2.2 2006/11/17 01:47:41 fang Exp $
 	TODO: trim includes
  */
 
@@ -158,8 +158,15 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	STACKTRACE_INDENT_PRINT("this->container (old) = " <<
 		&*this->container << endl);
 	this->container = p;
+	// do we ever want to instantiate more than the ports? no
 	substructure_parent_type::unroll_port_instances(*this->container, c);
-	// do we ever want to instantiate more than the ports?
+
+	// initialize directions, if applicable
+	direction_connection_policy::initialize_direction(this->container);
+	// we do this here for now merely for convenience/coverage:
+	// it is certainly correct.  
+	// future optimization: loop-transformation to eliminate
+	// repeated redundant function calls (only affects channels)
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("this->container (new) = " <<
 		&*this->container << endl);

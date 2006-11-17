@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.27 2006/11/07 06:34:45 fang Exp $
+	$Id: instance_collection.h,v 1.27.4.1 2006/11/17 01:47:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -176,6 +176,9 @@ virtual	instance_alias_info_type&
 	// TODO: substitute/rename as collection_type_established()
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+
+virtual	bool
+	is_formal(void) const = 0;
 
 	// this could just return hard-coded built-in type...
 	// this returns the type as given by the first instantiation statement

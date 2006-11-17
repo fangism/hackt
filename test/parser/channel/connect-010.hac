@@ -15,6 +15,6 @@ one_shot a(x);
 
 // source one token
 chp {
-a!(true)
+x!(true)
 }
 

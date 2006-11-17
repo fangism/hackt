@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.39 2006/11/07 06:34:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.39.4.1 2006/11/17 01:47:45 fang Exp $
 	TODO: trim includes
  */
 
@@ -372,6 +372,16 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::is_partially_unrolled(void) const {
 	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false.  Sparse collections can never be formal.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ARRAY_CLASS::is_formal(void) const {
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1202,6 +1212,16 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::is_partially_unrolled(void) const {
 	return this->the_instance.valid();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if the originating placeholder was formal.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+bool
+INSTANCE_SCALAR_CLASS::is_formal(void) const {
+	return this->source_placeholder->is_port_formal();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

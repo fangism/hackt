@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.1.2.1 2006/11/16 20:28:44 fang Exp $
+	$Id: connection_policy.h,v 1.1.2.2 2006/11/17 01:47:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -36,12 +36,15 @@ struct directional_connect_policy<false> {
 	/**
 		No-op.  
 	 */
-	template <class AliasType>
 	static
 	good_bool
-	synchronize_flags(const AliasType&, const AliasType&) {
+	synchronize_flags(const this_type&, const this_type&) {
 		return good_bool(true);
 	}
+
+	template <class ContainerPtrType>
+	void
+	initialize_direction(const ContainerPtrType&) const { }
 
 	void
 	write_flags(const ostream&) const { }
@@ -104,6 +107,10 @@ struct directional_connect_policy<true> {
 	static
 	good_bool
 	synchronize_flags(AliasType&, AliasType&);
+
+	template <class ContainerPtrType>
+	void
+	initialize_direction(const ContainerPtrType p);
 
 	void
 	write_flags(ostream&) const;
