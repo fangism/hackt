@@ -1,6 +1,6 @@
 # "Make.test-unroll"
 #	vi: ft=automake
-#	$Id: Make.test-unroll,v 1.2 2006/11/12 05:58:14 fang Exp $
+#	$Id: Make.test-unroll,v 1.2.2.1 2006/11/17 04:03:13 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -171,6 +171,7 @@ clean-unrolltests:
 	-$(RM_PATTERN) "*.unrolldiff"
 	-$(RM_PATTERN) "*.unrollfaildiff"
 	-$(RM_PATTERN) "*.unrolldump-noindex"
+	-$(RM_PATTERN) "*.unrolldump-filter-noindex"
 	-$(RM_PATTERN) "*.unrolldiff-noindex"
 	-$(RM_PATTERN) "*.unrollstderr-noindex"
 	-$(RM_PATTERN) "*.unrolldump"

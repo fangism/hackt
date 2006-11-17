@@ -101,6 +101,10 @@ In namespace "", we have: {
     x = chan(bool<>) x
 }
 
+top-level chp:
+  concurrent: {
+    x!(true)
+  }
 footprint: {
   a = process one_shot<>^0 = a (
     b = channel chan?(bool<>)^0 = a.b 

@@ -5,6 +5,12 @@
 
 2006-11-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-54-channel-01-04:
+	  Forced printing of top-level prs/chp/spec in module, mimicking
+		process_definition, for better diagnostics in test suite.  
+		Few test cases updated as a result.
+
+
 	* HACKT-00-01-04-main-00-80-54-channel-01-03:
 	  Implemented a connection direction checking policy in
 		Object/inst/connection_policy.tcc.

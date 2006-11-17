@@ -25,6 +25,12 @@ In namespace "", we have: {
     x = bool<> x
 }
 
+top-level chp:
+  concurrent: {
+    *[
+      x := true
+    ]
+  }
 footprint: {
   x = bool^0 = x (1) 
   Created state:
