@@ -4,11 +4,16 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.14.4.1 2006/11/16 20:28:38 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.14.4.2 2006/11/17 06:58:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
+
+#define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
 
 #include <exception>
 #include <iostream>
@@ -70,6 +75,11 @@ template class port_actual_collection<channel_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_CONSTRUCTORS
+#undef	STACKTRACE_DESTRUCTORS
 
 #endif	// __HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 

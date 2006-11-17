@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.1.2.2 2006/11/17 01:47:40 fang Exp $
+	$Id: connection_policy.tcc,v 1.1.2.3 2006/11/17 06:58:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -9,9 +9,11 @@
 #include <iostream>
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/instance_collection.h"
+#include "common/ICE.h"
+
+#include "util/stacktrace.h"
 #include "util/macros.h"
 #include "util/memory/excl_ptr.h"
-#include "common/ICE.h"
 
 namespace HAC {
 namespace entity {
@@ -23,10 +25,24 @@ namespace entity {
  */
 template <class AliasType>
 good_bool
-directional_connect_policy<true>::synchronize_flags(AliasType& l, AliasType& r) {
+directional_connect_policy<true>::synchronize_flags(
+		AliasType& l, AliasType& r) {
 	typedef	typename AliasType::traits_type		traits_type;
-	this_type& ll(l), rr(r);	// static_cast
+	STACKTRACE_VERBOSE;
+	if (&l == &r) {
+		// permit self-aliases, of course
+		return good_bool(true);
+	}
+	this_type& ll(l);	// static_cast
+	this_type& rr(r);	// static_cast
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(ll.direction_flags) << endl);
+	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rr.direction_flags) << endl);
+	l.dump_hierarchical_name(STACKTRACE_INDENT << "l: ") << endl;
+	r.dump_hierarchical_name(STACKTRACE_INDENT << "r: ") << endl;
+#endif
 	const unsigned char _and = ll.direction_flags & rr.direction_flags;
+	const unsigned char _or = ll.direction_flags | rr.direction_flags;
 	bool good = true;
 	if (_and & CONNECTED_TO_PRODUCER) {
 		// multiple producers
@@ -39,7 +55,7 @@ directional_connect_policy<true>::synchronize_flags(AliasType& l, AliasType& r) 
 		}
 	}
 	if (_and & CONNECTED_TO_CONSUMER) {
-		// multiple producers
+		// multiple consumers
 		if (!(_and & CONNECTED_SHARED_CONSUMER)) {
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
@@ -52,8 +68,7 @@ directional_connect_policy<true>::synchronize_flags(AliasType& l, AliasType& r) 
 		l.dump_hierarchical_name(cerr << "\tgot: ") << endl;
 		r.dump_hierarchical_name(cerr << "\tand: ") << endl;
 	} else {
-		const unsigned char _or = 
-			ll.direction_flags | rr.direction_flags;
+		STACKTRACE_INDENT_PRINT("new flags = " << size_t(_or) << endl);
 		ll.direction_flags = _or;
 		rr.direction_flags = _or;
 	}
@@ -74,6 +89,7 @@ directional_connect_policy<true>::initialize_direction(
 					traits_type;
 	typedef	typename traits_type::tag_type		tag_type;
 	typedef	instance_collection<tag_type>	instance_collection_type;
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	const bool f = p->is_formal();
 	const instance_collection_type& c(p->get_canonical_collection());

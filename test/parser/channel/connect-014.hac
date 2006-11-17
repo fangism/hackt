@@ -1,0 +1,13 @@
+// "connect-014.hac"
+// copy-modified from "connect-013.hac"
+// should error out connecting two send-only channels
+
+defproc senders(chan!(bool) a, b) {
+	chan(bool) x, y;
+	x = a;
+	y = b;
+	x = y;			// error
+}
+
+senders z;
+

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.27.2.2 2006/11/17 01:47:41 fang Exp $
+	$Id: instance_alias.tcc,v 1.27.2.3 2006/11/17 06:58:52 fang Exp $
 	TODO: trim includes
  */
 
@@ -380,6 +380,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
 	This version of connect is symmetric and tailored to port connections,
 	and is called from simple_meta_instance_reference::connect_port.  
 	This effectively checks for connectible-type-equivalence.  
+	optimization: any need to check for self-aliases? uncommon.
 	\param l an alias of this type.  
 	\param r an alias of this type.  
  */
@@ -401,6 +402,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 	This version of connect is slightly asymmetric and tailored for
 	connecting aliases, called by alias_connection::unroll.  
 	This effectively checks for connectible-type-equivalence.  
+	optimization: any need to check for self-aliases? uncommon.
 	\param l is the (unchanging) leftmost instance reference, 
 		which always contains relaxed actuals IF anything in
 		the connection list has actuals.  

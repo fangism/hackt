@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-05:
+	  Minor bug fix in direction flag synchronization (missed
+		reference declaration!).  
+	  Added more test cases for channel direction checking
+		to parser/channel.  
+	  Plan: test create-phase and add a CHP pass for channel use checking.  
+
+
 2006-11-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54-channel-01-04:

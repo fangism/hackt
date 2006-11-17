@@ -1,0 +1,11 @@
+// "connect-018.hac"
+// copy-modified from "connect-004.hac"
+// unroll: should accept self-alias
+// create: should fail with dangling channel
+
+defproc receivers(chan?(bool) a) {
+	a = a;
+}
+
+receivers z;
+
