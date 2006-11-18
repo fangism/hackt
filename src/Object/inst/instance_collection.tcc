@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.39.4.1 2006/11/17 01:47:45 fang Exp $
+	$Id: instance_collection.tcc,v 1.39.4.2 2006/11/18 06:07:27 fang Exp $
 	TODO: trim includes
  */
 
@@ -1048,14 +1048,27 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Applies direction flags to all aliases in collection, 
+	applicable only to channel types.  
+	\param f the direction flags to set.  
+	\return good if successful.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::set_alias_connection_flags(const unsigned char f) {
+	return for_each(this->collection.begin(), this->collection.end(), 
+		typename element_type::connection_flag_setter(f)).status;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visitor.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 	for_each(this->collection.begin(), this->collection.end(),
-		bind2nd_argval(mem_fun_ref(&element_type::accept), v)
-	);
+		bind2nd_argval(mem_fun_ref(&element_type::accept), v));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1571,6 +1584,13 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 	STACKTRACE_VERBOSE;
 	INVARIANT(pcc.size() == 1);
 	this->the_instance.assign_footprint_frame(ff, pcc, 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::set_alias_connection_flags(const unsigned char f) {
+	return this->the_instance.set_connection_flags(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.12 2006/10/24 07:27:01 fang Exp $
+	$Id: data_expr.cc,v 1.12.6.1 2006/11/18 06:07:20 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/operator_precedence.h"
 #include "Object/expr/const_index_list.h"
+#include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/pint_const.h"
 
 #include "Object/persistent_type_hash.h"
@@ -1094,6 +1095,27 @@ nonmeta_index_list::make_const_index_list(multikey_index_type& l) const {
 		}
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Attempts to r
+ */
+count_ptr<dynamic_meta_index_list>
+nonmeta_index_list::make_meta_index_list(void) const {
+	typedef	count_ptr<dynamic_meta_index_list>	return_type;
+	const return_type ret(new dynamic_meta_index_list);
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		const count_ptr<const meta_index_expr>
+			mie(i->is_a<const meta_index_expr>());
+		if (mie)
+			ret->push_back(mie);
+		else return return_type(NULL);
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

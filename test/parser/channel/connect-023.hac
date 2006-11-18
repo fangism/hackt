@@ -1,0 +1,9 @@
+// "connect-023.hac"
+// should pass: connecting two ports legally
+
+defproc forward(chan?(bool) x; chan!(bool) y) {
+	x = y;
+}
+
+forward march;
+

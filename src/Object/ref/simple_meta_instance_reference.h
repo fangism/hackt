@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.19 2006/11/07 06:35:17 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.19.4.1 2006/11/18 06:07:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -96,6 +96,9 @@ protected:
 public:
 	explicit
 	simple_meta_instance_reference(const instance_placeholder_ptr_type);
+
+	simple_meta_instance_reference(const instance_placeholder_ptr_type, 
+		indices_ptr_arg_type);
 
 virtual	~simple_meta_instance_reference();
 

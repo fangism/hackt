@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.14 2006/11/07 06:35:09 fang Exp $
+	$Id: CHP.cc,v 1.14.4.1 2006/11/18 06:07:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,20 +15,27 @@
 #include "Object/expr/int_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/datatype_instance_collection.h"
-#include "Object/inst/instance_collection.h"
+#include "Object/inst/channel_instance_collection.h"
+#include "Object/inst/instance_placeholder.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/value_scalar.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/connection_policy.h"
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
@@ -114,6 +121,11 @@ static
 good_bool
 unroll_resolve_selection_list(const selection_list_type&,
 	const unroll_context&, selection_list_type&);
+
+static
+good_bool
+set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&, 
+	const unroll_context&, const bool);
 
 //=============================================================================
 // class action method definitions
@@ -906,6 +918,68 @@ condition_wait::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+/**
+	\param ncr the nonmeta channel reference to resolve.
+	\param c the unroll context.
+	\param d true for send, false for receive.
+ */
+good_bool
+set_channel_alias_directions(
+		const simple_channel_nonmeta_instance_reference& ncr, 
+		const unroll_context& c, const bool d) {
+	// flag that a channel(s) is connected to producers
+	// recall that nonmeta references MUST be scalar..
+	const never_ptr<const nonmeta_index_list> ind(ncr.get_indices());
+	const count_ptr<dynamic_meta_index_list>
+		mil(ind ? ind->make_meta_index_list() :
+			count_ptr<dynamic_meta_index_list>(NULL));
+	if (ind && !mil) {
+		// there was at least one non-meta index
+		// we flag all members of the array as nonmeta-accessed
+		const never_ptr<channel_instance_collection>
+			cic(c.lookup_instance_collection(
+				*ncr.get_inst_base_subtype())
+				.is_a<channel_instance_collection>());
+		// can collection reference subinstance-actuals/members?
+		NEVER_NULL(cic);
+		// remember to use canonical aliases!
+		if (!cic->set_alias_connection_flags(
+			d ? directional_connect_policy<true>::
+				CONNECTED_CHP_NONMETA_PRODUCER
+			: directional_connect_policy<true>::
+				CONNECTED_CHP_NONMETA_CONSUMER
+			).good) {
+			// diagnostic?
+			return good_bool(false);
+		}
+	} else {
+		// should already be resolved to constants (or NULL)
+		// construct an auxiliary meta-instance reference
+		// to resolve the reference.  
+		const simple_channel_meta_instance_reference
+			cr(ncr.get_inst_base_subtype(), mil);
+		const never_ptr<channel_instance_alias_info>
+			ca(cr.unroll_generic_scalar_reference(c));
+		if (!ca) {
+			cerr << "Error: reference to uninstantiated "
+				"channel alias." << endl;
+			return good_bool(false);
+		}
+		// remember to use canonical alias!
+		// can this result in an error? yes!
+		if (!ca->find()->set_connection_flags(
+				d ? directional_connect_policy<true>::
+					CONNECTED_CHP_PRODUCER
+				: directional_connect_policy<true>::
+					CONNECTED_CHP_CONSUMER).good) {
+			// diagnostic?
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//=============================================================================
 // class channel_send method definitions
 
 channel_send::channel_send() : parent_type(), chan(), exprs() { }
@@ -950,6 +1024,13 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error resolving channel reference of send." << endl;
 		return action_ptr_type(NULL);
 	}
+#if 1
+	// pass true to indicate send
+	if (!set_channel_alias_directions(*cc, c, true).good) {
+		// diagnostic?
+		return action_ptr_type(NULL);
+	}
+#endif
 	typedef	expr_list_type::const_iterator	const_iterator;
 	const const_iterator
 		f(find(exprs_c.begin(), exprs_c.end(), data_ptr_type(NULL)));
@@ -1040,6 +1121,13 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error resolving channel reference of send." << endl;
 		return action_ptr_type(NULL);
 	}
+#if 1
+	// pass false to indicate receive
+	if (!set_channel_alias_directions(*cc, c, false).good) {
+		// diagnostic?
+		return action_ptr_type(NULL);
+	}
+#endif
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
 	const const_iterator
 		f(find(refs.begin(), refs.end(), inst_ref_ptr_type(NULL)));

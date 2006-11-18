@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.1.2.2 2006/11/17 01:47:39 fang Exp $
+	$Id: connection_policy.h,v 1.1.2.3 2006/11/18 06:07:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -46,6 +46,25 @@ struct directional_connect_policy<false> {
 	void
 	initialize_direction(const ContainerPtrType&) const { }
 
+	good_bool
+	set_connection_flags(const unsigned char) const {
+		return good_bool(true);
+	}
+
+	struct connection_flag_setter {
+		const good_bool		status;
+
+		explicit
+		connection_flag_setter(const unsigned char) :
+			status(true) { }
+
+		/**
+			No-op, directions do not apply.  
+		 */
+		void
+		operator () (const this_type&) const { }
+	};	// end struct collection_connection_flag_setter
+
 	void
 	write_flags(const ostream&) const { }
 
@@ -60,7 +79,9 @@ struct directional_connect_policy<false> {
  */
 template <>
 struct directional_connect_policy<true> {
+private:
 	typedef	directional_connect_policy<true>	this_type;
+public:
 	enum direction_flags {
 		/**
 			Set if connected to some producer of values, 
@@ -80,23 +101,64 @@ struct directional_connect_policy<true> {
 			Proposed flag for indicating whether 
 			producer connection is shared or not.  
 			Only meaningful when CONNECTED_TO_PRODUCER is set.
+			Not yet used.  
 		 */
 		CONNECTED_SHARED_PRODUCER = 0x04,
 		/**
 			Proposed flag for indicating whether 
 			consumer connection is shared or not.  
 			Only meaningful when CONNECTED_TO_CONSUMER is set.
+			Not yet used.  
 		 */
 		CONNECTED_SHARED_CONSUMER = 0x08,
+
+		/**
+			Set if the alias is used in CHP for sending.  
+			Should this be exclusive with CONNECTED_TO_PRODUCER?
+		 */
+		CONNECTED_CHP_PRODUCER = 0x10, 
+		/**
+			Set if the alias is used in CHP for receiving.  
+			Should this be exclusive with CONNECTED_TO_CONSUMER?
+		 */
+		CONNECTED_CHP_CONSUMER = 0x20, 
+		/**
+			Set if may be accessed by nonmeta-indexed
+			channel reference in CHP.  
+			We distinguish from normal connections
+			for the purpose of may-analysis.  
+			Only meaningful if CONNECTED_CHP_PRODUCER is set.
+		 */
+		CONNECTED_NONMETA_INDEXED_PRODUCER = 0x40,
+		/**
+			Set if may be accessed by nonmeta-indexed
+			channel reference in CHP.  
+			We distinguish from normal connections
+			for the purpose of may-analysis.  
+			Only meaningful if CONNECTED_CHP_CONSUMER is set.
+		 */
+		CONNECTED_NONMETA_INDEXED_CONSUMER = 0x80,
+
+		/**
+			Derived value combination.
+		 */
+		CONNECTED_CHP_NONMETA_PRODUCER = CONNECTED_CHP_PRODUCER | 
+			CONNECTED_NONMETA_INDEXED_PRODUCER, 
+		/**
+			Derived value combination.
+		 */
+		CONNECTED_CHP_NONMETA_CONSUMER = CONNECTED_CHP_CONSUMER | 
+			CONNECTED_NONMETA_INDEXED_CONSUMER, 
 		/**
 			Initial value: not connected.  
 			Port formal instantiations however should
 			set them to accordingly.  
 		 */
-		DEFAULT_CONNECT_FLAGS = 0
+		DEFAULT_CONNECT_FLAGS = 0x00
 	};
+protected:
 	unsigned char		direction_flags;
-
+public:
 	directional_connect_policy() :
 		direction_flags(DEFAULT_CONNECT_FLAGS) { }
 
@@ -111,6 +173,31 @@ struct directional_connect_policy<true> {
 	template <class ContainerPtrType>
 	void
 	initialize_direction(const ContainerPtrType p);
+
+	good_bool
+	set_connection_flags(const unsigned char);
+
+	struct connection_flag_setter {
+		good_bool		status;
+		const unsigned char	update;
+
+		explicit
+		connection_flag_setter(const unsigned char f) :
+			status(true), update(f) { }
+
+		void
+		operator () (this_type& a) {
+			if (!a.set_connection_flags(update).good) {
+				status.good = false;
+			}
+		}
+	};	// end struct connection_flag_setter
+
+	void
+	write_flags(const ostream&) const { }
+
+	// only for non-directional channels?
+	// forward_local_to_external_flags(...);
 
 	void
 	write_flags(ostream&) const;

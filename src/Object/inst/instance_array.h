@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.3.4.1 2006/11/17 01:47:43 fang Exp $
+	$Id: instance_array.h,v 1.3.4.2 2006/11/18 06:07:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -156,6 +156,8 @@ public:
 
 	void
 	accept(alias_visitor&) const;
+
+	SET_ALIAS_CONNECTION_FLAGS_PROTO;
 
 public:
 	void

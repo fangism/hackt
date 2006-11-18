@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-06:
+	  Added code to check CHP while unrolling for channel connectivity, 
+		compile-time gets the direction correct, but this will
+		account for dangling channels, for example.  
+	  Some more documentation, with semantics questions.  
+	  New directional connection flags: CHP-produced/consumer, 
+		and non-meta indexed.  
+	  TODO: test cases for new features.
+	  TODO: propagate local connection state from formals to actuals.  
+
+
 2006-11-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54-channel-01-05:

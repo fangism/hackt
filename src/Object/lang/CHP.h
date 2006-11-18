@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.11 2006/07/16 03:34:53 fang Exp $
+	$Id: CHP.h,v 1.11.24.1 2006/11/18 06:07:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -353,7 +353,8 @@ public:
 	typedef	count_ptr<const data_expr>		data_ptr_type;
 	typedef	vector<data_ptr_type>			expr_list_type;
 	/**
-		should be simple_channel_nonmeta_instnace_reference
+		should be simple_channel_nonmeta_instance_reference.
+		Are member_nonmeta_instance_references allowed?
 	 */
 	typedef	count_ptr<const simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
@@ -394,6 +395,10 @@ public:
 	typedef	count_ptr<const data_nonmeta_instance_reference>
 							inst_ref_ptr_type;
 	typedef	vector<inst_ref_ptr_type>		inst_ref_list_type;
+	/**
+		should be simple_channel_nonmeta_instance_reference.
+		Are member_nonmeta_instance_references allowed?
+	 */
 	typedef	count_ptr<const simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:

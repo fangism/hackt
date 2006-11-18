@@ -3,7 +3,7 @@
 	Class definitions for nonmeta index lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: nonmeta_index_list.h,v 1.6 2006/06/26 01:46:03 fang Exp $
+	$Id: nonmeta_index_list.h,v 1.6.28.1 2006/11/18 06:07:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_LIST_H__
@@ -12,6 +12,7 @@
 #include <vector>
 #include "util/persistent.h"
 #include "Object/common/multikey_index.h"
+#include "Object/ref/meta_index_list_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 
@@ -21,6 +22,7 @@ class nonmeta_index_expr_base;
 struct expr_dump_context;
 class unroll_context;
 class const_index_list;
+class dynamic_meta_index_list;
 using std::vector;
 using std::ostream;
 using util::persistent;
@@ -65,6 +67,9 @@ public:
 
 	good_bool
 	make_const_index_list(multikey_index_type&) const;
+
+	count_ptr<dynamic_meta_index_list>
+	make_meta_index_list(void) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nonmeta_index_list

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.3.4.1 2006/11/17 01:47:45 fang Exp $
+	$Id: instance_scalar.h,v 1.3.4.2 2006/11/18 06:07:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -136,6 +136,8 @@ public:
 
 	void
 	accept(alias_visitor&) const;
+
+	SET_ALIAS_CONNECTION_FLAGS_PROTO;
 
 public:
 	void

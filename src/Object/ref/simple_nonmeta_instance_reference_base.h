@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_nonmeta_instance_reference_base.h,v 1.7 2006/03/20 02:41:08 fang Exp $
+	$Id: simple_nonmeta_instance_reference_base.h,v 1.7.46.1 2006/11/18 06:07:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
@@ -22,6 +22,7 @@ using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::excl_ptr;
+using util::memory::never_ptr;
 
 //=============================================================================
 /**
@@ -33,6 +34,11 @@ class simple_nonmeta_instance_reference_base {
 public:
 	typedef	nonmeta_index_list			index_list_type;
 protected:
+	/**
+		Consider: reference count or de-pointer?
+		or simply private-implementation idiom, only if
+		pointer never shared persistently.  
+	 */
 	excl_ptr<index_list_type>			array_indices;
 	// don't bother tracking instantiation state for non-meta references
 protected:
@@ -45,6 +51,9 @@ virtual	~simple_nonmeta_instance_reference_base();
 
 	ostream&
 	dump_indices(ostream&, const expr_dump_context&) const;
+
+	never_ptr<const index_list_type>
+	get_indices(void) const { return this->array_indices; }
 
 virtual	good_bool
 	attach_indices(excl_ptr<index_list_type>&) = 0;

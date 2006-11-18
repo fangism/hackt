@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.3.4.1 2006/11/17 01:47:46 fang Exp $
+	$Id: port_formal_array.h,v 1.3.4.2 2006/11/18 06:07:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -151,6 +151,8 @@ public:
 
 	void
 	accept(alias_visitor&) const;
+
+	SET_ALIAS_CONNECTION_FLAGS_PROTO;
 
 	instance_alias_info_type&
 	load_reference(istream&);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.1.2.3 2006/11/17 06:58:51 fang Exp $
+	$Id: connection_policy.tcc,v 1.1.2.4 2006/11/18 06:07:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -78,6 +78,9 @@ directional_connect_policy<true>::synchronize_flags(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Currently does NOT handle shared channels.  
+	TODO: propagate local connection information to external, 
+		bottom-up, formal to actual.  
+	Cannot error, as this only initializes direction flags.  
  */
 template <class ContainerPtrType>
 void

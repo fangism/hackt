@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.34 2006/11/15 21:56:51 fang Exp $
+ 	$Id: definition.cc,v 1.34.2.1 2006/11/18 06:07:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3112,7 +3112,9 @@ process_definition::__create_complete_type(
 		// body to mark channels as having been connected to 
 		// senders and/or receivers.  
 		// This could conceivably be done inside the unroll-pass.  
-
+		// TODO: need final pass to issue warnings about
+		// locally dangling channel connections
+		// f.connection_diagnostics();
 		// f.mark_created();	// ?
 	}
 	return good_bool(true);
