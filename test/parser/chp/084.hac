@@ -1,6 +1,7 @@
 // "084.hac"
 // copy-modified from "083.hac"
 // should pass : meta indices
+// create: will warn about dangling channels
 
 template <pint I, J>
 defproc send_indexed (chan!(int) out) {

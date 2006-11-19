@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.1.2.4 2006/11/18 06:07:25 fang Exp $
+	$Id: connection_policy.tcc,v 1.1.2.5 2006/11/19 02:20:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -19,6 +19,17 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 //=============================================================================
+/**
+	Forces a flag synchronization.  
+	No error.  
+ */
+template <class AliasType>
+void
+directional_connect_policy<true>::__update_flags(AliasType& a) {
+	this->direction_flags = a.find()->direction_flags;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Issue an error/diagnostic if:
 	both canonical node are already connected to a producer
@@ -116,6 +127,30 @@ directional_connect_policy<true>::initialize_direction(
 	default:
 		ICE(cerr, cerr << "Invalid direction.";)
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Issues diagnostic for dangling channel connections.  
+	Could just make this a non-template function by passing
+		the tag_name as a string.  
+ */
+template <class AliasType>
+good_bool
+directional_connect_policy<true>::__check_connection(const AliasType& a) {
+	typedef	typename AliasType::traits_type		traits_type;
+	const char f = a.direction_flags;
+	if (!(f & (CONNECTED_TO_PRODUCER | CONNECTED_CHP_PRODUCER))) {
+		a.dump_hierarchical_name(
+			cerr << "WARNING: " << traits_type::tag_name << " ")
+			<< " lacks connection to a producer." << endl;
+	}
+	if (!(f & (CONNECTED_TO_CONSUMER | CONNECTED_CHP_CONSUMER))) {
+		a.dump_hierarchical_name(
+			cerr << "WARNING: " << traits_type::tag_name << " ")
+			<< " lacks connection to a consumer." << endl;
+	}
+	return good_bool(true);
 }
 
 //=============================================================================

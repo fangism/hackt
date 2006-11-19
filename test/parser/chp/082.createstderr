@@ -1,3 +1,15 @@
+WARNING: channel y2_0.b lacks connection to a consumer.
+WARNING: channel y2_1.b lacks connection to a consumer.
+WARNING: channel y3_0.b lacks connection to a consumer.
+WARNING: channel y3_1.b lacks connection to a consumer.
+WARNING: channel y3_2.b lacks connection to a consumer.
+WARNING: channel y6_0.b lacks connection to a consumer.
+WARNING: channel y6_1.b lacks connection to a consumer.
+WARNING: channel y6_2.b lacks connection to a consumer.
+WARNING: channel y6_3.b lacks connection to a consumer.
+WARNING: channel y6_4.b lacks connection to a consumer.
+WARNING: channel y6_5.b lacks connection to a consumer.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

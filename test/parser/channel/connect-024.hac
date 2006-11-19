@@ -1,6 +1,7 @@
 // "connect-024.hac"
 // copy-modified from "connect-023.hac"
 // should pass: connecting two ports legally
+// create: will pass too
 
 defproc forward(chan?(bool) x; chan!(bool) y) {
 	y = x;

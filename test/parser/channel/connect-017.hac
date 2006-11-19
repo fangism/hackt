@@ -1,7 +1,7 @@
 // "connect-017.hac"
 // copy-modified from "connect-003.hac"
 // unroll: should allow self-connection without error
-// create: will fail due to dangling channel
+// create: will warn or fail due to dangling channel
 
 defproc senders(chan!(bool) a) {
 	a = a;

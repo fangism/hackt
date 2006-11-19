@@ -1,0 +1,152 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	392
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	24	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	444
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	49	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	448
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    inner = process-definition (defined) inner(
+        chan?(bool<>) a
+      )
+      In definition "inner", we have: {
+      Instances:
+        a = chan?(bool<>) inner::a
+        z = bool<> inner::z
+      unroll sequence: 
+        chan?(bool<>) a
+        bool<> z
+      chp:
+        concurrent: {
+          sequential: {
+            a?(z)
+            a?(z)
+          }
+        }
+      footprint: {
+        a = channel chan?(bool<>)^0 = inner::a (1) 
+        z = bool^0 = inner::z (1) 
+        Created state:
+        channel instance pool:
+        1	inner::a
+        bool instance pool:
+        1	inner::z
+        resolved concurrent actions:
+          sequential: {
+            a?(z)
+            a?(z)
+          }
+      }
+      }
+
+    one_shot = process-definition (defined) one_shot(
+        chan?(bool<>) b
+      )
+      In definition "one_shot", we have: {
+      Instances:
+        b = chan?(bool<>) one_shot::b
+        y = inner<> one_shot::y
+      unroll sequence: 
+        chan?(bool<>) b
+        inner<> y
+        y (b);
+      footprint: {
+        b = channel chan?(bool<>)^0 = one_shot::b (1) 
+        y = process inner<>^0 = one_shot::y (1) (
+          a = channel chan?(bool<>)^0 = one_shot::b (1) 
+        )
+        Created state:
+        process instance pool:
+        1	one_shot::y
+        channel instance pool:
+        1	one_shot::b
+      }
+      }
+
+  Instances:
+    a = one_shot<> a
+    x = chan(bool<>) x
+}
+
+top-level chp:
+  concurrent: {
+    sequential: {
+      x!(true)
+      x!(false)
+    }
+  }
+footprint: {
+  a = process one_shot<>^0 = a (1) (
+    b = channel chan?(bool<>)^0 = x (1) 
+  )
+  x = channel chan(bool<>)^0 = x (1) 
+  Created state:
+  process instance pool:
+  1	a
+  channel instance pool:
+  1	x
+  resolved concurrent actions:
+    sequential: {
+      x!(true)
+      x!(false)
+    }
+}

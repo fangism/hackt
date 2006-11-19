@@ -1,7 +1,7 @@
 // "connect-020.hac"
 // copy-modified from "connect-015.hac"
 // unroll: should accept self-aliases
-// create: should fail on dangling channel
+// create: should warn or fail on dangling channel
 
 defproc receivers(chan?(bool) a) {
 	chan(bool) x, y;

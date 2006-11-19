@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.29 2006/11/07 06:34:19 fang Exp $
+	$Id: footprint.cc,v 1.29.4.1 2006/11/19 02:19:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -455,6 +455,7 @@ footprint::create_dependent_types(const footprint& top) {
 	}
 }
 	evaluate_scope_aliases();
+	// should this be postponed until connection_diagnostics()?
 	mark_created();
 	return good_bool(true);
 }
@@ -579,6 +580,21 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		.assign_footprint_frame(ff, pmc);
 	get_instance_collection_pool_bundle<bool_tag>()
 		.assign_footprint_frame(ff, pmc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Final pass over unique instances to check for connectivity violations, 
+	and issue warnings.  
+	This was introduced to check channel connectivity.  
+	Q: Should we store diagnostic summaries as flags?  
+		Could be useful for hierarchy checking.  
+	\pre already passed over CHP for channel connectivity.  
+	\return true to indicate acceptance.  
+ */
+good_bool
+footprint::connection_diagnostics(void) const {
+	return scope_aliases.check_channel_connections();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

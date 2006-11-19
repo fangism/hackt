@@ -1,6 +1,7 @@
 // "086.hac"
 // copy-modified from "083.hac"
 // should pass : nonmeta indices
+// create: warnings about dangling channels
 
 defproc send_indexed (chan?(int<1>) index[2]; chan!(int) out) {
 pint x[2][2];

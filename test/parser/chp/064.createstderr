@@ -1,3 +1,6 @@
+WARNING: channel A lacks connection to a producer.
+WARNING: channel B lacks connection to a consumer.
+---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail	size

@@ -1,5 +1,16 @@
 # "test/ChangeLog"
 
+2006-11-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-57:
+	  Update some dump/filter rules, now that we are logging
+		compiler warnings, and concatenating them to dumps.  
+		This revision mostly affected Make.test-create.
+		Added new ...-err suffixes to catch warning diagnostics.  
+	  POM-header-filter.awk.in: now preserve WARNINGs, 
+		but objdump diff still filters them out in rule for .outdump.
+
+
 2006-11-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54:

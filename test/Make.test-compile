@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.2.2.1 2006/11/17 04:03:12 fang Exp $
+#	$Id: Make.test-compile,v 1.2.2.2 2006/11/19 02:20:08 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -60,8 +60,9 @@ endif
 .haco.indump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
+# or just filter out all text before the persistence header
 .outdump.outdump-filter:
-	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
+	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) | $(GREP) -v "^WARNING" > $@ ; \
 	$(ECHO_FILTERED)
 
 .indump.indump-filter:

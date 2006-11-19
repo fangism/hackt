@@ -5,5 +5,5 @@
 
 chan(bool) X;
 
-// expected to error out at create time
+// expected to warn at create time
 

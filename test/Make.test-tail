@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.60.2.1 2006/11/17 01:47:48 fang Exp $
+#	$Id: Make.test-tail,v 1.60.2.2 2006/11/19 02:20:10 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -34,6 +34,7 @@ ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 # objdump should NOT fail under any circumstances
 # reminder: dump goes to stderr
 DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
+OBJDUMP_APPEND = $(HACKT_OBJDUMP_EXE) $< >> $@ 2>&1
 
 HACO_FLAGS += -I$(srcdir)
 

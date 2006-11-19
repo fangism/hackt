@@ -1,5 +1,6 @@
 // "083.hac"
 // should pass : mixing nonmeta and meta indices
+// create: will issue warnings about dangling channels
 
 template <pint I>
 defproc send_indexed (chan?(int) index; chan!(int) out) {

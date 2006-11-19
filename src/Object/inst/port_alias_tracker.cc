@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.15 2006/11/07 06:34:58 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.15.4.1 2006/11/19 02:20:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -150,6 +150,14 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	}
 {
 	// manually flatten the union-find structure
+	// since this alters the union-find we must make sure that connection
+	// flags are kept coherent, because normally they are only
+	// maintained by the canonical alias of each set.
+	// To accomplish this, we force a flag synchronization between
+	// the new shortest alias and its canonical alias BEFORE
+	// restructuring the union-find.
+	__shortest_alias->update_direction_flags();
+
 	iterator ii(alias_array.begin());
 	// const iterator ee(alias_array.end());
 	for ( ; ii!=e; ++ii) {
@@ -284,6 +292,28 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is only ever instantiated for channels.
+	Walks over all unique channel instances in scope, 
+	and checks for dangling connections.  
+ */
+template <class Tag>
+good_bool
+port_alias_tracker_base<Tag>::check_connections(void) const {
+	bool good = true;
+	const_iterator i(_ids.begin()), e(_ids.end());
+	for ( ; i!=e; ++i) {
+		// grab the canonical alias from each set.
+		INVARIANT(i->second.size());
+		if (!i->second.front()->find()->check_connection().good) {
+			// already have diagnostic message
+			good = false;
+		}
+	}
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 template <class Tag>
 void
@@ -402,6 +432,12 @@ if (has_internal_aliases) {
 	port_alias_tracker_base<bool_tag>::
 		__shorten_canonical_aliases(f.get_instance_pool<bool_tag>());
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+port_alias_tracker::check_channel_connections(void) const {
+	return port_alias_tracker_base<channel_tag>::check_connections();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

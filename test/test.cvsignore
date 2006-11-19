@@ -70,6 +70,7 @@ core.*
 *-sort
 *.sprs
 *.sprsdiff
+*-err
 *-dump
 *-diff
 *.nowarn

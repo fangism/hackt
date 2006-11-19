@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.20 2006/11/07 06:34:20 fang Exp $
+	$Id: footprint.h,v 1.20.4.1 2006/11/19 02:19:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -317,6 +317,10 @@ public:
 	void
 	cflat_aliases(ostream&, const state_manager&,
 		const cflat_options&) const;
+
+	// eventually pass parameter for warning control 
+	good_bool
+	connection_diagnostics(void) const;
 
 	void
 	accept(alias_visitor&) const;

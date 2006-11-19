@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.1.2.3 2006/11/18 06:07:24 fang Exp $
+	$Id: connection_policy.h,v 1.1.2.4 2006/11/19 02:19:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -48,6 +48,15 @@ struct directional_connect_policy<false> {
 
 	good_bool
 	set_connection_flags(const unsigned char) const {
+		return good_bool(true);
+	}
+
+	void
+	__update_flags(const this_type&) const { }
+
+	static
+	good_bool
+	__check_connection(const this_type&) {
 		return good_bool(true);
 	}
 
@@ -177,6 +186,17 @@ public:
 	good_bool
 	set_connection_flags(const unsigned char);
 
+protected:
+	template <class AliasType>
+	void
+	__update_flags(AliasType&);
+
+	template <class AliasType>
+	static
+	good_bool
+	__check_connection(const AliasType&);
+
+public:
 	struct connection_flag_setter {
 		good_bool		status;
 		const unsigned char	update;
@@ -192,9 +212,6 @@ public:
 			}
 		}
 	};	// end struct connection_flag_setter
-
-	void
-	write_flags(const ostream&) const { }
 
 	// only for non-directional channels?
 	// forward_local_to_external_flags(...);

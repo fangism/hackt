@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.18.4.1 2006/11/16 20:28:45 fang Exp $
+	$Id: instance_alias_info.h,v 1.18.4.2 2006/11/19 02:20:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -226,6 +226,12 @@ public:
 	 */
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
+
+	good_bool
+	check_connection(void) const;
+
+	void
+	update_direction_flags(void);
 
 	void
 	finalize_canonicalize(this_type&);

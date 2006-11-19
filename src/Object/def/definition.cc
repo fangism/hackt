@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.34.2.1 2006/11/18 06:07:17 fang Exp $
+ 	$Id: definition.cc,v 1.34.2.2 2006/11/19 02:19:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3104,6 +3104,7 @@ process_definition::__create_complete_type(
 			// already have error message
 			return good_bool(false);
 		}
+		// CHP unrolling also checks channel connectivity now
 		if (!chp.unroll(c, f).good) {
 			// already have error message
 			return good_bool(false);
@@ -3111,10 +3112,7 @@ process_definition::__create_complete_type(
 		// TODO: final pass of channel connectivity over the CHP
 		// body to mark channels as having been connected to 
 		// senders and/or receivers.  
-		// This could conceivably be done inside the unroll-pass.  
-		// TODO: need final pass to issue warnings about
-		// locally dangling channel connections
-		// f.connection_diagnostics();
+		f.connection_diagnostics();	// returns good_bool
 		// f.mark_created();	// ?
 	}
 	return good_bool(true);

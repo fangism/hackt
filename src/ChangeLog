@@ -5,6 +5,16 @@
 
 2006-11-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-54-channel-01-07:
+	  process_definition::create_complete_type():
+		added call to footprint::connection_diagnostics(), 
+		which calls port_alias_tracker::check_connections(), 
+		which checks channels connectivity, and issues diagnostics, 
+		such as unconnected channels.  
+	  Added bunch of test cases to test new channel connectivity checks. 
+		So far working satisfactorily.  
+
+
 	* HACKT-00-01-04-main-00-80-54-channel-01-06:
 	  Added code to check CHP while unrolling for channel connectivity, 
 		compile-time gets the direction correct, but this will

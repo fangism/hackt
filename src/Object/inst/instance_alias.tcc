@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.27.2.3 2006/11/17 06:58:52 fang Exp $
+	$Id: instance_alias.tcc,v 1.27.2.4 2006/11/19 02:20:04 fang Exp $
 	TODO: trim includes
  */
 
@@ -575,6 +575,10 @@ INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: recursive implementation.
+	Every call to find() compresses the path to the canonical node.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) {
@@ -588,6 +592,10 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This non-modifying variant of find() does NOT perform
+	path compression.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) const {
@@ -602,6 +610,33 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre this must be a canonical alias.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::check_connection(void) const {
+	INVARIANT(this->next == this);
+	return direction_connection_policy::__check_connection(*this);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Synchronizes a non-canonical aliases's direction flags with
+	its canonical alias's flags, if applicable.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::update_direction_flags(void) {
+	direction_connection_policy::__update_flags(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called by alias_reference_set::shortest_alias()
+	to manually flatten or restructure the union-find.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(this_type& n) {
@@ -609,6 +644,9 @@ INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(this_type& n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	What does this do again?
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename instance_alias_info<Tag>::substructure_parent_type&
 INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(
