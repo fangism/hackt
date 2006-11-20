@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.31 2006/11/07 06:34:09 fang Exp $
+	$Id: devel_switches.h,v 1.32 2006/11/20 06:07:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -140,10 +140,16 @@
 /**
 	Define to 1 to not serialize scope-alias summaries, but rather
 	regenerate/recache them automatically and on-demand.  
-	This will cut the size of the large binaries by a factor of 2.  
-	Goal: 1?
+	With this on, they are reconstructed upon footprint::load.  
+	This cut the size of the object binaries, by reconstructing
+		redundant (precisely regenerable) information.  
+	Goal: 1? (probably)
 	Priority: low-medium (memory intensive)
-	Status: not begun, but easy
+	Status: done, tested, but not committed.  
+		Results in massive (factor of 2) savings on 
+		large objects, especially top-level hierarchy.
+	NOTE: results in change in binary sizes of course, so regression
+		test cases need to be updated accordingly.
  */
 #define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		0
 

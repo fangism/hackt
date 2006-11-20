@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-55:
+	  In just a few lines enabled scope-alias reconstruction
+		as a replacement for persistent management, which 
+		saves a tons of memory (factor of 2) for binary objects.  
+		Modifications local to "Object/def/footprint.cc".
+	  Did not commit this switch, because test cases not updated.  
+		Will do so after outstanding branches converge.  
+
+
 2006-11-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54:

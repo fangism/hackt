@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.29 2006/11/07 06:34:19 fang Exp $
+	$Id: footprint.cc,v 1.30 2006/11/20 06:07:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <iterator>
 #include "util/hash_specializations.h"
+#include "Object/devel_switches.h"
 #include "Object/def/footprint.tcc"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
@@ -464,7 +465,7 @@ footprint::create_dependent_types(const footprint& top) {
 	Collects all aliases in this scope and also creates a set
 	of port aliases for the sake of replaying internal aliases.  
 	\pre the sequential scope was already played for creation.  
-	TODO: iterate over pools instead of map.  
+	NOTE: this can also called during load-reconstruction.
  */
 void
 footprint::evaluate_scope_aliases(void) {
@@ -675,6 +676,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	prs_footprint.collect_transient_info_base(m);
 	chp_footprint.collect_transient_info_base(m);
 	spec_footprint.collect_transient_info_base(m);
+	// scope/port alias_sets don't have pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -718,8 +720,10 @@ footprint::write_object_base(const persistent_object_manager& m,
 	value_footprint_base<pint_tag>::write_object_base(m, o);
 	value_footprint_base<preal_tag>::write_object_base(m, o);
 
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 	port_aliases.write_object_base(*this, o);
 	scope_aliases.write_object_base(*this, o);
+#endif
 
 	prs_footprint.write_object_base(m, o);
 	chp_footprint.write_object_base(m, o);
@@ -764,8 +768,15 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	value_footprint_base<preal_tag>::load_object_base(m, i);
 	// \pre placeholders have aleady been loaded
 
+#if AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
+	// instead of writing redundant information, reconstruct it!
+	if (created) {
+		evaluate_scope_aliases();
+	}
+#else
 	port_aliases.load_object_base(*this, i);
 	scope_aliases.load_object_base(*this, i);
+#endif
 
 	prs_footprint.load_object_base(m, i);
 	chp_footprint.load_object_base(m, i);
