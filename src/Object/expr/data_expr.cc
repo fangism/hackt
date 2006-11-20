@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.12.6.1 2006/11/18 06:07:20 fang Exp $
+	$Id: data_expr.cc,v 1.12.6.2 2006/11/20 04:57:38 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -496,7 +496,7 @@ int_relational_expr::get_unresolved_data_type_ref(void) const {
 		return return_type(NULL);
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_connectibly_type_equivalent(*rt)) {
+	if (lt->may_be_binop_type_equivalent(*rt)) {
 		return bool_traits::built_in_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
 	} else {
@@ -697,7 +697,7 @@ bool_logical_expr::get_unresolved_data_type_ref(void) const {
 	// type's MAY actually be template dependent
 	// so it's possible to defer, don't just assume they are boolean.
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_connectibly_type_equivalent(*rt))
+	if (lt->may_be_binop_type_equivalent(*rt))
 		return bool_traits::built_in_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
 	else	return return_type(NULL);

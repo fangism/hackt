@@ -1,0 +1,8 @@
+// "connect-029.hac"
+// referencing an array of channels with nonmeta-index
+// should pass unrolling and creating without warnings inside merge
+
+import "nonmeta-bool-merge.hac";
+
+merge traffic;
+

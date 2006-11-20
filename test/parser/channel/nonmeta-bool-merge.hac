@@ -1,0 +1,13 @@
+// "nonmeta-bool-merge.hac" (definition only)
+// referencing an array of channels with nonmeta-index
+// should pass unrolling and creating without warnings inside merge
+
+defproc merge(chan?(bool) B[2]; chan?(int<1>) S) {
+bool b;
+int<1> s;
+chp {
+	*[ S?(s); B[s]?(b) ]
+}
+}
+
+

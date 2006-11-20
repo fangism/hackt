@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.2 2006/11/12 05:58:07 fang Exp $
+#	$Id: Make.test-alloc,v 1.2.2.1 2006/11/20 04:57:46 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -62,6 +62,7 @@ endif
 .allocdump-filter.allocdiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.allocdiff$$/.allocstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_ALLOCDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
@@ -99,6 +100,7 @@ endif
 .allocfaildump.allocfaildiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.allocfaildiff$$/.allocstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_ALLOCFAIL_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
@@ -166,7 +168,7 @@ endif
 .alloc-from-haco-dump-filter.alloc-from-haco-diff:
 	@expect1=`$(ECHO) $@ | $(SED) 's/\.alloc-from-haco-diff$$/.allocdump-filter/g'` ; \
 	expect2=`$(ECHO) $@ | $(SED) 's/\.alloc-from-haco-diff$$/.alloc-from-u-dump-filter/g'` ; \
-	$(ECHO) -n "" > $@ ; \
+	$(RM) $@ ; \
 	if test -f "$$expect1" ; then \
 	  if test -f "$$expect2" ; then \
 	    $(ECHO_ALLOCFROMHACO_DIFF_COMMAND) ; \

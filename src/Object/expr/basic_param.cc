@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.23 2006/10/18 20:57:50 fang Exp $
+ 	$Id: basic_param.cc,v 1.23.8.1 2006/11/20 04:57:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -266,7 +266,11 @@ pint_expr::~pint_expr() {
  */
 count_ptr<const data_type_reference>
 pint_expr::get_unresolved_data_type_ref(void) const {
+#if 0
 	return int_traits::int32_type_ptr;
+#else
+	return int_traits::magic_int_type_ptr;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

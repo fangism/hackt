@@ -1,0 +1,25 @@
+// "connect-035.hac"
+// copy-modified "connect-009.hac"
+// forwarding send channels
+// create: fail because channel is used in CHP and passed as alias
+
+defproc inner(chan!(bool) a) {
+chp { a!(true) }
+}
+
+defproc one_shot(chan!(bool) b) {
+inner y(b);
+chp {
+*[ b!(false) ]			// die here
+}
+}
+
+chan(bool) x;
+one_shot a(x);
+
+// sink one token
+bool y;
+chp {
+x?(y)
+}
+

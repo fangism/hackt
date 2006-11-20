@@ -1,0 +1,26 @@
+// "connect-036.hac"
+// copy-modified from "connect-010.hac"
+// forwarding receive channels
+// create: should fail b/c channel is used in CHP and as alias
+
+defproc inner(chan?(bool) a) {
+bool z;
+chp { a?(z) }
+}
+
+defproc one_shot(chan?(bool) b) {
+inner y(b);
+bool x;
+chp {
+	*[ b?(x) ]		// error here
+}
+}
+
+chan(bool) x;
+one_shot a(x);
+
+// source one token
+chp {
+x!(true)
+}
+

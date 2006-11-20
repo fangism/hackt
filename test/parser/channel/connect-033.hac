@@ -1,0 +1,19 @@
+// "connect-033.hac"
+// copy-modified from "nonmeta-bool-merge.hac"
+// referencing an array of channels with nonmeta-index
+//	also referencing with meta-index
+// should pass unrolling and creating without warnings inside merge
+//	only external dangling channels
+
+defproc merge(chan?(bool) B[2]; chan?(int<1>) S) {
+bool b;
+int<1> s;
+chp {
+	*[ S?(s); B[s]?(b);
+	   B[0]?(b); B[1]?(b)
+	]
+}
+}
+
+merge lanes;
+

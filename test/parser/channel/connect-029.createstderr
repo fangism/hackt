@@ -1,0 +1,132 @@
+WARNING: channel traffic.B[0] lacks connection to a producer.
+WARNING: channel traffic.B[1] lacks connection to a producer.
+WARNING: channel traffic.S lacks connection to a producer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	528
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	504
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    merge = process-definition (defined) merge(
+        chan?(bool<>) B[0..1]
+        chan?(int<1>) S
+      )
+      In definition "merge", we have: {
+      Instances:
+        B = chan?(bool<>) merge::B^1
+        S = chan?(int<1>) merge::S
+        b = bool<> merge::b
+        s = int<1> merge::s
+      unroll sequence: 
+        chan?(bool<>) B[0..1]
+        chan?(int<1>) S
+        bool<> b
+        int<1> s
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(s)
+              B[s]?(b)
+            }
+          ]
+        }
+      footprint: {
+        B = channel chan?(bool<>)^1
+          {
+            [0] = merge::B[0] (2) 
+            [1] = merge::B[1] (3) 
+          }
+        S = channel chan?(int<1>)^0 = merge::S (1) 
+        b = bool^0 = merge::b (1) 
+        s = int<1>^0 = merge::s (1) 
+        Created state:
+        channel instance pool:
+        1	merge::S
+        2	merge::B[0]
+        3	merge::B[1]
+        int instance pool:
+        1	merge::s
+        bool instance pool:
+        1	merge::b
+        resolved concurrent actions:
+          *[
+            sequential: {
+              S?(s)
+              B[s]?(b)
+            }
+          ]
+      }
+      }
+
+  Instances:
+    traffic = merge<> traffic
+}
+
+footprint: {
+  traffic = process merge<>^0 = traffic (1) (
+    B = channel chan?(bool<>)^1
+      {
+        [0] = traffic.B[0] (1) 
+        [1] = traffic.B[1] (2) 
+      }
+    S = channel chan?(int<1>)^0 = traffic.S (3) 
+  )
+  Created state:
+  process instance pool:
+  1	traffic
+  channel instance pool:
+  1	traffic.B[0]
+  2	traffic.B[1]
+  3	traffic.S
+}

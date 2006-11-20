@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.3 2006/11/15 21:56:57 fang Exp $
+#	$Id: Make.test-prsim,v 1.3.2.1 2006/11/20 04:57:48 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -71,6 +71,7 @@ endif
 .prsimexpr.prsimexprdiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.prsimexprdiff$$/.expect-prsimexpr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_PRSIMEXPR_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
@@ -198,6 +199,7 @@ endif
 .prsimrc-out-filter.prsimrc-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.prsimrc-diff$$/.prsimrc-expect/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_PRSIMRC_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
@@ -211,6 +213,7 @@ endif
 .prsimrcfail-out-filter.prsimrcfail-diff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.prsimrcfail-diff$$/.prsimrc-expect/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_PRSIMRC_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
@@ -306,6 +309,7 @@ endif
 
 .prsimckpt-outdump.prsimckpt-diff:
 	@expect=`$(ECHO) $@ | $(SED) 's/\.prsimckpt-diff$$/.prsimckpt-indump/g'` ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_PRSIMCKPT_DIFF_COMMAND) ; \
 	  $(DIFF) -u "$$expect" $< > $@ 2>&1 ; \
@@ -372,6 +376,7 @@ endif
 # consider looking at hexdump too
 .prsimckpt-O1.prsimopt-diff:
 	@unopt=`$(ECHO) $< | $(SED) 's/-O1$$//g'` ; \
+	$(RM) $@ ; \
 	if test -f "$$unopt" ; then \
 	  $(ECHO_PRSIMCKPT_OPT_DIFF_COMMAND) ; \
 	  if $(DIFF) -q "$$unopt" $< ; then \

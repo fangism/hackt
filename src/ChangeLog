@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-08:
+	  pint_expr::get_unresolved_data_type_ref(): now returns the
+		magic int<0> type to allow flexible integer widths.  
+	  Object/expr/data_expr.cc: connectibly type-equivalence
+		replaced with binop-type-equivalence in nonmeta expressions.
+	  Two test cases updated accordingly.  
+	  Added bunch of test cases to check CHP and channel connectivity.
+
+
 2006-11-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54-channel-01-07:

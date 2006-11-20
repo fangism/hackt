@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.2.2.2 2006/11/19 02:20:08 fang Exp $
+#	$Id: Make.test-compile,v 1.2.2.3 2006/11/20 04:57:47 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -81,6 +81,7 @@ endif
 
 .indump-filter.compileobjdiff:
 	@odump=`$(ECHO) $@ | $(SED) 's/\.compileobjdiff$$/.outdump-filter/g'` ; \
+	$(RM) $@ ; \
 	if test -f "$$odump" ; then \
 	  $(ECHO_OBJDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$odump" $< > $@ 2>&1 ; \
@@ -135,6 +136,7 @@ endif
 	@log=`$(ECHO) $@ | $(SED) 's/\.compilewarndiff$$/.compiledump/g'` ; \
 	stderr=`$(ECHO) $@ | $(SED) 's/\.compilewarndiff$$/.stderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  if test -f "$$log" ; then \
 	    $(ECHO_COMPILEWARN_DIFF_COMMAND) ; \
@@ -194,6 +196,7 @@ endif
 .compiledump-filter.compilefaildiff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.compilefaildiff$$/.stderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
+	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_COMPILEDUMP_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \

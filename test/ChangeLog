@@ -1,8 +1,16 @@
 # "test/ChangeLog"
 
+2006-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-08:
+	  Make.test-*: all diff test scripts now start by rm $@, 
+		because empty redirections don't cause overwrites.  
+	  Handful of test cases added to parser/channel.
+
+
 2006-11-18	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-80-57:
+	* HACKT-00-01-04-main-00-80-54-channel-01-07:
 	  Update some dump/filter rules, now that we are logging
 		compiler warnings, and concatenating them to dumps.  
 		This revision mostly affected Make.test-create.

@@ -1,0 +1,21 @@
+// "connect-032.hac"
+// copy-modified from "connect-031.hac"
+// connecting split and merge
+// should result in fewer dangling channels at create time
+
+import "nonmeta-bool-merge.hac";
+import "nonmeta-bool-split.hac";
+
+chan(int<1>) c[2];
+chan(bool) b[2];
+merge lanes(b, c[0]);
+split hairs(b, c[1]);
+
+chp {
+*[ c[0]!(1), c[1]!(1);
+   c[0]!(0), c[1]!(0)
+ ]
+}
+
+// fully connected now
+
