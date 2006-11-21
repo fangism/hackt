@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.5 2005/12/13 04:15:27 fang Exp $
+	$Id: alias_actuals.cc,v 1.5.76.1 2006/11/21 06:02:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -47,6 +47,17 @@ instance_alias_info_actuals::attach_actuals(const alias_actuals_type& a) const {
 		actuals = a;
 		return true;
 	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	\inline?
+ */
+void
+instance_alias_info_actuals::copy_actuals(const this_type& t) {
+	actuals = t.actuals;
 }
 #endif
 

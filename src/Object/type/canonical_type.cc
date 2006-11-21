@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.13 2006/11/07 06:35:30 fang Exp $
+	$Id: canonical_type.cc,v 1.13.4.1 2006/11/21 06:02:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/struct_traits.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 #include "common/TODO.h"
 
 namespace HAC {
@@ -90,6 +91,7 @@ template <>
 struct unroll_port_instances_policy<process_definition> {
 	/**
 		Is this missing the top-level const footprint&?
+		Ans: is now referenced inside the unroll_context.
 	 */
 	void
 	operator () (const canonical_process_type& p, 
@@ -100,6 +102,15 @@ struct unroll_port_instances_policy<process_definition> {
 		const port_formals_manager&
 			pf(p.canonical_definition_ptr->get_port_formals());
 		// template formals/actuals included in footprint already
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+		if (!p.create_definition_footprint(
+				*c.get_top_footprint()).good) {
+			cerr << "Error instantiating process footprint: "
+				<< endl;
+			p.dump(cerr << "From canonical type: ") << endl;
+			THROW_EXIT;
+		}
+#endif
 /***
 	Problem: when type is incomplete, we can't access a footprint
 	because relaxed actuals are missing but required.

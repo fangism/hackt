@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-09:
+	  Implemented hierchical connection information forwarding
+		with switch: PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.
+		This passes connectivity information and relaxed actuals
+		from callee to caller, formal to actual.
+		However, this patch has been left disabled for the moment.
+		Consequence: to forward information accurately, dependent
+			types of collection must be complete and created, 
+			not just unrolled.  This means unroll and create
+			will no longer be useful as separable passes, if
+			unroll requires creating of dependent types.  
+		Testing shows that only expected unroll differences were
+			found and that create tests behaved the same.  
+		Will not enable this patch until after branch merge, 
+			or we arrive at a decision.  
+
+
 2006-11-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-54-channel-01-08:

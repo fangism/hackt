@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.1.2.5 2006/11/19 02:20:03 fang Exp $
+	$Id: connection_policy.tcc,v 1.1.2.6 2006/11/21 06:02:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -9,6 +9,8 @@
 #include <iostream>
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/devel_switches.h"
 #include "common/ICE.h"
 
 #include "util/stacktrace.h"
@@ -92,42 +94,95 @@ directional_connect_policy<true>::synchronize_flags(
 	TODO: propagate local connection information to external, 
 		bottom-up, formal to actual.  
 	Cannot error, as this only initializes direction flags.  
+	Policy: we assume port_formals are connected to their environment
+		to suppress unconnected diagnostics.  
+		However, port actual initializations are left up to
+		an implementation switch: 
+		PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+		if enabled, we don't initialize actuals with their directions, 
+		we infer them from their port summaries.  
+	NOTE: called by instance_alias_info::instantiate().
+	optimization: refactor code to avoid repeated calls to same container.
  */
-template <class ContainerPtrType>
+template <class ContainerType>
 void
 directional_connect_policy<true>::initialize_direction(
-		const ContainerPtrType p) {
-	typedef	typename ContainerPtrType::element_type
-					collection_interface_type;
+		const ContainerType& p) {
+	typedef	ContainerType		collection_interface_type;
 	typedef	typename collection_interface_type::traits_type
 					traits_type;
 	typedef	typename traits_type::tag_type		tag_type;
 	typedef	instance_collection<tag_type>	instance_collection_type;
 	STACKTRACE_VERBOSE;
-	NEVER_NULL(p);
-	const bool f = p->is_formal();
-	const instance_collection_type& c(p->get_canonical_collection());
+	const bool f = p.is_formal();
+	const instance_collection_type& c(p.get_canonical_collection());
 	const char d = c.__get_raw_type().get_direction();
 	switch (d) {
 	case '\0': break;		// leave as initial value
 	case '?':
 		if (f) {
 			direction_flags |= CONNECTED_TO_PRODUCER;
-		} else {
+		}
+#if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+		else {
 			direction_flags |= CONNECTED_TO_CONSUMER;
 		}
+#endif
 		break;
 	case '!':
 		if (f) {
 			direction_flags |= CONNECTED_TO_CONSUMER;
-		} else {
+		}
+#if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+		else {
 			direction_flags |= CONNECTED_TO_PRODUCER;
 		}
+#endif
 		break;
 	default:
 		ICE(cerr, cerr << "Invalid direction.";)
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+/**
+	This variation initializes actuals' aliases (from subinstances)
+	based on how they were connected in their corresponding
+	formal definition collections.  
+	This unmasks the bits that were set in the formal collection
+		to prevent connection in the wrong direction.  
+		Unmasking bits lets us check hierarchically whether or not
+		channels WERE connected properly.  
+	TODO: refactor to avoid repeated redundant calls.  
+	\param a the corresponding alias in the formal collection.  
+ */
+template <class AliasType>
+void
+directional_connect_policy<true>::initialize_actual_direction(
+		const AliasType& a) {
+	typedef	typename AliasType::container_type	collection_interface_type;
+	typedef	typename collection_interface_type::traits_type
+					traits_type;
+	typedef	typename traits_type::tag_type		tag_type;
+	typedef	instance_collection<tag_type>	instance_collection_type;
+
+	// const bool f = p.is_formal();
+	// const instance_collection_type& c(p.get_canonical_collection());
+	const instance_collection_type&
+		c(a.container->get_canonical_collection());
+	const char d = c.__get_raw_type().get_direction();
+	switch (d) {
+	case '\0': direction_flags = a.direction_flags; break;
+	case '?': direction_flags = a.direction_flags & ~CONNECTED_TO_PRODUCER;
+		break;
+	case '!': direction_flags = a.direction_flags & ~CONNECTED_TO_CONSUMER;
+		break;
+	default:
+		ICE(cerr, cerr << "Invalid direction.";)
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

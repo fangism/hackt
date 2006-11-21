@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.27.2.4 2006/11/19 02:20:04 fang Exp $
+	$Id: instance_alias.tcc,v 1.27.2.5 2006/11/21 06:02:26 fang Exp $
 	TODO: trim includes
  */
 
@@ -147,6 +147,9 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively expands the public ports of the instance hierarchy.  
+	The initial state is defined by the meta-type.  
+	\param p the parent actual collection
+	\param c the unroll context for recursive instantiation
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -162,7 +165,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	substructure_parent_type::unroll_port_instances(*this->container, c);
 
 	// initialize directions, if applicable
-	direction_connection_policy::initialize_direction(this->container);
+	direction_connection_policy::initialize_direction(*this->container);
 	// we do this here for now merely for convenience/coverage:
 	// it is certainly correct.  
 	// future optimization: loop-transformation to eliminate
@@ -174,6 +177,34 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		<< endl;
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+/**
+	Variation of instantiate() used to forward local alias information
+		from a formal collection to the actual copy. 
+		In particular, we pass relaxed actuals and channel
+		connectivity information.  
+	\param p the parent actual collection
+	\param c the unroll context for recursive instantiation
+	\param f the corresponding instance alias belonging to the 
+		formal collection.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
+		const port_actuals_ptr_type p, 
+		const unroll_context& c, const this_type& f) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(p);
+	INVARIANT(!this->container);
+	this->container = p;
+	// do we ever want to instantiate more than the ports? no
+	substructure_parent_type::unroll_port_instances(*this->container, c);
+	actuals_parent_type::copy_actuals(f);
+	direction_connection_policy::initialize_actual_direction(f);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.18.4.2 2006/11/19 02:20:04 fang Exp $
+	$Id: instance_alias_info.h,v 1.18.4.3 2006/11/21 06:02:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -17,6 +17,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
 #include "Object/inst/connection_policy.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -30,6 +31,7 @@ struct alias_printer;
 template <class> struct alias_matcher;
 template <class> class collection_interface;
 template <class> class instance_collection_pool_bundle;
+template <class> class port_actual_collection;
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -87,6 +89,10 @@ public:
 	 */
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	typedef	port_actual_collection<Tag>	port_actuals_type;
+	typedef	never_ptr<const port_actuals_type>	port_actuals_ptr_type;
+#endif
 	typedef	collection_interface<Tag>		container_type;
 	typedef	instance_collection_generic_type	canonical_container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
@@ -226,6 +232,12 @@ public:
 	 */
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
+
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	void
+	instantiate_actual_from_formal(const port_actuals_ptr_type, 
+		const unroll_context&, const this_type&);
+#endif
 
 	good_bool
 	check_connection(void) const;

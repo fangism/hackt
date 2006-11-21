@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.3.4.2 2006/11/18 06:07:43 fang Exp $
+	$Id: port_formal_array.tcc,v 1.3.4.3 2006/11/21 06:02:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -592,6 +592,39 @@ PORT_FORMAL_ARRAY_CLASS::set_alias_connection_flags(const unsigned char f) {
 	return for_each(this->begin(), this->end(),
 		typename element_type::connection_flag_setter(f)).status;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+/**
+	Since the formal collection is dense and lexicographically ordered
+	by index, we can quickly iterate over the formal and actual 
+	collections for instantiation-transformation.  
+	\pre dependent types are already created
+		(and any errors already caught)
+		Is currently done in canonical_type::unroll_port_instances()
+ */
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::instantiate_actuals_from_formals(
+		port_actuals_type& p, const unroll_context& c) const {
+	INVARIANT(p.collection_size() == this->collection_size());
+#if 0
+	if (!create_dependent_types(*c.get_top_footprint()).good) {
+		// error message, already have?
+		THROW_EXIT;
+	}
+#endif
+	typename port_actuals_type::iterator i(p.begin()), e(p.end());
+	const_iterator j(this->begin());
+	// only one element to instantiate
+	for ( ; i!=e; ++i, ++j) {
+		i->instantiate_actual_from_formal(
+			never_ptr<const port_actuals_type>(&p), c, *j);
+	}
+	// propagate actuals from formal to actual
+	// propagate direction connection information from formal to actual
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

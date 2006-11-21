@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.1.2.4 2006/11/19 02:19:58 fang Exp $
+	$Id: connection_policy.h,v 1.1.2.5 2006/11/21 06:02:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -29,10 +29,10 @@ struct directional_connect_policy;
 	Operations in this specialization should be no-ops.  
  */
 template <>
-struct directional_connect_policy<false> {
+class directional_connect_policy<false> {
 	typedef	directional_connect_policy<false>	this_type;
 	// default ctor and dtor
-
+protected:
 	/**
 		No-op.  
 	 */
@@ -42,15 +42,20 @@ struct directional_connect_policy<false> {
 		return good_bool(true);
 	}
 
-	template <class ContainerPtrType>
+	template <class ContainerType>
 	void
-	initialize_direction(const ContainerPtrType&) const { }
+	initialize_direction(const ContainerType&) const { }
 
+	void
+	initialize_actual_direction(const this_type&) const { }
+
+public:
 	good_bool
 	set_connection_flags(const unsigned char) const {
 		return good_bool(true);
 	}
 
+protected:
 	void
 	__update_flags(const this_type&) const { }
 
@@ -60,6 +65,7 @@ struct directional_connect_policy<false> {
 		return good_bool(true);
 	}
 
+public:
 	struct connection_flag_setter {
 		const good_bool		status;
 
@@ -74,6 +80,7 @@ struct directional_connect_policy<false> {
 		operator () (const this_type&) const { }
 	};	// end struct collection_connection_flag_setter
 
+protected:
 	void
 	write_flags(const ostream&) const { }
 
@@ -179,14 +186,18 @@ public:
 	good_bool
 	synchronize_flags(AliasType&, AliasType&);
 
-	template <class ContainerPtrType>
-	void
-	initialize_direction(const ContainerPtrType p);
-
 	good_bool
 	set_connection_flags(const unsigned char);
 
 protected:
+	template <class ContainerType>
+	void
+	initialize_direction(const ContainerType&);
+
+	template <class AliasType>
+	void
+	initialize_actual_direction(const AliasType&);
+
 	template <class AliasType>
 	void
 	__update_flags(AliasType&);
