@@ -1,0 +1,13 @@
+// "connect-031.hac"
+// connecting split and merge
+// should result in fewer dangling channels at create time
+
+import "nonmeta-bool-merge.hac";
+import "nonmeta-bool-split.hac";
+
+chan(bool) b[2];
+merge lanes(b, );
+split hairs(b, );
+
+// only int control channels are dangling
+

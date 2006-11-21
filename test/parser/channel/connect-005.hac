@@ -1,0 +1,9 @@
+// "connect-005.hac"
+// should fail because port is dangling, unconnected
+// expect to warn during create
+// (other way of failing: not connected at top-level)
+
+defproc hanging(chan?(bool) x) { }
+
+hanging folder;
+

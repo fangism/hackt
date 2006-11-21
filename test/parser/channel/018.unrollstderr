@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	chanplch	0	#HEAD#	#TAIL#	30
 	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	359
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

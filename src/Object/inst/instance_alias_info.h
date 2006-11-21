@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.18 2006/11/07 06:34:43 fang Exp $
+	$Id: instance_alias_info.h,v 1.19 2006/11/21 22:38:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -16,6 +16,8 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
+#include "Object/inst/connection_policy.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -29,6 +31,7 @@ struct alias_printer;
 template <class> struct alias_matcher;
 template <class> class collection_interface;
 template <class> class instance_collection_pool_bundle;
+template <class> class port_actual_collection;
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -55,7 +58,9 @@ class instance_alias_info :
 		public substructure_alias_base<
 			class_traits<Tag>::has_substructure>, 
 		// was protected
-		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
+		public class_traits<Tag>::instance_alias_relaxed_actuals_type, 
+		public directional_connect_policy<
+			class_traits<Tag>::is_connection_directional> {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 friend class instance_alias_info_actuals;
 public:
@@ -66,6 +71,9 @@ public:
 						substructure_parent_type;
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
+	typedef	directional_connect_policy<
+			traits_type::is_connection_directional>
+						direction_connection_policy;
 	typedef	instance_collection_pool_bundle<Tag>
 						collection_pool_bundle_type;
 	typedef	typename traits_type::instance_type
@@ -81,6 +89,10 @@ public:
 	 */
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	typedef	port_actual_collection<Tag>	port_actuals_type;
+	typedef	never_ptr<const port_actuals_type>	port_actuals_ptr_type;
+#endif
 	typedef	collection_interface<Tag>		container_type;
 	typedef	instance_collection_generic_type	canonical_container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
@@ -150,6 +162,7 @@ public:
 	instance_alias_info() : 
 		substructure_parent_type(), 
 		actuals_parent_type(), 
+		direction_connection_policy(),
 		next(this), 
 		container(NULL) { }
 
@@ -160,6 +173,7 @@ public:
 	instance_alias_info(const container_ptr_type m) :
 		substructure_parent_type(), 
 		actuals_parent_type(), 
+		direction_connection_policy(),
 		next(this), 
 		container(m) {
 	}
@@ -194,7 +208,7 @@ public:
 	const this_type*
 	peek(void) const { return this->next; }
 
-	void
+	good_bool
 	unite(this_type&);
 
 	pseudo_const_iterator
@@ -218,6 +232,18 @@ public:
 	 */
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
+
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	void
+	instantiate_actual_from_formal(const port_actuals_ptr_type, 
+		const unroll_context&, const this_type&);
+#endif
+
+	good_bool
+	check_connection(void) const;
+
+	void
+	update_direction_flags(void);
 
 	void
 	finalize_canonicalize(this_type&);

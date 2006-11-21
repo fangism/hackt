@@ -4,11 +4,16 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.14 2006/11/07 06:34:36 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.15 2006/11/21 22:38:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
+
+#define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
 
 #include <exception>
 #include <iostream>
@@ -25,6 +30,7 @@
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/instance_placeholder.tcc"
 #include "Object/inst/instance_alias.tcc"
+#include "Object/inst/connection_policy.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
 #include "Object/def/datatype_definition_base.h"
@@ -69,6 +75,11 @@ template class port_actual_collection<channel_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_CONSTRUCTORS
+#undef	STACKTRACE_DESTRUCTORS
 
 #endif	// __HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 

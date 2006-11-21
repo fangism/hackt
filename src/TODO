@@ -1,8 +1,15 @@
 "TODO"
-#	$Id: TODO,v 1.46 2006/11/15 00:08:47 fang Exp $
+#	$Id: TODO,v 1.47 2006/11/21 22:38:28 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
+===============================================================================
+Diagnostics:
+	definition-qualified identifiers should include template arguments
+		to distinguish between template variants and namespaces.
+	priority: medium -- affects user's ability to diagnose problems
+	example: test/parser/chp/094.hac (create)
+
 ===============================================================================
 Simulation:
 

@@ -1,0 +1,12 @@
+// "connect-022.hac"
+// copy-modified from "connect-008.hac"
+// should error out connecting two receive-only channels
+
+defproc one_shot(chan?(bool) a) {
+bool _x;
+chp { a?(_x) }
+}
+
+one_shot a, b;
+a.a = b.a;		// error
+

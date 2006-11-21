@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.13 2006/11/07 06:34:14 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.14 2006/11/21 22:38:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -66,6 +66,8 @@
 #define	PINT_VALUE_PLACEHOLDER_TYPE_KEY				"pintplch"
 #define	PREAL_VALUE_PLACEHOLDER_TYPE_KEY			"prealplh"
 
+#if 0
+// OBSOLETE: after footprints took charge of managing instance collections
 // Unique instances, post-unrolling:
 // Instantiations, collections (non-unique):
 #define	PROCESS_INSTANCE_COLLECTION_TYPE_KEY			"proccoll"
@@ -93,6 +95,7 @@
 #define	ENUM_PORT_ACTUAL_COLLECTION_TYPE_KEY			"enumpacc"
 #define	DBOOL_PORT_ACTUAL_COLLECTION_TYPE_KEY			"dboolpac"
 #define	DINT_PORT_ACTUAL_COLLECTION_TYPE_KEY			"dintpacc"
+#endif
 
 // Unique instances, post-unrolling:
 #define	UNIQUE_PROCESS_INSTANCE_TYPE_KEY			"procunis"

@@ -1,0 +1,14 @@
+// "connect-019.hac"
+// copy-modified from "connect-013.hac"
+// unroll: should allow self-aliases
+// create: should warn or fail on dangling channel
+
+defproc senders(chan!(bool) a) {
+	chan(bool) x, y;
+	a = x;
+	a = y;
+	x = y;		// OK, redundant self-aliases
+}
+
+senders z;
+

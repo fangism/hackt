@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.39 2006/11/07 06:34:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.40 2006/11/21 22:38:53 fang Exp $
 	TODO: trim includes
  */
 
@@ -372,6 +372,16 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::is_partially_unrolled(void) const {
 	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false.  Sparse collections can never be formal.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ARRAY_CLASS::is_formal(void) const {
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1038,14 +1048,41 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Applies direction flags to all aliases in collection, 
+	applicable only to channel types.  
+	\param f the direction flags to set.  
+	\return good if successful.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::set_alias_connection_flags(const unsigned char f) {
+	return for_each(this->collection.begin(), this->collection.end(), 
+		typename element_type::connection_flag_setter(f)).status;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+/**
+	For now, sparse collections never referenced as formals, 
+	so this should never be called.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::instantiate_actuals_from_formals(
+		port_actuals_type&, const unroll_context&) const {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Visitor.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 	for_each(this->collection.begin(), this->collection.end(),
-		bind2nd_argval(mem_fun_ref(&element_type::accept), v)
-	);
+		bind2nd_argval(mem_fun_ref(&element_type::accept), v));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1202,6 +1239,16 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::is_partially_unrolled(void) const {
 	return this->the_instance.valid();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if the originating placeholder was formal.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+bool
+INSTANCE_SCALAR_CLASS::is_formal(void) const {
+	return this->source_placeholder->is_port_formal();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1552,6 +1599,43 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 	INVARIANT(pcc.size() == 1);
 	this->the_instance.assign_footprint_frame(ff, pcc, 0);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::set_alias_connection_flags(const unsigned char f) {
+	return this->the_instance.set_connection_flags(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+/**
+	This initializes the scalar instance by propagating formal
+	connection information to the actual.  
+	This forward local information from callee to caller.  
+	\throw general exception if creating dependent types fails.  
+		TODO: better error handling.
+	\pre dependent types are already created (and errors rejected)
+		Is currently done in canonical_type::unroll_port_instances.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::instantiate_actuals_from_formals(
+		port_actuals_type& p, const unroll_context& c) const {
+	INVARIANT(p.collection_size() == 1);
+#if 0
+	if (!create_dependent_types(*c.get_top_footprint()).good) {
+		// error message, already have?
+		THROW_EXIT;
+	}
+#endif
+	// only one element to instantiate
+	p.begin()->instantiate_actual_from_formal(
+		never_ptr<const port_actuals_type>(&p), c, this->the_instance);
+	// propagate actuals from formal to actual
+	// propagate direction connection information from formal to actual
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

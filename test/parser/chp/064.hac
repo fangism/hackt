@@ -1,4 +1,6 @@
 // "064.hac"
+// should pass unrolling
+// create: expect diagnostic about dangling channels
 
 import "063.hac";
 

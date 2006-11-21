@@ -1,6 +1,6 @@
 % "chapters/channels.tex"
 
-%	$Id: channels.tex,v 1.5 2006/11/15 21:56:44 fang Exp $
+%	$Id: channels.tex,v 1.6 2006/11/21 22:38:20 fang Exp $
 
 \chapter{Channels}
 \label{sec:channels}
@@ -125,6 +125,7 @@ in a block.
 Channels that are missing connection to a producer or consumer
 should be rejected.  Basically, when a channel is deduced as dangling, 
 at least a diagnostic should be issued.  
+\tbf{Resolution}: issue warning diagnostic, without rejecting outright.
 
 \tbf{Proposal}: Shared channels:
 Thus far, we've described one-to-one channels where producers
@@ -160,6 +161,31 @@ When referenced externally, as a member of process,
 
 TODO: examples.  
 
+\tbf{Q}: should process aliases be allowed, 
+if processes declare directional channel ports?
+(Without further modification, they are rejected when attempting to 
+connect ports recursively.)
+Example:
+
+\begin{verbatim}
+defproc sink(chan?(bool) X) { }
+sink x, y;
+x = y; // results in x.X = y.X
+\end{verbatim}
+
+\tbf{Q}: What is the initial `connected' state of a non-directional
+channel port?
+
+\tbf{Q}: Should local `connected' state information be propagated
+from formal collections' aliases to actual collections' aliases?
+With this, channels that are locally dangling can be properly connected
+hierarchically.  
+This may help check connectivity of non-directional channels.  
+NOTE: this would also apply to relaxed actuals, and is a necessary step
+towards properly implementing them (a general mechanism to propagate
+local information externally).  
+TODO: illustrative examples.  
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fundamental Channel Types}
 \label{sec:channels:fundamental}
@@ -170,6 +196,9 @@ Until now, we've used \ttt{chan(bool)} without discussing its meaning.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{User-defined Channel Types}
 \label{sec:channels:userdef}
+
+User-defined channel types are dsecriptions of physical implementations
+of abstract channels and interfaces.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Issues}

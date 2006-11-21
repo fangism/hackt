@@ -1,0 +1,6 @@
+// "connect-030.hac"
+
+import "nonmeta-bool-split.hac";
+
+split pea_soup;
+

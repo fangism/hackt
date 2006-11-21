@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "POM-header-filter.awk"
-#	$Id: POM-header-filter.awk.in,v 1.2 2006/10/24 21:09:32 fang Exp $
+#	$Id: POM-header-filter.awk.in,v 1.3 2006/11/21 22:39:17 fang Exp $
 # filter for text dump of persistent_object_manager's object header
 
 # NOTE: when used as a pipe redirected from stdout combined with stderr,
@@ -19,7 +19,7 @@ if (match($0,"^Persistent Object Manager")) {
 } else if (match($0,"^In module created from")) {
 	gsub(": [^ ]*[ ]", ": ##FILE## ",$0);
 	print $0;
-} else if (match($0, "^WARNING")) {
+# } else if (match($0, "^WARNING")) {
 	# then filter out this line
 } else {
 	print;		# crashes???

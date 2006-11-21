@@ -1,0 +1,22 @@
+// "connect-027.hac"
+// copy-modified from "connect-009.hac"
+// should pass, forwarding send channels
+// makes sure that multiple channel references don't result in connection error
+
+defproc inner(chan!(bool) a) {
+chp { a!(true); a!(false) }
+}
+
+defproc one_shot(chan!(bool) b) {
+inner y(b);
+}
+
+chan(bool) x;
+one_shot a(x);
+
+// sink one token
+bool y;
+chp {
+x?(y); x?(y)
+}
+

@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.20 2006/11/07 06:35:28 fang Exp $
+	$Id: struct_traits.h,v 1.21 2006/11/21 22:39:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -32,6 +32,7 @@ struct class_traits<datastruct_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
+	static const bool		is_connection_directional = false;
 	enum {		is_nonmeta_data_lvalue = true		};
 
 	/**

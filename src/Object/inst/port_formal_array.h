@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.3 2006/11/07 06:34:59 fang Exp $
+	$Id: port_formal_array.h,v 1.4 2006/11/21 22:38:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -70,6 +70,9 @@ public:
 					instance_collection_parameter_type;
 	typedef	typename parent_type::collection_pool_bundle_type
 					collection_pool_bundle_type;
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	typedef	typename parent_type::port_actuals_type	port_actuals_type;
+#endif
 private:
 	typedef	typename array_type::iterator	iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
@@ -121,6 +124,9 @@ public:
 	bool
 	is_partially_unrolled(void) const;	// true
 
+	bool
+	is_formal(void) const;			// true
+
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
 
@@ -149,8 +155,14 @@ public:
 	void
 	accept(alias_visitor&) const;
 
+	SET_ALIAS_CONNECTION_FLAGS_PROTO;
+
 	instance_alias_info_type&
 	load_reference(istream&);
+
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO;
+#endif
 
 private:
 	iterator

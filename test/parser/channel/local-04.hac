@@ -1,0 +1,6 @@
+// "local-04.hac"
+// should fail -- reject scope-local declarations of directional channels
+
+defproc nobody() {
+chan!(bool) one_eyed_jack;
+}

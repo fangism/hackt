@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.3 2006/11/07 06:34:44 fang Exp $
+	$Id: instance_array.h,v 1.4 2006/11/21 22:38:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -65,6 +65,9 @@ public:
 					instance_placeholder_ptr_type;
 	enum { dimensions = D };
 private:
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	typedef	typename parent_type::port_actuals_type	port_actuals_type;
+#endif
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
 	typedef	element_type&				reference;
@@ -88,6 +91,9 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;
+
+	bool
+	is_formal(void) const;		// false
 
 	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const;
@@ -154,6 +160,11 @@ public:
 	void
 	accept(alias_visitor&) const;
 
+	SET_ALIAS_CONNECTION_FLAGS_PROTO;
+
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO;
+#endif
 public:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

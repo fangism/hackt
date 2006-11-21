@@ -1,0 +1,199 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	433
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	37	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	442
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	70	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	71	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	73	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	81	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	83	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	footprnt	0	#HEAD#	#TAIL#	595
+	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    merge = process-definition (defined) merge(
+        chan?(bool<>) B[0..1]
+        chan?(int<1>) S
+      )
+      In definition "merge", we have: {
+      Instances:
+        B = chan?(bool<>) merge::B^1
+        S = chan?(int<1>) merge::S
+        b = bool<> merge::b
+        s = int<1> merge::s
+      unroll sequence: 
+        chan?(bool<>) B[0..1]
+        chan?(int<1>) S
+        bool<> b
+        int<1> s
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(s)
+              B[s]?(b)
+            }
+          ]
+        }
+      footprint: {
+        B = channel chan?(bool<>)^1
+          {
+            [0] = merge::B[0] 
+            [1] = merge::B[1] 
+          }
+        S = channel chan?(int<1>)^0 = merge::S 
+        b = bool^0 = merge::b 
+        s = int<1>^0 = merge::s 
+      }
+      }
+
+    split = process-definition (defined) split(
+        chan!(bool<>) B[0..1]
+        chan?(int<1>) S
+      )
+      In definition "split", we have: {
+      Instances:
+        B = chan!(bool<>) split::B^1
+        S = chan?(int<1>) split::S
+        s = int<1> split::s
+      unroll sequence: 
+        chan!(bool<>) B[0..1]
+        chan?(int<1>) S
+        int<1> s
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(s)
+              B[s]!(true)
+            }
+          ]
+        }
+      footprint: {
+        B = channel chan!(bool<>)^1
+          {
+            [0] = split::B[0] 
+            [1] = split::B[1] 
+          }
+        S = channel chan?(int<1>)^0 = split::S 
+        s = int<1>^0 = split::s 
+      }
+      }
+
+  Instances:
+    b = chan(bool<>) b^1
+    hairs = split<> hairs
+    lanes = merge<> lanes
+}
+
+footprint: {
+  b = channel chan(bool<>)^1
+    {
+      [0] = lanes.B[0] 
+      [1] = lanes.B[1] 
+    }
+  hairs = process split<>^0 = hairs (
+    B = channel chan!(bool<>)^1
+      {
+        [0] = hairs.B[0] 
+        [1] = hairs.B[1] 
+      }
+    S = channel chan?(int<1>)^0 = hairs.S 
+  )
+  lanes = process merge<>^0 = lanes (
+    B = channel chan?(bool<>)^1
+      {
+        [0] = hairs.B[0] 
+        [1] = hairs.B[1] 
+      }
+    S = channel chan?(int<1>)^0 = lanes.S 
+  )
+}

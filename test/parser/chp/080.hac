@@ -1,6 +1,7 @@
 // "080.hac"
 // copy-modified from "075.hac"
-// should pass : unrolling and creating
+// should pass : unrolling
+// create: will warn about dangling channels
 
 template <pint B>
 defproc send_me(chan!(int) b) {

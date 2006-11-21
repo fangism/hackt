@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.5 2006/11/07 06:34:50 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.6 2006/11/21 22:38:53 fang Exp $
 	TODO: trim includes
  */
 
@@ -321,7 +321,6 @@ INSTANCE_PLACEHOLDER_CLASS::make_collection(footprint& f) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// re-write, need persistent type-key
 /**
 	initial_instantiation_statement_ptr is permitted to be NULL
 	for instance collections that belong to footprints.  

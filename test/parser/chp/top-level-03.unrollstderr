@@ -33,6 +33,15 @@ In namespace "", we have: {
     y = bool<> y
 }
 
+top-level chp:
+  concurrent: {
+    *[
+      x := true
+    ]
+    *[
+      y := false
+    ]
+  }
 footprint: {
   x = bool^0 = x 
   y = bool^0 = y 

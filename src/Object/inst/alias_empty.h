@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.11 2006/11/07 06:34:34 fang Exp $
+	$Id: alias_empty.h,v 1.12 2006/11/21 22:38:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -79,6 +79,10 @@ public:
 	}
 
 protected:
+	// no actuals to forward!
+	void
+	copy_actuals(const this_type&) const { }
+
 	/**
 		Thus far, no meta types without alias actuals can have 
 		substructure.  

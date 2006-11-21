@@ -1,0 +1,13 @@
+// "connect-016.hac"
+// copy-modified from "connect-015.hac"
+// should error out connecting two receive-only channels
+
+defproc receivers(chan?(bool) a, b) {
+	chan(bool) x, y;
+	a = x;
+	b = y;
+	x = y;		// error
+}
+
+receivers z;
+

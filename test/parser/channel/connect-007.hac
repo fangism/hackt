@@ -1,0 +1,10 @@
+// "connect-007.hac"
+// should error out connecting two send-only channels
+
+defproc one_shot(chan!(bool) a) {
+chp { a!(true) }
+}
+
+chan(bool) x;
+one_shot a(x), b(x);		// error
+

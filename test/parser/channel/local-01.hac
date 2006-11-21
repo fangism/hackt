@@ -1,0 +1,5 @@
+// "local-01.hac"
+// should fail -- reject scope-local declarations of directional channels
+
+chan?(bool) one_eyed_jack;
+

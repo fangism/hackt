@@ -1,6 +1,7 @@
 // "082.hac"
 // copy-modified from "078.hac"
-// should pass : unrolling and creating
+// should pass : unrolling
+// create: expect warnings about dangling channels
 
 template <pint N; pint B[N]; pint M>
 defproc compute_me(chan!(int<16>) b) {

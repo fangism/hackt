@@ -28,6 +28,9 @@ In namespace "", we have: {
     b = bool<> b
 }
 
+top-level prs:
+  a -> b-
+
 footprint: {
   a = bool^0 = a (1) 
   b = bool^0 = b (2) 

@@ -1,0 +1,310 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	501
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	37	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	528
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	70	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	71	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	72	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	74	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	77	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	79	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	80	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	83	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	85	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	87	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	91	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	98	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	99	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	102	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	104	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	106	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	110	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	111	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	112	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	114	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	115	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	116	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	117	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	118	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	122	##ADDR##	footprnt	0	#HEAD#	#TAIL#	882
+	123	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	124	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	125	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	126	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    merge = process-definition (defined) merge(
+        chan?(bool<>) B[0..1]
+        chan?(int<1>) S
+      )
+      In definition "merge", we have: {
+      Instances:
+        B = chan?(bool<>) merge::B^1
+        S = chan?(int<1>) merge::S
+        b = bool<> merge::b
+        s = int<1> merge::s
+      unroll sequence: 
+        chan?(bool<>) B[0..1]
+        chan?(int<1>) S
+        bool<> b
+        int<1> s
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(s)
+              B[s]?(b)
+            }
+          ]
+        }
+      footprint: {
+        B = channel chan?(bool<>)^1
+          {
+            [0] = merge::B[0] (2) 
+            [1] = merge::B[1] (3) 
+          }
+        S = channel chan?(int<1>)^0 = merge::S (1) 
+        b = bool^0 = merge::b (1) 
+        s = int<1>^0 = merge::s (1) 
+        Created state:
+        channel instance pool:
+        1	merge::S
+        2	merge::B[0]
+        3	merge::B[1]
+        int instance pool:
+        1	merge::s
+        bool instance pool:
+        1	merge::b
+        resolved concurrent actions:
+          *[
+            sequential: {
+              S?(s)
+              B[s]?(b)
+            }
+          ]
+      }
+      }
+
+    split = process-definition (defined) split(
+        chan!(bool<>) B[0..1]
+        chan?(int<1>) S
+      )
+      In definition "split", we have: {
+      Instances:
+        B = chan!(bool<>) split::B^1
+        S = chan?(int<1>) split::S
+        s = int<1> split::s
+      unroll sequence: 
+        chan!(bool<>) B[0..1]
+        chan?(int<1>) S
+        int<1> s
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(s)
+              B[s]!(true)
+            }
+          ]
+        }
+      footprint: {
+        B = channel chan!(bool<>)^1
+          {
+            [0] = split::B[0] (2) 
+            [1] = split::B[1] (3) 
+          }
+        S = channel chan?(int<1>)^0 = split::S (1) 
+        s = int<1>^0 = split::s (1) 
+        Created state:
+        channel instance pool:
+        1	split::S
+        2	split::B[0]
+        3	split::B[1]
+        int instance pool:
+        1	split::s
+        resolved concurrent actions:
+          *[
+            sequential: {
+              S?(s)
+              B[s]!(true)
+            }
+          ]
+      }
+      }
+
+  Instances:
+    b = chan(bool<>) b^1
+    c = chan(int<1>) c^1
+    hairs = split<> hairs
+    lanes = merge<> lanes
+}
+
+top-level chp:
+  concurrent: {
+    *[
+      sequential: {
+        concurrent: {
+          c[0]!(1)
+          c[1]!(1)
+        }
+        concurrent: {
+          c[0]!(0)
+          c[1]!(0)
+        }
+      }
+    ]
+  }
+footprint: {
+  b = channel chan(bool<>)^1
+    {
+      [0] = b[0] (1) 
+      [1] = b[1] (2) 
+    }
+  c = channel chan(int<1>)^1
+    {
+      [0] = c[0] (3) 
+      [1] = c[1] (4) 
+    }
+  hairs = process split<>^0 = hairs (2) (
+    B = channel chan!(bool<>)^1
+      {
+        [0] = b[0] (1) 
+        [1] = b[1] (2) 
+      }
+    S = channel chan?(int<1>)^0 = c[1] (4) 
+  )
+  lanes = process merge<>^0 = lanes (1) (
+    B = channel chan?(bool<>)^1
+      {
+        [0] = b[0] (1) 
+        [1] = b[1] (2) 
+      }
+    S = channel chan?(int<1>)^0 = c[0] (3) 
+  )
+  Created state:
+  process instance pool:
+  1	lanes
+  2	hairs
+  channel instance pool:
+  1	b[0]
+  2	b[1]
+  3	c[0]
+  4	c[1]
+  resolved concurrent actions:
+    *[
+      sequential: {
+        concurrent: {
+          c[0]!(1)
+          c[1]!(1)
+        }
+        concurrent: {
+          c[0]!(0)
+          c[1]!(0)
+        }
+      }
+    ]
+}

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.27 2006/11/15 21:56:53 fang Exp $
+	$Id: instance_alias.tcc,v 1.28 2006/11/21 22:38:51 fang Exp $
 	TODO: trim includes
  */
 
@@ -101,6 +101,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) : 
 		substructure_parent_type(t), 
 		actuals_parent_type(t),
+		direction_connection_policy(t), 
 		next(this), 
 		container(t.container) {
 	INVARIANT(t.next == &t);
@@ -146,6 +147,9 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively expands the public ports of the instance hierarchy.  
+	The initial state is defined by the meta-type.  
+	\param p the parent actual collection
+	\param c the unroll context for recursive instantiation
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -157,8 +161,15 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	STACKTRACE_INDENT_PRINT("this->container (old) = " <<
 		&*this->container << endl);
 	this->container = p;
+	// do we ever want to instantiate more than the ports? no
 	substructure_parent_type::unroll_port_instances(*this->container, c);
-	// do we ever want to instantiate more than the ports?
+
+	// initialize directions, if applicable
+	direction_connection_policy::initialize_direction(*this->container);
+	// we do this here for now merely for convenience/coverage:
+	// it is certainly correct.  
+	// future optimization: loop-transformation to eliminate
+	// repeated redundant function calls (only affects channels)
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("this->container (new) = " <<
 		&*this->container << endl);
@@ -166,6 +177,34 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		<< endl;
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+/**
+	Variation of instantiate() used to forward local alias information
+		from a formal collection to the actual copy. 
+		In particular, we pass relaxed actuals and channel
+		connectivity information.  
+	\param p the parent actual collection
+	\param c the unroll context for recursive instantiation
+	\param f the corresponding instance alias belonging to the 
+		formal collection.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
+		const port_actuals_ptr_type p, 
+		const unroll_context& c, const this_type& f) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(p);
+	INVARIANT(!this->container);
+	this->container = p;
+	// do we ever want to instantiate more than the ports? no
+	substructure_parent_type::unroll_port_instances(*this->container, c);
+	actuals_parent_type::copy_actuals(f);
+	direction_connection_policy::initialize_actual_direction(f);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
@@ -372,6 +411,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
 	This version of connect is symmetric and tailored to port connections,
 	and is called from simple_meta_instance_reference::connect_port.  
 	This effectively checks for connectible-type-equivalence.  
+	optimization: any need to check for self-aliases? uncommon.
 	\param l an alias of this type.  
 	\param r an alias of this type.  
  */
@@ -384,8 +424,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 		return good_bool(false);
 	}
 	// TODO: policy-based check of directions, (channels-only)
-	l.unite(r);
-	return l.connect_port_aliases_recursive(r);
+	return good_bool(l.unite(r).good &&
+		l.connect_port_aliases_recursive(r).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -393,6 +433,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 	This version of connect is slightly asymmetric and tailored for
 	connecting aliases, called by alias_connection::unroll.  
 	This effectively checks for connectible-type-equivalence.  
+	optimization: any need to check for self-aliases? uncommon.
 	\param l is the (unchanging) leftmost instance reference, 
 		which always contains relaxed actuals IF anything in
 		the connection list has actuals.  
@@ -410,8 +451,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
 		return good_bool(false);
 	}
 	// TODO: policy-based check of directions, (channels-only)
-	l.unite(r);
-	return l.connect_port_aliases_recursive(r);
+	return good_bool(l.unite(r).good &&
+		l.connect_port_aliases_recursive(r).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -538,7 +579,6 @@ ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o,
 		const dump_flags& df) const {
 	return dump_alias(o, df);
-	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -546,18 +586,30 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 	return dump_alias(o, dump_flags::default_value);
-	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to check for pointer equality?  Same result either way.
+	TODO: return an error if applicable
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 	STACKTRACE_VERBOSE;
-	this->find()->next = &*r.find();
+	const pseudo_iterator lc(this->find());
+	this_type* const rc = &*r.find();
+	lc->next = rc;
+	// synchronize direction_connection_flags
+	return direction_connection_policy::synchronize_flags(*lc, *rc);
+		// commutative
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: recursive implementation.
+	Every call to find() compresses the path to the canonical node.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) {
@@ -571,6 +623,10 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This non-modifying variant of find() does NOT perform
+	path compression.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) const {
@@ -585,6 +641,33 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre this must be a canonical alias.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::check_connection(void) const {
+	INVARIANT(this->next == this);
+	return direction_connection_policy::__check_connection(*this);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Synchronizes a non-canonical aliases's direction flags with
+	its canonical alias's flags, if applicable.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::update_direction_flags(void) {
+	direction_connection_policy::__update_flags(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called by alias_reference_set::shortest_alias()
+	to manually flatten or restructure the union-find.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(this_type& n) {
@@ -592,6 +675,9 @@ INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(this_type& n) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	What does this do again?
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename instance_alias_info<Tag>::substructure_parent_type&
 INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(
@@ -746,6 +832,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(const footprint& f,
 	NEVER_NULL(this->container);	// no need to write out
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(f, o);
+	direction_connection_policy::write_flags(o);
 //	else skip, collection will write connections later...
 }
 
@@ -765,6 +852,7 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(const footprint& f,
 	read_value(i, this->instance_index);
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(f, i);
+	direction_connection_policy::read_flags(i);
 //	else skip, collection will load connections later...
 }
 

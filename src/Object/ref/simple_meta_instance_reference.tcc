@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.27 2006/11/07 06:35:17 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.28 2006/11/21 22:38:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -62,6 +62,31 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
 		parent_type(), 
 		inst_collection_ref(pi) {
 	NEVER_NULL(inst_collection_ref);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Special ctor that attaches indices initially. 
+	\param pi placeholder instance pointer.
+	\param i indices.  
+	\pre in this variation, we require dimensions to be exact
+		and not underspecified with the indices, i.e. only
+		allowed for scalar references (for now).  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
+		const instance_placeholder_ptr_type pi, 
+		indices_ptr_arg_type i) :
+		common_base_type(i), 
+		parent_type(), 
+		inst_collection_ref(pi) {
+	NEVER_NULL(inst_collection_ref);
+#if 0
+	INVARIANT(i && (i->size() == this->inst_collection_ref->get_dimensions())
+		|| !this->inst_collection_ref->get_dimensions());
+#else
+	INVARIANT(!this->dimensions());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

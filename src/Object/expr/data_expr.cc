@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.12 2006/10/24 07:27:01 fang Exp $
+	$Id: data_expr.cc,v 1.13 2006/11/21 22:38:41 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/operator_precedence.h"
 #include "Object/expr/const_index_list.h"
+#include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/pint_const.h"
 
 #include "Object/persistent_type_hash.h"
@@ -495,7 +496,7 @@ int_relational_expr::get_unresolved_data_type_ref(void) const {
 		return return_type(NULL);
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_connectibly_type_equivalent(*rt)) {
+	if (lt->may_be_binop_type_equivalent(*rt)) {
 		return bool_traits::built_in_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
 	} else {
@@ -696,7 +697,7 @@ bool_logical_expr::get_unresolved_data_type_ref(void) const {
 	// type's MAY actually be template dependent
 	// so it's possible to defer, don't just assume they are boolean.
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_connectibly_type_equivalent(*rt))
+	if (lt->may_be_binop_type_equivalent(*rt))
 		return bool_traits::built_in_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
 	else	return return_type(NULL);
@@ -1094,6 +1095,27 @@ nonmeta_index_list::make_const_index_list(multikey_index_type& l) const {
 		}
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Attempts to r
+ */
+count_ptr<dynamic_meta_index_list>
+nonmeta_index_list::make_meta_index_list(void) const {
+	typedef	count_ptr<dynamic_meta_index_list>	return_type;
+	const return_type ret(new dynamic_meta_index_list);
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		const count_ptr<const meta_index_expr>
+			mie(i->is_a<const meta_index_expr>());
+		if (mie)
+			ret->push_back(mie);
+		else return return_type(NULL);
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.9 2006/11/07 06:34:58 fang Exp $
+	$Id: port_alias_tracker.h,v 1.10 2006/11/21 22:38:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -98,6 +98,9 @@ public:
 	alias_reference_set();
 	~alias_reference_set();
 
+	size_t
+	size(void) const { return this->alias_array.size(); }
+
 	void
 	push_back(const alias_ptr_type);
 
@@ -112,6 +115,9 @@ public:
 
 	const_iterator
 	end(void) const { return alias_array.end(); }
+
+	typename alias_array_type::const_reference
+	front(void) const { return alias_array.front(); }
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
@@ -175,6 +181,10 @@ protected:
 	__shorten_canonical_aliases(
 		instance_pool<state_instance<Tag> >&);
 
+	// only applicable to channels, really
+	good_bool
+	check_connections(void) const;
+
 #if 0
 	void
 	collect_map(persistent_object_manager&) const;
@@ -190,6 +200,9 @@ protected:
 
 //=============================================================================
 /**
+	This really should be renamed alias_tracker, as its use is not
+	just restricted to ports.  
+
 	Used to count aliases over structres whose connections have been
 	played and unique placeholder ID numbers have been assigned.  
 	Note: this can be reused to for tracking both internal aliases
@@ -240,6 +253,9 @@ public:
 
 	void
 	shorten_canonical_aliases(footprint&);
+
+	good_bool
+	check_channel_connections(void) const;
 
 public:
 	void

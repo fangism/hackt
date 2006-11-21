@@ -23,7 +23,16 @@ done
 
 for i
 do
-	cp -f $i.createdump-filter $srcdir/$i.createstderr
-	echo "Updated $srcdir/$i.createstderr"
+	if test -f $i.createdump-filter
+	then
+		cp -f $i.createdump-filter $srcdir/$i.createstderr
+		echo "Updated $srcdir/$i.createstderr"
+	elif test -f $i.createfaildump
+	then
+		cp -f $i.createfaildump $srcdir/$i.createstderr
+		echo "Updated $srcdir/$i.createstderr"
+	else
+		echo "$i.createdump-filter or $i.createfaildump required but missing."
+	fi
 done
 

@@ -5,12 +5,46 @@
 
 2006-11-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-57-merged-channel-01-09:
+	  Merged channel-01(-09) branch.
+	  Summary: channel aliases now have directional connection
+		semantics -- each alias (set) having producer/consumer flags.
+		As connections are made, flag are checked and updated
+		for conflicts.  Final checking reports dangling channels.  
+		Also includes (disabled) patch for propagating connection
+		summary information from formals to actuals, including
+		channel direction and relaxed actuals.  Enabling this patch
+		will obsolete the unroll phase.  
+	  Minor fixes: unresolved data-type of pint is int<0> (magic)
+
+
+2006-11-21	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-56:
 	  Explicitly instantiated a few more templates to make it build
 		with powerpc-apple-darwin8 g++-4.0.1 -O3 optimizations.  
 		AST/PRS.cc, AST/SPEC.cc, and added packed_array.tcc
 		to Object/unroll/expression_assignment.tcc.
 	  Test suite actually speeds up by around 10% over -O2.  
+
+
+2006-11-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-09:
+	  Implemented hierchical connection information forwarding
+		with switch: PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.
+		This passes connectivity information and relaxed actuals
+		from callee to caller, formal to actual.
+		However, this patch has been left disabled for the moment.
+		Consequence: to forward information accurately, dependent
+			types of collection must be complete and created, 
+			not just unrolled.  This means unroll and create
+			will no longer be useful as separable passes, if
+			unroll requires creating of dependent types.  
+		Testing shows that only expected unroll differences were
+			found and that create tests behaved the same.  
+		Will not enable this patch until after branch merge, 
+			or we arrive at a decision.  
 
 
 2006-11-20	David Fang		<fangism@users.sourceforge.net>
@@ -22,6 +56,83 @@
 		Modifications local to "Object/def/footprint.cc".
 	  Did not commit this switch, because test cases not updated.  
 		Will do so after outstanding branches converge.  
+
+
+2006-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-08:
+	  pint_expr::get_unresolved_data_type_ref(): now returns the
+		magic int<0> type to allow flexible integer widths.  
+	  Object/expr/data_expr.cc: connectibly type-equivalence
+		replaced with binop-type-equivalence in nonmeta expressions.
+	  Two test cases updated accordingly.  
+	  Added bunch of test cases to check CHP and channel connectivity.
+
+
+2006-11-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-07:
+	  process_definition::create_complete_type():
+		added call to footprint::connection_diagnostics(), 
+		which calls port_alias_tracker::check_connections(), 
+		which checks channels connectivity, and issues diagnostics, 
+		such as unconnected channels.  
+	  Added bunch of test cases to test new channel connectivity checks. 
+		So far working satisfactorily.  
+
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-06:
+	  Added code to check CHP while unrolling for channel connectivity, 
+		compile-time gets the direction correct, but this will
+		account for dangling channels, for example.  
+	  Some more documentation, with semantics questions.  
+	  New directional connection flags: CHP-produced/consumer, 
+		and non-meta indexed.  
+	  TODO: test cases for new features.
+	  TODO: propagate local connection state from formals to actuals.  
+
+
+2006-11-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-05:
+	  Minor bug fix in direction flag synchronization (missed
+		reference declaration!).  
+	  Added more test cases for channel direction checking
+		to parser/channel.  
+	  Plan: test create-phase and add a CHP pass for channel use checking.  
+
+
+2006-11-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-04:
+	  Forced printing of top-level prs/chp/spec in module, mimicking
+		process_definition, for better diagnostics in test suite.  
+		Few test cases updated as a result.
+
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-03:
+	  Implemented a connection direction checking policy in
+		Object/inst/connection_policy.tcc.
+		Correctly rejects mis-connections of channels.  
+	  Tested (successfully) new test cases for directional connections.  
+
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-02:
+	  No source revision.  
+	  Updated regression test cases, to reflect new footprint size.  
+
+
+	* HACKT-00-01-04-main-00-80-54-channel-01-01:
+	  New branch for updates to channel semantics: type-checking
+		and connection checking.
+	  AST/instance.cc: reject non-port directional channel declarations.  
+	  Added Object/inst/connection_policy.{h,tcc,cc}:
+		implements direction-connection semantics for channels
+		with additional direction flags per alias,  
+		not yet complete.  (Introduces 43 temporary regressions, 
+		cause by change in footprint size for channels.)
+	  Written and added bunch of test-cases to parser/channel: 
+		goal is to pass all of them before branch is over.  
 
 
 2006-11-15	David Fang		<fangism@users.sourceforge.net>

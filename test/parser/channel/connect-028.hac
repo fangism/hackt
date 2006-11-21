@@ -1,0 +1,21 @@
+// "connect-028.hac"
+// copy-modified from "connect-010.hac"
+// should pass, forwarding receive channels
+
+defproc inner(chan?(bool) a) {
+bool z;
+chp { a?(z); a?(z) }
+}
+
+defproc one_shot(chan?(bool) b) {
+inner y(b);
+}
+
+chan(bool) x;
+one_shot a(x);
+
+// source two tokens
+chp {
+x!(true); x!(false)
+}
+

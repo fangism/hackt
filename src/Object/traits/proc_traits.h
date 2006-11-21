@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.18 2006/11/07 06:35:28 fang Exp $
+	$Id: proc_traits.h,v 1.19 2006/11/21 22:39:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -35,6 +35,7 @@ struct class_traits<process_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = true;
 	static const bool		has_production_rules = true;
+	static const bool		is_connection_directional = false;
 
 	/**
 		closure for may-contains, defined by specialization only.

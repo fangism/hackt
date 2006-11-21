@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.27 2006/11/07 06:34:14 fang Exp $
+ 	$Id: module.cc,v 1.28 2006/11/21 22:38:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -149,21 +149,34 @@ module::dump(ostream& o) const {
 
 	global_namespace->dump(o) << endl;
 	const footprint& _footprint(get_footprint());
+	const expr_dump_context& dc(expr_dump_context::default_value);
 	if (!is_unrolled()) {
 		o << "Sequential instance management (to unroll): " << endl;
-		sequential_scope::dump(o,
-			expr_dump_context::default_value);
-		if (!prs.empty()) {
-			o << auto_indent << "top-level prs:" << endl;
-			INDENT_SECTION(o);
-			const PRS::rule_dump_context rdc(*global_namespace);
-			prs.dump(o, rdc) << endl;
-		}
-		return o;
-	} else {
-		footprint_map.dump(o, expr_dump_context::default_value)
-			<< endl;
+		sequential_scope::dump(o, dc);
 	}
+	// PRS
+	if (!prs.empty()) {
+		o << auto_indent << "top-level prs:" << endl;
+		INDENT_SECTION(o);
+		const PRS::rule_dump_context rdc(*global_namespace);
+		prs.dump(o, rdc) << endl;
+	}
+	// CHP
+	if (!chp.empty()) {
+		o << auto_indent << "top-level chp:" << endl;
+		INDENT_SECTION(o);
+		chp.dump(o << auto_indent, dc) << endl;
+	}
+	// SPEC
+	if (!spec.empty()) {
+		o << auto_indent << "top-level spec:" << endl;
+		INDENT_SECTION(o);
+		const PRS::rule_dump_context rdc(*this);
+		spec.dump(o, rdc);	// << endl;
+	}
+
+	if (is_unrolled()) {
+		footprint_map.dump(o, expr_dump_context::default_value) << endl;
 	if (is_allocated()) {
 #if 0
 		// only for debugging
@@ -171,6 +184,7 @@ module::dump(ostream& o) const {
 #endif
 		o << "Globally allocated state:" << endl;
 		global_state.dump(o, _footprint);
+	}
 	}
 	return o;
 }

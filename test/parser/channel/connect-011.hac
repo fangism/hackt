@@ -1,0 +1,13 @@
+// "connect-011.hac"
+// should fail: incorrect channel direction in connection
+
+defproc inner(chan!(bool) a) {
+chp { a!(true) }
+}
+
+defproc one_shot(chan?(bool) b) {
+inner y(b);			// error
+}
+
+one_shot a;
+
