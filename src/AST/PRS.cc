@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.22 2006/11/07 06:34:06 fang Exp $
+	$Id: PRS.cc,v 1.23 2006/11/21 05:00:10 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -848,6 +848,9 @@ template
 node_list<const PRS::body_item>::node_list(const PRS::body_item*);
 
 template
+node_list<const PRS::body_item>::~node_list();
+
+template
 ostream&
 node_list<const PRS::body_item>::what(ostream&) const;
 
@@ -864,6 +867,9 @@ node_list<const PRS::body_item>::rightmost(void) const;
 
 template
 node_list<const PRS::attribute>::node_list(const PRS::attribute*);
+
+template
+node_list<const PRS::attribute>::~node_list();
 
 template
 ostream&

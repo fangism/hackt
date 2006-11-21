@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-56:
+	  Explicitly instantiated a few more templates to make it build
+		with powerpc-apple-darwin8 g++-4.0.1 -O3 optimizations.  
+		AST/PRS.cc, AST/SPEC.cc, and added packed_array.tcc
+		to Object/unroll/expression_assignment.tcc.
+	  Test suite actually speeds up by around 10% over -O2.  
+
+
 2006-11-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-55:

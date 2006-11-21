@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.6 2006/04/23 07:37:17 fang Exp $
+	$Id: SPEC.cc,v 1.7 2006/11/21 05:00:12 fang Exp $
  */
 
 #include <iostream>
@@ -188,6 +188,7 @@ body::check_build(context& c) const {
 
 // template class node_list<const directive>;
 template node_list<const SPEC::directive>::node_list(const SPEC::directive*);
+template node_list<const SPEC::directive>::~node_list();
 template ostream& node_list<const SPEC::directive>::what(ostream&) const;
 template line_position node_list<const SPEC::directive>::leftmost(void) const;
 template line_position node_list<const SPEC::directive>::rightmost(void) const;
