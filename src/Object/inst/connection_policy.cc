@@ -1,13 +1,13 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.2 2006/11/21 22:38:50 fang Exp $
+	$Id: connection_policy.cc,v 1.3 2006/11/22 14:55:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include "Object/inst/connection_policy.h"
-#include "util/IO_utils.h"
+#include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
 namespace HAC {
