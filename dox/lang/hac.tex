@@ -1,12 +1,8 @@
 % "hac.tex"
 
-%	$Id: hac.tex,v 1.7 2006/11/26 04:41:06 fang Exp $
+%	$Id: hac.tex,v 1.8 2006/11/26 21:16:24 fang Exp $
 
 \documentclass[12pt]{book}
-
-% for dependency-tracking macros
-% \input maketexdepend		% ../mk/maketexdepend
-% \maketexdependignorepattern{maketexdepend}
 
 \usepackage{ifpdf}
 \usepackage{verbatim}
@@ -62,8 +58,6 @@
   {\end{quote}\end{sectionexample}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \maketexdependignore{hacdef.tex}
-% \maketexdependignorepattern{hacdef}
 \input hacdef		% from $(srcdir)/../common/hacdef.tex
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -114,7 +108,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
-% \maketexdependadd{hac.bib}
 \bibliography{hac}
 
 \clearpage

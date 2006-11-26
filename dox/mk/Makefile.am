@@ -1,5 +1,5 @@
 # "dox/mk/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2006/11/26 04:41:09 fang Exp $
+#	$Id: Makefile.am,v 1.7 2006/11/26 21:16:27 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -13,7 +13,8 @@ include $(top_srcdir)/Make.stddef
 
 # mktexdep = maketexdepend.tex
 # maketexdepend.{awk,tex} are now obsolete
-EXTRA_DIST += maketexdepend.awk maketexdepend.tex
+# EXTRA_DIST += maketexdepend.awk maketexdepend.tex
+
 EXTRA_DIST += Make.latex scantexdepend.awk
 
 AUTO_IGNORE += local.cvsignore

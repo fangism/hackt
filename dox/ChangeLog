@@ -1,5 +1,12 @@
 "dox/ChageLog"
-	$Id: ChangeLog,v 1.7 2006/11/26 04:41:02 fang Exp $
+	$Id: ChangeLog,v 1.8 2006/11/26 21:16:23 fang Exp $
+
+2006-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-59:
+	  Removed traces of maketexdepend, leaving only scantexdepend.
+	  Still sits in CVS, but no longer distributed or mentioned.  
+
 
 2006-11-25	David Fang		<fangism@users.sourceforge.net>
 

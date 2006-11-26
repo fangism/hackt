@@ -1,11 +1,7 @@
 % "hackt.tex"
-%	$Id: hackt.tex,v 1.2 2006/11/26 04:41:18 fang Exp $
+%	$Id: hackt.tex,v 1.3 2006/11/26 21:16:31 fang Exp $
 
 \documentclass[12pt]{book}
-
-% for dependency-tracking macros
-% \input maketexdepend		% ../mk/maketexdepend
-% \maketexdependignorepattern{maketexdepend}
 
 \usepackage{ifpdf}
 \usepackage{verbatim}
@@ -44,8 +40,6 @@
 \setlength{\textheight}{8.5in}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \maketexdependignore{hacdef.tex}
-% \maketexdependignorepattern{hacdef}
 \input hacdef		% from $(srcdir)/../common/hacdef.tex
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,7 +67,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
-% \maketexdependadd{hackt.bib}
 % \bibliography{hac}
 
 \clearpage
