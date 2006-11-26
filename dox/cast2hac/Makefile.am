@@ -1,5 +1,5 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2006/11/12 05:57:44 fang Exp $
+#	$Id: Makefile.am,v 1.9 2006/11/26 04:41:03 fang Exp $
 
 PDFS = cast2hac.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -26,8 +26,11 @@ EXTRA_DIST += \
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
--include cast2hac.depend
-AUTO_DEPENDS += cast2hac.depend
+# -include cast2hac.depend
+# AUTO_DEPENDS += cast2hac.depend
+-include cast2hac.pdfdepend
+-include cast2hac.dvidepend
+AUTO_DEPENDS += cast2hac.pdfdepend cast2hac.dvidepend
 
 include $(top_srcdir)/dox/Make.dox-tail
 

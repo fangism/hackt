@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.6 2006/06/26 01:45:22 fang Exp $
+#	$Id: Make.dox-head,v 1.7 2006/11/26 04:41:03 fang Exp $
 #	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
@@ -17,11 +17,14 @@ PSNUP = psnup
 # PDFLATEX = pdflatex
 # BIBTEX = bibtex
 # MAKEINDEX = makeindex
-MAKETEXDEPEND = $(AWK) -f $(top_srcdir)/dox/mk/maketexdepend.awk \
-	-v script=$(top_srcdir)/dox/mk/maketexdepend.awk -v srcdir=$(srcdir) \
-	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
 
-SUFFIXES = .ps .dvi .tex .pdf .depend .ind .idx .bbl .aux
+# MAKETEXDEPEND s now obsolete
+# MAKETEXDEPEND = $(AWK) -f $(top_srcdir)/dox/mk/maketexdepend.awk \
+#	-v script=$(top_srcdir)/dox/mk/maketexdepend.awk -v srcdir=$(srcdir) \
+#	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
+
+SUFFIXES = .ps .dvi .tex .pdf .ind .idx .bbl .aux \
+	.dvidepend .pdfdepend
 
 # where various documents (pdf, ps) should be installed
 docdir = $(pkgdatadir)/doc

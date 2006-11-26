@@ -4,7 +4,7 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.10 2006/11/15 21:56:46 fang Exp $
+#	$Id: Make.latex,v 1.11 2006/11/26 04:41:08 fang Exp $
 
 # useful macros
 # some of these are defined to be specific to this (hackt) project
@@ -14,20 +14,36 @@ AUTOTEXINPUTS = $(COMMONINPUTS)"$$TEXINPUTS"$(PATH_SEPARATOR)
 AUTOBIBINPUTS = $(COMMONINPUTS)"$$BIBINPUTS"$(PATH_SEPARATOR)
 
 # dependence generation
-.tex.depend:
-	@$(ECHO) "Generating auto-dependencies $@..."
-	@if test -f $@ ; then \
-		$(MAKETEXDEPEND) $< > $@.new ; \
-		if ! $(DIFF) -q $@ $@.new ; then \
-			mv -f $@.new $@ ; \
-			$(ECHO) "Updated $@." ; \
-		else 	$(RM) $@.new ; \
-			$(ECHO) "$@ is unchanged."; \
-			$(TOUCH) $@; \
-		fi > /dev/null ; \
-	else	$(MAKETEXDEPEND) $< > $@ ; \
-		$(ECHO) "Created $@." ; \
-	fi
+# this is now obsolete
+# .tex.depend:
+#	@$(ECHO) "Generating auto-dependencies $@..." ; \
+#	if test -f $@ ; then \
+#		$(MAKETEXDEPEND) $< > $@.new ; \
+#		if ! $(DIFF) -q $@ $@.new ; then \
+#			mv -f $@.new $@ ; \
+#			$(ECHO) "Updated $@." ; \
+#		else 	$(RM) $@.new ; \
+#			$(ECHO) "$@ is unchanged."; \
+#			$(TOUCH) $@; \
+#		fi > /dev/null ; \
+#	else	$(MAKETEXDEPEND) $< > $@ ; \
+#		$(ECHO) "Created $@." ; \
+#	fi
+
+SCANTEXDEPEND_FILTER = $(AWK) -f $(top_srcdir)/dox/mk/scantexdepend.awk
+SCANTEXDEPEND_SCRIPT = $(ECHO) -n "$@:" > $$depfile ; \
+	$(CAT) $*.log | $(SCANTEXDEPEND_FILTER) >> $$depfile
+
+# create dummy dependencies first, overwrite later
+# .pdf.pdfdepend:
+#	@:
+.tex.pdfdepend:
+	@$(TOUCH) $@
+
+# .dvi.dvidepend:
+#	@:
+.tex.dvidepend:
+	@$(TOUCH) $@
 
 # makeindex
 .idx.ind:
@@ -50,6 +66,7 @@ endif
 .tex.dvi:
 if HAVE_LATEX
 	@bldroot=$(get_bldroot) ; \
+	depfile=$@depend ; \
 	$(ECHO) "Generating $$bldroot.dvi..." ; \
 	if test -f $$bldroot.stamp ; then \
 		if $(GREP) -q $(PDFLATEX) $$bldroot.stamp ; then \
@@ -57,11 +74,12 @@ if HAVE_LATEX
 	fi ; \
 	TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null ; \
 	$(ECHO) $(LATEX) > $$bldroot.stamp ; \
+	$(ECHO) "Generating auto-dependencies $*.log..." ; \
+	$(SCANTEXDEPEND_SCRIPT) ; \
 	if $(GREP) "TeX capacity" $$bldroot.log; \
 		then $(ECHO) SHIT ; \
 	fi ; \
-	$(MAKE) $$bldroot.bbl ; \
-	$(MAKE) $$bldroot.ind ; \
+	$(MAKE) $$bldroot.bbl $$bldroot.ind ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null; \
@@ -83,6 +101,7 @@ endif
 .tex.pdf:
 if HAVE_PDFLATEX
 	@bldroot=$(get_bldroot) ; \
+	depfile=$@depend ; \
 	$(ECHO) "Generating $$bldroot.pdf..." ; \
 	if test -f $$bldroot.stamp ; then \
 		if $(GREP) -q $(PDFLATEX) $$bldroot.stamp ; then \
@@ -90,11 +109,12 @@ if HAVE_PDFLATEX
 	fi ; \
 	TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
 	$(ECHO) $(PDFLATEX) > $$bldroot.stamp ; \
+	$(ECHO) "Generating auto-dependencies $*.log..." ; \
+	$(SCANTEXDEPEND_SCRIPT) ; \
 	if $(GREP) "TeX capacity" $$bldroot.log; \
 		then $(ECHO) SHIT ; \
 	fi ; \
-	$(MAKE) $$bldroot.bbl ; \
-	$(MAKE) $$bldroot.ind ; \
+	$(MAKE) $$bldroot.bbl $$bldroot.ind ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
@@ -140,15 +160,18 @@ clean-index:
 	-$(RM) *.idx *.ind *.ilg *.out
 
 clean-aux:
-	-$(RM) *.aux *.log *.toc *.depend
+	-$(RM) *.aux *.log *.toc
 
-clean-depend:
+distclean-depend:
 	-$(RM) *.depend
+	-$(RM) *.*depend
 
 clean-docs:
 	-$(RM) *.ps *.dvi *.pdf
 
-clean-local: clean-docs clean-temps clean-depend
+clean-local: clean-docs clean-temps
+
+distclean-local: distclean-depend
 
 .PHONY: help-latex
 help-latex:

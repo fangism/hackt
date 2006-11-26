@@ -1,5 +1,5 @@
 # "dox/objfmt/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2006/11/12 05:57:50 fang Exp $
+#	$Id: Makefile.am,v 1.9 2006/11/26 04:41:12 fang Exp $
 
 PDFS = objfmt.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -21,8 +21,11 @@ EXTRA_DIST += objfmt.tex \
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
--include objfmt.depend
-AUTO_DEPENDS += objfmt.depend
+# -include objfmt.depend
+# AUTO_DEPENDS += objfmt.depend
+-include objfmt.pdfdepend
+-include objfmt.dvidepend
+AUTO_DEPENDS += objfmt.pdfdepend objfmt.dvidepend
 
 include $(top_srcdir)/dox/Make.dox-tail
 

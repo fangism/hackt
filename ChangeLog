@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-11-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-58:
+	  dox/ChangeLog only -- improved LaTeX dependency management.  
+
+
 2006-11-14	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-53:

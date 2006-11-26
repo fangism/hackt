@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2006/11/12 05:57:49 fang Exp $
+#	$Id: Makefile.am,v 1.21 2006/11/26 04:41:05 fang Exp $
 
 PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -30,8 +30,13 @@ EXTRA_DIST += \
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
--include hac.depend
-AUTO_DEPENDS += hac.depend
+# -include hac.depend
+# AUTO_DEPENDS += hac.depend 
+-include hac.pdfdepend
+-include hac.dvidepend
+AUTO_DEPENDS += hac.pdfdepend hac.dvidepend
+
+hac.pdf hac.dvi: $(srcdir)/hac.bib
 
 include $(top_srcdir)/dox/Make.dox-tail
 

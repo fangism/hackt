@@ -1,5 +1,5 @@
 # "dox/mk/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2006/05/26 07:26:58 fang Exp $
+#	$Id: Makefile.am,v 1.6 2006/11/26 04:41:09 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -12,8 +12,9 @@ include $(top_srcdir)/Make.stddef
 # to ensure a sucessful VPATH build of the documents.  
 
 # mktexdep = maketexdepend.tex
-
-EXTRA_DIST += maketexdepend.awk maketexdepend.tex Make.latex
+# maketexdepend.{awk,tex} are now obsolete
+EXTRA_DIST += maketexdepend.awk maketexdepend.tex
+EXTRA_DIST += Make.latex scantexdepend.awk
 
 AUTO_IGNORE += local.cvsignore
 DISTCLEANFILES += local.cvsignore

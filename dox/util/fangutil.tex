@@ -1,12 +1,12 @@
 % "fangutil.tex"
 
-%	$Id: fangutil.tex,v 1.3 2006/05/26 07:27:05 fang Exp $
+%	$Id: fangutil.tex,v 1.4 2006/11/26 04:41:20 fang Exp $
 
 \documentclass[12pt]{book}
 
 % for dependency-tracking macros
-\input maketexdepend		% ../mk/maketexdepend.tex
-\maketexdependignorepattern{maketexdepend}
+% \input maketexdepend		% ../mk/maketexdepend.tex
+% \maketexdependignorepattern{maketexdepend}
 
 \usepackage{ifpdf}
 \usepackage{verbatim}
@@ -71,7 +71,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
-\maketexdependadd{fangutil.bib}
+% \maketexdependadd{fangutil.bib}
 \bibliography{fangutil}
 
 \clearpage
