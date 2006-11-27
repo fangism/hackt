@@ -173,7 +173,7 @@ Persistent Object Manager text dump:
 	169	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	170	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	171	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
-	172	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	172	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

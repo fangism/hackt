@@ -51,7 +51,7 @@ Persistent Object Manager text dump:
 	47	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	48	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	50	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

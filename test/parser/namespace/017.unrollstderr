@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
 	6	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

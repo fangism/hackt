@@ -32,14 +32,14 @@ Persistent Object Manager text dump:
 	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	377
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	327
 	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	33	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	373
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)

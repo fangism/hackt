@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	308
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	76
 	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -20,15 +20,15 @@ Persistent Object Manager text dump:
 	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
 	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	357
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	307
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.35 2006/11/27 10:36:37 fang Exp $
+	$Id: devel_switches.h,v 1.36 2006/11/27 20:37:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -198,7 +198,7 @@
 	NOTE: results in change in binary sizes of course, so regression
 		test cases need to be updated accordingly.
  */
-#define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		0
+#define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		1
 
 //=============================================================================
 

@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.6 2006/11/27 08:30:19 fang Exp $
+	$Id: mem-01.hac,v 1.7 2006/11/27 20:42:37 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -189,13 +189,24 @@ hohoho rum[10][10];
 /** FILE SIZES as of HACKT-00-01-04-main-00-80-60
 // after discovering that subinstances' (actual-collections') aliases
 // were getting counted multiple times redundantly, we decided to fix it.
-// times: 2/6/6 s
--rw-r--r-- 1 davidfang    82893 Nov 27 02:12 mem-01.haco
--rw-r--r-- 1 davidfang 30677641 Nov 27 02:13 mem-01.haco-a
--rw-r--r-- 1 davidfang 17876341 Nov 27 02:13 mem-01.haco-c
--rw-r--r-- 1 davidfang  8612588 Nov 27 02:13 mem-01.haco-u
+// times: 2/6/6 s (on i686-apple-darwin)
+-rw-r--r-- 1 user    82893 Nov 27 02:12 mem-01.haco
+-rw-r--r-- 1 user 30677641 Nov 27 02:13 mem-01.haco-a
+-rw-r--r-- 1 user 17876341 Nov 27 02:13 mem-01.haco-c
+-rw-r--r-- 1 user  8612588 Nov 27 02:13 mem-01.haco-u
 // Wow, there goes a factor of 2!
 // next: enable scope-alias regeneration at load-time
+**/
+
+/** FILE SIZES as of HACKT-00-01-04-main-00-80-62
+// after enabling scope-alias regeneration upon loading
+// little time-space tradeoff
+// times: 2/5/8 s (on i686-apple-darwin)
+-rw-r--r--   1 user     85019 Nov 27 13:32 mem-01.haco
+-rw-r--r--   1 user  25083625 Nov 27 13:33 mem-01.haco-a
+-rw-r--r--   1 user  12282325 Nov 27 13:32 mem-01.haco-c
+-rw-r--r--   1 user   8614606 Nov 27 13:32 mem-01.haco-u
+// saves about 25% in space, at the cost of re-doing some work
 **/
 
 

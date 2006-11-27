@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.61 2006/11/21 22:39:16 fang Exp $
+#	$Id: Make.test-tail,v 1.62 2006/11/27 20:37:59 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -98,8 +98,12 @@ DISTHOOK_CLEANFILES += $(BOGUS_TARGETS)
 
 CHECK_SUMMARIES +=
 
-check-summaries: $(CHECK_SUMMARIES)
+check-summaries: check-summaries-recursive
+
+check-summaries-am: $(CHECK_SUMMARIES)
 	-@ls -l $(CHECK_SUMMARIES)
+
+MORE_RECURSIVE_TARGETS += check-summaries-recursive
 
 srcdir_EXTRA_DIST +=
 
@@ -175,8 +179,12 @@ clean-tests-local:
 
 MORE_CLEAN_RECURSIVE_TARGETS += clean-tests-recursive
 
-clean-summaries:
+clean-summaries: clean-summaries-recursive clean-summaries-local
+
+clean-summaries-local:
 	$(RM) $(CHECK_SUMMARIES)
+
+MORE_CLEAN_RECURSIVE_TARGETS += clean-summaries-recursive
 
 MORE_CLEAN_RECURSIVE_TARGETS += distclean-depend-recursive
 
@@ -207,8 +215,8 @@ distclean-local: cleaner-local distclean-depend-local
 #TODO: use RECURSIVE_TARGET_SCRIPT
 MORE_CLEAN_RECURSIVE_TARGETS += cleaner-recursive
 
-.PHONY: cleaner cleaner-am cleaner-local \
-	clean-tests help-test clean-summaries \
+.PHONY: cleaner cleaner-am cleaner-local check-summaries check-summaries-am \
+	clean-tests help-test clean-summaries clean-summaries-local \
 	distclean-depend distclean-depend-local
 
 help-local: help-test
@@ -216,7 +224,7 @@ help-local: help-test
 help-test:
 	@$(ECHO) "Test make targets:"
 	@$(ECHO) "    cleaner: also cleans *.<ext> files (recursive)"
-	@$(ECHO) "    check-summaries: summaries of test difference into patch file"
+	@$(ECHO) "    check-summaries: summaries of test differences (recursive)"
 	@$(ECHO) "	(produces: $(CHECK_SUMMARIES))"
 	@$(ECHO) "    echo-*:"
 	@$(ECHO) "	hackt: path to the built hackt executable"

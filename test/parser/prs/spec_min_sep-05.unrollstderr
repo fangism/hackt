@@ -57,10 +57,10 @@ Persistent Object Manager text dump:
 	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
 	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	417
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
 	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)

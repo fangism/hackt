@@ -25,11 +25,11 @@ Persistent Object Manager text dump:
 	21	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	357
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	307
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)

@@ -60,7 +60,7 @@ Persistent Object Manager text dump:
 	56	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
 	57	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
