@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.3 2006/11/21 22:39:16 fang Exp $
+#	$Id: Make.test-create,v 1.4 2006/11/27 08:29:21 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -267,7 +267,10 @@ clean-createtests:
 	-$(RM_PATTERN) "*.createfaildiff"
 	-$(RM_PATTERN) "*.haco-c-dump"
 	-$(RM_PATTERN) "*.createdump-filter"
+	-$(RM_PATTERN) "*.createdump-filter-noindex"
 	-$(RM_PATTERN) "*.createdump.filter"
+	-$(RM_PATTERN) "*.createstderr-noindex"
+	-$(RM_PATTERN) "*.creatediff-noindex"
 	-$(RM_PATTERN) "*.create-from*"
 	-$(RM_PATTERN) "*.haco-c-from*"
 

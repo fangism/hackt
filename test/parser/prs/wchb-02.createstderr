@@ -155,7 +155,7 @@ Persistent Object Manager text dump:
 	151	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	152	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	153	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	154	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1496
+	154	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1420
 	155	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	156	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	157	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -170,7 +170,7 @@ Persistent Object Manager text dump:
 	166	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	167	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	168	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	169	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1073
+	169	##ADDR##	footprnt	0	#HEAD#	#TAIL#	925
 	170	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	171	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	172	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

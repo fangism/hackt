@@ -90,7 +90,7 @@ Persistent Object Manager text dump:
 	86	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	87	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	4088
+	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	3696
 	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	24

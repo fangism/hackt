@@ -1,12 +1,15 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.16 2006/11/21 22:38:54 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.17 2006/11/27 08:29:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include <functional>
+#include <algorithm>
+#include <iterator>
+
 #include "Object/inst/port_alias_tracker.tcc"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
@@ -21,6 +24,7 @@
 #include "Object/traits/bool_traits.h"
 
 #include "util/persistent_object_manager.h"
+#include "util/copy_if.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -32,6 +36,9 @@ namespace entity {
 using util::read_value;
 using util::write_value;
 using util::auto_indent;
+using util::copy_if;
+using std::for_each;
+using std::back_inserter;
 
 //=============================================================================
 #if 0
@@ -170,6 +177,39 @@ alias_reference_set<Tag>::shortest_alias(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COPY_IF_PORT_ALIASES
+/**
+	Can this be replaced with mem_fun(&alias_type::is_port_alias())?
+	Need compose with dereference to mem_fun_ref.
+	Give me tr1::mem_fn!
+ */
+template <class Tag>
+struct alias_reference_set<Tag>::port_alias_predicate {
+	bool
+	operator () (const const_alias_ptr_type a) const {
+		const bool ret = a->is_port_alias();
+#if ENABLE_STACKTRACE
+		a->dump_hierarchical_name(STACKTRACE_INDENT) << " is ";
+		if (!ret) cerr << "not ";
+		cerr << "a formal alias." << endl;
+#endif
+		return ret;
+	}
+};	// end struct port_alias_predicate
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+alias_reference_set<Tag>::__import_port_aliases(const this_type& s) {
+	STACKTRACE_VERBOSE;
+	alias_array.clear();	// just in case
+	copy_if(s.alias_array.begin(), s.alias_array.end(), 
+		back_inserter(alias_array), port_alias_predicate());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
 template <class Tag>
 void
@@ -209,10 +249,12 @@ alias_reference_set<Tag>::load_object_base(
 			&alias_type::load_alias_reference(m, i)));
 	}
 }
+#endif	// AUTO_CACHE_FOOTPRPINT_SCOPE_ALIASES
 
 //=============================================================================
 // class port_alias_tracker_base method definitions
 
+#if !COPY_IF_PORT_ALIASES
 /**
 	Removes all unique entries of the alias map, i.e. all alias sets
 	with only one alias.  
@@ -234,6 +276,7 @@ port_alias_tracker_base<Tag>::filter_unique(void) {
 		}
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -314,6 +357,49 @@ port_alias_tracker_base<Tag>::check_connections(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COPY_IF_PORT_ALIASES
+/**
+	Functor for importing port aliases.  
+	TODO: mark as visibility hiddden, no need to export.
+ */
+template <class Tag>
+struct port_alias_tracker_base<Tag>::port_alias_importer {
+	port_alias_tracker_base<Tag>&		tracker;
+
+	explicit
+	port_alias_importer(port_alias_tracker_base<Tag>& t) :
+		tracker(t) { }
+
+	void
+	operator () (const value_type& p) {
+		STACKTRACE_VERBOSE;
+		// minor optimization: use insert() to get an iterator
+		// and use it to erase to avoid second tree lookup.
+		typename map_type::mapped_type& m(tracker._ids[p.first]);
+		m.__import_port_aliases(p.second);
+		// discard if empty or only has unique alias (filter unique)
+		if (m.is_unique()) {
+			tracker._ids.erase(p.first);
+		}
+	}
+};	// end struct port_alias_importer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Filters port_aliases from a map of alias sets into another.  
+	\param t the source of scope-aliases.  
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__import_port_aliases(const this_type& t) {
+	STACKTRACE_VERBOSE;
+	const_iterator i(t._ids.begin()), e(t._ids.end());
+	for_each(i, e, port_alias_importer(*this));
+}
+#endif	// COPY_IF_PORT_ALIASES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
 template <class Tag>
 void
@@ -358,6 +444,7 @@ port_alias_tracker_base<Tag>::load_map(const footprint& f, istream& i) {
 	}
 	INVARIANT(_ids.size() == s);
 }
+#endif	// AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 
 //=============================================================================
 // class port_alias_tracker method definitions
@@ -376,6 +463,7 @@ port_alias_tracker::port_alias_tracker() :
 port_alias_tracker::~port_alias_tracker() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !COPY_IF_PORT_ALIASES
 /**
 	Removes all unique aliases from all sets.  
  */
@@ -395,6 +483,7 @@ port_alias_tracker::filter_uniques(void) {
 		!port_alias_tracker_base<int_tag>::_ids.empty() ||
 		!port_alias_tracker_base<bool_tag>::_ids.empty();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
@@ -435,10 +524,41 @@ if (has_internal_aliases) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only need to check channels, other meta-types don't have directions.  
+	TODO: other things will need to be checked, like relaxed actual
+		type completion.  
+ */
 good_bool
 port_alias_tracker::check_channel_connections(void) const {
 	return port_alias_tracker_base<channel_tag>::check_connections();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COPY_IF_PORT_ALIASES
+/**
+	This collects aliases that are only ports, and
+	filters out unique sets.  
+	For alias replay and reconstruction from callee to caller.  
+ */
+void
+port_alias_tracker::import_port_aliases(const this_type& t) {
+	STACKTRACE_VERBOSE;
+	port_alias_tracker_base<process_tag>::__import_port_aliases(t);
+	port_alias_tracker_base<channel_tag>::__import_port_aliases(t);
+	port_alias_tracker_base<datastruct_tag>::__import_port_aliases(t);
+	port_alias_tracker_base<enum_tag>::__import_port_aliases(t);
+	port_alias_tracker_base<int_tag>::__import_port_aliases(t);
+	port_alias_tracker_base<bool_tag>::__import_port_aliases(t);
+	has_internal_aliases =
+		!port_alias_tracker_base<process_tag>::_ids.empty() ||
+		!port_alias_tracker_base<channel_tag>::_ids.empty() ||
+		!port_alias_tracker_base<datastruct_tag>::_ids.empty() ||
+		!port_alias_tracker_base<enum_tag>::_ids.empty() ||
+		!port_alias_tracker_base<int_tag>::_ids.empty() ||
+		!port_alias_tracker_base<bool_tag>::_ids.empty();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -455,6 +575,8 @@ if (has_internal_aliases) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
+#if 0
 void
 port_alias_tracker::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -470,6 +592,7 @@ if (has_internal_aliases) {
 #endif
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -498,6 +621,7 @@ if (has_internal_aliases) {
 	port_alias_tracker_base<bool_tag>::load_map(m, i);
 }
 }
+#endif	// AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 
 //=============================================================================
 // explicit template instantiations

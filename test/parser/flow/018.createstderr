@@ -100,7 +100,7 @@ Persistent Object Manager text dump:
 	96	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	97	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	98	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	99	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2148
+	99	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1707
 	100	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	101	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	102	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20

@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	574
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	554
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

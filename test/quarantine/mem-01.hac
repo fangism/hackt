@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-	$Id: mem-01.hac,v 1.5 2006/11/07 06:40:29 fang Exp $
+	$Id: mem-01.hac,v 1.6 2006/11/27 08:30:19 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -185,4 +185,17 @@ hohoho rum[10][10];
 // If we can find a way to regenerate alias information upon reconstruction
 // or a way of auto-caching, then we could save that much space again...
 **/
+
+/** FILE SIZES as of HACKT-00-01-04-main-00-80-60
+// after discovering that subinstances' (actual-collections') aliases
+// were getting counted multiple times redundantly, we decided to fix it.
+// times: 2/6/6 s
+-rw-r--r-- 1 davidfang    82893 Nov 27 02:12 mem-01.haco
+-rw-r--r-- 1 davidfang 30677641 Nov 27 02:13 mem-01.haco-a
+-rw-r--r-- 1 davidfang 17876341 Nov 27 02:13 mem-01.haco-c
+-rw-r--r-- 1 davidfang  8612588 Nov 27 02:13 mem-01.haco-u
+// Wow, there goes a factor of 2!
+// next: enable scope-alias regeneration at load-time
+**/
+
 

@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.10 2006/11/21 22:38:55 fang Exp $
+	$Id: port_alias_tracker.h,v 1.11 2006/11/27 08:29:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -17,6 +17,7 @@
 #include "util/boolean_types.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
 
 /**
 	This was introduced temporarily on branch, but is currently not used.
@@ -33,10 +34,14 @@
 namespace HAC {
 namespace entity {
 class footprint;
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using std::istream;
+#endif
 using std::ostream;
 using util::good_bool;
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 using util::persistent_object_manager;
+#endif
 using util::memory::never_ptr;
 
 template <class>
@@ -60,6 +65,7 @@ class instance_collection_pool_bundle;
  */
 template <class Tag>
 class alias_reference_set {
+	typedef	alias_reference_set<Tag>		this_type;
 public:
 	typedef	Tag					tag_type;
 	typedef	class_traits<Tag>			traits_type;
@@ -133,18 +139,25 @@ public:
 	get_string_cache(void) const { return cache; }
 #endif
 
+#if COPY_IF_PORT_ALIASES
+	void
+	__import_port_aliases(const this_type&);
+
+	struct port_alias_predicate;
+#endif
+
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 #endif
 
 	void
-	write_object_base(const collection_pool_bundle_type&, 
-		ostream&) const;
+	write_object_base(const collection_pool_bundle_type&, ostream&) const;
 
 	void
-	load_object_base(const collection_pool_bundle_type&, 
-		istream&);
+	load_object_base(const collection_pool_bundle_type&, istream&);
+#endif
 
 };	// end class alias_reference_set
 
@@ -155,11 +168,13 @@ public:
  */
 template <class Tag>
 class port_alias_tracker_base {
+	typedef	port_alias_tracker_base<Tag>			this_type;
 protected:
 	typedef	Tag						tag_type;
 	typedef	std::map<size_t, alias_reference_set<Tag> >	map_type;
 	typedef	typename map_type::const_iterator		const_iterator;
 	typedef	typename map_type::iterator			iterator;
+	typedef	typename map_type::value_type			value_type;
 	typedef	instance_collection_pool_bundle<Tag>
 						collection_pool_bundle_type;
 
@@ -168,8 +183,10 @@ protected:
 	port_alias_tracker_base();
 	~port_alias_tracker_base();
 
+#if !COPY_IF_PORT_ALIASES
 	void
 	filter_unique(void);
+#endif
 
 	ostream&
 	dump_map(ostream&) const;
@@ -185,6 +202,14 @@ protected:
 	good_bool
 	check_connections(void) const;
 
+#if COPY_IF_PORT_ALIASES
+	void
+	__import_port_aliases(const this_type&);
+
+	struct port_alias_importer;
+#endif
+
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
 	void
 	collect_map(persistent_object_manager&) const;
@@ -195,6 +220,7 @@ protected:
 
 	void
 	load_map(const footprint&, istream&);
+#endif
 
 };	// end class port_alias_tracker_base
 
@@ -218,6 +244,7 @@ class port_alias_tracker :
 	private port_alias_tracker_base<enum_tag>,
 	private port_alias_tracker_base<int_tag>,
 	private port_alias_tracker_base<bool_tag> {
+	typedef	port_alias_tracker			this_type;
 public:
 	/**
 		Map used to track number of occurrences of indices.  
@@ -245,8 +272,10 @@ public:
 	get_id_map(void) const { return port_alias_tracker_base<Tag>::_ids; }
 
 public:
+#if !COPY_IF_PORT_ALIASES
 	void
 	filter_uniques(void);
+#endif
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
@@ -257,15 +286,25 @@ public:
 	good_bool
 	check_channel_connections(void) const;
 
+#if COPY_IF_PORT_ALIASES
+	void
+	import_port_aliases(const this_type&);
+#endif
+
 public:
+
+#if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
+#if 0
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
+#endif
 
 	void
 	write_object_base(const footprint&, ostream&) const;
 
 	void
 	load_object_base(const footprint&, istream&);
+#endif
 
 };	// end struct port_alias_tracker
 

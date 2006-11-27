@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	574
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	554
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

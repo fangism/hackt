@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.31 2006/11/22 02:48:27 fang Exp $
+	$Id: footprint.cc,v 1.32 2006/11/27 08:29:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -473,6 +473,22 @@ footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("got " << instance_collection_map.size()
 		<< " entries." << endl);
+#if COPY_IF_PORT_ALIASES
+	get_instance_collection_pool_bundle<process_tag>()
+		.collect_scope_aliases(scope_aliases);
+	get_instance_collection_pool_bundle<channel_tag>()
+		.collect_scope_aliases(scope_aliases);
+	get_instance_collection_pool_bundle<datastruct_tag>()
+		.collect_scope_aliases(scope_aliases);
+	get_instance_collection_pool_bundle<int_tag>()
+		.collect_scope_aliases(scope_aliases);
+	get_instance_collection_pool_bundle<enum_tag>()
+		.collect_scope_aliases(scope_aliases);
+	get_instance_collection_pool_bundle<bool_tag>()
+		.collect_scope_aliases(scope_aliases);
+	// just copy-filter them over
+	port_aliases.import_port_aliases(scope_aliases);
+#else
 	get_instance_collection_pool_bundle<process_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<channel_tag>()
@@ -485,13 +501,16 @@ footprint::evaluate_scope_aliases(void) {
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<bool_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
+#endif
 	// don't filter for scope, want to keep around unique entries
 	// scope_aliases.filter_uniques();
 #if ENABLE_STACKTRACE
 	scope_aliases.dump(cerr << "footprint::scope_aliases: " << endl) << endl;
 #endif
 	// NOTE: don't filter uniques for scope_aliases, needed for aliases
+#if !COPY_IF_PORT_ALIASES
 	port_aliases.filter_uniques();
+#endif
 	scope_aliases.shorten_canonical_aliases(*this);
 }
 

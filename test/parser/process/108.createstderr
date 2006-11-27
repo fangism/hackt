@@ -33,13 +33,13 @@ Persistent Object Manager text dump:
 	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	530
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	520
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	557
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	527
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

@@ -50,7 +50,7 @@ Persistent Object Manager text dump:
 	46	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	397
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)

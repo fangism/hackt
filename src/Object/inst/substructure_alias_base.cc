@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.13 2006/11/07 06:35:04 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.14 2006/11/27 08:29:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -82,10 +82,12 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RECURSE_COLLECT_ALIASES
 void
 substructure_alias::collect_port_aliases(port_alias_tracker& p) const {
 	return subinstances.collect_port_aliases(p);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

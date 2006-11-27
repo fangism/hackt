@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.4 2006/11/21 22:39:14 fang Exp $
+#	$Id: Make.test-cflat,v 1.5 2006/11/27 08:29:21 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -487,6 +487,7 @@ clean-cflattests:
 	-$(RM_PATTERN) "*.hacktprsimexprtest"
 	-$(RM_PATTERN) "*.hacktprsdottest"
 	-$(RM_PATTERN) "*.prs"
+	-$(RM_PATTERN) "*.prs-sort"
 	-$(RM_PATTERN) "*.prsdiff"
 	-$(RM_PATTERN) "*.prsdiff-sort"
 	-$(RM_PATTERN) "*.lvssprs"

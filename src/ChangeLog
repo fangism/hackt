@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-60:
+	  New switch COPY_IF_PORT_ALIASES (disabled) uses a simpler
+		pass to collect sets of port aliases (port_alias_tracker).
+		Affects: footprint and port_alias_tracker.
+		Deletes bunch of unnecessary functions too.
+		Perm this later.
+	  Memory hog fix: subinstances scope-aliases were being multiple
+		counted during collect_port_aliases because collection
+		pool managers were traversing port_actual_collections, 
+		which were already recursively covered by their parents!
+		Saves another factor of 2 size on large footprints!
+		Test cases updated accordingly.  
+	  Minor additions in util/ChangeLog.  
+	  Next: enable COPY_IF_PORT_ALIASES
+	  Next: enable AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES and update tests.
+
+
 2006-11-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-59:

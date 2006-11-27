@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.2 2006/11/07 06:34:49 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.3 2006/11/27 08:29:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -83,6 +83,7 @@ struct instance_collection_pool_wrapper<T>::scope_alias_collector {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !COPY_IF_PORT_ALIASES
 /**
 	Functor for collecting port_aliases, conditional upon collection
 	being a port-formal, of course.  
@@ -101,6 +102,7 @@ struct instance_collection_pool_wrapper<T>::port_alias_collector {
 		}
 	}
 };
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -157,6 +159,7 @@ instance_collection_pool_wrapper<T>::collect_scope_aliases(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !COPY_IF_PORT_ALIASES
 template <class T>
 void
 instance_collection_pool_wrapper<T>::collect_port_aliases(
@@ -165,6 +168,7 @@ instance_collection_pool_wrapper<T>::collect_port_aliases(
 	const const_iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, port_alias_collector(pt));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
@@ -227,6 +231,37 @@ instance_collection_pool_bundle<Tag>::allocate_local_instance_ids(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COPY_IF_PORT_ALIASES
+/**
+	Visits all collections and evaluate aliases.  
+	This covers local private aliases and ports.  
+	Ports can be extracted later with filtering.  
+ */
+template <class Tag>
+void
+instance_collection_pool_bundle<Tag>::collect_scope_aliases(
+		port_alias_tracker& spt) const {
+	STACKTRACE_VERBOSE;
+	instance_collection_pool_wrapper<instance_array<Tag, 0> >
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<instance_array<Tag, 1> >
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<instance_array<Tag, 2> >
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<instance_array<Tag, 3> >
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<instance_array<Tag, 4> >
+		::collect_scope_aliases(spt);
+	instance_collection_pool_wrapper<port_formal_array<Tag> >
+		::collect_scope_aliases(spt);
+#if !RECURSE_COLLECT_ALIASES
+	// redundant, as they will be covered recursively by the above
+	instance_collection_pool_wrapper<port_actual_collection<Tag> >
+		::collect_scope_aliases(spt);
+#endif
+}
+
+#else	// COPY_IF_PORT_ALIASES
 /**
 	Only visit port-formals for port aliases.  
 	\param spt scope_alias set (entire footprint)
@@ -256,9 +291,18 @@ instance_collection_pool_bundle<Tag>::collect_scope_and_port_aliases(
 	instance_collection_pool_wrapper<port_formal_array<Tag> >
 		::collect_port_aliases(ppt);
 
+#if !RECURSE_COLLECT_ALIASES
+	// redundant, as they will be covered recursively by the above
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
 		::collect_scope_aliases(spt);
+#if 0
+	// will not work: wrong port formal indices during lookups
+	instance_collection_pool_wrapper<port_actual_collection<Tag> >
+		::collect_port_aliases(ppt);
+#endif
+#endif
 }
+#endif	// COPY_IF_PORT_ALIASES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

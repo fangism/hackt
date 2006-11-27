@@ -22,7 +22,7 @@ Persistent Object Manager text dump:
 	18	##ADDR##	dstrplch	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	433
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	423
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

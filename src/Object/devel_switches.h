@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.33 2006/11/22 01:50:56 fang Exp $
+	$Id: devel_switches.h,v 1.34 2006/11/27 08:29:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -160,6 +160,28 @@
 	Priority: low
  */
 #define	SUBTYPE_FOOTPRINTS			0
+
+/**
+	BUG FIX?
+	Define to 1 recurse collection of port aliases (redundantly redundant)
+	Discovered that using instance_collection_pool_manager to collect
+	instance aliases results in massive redundant repetition in
+	footprint's scope_aliases (which is never dumper, incidentally).
+	Disabling this behavior should result in smaller footprints.  
+	Goal: ?
+	Resolution: we keep recursion for now, and revisit this later.  
+ */
+#define	RECURSE_COLLECT_ALIASES			1
+
+/**
+	Define to 1 to simplify implementation of collecting port aliases
+	by collecting over scope-aliases in a separate pass.  
+	Affects: footprint, port_alias_tracker.  
+	Goal: 1
+	Rationale: code reduction, maintainability
+	Priority: low-medium
+ */
+#define	COPY_IF_PORT_ALIASES			0
 
 /**
 	Define to 1 to not serialize scope-alias summaries, but rather

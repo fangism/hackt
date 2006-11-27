@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.4 2006/11/21 22:38:55 fang Exp $
+	$Id: port_formal_array.tcc,v 1.5 2006/11/27 08:29:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -539,7 +539,12 @@ PORT_FORMAL_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		// 0 is not an acceptable index
 		t.template get_id_map<Tag>()[ii.instance_index]
 			.push_back(never_ptr<element_type>(&ii));
+#if RECURSE_COLLECT_ALIASES
 		ii.collect_port_aliases(t);
+#else
+		// no need to recurse because pool_manager visits
+		// every instance collection already
+#endif
 	}
 }
 

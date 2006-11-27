@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.19 2006/11/07 06:35:04 fang Exp $
+	$Id: substructure_alias_base.h,v 1.20 2006/11/27 08:29:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -18,7 +18,9 @@ struct dump_flags;
 class instance_collection_base;
 class physical_instance_placeholder;
 class unroll_context;
+#if RECURSE_COLLECT_ALIASES
 class port_alias_tracker;
+#endif
 class footprint;
 class footprint_frame;
 class port_member_context;
@@ -101,8 +103,10 @@ virtual	size_t
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
 
+#if RECURSE_COLLECT_ALIASES
 	void
 	collect_port_aliases(port_alias_tracker&) const;
+#endif
 
 virtual	this_type&
 	__trace_alias_base(const this_type&) const;
@@ -173,9 +177,10 @@ public:
 	ostream&
 	dump_ports(ostream& o, const dump_flags&) const { return o; }
 
+#if RECURSE_COLLECT_ALIASES
 	void
 	collect_port_aliases(const port_alias_tracker&) const { }
-
+#endif
 
 	void
 	connect_ports(void) const { }

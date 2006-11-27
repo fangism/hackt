@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.3 2006/11/21 22:38:54 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.4 2006/11/27 08:29:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -247,6 +247,14 @@ PORT_ACTUAL_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
+typename PORT_ACTUAL_COLLECTION_CLASS::instance_placeholder_ptr_type
+PORT_ACTUAL_COLLECTION_CLASS::get_placeholder(void) const {
+	STACKTRACE_VERBOSE;
+	return this->formal_collection->get_placeholder();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 never_ptr<const physical_instance_placeholder>
 PORT_ACTUAL_COLLECTION_CLASS::get_placeholder_base(void) const {
 	STACKTRACE_VERBOSE;
@@ -478,6 +486,10 @@ if (this->formal_collection->has_relaxed_type()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really should be named collect_scope_aliases.
+	TODO: rewrite functionally
+ */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 void
 PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(
@@ -492,7 +504,12 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(
 		// 0 is not an acceptable index
 		t.template get_id_map<Tag>()[ii.instance_index]
 			.push_back(never_ptr<element_type>(&ii));
+#if RECURSE_COLLECT_ALIASES
 		ii.collect_port_aliases(t);
+#else
+		// no need to recurse because pool_manager visits
+		// every instance collection already
+#endif
 	}
 }
 

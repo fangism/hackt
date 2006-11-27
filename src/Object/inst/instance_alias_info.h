@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.19 2006/11/21 22:38:52 fang Exp $
+	$Id: instance_alias_info.h,v 1.20 2006/11/27 08:29:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -338,7 +338,9 @@ public:
 	hierarchical_depth(void) const;
 
 	using substructure_parent_type::dump_ports;
+#if RECURSE_COLLECT_ALIASES
 	using substructure_parent_type::collect_port_aliases;
+#endif
 	using substructure_parent_type::connect_ports;
 	// using substructure_parent_type::lookup_port_instance;
 

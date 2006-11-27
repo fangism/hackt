@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.40 2006/11/21 22:38:53 fang Exp $
+	$Id: instance_collection.tcc,v 1.41 2006/11/27 08:29:07 fang Exp $
 	TODO: trim includes
  */
 
@@ -904,7 +904,12 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		// 0 is not an acceptable index
 		t.template get_id_map<Tag>()[ii.instance_index]
 			.push_back(never_ptr<element_type>(&ii));
+#if RECURSE_COLLECT_ALIASES
 		ii.collect_port_aliases(t);
+#else
+		// no need to recurse because pool_manager visits
+		// every instance collection already
+#endif
 	}
 }
 
@@ -1563,7 +1568,12 @@ if (this->the_instance.valid()) {
 	t.template get_id_map<Tag>()[this->the_instance.instance_index]
 		.push_back(never_ptr<instance_type>(
 			&const_cast<instance_type&>(this->the_instance)));
+#if RECURSE_COLLECT_ALIASES
 	this->the_instance.collect_port_aliases(t);
+#else
+	// no need to recurse because pool_manager visits
+	// every instance collection already
+#endif
 }
 }
 

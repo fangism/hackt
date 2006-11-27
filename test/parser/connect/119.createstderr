@@ -22,13 +22,13 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	335
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	389
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	435
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -66,7 +66,7 @@ Persistent Object Manager text dump:
 	62	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1096
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	996
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

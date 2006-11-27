@@ -184,7 +184,7 @@ Persistent Object Manager text dump:
 	180	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	181	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
 	182	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	183	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1338
+	183	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1283
 	184	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
 	185	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
 	186	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24

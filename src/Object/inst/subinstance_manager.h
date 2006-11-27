@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.16 2006/11/07 06:35:03 fang Exp $
+	$Id: subinstance_manager.h,v 1.17 2006/11/27 08:29:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -11,6 +11,7 @@
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -23,7 +24,9 @@ class physical_instance_collection;
 class physical_instance_placeholder;
 class unroll_context;
 class meta_instance_reference_base;
+#if RECURSE_COLLECT_ALIASES
 class port_alias_tracker;
+#endif
 class port_member_context;
 class state_manager;
 class footprint_frame;
@@ -117,8 +120,10 @@ public:
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
 
+#if RECURSE_COLLECT_ALIASES
 	void
 	collect_port_aliases(port_alias_tracker&) const;
+#endif
 
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);

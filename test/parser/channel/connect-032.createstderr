@@ -123,7 +123,7 @@ Persistent Object Manager text dump:
 	119	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	120	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	121	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	122	##ADDR##	footprnt	0	#HEAD#	#TAIL#	882
+	122	##ADDR##	footprnt	0	#HEAD#	#TAIL#	836
 	123	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	124	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	125	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16

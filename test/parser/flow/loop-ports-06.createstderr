@@ -129,7 +129,7 @@ Persistent Object Manager text dump:
 	125	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	126	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	127	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	128	##ADDR##	footprnt	0	#HEAD#	#TAIL#	5808
+	128	##ADDR##	footprnt	0	#HEAD#	#TAIL#	5056
 	129	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	130	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	131	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16

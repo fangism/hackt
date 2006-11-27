@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.20 2006/11/07 06:35:02 fang Exp $
+	$Id: subinstance_manager.cc,v 1.21 2006/11/27 08:29:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -117,6 +117,7 @@ subinstance_manager::lookup_port_instance(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RECURSE_COLLECT_ALIASES
 void
 subinstance_manager::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
@@ -126,6 +127,7 @@ subinstance_manager::collect_port_aliases(port_alias_tracker& t) const {
 		(*pi)->collect_port_aliases(t);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

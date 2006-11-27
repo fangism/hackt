@@ -56,13 +56,13 @@ Persistent Object Manager text dump:
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	768
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	714
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	57	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	770
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	644
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)

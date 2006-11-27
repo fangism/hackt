@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.3 2006/11/21 22:38:54 fang Exp $
+	$Id: port_actual_collection.h,v 1.4 2006/11/27 08:29:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -115,6 +115,9 @@ public:
 
 	count_ptr<const fundamental_type_reference>
 	get_unresolved_type_ref(void) const;
+
+	instance_placeholder_ptr_type
+	get_placeholder(void) const;
 
 	never_ptr<const physical_instance_placeholder>
 	get_placeholder_base(void) const;

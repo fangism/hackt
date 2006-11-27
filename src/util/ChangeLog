@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.60 2006/11/15 00:09:08 fang Exp $
+#	$Id: ChangeLog,v 1.61 2006/11/27 08:29:18 fang Exp $
+
+2006-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-60:
+	  Moved algorithms in conditional.h to namespace util.
+	  Added copy_if algorithm to util/copy_if.h
+	  Added util/algorithm.h to include related headers.  
+
 
 2006-11-14	David Fang		<fangism@users.sourceforge.net>
 
