@@ -5,6 +5,12 @@
 
 2006-11-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-62:
+	  Enabled AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES, which results in
+		footprint object binary significant size reduction, 
+		at the expense of a little more run-time for reconstruction.
+
+
 	* HACKT-00-01-04-main-00-80-61:
 	  Enabled COPY_IF_PORT_ALIASES, no regressions.  
 	  Rewrote collect_port_aliases in functional style.  
