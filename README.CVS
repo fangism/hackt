@@ -1,8 +1,12 @@
 "README.CVS"
-	$Id: README.CVS,v 1.1 2006/09/06 20:07:33 fang Exp $
+	$Id: README.CVS,v 1.2 2006/11/27 22:59:53 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
+
+	"It's not so hard to lift yourself by your bootstraps 
+	once you're off the ground."
+					-- Daniel B. Luten
 
 -------------------------------------------------------------------------------
 Getting started:

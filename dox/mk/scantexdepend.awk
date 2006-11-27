@@ -1,7 +1,8 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.2 2006/11/26 04:41:10 fang Exp $
+#	$Id: scantexdepend.awk,v 1.3 2006/11/27 22:59:57 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
+# usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
 
 BEGIN {
 	# optional: space-delimited targets
@@ -20,9 +21,11 @@ BEGIN {
 		dep = toks[1];
 		# eat closing paren if attached to first token
 		gsub("[)]+", "", dep);
-		# suppress auxiliary dependencies, because they are cleaned
-		# and we do not write suffix rules for them (yet)
-		if (!match(dep, "\\.aux$") &&
+		# File name must end with a 'normal' character.
+		# Suppress auxiliary dependencies, because they are cleaned
+		# and we do not write suffix rules for them (yet).
+		if (match(dep, "[A-Za-z0-9_-]$") &&
+			!match(dep, "\\.aux$") &&
 			!match(dep, "\\.bbl$") &&
 			!match(dep, "\\.ind$") &&
 			!match(dep, "\\.lo.$") &&
