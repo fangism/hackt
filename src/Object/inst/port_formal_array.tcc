@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.5 2006/11/27 08:29:16 fang Exp $
+	$Id: port_formal_array.tcc,v 1.6 2006/11/27 10:36:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -530,6 +530,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 void
 PORT_FORMAL_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	// TODO fix const_cast
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
@@ -546,6 +547,11 @@ PORT_FORMAL_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		// every instance collection already
 #endif
 	}
+#else
+	// mmm... functional
+	for_each(this->begin(), this->end(), 
+		typename parent_type::scope_alias_collector(t));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

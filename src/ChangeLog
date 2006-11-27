@@ -5,6 +5,12 @@
 
 2006-11-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-61:
+	  Enabled COPY_IF_PORT_ALIASES, no regressions.  
+	  Rewrote collect_port_aliases in functional style.  
+	  Next: enable AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES and update tests.
+
+
 	* HACKT-00-01-04-main-00-80-60:
 	  New switch COPY_IF_PORT_ALIASES (disabled) uses a simpler
 		pass to collect sets of port aliases (port_alias_tracker).
@@ -19,7 +25,6 @@
 		Test cases updated accordingly.  
 	  Minor additions in util/ChangeLog.  
 	  Next: enable COPY_IF_PORT_ALIASES
-	  Next: enable AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES and update tests.
 
 
 2006-11-26	David Fang		<fangism@users.sourceforge.net>

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.3 2006/11/27 08:29:10 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.4 2006/11/27 10:36:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -256,6 +256,7 @@ instance_collection_pool_bundle<Tag>::collect_scope_aliases(
 		::collect_scope_aliases(spt);
 #if !RECURSE_COLLECT_ALIASES
 	// redundant, as they will be covered recursively by the above
+	// these only contain subinstances, public ports
 	instance_collection_pool_wrapper<port_actual_collection<Tag> >
 		::collect_scope_aliases(spt);
 #endif

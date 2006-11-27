@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.4 2006/11/27 08:29:11 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.5 2006/11/27 10:36:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -495,6 +495,7 @@ void
 PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(
 		port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	// TODO fix const_cast
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
@@ -511,6 +512,11 @@ PORT_ACTUAL_COLLECTION_CLASS::collect_port_aliases(
 		// every instance collection already
 #endif
 	}
+#else
+	// mmm... functional
+	for_each(this->begin(), this->end(), 
+		typename formal_collection_type::scope_alias_collector(t));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

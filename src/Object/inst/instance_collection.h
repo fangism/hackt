@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.28 2006/11/21 22:38:52 fang Exp $
+	$Id: instance_collection.h,v 1.29 2006/11/27 10:36:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -273,6 +273,16 @@ public:
 	// NOTE: these really belong to instance_alias_info...
 	// not that all alias elements are equal, 
 	// we can factor out common functionality
+	class scope_alias_collector {
+		port_alias_tracker&		tracker;
+	public:
+		explicit
+		scope_alias_collector(port_alias_tracker& t) : tracker(t) { }
+
+		void
+		operator () (const instance_alias_info_type&);
+	};	// end class scope_alias_collector
+
 	/**
 		Functor to collect transient info in the aliases.  
 	 */

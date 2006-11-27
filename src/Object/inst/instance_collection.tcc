@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.41 2006/11/27 08:29:07 fang Exp $
+	$Id: instance_collection.tcc,v 1.42 2006/11/27 10:36:39 fang Exp $
 	TODO: trim includes
  */
 
@@ -895,6 +895,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	for ( ; i!=e; i++) {
@@ -911,6 +912,11 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		// every instance collection already
 #endif
 	}
+#else
+	// mmm... functional
+	for_each(collection.begin(), collection.end(), 
+		typename parent_type::scope_alias_collector(t));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -930,6 +936,31 @@ INSTANCE_ARRAY_CLASS::load_reference(istream& i) {
 	element_type* const e = this->collection.find(index);
 	NEVER_NULL(e);
 	return *e;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor for collecting scope aliases into alias sets
+	in the port_alias_tracker.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+void
+INSTANCE_COLLECTION_CLASS::scope_alias_collector::operator ()
+		(const instance_alias_info_type& a) {
+	typedef	instance_alias_info_type	element_type;
+	// fix-remove const casting...
+	// needed for the alias_reference_set pointers :X
+	element_type& ii(const_cast<element_type&>(a));
+	INVARIANT(ii.instance_index);
+	// 0 is not an acceptable index
+	tracker.template get_id_map<Tag>()[ii.instance_index]
+		.push_back(never_ptr<element_type>(&ii));
+#if RECURSE_COLLECT_ALIASES
+	ii.collect_port_aliases(tracker);
+#else
+	// no need to recurse because pool_manager visits
+	// every instance collection already
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1563,6 +1594,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 if (this->the_instance.valid()) {
+#if 0
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
 	t.template get_id_map<Tag>()[this->the_instance.instance_index]
@@ -1573,6 +1605,11 @@ if (this->the_instance.valid()) {
 #else
 	// no need to recurse because pool_manager visits
 	// every instance collection already
+#endif
+#else
+	// could just declare anonymous temporary functor, whatever...
+	typename parent_type::scope_alias_collector collect_it(t);
+	collect_it(this->the_instance);
 #endif
 }
 }
