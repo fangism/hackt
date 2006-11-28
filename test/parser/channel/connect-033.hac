@@ -2,8 +2,8 @@
 // copy-modified from "nonmeta-bool-merge.hac"
 // referencing an array of channels with nonmeta-index
 //	also referencing with meta-index
-// should pass unrolling and creating without warnings inside merge
-//	only external dangling channels
+// RESOLUTION: mixing nonmeta and meta indices should be rejected
+// should fail creating
 
 defproc merge(chan?(bool) B[2]; chan?(int<1>) S) {
 bool b;

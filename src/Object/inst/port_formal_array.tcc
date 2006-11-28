@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.6 2006/11/27 10:36:42 fang Exp $
+	$Id: port_formal_array.tcc,v 1.6.2.1 2006/11/28 22:01:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -299,13 +299,18 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	this->value_array.resize(k);
 	iterator i(this->begin()), e(this->end());
 	if (actuals) {
+	try {
 		// if ports are ever allowed to depend on relaxed parameters,
 		// then must attach actuals first before instantiating.  
 		for ( ; i!=e; ++i) {
 			i->instantiate(never_ptr<this_type>(this), c);
+			// can throw
 			const bool attached = i->attach_actuals(actuals);
 			NEVER_NULL(attached);
 		}
+	} catch (...) {
+		return good_bool(false);
+	}
 	} else {
 		for ( ; i!=e; ++i) {
 			i->instantiate(never_ptr<this_type>(this), c);

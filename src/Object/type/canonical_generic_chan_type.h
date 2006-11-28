@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.10 2006/11/21 22:39:09 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.10.2.1 2006/11/28 22:01:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -133,7 +133,7 @@ public:
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
-	void
+	good_bool
 	unroll_port_instances(const unroll_context&, 
 		subinstance_manager&) const;
 

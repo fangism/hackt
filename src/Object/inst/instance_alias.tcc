@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.28 2006/11/21 22:38:51 fang Exp $
+	$Id: instance_alias.tcc,v 1.28.2.1 2006/11/28 22:01:47 fang Exp $
 	TODO: trim includes
  */
 
@@ -162,7 +162,11 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		&*this->container << endl);
 	this->container = p;
 	// do we ever want to instantiate more than the ports? no
-	substructure_parent_type::unroll_port_instances(*this->container, c);
+	if (!substructure_parent_type::unroll_port_instances(
+			*this->container, c).good) {
+		// already have error message
+		THROW_EXIT;
+	}
 
 	// initialize directions, if applicable
 	direction_connection_policy::initialize_direction(*this->container);
@@ -200,7 +204,11 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 	INVARIANT(!this->container);
 	this->container = p;
 	// do we ever want to instantiate more than the ports? no
-	substructure_parent_type::unroll_port_instances(*this->container, c);
+	if (!substructure_parent_type::unroll_port_instances(
+			*this->container, c).good) {
+		// already have error message
+		THROW_EXIT;
+	}
 	actuals_parent_type::copy_actuals(f);
 	direction_connection_policy::initialize_actual_direction(f);
 }

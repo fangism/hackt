@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2 2006/11/21 22:38:51 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.1 2006/11/28 22:01:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -189,6 +189,8 @@ directional_connect_policy<true>::initialize_actual_direction(
 	Issues diagnostic for dangling channel connections.  
 	Could just make this a non-template function by passing
 		the tag_name as a string.  
+	TODO: finer diagnostic control to determine whether or not
+		to promote warning to error.  
  */
 template <class AliasType>
 good_bool

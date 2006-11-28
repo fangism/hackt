@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.2 2006/11/07 06:34:48 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.2.6.1 2006/11/28 22:01:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -268,7 +268,13 @@ instance_collection_pool_bundle<Tag>::allocate_port_collection(
 		instance_collection_pool_wrapper<port_actual_collection<Tag> >
 			::pool.allocate();	// already default constructed
 	ret->~port_actual_collection<Tag>();		// just in case...
-	new (ret) port_actual_collection<Tag>(f, c);	// placement construct
+	try {
+		new (ret) port_actual_collection<Tag>(f, c);
+		// placement construct
+		// can throw on error
+	} catch (...) {
+		return NULL;
+	}
 	// does not need to register as named with footprint's collection_map
 	return ret;
 }

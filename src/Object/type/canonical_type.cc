@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.14 2006/11/21 22:39:09 fang Exp $
+	$Id: canonical_type.cc,v 1.14.2.1 2006/11/28 22:01:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -49,7 +49,7 @@ canonical_definition_load_policy<datatype_definition_base>::operator () (
 //-----------------------------------------------------------------------------
 template <>
 struct unroll_port_instances_policy<datatype_definition_base> {
-	void
+	good_bool
 	operator () (const canonical_generic_datatype& d, 
 			const unroll_context& c,
 			subinstance_manager& sub) const {
@@ -57,13 +57,14 @@ struct unroll_port_instances_policy<datatype_definition_base> {
 		// eventually will need template arguments
 		data_type_reference::unroll_port_instances(
 			d.get_base_def(), d.get_raw_template_params(), c, sub);
+		return good_bool(true);
 	}
 };	// end struct unroll_port_instances_policy
 
 //-----------------------------------------------------------------------------
 template <>
 struct unroll_port_instances_policy<user_def_datatype> {
-	void
+	good_bool
 	operator () (const canonical_user_def_data_type& d, 
 			const unroll_context& c,
 			subinstance_manager& sub) const {
@@ -71,18 +72,20 @@ struct unroll_port_instances_policy<user_def_datatype> {
 		data_type_reference::unroll_port_instances(
 			d.get_base_def(), d.get_raw_template_params(), c, sub);
 		// FINISH_ME(Fang);
+		return good_bool(true);
 	}
 };	// end struct unroll_port_instances_policy
 
 //-----------------------------------------------------------------------------
 template <>
 struct unroll_port_instances_policy<user_def_chan> {
-	void
+	good_bool
 	operator () (const canonical_user_def_chan_type& d, 
 			const unroll_context& c,
 			subinstance_manager& sub) const {
 		// temporary
 		FINISH_ME(Fang);
+		return good_bool(false);
 	}
 };	// end struct unroll_port_instances_policy
 
@@ -93,7 +96,7 @@ struct unroll_port_instances_policy<process_definition> {
 		Is this missing the top-level const footprint&?
 		Ans: is now referenced inside the unroll_context.
 	 */
-	void
+	good_bool
 	operator () (const canonical_process_type& p, 
 			const unroll_context& c,
 			subinstance_manager& sub) const {
@@ -108,7 +111,7 @@ struct unroll_port_instances_policy<process_definition> {
 			cerr << "Error instantiating process footprint: "
 				<< endl;
 			p.dump(cerr << "From canonical type: ") << endl;
-			THROW_EXIT;
+			return good_bool(false);
 		}
 #endif
 /***
@@ -123,7 +126,7 @@ struct unroll_port_instances_policy<process_definition> {
 			f(p.canonical_definition_ptr->get_footprint(
 				p.param_list_ptr));
 		const unroll_context cc(&f, c);
-		pf.unroll_ports(cc, sub.get_array());
+		return pf.unroll_ports(cc, sub.get_array());
 	} else {
 		STACKTRACE_INDENT_PRINT("have relaxed type." << endl);
 		// unroll temporary footprint using partial template params
@@ -137,12 +140,12 @@ struct unroll_port_instances_policy<process_definition> {
 			cc(&f, c, unroll_context::auxiliary_target_tag());
 		if (p.canonical_definition_ptr->get_template_formals_manager()
 				.unroll_formal_parameters(cc, a).good) {
-			pf.unroll_ports(cc, sub.get_array());
+			return pf.unroll_ports(cc, sub.get_array());
 		} else {
 			cerr << "FATAL: unexpected error unrolling temporary "
 				"parameter-only footprint." << endl;
 			p.dump(cerr << "with canonical type: ") << endl;
-			THROW_EXIT;
+			return good_bool(false);
 		}
 	}
 	}

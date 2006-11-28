@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-01:
+	  Enabled PROPAGAATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.  
+	  Canonical types now must be complete (including relaxed actuals
+		where applicable) before unrolling, else will be rejected
+		with diagnosis.  
+	  Added return value to most unroll_port functions, 
+		and catch exception elsewhere for port error handling.
+	  This causes regressions on nearly all unroll tests because
+		unrolling now requires dependent types to be fully-created.
+		The post-unroll dumps resemble create-dumps.  
+	  Next: update tests
+
+
 2006-11-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-62:

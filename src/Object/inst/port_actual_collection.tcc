@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.5 2006/11/27 10:36:41 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.5.2.1 2006/11/28 22:01:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -51,7 +51,9 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This constructor should never throw.  
+	TODO: re-write function as something other than constructor
+		to return instead of throw.
+	\throw
 	\pre if we're propagating connection information hierarchically, 
 		then the formal collection type must already be successfully
 		created.  We don't create here, to avoid exception handling
@@ -77,6 +79,7 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
 		// here is an opportunity to pass local alias information up!
 		// provided that the dependent type is already *created*
 		i->instantiate(never_ptr<const this_type>(this), c);
+		// can throw on port error
 	}
 #endif
 }

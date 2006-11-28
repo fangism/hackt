@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.36 2006/11/27 20:37:58 fang Exp $
+	$Id: devel_switches.h,v 1.36.2.1 2006/11/28 22:01:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -78,6 +78,7 @@
  */
 #define	DENSE_FORMAL_VALUE_COLLECTIONS		0
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to propagate formal and local channel connectivity
 	up hierarchies for more accurate diagnostics about connectedness.
@@ -100,7 +101,19 @@
 		We may have to update all unroll tests by hand, or
 		say goodbye to the unroll phase and its tests.  
  */
-#define	PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY	0
+#define	PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY	1
+
+/**
+	Define to 1 to fuse unrolling and creating into the same phase.
+	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY, 
+		we now have no use for an unrolled-but-not-created footprint.
+	Goal: 1 (reluctantly)
+	Status: not begun
+	Priority: medium-high
+	Affects: top-level executable programs, internal passes 
+		don't need to use this flag.  
+ */
+#define	UNIFY_UNROLL_CREATE			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -162,6 +175,8 @@
 #define	SUBTYPE_FOOTPRINTS			0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the below flags are done, revisit and perm them later
+
 /**
 	Define to 1 recurse collection of port aliases (redundantly redundant)
 	Discovered that using instance_collection_pool_manager to collect
@@ -192,11 +207,9 @@
 		redundant (precisely regenerable) information.  
 	Goal: 1? (probably)
 	Priority: low-medium (memory intensive)
-	Status: done, tested, but not committed.  
+	Status: done, tested, but not perm'd yet.  
 		Results in massive (factor of 2) savings on 
 		large objects, especially top-level hierarchy.
-	NOTE: results in change in binary sizes of course, so regression
-		test cases need to be updated accordingly.
  */
 #define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		1
 

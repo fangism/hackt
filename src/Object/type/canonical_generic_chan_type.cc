@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.8 2006/10/18 21:38:46 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.8.10.1 2006/11/28 22:01:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -363,7 +363,7 @@ if (canonical_definition_ptr) {
 	For now, just no-op.  
 	TODO: finalize the behavior of this.  
  */
-void
+good_bool
 canonical_generic_chan_type::unroll_port_instances(
 		const unroll_context& c, subinstance_manager& sub) const {
 #if 0
@@ -373,6 +373,7 @@ if (canonical_definition_ptr) {
 } else {
 }
 #endif
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.13 2006/11/07 06:34:31 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.13.6.1 2006/11/28 22:01:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -224,7 +224,7 @@ port_formals_manager::equivalent_port_formals(
 	TODO: in instance_collection implementations, 
 		use packed array representation for port formals collections.  
  */
-void
+good_bool
 port_formals_manager::unroll_ports(const unroll_context& c, 
 		vector<never_ptr<physical_instance_collection> >& sub) const {
 	STACKTRACE_VERBOSE;
@@ -238,7 +238,11 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 		// supposed to return a new copy of instance-collection
 		const never_ptr<physical_instance_collection>
 			new_port(pcb->unroll_port_only(c));
-		NEVER_NULL(new_port);
+		// can throw
+		if (!new_port) {
+			// there was an error unrolling the port
+			return good_bool(false);
+		}
 #if ENABLE_STACKTRACE
 		new_port->dump(cerr << "new port: ") << endl;
 #endif
@@ -248,6 +252,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 #if ENABLE_STACKTRACE
 	cerr << "Just unrolled " << sub.size() << " port instances." << endl;
 #endif
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

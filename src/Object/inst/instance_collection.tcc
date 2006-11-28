@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.42 2006/11/27 10:36:39 fang Exp $
+	$Id: instance_collection.tcc,v 1.42.2.1 2006/11/28 22:01:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -574,9 +574,14 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// before calling recursive instantiate?
 			// only so if ports ever depend on relaxed parameters.  
 			// then insertion of new value was successful
+			try {
 			new_elem->instantiate(
 				never_ptr<const this_type>(this), c);
 			// set its relaxed actuals!!! (if appropriate)
+			// can throw!
+			} catch (...) {
+				err = true;
+			}
 			if (actuals) {
 			const bool attached(new_elem->attach_actuals(actuals));
 			if (!attached) {
@@ -1429,7 +1434,11 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		return good_bool(false);
 	}
 	// here we need an explicit instantiation (recursive)
+	try {
 	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
+	} catch (...) {
+		return good_bool(false);
+	}
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
 			complete_type_definition_footprint(actuals).good) {
