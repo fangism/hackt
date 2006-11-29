@@ -5,6 +5,20 @@
 
 2006-11-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-62-channel-02-02:
+	  No source revision.
+	  Test suite has now disabled unroll tests.  
+		See test/ChangeLog.
+	  Top-level configure now has option to re-enable them, 
+		but don't expect them to pass because they are no longer
+		updated, they correspond to old (correct) behavior.  
+	  Test suite: promoted many unroll-fail tests to create-fail tests.
+		Updated trivial cases, and left less trivial differences
+		as regressions (numbering 16 total, all in parser/channel).
+	  TODO: use UNIFY_UNROLL_CREATE flag to issue deprecation
+		warnings when using unroll (in main programs).  
+
+
 	* HACKT-00-01-04-main-00-80-62-channel-02-01:
 	  Enabled PROPAGAATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.  
 	  Canonical types now must be complete (including relaxed actuals

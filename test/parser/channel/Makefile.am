@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/11/21 22:39:21 fang Exp $
+#	$Id: Makefile.am,v 1.11.2.1 2006/11/29 04:54:10 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -53,6 +53,11 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	connect-035 connect-036
+
+if USE_UNROLL_PHASE
+else
+HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
+endif
 
 HACKT_ALLOC_TEST_PASSES =
 #	connect-009 connect-010

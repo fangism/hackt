@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.4 2006/11/27 08:29:21 fang Exp $
+#	$Id: Make.test-create,v 1.4.2.1 2006/11/29 04:53:45 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -79,7 +79,12 @@ createtest.autodepend: Makefile
 .hacktcreatetest:
 	@$(DUMMY_TEST_SCRIPT)
 
+# unroll and create have been fused together
+if USE_UNROLL_PHASE
 .haco-u.createfaildump:
+else
+.haco.createfaildump:
+endif
 	-@failobj=`$(ECHO) $@ | $(SED) 's/\.createfaildump$$/.haco-c-fail/g'` ; \
 	$(ECHO) $(HACKT_CREATE_EXE) $< "$$failobj" ; \
 	$(HACKT_CREATE_EXE) $< "$$failobj" > $@ 2>&1
@@ -116,14 +121,23 @@ createfailtest.autodepend: Makefile
 
 -include createfailtest.autodepend
 
+.hacktcreatefailtest:
+	@$(DUMMY_TEST_SCRIPT)
 
+
+# unroll and create have been fused together
+if USE_UNROLL_PHASE
 .haco-u.haco-c:
+else
+.haco.haco-c:
+endif
 	$(HACKT_CREATE_EXE) $< $@ 2>&1 | $(TEE) $@-err
 	@$(TOUCH) $@-err
 
 .haco-c.haco-c-err:
 	@:
 
+if USE_UNROLL_PHASE
 .haco.haco-c-from-haco:
 	$(HACKT_CREATE_EXE) $< $@ 2>&1 | $(TEE) $@-err
 	@$(TOUCH) $@-err
@@ -194,16 +208,26 @@ createfromhaco.autodepend: Makefile
 
 .hacktcreatefromhacotest:
 	@$(DUMMY_TEST_SCRIPT)
+endif
+# endif USE_UNROLL_PHASE
 
 AUTO_DEPENDS += createtest.autodepend \
-	createfailtest.autodepend \
-	createfromhaco.autodepend
+	createfailtest.autodepend
 
-BOGUS_TESTS += .hacktcreatetest .hacktcreatefailtest .hacktcreatefromhacotest
-BOGUS_TARGETS += .createstderr
+if USE_UNROLL_PHASE
+AUTO_DEPENDS += createfromhaco.autodepend
+endif
 
-CHECK_SUMMARIES += creatediffs createfaildiffs \
-	createfromhacodiffs creatediffs.noindex
+BOGUS_TESTS += .hacktcreatetest .hacktcreatefailtest
+if USE_UNROLL_PHASE
+BOGUS_TESTS += .hacktcreatefromhacotest
+endif
+BOGUS_TARGETS += .createstderr .createfaildiff .createfaildump
+
+CHECK_SUMMARIES += creatediffs createfaildiffs creatediffs.noindex
+if USE_UNROLL_PHASE
+CHECK_SUMMARIES += createfromhacodiffs
+endif
 
 
 creatediffs: force
@@ -212,8 +236,10 @@ creatediffs: force
 createfaildiffs: force
 	-$(CAT) *.createfaildiff > $@
 
+if USE_UNROLL_PHASE
 createfromhacodiffs: force
 	-$(CAT) *.create-from-haco-diff > $@
+endif
 
 creatediffs.noindex: force
 	-$(CAT) *.creatediff-noindex > $@
@@ -227,23 +253,31 @@ srcdir_EXTRA_DIST += $(HACKT_CREATE_TEST_SUBJECTS:=.createstderr)
 
 TESTS += \
 	$(HACKT_CREATE_TEST_PASSES:=.hacktcreatetest) \
-	$(HACKT_CREATE_TEST_FAILURES:=.hacktcreatefailtest) \
-	$(HACKT_CREATE_TEST_PASSES:=.hacktcreatefromhacotest)
+	$(HACKT_CREATE_TEST_FAILURES:=.hacktcreatefailtest)
 
+if USE_UNROLL_PHASE
+TESTS += $(HACKT_CREATE_TEST_PASSES:=.hacktcreatefromhacotest)
+endif
 
-build-check-local: \
+CREATE_BUILD_CHECK_LOCAL = \
 	$(HACKT_CREATE_TEST_PASSES:=.haco-c) \
 	$(HACKT_CREATE_TEST_PASSES:=.haco-c-err) \
 	$(HACKT_CREATE_TEST_PASSES:=.createdump) \
 	$(HACKT_CREATE_TEST_PASSES:=.createdump-filter) \
 	$(HACKT_CREATE_TEST_PASSES:=.creatediff) \
 	$(HACKT_CREATE_TEST_FAILURES:=.createfaildump) \
-	$(HACKT_CREATE_TEST_FAILURES:=.createfaildiff) \
+	$(HACKT_CREATE_TEST_FAILURES:=.createfaildiff)
+
+if USE_UNROLL_PHASE
+CREATE_BUILD_CHECK_LOCAL += \
 	$(HACKT_CREATE_TEST_PASSES:=.haco-c-from-haco) \
 	$(HACKT_CREATE_TEST_PASSES:=.haco-c-from-haco-err) \
 	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-dump) \
 	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-dump-filter) \
 	$(HACKT_CREATE_TEST_PASSES:=.create-from-haco-diff)
+endif
+
+build-check-local: $(CREATE_BUILD_CHECK_LOCAL)
 
 echo-create-passes: force
 	@$(ECHO) $(HACKT_CREATE_TEST_PASSES)

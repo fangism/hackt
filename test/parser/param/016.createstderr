@@ -1,0 +1,6 @@
+FATAL: reference to uninstantiated pint at foo [2]
+ERROR: unrolling values.
+ERROR: unrolling lvalue references in pint assignment.
+ERROR: at position 1 of expression-assignment list.
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

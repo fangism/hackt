@@ -1,5 +1,19 @@
 # "test/ChangeLog"
 
+2006-11-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-02:
+	  Uses AM_CONDITIONAL USE_UNROLL_PHASE to enable/disable
+		obsolete unroll tests and features in the test-suite.
+		Notably: create (haco-c) is now built directly from .haco,
+		create-from-haco tests are obsolete.
+		alloc-from-haco tests are now two-way diffs instead of 3-way.
+	  subdir Makefile.am's: conditionally promote unroll-test-failures
+		to create-test-failures.  
+	  Mostly trivial test updates done, leaving 16 regressions
+		to analyze in parser/channel.  
+
+
 2006-11-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-57-merged-channel-01-09:

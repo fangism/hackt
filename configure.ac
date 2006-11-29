@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.107 2006/11/26 04:41:02 fang Exp $
+#	$Id: configure.ac,v 1.107.2.1 2006/11/29 04:53:31 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -145,6 +145,8 @@ HACKT_ARG_ENABLE_VERBOSE_CHECK
 
 dnl enable or disable fun modules ("config/hackt.m4")
 HACKT_ARG_ENABLE_FUN
+dnl deprecated unroll phase
+HACKT_ARG_ENABLE_UNROLL_PHASE
 
 dnl define WORDS_BIGENDIAN if is big endian
 dnl not actually needed in this project yet

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.36.2.1 2006/11/28 22:01:40 fang Exp $
+	$Id: devel_switches.h,v 1.36.2.2 2006/11/29 04:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -107,13 +107,14 @@
 	Define to 1 to fuse unrolling and creating into the same phase.
 	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY, 
 		we now have no use for an unrolled-but-not-created footprint.
+	This is now defined in config.h by configure.  
 	Goal: 1 (reluctantly)
 	Status: not begun
 	Priority: medium-high
 	Affects: top-level executable programs, internal passes 
 		don't need to use this flag.  
  */
-#define	UNIFY_UNROLL_CREATE			1
+// #define	UNIFY_UNROLL_CREATE			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

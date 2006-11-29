@@ -1,0 +1,11 @@
+ERROR: integer widths do not match!  have: 13 vs. 12
+Type mismatch in aggregate int reference.
+	got: int<13>
+	and: int<12>
+ERROR: integer widths do not match!  have: 13 vs. 12
+Type mismatch in aggregate int reference.
+	got: int<13>
+	and: int<12>
+ERROR: unrolling instance references in int_connection::unroll().
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

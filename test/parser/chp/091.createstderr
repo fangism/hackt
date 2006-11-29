@@ -2,8 +2,10 @@ WARNING: channel send_indexed::out[1] lacks connection to a producer.
 WARNING: channel send_indexed::out[0] lacks connection to a producer.
 WARNING: channel foo.index lacks connection to a producer.
 WARNING: channel foo.out[0] lacks connection to a consumer.
+WARNING: channel foo.out[1] lacks connection to a producer.
 WARNING: channel foo.out[1] lacks connection to a consumer.
 WARNING: channel bar.index lacks connection to a producer.
+WARNING: channel bar.out[0] lacks connection to a producer.
 WARNING: channel bar.out[0] lacks connection to a consumer.
 WARNING: channel bar.out[1] lacks connection to a consumer.
 ---- END CREATE WARNINGS ---

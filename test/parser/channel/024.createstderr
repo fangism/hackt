@@ -1,0 +1,5 @@
+ERROR: types mismatch!
+	got: int<12>
+	and: int<11>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

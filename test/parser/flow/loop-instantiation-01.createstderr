@@ -1,0 +1,4 @@
+ERROR: invalid instantiation range list: [0..-1]
+Error resolving loop-body during iteration: $b = 0
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

@@ -1,0 +1,5 @@
+ERROR: unrolling packed instance aliases in process_connection:
+	size of reference 2 (load.bundle::b.basket::egg_array) = [12]
+	size of reference 1 (load.bundle::a.basket::egg_array[0..2]) = [3]
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.
