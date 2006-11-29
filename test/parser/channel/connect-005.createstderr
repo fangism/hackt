@@ -1,5 +1,6 @@
 WARNING: channel hanging::x lacks connection to a consumer.
 WARNING: channel folder.x lacks connection to a producer.
+WARNING: channel folder.x lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

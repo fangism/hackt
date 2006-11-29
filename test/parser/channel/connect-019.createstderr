@@ -1,4 +1,5 @@
 WARNING: channel senders::a lacks connection to a producer.
+WARNING: channel z.a lacks connection to a producer.
 WARNING: channel z.a lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
 

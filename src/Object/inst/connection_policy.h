@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.2 2006/11/21 22:38:50 fang Exp $
+	$Id: connection_policy.h,v 1.2.2.1 2006/11/29 22:46:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -155,6 +155,16 @@ public:
 		 */
 		CONNECTED_NONMETA_INDEXED_CONSUMER = 0x80,
 
+		/**
+			Derived value combination.
+		 */
+		CONNECTED_ANY_PRODUCER = CONNECTED_TO_PRODUCER |
+			CONNECTED_CHP_PRODUCER,
+		/**
+			Derived value combination.
+		 */
+		CONNECTED_ANY_CONSUMER = CONNECTED_TO_CONSUMER |
+			CONNECTED_CHP_CONSUMER,
 		/**
 			Derived value combination.
 		 */

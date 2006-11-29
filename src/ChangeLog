@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-03:
+	  Some regression fixes involving hierarchical channel 
+		connectivity checking.  Only 2 regressions remain
+		with the following issue:
+		regarding the CONNECTED_CHP_PRODUCER/CONSUMER flags, 
+		we need to disguish between a CHP 'connection' that
+		resulted from a substructure, vs. a local (this scope)
+		CHP connection.  Walking a CHP body should set the local
+		variant of the flag, while inheriting a flag from 
+		formal to actual should use the substructure variant.  
+		We forbid  connecting a channel to CHP in both local
+		and substructure context, unless we add future support
+		for sharing CHP connections between hierarchies. 
+		Next revision will address this.  
+
+
 2006-11-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-62-channel-02-02:

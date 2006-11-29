@@ -1,5 +1,6 @@
 WARNING: channel receivers::a lacks connection to a consumer.
 WARNING: channel z.a lacks connection to a producer.
+WARNING: channel z.a lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
 
 Persistent Object Manager text dump: 

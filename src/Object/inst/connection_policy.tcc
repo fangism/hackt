@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2.2.1 2006/11/28 22:01:45 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.2 2006/11/29 22:46:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -35,6 +35,8 @@ directional_connect_policy<true>::__update_flags(AliasType& a) {
 /**
 	Issue an error/diagnostic if:
 	both canonical node are already connected to a producer
+	TODO: precise direction connection checking, w.r.t CHP,
+		meta-references and nonmeta-references.
  */
 template <class AliasType>
 good_bool
@@ -48,18 +50,27 @@ directional_connect_policy<true>::synchronize_flags(
 	}
 	this_type& ll(l);	// static_cast
 	this_type& rr(r);	// static_cast
+	const unsigned char& lld(ll.direction_flags);
+	const unsigned char& rrd(rr.direction_flags);
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(ll.direction_flags) << endl);
-	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rr.direction_flags) << endl);
+	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(lld) << endl);
+	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rrd) << endl);
 	l.dump_hierarchical_name(STACKTRACE_INDENT << "l: ") << endl;
 	r.dump_hierarchical_name(STACKTRACE_INDENT << "r: ") << endl;
 #endif
-	const unsigned char _and = ll.direction_flags & rr.direction_flags;
-	const unsigned char _or = ll.direction_flags | rr.direction_flags;
+	// convenience aliases
+	const unsigned char _and = lld & rrd;
+	const unsigned char _or = lld | rrd;
 	bool good = true;
-	if (_and & CONNECTED_TO_PRODUCER) {
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	if ((lld & CONNECTED_ANY_PRODUCER) && (rrd & CONNECTED_ANY_PRODUCER))
+#else
+	if (_and & CONNECTED_TO_PRODUCER)
+#endif
+	{
 		// multiple producers
-		if (!(_and & CONNECTED_SHARED_PRODUCER)) {
+		if (!(_and & CONNECTED_SHARED_PRODUCER))
+		{
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
 				"non-sharing producers of type " <<
@@ -67,9 +78,15 @@ directional_connect_policy<true>::synchronize_flags(
 			good = false;
 		}
 	}
-	if (_and & CONNECTED_TO_CONSUMER) {
+#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+	if ((lld & CONNECTED_ANY_CONSUMER) && (rrd & CONNECTED_ANY_CONSUMER))
+#else
+	if (_and & CONNECTED_TO_CONSUMER)
+#endif
+	{
 		// multiple consumers
-		if (!(_and & CONNECTED_SHARED_CONSUMER)) {
+		if (!(_and & CONNECTED_SHARED_CONSUMER))
+		{
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
 				"non-sharing consumers of type " <<
@@ -197,12 +214,12 @@ good_bool
 directional_connect_policy<true>::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
 	const char f = a.direction_flags;
-	if (!(f & (CONNECTED_TO_PRODUCER | CONNECTED_CHP_PRODUCER))) {
+	if (!(f & CONNECTED_ANY_PRODUCER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a producer." << endl;
 	}
-	if (!(f & (CONNECTED_TO_CONSUMER | CONNECTED_CHP_CONSUMER))) {
+	if (!(f & CONNECTED_ANY_CONSUMER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a consumer." << endl;
