@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.3.2.2 2006/11/30 05:04:57 fang Exp $
+	$Id: connection_policy.cc,v 1.3.2.3 2006/11/30 23:13:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -26,7 +26,12 @@ good_bool
 directional_connect_policy<true>::set_connection_flags(
 		const connection_flags_type f) {
 	if (f & CONNECTED_CHP_PRODUCER) {
-		if (direction_flags & CONNECTED_TO_PRODUCER) {
+#if NEW_CONNECTION_FLAGS
+		if (direction_flags & CONNECTED_TO_NONCHP_PRODUCER)
+#else
+		if (direction_flags & CONNECTED_TO_PRODUCER)
+#endif
+		{
 			cerr << "Error: cannot connect to producer by both "
 				"aliasing and CHP!" << endl;
 			return good_bool(false);
@@ -34,7 +39,12 @@ directional_connect_policy<true>::set_connection_flags(
 	} 
 	// mutually exclusive, by caller
 	else if (f & CONNECTED_CHP_CONSUMER) {
-		if (direction_flags & CONNECTED_TO_CONSUMER) {
+#if NEW_CONNECTION_FLAGS
+		if (direction_flags & CONNECTED_TO_NONCHP_CONSUMER)
+#else
+		if (direction_flags & CONNECTED_TO_CONSUMER)
+#endif
+		{
 			cerr << "Error: cannot connect to consumer by both "
 				"aliasing and CHP!" << endl;
 			return good_bool(false);

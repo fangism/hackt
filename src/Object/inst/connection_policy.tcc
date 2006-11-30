@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2.2.3 2006/11/30 05:04:58 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.4 2006/11/30 23:13:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -63,13 +63,24 @@ directional_connect_policy<true>::synchronize_flags(
 	const connection_flags_type _or = lld | rrd;
 	bool good = true;
 #if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+#if NEW_CONNECTION_FLAGS
+	if ((lld & CONNECTED_TO_ANY_PRODUCER) &&
+			(rrd & CONNECTED_TO_ANY_PRODUCER))
+#else
 	if ((lld & CONNECTED_ANY_PRODUCER) && (rrd & CONNECTED_ANY_PRODUCER))
+#endif
 #else
 	if (_and & CONNECTED_TO_PRODUCER)
 #endif
 	{
 		// multiple producers
+		// TODO: strengthen condition?
+		// shared, but connection must also be consistent?
+#if NEW_CONNECTION_FLAGS
+		if (!(_and & CONNECTED_PRODUCER_IS_SHARED))
+#else
 		if (!(_and & CONNECTED_SHARED_PRODUCER))
+#endif
 		{
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
@@ -79,13 +90,22 @@ directional_connect_policy<true>::synchronize_flags(
 		}
 	}
 #if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
+#if NEW_CONNECTION_FLAGS
+	if ((lld & CONNECTED_TO_ANY_CONSUMER) &&
+			(rrd & CONNECTED_TO_ANY_CONSUMER))
+#else
 	if ((lld & CONNECTED_ANY_CONSUMER) && (rrd & CONNECTED_ANY_CONSUMER))
+#endif
 #else
 	if (_and & CONNECTED_TO_CONSUMER)
 #endif
 	{
 		// multiple consumers
+#if NEW_CONNECTION_FLAGS
+		if (!(_and & CONNECTED_CONSUMER_IS_SHARED))
+#else
 		if (!(_and & CONNECTED_SHARED_CONSUMER))
+#endif
 		{
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
@@ -94,6 +114,20 @@ directional_connect_policy<true>::synchronize_flags(
 			good = false;
 		}
 	}
+#if NEW_CONNECTION_FLAGS
+	if ((_or & CONNECTED_PRODUCER_IS_META) &&
+			(_or & CONNECTED_PRODUCER_IS_NONMETA)) {
+		cerr << "Error: cannot mix meta- and nonmeta-referenced " <<
+			traits_type::tag_name << " in producer alias." << endl;
+		good = false;
+	}
+	if ((_or & CONNECTED_CONSUMER_IS_META) &&
+			(_or & CONNECTED_CONSUMER_IS_NONMETA)) {
+		cerr << "Error: cannot mix meta- and nonmeta-referenced " <<
+			traits_type::tag_name << " in consumer alias." << endl;
+		good = false;
+	}
+#endif
 	if (!good) {
 		l.dump_hierarchical_name(cerr << "\tgot: ") << endl;
 		r.dump_hierarchical_name(cerr << "\tand: ") << endl;
@@ -138,7 +172,11 @@ directional_connect_policy<true>::initialize_direction(
 	case '\0': break;		// leave as initial value
 	case '?':
 		if (f) {
+#if NEW_CONNECTION_FLAGS
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+#else
 			direction_flags |= CONNECTED_TO_PRODUCER;
+#endif
 		}
 #if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 		else {
@@ -148,7 +186,11 @@ directional_connect_policy<true>::initialize_direction(
 		break;
 	case '!':
 		if (f) {
+#if NEW_CONNECTION_FLAGS
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+#else
 			direction_flags |= CONNECTED_TO_CONSUMER;
+#endif
 		}
 #if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 		else {
@@ -191,9 +233,25 @@ directional_connect_policy<true>::initialize_actual_direction(
 	const char d = c.__get_raw_type().get_direction();
 	switch (d) {
 	case '\0': direction_flags = a.direction_flags; break;
-	case '?': direction_flags = a.direction_flags & ~CONNECTED_TO_PRODUCER;
+	case '?':
+#if NEW_CONNECTION_FLAGS
+		// note: this clears out the META flag as well
+		direction_flags =
+			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
+			// | CONNECTED_TO_SUBSTRUCT_CONSUMER;
+#else
+		direction_flags = a.direction_flags & ~CONNECTED_TO_PRODUCER;
+#endif
 		break;
-	case '!': direction_flags = a.direction_flags & ~CONNECTED_TO_CONSUMER;
+	case '!':
+#if NEW_CONNECTION_FLAGS
+		// note: this clears out the META flag as well
+		direction_flags =
+			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
+			// | CONNECTED_TO_SUBSTRUCT_PRODUCER;
+#else
+		direction_flags = a.direction_flags & ~CONNECTED_TO_CONSUMER;
+#endif
 		break;
 	default:
 		ICE(cerr, cerr << "Invalid direction.";)
@@ -214,12 +272,22 @@ good_bool
 directional_connect_policy<true>::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
 	const connection_flags_type f = a.direction_flags;
-	if (!(f & CONNECTED_ANY_PRODUCER)) {
+#if NEW_CONNECTION_FLAGS
+	if (!(f & CONNECTED_TO_ANY_PRODUCER))
+#else
+	if (!(f & CONNECTED_ANY_PRODUCER))
+#endif
+	{
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a producer." << endl;
 	}
-	if (!(f & CONNECTED_ANY_CONSUMER)) {
+#if NEW_CONNECTION_FLAGS
+	if (!(f & CONNECTED_TO_ANY_CONSUMER))
+#else
+	if (!(f & CONNECTED_ANY_CONSUMER))
+#endif
+	{
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a consumer." << endl;

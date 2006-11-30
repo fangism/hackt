@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.42.2.1 2006/11/28 22:01:48 fang Exp $
+	$Id: instance_collection.tcc,v 1.42.2.2 2006/11/30 23:13:57 fang Exp $
 	TODO: trim includes
  */
 
@@ -1096,7 +1096,8 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::set_alias_connection_flags(const unsigned char f) {
+INSTANCE_ARRAY_CLASS::set_alias_connection_flags(
+		const connection_flags_type f) {
 	return for_each(this->collection.begin(), this->collection.end(), 
 		typename element_type::connection_flag_setter(f)).status;
 }
@@ -1659,7 +1660,8 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::set_alias_connection_flags(const unsigned char f) {
+INSTANCE_SCALAR_CLASS::set_alias_connection_flags(
+		const connection_flags_type f) {
 	return this->the_instance.set_connection_flags(f);
 }
 

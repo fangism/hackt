@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.15 2006/11/21 22:38:55 fang Exp $
+	$Id: CHP.cc,v 1.15.2.1 2006/11/30 23:13:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -945,9 +945,17 @@ set_channel_alias_directions(
 		// remember to use canonical aliases!
 		if (!cic->set_alias_connection_flags(
 			d ? directional_connect_policy<true>::
+#if NEW_CONNECTION_FLAGS
+				CONNECTED_TO_CHP_NONMETA_PRODUCER
+#else
 				CONNECTED_CHP_NONMETA_PRODUCER
+#endif
 			: directional_connect_policy<true>::
+#if NEW_CONNECTION_FLAGS
+				CONNECTED_TO_CHP_NONMETA_CONSUMER
+#else
 				CONNECTED_CHP_NONMETA_CONSUMER
+#endif
 			).good) {
 			// diagnostic?
 			return good_bool(false);
@@ -969,9 +977,18 @@ set_channel_alias_directions(
 		// can this result in an error? yes!
 		if (!ca->find()->set_connection_flags(
 				d ? directional_connect_policy<true>::
+#if NEW_CONNECTION_FLAGS
+					CONNECTED_TO_CHP_META_PRODUCER
+#else
 					CONNECTED_CHP_PRODUCER
+#endif
 				: directional_connect_policy<true>::
-					CONNECTED_CHP_CONSUMER).good) {
+#if NEW_CONNECTION_FLAGS
+					CONNECTED_TO_CHP_META_CONSUMER
+#else
+					CONNECTED_CHP_CONSUMER
+#endif
+					).good) {
 			// diagnostic?
 			return good_bool(false);
 		}

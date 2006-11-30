@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.6.2.1 2006/11/28 22:01:49 fang Exp $
+	$Id: port_formal_array.tcc,v 1.6.2.2 2006/11/30 23:13:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -604,7 +604,8 @@ PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-PORT_FORMAL_ARRAY_CLASS::set_alias_connection_flags(const unsigned char f) {
+PORT_FORMAL_ARRAY_CLASS::set_alias_connection_flags(
+		const connection_flags_type f) {
 	return for_each(this->begin(), this->end(),
 		typename element_type::connection_flag_setter(f)).status;
 }

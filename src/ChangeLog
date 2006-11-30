@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-11-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-05:
+	  New set of direction-connection flags for clarity.  
+		Same two regressions remain, fix next.  
+
+
 2006-11-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-62-channel-02-04:

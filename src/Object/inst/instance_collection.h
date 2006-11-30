@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.29 2006/11/27 10:36:38 fang Exp $
+	$Id: instance_collection.h,v 1.29.2.1 2006/11/30 23:13:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -16,6 +16,7 @@
 #include "Object/common/multikey_index.h"
 #include "Object/inst/collection_interface.h"
 #include "Object/devel_switches.h"
+#include "Object/inst/connection_policy_fwd.h"
 #include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -248,7 +249,7 @@ virtual	void
 
 #define	SET_ALIAS_CONNECTION_FLAGS_PROTO				\
 	good_bool							\
-	set_alias_connection_flags(const unsigned char)
+	set_alias_connection_flags(const connection_flags_type)
 
 virtual	SET_ALIAS_CONNECTION_FLAGS_PROTO = 0;
 

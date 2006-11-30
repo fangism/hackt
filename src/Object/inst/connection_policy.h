@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.2.2.2 2006/11/30 05:04:58 fang Exp $
+	$Id: connection_policy.h,v 1.2.2.3 2006/11/30 23:13:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
@@ -10,6 +10,11 @@
 #include "Object/inst/connection_policy_fwd.h"
 #include <iosfwd>
 #include "util/boolean_types.h"
+
+/**
+	Define to 1 to use new set of connection flags.  
+ */
+#define	NEW_CONNECTION_FLAGS			1
 
 namespace HAC {
 namespace entity {
@@ -91,6 +96,90 @@ private:
 	typedef	directional_connect_policy<true>	this_type;
 public:
 	enum direction_flags {
+#if NEW_CONNECTION_FLAGS
+		/**
+			Mutually exclusive with 
+			CONNECTED_TO_SUBSTRUCT_PRODUCER
+			and CONNECTED_CHP_PRODUCER.
+			Setting this means either connected to port formal.
+		 */
+		CONNECTED_TO_LOCAL_PRODUCER = 0x0001,
+		CONNECTED_TO_LOCAL_CONSUMER = 0x0100,
+		/**
+			Access is shared.  Requires ALL participants
+			in an alias set to be shared to be legal.  
+		 */
+		CONNECTED_PRODUCER_IS_SHARED = 0x0002,
+		CONNECTED_CONSUMER_IS_SHARED = 0x0200,
+		/**
+			Connection inferred from substructure, 
+			propagated from formal to actual.  
+		 */
+		CONNECTED_TO_SUBSTRUCT_PRODUCER = 0x0004,
+		CONNECTED_TO_SUBSTRUCT_CONSUMER = 0x0400,
+		/**
+			CHP source of same locale is allowed 
+			multiple references.
+		 */
+		CONNECTED_CHP_PRODUCER = 0x0008,
+		CONNECTED_CHP_CONSUMER = 0x0800,
+		/**
+			Exclusive with IS_NONMETA.
+			Implies LOCAL or SUBSTRUCT PRODUCER.  
+		 */
+		CONNECTED_PRODUCER_IS_META = 0x0010,
+		CONNECTED_CONSUMER_IS_META = 0x1000,
+		/**
+			Exclusive with IS_META.
+			Implies LOCAL or SUBSTRUCT PRODUCER.  
+		 */
+		CONNECTED_PRODUCER_IS_NONMETA = 0x0020,
+		CONNECTED_CONSUMER_IS_NONMETA = 0x2000,
+		// derived values
+		CONNECTED_PORT_FORMAL_PRODUCER =
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_PRODUCER_IS_META,	// maybe shared later
+		CONNECTED_PORT_FORMAL_CONSUMER =
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_CONSUMER_IS_META,	// maybe shared later
+		CONNECTED_TO_ANY_PRODUCER = 
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_CHP_PRODUCER |
+			CONNECTED_TO_SUBSTRUCT_PRODUCER,
+		CONNECTED_TO_ANY_CONSUMER = 
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_CHP_CONSUMER |
+			CONNECTED_TO_SUBSTRUCT_CONSUMER,
+		CONNECTED_TO_NONCHP_PRODUCER = 
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_TO_SUBSTRUCT_PRODUCER,
+		CONNECTED_TO_NONCHP_CONSUMER = 
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_TO_SUBSTRUCT_CONSUMER,
+		CONNECTED_TO_CHP_META_PRODUCER =
+			CONNECTED_CHP_PRODUCER |
+			CONNECTED_PRODUCER_IS_META,
+		CONNECTED_TO_CHP_META_CONSUMER =
+			CONNECTED_CHP_CONSUMER |
+			CONNECTED_CONSUMER_IS_META,
+		CONNECTED_TO_CHP_NONMETA_PRODUCER =
+			CONNECTED_CHP_PRODUCER |
+			CONNECTED_PRODUCER_IS_NONMETA,
+		CONNECTED_TO_CHP_NONMETA_CONSUMER =
+			CONNECTED_CHP_CONSUMER |
+			CONNECTED_CONSUMER_IS_NONMETA,
+		/// exclusion violation detection
+#if 0
+		CONNECTED_META_NONMETA_PRODUCER =
+			CONNECTED_PRODUCER_IS_META |
+			CONNECTED_PRODUCER_IS_NONMETA,
+		CONNECTED_META_NONMETA_CONSUMER =
+			CONNECTED_CONSUMER_IS_META |
+			CONNECTED_CONSUMER_IS_NONMETA,
+#endif
+		/// default value
+		DEFAULT_CONNECT_FLAGS = 0x0000
+#else	// NEW_CONNECTION_FLAGS
 		/**
 			Set if connected to some producer of values, 
 			such as a receive-port-formal, 
@@ -173,6 +262,7 @@ public:
 			set them to accordingly.  
 		 */
 		DEFAULT_CONNECT_FLAGS = 0x00
+#endif	// NEW_CONNECTION_FLAGS
 	};
 protected:
 	connection_flags_type		direction_flags;
