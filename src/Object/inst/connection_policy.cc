@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.3.2.1 2006/11/29 22:46:49 fang Exp $
+	$Id: connection_policy.cc,v 1.3.2.2 2006/11/30 05:04:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,7 +23,8 @@ namespace entity {
 	Checks can be a lot more sophisticated, depending on desired semantics.
  */
 good_bool
-directional_connect_policy<true>::set_connection_flags(const unsigned char f) {
+directional_connect_policy<true>::set_connection_flags(
+		const connection_flags_type f) {
 	if (f & CONNECTED_CHP_PRODUCER) {
 		if (direction_flags & CONNECTED_TO_PRODUCER) {
 			cerr << "Error: cannot connect to producer by both "

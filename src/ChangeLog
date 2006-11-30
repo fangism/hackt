@@ -5,6 +5,13 @@
 
 2006-11-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-62-channel-02-04:
+	  Minor patchlet: expanded direction fields to short to accommodate
+		new flag set for direction checking.  
+		Updated test expects for footprint size increase accordingly,
+		still same 2 regressions to fix next.
+
+
 	* HACKT-00-01-04-main-00-80-62-channel-02-03:
 	  Some regression fixes involving hierarchical channel 
 		connectivity checking.  Only 2 regressions remain

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2.2.2 2006/11/29 22:46:51 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.3 2006/11/30 05:04:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -50,8 +50,8 @@ directional_connect_policy<true>::synchronize_flags(
 	}
 	this_type& ll(l);	// static_cast
 	this_type& rr(r);	// static_cast
-	const unsigned char& lld(ll.direction_flags);
-	const unsigned char& rrd(rr.direction_flags);
+	const connection_flags_type& lld(ll.direction_flags);
+	const connection_flags_type& rrd(rr.direction_flags);
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(lld) << endl);
 	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rrd) << endl);
@@ -59,8 +59,8 @@ directional_connect_policy<true>::synchronize_flags(
 	r.dump_hierarchical_name(STACKTRACE_INDENT << "r: ") << endl;
 #endif
 	// convenience aliases
-	const unsigned char _and = lld & rrd;
-	const unsigned char _or = lld | rrd;
+	const connection_flags_type _and = lld & rrd;
+	const connection_flags_type _or = lld | rrd;
 	bool good = true;
 #if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	if ((lld & CONNECTED_ANY_PRODUCER) && (rrd & CONNECTED_ANY_PRODUCER))
@@ -213,7 +213,7 @@ template <class AliasType>
 good_bool
 directional_connect_policy<true>::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
-	const char f = a.direction_flags;
+	const connection_flags_type f = a.direction_flags;
 	if (!(f & CONNECTED_ANY_PRODUCER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")

@@ -1,12 +1,13 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.2.2.1 2006/11/29 22:46:50 fang Exp $
+	$Id: connection_policy.h,v 1.2.2.2 2006/11/30 05:04:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 #define	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 
+#include "Object/inst/connection_policy_fwd.h"
 #include <iosfwd>
 #include "util/boolean_types.h"
 
@@ -16,15 +17,6 @@ using std::istream;
 using std::ostream;
 using util::good_bool;
 //=============================================================================
-/**
-	These are to be used as base classes for instance_alias_info.  
-	\param B is true if instances have directional properties
-		such as channels.  
- */
-template <bool B>
-struct directional_connect_policy;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Operations in this specialization should be no-ops.  
  */
@@ -51,7 +43,7 @@ protected:
 
 public:
 	good_bool
-	set_connection_flags(const unsigned char) const {
+	set_connection_flags(const connection_flags_type) const {
 		return good_bool(true);
 	}
 
@@ -70,7 +62,7 @@ public:
 		const good_bool		status;
 
 		explicit
-		connection_flag_setter(const unsigned char) :
+		connection_flag_setter(const connection_flags_type) :
 			status(true) { }
 
 		/**
@@ -183,7 +175,7 @@ public:
 		DEFAULT_CONNECT_FLAGS = 0x00
 	};
 protected:
-	unsigned char		direction_flags;
+	connection_flags_type		direction_flags;
 public:
 	directional_connect_policy() :
 		direction_flags(DEFAULT_CONNECT_FLAGS) { }
@@ -197,7 +189,7 @@ public:
 	synchronize_flags(AliasType&, AliasType&);
 
 	good_bool
-	set_connection_flags(const unsigned char);
+	set_connection_flags(const connection_flags_type);
 
 protected:
 	template <class ContainerType>
@@ -220,10 +212,10 @@ protected:
 public:
 	struct connection_flag_setter {
 		good_bool		status;
-		const unsigned char	update;
+		const connection_flags_type	update;
 
 		explicit
-		connection_flag_setter(const unsigned char f) :
+		connection_flag_setter(const connection_flags_type f) :
 			status(true), update(f) { }
 
 		void
