@@ -5,6 +5,11 @@
 
 2006-11-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-62-channel-02-06:
+	  Remaining 2 regressions fixed.  Wasn't updating flag properly 
+		upon propagation of formal to actual connected channel.
+
+
 	* HACKT-00-01-04-main-00-80-62-channel-02-05:
 	  New set of direction-connection flags for clarity.  
 		Same two regressions remain, fix next.  

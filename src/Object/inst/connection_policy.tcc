@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2.2.4 2006/11/30 23:13:55 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.5 2006/12/01 00:57:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -238,7 +238,9 @@ directional_connect_policy<true>::initialize_actual_direction(
 		// note: this clears out the META flag as well
 		direction_flags =
 			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
-			// | CONNECTED_TO_SUBSTRUCT_CONSUMER;
+		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
+		}
 #else
 		direction_flags = a.direction_flags & ~CONNECTED_TO_PRODUCER;
 #endif
@@ -248,7 +250,9 @@ directional_connect_policy<true>::initialize_actual_direction(
 		// note: this clears out the META flag as well
 		direction_flags =
 			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
-			// | CONNECTED_TO_SUBSTRUCT_PRODUCER;
+		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+		}
 #else
 		direction_flags = a.direction_flags & ~CONNECTED_TO_CONSUMER;
 #endif
