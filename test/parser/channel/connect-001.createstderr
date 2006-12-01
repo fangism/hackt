@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
 	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

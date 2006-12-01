@@ -77,12 +77,12 @@ Persistent Object Manager text dump:
 	69	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
 	70	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	71	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	509
+	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	512
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	75	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	76	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	395
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
 	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

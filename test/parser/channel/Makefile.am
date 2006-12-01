@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/11/21 22:39:21 fang Exp $
+#	$Id: Makefile.am,v 1.12 2006/12/01 23:29:17 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,7 +20,11 @@ HACKT_PARSE_TEST_PASSES = \
 	connect-021 connect-022 connect-023 connect-024 \
 	connect-025 connect-026 connect-027 connect-028 \
 	connect-029 connect-030 connect-031 connect-032 \
-	connect-033 connect-034 connect-035 connect-036
+	connect-033 connect-034 connect-035 connect-036 \
+	connect-037 connect-038 connect-039 connect-040 \
+	connect-041 connect-042 connect-043 connect-044 \
+	connect-045 connect-046 connect-047 connect-048 \
+	connect-049 connect-050
 
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
 HACKT_UNROLL_TEST_PASSES = \
@@ -49,10 +53,19 @@ HACKT_CREATE_TEST_PASSES = \
 	connect-017 connect-018 connect-019 connect-020 \
 	connect-023 connect-024 connect-027 connect-028 \
 	connect-029 connect-030 connect-031 connect-032 \
-	connect-033 connect-034
+	connect-037 connect-038 connect-039 connect-040 \
+	connect-041 connect-042 connect-045 connect-048
 
 HACKT_CREATE_TEST_FAILURES = \
-	connect-035 connect-036
+	connect-033 connect-034 \
+	connect-035 connect-036 \
+	connect-043 connect-044 \
+	connect-046 connect-047 connect-049 connect-050
+
+if USE_UNROLL_PHASE
+else
+HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
+endif
 
 HACKT_ALLOC_TEST_PASSES =
 #	connect-009 connect-010

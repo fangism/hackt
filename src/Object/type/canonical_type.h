@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.9 2006/11/07 06:35:30 fang Exp $
+	$Id: canonical_type.h,v 1.10 2006/12/01 23:28:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -118,7 +118,7 @@ public:
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
-	void
+	good_bool
 	unroll_port_instances(const unroll_context&,
 		subinstance_manager&) const;
 

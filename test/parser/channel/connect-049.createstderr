@@ -1,0 +1,9 @@
+Error: cannot mix meta- and nonmeta-referenced channel in consumer alias.
+Error referencing foo::X[foo::i].
+Error unrolling action_sequence.
+Error resolving do-forever loop.
+Error unrolling action_sequence.
+Error instantiating process footprint: 
+From canonical type: foo<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

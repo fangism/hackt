@@ -1,5 +1,8 @@
 Error: cannot connect to consumer by both aliasing and CHP!
+Error referencing one_shot::b.
 Error resolving do-forever loop.
 Error unrolling action_sequence.
-Error during create_unique.
+Error instantiating process footprint: 
+From canonical type: one_shot<>
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

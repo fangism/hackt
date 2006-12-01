@@ -3,5 +3,7 @@ Error unrolling production rule:
 	(&:j:[0..$i-1]: ~nandN::in[$j]) -> nandN::_out+
 Error resolving production rule in loop:
 $i = 0
-Error during create_unique.
+Error instantiating process footprint: 
+From canonical type: nandN<4>
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

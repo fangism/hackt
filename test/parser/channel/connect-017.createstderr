@@ -1,4 +1,5 @@
 WARNING: channel senders::a lacks connection to a producer.
+WARNING: channel z.a lacks connection to a producer.
 WARNING: channel z.a lacks connection to a consumer.
 ---- END CREATE WARNINGS ---
 
@@ -16,12 +17,12 @@ Persistent Object Manager text dump:
 	9	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	322
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
 	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
 	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

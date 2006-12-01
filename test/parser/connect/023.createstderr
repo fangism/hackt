@@ -1,0 +1,4 @@
+ERROR: cannot unroll incomplete process type barf
+Instantiated from: barf<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

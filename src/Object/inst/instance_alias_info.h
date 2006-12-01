@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.20 2006/11/27 08:29:05 fang Exp $
+	$Id: instance_alias_info.h,v 1.21 2006/12/01 23:28:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -89,10 +89,8 @@ public:
 	 */
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	typedef	port_actual_collection<Tag>	port_actuals_type;
 	typedef	never_ptr<const port_actuals_type>	port_actuals_ptr_type;
-#endif
 	typedef	collection_interface<Tag>		container_type;
 	typedef	instance_collection_generic_type	canonical_container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
@@ -233,11 +231,9 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	void
 	instantiate_actual_from_formal(const port_actuals_ptr_type, 
 		const unroll_context&, const this_type&);
-#endif
 
 	good_bool
 	check_connection(void) const;

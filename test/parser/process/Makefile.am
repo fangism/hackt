@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2006/11/12 05:59:11 fang Exp $
+#	$Id: Makefile.am,v 1.18 2006/12/01 23:30:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -63,7 +63,11 @@ HACKT_CREATE_TEST_PASSES = \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 115 117 118
 
+if USE_UNROLL_PHASE
 HACKT_CREATE_TEST_FAILURES =
+else
+HACKT_CREATE_TEST_FAILURES = $(HACKT_UNROLL_TEST_FAILURES)
+endif
 
 # should be a subset of $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_ALLOC_TEST_PASSES = \

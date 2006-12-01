@@ -1,0 +1,18 @@
+// "connect-049.hac"
+// copy-modified from "connect-046.hac" (wrapped in a definition)
+// should fail creating:
+// cannot alias a channel that is referenced by nonmeta index in CHP
+
+defproc foo(chan(bool) X[4], Y; chan(int<2>) Z) {
+bool b;
+int<2> i;
+Y = X[3];	// alias
+
+chp {
+*[ Y?(b) ];	// meta-referenced
+*[ Z?(i); X[i]?(b) ]	// non-meta referenced
+}
+}
+
+foo bar;
+

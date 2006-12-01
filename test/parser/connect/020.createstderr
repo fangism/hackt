@@ -1,0 +1,4 @@
+ERROR: cannot unroll incomplete process type fang
+Instantiated from: fang<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

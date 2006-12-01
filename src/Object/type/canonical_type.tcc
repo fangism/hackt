@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.12 2006/11/07 06:35:31 fang Exp $
+	$Id: canonical_type.tcc,v 1.13 2006/12/01 23:28:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -244,7 +244,12 @@ good_bool
 CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
-	INVARIANT(this->is_strict());
+	if (!this->is_strict()) {
+		cerr << "Error: could not instantiate incomplete type "
+			"(missing relaxed actuals)" << endl;
+		dump(cerr << "\twith: ") << endl;
+		return good_bool(false);
+	}
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
 	return canonical_definition_ptr->create_complete_type(
 		param_list_ptr, top);
@@ -313,11 +318,11 @@ CANONICAL_TYPE_CLASS::must_be_connectibly_type_equivalent(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
-void
+good_bool
 CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
 		subinstance_manager& sub) const {
 	STACKTRACE_VERBOSE;
-	unroll_port_instances_policy<DefType>()(*this, c, sub);
+	return unroll_port_instances_policy<DefType>()(*this, c, sub);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,0 +1,16 @@
+// "connect-047.hac"
+// copy-modified from "connect-046.hac" (re-order CHP)
+// should fail creating:
+// cannot alias a channel that is referenced by nonmeta index in CHP
+
+chan(bool) X[4], Y;
+chan(int<2>) Z;
+
+bool b;
+int<2> i;
+Y = X[3];	// alias
+
+chp {
+*[ Z?(i); X[i]?(b) ];	// non-meta referenced
+*[ Y?(b) ]	// meta-referenced
+}

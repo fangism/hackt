@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2 2006/11/21 22:38:51 fang Exp $
+	$Id: connection_policy.tcc,v 1.3 2006/12/01 23:28:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -35,6 +35,8 @@ directional_connect_policy<true>::__update_flags(AliasType& a) {
 /**
 	Issue an error/diagnostic if:
 	both canonical node are already connected to a producer
+	TODO: precise direction connection checking, w.r.t CHP,
+		meta-references and nonmeta-references.
  */
 template <class AliasType>
 good_bool
@@ -48,18 +50,25 @@ directional_connect_policy<true>::synchronize_flags(
 	}
 	this_type& ll(l);	// static_cast
 	this_type& rr(r);	// static_cast
+	const connection_flags_type& lld(ll.direction_flags);
+	const connection_flags_type& rrd(rr.direction_flags);
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(ll.direction_flags) << endl);
-	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rr.direction_flags) << endl);
+	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(lld) << endl);
+	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rrd) << endl);
 	l.dump_hierarchical_name(STACKTRACE_INDENT << "l: ") << endl;
 	r.dump_hierarchical_name(STACKTRACE_INDENT << "r: ") << endl;
 #endif
-	const unsigned char _and = ll.direction_flags & rr.direction_flags;
-	const unsigned char _or = ll.direction_flags | rr.direction_flags;
+	// convenience aliases
+	const connection_flags_type _and = lld & rrd;
+	const connection_flags_type _or = lld | rrd;
 	bool good = true;
-	if (_and & CONNECTED_TO_PRODUCER) {
+	if ((lld & CONNECTED_TO_ANY_PRODUCER) &&
+			(rrd & CONNECTED_TO_ANY_PRODUCER))
+	{
 		// multiple producers
-		if (!(_and & CONNECTED_SHARED_PRODUCER)) {
+		// TODO: strengthen condition?
+		// shared, but connection must also be consistent?
+		if (!(_and & CONNECTED_PRODUCER_IS_SHARED)) {
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
 				"non-sharing producers of type " <<
@@ -67,15 +76,21 @@ directional_connect_policy<true>::synchronize_flags(
 			good = false;
 		}
 	}
-	if (_and & CONNECTED_TO_CONSUMER) {
+	if ((lld & CONNECTED_TO_ANY_CONSUMER) &&
+			(rrd & CONNECTED_TO_ANY_CONSUMER))
+	{
 		// multiple consumers
-		if (!(_and & CONNECTED_SHARED_CONSUMER)) {
+		if (!(_and & CONNECTED_CONSUMER_IS_SHARED)) {
 			// at least one of them not sharing
 			cerr << "Error: cannot alias two "
 				"non-sharing consumers of type " <<
 				traits_type::tag_name << "." << endl;
 			good = false;
 		}
+	}
+	if (!check_meta_nonmeta_usage(_or, traits_type::tag_name).good) {
+		// already have error message
+		good = false;
 	}
 	if (!good) {
 		l.dump_hierarchical_name(cerr << "\tgot: ") << endl;
@@ -121,23 +136,13 @@ directional_connect_policy<true>::initialize_direction(
 	case '\0': break;		// leave as initial value
 	case '?':
 		if (f) {
-			direction_flags |= CONNECTED_TO_PRODUCER;
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
 		}
-#if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
-		else {
-			direction_flags |= CONNECTED_TO_CONSUMER;
-		}
-#endif
 		break;
 	case '!':
 		if (f) {
-			direction_flags |= CONNECTED_TO_CONSUMER;
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
 		}
-#if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
-		else {
-			direction_flags |= CONNECTED_TO_PRODUCER;
-		}
-#endif
 		break;
 	default:
 		ICE(cerr, cerr << "Invalid direction.";)
@@ -145,7 +150,6 @@ directional_connect_policy<true>::initialize_direction(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	This variation initializes actuals' aliases (from subinstances)
 	based on how they were connected in their corresponding
@@ -174,38 +178,67 @@ directional_connect_policy<true>::initialize_actual_direction(
 	const char d = c.__get_raw_type().get_direction();
 	switch (d) {
 	case '\0': direction_flags = a.direction_flags; break;
-	case '?': direction_flags = a.direction_flags & ~CONNECTED_TO_PRODUCER;
+	case '?':
+		// note: this clears out the META flag as well
+		direction_flags =
+			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
+		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
+		}
 		break;
-	case '!': direction_flags = a.direction_flags & ~CONNECTED_TO_CONSUMER;
+	case '!':
+		// note: this clears out the META flag as well
+		direction_flags =
+			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
+		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
+			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
+		}
 		break;
 	default:
 		ICE(cerr, cerr << "Invalid direction.";)
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Issues diagnostic for dangling channel connections.  
 	Could just make this a non-template function by passing
 		the tag_name as a string.  
+	TODO: finer diagnostic control to determine whether or not
+		to promote warning to error.  
  */
 template <class AliasType>
 good_bool
 directional_connect_policy<true>::__check_connection(const AliasType& a) {
 	typedef	typename AliasType::traits_type		traits_type;
-	const char f = a.direction_flags;
-	if (!(f & (CONNECTED_TO_PRODUCER | CONNECTED_CHP_PRODUCER))) {
+	const connection_flags_type f = a.direction_flags;
+	if (!(f & CONNECTED_TO_ANY_PRODUCER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a producer." << endl;
 	}
-	if (!(f & (CONNECTED_TO_CONSUMER | CONNECTED_CHP_CONSUMER))) {
+	if (!(f & CONNECTED_TO_ANY_CONSUMER)) {
 		a.dump_hierarchical_name(
 			cerr << "WARNING: " << traits_type::tag_name << " ")
 			<< " lacks connection to a consumer." << endl;
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor's forwarding operator.  
+	Sets flags of each element's canonical alias, 
+	while checking for errors.
+ */
+template <class AliasType>
+void
+directional_connect_policy<true>::connection_flag_setter::operator () (
+		AliasType& a) {
+	// important that this is done with the *canoncical* node
+	if (!a.find()->set_connection_flags(update).good) {
+		status.good = false;
+	}
 }
 
 //=============================================================================

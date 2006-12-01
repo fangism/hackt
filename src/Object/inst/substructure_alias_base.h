@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.20 2006/11/27 08:29:18 fang Exp $
+	$Id: substructure_alias_base.h,v 1.21 2006/12/01 23:28:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -68,12 +68,14 @@ virtual	~substructure_alias_base() { }
 	}
 
 	template <class Tag>
-	void
+	good_bool
 	unroll_port_instances(
 			const collection_interface<Tag>& p, 
 			const unroll_context& c) {
-		subinstances.unroll_port_instances(p, c);
-		restore_parent_child_links();
+		if (subinstances.unroll_port_instances(p, c).good) {
+			restore_parent_child_links();
+			return good_bool(true);
+		} else	return good_bool(false);
 	}
 
 	void
@@ -160,9 +162,9 @@ protected:
 		No-op.
 	 */
 	template <class Tag>
-	void
+	good_bool
 	unroll_port_instances(const collection_interface<Tag>&, 
-		const unroll_context&) const { }
+		const unroll_context&) const { return good_bool(true); }
 
 	void
 	allocate_subinstances(footprint&) const { }

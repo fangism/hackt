@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.146 2006/11/21 22:38:27 fang Exp $
+#	$Id: Makefile.am,v 1.147 2006/12/01 23:28:28 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -300,6 +300,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/alias_visitee.h \
 	Object/inst/alias_visitor.h \
 	Object/inst/collection_fwd.h \
+	Object/inst/connection_policy_fwd.h \
 	Object/inst/instance_fwd.h \
 	Object/inst/substructure_alias_fwd.h \
 	Object/inst/general_collection_type_manager.h \

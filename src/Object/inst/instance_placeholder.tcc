@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.6 2006/11/21 22:38:53 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.7 2006/12/01 23:28:51 fang Exp $
 	TODO: trim includes
  */
 
@@ -232,8 +232,15 @@ INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 			template get_instance_collection_pool_bundle<Tag>());
 	const never_ptr<port_collection_type>
 		ret(pool.allocate_port_collection(back_ref, c));
+#if 0
 	NEVER_NULL(ret);
-	// TODO: attach relaxed parameters
+#else
+	if (!ret) {
+		cerr << "Error unrolling port." << endl;
+	}
+#endif
+	// TODO: attach relaxed parameters --
+	// this may be done in the unrolling of the ports now.
 	return ret;
 }
 

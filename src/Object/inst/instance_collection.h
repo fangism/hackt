@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.29 2006/11/27 10:36:38 fang Exp $
+	$Id: instance_collection.h,v 1.30 2006/12/01 23:28:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -15,7 +15,7 @@
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/inst/collection_interface.h"
-#include "Object/devel_switches.h"
+#include "Object/inst/connection_policy_fwd.h"
 #include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -99,9 +99,7 @@ protected:
 	// collection_type_manager_parent_type
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	typedef	port_actual_collection<Tag>		port_actuals_type;
-#endif
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
@@ -248,17 +246,15 @@ virtual	void
 
 #define	SET_ALIAS_CONNECTION_FLAGS_PROTO				\
 	good_bool							\
-	set_alias_connection_flags(const unsigned char)
+	set_alias_connection_flags(const connection_flags_type)
 
 virtual	SET_ALIAS_CONNECTION_FLAGS_PROTO = 0;
 
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 #define	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO				\
 	void								\
 	instantiate_actuals_from_formals(port_actuals_type&, 		\
 		const unroll_context&) const
 virtual	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO = 0;
-#endif
 
 public:
 virtual	instance_alias_info_type&

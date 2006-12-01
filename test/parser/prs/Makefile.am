@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2006/11/12 05:59:12 fang Exp $
+#	$Id: Makefile.am,v 1.30 2006/12/01 23:30:24 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -73,6 +73,11 @@ HACKT_CREATE_TEST_PASSES = \
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
 	null-01
+
+if USE_UNROLL_PHASE
+else
+HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
+endif
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...

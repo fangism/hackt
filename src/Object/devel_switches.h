@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.36 2006/11/27 20:37:58 fang Exp $
+	$Id: devel_switches.h,v 1.37 2006/12/01 23:28:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -78,29 +78,19 @@
  */
 #define	DENSE_FORMAL_VALUE_COLLECTIONS		0
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to propagate formal and local channel connectivity
-	up hierarchies for more accurate diagnostics about connectedness.
-	Consider this as a unroll/create-time option?
-	Consequence: unrolling connections for one type will require
-		dependent types to be *created* (not just unrolled)
-		for their port summaries.  This will cause quite a 
-		change in intermediate dumps...
-	This mechanism is also used to propagate relaxed actuals from
-		formal collections to actuals.  
-	Goal: 1?
-	Status: written and tested (unroll differences only, as expected)
-	Priority: medium
-	Consequences: this patch causes recursive unroll to depend on
-		'creation' of dependent types, which effectively fuses unroll
-		and create together, and causes major changes in ONLY
-		the unroll test expects (no create differences)
-		Fusing the two phases makes it more difficult to
-		debug transient states of the intermediate representation.
-		We may have to update all unroll tests by hand, or
-		say goodbye to the unroll phase and its tests.  
+	Define to 1 to fuse unrolling and creating into the same phase.
+	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY (perm'd), 
+		we now have no use for an unrolled-but-not-created footprint.
+	This is now defined in config.h by configure.  
+	Goal: 1 (reluctantly)
+	Status: not begun
+	Priority: medium-high
+	Affects: top-level executable programs, internal passes 
+		don't need to use this flag.  
  */
-#define	PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY	0
+// #define	UNIFY_UNROLL_CREATE			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -162,6 +152,8 @@
 #define	SUBTYPE_FOOTPRINTS			0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// the below flags are done, revisit and perm them later
+
 /**
 	Define to 1 recurse collection of port aliases (redundantly redundant)
 	Discovered that using instance_collection_pool_manager to collect
@@ -192,11 +184,9 @@
 		redundant (precisely regenerable) information.  
 	Goal: 1? (probably)
 	Priority: low-medium (memory intensive)
-	Status: done, tested, but not committed.  
+	Status: done, tested, but not perm'd yet.  
 		Results in massive (factor of 2) savings on 
 		large objects, especially top-level hierarchy.
-	NOTE: results in change in binary sizes of course, so regression
-		test cases need to be updated accordingly.
  */
 #define	AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES		1
 

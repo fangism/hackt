@@ -1,5 +1,6 @@
-ERROR: complete type required for instantiation
-	have: foo<5>
-Failed to instantiate bar
-Error during create_unique.
+Error: could not instantiate incomplete type (missing relaxed actuals)
+	with: foo<5>
+Error instantiating process footprint: 
+From canonical type: foo<5>
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.17 2006/11/27 08:29:17 fang Exp $
+	$Id: subinstance_manager.h,v 1.18 2006/12/01 23:28:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -114,7 +114,7 @@ public:
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
-	void
+	good_bool
 	unroll_port_instances(
 		const collection_interface<Tag>&, 
 		const unroll_context&);

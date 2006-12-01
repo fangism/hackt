@@ -3,6 +3,125 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-merged-channel-02-09:
+	  Branch merge.  Summary:
+	  Unroll phase has been fused into create phase, and now deprecated.
+		This in turn, has required us to disable all unroll-related
+		tests, so currently there are about 4269 tests remaining.  
+	  Additions to direction/connection checking of channels:
+		Connectivity state is now propagated up hierarchically
+		through formal alias summaries (callee to caller).  
+		Cannot mix meta and nonmeta channel references, 
+			non-meta referenced channels are basically unaliasable.
+		Added bunch of tests cases for these rules.  
+	  Next: built-in channel footprints for state allocation for chpsim.  
+
+
+2006-12-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-09:
+	  Perm'd PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.
+	  Now issue 'deprecated' warning when 'unroll' is run.  
+	  Next: develop footprints for built-in channel types, 
+		and some sort of mapper to manage them.  
+		May do this on new branch instead.  
+
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-08:
+	  Perm'd NEW_CONNECTION_FLAGS.
+	  Updated channel connection documentation in dox/lang.
+	  Next: perm PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.
+
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-07:
+	  Added better checks for meta/nonmeta mixing during CHP
+		traversal of channel references.  Now mixing meta 
+		references with non-meta references is forbidden, 
+		this is enforced by checking the canonical aliases.
+		In general, this means nonmeta-referenced channels
+		are NOT aliasable.  What not checked yet: connecting
+		nonmeta aliases from *different* collections.  
+		So we may need one final pass over channel alias sets
+		to check for uniqueness among nonmeta-referenced collections.
+		Should nonmeta referenced channels be restricted to 
+		self-aliases (unique) only?  
+	  Note: non-directional channel ports have always been allowed, 
+		and will remain so.  Warnings of dangling channels
+		are always in effect.  
+	  Added bunch of test cases for the above checks to parser/channel.
+	  Next: perm the NEW_CONNCTION_FLAGS, but update comments.  
+
+
+2006-11-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-06:
+	  Remaining 2 regressions fixed.  Wasn't updating flag properly 
+		upon propagation of formal to actual connected channel.
+		We now succesfully propagate local, directional connectivity 
+		information up through ports from callee to caller.
+
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-05:
+	  New set of direction-connection flags for clarity.  
+		Same two regressions remain, fix next.  
+
+
+2006-11-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-04:
+	  Minor patchlet: expanded direction fields to short to accommodate
+		new flag set for direction checking.  
+		Updated test expects for footprint size increase accordingly,
+		still same 2 regressions to fix next.
+
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-03:
+	  Some regression fixes involving hierarchical channel 
+		connectivity checking.  Only 2 regressions remain
+		with the following issue:
+		regarding the CONNECTED_CHP_PRODUCER/CONSUMER flags, 
+		we need to disguish between a CHP 'connection' that
+		resulted from a substructure, vs. a local (this scope)
+		CHP connection.  Walking a CHP body should set the local
+		variant of the flag, while inheriting a flag from 
+		formal to actual should use the substructure variant.  
+		We forbid  connecting a channel to CHP in both local
+		and substructure context, unless we add future support
+		for sharing CHP connections between hierarchies. 
+		Next revision will address this.  
+
+
+2006-11-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-02:
+	  No source revision.
+	  Test suite has now disabled unroll tests.  
+		See test/ChangeLog.
+	  Top-level configure now has option to re-enable them, 
+		but don't expect them to pass because they are no longer
+		updated, they correspond to old (correct) behavior.  
+	  Test suite: promoted many unroll-fail tests to create-fail tests.
+		Updated trivial cases, and left less trivial differences
+		as regressions (numbering 16 total, all in parser/channel).
+	  TODO: use UNIFY_UNROLL_CREATE flag to issue deprecation
+		warnings when using unroll (in main programs).  
+
+
+	* HACKT-00-01-04-main-00-80-62-channel-02-01:
+	  Enabled PROPAGAATE_CHANNEL_CONNECTIONS_HIERARCHICALLY.  
+	  Canonical types now must be complete (including relaxed actuals
+		where applicable) before unrolling, else will be rejected
+		with diagnosis.  
+	  Added return value to most unroll_port functions, 
+		and catch exception elsewhere for port error handling.
+	  This causes regressions on nearly all unroll tests because
+		unrolling now requires dependent types to be fully-created.
+		The post-unroll dumps resemble create-dumps.  
+	  Next: update tests
+
+
 2006-11-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-62:

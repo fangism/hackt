@@ -1,0 +1,12 @@
+// "connect-038.hac"
+// copy-modified from "connect-037.hac"
+// should pass: non-directional channel port, self-connected with CHP
+
+defproc boring(chan(bool) B) {
+bool x;
+chp { *[ B?(x) ] }
+chp { *[ B!(false) ] }
+}
+
+boring lecture;
+

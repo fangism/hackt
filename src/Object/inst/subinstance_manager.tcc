@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.9 2006/11/07 06:35:03 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.10 2006/12/01 23:28:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
@@ -27,7 +27,7 @@ namespace entity {
 		migrated to canonical_types?
  */
 template <class Tag>
-void
+good_bool
 subinstance_manager::unroll_port_instances(
 		const collection_interface<Tag>& inst, 
 		const unroll_context& c) {
@@ -53,7 +53,7 @@ subinstance_manager::unroll_port_instances(
 		cerr << "Error resolving type during "
 			"subinstance_manager::unroll_port_instances: <type>"
 				<< endl;
-		THROW_EXIT;
+		return good_bool(false);
 	}
 #if 0
 	unresolved_super_type->dump(cerr << "unresolved type: ") << endl;
@@ -63,7 +63,7 @@ subinstance_manager::unroll_port_instances(
 #if ENABLE_STACKTRACE
 	resolved_super_type.dump(STACKTRACE_INDENT << "super type: ") << endl;
 #endif
-	resolved_super_type.unroll_port_instances(c, *this);
+	return resolved_super_type.unroll_port_instances(c, *this);
 }
 
 //=============================================================================

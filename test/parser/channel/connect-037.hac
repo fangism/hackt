@@ -1,0 +1,9 @@
+// "connect-037.hac"
+// should pass: non-directional channel port not connected to anything
+// will warn about dangling connections
+
+defproc boring(chan(bool) B; chan(int) I) {
+}
+
+boring lecture;
+

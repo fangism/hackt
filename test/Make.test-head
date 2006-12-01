@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.26 2006/11/21 22:39:16 fang Exp $
+#	$Id: Make.test-head,v 1.27 2006/12/01 23:29:00 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -14,9 +14,6 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.outdump-filter .indump-filter .compileobjdiff \
 	.hacflattest .hacf .hacf-filter .hacf-diff \
 	.hacflatfailtest .hacf-fail .hacf-fail-filter .hacf-fail-diff \
-	.hacktunrolltest .unrolldump .unrolldump-filter \
-	.haco-u-dump .haco-u-dump-filter .unrolldiff \
-	.hacktunrollfailtest .unrollfaildump .unrollfaildiff \
 	.hacktcreatetest .hacktcreatefailtest \
 	.createdump .createdump-filter .creatediff \
 	.createfaildump .haco-c-dump .haco-c-err \
@@ -26,11 +23,11 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacktalloctest .haco-a-dump .haco-a-dump-filter \
 	.allocdump .allocfaildump .allocdump-filter \
 	.allocdiff .alloc-from-haco-diff \
-	.haco-a-from-haco .haco-a-from-u \
-	.haco-a-from-haco-dump .haco-a-from-u-dump \
-	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
-	.alloc-from-haco-dump .alloc-from-u-dump \
-	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
+	.haco-a-from-haco \
+	.haco-a-from-haco-dump \
+	.haco-a-from-haco-dump-filter \
+	.alloc-from-haco-dump \
+	.alloc-from-haco-dump-filter \
 	.hacktallocfromhacotest \
 	.hacktcflattest \
 	.hacktcflatlvstest \
@@ -59,6 +56,16 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.prsimckpt-01-dump .prsimopt-diff \
 	.hacktprsdottest
 
+if USE_UNROLL_PHASE
+SUFFIXES += \
+	.hacktunrolltest .unrolldump .unrolldump-filter \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.hacktunrollfailtest .unrollfaildump .unrollfaildiff \
+	.haco-a-from-u \
+	.alloc-from-u-dump .alloc-from-u-dump-filter \
+	.haco-a-from-u-dump .haco-a-from-u-dump-filter
+endif
+
 # if suffix substitutions ever result in target names with just the suffix
 # then just touch empty files with name.
 # NOTE: built test script should not be named here, as then need to be
@@ -70,20 +77,18 @@ BOGUS_SUFFIX_TARGETS = \
 	.outdump-filter .indump-filter .compileobjdiff \
 	.hacf .hacf-filter .hacf-diff \
 	.hacf-fail .hacf-fail-filter .hacf-fail-diff \
-	.unrolldump .unrolldump-filter .unrollstderr \
-	.haco-u-dump .haco-u-dump-filter .unrolldiff \
-	.createstderr .unrollfaildump .unrollfaildiff \
+	.createstderr \
 	.createdump .createdump-filter .createfaildump .haco-c-dump \
 	.haco-c-err .haco-c-from-haco .haco-c-from-haco-err \
 	.create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
 	.haco-a-dump .haco-a-dump-filter \
 	.allocdump .allocfaildump .allocdump-filter \
-	.haco-a-from-haco .haco-a-from-u \
-	.haco-a-from-haco-dump .haco-a-from-u-dump \
-	.haco-a-from-haco-dump-filter .haco-a-from-u-dump-filter \
-	.alloc-from-haco-dump .alloc-from-u-dump \
-	.alloc-from-haco-dump-filter .alloc-from-u-dump-filter \
+	.haco-a-from-haco \
+	.haco-a-from-haco-dump \
+	.haco-a-from-haco-dump-filter \
+	.alloc-from-haco-dump \
+	.alloc-from-haco-dump-filter \
 	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
 	.sprs .sprs-sort .sprsdiff .sprsdiff-sort \
 	.prsseu .prsseu-sort .prsseudiff .prsseudiff-sort \
@@ -99,6 +104,16 @@ BOGUS_SUFFIX_TARGETS = \
 	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
 	.prsimckpt-dupe .prsimckpt-dupe-dump \
 	.prsimckpt-O1 .prsimckpt-O1-err .prsimckpt-01-dump .prsimopt-diff
+
+if USE_UNROLL_PHASE
+BOGUS_SUFFIX_TARGETS += \
+	.unrolldump .unrolldump-filter .unrollstderr \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.unrollfaildump .unrollfaildiff \
+	.haco-a-from-u \
+	.haco-a-from-u-dump .haco-a-from-u-dump-filter \
+	.alloc-from-u-dump .alloc-from-u-dump-filter
+endif
 
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs

@@ -1,0 +1,18 @@
+// "connect-043.hac"
+// copy-modified from "nonmeta-bool-merge.hac"
+// referencing an array of channels with nonmeta-index
+// should fail: using a channel array referenced
+// with meta and nonmeta index.  
+
+defproc merge(chan?(bool) B[2]; chan?(int<1>) S) {
+bool b;
+int<1> s;
+chp {
+	*[ S?(s); B[s]?(b);
+	   S?(s); [ (s==0) -> B[0]?(b) [] else -> B[1]?(b) ]
+	]
+}
+}
+
+merge fail;
+

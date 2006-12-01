@@ -2,7 +2,8 @@
 // copy-modified from "nonmeta-bool-split.hac" (definition only)
 // referencing an array of channels with nonmeta-index
 //	also referencing with meta-index
-// should pass unrolling and creating without warnings inside split
+// RESOLUTION: mixing nonmeta and meta indices should be rejected
+// should fail creating
 
 defproc split(chan!(bool) B[2]; chan?(int<1>) S) {
 int<1> s;

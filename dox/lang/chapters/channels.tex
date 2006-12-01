@@ -1,6 +1,6 @@
 % "chapters/channels.tex"
 
-%	$Id: channels.tex,v 1.6 2006/11/21 22:38:20 fang Exp $
+%	$Id: channels.tex,v 1.7 2006/12/01 23:28:23 fang Exp $
 
 \chapter{Channels}
 \label{sec:channels}
@@ -40,16 +40,18 @@ a send-only channel in another module.}?
 \label{sec:channel:sendrecv:connect}
 
 What are legal connections between channel instance references?
+Channels have directional connection semantics.
+Two value producers cannot be aliased, nor can two consumers.  
 
 Q: Should legal programs be restricted to connecting
-at most one-receiver to one-sender?
+at most one-receiver to one-sender?\\
+A: Yes, until we support shared channels (see below).
 
 Q: Should dangling channels (one-way only) be allowed, rejected, or warned?
-Does not count ports.  
+Does not count definition ports, which are assumed to be connected.  
 
-Aliasing: is connecting two read-only channels legal for the sake of aliasing?
-Connecting two read-only ports of different processes seems like an error.
-Can we define precise alias semantics?
+Clarification: Channel directions indicated in port declarations only dictate
+which direction one \emph{cannot} connect to locally.  
 
 We use the following example program template to answer questions.  
 
@@ -63,7 +65,7 @@ defproc outer(chan(bool) P; chan?(bool) Q; chan!(bool) R) {
 \begin{itemize}
 \item \ttt{x(P,Q,R), y;} -- legal
 \item \ttt{x, y; x.A = P; x.B = Q; x.C = R} -- legal, equivalent to the previous
-\item \ttt{x, y(x.A, x.B, x.C);} -- legal?  two receive ports being aliased!
+\item \ttt{x, y(x.A, x.B, x.C);} -- error: two receive ports being aliased
 \item \ttt{x(P,R,Q), y;} -- error: connecting send-only to receive-only channel
 \item \ttt{x, y(x.A, x.C, x.B);} -- error: equivalent to above
 \end{itemize}
@@ -126,6 +128,8 @@ Channels that are missing connection to a producer or consumer
 should be rejected.  Basically, when a channel is deduced as dangling, 
 at least a diagnostic should be issued.  
 \tbf{Resolution}: issue warning diagnostic, without rejecting outright.
+Eventually, it is up to the final tool to accept or reject dangling
+connections.  
 
 \tbf{Proposal}: Shared channels:
 Thus far, we've described one-to-one channels where producers
@@ -174,17 +178,30 @@ x = y; // results in x.X = y.X
 \end{verbatim}
 
 \tbf{Q}: What is the initial `connected' state of a non-directional
-channel port?
+channel port (inside definition)?
+A: a read-only port is assumed to be connected to a producer, 
+and a write-only port is assumed to be connected to a consumer.  
 
 \tbf{Q}: Should local `connected' state information be propagated
 from formal collections' aliases to actual collections' aliases?
 With this, channels that are locally dangling can be properly connected
 hierarchically.  
+A: Yes, we propagate local connectivity summaries up through formals
+to initialize the connectivity state of substructure actuals
+for more precise hierarchical alias analysis.  
 This may help check connectivity of non-directional channels.  
 NOTE: this would also apply to relaxed actuals, and is a necessary step
 towards properly implementing them (a general mechanism to propagate
 local information externally).  
 TODO: illustrative examples.  
+
+\tbf{Q}: Do we allow a channel (member of an array) to be referenced 
+by both meta-parameter and nonmeta-parameters?  No.
+Rationale: Nonmeta indexed channels introduce another difficulty, 
+as they cannot be analyzed at compile time...
+Effectively, this restricts mixing of meta-aliasing and nonmeta-referencing, 
+at least for channels, variables may be another issue.
+This issue is related to alias disambiguation.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fundamental Channel Types}

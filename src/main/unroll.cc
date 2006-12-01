@@ -2,8 +2,10 @@
 	\file "main/unroll.cc"
 	Unrolls an object file, saves it to another object file.  
 	This file was reincarnated from "artobjunroll.cc" in a previous life.  
+	NOTE: this command is now obsolete, having been fused with
+	the create phase.  
 
-	$Id: unroll.cc,v 1.6 2005/12/13 04:15:48 fang Exp $
+	$Id: unroll.cc,v 1.7 2006/12/01 23:28:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -36,7 +38,12 @@ const char
 unroll::name[] = "unroll";
 
 const char
-unroll::brief_str[] = "Unrolls an object file, saving to another object file";
+unroll::brief_str[] =
+#if UNIFY_UNROLL_CREATE
+"Unrolls an object file, saving to another object file";
+#else
+"Unrolls an object file, saving to another object file (deprecated)";
+#endif
 
 const size_t
 unroll::program_id = register_hackt_program_class<unroll>();
@@ -48,6 +55,11 @@ unroll::unroll() { }
 int
 unroll::main(const int argc, char* argv[], const global_options&) {
 	options opt();
+#if UNIFY_UNROLL_CREATE
+	cerr << "NOTICE: the unroll compile phase has been fused with the "
+		"create phase, so this program is now deprecated." << endl;
+	cerr << "Please use the \'create\' subprogram instead." << endl;
+#endif
 	if (argc != 3) {
 		usage();
 		return 1;

@@ -1,0 +1,6 @@
+ERROR: types mismatch!
+	got: foo<5><4>
+	and: foo<5><3>
+ERROR: type-mismatch during process_instantiation_statement::unroll.
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

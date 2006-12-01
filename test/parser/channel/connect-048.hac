@@ -1,0 +1,16 @@
+// "connect-048.hac"
+// copy-modified from "connect-046.hac"
+// should warn creating: no mixing of meta and nonmeta
+// only warn about dangling channels
+
+chan(bool) X[4], Y;
+chan(int<2>) Z;
+
+bool b;
+int<2> i;
+X[0] = X[3];	// alias beween non-meta, OK
+
+chp {
+*[ Y?(b) ];	// meta-referenced
+*[ Z?(i); X[i]?(b) ]	// non-meta referenced
+}

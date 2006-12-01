@@ -1,12 +1,13 @@
 /**
 	\file "Object/inst/connection_policy.h"
 	Specializations for connections in the HAC language. 
-	$Id: connection_policy.h,v 1.2 2006/11/21 22:38:50 fang Exp $
+	$Id: connection_policy.h,v 1.3 2006/12/01 23:28:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 #define	__HAC_OBJECT_INST_CONNECTION_POLICY_H__
 
+#include "Object/inst/connection_policy_fwd.h"
 #include <iosfwd>
 #include "util/boolean_types.h"
 
@@ -16,15 +17,6 @@ using std::istream;
 using std::ostream;
 using util::good_bool;
 //=============================================================================
-/**
-	These are to be used as base classes for instance_alias_info.  
-	\param B is true if instances have directional properties
-		such as channels.  
- */
-template <bool B>
-struct directional_connect_policy;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Operations in this specialization should be no-ops.  
  */
@@ -51,7 +43,7 @@ protected:
 
 public:
 	good_bool
-	set_connection_flags(const unsigned char) const {
+	set_connection_flags(const connection_flags_type) const {
 		return good_bool(true);
 	}
 
@@ -70,7 +62,7 @@ public:
 		const good_bool		status;
 
 		explicit
-		connection_flag_setter(const unsigned char) :
+		connection_flag_setter(const connection_flags_type) :
 			status(true) { }
 
 		/**
@@ -100,80 +92,113 @@ private:
 public:
 	enum direction_flags {
 		/**
-			Set if connected to some producer of values, 
-			such as a receive-port-formal, 
-			or send-port-actual member, 
-			be it shared or non-shared. 
+			Set if connected to a local port producer.  
+			Mutually exclusive with 
+			CONNECTED_TO_SUBSTRUCT_PRODUCER
+			and CONNECTED_CHP_PRODUCER.
+			Setting this means either connected to port formal.
 		 */
-		CONNECTED_TO_PRODUCER = 0x01,
+		CONNECTED_TO_LOCAL_PRODUCER = 0x0001,
 		/**
-			Set if connected to some consumer of values, 
-			such as a send-port-formal, 
-			or receive-port-actual member, 
-			be it shared or non-shared. 
+			Analogous to CONNECTED_TO_LOCAL_CONSUMER.
 		 */
-		CONNECTED_TO_CONSUMER = 0x02,
+		CONNECTED_TO_LOCAL_CONSUMER = 0x0100,
 		/**
-			Proposed flag for indicating whether 
-			producer connection is shared or not.  
-			Only meaningful when CONNECTED_TO_PRODUCER is set.
-			Not yet used.  
+			Set if this channel is allowed to be connected
+			to other shared producers.  
+			Requires ALL participants
+			in an alias set to be shared to be legal.  
 		 */
-		CONNECTED_SHARED_PRODUCER = 0x04,
+		CONNECTED_PRODUCER_IS_SHARED = 0x0002,
 		/**
-			Proposed flag for indicating whether 
-			consumer connection is shared or not.  
-			Only meaningful when CONNECTED_TO_CONSUMER is set.
-			Not yet used.  
+			Analogous to CONNECTED_CONSUMER_IS_SHARED.
 		 */
-		CONNECTED_SHARED_CONSUMER = 0x08,
-
+		CONNECTED_CONSUMER_IS_SHARED = 0x0200,
 		/**
-			Set if the alias is used in CHP for sending.  
-			Should this be exclusive with CONNECTED_TO_PRODUCER?
+			Connection state inferred from hierarchy
+			when substructure is instantiated, 
+			propagated from formal to actual.  
 		 */
-		CONNECTED_CHP_PRODUCER = 0x10, 
+		CONNECTED_TO_SUBSTRUCT_PRODUCER = 0x0004,
 		/**
-			Set if the alias is used in CHP for receiving.  
-			Should this be exclusive with CONNECTED_TO_CONSUMER?
+			Analogous to CONNECTED_TO_SUBSTRUCT_PRODUCER.
 		 */
-		CONNECTED_CHP_CONSUMER = 0x20, 
+		CONNECTED_TO_SUBSTRUCT_CONSUMER = 0x0400,
 		/**
-			Set if may be accessed by nonmeta-indexed
-			channel reference in CHP.  
-			We distinguish from normal connections
-			for the purpose of may-analysis.  
-			Only meaningful if CONNECTED_CHP_PRODUCER is set.
+			This flag is necessary because
+			CHP source of same locale is allowed 
+			multiple references.
+			We allow X!() to appear multiple times without error.
+			However, we do not have any checks in-place yet 
+			for sharing channels across CHP loop-bodies.  
+			TODO: identify CHP body of origin, perhaps with 
+			automatic (anonymous) tree-naming.  
 		 */
-		CONNECTED_NONMETA_INDEXED_PRODUCER = 0x40,
+		CONNECTED_CHP_PRODUCER = 0x0008,
 		/**
-			Set if may be accessed by nonmeta-indexed
-			channel reference in CHP.  
-			We distinguish from normal connections
-			for the purpose of may-analysis.  
-			Only meaningful if CONNECTED_CHP_CONSUMER is set.
+			Analogous to CONNECTED_CHP_PRODUCER.
 		 */
-		CONNECTED_NONMETA_INDEXED_CONSUMER = 0x80,
-
+		CONNECTED_CHP_CONSUMER = 0x0800,
 		/**
-			Derived value combination.
+			Set if channel is known to be referenced (in CHP)
+			at compile time as a producer, using meta-parameters.  
+			Exclusive with IS_NONMETA.
+			Implies LOCAL or SUBSTRUCT or CHP PRODUCER.  
 		 */
-		CONNECTED_CHP_NONMETA_PRODUCER = CONNECTED_CHP_PRODUCER | 
-			CONNECTED_NONMETA_INDEXED_PRODUCER, 
+		CONNECTED_PRODUCER_IS_META = 0x0010,
 		/**
-			Derived value combination.
+			Analogous to CONNECTED_PRODUCER_IS_META.
 		 */
-		CONNECTED_CHP_NONMETA_CONSUMER = CONNECTED_CHP_CONSUMER | 
-			CONNECTED_NONMETA_INDEXED_CONSUMER, 
+		CONNECTED_CONSUMER_IS_META = 0x1000,
 		/**
-			Initial value: not connected.  
-			Port formal instantiations however should
-			set them to accordingly.  
+			Set if channel may be referenced (in CHP) through
+			a nonmeta index as a producer.  
+			Exclusive with IS_META.
+			Implies LOCAL or SUBSTRUCT PRODUCER.  
 		 */
-		DEFAULT_CONNECT_FLAGS = 0x00
+		CONNECTED_PRODUCER_IS_NONMETA = 0x0020,
+		/**
+			Analogous to CONNECTED_PRODUCER_IS_NONMETA.
+		 */
+		CONNECTED_CONSUMER_IS_NONMETA = 0x2000,
+		// derived values
+		CONNECTED_PORT_FORMAL_PRODUCER =
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_PRODUCER_IS_META,	// maybe shared later
+		CONNECTED_PORT_FORMAL_CONSUMER =
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_CONSUMER_IS_META,	// maybe shared later
+		CONNECTED_TO_ANY_PRODUCER = 
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_CHP_PRODUCER |
+			CONNECTED_TO_SUBSTRUCT_PRODUCER,
+		CONNECTED_TO_ANY_CONSUMER = 
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_CHP_CONSUMER |
+			CONNECTED_TO_SUBSTRUCT_CONSUMER,
+		CONNECTED_TO_NONCHP_PRODUCER = 
+			CONNECTED_TO_LOCAL_PRODUCER |
+			CONNECTED_TO_SUBSTRUCT_PRODUCER,
+		CONNECTED_TO_NONCHP_CONSUMER = 
+			CONNECTED_TO_LOCAL_CONSUMER |
+			CONNECTED_TO_SUBSTRUCT_CONSUMER,
+		CONNECTED_TO_CHP_META_PRODUCER =
+			CONNECTED_CHP_PRODUCER |
+			CONNECTED_PRODUCER_IS_META,
+		CONNECTED_TO_CHP_META_CONSUMER =
+			CONNECTED_CHP_CONSUMER |
+			CONNECTED_CONSUMER_IS_META,
+		CONNECTED_TO_CHP_NONMETA_PRODUCER =
+			CONNECTED_CHP_PRODUCER |
+			CONNECTED_PRODUCER_IS_NONMETA,
+		CONNECTED_TO_CHP_NONMETA_CONSUMER =
+			CONNECTED_CHP_CONSUMER |
+			CONNECTED_CONSUMER_IS_NONMETA,
+		/// default value
+		DEFAULT_CONNECT_FLAGS = 0x0000
 	};
 protected:
-	unsigned char		direction_flags;
+	connection_flags_type		direction_flags;
 public:
 	directional_connect_policy() :
 		direction_flags(DEFAULT_CONNECT_FLAGS) { }
@@ -187,7 +212,11 @@ public:
 	synchronize_flags(AliasType&, AliasType&);
 
 	good_bool
-	set_connection_flags(const unsigned char);
+	set_connection_flags(const connection_flags_type);
+
+	static
+	good_bool
+	check_meta_nonmeta_usage(const connection_flags_type, const char*);
 
 protected:
 	template <class ContainerType>
@@ -210,18 +239,15 @@ protected:
 public:
 	struct connection_flag_setter {
 		good_bool		status;
-		const unsigned char	update;
+		const connection_flags_type	update;
 
 		explicit
-		connection_flag_setter(const unsigned char f) :
+		connection_flag_setter(const connection_flags_type f) :
 			status(true), update(f) { }
 
+		template <class AliasType>
 		void
-		operator () (this_type& a) {
-			if (!a.set_connection_flags(update).good) {
-				status.good = false;
-			}
-		}
+		operator () (AliasType& a);
 	};	// end struct connection_flag_setter
 
 	// only for non-directional channels?

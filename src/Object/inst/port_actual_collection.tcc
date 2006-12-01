@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.5 2006/11/27 10:36:41 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.6 2006/12/01 23:28:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -51,7 +51,9 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This constructor should never throw.  
+	TODO: re-write function as something other than constructor
+		to return instead of throw.
+	\throw exception if there is an error in unrolling ports.  
 	\pre if we're propagating connection information hierarchically, 
 		then the formal collection type must already be successfully
 		created.  We don't create here, to avoid exception handling
@@ -64,21 +66,11 @@ PORT_ACTUAL_COLLECTION_CLASS::port_actual_collection(
 		parent_type(), 
 		formal_collection(f), 
 		value_array(f->collection_size()) {
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	// pass the iterators (or this collection) to the formal collection 
 	// for initialization of the connected state
 	// this requires that summaries are already constructed
 	// by the formal collection (requires create pass)
 	this->formal_collection->instantiate_actuals_from_formals(*this, c);
-	// might throw exception?
-#else
-	iterator i(this->begin()), e(this->end());
-	for ( ; i!=e; ++i) {
-		// here is an opportunity to pass local alias information up!
-		// provided that the dependent type is already *created*
-		i->instantiate(never_ptr<const this_type>(this), c);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

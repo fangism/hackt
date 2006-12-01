@@ -1,0 +1,6 @@
+Error: cannot mix meta- and nonmeta-referenced channel in consumer alias.
+Error referencing Y.
+Error resolving do-forever loop.
+Error unrolling action_sequence.
+Error during create_unique.
+ERROR in creating.  Aborting.

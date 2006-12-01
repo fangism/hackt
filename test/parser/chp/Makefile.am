@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2006/11/21 22:40:17 fang Exp $
+#	$Id: Makefile.am,v 1.16 2006/12/01 23:29:46 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -47,7 +47,9 @@ HACKT_CREATE_TEST_PASSES = \
 	bool-source bool-sink \
 	source-sink-01
 
-# 094: diagnostic improvement -- print template arguments for definition qualifiers
+# TODO:
+# 091 094: diagnostic improvement -- 
+# print template arguments for definition qualifiers
 
 HACKT_CREATE_TEST_FAILURES =
 

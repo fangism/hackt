@@ -1,0 +1,117 @@
+WARNING: channel Y lacks connection to a producer.
+WARNING: channel Z lacks connection to a producer.
+WARNING: channel X[0] lacks connection to a producer.
+WARNING: channel X[1] lacks connection to a producer.
+WARNING: channel X[2] lacks connection to a producer.
+WARNING: channel X[3] lacks connection to a producer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	529
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  5 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    X = chan(bool<>) X^1
+    Y = chan(bool<>) Y
+    Z = chan(int<2>) Z
+    b = bool<> b
+    i = int<2> i
+}
+
+top-level chp:
+  concurrent: {
+    *[
+      Y?(b)
+    ]
+    *[
+      sequential: {
+        Z?(i)
+        X[i]?(b)
+      }
+    ]
+  }
+footprint: {
+  X = channel chan(bool<>)^1
+    {
+      [0] = X[0] (3) 
+      [1] = X[1] (4) 
+      [2] = X[2] (5) 
+      [3] = X[3] (6) 
+    }
+  Y = channel chan(bool<>)^0 = Y (1) 
+  Z = channel chan(int<2>)^0 = Z (2) 
+  b = bool^0 = b (1) 
+  i = int<2>^0 = i (1) 
+  Created state:
+  channel instance pool:
+  1	Y
+  2	Z
+  3	X[0]
+  4	X[1]
+  5	X[2]
+  6	X[3]
+  int instance pool:
+  1	i
+  bool instance pool:
+  1	b
+  resolved concurrent actions:
+    *[
+      Y?(b)
+    ]
+    *[
+      sequential: {
+        Z?(i)
+        X[i]?(b)
+      }
+    ]
+}

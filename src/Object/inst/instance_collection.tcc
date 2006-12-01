@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.42 2006/11/27 10:36:39 fang Exp $
+	$Id: instance_collection.tcc,v 1.43 2006/12/01 23:28:50 fang Exp $
 	TODO: trim includes
  */
 
@@ -574,9 +574,14 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// before calling recursive instantiate?
 			// only so if ports ever depend on relaxed parameters.  
 			// then insertion of new value was successful
+			try {
 			new_elem->instantiate(
 				never_ptr<const this_type>(this), c);
 			// set its relaxed actuals!!! (if appropriate)
+			// can throw!
+			} catch (...) {
+				err = true;
+			}
 			if (actuals) {
 			const bool attached(new_elem->attach_actuals(actuals));
 			if (!attached) {
@@ -1091,13 +1096,13 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::set_alias_connection_flags(const unsigned char f) {
+INSTANCE_ARRAY_CLASS::set_alias_connection_flags(
+		const connection_flags_type f) {
 	return for_each(this->collection.begin(), this->collection.end(), 
 		typename element_type::connection_flag_setter(f)).status;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	For now, sparse collections never referenced as formals, 
 	so this should never be called.
@@ -1108,7 +1113,6 @@ INSTANCE_ARRAY_CLASS::instantiate_actuals_from_formals(
 		port_actuals_type&, const unroll_context&) const {
 	ICE_NEVER_CALL(cerr);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1429,7 +1433,11 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		return good_bool(false);
 	}
 	// here we need an explicit instantiation (recursive)
+	try {
 	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
+	} catch (...) {
+		return good_bool(false);
+	}
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
 			complete_type_definition_footprint(actuals).good) {
@@ -1650,12 +1658,12 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::set_alias_connection_flags(const unsigned char f) {
+INSTANCE_SCALAR_CLASS::set_alias_connection_flags(
+		const connection_flags_type f) {
 	return this->the_instance.set_connection_flags(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	This initializes the scalar instance by propagating formal
 	connection information to the actual.  
@@ -1682,7 +1690,6 @@ INSTANCE_SCALAR_CLASS::instantiate_actuals_from_formals(
 	// propagate actuals from formal to actual
 	// propagate direction connection information from formal to actual
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

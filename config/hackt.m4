@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.7 2006/11/12 05:57:40 fang Exp $
+dnl	$Id: hackt.m4,v 1.8 2006/12/01 23:28:20 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -363,6 +363,33 @@ dnl if given
 dnl if not given
 	[AC_MSG_RESULT([no (default)])]
 )])dnl
+
+
+dnl @synopsis HACKT_ARG_ENABLE_UNROLL_PHASE
+dnl
+dnl Phase out unroll compile phase.
+dnl Disables unroll tests.  
+dnl Eventually perm this.
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-11-28
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_UNROLL_PHASE],
+[AC_MSG_CHECKING([whether or not to enable unroll phase])
+AC_ARG_ENABLE(unroll_phase,
+	AS_HELP_STRING([--enable-unroll-phase],
+		[Use (deprecated) unroll compile phase. (default=disabled)])
+)
+AM_CONDITIONAL(USE_UNROLL_PHASE, test x"$enable_unroll_phase" = "xyes")
+if test x"$enable_unroll_phase" = "xyes"
+then    AC_MSG_RESULT([yes])
+	AC_DEFINE(UNIFY_UNROLL_CREATE, 0, [Define to 1 to combine unroll/create.])
+else    AC_MSG_RESULT([no])
+	AC_DEFINE(UNIFY_UNROLL_CREATE, 1, [Define to 1 to combine unroll/create.])
+fi
+])dnl
 
 
 dnl @synopsis HACKT_ARG_ENABLE_FUN
