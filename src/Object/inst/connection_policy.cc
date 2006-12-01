@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.3.2.4 2006/12/01 09:24:17 fang Exp $
+	$Id: connection_policy.cc,v 1.3.2.5 2006/12/01 21:40:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -26,46 +26,31 @@ good_bool
 directional_connect_policy<true>::set_connection_flags(
 		const connection_flags_type f) {
 	if (f & CONNECTED_CHP_PRODUCER) {
-#if NEW_CONNECTION_FLAGS
-		if (direction_flags & CONNECTED_TO_NONCHP_PRODUCER)
-#else
-		if (direction_flags & CONNECTED_TO_PRODUCER)
-#endif
-		{
+		if (direction_flags & CONNECTED_TO_NONCHP_PRODUCER) {
 			cerr << "Error: cannot connect to producer by both "
 				"aliasing and CHP!" << endl;
 			return good_bool(false);
 		}
-#if NEW_CONNECTION_FLAGS
-#endif
 	} 
 	// mutually exclusive, by caller
 	else if (f & CONNECTED_CHP_CONSUMER) {
-#if NEW_CONNECTION_FLAGS
-		if (direction_flags & CONNECTED_TO_NONCHP_CONSUMER)
-#else
-		if (direction_flags & CONNECTED_TO_CONSUMER)
-#endif
-		{
+		if (direction_flags & CONNECTED_TO_NONCHP_CONSUMER) {
 			cerr << "Error: cannot connect to consumer by both "
 				"aliasing and CHP!" << endl;
 			return good_bool(false);
 		}
 	}
 	const connection_flags_type _or = f | direction_flags;
-#if NEW_CONNECTION_FLAGS
 	if (!check_meta_nonmeta_usage(_or, "channel").good) {
 		// already have error message
 		return good_bool(false);
 	}
-#endif
 	// already connected in CHP, connecting again OK
 	direction_flags |= _or;
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if NEW_CONNECTION_FLAGS
 /**
 	Checks to make sure a producer/consumer isn't referenced both
 	by meta (constant) and nonmeta means.  
@@ -91,7 +76,6 @@ directional_connect_policy<true>::check_meta_nonmeta_usage(
 	}
 	return good_bool(good);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

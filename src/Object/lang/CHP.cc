@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.15.2.2 2006/12/01 09:24:19 fang Exp $
+	$Id: CHP.cc,v 1.15.2.3 2006/12/01 21:40:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -945,17 +945,9 @@ set_channel_alias_directions(
 		// remember to use canonical aliases!
 		if (!cic->set_alias_connection_flags(
 			d ? directional_connect_policy<true>::
-#if NEW_CONNECTION_FLAGS
 				CONNECTED_TO_CHP_NONMETA_PRODUCER
-#else
-				CONNECTED_CHP_NONMETA_PRODUCER
-#endif
 			: directional_connect_policy<true>::
-#if NEW_CONNECTION_FLAGS
 				CONNECTED_TO_CHP_NONMETA_CONSUMER
-#else
-				CONNECTED_CHP_NONMETA_CONSUMER
-#endif
 			).good) {
 			ncr.dump(cerr << "Error referencing ", 
 				expr_dump_context::default_value)
@@ -979,17 +971,9 @@ set_channel_alias_directions(
 		// can this result in an error? yes!
 		if (!ca->find()->set_connection_flags(
 				d ? directional_connect_policy<true>::
-#if NEW_CONNECTION_FLAGS
 					CONNECTED_TO_CHP_META_PRODUCER
-#else
-					CONNECTED_CHP_PRODUCER
-#endif
 				: directional_connect_policy<true>::
-#if NEW_CONNECTION_FLAGS
 					CONNECTED_TO_CHP_META_CONSUMER
-#else
-					CONNECTED_CHP_CONSUMER
-#endif
 					).good) {
 			ncr.dump(cerr << "Error referencing ", 
 				expr_dump_context::default_value)
