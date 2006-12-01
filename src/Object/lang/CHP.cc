@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.15.2.1 2006/11/30 23:13:58 fang Exp $
+	$Id: CHP.cc,v 1.15.2.2 2006/12/01 09:24:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -957,7 +957,9 @@ set_channel_alias_directions(
 				CONNECTED_CHP_NONMETA_CONSUMER
 #endif
 			).good) {
-			// diagnostic?
+			ncr.dump(cerr << "Error referencing ", 
+				expr_dump_context::default_value)
+				<< "." << endl;
 			return good_bool(false);
 		}
 	} else {
@@ -989,7 +991,9 @@ set_channel_alias_directions(
 					CONNECTED_CHP_CONSUMER
 #endif
 					).good) {
-			// diagnostic?
+			ncr.dump(cerr << "Error referencing ", 
+				expr_dump_context::default_value)
+				<< "." << endl;
 			return good_bool(false);
 		}
 	}

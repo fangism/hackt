@@ -1,4 +1,5 @@
 Error: cannot connect to consumer by both aliasing and CHP!
+Error referencing one_shot::b.
 Error resolving do-forever loop.
 Error unrolling action_sequence.
 Error instantiating process footprint: 

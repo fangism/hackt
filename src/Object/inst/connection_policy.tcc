@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2.2.5 2006/12/01 00:57:08 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.6 2006/12/01 09:24:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -115,16 +115,8 @@ directional_connect_policy<true>::synchronize_flags(
 		}
 	}
 #if NEW_CONNECTION_FLAGS
-	if ((_or & CONNECTED_PRODUCER_IS_META) &&
-			(_or & CONNECTED_PRODUCER_IS_NONMETA)) {
-		cerr << "Error: cannot mix meta- and nonmeta-referenced " <<
-			traits_type::tag_name << " in producer alias." << endl;
-		good = false;
-	}
-	if ((_or & CONNECTED_CONSUMER_IS_META) &&
-			(_or & CONNECTED_CONSUMER_IS_NONMETA)) {
-		cerr << "Error: cannot mix meta- and nonmeta-referenced " <<
-			traits_type::tag_name << " in consumer alias." << endl;
+	if (!check_meta_nonmeta_usage(_or, traits_type::tag_name).good) {
+		// already have error message
 		good = false;
 	}
 #endif
@@ -297,6 +289,22 @@ directional_connect_policy<true>::__check_connection(const AliasType& a) {
 			<< " lacks connection to a consumer." << endl;
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor's forwarding operator.  
+	Sets flags of each element's canonical alias, 
+	while checking for errors.
+ */
+template <class AliasType>
+void
+directional_connect_policy<true>::connection_flag_setter::operator () (
+		AliasType& a) {
+	// important that this is done with the *canoncical* node
+	if (!a.find()->set_connection_flags(update).good) {
+		status.good = false;
+	}
 }
 
 //=============================================================================

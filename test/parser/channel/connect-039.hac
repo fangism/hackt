@@ -1,0 +1,16 @@
+// "connect-039.hac"
+// copy-modified from "connect-038.hac"
+// should pass: non-directional channel port, fully connected at top-level
+// expect warning about dangling producer in definition
+
+defproc boring(chan(bool) B) {
+bool x;
+chp { *[ B?(x) ] }
+}
+
+chan(bool) Q;
+boring lecture(Q);
+chp { *[ Q!(false) ] }
+// chp { *[ lecture.B!(false) ] }
+// member_nonmeta_instance_references: not enabled yet
+

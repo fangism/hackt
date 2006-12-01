@@ -1,0 +1,14 @@
+// "connect-042.hac"
+// copy-modified from "connect-038.hac"
+// should pass: non-directional channel port
+// expect warnings about dangling channels
+
+defproc boring(chan(bool) B) {
+}
+
+defproc classroom() {
+boring lecture;
+}
+
+classroom hall;
+

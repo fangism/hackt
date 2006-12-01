@@ -1,0 +1,17 @@
+// "connect-041.hac"
+// copy-modified from "connect-038.hac"
+// should pass: non-directional channel port, self-connected with CHP
+// testing hierarchical propagation
+
+defproc boring(chan(bool) B) {
+bool x;
+chp { *[ B?(x) ] }
+chp { *[ B!(false) ] }
+}
+
+define classroom() {
+boring lecture;
+}
+
+classroom hall;
+

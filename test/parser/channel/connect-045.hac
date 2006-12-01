@@ -1,0 +1,14 @@
+// "connect-045.hac"
+// should warn creating:
+// expect warnings about dangling channels
+
+chan(bool) X[4], Y;
+chan(int<2>) Z;
+
+bool b;
+int<2> i;
+
+chp {
+*[ Y?(b) ];	// meta-referenced
+*[ Z?(i); X[i]?(b) ]	// non-meta referenced
+}

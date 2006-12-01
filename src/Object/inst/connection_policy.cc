@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.cc"
-	$Id: connection_policy.cc,v 1.3.2.3 2006/11/30 23:13:53 fang Exp $
+	$Id: connection_policy.cc,v 1.3.2.4 2006/12/01 09:24:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -36,6 +36,8 @@ directional_connect_policy<true>::set_connection_flags(
 				"aliasing and CHP!" << endl;
 			return good_bool(false);
 		}
+#if NEW_CONNECTION_FLAGS
+#endif
 	} 
 	// mutually exclusive, by caller
 	else if (f & CONNECTED_CHP_CONSUMER) {
@@ -50,10 +52,46 @@ directional_connect_policy<true>::set_connection_flags(
 			return good_bool(false);
 		}
 	}
+	const connection_flags_type _or = f | direction_flags;
+#if NEW_CONNECTION_FLAGS
+	if (!check_meta_nonmeta_usage(_or, "channel").good) {
+		// already have error message
+		return good_bool(false);
+	}
+#endif
 	// already connected in CHP, connecting again OK
-	direction_flags |= f;
+	direction_flags |= _or;
 	return good_bool(true);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NEW_CONNECTION_FLAGS
+/**
+	Checks to make sure a producer/consumer isn't referenced both
+	by meta (constant) and nonmeta means.  
+	\param _or the bitwise or of two flag sets to check.  
+	\param n meta-type name.  
+ */
+good_bool
+directional_connect_policy<true>::check_meta_nonmeta_usage(
+		const connection_flags_type _or, 
+		const char* n) {
+	bool good = true;
+	if ((_or & CONNECTED_PRODUCER_IS_META) &&
+			(_or & CONNECTED_PRODUCER_IS_NONMETA)) {
+		cerr << "Error: cannot mix meta- and nonmeta-referenced " <<
+			n << " in producer alias." << endl;
+		good = false;
+	}
+	if ((_or & CONNECTED_CONSUMER_IS_META) &&
+			(_or & CONNECTED_CONSUMER_IS_NONMETA)) {
+		cerr << "Error: cannot mix meta- and nonmeta-referenced " <<
+			n << " in consumer alias." << endl;
+		good = false;
+	}
+	return good_bool(good);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

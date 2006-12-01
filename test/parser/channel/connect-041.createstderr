@@ -1,0 +1,111 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	345
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	82
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	312
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    boring = process-definition (defined) boring(
+        chan(bool<>) B
+      )
+      In definition "boring", we have: {
+      Instances:
+        B = chan(bool<>) boring::B
+        x = bool<> boring::x
+      unroll sequence: 
+        chan(bool<>) B
+        bool<> x
+      chp:
+        concurrent: {
+          *[
+            B?(x)
+          ]
+          *[
+            B!(false)
+          ]
+        }
+      footprint: {
+        B = channel chan(bool<>)^0 = boring::B (1) 
+        x = bool^0 = boring::x (1) 
+        Created state:
+        channel instance pool:
+        1	boring::B
+        bool instance pool:
+        1	boring::x
+        resolved concurrent actions:
+          *[
+            B?(x)
+          ]
+          *[
+            B!(false)
+          ]
+      }
+      }
+
+    classroom = process-definition (defined) classroom(
+      )
+      In definition "classroom", we have: {
+      Instances:
+        lecture = boring<> classroom::lecture
+      unroll sequence: 
+        boring<> lecture
+      footprint: {
+        lecture = process boring<>^0 = classroom::lecture (1) (
+          B = channel chan(bool<>)^0 = classroom::lecture.B (1) 
+        )
+        Created state:
+        process instance pool:
+        1	classroom::lecture
+        channel instance pool:
+        1	classroom::lecture.B
+      }
+      }
+
+  Instances:
+    hall = classroom<> hall
+}
+
+footprint: {
+  hall = process classroom<>^0 = hall (1) 
+  Created state:
+  process instance pool:
+  1	hall
+}

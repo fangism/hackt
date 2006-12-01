@@ -1,0 +1,16 @@
+// "connect-044.hac"
+// copy-modified from "nonmeta-bool-split.hac"
+// referencing an array of channels with nonmeta-index
+// should pass unrolling and creating without warnings inside split
+
+defproc split(chan!(bool) B[2]; chan?(int<1>) S) {
+int<1> s;
+chp {
+	*[ S?(s); B[s]!(true);
+	   S?(s); [ (s==0) -> B[0]!(true) [] else -> B[1]!(true) ]
+	]
+}
+}
+
+split fail;
+

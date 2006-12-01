@@ -1,7 +1,10 @@
 Error: cannot mix meta- and nonmeta-referenced channel in consumer alias.
 Error referencing merge::B[0].
+Error resolving action statement of guarded action.
 Error: cannot mix meta- and nonmeta-referenced channel in consumer alias.
 Error referencing merge::B[1].
+Error resolving action statement of guarded action.
+Error unrolling deterministic selection.
 Error unrolling action_sequence.
 Error resolving do-forever loop.
 Error unrolling action_sequence.

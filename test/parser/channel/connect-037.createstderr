@@ -1,0 +1,82 @@
+WARNING: channel boring::B lacks connection to a producer.
+WARNING: channel boring::B lacks connection to a consumer.
+WARNING: channel boring::I lacks connection to a producer.
+WARNING: channel boring::I lacks connection to a consumer.
+WARNING: channel lecture.B lacks connection to a producer.
+WARNING: channel lecture.B lacks connection to a consumer.
+WARNING: channel lecture.I lacks connection to a producer.
+WARNING: channel lecture.I lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	95
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	364
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	374
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    boring = process-definition (defined) boring(
+        chan(bool<>) B
+        chan(int<32>) I
+      )
+      In definition "boring", we have: {
+      Instances:
+        B = chan(bool<>) boring::B
+        I = chan(int<32>) boring::I
+      unroll sequence: 
+        chan(bool<>) B
+        chan(int<32>) I
+      footprint: {
+        B = channel chan(bool<>)^0 = boring::B (1) 
+        I = channel chan(int<32>)^0 = boring::I (2) 
+        Created state:
+        channel instance pool:
+        1	boring::B
+        2	boring::I
+      }
+      }
+
+  Instances:
+    lecture = boring<> lecture
+}
+
+footprint: {
+  lecture = process boring<>^0 = lecture (1) (
+    B = channel chan(bool<>)^0 = lecture.B (1) 
+    I = channel chan(int<32>)^0 = lecture.I (2) 
+  )
+  Created state:
+  process instance pool:
+  1	lecture
+  channel instance pool:
+  1	lecture.B
+  2	lecture.I
+}
