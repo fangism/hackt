@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.h"
-	$Id: port_actual_collection.h,v 1.4 2006/11/27 08:29:10 fang Exp $
+	$Id: port_actual_collection.h,v 1.4.2.1 2006/12/01 22:27:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_H__
@@ -8,7 +8,6 @@
 
 #include <valarray>
 #include "Object/inst/collection_interface.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -76,11 +75,7 @@ public:
 					instance_collection_parameter_type;
 	typedef	typename parent_type::collection_pool_bundle_type
 					collection_pool_bundle_type;
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 public:
-#else
-private:
-#endif
 	// valarray iterator
 	typedef	element_type*			iterator;
 	typedef	const element_type*		const_iterator;
@@ -199,11 +194,7 @@ public:
 	load_object(footprint&, 
 		const persistent_object_manager&, istream&);
 
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 public:
-#else
-private:
-#endif
 	iterator
 	begin(void);
 

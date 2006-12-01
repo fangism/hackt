@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.36.2.2 2006/11/29 04:53:38 fang Exp $
+	$Id: devel_switches.h,v 1.36.2.3 2006/12/01 22:27:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -80,32 +80,8 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to propagate formal and local channel connectivity
-	up hierarchies for more accurate diagnostics about connectedness.
-	Consider this as a unroll/create-time option?
-	Consequence: unrolling connections for one type will require
-		dependent types to be *created* (not just unrolled)
-		for their port summaries.  This will cause quite a 
-		change in intermediate dumps...
-	This mechanism is also used to propagate relaxed actuals from
-		formal collections to actuals.  
-	Goal: 1?
-	Status: written and tested (unroll differences only, as expected)
-	Priority: medium
-	Consequences: this patch causes recursive unroll to depend on
-		'creation' of dependent types, which effectively fuses unroll
-		and create together, and causes major changes in ONLY
-		the unroll test expects (no create differences)
-		Fusing the two phases makes it more difficult to
-		debug transient states of the intermediate representation.
-		We may have to update all unroll tests by hand, or
-		say goodbye to the unroll phase and its tests.  
- */
-#define	PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY	1
-
-/**
 	Define to 1 to fuse unrolling and creating into the same phase.
-	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY, 
+	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY (perm'd), 
 		we now have no use for an unrolled-but-not-created footprint.
 	This is now defined in config.h by configure.  
 	Goal: 1 (reluctantly)

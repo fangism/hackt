@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.2.2.7 2006/12/01 21:40:34 fang Exp $
+	$Id: connection_policy.tcc,v 1.2.2.8 2006/12/01 22:27:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -62,12 +62,8 @@ directional_connect_policy<true>::synchronize_flags(
 	const connection_flags_type _and = lld & rrd;
 	const connection_flags_type _or = lld | rrd;
 	bool good = true;
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	if ((lld & CONNECTED_TO_ANY_PRODUCER) &&
 			(rrd & CONNECTED_TO_ANY_PRODUCER))
-#else
-	if (_and & CONNECTED_TO_PRODUCER)
-#endif
 	{
 		// multiple producers
 		// TODO: strengthen condition?
@@ -80,12 +76,8 @@ directional_connect_policy<true>::synchronize_flags(
 			good = false;
 		}
 	}
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	if ((lld & CONNECTED_TO_ANY_CONSUMER) &&
 			(rrd & CONNECTED_TO_ANY_CONSUMER))
-#else
-	if (_and & CONNECTED_TO_CONSUMER)
-#endif
 	{
 		// multiple consumers
 		if (!(_and & CONNECTED_CONSUMER_IS_SHARED)) {
@@ -146,21 +138,11 @@ directional_connect_policy<true>::initialize_direction(
 		if (f) {
 			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
 		}
-#if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
-		else {
-			direction_flags |= CONNECTED_TO_CONSUMER;
-		}
-#endif
 		break;
 	case '!':
 		if (f) {
 			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
 		}
-#if !PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
-		else {
-			direction_flags |= CONNECTED_TO_PRODUCER;
-		}
-#endif
 		break;
 	default:
 		ICE(cerr, cerr << "Invalid direction.";)
@@ -168,7 +150,6 @@ directional_connect_policy<true>::initialize_direction(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	This variation initializes actuals' aliases (from subinstances)
 	based on how they were connected in their corresponding
@@ -217,7 +198,6 @@ directional_connect_policy<true>::initialize_actual_direction(
 		ICE(cerr, cerr << "Invalid direction.";)
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

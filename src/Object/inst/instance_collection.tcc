@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.42.2.2 2006/11/30 23:13:57 fang Exp $
+	$Id: instance_collection.tcc,v 1.42.2.3 2006/12/01 22:27:26 fang Exp $
 	TODO: trim includes
  */
 
@@ -1103,7 +1103,6 @@ INSTANCE_ARRAY_CLASS::set_alias_connection_flags(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	For now, sparse collections never referenced as formals, 
 	so this should never be called.
@@ -1114,7 +1113,6 @@ INSTANCE_ARRAY_CLASS::instantiate_actuals_from_formals(
 		port_actuals_type&, const unroll_context&) const {
 	ICE_NEVER_CALL(cerr);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1666,7 +1664,6 @@ INSTANCE_SCALAR_CLASS::set_alias_connection_flags(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	This initializes the scalar instance by propagating formal
 	connection information to the actual.  
@@ -1693,7 +1690,6 @@ INSTANCE_SCALAR_CLASS::instantiate_actuals_from_formals(
 	// propagate actuals from formal to actual
 	// propagate direction connection information from formal to actual
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

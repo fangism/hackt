@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.6.2.2 2006/11/30 23:13:58 fang Exp $
+	$Id: port_formal_array.tcc,v 1.6.2.3 2006/12/01 22:27:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -611,7 +611,6 @@ PORT_FORMAL_ARRAY_CLASS::set_alias_connection_flags(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	Since the formal collection is dense and lexicographically ordered
 	by index, we can quickly iterate over the formal and actual 
@@ -641,7 +640,6 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_actuals_from_formals(
 	// propagate actuals from formal to actual
 	// propagate direction connection information from formal to actual
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

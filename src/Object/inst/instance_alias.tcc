@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.28.2.1 2006/11/28 22:01:47 fang Exp $
+	$Id: instance_alias.tcc,v 1.28.2.2 2006/12/01 22:27:21 fang Exp $
 	TODO: trim includes
  */
 
@@ -183,7 +183,6 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 /**
 	Variation of instantiate() used to forward local alias information
 		from a formal collection to the actual copy. 
@@ -212,7 +211,6 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 	actuals_parent_type::copy_actuals(f);
 	direction_connection_policy::initialize_actual_direction(f);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE

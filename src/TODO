@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.47 2006/11/21 22:38:28 fang Exp $
+#	$Id: TODO,v 1.47.2.1 2006/12/01 22:27:20 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -172,6 +172,12 @@ built-in channel types
 	Maintain footprint collection of each type mentioned.  
 	Is there a way to name a channel's structural member, since
 		formals are not named???
+built-in type footprints for allocation and tool referencing
+language defect: intended to support size-types in channel declarations,
+	such as "chan(bool[2])", but this was inadvertently overlooked
+	in the original art grammar.  Add it back.  
+	Priority: low-medium
+typedefs: channel typedefs don't carry directions [!?]
 
 ===============================================================================
 loop development:

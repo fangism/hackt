@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This contents of this file was split-off from 
 		"Object/inst/instance_collection.h"
-	$Id: instance_scalar.h,v 1.4 2006/11/21 22:38:53 fang Exp $
+	$Id: instance_scalar.h,v 1.4.2.1 2006/12/01 22:27:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_SCALAR_H__
@@ -52,9 +52,7 @@ public:
 					instance_placeholder_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
 					instance_placeholder_ptr_type;
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	typedef	typename parent_type::port_actuals_type	port_actuals_type;
-#endif
 	enum { dimensions = 0 };
 private:
 	instance_type					the_instance;
@@ -142,9 +140,7 @@ public:
 
 	SET_ALIAS_CONNECTION_FLAGS_PROTO;
 
-#if PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY
 	INSTANTIATE_ACTUALS_FROM_FORMALS_PROTO;
-#endif
 public:
 	void
 	write_pointer(ostream&, const collection_pool_bundle_type&) const;
