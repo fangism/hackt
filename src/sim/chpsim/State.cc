@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.1 2006/12/02 22:10:12 fang Exp $
+	$Id: State.cc,v 1.1.2.2 2006/12/04 09:55:56 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -16,7 +16,8 @@ namespace CHPSIM {
 // class State method definitions
 
 /**
-	The main execution engine of chpsim.  
+	The main event-driven execution engine of chpsim.  
+	Processes one event at a time.  
  */
 void
 State::step(void) {
@@ -33,6 +34,7 @@ State::step(void) {
 	//	if using dynamic subscribers, then create 'blocked' events
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
+	// Q: what are successor events blocked on?
 }
 
 //=============================================================================

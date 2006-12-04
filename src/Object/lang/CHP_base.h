@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7 2006/06/26 01:46:17 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.1 2006/12/04 09:55:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -14,11 +14,15 @@ namespace HAC {
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
+namespace PRS {
+	class cflat_visitor;
+}
 /**
 	Namespace for CHP object classes.  
  */
 namespace CHP {
 using std::ostream;
+using entity::PRS::cflat_visitor;
 using util::persistent;
 using util::persistent_object_manager;
 class action;
@@ -58,6 +62,12 @@ virtual	ostream&
 		const action_ptr_type&) const
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
+
+#define	CHP_ACTION_ACCEPT_PROTO						\
+	void								\
+	accept(cflat_visitor&) const
+
+virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 
 };	// end class action
 

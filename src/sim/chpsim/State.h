@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.1 2006/12/02 22:10:13 fang Exp $
+	$Id: State.h,v 1.1.2.2 2006/12/04 09:55:57 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -20,6 +20,8 @@ namespace CHPSIM {
 	The complete state of the CHPSIM simulator.  
 	TODO: consider how to partition and distribute statically
 	for parallel simulation, with min-cut locking.  
+	TODO: think about hooks for profiling.
+	TODO: how to estimate energy and delay.
  */
 class State {
 	// shopping list:

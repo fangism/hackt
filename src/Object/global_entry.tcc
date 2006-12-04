@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16 2006/11/07 06:34:13 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.1 2006/12/04 09:55:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -37,6 +37,7 @@
 #include "Object/cflat_context.h"
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
+#include "Object/lang/CHP.h"		// for concurrent_actions
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/def/process_definition.h"
@@ -263,6 +264,19 @@ production_rule_substructure::accept(const global_entry<Tag>& _this,
 	const SPEC::footprint&
 		sfp(f->get_spec_footprint());
 	sfp.accept(v);
+}
+
+//=============================================================================
+// class CHP_substructure method definitions
+
+template <class Tag, class Visitor>
+void
+CHP_substructure<true>::accept(const global_entry<Tag>& _this, Visitor& v) {
+	const footprint* const f(_this._frame._footprint);
+	NEVER_NULL(f);
+	const typename Visitor::footprint_frame_setter tmp(v, _this._frame);
+	const CHP::concurrent_actions& cfp(f->get_chp_footprint());
+	cfp.accept(v);
 }
 
 //=============================================================================

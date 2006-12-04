@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.12 2006/11/21 22:38:57 fang Exp $
+	$Id: CHP.h,v 1.12.4.1 2006/12/04 09:55:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -61,6 +61,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	// helper methods needed for process_definition
 	void
@@ -113,6 +114,7 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	good_bool
 	unroll(const unroll_context&, entity::footprint&) const;
@@ -207,6 +209,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
@@ -231,6 +234,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
@@ -272,6 +276,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_selection
@@ -305,6 +310,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
@@ -338,6 +344,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -375,6 +382,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	template <class L>
 	good_bool
@@ -417,6 +425,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	template <class L>
 	good_bool
@@ -445,6 +454,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
@@ -474,6 +484,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

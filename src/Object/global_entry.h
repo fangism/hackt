@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.12 2006/11/07 06:34:12 fang Exp $
+	$Id: global_entry.h,v 1.12.8.1 2006/12/04 09:55:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -326,6 +326,21 @@ struct production_rule_parent_policy<true> {
 
 //=============================================================================
 /**
+	CHP substructure of meta-types.  
+ */
+template <bool>
+struct CHP_substructure { };
+
+template <>
+struct CHP_substructure<true> {
+	template <class Tag, class Visitor>
+	static
+	void
+	accept(const global_entry<Tag>&, Visitor&);
+};	// end struct CHP_substructure
+
+//=============================================================================
+/**
 	Globally allocated entry for unique instance.  
  */
 template <class Tag>
@@ -333,6 +348,7 @@ struct global_entry :
 	public global_entry_base<class_traits<Tag>::has_substructure>, 
 	public production_rule_parent_policy<
 		class_traits<Tag>::has_production_rules>::type, 
+	// no need to derive from substructure policy classes, really
 	public global_entry_common {
 	typedef	global_entry_base<class_traits<Tag>::has_substructure>
 						parent_type;
