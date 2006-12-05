@@ -1,10 +1,13 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.2 2006/12/04 09:55:56 fang Exp $
+	$Id: State.cc,v 1.1.2.3 2006/12/05 01:49:28 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
+#include "sim/chpsim/StateConstructor.h"
+#include "Object/module.h"
+#include "Object/state_manager.h"
 
 #include <iostream>
 
@@ -15,6 +18,38 @@ namespace CHPSIM {
 //=============================================================================
 // class State method definitions
 
+/**
+	Will throw exception upon error.  
+ */
+State::State(const module& m) : 
+		mod(m), 
+		current_time(0) {
+	const state_manager& sm(mod.get_state_manager());
+
+	// perform initializations here
+
+	StateConstructor v(*this);	// + option flags
+	sm.accept(v);	// may throw
+	// also top-level footprint
+	mod.get_footprint().get_chp_footprint().accept(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+State::~State() {
+	// clean-up
+	// optional, but recommended: run some diagnostics
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::initialize(void) {
+	current_time = 0;
+	// initialize state of all channels and variables
+	// seed events that are ready to go, like active initializations
+	// register blocked events, pending value/condition changes
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main event-driven execution engine of chpsim.  
 	Processes one event at a time.  
@@ -34,7 +69,7 @@ State::step(void) {
 	//	if using dynamic subscribers, then create 'blocked' events
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
-	// Q: what are successor events blocked on?
+	// Q: what are successor events blocked on? only guard expressions
 }
 
 //=============================================================================

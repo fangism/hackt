@@ -5,6 +5,13 @@
 
 2006-12-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-02:
+	  Supplied empty definitions for CHP::action::accept(), 
+		taking CHPSIM::StateConstructor.  (Poor use of OO.)
+	  More members added to CHPSIM::State.  
+	  main/chpsim.{h,cc} outlined, replacing old dummy program.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-01:
 	  Starting to accomodate chpsim state allocation, much more planning
 		to do.  Also need to resolve interpetation of nonmeta-index

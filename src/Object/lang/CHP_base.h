@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.1 2006/12/04 09:55:49 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.2 2006/12/05 01:49:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -11,18 +11,30 @@
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
+namespace SIM {
+namespace CHPSIM {
+	// we need some sort of CHP_visitor refinement!
+	class StateConstructor;
+}	// end namespace CHPSIM
+}	// end namespace SIM
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
+#if 0
 namespace PRS {
 	class cflat_visitor;
 }
+#endif
 /**
 	Namespace for CHP object classes.  
  */
 namespace CHP {
 using std::ostream;
+#if 0
 using entity::PRS::cflat_visitor;
+#else
+using SIM::CHPSIM::StateConstructor;
+#endif
 using util::persistent;
 using util::persistent_object_manager;
 class action;
@@ -65,7 +77,7 @@ virtual	CHP_UNROLL_ACTION_PROTO = 0;
 
 #define	CHP_ACTION_ACCEPT_PROTO						\
 	void								\
-	accept(cflat_visitor&) const
+	accept(StateConstructor&) const
 
 virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 

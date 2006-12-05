@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16 2006/12/01 23:28:53 fang Exp $
+	$Id: CHP.cc,v 1.16.2.1 2006/12/05 01:49:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -44,9 +44,11 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/def/template_formals_manager.h"
 
+#include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/visitor_functor.h"
 #include "util/indent.h"
 #include "util/IO_utils.tcc"
 
@@ -227,6 +229,16 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Do we need to construct event successor edges and graphs?
+ */
+void
+action_sequence::accept(StateConstructor& s) const {
+	// TODO: using footprint frame, allocate event edge graph
+	for_each(begin(), end(), util::visitor_ptr(s));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action_sequence::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -372,6 +384,15 @@ concurrent_actions::unroll(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	this_type& t(f.get_chp_footprint());
 	return __unroll(c, t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+concurrent_actions::accept(StateConstructor& s) const {
+	// TODO: using footprint frame, allocate event edge graph
+	// there will be multiple outgoing edges
+	for_each(begin(), end(), util::visitor_ptr(s));
+	// construct an event join graph-node?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -582,6 +603,16 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+deterministic_selection::accept(StateConstructor& s) const {
+	// TODO: using footprint frame, allocate event edge graph
+	// there will be multiple outgoing edges, of which one will be selected
+	// TODO: run-time check for guard exclusion
+	// for_each(begin(), end(), util::visitor_ptr(s));
+	// construct an event join graph-node?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 deterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -646,6 +677,14 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 		// return newly constructed copy
 		return r;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nondeterministic_selection::accept(StateConstructor& s) const {
+	// TODO: using footprint frame, allocate event edge graph
+	// there will be multiple outgoing edges, of which one will be selected
+	// for_each(begin(), end(), util::visitor_ptr(s));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -764,6 +803,15 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Never supposed to be called, because these are expanded.  
+ */
+void
+metaloop_selection::accept(StateConstructor& s) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 metaloop_selection::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -832,6 +880,12 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+assignment::accept(StateConstructor& s) const {
+	// construct successor event graph edge? or caller's responsibility?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 assignment::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -892,6 +946,12 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 	} else {
 		return action_ptr_type(new this_type(g));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+condition_wait::accept(StateConstructor& s) const {
+	// register guard expression dependents
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1057,6 +1117,13 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+channel_send::accept(StateConstructor& s) const {
+	// atomic event
+	// construct event graph
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 channel_send::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -1154,6 +1221,13 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+channel_receive::accept(StateConstructor& s) const {
+	// atomic event
+	// construct event graph
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 channel_receive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -1228,6 +1302,12 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+do_forever_loop::accept(StateConstructor& s) const {
+	// construct cyclic event graph
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -1291,6 +1371,13 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 		// return newly constructed copy
 		return r;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+do_while_loop::accept(StateConstructor& s) const {
+	// construct cyclic event graph
+	// need guard dependencies
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
