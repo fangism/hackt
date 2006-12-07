@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.18 2006/12/01 23:28:52 fang Exp $
+	$Id: subinstance_manager.h,v 1.18.2.1 2006/12/07 07:48:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -31,7 +31,6 @@ class port_member_context;
 class state_manager;
 class footprint_frame;
 template <class> class collection_interface;
-class cflat_visitor;
 struct dump_flags;
 using std::ostream;
 using std::istream;

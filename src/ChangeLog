@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-03:
+	  Fleshing out more of CHP Event graph structures, and the
+		graph-construction pass.  Much more to come.  
+	  TODO: document decisions about CHP and nonmeta-index
+		dependent guard expressions.  
+
+
 2006-12-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-02:

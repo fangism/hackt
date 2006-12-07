@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.1 2006/12/05 01:49:22 fang Exp $
+	$Id: CHP.cc,v 1.16.2.2 2006/12/07 07:48:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -39,16 +39,18 @@
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
-
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/def/template_formals_manager.h"
+#include "sim/chpsim/StateConstructor.h"
+#include "sim/chpsim/State.h"
 
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/visitor_functor.h"
+#include "util/value_saver.h"
 #include "util/indent.h"
 #include "util/IO_utils.tcc"
 
@@ -116,6 +118,7 @@ using util::persistent_traits;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using SIM::CHPSIM::EventNode;
 
 //=============================================================================
 /// helper routines
@@ -231,11 +234,42 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Do we need to construct event successor edges and graphs?
+	NOTE: this does not actually allocate an event for itself.  
+	Constructs events in a backwards order to simplify event-chaining
+	of predecessors to successors.  
  */
 void
 action_sequence::accept(StateConstructor& s) const {
 	// TODO: using footprint frame, allocate event edge graph
-	for_each(begin(), end(), util::visitor_ptr(s));
+//	for_each(begin(), end(), util::visitor_ptr(s));
+	INVARIANT(!this->empty());
+	const_iterator i(begin()), e(end());
+#if 0
+	// chain events in sequence
+	StateConstructor::return_indices_type temp;
+	temp.swap(s.last_event_indices);	// save
+	// successor's list is initially empty
+	// s.last_event_indices.clear();
+	// caller's responsibility to connect
+	// alert: construct sequence backwards!!! but save the last one
+	--e;
+	(*i)->accept(s);
+	temp.swap(s.last_event_indices);	// save
+	for ( ; i!=e; ) {
+		--e;
+		typedef	StateConstructor::return_indices_type::const_iterator
+					ret_iterator;
+		ret_iterator j(temp.begin()), z(temp.end());
+		// s.visit(*i);
+		(*e)->accept(s);
+	}
+#else
+	do {
+		--e;
+		(*e)->accept(s);
+		// events will link themselves (callee responsible)
+	} while (i!=e);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -387,11 +421,56 @@ concurrent_actions::unroll(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Fork and join graph structure.  
+ */
 void
 concurrent_actions::accept(StateConstructor& s) const {
 	// TODO: using footprint frame, allocate event edge graph
 	// there will be multiple outgoing edges
+#if 0
 	for_each(begin(), end(), util::visitor_ptr(s));
+#else
+	const size_t branches = this->size();
+	// TODO: create a join event first (bottom-up)
+	const size_t join_index = s.state.event_pool.size();
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_JOIN, 
+			s.current_process_index));
+	EventNode& join_event(s.state.event_pool.back());
+	join_event.successor_events.resize(1);
+	join_event.successor_events[0] = s.last_event_index;
+	join_event.set_predecessors(branches);	// expect number of branches
+
+	const_iterator i(begin()), e(end());
+	vector<size_t> tmp;
+	tmp.reserve(this->size());
+	// construct concurrent chains
+	for ( ; i!=e; ++i) {
+		s.last_event_index = join_index;	// pass down
+		(*i)->accept(s);
+		tmp.push_back(s.last_event_index);	// head of each chain
+	}
+
+	// construct successor event graph edge? or caller's responsibility?
+	const size_t fork_index = s.state.event_pool.size();
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
+			s.current_process_index));
+	EventNode& fork_event(s.state.event_pool.back());
+
+	fork_event.successor_events.resize(branches);
+	copy(tmp.begin(), tmp.end(), &fork_event.successor_events[0]);
+
+	// leave trail of this event for predecessor
+	// s.last_event_indices.resize(1);
+	// s.last_event_indices[0] = fork_index;
+	s.last_event_index = fork_index;
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(fork_event);
+
+#endif
 	// construct an event join graph-node?
 }
 
@@ -882,6 +961,21 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 void
 assignment::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
+	const size_t new_index = s.state.event_pool.size();
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_ASSIGN, 
+			s.current_process_index));
+	EventNode& new_event(s.state.event_pool.back());
+
+	s.connect_successor_events(new_event);
+
+	// leave trail of this event for predecessor
+	// s.last_event_indices.resize(1);
+	// s.last_event_indices[0] = new_index;
+	s.last_event_index = new_index;
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(new_event);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -949,9 +1043,29 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: fuse this event with successor if single.  
+ */
 void
 condition_wait::accept(StateConstructor& s) const {
 	// register guard expression dependents
+	// construct successor event graph edge? or caller's responsibility?
+	const size_t new_index = s.state.event_pool.size();
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
+			s.current_process_index));
+	EventNode& new_event(s.state.event_pool.back());
+	new_event.set_guard_expr(cond);
+
+	s.connect_successor_events(new_event);
+
+	// leave trail of this event for predecessor
+	// s.last_event_indices.resize(1);
+	// s.last_event_indices[0] = new_index;
+	s.last_event_index = new_index;
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(new_event);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1120,6 +1234,21 @@ void
 channel_send::accept(StateConstructor& s) const {
 	// atomic event
 	// construct event graph
+	const size_t new_index = s.state.event_pool.size();
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_SEND, 
+			s.current_process_index));
+	EventNode& new_event(s.state.event_pool.back());
+
+	s.connect_successor_events(new_event);
+
+	// leave trail of this event for predecessor
+	// s.last_event_indices.resize(1);
+	// s.last_event_indices[0] = new_index;
+	s.last_event_index = new_index;
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(new_event);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1224,6 +1353,21 @@ void
 channel_receive::accept(StateConstructor& s) const {
 	// atomic event
 	// construct event graph
+	const size_t new_index = s.state.event_pool.size();
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_RECEIVE, 
+			s.current_process_index));
+	EventNode& new_event(s.state.event_pool.back());
+
+	s.connect_successor_events(new_event);
+
+	// leave trail of this event for predecessor
+	// s.last_event_indices.resize(1);
+	// s.last_event_indices[0] = new_index;
+	s.last_event_index = new_index;
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(new_event);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1301,9 +1445,31 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: nothing can follow a do-forever loop, 
+	so we need not worry about an initial successor.  
+	However, there may be entries into an infinite loop, so we
+	must return the 
+ */
 void
 do_forever_loop::accept(StateConstructor& s) const {
 	// construct cyclic event graph
+	// create a dummy event first (epilogue) and loop it around.
+	// OR use the 0th event slot as the dummy!
+	// -- works only if we need one dummy at a time
+#if 0
+	EventNode dummy;
+	// guarantee undo upon exiting scope
+	const util::value_saver<EventNode> tmp(s.state.event_pool[0], dummy);
+	// fake the event processing, using index 0
+#endif
+	// s.last_event_indices.resize(1);
+	// s.last_event_indices[0] = 0;	// point to dummy, pass down
+	s.last_event_index = 0;	// point to dummy, pass down
+	body->accept(s);
+	// s.last_event_indices now points to first action(s) in loop
+	// if there are more than one?
+	// no, even concurrent events should be bound by one event.
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

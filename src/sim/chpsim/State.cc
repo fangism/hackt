@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.3 2006/12/05 01:49:28 fang Exp $
+	$Id: State.cc,v 1.1.2.4 2006/12/07 07:48:39 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -23,10 +23,13 @@ namespace CHPSIM {
  */
 State::State(const module& m) : 
 		mod(m), 
+		event_pool(), 
 		current_time(0) {
 	const state_manager& sm(mod.get_state_manager());
 
 	// perform initializations here
+	event_pool.reserve(256);
+	event_pool.resize(1);		// 0th entry is a dummy
 
 	StateConstructor v(*this);	// + option flags
 	sm.accept(v);	// may throw

@@ -1,32 +1,47 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.1 2006/12/02 22:10:11 fang Exp $
+	$Id: Event.h,v 1.1.2.2 2006/12/07 07:48:38 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
 #define	__HAC_SIM_CHPSIM_EVENT_H__
 
 #include "util/size_t.h"
+#include <valarray>
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
+namespace entity {
+	class bool_expr;
+namespace CHP {
+	class action;
+}
+}
 namespace SIM {
 namespace CHPSIM {
+using std::valarray;
+using entity::bool_expr;
+using entity::CHP::action;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**
 	Plan is to have different event pools.  
  */
 enum {
-	EVENT_NULL = 0,
+	EVENT_NULL = 0,		///< can be used to mean 'skip'
 	EVENT_ASSIGN,
 	EVENT_SEND,
-	EVENT_RECEIVE
-	// flow control events? loops? sequencing, and concurrency?
-	// build up successor/predecessor chains?
+	EVENT_RECEIVE,
+	EVENT_CONCURRENT_FORK,	///< divergence of concurrent events
+	EVENT_CONCURRENT_JOIN,	///< convergence event
+	EVENT_SELECTION_BEGIN,	///< the start of any selection
+	EVENT_SELECTION_END	///< end of any selection
 };
 
 //-----------------------------------------------------------------------------
+#if 0
 /**
 	Event representing change of variable value.  
 	For now, we assign bools and ints, don't deal with structures yet.
@@ -60,6 +75,89 @@ struct event_placeholder {
 	size_t				event_type;
 	size_t				event_index;
 };	// end struct event_placeholder
+#endif
+
+//=============================================================================
+/**
+	This represents a node in the event graph, which can be 
+	thought of as a marked graph.  
+	Events are generalized to have guards, though in many cases, 
+	they will be NULL.  
+	We 'allocate' graph nodes with back-references to their
+	corresponding events in the CHP footprint.  
+	The 'edges' between graph nodes form predecessor-successor relations.
+	This will be used as a base class for other events.  
+	TODO: align to natural boundary.
+ */
+class EventNode {
+public:
+	typedef	size_t			event_index_type;
+private:
+	/// wake-up guard expression for THIS event, if applicable
+	count_ptr<const bool_expr>	guard_expr;
+	/**
+		the (atomic) event to occur corresponding to this node
+		Would be nice if some of theses actions were 
+		resolved to static references... (don't optimize now)
+		Can be lightweight pointer instead of reference count?
+	 */
+	// count_ptr<const action>		action_ptr;
+	const action*			action_ptr;
+public:
+	/**
+		events that follow this event.  
+		The interpretation of these events (concurrent, 
+		deterministic, nondeterministic) is depending on the type.  
+	 */
+	valarray<event_index_type>	successor_events;
+private:
+#if 1
+	/**
+		enumeration for this event, 
+		semi-redundant with the action pointer.  
+	 */
+	unsigned short			event_type;
+#endif
+#if 1
+	/**
+		General purpose flags (space-filler).  
+	 */
+	unsigned short			flags;
+#endif
+	/**
+		footprint, footprint frame / global_entry<process>
+		or just 0-based index to process entries.  (0 => top)
+	 */
+	size_t				process_index;
+	/**
+		The number of concurrent event predecessors.
+		Wait for this number of events to precede before executing, 
+		like a barrier count.  
+		Sequential actions (in chain) only have one predecessor.  
+		Selection statements re-join with only one predecessor.  
+		Do we keep predecessor edge information anywhere else?
+		Should be const, incidentally...
+	 */
+	unsigned short			predecessors;
+	/**
+		barrier count: from number of predecessors (join operation)
+		Event fires when countdown reaches zero, post-decrement.  
+	 */
+	unsigned short			countdown;
+public:
+	EventNode();
+
+	EventNode(const action*, const unsigned short, const size_t pid);
+
+	~EventNode();
+
+	void
+	set_guard_expr(const count_ptr<const bool_expr>&);
+
+	void
+	set_predecessors(const event_index_type n) { predecessors = n; }
+
+};	// end class EventNode
 
 //=============================================================================
 }	// end namespace CHPSIM

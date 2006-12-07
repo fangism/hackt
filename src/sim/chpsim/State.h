@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.3 2006/12/05 01:49:30 fang Exp $
+	$Id: State.h,v 1.1.2.4 2006/12/07 07:48:40 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -8,6 +8,7 @@
 #define	__HAC_SIM_CHPSIM_STATE_H__
 
 #include <iosfwd>
+#include <vector>
 #include "sim/time.h"
 #include "sim/chpsim/Event.h"
 #include "util/string_fwd.h"
@@ -18,8 +19,10 @@ namespace entity {
 }
 namespace SIM {
 namespace CHPSIM {
+using std::vector;
 using std::string;
 using entity::module;
+class StateConstructor;
 
 //=============================================================================
 /**
@@ -30,8 +33,12 @@ using entity::module;
 	TODO: how to estimate energy and delay.
  */
 class State {
+friend class StateConstructor;
 public:
 	typedef	real_time			time_type;
+private:
+	typedef	EventNode			event_type;
+	typedef	vector<event_type>		event_pool_type;
 private:
 	const module&				mod;
 	// shopping list:
@@ -40,12 +47,15 @@ private:
 	// variable pools (bool, int, mpz_t)
 	//	no need for user-defined, as they are just composites
 	//	of the fundamental types.
-	// event pools: for each type of event
+	// event pools: for each type of event?
+public:
+	// to give CHP action classes access ...
+	event_pool_type				event_pool;
 	// event queue: unified priority queue of event_placeholders
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separate)ly
-
+private:
 	time_type				current_time;
 	// time_type				uniform_delay;
 

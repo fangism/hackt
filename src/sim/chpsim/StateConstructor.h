@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.1.2.1 2006/12/04 09:56:01 fang Exp $
+	$Id: StateConstructor.h,v 1.1.2.2 2006/12/07 07:48:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -11,10 +11,12 @@
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/chpsim/State.h"
 #include "sim/common.h"
+// #include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
+class EventNode;		// from "sim/chpsim/Event.h"
 using entity::state_manager;
 using entity::cflat_context_visitor;
 using entity::PRS::footprint_rule;
@@ -31,16 +33,40 @@ using entity::SPEC::footprint_directive;
 class StateConstructor : public cflat_context_visitor {
 public:
 	typedef	State				state_type;
-
+	// typedef	std::default_vector<size_t>::type	return_indices_type;
+	typedef	EventNode			event_type;
 public:
 	state_type&				state;
+	/**
+		Return value slot to indicate last allocated event(s).  
+		Should be non-zero.  
+		There may be more than one in the case of concurrency.  
+		These are needed to re-link predecessors to successors.  
+	 */
+	// return_indices_type			last_event_indices;
+	size_t					last_event_index;
+	/**
+		index of the globally allocated process, for context.  
+	 */
+	size_t					current_process_index;
 protected:
 
+private:
+	// non-copy-able
+	explicit
+	StateConstructor(const StateConstructor&);
 public:
 	explicit
-	StateConstructor(state_type& s) : state(s) { }
+	StateConstructor(state_type&);
 
 	~StateConstructor();
+
+	void
+	connect_successor_events(event_type&) const;
+
+	void
+	count_predecessors(const event_type&) const;
+
 protected:
 	using cflat_context_visitor::visit;
 
@@ -63,6 +89,7 @@ protected:
 
 	void
 	visit(const entity::SPEC::footprint_directive&);	// no-op
+
 
 };	// end class StateConstructor
 
