@@ -1,5 +1,5 @@
 /**
-	\file "sim/prsim/Command.cc"
+	\file "sim/chpsim/Command.cc"
 	All built-in commands should be statically registered 
 	in this translation unit to guarantee proper static object
 	initialization ordering; the command_map must be constructed
@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.20.12.2 2006/12/08 22:34:04 fang Exp $
+	$Id: Command.cc,v 1.1.2.1 2006/12/08 22:34:01 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -19,9 +19,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <string>
 #include <algorithm>
 #include <iterator>
+#include <set>
 
-#include "sim/prsim/Command.h"
-#include "sim/prsim/State.h"
+#include "sim/chpsim/Command.h"
+#include "sim/chpsim/State.h"
 #include "sim/command.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
@@ -42,9 +43,9 @@ namespace HAC {
 namespace SIM {
 
 // must instantiate dependent class first!
-template class command_registry<PRSIM::Command>;
+template class command_registry<CHPSIM::Command>;
 
-namespace PRSIM {
+namespace CHPSIM {
 #include "util/using_istream.h"
 #include "util/using_ostream.h"
 using std::ios_base;
@@ -64,17 +65,12 @@ using parser::parse_name_to_get_subnodes;
 // local static CommandCategories
 // feel free to add categories here
 
-#if 0
-CommandCategory
-	CommandRegistry::aliases("aliases", "user-defined alias commands");
-#else
 /**
 	Global static initialization of aliases.  
 	Or should we have one per interpreter?
  */
 CommandRegistry::aliases_map_type
 CommandRegistry::aliases;
-#endif
 
 static CommandCategory
 	builtin("builtin", "built-in commands"),
@@ -420,6 +416,7 @@ Initialize::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reset, "reset", simulation, 
 	"resets simulator state, queue, and modes (fresh start)")
 
@@ -434,8 +431,10 @@ Reset::usage(ostream& o) {
 	o << "reset: " << brief << endl;
 	o << "restart the entire simulation as if it was just launched" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Command class for stepping through one event at a time from
 	the event queue. 
@@ -524,7 +523,7 @@ Step::print_watched_node(ostream& o, const State& s,
 }
 
 /**
-	Like process_step() from original prsim.  
+	Like process_step().  
  */
 int
 Step::main(State& s, const string_list& a) {
@@ -606,8 +605,10 @@ Step::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 	"advance the simulation in time units")
 
@@ -692,8 +693,10 @@ Advance::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
  	"run until event queue empty or breakpoint")
 
@@ -762,8 +765,10 @@ Cycle::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation,
 	"show event queue")
 
@@ -783,8 +788,10 @@ Queue::usage(ostream& o) {
 	o << "queue: " << brief << endl;
 	o << "prints events pending in the event queue" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 	"set node immediately, or after delay")
 
@@ -868,8 +875,10 @@ Set::usage(ostream& o) {
 "\twarning.  See also \'setf\'."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
 	"same as set, but overriding pending events")
 
@@ -887,8 +896,10 @@ SetF::usage(ostream& o) {
 "\tThis overrides a previous pending event on the node, if any."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSet, "unset", simulation,
 	"force re-evaluation of node\'s input state, may cancel setf")
 
@@ -921,8 +932,10 @@ UnSet::usage(ostream& o) {
 "\tSee also \'unsetall\'."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSetAll, "unsetall", simulation,
 	"force re-evaluation of all nodes\' inputs, cancelling setf")
 
@@ -946,8 +959,10 @@ o <<
 "\tnew events in the event queue.  See also \'unset\'."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 	"set node to value after random delay")
 
@@ -1003,8 +1018,10 @@ Setr::usage(ostream& o) {
 "\tThis variation yields to pending events on the node, if any."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
 	"set node to value after random delay, overriding pending events")
 
@@ -1021,12 +1038,14 @@ SetrF::usage(ostream& o) {
 "\tThis variation overrides pending events on the node, if any."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
 //	"set node with random delay after event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 	"set breakpoint on node")	// no vector support yet
 
@@ -1060,8 +1079,10 @@ BreakPt::usage(ostream& o) {
 	o << "causes simulation to stop upon any transition of the named nodes"
 		<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
 	"remove breakpoint on node")	// no vector support yet
 
@@ -1094,8 +1115,10 @@ NoBreakPt::usage(ostream& o) {
 	o << "nobreakpt <nodes>" << endl;
 	o << "removes named node from breakpoint list" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreak, "unbreak", simulation,
 	"alias for \'nobreakpt\'")	// no vector support yet
 
@@ -1108,8 +1131,10 @@ void
 UnBreak::usage(ostream& o) {
 	NoBreakPt::usage(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPtAll, "nobreakptall", simulation,
 	"remove all breakpoints")
 
@@ -1129,8 +1154,10 @@ NoBreakPtAll::usage(ostream& o) {
 	o << "nobreakptall" << endl;
 	o << "clears all breakpoints" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAll, "unbreakall", simulation,
 	"alias for \'nobreakptall\'")
 
@@ -1146,8 +1173,10 @@ void
 UnBreakAll::usage(ostream& o) {
 	NoBreakPtAll::usage(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Breaks, "breaks", simulation,
 	"list all nodes that are breakpoints")
 
@@ -1167,8 +1196,10 @@ Breaks::usage(ostream& o) {
 	o << "breaks";
 	o << "lists all breakpoint nodes" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Save, "save", simulation, 
 	"saves simulation state to a checkpoint")
 
@@ -1198,10 +1229,12 @@ void
 Save::usage(ostream& o) {
 	o << "save <file>" << endl;
 	o << brief << endl;
-	o << "(recommend some extension like .prsimckpt)" << endl;
+	o << "(recommend some extension like .chpsimckpt)" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Load, "load", simulation, 
 	"loads simulation state from a checkpoint")
 
@@ -1232,6 +1265,7 @@ Load::usage(ostream& o) {
 	o << "load <file>" << endl;
 	o << brief << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,
@@ -1256,6 +1290,7 @@ What::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Who, "who", info,
 	"print aliases of node or structure")
 
@@ -1281,8 +1316,10 @@ Who::usage(ostream& o) {
 	o << "prints all aliases (equivalent names) of the referenced instance"
 		<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of node/vector")
 
@@ -1317,8 +1354,10 @@ Get::usage(ostream& o) {
 "signal transition that caused it to become its current value."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
 	"print values of all subnodes")
 
@@ -1352,8 +1391,10 @@ GetAll::usage(ostream& o) {
 	o << "prints the current values of all subnodes of the named structure"
 		<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
@@ -1381,8 +1422,10 @@ Status::usage(ostream& o) {
 	o << "status <[0fF1tTxXuU]>" << endl;
 	o << "list all nodes with the matching current value" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 	"print rules that influence a node")
 
@@ -1442,8 +1485,10 @@ Fanout::usage(ostream& o) {
 	o << "fanout <node>" << endl;
 	o << "print all rules affected by this node" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMk, "rings-mk", info, 
 	"print forced exclusive rings of which a node is a member")
 
@@ -1544,6 +1589,7 @@ AllRingsChk::usage(ostream& o) {
 	o << "allrings-chk" << endl;
 	o << "print all checked-exclusive rings" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // will category conflict with command?
@@ -1551,6 +1597,7 @@ AllRingsChk::usage(ostream& o) {
 //	"print information about a node/vector")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info, 
 	"error if node is NOT expected value")
 
@@ -1649,8 +1696,10 @@ AssertN::usage(ostream& o) {
 	o << "signal an error and halt simulation if node is at this value"
 		<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1 && 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertQueue, "assert-queue", info, 
 	"assert that the event queue is not empty")
 
@@ -1675,6 +1724,7 @@ AssertQueue::usage(ostream& o) {
 	o << "assert-queue" << endl;
 	o << "signal an error if the event queue is empty" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Time, "time", info, 
@@ -1713,40 +1763,7 @@ Time::usage(ostream& o) {
 //	"confirm assertions silently")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(BackTrace, "backtrace", info, 
-	"trace backwards partial event causality history")
-
-int
-BackTrace::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		// Step::print_watched_node(cout, s, ni, objname);
-		s.backtrace_node(cout, ni);
-		return Command::NORMAL;
-	} else {
-		return Command::BADARG;
-	}
-}
-}
-
-void
-BackTrace::usage(ostream& o) {
-	o << name << " <node>" << endl;
-	o <<
-"Traces back history of last-arriving events until cycle found.\n"
-"This is useful for finding critical paths and diagnosing instabilities."
-	<< endl;
-}
-
-#endif	// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
 	"print activity on selected nodes")
 
@@ -1784,8 +1801,10 @@ Watch::usage(ostream& o) {
 	o << "adds node(s) to watch-list.\n"
 "Watched nodes print their transitions to stdout." << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
 	"silence activity reporting on selected nodes")
 
@@ -1821,8 +1840,10 @@ UnWatch::usage(ostream& o) {
 	o << "unwatch <nodes>" << endl;
 	o << "removes nodes from watch-list" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAll, "watchall", view, 
 	"print activity on all nodes (flag)")
 
@@ -1845,8 +1866,10 @@ WatchAll::usage(ostream& o) {
 	o << "watchall" << endl;
 	o << "print all transitions to stdout." << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAll, "unwatchall", view, 
 	"remove all nodes from watchlist")
 
@@ -1960,8 +1983,10 @@ NoWatchQueue::usage(ostream& o) {
 	o << "Silence events as they are inserted into the event queue."
 		<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TCounts, "tcounts", view, 
 	"show transition counts on watched nodes")
 
@@ -2023,58 +2048,10 @@ ZeroTCounts::usage(ostream& o) {
 	o << "zerotcounts" << endl;
 	o << "reset transition counts of all nodes" << endl;
 }
-
-//-----------------------------------------------------------------------------
-#if WANT_OLD_RANDOM_COMMANDS
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Random, "random", modes, 
-	"use random delays (deprecated)")
-
-int
-Random::main(State& s, const string_list& a) {
-cerr << "WARNING: this command is deprecated, use \"timing random\" instead."
-	<< endl;
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.randomize();
-	return Command::NORMAL;
-}
-}
-
-void
-Random::usage(ostream& o) {
-	o << "random (deprecated)";
-	o << "same as: timing random" << endl;
-}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoRandom, "norandom", modes, 
-	"use non-random delays (deprecated)")
-
-int
-NoRandom::main(State& s, const string_list& a) {
-cerr << "WARNING: this command is deprecated, use \"timing ...\" instead."
-	<< endl;
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.norandom();		// is this "uniform" or "after"?
-	return Command::NORMAL;
-}
-}
-
-void
-NoRandom::usage(ostream& o) {
-	o << "norandom (deprecated)";
-	o << "disables random timing" << endl;
-	o << "use: timing ..." << endl;
-}
-
-#endif	// WANT_OLD_RANDOM_COMMANDS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(EvalOrder, "eval-order", modes, 
 	"shuffle (or not) the evaluation ordering of fanouts")
 
@@ -2112,8 +2089,10 @@ EvalOrder::usage(ostream& o) {
 "\t\temulating arbitration of forced exclusive rules with the same fanin."
 	<< endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
 	"set/get timing mode")
 
@@ -2141,8 +2120,10 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckExcl, "checkexcl", modes, 
 	"enable mutual exclusion checks")
 
@@ -2184,8 +2165,10 @@ NoCheckExcl::usage(ostream& o) {
 	o << "nocheckexcl" << endl;
 	o << "Disables run-time mutual exclusion checks." << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableUnknown, "unstable-unknown", 
 	modes, "rule instabilities propagate unknowns (default)")
 
@@ -2228,6 +2211,7 @@ UnstableDequeue::usage(ostream& o) {
 	o << "Unstable events are dequeued during run-time." << endl;
 	o << "See also \'unstable-unknown\'." << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static const char
@@ -2275,6 +2259,7 @@ class_name::usage(ostream& o) {						\
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Unstable, "unstable", 
 	"alter simulation behavior on unstable", 
 	"Alters simulator behavior on an instability violation.",
@@ -2297,10 +2282,12 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 	"alter simulation behavior on weak-interference",
 	"Alters simulator behavior on a weak-interference violation.",
 	weak_interference)
+#endif
 
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 
 	modes, "enable/disable weak-interference warnings")
 
@@ -2336,13 +2323,14 @@ SetMode::usage(ostream& o) {
 "Instabilities and interferences still cause simulations to halt, while \n"
 "weak-instabilities trigger warnings." << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
 //=============================================================================
-}	// end namespace PRSIM
+}	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
 

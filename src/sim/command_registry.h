@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.1.2.1 2006/12/08 07:51:22 fang Exp $
+	$Id: command_registry.h,v 1.1.2.2 2006/12/08 22:33:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -11,7 +11,6 @@
 #include "util/macros.h"
 #include "util/qmap.h"	// TODO: use std::map instead
 #include "util/tokenize_fwd.h"
-// #include "util/member_saver_fwd.h"
 
 namespace HAC {
 namespace SIM {
@@ -24,12 +23,47 @@ template <class> class command_category;
 
 //=============================================================================
 /**
+	State-independent base class for alias support.  
+ */
+class command_aliases_base {
+public:
+	/**
+		An alias is just a string_list, the key string
+		will expand into the value strings.  
+	 */
+	typedef	default_qmap<string, string_list>::type	aliases_map_type;
+	typedef	aliases_map_type::const_iterator	alias_iterator;
+
+	static
+	int
+	expand_aliases(const aliases_map_type&, string_list&);
+
+	static
+	int
+	add_alias(aliases_map_type&, const string&, const string_list&);
+
+	static
+	int
+	unalias(aliases_map_type&, const string&);
+
+	static
+	int
+	unalias_all(aliases_map_type&);
+
+	static
+	void
+	list_aliases(const aliases_map_type&, ostream&);
+
+};	// end class command_aliases_base
+
+//=============================================================================
+/**
 	Static global map of commands.  
 	Any compelling reason why this should be a purely static class?
 	Consider Singleton class?
  */
 template <class Command>
-class command_registry {
+class command_registry : public command_aliases_base {
 	typedef	command_registry<Command>		this_type;
 public:
 	typedef	Command					command_type;
@@ -48,15 +82,12 @@ private:
 public:
 	typedef	typename command_type::main_ptr_type	main_ptr_type;
 	typedef	typename command_type::usage_ptr_type	usage_ptr_type;
-	/**
-		An alias is just a string_list, the key string
-		will expand into the value strings.  
-	 */
-	typedef	default_qmap<string, string_list>::type	aliases_map_type;
-	typedef	aliases_map_type::const_iterator	alias_iterator;
 private:
 	static command_map_type		command_map;
 	static category_map_type	category_map;
+	/**
+		Aliases specific to this interpreter.  
+	 */
 	static aliases_map_type		aliases;
 public:
 	template <class C>
@@ -86,10 +117,6 @@ public:
 
 	static
 	int
-	expand_aliases(string_list&);
-
-	static
-	int
 	source(state_type&, const string&);
 
 	static
@@ -107,6 +134,10 @@ public:
 	static
 	bool
 	help_category(ostream&, const string&);
+
+	static
+	int
+	expand_aliases(string_list&);
 
 	static
 	int

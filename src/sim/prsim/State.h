@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.16.12.1 2006/12/08 07:51:29 fang Exp $
+	$Id: State.h,v 1.16.12.2 2006/12/08 22:34:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -12,6 +12,7 @@
 #include <set>
 #include "util/STL/hash_map.h"
 #include "sim/time.h"
+#include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
@@ -24,21 +25,11 @@
 #include "util/tokenize_fwd.h"
 
 namespace HAC {
-namespace entity {
-	class module;
-}
-
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
 struct ExprAllocFlags;
-using std::string;
-using entity::module;
 using util::list_vector;
-using std::ostream;
-using std::istream;
-using util::ifstream_manager;
-using util::string_list;
 using HASH_MAP_NAMESPACE::hash_map;
 
 //=============================================================================
@@ -77,7 +68,7 @@ struct watch_entry {
 		For now, only the expr_graph_node_pool is log(N) access, 
 		but it's not accessed during simulation, so HA!
  */
-class State {
+class State : public state_base {
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
 	typedef	State				this_type;
@@ -349,8 +340,6 @@ protected:
 	 */
 	typedef	vector<ring_set_type>		check_excl_array_type;
 private:
-//	count_ptr<const module>			mod;
-	const module&				mod;
 	node_pool_type				node_pool;
 	expr_pool_type				expr_pool;
 	expr_graph_node_pool_type		expr_graph_node_pool;
@@ -404,11 +393,6 @@ private:
 	 */
 	volatile bool				interrupted;
 	/**
-		interpreter state for the input stream.
-		Not checkpointed, of course.  
-	 */
-	ifstream_manager			ifstreams;
-	/**
 		For efficient tracing and lookup of root rule expressions.  
 		Should not be maintained for state checkpointing.  
 	 */
@@ -434,14 +418,6 @@ private:
 
 public:
 	~State();
-
-	const module&
-	get_module(void) const { return mod; }
-
-	ifstream_manager&
-	get_stream_manager(void) {
-		return ifstreams;
-	}
 
 	/// initializes the simulator state, all nodes and exprs X
 	void
@@ -728,24 +704,6 @@ public:
 
 	ostream&
 	status_nodes(ostream&, const uchar) const;
-
-	template <class L>
-	void
-	import_source_paths(const L& l) {
-		typedef	typename L::const_iterator	const_iterator;
-		const_iterator i(l.begin()), e(l.end());
-		for ( ; i!=e; ++i) {
-			ifstreams.add_path(*i);
-		}
-	}
-
-	void
-	add_source_path(const string& s) {
-		ifstreams.add_path(s);
-	}
-
-	ostream&
-	dump_source_paths(ostream&) const;
 
 	bool
 	dequeue_unstable_events(void) const {

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.30.8.1 2006/12/08 07:51:28 fang Exp $
+	$Id: State.cc,v 1.30.8.2 2006/12/08 22:34:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -147,13 +147,11 @@ State::pull_to_value[3][3] = {
 /**
 	Allocates simulation state, given a module.
 	TODO: do this work in module?
-	TODO: add support for top-level PRS (outside of procs)
-	TODO: expression minimization pass
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
  */
 State::State(const entity::module& m, const ExprAllocFlags& f) : 
-		mod(m), 
+		state_base(m, "prsim> "), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue(), 
 		rule_map(), 
@@ -171,7 +169,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
 		timing_mode(TIMING_DEFAULT),
-		ifstreams(), 
+//		ifstreams(), 
 		__scratch_expr_trace(),
 		__shuffle_indices(0) {
 	const state_manager& sm(mod.get_state_manager());
@@ -2880,13 +2878,6 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 		o << ')';
 	}
 	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-State::dump_source_paths(ostream& o) const {
-	o << "source paths:" << endl;
-	return ifstreams.dump_paths(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

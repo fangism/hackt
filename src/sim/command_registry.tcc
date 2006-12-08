@@ -1,14 +1,13 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.1.2.1 2006/12/08 07:51:23 fang Exp $
+	$Id: command_registry.tcc,v 1.1.2.2 2006/12/08 22:33:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
 #define	__HAC_SIM_COMMAND_REGISTRY_TCC__
 
 #include <iostream>
-#include <iterator>
-#include <set>
+
 #include "sim/command_registry.h"
 #include "sim/command.h"
 #include "sim/command_category.h"
@@ -20,9 +19,7 @@
 namespace HAC {
 namespace SIM {
 using std::cin;
-using std::set;
 using std::istream;
-using std::ostream_iterator;
 using util::readline_wrapper;
 using util::ifstream_manager;
 using util::strings::eat_whitespace;
@@ -170,14 +167,8 @@ command_registry<Command>::add_alias(const string& a, const string_list& c) {
 		cerr << "\'" << a << "\' is already a category, "
 			"cannot be used to register an alias." << endl;
 		return Command::BADARG;
-	} else if (aliases.find(a) != aliases.end()) {
-		cerr << "\'" << a << "\' is already an alias; "
-			"you must unalias it before redefining it." << endl;
-		return Command::BADARG;
-	} else {
-		aliases[a] = c;
-		return Command::NORMAL;
 	}
+	else return command_aliases_base::add_alias(aliases, a, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -188,8 +179,7 @@ command_registry<Command>::add_alias(const string& a, const string_list& c) {
 template <class Command>
 int
 command_registry<Command>::unalias(const string& a) {
-	aliases.erase(a);
-	return Command::NORMAL;
+	return command_aliases_base::unalias(aliases, a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,22 +189,14 @@ command_registry<Command>::unalias(const string& a) {
 template <class Command>
 int
 command_registry<Command>::unalias_all(void) {
-	aliases.clear();
-	return Command::NORMAL;
+	return command_aliases_base::unalias_all(aliases);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>
 void
 command_registry<Command>::list_aliases(ostream& o) {
-	o << "Command aliases:" << endl;
-	alias_iterator i(aliases.begin()), e(aliases.end());
-	for ( ; i!=e; ++i) {
-		o << "\t" << i->first << " -> ";
-		ostream_iterator<string> osi(o, " ");
-		copy(i->second.begin(), i->second.end(), osi);
-		o << endl;
-	}
+	command_aliases_base::list_aliases(aliases, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,24 +208,7 @@ command_registry<Command>::list_aliases(ostream& o) {
 template <class Command>
 int
 command_registry<Command>::expand_aliases(string_list& c) {
-if (c.size()) {
-	set<string> seen;
-	alias_iterator a(aliases.find(c.front()));
-	while (a != aliases.end()) {
-		const string_list& x(a->second);
-		if (!seen.insert(a->first).second) {
-			cerr << "Error: detected cyclic alias during expansion!"
-				<< endl;
-			return Command::BADARG;
-		}
-		c.pop_front();
-		reverse_copy(x.begin(), x.end(), front_inserter(c));
-		a = aliases.find(c.front());
-	}
-	// stops expanding as soon as non-alias is found.  
-}
-// else nothing to expand
-	return Command::NORMAL;
+	return command_aliases_base::expand_aliases(aliases, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -296,12 +261,9 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 template <class Command>
 int
 command_registry<Command>::interpret(state_type& s, const bool interactive) {
-	// oops, don't hard-code!  
-	// TODO: pull this out
-	static const char prompt[] = "prsim> ";
 	static const char noprompt[] = "";
 if (interactive) {
-	readline_wrapper rl(interactive ? prompt : noprompt);
+	readline_wrapper rl(interactive ? s.get_prompt().c_str() : noprompt);
 	// do NOT delete this line string, it is already managed.
 	const char* line = NULL;
 	int status = Command::NORMAL;
@@ -358,6 +320,7 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Prerequisite: the state class must have a get_stream_manager interface.
 	\param f the file name.  
 	\param st the simulator state.  
 	\return status of the interpreter.

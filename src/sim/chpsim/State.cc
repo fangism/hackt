@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.5 2006/12/08 07:51:25 fang Exp $
+	$Id: State.cc,v 1.1.2.6 2006/12/08 22:34:04 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -23,7 +23,7 @@ namespace CHPSIM {
 	Will throw exception upon error.  
  */
 State::State(const module& m) : 
-		mod(m), 
+		state_base(m, "chpsim> "), 
 		event_pool(), 
 		current_time(0), 
 		interrupted(false),

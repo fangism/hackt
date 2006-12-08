@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.5 2006/12/08 07:51:26 fang Exp $
+	$Id: State.h,v 1.1.2.6 2006/12/08 22:34:04 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -10,19 +10,14 @@
 #include <iosfwd>
 #include <vector>
 #include "sim/time.h"
+#include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
-#include "util/string_fwd.h"
 
 namespace HAC {
-namespace entity {
-	class module;
-}
 namespace SIM {
 namespace CHPSIM {
 using std::vector;
-using std::string;
-using entity::module;
 class StateConstructor;
 
 //=============================================================================
@@ -33,7 +28,7 @@ class StateConstructor;
 	TODO: think about hooks for profiling.
 	TODO: how to estimate energy and delay.
  */
-class State {
+class State : public state_base {
 friend class StateConstructor;
 	typedef	State				this_type;
 public:
@@ -52,7 +47,6 @@ private:
 		FLAGS_DEFAULT = 0x0000
 	};
 private:
-	const module&				mod;
 	// shopping list:
 	// channel state pool -- channels will have a char
 	//	to indicate send/receive state
@@ -75,19 +69,17 @@ private:
 	bool					interrupted;
 	flags_type				flags;
 
-	// for command-interpreter
-	// ifstream_manager			ifstreams;
 public:
 	explicit
 	State(const module&);
 
 	~State();
 
-	const module&
-	get_module(void) const { return mod; }
-
 	void
 	initialize(void);
+
+	const time_type&
+	time(void) const { return current_time; }
 
 	// step_return_type
 	void

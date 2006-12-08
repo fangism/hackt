@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.2 2006/12/08 07:51:13 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.3 2006/12/08 22:33:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,6 +16,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
 #include "sim/chpsim/State.h"
+#include "sim/chpsim/Command.h"
 #include "util/getopt_mapped.h"		// for getopt()
 #include "util/memory/excl_ptr.h"	// for never_ptr
 
@@ -85,7 +86,10 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 	}
 #endif
 	if (opt.help_only) {
-		cerr << "TODO: print chpsim interactive help." << endl;
+		util::string_list args;
+		args.push_back("help");
+		args.push_back("all");
+		SIM::CHPSIM::Help::main(args);
 		return 0;
 	}
 	if (optind+1 != argc) {
