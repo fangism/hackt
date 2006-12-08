@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.16 2006/09/16 20:47:54 fang Exp $
+	$Id: State.h,v 1.16.12.1 2006/12/08 07:51:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -12,6 +12,7 @@
 #include <set>
 #include "util/STL/hash_map.h"
 #include "sim/time.h"
+#include "sim/signal_handler.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
@@ -79,6 +80,7 @@ struct watch_entry {
 class State {
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
+	typedef	State				this_type;
 public:
 	// these typedefs will make it convenient to template this
 	// class in the future...
@@ -422,19 +424,7 @@ public:
 		Signal handler class that binds the State reference
 		for the duration of the scope in which it is declared.  
 	 */
-	class signal_handler {
-	private:
-		static State*		_state;
-		static void main(int);
-	private:
-		State*			_prev;
-		void (*_main)(int);
-	public:
-		explicit
-		signal_handler(State*);
-
-		~signal_handler();
-	} __ATTRIBUTE_UNUSED__ ;
+	typedef	signal_handler<this_type>	signal_handler;
 public:
 	explicit
 	State(const module&, const ExprAllocFlags&);

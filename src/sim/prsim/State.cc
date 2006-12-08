@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.30 2006/11/07 06:35:38 fang Exp $
+	$Id: State.cc,v 1.30.8.1 2006/12/08 07:51:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,7 @@
 #include "sim/prsim/Event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
+#include "sim/signal_handler.tcc"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -27,7 +28,6 @@
 #include "sim/ISE.h"
 #include "common/TODO.h"
 #include "util/attributes.h"
-#include "util/signal.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
 #include "util/memory/index_pool.tcc"
@@ -3480,44 +3480,11 @@ watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
 }
 
 //=============================================================================
-// class State::signal_handler method definitions
-
-/**
-	Global static initializer for handler's bound State reference.  
- */
-State*
-State::signal_handler::_state = NULL;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Preserves the current State* and handler for restoration.  
-	Swaps the current signal handler out for this one.  
- */
-State::signal_handler::signal_handler(State* s) :
-		_prev(_state), _main(signal(SIGINT, main)) {
-	_state = s;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Upon destruction, restores the former signal handler.  
-	Swaps the former signal handler back in.  
- */
-State::signal_handler::~signal_handler() {
-	_state = _prev;
-	signal(SIGINT, _main);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-State::signal_handler::main(int sig) {
-	if (_state) {
-		_state->stop();
-	}
-}
-
-//=============================================================================
 }	// end namespace PRSIM
+
+// explicit template instantiation of signal handler class
+template class signal_handler<PRSIM::State>;
+
 }	// end namespace SIM
 }	// end namespace HAC
 

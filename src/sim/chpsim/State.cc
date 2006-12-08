@@ -1,11 +1,12 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.4 2006/12/07 07:48:39 fang Exp $
+	$Id: State.cc,v 1.1.2.5 2006/12/08 07:51:25 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
+#include "sim/signal_handler.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 
@@ -24,7 +25,9 @@ namespace CHPSIM {
 State::State(const module& m) : 
 		mod(m), 
 		event_pool(), 
-		current_time(0) {
+		current_time(0), 
+		interrupted(false),
+		flags(FLAGS_DEFAULT) {
 	const state_manager& sm(mod.get_state_manager());
 
 	// perform initializations here
@@ -77,6 +80,9 @@ State::step(void) {
 
 //=============================================================================
 }	// end namespace CHPSIM
+
+// explicit class instantiation
+template class signal_handler<CHPSIM::State>;
 }	// end namespace SIM
 }	// end namespace HAC
 

@@ -5,6 +5,15 @@
 
 2006-12-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-05:
+	  Factored out prsim Command classes into re-usable template
+		class to reuse with chpsim.  
+		New: sim/{command{,_category,_registry}.{h,tcc,cc}, 
+		and pulled out signal_handler (SIGINT) into re-usable class.
+	  main/chpsim.cc: added more disabled code, following prsim's main.
+	  TODO: un-hardcode the command prompt.  :)
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-04:
 	  Finished first draft of CHP whole-program graph construction, 
 		using reverse (successor to predecessor) ordering.  

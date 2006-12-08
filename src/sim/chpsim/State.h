@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.4 2006/12/07 07:48:40 fang Exp $
+	$Id: State.h,v 1.1.2.5 2006/12/08 07:51:26 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include <vector>
 #include "sim/time.h"
+#include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "util/string_fwd.h"
 
@@ -34,11 +35,22 @@ class StateConstructor;
  */
 class State {
 friend class StateConstructor;
+	typedef	State				this_type;
 public:
 	typedef	real_time			time_type;
+	typedef	signal_handler<this_type>	signal_handler;
 private:
 	typedef	EventNode			event_type;
 	typedef	vector<event_type>		event_pool_type;
+	typedef	unsigned int			flags_type;
+	enum {
+		/**
+			Whether or not the simulation was halted for any 
+			reason, self-stopped on error, or interrupted.  
+		 */
+		FLAG_STOP_SIMULATION = 0x0001,
+		FLAGS_DEFAULT = 0x0000
+	};
 private:
 	const module&				mod;
 	// shopping list:
@@ -60,6 +72,8 @@ private:
 	// time_type				uniform_delay;
 
 	// mode flags
+	bool					interrupted;
+	flags_type				flags;
 
 	// for command-interpreter
 	// ifstream_manager			ifstreams;
@@ -78,6 +92,12 @@ public:
 	// step_return_type
 	void
 	step(void);	// THROWS_STEP_EXCEPTION
+
+	void
+	stop(void) {
+		flags |= FLAG_STOP_SIMULATION;
+		interrupted = true;
+	}
 
 };	// end class State
 
