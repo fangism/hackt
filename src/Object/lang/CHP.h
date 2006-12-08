@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.12.4.1 2006/12/04 09:55:48 fang Exp $
+	$Id: CHP.h,v 1.12.4.2 2006/12/08 03:14:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -62,6 +62,10 @@ public:
 
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+
+	static
+	void
+	accept_sequence(const action_list_type&, StateConstructor&);
 
 	// helper methods needed for process_definition
 	void
@@ -169,6 +173,8 @@ public:
 	unroll_return_type
 	unroll_resolve_copy(const unroll_context&,
 		const count_ptr<const guarded_action>&) const;
+
+	CHP_ACTION_ACCEPT_PROTO;
 
 	struct unroll_resolver {
 		const unroll_context&			_context;

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37 2006/12/01 23:28:33 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.1 2006/12/08 03:14:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -150,6 +150,22 @@
 	Priority: low
  */
 #define	SUBTYPE_FOOTPRINTS			0
+
+/**
+	Define to 1 to privatize the PRS_footprint structure.  
+	Rationale: reduces recompile-times by decoupling headers
+	and breaking definition dependencies.  
+	Goal: 1?
+ */
+#define	PIMPL_PRS_FOOTPRINT			0
+
+/**
+	Define to 1 to privatize the CHP_footprint structure.  
+	Rationale: reduces recompile-times by decoupling headers
+	and breaking definition dependencies.  
+	Goal: 1?
+ */
+#define	PIMPL_CHP_FOOTPRINT			0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

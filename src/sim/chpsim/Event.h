@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.2 2006/12/07 07:48:38 fang Exp $
+	$Id: Event.h,v 1.1.2.3 2006/12/08 03:14:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -30,14 +30,14 @@ using util::memory::count_ptr;
 	Plan is to have different event pools.  
  */
 enum {
-	EVENT_NULL = 0,		///< can be used to mean 'skip'
-	EVENT_ASSIGN,
-	EVENT_SEND,
-	EVENT_RECEIVE,
-	EVENT_CONCURRENT_FORK,	///< divergence of concurrent events
-	EVENT_CONCURRENT_JOIN,	///< convergence event
-	EVENT_SELECTION_BEGIN,	///< the start of any selection
-	EVENT_SELECTION_END	///< end of any selection
+	EVENT_NULL = 0,		///< can be used to mean 'skip' or 'no-op'
+	EVENT_ASSIGN = 1,
+	EVENT_SEND = 2,
+	EVENT_RECEIVE = 3,
+	EVENT_CONCURRENT_FORK = 4,	///< divergence of concurrent events
+	EVENT_CONCURRENT_JOIN = EVENT_NULL,	///< convergence event (no-op)
+	EVENT_SELECTION_BEGIN = 5,	///< the start of any selection
+	EVENT_SELECTION_END = EVENT_NULL	///< end of any selection (no-op)
 };
 
 //-----------------------------------------------------------------------------

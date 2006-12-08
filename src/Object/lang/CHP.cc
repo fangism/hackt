@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.2 2006/12/07 07:48:32 fang Exp $
+	$Id: CHP.cc,v 1.16.2.3 2006/12/08 03:14:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -233,6 +233,24 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Constructs a sequence of events backwards from back to
+	front, where each event 'connects' to its successor(s).
+ */
+void
+action_sequence::accept_sequence(const action_list_type& l, 
+		StateConstructor& s) {
+//	for_each(begin(), end(), util::visitor_ptr(s));
+	const_iterator i(l.begin()), e(l.end());
+	INVARIANT(i!=e);	// else would be empty
+	do {
+		--e;
+		(*e)->accept(s);
+		// events will link themselves (callee responsible)
+	} while (i!=e);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Do we need to construct event successor edges and graphs?
 	NOTE: this does not actually allocate an event for itself.  
 	Constructs events in a backwards order to simplify event-chaining
@@ -240,36 +258,7 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
  */
 void
 action_sequence::accept(StateConstructor& s) const {
-	// TODO: using footprint frame, allocate event edge graph
-//	for_each(begin(), end(), util::visitor_ptr(s));
-	INVARIANT(!this->empty());
-	const_iterator i(begin()), e(end());
-#if 0
-	// chain events in sequence
-	StateConstructor::return_indices_type temp;
-	temp.swap(s.last_event_indices);	// save
-	// successor's list is initially empty
-	// s.last_event_indices.clear();
-	// caller's responsibility to connect
-	// alert: construct sequence backwards!!! but save the last one
-	--e;
-	(*i)->accept(s);
-	temp.swap(s.last_event_indices);	// save
-	for ( ; i!=e; ) {
-		--e;
-		typedef	StateConstructor::return_indices_type::const_iterator
-					ret_iterator;
-		ret_iterator j(temp.begin()), z(temp.end());
-		// s.visit(*i);
-		(*e)->accept(s);
-	}
-#else
-	do {
-		--e;
-		(*e)->accept(s);
-		// events will link themselves (callee responsible)
-	} while (i!=e);
-#endif
+	accept_sequence(*this, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -434,6 +423,8 @@ concurrent_actions::accept(StateConstructor& s) const {
 	const size_t branches = this->size();
 	// TODO: create a join event first (bottom-up)
 	const size_t join_index = s.state.event_pool.size();
+{
+	// join shouldn't need an action ptr (unless we want back-reference)
 	s.state.event_pool.push_back(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_JOIN, 
 			s.current_process_index));
@@ -441,10 +432,12 @@ concurrent_actions::accept(StateConstructor& s) const {
 	join_event.successor_events.resize(1);
 	join_event.successor_events[0] = s.last_event_index;
 	join_event.set_predecessors(branches);	// expect number of branches
+	// reminder, reference may be invalidated after push_back
+}
 
 	const_iterator i(begin()), e(end());
 	vector<size_t> tmp;
-	tmp.reserve(this->size());
+	tmp.reserve(branches);
 	// construct concurrent chains
 	for ( ; i!=e; ++i) {
 		s.last_event_index = join_index;	// pass down
@@ -454,6 +447,7 @@ concurrent_actions::accept(StateConstructor& s) const {
 
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t fork_index = s.state.event_pool.size();
+{
 	s.state.event_pool.push_back(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
 			s.current_process_index));
@@ -462,14 +456,11 @@ concurrent_actions::accept(StateConstructor& s) const {
 	fork_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &fork_event.successor_events[0]);
 
-	// leave trail of this event for predecessor
-	// s.last_event_indices.resize(1);
-	// s.last_event_indices[0] = fork_index;
-	s.last_event_index = fork_index;
-
 	// updates successors' predecessor-counts
 	s.count_predecessors(fork_event);
-
+}
+	// leave trail of this event for predecessor
+	s.last_event_index = fork_index;
 #endif
 	// construct an event join graph-node?
 }
@@ -588,6 +579,30 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre a slection-merge event is pointed to by s.last_event_index.
+ */
+void
+guarded_action::accept(StateConstructor& s) const {
+	if (stmt) {
+		stmt->accept(s);
+		// just attach the guard expression
+		s.state.event_pool[s.last_event_index].set_guard_expr(guard);
+	} else {
+		// make a NULL event with just the guard
+		const size_t null_index = s.state.event_pool.size();
+		s.state.event_pool.push_back(
+			EventNode(NULL, SIM::CHPSIM::EVENT_NULL,
+				s.current_process_index));
+		EventNode& null_event(s.state.event_pool.back());
+		null_event.set_guard_expr(guard);
+		s.connect_successor_events(null_event);
+		s.count_predecessors(null_event);	// 1 predecessor
+		s.last_event_index = null_index;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 guarded_action::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -681,13 +696,50 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Almost exact same code for non-deterministic selection.
+ */
 void
 deterministic_selection::accept(StateConstructor& s) const {
-	// TODO: using footprint frame, allocate event edge graph
-	// there will be multiple outgoing edges, of which one will be selected
 	// TODO: run-time check for guard exclusion
-	// for_each(begin(), end(), util::visitor_ptr(s));
-	// construct an event join graph-node?
+	const size_t branches = this->size();
+	const size_t merge_index = s.state.event_pool.size();
+{
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
+			s.current_process_index));
+	EventNode& merge_event(s.state.event_pool.back());
+	merge_event.successor_events.resize(1);
+	merge_event.successor_events[0] = s.last_event_index;
+	merge_event.set_predecessors(1);	// expect ONE branch only
+}
+
+	const_iterator i(begin()), e(end());
+	vector<size_t> tmp;
+	tmp.reserve(branches);
+	// construct concurrent chains
+	for ( ; i!=e; ++i) {
+		s.last_event_index = merge_index;	// pass down
+		(*i)->accept(s);
+		tmp.push_back(s.last_event_index);	// head of each chain
+	}
+
+	// construct successor event graph edge? or caller's responsibility?
+	const size_t split_index = s.state.event_pool.size();
+{
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
+			s.current_process_index));
+	EventNode& split_event(s.state.event_pool.back());
+
+	split_event.successor_events.resize(branches);
+	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(split_event);
+}
+	// leave trail of this event for predecessor
+	s.last_event_index = split_index;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -759,11 +811,50 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Code ripped from deterministic_selection::accept().
+ */
 void
 nondeterministic_selection::accept(StateConstructor& s) const {
-	// TODO: using footprint frame, allocate event edge graph
-	// there will be multiple outgoing edges, of which one will be selected
-	// for_each(begin(), end(), util::visitor_ptr(s));
+	// TODO: run-time check for guard exclusion
+	const size_t branches = this->size();
+	const size_t merge_index = s.state.event_pool.size();
+{
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
+			s.current_process_index));
+	EventNode& merge_event(s.state.event_pool.back());
+	merge_event.successor_events.resize(1);
+	merge_event.successor_events[0] = s.last_event_index;
+	merge_event.set_predecessors(1);	// expect ONE branch only
+}
+
+	const_iterator i(begin()), e(end());
+	vector<size_t> tmp;
+	tmp.reserve(branches);
+	// construct concurrent chains
+	for ( ; i!=e; ++i) {
+		s.last_event_index = merge_index;	// pass down
+		(*i)->accept(s);
+		tmp.push_back(s.last_event_index);	// head of each chain
+	}
+
+	// construct successor event graph edge? or caller's responsibility?
+	const size_t split_index = s.state.event_pool.size();
+{
+	s.state.event_pool.push_back(
+		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
+			s.current_process_index));
+	EventNode& split_event(s.state.event_pool.back());
+
+	split_event.successor_events.resize(branches);
+	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
+
+	// updates successors' predecessor-counts
+	s.count_predecessors(split_event);
+}
+	// leave trail of this event for predecessor
+	s.last_event_index = split_index;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1463,13 +1554,23 @@ do_forever_loop::accept(StateConstructor& s) const {
 	const util::value_saver<EventNode> tmp(s.state.event_pool[0], dummy);
 	// fake the event processing, using index 0
 #endif
-	// s.last_event_indices.resize(1);
-	// s.last_event_indices[0] = 0;	// point to dummy, pass down
-	s.last_event_index = 0;	// point to dummy, pass down
+	const size_t loopback_index = s.state.event_pool.size();
+{
+	s.state.event_pool.push_back(EventNode(this, SIM::CHPSIM::EVENT_NULL,
+		s.current_process_index));
+//	EventNode& loopback_event(s.state.event_pool.back());
+}
+	s.last_event_index = loopback_index;	// point to dummy, pass down
 	body->accept(s);
-	// s.last_event_indices now points to first action(s) in loop
-	// if there are more than one?
-	// no, even concurrent events should be bound by one event.
+{
+	// find last event and loop it back to the beginning
+	EventNode& loopback_event(s.state.event_pool[loopback_index]);
+	loopback_event.successor_events.resize(1);
+	loopback_event.successor_events[0] = s.last_event_index;
+	// s.last_event_index now points to first action(s) in loop
+	EventNode& head_event(s.state.event_pool[s.last_event_index]);
+	head_event.set_predecessors(1);	// but may have multiple entries
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1540,10 +1641,52 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Code ripped from do_forever_loop::accept().
+	Need to synthesize a deterministic selection with an exit branch.
+	Semantics: never blocking, as there is an implicit else-clause
+	that skips past the loop.  
+	Reminder: guards cannot include an explicit else clause.  
+ */
 void
 do_while_loop::accept(StateConstructor& s) const {
 	// construct cyclic event graph
-	// need guard dependencies
+	// create a dummy event first (epilogue) and loop it around.
+	const size_t branches = this->size();
+	const size_t loopback_index = s.state.event_pool.size();
+{
+	s.state.event_pool.push_back(EventNode(this, 
+		SIM::CHPSIM::EVENT_SELECTION_BEGIN,
+		s.current_process_index));
+	EventNode& loopback_event(s.state.event_pool.back());
+	loopback_event.successor_events.resize(branches +1);
+	loopback_event.successor_events[branches] = s.last_event_index;	// exit
+	// convention: 
+	// 1st events will go into the body of the do-while loop
+	// last event will be the exit branch, corresponding to the else clause
+}
+	vector<size_t> tmp;
+	tmp.reserve(branches);
+{
+	const_iterator i(begin()), e(end());
+	// construct concurrent chains
+	for ( ; i!=e; ++i) {
+		s.last_event_index = loopback_index;	// pass down
+		(*i)->accept(s);		// guarded actions
+		tmp.push_back(s.last_event_index);	// head of each chain
+	}
+}
+{
+	// find last event and loop it back to the beginning
+	EventNode& loopback_event(s.state.event_pool[loopback_index]);
+	copy(tmp.begin(), tmp.end(), &loopback_event.successor_events[0]);
+	// loopback_event.successor_events[0] = s.last_event_index;
+	// s.last_event_index now points to first action(s) in loop
+	// EventNode& head_event(s.state.event_pool[s.last_event_index]);
+	// head_event.set_predecessors(1);	// but may have multiple entries
+	s.count_predecessors(loopback_event);
+	s.last_event_index = loopback_index;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

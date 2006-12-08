@@ -1,6 +1,6 @@
 % "chapters/CHP.tex"
 
-%	$Id: CHP.tex,v 1.4 2006/06/28 22:17:38 fang Exp $
+%	$Id: CHP.tex,v 1.4.32.1 2006/12/08 03:14:36 fang Exp $
 
 \chapter{Communicating Hardware Processes}
 \label{sec:chp}
@@ -156,6 +156,25 @@ is also reached.
 After both sides of the communication have `synchronized,'
 can the communication proceed.  
 
+Execution clarification:
+Suppose we have the statement \ttt{X[i]!(y[j])}, where \ttt{i} and \ttt{j}
+are nonmeta (run-time) variables.  
+If we reach this program point, and find that \ttt{X[i]} is blocked
+(not ready to send), then we must suspend further execution until
+one of the following conditions changes:
+\begin{itemize}
+\item \ttt{X[k]} receive executes for \emph{some} value \ttt{k}
+\item \ttt{i} changes the reference to a different channel
+\end{itemize}
+If we were to be precise, and track dependencies dynamically 
+(rather than conservatively and statically), 
+we could narrow the first conditional to only \ttt{X[i]} receiving.  
+Only at the time of execution,
+do we evaluate the value of \ttt{y[j]} for sending.  
+The value and reference of \ttt{y[j]} is \emph{permitted to change} between
+the time it is blocked and the time the communication is executed!
+(Can we trap or alert when this is not intended?)
+
 TODO: Probes
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -174,6 +193,9 @@ The \emph{lvalue} must refer to a scalar instance of a data type,
 while the \emph{rvalue} may be any (nonmeta) expression.  
 The types for \emph{lvalue} and \emph{rvalue} must match.  
 
+Execution: just assign the current value of the rvalue to the lvalue.
+Assignments are atomic, so we need not consider changing references.  
+
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Wait}
 \label{sec:chp:stmts:wait}
@@ -186,6 +208,14 @@ to become true before proceeding.
 \end{itemize}
 
 The expression must, of course, be boolean in value.  
+
+Execution: 
+When arriving at a wait event, evaluate the guard expresions.
+If true, then proceed immediately to the event that follows. 
+Otherwise, block this event pending any change on variables or channels
+that could possibly change the value of the expression.  
+In implementation, the set may be precise or conservative, but 
+the resulting evaluation must remain equivalent.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Composition}
@@ -202,6 +232,11 @@ Concurrent composition has higher precedence than sequential composition,
 so $X,Y;Z$ is interpreted as $(X,Y);Z$.  
 However, one may explictly parenthesize $X,(Y;Z)$.  
 
+Execution of concurrent branches behaves like a fork and join (barrier).
+Upon initial execution, each branch is begun concurently, 
+but the execution is not completely until all branches have reached
+the join-barrier.  
+(This can be easily implemented as a decrementing barrier counter.)
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Skip}
@@ -231,6 +266,9 @@ Most hardware one will describe with CHP will contain a loop.
 \item \tit{CHP-loop} : \chpbeginloop\ \tit{CHP-stmt-list} \chpendloop
 \end{itemize}
 
+Execution: after the last action in the loop executes, schedule
+the first action for execution.  
+
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Guarded Commands}
 \label{sec:chp:flow:guardedcmd}
@@ -243,6 +281,10 @@ A special case of a guarded commands is an else-clause,
 which replaces the guard expression with the keyword \ttt{else}.  
 An else clause may only appear at the end of deterministic selections, 
 but not any other selection statements.  
+
+Execution: 
+Interpretation depends on the context in which the guarded command appears, 
+e.g. deterministic vs. nondeterministic selection, or do-while loops.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Deterministic Selection}
@@ -257,6 +299,7 @@ but not any other selection statements.
 
 The guarded command list must contain at least two guarded commands
 (else it's not a selection).  
+The last guarded statement may be an else clause.  
 
 Operational Semantics: 
 (Basically exclusive switch-case.)
@@ -265,6 +308,22 @@ If more than one guard is ever true, then there is an error in the program.
 A deterministic selection blocks until one of its guards has become true
 and its guarded commands executed.  
 
+Execution: 
+Since branches are executed mutually exclusively, as soon as any branch
+finishes executing its last event, the events that immediately follow 
+the selection may be processes as if in the same sequence.  
+If at any time more than one guard evaluates true, a diagnostic is
+required, though signaling and error is recommended.  
+
+If initially none of the guards evaluate true, 
+then the selection is blocked until one of them becomes true.  
+(This can be accomplished by registering all dependent variables
+on a global watch-list.  
+When any variable on the watch-list changes status, then subscribed
+expressions are re-evaluated, to see if new events may be scheduled.)
+
+If the guards include an else-clause, then this selection never blocks, 
+because the else-clause will guarantee that one clause will execute.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Nondeterministic Selection}
@@ -281,12 +340,17 @@ and its guarded commands executed.
 Note: for the sake of a cleaner grammar, 
 we use \thinbar\ instead of \oldthinbar\ to denote 
 a nondeterministic selection.  
+Can nondeterministic selections contain else-clauses?
 
 Operational Semantics: nondeterministic selection blocks until at least
 one guard becomes true.  
 While any number of guards may be true, one of the true guards is 
 chosen arbitrarily\footnote{Weakly fair.} as the path of execution.  
 
+Execution:
+More than one guard is allowed to be true, but only branch is chosen
+to be executed.  
+Q: Do we use the notion of a time-window before evaluating guards?
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Do-While}
@@ -297,8 +361,14 @@ chosen arbitrarily\footnote{Weakly fair.} as the path of execution.
 	\chpbeginloop\ \tit{CHP-det-guarded-command-list} \chpendloop
 \end{itemize}
 
+No else clauses allowed.  
+
 Operational Semantics:
 Loop until all guards are false.  
+
+Execution:
+Never blocks because there is an implicit else-clause that
+skips/exits the loop.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Extensions}
