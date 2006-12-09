@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.5 2006/12/08 22:33:46 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.6 2006/12/09 07:51:57 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,7 +46,7 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt
-bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim
+bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim hacchpsim
 
 CLEANFILES += $(bin_SCRIPTS)
 
@@ -80,6 +80,11 @@ hflat: $(top_builddir)/config.status
 hacprsim: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" >> $@
+	@$(CHMOD) +x $@
+
+hacchpsim: $(top_builddir)/config.status
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -670,6 +675,7 @@ SIM_CC_FILES = \
 	sim/ISE.cc \
 	sim/time.cc \
 	sim/command.cc \
+	sim/command_builtin.cc \
 	sim/command_registry.cc \
 	sim/random_time.cc \
 	sim/state_base.cc \
@@ -688,6 +694,8 @@ SIM_CC_FILES = \
 
 SIM_TCC_FILES = \
 	sim/command.tcc \
+	sim/command_builtin.tcc \
+	sim/command_common.tcc \
 	sim/command_category.tcc \
 	sim/command_registry.tcc \
 	sim/signal_handler.tcc \
@@ -702,6 +710,7 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/prsim/ExprAllocFlags.h \
 	sim/chpsim/Channel.h \
 	sim/chpsim/StateConstructorFlags.h \
+	sim/chpsim/Dependence.h \
 	sim/chpsim/Variable.h
 
 # libhacktexec sources
@@ -1424,7 +1433,7 @@ DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 OBJECT_DIRS = Object Object/common Object/expr Object/def Object/inst \
 	Object/lang Object/ref Object/traits Object/type Object/unroll
 
-SIM_DIRS = sim sim/prsim
+SIM_DIRS = sim sim/prsim sim/chpsim
 
 CLEANSUBDIRS += lexer parser AST $(OBJECT_DIRS) $(SIM_DIRS)
 
@@ -1496,6 +1505,8 @@ sim/.cvsignore: .cvsignore
 	$(CP) $? $@
 sim/prsim/.cvsignore: .cvsignore
 	$(CP) $? $@
+sim/chpsim/.cvsignore: .cvsignore
+	$(CP) $? $@
 test/.cvsignore: .cvsignore test/local.cvsignore
 	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
@@ -1509,7 +1520,7 @@ SUBDIR_CVSIGNORE += lexer/.cvsignore parser/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
 	Object/unroll/.cvsignore \
 	AST/.cvsignore main/.cvsignore \
-	sim/.cvsignore sim/prsim/.cvsignore \
+	sim/.cvsignore sim/prsim/.cvsignore sim/chpsim/.cvsignore \
 	test/.cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)

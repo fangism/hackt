@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.1 2006/12/08 22:34:01 fang Exp $
+	$Id: Command.cc,v 1.1.2.2 2006/12/09 07:52:12 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -24,20 +24,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/chpsim/Command.h"
 #include "sim/chpsim/State.h"
 #include "sim/command.tcc"
+#include "sim/command_builtin.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
+#include "sim/command_common.tcc"
 #include "parser/instref.h"
 
 #include "common/TODO.h"
 #include "util/libc.h"
+#include "util/attributes.h"
 #include "util/memory/excl_malloc_ptr.h"
-
-/**
-	These commands are deprecated, but provided for backwards compatibility.
-	Eventually disable this.  
-	(NOTE: the alias command can always effectively re-enable it.)
- */
-#define	WANT_OLD_RANDOM_COMMANDS			1
 
 namespace HAC {
 namespace SIM {
@@ -64,13 +60,6 @@ using parser::parse_name_to_get_subnodes;
 //=============================================================================
 // local static CommandCategories
 // feel free to add categories here
-
-/**
-	Global static initialization of aliases.  
-	Or should we have one per interpreter?
- */
-CommandRegistry::aliases_map_type
-CommandRegistry::aliases;
 
 static CommandCategory
 	builtin("builtin", "built-in commands"),
@@ -104,334 +93,77 @@ const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
 
 //-----------------------------------------------------------------------------
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Echo, "echo", builtin, 
+typedef	stateless_command_wrapper<Echo, State>	Echo;
+INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Echo, "echo", CHPSIM::builtin, 
 	"prints arguments back to stdout, space-delimited")
 
-int
-Echo::main(State&, const string_list& args) {
-	INVARIANT(!args.empty());
-	ostream_iterator<string> osi(cout, " ");
-	copy(++args.begin(), args.end(), osi);
-	cout << endl;
-	return Command::NORMAL;
-}
+//-----------------------------------------------------------------------------
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Help, CHPSIM::builtin)
+}	// end namespace CHPSIM
 
-void
-Echo::usage(ostream& o) {
-	o << "echo [args]: repeats arguments to stdout, space-delimited"
-		<< endl;
-}
+// explicit instantiation in correct namespace
+template int CHPSIM::Help::main(const string_list&);
+
+// re-open namespace
+namespace CHPSIM {
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	stateless_command_wrapper<CommentPound, State>		CommentPound;
+typedef	stateless_command_wrapper<CommentComment, State>	CommentComment;
+
+INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::CommentPound,
+	"#", CHPSIM::builtin, "comments are ignored")
+INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::CommentComment,
+	"comment", CHPSIM::builtin, "comments are ignored")
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INITIALIZE_COMMAND_CLASS(Help, "help", builtin,
-	"show available commands and categories")
-
-/**
-	\param args the tokenized command line, including the "help" command
-		as the first token.
- */
-int
-Help::main(const string_list& args) {
-	INVARIANT(args.size());
-	const string_list::const_iterator argi(++args.begin());
-	// skip first, which is 'help'
-	if (argi != args.end()) {
-		if (!CommandRegistry::help_category(cout, *argi) &&
-			!CommandRegistry::help_command(cout, *argi)) {
-			cerr << "Unknown category/command: " << *argi<< endl;
-		}
-	} else {
-		// no argument, just list available commands
-		CommandRegistry::list_categories(cout);
-		usage(cout);
-	}
-	return Command::NORMAL;
-}
-
-int
-Help::main(State&, const string_list& args) {
-	return main(args);
-}
-
-void
-Help::usage(ostream& o) {
-	o << "help: lists available commands and categories" << endl;
-	o << "to get usage for a specific command or category, "
-		"run: help <name>" << endl;
-	o << "help all: lists all commands across all categories" << endl;
-}
+typedef	All<State>					All;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::All, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentPound, "#", builtin,
-	"comments are ignored")
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentComment, "comment", builtin,
-	"comments are ignored")
+typedef	stateless_command_wrapper<Exit, State>		Exit;
+typedef	stateless_command_wrapper<Quit, State>		Quit;
 
-int
-CommentPound::main(State&, const string_list&) { return Command::NORMAL; }
-
-void
-CommentPound::usage(ostream& o) {
-	o << "# or \'comment\' ignores the whole line." << endl;
-}
-
-int
-CommentComment::main(State&, const string_list&) { return Command::NORMAL; }
-
-void
-CommentComment::usage(ostream& o) { CommentPound::usage(o); }
+INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Exit,
+	"exit", CHPSIM::builtin, "exits simulator")
+INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Quit,
+	"quit", CHPSIM::builtin, "exits simulator")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(All, "all", builtin, "show all commands")
-
-int
-All::main(State&, const string_list&) {
-	cout << "usage: help all" << endl;
-	return Command::NORMAL;
-}
-
-void
-All::usage(ostream& o) {
-	CommandRegistry::list_commands(o);
-}
+typedef	Alias<State>				Alias;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Alias, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Exit, "exit", builtin, "exits simulator")
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Quit, "quit", builtin, "exits simulator")
-
-int
-Exit::main(State&, const string_list&) {
-	return Command::END;
-}
-
-void
-Exit::usage(ostream& o) {
-	o << "exit: " << brief << endl;
-}
-
-int
-Quit::main(State& s, const string_list& a) {
-	return Exit::main(s, a);
-}
-
-void
-Quit::usage(ostream& o) {
-	Exit::usage(o);
-}
+typedef	UnAlias<State>				UnAlias;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::UnAlias, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Alias, "alias", builtin,
-	"defines alias to auto-expand by the interpreter")
-
-/**
-	TODO: Consider storing interpreter aliases in the State object, 
-	instead of global registration.  
- */
-int
-Alias::main(State&, const string_list& a) {
-if (a.size() < 3) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	typedef	string_list::const_iterator	const_iterator;
-	string_list ac(a);
-	ac.pop_front();		// drop the command
-	const string al(ac.front());
-	ac.pop_front();		// extract alias name, use the rest
-	return CommandRegistry::add_alias(al, ac);
-}
-}
-
-void
-Alias::usage(ostream& o) {
-	o << "alias <name> <command> [args...]" << endl;
-	o <<
-"defines an alias that expands into another command and args\n"
-"Aliases may reference other aliases as long as no cycles are formed."
-	<< endl;
-}
+typedef	UnAliasAll<State>			UnAliasAll;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::UnAliasAll, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnAlias, "unalias", builtin,
-	"undefines an alias command")
-
-/**
-	Un-aliases one command at a time.  
- */
-int
-UnAlias::main(State&, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	return CommandRegistry::unalias(a.back());
-}
-}
-
-void
-UnAlias::usage(ostream& o) {
-	o << "unalias <name>" << endl;
-	o << "undefines an existing command alias" << endl;
-}
+typedef	Aliases<State>				Aliases;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnAliasAll, "unaliasall", builtin,
-	"undefines all alias commands")
-
-/**
-	Un-aliases all alias commands.  
- */
-int
-UnAliasAll::main(State&, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	return CommandRegistry::unalias_all();
-}
-}
-
-void
-UnAliasAll::usage(ostream& o) {
-	o << "unaliasall" << endl;
-	o << "undefines all existing command aliases" << endl;
-}
+typedef	Source<State>				Source;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Source, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Aliases, "aliases", builtin,
-	"show all registered command aliases")
-
-int
-Aliases::main(State&, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	CommandRegistry::list_aliases(cout);
-	return Command::NORMAL;
-}
-}
-
-void
-Aliases::usage(ostream& o) {
-	o << "aliases" << endl;
-	o << "lists all active defined command aliases" << endl;
-}
+typedef	AddPath<State>				AddPath;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AddPath, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Source, "source", general,
-	"execute commands from script file(s)")
-
-/**
-	TODO: additional flags to determine error handling, verbosity...
-	Include paths for source files?
- */
-int
-Source::main(State& s, const string_list& a) {
-if (a.size() < 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	string_list::const_iterator i(++a.begin());
-	const string_list::const_iterator e(a.end());
-	int status = Command::NORMAL;
-	for ( ; i!=e && !status; ++i) {
-		// termination will depend on error handling
-		status = CommandRegistry::source(s, *i);
-	}
-	if (status) {
-		--i;
-		cerr << "Error encountered during source \"" <<
-			*i << "\"." << endl;
-	}
-	return status;
-}
-}
-
-void
-Source::usage(ostream& o) {
-	o << "source <file(s)>: " << brief << endl;
-	o << "read in and run commands from the named file(s)" << endl;
-	o << "sourcing terminates upon first error encountered." << endl;
-}
+typedef	Paths<State>				Paths;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Paths, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddPath, "addpath", general,
-	"add search paths for source scripts")
-
-int
-AddPath::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.add_source_path(a.back());
-	return Command::NORMAL;
-}
-}
-
-void
-AddPath::usage(ostream& o) {
-	o << "addpath <path>" << endl;
-	o <<
-"adds a path to the search-list used to locate sourced command files"
-<< endl;
-}
+typedef	Initialize<State>			Initialize;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Initialize, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Paths, "paths", general,
-	"show search paths for source scripts")
-
-int
-Paths::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.dump_source_paths(cout);
-	return Command::NORMAL;
-}
-}
-
-void
-Paths::usage(ostream& o) {
-	o << "paths" << endl;
-	o << "show current list of source search paths" << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Initialize, "initialize", simulation,
-	"resets simulator state and event queue, preserving modes")
-
-int
-Initialize::main(State& s, const string_list&) {
-	s.initialize();
-	return Command::NORMAL;
-}
-
-void
-Initialize::usage(ostream& o) {
-	o << "initialize: " << brief << endl;
-	o << "set all nodes to unknown state and clear the event queue" << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reset, "reset", simulation, 
-	"resets simulator state, queue, and modes (fresh start)")
-
-int
-Reset::main(State& s, const string_list&) {
-	s.reset();
-	return Command::NORMAL;
-}
-
-void
-Reset::usage(ostream& o) {
-	o << "reset: " << brief << endl;
-	o << "restart the entire simulation as if it was just launched" << endl;
-}
-#endif
+typedef	Reset<State>				Reset;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -768,27 +500,8 @@ Cycle::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation,
-	"show event queue")
-
-int
-Queue::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.dump_event_queue(cout);
-	return Command::NORMAL;
-}
-}
-
-void
-Queue::usage(ostream& o) {
-	o << "queue: " << brief << endl;
-	o << "prints events pending in the event queue" << endl;
-}
-#endif
+typedef	Queue<State>				Queue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Queue, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1199,124 +912,21 @@ Breaks::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Save, "save", simulation, 
-	"saves simulation state to a checkpoint")
 
-int
-Save::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& fname(a.back());
-	std::ofstream f(fname.c_str(), ios_base::binary);
-	if (!f) {
-		cerr << "Error opening file \"" << fname <<
-			"\" for writing." << endl;
-		return Command::BADFILE;
-	}
-	if (s.save_checkpoint(f)) {
-		// error-handling?
-		cerr << "Error writing checkpoint!" << endl;
-		return Command::UNKNOWN;
-	}
-	return Command::NORMAL;
-}
-}
-
-void
-Save::usage(ostream& o) {
-	o << "save <file>" << endl;
-	o << brief << endl;
-	o << "(recommend some extension like .chpsimckpt)" << endl;
-}
-#endif
+typedef	Save<State>				Save;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Load, "load", simulation, 
-	"loads simulation state from a checkpoint")
-
-int
-Load::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	const string& fname(a.back());
-	std::ifstream f(fname.c_str(), ios_base::binary);
-	if (!f) {
-		cerr << "Error opening file \"" << fname <<
-			"\" for reading." << endl;
-		return Command::BADFILE;
-	}
-	if (s.load_checkpoint(f)) {
-		// error-handling?
-		cerr << "Error loading checkpoint!" << endl;
-		return Command::UNKNOWN;
-	}
-	return Command::NORMAL;
-}
-}
-
-void
-Load::usage(ostream& o) {
-	o << "load <file>" << endl;
-	o << brief << endl;
-}
-#endif
+typedef	Load<State>				Load;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,
-	"print type information of named entity")
-
-int
-What::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (parse_name_to_what(cout, a.back(), s.get_module()))
-		return Command::BADARG;
-	else	return Command::NORMAL;
-}
-}
-
-void
-What::usage(ostream& o) {
-	o << "what <name>" << endl;
-	o << "prints the type/size of the referenced instance(s)" << endl;
-}
+typedef	What<State>				What;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::What, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Who, "who", info,
-	"print aliases of node or structure")
-
-int
-Who::main(State& s, const string_list& a) {
-if (a.size() != 2) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	cout << "aliases of \"" << a.back() << "\":" << endl;
-	if (parse_name_to_aliases(cout, a.back(), s.get_module())) {
-		return Command::BADARG;
-	} else {
-		cout << endl;
-		return Command::NORMAL;
-	}
-}
-}
-
-void
-Who::usage(ostream& o) {
-	o << "who <name>" << endl;
-	o << "prints all aliases (equivalent names) of the referenced instance"
-		<< endl;
-}
-#endif
+typedef	Who<State>				Who;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Who, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1699,60 +1309,13 @@ AssertN::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1 && 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertQueue, "assert-queue", info, 
-	"assert that the event queue is not empty")
 
-int
-AssertQueue::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	if (s.pending_events()) {
-		return Command::NORMAL;
-	} else {
-		cout << "assert failed: expecting non-empty event queue."
-			<< endl;
-		return Command::FATAL;
-	}
-}
-}
-
-void
-AssertQueue::usage(ostream& o) {
-	o << "assert-queue" << endl;
-	o << "signal an error if the event queue is empty" << endl;
-}
-#endif
+typedef	AssertQueue<State>			AssertQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertQueue, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Time, "time", info, 
-	"display current simulation time")
-
-/**
-	TODO:
-	Allow "time x" to manually set the time if the event queue is empty. 
-	Useful for manually resetting the timer.  
-	Allow "time +x" to advance by time, like step.  
-		(or reserve for the advance command?)
- */
-int
-Time::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	cout << "time: " << s.time() << endl;
-	return Command::NORMAL;
-}
-}
-
-void
-Time::usage(ostream& o) {
-	o << "time" << endl;
-	o << "shows the current time" << endl;
-}
+typedef	Time<State>				Time;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Time, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Confirm, "confirm", info, 
@@ -1939,51 +1502,15 @@ Watches::usage(ostream& o) {
 	o << "watches" << endl;
 	o << "show list of explicitly watched nodes" << endl;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchQueue, "watch-queue", view,
-	"print each event as it is enqueued into the event queue")
-
-int
-WatchQueue::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.watch_event_queue();
-	return Command::NORMAL;
-}
-}
-
-void
-WatchQueue::usage(ostream& o) {
-	o << "watch-queue" << endl;
-	o << "Print events as they are inserted into the event queue."
-		<< endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchQueue, "nowatch-queue", view,
-	"silence enqueuing into the event queue (default)")
-
-int
-NoWatchQueue::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.nowatch_event_queue();
-	return Command::NORMAL;
-}
-}
-
-void
-NoWatchQueue::usage(ostream& o) {
-	o << "nowatch-queue" << endl;
-	o << "Silence events as they are inserted into the event queue."
-		<< endl;
-}
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	WatchQueue<State>			WatchQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WatchQueue, CHPSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	NoWatchQueue<State>			NoWatchQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchQueue, CHPSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

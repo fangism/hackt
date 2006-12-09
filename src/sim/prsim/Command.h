@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.6.42.1 2006/12/08 07:51:28 fang Exp $
+	$Id: Command.h,v 1.6.42.2 2006/12/09 07:52:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -17,6 +17,8 @@
 
 namespace HAC {
 namespace SIM {
+template <class> class Help;
+
 namespace PRSIM {
 class State;
 using std::string;
@@ -84,22 +86,10 @@ private:								\
 	static const size_t		receipt_id;			\
 };
 
-// declare some generally useful commands
 /**
-	The 'help' command class.  
-	Not using the macro to define because we extend the interface somewhat.
+	public help class.  
  */
-struct Help {
-public:
-	static const char		name[];
-	static const char		brief[];
-	static CommandCategory&		category;
-	static int	main(const string_list&);	// no state needed
-	static int	main(State&, const string_list&);
-	static void	usage(ostream&);
-private:
-	static const size_t		receipt_id;
-};	// end class Help
+typedef	Help<State>			Help;
 
 //=============================================================================
 }	// end namespace PRSIM

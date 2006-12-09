@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.6 2006/12/08 22:34:04 fang Exp $
+	$Id: State.cc,v 1.1.2.7 2006/12/09 07:52:14 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -12,9 +12,12 @@
 
 #include <iostream>
 
+#include "common/TODO.h"
+
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class State method definitions
@@ -56,6 +59,12 @@ State::initialize(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::reset(void) {
+	// TOOD: write me!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main event-driven execution engine of chpsim.  
 	Processes one event at a time.  
@@ -76,6 +85,26 @@ State::step(void) {
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_event_queue(ostream& o) const {
+	return o << "what event queue?" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::save_checkpoint(ostream& o) const {
+	FINISH_ME(Fang);
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::load_checkpoint(istream& o) {
+	FINISH_ME(Fang);
+	return false;
 }
 
 //=============================================================================

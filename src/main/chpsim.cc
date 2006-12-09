@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.3 2006/12/08 22:33:47 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.4 2006/12/09 07:51:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/options_modifier.tcc"
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
+#include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
 #include "util/memory/excl_ptr.h"	// for never_ptr
 

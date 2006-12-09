@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.1.2.2 2006/12/08 22:33:53 fang Exp $
+	$Id: command_registry.tcc,v 1.1.2.3 2006/12/09 07:52:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -24,6 +24,7 @@ using util::readline_wrapper;
 using util::ifstream_manager;
 using util::strings::eat_whitespace;
 using util::tokenize;
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class command_registry member/method definitions
@@ -43,6 +44,15 @@ command_registry<Command>::command_map;
 template <class Command>
 typename command_registry<Command>::category_map_type
 command_registry<Command>::category_map;
+
+
+/**
+	Global static initialization of aliases.  
+	Or should we have one per interpreter?
+ */
+template <class Command>
+typename command_registry<Command>::aliases_map_type
+command_registry<Command>::aliases;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>

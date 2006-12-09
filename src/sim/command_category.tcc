@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_category.tcc"
-	$Id: command_category.tcc,v 1.1.2.1 2006/12/08 07:51:21 fang Exp $
+	$Id: command_category.tcc,v 1.1.2.2 2006/12/09 07:52:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_CATEGORY_TCC__
@@ -13,6 +13,8 @@
 
 namespace HAC {
 namespace SIM {
+#include "util/using_ostream.h"
+
 //=============================================================================
 // class command_category method definitions
 

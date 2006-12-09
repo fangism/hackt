@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.6 2006/12/08 22:34:04 fang Exp $
+	$Id: State.h,v 1.1.2.7 2006/12/09 07:52:15 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -44,6 +44,7 @@ private:
 			reason, self-stopped on error, or interrupted.  
 		 */
 		FLAG_STOP_SIMULATION = 0x0001,
+		FLAG_WATCH_QUEUE = 0x0002,
 		FLAGS_DEFAULT = 0x0000
 	};
 private:
@@ -78,6 +79,15 @@ public:
 	void
 	initialize(void);
 
+	void
+	reset(void);
+
+	/**
+		TODO: finish me, add an actual queue!
+	 */
+	bool
+	pending_events(void) const { return false; }
+
 	const time_type&
 	time(void) const { return current_time; }
 
@@ -90,6 +100,24 @@ public:
 		flags |= FLAG_STOP_SIMULATION;
 		interrupted = true;
 	}
+
+	void
+	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
+
+	void
+	nowatch_event_queue(void) { flags &= ~FLAG_WATCH_QUEUE; }
+
+	bool
+	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
+
+	ostream&
+	dump_event_queue(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
 
 };	// end class State
 
