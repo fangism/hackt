@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.7 2006/12/09 07:52:14 fang Exp $
+	$Id: State.cc,v 1.1.2.8 2006/12/11 00:40:21 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -9,6 +9,10 @@
 #include "sim/signal_handler.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
+#include "Object/global_entry.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/chan_traits.h"
 
 #include <iostream>
 
@@ -18,6 +22,11 @@ namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
+using entity::bool_tag;
+using entity::int_tag;
+using entity::channel_tag;
+using entity::process_tag;
+using entity::global_entry_pool;
 
 //=============================================================================
 // class State method definitions
@@ -32,14 +41,24 @@ State::State(const module& m) :
 		interrupted(false),
 		flags(FLAGS_DEFAULT) {
 	const state_manager& sm(mod.get_state_manager());
+	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+	const global_entry_pool<int_tag>& ip(sm.get_pool<int_tag>());
+	const global_entry_pool<channel_tag>& cp(sm.get_pool<channel_tag>());
 
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
 
+	const size_t bs = bp.size();
+	const size_t is = ip.size();
+	const size_t cs = cp.size();
+	bool_pool.resize(bs);
+	int_pool.resize(is);
+	channel_pool.resize(cs);
+
 	StateConstructor v(*this);	// + option flags
 	sm.accept(v);	// may throw
-	// also top-level footprint
+	// also top-level footprint (this can also come first)
 	mod.get_footprint().get_chp_footprint().accept(v);
 }
 
@@ -94,6 +113,72 @@ State::dump_event_queue(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints non-hierarchical structure of the entire allocated state.
+	See also: dump_struct_dot() for a graphical view.  
+ */
+ostream&
+State::dump_struct(ostream& o) const {
+{
+	o << "Variables: " << endl;
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	{
+		const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+		const node_index_type bools = bool_pool.size();
+		node_index_type i = FIRST_VALID_NODE;
+		for ( ; i<bools; ++i) {
+			o << "bool[" << i << "]: \"";
+			bp[i].dump_canonical_name(o, topfp, sm);
+			o << "\" ";
+			// no static structural information
+			// bool_pool[i].dump_struct(o) << endl;
+		}
+	}{
+		const global_entry_pool<int_tag>& ip(sm.get_pool<int_tag>());
+		const node_index_type ints = int_pool.size();
+		node_index_type i = FIRST_VALID_NODE;
+		for ( ; i<ints; ++i) {
+			o << "bool[" << i << "]: \"";
+			ip[i].dump_canonical_name(o, topfp, sm);
+			o << "\" ";
+			// no static structural information
+			// int_pool[i].dump_struct(o) << endl;
+		}
+	}{
+		const global_entry_pool<channel_tag>&
+			cp(sm.get_pool<channel_tag>());
+		const node_index_type chans = channel_pool.size();
+		node_index_type i = FIRST_VALID_NODE;
+		for ( ; i<chans; ++i) {
+			o << "bool[" << i << "]: \"";
+			cp[i].dump_canonical_name(o, topfp, sm);
+			o << "\" ";
+			// no static structural information
+			// channel_pool[i].dump_struct(o) << endl;
+		}
+	}
+	// repeat for channels
+}{
+// CHP graph structures (non-hierarchical)
+	o << "Event graph: " << endl;
+	const size_t es = event_pool.size();
+	size_t i = FIRST_VALID_EVENT;
+	for ( ; i<es; ++i) {
+		o << "event[" << i << "]: ";
+		event_pool[i].dump_struct(o);	// << endl;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checkpoint things that are not reconstructible from the object file.
+	checklist:
+	dynamic subscription state, which encodes which events are
+		outstanding and blocked.  
+ */
 bool
 State::save_checkpoint(ostream& o) const {
 	FINISH_ME(Fang);

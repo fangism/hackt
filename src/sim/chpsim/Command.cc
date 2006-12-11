@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.2 2006/12/09 07:52:12 fang Exp $
+	$Id: Command.cc,v 1.1.2.3 2006/12/11 00:40:13 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -89,7 +89,7 @@ CommandCategory& _class::category(_category);				\
 const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 
 #define	DECLARE_AND_INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief) \
-	DECLARE_COMMAND_CLASS(_class)					\
+	DECLARE_CHPSIM_COMMAND_CLASS(_class)				\
 	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
 
 //-----------------------------------------------------------------------------

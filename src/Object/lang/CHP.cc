@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.3 2006/12/08 03:14:43 fang Exp $
+	$Id: CHP.cc,v 1.16.2.4 2006/12/11 00:40:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -199,6 +199,15 @@ action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print anything.  Not a single statement/event.  
+ */
+ostream&
+action_sequence::dump_event(ostream& o) const {
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 action_sequence::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -354,6 +363,15 @@ if (!empty()) {
 		__dump(o, c);
 	}
 }
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print anything.  Not a single statement/event.  
+ */
+ostream&
+concurrent_actions::dump_event(ostream& o) const {
 	return o;
 }
 
@@ -676,6 +694,15 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print anything.  Not a single statement/event.  
+ */
+ostream&
+deterministic_selection::dump_event(ostream& o) const {
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 deterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -788,6 +815,15 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print anything.  Not a single statement/event.  
+ */
+ostream&
+nondeterministic_selection::dump_event(ostream& o) const {
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -915,6 +951,16 @@ metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Don't print anything.  Not a single statement/event.  
+ */
+ostream&
+metaloop_selection::dump_event(ostream& o) const {
+	ICE_NEVER_CALL(cerr);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This expands a meta-loop into unrolled form.  
 	Partially ripped from entity::PRS::rule_loop::unroll().  
  */
@@ -1032,6 +1078,15 @@ assignment::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Defer to normal dump.  
+ */
+ostream&
+assignment::dump_event(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 assignment::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1114,6 +1169,15 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(condition_wait)
 ostream&
 condition_wait::dump(ostream& o, const expr_dump_context& c) const {
 	return cond->dump(o << '[', c) << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Defer to normal dump.  
+ */
+ostream&
+condition_wait::dump_event(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1281,6 +1345,15 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Defer to normal dump.  
+ */
+ostream&
+channel_send::dump_event(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 channel_send::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1400,6 +1473,15 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Defer to normal dump.  
+ */
+ostream&
+channel_receive::dump_event(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 channel_receive::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1516,6 +1598,15 @@ do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print, not a single statement/event.  
+ */
+ostream&
+do_forever_loop::dump_event(ostream& o) const {
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 do_forever_loop::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1618,6 +1709,15 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print, not a single statement/event.  
+ */
+ostream&
+do_while_loop::dump_event(ostream& o) const {
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

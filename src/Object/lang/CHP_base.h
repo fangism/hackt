@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.2 2006/12/05 01:49:24 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.3 2006/12/11 00:40:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -54,6 +54,12 @@ virtual	~action() { }
 
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
+
+#define	CHP_DUMP_EVENT_PROTO						\
+	ostream&							\
+	dump_event(ostream&) const
+
+virtual	CHP_DUMP_EVENT_PROTO = 0;
 
 	/**
 		unroll_context-binding functor.  

@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.61 2006/11/27 08:29:18 fang Exp $
+#	$Id: ChangeLog,v 1.61.4.1 2006/12/11 00:40:31 fang Exp $
+
+2006-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-07:
+	  Added supplemental interface to container iterators:
+		util/STL/container_iterator.h and
+		util/STL/valarray_iterator.h for specializations.  
+		Specialization doesn't quite work as expected... doh.
+
 
 2006-11-26	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,15 +1,18 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.3 2006/12/08 03:14:45 fang Exp $
+	$Id: Event.h,v 1.1.2.4 2006/12/11 00:40:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
 #define	__HAC_SIM_CHPSIM_EVENT_H__
 
 #include "util/size_t.h"
+#include "util/attributes.h"
+#include <iosfwd>
 #include <valarray>
 #include "util/memory/count_ptr.h"
+#include "sim/chpsim/Dependence.h"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +23,7 @@ namespace CHP {
 }
 namespace SIM {
 namespace CHPSIM {
+using std::ostream;
 using std::valarray;
 using entity::bool_expr;
 using entity::CHP::action;
@@ -142,8 +146,17 @@ private:
 	/**
 		barrier count: from number of predecessors (join operation)
 		Event fires when countdown reaches zero, post-decrement.  
+		This is dynamic stateful information that needs 
+		to be checkpointed.  
 	 */
 	unsigned short			countdown;
+	/**
+		Set of variables and channels whose update may affect the
+		blocking state of this event.  
+		Consider using an excl_ptr to this if 
+		a significant number of events don't need this.  
+	 */
+	DependenceSet			deps;
 public:
 	EventNode();
 
@@ -156,6 +169,9 @@ public:
 
 	void
 	set_predecessors(const event_index_type n) { predecessors = n; }
+
+	ostream&
+	dump_struct(ostream&) const;
 
 };	// end class EventNode
 

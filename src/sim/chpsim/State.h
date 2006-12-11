@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.7 2006/12/09 07:52:15 fang Exp $
+	$Id: State.h,v 1.1.2.8 2006/12/11 00:40:21 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -13,6 +13,8 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
+#include "sim/chpsim/Variable.h"
+#include "sim/chpsim/Channel.h"
 
 namespace HAC {
 namespace SIM {
@@ -38,6 +40,13 @@ private:
 	typedef	EventNode			event_type;
 	typedef	vector<event_type>		event_pool_type;
 	typedef	unsigned int			flags_type;
+
+	enum {
+		/// index of the first valid node
+		FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
+		/// index of the first valid event
+		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
+	};
 	enum {
 		/**
 			Whether or not the simulation was halted for any 
@@ -54,6 +63,10 @@ private:
 	// variable pools (bool, int, mpz_t)
 	//	no need for user-defined, as they are just composites
 	//	of the fundamental types.
+	vector<BoolVariable>			bool_pool;
+	vector<IntVariable>			int_pool;
+	vector<ChannelState>			channel_pool;
+	
 	// event pools: for each type of event?
 public:
 	// to give CHP action classes access ...
@@ -109,6 +122,15 @@ public:
 
 	bool
 	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
+
+	void
+	check_structure(void) const;
+
+	ostream&
+	dump_struct(ostream&) const;
+
+	ostream&
+	dump_struct_dot(ostream&) const;
 
 	ostream&
 	dump_event_queue(ostream&) const;

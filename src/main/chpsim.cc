@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.4 2006/12/09 07:51:58 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.5 2006/12/11 00:40:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -26,13 +26,14 @@ namespace HAC {
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::CHPSIM::State;
+using SIM::CHPSIM::CommandRegistry;
 
 //=============================================================================
 template class options_modifier_policy<chpsim_options>;
 
 //=============================================================================
 /**
-	Has a lot in common with prsim_options (main/prsim.cc)
+	Has a lot in common with chpsim_options (main/prsim.cc)
  */
 class chpsim_options {
 public:
@@ -42,13 +43,19 @@ public:
 	bool				interactive;
 	/// whether or not to run, or just run some other diagnostics
 	bool				run;
-
+	/// show result of graph allocation
+	bool				dump_graph_alloc;
+	/// check structure
+	bool				check_structure;
+	/// whether or not to produce dot graph output before running
+	bool				dump_dot_struct;
 	/// list of paths to search for sourced scripts
 	typedef	std::list<string>	source_paths_type;
 	source_paths_type		source_paths;
 
 	chpsim_options() : help_only(false), interactive(true), 
-		run(true), source_paths() { }
+		run(true), dump_graph_alloc(false), check_structure(true),
+		dump_dot_struct(false), source_paths() { }
 };	// end class chpsim_options
 
 //=============================================================================
@@ -118,24 +125,22 @@ try {
 	State sim_state(*the_module);		// may throw
 	// install interrupt signal handler
 	const State::signal_handler int_handler(&sim_state);
-#if 0
-	if (opt.dump_alloc)
+	if (opt.dump_graph_alloc)
 		sim_state.dump_struct(cout) << endl;
+#if 0
 	if (opt.check_structure)
 		sim_state.check_structure();
 	if (opt.dump_dot_struct)
 		sim_state.dump_struct_dot(cout) << endl;
-	sim_state.import_source_paths(opt.source_paths);
 #endif
+	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
-#if 0
 		// run command interpreter
 		// return error if necessary
 		const int ret = CommandRegistry::interpret(sim_state, 
 			opt.interactive);
 		if (ret)	return ret;
-#endif
 	}
 } catch (...) {
 	cerr << "Caught exception during construction of simulator state."
@@ -151,18 +156,32 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bhi";
+	static const char optstring[] = "+bf:hiI:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
 	case 'b':
 		o.interactive = false;
 		break;
+	case 'f': {
+		const options_modifier_map_iterator
+			mi(options_modifier_map.find(optarg));
+		if (mi == options_modifier_map.end() || !mi->second) {
+			cerr << "Invalid option argument: " << optarg << endl;
+			return 1;
+		} else {
+			(mi->second)(o);
+		}
+		break;
+	}
 	case 'h':
 		o.help_only = true;
 		break;
 	case 'i':
 		o.interactive = true;
+	case 'I':
+		o.source_paths.push_back(optarg);
+		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;
 		return 1;
@@ -180,7 +199,67 @@ switch (c) {
 void
 chpsim::usage(void) {
 	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
+	cerr << "options:" << endl;
+	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
+//	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
+	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
+	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
+	cerr << "\t-i : interactive (default)" << endl;
+	cerr << "\t-I <path> : include path for scripts (repeatable)" << endl;
+//	cerr << "\t-O <0..1> : expression optimization level" << endl;
+        const size_t flags = options_modifier_map.size();
+	if (flags) {
+		cerr << "flags (" << flags << " total):" << endl;
+		dump_options_briefs(cerr);
+	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static void __chpsim_default(chpsim_options& o) { o = chpsim_options(); }
+
+static void __chpsim_run(chpsim_options& o) { o.run = true; }
+static void __chpsim_no_run(chpsim_options& o) { o.run = false; }
+static void __chpsim_dump_graph_alloc(chpsim_options& o)
+	{ o.dump_graph_alloc = true; }
+static void __chpsim_no_dump_graph_alloc(chpsim_options& o)
+	{ o.dump_graph_alloc = false; }
+static void __chpsim_check_structure(chpsim_options& o)
+	{ o.check_structure = true; }
+static void __chpsim_no_check_structure(chpsim_options& o)
+	{ o.check_structure = false; }
+static void __chpsim_dump_dot_struct(chpsim_options& o)
+	{ o.dump_dot_struct = true; }
+static void __chpsim_no_dump_dot_struct(chpsim_options& o)
+	{ o.dump_dot_struct = false; }
+
+const chpsim::register_options_modifier
+	chpsim::_default(
+		"default", &__chpsim_default,
+		"default options"), 
+	chpsim::_run(
+		"run", &__chpsim_run,
+		"enable simulation run (default)"), 
+	chpsim::_no_run(
+		"no-run", &__chpsim_no_run,
+		"disable simulation run"), 
+	chpsim::_dump_graph_alloc(
+		"dump-graph-alloc", &__chpsim_dump_graph_alloc,
+		"show result of expression allocation"), 
+	chpsim::_no_dump_graph_alloc(
+		"no-dump-graph-alloc", &__chpsim_no_dump_graph_alloc,
+		"suppress result of expression allocation (default)"),
+	chpsim::_check_structure(
+		"check-structure", &__chpsim_check_structure,
+		"checks expression/node structure consistency (default)"), 
+	chpsim::_no_check_structure(
+		"no-check-structure", &__chpsim_no_check_structure,
+		"disable structural consistency checks"),
+	chpsim::_dump_dot_struct(
+		"dump-dot-struct", &__chpsim_dump_dot_struct,
+		"print dot-formatted graph structure"), 
+	chpsim::_no_dump_dot_struct(
+		"no-dump-dot-struct", &__chpsim_no_dump_dot_struct,
+		"suppress dot-formatted graph structure (default)");
 
 //=============================================================================
 }	// end namespace HAC

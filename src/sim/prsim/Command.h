@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.6.42.2 2006/12/09 07:52:17 fang Exp $
+	$Id: Command.h,v 1.6.42.3 2006/12/11 00:40:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -74,7 +74,7 @@ class CommandAlias {
 /**
 	Declares a command class.  
  */
-#define	DECLARE_COMMAND_CLASS(class_name)				\
+#define	DECLARE_PRSIM_COMMAND_CLASS(class_name)				\
 struct class_name {                                                     \
 public:                                                                 \
 	static const char		name[];				\

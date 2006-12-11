@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.12.4.2 2006/12/08 03:14:44 fang Exp $
+	$Id: CHP.h,v 1.12.4.3 2006/12/11 00:40:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -60,6 +60,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -117,6 +118,7 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -174,6 +176,7 @@ public:
 	unroll_resolve_copy(const unroll_context&,
 		const count_ptr<const guarded_action>&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
 	struct unroll_resolver {
@@ -214,6 +217,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -239,6 +243,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -281,6 +286,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -315,6 +321,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -349,6 +356,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -387,6 +395,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -430,6 +439,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -459,6 +469,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
@@ -489,6 +500,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 
