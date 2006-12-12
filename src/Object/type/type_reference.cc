@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.23 2006/11/21 22:39:11 fang Exp $
+ 	$Id: type_reference.cc,v 1.23.4.1 2006/12/12 10:18:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -1618,7 +1618,8 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
  */
 count_ptr<const process_type_reference>
 process_type_reference::unroll_resolve(void) const {
-	return unroll_resolve(unroll_context(NULL, NULL));
+	return unroll_resolve(
+		unroll_context(static_cast<const footprint*>(NULL), NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

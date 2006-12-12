@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.13 2006/11/21 22:38:41 fang Exp $
+	$Id: data_expr.cc,v 1.13.4.1 2006/12/12 10:17:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -27,6 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/expr_visitor.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
@@ -312,6 +313,12 @@ int_arith_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_arith_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
 int_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
@@ -533,6 +540,12 @@ int_relational_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_relational_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 int_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -726,6 +739,12 @@ bool_logical_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_logical_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 bool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -811,6 +830,13 @@ int_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_negation_expr::accept(nonmeta_expr_visitor& v) const {
+	// cast diambiguates between data_expr and nonmeta_index_expr_base
+	v.visit(static_cast<const data_expr&>(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
 int_negation_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
@@ -884,6 +910,12 @@ bool_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_negation_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 bool_negation_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -945,6 +977,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_range_expr)
 ostream&
 int_range_expr::dump(ostream& o, const expr_dump_context&) const {
 	return upper->what(lower->what(o << '[') << "..") << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_range_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1042,6 +1080,12 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 		else    (*i)->dump(o, c);
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nonmeta_index_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

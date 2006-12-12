@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.21 2006/11/07 06:35:15 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.21.8.1 2006/12/12 10:18:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -17,6 +17,7 @@
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/global_entry.tcc"
@@ -150,7 +151,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm, footprint& top) const {
+		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
 	if (_parent_inst_ref.dimensions()) {
@@ -202,6 +203,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	const footprint_frame_map_type& ffm(fpf->template get_frame_map<Tag>());
 	// this lookup returns a globally allocated index
 	return ffm[ind -1];	// 0-indexed offset
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+MEMBER_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,7 +305,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm, footprint& top) const {
+		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	return parent_type::substructure_implementation_policy::
 		template member_lookup_footprint_frame<Tag>(*this, sm, top);

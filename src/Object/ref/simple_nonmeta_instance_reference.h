@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.11 2006/11/21 22:38:59 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.11.4.1 2006/12/12 10:18:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -18,6 +18,7 @@ namespace HAC {
 namespace entity {
 class data_expr;
 class unroll_context;
+class nonmeta_expr_visitor;
 using util::packed_array_generic;
 
 //=============================================================================
@@ -89,6 +90,8 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const this_type>&) const;
 
+	void
+	accept(nonmeta_expr_visitor&) const;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

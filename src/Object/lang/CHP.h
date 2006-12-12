@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.12.4.3 2006/12/11 00:40:03 fang Exp $
+	$Id: CHP.h,v 1.12.4.4 2006/12/12 10:18:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -165,6 +165,9 @@ public:
 	guarded_action();
 	guarded_action(const guard_ptr_type&, const stmt_ptr_type&);
 	~guarded_action();
+
+	const guard_ptr_type&
+	get_guard(void) const { return guard; }
 
 	ostream&
 	what(ostream&) const;

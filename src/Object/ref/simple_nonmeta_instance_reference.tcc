@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.11 2006/11/21 22:38:59 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.1 2006/12/12 10:18:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -11,6 +11,7 @@
 #include <iostream>
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/common/dump_flags.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "util/what.h"
@@ -128,6 +129,13 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::attach_indices(
 
 	this->array_indices = i;
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

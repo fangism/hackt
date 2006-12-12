@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.12 2006/10/18 20:57:57 fang Exp $
+	$Id: pint_range.h,v 1.12.12.1 2006/12/12 10:18:05 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -15,6 +15,7 @@
 namespace HAC {
 namespace entity {
 class pint_expr;
+class nonmeta_expr_visitor;
 using std::ostream;
 using util::memory::count_ptr;
 
@@ -75,6 +76,9 @@ public:
 
 	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
 	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 protected:
 	using parent_type::unroll_resolve_copy;

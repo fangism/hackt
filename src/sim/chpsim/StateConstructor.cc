@@ -1,13 +1,17 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.1.2.2 2006/12/07 07:48:42 fang Exp $
+	$Id: StateConstructor.cc,v 1.1.2.3 2006/12/12 10:18:30 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/Event.h"
-#include "util/visitor_functor.h"
+#include "Object/module.h"
 #include "Object/global_entry.tcc"
 #include "Object/lang/CHP_footprint.h"
+#include "util/visitor_functor.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
@@ -30,11 +34,23 @@ StateConstructor::~StateConstructor() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Clears the last_event_index.
+	Call this before visiting each process.  
+ */
+void
+StateConstructor::reset(void) {
+	last_event_index = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Copy-modified from entity::cflat_visitor::visit()
-	TODO: top-level CHP!
+	top-level CHP is already visited by the caller
+	in CHPSIM::State::State().  
  */
 void
 StateConstructor::visit(const state_manager& _sm) {
+	STACKTRACE_VERBOSE;
 	size_t pid = 1;		// 0-indexed, but 0th entry is null
 	// const global_entry_pool<process_tag>& proc_entry_pool(sm);
 	const global_entry_pool<process_tag>&
@@ -43,19 +59,45 @@ StateConstructor::visit(const state_manager& _sm) {
 	const size_t plim = proc_entry_pool.size();
 	for ( ; pid < plim; ++pid) {
 		// visit CHP instead
+		reset();
 		current_process_index = pid;
 		entity::CHP_substructure<true>::accept(
 			proc_entry_pool[pid], *this);
+		// TODO: take root last_event_index and add it to
+		// the State's list of ready events (how simulation begins)
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const state_manager&
+StateConstructor::get_state_manager(void) const {
+	return state.get_module().get_state_manager();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return reference to current's processes footprint or
+		the top-level footprint (if index is null)
+ */
+const entity::footprint&
+StateConstructor::get_process_footprint(void) const {
+	const module& m(state.get_module());
+	return current_process_index ?
+		*m.get_state_manager()
+			.get_pool<process_tag>()[current_process_index]
+			._frame._footprint
+		: m.get_footprint();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This updates the new event's list of successors using the 
 	current list of successor events.  (Backwards construction.)
+	If last_event_index is 0 (null), then don't bother.  
  */
 void
 StateConstructor::connect_successor_events(event_type& ev) const {
+	// STACKTRACE_VERBOSE;
 #if 0
 	typedef	return_indices_type::const_iterator	ret_iterator;
 	const ret_iterator 
@@ -64,14 +106,17 @@ StateConstructor::connect_successor_events(event_type& ev) const {
 	ev.successor_events.resize(last_event_indices.size());
 	copy(b, e, &ev.successor_events[0]);
 #else
-	ev.successor_events.resize(1);
-	ev.successor_events[0] = last_event_index;
+	if (last_event_index) {
+		ev.successor_events.resize(1);
+		ev.successor_events[0] = last_event_index;
+	}
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For use with unique predecessors, such as in sequences.  
+	TODO: rename this bad boy...
 	\pre before this routine, caller has set the last_event_indices
 		to correspond to the newly constructed event(s).
 		For basic atomic events, it is a single event, 
@@ -81,6 +126,7 @@ StateConstructor::connect_successor_events(event_type& ev) const {
  */
 void
 StateConstructor::count_predecessors(const event_type& ev) const {
+	STACKTRACE_VERBOSE;
 	typedef	event_type::event_index_type	event_index_type;
 	// poor man's valarray iterator
 	const event_index_type* i = &ev.successor_events[0], 

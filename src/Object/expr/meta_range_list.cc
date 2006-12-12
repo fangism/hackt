@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.18 2006/10/18 20:57:55 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.18.12.1 2006/12/12 10:17:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -29,6 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/STL/functional.h"	// for _Select{1st,2nd}
@@ -396,6 +397,12 @@ const_range_list::must_be_formal_size_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 const_range_list::unroll_resolve_rvalues(const_range_list& r, 
 		const unroll_context& c) const {
@@ -623,6 +630,12 @@ dynamic_meta_range_list::is_static_constant(void) const {
 const_range_list
 dynamic_meta_range_list::static_overlap(const meta_range_list& r) const {
 	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+dynamic_meta_range_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

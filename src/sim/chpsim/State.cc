@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.8 2006/12/11 00:40:21 fang Exp $
+	$Id: State.cc,v 1.1.2.9 2006/12/12 10:18:29 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -57,9 +57,11 @@ State::State(const module& m) :
 	channel_pool.resize(cs);
 
 	StateConstructor v(*this);	// + option flags
-	sm.accept(v);	// may throw
-	// also top-level footprint (this can also come first)
+	// visit top-level footprint
+	// v.current_process_index = 0;	// already initialized
 	mod.get_footprint().get_chp_footprint().accept(v);
+	// visit hierarchical footprints
+	sm.accept(v);	// may throw
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -132,18 +134,20 @@ State::dump_struct(ostream& o) const {
 			bp[i].dump_canonical_name(o, topfp, sm);
 			o << "\" ";
 			// no static structural information
-			// bool_pool[i].dump_struct(o) << endl;
+			// bool_pool[i].dump_struct(o);
+			o << endl;
 		}
 	}{
 		const global_entry_pool<int_tag>& ip(sm.get_pool<int_tag>());
 		const node_index_type ints = int_pool.size();
 		node_index_type i = FIRST_VALID_NODE;
 		for ( ; i<ints; ++i) {
-			o << "bool[" << i << "]: \"";
+			o << "int[" << i << "]: \"";
 			ip[i].dump_canonical_name(o, topfp, sm);
 			o << "\" ";
 			// no static structural information
-			// int_pool[i].dump_struct(o) << endl;
+			// int_pool[i].dump_struct(o);
+			o << endl;
 		}
 	}{
 		const global_entry_pool<channel_tag>&
@@ -151,15 +155,18 @@ State::dump_struct(ostream& o) const {
 		const node_index_type chans = channel_pool.size();
 		node_index_type i = FIRST_VALID_NODE;
 		for ( ; i<chans; ++i) {
-			o << "bool[" << i << "]: \"";
+			o << "chan[" << i << "]: \"";
 			cp[i].dump_canonical_name(o, topfp, sm);
 			o << "\" ";
 			// no static structural information
-			// channel_pool[i].dump_struct(o) << endl;
+			// channel_pool[i].dump_struct(o);
+			o << endl;
 		}
 	}
 	// repeat for channels
-}{
+}
+	o << endl;
+{
 // CHP graph structures (non-hierarchical)
 	o << "Event graph: " << endl;
 	const size_t es = event_pool.size();

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.13 2006/10/18 20:57:52 fang Exp $
+	$Id: const_range_list.h,v 1.13.12.1 2006/12/12 10:17:41 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_LIST_H__
@@ -119,6 +119,9 @@ public:
 
 	bool
 	must_be_formal_size_equivalent(const meta_range_list& ) const;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

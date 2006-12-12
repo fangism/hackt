@@ -3,7 +3,7 @@
 	Dynamic meta parameter range list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_range_list.h,v 1.9 2006/10/18 20:57:53 fang Exp $
+	$Id: dynamic_meta_range_list.h,v 1.9.12.1 2006/12/12 10:17:44 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_META_RANGE_LIST_H__
@@ -77,6 +77,9 @@ public:
 
 	bool
 	must_be_formal_size_equivalent(const meta_range_list& ) const;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

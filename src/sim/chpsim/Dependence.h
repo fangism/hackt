@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.1.2.2 2006/12/11 00:40:18 fang Exp $
+	$Id: Dependence.h,v 1.1.2.3 2006/12/12 10:18:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -11,22 +11,20 @@
 #include "sim/common.h"
 
 namespace HAC {
-#if 0
-namespace entity {
-	class data_expr;
-}
-#endif
 namespace SIM {
 namespace CHPSIM {
-// using entity::data_expr;
 using std::ostream;
+class DependenceSetCollector;	// from "sim/chpsim/DependenceCollector.h"
 /**
 	To keep this structure as small as possible, we use
 	a valarray, but to construct the sets, we will use
 	temporary vectors.  
+	Invariant: make this set sorted for efficient set union/difference
+	algorithms.  
  */
 typedef	std::valarray<node_index_type>	instance_set_type;
 
+//=============================================================================
 /**
 	Each event evaluates a satic set of variables/channels that 
 	can cause it to unblock, the wake-up set.  
@@ -42,16 +40,6 @@ typedef	std::valarray<node_index_type>	instance_set_type;
 	current object size: 24B
  */
 struct DependenceSet {
-#if 0
-	/**
-		Refers to a nonmeta expression (in CHP footprint)
-	 */
-	const data_expr&			guard_expression;
-	// need a process context (footprint frame) to resolve
-	//	local references.  
-	explicit
-	Dependence(const data_expr& d) : guard_expression(d) { }
-#endif
 	instance_set_type			bool_set;
 	instance_set_type			int_set;
 	instance_set_type			channel_set;
@@ -59,11 +47,15 @@ struct DependenceSet {
 	DependenceSet() : bool_set(), int_set(), channel_set() { }
 	~DependenceSet() { }
 
+	void
+	import(const DependenceSetCollector&);
+
 	ostream&
 	dump(ostream&) const;
 
 };	// end class Dependence
 
+//=============================================================================
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.4 2006/12/11 00:40:03 fang Exp $
+	$Id: CHP.cc,v 1.16.2.5 2006/12/12 10:18:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -43,6 +43,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/def/template_formals_manager.h"
 #include "sim/chpsim/StateConstructor.h"
+#include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/State.h"
 
 #include "common/ICE.h"
@@ -248,7 +249,8 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 void
 action_sequence::accept_sequence(const action_list_type& l, 
 		StateConstructor& s) {
-//	for_each(begin(), end(), util::visitor_ptr(s));
+	STACKTRACE_VERBOSE;
+//	for_each(rbegin(), rend(), util::visitor_ptr(s));
 	const_iterator i(l.begin()), e(l.end());
 	INVARIANT(i!=e);	// else would be empty
 	do {
@@ -430,16 +432,33 @@ concurrent_actions::unroll(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Fork and join graph structure.  
+	TODO: this dependencies for this event is the union of 
+		all dependencies of the respective guards.  
+		If there is an else clause, we may omit dependencies, 
+		as a branch is always taken immediately.
+		Will we ever check for guard stability?
  */
 void
 concurrent_actions::accept(StateConstructor& s) const {
 	// TODO: using footprint frame, allocate event edge graph
 	// there will be multiple outgoing edges
+	STACKTRACE_VERBOSE;
 #if 0
 	for_each(begin(), end(), util::visitor_ptr(s));
 #else
 	const size_t branches = this->size();
-	// TODO: create a join event first (bottom-up)
+	STACKTRACE_INDENT_PRINT("branches: " << branches << endl);
+// check for degenerate cases first: 0, 1
+// these can arise from meta-expansions
+if (!branches) {
+	return;
+} else if (branches == 1) {
+	// don't bother forking and joining
+	front()->accept(s);
+	return;
+}
+// else do the normal thing
+	// create a join event first (bottom-up)
 	const size_t join_index = s.state.event_pool.size();
 {
 	// join shouldn't need an action ptr (unless we want back-reference)
@@ -599,9 +618,14 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre a slection-merge event is pointed to by s.last_event_index.
+	Plan: construct guards in all branches first
+	(guarded actions), then move them into a union.  
+	It is the selection' (caller) responsibility to collect
+		guard-dependencies for subscription sets.  
  */
 void
 guarded_action::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	if (stmt) {
 		stmt->accept(s);
 		// just attach the guard expression
@@ -725,9 +749,11 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Almost exact same code for non-deterministic selection.
+	TODO: static dependency sets of guards.
  */
 void
 deterministic_selection::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
 	const size_t branches = this->size();
 	const size_t merge_index = s.state.event_pool.size();
@@ -742,6 +768,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 }
 
 	const_iterator i(begin()), e(end());
+	SIM::CHPSIM::DependenceSetCollector deps(s);	// args
 	vector<size_t> tmp;
 	tmp.reserve(branches);
 	// construct concurrent chains
@@ -749,6 +776,13 @@ deterministic_selection::accept(StateConstructor& s) const {
 		s.last_event_index = merge_index;	// pass down
 		(*i)->accept(s);
 		tmp.push_back(s.last_event_index);	// head of each chain
+		const guarded_action::guard_ptr_type& g((*i)->get_guard());
+		if (g) {
+			g->accept(deps);
+		} else {
+			// is else clause, don't need any guard dependencies!
+			deps.clear();
+		}
 	}
 
 	// construct successor event graph edge? or caller's responsibility?
@@ -852,6 +886,7 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
  */
 void
 nondeterministic_selection::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
 	const size_t branches = this->size();
 	const size_t merge_index = s.state.event_pool.size();
@@ -1106,6 +1141,7 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 assignment::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = s.state.event_pool.size();
 	s.state.event_pool.push_back(
@@ -1203,6 +1239,7 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
  */
 void
 condition_wait::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// register guard expression dependents
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = s.state.event_pool.size();
@@ -1396,6 +1433,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_send::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// atomic event
 	// construct event graph
 	const size_t new_index = s.state.event_pool.size();
@@ -1524,6 +1562,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_receive::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// atomic event
 	// construct event graph
 	const size_t new_index = s.state.event_pool.size();
@@ -1635,6 +1674,7 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
  */
 void
 do_forever_loop::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	// OR use the 0th event slot as the dummy!
@@ -1750,6 +1790,7 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
  */
 void
 do_while_loop::accept(StateConstructor& s) const {
+	STACKTRACE_VERBOSE;
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	const size_t branches = this->size();

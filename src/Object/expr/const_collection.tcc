@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.19 2006/10/18 05:32:39 fang Exp $
+ 	$Id: const_collection.tcc,v 1.19.12.1 2006/12/12 10:17:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -39,6 +39,7 @@
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_visitor.h"
 
 #include "util/persistent_object_manager.h"
 #include "util/multikey.h"
@@ -302,6 +303,13 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
 			return false;
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+void
+CONST_COLLECTION_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

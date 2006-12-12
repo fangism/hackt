@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.15 2006/10/18 07:39:39 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.15.12.1 2006/12/12 10:18:02 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -54,8 +54,8 @@ private:
 	static size_t op_map_init(void);
 
 protected:
-	count_ptr<const pbool_expr>	lx;
-	count_ptr<const pbool_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 /**
 	Pointer to the binary logical functor.  
  */
@@ -70,6 +70,12 @@ public:
 		const operand_ptr_type& r);
 
 	~pbool_logical_expr();
+
+	const operand_ptr_type&
+	get_first(void) const { return lx; }
+
+	const operand_ptr_type&
+	get_second(void) const { return rx; }
 
 	ostream&
 	what(ostream& o) const;
@@ -118,6 +124,7 @@ public:
 		const count_ptr<const pbool_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
 	using parent_type::substitute_default_positional_parameters;

@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.15 2006/10/18 07:39:39 fang Exp $
+	$Id: pint_arith_expr.h,v 1.15.12.1 2006/12/12 10:18:03 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -81,6 +81,12 @@ public:
 
 	~pint_arith_expr();
 
+	const operand_ptr_type&
+	get_first(void) const { return lx; }
+
+	const operand_ptr_type&
+	get_second(void) const { return rx; }
+
 	ostream&
 	what(ostream& o) const;
 
@@ -128,6 +134,7 @@ public:
 		const count_ptr<const pint_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO;
 	using parent_type::substitute_default_positional_parameters;

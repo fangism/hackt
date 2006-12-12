@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.16 2006/10/18 20:57:55 fang Exp $
+ 	$Id: meta_range.cc,v 1.16.12.1 2006/12/12 10:17:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pint_arith_expr.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -224,6 +225,12 @@ const_range
 pint_range::static_constant_range(void) const {
 	return const_range(lower->static_constant_value(), 
 		upper->static_constant_value());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_range::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -516,6 +523,12 @@ const_range::lower_bound(void) const {
 pint_value_type
 const_range::upper_bound(void) const {
 	return second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

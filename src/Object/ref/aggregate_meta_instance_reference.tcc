@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.11 2006/11/07 06:35:12 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.11.8.1 2006/12/12 10:18:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -15,6 +15,7 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/collection_interface.h"
+#include "Object/expr/expr_visitor.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/persistent_object_manager.tcc"
@@ -117,6 +118,13 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::get_unresolved_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Aggregates cannot be scalar.  
  */
@@ -132,7 +140,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager&, footprint&) const {
+		const state_manager&, const footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }

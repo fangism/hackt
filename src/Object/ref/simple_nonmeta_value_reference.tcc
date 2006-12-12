@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17 2006/11/07 06:35:19 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.1 2006/12/12 10:18:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -35,6 +35,7 @@
 #include "Object/inst/value_scalar.h"
 #include "Object/common/dump_flags.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/expr/nonmeta_index_list.h"
 
 #include "util/what.h"
@@ -432,6 +433,13 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::must_be_equivalent(
 	}
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

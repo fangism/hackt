@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.16 2006/10/24 07:27:04 fang Exp $
+	$Id: param_expr_list.h,v 1.16.10.1 2006/12/12 10:18:01 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -25,6 +25,7 @@ class param_value_placeholder;
 class unroll_context;
 class template_actuals;
 struct expr_dump_context;
+class nonmeta_expr_visitor;
 using util::good_bool;
 using util::bad_bool;
 using std::vector;
@@ -72,6 +73,9 @@ virtual	bool
 
 virtual	bool
 	is_relaxed_formal_dependent(void) const = 0;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
 
 // coordinate with COUNT_TEMPLATE_ARGS in "Object/art_object_definition_base.h"
 	typedef	count_ptr<const const_param_expr_list>

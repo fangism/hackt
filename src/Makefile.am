@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.7 2006/12/11 00:40:02 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.8 2006/12/12 10:17:36 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -412,6 +412,7 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
 	Object/expr/expr_dump_context.cc \
+	Object/expr/expr_visitor.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -456,7 +457,9 @@ OBJECT_CC_FILES = \
 	Object/lang/SPEC.cc \
 	Object/lang/SPEC_common.cc \
 	Object/lang/SPEC_footprint.cc \
-	Object/lang/SPEC_registry.cc
+	Object/lang/SPEC_registry.cc \
+	sim/chpsim/DependenceCollector.cc
+# this really wants to belong to the sim lib, but link dependencies...
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \

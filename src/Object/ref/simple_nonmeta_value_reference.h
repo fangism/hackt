@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.13 2006/10/18 20:58:17 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.13.12.1 2006/12/12 10:18:19 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -22,6 +22,7 @@ namespace HAC {
 namespace entity {
 class const_index_list;
 class unroll_context;
+class nonmeta_expr_visitor;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -133,6 +134,9 @@ public:
 	count_ptr<const data_expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const data_expr_base_type>&) const;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 protected:
 	using data_expr_base_type::unroll_resolve_copy;

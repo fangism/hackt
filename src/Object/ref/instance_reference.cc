@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.20 2006/10/18 05:32:50 fang Exp $
+ 	$Id: instance_reference.cc,v 1.20.12.1 2006/12/12 10:18:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -37,6 +37,9 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/traits/int_traits.h"	// dunno why... (nonmeta_expr_visitor)
+#include "Object/traits/bool_traits.h"	// dunno why... (nonmeta_expr_visitor)
+#include "Object/traits/enum_traits.h"	// dunno why... (nonmeta_expr_visitor)
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/unroll/port_connection_base.h"

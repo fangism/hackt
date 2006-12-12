@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.16 2006/10/18 08:51:54 fang Exp $
+	$Id: const_param_expr_list.h,v 1.16.12.1 2006/12/12 10:17:40 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -115,6 +115,9 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 	count_ptr<dynamic_param_expr_list>
 	to_dynamic_list(void) const;

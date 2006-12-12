@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.9 2006/10/18 20:58:11 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.9.12.1 2006/12/12 10:18:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -27,6 +27,7 @@ class const_range_list;
 class param_value_collection;
 class template_formals_manager;
 class dynamic_param_expr_list;
+class nonmeta_expr_visitor;
 using std::istream;
 using std::ostream;
 using util::memory::never_ptr;
@@ -165,6 +166,9 @@ public:
                 const count_ptr<const expr_base_type>&) const;
 
 	using expr_base_type::substitute_default_positional_parameters;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 protected:
 	using expr_base_type::unroll_resolve_rvalues;

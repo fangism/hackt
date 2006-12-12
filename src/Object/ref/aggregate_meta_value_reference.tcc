@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.12 2006/10/18 20:58:13 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.12.12.1 2006/12/12 10:18:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -26,6 +26,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/type/param_type_reference.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
@@ -238,6 +239,13 @@ if (vr) {
 	FINISH_ME(Fang);
 	return false;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+void
+AGGREGATE_META_VALUE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

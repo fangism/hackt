@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.11 2006/10/18 20:57:54 fang Exp $
+	$Id: meta_index_list.h,v 1.11.12.1 2006/12/12 10:17:55 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_LIST_H__
@@ -20,6 +20,7 @@ class unroll_context;
 struct expr_dump_context;
 class template_formals_manager;
 class dynamic_param_expr_list;
+class nonmeta_expr_visitor;
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -83,6 +84,10 @@ virtual	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO = 0;
 
 virtual	bool
 	must_be_equivalent_indices(const meta_index_list& ) const = 0;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
+
 };	// end class meta_index_list
 
 //=============================================================================

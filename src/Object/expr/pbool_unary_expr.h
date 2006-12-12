@@ -3,7 +3,7 @@
 	Unary negation of meta boolean.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_unary_expr.h,v 1.14 2006/10/18 07:39:39 fang Exp $
+	$Id: pbool_unary_expr.h,v 1.14.12.1 2006/12/12 10:18:03 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_UNARY_EXPR_H__
@@ -27,15 +27,19 @@ class pbool_unary_expr : public pbool_expr {
 public:
 	typedef	pbool_value_type	value_type;
 	typedef	char			op_type;
+	typedef	count_ptr<const pbool_expr>	operand_ptr_type;
 protected:
 	const op_type			op;
 	/** argument expression must be 0-dimensional */
-	count_ptr<const pbool_expr>	ex;
+	operand_ptr_type		ex;
 private:
 	pbool_unary_expr();
 public:
-	pbool_unary_expr(const op_type o, const count_ptr<const pbool_expr>& e);
-	pbool_unary_expr(const count_ptr<const pbool_expr>& e, const op_type o);
+	pbool_unary_expr(const op_type o, const operand_ptr_type& e);
+	pbool_unary_expr(const operand_ptr_type& e, const op_type o);
+
+	const operand_ptr_type&
+	get_operand(void) const { return ex; }
 
 	ostream&
 	what(ostream& o) const;
@@ -80,6 +84,7 @@ public:
 		const count_ptr<const pbool_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
 	using parent_type::substitute_default_positional_parameters;

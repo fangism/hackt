@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.19 2006/11/07 06:35:13 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.19.8.1 2006/12/12 10:18:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -116,7 +116,7 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
-		const state_manager& sm, footprint& top) {
+		const state_manager& sm, const footprint& top) {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
 	const never_ptr<substructure_alias>
@@ -139,7 +139,7 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>& _this, 
-		const state_manager& sm, footprint& top) {
+		const state_manager& sm, const footprint& top) {
 	STACKTRACE_VERBOSE;
 	const size_t id = _this.lookup_globally_allocated_index(sm, top);
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
@@ -236,7 +236,7 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type&, 
 		index_list_ptr_arg_type,
-		const state_manager&, footprint& top) {
+		const state_manager&, const footprint& top) {
 	// ICE?
 	return NULL;
 }
@@ -251,7 +251,7 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>&, 
-		const state_manager&, footprint&) {
+		const state_manager&, const footprint&) {
 	// ICE?
 	return NULL;
 }

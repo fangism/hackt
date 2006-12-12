@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.1.2.2 2006/12/07 07:48:42 fang Exp $
+	$Id: StateConstructor.h,v 1.1.2.3 2006/12/12 10:18:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -61,6 +61,12 @@ public:
 
 	~StateConstructor();
 
+	const state_manager&
+	get_state_manager(void) const;
+
+	const entity::footprint&
+	get_process_footprint(void) const;
+
 	void
 	connect_successor_events(event_type&) const;
 
@@ -69,6 +75,9 @@ public:
 
 protected:
 	using cflat_context_visitor::visit;
+
+	void
+	reset(void);
 
 	// overrides
 	void
