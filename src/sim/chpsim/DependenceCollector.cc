@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.4 2006/12/13 07:47:43 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.5 2006/12/13 08:09:06 fang Exp $
  */
 
 #include <iostream>
@@ -222,9 +222,9 @@ DependenceSetCollector::visit(
 // nonmeta references
 
 // not yet supported
-DEFINE_NEVER_VISIT(simple_process_nonmeta_instance_reference);
-DEFINE_NEVER_VISIT(simple_datastruct_nonmeta_instance_reference);
-DEFINE_NEVER_VISIT(simple_enum_nonmeta_instance_reference);
+DEFINE_NEVER_VISIT(simple_process_nonmeta_instance_reference)
+DEFINE_NEVER_VISIT(simple_datastruct_nonmeta_instance_reference)
+DEFINE_NEVER_VISIT(simple_enum_nonmeta_instance_reference)
 
 /**
 	Collects all may-references of nonmeta-referenced channel.  
