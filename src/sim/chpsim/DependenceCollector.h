@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.1.2.2 2006/12/13 02:29:09 fang Exp $
+	$Id: DependenceCollector.h,v 1.1.2.3 2006/12/13 07:47:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -66,6 +66,9 @@ using entity::simple_datastruct_nonmeta_instance_reference;
 using entity::simple_pbool_nonmeta_instance_reference;
 using entity::simple_pint_nonmeta_instance_reference;
 using entity::simple_preal_nonmeta_instance_reference;
+using entity::simple_pbool_nonmeta_value_reference;
+using entity::simple_pint_nonmeta_value_reference;
+using entity::simple_preal_nonmeta_value_reference;
 using entity::simple_bool_meta_instance_reference;
 using entity::simple_int_meta_instance_reference;
 using entity::simple_channel_meta_instance_reference;

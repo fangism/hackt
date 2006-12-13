@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-12:
+	  Finished DependenceCollector visitor methods, but untested so far.
+		simple_nonmeta_value_reference::lookup_may_reference...
+		implementation ripped off of instance_reference's.
+		Need to check intermediate dumps of dependency sets.  
+	  Compiles and runs, no regressions.  
+
+
 2006-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-11:

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.3 2006/12/13 04:12:20 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.4 2006/12/13 07:47:43 fang Exp $
  */
 
 #include <iostream>
@@ -12,9 +12,11 @@
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_negation_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/real_expr.h"
 // #include "Object/expr/real_negation_expr.h"
 // #include "Object/expr/real_arith_expr.h"
 // #include "Object/expr/real_relational_expr.h"
+#include "Object/expr/nonmeta_index_list.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 
@@ -24,10 +26,12 @@
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
+#include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
+#include "Object/traits/value_traits.h"
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -43,7 +47,9 @@ using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
 using entity::footprint_frame;
+using entity::simple_nonmeta_instance_reference_base;
 using util::set_inserter;
+using util::memory::never_ptr;
 
 //=============================================================================
 // class DependenceSetCollector method definitions
@@ -73,7 +79,6 @@ DependenceSetCollector::clear(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	No-op visits.
  */
@@ -216,23 +221,56 @@ DependenceSetCollector::visit(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // nonmeta references
 
+// not yet supported
 DEFINE_NEVER_VISIT(simple_process_nonmeta_instance_reference);
+DEFINE_NEVER_VISIT(simple_datastruct_nonmeta_instance_reference);
+DEFINE_NEVER_VISIT(simple_enum_nonmeta_instance_reference);
 
 /**
 	Collects all may-references of nonmeta-referenced channel.  
+	Remember: also visit the array_indices.  
  */
+#define	DEFINE_NONMETA_INSTANCE_VISIT(type, set)			\
+void									\
+DependenceSetCollector::visit(const type& r) {				\
+	vector<node_index_type> indices;				\
+	if (r.lookup_may_reference_global_indices(			\
+			_sm, _fp, _ff, indices).good) {			\
+		copy(indices.begin(), indices.end(), set_inserter(set)); \
+		const never_ptr<const type::index_list_type>		\
+			ind(r.get_indices());				\
+		if (ind) { ind->accept(*this); }			\
+	} else {							\
+		/* TODO: error handling */				\
+		FINISH_ME(Fang);					\
+		THROW_EXIT;						\
+	}								\
+}
+
+DEFINE_NONMETA_INSTANCE_VISIT(
+	simple_bool_nonmeta_instance_reference, bool_set)
+DEFINE_NONMETA_INSTANCE_VISIT(
+	simple_int_nonmeta_instance_reference, int_set)
+DEFINE_NONMETA_INSTANCE_VISIT(
+	simple_channel_nonmeta_instance_reference, channel_set)
+
+// meta-value references have no aliases, and thus are only index dependent
 void
-DependenceSetCollector::visit(
-		const simple_channel_nonmeta_instance_reference& r) {
-	vector<node_index_type> indices;
-	if (r.lookup_may_reference_global_indices(
-			_sm, _fp, _ff, indices).good) {
-		copy(indices.begin(), indices.end(), set_inserter(channel_set));
-	} else {
-		// TODO: error handling
-		FINISH_ME(Fang);
-		THROW_EXIT;
-	}
+DependenceSetCollector::visit(const simple_pbool_nonmeta_value_reference& r) {
+	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
+	if (ind) { ind->accept(*this); }
+}
+
+void
+DependenceSetCollector::visit(const simple_pint_nonmeta_value_reference& r) {
+	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
+	if (ind) { ind->accept(*this); }
+}
+
+void
+DependenceSetCollector::visit(const simple_preal_nonmeta_value_reference& r) {
+	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
+	if (ind) { ind->accept(*this); }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -262,7 +300,6 @@ DEFINE_NEVER_VISIT(aggregate_enum_meta_instance_reference)
 #undef	DEFINE_NEVER_VISIT
 #undef	DEFINE_UNARY_VISIT
 #undef	DEFINE_BINARY_VISIT
-#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

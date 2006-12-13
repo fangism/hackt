@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/simple_meta_indexed_reference_base.h"
 	Base implementation class for meta-indexed references in HAC.  
-	$Id: simple_meta_indexed_reference_base.h,v 1.6 2006/10/24 07:27:28 fang Exp $
+	$Id: simple_meta_indexed_reference_base.h,v 1.6.10.1 2006/12/13 07:47:37 fang Exp $
 	This file was "Object/simple_meta_instance_reference_base.h"
 		in a previous life.  
 	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
@@ -83,6 +83,9 @@ virtual	good_bool
 
 	ostream&
 	dump_indices(ostream&, const expr_dump_context&) const;
+
+	const indices_ptr_type&
+	get_indices(void) const { return array_indices; }
 
 protected:		// for children only
 	// persistent object IO helper methods

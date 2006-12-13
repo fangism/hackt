@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.13.12.1 2006/12/12 10:18:19 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.13.12.2 2006/12/13 07:47:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -16,6 +16,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "util/STL/vector_fwd.h"
 
 //=============================================================================
 namespace HAC {
@@ -23,6 +24,9 @@ namespace entity {
 class const_index_list;
 class unroll_context;
 class nonmeta_expr_visitor;
+class state_manager;
+class footprint;
+class footprint_frame;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -134,6 +138,11 @@ public:
 	count_ptr<const data_expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const data_expr_base_type>&) const;
+
+	good_bool
+	lookup_may_reference_global_indices(const state_manager&, 
+		const footprint&, const footprint_frame* const,
+		std::default_vector<size_t>::type&) const;
 
 	void
 	accept(nonmeta_expr_visitor&) const;
