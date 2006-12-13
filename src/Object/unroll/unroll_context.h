@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.16.8.1 2006/12/12 10:18:25 fang Exp $
+	$Id: unroll_context.h,v 1.16.8.2 2006/12/13 04:12:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -70,6 +70,11 @@ private:
 		and efficiently referencing the instantiating context.  
 	 */
 	footprint*					target_footprint;
+	/**
+		A non-modifiable copy of the target footprint for
+		lookup purposes.  
+	 */
+	const footprint*			const_target_footprint;
 	/**
 		The lookup-only footprint associated with this context.  
 		Failure to find lookup something here will continue

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.2 2006/12/13 02:29:08 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.3 2006/12/13 04:12:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -205,7 +205,7 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::lookup_may_reference_global_indices(
 	if (this->array_indices && !mil) {
 		// there was at least one non-meta index
 		// grab all collection aliases conservatively
-		const unroll_context dummy(&const_cast<footprint&>(fp), &fp);
+		const unroll_context dummy(&fp, &fp);
 		// correct???
 		const never_ptr<instance_collection_generic_type>
 			ic(dummy.lookup_instance_collection(

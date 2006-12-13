@@ -5,6 +5,13 @@
 
 2006-12-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-11:
+	  Minor patch: fixed kludge with const_cast-ing footprint pointers
+		by replicating pointer members in unroll_context.
+		That's one less hack to have to document/explain/remember...
+	  Back to finishing CHPSIM::DependenceCollector...
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-10:
 	  Links, but DependenceSetCollector temporarily disabled.
 	  Fixed minor regression cause by last revision, regarding

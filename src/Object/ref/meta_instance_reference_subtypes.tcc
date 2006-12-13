@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.18.8.1 2006/12/13 02:29:07 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.18.8.2 2006/12/13 04:12:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -106,9 +106,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const size_t index = _this.lookup_globally_allocated_index(
-		mod.get_state_manager(), 
-		// temporary kludge until we clean up
-		const_cast<footprint&>(mod.get_footprint()));
+		mod.get_state_manager(), mod.get_footprint());
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
@@ -128,7 +126,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 		_this(IS_A(const simple_reference_type&, *this));
 	const state_manager& sm(mod.get_state_manager());
 	// temporary kludge until we clean up
-	footprint& top(const_cast<footprint&>(mod.get_footprint()));
+	const footprint& top(mod.get_footprint());
 	if (_this.dimensions()) {
 		vector<size_t> inds;
 		if (!_this.lookup_globally_allocated_indices(sm, 
@@ -310,9 +308,7 @@ META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	typedef	vector<size_t>				indices_type;
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	alias_collection_type aliases;
-	// const_cast is a workaround to my own stupidity
-	// we promise that lookup does NOT modify (lookup only)
-	const unroll_context dummy(&const_cast<footprint&>(top), &top);
+	const unroll_context dummy(&top, &top);
 	// reminder: call to unroll_references_packed is virtual
 	if (this->unroll_references_packed(dummy, aliases).bad) {
 		cerr << "Error resolving collection of aliases." << endl;

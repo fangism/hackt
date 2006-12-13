@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.2 2006/12/13 02:29:07 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.3 2006/12/13 04:12:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -209,8 +209,7 @@ size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
-	// const_cast: we promise not to modify in any way
-	const unroll_context uc(&const_cast<footprint&>(top), &top);
+	const unroll_context uc(&top, &top);
 	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,
@@ -223,58 +222,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	INVARIANT(ret);
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	This is really just a helper routine, using the inst_collection_ref, 
-	and ignoring array_indices.  
- */
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-void
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_collection_global_indices(
-		const state_manager& sm, const footprint& top, 
-		vector<size_t>& indices) const {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Collects a bunch of instance alias IDs with the same hierarchical
-	prefix, including array slices.  
-	Only called from top-level, context-free.  
- */
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, const footprint& top, 
-		vector<size_t>& indices) const {
-	typedef	vector<size_t>				indices_type;
-	typedef	typename alias_collection_type::const_iterator	const_iterator;
-	alias_collection_type aliases;
-	const unroll_context dummy(&top, &top);
-	// reminder: call to unroll_references_packed is virtual
-#if 0
-	if (!__unroll_generic_scalar_references(
-			*this->inst_collection_ref, this->array_indices, 
-			dummy, true, aliases).good)
-#else
-	if (this->unroll_references_packed(dummy, aliases).bad)
-#endif
-	{
-		cerr << "Error resolving collection of aliases." << endl;
-		return good_bool(false);
-	}
-	const_iterator i(aliases.begin()), e(aliases.end());
-	for ( ; i!=e; ++i) {
-		// don't bother checking for duplicates
-		// (easy: just use std::set instead of vector)
-		indices.push_back((*i)->instance_index);
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

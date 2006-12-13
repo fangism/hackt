@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.24.8.1 2006/12/12 10:18:23 fang Exp $
+	$Id: unroll_context.cc,v 1.24.8.2 2006/12/13 04:12:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -45,6 +45,7 @@ unroll_context::unroll_context(footprint* const f,
 		const footprint* const t) :
 		next(),
 		target_footprint(f),
+		const_target_footprint(f), 
 		lookup_footprint(f), 
 		top_footprint(t) {
 }
@@ -58,6 +59,7 @@ unroll_context::unroll_context(const footprint* const f,
 		const footprint* const t) :
 		next(),
 		target_footprint(NULL),
+		const_target_footprint(f), 
 		lookup_footprint(f), 
 		top_footprint(t) {
 }
@@ -70,6 +72,7 @@ unroll_context::unroll_context(const footprint* const f,
 		const unroll_context& c) :
 		next(&c),
 		target_footprint(NULL),
+		const_target_footprint(f), 
 		lookup_footprint(f), 
 		top_footprint(c.top_footprint) {
 }
@@ -82,6 +85,7 @@ unroll_context::unroll_context(footprint* const f,
 		const unroll_context& c) :
 		next(&c),
 		target_footprint(c.target_footprint),
+		const_target_footprint(c.const_target_footprint), 
 		lookup_footprint(f), 
 		top_footprint(c.top_footprint) {
 }
@@ -97,6 +101,7 @@ unroll_context::unroll_context(footprint* const f,
 		const auxiliary_target_tag) :
 		next(&c),
 		target_footprint(f),
+		const_target_footprint(f), 
 		lookup_footprint(f), 
 		top_footprint(c.top_footprint) {
 }
@@ -120,9 +125,9 @@ unroll_context::dump(ostream& o) const {
 			dump_flags::default_value, 
 			expr_dump_context::default_value);
 	}
-	if (target_footprint) {
-	if (target_footprint != lookup_footprint) {
-		target_footprint->dump_with_collections(
+	if (const_target_footprint) {
+	if (const_target_footprint != lookup_footprint) {
+		const_target_footprint->dump_with_collections(
 			cerr << endl << "target footprint: " << endl,
 			dump_flags::default_value, 
 			expr_dump_context::default_value);
@@ -160,6 +165,7 @@ unroll_context::make_member_context(void) const {
 	STACKTRACE_VERBOSE;
 	unroll_context ret(*this);
 	ret.target_footprint = NULL;
+	ret.const_target_footprint = NULL;
 	return ret;
 }
 
@@ -178,8 +184,8 @@ unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
 	STACKTRACE_VERBOSE;
-	NEVER_NULL(target_footprint);
-	return (*target_footprint)[p.get_footprint_key()]
+	NEVER_NULL(const_target_footprint);
+	return (*const_target_footprint)[p.get_footprint_key()]
 		.is_a<physical_instance_collection>();
 }
 
@@ -269,10 +275,10 @@ unroll_context::lookup_lvalue_collection(
 #endif
 	// use the first context with a valid target footprint
 	// do not use parents' target footprints
-	if (target_footprint) {
+	if (const_target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
-			ret((*target_footprint)[p.get_footprint_key()]
+			ret((*const_target_footprint)[p.get_footprint_key()]
 				.is_a<param_value_collection>());
 		if (ret)
 			return ret;
@@ -299,6 +305,9 @@ unroll_context::lookup_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return reference to modifiable footprint.  
+ */
 footprint&
 unroll_context::get_target_footprint(void) const {
 	footprint* f = target_footprint;

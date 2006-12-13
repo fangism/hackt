@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.2 2006/12/13 02:29:08 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.3 2006/12/13 04:12:20 fang Exp $
  */
 
 #include <iostream>
@@ -239,23 +239,23 @@ DependenceSetCollector::visit(
 // meta value references never change, and thus do not need to be
 // added to any dependence sets -- they are constant.
 
-DEFINE_TRIVIAL_VISIT(simple_pint_meta_value_reference);
-DEFINE_TRIVIAL_VISIT(simple_pbool_meta_value_reference);
-DEFINE_TRIVIAL_VISIT(simple_preal_meta_value_reference);
-DEFINE_TRIVIAL_VISIT(aggregate_pint_meta_value_reference);
-DEFINE_TRIVIAL_VISIT(aggregate_pbool_meta_value_reference);
-DEFINE_TRIVIAL_VISIT(aggregate_preal_meta_value_reference);
+DEFINE_TRIVIAL_VISIT(simple_pint_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(simple_pbool_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(simple_preal_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(aggregate_pint_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(aggregate_pbool_meta_value_reference)
+DEFINE_TRIVIAL_VISIT(aggregate_preal_meta_value_reference)
 
 // enums and structs are so far unsupported, so we ICE for now
-DEFINE_NEVER_VISIT(simple_process_meta_instance_reference);
-DEFINE_NEVER_VISIT(simple_datastruct_meta_instance_reference);
-DEFINE_NEVER_VISIT(simple_enum_meta_instance_reference);
-DEFINE_NEVER_VISIT(process_member_meta_instance_reference);
-DEFINE_NEVER_VISIT(datastruct_member_meta_instance_reference);
-DEFINE_NEVER_VISIT(enum_member_meta_instance_reference);
-DEFINE_NEVER_VISIT(aggregate_process_meta_instance_reference);
-DEFINE_NEVER_VISIT(aggregate_datastruct_meta_instance_reference);
-DEFINE_NEVER_VISIT(aggregate_enum_meta_instance_reference);
+DEFINE_NEVER_VISIT(simple_process_meta_instance_reference)
+DEFINE_NEVER_VISIT(simple_datastruct_meta_instance_reference)
+DEFINE_NEVER_VISIT(simple_enum_meta_instance_reference)
+DEFINE_NEVER_VISIT(process_member_meta_instance_reference)
+DEFINE_NEVER_VISIT(datastruct_member_meta_instance_reference)
+DEFINE_NEVER_VISIT(enum_member_meta_instance_reference)
+DEFINE_NEVER_VISIT(aggregate_process_meta_instance_reference)
+DEFINE_NEVER_VISIT(aggregate_datastruct_meta_instance_reference)
+DEFINE_NEVER_VISIT(aggregate_enum_meta_instance_reference)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #undef	DEFINE_TRIVIAL_VISIT

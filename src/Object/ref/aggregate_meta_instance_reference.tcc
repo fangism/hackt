@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.11.8.2 2006/12/13 02:29:05 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.11.8.3 2006/12/13 04:12:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -236,16 +236,6 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	}
 	return bad_bool(err);
 }	// end method unroll_references_packed
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, const footprint& top, 
-		vector<size_t>& indices) const {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
