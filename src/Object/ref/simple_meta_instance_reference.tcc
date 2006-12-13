@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.1 2006/12/12 10:18:17 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.2 2006/12/13 02:29:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -209,7 +209,8 @@ size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
-	const unroll_context uc(&top, &top);
+	// const_cast: we promise not to modify in any way
+	const unroll_context uc(&const_cast<footprint&>(top), &top);
 	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,
@@ -224,6 +225,21 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	This is really just a helper routine, using the inst_collection_ref, 
+	and ignoring array_indices.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_collection_global_indices(
+		const state_manager& sm, const footprint& top, 
+		vector<size_t>& indices) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Collects a bunch of instance alias IDs with the same hierarchical
 	prefix, including array slices.  
@@ -232,7 +248,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, footprint& top, 
+		const state_manager& sm, const footprint& top, 
 		vector<size_t>& indices) const {
 	typedef	vector<size_t>				indices_type;
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
@@ -258,6 +274,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

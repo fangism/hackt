@@ -2,13 +2,15 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.1 2006/12/12 10:18:19 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.2 2006/12/13 02:29:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 #define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
+#include <vector>
+
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/expr_visitor.h"
@@ -176,6 +178,70 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
 		// is scalar reference (cannot be implicit indices!)
 		// therefore, just return this copy!
 		return p;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This looks up a nonmeta reference and returns a list of all 
+	globally allocated indices that MAY be referenced.
+	The list is precise if the indices are resolved to
+	compile-time constants (meta-parameters).  
+	Called by CHPSIM::DependenceSetCollector::visit().
+	\param fp the *local* footprint to lookup.
+	\param sm the top-level state-manager with global allocation
+		information, and footprint frames.  
+ */
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::lookup_may_reference_global_indices(
+		const state_manager& sm, const footprint& fp, 
+		const footprint_frame* const ff, 
+		vector<size_t>& indices) const {
+	const count_ptr<dynamic_meta_index_list>
+		mil(this->array_indices ?
+			array_indices->make_meta_index_list() :
+			count_ptr<dynamic_meta_index_list>(NULL));
+	if (this->array_indices && !mil) {
+		// there was at least one non-meta index
+		// grab all collection aliases conservatively
+		const unroll_context dummy(&const_cast<footprint&>(fp), &fp);
+		// correct???
+		const never_ptr<instance_collection_generic_type>
+			ic(dummy.lookup_instance_collection(
+				*this->inst_collection_ref)
+				.template is_a<instance_collection_generic_type>());
+		NEVER_NULL(ic);
+		typedef	typename instance_collection_generic_type::const_instance_alias_info_ptr_type
+					alias_ptr_type;
+		typedef	vector<alias_ptr_type>	alias_list_type;
+		typedef	typename alias_list_type::const_iterator
+					const_iterator;
+		alias_list_type aliases;
+		ic->get_all_aliases(aliases);
+		indices.reserve(aliases.size());	// upper bound
+		// translate to global_indices
+		const_iterator i(aliases.begin()), e(aliases.end());
+		if (ff) {
+			// need to translate local to global
+			// HERE
+			for ( ; i!=e; ++i) {
+				indices.push_back(
+					ff->template get_frame_map<Tag>()[*i]);
+			}
+		} else {
+			// local indices == global indices
+			copy(i, e, back_inserter(indices));
+		}
+		return good_bool(true);
+	} else {
+		// should already be resolved to constants (or NULL)
+		// construct an auxiliary meta-instance reference
+		// to resolve the reference.  
+		const simple_meta_instance_reference_type
+			cr(this->inst_collection_ref, mil);
+		return cr.lookup_globally_allocated_indices(sm, fp, indices);
+		// NOTE: this expects a top-level footprint!
 	}
 }
 

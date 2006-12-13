@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.12.8.1 2006/12/12 10:18:16 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.12.8.2 2006/12/13 02:29:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -12,6 +12,7 @@
 #include "Object/ref/meta_index_list_fwd.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/boolean_types.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +21,7 @@ class nonmeta_expr_visitor;
 template <class> class simple_meta_instance_reference;
 template <class> class aggregate_meta_instance_reference;
 template <class> class collection_interface;
+using util::good_bool;
 using util::bad_bool;
 
 //=============================================================================
@@ -82,6 +84,10 @@ virtual bad_bool
 
 virtual	void
 	accept(nonmeta_expr_visitor&) const = 0;
+
+	good_bool
+	lookup_globally_allocated_indices(const state_manager&,
+		const footprint&, std::default_vector<size_t>::type&) const;
 
 protected:
 	/**

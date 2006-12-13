@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.5 2006/12/01 23:28:52 fang Exp $
+	$Id: port_formal_array.h,v 1.5.2.1 2006/12/13 02:29:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -54,6 +54,8 @@ public:
 	typedef	typename key_type::generator_type	key_generator_type;
 	typedef	typename parent_type::instance_alias_info_ptr_type
 						instance_alias_info_ptr_type;
+	typedef	typename parent_type::const_instance_alias_info_ptr_type
+					const_instance_alias_info_ptr_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
 	typedef	typename parent_type::collection_interface_type
@@ -144,6 +146,7 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list&) const;
 
+	GET_ALL_ALIASES_PROTO;
 	UNROLL_ALIASES_PROTO;
 	CREATE_DEPENDENT_TYPES_PROTO;
 	COLLECT_PORT_ALIASES_PROTO;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.19.8.1 2006/12/12 10:18:13 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.19.8.2 2006/12/13 02:29:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -118,7 +118,9 @@ simple_lookup_footprint_frame(
 		index_list_ptr_arg_type ind,
 		const state_manager& sm, const footprint& top) {
 	STACKTRACE_VERBOSE;
-	const unroll_context uc(&top, &top);
+	// stupid const_cast hack workaround: 
+	// we just want to lookup-only the target, promise not to modify
+	const unroll_context uc(&const_cast<footprint&>(top), &top);
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
 			inst, ind, uc));

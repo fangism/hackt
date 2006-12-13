@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.1 2006/12/12 10:18:28 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.2 2006/12/13 02:29:08 fang Exp $
  */
 
 #include <iostream>
@@ -16,15 +16,22 @@
 // #include "Object/expr/real_arith_expr.h"
 // #include "Object/expr/real_relational_expr.h"
 #include "Object/state_manager.h"
+#include "Object/global_entry.h"
 
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/member_meta_instance_reference.h"
+#include "Object/ref/aggregate_meta_instance_reference.h"
+#include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/traits/proc_traits.h"
 
 #include "common/ICE.h"
+#include "common/TODO.h"
+#include "util/iterator_more.h"
 
 namespace HAC {
 namespace SIM {
@@ -33,7 +40,10 @@ namespace CHPSIM {
 using entity::bool_tag;
 using entity::int_tag;
 using entity::channel_tag;
+using entity::process_tag;
 using entity::global_entry_pool;
+using entity::footprint_frame;
+using util::set_inserter;
 
 //=============================================================================
 // class DependenceSetCollector method definitions
@@ -41,7 +51,14 @@ using entity::global_entry_pool;
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
 		_sm(s.get_state_manager()), 
 		_fp(s.get_process_footprint()), 
+		_ff(s.current_process_index ?
+			&_sm.get_pool<process_tag>()[s.current_process_index]
+			._frame
+			: NULL), 
 		bool_set(), int_set(), channel_set() {
+	if (s.current_process_index) {
+		NEVER_NULL(_ff);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -56,6 +73,7 @@ DependenceSetCollector::clear(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	No-op visits.
  */
@@ -122,6 +140,8 @@ DEFINE_BINARY_VISIT(bool_logical_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Meta-references can be fully resolved at compile time.
+	These are not likely to be called from CHP, which contains
+	nonmeta-typed references (some of which may qualify as meta).
 	\param r scalar reference to a bool.  
  */
 void
@@ -154,25 +174,66 @@ DependenceSetCollector::visit(const channel_member_meta_instance_reference& r) {
 	channel_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
 }
 
-#if 0
 void
 DependenceSetCollector::visit(
 		const aggregate_bool_meta_instance_reference& r) {
-	bool_set.insert(r.lookup_globally_allocated_indices(_sm, _fp));
+	vector<node_index_type> indices;
+	if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
+		copy(indices.begin(), indices.end(), set_inserter(bool_set));
+	} else {
+		// TODO: error handling
+		FINISH_ME(Fang);
+		THROW_EXIT;
+	}
 }
 
 void
 DependenceSetCollector::visit(
 		const aggregate_int_meta_instance_reference& r) {
-	int_set.insert(r.lookup_globally_allocated_indices(_sm, _fp));
+	vector<node_index_type> indices;
+	if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
+		copy(indices.begin(), indices.end(), set_inserter(int_set));
+	} else {
+		// TODO: error handling
+		FINISH_ME(Fang);
+		THROW_EXIT;
+	}
 }
 
 void
 DependenceSetCollector::visit(
 		const aggregate_channel_meta_instance_reference& r) {
-	channel_set.insert(r.lookup_globally_allocated_indices(_sm, _fp));
+	vector<node_index_type> indices;
+	if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
+		copy(indices.begin(), indices.end(), set_inserter(channel_set));
+	} else {
+		// TODO: error handling
+		FINISH_ME(Fang);
+		THROW_EXIT;
+	}
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// nonmeta references
+
+DEFINE_NEVER_VISIT(simple_process_nonmeta_instance_reference);
+
+/**
+	Collects all may-references of nonmeta-referenced channel.  
+ */
+void
+DependenceSetCollector::visit(
+		const simple_channel_nonmeta_instance_reference& r) {
+	vector<node_index_type> indices;
+	if (r.lookup_may_reference_global_indices(
+			_sm, _fp, _ff, indices).good) {
+		copy(indices.begin(), indices.end(), set_inserter(channel_set));
+	} else {
+		// TODO: error handling
+		FINISH_ME(Fang);
+		THROW_EXIT;
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // meta value references never change, and thus do not need to be
@@ -201,6 +262,7 @@ DEFINE_NEVER_VISIT(aggregate_enum_meta_instance_reference);
 #undef	DEFINE_NEVER_VISIT
 #undef	DEFINE_UNARY_VISIT
 #undef	DEFINE_BINARY_VISIT
+#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

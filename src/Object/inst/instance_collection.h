@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.30 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_collection.h,v 1.30.2.1 2006/12/13 02:28:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -18,6 +18,7 @@
 #include "Object/inst/connection_policy_fwd.h"
 #include "util/persistent_functor.h"
 #include "util/STL/list_fwd.h"
+#include "util/STL/vector_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
@@ -75,6 +76,8 @@ public:
 						instance_alias_info_type;
 	typedef	never_ptr<instance_alias_info_type>
 						instance_alias_info_ptr_type;
+	typedef	never_ptr<const instance_alias_info_type>
+					const_instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	typename traits_type::instance_placeholder_type
@@ -243,6 +246,15 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 
 virtual	void
 	accept(alias_visitor&) const = 0;
+
+/**
+	Grab all aliases in collection regardless of collection density.
+ */
+#define	GET_ALL_ALIASES_PROTO						\
+	void								\
+	get_all_aliases(typename std::default_vector<const_instance_alias_info_ptr_type>::type&) const
+
+virtual	GET_ALL_ALIASES_PROTO = 0;
 
 #define	SET_ALIAS_CONNECTION_FLAGS_PROTO				\
 	good_bool							\

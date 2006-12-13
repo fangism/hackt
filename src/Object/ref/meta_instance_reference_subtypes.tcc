@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.18 2006/11/07 06:35:16 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.18.8.1 2006/12/13 02:29:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -292,6 +292,40 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		inst(IS_A(const collection_interface_type&, *inst_p));
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects a bunch of instance alias IDs with the same hierarchical
+	prefix, including array slices.  
+	Only called from top-level, context-free.  
+	Optional: sort vector.
+	\param sm global state-manager with allocation information.
+	\param top the top-level footprint of the module.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
+		const state_manager& sm, const footprint& top, 
+		vector<size_t>& indices) const {
+	typedef	vector<size_t>				indices_type;
+	typedef	typename alias_collection_type::const_iterator	const_iterator;
+	alias_collection_type aliases;
+	// const_cast is a workaround to my own stupidity
+	// we promise that lookup does NOT modify (lookup only)
+	const unroll_context dummy(&const_cast<footprint&>(top), &top);
+	// reminder: call to unroll_references_packed is virtual
+	if (this->unroll_references_packed(dummy, aliases).bad) {
+		cerr << "Error resolving collection of aliases." << endl;
+		return good_bool(false);
+	}
+	const_iterator i(aliases.begin()), e(aliases.end());
+	for ( ; i!=e; ++i) {
+		// don't bother checking for duplicates
+		// (easy: just use std::set instead of vector)
+		indices.push_back((*i)->instance_index);
+	}
+	return good_bool(true);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

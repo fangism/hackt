@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.14.12.1 2006/12/12 10:18:16 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.14.12.2 2006/12/13 02:29:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -39,7 +39,6 @@ using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-// using std::default_vector;
 using std::istream;
 using std::ostream;
 using util::persistent;

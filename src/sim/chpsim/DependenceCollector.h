@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.1.2.1 2006/12/12 10:18:29 fang Exp $
+	$Id: DependenceCollector.h,v 1.1.2.2 2006/12/13 02:29:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -13,11 +13,13 @@
 namespace HAC {
 namespace entity {
 	class footprint;
+	class footprint_frame;
 	class state_manager;
 }
 namespace SIM {
 namespace CHPSIM {
 using entity::footprint;
+using entity::footprint_frame;
 using entity::state_manager;
 class StateConstructor;
 
@@ -98,6 +100,7 @@ struct DependenceSetCollector : public entity::nonmeta_expr_visitor {
 	typedef	std::set<node_index_type>	set_type;
 	const state_manager&			_sm;
 	const footprint&			_fp;
+	const footprint_frame* const		_ff;
 	set_type				bool_set;
 	set_type				int_set;
 	set_type				channel_set;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.5 2006/12/12 10:18:10 fang Exp $
+	$Id: CHP.cc,v 1.16.2.6 2006/12/13 02:29:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -768,7 +768,9 @@ deterministic_selection::accept(StateConstructor& s) const {
 }
 
 	const_iterator i(begin()), e(end());
+#if 0
 	SIM::CHPSIM::DependenceSetCollector deps(s);	// args
+#endif
 	vector<size_t> tmp;
 	tmp.reserve(branches);
 	// construct concurrent chains
@@ -776,6 +778,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 		s.last_event_index = merge_index;	// pass down
 		(*i)->accept(s);
 		tmp.push_back(s.last_event_index);	// head of each chain
+#if 0
 		const guarded_action::guard_ptr_type& g((*i)->get_guard());
 		if (g) {
 			g->accept(deps);
@@ -783,6 +786,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 			// is else clause, don't need any guard dependencies!
 			deps.clear();
 		}
+#endif
 	}
 
 	// construct successor event graph edge? or caller's responsibility?
@@ -1348,7 +1352,7 @@ set_channel_alias_directions(
 		}
 	}
 	return good_bool(true);
-}
+}	// end function set_channel_alias_directions
 
 //=============================================================================
 // class channel_send method definitions

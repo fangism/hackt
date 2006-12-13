@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.43 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_collection.tcc,v 1.43.2.1 2006/12/13 02:28:58 fang Exp $
 	TODO: trim includes
  */
 
@@ -810,6 +810,22 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Grab all aliases in a flat collection.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::get_all_aliases(
+		typename std::default_vector<const_instance_alias_info_ptr_type>::type& aliases) const {
+	aliases.reserve(this->collection_size());
+	const_iterator i(this->collection.begin()), 
+		e(this->collection.end());
+	for ( ; i!=e; ++i) {
+		aliases.push_back(const_instance_alias_info_ptr_type(&*i));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursively aliases public ports between two instance collections.  
 	\param p subinstance collection to connect to this.  
 	\pre this has identical type to p
@@ -1523,6 +1539,15 @@ INSTANCE_SCALAR_CLASS::lookup_instance_collection(
 		"should never be called." << endl;
 	INVARIANT(r.empty());
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::get_all_aliases(
+		typename std::default_vector<const_instance_alias_info_ptr_type>::type& aliases) const {
+	aliases.push_back(
+		const_instance_alias_info_ptr_type(&this->the_instance));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

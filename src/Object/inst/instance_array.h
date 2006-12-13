@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.5 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_array.h,v 1.5.2.1 2006/12/13 02:28:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -42,6 +42,8 @@ public:
 						instance_alias_info_type;
 	typedef	typename traits_type::instance_alias_info_ptr_type
 						instance_alias_info_ptr_type;
+	typedef	typename parent_type::const_instance_alias_info_ptr_type
+					const_instance_alias_info_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 	typedef	typename parent_type::collection_interface_type
@@ -154,6 +156,8 @@ public:
 	CONSTRUCT_PORT_CONTEXT_PROTO;
 
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
+
+	GET_ALL_ALIASES_PROTO;
 
 	void
 	accept(alias_visitor&) const;
