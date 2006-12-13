@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.3 2006/12/13 04:12:19 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.4 2006/12/13 06:46:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -16,6 +16,8 @@
 #include "Object/expr/expr_visitor.h"
 #include "Object/common/dump_flags.h"
 #include "Object/expr/nonmeta_index_list.h"
+#include "Object/unroll/unroll_context.h"
+#include "Object/global_entry.h"
 #include "util/what.h"
 #include "util/persistent_object_manager.tcc"
 
