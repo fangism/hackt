@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.2 2006/12/13 07:47:39 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.3 2006/12/13 07:56:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -38,6 +38,8 @@
 #include "Object/expr/expr_visitor.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
+#include "Object/traits/classification_tags.h"
+#include "Object/global_entry.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
