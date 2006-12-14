@@ -1,0 +1,12 @@
+Variables: 
+chan[1]: "X.b" 
+chan[2]: "Y.b" 
+
+Event graph: 
+event[1]: null: , pid: 1, #pred: 1, succ: 2 
+event[2]: send: send_me::b!(true), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+event[3]: null: , pid: 2, #pred: 1, succ: 4 
+event[4]: send: send_me::b!(false), pid: 2, #pred: 1, succ: 3 
+channel deps: 2 
+

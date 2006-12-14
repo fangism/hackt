@@ -1,0 +1,207 @@
+WARNING: channel bar.A lacks connection to a producer.
+WARNING: channel bar.B lacks connection to a producer.
+WARNING: channel bar.C lacks connection to a consumer.
+WARNING: channel bar.D lacks connection to a consumer.
+WARNING: channel bar.E lacks connection to a consumer.
+WARNING: channel bar.F lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	44	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
+	47	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	nnegatex	0	#HEAD#	#TAIL#	13
+	53	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	57	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	62	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	586
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	498
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        chan?(int<32>) A
+        chan?(int<32>) B
+        chan!(int<32>) C
+        chan!(int<32>) D
+        chan!(int<32>) E
+        chan!(int<32>) F
+      )
+      In definition "foo", we have: {
+      Instances:
+        A = chan?(int<32>) foo::A
+        B = chan?(int<32>) foo::B
+        C = chan!(int<32>) foo::C
+        D = chan!(int<32>) foo::D
+        E = chan!(int<32>) foo::E
+        F = chan!(int<32>) foo::F
+        a = int<32> foo::a
+        b = int<32> foo::b
+        z = int<32> foo::z
+      unroll sequence: 
+        chan?(int<32>) A
+        chan?(int<32>) B
+        chan!(int<32>) C
+        chan!(int<32>) D
+        chan!(int<32>) E
+        chan!(int<32>) F
+        int<32> a
+        int<32> b
+        int<32> z
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              concurrent: {
+                A?(a)
+                B?(b)
+              }
+              z := a^b
+              concurrent: {
+                C!(z)
+                D!(~z)
+                E!(a&b)
+                F!(a|b)
+              }
+            }
+          ]
+        }
+      footprint: {
+        A = channel chan?(int<32>)^0 = foo::A (1) 
+        B = channel chan?(int<32>)^0 = foo::B (2) 
+        C = channel chan!(int<32>)^0 = foo::C (3) 
+        D = channel chan!(int<32>)^0 = foo::D (4) 
+        E = channel chan!(int<32>)^0 = foo::E (5) 
+        F = channel chan!(int<32>)^0 = foo::F (6) 
+        a = int<32>^0 = foo::a (1) 
+        b = int<32>^0 = foo::b (2) 
+        z = int<32>^0 = foo::z (3) 
+        Created state:
+        channel instance pool:
+        1	foo::A
+        2	foo::B
+        3	foo::C
+        4	foo::D
+        5	foo::E
+        6	foo::F
+        int instance pool:
+        1	foo::a
+        2	foo::b
+        3	foo::z
+        resolved concurrent actions:
+          *[
+            sequential: {
+              concurrent: {
+                A?(a)
+                B?(b)
+              }
+              z := a^b
+              concurrent: {
+                C!(z)
+                D!(~z)
+                E!(a&b)
+                F!(a|b)
+              }
+            }
+          ]
+      }
+      }
+
+  Instances:
+    bar = foo<> bar
+}
+
+footprint: {
+  bar = process foo<>^0 = bar (1) (
+    A = channel chan?(int<32>)^0 = bar.A (1) 
+    B = channel chan?(int<32>)^0 = bar.B (2) 
+    C = channel chan!(int<32>)^0 = bar.C (3) 
+    D = channel chan!(int<32>)^0 = bar.D (4) 
+    E = channel chan!(int<32>)^0 = bar.E (5) 
+    F = channel chan!(int<32>)^0 = bar.F (6) 
+  )
+  Created state:
+  process instance pool:
+  1	bar
+  channel instance pool:
+  1	bar.A
+  2	bar.B
+  3	bar.C
+  4	bar.D
+  5	bar.E
+  6	bar.F
+}

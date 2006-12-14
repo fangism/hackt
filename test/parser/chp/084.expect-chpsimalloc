@@ -1,0 +1,20 @@
+Variables: 
+chan[1]: "foo.out" 
+chan[2]: "ick.out" 
+chan[3]: "poo.out" 
+chan[4]: "bar.out" 
+
+Event graph: 
+event[1]: null: , pid: 1, #pred: 1, succ: 2 
+event[2]: send: send_indexed::out!(1), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+event[3]: null: , pid: 2, #pred: 1, succ: 4 
+event[4]: send: send_indexed::out!(2), pid: 2, #pred: 1, succ: 3 
+channel deps: 2 
+event[5]: null: , pid: 3, #pred: 1, succ: 6 
+event[6]: send: send_indexed::out!(3), pid: 3, #pred: 1, succ: 5 
+channel deps: 3 
+event[7]: null: , pid: 4, #pred: 1, succ: 8 
+event[8]: send: send_indexed::out!(4), pid: 4, #pred: 1, succ: 7 
+channel deps: 4 
+

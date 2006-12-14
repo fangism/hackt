@@ -5,6 +5,12 @@
 
 2006-12-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-15:
+	  More chpsim graph fixes and test cases (a bunch).
+		Forgot to count_predecessors in a few places.  
+	  Next: list of initial events to launch.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-14:
 	  Factored out may_reference lookup (nonmeta) into separate file, 
 		eliminating duplicate maintainence through template.  

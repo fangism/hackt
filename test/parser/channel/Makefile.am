@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.12.2.1 2006/12/14 00:14:09 fang Exp $
+#	$Id: Makefile.am,v 1.12.2.2 2006/12/14 22:35:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,9 +24,10 @@ HACKT_PARSE_TEST_PASSES = \
 	connect-037 connect-038 connect-039 connect-040 \
 	connect-041 connect-042 connect-043 connect-044 \
 	connect-045 connect-046 connect-047 connect-048 \
-	connect-049 connect-050
+	connect-049 connect-050 connect-051 connect-052
 
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
+# UNROLL tests are obsolete
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 005 008 009 010 \
 	011 012 014 015 016 017 018 019 \
@@ -54,7 +55,8 @@ HACKT_CREATE_TEST_PASSES = \
 	connect-023 connect-024 connect-027 connect-028 \
 	connect-029 connect-030 connect-031 connect-032 \
 	connect-037 connect-038 connect-039 connect-040 \
-	connect-041 connect-042 connect-045 connect-048
+	connect-041 connect-042 connect-045 connect-048 \
+	connect-051 connect-052
 
 HACKT_CREATE_TEST_FAILURES = \
 	connect-033 connect-034 \

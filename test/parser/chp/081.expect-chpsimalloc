@@ -1,0 +1,48 @@
+Variables: 
+chan[1]: "y2_0.b" 
+chan[2]: "y2_1.b" 
+chan[3]: "y3_0.b" 
+chan[4]: "y3_1.b" 
+chan[5]: "y3_2.b" 
+chan[6]: "y6_0.b" 
+chan[7]: "y6_1.b" 
+chan[8]: "y6_2.b" 
+chan[9]: "y6_3.b" 
+chan[10]: "y6_4.b" 
+chan[11]: "y6_5.b" 
+
+Event graph: 
+event[1]: null: , pid: 1, #pred: 1, succ: 2 
+event[2]: send: assign_me::b!(false), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+event[3]: null: , pid: 2, #pred: 1, succ: 4 
+event[4]: send: assign_me::b!(true), pid: 2, #pred: 1, succ: 3 
+channel deps: 2 
+event[5]: null: , pid: 3, #pred: 1, succ: 6 
+event[6]: send: assign_me::b!(false), pid: 3, #pred: 1, succ: 5 
+channel deps: 3 
+event[7]: null: , pid: 4, #pred: 1, succ: 8 
+event[8]: send: assign_me::b!(true), pid: 4, #pred: 1, succ: 7 
+channel deps: 4 
+event[9]: null: , pid: 5, #pred: 1, succ: 10 
+event[10]: send: assign_me::b!(false), pid: 5, #pred: 1, succ: 9 
+channel deps: 5 
+event[11]: null: , pid: 6, #pred: 1, succ: 12 
+event[12]: send: assign_me::b!(false), pid: 6, #pred: 1, succ: 11 
+channel deps: 6 
+event[13]: null: , pid: 7, #pred: 1, succ: 14 
+event[14]: send: assign_me::b!(true), pid: 7, #pred: 1, succ: 13 
+channel deps: 7 
+event[15]: null: , pid: 8, #pred: 1, succ: 16 
+event[16]: send: assign_me::b!(false), pid: 8, #pred: 1, succ: 15 
+channel deps: 8 
+event[17]: null: , pid: 9, #pred: 1, succ: 18 
+event[18]: send: assign_me::b!(true), pid: 9, #pred: 1, succ: 17 
+channel deps: 9 
+event[19]: null: , pid: 10, #pred: 1, succ: 20 
+event[20]: send: assign_me::b!(false), pid: 10, #pred: 1, succ: 19 
+channel deps: 10 
+event[21]: null: , pid: 11, #pred: 1, succ: 22 
+event[22]: send: assign_me::b!(true), pid: 11, #pred: 1, succ: 21 
+channel deps: 11 
+

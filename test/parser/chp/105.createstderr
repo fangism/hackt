@@ -1,0 +1,209 @@
+WARNING: channel bar.A lacks connection to a producer.
+WARNING: channel bar.B lacks connection to a producer.
+WARNING: channel bar.C lacks connection to a consumer.
+WARNING: channel bar.D lacks connection to a consumer.
+WARNING: channel bar.E lacks connection to a consumer.
+WARNING: channel bar.F lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	18	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
+	45	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	55	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	60	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	588
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	498
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        chan?(bool<>) A
+        chan?(bool<>) B
+        chan!(bool<>) C
+        chan!(bool<>) D
+        chan!(bool<>) E
+        chan!(bool<>) F
+      )
+      In definition "foo", we have: {
+      Instances:
+        A = chan?(bool<>) foo::A
+        B = chan?(bool<>) foo::B
+        C = chan!(bool<>) foo::C
+        D = chan!(bool<>) foo::D
+        E = chan!(bool<>) foo::E
+        F = chan!(bool<>) foo::F
+        a = bool<> foo::a
+        b = bool<> foo::b
+        y = bool<> foo::y
+        z = bool<> foo::z
+      unroll sequence: 
+        chan?(bool<>) A
+        chan?(bool<>) B
+        chan!(bool<>) C
+        chan!(bool<>) D
+        chan!(bool<>) E
+        chan!(bool<>) F
+        bool<> a
+        bool<> b
+        bool<> y
+        bool<> z
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              concurrent: {
+                A?(a)
+                B?(b)
+              }
+              z := a!=b
+              concurrent: {
+                C!(z)
+                D!(~z)
+                E!(a&&b)
+                F!(a||b)
+              }
+            }
+          ]
+        }
+      footprint: {
+        A = channel chan?(bool<>)^0 = foo::A (1) 
+        B = channel chan?(bool<>)^0 = foo::B (2) 
+        C = channel chan!(bool<>)^0 = foo::C (3) 
+        D = channel chan!(bool<>)^0 = foo::D (4) 
+        E = channel chan!(bool<>)^0 = foo::E (5) 
+        F = channel chan!(bool<>)^0 = foo::F (6) 
+        a = bool^0 = foo::a (1) 
+        b = bool^0 = foo::b (2) 
+        y = bool^0 = foo::y (3) 
+        z = bool^0 = foo::z (4) 
+        Created state:
+        channel instance pool:
+        1	foo::A
+        2	foo::B
+        3	foo::C
+        4	foo::D
+        5	foo::E
+        6	foo::F
+        bool instance pool:
+        1	foo::a
+        2	foo::b
+        3	foo::y
+        4	foo::z
+        resolved concurrent actions:
+          *[
+            sequential: {
+              concurrent: {
+                A?(a)
+                B?(b)
+              }
+              z := a!=b
+              concurrent: {
+                C!(z)
+                D!(~z)
+                E!(a&&b)
+                F!(a||b)
+              }
+            }
+          ]
+      }
+      }
+
+  Instances:
+    bar = foo<> bar
+}
+
+footprint: {
+  bar = process foo<>^0 = bar (1) (
+    A = channel chan?(bool<>)^0 = bar.A (1) 
+    B = channel chan?(bool<>)^0 = bar.B (2) 
+    C = channel chan!(bool<>)^0 = bar.C (3) 
+    D = channel chan!(bool<>)^0 = bar.D (4) 
+    E = channel chan!(bool<>)^0 = bar.E (5) 
+    F = channel chan!(bool<>)^0 = bar.F (6) 
+  )
+  Created state:
+  process instance pool:
+  1	bar
+  channel instance pool:
+  1	bar.A
+  2	bar.B
+  3	bar.C
+  4	bar.D
+  5	bar.E
+  6	bar.F
+}

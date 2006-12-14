@@ -1,0 +1,12 @@
+// "connect-051.hac"
+// is "nonmeta-bool-merge.hac" un-wrapped to top-level
+
+bool b;
+int<1> s;
+chan(int<1>) S;
+chan(bool) B[2];
+chp {
+	*[ S?(s); B[s]?(b) ]
+}
+
+

@@ -1,0 +1,14 @@
+Variables: 
+int[1]: "differ.x" 
+int[2]: "differ.z" 
+chan[1]: "A" 
+chan[2]: "B" 
+
+Event graph: 
+event[1]: send: adjacent_diff::R!(adjacent_diff::x-adjacent_diff::z), pid: 1, #pred: 1, succ: 
+channel deps: 2 
+event[2]: receive: adjacent_diff::L?(adjacent_diff::z), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+event[3]: receive: adjacent_diff::L?(adjacent_diff::x), pid: 1, #pred: 0, succ: 2 
+channel deps: 1 
+

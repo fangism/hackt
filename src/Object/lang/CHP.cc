@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.9 2006/12/14 08:56:42 fang Exp $
+	$Id: CHP.cc,v 1.16.2.10 2006/12/14 22:35:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -481,6 +481,7 @@ if (!branches) {
 	// have to set it again!?  must get clobbered by above loop...
 	EventNode& join_event(s.state.event_pool[join_index]);
 	join_event.set_predecessors(branches);
+	s.count_predecessors(join_event);
 }
 
 	// construct successor event graph edge? or caller's responsibility?
@@ -766,6 +767,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 	EventNode& merge_event(s.state.event_pool.back());
 	s.connect_successor_events(merge_event);
 	merge_event.set_predecessors(1);	// expect ONE branch only
+	s.count_predecessors(merge_event);
 }
 
 	const_iterator i(begin()), e(end());
@@ -901,6 +903,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	EventNode& merge_event(s.state.event_pool.back());
 	s.connect_successor_events(merge_event);
 	merge_event.set_predecessors(1);	// expect ONE branch only
+	s.count_predecessors(merge_event);
 }
 
 	const_iterator i(begin()), e(end());
@@ -1739,6 +1742,7 @@ do_forever_loop::accept(StateConstructor& s) const {
 	// s.last_event_index now points to first action(s) in loop
 	EventNode& head_event(s.state.event_pool[s.last_event_index]);
 	head_event.set_predecessors(1);	// but may have multiple entries
+	// caller will count_predecessors
 }
 }
 
