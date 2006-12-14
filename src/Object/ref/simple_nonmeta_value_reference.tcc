@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.3 2006/12/13 07:56:11 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4 2006/12/14 08:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -40,6 +40,7 @@
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
+#include "Object/ref/nonmeta_ref_implementation.tcc"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -53,94 +54,13 @@ namespace entity {
 //=============================================================================
 #include "util/using_ostream.h"
 using util::persistent_traits;
+using std::transform;
 
 //=============================================================================
 // defined by specializations only, 
 // in "Object/ref/instance_reference_datatype.cc"
 template <class>
 struct nonmeta_reference_type_check_policy;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private implementation to this module.
-	Overloaded and specialized using tag-inheritance.  
-	Code ripped from simple_nonmeta_instance_reference::lookup_may_ref...
- */
-template <class Tag>
-static
-good_bool
-__nonmeta_value_lookup_may_reference_indices_impl(
-		const simple_nonmeta_value_reference<Tag>& r, 
-		const state_manager& sm, const footprint& fp, 
-		const footprint_frame* const ff, 
-		vector<size_t>& indices, physical_instance_tag) {
-	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
-	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::instance_collection_generic_type
-				instance_collection_generic_type;
-	const count_ptr<dynamic_meta_index_list>
-		mil(r.get_indices() ?
-			r.get_indices()->make_meta_index_list() :
-			count_ptr<dynamic_meta_index_list>(NULL));
-	if (r.get_indices() && !mil) {
-		// there was at least one non-meta index
-		// grab all collection aliases conservatively
-		const unroll_context dummy(&fp, &fp);
-		const never_ptr<instance_collection_generic_type>
-			ic(dummy.lookup_instance_collection(
-				*r.get_inst_base_subtype())
-				.template is_a<instance_collection_generic_type>());
-		NEVER_NULL(ic);
-		typedef	typename instance_collection_generic_type::const_instance_alias_info_ptr_type
-					alias_ptr_type;
-		typedef	vector<alias_ptr_type>	alias_list_type;
-		typedef	typename alias_list_type::const_iterator
-					const_iterator;
-		alias_list_type aliases;
-		ic->get_all_aliases(aliases);
-		indices.reserve(aliases.size());	// upper bound
-		// translate to global_indices
-		const_iterator i(aliases.begin()), e(aliases.end());
-		if (ff) {
-			// need to translate local to global
-			// HERE
-			for ( ; i!=e; ++i) {
-				indices.push_back(
-					ff->template get_frame_map<Tag>()[*i]);
-			}
-		} else {
-			// local indices == global indices
-			copy(i, e, back_inserter(indices));
-		}
-		return good_bool(true);
-	} else {
-		// should already be resolved to constants (or NULL)
-		// construct an auxiliary meta-instance reference
-		// to resolve the reference.  
-		typedef	simple_meta_instance_reference<Tag>
-				meta_reference_type;
-		const meta_reference_type cr(r.get_inst_base_subtype(), mil);
-		return cr.lookup_globally_allocated_indices(sm, fp, indices);
-		// NOTE: this expects a top-level footprint!
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Meta-values are not aliasable, value-only semantics.  
-	We're done! (no-op).
- */
-template <class Tag>
-static
-good_bool
-__nonmeta_value_lookup_may_reference_indices_impl(
-		const simple_nonmeta_value_reference<Tag>& r, 
-		const state_manager& sm, const footprint& fp, 
-		const footprint_frame* const ff, 
-		vector<size_t>& indices, parameter_value_tag) {
-	// no-op!
-	return good_bool(true);
-}
 
 //=============================================================================
 /**
@@ -563,7 +483,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::lookup_may_reference_global_indices(
 		const state_manager& sm, const footprint& fp, 
 		const footprint_frame* const ff, 
 		vector<size_t>& indices) const {
-	return __nonmeta_value_lookup_may_reference_indices_impl(
+	return __nonmeta_instance_lookup_may_reference_indices_impl(
 		*this, sm, fp, ff, indices, Tag());
 }
 

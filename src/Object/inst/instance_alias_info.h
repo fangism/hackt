@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.21 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_alias_info.h,v 1.21.2.1 2006/12/14 08:56:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -94,6 +94,17 @@ public:
 	typedef	collection_interface<Tag>		container_type;
 	typedef	instance_collection_generic_type	canonical_container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
+
+	template <class P>
+	struct ptr_to_index_transformer {
+		typedef	P		argument_type;
+		typedef	size_t		result_type;
+		size_t
+		operator () (const P p) const {
+			NEVER_NULL(p);
+			return p->instance_index;
+		}
+	};	// end struct ptr_to_index_transformer
 
 	template <class T>
 	class _iterator {

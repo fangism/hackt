@@ -1,0 +1,23 @@
+Variables: 
+bool[1]: "lanes.b" 
+int[1]: "lanes.s" 
+int[2]: "hairs.s" 
+chan[1]: "b[0]" 
+chan[2]: "b[1]" 
+chan[3]: "lanes.S" 
+chan[4]: "hairs.S" 
+
+Event graph: 
+event[1]: null: , pid: 1, #pred: 1, succ: 3 
+event[2]: receive: merge::B[merge::s]?(merge::b), pid: 1, #pred: 1, succ: 1 
+int deps: 1 
+channel deps: 1 2 
+event[3]: receive: merge::S?(merge::s), pid: 1, #pred: 1, succ: 2 
+channel deps: 3 
+event[4]: null: , pid: 2, #pred: 1, succ: 6 
+event[5]: send: split::B[split::s]!(true), pid: 2, #pred: 1, succ: 4 
+int deps: 2 
+channel deps: 1 2 
+event[6]: receive: split::S?(split::s), pid: 2, #pred: 1, succ: 5 
+channel deps: 4 
+

@@ -1,9 +1,12 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.5 2006/12/13 08:09:06 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.6 2006/12/14 08:56:51 fang Exp $
  */
 
+#define	ENABLE_STACKTRACE				0
+
 #include <iostream>
+#include <algorithm>
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/StateConstructor.h"
 
@@ -36,17 +39,21 @@
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/iterator_more.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
+using std::copy;
+using std::transform;
 using entity::bool_tag;
 using entity::int_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
 using entity::footprint_frame;
+using entity::footprint_frame_transformer;
 using entity::simple_nonmeta_instance_reference_base;
 using util::set_inserter;
 using util::memory::never_ptr;
@@ -84,7 +91,9 @@ DependenceSetCollector::clear(void) {
  */
 #define	DEFINE_TRIVIAL_VISIT(type)					\
 void									\
-DependenceSetCollector::visit(const type& t) { }
+DependenceSetCollector::visit(const type& t) {				\
+	STACKTRACE_VERBOSE;						\
+}
 
 /**
 	Should never be reached.  (Will ICE if reached)
@@ -122,12 +131,14 @@ DEFINE_NEVER_VISIT(preal_relational_expr)
 #define	DEFINE_UNARY_VISIT(type)					\
 void									\
 DependenceSetCollector::visit(const type& t) {				\
+	STACKTRACE_VERBOSE;						\
 	t.get_operand()->accept(*this);					\
 }
 
 #define	DEFINE_BINARY_VISIT(type)					\
 void									\
 DependenceSetCollector::visit(const type& t) {				\
+	STACKTRACE_VERBOSE;						\
 	t.get_first()->accept(*this);					\
 	t.get_second()->accept(*this);					\
 }
@@ -151,71 +162,113 @@ DEFINE_BINARY_VISIT(bool_logical_expr)
  */
 void
 DependenceSetCollector::visit(const simple_bool_meta_instance_reference& r) {
-	bool_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
+	STACKTRACE_VERBOSE;
+	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
+	bool_set.insert(_ff ? footprint_frame_transformer(
+			_ff->get_frame_map<bool_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const simple_int_meta_instance_reference& r) {
-	int_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
+	STACKTRACE_VERBOSE;
+	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
+	int_set.insert(_ff ? footprint_frame_transformer(
+			_ff->get_frame_map<int_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const simple_channel_meta_instance_reference& r) {
-	channel_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
+	STACKTRACE_VERBOSE;
+	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
+	channel_set.insert(_ff ? footprint_frame_transformer(
+			_ff->get_frame_map<channel_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const bool_member_meta_instance_reference& r) {
-	bool_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
+	STACKTRACE_VERBOSE;
+	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
+	bool_set.insert(_ff ? footprint_frame_transformer(
+			_ff->get_frame_map<bool_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const int_member_meta_instance_reference& r) {
-	int_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
+	STACKTRACE_VERBOSE;
+	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
+	int_set.insert(_ff ? footprint_frame_transformer(
+			_ff->get_frame_map<int_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const channel_member_meta_instance_reference& r) {
-	channel_set.insert(r.lookup_globally_allocated_index(_sm, _fp));
+	STACKTRACE_VERBOSE;
+	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
+	channel_set.insert(_ff ? footprint_frame_transformer(
+			_ff->get_frame_map<channel_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(
 		const aggregate_bool_meta_instance_reference& r) {
+	STACKTRACE_VERBOSE;
 	vector<node_index_type> indices;
-	if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
-		copy(indices.begin(), indices.end(), set_inserter(bool_set));
+if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
+	if (_ff) {
+		transform(indices.begin(), indices.end(),
+			set_inserter(bool_set), 
+			footprint_frame_transformer(
+				_ff->get_frame_map<bool_tag>()));
 	} else {
-		// TODO: error handling
-		FINISH_ME(Fang);
-		THROW_EXIT;
+		copy(indices.begin(), indices.end(), set_inserter(bool_set));
 	}
+} else {
+	// TODO: error handling
+	FINISH_ME(Fang);
+	THROW_EXIT;
+}
 }
 
 void
 DependenceSetCollector::visit(
 		const aggregate_int_meta_instance_reference& r) {
+	STACKTRACE_VERBOSE;
 	vector<node_index_type> indices;
-	if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
-		copy(indices.begin(), indices.end(), set_inserter(int_set));
+if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
+	if (_ff) {
+		transform(indices.begin(), indices.end(),
+			set_inserter(int_set), 
+			footprint_frame_transformer(
+				_ff->get_frame_map<int_tag>()));
 	} else {
-		// TODO: error handling
-		FINISH_ME(Fang);
-		THROW_EXIT;
+		copy(indices.begin(), indices.end(), set_inserter(int_set));
 	}
+} else {
+	// TODO: error handling
+	FINISH_ME(Fang);
+	THROW_EXIT;
+}
 }
 
 void
 DependenceSetCollector::visit(
 		const aggregate_channel_meta_instance_reference& r) {
+	STACKTRACE_VERBOSE;
 	vector<node_index_type> indices;
-	if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
-		copy(indices.begin(), indices.end(), set_inserter(channel_set));
+if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
+	if (_ff) {
+		transform(indices.begin(), indices.end(),
+			set_inserter(channel_set), 
+			footprint_frame_transformer(
+				_ff->get_frame_map<channel_tag>()));
 	} else {
-		// TODO: error handling
-		FINISH_ME(Fang);
-		THROW_EXIT;
+		copy(indices.begin(), indices.end(), set_inserter(channel_set));
 	}
+} else {
+	// TODO: error handling
+	FINISH_ME(Fang);
+	THROW_EXIT;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,6 +286,7 @@ DEFINE_NEVER_VISIT(simple_enum_nonmeta_instance_reference)
 #define	DEFINE_NONMETA_INSTANCE_VISIT(type, set)			\
 void									\
 DependenceSetCollector::visit(const type& r) {				\
+	STACKTRACE_VERBOSE;						\
 	vector<node_index_type> indices;				\
 	if (r.lookup_may_reference_global_indices(			\
 			_sm, _fp, _ff, indices).good) {			\
@@ -257,18 +311,21 @@ DEFINE_NONMETA_INSTANCE_VISIT(
 // meta-value references have no aliases, and thus are only index dependent
 void
 DependenceSetCollector::visit(const simple_pbool_nonmeta_value_reference& r) {
+	STACKTRACE_VERBOSE;
 	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
 	if (ind) { ind->accept(*this); }
 }
 
 void
 DependenceSetCollector::visit(const simple_pint_nonmeta_value_reference& r) {
+	STACKTRACE_VERBOSE;
 	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
 	if (ind) { ind->accept(*this); }
 }
 
 void
 DependenceSetCollector::visit(const simple_preal_nonmeta_value_reference& r) {
+	STACKTRACE_VERBOSE;
 	const never_ptr<const nonmeta_index_list> ind(r.get_indices());
 	if (ind) { ind->accept(*this); }
 }

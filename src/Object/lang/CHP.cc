@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.8 2006/12/14 00:13:58 fang Exp $
+	$Id: CHP.cc,v 1.16.2.9 2006/12/14 08:56:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -443,9 +443,6 @@ concurrent_actions::accept(StateConstructor& s) const {
 	// TODO: using footprint frame, allocate event edge graph
 	// there will be multiple outgoing edges
 	STACKTRACE_VERBOSE;
-#if 0
-	for_each(begin(), end(), util::visitor_ptr(s));
-#else
 	const size_t branches = this->size();
 	STACKTRACE_INDENT_PRINT("branches: " << branches << endl);
 // check for degenerate cases first: 0, 1
@@ -480,6 +477,11 @@ if (!branches) {
 		(*i)->accept(s);
 		tmp.push_back(s.last_event_index);	// head of each chain
 	}
+{
+	// have to set it again!?  must get clobbered by above loop...
+	EventNode& join_event(s.state.event_pool[join_index]);
+	join_event.set_predecessors(branches);
+}
 
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t fork_index = s.state.event_pool.size();
@@ -497,7 +499,6 @@ if (!branches) {
 }
 	// leave trail of this event for predecessor
 	s.last_event_index = fork_index;
-#endif
 	// construct an event join graph-node?
 }
 

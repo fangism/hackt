@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.12.8.1 2006/12/04 09:55:45 fang Exp $
+	$Id: global_entry.h,v 1.12.8.2 2006/12/14 08:56:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -90,6 +90,31 @@ protected:
 	__collect_subentries(entry_collection&, const state_manager&) const;
 
 };	// end struct footprint_frame_map
+
+//=============================================================================
+/**
+	Functor for transforming indices via footprint frame lookup.  
+ */
+struct footprint_frame_transformer {
+	typedef	size_t				argument_type;
+	typedef	size_t				result_type;
+
+	const footprint_frame_map_type&			ff;
+
+	explicit
+	footprint_frame_transformer(const footprint_frame_map_type& f) :
+		ff(f) { }
+
+	/**
+		\param i footprint-local index.
+		\return global index from allocation.  
+	 */
+	size_t
+	operator () (const size_t i) const {
+		return ff[i -1];
+	}
+	
+};	// end struct footprint_frame_transformer
 
 //=============================================================================
 /**

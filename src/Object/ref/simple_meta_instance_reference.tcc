@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.3 2006/12/13 04:12:18 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.4 2006/12/14 08:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -203,6 +203,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	If this is called, we're at the top-level of the instance hierarchy.
 	This should work regardless of whether this type has substructure.  
 	Only called from top-level, context-free.  
+	NOTE: this can also be used to lookup up a local footprint
+	if the footprint is a not the top-level.  In this case, the
+	index returned is a local index which needs to be translated
+	to a global index through a footprint_frame lookup.  
+	Will private subinstances still work on local references???
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
