@@ -5,6 +5,16 @@
 
 2006-12-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-13:
+	  First batch of chpsim event allocation dump tests! (parser/channel)
+	  And with it, first set of buglet fixes:
+		Object/lang/CHP.cc: 
+			Suppress listing of null-event as a successor.
+			Evaluate static dependency sets for all types of 
+				events that need them (blocking).
+	  TODO: 6 of the new tests produce incorrect dependencies, fix them.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-12:
 	  Finished DependenceCollector visitor methods, but untested so far.
 		simple_nonmeta_value_reference::lookup_may_reference...

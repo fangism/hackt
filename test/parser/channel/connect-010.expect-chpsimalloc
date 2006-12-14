@@ -1,0 +1,10 @@
+Variables: 
+bool[1]: "a.y.z" 
+chan[1]: "x" 
+
+Event graph: 
+event[1]: send: x!(true), pid: 0, #pred: 0, succ: 
+channel deps: 1 
+event[2]: receive: inner::a?(inner::z), pid: 2, #pred: 0, succ: 
+channel deps: 1 
+

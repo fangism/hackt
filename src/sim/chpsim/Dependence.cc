@@ -1,13 +1,15 @@
 /**
 	\file "sim/chpsim/Dependence.cc"
-	$Id: Dependence.cc,v 1.1.2.1 2006/12/11 00:40:17 fang Exp $
+	$Id: Dependence.cc,v 1.1.2.2 2006/12/14 00:13:59 fang Exp $
  */
 
 #include "sim/chpsim/Dependence.h"
+#include "sim/chpsim/DependenceCollector.h"
 #include <iostream>
 #include <iterator>
 #include <algorithm>
 #include "util/STL/valarray_iterator.h"
+#include "util/iterator_more.h"
 
 namespace HAC {
 namespace SIM {
@@ -19,6 +21,7 @@ using std::copy;
 //=============================================================================
 // class DependenceSet method definitions
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 DependenceSet::dump(ostream& o) const {
 	std::ostream_iterator<node_index_type> osi(o, " ");
@@ -38,6 +41,17 @@ if (channel_set.size()) {
 	o << endl;
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+DependenceSet::import(const DependenceSetCollector& d) {
+	bool_set.resize(d.bool_set.size());
+	copy(d.bool_set.begin(), d.bool_set.end(), begin(bool_set));
+	int_set.resize(d.int_set.size());
+	copy(d.int_set.begin(), d.int_set.end(), begin(int_set));
+	channel_set.resize(d.channel_set.size());
+	copy(d.channel_set.begin(), d.channel_set.end(), begin(channel_set));
 }
 
 //=============================================================================

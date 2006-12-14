@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.7 2006/12/13 07:47:34 fang Exp $
+	$Id: CHP.cc,v 1.16.2.8 2006/12/14 00:13:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -466,12 +466,11 @@ if (!branches) {
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_JOIN, 
 			s.current_process_index));
 	EventNode& join_event(s.state.event_pool.back());
-	join_event.successor_events.resize(1);
-	join_event.successor_events[0] = s.last_event_index;
+	s.connect_successor_events(join_event);
 	join_event.set_predecessors(branches);	// expect number of branches
 	// reminder, reference may be invalidated after push_back
 }
-
+	// NOTE: no dependencies to track, unblocked concurrency
 	const_iterator i(begin()), e(end());
 	vector<size_t> tmp;
 	tmp.reserve(branches);
@@ -622,6 +621,8 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 	(guarded actions), then move them into a union.  
 	It is the selection' (caller) responsibility to collect
 		guard-dependencies for subscription sets.  
+		The dependencies for the guarded action are computed
+		by the action sequence.  
  */
 void
 guarded_action::accept(StateConstructor& s) const {
@@ -762,8 +763,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
 			s.current_process_index));
 	EventNode& merge_event(s.state.event_pool.back());
-	merge_event.successor_events.resize(1);
-	merge_event.successor_events[0] = s.last_event_index;
+	s.connect_successor_events(merge_event);
 	merge_event.set_predecessors(1);	// expect ONE branch only
 }
 
@@ -794,6 +794,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
 			s.current_process_index));
 	EventNode& split_event(s.state.event_pool.back());
+	split_event.import_dependencies(deps);
 
 	split_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
@@ -897,12 +898,12 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
 			s.current_process_index));
 	EventNode& merge_event(s.state.event_pool.back());
-	merge_event.successor_events.resize(1);
-	merge_event.successor_events[0] = s.last_event_index;
+	s.connect_successor_events(merge_event);
 	merge_event.set_predecessors(1);	// expect ONE branch only
 }
 
 	const_iterator i(begin()), e(end());
+	SIM::CHPSIM::DependenceSetCollector deps(s);	// args
 	vector<size_t> tmp;
 	tmp.reserve(branches);
 	// construct concurrent chains
@@ -910,6 +911,15 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 		s.last_event_index = merge_index;	// pass down
 		(*i)->accept(s);
 		tmp.push_back(s.last_event_index);	// head of each chain
+		const guarded_action::guard_ptr_type& g((*i)->get_guard());
+		if (g) {
+			g->accept(deps);
+		} else {
+			// is else clause, don't need any guard dependencies!
+			deps.clear();
+			// TODO: check terminating clause *first*
+			// before bothering...
+		}
 	}
 
 	// construct successor event graph edge? or caller's responsibility?
@@ -919,6 +929,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
 			s.current_process_index));
 	EventNode& split_event(s.state.event_pool.back());
+	split_event.import_dependencies(deps);
 
 	split_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
@@ -1152,6 +1163,8 @@ assignment::accept(StateConstructor& s) const {
 	EventNode& new_event(s.state.event_pool.back());
 
 	s.connect_successor_events(new_event);
+	// assignments are atomic and never block
+	// thus we need no dependencies.  
 
 	// leave trail of this event for predecessor
 	// s.last_event_indices.resize(1);
@@ -1249,7 +1262,13 @@ condition_wait::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
 			s.current_process_index));
 	EventNode& new_event(s.state.event_pool.back());
-	new_event.set_guard_expr(cond);
+	new_event.set_guard_expr(cond);		// basically a shortcut
+
+	if (cond) {
+		SIM::CHPSIM::DependenceSetCollector deps(s);
+		cond->accept(deps);
+		new_event.import_dependencies(deps);
+	}
 
 	s.connect_successor_events(new_event);
 
@@ -1444,6 +1463,13 @@ channel_send::accept(StateConstructor& s) const {
 			s.current_process_index));
 	EventNode& new_event(s.state.event_pool.back());
 
+{
+	// can block on channel, so we add dependencies
+	SIM::CHPSIM::DependenceSetCollector deps(s);
+	chan->accept(deps);
+	new_event.import_dependencies(deps);
+}
+
 	s.connect_successor_events(new_event);
 
 	// leave trail of this event for predecessor
@@ -1573,6 +1599,12 @@ channel_receive::accept(StateConstructor& s) const {
 			s.current_process_index));
 	EventNode& new_event(s.state.event_pool.back());
 
+{
+	// can block on channel, so we add dependencies
+	SIM::CHPSIM::DependenceSetCollector deps(s);
+	chan->accept(deps);
+	new_event.import_dependencies(deps);
+}
 	s.connect_successor_events(new_event);
 
 	// leave trail of this event for predecessor
@@ -1672,7 +1704,9 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 	NOTE: nothing can follow a do-forever loop, 
 	so we need not worry about an initial successor.  
 	However, there may be entries into an infinite loop, so we
-	must return the 
+	must return the index to the first event in the loop.  
+	TODO: optimization: overwrite the loopback null event slot
+		if the event is trivial -- may result in self-reference, OK.
  */
 void
 do_forever_loop::accept(StateConstructor& s) const {
@@ -1695,6 +1729,7 @@ do_forever_loop::accept(StateConstructor& s) const {
 }
 	s.last_event_index = loopback_index;	// point to dummy, pass down
 	body->accept(s);
+	// never blocks, no need for dependency checking
 {
 	// find last event and loop it back to the beginning
 	EventNode& loopback_event(s.state.event_pool[loopback_index]);
@@ -1808,6 +1843,8 @@ do_while_loop::accept(StateConstructor& s) const {
 	// 1st events will go into the body of the do-while loop
 	// last event will be the exit branch, corresponding to the else clause
 }
+	// NOTE: no need to add guard dependencies because
+	// action is always taken immediately (implicit else-clause skips body)
 	vector<size_t> tmp;
 	tmp.reserve(branches);
 {

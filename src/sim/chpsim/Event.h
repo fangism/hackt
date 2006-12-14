@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.4 2006/12/11 00:40:19 fang Exp $
+	$Id: Event.h,v 1.1.2.5 2006/12/14 00:14:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -23,6 +23,7 @@ namespace CHP {
 }
 namespace SIM {
 namespace CHPSIM {
+class DependenceSetCollector;
 using std::ostream;
 using std::valarray;
 using entity::bool_expr;
@@ -169,6 +170,11 @@ public:
 
 	void
 	set_predecessors(const event_index_type n) { predecessors = n; }
+
+	void
+	import_dependencies(const DependenceSetCollector& d) {
+		deps.import(d);
+	}
 
 	ostream&
 	dump_struct(ostream&) const;

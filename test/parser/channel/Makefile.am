@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2006/12/01 23:29:17 fang Exp $
+#	$Id: Makefile.am,v 1.12.2.1 2006/12/14 00:14:09 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -69,6 +69,9 @@ endif
 
 HACKT_ALLOC_TEST_PASSES =
 #	connect-009 connect-010
+
+# temporary for now:
+HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 000 003 004 006 007 \
