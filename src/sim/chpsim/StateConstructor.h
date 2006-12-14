@@ -1,12 +1,13 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.1.2.3 2006/12/12 10:18:30 fang Exp $
+	$Id: StateConstructor.h,v 1.1.2.4 2006/12/14 23:43:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 #define	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 
+#include <vector>
 #include "Object/lang/cflat_context_visitor.h"
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/chpsim/State.h"
@@ -44,13 +45,15 @@ public:
 		These are needed to re-link predecessors to successors.  
 	 */
 	// return_indices_type			last_event_indices;
-	size_t					last_event_index;
+	event_index_type			last_event_index;
 	/**
 		index of the globally allocated process, for context.  
 	 */
-	size_t					current_process_index;
-protected:
-
+	node_index_type				current_process_index;
+	/**
+		List of initially ready events.  
+	 */
+	std::vector<event_index_type>		initial_events;
 private:
 	// non-copy-able
 	explicit

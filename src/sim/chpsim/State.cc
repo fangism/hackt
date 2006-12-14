@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.9 2006/12/12 10:18:29 fang Exp $
+	$Id: State.cc,v 1.1.2.10 2006/12/14 23:43:26 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -60,8 +60,23 @@ State::State(const module& m) :
 	// visit top-level footprint
 	// v.current_process_index = 0;	// already initialized
 	mod.get_footprint().get_chp_footprint().accept(v);
+	if (v.last_event_index) {
+		v.initial_events.push_back(v.last_event_index);
+		// first top-level event
+	}
 	// visit hierarchical footprints
 	sm.accept(v);	// may throw
+
+	// now we have a list of initial_events, use event slot 0 to
+	// launch them all concurrently upon startup.
+	event_type& init(event_pool[0]);
+	init.set_predecessors(0);		// first event, no predecessors
+	// init.process_index = 0;		// associate with top-level
+	init.set_event_type(EVENT_CONCURRENT_FORK);
+	init.successor_events.resize(v.initial_events.size());
+	copy(v.initial_events.begin(), v.initial_events.end(),
+		&init.successor_events[0]);
+	v.count_predecessors(init);	// careful: event optimizations!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,7 +91,9 @@ State::initialize(void) {
 	current_time = 0;
 	// initialize state of all channels and variables
 	// seed events that are ready to go, like active initializations
+	//	note: we use event[0] as the launching event
 	// register blocked events, pending value/condition changes
+	// TODO: for-all events: reset countdown
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -169,8 +186,9 @@ State::dump_struct(ostream& o) const {
 {
 // CHP graph structures (non-hierarchical)
 	o << "Event graph: " << endl;
-	const size_t es = event_pool.size();
-	size_t i = FIRST_VALID_EVENT;
+	const event_index_type es = event_pool.size();
+	event_index_type i = 0;		// FIRST_VALID_EVENT;
+	// we use the 0th event to launch initial batch of events
 	for ( ; i<es; ++i) {
 		o << "event[" << i << "]: ";
 		event_pool[i].dump_struct(o);	// << endl;

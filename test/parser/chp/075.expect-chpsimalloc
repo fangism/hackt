@@ -4,6 +4,7 @@ int[2]: "Y.b"
 int[3]: "Z.b" 
 
 Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 2 4 6 
 event[1]: null: , pid: 1, #pred: 1, succ: 2 
 event[2]: assign: assign_me::b := 123, pid: 1, #pred: 1, succ: 1 
 event[3]: null: , pid: 2, #pred: 1, succ: 4 

@@ -2,4 +2,5 @@ Variables:
 chan[1]: "march.x" 
 
 Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 
 

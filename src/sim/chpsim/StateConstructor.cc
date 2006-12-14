@@ -1,10 +1,11 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.1.2.3 2006/12/12 10:18:30 fang Exp $
+	$Id: StateConstructor.cc,v 1.1.2.4 2006/12/14 23:43:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
 
+#include <vector>
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/Event.h"
 #include "Object/module.h"
@@ -16,6 +17,7 @@
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
+using std::vector;
 using entity::process_tag;
 using entity::global_entry_pool;
 
@@ -51,12 +53,13 @@ StateConstructor::reset(void) {
 void
 StateConstructor::visit(const state_manager& _sm) {
 	STACKTRACE_VERBOSE;
-	size_t pid = 1;		// 0-indexed, but 0th entry is null
+	node_index_type pid = 1;	// 0-indexed, but 0th entry is null
 	// const global_entry_pool<process_tag>& proc_entry_pool(sm);
 	const global_entry_pool<process_tag>&
 		proc_entry_pool(_sm.get_pool<process_tag>());
 	// Could re-write in terms of begin() and end() iterators.  
-	const size_t plim = proc_entry_pool.size();
+	const node_index_type plim = proc_entry_pool.size();
+	initial_events.reserve(plim +1);	// +1 for top-level
 	for ( ; pid < plim; ++pid) {
 		// visit CHP instead
 		reset();
@@ -65,6 +68,9 @@ StateConstructor::visit(const state_manager& _sm) {
 			proc_entry_pool[pid], *this);
 		// TODO: take root last_event_index and add it to
 		// the State's list of ready events (how simulation begins)
+		if (last_event_index) {
+			initial_events.push_back(last_event_index);
+		}
 	}
 }
 

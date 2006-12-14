@@ -5,6 +5,13 @@
 
 2006-12-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-16:
+	  Now using event[0] as the reserved fork-event for launching
+		the simulation by spawning initial events.  
+		chpsim alloc test dumps updated accordingly.  
+	  Next: loop-null event folding to eliminate waste.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-15:
 	  More chpsim graph fixes and test cases (a bunch).
 		Forgot to count_predecessors in a few places.  

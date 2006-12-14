@@ -3,4 +3,5 @@ chan[1]: "lecture.B"
 chan[2]: "lecture.I" 
 
 Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 
 
