@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.27.2.1 2006/12/14 00:14:07 fang Exp $
+#	$Id: Make.test-head,v 1.27.2.2 2006/12/15 02:14:47 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -16,7 +16,7 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacflatfailtest .hacf-fail .hacf-fail-filter .hacf-fail-diff \
 	.hacktcreatetest .hacktcreatefailtest \
 	.createdump .createdump-filter .creatediff \
-	.createfaildump .haco-c-dump .haco-c-err \
+	.createfaildump .createfaildiff .haco-c-dump .haco-c-err \
 	.haco-c-from-haco .haco-c-from-haco-err .create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
 	.hacktcreatefromhacotest \
@@ -81,7 +81,7 @@ BOGUS_SUFFIX_TARGETS = \
 	.hacf-fail .hacf-fail-filter .hacf-fail-diff \
 	.createstderr \
 	.createdump .createdump-filter .createfaildump .haco-c-dump \
-	.haco-c-err .haco-c-from-haco .haco-c-from-haco-err \
+	.createfaildiff .haco-c-err .haco-c-from-haco .haco-c-from-haco-err \
 	.create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
 	.haco-a-dump .haco-a-dump-filter \
