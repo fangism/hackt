@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.cc"
-	$Id: Dependence.cc,v 1.1.2.2 2006/12/14 00:13:59 fang Exp $
+	$Id: Dependence.cc,v 1.1.2.3 2006/12/15 00:49:40 fang Exp $
  */
 
 #include "sim/chpsim/Dependence.h"
@@ -52,6 +52,18 @@ DependenceSet::import(const DependenceSetCollector& d) {
 	copy(d.int_set.begin(), d.int_set.end(), begin(int_set));
 	channel_set.resize(d.channel_set.size());
 	copy(d.channel_set.begin(), d.channel_set.end(), begin(channel_set));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DependenceSet&
+DependenceSet::operator = (const this_type& d) {
+	bool_set.resize(d.bool_set.size());
+	copy(begin(d.bool_set), end(d.bool_set), begin(bool_set));
+	int_set.resize(d.int_set.size());
+	copy(begin(d.int_set), end(d.int_set), begin(int_set));
+	channel_set.resize(d.channel_set.size());
+	copy(begin(d.channel_set), end(d.channel_set), begin(channel_set));
+	return *this;
 }
 
 //=============================================================================

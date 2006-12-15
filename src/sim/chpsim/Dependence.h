@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.1.2.3 2006/12/12 10:18:28 fang Exp $
+	$Id: Dependence.h,v 1.1.2.4 2006/12/15 00:49:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -40,12 +40,18 @@ typedef	std::valarray<node_index_type>	instance_set_type;
 	current object size: 24B
  */
 struct DependenceSet {
+private:
+	typedef	DependenceSet			this_type;
+public:
 	instance_set_type			bool_set;
 	instance_set_type			int_set;
 	instance_set_type			channel_set;
 
 	DependenceSet() : bool_set(), int_set(), channel_set() { }
 	~DependenceSet() { }
+
+	this_type&
+	operator = (const this_type&);
 
 	void
 	import(const DependenceSetCollector&);

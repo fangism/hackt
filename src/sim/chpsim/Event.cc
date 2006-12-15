@@ -1,10 +1,11 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.2 2006/12/11 00:40:18 fang Exp $
+	$Id: Event.cc,v 1.1.2.3 2006/12/15 00:49:44 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
+#include <algorithm>
 #include "sim/chpsim/Event.h"
 #include "sim/ISE.h"
 #include "Object/expr/bool_expr.h"
@@ -19,6 +20,7 @@ namespace CHPSIM {
 using std::ostream_iterator;
 using std::begin;
 using std::end;
+using std::copy;
 using entity::expr_dump_context;
 
 //=============================================================================
@@ -54,6 +56,27 @@ EventNode::EventNode(const action* a,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EventNode::~EventNode() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to manually define valarray assignment with 
+	container-like semantics.  
+ */
+EventNode&
+EventNode::operator = (const this_type& e) {
+	guard_expr = e.guard_expr;
+	action_ptr = e.action_ptr;
+	successor_events.resize(e.successor_events.size());
+	copy(begin(e.successor_events), end(e.successor_events), 
+		begin(successor_events));
+	event_type = e.event_type;
+	flags = e.flags;
+	process_index = e.process_index;
+	predecessors = e.predecessors;
+	countdown = e.countdown;
+	deps = e.deps;		// re-defined!
+	return *this;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

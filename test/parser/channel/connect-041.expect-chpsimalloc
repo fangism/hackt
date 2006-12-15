@@ -3,13 +3,11 @@ bool[1]: "hall.lecture.x"
 chan[1]: "hall.lecture.B" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 6 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 4 
 event[1]: null: , pid: 2, #pred: 2, succ: 
-event[2]: null: , pid: 2, #pred: 1, succ: 3 
-event[3]: receive: boring::B?(boring::x), pid: 2, #pred: 1, succ: 2 
+event[2]: receive: boring::B?(boring::x), pid: 2, #pred: 1, succ: 2 
 channel deps: 1 
-event[4]: null: , pid: 2, #pred: 1, succ: 5 
-event[5]: send: boring::B!(false), pid: 2, #pred: 1, succ: 4 
+event[3]: send: boring::B!(false), pid: 2, #pred: 1, succ: 3 
 channel deps: 1 
-event[6]: fork: , pid: 2, #pred: 1, succ: 3 5 
+event[4]: fork: , pid: 2, #pred: 1, succ: 2 3 
 

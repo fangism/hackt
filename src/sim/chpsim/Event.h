@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.6 2006/12/14 23:43:26 fang Exp $
+	$Id: Event.h,v 1.1.2.7 2006/12/15 00:49:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -95,6 +95,7 @@ struct event_placeholder {
 	TODO: align to natural boundary.
  */
 class EventNode {
+	typedef	EventNode		this_type;
 public:
 	typedef	size_t			event_index_type;
 private:
@@ -164,6 +165,11 @@ public:
 	EventNode(const action*, const unsigned short, const size_t pid);
 
 	~EventNode();
+
+	// need to override because valarray doesn't implement 
+	// operator = using default container behavior
+	this_type&
+	operator = (const this_type&);
 
 	void
 	set_guard_expr(const count_ptr<const bool_expr>&);

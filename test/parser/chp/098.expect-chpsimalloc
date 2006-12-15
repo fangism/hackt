@@ -5,12 +5,11 @@ int[3]: "f.z"
 int[4]: "f.w" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 7 
-event[1]: null: , pid: 1, #pred: 1, succ: 7 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 
+event[1]: fork: , pid: 1, #pred: 1, succ: 4 6 
 event[2]: null: , pid: 1, #pred: 2, succ: 1 
 event[3]: assign: foo::y := foo::y+1, pid: 1, #pred: 1, succ: 2 
 event[4]: assign: foo::x := foo::y, pid: 1, #pred: 1, succ: 3 
 event[5]: assign: foo::w := foo::w+1, pid: 1, #pred: 1, succ: 2 
 event[6]: assign: foo::z := foo::w, pid: 1, #pred: 1, succ: 5 
-event[7]: fork: , pid: 1, #pred: 1, succ: 4 6 
 

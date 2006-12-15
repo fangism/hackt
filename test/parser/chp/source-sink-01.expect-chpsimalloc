@@ -3,11 +3,9 @@ bool[1]: "b.x"
 chan[1]: "B" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 2 4 
-event[1]: null: , pid: 1, #pred: 1, succ: 2 
-event[2]: send: chp_bool_source::S!(true), pid: 1, #pred: 1, succ: 1 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 
+event[1]: send: chp_bool_source::S!(true), pid: 1, #pred: 1, succ: 1 
 channel deps: 1 
-event[3]: null: , pid: 2, #pred: 1, succ: 4 
-event[4]: receive: chp_bool_sink::S?(chp_bool_sink::x), pid: 2, #pred: 1, succ: 3 
+event[2]: receive: chp_bool_sink::S?(chp_bool_sink::x), pid: 2, #pred: 1, succ: 2 
 channel deps: 1 
 

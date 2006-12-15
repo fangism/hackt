@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.10 2006/12/14 22:35:41 fang Exp $
+	$Id: CHP.cc,v 1.16.2.11 2006/12/15 00:49:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1719,14 +1719,9 @@ do_forever_loop::accept(StateConstructor& s) const {
 	// create a dummy event first (epilogue) and loop it around.
 	// OR use the 0th event slot as the dummy!
 	// -- works only if we need one dummy at a time
-#if 0
-	EventNode dummy;
-	// guarantee undo upon exiting scope
-	const util::value_saver<EventNode> tmp(s.state.event_pool[0], dummy);
-	// fake the event processing, using index 0
-#endif
 	const size_t loopback_index = s.state.event_pool.size();
 {
+	// back-reference action pointer is really optional
 	s.state.event_pool.push_back(EventNode(this, SIM::CHPSIM::EVENT_NULL,
 		s.current_process_index));
 //	EventNode& loopback_event(s.state.event_pool.back());
@@ -1737,11 +1732,19 @@ do_forever_loop::accept(StateConstructor& s) const {
 {
 	// find last event and loop it back to the beginning
 	EventNode& loopback_event(s.state.event_pool[loopback_index]);
+	EventNode& head_event(s.state.event_pool[s.last_event_index]);
+#if 0
 	loopback_event.successor_events.resize(1);
 	loopback_event.successor_events[0] = s.last_event_index;
 	// s.last_event_index now points to first action(s) in loop
-	EventNode& head_event(s.state.event_pool[s.last_event_index]);
 	head_event.set_predecessors(1);	// but may have multiple entries
+#else
+	// the last_event_index refers to the most recently allocated event
+	loopback_event = head_event;	// MOVE into placeholder slot!
+	s.state.event_pool.pop_back();	// recycle it!
+	loopback_event.set_predecessors(1);	// but may have multiple entries
+	s.last_event_index = loopback_index;
+#endif
 	// caller will count_predecessors
 }
 }

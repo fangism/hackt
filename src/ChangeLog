@@ -5,6 +5,15 @@
 
 2006-12-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-17:
+	  Loop-back event slot recycled, no more null-waste.
+		Defined operator = for Event and DependenceSet for 
+		move semantics because std::valarray does not use
+		container move semantics (only element copy, no-resize).  
+	  Updated test-cases accordingly.  
+	  Next: graphical representations of event graphs.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-16:
 	  Now using event[0] as the reserved fork-event for launching
 		the simulation by spawning initial events.  
