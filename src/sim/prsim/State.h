@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.16.12.2 2006/12/08 22:34:08 fang Exp $
+	$Id: State.h,v 1.16.12.3 2006/12/16 23:54:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -14,6 +14,7 @@
 #include "sim/time.h"
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
+#include "sim/event.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
@@ -29,6 +30,7 @@ namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
 struct ExprAllocFlags;
+using std::map;
 using util::list_vector;
 using HASH_MAP_NAMESPACE::hash_map;
 
@@ -100,7 +102,7 @@ public:
 	typedef	RuleState<time_type>		rule_type;
 	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
 
-	typedef	std::map<node_index_type, watch_entry>	watch_list_type;
+	typedef	map<node_index_type, watch_entry>	watch_list_type;
 	/**
 		The first node index is the one that just changed, 
 		the second index refers to the node that caused it, 

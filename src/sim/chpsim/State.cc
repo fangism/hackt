@@ -1,11 +1,17 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.11 2006/12/16 03:05:50 fang Exp $
+	$Id: State.cc,v 1.1.2.12 2006/12/16 23:54:11 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
+#define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
+
+#include <iostream>
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
+#include "sim/event.tcc"
 #include "sim/signal_handler.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -14,9 +20,17 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/chan_traits.h"
 
-#include <iostream>
-
 #include "common/TODO.h"
+#include "util/stacktrace.h"
+
+#if	DEBUG_STEP
+#define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_STEP		STACKTRACE_VERBOSE
+#else
+#define	DEBUG_STEP_PRINT(x)
+#define	STACKTRACE_VERBOSE_STEP
+#endif
+
 
 namespace HAC {
 namespace SIM {
@@ -36,26 +50,16 @@ using entity::global_entry_pool;
  */
 State::State(const module& m) : 
 		state_base(m, "chpsim> "), 
+		instances(m.get_state_manager()), 
 		event_pool(), 
+		event_queue(), 
 		current_time(0), 
 		interrupted(false),
 		flags(FLAGS_DEFAULT) {
-	const state_manager& sm(mod.get_state_manager());
-	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
-	const global_entry_pool<int_tag>& ip(sm.get_pool<int_tag>());
-	const global_entry_pool<channel_tag>& cp(sm.get_pool<channel_tag>());
-
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
-
-	const size_t bs = bp.size();
-	const size_t is = ip.size();
-	const size_t cs = cp.size();
-	bool_pool.resize(bs);
-	int_pool.resize(is);
-	channel_pool.resize(cs);
-
+{
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
 	// v.current_process_index = 0;	// already initialized
@@ -65,6 +69,7 @@ State::State(const module& m) :
 		// first top-level event
 	}
 	// visit hierarchical footprints
+	const state_manager& sm(mod.get_state_manager());
 	sm.accept(v);	// may throw
 
 	// now we have a list of initial_events, use event slot 0 to
@@ -78,6 +83,7 @@ State::State(const module& m) :
 		&init.successor_events[0]);
 	v.count_predecessors(init);	// careful: event optimizations!
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 State::~State() {
@@ -90,6 +96,7 @@ void
 State::initialize(void) {
 	current_time = 0;
 	// initialize state of all channels and variables
+	// empty the event_queue
 	// seed events that are ready to go, like active initializations
 	//	note: we use event[0] as the launching event
 	// register blocked events, pending value/condition changes
@@ -104,15 +111,65 @@ State::reset(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Fetches next event from the priority queue.  
+	Automatically skips and deallocates killed events.  
+	NOTE: possible that last event in queue is killed, 
+		in which case, need to return a NULL placeholder.  
+ */
+State::event_placeholder_type
+State::dequeue_event(void) {
+	STACKTRACE_VERBOSE_STEP;
+#if 0
+	event_placeholder_type ret(event_queue.pop());
+	while (get_event(ret.event_index).killed()) {
+		__deallocate_killed_event(ret.event_index);
+		if (event_queue.empty()) {
+			return event_placeholder_type(
+				current_time, INVALID_EVENT_INDEX);
+		} else {
+			ret = event_queue.pop();
+		}
+	};
+	return ret;
+#else
+	return event_queue.pop();
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	The main event-driven execution engine of chpsim.  
 	Processes one event at a time.  
+	\return reference to the variable that was just modified, if any.
  */
-void
+State::step_return_type
 State::step(void) {
+	typedef	step_return_type	return_type;
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
+	if (event_queue.empty()) {
+		return return_type(INSTANCE_TYPE_NULL, INVALID_NODE_INDEX);
+	}
+
+	const event_placeholder_type ep(dequeue_event());
+	current_time = ep.time;
+	DEBUG_STEP_PRINT("time = " << current_time << endl);
+	const event_index_type& ei(ep.event_index);
+	if (!ei) {
+		// possible in the event that last events are killed
+		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+	}
+	DEBUG_STEP_PRINT("event_index = " << ei << endl);
+
 	// 2) execute the event (alter state, variables, channel, etc.)
+
 	// 3) check if the alteration of state/variable triggers new events
+	//	each variable affected has a dynamic set of 
+	//		'subscribed' pending events (dynamic fanout)
+	//	accumulate set of blocked events to recheck/re-evaluate
+	//	re-evaluate list of events, enqueuing/unblocking any events
+	//		that are ready to fire.
+
 	//	how do we do this? subscribe-publish/observer approach?
 	//	updated variable will have a list of observers to notify
 	//		should this list be a static fanout list
@@ -123,6 +180,9 @@ State::step(void) {
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
+
+	// TODO: finish me
+	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,45 +202,7 @@ State::dump_struct(ostream& o) const {
 	o << "Variables: " << endl;
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
-	{
-		const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
-		const node_index_type bools = bool_pool.size();
-		node_index_type i = FIRST_VALID_NODE;
-		for ( ; i<bools; ++i) {
-			o << "bool[" << i << "]: \"";
-			bp[i].dump_canonical_name(o, topfp, sm);
-			o << "\" ";
-			// no static structural information
-			// bool_pool[i].dump_struct(o);
-			o << endl;
-		}
-	}{
-		const global_entry_pool<int_tag>& ip(sm.get_pool<int_tag>());
-		const node_index_type ints = int_pool.size();
-		node_index_type i = FIRST_VALID_NODE;
-		for ( ; i<ints; ++i) {
-			o << "int[" << i << "]: \"";
-			ip[i].dump_canonical_name(o, topfp, sm);
-			o << "\" ";
-			// no static structural information
-			// int_pool[i].dump_struct(o);
-			o << endl;
-		}
-	}{
-		const global_entry_pool<channel_tag>&
-			cp(sm.get_pool<channel_tag>());
-		const node_index_type chans = channel_pool.size();
-		node_index_type i = FIRST_VALID_NODE;
-		for ( ; i<chans; ++i) {
-			o << "chan[" << i << "]: \"";
-			cp[i].dump_canonical_name(o, topfp, sm);
-			o << "\" ";
-			// no static structural information
-			// channel_pool[i].dump_struct(o);
-			o << endl;
-		}
-	}
-	// repeat for channels
+	instances.dump_struct(o, sm, topfp);
 }
 	o << endl;
 {
@@ -259,6 +281,9 @@ State::load_checkpoint(istream& o) {
 
 // explicit class instantiation
 template class signal_handler<CHPSIM::State>;
+// template class EventQueue<EventPlaceholder<real_time> >;
+	// NOTE: already instantiated for PRSIM, factor into common lib?
+
 }	// end namespace SIM
 }	// end namespace HAC
 

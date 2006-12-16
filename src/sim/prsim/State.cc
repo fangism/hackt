@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.30.8.3 2006/12/11 00:40:29 fang Exp $
+	$Id: State.cc,v 1.30.8.4 2006/12/16 23:54:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,7 +15,7 @@
 #include <set>
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
-#include "sim/prsim/Event.tcc"
+#include "sim/event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
 #include "sim/signal_handler.tcc"
@@ -3474,6 +3474,7 @@ watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
 
 // explicit template instantiation of signal handler class
 template class signal_handler<PRSIM::State>;
+// template class EventQueue<EventPlaceholder<real_time> >;
 
 }	// end namespace SIM
 }	// end namespace HAC

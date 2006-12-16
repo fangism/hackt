@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.8 2006/12/11 00:40:21 fang Exp $
+	$Id: State.h,v 1.1.2.9 2006/12/16 23:54:12 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -10,11 +10,14 @@
 #include <iosfwd>
 #include <vector>
 #include "sim/time.h"
+#include "sim/event.h"
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
-#include "sim/chpsim/Variable.h"
-#include "sim/chpsim/Channel.h"
+#include "sim/chpsim/InstancePools.h"
+#include "sim/chpsim/type_enum.h"
+// #include "sim/chpsim/Variable.h"
+// #include "sim/chpsim/Channel.h"
 
 namespace HAC {
 namespace SIM {
@@ -39,14 +42,19 @@ public:
 private:
 	typedef	EventNode			event_type;
 	typedef	vector<event_type>		event_pool_type;
+	typedef	EventPlaceholder<time_type>	event_placeholder_type;
+	typedef	EventQueue<event_placeholder_type>
+						event_queue_type;
 	typedef	unsigned int			flags_type;
 
+	// NOTE: duplicate definition in InstancePools
 	enum {
 		/// index of the first valid node
 		FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
+	typedef	instance_reference		step_return_type;
 	enum {
 		/**
 			Whether or not the simulation was halted for any 
@@ -57,21 +65,17 @@ private:
 		FLAGS_DEFAULT = 0x0000
 	};
 private:
-	// shopping list:
-	// channel state pool -- channels will have a char
-	//	to indicate send/receive state
-	// variable pools (bool, int, mpz_t)
-	//	no need for user-defined, as they are just composites
-	//	of the fundamental types.
-	vector<BoolVariable>			bool_pool;
-	vector<IntVariable>			int_pool;
-	vector<ChannelState>			channel_pool;
-	
+	/**
+		Collection of variable values and channel state.
+	 */
+	InstancePools				instances;
+
 	// event pools: for each type of event?
 public:
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
 	// event queue: unified priority queue of event_placeholders
+	event_queue_type			event_queue;
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separate)ly
@@ -96,16 +100,20 @@ public:
 	reset(void);
 
 	/**
-		TODO: finish me, add an actual queue!
+		\return true if event_queue is not empty.
 	 */
 	bool
-	pending_events(void) const { return false; }
+	pending_events(void) const { return !event_queue.empty(); }
 
 	const time_type&
 	time(void) const { return current_time; }
 
-	// step_return_type
-	void
+private:
+	event_placeholder_type
+	dequeue_event(void);
+
+public:
+	step_return_type
 	step(void);	// THROWS_STEP_EXCEPTION
 
 	void

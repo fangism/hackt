@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-19:
+	  Factored out sim/prsim/Event.h template classes into sim/event.h.
+	  Added event-queue structure to CHPSIM::State.
+	  TODO: main step-execution loop of CHPSIM::State, and general
+		event execution and handling. 
+
+
 2006-12-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-18:

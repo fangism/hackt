@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.8 2006/12/16 03:05:49 fang Exp $
+	$Id: Event.h,v 1.1.2.9 2006/12/16 23:54:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -151,6 +151,10 @@ public:
 	import_dependencies(const DependenceSetCollector& d) {
 		deps.import(d);
 	}
+
+	// return: references to changed state?
+	void
+	execute(void);
 
 	ostream&
 	dump_struct(ostream&) const;

@@ -1,14 +1,13 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.7 2006/08/12 00:36:32 fang Exp $
+	$Id: Event.cc,v 1.7.26.1 2006/12/16 23:54:16 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
 #include <numeric>
 #include "sim/prsim/Event.h"
-#include "sim/prsim/Event.tcc"
 #include "sim/time.h"
 #include "util/memory/index_pool.tcc"
 #include "util/IO_utils.tcc"
@@ -219,15 +218,9 @@ EventPool::deallocate(const event_index_type i) {
 }
 #endif  
 
-
-//=============================================================================
-// class EventQueue method definitions
-// explicit class instantiation
-
-template class EventQueue<EventPlaceholder<real_time> >;
-
-//=============================================================================
 }	// end namespace PRSIM
+
+//=============================================================================
 }	// end namespace SIM
 }	// end namespace HAC
 
