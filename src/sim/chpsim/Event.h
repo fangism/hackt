@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.7 2006/12/15 00:49:46 fang Exp $
+	$Id: Event.h,v 1.1.2.8 2006/12/16 03:05:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -9,10 +9,12 @@
 
 #include "util/size_t.h"
 #include "util/attributes.h"
+#include "util/string_fwd.h"
 #include <iosfwd>
 #include <valarray>
 #include "util/memory/count_ptr.h"
 #include "sim/chpsim/Dependence.h"
+// #include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -25,6 +27,8 @@ namespace SIM {
 namespace CHPSIM {
 class DependenceSetCollector;
 using std::ostream;
+using std::string;
+// using std::vector;
 using std::valarray;
 using entity::bool_expr;
 using entity::CHP::action;
@@ -32,7 +36,7 @@ using util::memory::count_ptr;
 
 //=============================================================================
 /**
-	Plan is to have different event pools.  
+	Plan is to have different event pools... not anymore! is unified.
  */
 enum {
 	EVENT_NULL = 0,		///< can be used to mean 'skip' or 'no-op'
@@ -44,43 +48,6 @@ enum {
 	EVENT_SELECTION_BEGIN = 5,	///< the start of any selection
 	EVENT_SELECTION_END = EVENT_NULL	///< end of any selection (no-op)
 };
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	Event representing change of variable value.  
-	For now, we assign bools and ints, don't deal with structures yet.
-	The lvalue reference is the result of run-time resolution, 
-	in the case of non-meta indexed variables.  
-	The rvalue is a resolved/updated value to assign.  
-	Could also template this by type... bool, int.
-	Aggregate assignments? not yet.
- */
-struct assign_event {
-	// lvalue -- some resolved reference to lvalue (bool, int)
-	size_t				lvalue_type;
-	// would be best to resolve ASAP
-	size_t				lvalue_index;
-	// the value to assign (currently, only integer)
-	size_t				rvalue;
-};	// end struct assign_event
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct send_event {
-	size_t				lvalue_channel_index;
-	// rvalue must be aggregate structure
-};	// end struct send_event
-
-//=============================================================================
-/**
-	The master event record for the event queue.  
-	Q: TimeType? integer of floating point?
- */
-struct event_placeholder {
-	size_t				event_type;
-	size_t				event_index;
-};	// end struct event_placeholder
-#endif
 
 //=============================================================================
 /**
@@ -187,6 +154,12 @@ public:
 
 	ostream&
 	dump_struct(ostream&) const;
+
+	ostream&
+	dump_dot_node(ostream&) const;
+
+	ostream&
+	dump_dot_edge(ostream&) const;
 
 };	// end class EventNode
 

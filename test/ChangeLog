@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2006-12-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-18:
+	  Added support for dot graph generation for chpsim event
+		graph visualization.  
+
+
 2006-12-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-13:

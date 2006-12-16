@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.4 2006/11/21 22:39:16 fang Exp $
+#	$Id: Make.test-prsim,v 1.4.4.1 2006/12/16 03:05:56 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -500,11 +500,11 @@ all-prs-dot: $(ALL_PRSIMEXPR_DOT)
 
 all-prs-dot-ps: $(ALL_PRS_DOT_PS)
 
-clean-prs-dot:
-	$(RM) $(ALL_PRSIMEXPR_DOT)
+clean-prs-dot: force
+	-$(RM) $(ALL_PRSIMEXPR_DOT)
 
-clean-prs-dot-ps:
-	$(RM) $(ALL_PRS_DOT_PS)
+clean-prs-dot-ps: force
+	-$(RM) $(ALL_PRS_DOT_PS)
 
 
 echo-prsimexpr-tests: force
@@ -553,5 +553,5 @@ clean-prsimtests:
 
 clean-local: clean-prsimtests
 
-.PHONY: clean-prsimtests
+.PHONY: clean-prsimtests all-prs-dot all-prs-ps
 

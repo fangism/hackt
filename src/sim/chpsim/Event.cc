@@ -1,11 +1,12 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.3 2006/12/15 00:49:44 fang Exp $
+	$Id: Event.cc,v 1.1.2.4 2006/12/16 03:05:47 fang Exp $
  */
 
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <string>
 #include "sim/chpsim/Event.h"
 #include "sim/ISE.h"
 #include "Object/expr/bool_expr.h"
@@ -104,7 +105,7 @@ EventNode::dump_struct(ostream& o) const {
 	}
 	if (action_ptr) {
 		// not the normal dump, but one used for event graphs
-		action_ptr->dump_event(o);
+		action_ptr->dump_event(o, expr_dump_context::default_value);
 	} else {
 		o << "null";
 	}
@@ -118,6 +119,51 @@ EventNode::dump_struct(ostream& o) const {
 	copy(begin(successor_events), end(successor_events), osi);
 	o << endl;
 	deps.dump(o);	// includes endl already
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print guards here, put guards on edges.  
+ */
+ostream&
+EventNode::dump_dot_node(ostream& o) const {
+	o << "[shape=";
+	switch (event_type) {
+	case EVENT_NULL:
+		o << ((predecessors > 1) ? "diamond" : "ellipse"); 
+		break;
+	case EVENT_ASSIGN: o << "box"; break;
+	case EVENT_SEND: o << "house"; break;
+	case EVENT_RECEIVE: o << "invhouse"; break;
+	case EVENT_CONCURRENT_FORK: o << "hexagon"; break;
+	case EVENT_SELECTION_BEGIN: o << "trapezium"; break;
+	default:
+		ISE(cerr, cerr << "Invalid event type enum: "
+			<< event_type << endl;)
+	}
+	if (action_ptr) {
+		o << ", ";
+		action_ptr->dump_event(o << "label=\"", 
+			expr_dump_context::default_value) 
+			// TODO: pass context scope to suppress scope qualifier
+			<< "\\npid=" << process_index << "\"";
+	}
+	// no edges
+	// no deps
+	return o << "];";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just prints edge label if applicable.
+ */
+ostream&
+EventNode::dump_dot_edge(ostream& o) const {
+	if (guard_expr) {
+		guard_expr->dump(o << "\t[label=\"",
+			expr_dump_context::default_value) << "\"]";
+	}
 	return o;
 }
 

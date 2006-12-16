@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.10 2006/12/14 23:43:26 fang Exp $
+	$Id: State.cc,v 1.1.2.11 2006/12/16 03:05:50 fang Exp $
  */
 
 #include "sim/chpsim/State.h"
@@ -194,6 +194,43 @@ State::dump_struct(ostream& o) const {
 		event_pool[i].dump_struct(o);	// << endl;
 	}
 }
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Any control over dumping options?
+	For now we don't bother dumping variables and dependencies.  
+	Dependencies are "may" instance sets.
+	Consider evaluating sets of anti-dependence (affects) variables.  
+	Would be nice to distinguish between may and must variables.  
+ */
+ostream&
+State::dump_struct_dot(ostream& o) const {
+	o << "digraph G {" << endl;
+{
+	o << "# Events: " << endl;
+	const event_index_type es = event_pool.size();
+	event_index_type i = 0;		// FIRST_VALID_EVENT;
+	// we use the 0th event to launch initial batch of events
+	const string prefix("EVENT_");
+	for ( ; i<es; ++i) {
+		// o << "EVENT_" << i << "\t[label=\"" << i << "\"];";
+		o << prefix << i << "\t";
+		const event_type& e(event_pool[i]);
+		e.dump_dot_node(o) << endl;
+		// iterate over edges
+		const event_index_type* j = &e.successor_events[0];
+		const event_index_type* z =
+			&e.successor_events[e.successor_events.size()];
+		for ( ; j!=z; ++j) {
+			const event_index_type h = *j;
+			o << prefix << i << " -> " << prefix << h;
+			event_pool[h].dump_dot_edge(o) << ';' << endl;
+		}
+	}
+}
+	o << "}" << endl;
 	return o;
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.11 2006/12/15 00:49:39 fang Exp $
+	$Id: CHP.cc,v 1.16.2.12 2006/12/16 03:05:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -204,7 +204,7 @@ action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 	Don't print anything.  Not a single statement/event.  
  */
 ostream&
-action_sequence::dump_event(ostream& o) const {
+action_sequence::dump_event(ostream& o, const expr_dump_context&) const {
 	return o;
 }
 
@@ -373,7 +373,7 @@ if (!empty()) {
 	Don't print anything.  Not a single statement/event.  
  */
 ostream&
-concurrent_actions::dump_event(ostream& o) const {
+concurrent_actions::dump_event(ostream& o, const expr_dump_context&) const {
 	return o;
 }
 
@@ -725,7 +725,8 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 	Don't print anything.  Not a single statement/event.  
  */
 ostream&
-deterministic_selection::dump_event(ostream& o) const {
+deterministic_selection::dump_event(ostream& o, 
+		const expr_dump_context&) const {
 	return o;
 }
 
@@ -862,7 +863,8 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 	Don't print anything.  Not a single statement/event.  
  */
 ostream&
-nondeterministic_selection::dump_event(ostream& o) const {
+nondeterministic_selection::dump_event(ostream& o, 
+		const expr_dump_context&) const {
 	return o;
 }
 
@@ -1006,7 +1008,7 @@ metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
 	Don't print anything.  Not a single statement/event.  
  */
 ostream&
-metaloop_selection::dump_event(ostream& o) const {
+metaloop_selection::dump_event(ostream& o, const expr_dump_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return o;
 }
@@ -1134,8 +1136,8 @@ assignment::dump(ostream& o, const expr_dump_context& c) const {
 	Defer to normal dump.  
  */
 ostream&
-assignment::dump_event(ostream& o) const {
-	return dump(o, expr_dump_context::default_value);
+assignment::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1231,8 +1233,8 @@ condition_wait::dump(ostream& o, const expr_dump_context& c) const {
 	Defer to normal dump.  
  */
 ostream&
-condition_wait::dump_event(ostream& o) const {
-	return dump(o, expr_dump_context::default_value);
+condition_wait::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1411,8 +1413,8 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 	Defer to normal dump.  
  */
 ostream&
-channel_send::dump_event(ostream& o) const {
-	return dump(o, expr_dump_context::default_value);
+channel_send::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1547,8 +1549,8 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	Defer to normal dump.  
  */
 ostream&
-channel_receive::dump_event(ostream& o) const {
-	return dump(o, expr_dump_context::default_value);
+channel_receive::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1679,7 +1681,7 @@ do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
 	Don't print, not a single statement/event.  
  */
 ostream&
-do_forever_loop::dump_event(ostream& o) const {
+do_forever_loop::dump_event(ostream& o, const expr_dump_context&) const {
 	return o;
 }
 
@@ -1801,7 +1803,7 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 	Don't print, not a single statement/event.  
  */
 ostream&
-do_while_loop::dump_event(ostream& o) const {
+do_while_loop::dump_event(ostream& o, const expr_dump_context&) const {
 	return o;
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.5 2006/12/11 00:40:06 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.6 2006/12/16 03:05:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -130,9 +130,9 @@ try {
 #if 0
 	if (opt.check_structure)
 		sim_state.check_structure();
+#endif
 	if (opt.dump_dot_struct)
 		sim_state.dump_struct_dot(cout) << endl;
-#endif
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
