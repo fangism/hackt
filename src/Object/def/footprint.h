@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.21 2006/11/21 22:38:40 fang Exp $
+	$Id: footprint.h,v 1.21.4.1 2006/12/18 21:28:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -10,21 +10,34 @@
 #include <iosfwd>
 #include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
+#if 0
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
+#endif
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
 #include "util/memory/count_ptr.h"
+#include "util/memory/excl_ptr.h"
 #include "util/persistent.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
+class cflat_options;
 namespace entity {
+namespace PRS {
+	class footprint;
+}
+namespace SPEC {
+	class footprint;
+}
+namespace CHP {
+	class concurrent_actions;
+}
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
@@ -36,6 +49,7 @@ struct expr_dump_context;
 using std::string;
 using util::good_bool;
 using util::memory::count_ptr;
+using util::memory::excl_ptr;
 
 //=============================================================================
 /**
@@ -116,6 +130,8 @@ private:
 	// back-reference to definition?  NO, instance_collection_map suffices
 	/**
 		Whether or not this definition footprint has been unrolled.
+		NOTE: this flag is obsolete since we've fused unrolling and
+		creating into a single phase.  
 	 */
 	bool					unrolled;
 	/**
@@ -164,8 +180,9 @@ private:
 	/**
 		The set of unrolled production rules, local to this scope.  
 		This is populated during the create phase.  
+		Privatized implementation.  
 	 */
-	PRS::footprint				prs_footprint;
+	excl_ptr<PRS::footprint>		prs_footprint;
 	/**
 		The CHP footprint type is the same as the source tree's
 		IR, but with meta-parameter dependencies resolved
@@ -175,13 +192,15 @@ private:
 	/**
 		Meta-param unrolled footprint of CHP, 
 		established during the create phase.  
+		Privatized implementation.  
 	 */
-	chp_footprint_type			chp_footprint;
+	excl_ptr<chp_footprint_type>		chp_footprint;
 	/**
 		Unrolled specifications, local to this scope.  
 		This is populated during the create phase.  
+		Privatized implementation.  
 	 */
-	SPEC::footprint				spec_footprint;
+	excl_ptr<SPEC::footprint>		spec_footprint;
 
 public:
 	footprint();
@@ -290,22 +309,22 @@ public:
 	evaluate_scope_aliases(void);
 
 	PRS::footprint&
-	get_prs_footprint(void) { return prs_footprint; }
+	get_prs_footprint(void) { return *prs_footprint; }
 
 	const PRS::footprint&
-	get_prs_footprint(void) const { return prs_footprint; }
+	get_prs_footprint(void) const { return *prs_footprint; }
 
 	chp_footprint_type&
-	get_chp_footprint(void) { return chp_footprint; }
+	get_chp_footprint(void) { return *chp_footprint; }
 
 	const chp_footprint_type&
-	get_chp_footprint(void) const { return chp_footprint; }
+	get_chp_footprint(void) const { return *chp_footprint; }
 
 	SPEC::footprint&
-	get_spec_footprint(void) { return spec_footprint; }
+	get_spec_footprint(void) { return *spec_footprint; }
 
 	const SPEC::footprint&
-	get_spec_footprint(void) const { return spec_footprint; }
+	get_spec_footprint(void) const { return *spec_footprint; }
 
 	good_bool
 	expand_unique_subinstances(state_manager&) const;

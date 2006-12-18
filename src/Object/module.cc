@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.28 2006/11/21 22:38:33 fang Exp $
+ 	$Id: module.cc,v 1.28.4.1 2006/12/18 21:27:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -20,6 +20,7 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/lang/cflat_printer.h"
+#include "Object/lang/PRS_footprint.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/type/process_type_reference.h"

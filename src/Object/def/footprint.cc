@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.32 2006/11/27 08:29:03 fang Exp $
+	$Id: footprint.cc,v 1.32.4.1 2006/12/18 21:27:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -61,6 +61,9 @@
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/preal_instance.h"
+#include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
+#include "Object/lang/CHP.h"
 #include "Object/persistent_type_hash.h"
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
@@ -231,8 +234,9 @@ footprint::footprint() :
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(), 
-	spec_footprint() {
+	prs_footprint(new PRS::footprint), 
+	chp_footprint(new chp_footprint_type), 
+	spec_footprint(new SPEC::footprint) {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -258,8 +262,12 @@ footprint::footprint(const footprint& t) :
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint(), 
-	spec_footprint() {
+	prs_footprint(new PRS::footprint), 
+	chp_footprint(new chp_footprint_type), 
+	spec_footprint(new SPEC::footprint) {
+	NEVER_NULL(prs_footprint);
+	NEVER_NULL(chp_footprint);
+	NEVER_NULL(spec_footprint);
 	STACKTRACE_CTOR_VERBOSE;
 	INVARIANT(t.instance_collection_map.empty());
 }
@@ -318,9 +326,9 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		// don't bother dumping, unless debugging
 		scope_aliases.dump(o);
 #endif
-		prs_footprint.dump(o, *this);
-		chp_footprint.dump(o, *this, dc);
-		spec_footprint.dump(o, *this);
+		prs_footprint->dump(o, *this);
+		chp_footprint->dump(o, *this, dc);
+		spec_footprint->dump(o, *this);
 	}	// end if is_created
 	}	// end if collection_map is not empty
 	return o;
@@ -708,9 +716,9 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::collect_transient_info_base(m);
 	footprint_base<bool_tag>::collect_transient_info_base(m);
 	// value_footprint_bases don't have pointers
-	prs_footprint.collect_transient_info_base(m);
-	chp_footprint.collect_transient_info_base(m);
-	spec_footprint.collect_transient_info_base(m);
+	prs_footprint->collect_transient_info_base(m);
+	chp_footprint->collect_transient_info_base(m);
+	spec_footprint->collect_transient_info_base(m);
 	// scope/port alias_sets don't have pointers
 }
 
@@ -760,9 +768,9 @@ footprint::write_object_base(const persistent_object_manager& m,
 	scope_aliases.write_object_base(*this, o);
 #endif
 
-	prs_footprint.write_object_base(m, o);
-	chp_footprint.write_object_base(m, o);
-	spec_footprint.write_object_base(m, o);
+	prs_footprint->write_object_base(m, o);
+	chp_footprint->write_object_base(m, o);
+	spec_footprint->write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -813,9 +821,9 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	scope_aliases.load_object_base(*this, i);
 #endif
 
-	prs_footprint.load_object_base(m, i);
-	chp_footprint.load_object_base(m, i);
-	spec_footprint.load_object_base(m, i);
+	prs_footprint->load_object_base(m, i);
+	chp_footprint->load_object_base(m, i);
+	spec_footprint->load_object_base(m, i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

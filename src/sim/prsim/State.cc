@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.30.8.4 2006/12/16 23:54:18 fang Exp $
+	$Id: State.cc,v 1.30.8.5 2006/12/18 21:28:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,7 @@
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/lang/PRS_footprint.h"
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
 #include "common/TODO.h"

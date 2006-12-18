@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-20:
+	  Privatized member implementations of entity::footprint, 
+		namely PRS::footprint, chp_footprint, SPEC::footprint.
+		This breaks an unnecessarily deep chain of header
+		and definition dependencies, thereby speeding up recompiles.
+
+
 2006-12-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-19:

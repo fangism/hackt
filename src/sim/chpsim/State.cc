@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.12 2006/12/16 23:54:11 fang Exp $
+	$Id: State.cc,v 1.1.2.13 2006/12/18 21:28:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -160,8 +160,11 @@ State::step(void) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
+	// no need to deallocate event, they are all statically pre-allocated
 
 	// 2) execute the event (alter state, variables, channel, etc.)
+	//	expect a reference to the variable(s) that were affected
+	// const instance_reference ret;
 
 	// 3) check if the alteration of state/variable triggers new events
 	//	each variable affected has a dynamic set of 

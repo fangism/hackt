@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16.8.1 2006/12/04 09:55:46 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.2 2006/12/18 21:27:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -37,6 +37,8 @@
 #include "Object/cflat_context.h"
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
+#include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"		// for concurrent_actions
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
