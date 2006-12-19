@@ -1,23 +1,32 @@
 /**
 	\file "sim/chpsim/Variable.h"
-	$Id: Variable.h,v 1.1.2.2 2006/12/11 00:40:26 fang Exp $
+	$Id: Variable.h,v 1.1.2.3 2006/12/19 23:44:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_VARIABLE_H__
 #define	__HAC_SIM_CHPSIM_VARIABLE_H__
 
+// obsolete, superceded by:
+#include "Object/nonmeta_variable.h"
+#if 0
 #include "sim/common.h"
 #include "Object/expr/types.h"
 #include <iosfwd>
 #include <valarray>
 #include <set>
 // #include "sim/chpsim/Dependence.h"
+#endif
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 using std::ostream;
 using std::valarray;
+using entity::event_subscribers_type;
+using entity::BoolVariable;
+using entity::IntVariable;
+using entity::ChannelState;
+#if 0
 // typedef	valarray<Dependence>			fanout_list_type;
 typedef	std::set<event_index_type>		event_subscribers_type;
 // typedef	std::valarray<event_index_type>		event_subscribers_type;
@@ -82,7 +91,7 @@ public:
 	// for now...
 	using parent_type::dump_struct;
 };	// end clas IntVariable
-
+#endif
 //=============================================================================
 }	// end namespace CHPSIM
 }	// end namespace SIM

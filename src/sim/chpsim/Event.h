@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.9 2006/12/16 23:54:04 fang Exp $
+	$Id: Event.h,v 1.1.2.10 2006/12/19 23:44:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -12,13 +12,17 @@
 #include "util/string_fwd.h"
 #include <iosfwd>
 #include <valarray>
+#include <vector>
 #include "util/memory/count_ptr.h"
 #include "sim/chpsim/Dependence.h"
+#include "sim/chpsim/type_enum.h"
 // #include "util/STL/vector_fwd.h"
+#include "sim/chpsim/InstancePools.h"
 
 namespace HAC {
 namespace entity {
 	class bool_expr;
+	class state_manager;
 namespace CHP {
 	class action;
 }
@@ -28,9 +32,10 @@ namespace CHPSIM {
 class DependenceSetCollector;
 using std::ostream;
 using std::string;
-// using std::vector;
+using std::vector;
 using std::valarray;
 using entity::bool_expr;
+using entity::state_manager;
 using entity::CHP::action;
 using util::memory::count_ptr;
 
@@ -154,7 +159,8 @@ public:
 
 	// return: references to changed state?
 	void
-	execute(void);
+	execute(const state_manager&, InstancePools&, 
+		vector<instance_reference>&);
 
 	ostream&
 	dump_struct(ostream&) const;

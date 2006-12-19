@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.11 2006/12/16 23:54:01 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.12 2006/12/19 23:43:57 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -436,6 +436,9 @@ OBJECT_CC_FILES = \
 	Object/global_entry.cc \
 	Object/port_context.cc \
 	Object/state_manager.cc \
+	Object/nonmeta_state.cc \
+	Object/nonmeta_variable.cc \
+	Object/nonmeta_context.cc \
 	Object/global_entry_context.cc \
 	Object/sizes.cc \
 	Object/type/template_actuals.cc \

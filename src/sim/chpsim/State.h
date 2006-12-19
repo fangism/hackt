@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.9 2006/12/16 23:54:12 fang Exp $
+	$Id: State.h,v 1.1.2.10 2006/12/19 23:44:12 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -14,10 +14,9 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
-#include "sim/chpsim/InstancePools.h"
+#include "Object/nonmeta_state.h"
+#include "sim/chpsim/InstancePools.h"	// obsolete: use nonmeta_state_manager
 #include "sim/chpsim/type_enum.h"
-// #include "sim/chpsim/Variable.h"
-// #include "sim/chpsim/Channel.h"
 
 namespace HAC {
 namespace SIM {
@@ -55,6 +54,7 @@ private:
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
 	typedef	instance_reference		step_return_type;
+	typedef	vector<instance_reference>	update_reference_array_type;
 	enum {
 		/**
 			Whether or not the simulation was halted for any 
@@ -87,6 +87,14 @@ private:
 	bool					interrupted;
 	flags_type				flags;
 
+	/**
+		Auxiliary list of references updated as the result
+		of an event execution.  Need an array because
+		more than one variable may be affected 
+		(consider channel receive).  
+		Eventually, aggregate references.  
+	 */
+	update_reference_array_type		__updated_list;
 public:
 	explicit
 	State(const module&);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.4 2006/12/16 03:05:46 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.5 2006/12/19 23:44:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -9,6 +9,8 @@
 
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
+#include "util/STL/vector_fwd.h"
+#include "sim/chpsim/type_enum.h"	// for instance_reference
 
 namespace HAC {
 namespace SIM {
@@ -20,26 +22,23 @@ namespace CHPSIM {
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
-#if 0
-namespace PRS {
-	class cflat_visitor;
-}
-#endif
+class nonmeta_state_manager;
+class nonmeta_context;
 /**
 	Namespace for CHP object classes.  
  */
 namespace CHP {
+using entity::nonmeta_state_manager;
 using std::ostream;
-#if 0
-using entity::PRS::cflat_visitor;
-#else
 using SIM::CHPSIM::StateConstructor;
-#endif
 using util::persistent;
 using util::persistent_object_manager;
 class action;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
+typedef	SIM::CHPSIM::instance_reference		global_reference;
+typedef	std::default_vector<global_reference>::type
+					update_reference_array_type;
 
 //=============================================================================
 /**
@@ -89,6 +88,12 @@ virtual	CHP_UNROLL_ACTION_PROTO = 0;
 	accept(StateConstructor&) const
 
 virtual	CHP_ACTION_ACCEPT_PROTO = 0;
+
+#define	CHP_EXECUTE_PROTO						\
+	void								\
+	execute(const nonmeta_context&, update_reference_array_type&) const
+
+virtual	CHP_EXECUTE_PROTO = 0;
 
 };	// end class action
 

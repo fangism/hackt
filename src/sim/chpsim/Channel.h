@@ -1,11 +1,15 @@
 /**
 	\file "sim/chpsim/Channel.h"
-	$Id: Channel.h,v 1.1.2.2 2006/12/11 00:40:11 fang Exp $
+	$Id: Channel.h,v 1.1.2.3 2006/12/19 23:44:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHANNEL_H__
 #define	__HAC_SIM_CHPSIM_CHANNEL_H__
 
+// obsolete
+#include "Object/nonmeta_variable.h"
+
+#if 0
 #include <valarray>
 #include "sim/chpsim/Variable.h"
 
@@ -56,6 +60,7 @@ class ChannelState : public ChannelData {
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 
 #endif	// __HAC_SIM_CHPSIM_CHANNEL_H__
 

@@ -1,10 +1,12 @@
 /**
 	\file "sim/chpsim/Variable.cc"
-	$Id: Variable.cc,v 1.1.2.1 2006/12/11 00:40:23 fang Exp $
+	$Id: Variable.cc,v 1.1.2.2 2006/12/19 23:44:13 fang Exp $
  */
 
 #include "sim/chpsim/Variable.h"
+// obsolete
 
+#if 0
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
@@ -21,4 +23,5 @@ VariableBase::~VariableBase() { }
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC
+#endif
 

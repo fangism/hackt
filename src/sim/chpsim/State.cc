@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.13 2006/12/18 21:28:05 fang Exp $
+	$Id: State.cc,v 1.1.2.14 2006/12/19 23:44:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -55,10 +55,12 @@ State::State(const module& m) :
 		event_queue(), 
 		current_time(0), 
 		interrupted(false),
-		flags(FLAGS_DEFAULT) {
+		flags(FLAGS_DEFAULT), 
+		__updated_list() {
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
+	__updated_list.reserve(4);	// optional
 {
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
@@ -163,8 +165,13 @@ State::step(void) {
 	// no need to deallocate event, they are all statically pre-allocated
 
 	// 2) execute the event (alter state, variables, channel, etc.)
-	//	expect a reference to the variable(s) that were affected
-	// const instance_reference ret;
+	//	expect a reference to the channel/variable(s) affected
+#if 0
+	__update_list.clear();
+	event_pool[ei].execute(instances, __update_list);
+#endif
+	// Q: should __update_list be set-sorted to eliminate duplicates?
+	// __update_list lists variables updated
 
 	// 3) check if the alteration of state/variable triggers new events
 	//	each variable affected has a dynamic set of 
@@ -183,6 +190,10 @@ State::step(void) {
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
+
+	// 4) immediately include this event's successors in list
+	//	to evaluate if ready to enqueue.
+
 
 	// TODO: finish me
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);

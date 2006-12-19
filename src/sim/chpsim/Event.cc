@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.4 2006/12/16 03:05:47 fang Exp $
+	$Id: Event.cc,v 1.1.2.5 2006/12/19 23:44:11 fang Exp $
  */
 
 #include <iostream>
@@ -13,6 +13,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
 #include "util/STL/valarray_iterator.h"
+#include "Object/nonmeta_context.h"
 
 namespace HAC {
 namespace SIM {
@@ -83,6 +84,23 @@ EventNode::operator = (const this_type& e) {
 void
 EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 	guard_expr = g;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this really should just be inlined
+	\return the type-enumerated index referring to the variable
+		or channel that was modified.
+	What if channel receive? (two modifications?)
+ */
+void
+EventNode::execute(const state_manager& sm, InstancePools& p, 
+		vector<instance_reference>& updates) {
+	if ((event_type != EVENT_NULL) && action_ptr) {
+		const entity::nonmeta_context c(sm, p, process_index);
+		action_ptr->execute(c, updates);
+	}
+	// else do nothing
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
