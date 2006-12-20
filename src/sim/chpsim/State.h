@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.10 2006/12/19 23:44:12 fang Exp $
+	$Id: State.h,v 1.1.2.11 2006/12/20 08:33:28 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -64,6 +64,8 @@ private:
 		FLAG_WATCH_QUEUE = 0x0002,
 		FLAGS_DEFAULT = 0x0000
 	};
+	struct recheck_transformer;
+	struct event_enqueuer;
 private:
 	/**
 		Collection of variable values and channel state.
@@ -93,8 +95,18 @@ private:
 		more than one variable may be affected 
 		(consider channel receive).  
 		Eventually, aggregate references.  
+		We keep this persistent between step() invocations
+		to avoid repeated initial allocations.  
 	 */
 	update_reference_array_type		__updated_list;
+	typedef	vector<event_index_type>	enqueue_list_type;
+	/**
+		List of events to enqueue for certain, accumulated
+		in step() method.  
+		We keep this persistent between step() invocations
+		to avoid repeated initial allocations.  
+	 */
+	enqueue_list_type			__enqueue_list;
 public:
 	explicit
 	State(const module&);

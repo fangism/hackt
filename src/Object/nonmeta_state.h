@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.1.2.1 2006/12/19 23:44:03 fang Exp $
+	$Id: nonmeta_state.h,v 1.1.2.2 2006/12/20 08:33:17 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -10,15 +10,7 @@
 #include <iosfwd>
 #include <vector>
 
-#if 0
-// #include "util/size_t.h"
-// #include "sim/common.h"
-// temporary until we relocate their definitions
-#include "sim/chpsim/Variable.h"
-#include "sim/chpsim/Channel.h"
-#else
 #include "Object/nonmeta_variable.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -59,8 +51,10 @@ struct variable_type<channel_tag> {
  */
 template <class Tag>
 class nonmeta_state_base {
+public:
 	typedef	variable_type<Tag>		implementation;
 	typedef	typename implementation::type	instance_type;
+	typedef	vector<instance_type>		pool_type;
 protected:
 	vector<instance_type>			pool;
 
@@ -97,6 +91,12 @@ public:
 	nonmeta_state_manager(const state_manager&);
 
 	~nonmeta_state_manager();
+
+	template <class Tag>
+	const typename nonmeta_state_base<Tag>::pool_type&
+	get_pool(void) const {
+		return nonmeta_state_base<Tag>::pool;
+	}
 
 	void
 	initialize(void);

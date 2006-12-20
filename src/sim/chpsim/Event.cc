@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.5 2006/12/19 23:44:11 fang Exp $
+	$Id: Event.cc,v 1.1.2.6 2006/12/20 08:33:25 fang Exp $
  */
 
 #include <iostream>
@@ -23,6 +23,7 @@ using std::ostream_iterator;
 using std::begin;
 using std::end;
 using std::copy;
+using std::back_inserter;
 using entity::expr_dump_context;
 
 //=============================================================================
@@ -89,18 +90,34 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this really should just be inlined
+	\param enqueue list of successor events to enqueue immediately
 	\return the type-enumerated index referring to the variable
 		or channel that was modified.
 	What if channel receive? (two modifications?)
  */
 void
 EventNode::execute(const state_manager& sm, InstancePools& p, 
-		vector<instance_reference>& updates) {
-	if ((event_type != EVENT_NULL) && action_ptr) {
-		const entity::nonmeta_context c(sm, p, process_index);
-		action_ptr->execute(c, updates);
+		vector<instance_reference>& updates, 
+		vector<event_index_type>& enqueue) {
+#if 0
+	// actually, guard expression should be checked before an event
+	// is enqueued.
+	// a check here would verify that the guard is *stably* true.  
+	if (guard_expr) {
+		...
 	}
-	// else do nothing
+#endif
+	if ((event_type != EVENT_NULL) && action_ptr) {
+		const entity::nonmeta_context c(sm, p, *this, enqueue);
+		// at the same time, enqueue successors, depending on event_type
+		action_ptr->execute(c, updates);
+		// action_ptr->evaluate_successors(enqueue);
+	} else {	// event is NULL or action_ptr is NULL
+		// else do nothing
+		// enqueue all successors
+		copy(begin(successor_events), end(successor_events), 
+			back_inserter(enqueue));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.12 2006/12/16 03:05:45 fang Exp $
+	$Id: CHP.cc,v 1.16.2.13 2006/12/20 08:33:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -42,6 +42,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/def/template_formals_manager.h"
+#include "Object/nonmeta_context.h"
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/State.h"
@@ -273,6 +274,17 @@ action_sequence::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequences should never be used as leaf events, 
+	so this does nothing.  
+ */
+void
+action_sequence::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	// no-op
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action_sequence::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -501,6 +513,17 @@ if (!branches) {
 	// leave trail of this event for predecessor
 	s.last_event_index = fork_index;
 	// construct an event join graph-node?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Action groups should never be used as leaf events, 
+	so this does nothing.  
+ */
+void
+concurrent_actions::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	// no-op
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -809,6 +832,26 @@ deterministic_selection::accept(StateConstructor& s) const {
 	// leave trail of this event for predecessor
 	s.last_event_index = split_index;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Action groups should never be used as leaf events, 
+	so this does nothing.  
+ */
+void
+deterministic_selection::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	// 1) evaluate all clauses, which contain guard expressions
+	//	Use functional pass.
+	// 2) if exactly one is true, return reference to it as the successor
+	//	event to enqueue (not execute right away)
+	//	a) if more than one true, signal a run-time error
+	//	b) if none are true, and there is an else clause, use it
+	//	c) if none are true, without else clause, 'block',
+	//		subscribing this event to its set of dependents.  
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

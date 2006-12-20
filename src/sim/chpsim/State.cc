@@ -1,13 +1,14 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.14 2006/12/19 23:44:12 fang Exp $
+	$Id: State.cc,v 1.1.2.15 2006/12/20 08:33:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
+#include <iterator>
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
@@ -21,7 +22,10 @@
 #include "Object/traits/chan_traits.h"
 
 #include "common/TODO.h"
+#include "sim/ISE.h"
 #include "util/stacktrace.h"
+#include "util/iterator_more.h"
+#include "util/copy_if.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -41,6 +45,44 @@ using entity::int_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
+using entity::event_subscribers_type;
+using std::copy;
+using std::back_inserter;
+using util::set_inserter;
+using util::copy_if;
+
+//=============================================================================
+// class State::recheck_transformer definition
+
+/**
+	Functor for re-evaluating events for the event-queue.
+	Should be allowed to access private members of State.
+ */
+struct State::recheck_transformer {
+	this_type&		state;
+
+	explicit
+	recheck_transformer(this_type& s) : state(s) { }
+
+	bool
+	operator () (const event_index_type);
+};	// end class recheck_transformer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor for enqueuing ready events.  
+	Should be allowed to access private members of State.
+ */
+struct State::event_enqueuer {
+	this_type&		state;
+
+	explicit
+	event_enqueuer(this_type& s) : state(s) { }
+
+	void
+	operator () (const event_index_type);
+
+};	// end class event_enqueuer
 
 //=============================================================================
 // class State method definitions
@@ -56,11 +98,13 @@ State::State(const module& m) :
 		current_time(0), 
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
-		__updated_list() {
+		__updated_list(), 
+		__enqueue_list() {
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
-	__updated_list.reserve(4);	// optional
+	__updated_list.reserve(16);	// optional pre-allocation
+	__enqueue_list.reserve(16);	// optional pre-allocation
 {
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
@@ -165,14 +209,19 @@ State::step(void) {
 	// no need to deallocate event, they are all statically pre-allocated
 
 	// 2) execute the event (alter state, variables, channel, etc.)
-	//	expect a reference to the channel/variable(s) affected
-#if 0
-	__update_list.clear();
-	event_pool[ei].execute(instances, __update_list);
-#endif
-	// Q: should __update_list be set-sorted to eliminate duplicates?
-	// __update_list lists variables updated
+	//	expect references to the channel/variable(s) affected
+	__enqueue_list.clear();
+	__updated_list.clear();
+	event_pool[ei].execute(mod.get_state_manager(), 
+		instances, __updated_list, __enqueue_list);
+	// Q: should __updated_list be set-sorted to eliminate duplicates?
+	// __updated_list lists variables updated
+	// At the same time, enlist the successors for evaluation
+	// Don't forget to update countdown!
 
+{
+	// list of events to check next
+	event_subscribers_type __rechecks;
 	// 3) check if the alteration of state/variable triggers new events
 	//	each variable affected has a dynamic set of 
 	//		'subscribed' pending events (dynamic fanout)
@@ -190,9 +239,62 @@ State::step(void) {
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
-
+{
+	typedef	update_reference_array_type::const_iterator	const_iterator;
+	const_iterator ui(__updated_list.begin()), ue(__updated_list.end());
+	for ( ; ui!=ue; ++ui) {
+		const size_t j = ui->second;
+		// switch on the reference type (enum)
+		switch (ui->first) {
+		// we don't care about variables values, 
+		// just collect the affected subscribers
+		// set insertion should maintain uniqueness
+		// events happen to be sorted by index
+		case INSTANCE_TYPE_BOOL: {
+			const event_subscribers_type&
+				es(instances.get_pool<bool_tag>()[j]
+					.get_subscribers());
+			copy(es.begin(), es.end(), set_inserter(__rechecks));
+			break;
+		}
+		case INSTANCE_TYPE_INT: {
+			const event_subscribers_type&
+				es(instances.get_pool<int_tag>()[j]
+					.get_subscribers());
+			copy(es.begin(), es.end(), set_inserter(__rechecks));
+			break;
+		}
+		case INSTANCE_TYPE_CHANNEL: {
+			const event_subscribers_type&
+				es(instances.get_pool<channel_tag>()[j]
+					.get_subscribers());
+			copy(es.begin(), es.end(), set_inserter(__rechecks));
+			break;
+		}
+		// case INSTANCE_TYPE_NULL:	// should not have been added
+		default:
+			ISE(cerr, cerr << "Unexpected type." << endl;)
+		}	// end switch
+	}	// end for
+}{
 	// 4) immediately include this event's successors in list
 	//	to evaluate if ready to enqueue.
+	// selection of successors will depend on event_type, of course
+	// TODO: finish me
+}{
+#if 0
+	typedef	event_subscribers_type::const_iterator	const_iterator;
+	const_iterator ri(recheck.begin()), re(recheck.end());
+#else
+	copy_if(__rechecks.begin(), __rechecks.end(), 
+		back_inserter(__enqueue_list), recheck_transformer(*this));
+#endif
+	// enqueue any events that are ready to fire
+	//	NOTE: check the guard expressions of events before enqueuing
+	for_each(__enqueue_list.begin(), __enqueue_list.end(),
+		event_enqueuer(*this));
+}
+}
 
 
 	// TODO: finish me
