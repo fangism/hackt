@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.11 2006/12/20 08:33:28 fang Exp $
+	$Id: State.h,v 1.1.2.12 2006/12/20 20:36:50 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -95,7 +95,7 @@ private:
 		more than one variable may be affected 
 		(consider channel receive).  
 		Eventually, aggregate references.  
-		We keep this persistent between step() invocations
+		We keep this around between step() invocations
 		to avoid repeated initial allocations.  
 	 */
 	update_reference_array_type		__updated_list;
@@ -103,7 +103,7 @@ private:
 	/**
 		List of events to enqueue for certain, accumulated
 		in step() method.  
-		We keep this persistent between step() invocations
+		We keep this around between step() invocations
 		to avoid repeated initial allocations.  
 	 */
 	enqueue_list_type			__enqueue_list;

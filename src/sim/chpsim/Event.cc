@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.6 2006/12/20 08:33:25 fang Exp $
+	$Id: Event.cc,v 1.1.2.7 2006/12/20 20:36:47 fang Exp $
  */
 
 #include <iostream>
@@ -85,6 +85,27 @@ EventNode::operator = (const this_type& e) {
 void
 EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 	guard_expr = g;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-evaluates the guard expression of this event to determine
+	whether or not event should be enqueued.  
+
+	\param sm the structural state manager (hierarchy)
+	\param p the run-time state of variables and channels.
+	\param enqueue return list of event(s) to enqueue for execution.
+	Don't forget to countdown predecessors.
+	Is there a problem with guarded selection statements?
+	TODO: Need to examine how they are constructed...
+ */
+void
+EventNode::recheck(const state_manager& sm, InstancePools& p, 
+		vector<event_index_type>& enqueue) {
+	const entity::nonmeta_context c(sm, p, *this, enqueue);
+	if (guard_expr) {
+		// if (guard_expr->nonmeta_resolve(c))
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

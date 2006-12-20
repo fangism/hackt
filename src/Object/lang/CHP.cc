@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.13 2006/12/20 08:33:20 fang Exp $
+	$Id: CHP.cc,v 1.16.2.14 2006/12/20 20:36:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1300,6 +1300,9 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: fuse this event with successor if single.  
+	TODO: what if several conditional waits occur in succession?
+		Take conjunction or sequential evaluation
+		using auxiliary null events?
  */
 void
 condition_wait::accept(StateConstructor& s) const {

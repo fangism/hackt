@@ -5,6 +5,13 @@
 
 2006-12-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23:
+	  Re-wrote event filter/transformations.
+	  Factored out tool-independent nonmeta_context_base for
+		run-time evaluation.  
+	  Next: nonmeta_expression resolution, on branch.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-22:
 	  Worked out more top-down flow code for CHP event execution.
 		Missing implementation details, still undefined references.  

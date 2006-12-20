@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.15 2006/12/20 08:33:28 fang Exp $
+	$Id: State.cc,v 1.1.2.16 2006/12/20 20:36:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -64,8 +64,16 @@ struct State::recheck_transformer {
 	explicit
 	recheck_transformer(this_type& s) : state(s) { }
 
-	bool
-	operator () (const event_index_type);
+	/**
+		\param ei event index to re-evaluate depending on type.
+		Appends event to __enqueue_list if ready to fire.
+	 */
+	void
+	operator () (const event_index_type ei) {
+		event_type& e(state.event_pool[ei]);
+		e.recheck(state.mod.get_state_manager(), 
+			state.instances, state.__enqueue_list);
+	}
 };	// end class recheck_transformer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -286,8 +294,8 @@ State::step(void) {
 	typedef	event_subscribers_type::const_iterator	const_iterator;
 	const_iterator ri(recheck.begin()), re(recheck.end());
 #else
-	copy_if(__rechecks.begin(), __rechecks.end(), 
-		back_inserter(__enqueue_list), recheck_transformer(*this));
+	for_each(__rechecks.begin(), __rechecks.end(), 
+		recheck_transformer(*this));
 #endif
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing

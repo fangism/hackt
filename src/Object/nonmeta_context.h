@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.1.2.2 2006/12/20 08:33:16 fang Exp $
+	$Id: nonmeta_context.h,v 1.1.2.3 2006/12/20 20:36:42 fang Exp $
  */
 #ifndef	__HAC_OBJECT_NONMETA_CONTEXT_H__
 #define	__HAC_OBJECT_NONMETA_CONTEXT_H__
@@ -23,10 +23,10 @@ class nonmeta_state_manager;	// for run-time value information
 //=============================================================================
 /**
 	Context information for lookup up run-time values from state.  
+	This is all that is needed to lookup run-time values and references.  
  */
-class nonmeta_context {
-	typedef	SIM::CHPSIM::EventNode		event_type;
-	typedef	std::default_vector<size_t>::type	enqueue_queue_type;
+class nonmeta_context_base {
+protected:
 	/**
 		Read-only structural information including
 		footprint frames.  
@@ -36,6 +36,23 @@ class nonmeta_context {
 		Run-time data, modifiable.  
 	 */
 	nonmeta_state_manager&			values;
+
+	nonmeta_context_base(const state_manager& s, 
+		nonmeta_state_manager& v) : sm(s), values(v) { }
+
+	// default copy-ctor
+	// default dtor
+
+};	// end class nonmeta_context_base
+
+//=============================================================================
+/**
+	Context information for lookup up run-time values from state.  
+	This is now tied to CHPSIM data structures.  
+ */
+class nonmeta_context : public nonmeta_context_base {
+	typedef	SIM::CHPSIM::EventNode		event_type;
+	typedef	std::default_vector<size_t>::type	enqueue_queue_type;
 	/**
 		Global process index, for looking up footprint frames.  
 		Zero-value means top-level.

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.11 2006/12/20 08:33:25 fang Exp $
+	$Id: Event.h,v 1.1.2.12 2006/12/20 20:36:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -157,10 +157,13 @@ public:
 		deps.import(d);
 	}
 
-	// return: references to changed state?
 	void
 	execute(const state_manager&, InstancePools&, 
 		vector<instance_reference>&, 
+		vector<event_index_type>&);
+
+	void
+	recheck(const state_manager&, InstancePools&, 
 		vector<event_index_type>&);
 
 	ostream&
