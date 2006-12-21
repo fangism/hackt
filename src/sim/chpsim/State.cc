@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.16 2006/12/20 20:36:50 fang Exp $
+	$Id: State.cc,v 1.1.2.16.2.1 2006/12/21 07:09:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -290,17 +290,15 @@ State::step(void) {
 	// selection of successors will depend on event_type, of course
 	// TODO: finish me
 }{
-#if 0
-	typedef	event_subscribers_type::const_iterator	const_iterator;
-	const_iterator ri(recheck.begin()), re(recheck.end());
-#else
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this));
-#endif
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
+#if 0
+	// temporarily disabled for regression testing
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 		event_enqueuer(*this));
+#endif
 }
 }
 

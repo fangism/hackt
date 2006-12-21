@@ -2,7 +2,7 @@
 	\file "Object/inst/footprint_struct_base.cc"
 	Explicit template instantiations of footprint_bases
 	that manage (sub)structured meta-types.  
-	$Id: footprint_struct_base.cc,v 1.2 2006/11/07 06:34:26 fang Exp $
+	$Id: footprint_struct_base.cc,v 1.2.10.1 2006/12/21 07:08:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,6 +24,7 @@
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/instance_array.h"
 #include "Object/inst/instance_collection_pool_bundle.tcc"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -36,7 +37,9 @@ template class instance_collection_pool_bundle<datastruct_tag>;
 
 template class footprint_base<process_tag>;
 template class footprint_base<channel_tag>;
+#if ENABLE_DATASTRUCTS
 template class footprint_base<datastruct_tag>;
+#endif
 
 }	// end namespace entity
 }	// end namespace HAC

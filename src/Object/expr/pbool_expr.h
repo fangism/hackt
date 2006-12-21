@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.16 2006/10/18 20:57:56 fang Exp $
+	$Id: pbool_expr.h,v 1.16.14.1 2006/12/21 07:08:49 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -102,6 +102,17 @@ virtual	count_ptr<const const_param>
 
 virtual	UNROLL_RESOLVE_COPY_PBOOL_PROTO = 0;
 
+#if USE_NONMETA_RESOLVE
+#define	NONMETA_RESOLVE_COPY_PBOOL_PROTO				\
+	count_ptr<const pbool_const>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const pbool_expr>&) const
+
+	NONMETA_RESOLVE_COPY_BOOL_PROTO;
+
+virtual	NONMETA_RESOLVE_COPY_PBOOL_PROTO = 0;
+#endif
+
 #define SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO			\
 	count_ptr<const pbool_expr>					\
 	substitute_default_positional_parameters(			\
@@ -115,6 +126,9 @@ virtual SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO = 0;
 
 protected:
 	using bool_expr::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using bool_expr::nonmeta_resolve_copy;
+#endif
 
 protected:
 	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;

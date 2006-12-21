@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.26 2006/11/07 06:34:44 fang Exp $
+ 	$Id: instance_collection.cc,v 1.26.10.1 2006/12/21 07:09:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -351,12 +351,14 @@ datatype_instance_collection::establish_collection_type(
 		return e->establish_collection_type(d);
 	}
 }{
+#if ENABLE_DATASTRUCTS
 	// TODO: user-def-structs
 	struct_instance_collection* const
 		e(IS_A(struct_instance_collection*, this));
 	if (e) {
 		return e->establish_collection_type(p);
 	}
+#endif
 }
 	ICE(cerr,
 		cerr << "Unhandled case in this function." << endl;
@@ -397,11 +399,13 @@ datatype_instance_collection::check_established_type(
 		return e->check_established_type(d);
 	}
 }{
+#if ENABLE_DATASTRUCTS
 	const struct_instance_collection* const
 		e(IS_A(const struct_instance_collection*, this));
 	if (e) {
 		return e->check_established_type(p);
 	}
+#endif
 }
 	ICE(cerr,
 		cerr << "Unhandled case in this function." << endl;

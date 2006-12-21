@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.9.12.1 2006/12/12 10:18:13 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.9.12.1.2.1 2006/12/21 07:09:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -13,6 +13,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/aggregate_meta_value_reference_base.h"
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
@@ -28,6 +29,7 @@ class param_value_collection;
 class template_formals_manager;
 class dynamic_param_expr_list;
 class nonmeta_expr_visitor;
+class nonmeta_context_base;
 using std::istream;
 using std::ostream;
 using util::memory::never_ptr;
@@ -159,6 +161,12 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
+#if USE_NONMETA_RESOLVE
+	count_ptr<const const_expr_type>
+	nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const expr_base_type>&) const;
+#endif
+
         count_ptr<const expr_base_type>
         substitute_default_positional_parameters(
                 const template_formals_manager&,
@@ -173,6 +181,9 @@ public:
 protected:
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using expr_base_type::nonmeta_resolve_copy;
+#endif
 
 public:
 	good_bool

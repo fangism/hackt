@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.7 2006/12/20 20:36:47 fang Exp $
+	$Id: Event.cc,v 1.1.2.7.2.1 2006/12/21 07:09:14 fang Exp $
  */
 
 #include <iostream>
@@ -131,8 +131,10 @@ EventNode::execute(const state_manager& sm, InstancePools& p,
 	if ((event_type != EVENT_NULL) && action_ptr) {
 		const entity::nonmeta_context c(sm, p, *this, enqueue);
 		// at the same time, enqueue successors, depending on event_type
+#if ENABLE_CHP_EXECUTE
 		action_ptr->execute(c, updates);
 		// action_ptr->evaluate_successors(enqueue);
+#endif
 	} else {	// event is NULL or action_ptr is NULL
 		// else do nothing
 		// enqueue all successors

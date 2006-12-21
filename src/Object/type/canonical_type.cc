@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.15 2006/12/01 23:28:56 fang Exp $
+	$Id: canonical_type.cc,v 1.15.4.1 2006/12/21 07:09:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/struct_traits.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 #include "common/TODO.h"
 
 namespace HAC {
@@ -242,11 +243,15 @@ check_footprint_policy<user_def_datatype>::operator () (
 //=============================================================================
 template
 canonical_user_def_data_type::canonical_type(const canonical_generic_datatype&);
+#if ENABLE_DATASTRUCTS
 template
 canonical_generic_datatype::canonical_type(const canonical_user_def_data_type&);
+#endif
 
 template class canonical_type<datatype_definition_base>;
+#if ENABLE_DATASTRUCTS
 template class canonical_type<user_def_datatype>;
+#endif
 template class canonical_type<user_def_chan>;
 template class canonical_type<process_definition>;
 // specialized, defined in "Object/type/canonical_generic_chan_type.cc"

@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.13.12.2 2006/12/13 07:47:38 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.13.12.2.2.1 2006/12/21 07:09:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -23,6 +23,7 @@ namespace HAC {
 namespace entity {
 class const_index_list;
 class unroll_context;
+class nonmeta_context_base;
 class nonmeta_expr_visitor;
 class state_manager;
 class footprint;
@@ -91,6 +92,7 @@ friend struct nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>;
 							parent_type;
 	typedef	typename traits_type::data_expr_base_type
 							data_expr_base_type;
+	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	simple_nonmeta_instance_reference_base	common_base_type;
 	typedef	data_expr_base_type			interface_type;
 protected:
@@ -139,6 +141,12 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const data_expr_base_type>&) const;
 
+#if USE_NONMETA_RESOLVE
+	count_ptr<const const_expr_type>
+	nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const data_expr_base_type>&) const;
+#endif
+
 	good_bool
 	lookup_may_reference_global_indices(const state_manager&, 
 		const footprint&, const footprint_frame* const,
@@ -149,6 +157,9 @@ public:
 
 protected:
 	using data_expr_base_type::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using data_expr_base_type::nonmeta_resolve_copy;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -5,6 +5,27 @@
 
 2006-12-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-01:
+	  This sub-branch is for implementing run-time expression resolution
+		of nonmeta expressions and references.  
+	  In this initial revision:
+		we tentatively disable all uses of datastruct_tag because
+		they were never well-defined (value semantics?) and inhibit
+		implementation of nonmeta expression evaluation without
+		ugly and meaningless hacks in traits classes.  
+		switch: ENABLE_DATASTRUCTS in Object/devel_switches.h
+		Consequently, footprints and all other structures with
+			datastruct components have changed size, 
+			so test cases have been updated accordingly.
+		Regression introduced: can no longer instantiated
+			user-defined types, which were never used anyhow.
+		Must wait until semantics for those types are better defined.
+	  Method prototypes for nonmeta_resolve_copy() are written, 
+		but switch-disabled in this revision.
+
+
+2006-12-20	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-23:
 	  Re-wrote event filter/transformations.
 	  Factored out tool-independent nonmeta_context_base for

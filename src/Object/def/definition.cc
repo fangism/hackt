@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.35 2006/11/21 22:38:37 fang Exp $
+ 	$Id: definition.cc,v 1.35.6.1 2006/12/21 07:08:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2183,6 +2183,7 @@ user_def_datatype::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_DATASTRUCTS
 if (defined) {
 	footprint* const f = &footprint_map[p];
 	if (!f->is_unrolled()) {
@@ -2219,6 +2220,9 @@ if (defined) {
 	// parent should print: "instantiated from here"
 	return good_bool(false);
 }
+#else
+	FINISH_ME_EXIT(Fang);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2231,6 +2235,7 @@ user_def_datatype::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_DATASTRUCTS
 if (defined) {
 	footprint* f = &footprint_map[p];
 #if 0
@@ -2276,6 +2281,10 @@ if (defined) {
 	// parent should print: "instantiated from here"
 	return good_bool(false);
 }
+#else
+	FINISH_ME(Fang);
+	return good_bool(false);
+#endif	// ENABLE_DATASTRUCTS
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

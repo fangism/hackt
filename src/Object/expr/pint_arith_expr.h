@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.15.12.1 2006/12/12 10:18:03 fang Exp $
+	$Id: pint_arith_expr.h,v 1.15.12.1.2.1 2006/12/21 07:08:50 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -134,6 +134,9 @@ public:
 		const count_ptr<const pint_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
+#if USE_NONMETA_RESOLVE
+	NONMETA_RESOLVE_COPY_PINT_PROTO;
+#endif
 	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO;
@@ -141,6 +144,9 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using parent_type::nonmeta_resolve_copy;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

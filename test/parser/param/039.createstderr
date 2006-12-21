@@ -18,11 +18,11 @@ Persistent Object Manager text dump:
 	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	346
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
 	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	312
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	280
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

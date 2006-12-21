@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.21.4.1 2006/12/18 21:28:00 fang Exp $
+	$Id: footprint.h,v 1.21.4.1.2.1 2006/12/21 07:08:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -10,14 +10,9 @@
 #include <iosfwd>
 #include "Object/def/footprint_base.h"
 #include "Object/inst/port_alias_tracker.h"
-#if 0
-#include "Object/lang/PRS_footprint.h"
-#include "Object/lang/SPEC_footprint.h"
-#include "Object/lang/CHP.h"
-// #include "Object/lang/CHP_footprint.h"
-#endif
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
+#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -78,7 +73,9 @@ class footprint :
 	// public alias_visitee, 	// not needed
 	private	footprint_base<process_tag>, 
 	private	footprint_base<channel_tag>, 
+#if ENABLE_DATASTRUCTS
 	private	footprint_base<datastruct_tag>, 
+#endif
 	private	footprint_base<enum_tag>, 
 	private	footprint_base<int_tag>, 
 	private	footprint_base<bool_tag>, 
@@ -118,8 +115,10 @@ private:
 					instance_map_iterator;
 	typedef	footprint_base<process_tag>::instance_pool_type	process_instance_pool_type;
 	typedef	footprint_base<channel_tag>::instance_pool_type	channel_instance_pool_type;
+#if ENABLE_DATASTRUCTS
 	typedef	footprint_base<datastruct_tag>::instance_pool_type
 							struct_instance_pool_type;
+#endif
 	typedef	footprint_base<enum_tag>::instance_pool_type	enum_instance_pool_type;
 	typedef	footprint_base<int_tag>::instance_pool_type	int_instance_pool_type;
 	typedef	footprint_base<bool_tag>::instance_pool_type	bool_instance_pool_type;

@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.16 2006/10/18 20:57:57 fang Exp $
+	$Id: pint_expr.h,v 1.16.14.1 2006/12/21 07:08:52 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -111,10 +111,21 @@ virtual	count_ptr<const const_param>
 	unroll_resolve_copy(const unroll_context&,			\
 		const count_ptr<const pint_expr>&) const
 
+#if USE_NONMETA_RESOLVE
+#define	NONMETA_RESOLVE_COPY_PINT_PROTO					\
+	count_ptr<const pint_const>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const pint_expr>&) const
+#endif
+
 	UNROLL_RESOLVE_COPY_INT_PROTO;
 	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
 	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
+#if USE_NONMETA_RESOLVE
+	NONMETA_RESOLVE_COPY_INT_PROTO;
 
+virtual	NONMETA_RESOLVE_COPY_PINT_PROTO = 0;
+#endif
 virtual UNROLL_RESOLVE_COPY_PINT_PROTO = 0;
 
 #define	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO			\
@@ -131,6 +142,9 @@ virtual	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO = 0;
 
 protected:
 	using nonmeta_parent_type::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using nonmeta_parent_type::nonmeta_resolve_copy;
+#endif
 	// using index_parent_type::unroll_resolve_copy;
 
 protected:

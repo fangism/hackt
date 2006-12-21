@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.23.4.1 2006/12/12 10:18:21 fang Exp $
+ 	$Id: type_reference.cc,v 1.23.4.1.2.1 2006/12/21 07:09:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -299,6 +299,7 @@ data_type_reference::data_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_DATASTRUCTS
 /**
 	Downgrading from canonical to more general type reference.  
  */
@@ -307,6 +308,7 @@ data_type_reference::data_type_reference(
 		fundamental_type_reference(p.get_template_params()), 
 		base_type_def(p.get_base_def()) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
@@ -457,7 +459,12 @@ data_type_reference::make_instance_collection(
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
+#if ENABLE_DATASTRUCTS
 		return return_type(new struct_instance_placeholder(*s, id, d));
+#else
+		FINISH_ME_EXIT(Fang);
+		return return_type(NULL);
+#endif
 	} else if (alias.is_a<const enum_datatype_def>()) {
 		return return_type(new enum_instance_placeholder(*s, id, d));
 	} else {

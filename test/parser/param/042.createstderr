@@ -20,13 +20,13 @@ Persistent Object Manager text dump:
 	16	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	370
+	19	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
 	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	342
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	310
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

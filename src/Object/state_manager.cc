@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.16 2006/11/07 06:34:15 fang Exp $
+	$Id: state_manager.cc,v 1.16.10.1 2006/12/21 07:08:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -121,7 +121,10 @@ global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m,
 
 state_manager::state_manager() :
 		process_pool_type(), channel_pool_type(), 
-		struct_pool_type(), enum_pool_type(), 
+#if ENABLE_DATASTRUCTS
+		struct_pool_type(), 
+#endif
+		enum_pool_type(), 
 		int_pool_type(), bool_pool_type() {
 }
 
@@ -137,7 +140,9 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 	o << "globID\tsuper\t\tlocalID\tcanonical\tfootprint-frame" << endl;
 	global_entry_pool<process_tag>::dump(o, topfp);
 	global_entry_pool<channel_tag>::dump(o, topfp);
+#if ENABLE_DATASTRUCTS
 	global_entry_pool<datastruct_tag>::dump(o, topfp);
+#endif
 	global_entry_pool<enum_tag>::dump(o, topfp);
 	global_entry_pool<int_tag>::dump(o, topfp);
 	global_entry_pool<bool_tag>::dump(o, topfp);
@@ -202,7 +207,9 @@ void
 state_manager::allocate_test(void) {
 	__allocate_test<process_tag>();
 	__allocate_test<channel_tag>();
+#if ENABLE_DATASTRUCTS
 	__allocate_test<datastruct_tag>();
+#endif
 	__allocate_test<enum_tag>();
 	__allocate_test<int_tag>();
 	__allocate_test<bool_tag>();
@@ -218,7 +225,9 @@ state_manager::__collect_subentries_test(void) const {
 	entry_collection foo;
 	collect_subentries<process_tag>(foo, 1);
 	collect_subentries<channel_tag>(foo, 1);
+#if ENABLE_DATASTRUCTS
 	collect_subentries<datastruct_tag>(foo, 1);
+#endif
 	collect_subentries<enum_tag>(foo, 1);
 	collect_subentries<int_tag>(foo, 1);
 	collect_subentries<bool_tag>(foo, 1);
@@ -230,7 +239,9 @@ state_manager::collect_transient_info_base(persistent_object_manager& m,
 		const footprint& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	global_entry_pool<process_tag>::collect_transient_info_base(m, f);
+#if ENABLE_DATASTRUCTS
 	global_entry_pool<datastruct_tag>::collect_transient_info_base(m, f);
+#endif
 	global_entry_pool<channel_tag>::collect_transient_info_base(m, f);
 #if 0
 	// these cannot contain pointers... yet
@@ -246,7 +257,9 @@ state_manager::write_object_base(const persistent_object_manager& m,
 		ostream& o, const footprint& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	global_entry_pool<process_tag>::write_object_base(m, o, f);
+#if ENABLE_DATASTRUCTS
 	global_entry_pool<datastruct_tag>::write_object_base(m, o, f);
+#endif
 	global_entry_pool<channel_tag>::write_object_base(m, o, f);
 	global_entry_pool<enum_tag>::write_object_base(m, o, f);
 	global_entry_pool<int_tag>::write_object_base(m, o, f);
@@ -259,7 +272,9 @@ state_manager::load_object_base(const persistent_object_manager& m,
 		istream& i, const footprint& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	global_entry_pool<process_tag>::load_object_base(m, i, f);
+#if ENABLE_DATASTRUCTS
 	global_entry_pool<datastruct_tag>::load_object_base(m, i, f);
+#endif
 	global_entry_pool<channel_tag>::load_object_base(m, i, f);
 	global_entry_pool<enum_tag>::load_object_base(m, i, f);
 	global_entry_pool<int_tag>::load_object_base(m, i, f);

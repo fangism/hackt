@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.5 2006/12/19 23:44:10 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.5.2.1 2006/12/21 07:09:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -10,6 +10,7 @@
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
+#include "Object/devel_switches.h"
 #include "sim/chpsim/type_enum.h"	// for instance_reference
 
 namespace HAC {
@@ -89,11 +90,13 @@ virtual	CHP_UNROLL_ACTION_PROTO = 0;
 
 virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 
+#if ENABLE_CHP_EXECUTE
 #define	CHP_EXECUTE_PROTO						\
 	void								\
 	execute(const nonmeta_context&, update_reference_array_type&) const
 
 virtual	CHP_EXECUTE_PROTO = 0;
+#endif
 
 };	// end class action
 

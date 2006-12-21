@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.32.4.1 2006/12/18 21:27:57 fang Exp $
+	$Id: footprint.cc,v 1.32.4.1.2.1 2006/12/21 07:08:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -221,7 +221,9 @@ footprint_base<Tag>::__expand_production_rules(const footprint_frame& ff,
 footprint::footprint() :
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>(), 
+#endif
 	footprint_base<enum_tag>(), 
 	footprint_base<int_tag>(), 
 	footprint_base<bool_tag>(), 
@@ -249,7 +251,9 @@ footprint::footprint(const footprint& t) :
 	persistent(), 
 	footprint_base<process_tag>(), 
 	footprint_base<channel_tag>(), 
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>(), 
+#endif
 	footprint_base<enum_tag>(), 
 	footprint_base<int_tag>(), 
 	footprint_base<bool_tag>(), 
@@ -290,7 +294,9 @@ footprint::dump(ostream& o) const {
 	// instance_collection_map ?
 	footprint_base<process_tag>::_instance_pool->dump(o);
 	footprint_base<channel_tag>::_instance_pool->dump(o);
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>::_instance_pool->dump(o);
+#endif
 	footprint_base<enum_tag>::_instance_pool->dump(o);
 	footprint_base<int_tag>::_instance_pool->dump(o);
 	footprint_base<bool_tag>::_instance_pool->dump(o);
@@ -379,9 +385,11 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 	case META_TYPE_CHANNEL:
 		return footprint_base<meta_type_map<META_TYPE_CHANNEL>::type>::
 		collection_pool_bundle->lookup_collection(e.pool_type, e.index);
+#if ENABLE_DATASTRUCTS
 	case META_TYPE_STRUCT:
 		return footprint_base<meta_type_map<META_TYPE_STRUCT>::type>::
 		collection_pool_bundle->lookup_collection(e.pool_type, e.index);
+#endif
 	case META_TYPE_BOOL:
 		return footprint_base<meta_type_map<META_TYPE_BOOL>::type>::
 		collection_pool_bundle->lookup_collection(e.pool_type, e.index);
@@ -428,8 +436,10 @@ footprint::create_dependent_types(const footprint& top) {
 			.create_dependent_types(top).good &&
 		get_instance_collection_pool_bundle<channel_tag>()
 			.create_dependent_types(top).good &&
+#if ENABLE_DATASTRUCTS
 		get_instance_collection_pool_bundle<datastruct_tag>()
 			.create_dependent_types(top).good &&
+#endif
 		get_instance_collection_pool_bundle<int_tag>()
 			.create_dependent_types(top).good &&
 		get_instance_collection_pool_bundle<enum_tag>()
@@ -451,8 +461,10 @@ footprint::create_dependent_types(const footprint& top) {
 			.allocate_local_instance_ids(*this).good &&
 		get_instance_collection_pool_bundle<channel_tag>()
 			.allocate_local_instance_ids(*this).good &&
+#if ENABLE_DATASTRUCTS
 		get_instance_collection_pool_bundle<datastruct_tag>()
 			.allocate_local_instance_ids(*this).good &&
+#endif
 		get_instance_collection_pool_bundle<enum_tag>()
 			.allocate_local_instance_ids(*this).good &&
 		get_instance_collection_pool_bundle<int_tag>()
@@ -486,8 +498,10 @@ footprint::evaluate_scope_aliases(void) {
 		.collect_scope_aliases(scope_aliases);
 	get_instance_collection_pool_bundle<channel_tag>()
 		.collect_scope_aliases(scope_aliases);
+#if ENABLE_DATASTRUCTS
 	get_instance_collection_pool_bundle<datastruct_tag>()
 		.collect_scope_aliases(scope_aliases);
+#endif
 	get_instance_collection_pool_bundle<int_tag>()
 		.collect_scope_aliases(scope_aliases);
 	get_instance_collection_pool_bundle<enum_tag>()
@@ -496,20 +510,22 @@ footprint::evaluate_scope_aliases(void) {
 		.collect_scope_aliases(scope_aliases);
 	// just copy-filter them over
 	port_aliases.import_port_aliases(scope_aliases);
-#else
+#else	// COPY_IF_PORT_ALIASES
 	get_instance_collection_pool_bundle<process_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<channel_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
+#if ENABLE_DATASTRUCTS
 	get_instance_collection_pool_bundle<datastruct_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
+#endif
 	get_instance_collection_pool_bundle<int_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<enum_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
 	get_instance_collection_pool_bundle<bool_tag>()
 		.collect_scope_and_port_aliases(scope_aliases, port_aliases);
-#endif
+#endif	// COPY_IF_PORT_ALIASES
 	// don't filter for scope, want to keep around unique entries
 	// scope_aliases.filter_uniques();
 #if ENABLE_STACKTRACE
@@ -536,11 +552,15 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 	// nothing else has substructure.  
 	const size_t process_offset = sm.get_pool<process_tag>().size();
 	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+#if ENABLE_DATASTRUCTS
 	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
+#endif
 	const good_bool a(
 		footprint_base<process_tag>::__allocate_global_state(sm).good &&
 		footprint_base<channel_tag>::__allocate_global_state(sm).good &&
+#if ENABLE_DATASTRUCTS
 		footprint_base<datastruct_tag>::__allocate_global_state(sm).good &&
+#endif
 		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
 		footprint_base<int_tag>::__allocate_global_state(sm).good &&
 		footprint_base<bool_tag>::__allocate_global_state(sm).good);
@@ -562,10 +582,12 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 					ff, sm, process_offset).good &&
 			footprint_base<channel_tag>::
 				__expand_unique_subinstances(
-					ff, sm, channel_offset).good &&
-			footprint_base<datastruct_tag>::
+					ff, sm, channel_offset).good
+#if ENABLE_DATASTRUCTS
+			&& footprint_base<datastruct_tag>::
 				__expand_unique_subinstances(
 					ff, sm, struct_offset).good
+#endif
 		);
 #if 0
 		if (!b.good)
@@ -600,8 +622,10 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		.assign_footprint_frame(ff, pmc);
 	get_instance_collection_pool_bundle<channel_tag>()
 		.assign_footprint_frame(ff, pmc);
+#if ENABLE_DATASTRUCTS
 	get_instance_collection_pool_bundle<datastruct_tag>()
 		.assign_footprint_frame(ff, pmc);
+#endif
 	get_instance_collection_pool_bundle<int_tag>()
 		.assign_footprint_frame(ff, pmc);
 	get_instance_collection_pool_bundle<enum_tag>()
@@ -711,7 +735,9 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	// no need to visit def_back_ref
 	footprint_base<process_tag>::collect_transient_info_base(m);
 	footprint_base<channel_tag>::collect_transient_info_base(m);
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>::collect_transient_info_base(m);
+#endif
 	footprint_base<enum_tag>::collect_transient_info_base(m);
 	footprint_base<int_tag>::collect_transient_info_base(m);
 	footprint_base<bool_tag>::collect_transient_info_base(m);
@@ -747,14 +773,18 @@ footprint::write_object_base(const persistent_object_manager& m,
 	// reconstruct the map AFTER all collections are loaded
 	footprint_base<process_tag>::write_reserve_sizes(o);
 	footprint_base<channel_tag>::write_reserve_sizes(o);
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>::write_reserve_sizes(o);
+#endif
 	footprint_base<enum_tag>::write_reserve_sizes(o);
 	footprint_base<int_tag>::write_reserve_sizes(o);
 	footprint_base<bool_tag>::write_reserve_sizes(o);
 
 	footprint_base<process_tag>::write_object_base(m, o);
 	footprint_base<channel_tag>::write_object_base(m, o);
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>::write_object_base(m, o);
+#endif
 	footprint_base<enum_tag>::write_object_base(m, o);
 	footprint_base<int_tag>::write_object_base(m, o);
 	footprint_base<bool_tag>::write_object_base(m, o);
@@ -794,14 +824,18 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	// load all collections first, THEN reconstruct the local map
 	footprint_base<process_tag>::load_reserve_sizes(i);
 	footprint_base<channel_tag>::load_reserve_sizes(i);
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>::load_reserve_sizes(i);
+#endif
 	footprint_base<enum_tag>::load_reserve_sizes(i);
 	footprint_base<int_tag>::load_reserve_sizes(i);
 	footprint_base<bool_tag>::load_reserve_sizes(i);
 
 	footprint_base<process_tag>::load_object_base(m, i);
 	footprint_base<channel_tag>::load_object_base(m, i);
+#if ENABLE_DATASTRUCTS
 	footprint_base<datastruct_tag>::load_object_base(m, i);
+#endif
 	footprint_base<enum_tag>::load_object_base(m, i);
 	footprint_base<int_tag>::load_object_base(m, i);
 	footprint_base<bool_tag>::load_object_base(m, i);

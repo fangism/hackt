@@ -1,16 +1,19 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.4 2006/11/02 22:02:00 fang Exp $
+	$Id: alias_printer.cc,v 1.4.10.1 2006/12/21 07:08:58 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
+#include "Object/devel_switches.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
+#if ENABLE_DATASTRUCTS
 #include "Object/traits/struct_traits.h"
+#endif
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/def/footprint.h"
@@ -137,7 +140,9 @@ alias_printer::visit(const instance_alias_info<Tag>& a) {		\
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(bool_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(int_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(enum_tag)
+#if ENABLE_DATASTRUCTS
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(datastruct_tag)
+#endif
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(channel_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
 

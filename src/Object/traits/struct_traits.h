@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.21.4.1 2006/12/04 09:55:55 fang Exp $
+	$Id: struct_traits.h,v 1.21.4.1.2.1 2006/12/21 07:09:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -67,6 +67,12 @@ struct class_traits<datastruct_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
+	/**
+		This is really unused filler.
+		pint_const is just bogus
+		Data structs are not used yet...
+	 */
+	typedef	pint_const			const_expr_type;
 	typedef	struct_expr			data_expr_base_type;
 	typedef	struct_value_type		data_value_type;
 
