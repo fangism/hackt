@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.12 2006/12/20 20:36:50 fang Exp $
+	$Id: Event.h,v 1.1.2.12.2.1 2006/12/22 04:11:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -23,6 +23,7 @@ namespace HAC {
 namespace entity {
 	class bool_expr;
 	class state_manager;
+	class footprint;
 namespace CHP {
 	class action;
 }
@@ -36,6 +37,7 @@ using std::vector;
 using std::valarray;
 using entity::bool_expr;
 using entity::state_manager;
+using entity::footprint;
 using entity::CHP::action;
 using util::memory::count_ptr;
 
@@ -158,12 +160,12 @@ public:
 	}
 
 	void
-	execute(const state_manager&, InstancePools&, 
+	execute(const state_manager&, const footprint&, InstancePools&, 
 		vector<instance_reference>&, 
 		vector<event_index_type>&);
 
 	void
-	recheck(const state_manager&, InstancePools&, 
+	recheck(const state_manager&, const footprint&, InstancePools&, 
 		vector<event_index_type>&);
 
 	ostream&

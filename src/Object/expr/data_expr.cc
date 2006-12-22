@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.13.4.1 2006/12/12 10:17:42 fang Exp $
+	$Id: data_expr.cc,v 1.13.4.1.2.1 2006/12/22 04:10:54 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -27,6 +27,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/expr/expr_visitor.h"
 
 #include "Object/persistent_type_hash.h"
@@ -102,6 +104,14 @@ int_expr::unroll_resolve_copy(const unroll_context& c,
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+int_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+}
+
 //=============================================================================
 // class bool_expr method definitions
 
@@ -112,6 +122,14 @@ bool_expr::unroll_resolve_copy(const unroll_context& c,
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+bool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+}
+
 //=============================================================================
 // class real_expr method definitions
 
@@ -120,6 +138,14 @@ real_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+real_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
 }
 
 //=============================================================================

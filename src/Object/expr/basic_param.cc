@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.24.4.1 2006/12/12 10:17:37 fang Exp $
+ 	$Id: basic_param.cc,v 1.24.4.1.2.1 2006/12/22 04:10:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -45,6 +45,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
+#include "Object/nonmeta_context.h"
+#include "Object/unroll/unroll_context.h"
 
 #include "common/TODO.h"
 
@@ -210,6 +212,25 @@ pbool_expr::unroll_resolve_rvalues(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+pbool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& b) const {
+#if 1
+	const unroll_context uc(&c.topfp, &c.topfp);
+	return unroll_resolve_rvalues(uc, b.is_a<const this_type>());
+#else
+	FINISH_ME(Fang);
+	return count_ptr<const pbool_const>(NULL);
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 pbool_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& b) const {
@@ -361,6 +382,25 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+pint_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& b) const {
+#if 1
+	const unroll_context uc(&c.topfp, &c.topfp);
+	return unroll_resolve_rvalues(uc, b.is_a<const this_type>());
+#else
+	FINISH_ME(Fang);
+	return count_ptr<const pint_const>(NULL);
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Forwarding function.  
  */
@@ -510,6 +550,25 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const real_expr>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+preal_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const real_expr>& b) const {
+#if 1
+	const unroll_context uc(&c.topfp, &c.topfp);
+	return unroll_resolve_rvalues(uc, b.is_a<const this_type>());
+#else
+	FINISH_ME(Fang);
+	return count_ptr<const preal_const>(NULL);
+#endif
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -769,6 +828,19 @@ pint_const::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	Constant need not be unrolled, return reference counted copy of self.  
+ */
+count_ptr<const const_param>
+pint_const::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const pint_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const pint_const>();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param p const parameter integer.
 	\pre p must be pint_const or pint_const_collection.
@@ -935,6 +1007,19 @@ pbool_const::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	Constant need not be unrolled, return reference counted copy of self.  
+ */
+count_ptr<const const_param>
+pbool_const::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const pbool_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const pbool_const>();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_const::must_be_equivalent(const pbool_expr& b) const {
 	return b.is_static_constant() && (val == b.static_constant_value());
@@ -1098,6 +1183,19 @@ preal_const::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	Constant need not be unrolled, return reference counted copy of self.  
+ */
+count_ptr<const const_param>
+preal_const::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const preal_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const preal_const>();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

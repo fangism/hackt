@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.9.12.1.2.1 2006/12/21 07:09:04 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.9.12.1.2.2 2006/12/22 04:11:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -161,8 +161,8 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
-#if USE_NONMETA_RESOLVE
-	count_ptr<const const_expr_type>
+#if 0 && USE_NONMETA_RESOLVE
+	count_ptr<const const_param>
 	nonmeta_resolve_copy(const nonmeta_context_base&, 
 		const count_ptr<const expr_base_type>&) const;
 #endif

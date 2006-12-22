@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.7.2.1 2006/12/21 07:09:14 fang Exp $
+	$Id: Event.cc,v 1.1.2.7.2.2 2006/12/22 04:11:10 fang Exp $
  */
 
 #include <iostream>
@@ -100,9 +100,9 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 	TODO: Need to examine how they are constructed...
  */
 void
-EventNode::recheck(const state_manager& sm, InstancePools& p, 
-		vector<event_index_type>& enqueue) {
-	const entity::nonmeta_context c(sm, p, *this, enqueue);
+EventNode::recheck(const state_manager& sm, const footprint& f,
+		InstancePools& p, vector<event_index_type>& enqueue) {
+	const entity::nonmeta_context c(sm, f, p, *this, enqueue);
 	if (guard_expr) {
 		// if (guard_expr->nonmeta_resolve(c))
 	}
@@ -117,7 +117,8 @@ EventNode::recheck(const state_manager& sm, InstancePools& p,
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(const state_manager& sm, InstancePools& p, 
+EventNode::execute(const state_manager& sm, const footprint& f, 
+		InstancePools& p, 
 		vector<instance_reference>& updates, 
 		vector<event_index_type>& enqueue) {
 #if 0
@@ -129,7 +130,7 @@ EventNode::execute(const state_manager& sm, InstancePools& p,
 	}
 #endif
 	if ((event_type != EVENT_NULL) && action_ptr) {
-		const entity::nonmeta_context c(sm, p, *this, enqueue);
+		const entity::nonmeta_context c(sm, f, p, *this, enqueue);
 		// at the same time, enqueue successors, depending on event_type
 #if ENABLE_CHP_EXECUTE
 		action_ptr->execute(c, updates);

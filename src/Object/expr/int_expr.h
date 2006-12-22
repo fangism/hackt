@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.6.32.1.2.1 2006/12/21 07:08:46 fang Exp $
+	$Id: int_expr.h,v 1.6.32.1.2.2 2006/12/22 04:10:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_EXPR_H__
@@ -45,7 +45,7 @@ virtual UNROLL_RESOLVE_COPY_INT_PROTO = 0;
 
 #if USE_NONMETA_RESOLVE
 #define	NONMETA_RESOLVE_COPY_INT_PROTO					\
-	count_ptr<const pint_const>					\
+	count_ptr<const const_param>					\
 	nonmeta_resolve_copy(const nonmeta_context_base&,		\
 		const count_ptr<const int_expr>&) const
 

@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.19.12.1 2006/12/12 10:17:39 fang Exp $
+ 	$Id: const_collection.tcc,v 1.19.12.1.2.1 2006/12/22 04:10:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -448,6 +448,17 @@ CONST_COLLECTION_CLASS::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p.template is_a<const this_type>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && USE_NONMETA_RESOLVE
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<const typename CONST_COLLECTION_CLASS::parent_const_type>
+CONST_COLLECTION_CLASS::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const expr_base_type>& p) const {
+	INVARIANT(p == this);
+	return p.template is_a<const this_type>();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.15.12.1.2.1 2006/12/21 07:08:42 fang Exp $
+	$Id: const_collection.h,v 1.15.12.1.2.2 2006/12/22 04:10:52 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -57,6 +57,7 @@ const_collection<Tag>
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 class const_collection :
 		public class_traits<Tag>::expr_base_type,
+		// this is just const_param
 		public class_traits<Tag>::const_collection_parent_type {
 	typedef	CONST_COLLECTION_CLASS			this_type;
 public:
@@ -175,8 +176,8 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
-#if USE_NONMETA_RESOLVE
-	count_ptr<const const_expr_type>
+#if 0 && USE_NONMETA_RESOLVE
+	count_ptr<const parent_const_type>
 	nonmeta_resolve_copy(const nonmeta_context_base&, 
 		const count_ptr<const expr_base_type>&) const;
 #endif

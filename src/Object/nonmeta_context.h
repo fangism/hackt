@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.1.2.3 2006/12/20 20:36:42 fang Exp $
+	$Id: nonmeta_context.h,v 1.1.2.3.2.1 2006/12/22 04:10:48 fang Exp $
  */
 #ifndef	__HAC_OBJECT_NONMETA_CONTEXT_H__
 #define	__HAC_OBJECT_NONMETA_CONTEXT_H__
@@ -16,7 +16,7 @@ namespace CHPSIM {
 }	// end namespace CHPSIM
 }	// end namespace SIM
 namespace entity {
-
+class footprint;
 class state_manager;		// for structural information
 class nonmeta_state_manager;	// for run-time value information
 
@@ -26,19 +26,25 @@ class nonmeta_state_manager;	// for run-time value information
 	This is all that is needed to lookup run-time values and references.  
  */
 class nonmeta_context_base {
-protected:
+public:
 	/**
 		Read-only structural information including
 		footprint frames.  
 	 */
 	const state_manager&			sm;
 	/**
+		Top-level footprint.
+	 */
+	const footprint&			topfp;
+protected:
+	/**
 		Run-time data, modifiable.  
 	 */
 	nonmeta_state_manager&			values;
 
 	nonmeta_context_base(const state_manager& s, 
-		nonmeta_state_manager& v) : sm(s), values(v) { }
+		const footprint& f, 
+		nonmeta_state_manager& v) : sm(s), topfp(f), values(v) { }
 
 	// default copy-ctor
 	// default dtor
@@ -63,7 +69,8 @@ class nonmeta_context : public nonmeta_context_base {
 	 */
 	enqueue_queue_type&			queue;
 public:
-	nonmeta_context(const state_manager&, nonmeta_state_manager&, 
+	nonmeta_context(const state_manager&, const footprint&,
+		nonmeta_state_manager&, 
 		event_type&, enqueue_queue_type&);
 
 	~nonmeta_context();

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.16.2.1 2006/12/21 07:09:15 fang Exp $
+	$Id: State.cc,v 1.1.2.16.2.2 2006/12/22 04:11:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -60,9 +60,14 @@ using util::copy_if;
  */
 struct State::recheck_transformer {
 	this_type&		state;
+	const state_manager&	sm;
+	const footprint&	topfp;
 
 	explicit
-	recheck_transformer(this_type& s) : state(s) { }
+	recheck_transformer(this_type& s) : 
+		state(s), 
+		sm(state.mod.get_state_manager()), 
+		topfp(state.mod.get_footprint()) { }
 
 	/**
 		\param ei event index to re-evaluate depending on type.
@@ -71,7 +76,8 @@ struct State::recheck_transformer {
 	void
 	operator () (const event_index_type ei) {
 		event_type& e(state.event_pool[ei]);
-		e.recheck(state.mod.get_state_manager(), 
+		e.recheck(sm, topfp, 
+			// can also factor these member references out
 			state.instances, state.__enqueue_list);
 	}
 };	// end class recheck_transformer
@@ -220,7 +226,7 @@ State::step(void) {
 	//	expect references to the channel/variable(s) affected
 	__enqueue_list.clear();
 	__updated_list.clear();
-	event_pool[ei].execute(mod.get_state_manager(), 
+	event_pool[ei].execute(mod.get_state_manager(), mod.get_footprint(),
 		instances, __updated_list, __enqueue_list);
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	// __updated_list lists variables updated

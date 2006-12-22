@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.13.12.2.2.1 2006/12/21 07:09:07 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.13.12.2.2.2 2006/12/22 04:11:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -28,6 +28,7 @@ class nonmeta_expr_visitor;
 class state_manager;
 class footprint;
 class footprint_frame;
+class const_param;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -142,7 +143,7 @@ public:
 		const count_ptr<const data_expr_base_type>&) const;
 
 #if USE_NONMETA_RESOLVE
-	count_ptr<const const_expr_type>
+	count_ptr<const const_param>
 	nonmeta_resolve_copy(const nonmeta_context_base&, 
 		const count_ptr<const data_expr_base_type>&) const;
 #endif
