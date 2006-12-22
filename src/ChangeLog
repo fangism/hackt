@@ -5,6 +5,18 @@
 
 2006-12-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-03:
+	  More implementation of nonmeta_resolve methods.  
+		Added __nonmeta_resolve_rvalue helper method.  
+		param consts' nonmeta_resolve_copy defers to base classes now.
+		remaining undefined references to simple_nonmeta...
+	  TODO: __unroll_resolve_rvalue and __nonmeta_resolve_rvalue:
+		re-use them in common virtual function in meta-expr base class.
+		Only override for const_collection and other aggregates.  
+	  Consider returning plain values instead of ref-count ptrs
+		in nonmeta resolution, even pool-allocated may bottleneck.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-02:
 	  Re-wrote nonmeta_resolve_copy using unroll_resolve_copy
 		for meta-expressions (compile-time), thereby reducing number

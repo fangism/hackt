@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.15.12.1.2.2 2006/12/22 04:10:57 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.15.12.1.2.3 2006/12/22 06:14:25 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -124,9 +124,6 @@ public:
 		const count_ptr<const pbool_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
-#if 0 && USE_NONMETA_RESOLVE
-	NONMETA_RESOLVE_COPY_PBOOL_PROTO;
-#endif
 	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
@@ -135,9 +132,7 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
-#if 0 && USE_NONMETA_RESOLVE
 	using parent_type::nonmeta_resolve_copy;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

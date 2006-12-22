@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.11.12.1.2.1 2006/12/21 07:08:41 fang Exp $
+	$Id: bool_logical_expr.h,v 1.11.12.1.2.2 2006/12/22 06:14:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -90,6 +90,7 @@ public:
 
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
 #if USE_NONMETA_RESOLVE
+	NONMETA_RESOLVE_RVALUE_BOOL_PROTO;
 	NONMETA_RESOLVE_COPY_BOOL_PROTO;
 #endif
 	EXPR_ACCEPT_VISITOR_PROTO;

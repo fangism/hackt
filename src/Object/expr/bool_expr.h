@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: bool_expr.h,v 1.6.32.1.2.2 2006/12/22 04:10:51 fang Exp $
+	$Id: bool_expr.h,v 1.6.32.1.2.3 2006/12/22 06:14:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
@@ -46,6 +46,12 @@ virtual	UNROLL_RESOLVE_COPY_BOOL_PROTO = 0;
 	nonmeta_resolve_copy(const nonmeta_context_base&,		\
 		const count_ptr<const bool_expr>&) const
 
+#define	NONMETA_RESOLVE_RVALUE_BOOL_PROTO				\
+	count_ptr<const pbool_const>					\
+	__nonmeta_resolve_rvalue(const nonmeta_context_base&,		\
+		const count_ptr<const bool_expr>&) const
+
+virtual	NONMETA_RESOLVE_RVALUE_BOOL_PROTO = 0;
 virtual	NONMETA_RESOLVE_COPY_BOOL_PROTO = 0;
 
 	NONMETA_RESOLVE_COPY_DATA_PROTO;

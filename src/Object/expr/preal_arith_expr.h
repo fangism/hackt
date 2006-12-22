@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.11.12.1.2.2 2006/12/22 04:11:02 fang Exp $
+	$Id: preal_arith_expr.h,v 1.11.12.1.2.3 2006/12/22 06:14:27 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -125,9 +125,6 @@ public:
 		const count_ptr<const preal_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
-#if 0 && USE_NONMETA_RESOLVE
-	NONMETA_RESOLVE_COPY_PREAL_PROTO;
-#endif
 	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
@@ -136,9 +133,7 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
-#if 0 && USE_NONMETA_RESOLVE
 	using parent_type::nonmeta_resolve_copy;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS
