@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4 2006/12/14 08:56:50 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4.2.1 2006/12/23 06:44:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -41,6 +41,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
 #include "Object/ref/nonmeta_ref_implementation.tcc"
+#include "Object/nonmeta_context.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -74,6 +75,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, datatype_ta
 							index_list_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
+	typedef	count_ptr<const typename reference_type::const_expr_type>
+							const_return_type;
 
 static
 return_type
@@ -91,7 +94,7 @@ unroll_resolve_copy (const reference_type& _this, const unroll_context& c,
 		if (!resolved_indices) {
 			cerr << "Error resolving nonmeta value reference\'s "
 				"indices." << endl;
-			return count_ptr<this_type>(NULL);
+			return return_type(NULL);
 		}
 		if (std::equal(resolved_indices->begin(),
 				resolved_indices->end(),
@@ -117,9 +120,20 @@ unroll_resolve_copy (const reference_type& _this, const unroll_context& c,
 	}
 }	// end method unroll_resolve_copy
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+const_return_type
+nonmeta_resolve_rvalue(const reference_type& _this,
+		const nonmeta_context_base& c, const return_type& p);
+#if 0
+{
+	typedef	reference_type				this_type;
+}
+#endif
+
 };	// end struct nonmeta_unroll_resolve_copy_policy
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+//-----------------------------------------------------------------------------
 /**
 	Specialization for nonmeta types that have a corresponding
 	meta type, like bool and int.  
@@ -131,6 +145,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, parameter_v
 							index_list_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
+	typedef	count_ptr<const typename reference_type::const_expr_type>
+							const_return_type;
 	typedef typename reference_type::traits_type	traits_type;
 	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
@@ -146,6 +162,32 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, parameter_v
 						value_array_generic_type;
 
 /**
+	When indices are resolved to constants. 
+ */
+static
+const_return_type
+__lookup_const_resolved_value(const value_collection_type& vc, 
+		const unroll_context& c, const multikey_index_type& k) {
+	data_value_type _val;
+	const never_ptr<const param_value_collection>
+		pvc(c.lookup_rvalue_collection(vc));
+	if (!pvc) {
+		return const_return_type(NULL);
+	}
+	const never_ptr<const value_array_generic_type>
+		va(pvc.template is_a<const value_array_generic_type>());
+	if (!va) {
+		return const_return_type(NULL);
+	}
+	if (va->lookup_value(_val, k).good) {
+		return const_return_type(new const_expr_type(_val));
+	} else {
+		return const_return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	See comment of value_array::lookup_value for new usage.  
 	\param i resolved indices.  
  */
@@ -157,22 +199,7 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	STACKTRACE_VERBOSE;
 	multikey_index_type k(i.size());	// pre-size
 	if (i.make_const_index_list(k).good) {
-		data_value_type _val;
-		const never_ptr<const param_value_collection>
-			pvc(c.lookup_rvalue_collection(vc));
-		if (!pvc) {
-			return return_type(NULL);
-		}
-		const never_ptr<const value_array_generic_type>
-			va(pvc.template is_a<const value_array_generic_type>());
-		if (!va) {
-			return return_type(NULL);
-		}
-		if (va->lookup_value(_val, k).good) {
-			return return_type(new const_expr_type(_val));
-		} else {
-			return return_type(NULL);
-		}
+		return __lookup_const_resolved_value(vc, c, k);
 	} else {
 		// there is some nonmeta value in index expr
 		return ret;
@@ -249,6 +276,65 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		}
 	}
 }	// end method unroll_resolve_copy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: recycle as much code as possible, this is too much copying.
+ */
+static
+const_return_type
+nonmeta_resolve_rvalue(const reference_type& _this,
+		const nonmeta_context_base& c, const return_type& p);
+#if 0
+{
+	typedef	reference_type				this_type;
+	const const_return_type error(NULL);
+	// BUG TODO: this feels wrong, must refer to locals!!!
+	// need local footprint! (in addition to global?)
+	const unroll_context uc(&c.topfp, &c.topfp);
+	if (_this.array_indices) {
+		// resolve the indices using run-time values
+		// count_ptr<const_index_list>
+		count_ptr<index_list_type>
+			resolved_indices(_this.array_indices
+				->nonmeta_resolve_copy(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving nonmeta value reference\'s "
+				"indices." << endl;
+			return error;
+		}
+		// then resolution changed nothing, return this-copy
+		// check for complete index resolution first
+		return __lookup_unroll_resolved_value(
+			*_this.value_collection_ref, uc, 
+			*resolved_indices, p);
+	} else {
+		STACKTRACE_INDENT_PRINT("scalar" << endl);
+		// is scalar reference (cannot be implicit indices!)
+		// therefore, just look this up
+		// code ripped from:
+		// simple_meta_value_reference::unroll_resolve_rvalues
+		const never_ptr<const param_value_collection>
+			pvc(uc.lookup_rvalue_collection(
+				*_this.value_collection_ref));
+		if (!pvc) {
+			return error;
+		}
+		data_value_type _val;
+		const never_ptr<const value_scalar_type>
+			va(pvc.template is_a<const value_scalar_type>());
+		if (va && va->lookup_value(_val).good) {
+			return const_return_type(new const_expr_type(_val));
+		} else {
+                        cerr << "ERROR: in unroll_resolve-ing "
+                                "simple_meta_value_reference, "
+                                "uninitialized value." << endl;
+                        return error;
+		}
+	}
+}
+#endif
+
 };	// end struct nonmeta_unroll_resolve_copy_policy
 
 //=============================================================================
@@ -470,6 +556,37 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 			typename Tag::parent_tag>::
 				unroll_resolve_copy(*this, c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::const_expr_type>
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::__nonmeta_resolve_rvalue(
+		const nonmeta_context_base& c, 
+		const count_ptr<const data_expr_base_type>& p) const {
+	typedef	count_ptr<const const_expr_type>	return_type;
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	return nonmeta_unroll_resolve_copy_policy<Tag,
+			typename Tag::parent_tag>::
+				nonmeta_resolve_rvalue(*this, c, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For now only allow resolution of scalar values.  
+	Later support array-aggregates.  
+ */
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const const_param>
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_resolve_copy(
+		const nonmeta_context_base& c, 
+		const count_ptr<const data_expr_base_type>& p) const {
+	return __nonmeta_resolve_rvalue(c, p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// USE_NONMETA_RESOLVE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
