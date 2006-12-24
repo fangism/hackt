@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-05:
+	  It compiles and links again!  (untested)
+	  Completed resolution of nonmeta-indices, which currently
+		forbids use of ranged expressions in indices.
+	  Could use better error handling.
+	  Next: simple_nonmeta_value_reference's implementation for nonmeta
+		resolving data-type value collections, using meta-tag.
+
+
 2006-12-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-04:

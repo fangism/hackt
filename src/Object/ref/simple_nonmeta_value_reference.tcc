@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4.2.1 2006/12/23 06:44:41 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4.2.2 2006/12/24 18:27:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -37,6 +37,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/const_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
@@ -121,15 +122,50 @@ unroll_resolve_copy (const reference_type& _this, const unroll_context& c,
 }	// end method unroll_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses the values held in the run-time instance/value pools to
+	resolve values.  (bool, int, enum)
+ */
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
-		const nonmeta_context_base& c, const return_type& p);
-#if 0
+		const nonmeta_context_base& c, const return_type& p)
 {
 	typedef	reference_type				this_type;
-}
+#if 0
+	// Lookup globally indexed reference, use tagged-pool.  
 #endif
+	if (_this.array_indices) {
+		// resolve the indices
+		// if indices are all meta-valued, then resolve all the way
+		// otherwise there is at least one nonmeta dependence, 
+		// which prevents further compile-time resolution.  
+		const count_ptr<const const_index_list>
+			resolved_indices(_this.array_indices
+				->nonmeta_resolve_copy(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving nonmeta value reference\'s "
+				"indices." << endl;
+			return const_return_type(NULL);
+		}
+		// TODO: finish me
+#if 0
+		excl_ptr<index_list_type>
+			ri(resolved_indices.exclusive_release());
+		count_ptr<this_type>
+			ret(new this_type(_this.value_collection_ref));
+		ret->attach_indices(ri);
+		INVARIANT(!ri);		// transferred ownership
+		return ret;
+#endif
+	} else {
+		STACKTRACE_INDENT_PRINT("scalar" << endl);
+		// is scalar reference (cannot be implicit indices!)
+#if 0
+		return p;
+#endif
+	}
+}
 
 };	// end struct nonmeta_unroll_resolve_copy_policy
 
@@ -207,6 +243,23 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	TODO: validate correctness.
+ */
+static
+const_return_type
+__lookup_unroll_resolved_value(const value_collection_type& vc, 
+		const unroll_context& c, const const_index_list& i) {
+	STACKTRACE_VERBOSE;
+	const multikey_index_type u(i.upper_multikey());
+	const multikey_index_type l(i.lower_multikey());
+	INVARIANT(u == l);		// no nonmeta ranges!
+	return __lookup_const_resolved_value(vc, c, u);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This may be obsolete with the use of placeholders.  
 	Well, is it?
@@ -278,14 +331,14 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 }	// end method unroll_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
 /**
 	TODO: recycle as much code as possible, this is too much copying.
  */
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
-		const nonmeta_context_base& c, const return_type& p);
-#if 0
+		const nonmeta_context_base& c, const return_type& p)
 {
 	typedef	reference_type				this_type;
 	const const_return_type error(NULL);
@@ -294,8 +347,8 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 	const unroll_context uc(&c.topfp, &c.topfp);
 	if (_this.array_indices) {
 		// resolve the indices using run-time values
-		// count_ptr<const_index_list>
-		count_ptr<index_list_type>
+		const count_ptr<const const_index_list>
+		// count_ptr<index_list_type>
 			resolved_indices(_this.array_indices
 				->nonmeta_resolve_copy(c));
 		if (!resolved_indices) {
@@ -307,7 +360,7 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		// check for complete index resolution first
 		return __lookup_unroll_resolved_value(
 			*_this.value_collection_ref, uc, 
-			*resolved_indices, p);
+			*resolved_indices);
 	} else {
 		STACKTRACE_INDENT_PRINT("scalar" << endl);
 		// is scalar reference (cannot be implicit indices!)
@@ -333,7 +386,7 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		}
 	}
 }
-#endif
+#endif	// USE_NONMETA_RESOLVE
 
 };	// end struct nonmeta_unroll_resolve_copy_policy
 

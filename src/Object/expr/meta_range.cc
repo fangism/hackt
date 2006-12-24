@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.16.12.1 2006/12/12 10:17:56 fang Exp $
+ 	$Id: meta_range.cc,v 1.16.12.1.2.1 2006/12/24 18:27:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -259,6 +259,18 @@ pint_range::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const const_index>(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	\return NULL because nonmeta ranges don't exist yet. 
+ */
+count_ptr<const pint_const>
+pint_range::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	return count_ptr<const pint_const>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const meta_index_expr>
@@ -553,6 +565,18 @@ const_range::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p.is_a<const const_range>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	\return NULL because nonmeta ranges don't exist yet. 
+ */
+count_ptr<const pint_const>
+const_range::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	return count_ptr<const pint_const>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const meta_index_expr>

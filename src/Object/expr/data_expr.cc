@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.13.4.1.2.2 2006/12/22 06:14:21 fang Exp $
+	$Id: data_expr.cc,v 1.13.4.1.2.3 2006/12/24 18:27:44 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -107,12 +107,22 @@ int_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+count_ptr<const pint_const>
+int_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	INVARIANT(p == this);
+	return __nonmeta_resolve_rvalue(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_param>
 int_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
 }
+#endif
 
 //=============================================================================
 // class bool_expr method definitions
@@ -125,12 +135,14 @@ bool_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
 count_ptr<const const_param>
 bool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
 }
+#endif
 
 //=============================================================================
 // class real_expr method definitions
@@ -143,12 +155,14 @@ real_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
 count_ptr<const const_param>
 real_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
 }
+#endif
 
 //=============================================================================
 // class enum_expr method definitions
@@ -161,6 +175,7 @@ enum_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
 count_ptr<const const_param>
 enum_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const data_expr>& p) const {
@@ -172,6 +187,7 @@ enum_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 	return count_ptr<const const_param>(NULL);
 #endif
 }
+#endif
 
 //=============================================================================
 // class struct_expr method definitions
@@ -1189,6 +1205,18 @@ int_range_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	\return NULL No nonmeta ranges exist.
+ */
+count_ptr<const pint_const>
+int_range_expr::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	return count_ptr<const pint_const>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_range_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1265,6 +1293,31 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NONMETA_RESOLVE
+/**
+	For now nonmeta-index lists may not contain ranges, 
+		only integer indices.  
+	\return list of integer constants representing indices.  
+ */
+count_ptr<const_index_list>
+nonmeta_index_list::nonmeta_resolve_copy(const nonmeta_context_base& c) const {
+	const count_ptr<const_index_list> ret(new const_index_list);
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+		const count_ptr<const pint_const> 
+			ind((*i)->nonmeta_resolve_copy(c, *i));
+		if (ind)
+			ret->push_back(ind);
+		else	return count_ptr<const_index_list>(NULL);
+	}
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

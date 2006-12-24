@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.12.12.1 2006/12/12 10:18:05 fang Exp $
+	$Id: pint_range.h,v 1.12.12.1.2.1 2006/12/24 18:27:50 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -75,6 +75,9 @@ public:
 	must_be_formal_size_equivalent(const meta_range_expr& ) const;
 
 	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
+#if USE_NONMETA_RESOLVE
+	NONMETA_RESOLVE_COPY_INDEX_PROTO;
+#endif
 	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO;
 
 	void
