@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.7.2.3 2006/12/25 02:19:50 fang Exp $
+	$Id: Event.cc,v 1.1.2.7.2.4 2006/12/25 02:58:29 fang Exp $
  */
 
 #include <iostream>
@@ -100,14 +100,7 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 	TODO: Need to examine how they are constructed...
  */
 void
-EventNode::recheck(
-#if 0
-		const state_manager& sm, const footprint& f,
-		InstancePools& p, vector<event_index_type>& enqueue
-#else
-		const nonmeta_context& c
-#endif
-		) {
+EventNode::recheck(const nonmeta_context& c) {
 //	const entity::nonmeta_context c(sm, f, p, *this, enqueue);
 	if (guard_expr) {
 		// if (guard_expr->nonmeta_resolve(c))
@@ -123,17 +116,8 @@ EventNode::recheck(
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(
-#if 0
-		const state_manager& sm, const footprint& f, 
-		InstancePools& p, 
-		vector<instance_reference>& updates, 
-		vector<event_index_type>& enqueue
-#else
-		const nonmeta_context& c, 
-		vector<instance_reference>& updates
-#endif
-		) {
+EventNode::execute(const nonmeta_context& c, 
+		vector<instance_reference>& updates) {
 #if 0
 	// actually, guard expression should be checked before an event
 	// is enqueued.

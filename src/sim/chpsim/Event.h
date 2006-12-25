@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.12.2.2 2006/12/25 02:19:51 fang Exp $
+	$Id: Event.h,v 1.1.2.12.2.3 2006/12/25 02:58:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -16,8 +16,6 @@
 #include "util/memory/count_ptr.h"
 #include "sim/chpsim/Dependence.h"
 #include "sim/chpsim/type_enum.h"
-// #include "util/STL/vector_fwd.h"
-#include "sim/chpsim/InstancePools.h"
 
 namespace HAC {
 namespace entity {
@@ -163,24 +161,11 @@ public:
 		deps.import(d);
 	}
 
-#if 0
-	void
-	execute(const state_manager&, const footprint&, InstancePools&, 
-		vector<instance_reference>&, 
-		vector<event_index_type>&);
-#else
 	void
 	execute(const nonmeta_context&, vector<instance_reference>&);
-#endif
 
-#if 0
-	void
-	recheck(const state_manager&, const footprint&, InstancePools&, 
-		vector<event_index_type>&);
-#else
 	void
 	recheck(const nonmeta_context&);
-#endif
 
 	ostream&
 	dump_struct(ostream&) const;

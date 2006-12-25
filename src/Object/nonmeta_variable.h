@@ -1,13 +1,12 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.2.2.1 2006/12/25 02:19:46 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.2.2.2 2006/12/25 02:58:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
 #define	__HAC_OBJECT_NONMETA_VARIABLE_H__
 
 #include "util/size_t.h"
-// #include "sim/common.h"
 #include "Object/expr/types.h"
 #include <iosfwd>
 #include <valarray>

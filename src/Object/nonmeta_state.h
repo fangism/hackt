@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.1.2.2.2.1 2006/12/25 02:19:45 fang Exp $
+	$Id: nonmeta_state.h,v 1.1.2.2.2.2 2006/12/25 02:58:26 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -84,7 +84,6 @@ class nonmeta_state_manager :
 	protected nonmeta_state_base<int_tag>,
 	protected nonmeta_state_base<enum_tag>,
 	protected nonmeta_state_base<channel_tag> {
-// friend class Event;
 	typedef	nonmeta_state_manager			this_type;
 	typedef	nonmeta_state_base<bool_tag>	bool_base_type;
 	typedef	nonmeta_state_base<int_tag>	int_base_type;

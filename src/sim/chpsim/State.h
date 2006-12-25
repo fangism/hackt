@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.12 2006/12/20 20:36:50 fang Exp $
+	$Id: State.h,v 1.1.2.12.2.1 2006/12/25 02:58:31 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -15,13 +15,13 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
-#include "sim/chpsim/InstancePools.h"	// obsolete: use nonmeta_state_manager
 #include "sim/chpsim/type_enum.h"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 using std::vector;
+using entity::nonmeta_state_manager;
 class StateConstructor;
 
 //=============================================================================
@@ -70,7 +70,7 @@ private:
 	/**
 		Collection of variable values and channel state.
 	 */
-	InstancePools				instances;
+	nonmeta_state_manager			instances;
 
 	// event pools: for each type of event?
 public:

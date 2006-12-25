@@ -1,31 +1,15 @@
 /**
 	\file "Object/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.1.2.3.2.2 2006/12/25 02:19:42 fang Exp $
+	$Id: nonmeta_context.cc,v 1.1.2.3.2.3 2006/12/25 02:58:25 fang Exp $
  */
 
 #include "Object/nonmeta_context.h"
-#include "Object/state_manager.h"
+// #include "Object/state_manager.h"
 
 namespace HAC {
 namespace entity {
 //=============================================================================
 // class nonmeta_context method definitions
-
-#if 0
-nonmeta_context::nonmeta_context(const state_manager& s, 
-		const footprint& f, 
-		nonmeta_state_manager& v, event_type& e, 
-		enqueue_queue_type& q) :
-		nonmeta_context_base(s, f, 
-			e.get_process_index() ?
-				s.get_pool<process_tag>()
-				[e.get_process_index()]._frame._footprint
-				: NULL,
-			v), event(e), queue(q) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-nonmeta_context::~nonmeta_context() { }
-#endif
 
 //=============================================================================
 }	// end namespace entity

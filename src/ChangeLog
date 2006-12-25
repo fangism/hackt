@@ -5,6 +5,10 @@
 
 2006-12-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-07:
+	  Clean-ups only, removing obsolete files and references before merge.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-06:
 	  Finished (untested) simple_nonmeta_value_reference run-time lookup.
 	  Moved CHPsim-specific nonmeta context class into sim/chpsim.
