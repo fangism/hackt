@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.15.12.1 2006/12/12 10:17:38 fang Exp $
+	$Id: const_collection.h,v 1.15.12.2 2006/12/25 03:27:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/STL/construct_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
@@ -25,6 +26,7 @@ namespace entity {
 class const_index_list;
 class const_range_list;
 class unroll_context;
+class nonmeta_context_base;
 class param_expr;
 class const_param;
 struct expr_dump_context;
@@ -55,6 +57,7 @@ const_collection<Tag>
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 class const_collection :
 		public class_traits<Tag>::expr_base_type,
+		// this is just const_param
 		public class_traits<Tag>::const_collection_parent_type {
 	typedef	CONST_COLLECTION_CLASS			this_type;
 public:
@@ -165,6 +168,9 @@ public:
 
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using expr_base_type::nonmeta_resolve_copy;
+#endif
 
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 

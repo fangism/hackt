@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.12 2006/12/20 20:36:50 fang Exp $
+	$Id: Event.h,v 1.1.2.13 2006/12/25 03:28:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -16,13 +16,12 @@
 #include "util/memory/count_ptr.h"
 #include "sim/chpsim/Dependence.h"
 #include "sim/chpsim/type_enum.h"
-// #include "util/STL/vector_fwd.h"
-#include "sim/chpsim/InstancePools.h"
 
 namespace HAC {
 namespace entity {
 	class bool_expr;
 	class state_manager;
+	class footprint;
 namespace CHP {
 	class action;
 }
@@ -30,12 +29,14 @@ namespace CHP {
 namespace SIM {
 namespace CHPSIM {
 class DependenceSetCollector;
+class nonmeta_context;
 using std::ostream;
 using std::string;
 using std::vector;
 using std::valarray;
 using entity::bool_expr;
 using entity::state_manager;
+using entity::footprint;
 using entity::CHP::action;
 using util::memory::count_ptr;
 
@@ -143,6 +144,9 @@ public:
 	this_type&
 	operator = (const this_type&);
 
+	const size_t
+	get_process_index(void) const { return process_index; }
+
 	void
 	set_guard_expr(const count_ptr<const bool_expr>&);
 
@@ -158,13 +162,10 @@ public:
 	}
 
 	void
-	execute(const state_manager&, InstancePools&, 
-		vector<instance_reference>&, 
-		vector<event_index_type>&);
+	execute(const nonmeta_context&, vector<instance_reference>&);
 
 	void
-	recheck(const state_manager&, InstancePools&, 
-		vector<event_index_type>&);
+	recheck(const nonmeta_context&);
 
 	ostream&
 	dump_struct(ostream&) const;

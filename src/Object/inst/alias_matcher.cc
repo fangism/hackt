@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.4 2006/11/02 22:01:59 fang Exp $
+	$Id: alias_matcher.cc,v 1.4.8.1 2006/12/25 03:27:48 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -18,6 +18,7 @@
 #include "Object/global_entry.tcc"	// for get_frame_map
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
+#include "Object/devel_switches.h"
 #include "util/macros.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
@@ -207,7 +208,9 @@ alias_matcher<Tag>::visit(const instance_alias_info<Tag2>& a) {		\
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(bool_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(int_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(enum_tag)
+#if ENABLE_DATASTRUCTS
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(datastruct_tag)
+#endif
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(channel_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
 
@@ -219,7 +222,9 @@ DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
 template struct alias_matcher<bool_tag>;
 template struct alias_matcher<int_tag>;
 template struct alias_matcher<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template struct alias_matcher<datastruct_tag>;
+#endif
 template struct alias_matcher<channel_tag>;
 template struct alias_matcher<process_tag>;
 

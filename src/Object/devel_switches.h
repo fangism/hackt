@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37.2.1 2006/12/08 03:14:40 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.2 2006/12/25 03:27:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -152,20 +152,31 @@
 #define	SUBTYPE_FOOTPRINTS			0
 
 /**
-	Define to 1 to privatize the PRS_footprint structure.  
-	Rationale: reduces recompile-times by decoupling headers
-	and breaking definition dependencies.  
-	Goal: 1?
+	Define to 1 to instantiate struct collections and references, 
+	which as of the time of writing this, have never been well-defined
+	or used.  
+	Goal: ?
+	Pending: well-defined semantics in language
  */
-#define	PIMPL_PRS_FOOTPRINT			0
+#define	ENABLE_DATASTRUCTS			0
 
 /**
-	Define to 1 to privatize the CHP_footprint structure.  
-	Rationale: reduces recompile-times by decoupling headers
-	and breaking definition dependencies.  
-	Goal: 1?
+	Define to 1 to enable the NONMETA_RESOLVE methods in the
+	expression / references class hierarchies.
+	Goal: 1
+	Application: for run-time resolution of values (simulation)
+	Priority: high
+	Status: declarations in place, missing definitions
  */
-#define	PIMPL_CHP_FOOTPRINT			0
+#define	USE_NONMETA_RESOLVE			1
+
+/**
+	Define to 1 to turn on CHP execution virtual functions.
+	Goal: 1
+	Status: temporarily turned off for regression testing
+	Prerequisite: USE_NONMETA_RESOLVE
+ */
+#define	ENABLE_CHP_EXECUTE			0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16.8.2 2006/12/18 21:27:55 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.3 2006/12/25 03:27:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -142,6 +142,8 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 				o, _footprint);
 			break;
 		}
+		// case PARENT_TYPE_CHANNEL: ?
+#if ENABLE_DATASTRUCTS
 		case PARENT_TYPE_STRUCT: {
 			instance_alias_info<datastruct_tag>::dump_complete_type(
 				extract_parent_formal_instance_alias<
@@ -149,6 +151,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 				o, _footprint);
 			break;
 		}
+#endif
 		default:
 			// for now, the only thing that can be parent
 			// is process, append cases later...
@@ -345,6 +348,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#if ENABLE_DATASTRUCTS
 	case PARENT_TYPE_STRUCT: {
 		const global_entry<datastruct_tag>&
 			p_ent(extract_parent_entry<datastruct_tag>(sm, *this));
@@ -356,6 +360,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#endif
 	default:
 		ICE(cerr, 
 			cerr << "Unknown parent tag enumeration: " <<

@@ -1,13 +1,12 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.2 2006/12/20 08:33:18 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.3 2006/12/25 03:27:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
 #define	__HAC_OBJECT_NONMETA_VARIABLE_H__
 
 #include "util/size_t.h"
-// #include "sim/common.h"
 #include "Object/expr/types.h"
 #include <iosfwd>
 #include <valarray>
@@ -61,6 +60,7 @@ public:
 		The value type.
 	 */
 	typedef	char				value_type;
+	value_type				value;
 
 	// for now...
 	using parent_type::dump_struct;
@@ -76,10 +76,26 @@ class IntVariable : public nonmeta_variable_base {
 public:
 	/// the value type
 	typedef	unsigned int			value_type;
+	value_type				value;
 
 	// for now...
 	using parent_type::dump_struct;
 };	// end clas IntVariable
+
+//=============================================================================
+/**
+	Provisional enum variable class, not really used yet.
+ */
+class EnumVariable : public nonmeta_variable_base {
+	typedef	nonmeta_variable_base			parent_type;
+public:
+	/// the value type
+	typedef	unsigned int			value_type;
+	value_type				value;
+
+	// for now...
+	using parent_type::dump_struct;
+};	// end class EnumVariable
 
 //=============================================================================
 /**

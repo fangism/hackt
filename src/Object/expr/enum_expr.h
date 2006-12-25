@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: enum_expr.h,v 1.5 2006/06/26 01:45:59 fang Exp $
+	$Id: enum_expr.h,v 1.5.32.1 2006/12/25 03:27:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_ENUM_EXPR_H__
@@ -17,6 +17,7 @@
 namespace HAC {
 namespace entity {
 class unroll_context;
+class pint_const;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -40,7 +41,23 @@ virtual	~enum_expr() { }
 		const count_ptr<const enum_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_ENUM_PROTO = 0;
+
+#if USE_NONMETA_RESOLVE
+#define	NONMETA_RESOLVE_COPY_ENUM_PROTO					\
+	count_ptr<const pint_const>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const enum_expr>&) const
+
+//	TODO: define what enums should resolve to (pints?)
+#if 0
+virtual	NONMETA_RESOLVE_COPY_ENUM_PROTO = 0;
+#endif
+#endif
+
 protected:
+#if USE_NONMETA_RESOLVE
+	NONMETA_RESOLVE_COPY_DATA_PROTO;
+#endif
 	UNROLL_RESOLVE_COPY_DATA_PROTO;
 
 };	// end class enum_expr

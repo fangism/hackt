@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.13 2006/03/15 04:38:24 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.13.52.1 2006/12/25 03:27:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -24,17 +24,22 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
+#include "Object/devel_switches.h"
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/bool_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
+#if ENABLE_DATASTRUCTS
 #include "Object/inst/struct_instance_collection.h"
+#endif
 #include "Object/persistent_type_hash.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/enum_traits.h"
+#if ENABLE_DATASTRUCTS
 #include "Object/traits/struct_traits.h"
+#endif
 #include "Object/unroll/port_connection.tcc"
 
 #include "util/what.tcc"
@@ -72,9 +77,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::enum_alias_connection, 
 		ENUM_ALIAS_CONNECTION_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::datastruct_alias_connection, 
 		STRUCT_ALIAS_CONNECTION_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_alias_connection, 
 		CHANNEL_ALIAS_CONNECTION_TYPE_KEY, 0)
@@ -88,9 +95,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_port_connection,
 	CHANNEL_PORT_CONNECTION_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_port_connection,
 	STRUCT_PORT_CONNECTION_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 //=============================================================================
@@ -206,11 +215,15 @@ port_connection_base::load_object_base(const persistent_object_manager& m,
 template class alias_connection<int_tag>;
 template class alias_connection<bool_tag>;
 template class alias_connection<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template class alias_connection<datastruct_tag>;
+#endif
 template class alias_connection<channel_tag>;
 template class alias_connection<process_tag>;
 
+#if ENABLE_DATASTRUCTS
 template class port_connection<datastruct_tag>;
+#endif
 template class port_connection<channel_tag>;
 template class port_connection<process_tag>;
 

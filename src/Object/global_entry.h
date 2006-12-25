@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.12.8.2 2006/12/14 08:56:40 fang Exp $
+	$Id: global_entry.h,v 1.12.8.3 2006/12/25 03:27:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -12,6 +12,7 @@
 // #include <valarray>		// may be more efficient
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "Object/devel_switches.h"
 #include "util/macros.h"
 
 namespace HAC {
@@ -134,13 +135,17 @@ struct footprint_frame_transformer {
 struct footprint_frame :
 	public footprint_frame_map<process_tag>, 
 	public footprint_frame_map<channel_tag>, 
+#if ENABLE_DATASTRUCTS
 	public footprint_frame_map<datastruct_tag>, 
+#endif
 	public footprint_frame_map<enum_tag>, 
 	public footprint_frame_map<int_tag>, 
 	public footprint_frame_map<bool_tag> {
 	typedef	footprint_frame_map<process_tag>	process_map_type;
 	typedef	footprint_frame_map<channel_tag>	channel_map_type;
+#if ENABLE_DATASTRUCTS
 	typedef	footprint_frame_map<datastruct_tag>	struct_map_type;
+#endif
 	typedef	footprint_frame_map<enum_tag>		enum_map_type;
 	typedef	footprint_frame_map<int_tag>		int_map_type;
 	typedef	footprint_frame_map<bool_tag>		bool_map_type;

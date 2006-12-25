@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-12-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-01:
+	  Updated test cases for footprint size reduction, after having
+		disabled user-defined datastructs.
+	  Also disabled some regression-causing (unused, undefined features)
+		test: parser/datatype/{032,036}
+
+
 2006-12-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-18:

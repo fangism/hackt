@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.13 2006/11/07 06:35:02 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.13.8.1 2006/12/25 03:27:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -30,6 +30,10 @@
 #include "Object/inst/state_instance.tcc"
 #include "Object/unroll/datatype_instantiation_statement.h"
 
+#include "Object/devel_switches.h"
+
+#if ENABLE_DATASTRUCTS
+// this is a nuisance, so we disable it
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_instance_collection,
 		"struct_instance_collection")
@@ -67,6 +71,7 @@ template class port_actual_collection<datastruct_tag>;
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+#endif
 
 #endif	// __HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
 

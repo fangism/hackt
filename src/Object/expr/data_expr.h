@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.9.12.1 2006/12/12 10:17:43 fang Exp $
+	$Id: data_expr.h,v 1.9.12.2 2006/12/25 03:27:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -17,6 +17,7 @@
 // unroll_resolve_copy is only needed because CHP assignments
 // are not (yet) subtyped, if we ever update this, we can trim here
 #include "Object/type/canonical_type_fwd.h"
+#include "Object/devel_switches.h"
 
 #define	USE_DATA_EXPR_EQUIVALENCE	0
 
@@ -24,8 +25,10 @@ namespace HAC {
 namespace entity {
 class data_type_reference;
 class unroll_context;
+class nonmeta_context_base;
 struct expr_dump_context;
 class nonmeta_expr_visitor;
+class const_param;
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -79,6 +82,15 @@ virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 		const count_ptr<const data_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_DATA_PROTO = 0;
+
+#if USE_NONMETA_RESOLVE
+#define	NONMETA_RESOLVE_COPY_DATA_PROTO					\
+	count_ptr<const const_param>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const data_expr>&) const
+
+virtual	NONMETA_RESOLVE_COPY_DATA_PROTO = 0;
+#endif
 
 #define	EXPR_ACCEPT_VISITOR_PROTO					\
 	void								\

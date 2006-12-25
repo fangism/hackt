@@ -1,5 +1,5 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2006/12/01 23:30:01 fang Exp $
+#	$Id: Makefile.am,v 1.15.2.1 2006/12/25 03:29:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -13,13 +13,13 @@ HACKT_PARSE_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
 	021 022 023 026 027 028 029 \
-	030 031 032 033 036 037
+	030 031 033 037
 
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
 	021 022 023 026 027 028 029 \
-	030 031 032 033 036
+	030 031 033
 
 HACKT_UNROLL_TEST_FAILURES = \
 	037
@@ -28,7 +28,15 @@ HACKT_UNROLL_TEST_FAILURES = \
 HACKT_CREATE_TEST_PASSES = \
 	001 002 006 007 008 \
 	023 026 029 \
-	030 031 032 033 036
+	030 031 033
+
+# REGRESSION (parse, unroll, create): 032 036 
+# (instantiations of 031 033, respectively)
+# New on branch revision: HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-01
+# We have disabled used of user-defined datatypes
+# until they are well-defined in the language
+# (They were a nuisance to maintain because datatypes
+# don't have clear value or reference semantics.)
 
 if USE_UNROLL_PHASE
 HACKT_CREATE_TEST_FAILURES =

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.14 2006/12/20 20:36:44 fang Exp $
+	$Id: CHP.cc,v 1.16.2.15 2006/12/25 03:27:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -274,6 +274,7 @@ action_sequence::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
 /**
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
@@ -283,6 +284,7 @@ action_sequence::execute(const nonmeta_context&,
 		update_reference_array_type&) const {
 	// no-op
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -516,6 +518,7 @@ if (!branches) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
@@ -525,6 +528,7 @@ concurrent_actions::execute(const nonmeta_context&,
 		update_reference_array_type&) const {
 	// no-op
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -834,7 +838,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if 0 && ENABLE_CHP_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  

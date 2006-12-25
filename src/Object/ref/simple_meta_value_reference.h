@@ -2,12 +2,13 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.17.12.1 2006/12/12 10:18:17 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.17.12.2 2006/12/25 03:27:54 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 #define __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 
+#include "Object/devel_switches.h"
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/common/multikey_index.h"
 #include "Object/ref/meta_value_reference_base.h"
@@ -22,6 +23,7 @@ class const_param;
 class const_index_list;
 class const_range_list;
 class unroll_context;
+class nonmeta_context_base;
 class param_expr;
 class template_formals_manager;
 class dynamic_param_expr_list;
@@ -159,6 +161,12 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
+#if 0 && USE_NONMETA_RESOLVE
+	count_ptr<const const_param>
+	nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const expr_base_type>&) const;
+#endif
+
         count_ptr<const expr_base_type>
         substitute_default_positional_parameters(
                 const template_formals_manager&,
@@ -172,6 +180,9 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+#if USE_NONMETA_RESOLVE
+	using parent_type::nonmeta_resolve_copy;
+#endif
 
 protected:
 	using common_base_type::collect_transient_info_base;

@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.18.4.1 2006/12/04 09:55:53 fang Exp $
+	$Id: enum_traits.h,v 1.18.4.2 2006/12/25 03:27:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -53,6 +53,11 @@ struct class_traits<enum_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
+	/**
+		Temporary, not really used yet.
+		TODO: decide how to interpret and pass enums
+	 */
+	typedef	pint_const			const_expr_type;
 	typedef	enum_expr			data_expr_base_type;
 	typedef	enum_value_type			data_value_type;
 

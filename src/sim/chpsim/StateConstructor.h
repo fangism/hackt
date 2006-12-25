@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.1.2.4 2006/12/14 23:43:27 fang Exp $
+	$Id: StateConstructor.h,v 1.1.2.5 2006/12/25 03:28:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -12,7 +12,6 @@
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/chpsim/State.h"
 #include "sim/common.h"
-// #include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace SIM {

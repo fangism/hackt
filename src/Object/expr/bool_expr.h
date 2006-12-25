@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: bool_expr.h,v 1.6.32.1 2006/12/12 10:17:37 fang Exp $
+	$Id: bool_expr.h,v 1.6.32.2 2006/12/25 03:27:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
@@ -16,8 +16,8 @@
 
 namespace HAC {
 namespace entity {
-class unroll_context;
-using util::memory::count_ptr;
+class pbool_const;
+class const_param;
 
 //=============================================================================
 /**
@@ -39,6 +39,23 @@ virtual	~bool_expr() { }
 virtual	UNROLL_RESOLVE_COPY_BOOL_PROTO = 0;
 
 	UNROLL_RESOLVE_COPY_DATA_PROTO;
+
+#if USE_NONMETA_RESOLVE
+#define	NONMETA_RESOLVE_COPY_BOOL_PROTO					\
+	count_ptr<const const_param>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const bool_expr>&) const
+
+#define	NONMETA_RESOLVE_RVALUE_BOOL_PROTO				\
+	count_ptr<const pbool_const>					\
+	__nonmeta_resolve_rvalue(const nonmeta_context_base&,		\
+		const count_ptr<const bool_expr>&) const
+
+virtual	NONMETA_RESOLVE_RVALUE_BOOL_PROTO = 0;
+virtual	NONMETA_RESOLVE_COPY_BOOL_PROTO = 0;
+
+	NONMETA_RESOLVE_COPY_DATA_PROTO;
+#endif
 
 virtual	EXPR_ACCEPT_VISITOR_PROTO = 0;
 

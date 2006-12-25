@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.16 2006/12/20 20:36:50 fang Exp $
+	$Id: State.cc,v 1.1.2.17 2006/12/25 03:28:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/event.tcc"
 #include "sim/signal_handler.tcc"
+#include "sim/chpsim/nonmeta_context.h"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -60,9 +61,14 @@ using util::copy_if;
  */
 struct State::recheck_transformer {
 	this_type&		state;
+	const state_manager&	sm;
+	const footprint&	topfp;
 
 	explicit
-	recheck_transformer(this_type& s) : state(s) { }
+	recheck_transformer(this_type& s) : 
+		state(s), 
+		sm(state.mod.get_state_manager()), 
+		topfp(state.mod.get_footprint()) { }
 
 	/**
 		\param ei event index to re-evaluate depending on type.
@@ -71,8 +77,9 @@ struct State::recheck_transformer {
 	void
 	operator () (const event_index_type ei) {
 		event_type& e(state.event_pool[ei]);
-		e.recheck(state.mod.get_state_manager(), 
-			state.instances, state.__enqueue_list);
+		const nonmeta_context
+			c(sm, topfp, state.instances, e, state.__enqueue_list);
+		e.recheck(c);
 	}
 };	// end class recheck_transformer
 
@@ -220,8 +227,10 @@ State::step(void) {
 	//	expect references to the channel/variable(s) affected
 	__enqueue_list.clear();
 	__updated_list.clear();
-	event_pool[ei].execute(mod.get_state_manager(), 
-		instances, __updated_list, __enqueue_list);
+	event_type& ev(event_pool[ei]);
+	const nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), 
+		instances, ev, __enqueue_list);
+	ev.execute(c, __updated_list);
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	// __updated_list lists variables updated
 	// At the same time, enlist the successors for evaluation
@@ -290,17 +299,15 @@ State::step(void) {
 	// selection of successors will depend on event_type, of course
 	// TODO: finish me
 }{
-#if 0
-	typedef	event_subscribers_type::const_iterator	const_iterator;
-	const_iterator ri(recheck.begin()), re(recheck.end());
-#else
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this));
-#endif
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
+#if 0
+	// temporarily disabled for regression testing
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 		event_enqueuer(*this));
+#endif
 }
 }
 
