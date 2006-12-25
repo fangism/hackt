@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4.2.2 2006/12/24 18:27:51 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.4.2.3 2006/12/25 02:19:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -43,6 +43,8 @@
 #include "Object/global_entry.h"
 #include "Object/ref/nonmeta_ref_implementation.tcc"
 #include "Object/nonmeta_context.h"
+#include "Object/nonmeta_variable.h"
+#include "Object/nonmeta_state.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -74,6 +76,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, datatype_ta
 	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
 	typedef	typename reference_type::index_list_type
 							index_list_type;
+	typedef	typename reference_type::const_expr_type
+							const_expr_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
 	typedef	count_ptr<const typename reference_type::const_expr_type>
@@ -132,9 +136,9 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		const nonmeta_context_base& c, const return_type& p)
 {
 	typedef	reference_type				this_type;
-#if 0
-	// Lookup globally indexed reference, use tagged-pool.  
-#endif
+	simple_meta_instance_reference<Tag>
+		mref(_this.value_collection_ref);
+	// size_t local_ind;
 	if (_this.array_indices) {
 		// resolve the indices
 		// if indices are all meta-valued, then resolve all the way
@@ -148,23 +152,33 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 				"indices." << endl;
 			return const_return_type(NULL);
 		}
-		// TODO: finish me
+		// could be easily more efficient with refactoring...
 #if 0
-		excl_ptr<index_list_type>
-			ri(resolved_indices.exclusive_release());
-		count_ptr<this_type>
-			ret(new this_type(_this.value_collection_ref));
-		ret->attach_indices(ri);
-		INVARIANT(!ri);		// transferred ownership
-		return ret;
+		const simple_meta_instance_reference<Tag>
+			mref(_this.value_collection_ref, resolved_indices);
+#else
+		mref.attach_indices(resolved_indices);
 #endif
+		// CAUTION: was intended for top-level lookups only
+		// this may return a footprint-local index
+		// See lookup adaptations in "sim/chpsim/DependenceCollector.cc"
 	} else {
 		STACKTRACE_INDENT_PRINT("scalar" << endl);
 		// is scalar reference (cannot be implicit indices!)
 #if 0
-		return p;
+		const simple_meta_instance_reference<Tag>
+			mref(_this.value_collection_ref);
 #endif
 	}
+	const size_t local_ind = mref.lookup_globally_allocated_index(
+			c.sm, c.topfp);
+	const size_t global_index =
+		(c.fpf) ? footprint_frame_transformer(
+			c.fpf->template get_frame_map<Tag>())(local_ind)
+		: local_ind;
+	return const_return_type(
+		new const_expr_type(
+			c.values.template get_pool<Tag>()[global_index].value));
 }
 
 };	// end struct nonmeta_unroll_resolve_copy_policy

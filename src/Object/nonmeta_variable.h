@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.2 2006/12/20 08:33:18 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.2.2.1 2006/12/25 02:19:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -61,6 +61,7 @@ public:
 		The value type.
 	 */
 	typedef	char				value_type;
+	value_type				value;
 
 	// for now...
 	using parent_type::dump_struct;
@@ -76,10 +77,26 @@ class IntVariable : public nonmeta_variable_base {
 public:
 	/// the value type
 	typedef	unsigned int			value_type;
+	value_type				value;
 
 	// for now...
 	using parent_type::dump_struct;
 };	// end clas IntVariable
+
+//=============================================================================
+/**
+	Provisional enum variable class, not really used yet.
+ */
+class EnumVariable : public nonmeta_variable_base {
+	typedef	nonmeta_variable_base			parent_type;
+public:
+	/// the value type
+	typedef	unsigned int			value_type;
+	value_type				value;
+
+	// for now...
+	using parent_type::dump_struct;
+};	// end class EnumVariable
 
 //=============================================================================
 /**

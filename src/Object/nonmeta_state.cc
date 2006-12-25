@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.1.2.1 2006/12/19 23:44:02 fang Exp $
+	$Id: nonmeta_state.cc,v 1.1.2.1.2.1 2006/12/25 02:19:44 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/traits/enum_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -26,6 +27,7 @@ nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
 	this->pool.resize(s);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 nonmeta_state_base<Tag>::~nonmeta_state_base() { }
 
@@ -35,6 +37,7 @@ nonmeta_state_base<Tag>::~nonmeta_state_base() { }
 nonmeta_state_manager::nonmeta_state_manager(const state_manager& sm) :
 		bool_base_type(sm), 
 		int_base_type(sm), 
+		enum_base_type(sm), 
 		channel_base_type(sm) {
 }
 
@@ -67,6 +70,18 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 			o << "\" ";
 			// no static structural information
 			// int_pool[i].dump_struct(o);
+			o << endl;
+		}
+	}{
+		const global_entry_pool<enum_tag>& ip(sm.get_pool<enum_tag>());
+		const size_t enums = enum_base_type::pool.size();
+		size_t i = FIRST_VALID_NODE;
+		for ( ; i<enums; ++i) {
+			o << "enum[" << i << "]: \"";
+			ip[i].dump_canonical_name(o, topfp, sm);
+			o << "\" ";
+			// no static structural information
+			// enum_pool[i].dump_struct(o);
 			o << endl;
 		}
 	}{

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.7.2.2 2006/12/22 04:11:10 fang Exp $
+	$Id: Event.cc,v 1.1.2.7.2.3 2006/12/25 02:19:50 fang Exp $
  */
 
 #include <iostream>
@@ -13,7 +13,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
 #include "util/STL/valarray_iterator.h"
-#include "Object/nonmeta_context.h"
+#include "sim/chpsim/nonmeta_context.h"
 
 namespace HAC {
 namespace SIM {
@@ -100,9 +100,15 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 	TODO: Need to examine how they are constructed...
  */
 void
-EventNode::recheck(const state_manager& sm, const footprint& f,
-		InstancePools& p, vector<event_index_type>& enqueue) {
-	const entity::nonmeta_context c(sm, f, p, *this, enqueue);
+EventNode::recheck(
+#if 0
+		const state_manager& sm, const footprint& f,
+		InstancePools& p, vector<event_index_type>& enqueue
+#else
+		const nonmeta_context& c
+#endif
+		) {
+//	const entity::nonmeta_context c(sm, f, p, *this, enqueue);
 	if (guard_expr) {
 		// if (guard_expr->nonmeta_resolve(c))
 	}
@@ -117,10 +123,17 @@ EventNode::recheck(const state_manager& sm, const footprint& f,
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(const state_manager& sm, const footprint& f, 
+EventNode::execute(
+#if 0
+		const state_manager& sm, const footprint& f, 
 		InstancePools& p, 
 		vector<instance_reference>& updates, 
-		vector<event_index_type>& enqueue) {
+		vector<event_index_type>& enqueue
+#else
+		const nonmeta_context& c, 
+		vector<instance_reference>& updates
+#endif
+		) {
 #if 0
 	// actually, guard expression should be checked before an event
 	// is enqueued.
@@ -130,7 +143,7 @@ EventNode::execute(const state_manager& sm, const footprint& f,
 	}
 #endif
 	if ((event_type != EVENT_NULL) && action_ptr) {
-		const entity::nonmeta_context c(sm, f, p, *this, enqueue);
+		// const entity::nonmeta_context c(sm, f, p, *this, enqueue);
 		// at the same time, enqueue successors, depending on event_type
 #if ENABLE_CHP_EXECUTE
 		action_ptr->execute(c, updates);
@@ -140,7 +153,7 @@ EventNode::execute(const state_manager& sm, const footprint& f,
 		// else do nothing
 		// enqueue all successors
 		copy(begin(successor_events), end(successor_events), 
-			back_inserter(enqueue));
+			back_inserter(c.queue));
 	}
 }
 

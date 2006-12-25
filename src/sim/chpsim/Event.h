@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.12.2.1 2006/12/22 04:11:11 fang Exp $
+	$Id: Event.h,v 1.1.2.12.2.2 2006/12/25 02:19:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -31,6 +31,7 @@ namespace CHP {
 namespace SIM {
 namespace CHPSIM {
 class DependenceSetCollector;
+class nonmeta_context;
 using std::ostream;
 using std::string;
 using std::vector;
@@ -145,6 +146,9 @@ public:
 	this_type&
 	operator = (const this_type&);
 
+	const size_t
+	get_process_index(void) const { return process_index; }
+
 	void
 	set_guard_expr(const count_ptr<const bool_expr>&);
 
@@ -159,14 +163,24 @@ public:
 		deps.import(d);
 	}
 
+#if 0
 	void
 	execute(const state_manager&, const footprint&, InstancePools&, 
 		vector<instance_reference>&, 
 		vector<event_index_type>&);
+#else
+	void
+	execute(const nonmeta_context&, vector<instance_reference>&);
+#endif
 
+#if 0
 	void
 	recheck(const state_manager&, const footprint&, InstancePools&, 
 		vector<event_index_type>&);
+#else
+	void
+	recheck(const nonmeta_context&);
+#endif
 
 	ostream&
 	dump_struct(ostream&) const;

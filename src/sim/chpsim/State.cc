@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.16.2.2 2006/12/22 04:11:14 fang Exp $
+	$Id: State.cc,v 1.1.2.16.2.3 2006/12/25 02:19:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/event.tcc"
 #include "sim/signal_handler.tcc"
+#include "sim/chpsim/nonmeta_context.h"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -76,9 +77,9 @@ struct State::recheck_transformer {
 	void
 	operator () (const event_index_type ei) {
 		event_type& e(state.event_pool[ei]);
-		e.recheck(sm, topfp, 
-			// can also factor these member references out
-			state.instances, state.__enqueue_list);
+		const nonmeta_context
+			c(sm, topfp, state.instances, e, state.__enqueue_list);
+		e.recheck(c);
 	}
 };	// end class recheck_transformer
 
@@ -226,8 +227,10 @@ State::step(void) {
 	//	expect references to the channel/variable(s) affected
 	__enqueue_list.clear();
 	__updated_list.clear();
-	event_pool[ei].execute(mod.get_state_manager(), mod.get_footprint(),
-		instances, __updated_list, __enqueue_list);
+	event_type& ev(event_pool[ei]);
+	const nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), 
+		instances, ev, __enqueue_list);
+	ev.execute(c, __updated_list);
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	// __updated_list lists variables updated
 	// At the same time, enlist the successors for evaluation

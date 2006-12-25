@@ -5,6 +5,15 @@
 
 2006-12-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-06:
+	  Finished (untested) simple_nonmeta_value_reference run-time lookup.
+	  Moved CHPsim-specific nonmeta context class into sim/chpsim.
+	  Added enum member instance to nonmeta_state.
+	  Added missing value field to *Variable (nonmeta) classes. 
+	  Rewrote CHPSIM::execute to pass bundled reference context argument.
+	  Branch pretty much ready to merge, though untested.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-05:
 	  It compiles and links again!  (untested)
 	  Completed resolution of nonmeta-indices, which currently
