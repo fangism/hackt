@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.15 2006/12/25 03:27:51 fang Exp $
+	$Id: CHP.cc,v 1.16.2.16 2006/12/26 21:26:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -46,6 +46,7 @@
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/State.h"
+#include "sim/chpsim/nonmeta_context.h"
 
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
@@ -282,6 +283,16 @@ action_sequence::accept(StateConstructor& s) const {
 void
 action_sequence::execute(const nonmeta_context&, 
 		update_reference_array_type&) const {
+	// no-op
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequences should never be used as leaf events, 
+	so this does nothing.  
+ */
+void
+action_sequence::recheck(const nonmeta_context&) const {
 	// no-op
 }
 #endif
@@ -526,6 +537,16 @@ if (!branches) {
 void
 concurrent_actions::execute(const nonmeta_context&, 
 		update_reference_array_type&) const {
+	// no-op
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Action groups should never be used as leaf events, 
+	so this does nothing.  
+ */
+void
+concurrent_actions::recheck(const nonmeta_context&) const {
 	// no-op
 }
 #endif
@@ -845,6 +866,24 @@ deterministic_selection::accept(StateConstructor& s) const {
  */
 void
 deterministic_selection::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	// 1) evaluate all clauses, which contain guard expressions
+	//	Use functional pass.
+	// 2) if exactly one is true, return reference to it as the successor
+	//	event to enqueue (not execute right away)
+	//	a) if more than one true, signal a run-time error
+	//	b) if none are true, and there is an else clause, use it
+	//	c) if none are true, without else clause, 'block',
+	//		subscribing this event to its set of dependents.  
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Action groups should never be used as leaf events, 
+	so this does nothing.  
+ */
+void
+deterministic_selection::recheck(const nonmeta_context&, 
 		update_reference_array_type&) const {
 	// 1) evaluate all clauses, which contain guard expressions
 	//	Use functional pass.
@@ -1227,6 +1266,29 @@ assignment::accept(StateConstructor& s) const {
 	// updates successors' predecessor-counts
 	s.count_predecessors(new_event);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+/**
+	lvalue must be bool, int, or enum reference.  
+	\param u collection of references updated by the assignment execution,
+		namely, the lvalues.
+ */
+void
+assignment::execute(const nonmeta_context& c,
+		update_reference_array_type& u) const {
+	lval->nonmeta_assign(rval, c, u);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assignments are non-blocking, and thus need no re-evaluation.
+ */
+void
+assignment::recheck(const nonmeta_context&) const {
+	// no-op
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

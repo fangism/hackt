@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.24.8.2 2006/12/13 04:12:19 fang Exp $
+	$Id: unroll_context.cc,v 1.24.8.3 2006/12/26 21:26:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -27,6 +27,7 @@
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/global_entry_context.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -62,6 +63,15 @@ unroll_context::unroll_context(const footprint* const f,
 		const_target_footprint(f), 
 		lookup_footprint(f), 
 		top_footprint(t) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+unroll_context::unroll_context(const global_entry_context_base& c) :
+		next(),
+		target_footprint(NULL),
+		const_target_footprint(c.get_top_footprint_ptr()), 
+		lookup_footprint(c.get_top_footprint_ptr()), 
+		top_footprint(c.get_top_footprint_ptr()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

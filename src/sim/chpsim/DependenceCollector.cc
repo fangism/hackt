@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.6 2006/12/14 08:56:51 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.7 2006/12/26 21:26:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -22,6 +22,7 @@
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
+#include "Object/global_entry_context.h"
 
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"
@@ -55,6 +56,7 @@ using entity::global_entry_pool;
 using entity::footprint_frame;
 using entity::footprint_frame_transformer;
 using entity::simple_nonmeta_instance_reference_base;
+using entity::global_entry_context;
 using util::set_inserter;
 using util::memory::never_ptr;
 
@@ -62,15 +64,24 @@ using util::memory::never_ptr;
 // class DependenceSetCollector method definitions
 
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
+#if 0
 		_sm(s.get_state_manager()), 
-		_fp(s.get_process_footprint()), 
+		_fp(s.get_process_footprint()), 	// is top-level!
 		_ff(s.current_process_index ?
 			&_sm.get_pool<process_tag>()[s.current_process_index]
 			._frame
-			: NULL), 
+			: NULL), 	// don't default to top-level
+#else
+		global_entry_context(s.get_state_manager(), 
+			s.get_process_footprint(), 	// is top-level!
+			(s.current_process_index ?
+			&s.get_state_manager().get_pool<process_tag>()
+				[s.current_process_index]._frame
+			: NULL)), 	// don't default to top-level
+#endif
 		bool_set(), int_set(), channel_set() {
 	if (s.current_process_index) {
-		NEVER_NULL(_ff);
+		NEVER_NULL(fpf);
 	}
 }
 
@@ -163,49 +174,49 @@ DEFINE_BINARY_VISIT(bool_logical_expr)
 void
 DependenceSetCollector::visit(const simple_bool_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
-	bool_set.insert(_ff ? footprint_frame_transformer(
-			_ff->get_frame_map<bool_tag>())(i) : i);
+	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
+	bool_set.insert(fpf ? footprint_frame_transformer(
+			fpf->get_frame_map<bool_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const simple_int_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
-	int_set.insert(_ff ? footprint_frame_transformer(
-			_ff->get_frame_map<int_tag>())(i) : i);
+	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
+	int_set.insert(fpf ? footprint_frame_transformer(
+			fpf->get_frame_map<int_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const simple_channel_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
-	channel_set.insert(_ff ? footprint_frame_transformer(
-			_ff->get_frame_map<channel_tag>())(i) : i);
+	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
+	channel_set.insert(fpf ? footprint_frame_transformer(
+			fpf->get_frame_map<channel_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const bool_member_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
-	bool_set.insert(_ff ? footprint_frame_transformer(
-			_ff->get_frame_map<bool_tag>())(i) : i);
+	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
+	bool_set.insert(fpf ? footprint_frame_transformer(
+			fpf->get_frame_map<bool_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const int_member_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
-	int_set.insert(_ff ? footprint_frame_transformer(
-			_ff->get_frame_map<int_tag>())(i) : i);
+	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
+	int_set.insert(fpf ? footprint_frame_transformer(
+			fpf->get_frame_map<int_tag>())(i) : i);
 }
 
 void
 DependenceSetCollector::visit(const channel_member_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(_sm, _fp);
-	channel_set.insert(_ff ? footprint_frame_transformer(
-			_ff->get_frame_map<channel_tag>())(i) : i);
+	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
+	channel_set.insert(fpf ? footprint_frame_transformer(
+			fpf->get_frame_map<channel_tag>())(i) : i);
 }
 
 void
@@ -213,12 +224,12 @@ DependenceSetCollector::visit(
 		const aggregate_bool_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	vector<node_index_type> indices;
-if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
-	if (_ff) {
+if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
+	if (fpf) {
 		transform(indices.begin(), indices.end(),
 			set_inserter(bool_set), 
 			footprint_frame_transformer(
-				_ff->get_frame_map<bool_tag>()));
+				fpf->get_frame_map<bool_tag>()));
 	} else {
 		copy(indices.begin(), indices.end(), set_inserter(bool_set));
 	}
@@ -234,12 +245,12 @@ DependenceSetCollector::visit(
 		const aggregate_int_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	vector<node_index_type> indices;
-if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
-	if (_ff) {
+if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
+	if (fpf) {
 		transform(indices.begin(), indices.end(),
 			set_inserter(int_set), 
 			footprint_frame_transformer(
-				_ff->get_frame_map<int_tag>()));
+				fpf->get_frame_map<int_tag>()));
 	} else {
 		copy(indices.begin(), indices.end(), set_inserter(int_set));
 	}
@@ -255,12 +266,12 @@ DependenceSetCollector::visit(
 		const aggregate_channel_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	vector<node_index_type> indices;
-if (r.lookup_globally_allocated_indices(_sm, _fp, indices).good) {
-	if (_ff) {
+if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
+	if (fpf) {
 		transform(indices.begin(), indices.end(),
 			set_inserter(channel_set), 
 			footprint_frame_transformer(
-				_ff->get_frame_map<channel_tag>()));
+				fpf->get_frame_map<channel_tag>()));
 	} else {
 		copy(indices.begin(), indices.end(), set_inserter(channel_set));
 	}
@@ -288,8 +299,7 @@ void									\
 DependenceSetCollector::visit(const type& r) {				\
 	STACKTRACE_VERBOSE;						\
 	vector<node_index_type> indices;				\
-	if (r.lookup_may_reference_global_indices(			\
-			_sm, _fp, _ff, indices).good) {			\
+	if (r.lookup_may_reference_global_indices(*this, indices).good) { \
 		copy(indices.begin(), indices.end(), set_inserter(set)); \
 		const never_ptr<const type::index_list_type>		\
 			ind(r.get_indices());				\

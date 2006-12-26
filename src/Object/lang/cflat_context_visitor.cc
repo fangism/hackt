@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.5 2006/11/02 22:02:02 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.5.8.1 2006/12/26 21:26:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -22,6 +22,7 @@ namespace entity {
 // class cflat_context_visitor method definitions
 
 /**
+	Can also be pushed to parent class.  
 	Frequently used, consider inlining.  
 	The footprint_frame is NOT set in the case of top-level (new supported)
 	visits (b/c type frame is not applicable), in which case, 
@@ -38,8 +39,16 @@ cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 	INVARIANT(lni);
 	// cerr << "lni = " << lni << endl;
 	if (fpf) {
+		// see also footprint_frame_transformer in global_entry.h
+#if 0
+		// equivalent
+		return footprint_frame_transformer(
+			fpf->get_frame_map<bool_tag>())(lni);
+#else
 		return fpf->get_frame_map<bool_tag>()[lni-1];
+#endif
 	} else {
+		// is top-level footprint
 		return lni;
 	}
 }
@@ -51,7 +60,8 @@ cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 ostream&
 cflat_context_visitor::__dump_resolved_canonical_literal(
 		ostream& os, const size_t ni) const {
-	return sm->get_pool<bool_tag>()[ni].dump_canonical_name(os, *fp, *sm);
+	return sm->get_pool<bool_tag>()[ni]
+		.dump_canonical_name(os, *topfp, *sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

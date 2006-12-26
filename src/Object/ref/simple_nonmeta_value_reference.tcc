@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.5 2006/12/25 03:27:55 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.6 2006/12/26 21:26:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -46,6 +46,8 @@
 #include "Object/nonmeta_variable.h"
 #include "Object/nonmeta_state.h"
 
+#include "common/ICE.h"
+
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
@@ -78,6 +80,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, datatype_ta
 							index_list_type;
 	typedef	typename reference_type::const_expr_type
 							const_expr_type;
+	typedef	typename reference_type::data_expr_base_type
+							data_expr_base_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
 	typedef	count_ptr<const typename reference_type::const_expr_type>
@@ -153,25 +157,17 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 			return const_return_type(NULL);
 		}
 		// could be easily more efficient with refactoring...
-#if 0
-		const simple_meta_instance_reference<Tag>
-			mref(_this.value_collection_ref, resolved_indices);
-#else
+		// we know these resolved indices are constant now...
 		mref.attach_indices(resolved_indices);
-#endif
 		// CAUTION: was intended for top-level lookups only
 		// this may return a footprint-local index
 		// See lookup adaptations in "sim/chpsim/DependenceCollector.cc"
 	} else {
 		STACKTRACE_INDENT_PRINT("scalar" << endl);
 		// is scalar reference (cannot be implicit indices!)
-#if 0
-		const simple_meta_instance_reference<Tag>
-			mref(_this.value_collection_ref);
-#endif
 	}
 	const size_t local_ind = mref.lookup_globally_allocated_index(
-			c.sm, c.topfp);
+			*c.sm, *c.topfp);
 	const size_t global_index =
 		(c.fpf) ? footprint_frame_transformer(
 			c.fpf->template get_frame_map<Tag>())(local_ind)
@@ -179,6 +175,52 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 	return const_return_type(
 		new const_expr_type(
 			c.values.template get_pool<Tag>()[global_index].value));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns rvalue to lvalue in the run-time, nonmeta context.  
+	TODO: push referenced lvalue into update_reference_array.  
+ */
+static
+void
+nonmeta_assign(const reference_type& lref, 
+		const count_ptr<const data_expr_base_type>& rval, 
+		const nonmeta_context_base& c, 
+		update_reference_array_type& u)
+{
+	NEVER_NULL(rval);	// assert dynamic_cast
+	const count_ptr<const const_expr_type>
+		rv(rval->__nonmeta_resolve_rvalue(c, rval));
+	if (!rval) {
+		// TODO: more verbose message
+		cerr << "Run-time error resolving rvalue." << endl;
+		THROW_EXIT;
+	}
+	count_ptr<const const_index_list> l_ind(NULL);
+	if (lref.get_indices()) {
+		l_ind = lref.get_indices()->nonmeta_resolve_copy(c);
+		if (!l_ind) {
+			cerr << "Run-time error resolving lvalue\'s indices."
+				<< endl;
+			THROW_EXIT;
+		}
+	}
+	const simple_meta_instance_reference<Tag>
+		iref(lref.get_inst_base_subtype(), l_ind);
+	const size_t local_ind = (c.fpf ? 
+		iref.lookup_globally_allocated_index
+			(*c.sm, *c.fpf->_footprint) :
+		iref.lookup_globally_allocated_index(*c.sm, *c.topfp));
+	const size_t global_ind = (c.fpf ?
+		footprint_frame_transformer(
+			c.fpf->template get_frame_map<Tag>())(local_ind)
+			: local_ind);
+	c.values.template get_pool<Tag>()[global_ind].value = 
+		rv->static_constant_value();
+#if 0
+	u.push_back(...(, global_ind));
+#endif
 }
 
 };	// end struct nonmeta_unroll_resolve_copy_policy
@@ -193,6 +235,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, parameter_v
 	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
 	typedef	typename reference_type::index_list_type
 							index_list_type;
+	typedef	typename reference_type::data_expr_base_type
+							data_expr_base_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
 	typedef	count_ptr<const typename reference_type::const_expr_type>
@@ -356,13 +400,11 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 {
 	typedef	reference_type				this_type;
 	const const_return_type error(NULL);
-	// BUG TODO: this feels wrong, must refer to locals!!!
-	// need local footprint! (in addition to global?)
-	const unroll_context uc(&c.topfp, &c.topfp);
+	const unroll_context
+		uc((c.fpf ? c.fpf->_footprint : c.topfp), c.topfp);
 	if (_this.array_indices) {
 		// resolve the indices using run-time values
 		const count_ptr<const const_index_list>
-		// count_ptr<index_list_type>
 			resolved_indices(_this.array_indices
 				->nonmeta_resolve_copy(c));
 		if (!resolved_indices) {
@@ -401,6 +443,18 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 	}
 }
 #endif	// USE_NONMETA_RESOLVE
+
+/**
+	Meta-parameter references can never be nonmeta-lvalues.  
+ */
+static
+void
+nonmeta_assign(const reference_type&, 
+		const count_ptr<const data_expr_base_type>&, 
+		const nonmeta_context_base&, 
+		const update_reference_array_type&) {
+	ICE_NEVER_CALL(cerr);
+}
 
 };	// end struct nonmeta_unroll_resolve_copy_policy
 
@@ -652,8 +706,19 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_resolve_copy(
 	return __nonmeta_resolve_rvalue(c, p);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #endif	// USE_NONMETA_RESOLVE
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_assign(
+		const count_ptr<const data_expr>& rval, 
+		const nonmeta_context_base& c,
+		update_reference_array_type& u) const {
+	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
+		nonmeta_assign(*this, 
+			rval.template is_a<const data_expr_base_type>(),
+			c, u);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -664,11 +729,15 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_resolve_copy(
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::lookup_may_reference_global_indices(
+#if 0
 		const state_manager& sm, const footprint& fp, 
 		const footprint_frame* const ff, 
+#else
+		const global_entry_context& c, 
+#endif
 		vector<size_t>& indices) const {
 	return __nonmeta_instance_lookup_may_reference_indices_impl(
-		*this, sm, fp, ff, indices, Tag());
+		*this, c, indices, Tag());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

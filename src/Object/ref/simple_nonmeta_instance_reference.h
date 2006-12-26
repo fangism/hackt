@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.11.4.2 2006/12/13 02:29:08 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.11.4.3 2006/12/26 21:26:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -19,6 +19,8 @@ namespace HAC {
 namespace entity {
 class data_expr;
 class unroll_context;
+class nonmeta_context_base;
+class global_entry_context;
 class nonmeta_expr_visitor;
 class state_manager;
 class footprint;
@@ -101,10 +103,21 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const this_type>&) const;
 
+	// wrap arguments in nonmeta_context_base instead?
 	good_bool
-	lookup_may_reference_global_indices(const state_manager&, 
+	lookup_may_reference_global_indices(
+#if 0
+		const state_manager&, 
 		const footprint&, const footprint_frame* const,
+#else
+		const global_entry_context&, 
+#endif
 		std::default_vector<size_t>::type&) const;
+
+#if 0
+	size_t
+	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
+#endif
 
 	void
 	accept(nonmeta_expr_visitor&) const;

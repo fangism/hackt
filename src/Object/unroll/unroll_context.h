@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.16.8.2 2006/12/13 04:12:20 fang Exp $
+	$Id: unroll_context.h,v 1.16.8.3 2006/12/26 21:26:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -26,6 +26,7 @@ class param_value_placeholder;
 class physical_instance_placeholder;
 class physical_instance_collection;
 class param_value_collection;
+class global_entry_context_base;
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -98,6 +99,9 @@ public:
 
 	// called by top-module
 	unroll_context(footprint* const, const footprint* const);
+	// automatic converting from global_entry_context
+	explicit
+	unroll_context(const global_entry_context_base&);
 	// called by lookup functions
 	unroll_context(const footprint* const, const footprint* const);
 	// read-only footrint, no target

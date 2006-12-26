@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.6 2006/12/25 03:27:52 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.7 2006/12/26 21:26:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -18,13 +18,13 @@ namespace SIM {
 namespace CHPSIM {
 	// we need some sort of CHP_visitor refinement!
 	class StateConstructor;
+	class nonmeta_context;
 }	// end namespace CHPSIM
 }	// end namespace SIM
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
 class nonmeta_state_manager;
-class nonmeta_context;
 /**
 	Namespace for CHP object classes.  
  */
@@ -32,6 +32,7 @@ namespace CHP {
 using entity::nonmeta_state_manager;
 using std::ostream;
 using SIM::CHPSIM::StateConstructor;
+using SIM::CHPSIM::nonmeta_context;
 using util::persistent;
 using util::persistent_object_manager;
 class action;
@@ -96,6 +97,12 @@ virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 	execute(const nonmeta_context&, update_reference_array_type&) const
 
 virtual	CHP_EXECUTE_PROTO = 0;
+
+#define	CHP_RECHECK_PROTO						\
+	void								\
+	recheck(const nonmeta_context&) const
+
+virtual	CHP_RECHECK_PROTO = 0;
 #endif
 
 };	// end class action

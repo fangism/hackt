@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.5 2006/12/14 08:56:50 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.11.4.6 2006/12/26 21:26:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -205,12 +205,16 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::lookup_may_reference_global_indices(
+#if 0
 		const state_manager& sm, const footprint& fp, 
 		const footprint_frame* const ff, 
+#else
+		const global_entry_context& c, 
+#endif
 		vector<size_t>& indices) const {
 	STACKTRACE_VERBOSE;
 	return __nonmeta_instance_lookup_may_reference_indices_impl(
-		*this, sm, fp, ff, indices, Tag());
+		*this, c, indices, Tag());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.1 2006/12/14 08:56:49 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.2 2006/12/26 21:26:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -13,6 +13,7 @@
 #include "Object/ref/nonmeta_ref_implementation.h"
 // #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/global_entry_context.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/traits/classification_tags.h"
@@ -50,8 +51,12 @@ good_bool
 __nonmeta_instance_lookup_may_reference_indices_impl(
 		const reference_type& r, 
 //		const simple_nonmeta_value_reference<Tag>& r, 
+#if 0
 		const state_manager& sm, const footprint& fp, 
 		const footprint_frame* const ff, 
+#else
+		const global_entry_context& c, 
+#endif
 		vector<size_t>& indices, physical_instance_tag) {
 //	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
 //	typedef	class_traits<Tag>			traits_type;
@@ -59,16 +64,19 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 	typedef	typename traits_type::tag_type		Tag;
 	typedef	typename traits_type::instance_collection_generic_type
 				instance_collection_generic_type;
-	if (ff) INVARIANT(ff->_footprint == &fp);
+	const footprint_frame* const ff = c.get_footprint_frame();
+//	if (ff) INVARIANT(ff->_footprint == c.fpf);
+	const footprint* local_fp =
+		(ff ? ff->_footprint : c.get_top_footprint_ptr());
 	never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
 	const count_ptr<dynamic_meta_index_list>
-		mil(r_ind ?  r_ind->make_meta_index_list() :
+		mil(r_ind ? r_ind->make_meta_index_list() :
 			count_ptr<dynamic_meta_index_list>(NULL));
 	if (r_ind && !mil) {
 		STACKTRACE_INDENT_PRINT("nonmeta indices" << endl);
 		// there was at least one non-meta index
 		// grab all collection aliases conservatively
-		const unroll_context dummy(&fp, &fp);
+		const unroll_context dummy(local_fp, c.get_top_footprint_ptr());
 		// correct???
 		const never_ptr<instance_collection_generic_type>
 			ic(dummy.lookup_instance_collection(
@@ -149,7 +157,8 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		const meta_reference_type cr(r.get_inst_base_subtype(), mil);
 		// the call only results in local indices!
 		if (cr.lookup_globally_allocated_indices(
-				sm, fp, indices).good) {
+				*c.get_state_manager(), 
+				*local_fp, indices).good) {
 			if (ff) {
 				// apply transformation if not top-level
 				transform(indices.begin(), indices.end(), 
@@ -161,6 +170,7 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		}
 		else return good_bool(false);
 	}
+	return good_bool(false);	// unreachable
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -172,8 +182,12 @@ template <class Tag>
 good_bool
 __nonmeta_instance_lookup_may_reference_indices_impl(
 		const simple_nonmeta_value_reference<Tag>& r, 
+#if 0
 		const state_manager& sm, const footprint& fp, 
 		const footprint_frame* const ff, 
+#else
+		const global_entry_context&, 
+#endif
 		vector<size_t>& indices, parameter_value_tag) {
 	// no-op!
 	return good_bool(true);

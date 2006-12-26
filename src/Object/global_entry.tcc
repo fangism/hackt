@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16.8.3 2006/12/25 03:27:28 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.4 2006/12/26 21:25:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -124,7 +124,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 	INVARIANT(_footprint);
 	ostream& o(gec.os);
 	const size_t ind(gec.index);
-	const footprint& topfp(*gec.fp);
+	const footprint& topfp(*gec.topfp);
 	const state_manager& sm(*gec.sm);
 	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	if (ind >= _pool.size()) {
@@ -375,6 +375,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 /**
 	Wrapped call that formats properly.  
 	\param topfp should be the top-level footprint belonging to the module.
+	This could just take a global_entry_context_base bundled argument.  
  */
 template <class Tag>
 ostream&
@@ -415,7 +416,7 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 		THROW_EXIT;
 	}
 	o << local_offset << '\t';
-	dump_canonical_name(o, *ged.fp, *ged.sm) << '\t';
+	dump_canonical_name(o, *ged.topfp, *ged.sm) << '\t';
 	parent_type::template dump<Tag>(ged);
 	return o;
 }

@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.24.4.2 2006/12/25 03:27:36 fang Exp $
+ 	$Id: basic_param.cc,v 1.24.4.3 2006/12/26 21:26:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -232,7 +232,7 @@ pbool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 count_ptr<const pbool_const>
 pbool_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
 		const count_ptr<const bool_expr>& b) const {
-	const unroll_context uc(&c.topfp, &c.topfp);
+	const unroll_context uc(c);
 	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
 #endif	// USE_NONMETA_REFERENCE
@@ -409,7 +409,7 @@ pint_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 count_ptr<const pint_const>
 pint_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
 		const count_ptr<const int_expr>& b) const {
-	const unroll_context uc(&c.topfp, &c.topfp);
+	const unroll_context uc(c);
 	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
 #endif	// USE_NONMETA_REFERENCE
@@ -586,7 +586,7 @@ preal_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 count_ptr<const preal_const>
 preal_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
 		const count_ptr<const real_expr>& b) const {
-	const unroll_context uc(&c.topfp, &c.topfp);
+	const unroll_context uc(c);
 	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
 #endif	// USE_NONMETA_REFERENCE

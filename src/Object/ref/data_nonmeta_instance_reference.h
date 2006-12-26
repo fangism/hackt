@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.5 2006/10/18 19:08:03 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.5.12.1 2006/12/26 21:26:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -9,13 +9,17 @@
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "util/memory/count_ptr.h"
 #include "Object/type/canonical_type_fwd.h"
+#include "Object/lang/CHP_base.h"	// for update_reference_array_type
+// #include "sim/chpsim/type_enum.h"
 
 namespace HAC {
 namespace entity {
 class data_expr;
 class data_type_reference;
 class unroll_context;
+class nonmeta_context_base;
 using util::memory::count_ptr;
+using CHP::update_reference_array_type;
 
 //=============================================================================
 /**
@@ -48,6 +52,15 @@ virtual	bool
 		const count_ptr<const data_nonmeta_instance_reference>&) const
 
 	UNROLL_RESOLVE_COPY_NONMETA_DATA_REFERENCE_PROTO;
+
+#define	NONMETA_ASSIGN_PROTO						\
+	void								\
+	nonmeta_assign(const count_ptr<const data_expr>&, 		\
+		const nonmeta_context_base&,				\
+		update_reference_array_type&) const
+
+virtual	NONMETA_ASSIGN_PROTO = 0;
+
 };	// end class data_nonmeta_instance_reference
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.8 2006/12/25 03:28:00 fang Exp $
+	$Id: Event.cc,v 1.1.2.9 2006/12/26 21:26:13 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "sim/chpsim/Event.h"
 #include "sim/ISE.h"
 #include "Object/expr/bool_expr.h"
+#include "Object/expr/pbool_const.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
 #include "util/STL/valarray_iterator.h"
@@ -25,6 +26,7 @@ using std::end;
 using std::copy;
 using std::back_inserter;
 using entity::expr_dump_context;
+using entity::pbool_const;
 
 //=============================================================================
 // class EventNode method definitions
@@ -101,9 +103,27 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
  */
 void
 EventNode::recheck(const nonmeta_context& c) {
-//	const entity::nonmeta_context c(sm, f, p, *this, enqueue);
+	bool ready = true;
 	if (guard_expr) {
-		// if (guard_expr->nonmeta_resolve(c))
+		// TODO: decide error handling via exceptions?
+		const count_ptr<const pbool_const>
+			g(guard_expr->__nonmeta_resolve_rvalue(c, guard_expr));
+		if (!g) {
+			cerr << "Failure resolving run-time value of "
+				"boolean expression: ";
+			guard_expr->dump(cerr,
+				expr_dump_context::default_value) << endl;
+			// temporary
+			THROW_EXIT;
+		}
+		ready &= g->static_constant_value();
+	}
+	if (ready && action_ptr) {
+		// this may or may not enqueue en event depending on
+		// selection type
+#if ENABLE_CHP_EXECUTE
+		action_ptr->recheck(c);
+#endif
 	}
 }
 

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37.2.2 2006/12/25 03:27:25 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.3 2006/12/26 21:25:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -176,7 +176,7 @@
 	Status: temporarily turned off for regression testing
 	Prerequisite: USE_NONMETA_RESOLVE
  */
-#define	ENABLE_CHP_EXECUTE			0
+#define	ENABLE_CHP_EXECUTE			(0 && USE_NONMETA_RESOLVE)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

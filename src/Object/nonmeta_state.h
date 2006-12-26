@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.1.2.3 2006/12/25 03:27:30 fang Exp $
+	$Id: nonmeta_state.h,v 1.1.2.4 2006/12/26 21:26:01 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -102,6 +102,12 @@ public:
 	template <class Tag>
 	const typename nonmeta_state_base<Tag>::pool_type&
 	get_pool(void) const {
+		return nonmeta_state_base<Tag>::pool;
+	}
+
+	template <class Tag>
+	typename nonmeta_state_base<Tag>::pool_type&
+	get_pool(void) {
 		return nonmeta_state_base<Tag>::pool;
 	}
 
