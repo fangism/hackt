@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.3.42.1 2006/12/26 21:25:59 fang Exp $
+	$Id: global_entry_context.h,v 1.3.42.2 2006/12/27 06:01:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -40,7 +40,7 @@ protected:
 	/**
 		Top-level footprint for global lookups.  
 	 */
-	const footprint*			topfp;	// topfp
+	const footprint*			topfp;
 
 public:
 	/**
@@ -52,7 +52,6 @@ public:
 			const state_manager*, &global_entry_context_base::sm>,
 		public member_saver<this_type, 
 			const footprint*, &global_entry_context_base::topfp> {
-		// global_entry_context_base&		ccb;
 		typedef	member_saver<this_type, 
 			const state_manager*, &global_entry_context_base::sm>
 				manager_saver_type;
@@ -122,6 +121,10 @@ public:
 	template <class Tag>
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
+
+	template <class Tag>
+	size_t
+	lookup_global_id(const size_t) const;
 
 };	// end struct global_entry_context
 

@@ -5,6 +5,21 @@
 
 2006-12-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-26:
+	  Cleaned up some of last revisions changes.  
+	  Re-enabled ENABLE_CHP_EXECUTE switch, implemented more
+		CHP::action::execute and ::recheck methods, but still
+		some remain undefined (link fail).  
+	  Moved global ID lookup function to global_entry_context, 
+		for more convenience and consistent reuse by context classes.
+		Added Object/global_entry_context.tcc.
+		Implemented simple_nonmeta_{instance,value}_reference::
+			lookup_nonmeta_global_index().  
+	  CHP::action::recheck now returns a bool to indicate whether or not
+		the *invoking* event should be enqueued for execution.  
+		In other cases, the event's successors are selected from.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-25:
 	  Rewrote a bunch of instance-reference lookup functions to take
 		a bundled global_entry_context argument for ease of 

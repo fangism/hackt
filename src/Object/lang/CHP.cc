@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.16 2006/12/26 21:26:06 fang Exp $
+	$Id: CHP.cc,v 1.16.2.17 2006/12/27 06:01:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -284,6 +284,7 @@ void
 action_sequence::execute(const nonmeta_context&, 
 		update_reference_array_type&) const {
 	// no-op
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -291,9 +292,11 @@ action_sequence::execute(const nonmeta_context&,
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
  */
-void
+bool
 action_sequence::recheck(const nonmeta_context&) const {
 	// no-op
+	ICE_NEVER_CALL(cerr);
+	return false;
 }
 #endif
 
@@ -545,9 +548,10 @@ concurrent_actions::execute(const nonmeta_context&,
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
  */
-void
+bool
 concurrent_actions::recheck(const nonmeta_context&) const {
 	// no-op
+	return false;
 }
 #endif
 
@@ -882,7 +886,7 @@ deterministic_selection::execute(const nonmeta_context&,
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
  */
-void
+bool
 deterministic_selection::recheck(const nonmeta_context&, 
 		update_reference_array_type&) const {
 	// 1) evaluate all clauses, which contain guard expressions
@@ -893,6 +897,7 @@ deterministic_selection::recheck(const nonmeta_context&,
 	//	b) if none are true, and there is an else clause, use it
 	//	c) if none are true, without else clause, 'block',
 	//		subscribing this event to its set of dependents.  
+	return false;
 }
 #endif
 
@@ -1278,15 +1283,17 @@ void
 assignment::execute(const nonmeta_context& c,
 		update_reference_array_type& u) const {
 	lval->nonmeta_assign(rval, c, u);
+	// this should also record the reference updated in @u
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Assignments are non-blocking, and thus need no re-evaluation.
  */
-void
+bool
 assignment::recheck(const nonmeta_context&) const {
 	// no-op
+	return false;
 }
 #endif
 
@@ -1398,6 +1405,28 @@ condition_wait::accept(StateConstructor& s) const {
 	// updates successors' predecessor-counts
 	s.count_predecessors(new_event);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+/**
+	Does nothing, is a NULL event.  
+ */
+void
+condition_wait::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The 'guarded' action is a NULL event, which can always occur.  
+	The guard expression is already checked by the caller
+	as a part of event processing.  
+ */
+bool
+condition_wait::recheck(const nonmeta_context&) const {
+	return true;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1570,6 +1599,35 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+#if 0
+/**
+	Assigns the 'fields' of the channel and flips the (lock) state bit.  
+	Only the channel is 'modified' by a send, so we register it
+	with the update set.  
+ */
+void
+channel_send::execute(const nonmeta_context& c, 
+		update_reference_array_type& u) const {
+	const chan_index = chan->lookup_instance_global_index(c);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Enqueue event if it is ready to execute.  
+	\return true if this event can be unblocked and enqueued for execution.
+ */
+bool
+channel_send::recheck(const nonmeta_context& c) const {
+	// see if referenced channel is ready to send
+	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
+	return nc.can_send();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_send::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
@@ -1735,6 +1793,35 @@ channel_receive::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+#if 0
+/**
+	Assigns the 'fields' of the channel and flips the (lock) state bit.  
+	Both the channel and lvalues are 'modified' by a receive, 
+	so we register them all with the update set.  
+ */
+void
+channel_receive::execute(const nonmeta_context& c, 
+		update_reference_array_type& u) const {
+	const chan_index = chan->lookup_instance_global_index(c);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Enqueue event if it is ready to execute.  
+	\return true if this event can be unblocked and enqueued for execution.
+ */
+bool
+channel_receive::recheck(const nonmeta_context& c) const {
+	// see if referenced channel is ready to receive
+	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
+	return nc.can_receive();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_receive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1864,6 +1951,26 @@ do_forever_loop::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+/**
+	No-op, this should never be called from simulator, as loop
+	body events are expanded.  
+ */
+void
+do_forever_loop::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+do_forever_loop::recheck(const nonmeta_context&) const {
+	ICE_NEVER_CALL(cerr);
+	return false;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1990,6 +2097,30 @@ do_while_loop::accept(StateConstructor& s) const {
 	s.last_event_index = loopback_index;
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && ENABLE_CHP_EXECUTE
+/**
+	Evaluate the guards immediately.
+	If evaluation is true, execute the body branch, else take the
+	else-clause (exit) successor.  
+ */
+void
+do_while_loop::execute(const nonmeta_context& c,
+		update_reference_array_type& u) const {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This event never blocks and thus never needs to be rechecked for 
+	unblocking because the loop-condition comes with an implicit
+	else-clause which is taken if the evaluated condition is false.  
+ */
+void
+do_while_loop::recheck(const nonmeta_context& c) const {
+	return false;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

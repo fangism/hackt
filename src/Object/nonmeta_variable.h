@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.3 2006/12/25 03:27:32 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.4 2006/12/27 06:01:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -16,6 +16,11 @@ namespace HAC {
 namespace entity {
 using std::ostream;
 using std::valarray;
+
+/**
+	Consider overriding with a faster allocator for efficient
+	insertion and removal.
+ */
 typedef	std::set<size_t>		event_subscribers_type;
 	// size_t -> event_index_type
 
@@ -135,6 +140,14 @@ class ChannelState : public ChannelData, public nonmeta_variable_base {
 		else it is ready to be sent.  
 	 */
 	bool				full;
+public:
+	ChannelState();
+
+	bool
+	can_receive(void) const { return full; }
+
+	bool
+	can_send(void) const { return !full; }
 };	// end class ChannelState
 
 //=============================================================================

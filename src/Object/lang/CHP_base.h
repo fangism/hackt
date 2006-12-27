@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.7 2006/12/26 21:26:07 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.8 2006/12/27 06:01:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -98,8 +98,11 @@ virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 
 virtual	CHP_EXECUTE_PROTO = 0;
 
+/**
+	\return true if the invoking event should be enqueued.
+ */
 #define	CHP_RECHECK_PROTO						\
-	void								\
+	bool								\
 	recheck(const nonmeta_context&) const
 
 virtual	CHP_RECHECK_PROTO = 0;

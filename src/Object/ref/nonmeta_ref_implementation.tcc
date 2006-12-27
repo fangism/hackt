@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.2 2006/12/26 21:26:08 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.3 2006/12/27 06:01:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -13,11 +13,14 @@
 #include "Object/ref/nonmeta_ref_implementation.h"
 // #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/unroll/unroll_context.h"
-#include "Object/global_entry_context.h"
+#include "Object/global_entry_context.tcc"
+#include "Object/nonmeta_context.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
+
+#include "common/ICE.h"
 
 #include "util/compose.h"
 #include "util/stacktrace.h"
@@ -37,6 +40,8 @@ using ADS::unary_compose;
 
 //=============================================================================
 /**
+	This collects all references that *may* be referenced
+	by an (nonmeta) instance reference, conservatively.
 	Private implementation to this module.
 	Overloaded and specialized using tag-inheritance.  
 	Code ripped from simple_nonmeta_instance_reference::lookup_may_ref...
@@ -50,16 +55,8 @@ template <class reference_type>
 good_bool
 __nonmeta_instance_lookup_may_reference_indices_impl(
 		const reference_type& r, 
-//		const simple_nonmeta_value_reference<Tag>& r, 
-#if 0
-		const state_manager& sm, const footprint& fp, 
-		const footprint_frame* const ff, 
-#else
 		const global_entry_context& c, 
-#endif
 		vector<size_t>& indices, physical_instance_tag) {
-//	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
-//	typedef	class_traits<Tag>			traits_type;
 	typedef	typename reference_type::traits_type	traits_type;
 	typedef	typename traits_type::tag_type		Tag;
 	typedef	typename traits_type::instance_collection_generic_type
@@ -68,7 +65,7 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 //	if (ff) INVARIANT(ff->_footprint == c.fpf);
 	const footprint* local_fp =
 		(ff ? ff->_footprint : c.get_top_footprint_ptr());
-	never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
+	const never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
 	const count_ptr<dynamic_meta_index_list>
 		mil(r_ind ? r_ind->make_meta_index_list() :
 			count_ptr<dynamic_meta_index_list>(NULL));
@@ -77,7 +74,6 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		// there was at least one non-meta index
 		// grab all collection aliases conservatively
 		const unroll_context dummy(local_fp, c.get_top_footprint_ptr());
-		// correct???
 		const never_ptr<instance_collection_generic_type>
 			ic(dummy.lookup_instance_collection(
 				*r.get_inst_base_subtype())
@@ -181,16 +177,60 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 template <class Tag>
 good_bool
 __nonmeta_instance_lookup_may_reference_indices_impl(
-		const simple_nonmeta_value_reference<Tag>& r, 
-#if 0
-		const state_manager& sm, const footprint& fp, 
-		const footprint_frame* const ff, 
-#else
+		const simple_nonmeta_value_reference<Tag>&, 
 		const global_entry_context&, 
-#endif
 		vector<size_t>& indices, parameter_value_tag) {
 	// no-op!
 	return good_bool(true);
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Looks up the exact run-time reference.
+ */
+template <class reference_type>
+size_t
+__nonmeta_instance_global_lookup_impl(
+		const reference_type& r,
+		const nonmeta_context_base& c, 
+		physical_instance_tag) {
+	typedef	typename reference_type::traits_type	traits_type;
+	typedef	typename traits_type::tag_type		Tag;
+	typedef	typename traits_type::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef	simple_meta_instance_reference<Tag>	meta_reference_type;
+
+	const never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
+	size_t local_ind;
+	if (r_ind) {
+		const count_ptr<const const_index_list>
+			cil(r_ind->nonmeta_resolve_copy(c));
+		if (!cil) {
+			cerr << "Run-time error resolving nonmeta indices."
+				<< endl;
+			THROW_EXIT;
+		}
+		const meta_reference_type cr(r.get_inst_base_subtype(), cil);
+		local_ind = cr.lookup_globally_allocated_index(*c.sm, *c.topfp);
+	} else {
+		const meta_reference_type cr(r.get_inst_base_subtype());
+		local_ind = cr.lookup_globally_allocated_index(*c.sm, *c.topfp);
+	}
+	return c.lookup_global_id<Tag>(local_ind);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Should never be called, meta-parameters are not instances.  
+ */
+template <class Tag>
+size_t
+__nonmeta_instance_global_lookup_impl(
+		const simple_nonmeta_value_reference<Tag>&,
+		const nonmeta_context_base&, 
+		parameter_value_tag) {
+	ICE_NEVER_CALL(cerr);
+	return 0;
 }
 
 //=============================================================================

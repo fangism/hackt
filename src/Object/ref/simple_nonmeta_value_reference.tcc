@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.6 2006/12/26 21:26:10 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.7 2006/12/27 06:01:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -197,25 +197,8 @@ nonmeta_assign(const reference_type& lref,
 		cerr << "Run-time error resolving rvalue." << endl;
 		THROW_EXIT;
 	}
-	count_ptr<const const_index_list> l_ind(NULL);
-	if (lref.get_indices()) {
-		l_ind = lref.get_indices()->nonmeta_resolve_copy(c);
-		if (!l_ind) {
-			cerr << "Run-time error resolving lvalue\'s indices."
-				<< endl;
-			THROW_EXIT;
-		}
-	}
-	const simple_meta_instance_reference<Tag>
-		iref(lref.get_inst_base_subtype(), l_ind);
-	const size_t local_ind = (c.fpf ? 
-		iref.lookup_globally_allocated_index
-			(*c.sm, *c.fpf->_footprint) :
-		iref.lookup_globally_allocated_index(*c.sm, *c.topfp));
-	const size_t global_ind = (c.fpf ?
-		footprint_frame_transformer(
-			c.fpf->template get_frame_map<Tag>())(local_ind)
-			: local_ind);
+	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
+	INVARIANT(global_ind);	// unless there is an error
 	c.values.template get_pool<Tag>()[global_ind].value = 
 		rv->static_constant_value();
 #if 0
@@ -729,15 +712,21 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_assign(
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::lookup_may_reference_global_indices(
-#if 0
-		const state_manager& sm, const footprint& fp, 
-		const footprint_frame* const ff, 
-#else
 		const global_entry_context& c, 
-#endif
 		vector<size_t>& indices) const {
 	return __nonmeta_instance_lookup_may_reference_indices_impl(
 		*this, c, indices, Tag());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up up a global run-time scalar reference. 
+ */
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::lookup_nonmeta_global_index(
+		const nonmeta_context_base& c) const {
+	return __nonmeta_instance_global_lookup_impl(*this, c, Tag());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

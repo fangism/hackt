@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.13 2006/12/25 03:28:03 fang Exp $
+	$Id: State.h,v 1.1.2.14 2006/12/27 06:01:43 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -22,6 +22,7 @@ namespace SIM {
 namespace CHPSIM {
 using std::vector;
 using entity::nonmeta_state_manager;
+using entity::event_subscribers_type;
 class StateConstructor;
 
 //=============================================================================
@@ -107,6 +108,12 @@ private:
 		to avoid repeated initial allocations.  
 	 */
 	enqueue_list_type			__enqueue_list;
+#if 0
+	/**
+		Set of events to recheck for unblocking.  
+	 */
+	event_subscribers_type			__rechecks;
+#endif
 public:
 	explicit
 	State(const module&);

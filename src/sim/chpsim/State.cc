@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.17 2006/12/25 03:28:02 fang Exp $
+	$Id: State.cc,v 1.1.2.18 2006/12/27 06:01:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -79,7 +79,9 @@ struct State::recheck_transformer {
 		event_type& e(state.event_pool[ei]);
 		const nonmeta_context
 			c(sm, topfp, state.instances, e, state.__enqueue_list);
-		e.recheck(c);
+		if (e.recheck(c)) {
+			state.__enqueue_list.push_back(ei);
+		}
 	}
 };	// end class recheck_transformer
 
@@ -114,7 +116,11 @@ State::State(const module& m) :
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
-		__enqueue_list() {
+		__enqueue_list()
+#if 0
+		, __rechecks()
+#endif
+		{
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
@@ -238,7 +244,11 @@ State::step(void) {
 
 {
 	// list of events to check next
+#if 0
+	__rechecks.clear();
+#else
 	event_subscribers_type __rechecks;
+#endif
 	// 3) check if the alteration of state/variable triggers new events
 	//	each variable affected has a dynamic set of 
 	//		'subscribed' pending events (dynamic fanout)

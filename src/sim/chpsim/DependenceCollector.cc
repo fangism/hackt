@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.7 2006/12/26 21:26:12 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.8 2006/12/27 06:01:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -64,21 +64,12 @@ using util::memory::never_ptr;
 // class DependenceSetCollector method definitions
 
 DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) : 
-#if 0
-		_sm(s.get_state_manager()), 
-		_fp(s.get_process_footprint()), 	// is top-level!
-		_ff(s.current_process_index ?
-			&_sm.get_pool<process_tag>()[s.current_process_index]
-			._frame
-			: NULL), 	// don't default to top-level
-#else
 		global_entry_context(s.get_state_manager(), 
 			s.get_process_footprint(), 	// is top-level!
 			(s.current_process_index ?
 			&s.get_state_manager().get_pool<process_tag>()
 				[s.current_process_index]._frame
 			: NULL)), 	// don't default to top-level
-#endif
 		bool_set(), int_set(), channel_set() {
 	if (s.current_process_index) {
 		NEVER_NULL(fpf);

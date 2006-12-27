@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.1.4.1 2006/12/25 03:28:04 fang Exp $
+	$Id: nonmeta_context.cc,v 1.1.4.2 2006/12/27 06:01:43 fang Exp $
  */
 
 #include "sim/chpsim/nonmeta_context.h"
@@ -29,7 +29,8 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				&s.get_pool<process_tag>()
 				[e.get_process_index()]._frame
 				: NULL),
-			v), event(e), queue(q) { }
+			v),
+		event(e), queue(q) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_context::~nonmeta_context() { }

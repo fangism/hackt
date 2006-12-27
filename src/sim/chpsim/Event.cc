@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.9 2006/12/26 21:26:13 fang Exp $
+	$Id: Event.cc,v 1.1.2.10 2006/12/27 06:01:42 fang Exp $
  */
 
 #include <iostream>
@@ -97,11 +97,13 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 	\param sm the structural state manager (hierarchy)
 	\param p the run-time state of variables and channels.
 	\param enqueue return list of event(s) to enqueue for execution.
+	\return true if *this* event should be enqueued.  
+		This avoids having to pass the index of this event down.  
 	Don't forget to countdown predecessors.
 	Is there a problem with guarded selection statements?
 	TODO: Need to examine how they are constructed...
  */
-void
+bool
 EventNode::recheck(const nonmeta_context& c) {
 	bool ready = true;
 	if (guard_expr) {
@@ -118,12 +120,15 @@ EventNode::recheck(const nonmeta_context& c) {
 		}
 		ready &= g->static_constant_value();
 	}
+	// TODO: if action_ptr is NULL should we refer to successor?
 	if (ready && action_ptr) {
-		// this may or may not enqueue en event depending on
-		// selection type
+		// this may or may not enqueue event(s) depending on
+		// selection type (from list of successors)
 #if ENABLE_CHP_EXECUTE
-		action_ptr->recheck(c);
+		return action_ptr->recheck(c);
 #endif
+	} else {
+		return ready;
 	}
 }
 

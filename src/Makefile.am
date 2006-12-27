@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.13 2006/12/25 03:27:24 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.14 2006/12/27 06:01:30 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -496,6 +496,7 @@ OBJECT_TCC_FILES = \
 	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \
 	Object/global_entry.tcc \
+	Object/global_entry_context.tcc \
 	Object/state_manager.tcc \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
