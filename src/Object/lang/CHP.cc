@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.17 2006/12/27 06:01:37 fang Exp $
+	$Id: CHP.cc,v 1.16.2.18 2006/12/28 04:28:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
+#include "Object/expr/pbool_const.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -43,6 +44,8 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/nonmeta_context.h"
+
+// chpsim headers
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/State.h"
@@ -56,6 +59,10 @@
 #include "util/value_saver.h"
 #include "util/indent.h"
 #include "util/IO_utils.tcc"
+#include "util/STL/valarray_iterator.h"
+#include "util/reference_wrapper.h"
+#include "util/iterator_more.h"		// for set_inserter
+#include "util/numeric/random.h"	// for rand48
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::action_sequence,
@@ -122,6 +129,9 @@ using util::persistent_traits;
 using util::write_value;
 using util::read_value;
 using SIM::CHPSIM::EventNode;
+using util::reference_wrapper;
+using util::set_inserter;
+using util::numeric::rand48;
 
 //=============================================================================
 /// helper routines
@@ -536,17 +546,24 @@ if (!branches) {
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
+	Conditionally enqueue all successors, blocking on ones that are not
+	ready to execute.  
  */
 void
-concurrent_actions::execute(const nonmeta_context&, 
+concurrent_actions::execute(const nonmeta_context& c, 
 		update_reference_array_type&) const {
-	// no-op
+	typedef	EventNode	event_type;
+	typedef	size_t		event_index_type;
+	STACKTRACE_VERBOSE;
+	const event_type::successor_list_type& succ(c.event.successor_events);
+	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
+	This event also never blocks, although its successors may block.
  */
 bool
 concurrent_actions::recheck(const nonmeta_context&) const {
@@ -749,6 +766,82 @@ unroll_resolve_selection_list(const selection_list_type& s,
 }
 
 //=============================================================================
+// class guarded_action::selection_evaluator definition
+
+/**
+	Functor for evaluating guarded statements.  
+	This class can be given hidden visibility (local to module).  
+ */
+struct guarded_action::selection_evaluator {
+	// operator on selection_list_type::const_reference
+	typedef	const count_ptr<const guarded_action>&	argument_type;
+	const nonmeta_context_base& 		context;
+	/// successor index (induction variable)
+	size_t					index;
+	/// list of successors whose guards evaluated true (accumulate)
+	vector<size_t>				ready;
+
+	explicit
+	selection_evaluator(const nonmeta_context_base& c) :
+			context(c), index(0), ready() {
+		ready.reserve(2);
+	}
+
+	void
+	operator () (argument_type g) {
+		NEVER_NULL(g);
+	if (g->guard) {
+		const count_ptr<const pbool_const>
+			b(g->guard->__nonmeta_resolve_rvalue(
+				context, g->guard));
+		// error handling
+		if (!b) {
+			cerr << "Run-time error evaluating guard expression."
+				<< endl;
+			THROW_EXIT;
+		}
+		if (b->static_constant_value()) {
+			ready.push_back(index);
+		}
+	} else {
+		// NULL guard is an else clause
+		ready.push_back(index);
+	}
+		++index;
+	}	// end operator ()
+
+private:
+	typedef	selection_evaluator		this_type;
+
+	/// no-copy or assign
+	explicit
+	selection_evaluator(const this_type&);
+
+};	// end class selection_evaluator
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor reference wrapper.
+ */
+class guarded_action::selection_evaluator_ref :
+		public reference_wrapper<guarded_action::selection_evaluator> {
+	typedef	reference_wrapper<guarded_action::selection_evaluator>
+				parent_type;
+	typedef	parent_type::type::argument_type	argument_type;
+public:
+	selection_evaluator_ref(reference r) : parent_type(r) { }
+
+	/**
+		Forwarding operator to underlying reference.  
+	 */
+	void
+	operator () (argument_type a) {
+		get()(a);
+	}
+
+};	// end class selection_evaluator_ref
+
+//=============================================================================
 // class deterministic_selection method definitions
 
 deterministic_selection::deterministic_selection() :
@@ -863,32 +956,36 @@ deterministic_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && ENABLE_CHP_EXECUTE
+#if ENABLE_CHP_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
-	so this does nothing.  
+	so this does nothing other than evaluate guards, via recheck().  
+	Q: this is checked twice: pre-enqueue, and during execution.
+		What if guard is unstable?  and conditions change?
  */
 void
 deterministic_selection::execute(const nonmeta_context&, 
 		update_reference_array_type&) const {
-	// 1) evaluate all clauses, which contain guard expressions
-	//	Use functional pass.
-	// 2) if exactly one is true, return reference to it as the successor
-	//	event to enqueue (not execute right away)
-	//	a) if more than one true, signal a run-time error
-	//	b) if none are true, and there is an else clause, use it
-	//	c) if none are true, without else clause, 'block',
-	//		subscribing this event to its set of dependents.  
+	// drop return value?
+#if 0
+	recheck(c);
+#else
+	ICE_NEVER_CALL(cerr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Action groups should never be used as leaf events, 
-	so this does nothing.  
+	so this does nothing.
+	When a successor is ready to enqueue, unsubscribe this event from
+	its dependencies.  
+	\return false signaling that this event is never enqueued, 
+		(only successors are enqueued).
+	Q: this is checked twice?
  */
 bool
-deterministic_selection::recheck(const nonmeta_context&, 
-		update_reference_array_type&) const {
+deterministic_selection::recheck(const nonmeta_context& c) const {
 	// 1) evaluate all clauses, which contain guard expressions
 	//	Use functional pass.
 	// 2) if exactly one is true, return reference to it as the successor
@@ -897,9 +994,21 @@ deterministic_selection::recheck(const nonmeta_context&,
 	//	b) if none are true, and there is an else clause, use it
 	//	c) if none are true, without else clause, 'block',
 	//		subscribing this event to its set of dependents.  
+	STACKTRACE_VERBOSE;
+	guarded_action::selection_evaluator G(c);	// needs reference wrap
+	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
+	switch (G.ready.size()) {
+	case 0: return false;		// no successor to enqueue
+	case 1: c.rechecks.insert(G.ready.front());
+		return true;
+	default:
+		cerr << "Run-time error: multiple exclusive guards of "
+			"deterministic selection evaluated TRUE!" << endl;
+		THROW_EXIT;
+	}	// end switch
 	return false;
 }
-#endif
+#endif	// ENABLE_CHP_EXECUTE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1039,6 +1148,65 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+/**
+	Action groups should never be used as leaf events, 
+	so this does nothing other than evaluate guards, via recheck().  
+	Q: this is checked twice: pre-enqueue, and during execution.
+		What if guard is unstable?  and conditions change?
+ */
+void
+nondeterministic_selection::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	// drop return value?
+#if 0
+	recheck(c);
+#else
+	ICE_NEVER_CALL(cerr);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Action groups should never be used as leaf events, 
+	so this does nothing.
+	When a successor is ready to enqueue, unsubscribe this event from
+	its dependencies.  
+	\pre selection has no else clause.  
+	\return false signaling that this event is never enqueued, 
+		(only successors are enqueued).
+	Q: this is checked twice?
+ */
+bool
+nondeterministic_selection::recheck(const nonmeta_context& c) const {
+	// 1) evaluate all clauses, which contain guard expressions
+	//	Use functional pass.
+	// 2) if exactly one is true, return reference to it as the successor
+	//	event to enqueue (not execute right away)
+	//	a) if more than one true, signal a run-time error
+	//	b) if none are true, and there is an else clause, use it
+	//	c) if none are true, without else clause, 'block',
+	//		subscribing this event to its set of dependents.  
+	STACKTRACE_VERBOSE;
+	guarded_action::selection_evaluator G(c);	// needs reference wrap
+	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
+	const size_t m = G.ready.size();
+	switch (m) {
+	case 0: return false;		// no successor to enqueue
+	case 1: c.rechecks.insert(G.ready.front());
+		return true;
+	default: {
+		// pick one at random
+		static rand48<long> rgen;
+		const size_t r = rgen();
+		c.rechecks.insert(G.ready[r%m]);
+	}
+	}	// end switch
+	return false;
+}
+#endif	// ENABLE_CHP_EXECUTE
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 nondeterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -1173,6 +1341,28 @@ metaloop_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_EXECUTE
+/**
+	Never called, always expanded.  
+ */
+void
+metaloop_selection::execute(const nonmeta_context&, 
+		update_reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Never called, always expanded.  
+ */
+bool
+metaloop_selection::recheck(const nonmeta_context&) const {
+	ICE_NEVER_CALL(cerr);
+	return false;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 metaloop_selection::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1282,8 +1472,11 @@ assignment::accept(StateConstructor& s) const {
 void
 assignment::execute(const nonmeta_context& c,
 		update_reference_array_type& u) const {
+	typedef	EventNode		event_type;
 	lval->nonmeta_assign(rval, c, u);
-	// this should also record the reference updated in @u
+	// TODO: this should also record the reference updated in @u
+	const event_type::successor_list_type& succ(c.event.successor_events);
+	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1293,7 +1486,7 @@ assignment::execute(const nonmeta_context& c,
 bool
 assignment::recheck(const nonmeta_context&) const {
 	// no-op
-	return false;
+	return true;
 }
 #endif
 
@@ -1372,7 +1565,8 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: fuse this event with successor if single.  
+	TODO: alternative: fuse this event with successor if single.  
+		rationale: every CHPSIM event is "guarded"
 	TODO: what if several conditional waits occur in succession?
 		Take conjunction or sequential evaluation
 		using auxiliary null events?
@@ -2099,15 +2293,30 @@ do_while_loop::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && ENABLE_CHP_EXECUTE
+#if ENABLE_CHP_EXECUTE
 /**
 	Evaluate the guards immediately.
 	If evaluation is true, execute the body branch, else take the
-	else-clause (exit) successor.  
+	else-clause (exit) successor, enumerated as the last branch.
+	NOTE: there's no else clause.
+	\return true, as this node is never blocking.  
  */
 void
 do_while_loop::execute(const nonmeta_context& c,
-		update_reference_array_type& u) const {
+		update_reference_array_type&) const {
+	STACKTRACE_VERBOSE;
+	guarded_action::selection_evaluator G(c);	// needs reference wrap
+	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
+	switch (G.ready.size()) {
+	case 0: c.rechecks.insert(c.event.successor_events[size()]);
+		break;
+	case 1: c.rechecks.insert(G.ready.front());
+		break;
+	default:
+		cerr << "Run-time error: multiple exclusive guards of "
+			"do-while-loop evaluated TRUE!" << endl;
+		THROW_EXIT;
+	}	// end switch
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2116,11 +2325,11 @@ do_while_loop::execute(const nonmeta_context& c,
 	unblocking because the loop-condition comes with an implicit
 	else-clause which is taken if the evaluated condition is false.  
  */
-void
-do_while_loop::recheck(const nonmeta_context& c) const {
-	return false;
+bool
+do_while_loop::recheck(const nonmeta_context&) const {
+	return true;
 }
-#endif
+#endif	// ENABLE_CHP_EXECUTE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

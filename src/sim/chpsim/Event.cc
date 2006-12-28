@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.10 2006/12/27 06:01:42 fang Exp $
+	$Id: Event.cc,v 1.1.2.11 2006/12/28 04:28:15 fang Exp $
  */
 
 #include <iostream>
@@ -105,6 +105,10 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
  */
 bool
 EventNode::recheck(const nonmeta_context& c) {
+if (countdown) {
+	// then awaiting more predecessors to arrive
+	return false;
+} else {
 	bool ready = true;
 	if (guard_expr) {
 		// TODO: decide error handling via exceptions?
@@ -131,38 +135,38 @@ EventNode::recheck(const nonmeta_context& c) {
 		return ready;
 	}
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this really should just be inlined
-	\param enqueue list of successor events to enqueue immediately
+	\param c context containing the list of successor events to 
+		enqueue immediately.
 	\return the type-enumerated index referring to the variable
-		or channel that was modified.
+		or channel that was modified (in @updates).
 	What if channel receive? (two modifications?)
  */
 void
 EventNode::execute(const nonmeta_context& c, 
 		vector<instance_reference>& updates) {
-#if 0
-	// actually, guard expression should be checked before an event
+	// reminder: guard expression should be checked before an event
 	// is enqueued.
-	// a check here would verify that the guard is *stably* true.  
-	if (guard_expr) {
-		...
-	}
-#endif
+	// a re-check here would verify that the guard is *stably* true.  
 	if ((event_type != EVENT_NULL) && action_ptr) {
-		// const entity::nonmeta_context c(sm, f, p, *this, enqueue);
 		// at the same time, enqueue successors, depending on event_type
 #if ENABLE_CHP_EXECUTE
 		action_ptr->execute(c, updates);
 		// action_ptr->evaluate_successors(enqueue);
 #endif
+		// remember to decrement the predecessor-arrival countdown
+		// for all successors
 	} else {	// event is NULL or action_ptr is NULL
 		// else do nothing
 		// enqueue all successors
 		copy(begin(successor_events), end(successor_events), 
 			back_inserter(c.queue));
+		// remember to decrement the predecessor-arrival countdown
+		// for all successors
 	}
 }
 

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-12-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-27:
+	  Implemented most of remaining execute/recheck CHP functions, 
+		only send/receive left (all untested).
+	  Need to define some sort of CHP footprint or general method for
+		allocating ChannelData field members or use footprint.
+	  Reminder: execute/recheck moves successors to the recheck/enqueue
+		queues depending on the event type.  
+	  CHPSIM::nonmeta_context now has a recheck queue for listing
+		successors to check.  
+
+
 2006-12-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-26:

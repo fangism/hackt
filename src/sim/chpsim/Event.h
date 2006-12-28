@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.14 2006/12/27 06:01:42 fang Exp $
+	$Id: Event.h,v 1.1.2.15 2006/12/28 04:28:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -71,6 +71,7 @@ class EventNode {
 	typedef	EventNode		this_type;
 public:
 	typedef	size_t			event_index_type;
+	typedef	valarray<event_index_type>	successor_list_type;
 private:
 	/// wake-up guard expression for THIS event, if applicable
 	count_ptr<const bool_expr>	guard_expr;
@@ -88,7 +89,7 @@ public:
 		The interpretation of these events (concurrent, 
 		deterministic, nondeterministic) is depending on the type.  
 	 */
-	valarray<event_index_type>	successor_events;
+	successor_list_type		successor_events;
 private:
 #if 1
 	/**

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.18 2006/12/27 06:01:43 fang Exp $
+	$Id: State.cc,v 1.1.2.19 2006/12/28 04:28:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -77,8 +77,11 @@ struct State::recheck_transformer {
 	void
 	operator () (const event_index_type ei) {
 		event_type& e(state.event_pool[ei]);
+		// TODO: eliminate repeated construction, 
+		// make the event member a pointer instead of reference
 		const nonmeta_context
-			c(sm, topfp, state.instances, e, state.__enqueue_list);
+			c(sm, topfp, state.instances, e, 
+				state.__rechecks, state.__enqueue_list);
 		if (e.recheck(c)) {
 			state.__enqueue_list.push_back(ei);
 		}
@@ -116,10 +119,8 @@ State::State(const module& m) :
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
-		__enqueue_list()
-#if 0
-		, __rechecks()
-#endif
+		__enqueue_list(), 
+		__rechecks()
 		{
 	// perform initializations here
 	event_pool.reserve(256);
@@ -233,9 +234,10 @@ State::step(void) {
 	//	expect references to the channel/variable(s) affected
 	__enqueue_list.clear();
 	__updated_list.clear();
+	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
 	const nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), 
-		instances, ev, __enqueue_list);
+		instances, ev, __rechecks, __enqueue_list);
 	ev.execute(c, __updated_list);
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	// __updated_list lists variables updated
@@ -244,11 +246,6 @@ State::step(void) {
 
 {
 	// list of events to check next
-#if 0
-	__rechecks.clear();
-#else
-	event_subscribers_type __rechecks;
-#endif
 	// 3) check if the alteration of state/variable triggers new events
 	//	each variable affected has a dynamic set of 
 	//		'subscribed' pending events (dynamic fanout)
@@ -324,7 +321,7 @@ State::step(void) {
 
 	// TODO: finish me
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-}
+}	// end step() method
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

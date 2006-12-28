@@ -1,12 +1,13 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.1.4.1 2006/12/25 03:28:04 fang Exp $
+	$Id: nonmeta_context.h,v 1.1.4.2 2006/12/28 04:28:21 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 
 #include "Object/nonmeta_context.h"
+#include "Object/nonmeta_variable.h"	// for event_subscribers_type
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {
@@ -18,6 +19,7 @@ using entity::footprint_frame;
 using entity::state_manager;
 using entity::nonmeta_state_manager;
 using entity::nonmeta_context_base;
+using entity::event_subscribers_type;
 
 //=============================================================================
 /**
@@ -28,20 +30,37 @@ class nonmeta_context : public nonmeta_context_base {
 friend class EventNode;
 	typedef	EventNode				event_type;
 	typedef	std::default_vector<size_t>::type	enqueue_queue_type;
+public:
 	/**
 		Global process index, for looking up footprint frames.  
 		Zero-value means top-level.
 	 */
 	event_type&				event;
 	/**
-		This is where to enqueue successors to evaluate.  
+	 */
+	event_subscribers_type&			rechecks;
+	/**
+		This lists successor events to enqueue for execution.  
 	 */
 	enqueue_queue_type&			queue;
 public:
 	nonmeta_context(const state_manager&, const footprint&, 
-		nonmeta_state_manager&, event_type&, enqueue_queue_type&);
+		nonmeta_state_manager&, event_type&, 
+		event_subscribers_type&, enqueue_queue_type&);
 
 	~nonmeta_context();
+
+	const event_type&
+	get_event(void) const { return event; }
+
+	event_type&
+	get_event(void) { return event; }
+
+	void
+	enqueue(const size_t);
+
+	void
+	schedule_recheck(const size_t i) const { rechecks.insert(i); }
 
 };	// end class nonmeta_context
 

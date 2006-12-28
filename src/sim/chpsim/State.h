@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.14 2006/12/27 06:01:43 fang Exp $
+	$Id: State.h,v 1.1.2.15 2006/12/28 04:28:20 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -108,12 +108,10 @@ private:
 		to avoid repeated initial allocations.  
 	 */
 	enqueue_list_type			__enqueue_list;
-#if 0
 	/**
 		Set of events to recheck for unblocking.  
 	 */
 	event_subscribers_type			__rechecks;
-#endif
 public:
 	explicit
 	State(const module&);
@@ -134,6 +132,9 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	const event_type&
+	get_event(const event_index_type i) const { return event_pool[i]; }
 
 private:
 	event_placeholder_type
