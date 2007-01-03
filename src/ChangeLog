@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-28:
+	  Removed Object/inst/substructure_alias_base.tcc (obsolete).
+	  Starting to plan for global_entry<channel_tag> for simulation state.
+	  Temporary definitions for channel_{send,receive}::execute().
+	  More source documentation in comments.  
+
+
 2006-12-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-27:

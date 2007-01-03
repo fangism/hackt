@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.32.4.2 2006/12/25 03:27:35 fang Exp $
+	$Id: footprint.cc,v 1.32.4.3 2007/01/03 23:34:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -94,7 +94,7 @@ using std::copy;
 // class footprint_base method definitions
 
 /**
-	Top-level global state allocation.  
+	Top-level global state allocation (not for use with subinstances).  
 	Parent tag and id are all zero.  
  */
 template <class Tag>
@@ -126,6 +126,8 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Iterate over local footprint of structured entries.  
+	Each entry is initialized by resizing footprint_frame.  
+	\param gframe footprint frame of the top-level global process.  
 	\param s the global state allocator.
 	\param o the offset from which to start in the global state allocator.
  */
@@ -564,9 +566,6 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
 		footprint_base<int_tag>::__allocate_global_state(sm).good &&
 		footprint_base<bool_tag>::__allocate_global_state(sm).good);
-	/***
-		Possibly construct footprint_frame(*this);
-	***/
 	footprint_frame ff(*this);
 	ff.init_top_level();
 #if ENABLE_STACKTRACE
@@ -604,7 +603,7 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 		// error
 		return a;
 	}
-}
+}	// end method expand_unique_subinstances
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

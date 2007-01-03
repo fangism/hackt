@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.29 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_alias.tcc,v 1.29.2.1 2007/01/03 23:34:14 fang Exp $
 	TODO: trim includes
  */
 
@@ -31,7 +31,6 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
-#include "Object/inst/substructure_alias_base.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"
 #include "Object/inst/port_alias_tracker.h"
@@ -504,6 +503,7 @@ void
 INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 		const port_collection_context& pcc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
+	// could use footprint_frame_transformer here for consistency
 	const size_t local_offset = this->instance_index -1;
 	STACKTRACE_INDENT_PRINT("local_offset = " << local_offset << endl);
 	STACKTRACE_INDENT_PRINT("global_id = " << pcc.id_map[ind] << endl);
@@ -726,7 +726,7 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias& a) const {
 	\param pcc the port context to assign to.  
 	\param ff the reference footprint_frame.
 	\param sm the global state allocation manager.
-	\param ind
+	\param ind offset into the port_collection_context.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -734,6 +734,7 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 		port_collection_context& pcc, const footprint_frame& ff,
 		const size_t ind) const {
 	STACKTRACE_VERBOSE;
+	// could use footprint_frame_transformer here for consistency
 	const size_t local_placeholder_id = this->instance_index -1;
 	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
 	STACKTRACE_INDENT_PRINT("local_id = " << local_placeholder_id << endl);

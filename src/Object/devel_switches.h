@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37.2.4 2006/12/27 06:01:31 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.5 2007/01/03 23:34:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -80,12 +80,12 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is now defined in config.h by configure.  
 	Define to 1 to fuse unrolling and creating into the same phase.
 	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY (perm'd), 
 		we now have no use for an unrolled-but-not-created footprint.
-	This is now defined in config.h by configure.  
 	Goal: 1 (reluctantly)
-	Status: not begun
+	Status: complete
 	Priority: medium-high
 	Affects: top-level executable programs, internal passes 
 		don't need to use this flag.  
@@ -177,6 +177,16 @@
 	Prerequisite: USE_NONMETA_RESOLVE
  */
 #define	ENABLE_CHP_EXECUTE			(1 && USE_NONMETA_RESOLVE)
+
+/**
+	Define to 1 to re-define global_entry<channel> using
+	canonical_fundamental_channel footprints.  
+	Also allocate ChannelData accordingly.  
+	Goal: 1
+	Status: not begun
+	Priority: high (for chpsim)
+ */
+#define	BUILTIN_CHANNEL_FOOTPRINTS		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

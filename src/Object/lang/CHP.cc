@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.18 2006/12/28 04:28:13 fang Exp $
+	$Id: CHP.cc,v 1.16.2.19 2007/01/03 23:34:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,7 +9,6 @@
 #include <iterator>
 #include <algorithm>
 #include <exception>
-// #include <functional>
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
@@ -44,6 +43,8 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/nonmeta_context.h"
+#include "Object/state_manager.h"
+#include "Object/global_entry.h"
 
 // chpsim headers
 #include "sim/chpsim/StateConstructor.h"
@@ -52,6 +53,7 @@
 #include "sim/chpsim/nonmeta_context.h"
 
 #include "common/ICE.h"
+#include "common/TODO.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -1794,7 +1796,6 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if ENABLE_CHP_EXECUTE
-#if 0
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
@@ -1803,9 +1804,22 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 void
 channel_send::execute(const nonmeta_context& c, 
 		update_reference_array_type& u) const {
-	const chan_index = chan->lookup_instance_global_index(c);
-}
+#if 0
+	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
+	const global_entry<channel_tag>&
+		ch(c.sm->get_pool<channel_tag>()[chan_index]);
+	// evaluate rvalues of channel send statement
+	// ChannelWriter writer(nc);
+	// ChannelWriterRef W(writer);	// reference-wrapped
+	// transform(exprs.begin(), exprs.end(), W, 
+	//	nonmeta_expr_evaluator(c));
+	// write to the ChannelState using canonical_fundamental_type
+	// don't forget to track the updated-references (channel)
+	nc.send();
 #endif
+	FINISH_ME(Fang);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1988,7 +2002,6 @@ channel_receive::accept(StateConstructor& s) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if ENABLE_CHP_EXECUTE
-#if 0
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
@@ -1997,9 +2010,11 @@ channel_receive::accept(StateConstructor& s) const {
 void
 channel_receive::execute(const nonmeta_context& c, 
 		update_reference_array_type& u) const {
-	const chan_index = chan->lookup_instance_global_index(c);
-}
+#if 0
+	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 #endif
+	FINISH_ME(Fang);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

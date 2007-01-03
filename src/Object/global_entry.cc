@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.9.8.1 2006/12/25 03:27:26 fang Exp $
+	$Id: global_entry.cc,v 1.9.8.2 2007/01/03 23:34:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -39,7 +39,10 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	In the top-level domain, the frame has offset 1.
+	This should only ever be called from top-level expansion.  
+	In the top-level domain, the frame has offset 1, because the 0th
+	entry is reserved as NULL.  
+	(Called from footprint::expand_unique_subinstances().)
  */
 template <class Tag>
 void

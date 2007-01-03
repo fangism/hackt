@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.14 2006/12/27 06:01:30 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.15 2007/01/03 23:34:07 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -281,7 +281,6 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/port_alias_tracker.tcc \
 	Object/inst/subinstance_manager.tcc \
-	Object/inst/substructure_alias_base.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \

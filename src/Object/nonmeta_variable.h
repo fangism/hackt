@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.4 2006/12/27 06:01:36 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.5 2007/01/03 23:34:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -148,6 +148,13 @@ public:
 
 	bool
 	can_send(void) const { return !full; }
+
+	void
+	send(void) { full = true; }
+
+	void
+	receive(void) { full = false; }
+
 };	// end class ChannelState
 
 //=============================================================================
