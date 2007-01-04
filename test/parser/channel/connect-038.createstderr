@@ -21,12 +21,12 @@ Persistent Object Manager text dump:
 	17	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	313
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	309
 	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	307
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

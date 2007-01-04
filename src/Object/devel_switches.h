@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37.2.5 2007/01/03 23:34:08 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.6 2007/01/04 07:51:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -186,7 +186,7 @@
 	Status: not begun
 	Priority: high (for chpsim)
  */
-#define	BUILTIN_CHANNEL_FOOTPRINTS		0
+#define	BUILTIN_CHANNEL_FOOTPRINTS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.20.4.1 2006/12/04 09:55:52 fang Exp $
+	$Id: chan_traits.h,v 1.20.4.2 2007/01/04 07:52:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -10,6 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -35,7 +36,16 @@ struct class_traits<channel_tag> {
 
 	typedef	never_ptr<instance_alias_info_type>
 						instance_alias_info_ptr_type;
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	static const bool		has_substructure = false;
+	/**
+		Channels are not printed in cflat-ing, at least not yet.
+		Rationale: No legacy tools ever flattened CHP channels.  
+	 */
+	enum { print_cflat_leaf = false };
+#else
 	static const bool		has_substructure = true;
+#endif
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
 	static const bool		has_CHP = true;

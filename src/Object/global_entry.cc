@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.9.8.2 2007/01/03 23:34:09 fang Exp $
+	$Id: global_entry.cc,v 1.9.8.3 2007/01/04 07:52:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -254,7 +254,9 @@ void
 footprint_frame::allocate_remaining_subinstances(const footprint& fp, 
 		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
 	const size_t process_offset = sm.get_pool<process_tag>().size();
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+#endif
 #if ENABLE_DATASTRUCTS
 	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
 #endif
@@ -276,14 +278,18 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 	// Now this footprint_frame should be good to pass down to subinstances
 	// end expand subinstances...
 	const size_t process_end = sm.get_pool<process_tag>().size();
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_end = sm.get_pool<channel_tag>().size();
+#endif
 #if ENABLE_DATASTRUCTS
 	const size_t struct_end = sm.get_pool<datastruct_tag>().size();
 #endif
 	footprint_frame_map<process_tag>::
 		__expand_subinstances(fp, sm, process_offset, process_end);
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	footprint_frame_map<channel_tag>::
 		__expand_subinstances(fp, sm, channel_offset, channel_end);
+#endif
 #if ENABLE_DATASTRUCTS
 	footprint_frame_map<datastruct_tag>::
 		__expand_subinstances(fp, sm, struct_offset, struct_end);

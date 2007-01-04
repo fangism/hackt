@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.32.4.3 2007/01/03 23:34:12 fang Exp $
+	$Id: footprint.cc,v 1.32.4.4 2007/01/04 07:52:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -553,7 +553,9 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 	// only processes, channels, and data structures need to be expanded
 	// nothing else has substructure.  
 	const size_t process_offset = sm.get_pool<process_tag>().size();
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+#endif
 #if ENABLE_DATASTRUCTS
 	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
 #endif
@@ -578,10 +580,12 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 		const good_bool b(
 			footprint_base<process_tag>::
 				__expand_unique_subinstances(
-					ff, sm, process_offset).good &&
-			footprint_base<channel_tag>::
+					ff, sm, process_offset).good
+#if !BUILTIN_CHANNEL_FOOTPRINTS
+			&& footprint_base<channel_tag>::
 				__expand_unique_subinstances(
 					ff, sm, channel_offset).good
+#endif
 #if ENABLE_DATASTRUCTS
 			&& footprint_base<datastruct_tag>::
 				__expand_unique_subinstances(

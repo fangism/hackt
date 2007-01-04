@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16.8.4 2006/12/26 21:25:58 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.5 2007/01/04 07:52:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -337,6 +337,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	case PARENT_TYPE_CHANNEL: {
 		const global_entry<channel_tag>&
 			p_ent(extract_parent_entry<channel_tag>(sm, *this));
@@ -348,6 +349,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#endif
 #if ENABLE_DATASTRUCTS
 	case PARENT_TYPE_STRUCT: {
 		const global_entry<datastruct_tag>&

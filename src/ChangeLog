@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-29:
+	  class_traits<channel_tag>::has_substructure is no longer true:
+		built-in channels do have named subinstances, and thus do
+		not need to be handled like process-ports.  
+		Channels are now treated as leaf types, as far as global
+		allocation and referencing is concerned.  
+		Channel fields are non-aliasable, they have value-semantics.  
+		parser/{chp,channel} create tests updated because of
+		small decrease in binary sizes.  
+	  Changes are wrapped around switch BUILTIN_CHANNEL_FOOTPRINTS.
+	  TODO: built-in-channel-footprints for the sake of allocating
+		ChannelState and ChannelData fields.  
+		Need to extend global_entry<channel> with info field.
+
+
 2007-01-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-28:
