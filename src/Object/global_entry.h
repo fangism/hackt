@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.12.8.3 2006/12/25 03:27:27 fang Exp $
+	$Id: global_entry.h,v 1.12.8.4 2007/01/04 21:44:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -219,7 +219,7 @@ private:
 
 //=============================================================================
 template <bool B>
-struct global_entry_base { };
+struct global_entry_substructure_base;
 
 //=============================================================================
 /**
@@ -228,7 +228,7 @@ struct global_entry_base { };
 	\param B whether or not the meta type has substructure.  
  */
 template <>
-struct global_entry_base<false> {
+struct global_entry_substructure_base<false> {
 
 	template <class Tag>
 	ostream&
@@ -237,29 +237,26 @@ struct global_entry_base<false> {
 	void
 	collect_subentries(entry_collection&, const state_manager&) const { }
 
-	template <class Tag>
 	void
 	collect_transient_info_base(const persistent_object_manager&, 
 		const size_t, const footprint&, const state_manager&) const { }
 
-	template <class Tag>
 	void
 	write_object_base(const persistent_object_manager&, const ostream&, 
 		const size_t, const footprint&, const state_manager&) const { }
 
-	template <class Tag>
 	void
 	load_object_base(const persistent_object_manager&, const istream&,
 		const size_t, const footprint&, const state_manager&) { }
 
-};	// end struct global_entry_base
+};	// end struct global_entry_substructure_base
 
 //-----------------------------------------------------------------------------
 /**
 	Specialization for types with substructure.  
  */
 template <>
-struct global_entry_base<true> {
+struct global_entry_substructure_base<true> {
 	footprint_frame			_frame;
 
 	template <class Tag>
@@ -272,22 +269,19 @@ struct global_entry_base<true> {
 	}
 
 	// some footprint (in frame) may contain relaxed template arguments.  
-	template <class Tag>
 	void
 	collect_transient_info_base(persistent_object_manager&, 
 		const size_t, const footprint&, const state_manager&) const;
 
 	// dumper could be reused for write_object_base!
-	template <class Tag>
 	void
 	write_object_base(const persistent_object_manager&, ostream&, 
 		const size_t, const footprint&, const state_manager&) const;
 
-	template <class Tag>
 	void
 	load_object_base(const persistent_object_manager&, istream&,
 		const size_t, const footprint&, const state_manager&);
-};	// end struct global_entry_base
+};	// end struct global_entry_substructure_base
 
 //=============================================================================
 /**
@@ -371,17 +365,63 @@ struct CHP_substructure<true> {
 
 //=============================================================================
 /**
+	Default implementation.  
+ */
+template <class Tag>
+struct global_entry_base :
+	public global_entry_substructure_base<false> {
+	typedef	global_entry_substructure_base<false>	substructure_policy;
+	using substructure_policy::dump;
+	using substructure_policy::collect_subentries;
+	using substructure_policy::collect_transient_info_base;
+	using substructure_policy::write_object_base;
+	using substructure_policy::load_object_base;
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization for processes.  
+ */
+template <>
+struct global_entry_base<process_tag> :
+	public global_entry_substructure_base<true> {
+	typedef	global_entry_substructure_base<true>	substructure_policy;
+
+	using substructure_policy::dump;
+	using substructure_policy::collect_subentries;
+	using substructure_policy::collect_transient_info_base;
+	using substructure_policy::write_object_base;
+	using substructure_policy::load_object_base;
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Specialization for globally allocated channel info.  
+	TODO: channel footprint definition.  
+ */
+template <>
+struct global_entry_base<channel_tag> : global_entry_substructure_base<false> {
+	using substructure_policy::dump;
+	using substructure_policy::collect_subentries;
+	using substructure_policy::collect_transient_info_base;
+	using substructure_policy::write_object_base;
+	using substructure_policy::load_object_base;
+};
+#endif
+
+//=============================================================================
+/**
 	Globally allocated entry for unique instance.  
  */
 template <class Tag>
 struct global_entry :
-	public global_entry_base<class_traits<Tag>::has_substructure>, 
+	public global_entry_base<Tag>, 
 	public production_rule_parent_policy<
 		class_traits<Tag>::has_production_rules>::type, 
 	// no need to derive from substructure policy classes, really
 	public global_entry_common {
-	typedef	global_entry_base<class_traits<Tag>::has_substructure>
-						parent_type;
+	typedef	global_entry_base<Tag>		parent_type;
 	typedef	typename production_rule_parent_policy<
 		class_traits<Tag>::has_production_rules>::type
 						prs_parent_type;

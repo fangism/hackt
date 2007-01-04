@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16.8.5 2007/01/04 07:52:00 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.6 2007/01/04 21:44:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -142,7 +142,9 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 				o, _footprint);
 			break;
 		}
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 		// case PARENT_TYPE_CHANNEL: ?
+#endif
 #if ENABLE_DATASTRUCTS
 		case PARENT_TYPE_STRUCT: {
 			instance_alias_info<datastruct_tag>::dump_complete_type(
@@ -167,11 +169,11 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 }
 
 //=============================================================================
-// class global_entry_base method definitions
+// class global_entry_substructure_base method definitions
 
 template <class Tag>
 ostream&
-global_entry_base<false>::dump(global_entry_dumper& ged) const {
+global_entry_substructure_base<false>::dump(global_entry_dumper& ged) const {
 	return ged.os;
 }
 
@@ -180,70 +182,11 @@ global_entry_base<false>::dump(global_entry_dumper& ged) const {
 	Prints the type with which the footprint is associated, 
 	and the brief contents of the footprint frame.  
  */
-#if 0
 template <class Tag>
 ostream&
-global_entry_base<true>::dump(ostream& o, const size_t ind, 
-		const footprint& topfp, const state_manager& sm) const {
-	this->_frame.template dump_footprint<Tag>(o, ind, topfp, sm);
-	return this->_frame.dump_frame(o);
-}
-#else
-template <class Tag>
-ostream&
-global_entry_base<true>::dump(global_entry_dumper& ged) const {
+global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
 	return this->_frame.dump_frame(ged.os);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Collects pointers needed for save/restoration of footprint pointers.  
-	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
- */
-template <class Tag>
-void
-global_entry_base<true>::collect_transient_info_base(
-		persistent_object_manager& m, 
-		const size_t ind, const footprint& topfp, 
-		const state_manager& sm) const {
-	_frame.collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: use global_entry_dumper!
-	TODO: comment: pay attention to ordering, 
-		is crucial for reconstruction.
-	Q: Is persistent object manager really needed?
-	A: yes, some canonical_types contain relaxed template params.
- */
-template <class Tag>
-void
-global_entry_base<true>::write_object_base(const persistent_object_manager& m,
-		ostream& o, const size_t ind, const footprint& topfp,
-		const state_manager& sm) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	_frame.write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Dependent reconstruction ordering:
-	\pre all footprints (top-level and asssociated with complete ypes)
-		have been restored prior to calling this.  
-		Thus it is safe to reference instance placeholders'
-		back-references.  
-		See the reconstruction ordering in module::load_object_base().  
- */
-template <class Tag>
-void
-global_entry_base<true>::load_object_base(const persistent_object_manager& m,
-		istream& i, const size_t ind, const footprint& topfp,
-		const state_manager& sm) {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	_frame.load_object_base(m, i);
 }
 
 //=============================================================================
@@ -439,7 +382,7 @@ global_entry<Tag>::write_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
 	write_value(o, local_offset);
 	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-	parent_type::template write_object_base<Tag>(m, o, ind, f, sm);
+	parent_type::write_object_base(m, o, ind, f, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -460,7 +403,7 @@ global_entry<Tag>::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
 	read_value(i, local_offset);
 	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-	parent_type::template load_object_base<Tag>(m, i, ind, f, sm);
+	parent_type::load_object_base(m, i, ind, f, sm);
 }
 
 //=============================================================================

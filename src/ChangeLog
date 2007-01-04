@@ -5,6 +5,12 @@
 
 2007-01-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30:
+	  Re-structured global_entry_base and substructure parent, 
+		less template code replication, and will make way for
+		built-in channel specialization.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-29:
 	  class_traits<channel_tag>::has_substructure is no longer true:
 		built-in channels do have named subinstances, and thus do

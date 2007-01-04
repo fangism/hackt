@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.9.8.3 2007/01/04 07:52:00 fang Exp $
+	$Id: global_entry.cc,v 1.9.8.4 2007/01/04 21:44:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -404,7 +404,53 @@ footprint_frame::get_frame_map_test(void) const {
 }
 
 //=============================================================================
-// class global_entry_base method definitions
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects pointers needed for save/restoration of footprint pointers.  
+	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
+ */
+void
+global_entry_substructure_base<true>::collect_transient_info_base(
+		persistent_object_manager& m, 
+		const size_t ind, const footprint& topfp, 
+		const state_manager& sm) const {
+	_frame.collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use global_entry_dumper!
+	TODO: comment: pay attention to ordering, 
+		is crucial for reconstruction.
+	Q: Is persistent object manager really needed?
+	A: yes, some canonical_types contain relaxed template params.
+ */
+void
+global_entry_substructure_base<true>::write_object_base(
+		const persistent_object_manager& m,
+		ostream& o, const size_t ind, const footprint& topfp,
+		const state_manager& sm) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	_frame.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dependent reconstruction ordering:
+	\pre all footprints (top-level and asssociated with complete ypes)
+		have been restored prior to calling this.  
+		Thus it is safe to reference instance placeholders'
+		back-references.  
+		See the reconstruction ordering in module::load_object_base().  
+ */
+void
+global_entry_substructure_base<true>::load_object_base(
+		const persistent_object_manager& m,
+		istream& i, const size_t ind, const footprint& topfp,
+		const state_manager& sm) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	_frame.load_object_base(m, i);
+}
 
 //=============================================================================
 // explicit template instantiations

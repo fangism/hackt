@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.16.8.1 2006/12/25 03:27:32 fang Exp $
+	$Id: state_manager.cc,v 1.16.8.2 2007/01/04 21:44:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -77,7 +77,7 @@ global_entry_pool<Tag>::collect_transient_info_base(
 	const const_iterator e(this->end());
 	size_t j = 1;
 	for ( ; i!=e; ++i, ++j) {
-		i->template collect_transient_info_base<Tag>(m, j, f, 
+		i->collect_transient_info_base(m, j, f, 
 			AS_A(const state_manager&, *this));
 	}
 }
