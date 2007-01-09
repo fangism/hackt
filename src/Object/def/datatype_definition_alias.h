@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.8 2006/10/18 01:19:08 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.8.16.1 2007/01/09 19:30:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
@@ -85,6 +85,9 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+
+	unsigned char
+	get_meta_type_enum(void) const;
 
 };	// end class datatype_definition_alias
 

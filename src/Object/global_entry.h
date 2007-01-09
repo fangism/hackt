@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.12.8.4 2007/01/04 21:44:55 fang Exp $
+	$Id: global_entry.h,v 1.12.8.4.2.1 2007/01/09 19:30:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -278,6 +278,9 @@ struct global_entry_substructure_base<true> {
 	write_object_base(const persistent_object_manager&, ostream&, 
 		const size_t, const footprint&, const state_manager&) const;
 
+	/**
+		Consider bundling arguments together...
+	 */
 	void
 	load_object_base(const persistent_object_manager&, istream&,
 		const size_t, const footprint&, const state_manager&);
@@ -395,19 +398,13 @@ struct global_entry_base<process_tag> :
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if BUILTIN_CHANNEL_FOOTPRINTS
 /**
 	Specialization for globally allocated channel info.  
 	TODO: channel footprint definition.  
  */
 template <>
-struct global_entry_base<channel_tag> : global_entry_substructure_base<false> {
-	using substructure_policy::dump;
-	using substructure_policy::collect_subentries;
-	using substructure_policy::collect_transient_info_base;
-	using substructure_policy::write_object_base;
-	using substructure_policy::load_object_base;
-};
+struct global_entry_base<channel_tag>;
 #endif
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.32.4.4 2007/01/04 07:52:02 fang Exp $
+	$Id: footprint.cc,v 1.32.4.4.2.1 2007/01/09 19:30:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,6 +19,10 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#include "Object/type/canonical_fundamental_chan_type.h"
+#endif
 #include "Object/port_context.h"
 #include "Object/common/cflat_args.h"
 #include "Object/common/alias_string_cache.h"

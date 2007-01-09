@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.15 2007/01/03 23:34:07 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.15.2.1 2007/01/09 19:30:10 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -433,6 +433,7 @@ OBJECT_CC_FILES = \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
 	Object/global_entry.cc \
+	Object/global_channel_entry.cc \
 	Object/port_context.cc \
 	Object/state_manager.cc \
 	Object/nonmeta_state.cc \
@@ -444,6 +445,7 @@ OBJECT_CC_FILES = \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
 	Object/type/canonical_generic_chan_type.cc \
+	Object/type/canonical_fundamental_chan_type.cc \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \

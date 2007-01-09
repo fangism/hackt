@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.9.8.4 2007/01/04 21:44:54 fang Exp $
+	$Id: global_entry.cc,v 1.9.8.4.2.1 2007/01/09 19:30:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -8,6 +8,9 @@
 
 #include <algorithm>
 #include "Object/global_entry.tcc"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/def/footprint.h"
 #include "Object/port_context.h"
 #include "Object/state_manager.tcc"

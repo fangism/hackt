@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.35.4.1 2006/12/25 03:27:34 fang Exp $
+ 	$Id: definition.cc,v 1.35.4.1.2.1 2007/01/09 19:30:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -54,6 +54,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/dump_flags.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/bool_traits.h"	// for built_in_definition
+#include "Object/traits/int_traits.h"	// for built_in_definition
+#include "Object/traits/enum_traits.h"	// for type_tag_enum_value
 #include "Object/type/canonical_generic_chan_type.h"
 
 #include "common/ICE.h"
@@ -698,6 +701,15 @@ datatype_definition_base::make_typedef(never_ptr<const scopespace> s,
 		const token_identifier& id) const {
 	return excl_ptr<definition_base>(
 		new datatype_definition_alias(id, s));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+datatype_definition_base::less_ordering(
+		const datatype_definition_base& r) const {
+	const unsigned char le = get_meta_type_enum();
+	const unsigned char re = r.get_meta_type_enum();
+	return (le < re) || ((le == re) && (this < &r));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1454,6 +1466,23 @@ built_in_datatype_def::create_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+unsigned char
+built_in_datatype_def::get_meta_type_enum(void) const {
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	if (this == &bool_traits::built_in_definition) {
+		return bool_traits::type_tag_enum_value;
+	}
+	else if (this == &int_traits::built_in_definition) {
+		return int_traits::type_tag_enum_value;
+	} else {
+		// no other built-in definitions at this time
+		THROW_EXIT;
+		return META_TYPE_NONE;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Leeching off of datatype definition.  
 	Will be handled specially (replaced) by data_type_reference.  
@@ -1827,6 +1856,12 @@ enum_datatype_def::create_complete_type(
 		const footprint& top) const {
 	// nothing, doesn't have a footprint manager
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+unsigned char
+enum_datatype_def::get_meta_type_enum(void) const {
+	return class_traits<enum_tag>::type_tag_enum_value;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2289,6 +2324,18 @@ if (defined) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Not supposed to be called.
+	No user-defined data types allowed in built-in channel specifications
+	... yet.
+ */
+unsigned char
+user_def_datatype::get_meta_type_enum(void) const {
+	ICE_NEVER_CALL(cerr);
+	return META_TYPE_NONE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
  */
@@ -2533,6 +2580,17 @@ datatype_definition_alias::create_complete_type(
 		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Should never be called, as canonical type are supposed to
+	resolve typedef aliases.  
+ */
+unsigned char
+datatype_definition_alias::get_meta_type_enum(void) const {
+	ICE_NEVER_CALL(cerr);
+	return META_TYPE_NONE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

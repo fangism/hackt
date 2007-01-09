@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-01:
+	  This branch is intended for reworking the channel meta-type
+		system for CHPSIM.  This branch will displace intermediate
+		representation support of user-defined-channels (which have
+		never been clearly specified to begin with *ahem*)
+		in favor of built-in channel types.  
+	  Added Object/global_channel_entry.{h,cc} (specialization).
+	  Added Object/type/canonical_fundamental_chan_type.{h,cc}.
+	  Defined a total-ordering for fundamental data-types: 
+		bool, int, enums.  No user-defined data-types are allowed yet.  
+	  Enabled BUILIN_CHANNEL_FOOTPRINTS switch, but is incomplete.
+	  Test suite shows no regressions.  
+
+
 2007-01-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-30:

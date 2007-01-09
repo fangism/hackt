@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.10 2006/10/18 01:19:14 fang Exp $
+	$Id: user_def_datatype.h,v 1.10.16.1 2007/01/09 19:30:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -114,6 +114,10 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+
+	unsigned char
+	get_meta_type_enum(void) const;
+
 };	// end class user_def_datatype
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.20.12.1 2006/12/12 10:18:14 fang Exp $
+ 	$Id: instance_reference.cc,v 1.20.12.1.4.1 2007/01/09 19:30:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -49,6 +49,9 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/type/canonical_generic_chan_type.h"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 
 #include "common/TODO.h"
 

@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.15.2.1 2006/12/25 03:27:57 fang Exp $
+	$Id: canonical_type.cc,v 1.15.2.1.2.1 2007/01/09 19:30:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -238,6 +238,18 @@ check_footprint_policy<user_def_datatype>::operator () (
 		__ATTRIBUTE_UNUSED_CTOR__((cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params())));
 	INVARIANT(f == &_f);
+}
+
+//=============================================================================
+/**
+	Ordering definition for built-in data types.  
+ */
+bool
+operator < (const canonical_generic_datatype& l,
+		const canonical_generic_datatype& r) {
+	NEVER_NULL(l.get_base_def());
+	NEVER_NULL(r.get_base_def());
+	return l.get_base_def()->less_ordering(*r.get_base_def());
 }
 
 //=============================================================================

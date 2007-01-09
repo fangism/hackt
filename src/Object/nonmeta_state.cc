@@ -1,12 +1,15 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.1.2.2 2006/12/25 03:27:29 fang Exp $
+	$Id: nonmeta_state.cc,v 1.1.2.2.2.1 2007/01/09 19:30:18 fang Exp $
  */
 
 #include <iostream>
 #include "Object/nonmeta_state.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
