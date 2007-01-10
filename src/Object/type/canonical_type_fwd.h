@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.6.76.1 2007/01/09 19:30:43 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.6.76.2 2007/01/10 20:14:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
@@ -21,6 +21,9 @@ class canonical_type_base;
 
 template <class>
 class canonical_type;
+
+class canonical_fundamental_chan_type_base;
+class canonical_fundamental_chan_type;
 
 // HACK ALERT:
 // since built-in channels don't exactly conform to the normal

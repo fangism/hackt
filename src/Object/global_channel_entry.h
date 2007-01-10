@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_channel_entry.h"
-	$Id: global_channel_entry.h,v 1.1.2.1 2007/01/09 19:30:15 fang Exp $
+	$Id: global_channel_entry.h,v 1.1.2.2 2007/01/10 20:14:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_CHANNEL_ENTRY_H__
@@ -13,14 +13,14 @@
 namespace HAC {
 namespace entity {
 using util::memory::count_ptr;
-struct canonical_fundamental_chan_type;
+struct canonical_fundamental_chan_type_base;
 
 //=============================================================================
 template <>
 struct global_entry_base<channel_tag> :
 		public global_entry_substructure_base<false> {
 	typedef	global_entry_substructure_base<false>	substructure_policy;
-	count_ptr<const canonical_fundamental_chan_type>
+	count_ptr<const canonical_fundamental_chan_type_base>
 						channel_type;
 
 	global_entry_base();

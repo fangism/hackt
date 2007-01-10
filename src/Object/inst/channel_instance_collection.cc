@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.15 2006/11/21 22:38:50 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.15.8.1 2007/01/10 20:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -25,17 +25,29 @@
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/def/definition_base.h"
 #include "Object/def/user_def_chan.h"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/type/builtin_channel_type_reference.h"
+#else
 #include "Object/type/channel_type_reference.h"
+#endif
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/instance_placeholder.tcc"
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/connection_policy.tcc"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/inst/channel_collection_type_manager.tcc"
+#else
 #include "Object/inst/general_collection_type_manager.tcc"
+#endif
 #include "Object/inst/state_instance.tcc"
 #include "Object/def/datatype_definition_base.h"
 #include "Object/inst/alias_empty.h"	// why is this needed?
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/unroll/channel_instantiation_type_ref_base.h"
+#else
 #include "Object/unroll/instantiation_statement_type_ref_default.h"
+#endif
 
 namespace util {
 

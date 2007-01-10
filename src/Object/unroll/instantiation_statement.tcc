@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.24 2006/11/07 06:35:33 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.24.12.1 2007/01/10 20:14:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -181,7 +181,7 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 	(this will require some serious specialization)
 	\param c the unroll context.  
 	\return good if successful, else false.
-	TODO: clean-up the hack in here
+	TODO: clean-up the hack(s) in here
 	TODO: use a consistent policy/trait class to specialize implementations
 		of type checking for each meta class.  
 		Don't go through common class for type-references.  

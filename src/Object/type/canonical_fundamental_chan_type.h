@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.h"
-	$Id: canonical_fundamental_chan_type.h,v 1.1.2.1 2007/01/09 19:30:41 fang Exp $
+	$Id: canonical_fundamental_chan_type.h,v 1.1.2.2 2007/01/10 20:14:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_FUNDAMENTAL_CHAN_TYPE_H__
@@ -36,9 +36,9 @@ using util::memory::count_ptr;
 	TODO: add support for arrays in type-list.  
 	NOTE: no template parameters (not derived from canonical_type_base)
  */
-class canonical_fundamental_chan_type : public persistent {
+class canonical_fundamental_chan_type_base : public persistent {
 // friend class builtin_channel_type_reference;
-	typedef	canonical_fundamental_chan_type		this_type;
+	typedef	canonical_fundamental_chan_type_base	this_type;
 	/**
 		TODO: May have to supply custom compare operator, 
 		must make sure pointer-address comparison is not used.  
@@ -50,7 +50,7 @@ public:
 	 */
 	typedef	vector<canonical_generic_datatype>
 						datatype_list_type;
-private:
+protected:
 	/**
 		Global set of all instantiated canonical fundamental
 		channel types.  
@@ -68,35 +68,36 @@ private:
 	datatype_list_type			datatype_list;
 	// TODO: private implementation of cacheable, self-derived data
 	// e.g. channel-data footprint sizes
+#if 0
 private:
-	/// only called to signal an error
-	canonical_fundamental_chan_type();
+#else
+public:
+#endif
+	/// only called to signal an error or create a temporary
+	canonical_fundamental_chan_type_base();
 
 public:
 	explicit
-	canonical_fundamental_chan_type(const datatype_list_type&);
+	canonical_fundamental_chan_type_base(const datatype_list_type&);
 
 	// default copy-constructor suffices
 
-	~canonical_fundamental_chan_type();
-
-#if 0
-	// do we need a generic version?
-	canonical_definition_ptr_type
-	get_base_def(void) const { return canonical_definition_ptr; }
-
-	template_actuals
-	get_template_params(void) const;
-#endif
+	~canonical_fundamental_chan_type_base();
 
 	const datatype_list_type&
 	get_datatype_list(void) const { return datatype_list; }
+
+	datatype_list_type&
+	get_datatype_list(void) { return datatype_list; }
 
 	ostream&
 	what(ostream&) const;
 
 	ostream&
 	dump(ostream&) const;
+
+	ostream&
+	dump(ostream&, const char) const;
 
 	count_ptr<const this_type>
 	register_globally(void) const;
@@ -105,17 +106,6 @@ public:
 	count_ptr<const this_type>
 	register_type(const datatype_list_type&);
 
-#if 0
-	/// \param d is '!' or '?' or other
-	void
-	set_direction(const char d) { direction = d; }
-
-	char
-	get_direction(void) const { return direction; }
-
-	count_ptr<const type_reference_type>
-	make_type_reference(void) const;
-#endif
 
 	bool
 	is_strict(void) const { return true; }
@@ -143,23 +133,14 @@ public:
 	unroll_port_instances(const unroll_context&, 
 		subinstance_manager&) const;
 
-#if 0
-	// like fundamental_type_reference::unroll_register_complete_type()
-	good_bool
-	unroll_definition_footprint(const footprint&) const;
-
-	good_bool
-	create_definition_footprint(const footprint&) const;
-
-	using base_type::combine_relaxed_actuals;
-	using base_type::match_relaxed_actuals;
-#endif
-
 	good_bool
 	initialize_footprint_frame(footprint_frame&) const;
 
 	bool
 	operator < (const this_type&) const;
+
+	bool
+	operator == (const this_type&) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS
@@ -174,7 +155,67 @@ public:
 	void
 	load_object(const persistent_object_manager&, istream&);
 
-};	// end class canonical_type
+};	// end class canonical_fundamental_chan_type_base
+
+//=============================================================================
+/**
+	Fundamental channel type with direction.  
+	We choose to wrap around a reference-counted pointer
+	(containership, vs. inheritance) because we want to share the 
+	canonical base type as much as possible.  
+ */
+class canonical_fundamental_chan_type {
+	typedef	canonical_fundamental_chan_type		this_type;
+	typedef	canonical_fundamental_chan_type_base	base_type;
+	typedef	base_type::datatype_list_type		datatype_list_type;
+protected:
+	typedef	count_ptr<const base_type>	base_chan_ptr_type;
+	base_chan_ptr_type	base_chan_type;
+	char			direction;
+public:
+	canonical_fundamental_chan_type();
+	// implicit
+	canonical_fundamental_chan_type(const base_chan_ptr_type&);
+	~canonical_fundamental_chan_type();
+
+	/// \param d is '!' or '?' or other
+	void
+	set_direction(const char d) { direction = d; }
+
+	char
+	get_direction(void) const { return direction; }
+
+	ostream&
+	dump(ostream&) const;
+
+// other functions are forwarded explicitly
+	const datatype_list_type&
+	get_datatype_list(void) const {
+		return base_chan_type->get_datatype_list();
+	}
+
+	operator bool () const { return base_chan_type; }
+
+	bool
+	must_be_collectibly_type_equivalent(const this_type&) const;
+
+	bool
+	must_be_connectibly_type_equivalent(const this_type&) const;
+
+	static
+	ostream&
+	type_mismatch_error(ostream&, const this_type&, const this_type&);
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+};	// end class canonical_fundamental_chan_type
 
 //=============================================================================
 }	// end namespace entity

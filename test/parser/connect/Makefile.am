@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2006/12/01 23:29:57 fang Exp $
+#	$Id: Makefile.am,v 1.24.6.1 2007/01/10 20:15:07 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -29,7 +29,7 @@ HACKT_PARSE_TEST_PASSES = \
 	051 052 053 057 058 059 \
 	060 062 063 064 065 066 067 068 069 \
 	071 074 075 078 \
-	083 084 085 086 086a 086b 087 088 089 \
+	083 084 085 088 089 \
 	091 092 099 \
 	100 101 102 103 103a 104 105 106 107 108 109 \
 	110 111 112 113 118 119 \
@@ -46,7 +46,7 @@ HACKT_UNROLL_TEST_PASSES = \
 	051 057 058 \
 	062 063 064 065 067 069 \
 	078 \
-	083 084 085 086 086b 087 088 089 \
+	083 084 085 088 089 \
 	092 099 \
 	100 101 102 103 104 106 107 109 \
 	111 112 113 118 119 \
@@ -59,7 +59,6 @@ HACKT_UNROLL_TEST_FAILURES = \
 	052 053 059 \
 	060 066 068 \
 	071 074 075 \
-	086a \
 	091 \
 	103a 105 108 \
 	110 \
@@ -127,6 +126,10 @@ HACKT_ALLOC_TEST_PASSES = \
 # notes:
 # the following tests depend channel port subinstances
 # 086 087
+# the following tests require support for user-defined channels
+# 086 086a 086b 087
+
+srcdir_EXTRA_DIST += 086.hac 086a.hac 086b.hac 087.hac
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	001 006b \

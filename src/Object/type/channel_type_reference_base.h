@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.8 2006/10/18 21:38:49 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.8.16.1 2007/01/10 20:14:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
@@ -12,6 +12,7 @@
 
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -79,8 +80,10 @@ virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
 
 	// should be pure virtual, just declare for now
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 virtual	canonical_type<channel_definition_base>
 	make_canonical_type(void) const = 0;
+#endif
 
 protected:
 	using parent_type::collect_transient_info_base;

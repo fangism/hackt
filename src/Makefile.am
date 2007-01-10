@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.15.2.1 2007/01/09 19:30:10 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.15.2.2 2007/01/10 20:14:06 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -279,6 +279,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/null_collection_type_manager.tcc \
 	Object/inst/int_collection_type_manager.tcc \
 	Object/inst/parameterless_collection_type_manager.tcc \
+	Object/inst/channel_collection_type_manager.tcc \
 	Object/inst/port_alias_tracker.tcc \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
@@ -311,6 +312,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/null_collection_type_manager.h \
 	Object/inst/int_collection_type_manager.h \
 	Object/inst/parameterless_collection_type_manager.h \
+	Object/inst/channel_collection_type_manager.h \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
@@ -624,6 +626,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/instance_management_base.h \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
+	Object/unroll/channel_instantiation_type_ref_base.h \
 	Object/unroll/null_parameter_type.h \
 	Object/unroll/param_expression_assignment.h \
 	Object/unroll/param_instantiation_statement.h \

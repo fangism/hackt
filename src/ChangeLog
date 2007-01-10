@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-02:
+	  Added new specializations for instance management for 
+		built-in channel types:
+		channel_collection_type_manager (collection) and
+		channel_instantiation_type_ref (instantiation_statement).
+		POlicies are reflected in "Object/traits/chan_traits.h"
+	  Factored canonical_fundamental_chan_type_base (without direction)
+		and use a ref-counted pointer in the type with direction.  
+	  Dropped support for user-defined channel types in front-end
+		as well as middle-end.  
+		Withdrew all affected regression tests: 
+			parser/connect/{086,086a,086b,087}.hac
+			parser/channel/018.hac
+		No other regressions.  
+	  Next: register canonical_fundamental_chan_type_base with
+		global instantiated set to share pointers.  
+
+
 2007-01-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-01:
