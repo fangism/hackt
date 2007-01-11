@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.h"
-	$Id: canonical_fundamental_chan_type.h,v 1.1.2.3 2007/01/11 08:04:50 fang Exp $
+	$Id: canonical_fundamental_chan_type.h,v 1.1.2.4 2007/01/11 21:03:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_FUNDAMENTAL_CHAN_TYPE_H__
@@ -182,6 +182,9 @@ public:
 	// implicit
 	canonical_fundamental_chan_type(const base_chan_ptr_type&);
 	~canonical_fundamental_chan_type();
+
+	const base_chan_ptr_type&
+	get_base_type(void) const { return base_chan_type; }
 
 	/// \param d is '!' or '?' or other
 	void

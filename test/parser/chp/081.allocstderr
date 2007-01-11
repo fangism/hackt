@@ -1,0 +1,36 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	y2_0	assign_me<2, {0,1}, 0>
+	channel: 1
+2	(top)	-	2	y2_1	assign_me<2, {0,1}, 1>
+	channel: 2
+3	(top)	-	3	y3_0	assign_me<3, {0,1,0}, 0>
+	channel: 3
+4	(top)	-	4	y3_1	assign_me<3, {0,1,0}, 1>
+	channel: 4
+5	(top)	-	5	y3_2	assign_me<3, {0,1,0}, 2>
+	channel: 5
+6	(top)	-	6	y6_0	assign_me<6, {0,1,0,1,0,1}, 0>
+	channel: 6
+7	(top)	-	7	y6_1	assign_me<6, {0,1,0,1,0,1}, 1>
+	channel: 7
+8	(top)	-	8	y6_2	assign_me<6, {0,1,0,1,0,1}, 2>
+	channel: 8
+9	(top)	-	9	y6_3	assign_me<6, {0,1,0,1,0,1}, 3>
+	channel: 9
+10	(top)	-	10	y6_4	assign_me<6, {0,1,0,1,0,1}, 4>
+	channel: 10
+11	(top)	-	11	y6_5	assign_me<6, {0,1,0,1,0,1}, 5>
+	channel: 11
+[global channel entries]
+1	(top)	-	1	y2_0.b	chan(bool<>)
+2	(top)	-	2	y2_1.b	chan(bool<>)
+3	(top)	-	3	y3_0.b	chan(bool<>)
+4	(top)	-	4	y3_1.b	chan(bool<>)
+5	(top)	-	5	y3_2.b	chan(bool<>)
+6	(top)	-	6	y6_0.b	chan(bool<>)
+7	(top)	-	7	y6_1.b	chan(bool<>)
+8	(top)	-	8	y6_2.b	chan(bool<>)
+9	(top)	-	9	y6_3.b	chan(bool<>)
+10	(top)	-	10	y6_4.b	chan(bool<>)
+11	(top)	-	11	y6_5.b	chan(bool<>)

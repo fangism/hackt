@@ -1,0 +1,14 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	traffic	merge<>
+	channel: 3,1,2
+	int: 1
+	bool: 1
+[global channel entries]
+1	(top)	-	1	traffic.B[0]	chan(bool<>)
+2	(top)	-	2	traffic.B[1]	chan(bool<>)
+3	(top)	-	3	traffic.S	chan(int<1>)
+[global int entries]
+1	process	1	1	traffic.s	
+[global bool entries]
+1	process	1	1	traffic.b	

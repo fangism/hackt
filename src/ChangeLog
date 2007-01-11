@@ -5,6 +5,17 @@
 
 2007-01-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-04:
+	  Finally established built-in channel fooprints for global
+		channel entries (alloc phase).
+	  entity::footprint: implemented __set_channel_footprints()
+		for top-level post-allocate type assignment.
+	  Enabled and verified alloc tests in parser/{chp,channel}.
+		Channel entries are properly allocated and 
+		reference correct canonical_fundamental_chan_type_base's.  
+	  This concludes work on this branch -- merge to parent branch.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-03:
 	  Now all canonical_fundamental_chan_type_base's "are belong to"
 		the global registry, all ref-counted, now also pool-allocated.

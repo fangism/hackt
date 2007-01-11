@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_base.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint_base.h,v 1.2 2006/11/07 06:34:21 fang Exp $
+	$Id: footprint_base.h,v 1.2.12.1 2007/01/11 21:03:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_BASE_H__
@@ -59,13 +59,19 @@ protected:
 	good_bool
 	__allocate_global_state(state_manager&) const;
 
+	// for process_tag ONLY!
 	good_bool
 	__expand_unique_subinstances(const footprint_frame&,
 		state_manager&, const size_t) const;
 
+	// for process_tag ONLY!
 	good_bool
 	__expand_production_rules(const footprint_frame&, 
 		state_manager&) const;
+
+	// for channel_tag ONLY!
+	good_bool
+	__set_channel_footprints(state_manager&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
