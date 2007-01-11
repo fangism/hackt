@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.52 2006/11/15 00:09:15 fang Exp $
+#	$Id: Makefile.am,v 1.52.10.1 2007/01/11 08:05:07 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -51,6 +51,7 @@ noinst_PROGRAMS = \
 	list_vector_pool_test \
 	chunk_map_pool_test \
 	static_count_ptr_test \
+	chunk_pool_ref_count_test \
 	local_static_store_test \
 	multi_pool_module_test \
 	multidimensional_sparse_set_test \
@@ -105,6 +106,8 @@ list_vector_test_SOURCES = list_vector_test.cc
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
 chunk_map_pool_test_SOURCES = chunk_map_pool_test.cc
+chunk_pool_ref_count_test_SOURCES = chunk_pool_ref_count_test.cc
+chunk_pool_ref_count_test_LDADD = libfangutil.la
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 EBCO_test_SOURCES = EBCO_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc

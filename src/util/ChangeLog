@@ -1,5 +1,16 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.61.4.2 2006/12/12 10:18:30 fang Exp $
+#	$Id: ChangeLog,v 1.61.4.2.4.1 2007/01/11 08:04:59 fang Exp $
+
+2007-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-03:
+	  memory/count_ptr.tcc: re-wrote assignment operator using
+		release() call, expected to inline.  Doesn't change 
+		functionality, but makes more comprehensible and maintainable.  
+	  Added util/test/chunk_pool_ref_count_test.cc:
+		tests reference-count pointer, validating no leak using
+		a pool-allocated class (diagnostics upon exit).
+
 
 2006-12-10	David Fang		<fangism@users.sourceforge.net>
 

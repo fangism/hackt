@@ -1,0 +1,23 @@
+hello
+goodbye
+#refs = 1
+#refs = 2
+#refs = 2
+hello again
+hello again
+umm, what now?
+umm, what now?
+#refs = 2, 2
+who's this?
+who's this?, umm, what now?, who's this?
+#refs = 2, 1, 2
+who's this?, umm, what now?, who's this?, who's this?
+#refs = 3, 1
+this is new!
+#refs = 2, 2
+this is new!
+this is new!
+goodbye again
+It's me again!
+I'm pointing to myself.
+I'm done.

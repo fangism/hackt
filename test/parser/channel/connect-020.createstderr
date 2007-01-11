@@ -32,15 +32,11 @@ Persistent Object Manager text dump:
 	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	313
 	25	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	307
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	307
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

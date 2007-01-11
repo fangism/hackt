@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.h"
-	$Id: canonical_fundamental_chan_type.h,v 1.1.2.2 2007/01/10 20:14:28 fang Exp $
+	$Id: canonical_fundamental_chan_type.h,v 1.1.2.3 2007/01/11 08:04:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_FUNDAMENTAL_CHAN_TYPE_H__
@@ -14,6 +14,7 @@
 // #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
+#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -99,31 +100,23 @@ public:
 	ostream&
 	dump(ostream&, const char) const;
 
+	static
 	count_ptr<const this_type>
-	register_globally(void) const;
+	register_globally(const count_ptr<const this_type>&);
 
 	static
 	count_ptr<const this_type>
 	register_type(const datatype_list_type&);
 
+	static
+	ostream&
+	dump_global_registry(ostream&);
 
 	bool
 	is_strict(void) const { return true; }
 
 	bool
 	is_relaxed(void) const { return false; }
-
-#if 0
-	operator bool () const;
-#endif
-
-#if 0
-	bool
-	must_be_collectibly_type_equivalent(const this_type&) const;
-
-	bool
-	must_be_connectibly_type_equivalent(const this_type&) const;
-#endif
 
 	static
 	ostream&
@@ -144,11 +137,23 @@ public:
 
 public:
 	FRIEND_PERSISTENT_TRAITS
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(16)
 
+public:
 // object persistence
 	void
 	collect_transient_info(persistent_object_manager&) const;
 
+	static
+	void
+	write_pointer(const persistent_object_manager&, ostream&, 
+		const count_ptr<const this_type>&);
+
+	static
+	count_ptr<const this_type>
+	read_pointer(const persistent_object_manager&, istream&);
+
+private:
 	void
 	write_object(const persistent_object_manager&, ostream&) const;
 

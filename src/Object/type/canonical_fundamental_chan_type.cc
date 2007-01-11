@@ -1,7 +1,14 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.1.2.2 2007/01/10 20:14:27 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.1.2.3 2007/01/11 08:04:47 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_CONSTRUCTORS		0
+#define	STACKTRACE_DESTRUCTORS		0
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
@@ -11,17 +18,24 @@
 #include "Object/def/datatype_definition_base.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/pint_const.h"
 
 #include "util/memory/count_ptr.tcc"
+#include "util/memory/chunk_map_pool.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.h"
 #include "util/IO_utils.tcc"
+#include "util/stacktrace.h"
+#include "util/what.h"
 
 namespace util {
 // TODO: specialize reconstructor for de-serialization
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::canonical_fundamental_chan_type_base, 
 	CANONICAL_FUNDAMENTAL_CHANNEL_TYPE_TYPE_KEY, 0)
+
+SPECIALIZE_UTIL_WHAT(HAC::entity::canonical_fundamental_chan_type_base, 
+	"canonical-fund-chan-type-base")
 
 namespace memory {
 using HAC::entity::canonical_fundamental_chan_type_base;
@@ -48,10 +62,30 @@ namespace entity {
 #include "util/using_ostream.h"
 // using util::memory::operator<;
 using util::persistent_traits;
+using std::cin;
+
+//=============================================================================
+// static initializers
+
+// only needed for debugging, really
+REQUIRES_STACKTRACE_STATIC_INIT
+/**
+	Need to partially order static global destructors because
+	canonical_datatypes may contain pint_consts.  
+	Any other shared pooled types we've forgotten?
+ */
+REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(pint_const)
 
 //=============================================================================
 // class canonical_fundamental_chan_type method definitions
 
+/**
+	This must be initialized before the global registry, to ensure
+	orderly destruction!
+ */
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(canonical_fundamental_chan_type_base)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Global set of all instantiated built-in channel types.  
 	Instantiated types should register and check with this set
@@ -67,6 +101,10 @@ canonical_fundamental_chan_type_base::global_registry;
 canonical_fundamental_chan_type_base::canonical_fundamental_chan_type_base() :
 		persistent(), 
 		datatype_list() {
+	STACKTRACE_CTOR_VERBOSE;
+#if STACKTRACE_CONSTRUCTORS
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -74,11 +112,19 @@ canonical_fundamental_chan_type_base::canonical_fundamental_chan_type_base(
 		const datatype_list_type& d) :
 		persistent(), 
 		datatype_list(d) {
+	STACKTRACE_CTOR_VERBOSE;
+#if STACKTRACE_CONSTRUCTORS
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
 canonical_fundamental_chan_type_base::~canonical_fundamental_chan_type_base() {
+	STACKTRACE_DTOR_VERBOSE;
+#if STACKTRACE_DESTRUCTORS
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,9 +168,17 @@ canonical_fundamental_chan_type_base::dump(ostream& o) const {
  */
 bool
 canonical_fundamental_chan_type_base::operator < (const this_type& r) const {
-	return std::lexicographical_compare(
+#if ENABLE_STACKTRACE
+	this->dump(cerr << "comparing for ordering: ") << " vs. ";
+	r.dump(cerr) << " ... ";
+#endif
+	const bool ret = std::lexicographical_compare(
 		datatype_list.begin(), datatype_list.end(), 
 		r.datatype_list.begin(), r.datatype_list.end());
+#if ENABLE_STACKTRACE
+	cerr << (ret ? "<" : ">=") << endl;
+#endif
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -136,12 +190,16 @@ canonical_fundamental_chan_type_base::operator < (const this_type& r) const {
 bool
 canonical_fundamental_chan_type_base::operator == (const this_type& t) const {
 	typedef datatype_list_type::const_iterator      const_iterator;
+#if 0
+	this->dump(cerr << "comparing for equiv: ") << " vs. ";
+	t.dump(cerr) << endl;
+#endif
 	if (datatype_list.size() != t.datatype_list.size())
 		return false;
 	const_iterator i(datatype_list.begin());
 	const_iterator j(t.datatype_list.begin());
 	const const_iterator e(datatype_list.end());
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i, ++j) {
 		if (!i->must_be_connectibly_type_equivalent(*j))
 			return false;
 	}
@@ -161,9 +219,43 @@ canonical_fundamental_chan_type_base::register_type(
 		const datatype_list_type& d) {
 	typedef	count_ptr<const this_type>		return_type;
 	const return_type probe(new this_type(d));
+	return register_globally(probe);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const canonical_fundamental_chan_type_base>
+canonical_fundamental_chan_type_base::register_globally(
+		const count_ptr<const this_type>& p) {
 	typedef global_registry_type::iterator		iterator;
-	std::pair<iterator, bool> t(global_registry.insert(probe));
+	STACKTRACE_VERBOSE;
+	const std::pair<iterator, bool> t(global_registry.insert(p));
+#if ENABLE_STACKTRACE
+	if (t.second) {
+		STACKTRACE_INDENT_PRINT("new chan() registered." << endl);
+	} else {
+		STACKTRACE_INDENT_PRINT("old chan() re-used." << endl);
+	}
+	(*t.first)->dump(STACKTRACE_STREAM) << endl;
+#endif
+	NEVER_NULL(*t.first);
 	return *t.first;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For debugging dump all registered built-in channel types.  
+ */
+ostream&
+canonical_fundamental_chan_type_base::dump_global_registry(ostream& o) {
+	typedef global_registry_type::const_iterator	const_iterator;
+	o << "global chan() type registry:" << endl;
+	const_iterator i(global_registry.begin());
+	const const_iterator e(global_registry.end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		(*i)->dump(o << '\t') << endl;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -176,6 +268,35 @@ if (!m.register_transient_object(this,
 		util::persistent_collector_ref(m)
 	);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+canonical_fundamental_chan_type_base::write_pointer(
+		const persistent_object_manager& m, ostream& o, 
+		const count_ptr<const this_type>& t) {
+	if (t) {
+		typedef global_registry_type::const_iterator	const_iterator;
+		const const_iterator f(global_registry.find(t));
+		INVARIANT(f != global_registry.end());
+	}
+	m.write_pointer(o, t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const canonical_fundamental_chan_type_base>
+canonical_fundamental_chan_type_base::read_pointer(
+		const persistent_object_manager& m, istream& i) {
+	const count_ptr<canonical_fundamental_chan_type_base> temp;
+	m.read_pointer(i, temp);
+	// TODO: load global map! (responsibility here)
+	if (temp) {
+		m.load_object_once(temp);
+//		m.please_delete(&*temp);	// don't keep around
+		return register_globally(temp);
+	} else {
+		return count_ptr<const this_type>(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -220,16 +341,21 @@ canonical_fundamental_chan_type_base::load_object(
 
 canonical_fundamental_chan_type::canonical_fundamental_chan_type() :
 		base_chan_type(), direction('\0') {
+	STACKTRACE_CTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_fundamental_chan_type::canonical_fundamental_chan_type(
 		const base_chan_ptr_type& c) :
 		base_chan_type(c), direction('\0') {
+	STACKTRACE_CTOR_VERBOSE;
+	NEVER_NULL(base_chan_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-canonical_fundamental_chan_type::~canonical_fundamental_chan_type() { }
+canonical_fundamental_chan_type::~canonical_fundamental_chan_type() {
+	STACKTRACE_DTOR_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -291,7 +417,10 @@ canonical_fundamental_chan_type::collect_transient_info_base(
 void
 canonical_fundamental_chan_type::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, base_chan_type);
+	STACKTRACE_VERBOSE;
+	// TODO: verify that pointer is a member of global registry, 
+	// and not a stray!
+	base_type::write_pointer(m, o, base_chan_type);
 	util::write_value(o, direction);
 }
 
@@ -299,12 +428,14 @@ canonical_fundamental_chan_type::write_object_base(
 void
 canonical_fundamental_chan_type::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, base_chan_type);
-	// TODO: load global map! (responsibility here)
+	STACKTRACE_VERBOSE;
+	base_chan_type = base_type::read_pointer(m, i);	// special!
 	util::read_value(i, direction);
 }
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

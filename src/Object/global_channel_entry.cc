@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_channel_entry.cc"
-	$Id: global_channel_entry.cc,v 1.1.2.1 2007/01/09 19:30:12 fang Exp $
+	$Id: global_channel_entry.cc,v 1.1.2.2 2007/01/11 08:04:45 fang Exp $
  */
 
 #include "Object/global_channel_entry.h"
@@ -38,7 +38,7 @@ global_entry_base<channel_tag>::write_object_base(
 		const size_t ind,
 		const footprint& f, const state_manager& sm) const {
 	substructure_policy::write_object_base(m, o, ind, f, sm);
-	m.write_pointer(o, channel_type);
+	canonical_fundamental_chan_type_base::write_pointer(m, o, channel_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -48,7 +48,7 @@ global_entry_base<channel_tag>::load_object_base(
 		const size_t ind,
 		const footprint& f, const state_manager& sm) {
 	substructure_policy::load_object_base(m, i, ind, f, sm);
-	m.read_pointer(i, channel_type);
+	channel_type = canonical_fundamental_chan_type_base::read_pointer(m, i);
 }
 
 //=============================================================================

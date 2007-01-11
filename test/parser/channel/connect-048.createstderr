@@ -59,8 +59,6 @@ Persistent Object Manager text dump:
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

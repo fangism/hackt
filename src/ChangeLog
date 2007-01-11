@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-03:
+	  Now all canonical_fundamental_chan_type_base's "are belong to"
+		the global registry, all ref-counted, now also pool-allocated.
+		The global canonical pointers are restored upon persistence
+		de-serialization, using wrapped interfaces to
+		static member functions write_pointer/read_pointer.  
+		Object/type_reference.cc: also use register_globally().
+	  Bug fix from previous rev.:
+		Corrected operator < of canonical_generic_datatypes, 
+		forgot to compare parameters lists, duh.  
+	  As a result of sharing built-in channel type pointers, 
+		binary footprints have shrunk, thanks to reduced replication.
+		channel and CHP test cases updated accordingly.  
+
+
 2007-01-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-02:

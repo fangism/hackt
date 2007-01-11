@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.23.4.2.2.1 2007/01/10 20:14:30 fang Exp $
+ 	$Id: type_reference.cc,v 1.23.4.2.2.2 2007/01/11 08:04:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -1232,7 +1232,8 @@ builtin_channel_type_reference::make_instance_collection(
 	Temporary hack: see canonical_generic_chan_type.
 	Temporary hack: see canonical_fundamental_chan_type.
 	TODO: add unroll_context argument!
-	\pre this has already been unroll-resolved to constants
+	\pre this has already been unroll-resolved to constants,
+		no meta-references remain.
  */
 #if BUILTIN_CHANNEL_FOOTPRINTS
 canonical_fundamental_chan_type
@@ -1250,7 +1251,11 @@ builtin_channel_type_reference::make_canonical_type(void) const {
 		yet_another_datatype_canonicalizer()	// helper functor
 		// datatype_resolver(c)	// helper functor
 	);
-	canonical_fundamental_chan_type ret(ret_base);
+	// return a globally shared canonical reference
+	const count_ptr<const canonical_fundamental_chan_type_base>
+		ret_arg(canonical_fundamental_chan_type_base::
+			register_globally(ret_base));
+	canonical_fundamental_chan_type ret(ret_arg);
 	ret.set_direction(direction);
 #else
 	canonical_generic_chan_type ret;
