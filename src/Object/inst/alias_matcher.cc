@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.4.8.1 2006/12/25 03:27:48 fang Exp $
+	$Id: alias_matcher.cc,v 1.4.8.2 2007/01/12 00:40:00 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -16,6 +16,9 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/def/footprint.h"
 #include "Object/global_entry.tcc"	// for get_frame_map
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/devel_switches.h"

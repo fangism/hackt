@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.6 2006/01/27 08:07:19 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.6.72.1 2007/01/12 00:40:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
@@ -22,6 +22,9 @@ class canonical_type_base;
 template <class>
 class canonical_type;
 
+class canonical_fundamental_chan_type_base;
+class canonical_fundamental_chan_type;
+
 // HACK ALERT:
 // since built-in channels don't exactly conform to the normal
 // meta-type, we need an exception to accommodate them.  To accomplish this, 
@@ -36,6 +39,14 @@ typedef	canonical_type<channel_definition_base>	canonical_generic_chan_type;
 typedef	canonical_type<user_def_chan>		canonical_user_def_chan_type;
 // built-in channel type?
 typedef	canonical_type<process_definition>	canonical_process_type;
+
+/**
+	Comparison operator needed for set sorting of
+	built-in channel types.  
+ */
+bool
+operator < (const canonical_generic_datatype&, 
+		const canonical_generic_datatype&);
 
 //=============================================================================
 // HACK alert until we take the time to redo built-in types correctly

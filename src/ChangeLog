@@ -3,6 +3,85 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-31-merged-channel-04:
+	  Child branch merge.  Summary:
+		Displace generic (incomplete) channel type mechanism with
+		only support for built-in channel types.  
+		Built-in channel type instantiations are maintained
+		uniquely using a global ordered set of them, thus eliminating
+		unnecessary replication.  
+		Allocation now establishes channel types per global channel
+		entry, now usable to the simulation environment.  
+	  Regressions: front-end support for user-defined channel types has
+		been dropped, but never worked fully to begin with.  
+
+
+2007-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-04:
+	  Finally established built-in channel fooprints for global
+		channel entries (alloc phase).
+	  entity::footprint: implemented __set_channel_footprints()
+		for top-level post-allocate type assignment.
+	  Enabled and verified alloc tests in parser/{chp,channel}.
+		Channel entries are properly allocated and 
+		reference correct canonical_fundamental_chan_type_base's.  
+	  This concludes work on this branch -- merge to parent branch.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-03:
+	  Now all canonical_fundamental_chan_type_base's "are belong to"
+		the global registry, all ref-counted, now also pool-allocated.
+		The global canonical pointers are restored upon persistence
+		de-serialization, using wrapped interfaces to
+		static member functions write_pointer/read_pointer.  
+		Object/type_reference.cc: also use register_globally().
+	  Bug fix from previous rev.:
+		Corrected operator < of canonical_generic_datatypes, 
+		forgot to compare parameters lists, duh.  
+	  As a result of sharing built-in channel type pointers, 
+		binary footprints have shrunk, thanks to reduced replication.
+		channel and CHP test cases updated accordingly.  
+
+
+2007-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-02:
+	  Added new specializations for instance management for 
+		built-in channel types:
+		channel_collection_type_manager (collection) and
+		channel_instantiation_type_ref (instantiation_statement).
+		Policies are reflected in "Object/traits/chan_traits.h"
+	  Factored canonical_fundamental_chan_type_base (without direction)
+		and use a ref-counted pointer in the type with direction.  
+	  Dropped support for user-defined channel types in front-end
+		as well as middle-end.  
+		Withdrew all affected regression tests: 
+			parser/connect/{086,086a,086b,087}.hac
+			parser/channel/018.hac
+		No other regressions.  
+	  Next: register canonical_fundamental_chan_type_base with
+		global instantiated set to share pointers.  
+
+
+2007-01-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-01:
+	  This branch is intended for reworking the channel meta-type
+		system for CHPSIM.  This branch will displace intermediate
+		representation support of user-defined-channels (which have
+		never been clearly specified to begin with *ahem*)
+		in favor of built-in channel types.  
+	  Added Object/global_channel_entry.{h,cc} (specialization).
+	  Added Object/type/canonical_fundamental_chan_type.{h,cc}.
+	  Defined a total-ordering for fundamental data-types: 
+		bool, int, enums.  No user-defined data-types are allowed yet.  
+	  Enabled BUILIN_CHANNEL_FOOTPRINTS switch, but is incomplete.
+	  Test suite shows no regressions.  
+
+
 2007-01-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-30:

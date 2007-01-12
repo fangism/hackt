@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.3 2006/12/01 23:28:49 fang Exp $
+	$Id: connection_policy.tcc,v 1.3.2.1 2007/01/12 00:40:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -10,7 +10,7 @@
 #include "Object/inst/connection_policy.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
-#include "Object/devel_switches.h"
+// #include "Object/devel_switches.h"
 #include "common/ICE.h"
 
 #include "util/stacktrace.h"

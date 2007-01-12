@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.4.8.1 2006/12/25 03:27:49 fang Exp $
+	$Id: alias_printer.cc,v 1.4.8.2 2007/01/12 00:40:01 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -13,6 +13,9 @@
 #include "Object/traits/enum_traits.h"
 #if ENABLE_DATASTRUCTS
 #include "Object/traits/struct_traits.h"
+#endif
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
 #endif
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"

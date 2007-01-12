@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.16.8.2 2007/01/04 21:44:57 fang Exp $
+	$Id: state_manager.cc,v 1.16.8.3 2007/01/12 00:39:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,9 @@
 #include <functional>
 #include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/struct_traits.h"

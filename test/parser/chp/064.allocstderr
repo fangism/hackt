@@ -1,0 +1,11 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	differ	adjacent_diff<12>
+	channel: 1,2
+	int: 1,2
+[global channel entries]
+1	(top)	-	1	A	chan(int<12>)
+2	(top)	-	2	B	chan(int<12>)
+[global int entries]
+1	process	1	1	differ.x	
+2	process	1	2	differ.z	

@@ -21,13 +21,13 @@ Persistent Object Manager text dump:
 	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	14	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -67,21 +67,21 @@ Persistent Object Manager text dump:
 	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
-	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	414
+	62	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
-	70	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
-	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
-	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	72	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	footprnt	0	#HEAD#	#TAIL#	414
 	76	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	77	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20

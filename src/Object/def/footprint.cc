@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.32.4.4 2007/01/04 07:52:02 fang Exp $
+	$Id: footprint.cc,v 1.32.4.5 2007/01/12 00:39:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,6 +19,10 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#include "Object/type/canonical_fundamental_chan_type.h"
+#endif
 #include "Object/port_context.h"
 #include "Object/common/cflat_args.h"
 #include "Object/common/alias_string_cache.h"
@@ -126,6 +130,8 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Iterate over local footprint of structured entries.  
+	This is only applicable to process_tag!  
+	(nothing else has footprint-frame)
 	Each entry is initialized by resizing footprint_frame.  
 	\param gframe footprint frame of the top-level global process.  
 	\param s the global state allocator.
@@ -140,6 +146,7 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	STACKTRACE_VERBOSE;
 	size_t j = o;
 	global_pool_type& gpool(sm.template get_pool<Tag>());
+	// remember to skip the NULL entry
 	const_iterator i(++_instance_pool->begin());
 	const const_iterator e(_instance_pool->end());
 	for ( ; i!=e; i++, j++) {
@@ -188,13 +195,71 @@ footprint_base<Tag>::__expand_unique_subinstances(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Establishes the built-in channel footprint.
+	Called from top-level only.  
+ */
+template <class Tag>
+good_bool
+footprint_base<Tag>::__set_channel_footprints(state_manager& sm) const {
+	typedef	global_entry_pool<Tag>		global_pool_type;
+	// typedef	typename global_pool_type::iterator	pool_iterator;
+	STACKTRACE_VERBOSE;
+	global_pool_type& gpool(sm.template get_pool<Tag>());
+	size_t j = 1;		// top-level pool, skip 0th entry
+{
+	// this covers top-level channels only
+	const_iterator i(++_instance_pool->begin());	// skip NULL
+	const const_iterator e(_instance_pool->end());
+	// pool_iterator j(++gpool.begin());	// nested-iterator private
+	for ( ; i!=e; ++i, ++j) {
+		global_entry<Tag>& ref(gpool[j]);
+		// global_entry<Tag>& ref(*j);
+		const instance_alias_info<Tag>&
+			formal_alias(*i->get_back_ref());
+		NEVER_NULL(formal_alias.container);	// container back-ref
+		const instance_collection<Tag>&
+			col(formal_alias.container->get_canonical_collection());
+		// can now access the channel_collection_type_manager base
+		ref.channel_type = col.__get_raw_type().get_base_type();
+		// possibly re-cache/compute structural summaries
+	}
+}{
+	// this covers internally allocated (private) channels
+	// kinda hackish... :(
+	const size_t s = gpool.size();
+	for ( ; j<s; ++j) {
+		typedef	typename state_instance<Tag>::pool_type	pool_type;
+		global_entry<Tag>& ref(gpool[j]);
+		NEVER_NULL(ref.parent_id);
+		INVARIANT(ref.parent_tag_value == PARENT_TYPE_PROCESS);
+		// partially ripped from global_entry::__dump_canonical_name
+		const global_entry<process_tag>&
+			pref(extract_parent_entry<process_tag>(sm, ref));
+		const pool_type&
+			_lpool(pref._frame._footprint->
+				template get_instance_pool<Tag>());
+		const state_instance<Tag>& _inst(_lpool[ref.local_offset]);
+		const instance_alias_info<Tag>&
+			alias(*_inst.get_back_ref());
+		const instance_collection<Tag>&
+			col(alias.container->get_canonical_collection());
+		ref.channel_type = col.__get_raw_type().get_base_type();
+	}
+}
+	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 // not ready to unveil until simulation engine is ready...
 /**
 	NOTE: this is only need for simulation, not needed for cflattening.
 	Expands each unique process' local production rules, 
 	according to its footprint.  
-	This should only be instantiated with Tag = process_tag.
+	This is only applicable to process_tag!
 	Is footprint_frame needed?
  */
 template <class Tag>
@@ -592,6 +657,12 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 					ff, sm, struct_offset).good
 #endif
 		);
+#if BUILTIN_CHANNEL_FOOTPRINTS
+		if (!b.good)	return b;
+		// assign channel footprints after global allocation is complete
+		return footprint_base<channel_tag>::
+			__set_channel_footprints(sm);
+#else
 #if 0
 		if (!b.good)
 			return b;
@@ -603,6 +674,7 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 #else
 		return b;
 #endif
+#endif	// BUILTIN_CHANNEL_FOOTPRINTS
 	} else {
 		// error
 		return a;

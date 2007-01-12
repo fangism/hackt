@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61

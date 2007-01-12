@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.12.2.2 2006/12/14 22:35:47 fang Exp $
+#	$Id: Makefile.am,v 1.12.2.3 2007/01/12 00:41:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -10,7 +10,7 @@ HACKT_PARSE_TEST_FAILURES = 000 003 004 006 007 \
 
 HACKT_PARSE_TEST_PASSES = \
 	001 002 005 008 009 010 \
-	011 012 014 015 016 017 018 019 \
+	011 012 014 015 016 017 019 \
 	020 021 024 \
 	connect-001 connect-002 connect-003 connect-004 connect-005 \
 	connect-006 connect-007 connect-008 connect-009 connect-010 \
@@ -30,7 +30,7 @@ HACKT_PARSE_TEST_PASSES = \
 # UNROLL tests are obsolete
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 005 008 009 010 \
-	011 012 014 015 016 017 018 019 \
+	011 012 014 015 016 017 019 \
 	020 021 \
 	connect-001 connect-002 connect-005 connect-006 \
 	connect-009 connect-010 \
@@ -69,8 +69,7 @@ else
 HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
 endif
 
-HACKT_ALLOC_TEST_PASSES =
-#	connect-009 connect-010
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
 # temporary for now:
 HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_PASSES)
@@ -79,8 +78,12 @@ HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_PASSES)
 BISON_OUTPUTS += 000 003 004 006 007 \
 	013
 
+# regressions:
+# 018 -- dropped support for user-defined channel types until much later
+
 srcdir_EXTRA_DIST += \
-	nonmeta-bool-merge.hac nonmeta-bool-split.hac
+	nonmeta-bool-merge.hac nonmeta-bool-split.hac \
+	018.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

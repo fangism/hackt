@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.9 2006/10/18 01:19:07 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.9.12.1 2007/01/12 00:39:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -87,6 +87,10 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+
+	unsigned char
+	get_meta_type_enum(void) const;
+
 };	// end class built_in_datatype_def
 
 //=============================================================================

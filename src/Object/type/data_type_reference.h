@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.12 2006/11/07 06:35:31 fang Exp $
+ 	$Id: data_type_reference.h,v 1.12.8.1 2007/01/12 00:40:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -82,6 +82,10 @@ public:
 	// need to be able to lookup parameters... update later...
 	count_ptr<const this_type>
 	unroll_resolve(const unroll_context&) const;
+
+	count_ptr<const this_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const this_type>&) const;
 
 	static
 	data_type_reference*

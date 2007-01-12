@@ -1,0 +1,9 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	lecture	boring<>
+	channel: 1
+	bool: 1
+[global channel entries]
+1	(top)	-	1	lecture.B	chan(bool<>)
+[global bool entries]
+1	process	1	1	lecture.x	

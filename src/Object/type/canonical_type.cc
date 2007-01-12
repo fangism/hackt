@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.15.2.1 2006/12/25 03:27:57 fang Exp $
+	$Id: canonical_type.cc,v 1.15.2.2 2007/01/12 00:40:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -238,6 +238,45 @@ check_footprint_policy<user_def_datatype>::operator () (
 		__ATTRIBUTE_UNUSED_CTOR__((cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params())));
 	INVARIANT(f == &_f);
+}
+
+//=============================================================================
+/**
+	Ordering definition for built-in data types.  
+ */
+bool
+operator < (const canonical_generic_datatype& l,
+		const canonical_generic_datatype& r) {
+	const never_ptr<const datatype_definition_base>
+		ld(l.get_base_def()), 
+		rd(r.get_base_def());
+	NEVER_NULL(ld);
+	NEVER_NULL(rd);
+	if (ld != rd) {
+		return ld->less_ordering(*rd);
+	} else {
+		typedef	canonical_type_base::const_param_list_ptr_type
+						params_ptr_type;
+		const params_ptr_type& lp(l.get_raw_template_params());
+		const params_ptr_type& rp(r.get_raw_template_params());
+		// NOTE: empty param lists are considered equivalent to NULL
+		if (lp) {
+			if (rp) {
+				// compare const_param_expr_lists
+				return *lp < *rp;
+			} else {
+				// non-NULL lp cannot possibly be < rp
+				return false;
+			}
+		} else {
+			if (rp) {
+				// if rp is also empty, then lp == rp
+				return !rp->size();
+			} else {
+				return false;
+			}
+		}
+	}
 }
 
 //=============================================================================

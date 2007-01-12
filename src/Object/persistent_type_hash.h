@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.14 2006/11/21 22:38:37 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.14.4.1 2007/01/12 00:39:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -44,6 +44,9 @@
 #define	ENUM_DEFINITION_TYPE_KEY				"enumdefn"
 #define	DATA_TYPEDEF_TYPE_KEY					"datatpdf"
 //	no built-in definition types, like params
+
+// for canonical built-in channel types
+#define	CANONICAL_FUNDAMENTAL_CHANNEL_TYPE_TYPE_KEY		"fndchntp"
 
 // for heap-allocated footprints
 #define	GENERIC_FOOTPRINT_TYPE_KEY				"footprnt"

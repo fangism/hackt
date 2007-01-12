@@ -1,0 +1,27 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	send_indexed<0, 0>
+	channel: 1,2,3,4
+2	(top)	-	2	ick	send_indexed<0, 1>
+	channel: 5,6,7,8
+3	(top)	-	3	poo	send_indexed<1, 0>
+	channel: 9,10,11,12
+4	(top)	-	4	bar	send_indexed<1, 1>
+	channel: 13,14,15,16
+[global channel entries]
+1	(top)	-	1	foo.out[0][0]	chan(int<32>)
+2	(top)	-	2	foo.out[0][1]	chan(int<32>)
+3	(top)	-	3	foo.out[1][0]	chan(int<32>)
+4	(top)	-	4	foo.out[1][1]	chan(int<32>)
+5	(top)	-	5	ick.out[0][0]	chan(int<32>)
+6	(top)	-	6	ick.out[0][1]	chan(int<32>)
+7	(top)	-	7	ick.out[1][0]	chan(int<32>)
+8	(top)	-	8	ick.out[1][1]	chan(int<32>)
+9	(top)	-	9	poo.out[0][0]	chan(int<32>)
+10	(top)	-	10	poo.out[0][1]	chan(int<32>)
+11	(top)	-	11	poo.out[1][0]	chan(int<32>)
+12	(top)	-	12	poo.out[1][1]	chan(int<32>)
+13	(top)	-	13	bar.out[0][0]	chan(int<32>)
+14	(top)	-	14	bar.out[0][1]	chan(int<32>)
+15	(top)	-	15	bar.out[1][0]	chan(int<32>)
+16	(top)	-	16	bar.out[1][1]	chan(int<32>)
