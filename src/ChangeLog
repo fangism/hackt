@@ -5,6 +5,19 @@
 
 2007-01-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-32:
+	  Defined fundamental_channel_footprint as just a collection
+		of sizes to allocate nonmeta_state's ChannelData fields.  
+	  nonmeta_state_manager: now allocates ChannelData fields corresponding
+		to fundamental channel type upon construction.  
+	  main/chpsim.cc: pre-caches all fundamental_channel_footprints
+		before constructing CHPSIM simulator state.  
+	  virtual datatype_definition_base::count_channel_member() implemented, 
+		to accumulate size of field over meta-types.  
+	  TODO: add support for sized-types and arrays (later).  
+	  Next: finish implementing channel_send/receive::execute().
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-31-merged-channel-04:
 	  Child branch merge.  Summary:
 		Displace generic (incomplete) channel type mechanism with

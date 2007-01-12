@@ -2,7 +2,7 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.9.12.1 2007/01/12 00:39:58 fang Exp $
+	$Id: enum_datatype_def.h,v 1.9.12.2 2007/01/12 03:11:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_ENUM_DATATYPE_DEF_H__
@@ -101,6 +101,8 @@ public:
 	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 
+	void
+	count_channel_member(fundamental_channel_footprint&) const;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.16 2007/01/12 00:39:43 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.17 2007/01/12 03:11:29 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -545,6 +545,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/user_def_chan.h \
 	Object/def/user_def_datatype.h \
 	Object/def/footprint_base.h \
+	Object/def/fundamental_channel_footprint.h \
 	Object/expr/expr_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \

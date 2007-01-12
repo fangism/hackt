@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.5 2007/01/03 23:34:10 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.6 2007/01/12 03:11:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -14,6 +14,16 @@
 
 namespace HAC {
 namespace entity {
+struct bool_tag;
+struct int_tag;
+struct enum_tag;
+struct channel_tag;
+class BoolVariable;
+class IntVariable;
+class EnumVariable;
+class ChannelState;
+class fundamental_channel_footprint;
+	// defined in "Object/def/fundamental_channel_footprint.h"
 using std::ostream;
 using std::valarray;
 
@@ -23,6 +33,33 @@ using std::valarray;
  */
 typedef	std::set<size_t>		event_subscribers_type;
 	// size_t -> event_index_type
+
+//=============================================================================
+/**
+	TODO: define this in corresponding class_traits?
+ */
+template <class Tag>
+struct variable_type { };
+
+template <>
+struct variable_type<bool_tag> {
+	typedef	BoolVariable		type;
+};
+
+template <>
+struct variable_type<int_tag> {
+	typedef	IntVariable		type;
+};
+
+template <>
+struct variable_type<enum_tag> {
+	typedef	EnumVariable		type;
+};
+
+template <>
+struct variable_type<channel_tag> {
+	typedef	ChannelState		type;
+};
 
 //=============================================================================
 /**
@@ -103,6 +140,21 @@ public:
 };	// end class EnumVariable
 
 //=============================================================================
+template <class Tag>
+struct channel_data_base {
+	typedef	typename variable_type<Tag>::type::value_type
+						member_variable_type;
+	typedef	valarray<member_variable_type>	member_variable_array_type;
+
+	member_variable_array_type		member_fields;
+
+protected:
+	void
+	__resize(const fundamental_channel_footprint&);
+
+};	// end struct channel_data_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The raw data contained in the channel, whose interpretation
 	will be determined by the corresponding global channel entry.
@@ -112,14 +164,15 @@ public:
 		trading off between memory and performance.  
 		Layout will be defined by fundamental channel footprint.  
  */
-class ChannelData {
+class ChannelData : 
+	public channel_data_base<bool_tag>,
+	public channel_data_base<int_tag>,
+	public channel_data_base<enum_tag> {
 public:
-	typedef	valarray<BoolVariable::value_type>	bool_fields_type;
-	typedef	valarray<IntVariable::value_type>	int_fields_type;
-	bool_fields_type				bool_fields;
-	int_fields_type					int_fields;
-
 	// default constructor and destructor
+
+	void
+	resize(const fundamental_channel_footprint&);
 
 };	// end class ChannelData
 
@@ -161,5 +214,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_CHPSIM_CHANNEL_H__
+#endif	// __HAC_OBJECT_NONMETA_VARIABLE_H__
 

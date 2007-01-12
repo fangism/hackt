@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.1.2.4 2006/12/26 21:26:01 fang Exp $
+	$Id: nonmeta_state.h,v 1.1.2.5 2007/01/12 03:11:32 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -23,33 +23,6 @@ class channel_tag;
 using std::vector;
 using std::ostream;
 using std::istream;
-
-//=============================================================================
-/**
-	TODO: define this in corresponding class_traits?
- */
-template <class Tag>
-struct variable_type { };
-
-template <>
-struct variable_type<bool_tag> {
-	typedef	BoolVariable		type;
-};
-
-template <>
-struct variable_type<int_tag> {
-	typedef	IntVariable		type;
-};
-
-template <>
-struct variable_type<enum_tag> {
-	typedef	EnumVariable		type;
-};
-
-template <>
-struct variable_type<channel_tag> {
-	typedef	ChannelState		type;
-};
 
 //=============================================================================
 /**

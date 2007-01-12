@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.1.2.3 2007/01/12 00:39:49 fang Exp $
+	$Id: nonmeta_state.cc,v 1.1.2.4 2007/01/12 03:11:31 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/enum_traits.h"
+#include "Object/type/canonical_fundamental_chan_type.h"
 
 namespace HAC {
 namespace entity {
@@ -37,11 +38,30 @@ nonmeta_state_base<Tag>::~nonmeta_state_base() { }
 //=============================================================================
 // class nonmeta_state_manager method definitions
 
+/**
+	This also allocates the ChannelState's fields according to their
+	corresponding channel types.  
+	\pre must have already refreshed the channel type footprint summaries.
+ */
 nonmeta_state_manager::nonmeta_state_manager(const state_manager& sm) :
 		bool_base_type(sm), 
 		int_base_type(sm), 
 		enum_base_type(sm), 
 		channel_base_type(sm) {
+	typedef	global_entry_pool<channel_tag>	channel_entry_pool_type;
+	typedef	channel_base_type::pool_type	channel_state_pool_type;
+	typedef	channel_state_pool_type::iterator	channel_state_iterator;
+	const channel_entry_pool_type&
+		cep(sm.get_pool<channel_tag>());
+	const size_t s = cep.size();
+	channel_state_iterator i(channel_base_type::pool.begin());
+	const channel_state_iterator e(channel_base_type::pool.end());
+	INVARIANT(size_t(distance(i, e)) == s);
+	size_t j = 1;	// 1-indexed, skip NULL entry
+	for (++i; i!=e; ++i, ++j) {
+		const global_entry<channel_tag>& ce(cep[j]);
+		i->resize(ce.channel_type->footprint_size());
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

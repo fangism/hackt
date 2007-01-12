@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.35.4.2 2007/01/12 00:39:57 fang Exp $
+ 	$Id: definition.cc,v 1.35.4.3 2007/01/12 03:11:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -36,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/channel_definition_alias.h"
 #include "Object/def/process_definition.h"
 #include "Object/def/process_definition_alias.h"
+#include "Object/def/fundamental_channel_footprint.h"
 #include "Object/def/footprint.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
@@ -1483,6 +1484,28 @@ built_in_datatype_def::get_meta_type_enum(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+built_in_datatype_def::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	if (this == &bool_traits::built_in_definition) {
+		++f.size<bool_tag>();
+	}
+	else if (this == &int_traits::built_in_definition) {
+		++f.size<int_tag>();
+	} else {
+		// no other built-in definitions at this time
+		THROW_EXIT;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Leeching off of datatype definition.  
 	Will be handled specially (replaced) by data_type_reference.  
@@ -1863,6 +1886,18 @@ unsigned char
 enum_datatype_def::get_meta_type_enum(void) const {
 	return class_traits<enum_tag>::type_tag_enum_value;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+enum_datatype_def::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	++f.size<enum_tag>();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2335,6 +2370,18 @@ user_def_datatype::get_meta_type_enum(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+user_def_datatype::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2592,6 +2639,18 @@ datatype_definition_alias::get_meta_type_enum(void) const {
 	ICE_NEVER_CALL(cerr);
 	return META_TYPE_NONE;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+datatype_definition_alias::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

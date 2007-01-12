@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37.2.6 2007/01/04 07:51:59 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.7 2007/01/12 03:11:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -166,7 +166,7 @@
 	Goal: 1
 	Application: for run-time resolution of values (simulation)
 	Priority: high
-	Status: declarations in place, missing definitions
+	Status: done, but untested
  */
 #define	USE_NONMETA_RESOLVE			1
 
@@ -183,7 +183,7 @@
 	canonical_fundamental_channel footprints.  
 	Also allocate ChannelData accordingly.  
 	Goal: 1
-	Status: not begun
+	Status: done
 	Priority: high (for chpsim)
  */
 #define	BUILTIN_CHANNEL_FOOTPRINTS		1

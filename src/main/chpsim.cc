@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.6 2006/12/16 03:05:46 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.7 2007/01/12 03:11:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,6 +15,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/program_registry.h"	// to register with hackt's dispatcher
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
+#include "Object/type/canonical_fundamental_chan_type.h"
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
 #include "sim/command_common.h"
@@ -27,6 +28,7 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::CHPSIM::State;
 using SIM::CHPSIM::CommandRegistry;
+using entity::canonical_fundamental_chan_type_base;
 
 //=============================================================================
 template class options_modifier_policy<chpsim_options>;
@@ -122,6 +124,8 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 		}
 	}
 try {
+	// first, cache all built-in channel types' summaries
+	canonical_fundamental_chan_type_base::refresh_all_footprints();
 	State sim_state(*the_module);		// may throw
 	// install interrupt signal handler
 	const State::signal_handler int_handler(&sim_state);

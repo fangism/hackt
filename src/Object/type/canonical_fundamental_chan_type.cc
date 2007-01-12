@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.1.4.1 2007/01/12 00:40:24 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.1.4.2 2007/01/12 03:11:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/canonical_type.h"	// for generic data-type
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/def/datatype_definition_base.h"
+#include "Object/def/fundamental_channel_footprint.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
@@ -77,6 +78,14 @@ REQUIRES_STACKTRACE_STATIC_INIT
 REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(pint_const)
 
 //=============================================================================
+/**
+	This pool should be constructed before
+	canonical_fundamental_chan_type_base's
+	for proper destructor ordering.  
+ */
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(fundamental_channel_footprint)
+
+//=============================================================================
 // class canonical_fundamental_chan_type method definitions
 
 /**
@@ -100,7 +109,8 @@ canonical_fundamental_chan_type_base::global_registry;
  */
 canonical_fundamental_chan_type_base::canonical_fundamental_chan_type_base() :
 		persistent(), 
-		datatype_list() {
+		datatype_list(), 
+		footprint_cache(NULL) {
 	STACKTRACE_CTOR_VERBOSE;
 #if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
@@ -111,7 +121,8 @@ canonical_fundamental_chan_type_base::canonical_fundamental_chan_type_base() :
 canonical_fundamental_chan_type_base::canonical_fundamental_chan_type_base(
 		const datatype_list_type& d) :
 		persistent(), 
-		datatype_list(d) {
+		datatype_list(d), 
+		footprint_cache(NULL) {
 	STACKTRACE_CTOR_VERBOSE;
 #if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
@@ -256,6 +267,57 @@ canonical_fundamental_chan_type_base::dump_global_registry(ostream& o) {
 		(*i)->dump(o << '\t') << endl;
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor.
+	TODO: support sized-types.  
+ */
+struct canonical_fundamental_chan_type_base::channel_footprint_refresher {
+	fundamental_channel_footprint& 			cfp;
+	explicit
+	channel_footprint_refresher(fundamental_channel_footprint& f) :
+		cfp(f) { }
+
+	void
+	operator () (const canonical_generic_datatype& d) {
+		d.get_base_def()->count_channel_member(cfp);
+	}
+
+};	// end struct channel_footprint_refresher
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-evaluates the data-type list to produce a size summary
+	of channel components.  
+	TODO: accommodate sized-types.  
+ */
+void
+canonical_fundamental_chan_type_base::refresh_footprint(void) const {
+	// over-write previous, if any, else make new one, no need to reset
+	footprint_cache = excl_ptr<fundamental_channel_footprint>(
+		new fundamental_channel_footprint);
+	// with pool-allocation, should be fast
+	NEVER_NULL(footprint_cache);
+	for_each(datatype_list.begin(), datatype_list.end(), 
+		channel_footprint_refresher(*footprint_cache)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Refreshes all footprint summaries for registered channel types.  
+ */
+void
+canonical_fundamental_chan_type_base::refresh_all_footprints(void) {
+	typedef global_registry_type::iterator	iterator;
+	iterator i(global_registry.begin());
+	const iterator e(global_registry.end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		(*i)->refresh_footprint();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
