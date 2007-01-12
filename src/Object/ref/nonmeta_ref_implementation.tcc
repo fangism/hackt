@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.3 2006/12/27 06:01:39 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.4 2007/01/12 03:44:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -216,7 +216,7 @@ __nonmeta_instance_global_lookup_impl(
 		const meta_reference_type cr(r.get_inst_base_subtype());
 		local_ind = cr.lookup_globally_allocated_index(*c.sm, *c.topfp);
 	}
-	return c.lookup_global_id<Tag>(local_ind);
+	return c.template lookup_global_id<Tag>(local_ind);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.1.2.4 2007/01/12 03:11:31 fang Exp $
+	$Id: nonmeta_state.cc,v 1.1.2.5 2007/01/12 03:46:40 fang Exp $
  */
 
 #include <iostream>
@@ -26,7 +26,7 @@ namespace entity {
 template <class Tag>
 nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
 		pool() {
-	const global_entry_pool<Tag>& p(sm.get_pool<Tag>());
+	const global_entry_pool<Tag>& p(sm.template get_pool<Tag>());
 	const size_t s = p.size();
 	this->pool.resize(s);
 }
