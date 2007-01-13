@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.1.2.3 2007/01/12 03:11:33 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.1.2.4 2007/01/13 21:06:54 fang Exp $
  */
 
 #include "Object/nonmeta_variable.h"
@@ -18,6 +18,33 @@ nonmeta_variable_base::nonmeta_variable_base() : event_subscribers() {
 nonmeta_variable_base::~nonmeta_variable_base() { }
 
 //=============================================================================
+// class BoolVariable method definitions
+
+/**
+	Arbitrarily reset to some value.  
+ */
+void
+BoolVariable::reset(void) {
+	value = 0;
+}
+
+//=============================================================================
+// class IntVariable method definitions
+
+void
+IntVariable::reset(void) {
+	value = 0;
+}
+
+//=============================================================================
+// class EnumVariable method definitions
+
+void
+EnumVariable::reset(void) {
+	value = 0;
+}
+
+//=============================================================================
 // class channel_data_base method definitions
 
 /**
@@ -27,6 +54,13 @@ template <class Tag>
 void
 channel_data_base<Tag>::__resize(const fundamental_channel_footprint& f) {
 	member_fields.resize(f.template size<Tag>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+channel_data_base<Tag>::__reset(void) {
+	member_fields = 0;	// valarray mass assign of value
 }
 
 //=============================================================================
@@ -39,6 +73,14 @@ ChannelData::resize(const fundamental_channel_footprint& f) {
 	channel_data_base<enum_tag>::__resize(f);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ChannelData::reset(void) {
+	channel_data_base<bool_tag>::__reset();
+	channel_data_base<int_tag>::__reset();
+	channel_data_base<enum_tag>::__reset();
+}
+
 //=============================================================================
 // class ChannelState method definitions
 
@@ -47,6 +89,18 @@ ChannelData::resize(const fundamental_channel_footprint& f) {
  */
 ChannelState::ChannelState() :
 		ChannelData(), nonmeta_variable_base(), full(false) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Channels are assumed to reset in the empty state.  
+	Technically, resetting data should be unnecessary, 
+	as they cannot be read until they are written.  
+ */
+void
+ChannelState::reset(void) {
+	ChannelData::reset();
+	full = false;
 }
 
 //=============================================================================

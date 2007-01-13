@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.16 2007/01/13 02:08:23 fang Exp $
+	$Id: Event.h,v 1.1.2.17 2007/01/13 21:07:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -164,10 +164,19 @@ public:
 	}
 
 	void
+	reset(void);
+
+	void
 	execute(const nonmeta_context&, vector<global_indexed_reference>&);
 
 	bool
 	recheck(const nonmeta_context&);
+
+	ostream&
+	dump_brief(ostream&) const;
+
+	ostream&
+	dump_pending(ostream&) const;
 
 	ostream&
 	dump_struct(ostream&) const;

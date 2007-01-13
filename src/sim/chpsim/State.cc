@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.20 2007/01/13 02:08:25 fang Exp $
+	$Id: State.cc,v 1.1.2.21 2007/01/13 21:07:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <functional>
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
@@ -20,6 +21,7 @@
 #include "Object/global_entry.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/enum_traits.h"
 #include "Object/traits/chan_traits.h"
 
 #include "common/TODO.h"
@@ -48,8 +50,12 @@ using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
 using entity::event_subscribers_type;
+using entity::class_traits;
+using entity::meta_type_map;
 using std::copy;
 using std::back_inserter;
+using std::mem_fun_ref;
+using std::ostream_iterator;
 using util::set_inserter;
 using util::copy_if;
 
@@ -100,8 +106,15 @@ struct State::event_enqueuer {
 	explicit
 	event_enqueuer(this_type& s) : state(s) { }
 
+	/**
+		TODO: add event delays
+	 */
 	void
-	operator () (const event_index_type);
+	operator () (const event_index_type ei) {
+		const time_type new_time = state.current_time +10;
+		state.event_queue.push(
+			event_placeholder_type(new_time, ei));
+	}
 
 };	// end class event_enqueuer
 
@@ -161,15 +174,27 @@ State::~State() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initializing the simulator resets all simulator state and
+	enqueues the 0th spawning event into the event-queue.  
+ */
 void
 State::initialize(void) {
 	current_time = 0;
 	// initialize state of all channels and variables
+	instances.reset();
 	// empty the event_queue
+	event_queue.clear();
 	// seed events that are ready to go, like active initializations
-	//	note: we use event[0] as the launching event
-	// register blocked events, pending value/condition changes
-	// TODO: for-all events: reset countdown
+	//	note: we use event[0] as the launching event (concurrent)
+	event_queue.push(event_placeholder_type(current_time, 0));
+	__updated_list.clear();
+	__enqueue_list.clear();
+	__rechecks.clear();
+	// TODO: for-all events: reset countdown and state
+	for_each(event_pool.begin(), event_pool.end(),
+		mem_fun_ref(&event_type::reset)
+	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -209,11 +234,14 @@ State::dequeue_event(void) {
 /**
 	The main event-driven execution engine of chpsim.  
 	Processes one event at a time.  
+	Q: since multiple instances referenced can be altered, 
+		should we check against the watch-list here (set-intersection)?
 	\return reference to the variable that was just modified, if any.
  */
 State::step_return_type
 State::step(void) {
 	typedef	step_return_type	return_type;
+	STACKTRACE_VERBOSE;
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	if (event_queue.empty()) {
@@ -240,11 +268,20 @@ State::step(void) {
 	const nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), 
 		instances, ev, __rechecks, __enqueue_list);
 	ev.execute(c, __updated_list);
-	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	// __updated_list lists variables updated
+	// Q: should __updated_list be set-sorted to eliminate duplicates?
+	//	Yes, but do this later...
 	// At the same time, enlist the successors for evaluation
 	// Don't forget to update countdown!
-
+#if DEBUG_STEP
+	// debugging: 
+	// print the list of references affected
+	dump_updated_references(cout);
+	// print the list of successor events scheduled for recheck
+	dump_recheck_events(cout);
+	// print the list of successor events enqueued immediately
+	dump_enqueue_events(cout);
+#endif
 {
 	// list of events to check next
 	// 3) check if the alteration of state/variable triggers new events
@@ -308,33 +345,71 @@ State::step(void) {
 			ISE(cerr, cerr << "Unexpected type." << endl;)
 		}	// end switch
 	}	// end for
-}{
+}
 	// 4) immediately include this event's successors in list
 	//	to evaluate if ready to enqueue.
 	// selection of successors will depend on event_type, of course
-	// TODO: finish me
-}{
+	//	This has been folded into the execution of this event.
+{
+#if DEBUG_STEP
+	// debug: print list of events to recheck
+	dump_recheck_events(cout);
+#endif
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this));
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
-#if 0
 	// temporarily disabled for regression testing
+#if DEBUG_STEP
+	// debug: print list of event to enqueue
+	dump_enqueue_events(cout);
+#endif
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 		event_enqueuer(*this));
-#endif
 }
 }
-
-
-	// TODO: finish me
+	// TODO: finish me: watch list
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 }	// end step() method
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints event in brief form for queue.  
+ */
+ostream&
+State::dump_event(ostream& o, const event_index_type ei,
+		const time_type t) const {
+	const event_type& ev(get_event(ei));
+	o << '\t' << t << '\t';
+#if 1
+	o << ei << '\t';
+#endif
+	ev.dump_brief(o) << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the event queue.  
+ */
 ostream&
 State::dump_event_queue(ostream& o) const {
-	return o << "what event queue?" << endl;
+	typedef	temp_queue_type::const_iterator	const_iterator;
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+	const_iterator i(temp.begin()), e(temp.end());
+	o << "event queue:" << endl;
+	// print header
+	if (i!=e) {
+		o << "\ttime\teid\tpid\tevent" << endl;
+		for ( ; i!=e; ++i) {
+			dump_event(o, i->event_index, i->time);
+		}
+	} else {
+		// deadlocked!
+		o << "\t(empty)" << endl;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -400,6 +475,46 @@ State::dump_struct_dot(ostream& o) const {
 }
 	o << "}" << endl;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_updated_references(ostream& o) const {
+	typedef	update_reference_array_type::const_iterator	const_iterator;
+	o << "updated references:" << endl;
+	const_iterator i(__updated_list.begin()), e(__updated_list.end());
+	for ( ; i!=e; ++i) {
+	switch (i->first) {
+#define	CASE_PRINT_TYPE_TAG_NAME(V)					\
+	case V: o << class_traits<meta_type_map<V>::type>::tag_name; break;
+	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_BOOL)
+	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_INT)
+	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_ENUM)
+	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_CHANNEL)
+	default: o << "UNKNOWN";
+#undef	CASE_PRINT_TYPE_TAG_NAME(V)
+	}	// end switch
+		o << '[' << i->second << "], ";
+	}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_recheck_events(ostream& o) const {
+	o << "recheck events: ";
+	ostream_iterator<size_t> osi(o, ", ");
+	copy(__rechecks.begin(), __rechecks.end(), osi);
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_enqueue_events(ostream& o) const {
+	o << "to be enqueued: ";
+	ostream_iterator<size_t> osi(o, ", ");
+	copy(__enqueue_list.begin(), __enqueue_list.end(), osi);
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

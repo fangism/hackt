@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.6 2007/01/12 03:11:34 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.7 2007/01/13 21:06:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -106,6 +106,10 @@ public:
 
 	// for now...
 	using parent_type::dump_struct;
+
+	void
+	reset(void);
+
 };	// end class BoolVariable
 
 //=============================================================================
@@ -122,6 +126,10 @@ public:
 
 	// for now...
 	using parent_type::dump_struct;
+
+	void
+	reset(void);
+
 };	// end clas IntVariable
 
 //=============================================================================
@@ -137,6 +145,10 @@ public:
 
 	// for now...
 	using parent_type::dump_struct;
+
+	void
+	reset(void);
+
 };	// end class EnumVariable
 
 //=============================================================================
@@ -151,6 +163,9 @@ struct channel_data_base {
 protected:
 	void
 	__resize(const fundamental_channel_footprint&);
+
+	void
+	__reset(void);
 
 };	// end struct channel_data_base
 
@@ -173,6 +188,9 @@ public:
 
 	void
 	resize(const fundamental_channel_footprint&);
+
+	void
+	reset(void);
 
 };	// end class ChannelData
 
@@ -207,6 +225,9 @@ public:
 
 	void
 	receive(void) { full = false; }
+
+	void
+	reset(void);
 
 };	// end class ChannelState
 

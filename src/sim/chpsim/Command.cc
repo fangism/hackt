@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.3 2006/12/11 00:40:13 fang Exp $
+	$Id: Command.cc,v 1.1.2.4 2007/01/13 21:06:57 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -166,7 +166,6 @@ typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Command class for stepping through one event at a time from
 	the event queue. 
@@ -178,19 +177,22 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
+#if 0
 	static ostream& print_watched_node(ostream&, const State&, 
 		const node_index_type, const string&);
 	static ostream& print_watched_node(ostream&, const State&, 
 		const State::step_return_type&);
 	static ostream& print_watched_node(ostream&, const State&, 
 		const State::step_return_type&, const string&);
+#endif
 private:
 	static const size_t             receipt_id;
 };      // end class Step
 
 INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
-	"step through event")
+	"step through single event")
 
+#if 0
 static
 inline
 node_index_type
@@ -253,9 +255,12 @@ Step::print_watched_node(ostream& o, const State& s,
 		State::step_return_type(ni, s.get_node(ni).get_cause_node()), 
 		nodename);
 }
+#endif
 
 /**
-	Like process_step().  
+	Command to advance one event in simulation.  
+	TODO: return value support
+	TODO: breakpoint, watchpoint support
  */
 int
 Step::main(State& s, const string_list& a) {
@@ -264,10 +269,9 @@ if (a.size() > 2) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
-	size_t i;		// the number of discrete time steps
+	size_t i;		// the number of events to advance
 		// not necessarily == the number of discrete events
-	State::step_return_type ni;	// also stores the cause of the event
+//	State::step_return_type ni;	// also stores the cause of the event
 	if (a.size() == 2) {
 		if (string_to_num(a.back(), i)) {
 			cerr << "Error parsing #steps." << endl;
@@ -280,15 +284,16 @@ if (a.size() > 2) {
 	s.resume();
 	time_type time = s.time();
 	// could check s.pending_events()
-	try {
-	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
-		// if time actually advanced, decrement steps-remaining
-		// NB: may need specialization for real-valued (float) time.  
-		const time_type ct(s.time());
-		if (time != ct) {
-			--i;
-			time = ct;
-		}
+#if 0
+	while (!s.stopped() && i && GET_NODE((ni = s.step())))
+#else
+	while (!s.stopped() && i)
+#endif
+	{
+		// ignore return for now
+		s.step();
+		time = s.time();
+#if 0
 		const node_type& n(s.get_node(GET_NODE(ni)));
 		/***
 			The following code should be consistent with
@@ -320,11 +325,9 @@ if (a.size() > 2) {
 				// or Command::BREAK; ?
 			}
 		}
+#endif
+		--i;
 	}	// end while
-	} catch (State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
-		return Command::FATAL;
-	}	// no other exceptions
 	return Command::NORMAL;
 }
 }	// end Step::main()
@@ -337,7 +340,6 @@ Step::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

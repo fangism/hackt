@@ -1,7 +1,9 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.12 2007/01/13 02:08:22 fang Exp $
+	$Id: Event.cc,v 1.1.2.13 2007/01/13 21:06:59 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include <iterator>
@@ -13,8 +15,9 @@
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
-#include "util/STL/valarray_iterator.h"
 #include "sim/chpsim/nonmeta_context.h"
+#include "util/STL/valarray_iterator.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace SIM {
@@ -91,6 +94,15 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Resets the state of the event, for beginning simulation.  
+ */
+void
+EventNode::reset(void) {
+	countdown = predecessors;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Re-evaluates the guard expression of this event to determine
 	whether or not event should be enqueued.  
 
@@ -105,6 +117,7 @@ EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
  */
 bool
 EventNode::recheck(const nonmeta_context& c) {
+	STACKTRACE_VERBOSE;
 if (countdown) {
 	// then awaiting more predecessors to arrive
 	return false;
@@ -149,6 +162,7 @@ if (countdown) {
 void
 EventNode::execute(const nonmeta_context& c, 
 		vector<global_indexed_reference>& updates) {
+	STACKTRACE_VERBOSE;
 	// reminder: guard expression should be checked before an event
 	// is enqueued.
 	// a re-check here would verify that the guard is *stably* true.  
@@ -171,6 +185,38 @@ EventNode::execute(const nonmeta_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For printing the event queue.  
+	Disregards the guard-expr in any case.  
+	TODO: a line/position in source might be nice, 
+		in case of repetition.  
+ */
+ostream&
+EventNode::dump_brief(ostream& o) const {
+	o << process_index << '\t';
+	if (action_ptr) {
+		action_ptr->dump_event(o, expr_dump_context::default_value);
+	} else {
+		o << "null";
+	}
+	// countdown/predecessors?
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Dumps more stateful information about node.  
+ */
+ostream&
+EventNode::dump_pending(ostream& o) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For diagnostics.  
+ */
 ostream&
 EventNode::dump_struct(ostream& o) const {
 	switch (event_type) {

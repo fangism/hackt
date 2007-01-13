@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.16 2007/01/13 02:08:26 fang Exp $
+	$Id: State.h,v 1.1.2.17 2007/01/13 21:07:01 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -44,6 +44,8 @@ private:
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>
 						event_queue_type;
+	typedef	vector<event_queue_type::value_type>
+						temp_queue_type;
 	typedef	unsigned int			flags_type;
 
 	// NOTE: duplicate definition in InstancePools
@@ -87,6 +89,7 @@ private:
 	// time_type				uniform_delay;
 
 	// mode flags
+	/// is this redundant?
 	bool					interrupted;
 	flags_type				flags;
 
@@ -150,6 +153,15 @@ public:
 		interrupted = true;
 	}
 
+	bool
+	stopped(void) const { return flags & FLAG_STOP_SIMULATION; }
+
+	void
+	resume(void) {
+		flags &= ~FLAG_STOP_SIMULATION;
+		interrupted = false;
+	}
+
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
 
@@ -169,6 +181,9 @@ public:
 	dump_struct_dot(ostream&) const;
 
 	ostream&
+	dump_event(ostream&, const event_index_type, const time_type) const;
+
+	ostream&
 	dump_event_queue(ostream&) const;
 
 	bool
@@ -176,6 +191,16 @@ public:
 
 	bool
 	load_checkpoint(istream&);
+
+private:
+	ostream&
+	dump_updated_references(ostream&) const;
+
+	ostream&
+	dump_recheck_events(ostream&) const;
+
+	ostream&
+	dump_enqueue_events(ostream&) const;
 
 };	// end class State
 

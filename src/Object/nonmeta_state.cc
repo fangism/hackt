@@ -1,9 +1,10 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.1.2.5 2007/01/12 03:46:40 fang Exp $
+	$Id: nonmeta_state.cc,v 1.1.2.6 2007/01/13 21:06:53 fang Exp $
  */
 
 #include <iostream>
+#include <functional>
 #include "Object/nonmeta_state.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -19,6 +20,7 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
+using std::mem_fun_ref;
 
 //=============================================================================
 // class nonmeta_state_base method definitions
@@ -34,6 +36,13 @@ nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 nonmeta_state_base<Tag>::~nonmeta_state_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+nonmeta_state_base<Tag>::reset() {
+	for_each(pool.begin(), pool.end(), mem_fun_ref(&instance_type::reset));
+}
 
 //=============================================================================
 // class nonmeta_state_manager method definitions
@@ -66,6 +75,18 @@ nonmeta_state_manager::nonmeta_state_manager(const state_manager& sm) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_state_manager::~nonmeta_state_manager() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	0-initializes data.  
+ */
+void
+nonmeta_state_manager::reset(void) {
+	bool_base_type::reset();
+	int_base_type::reset();
+	enum_base_type::reset();
+	channel_base_type::reset();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

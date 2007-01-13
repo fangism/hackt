@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.1.4.2 2006/12/28 04:28:21 fang Exp $
+	$Id: nonmeta_context.h,v 1.1.4.3 2007/01/13 21:07:01 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -37,6 +37,8 @@ public:
 	 */
 	event_type&				event;
 	/**
+		Set of events to re-evaluate, so see if they 
+		can move from pending (blocked) to execute.  
 	 */
 	event_subscribers_type&			rechecks;
 	/**

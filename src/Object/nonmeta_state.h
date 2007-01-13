@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.1.2.5 2007/01/12 03:11:32 fang Exp $
+	$Id: nonmeta_state.h,v 1.1.2.6 2007/01/13 21:06:54 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -41,6 +41,9 @@ protected:
 	nonmeta_state_base(const state_manager&);
 
 	~nonmeta_state_base();
+
+	void
+	reset(void);
 
 };	// end class nonmeta_state_base
 
