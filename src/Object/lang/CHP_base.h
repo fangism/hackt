@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.8 2006/12/27 06:01:38 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.9 2007/01/13 02:08:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -11,7 +11,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
 #include "Object/devel_switches.h"
-#include "sim/chpsim/type_enum.h"	// for instance_reference
+#include "Object/ref/reference_enum.h"
 
 namespace HAC {
 namespace SIM {
@@ -38,9 +38,6 @@ using util::persistent_object_manager;
 class action;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
-typedef	SIM::CHPSIM::instance_reference		global_reference;
-typedef	std::default_vector<global_reference>::type
-					update_reference_array_type;
 
 //=============================================================================
 /**
@@ -94,7 +91,7 @@ virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 #if ENABLE_CHP_EXECUTE
 #define	CHP_EXECUTE_PROTO						\
 	void								\
-	execute(const nonmeta_context&, update_reference_array_type&) const
+	execute(const nonmeta_context&, global_reference_array_type&) const
 
 virtual	CHP_EXECUTE_PROTO = 0;
 

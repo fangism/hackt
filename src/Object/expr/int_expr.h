@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.6.32.2 2006/12/25 03:27:40 fang Exp $
+	$Id: int_expr.h,v 1.6.32.3 2007/01/13 02:08:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_EXPR_H__
@@ -59,6 +59,7 @@ virtual	NONMETA_RESOLVE_COPY_INT_PROTO = 0;
 
 	NONMETA_RESOLVE_COPY_DATA_PROTO;
 	NONMETA_RESOLVE_COPY_INDEX_PROTO;
+	EVALUATE_WRITE_PROTO;
 #endif
 
 	// visitor disambiguation (doesn't matter)

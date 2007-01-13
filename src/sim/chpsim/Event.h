@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.15 2006/12/28 04:28:16 fang Exp $
+	$Id: Event.h,v 1.1.2.16 2007/01/13 02:08:23 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -15,7 +15,7 @@
 #include <vector>
 #include "util/memory/count_ptr.h"
 #include "sim/chpsim/Dependence.h"
-#include "sim/chpsim/type_enum.h"
+#include "Object/ref/reference_enum.h"
 
 namespace HAC {
 namespace entity {
@@ -38,6 +38,7 @@ using entity::bool_expr;
 using entity::state_manager;
 using entity::footprint;
 using entity::CHP::action;
+using entity::global_indexed_reference;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -163,7 +164,7 @@ public:
 	}
 
 	void
-	execute(const nonmeta_context&, vector<instance_reference>&);
+	execute(const nonmeta_context&, vector<global_indexed_reference>&);
 
 	bool
 	recheck(const nonmeta_context&);

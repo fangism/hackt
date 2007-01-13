@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.61.4.3 2007/01/12 00:40:37 fang Exp $
+#	$Id: ChangeLog,v 1.61.4.4 2007/01/13 02:08:28 fang Exp $
+
+2007-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-33:
+	  util/member_select.h: rewrote without add_reference, 
+		specialized forwarding-operator overload for const. 
+	  I wish for boost::lambda.  
+
 
 2007-01-11	David Fang		<fangism@users.sourceforge.net>
 

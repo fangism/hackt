@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.13.4.2 2006/12/25 03:27:39 fang Exp $
+	$Id: data_expr.cc,v 1.13.4.3 2007/01/13 02:08:03 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/expr_visitor.h"
+#include "Object/nonmeta_channel_manipulator.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
@@ -122,6 +123,24 @@ int_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 	INVARIANT(p == this);
 	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+int_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const pint_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+		*w.iter_ref<int_tag>()++ = d->static_constant_value();
+	} else {
+		THROW_EXIT;
+	}
+}
 #endif
 
 //=============================================================================
@@ -142,6 +161,24 @@ bool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 	INVARIANT(p == this);
 	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+bool_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const pbool_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+		*w.iter_ref<bool_tag>()++ = d->static_constant_value();
+	} else {
+		THROW_EXIT;
+	}
+}
 #endif
 
 //=============================================================================
@@ -161,6 +198,29 @@ real_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+real_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const preal_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+#if 0
+		*w.iter_ref<real_tag>()++ = d->static_constant_value();
+#else
+		FINISH_ME(Fang);
+		cerr << "channel_data_writer lacks \'real\' fields." << endl;
+#endif
+	} else {
+		THROW_EXIT;
+	}
 }
 #endif
 
@@ -186,6 +246,24 @@ enum_expr::nonmeta_resolve_copy(const nonmeta_context_base& c,
 	FINISH_ME(Fang);
 	return count_ptr<const const_param>(NULL);
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+enum_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const pint_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+		*w.iter_ref<enum_tag>()++ = d->static_constant_value();
+	} else {
+		THROW_EXIT;
+	}
 }
 #endif
 

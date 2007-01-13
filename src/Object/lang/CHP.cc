@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.19 2007/01/03 23:34:18 fang Exp $
+	$Id: CHP.cc,v 1.16.2.20 2007/01/13 02:08:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -44,7 +44,8 @@
 #include "Object/def/template_formals_manager.h"
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
-#include "Object/global_entry.h"
+#include "Object/global_channel_entry.h"
+#include "Object/nonmeta_channel_manipulator.h"
 
 // chpsim headers
 #include "sim/chpsim/StateConstructor.h"
@@ -294,7 +295,7 @@ action_sequence::accept(StateConstructor& s) const {
  */
 void
 action_sequence::execute(const nonmeta_context&, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	// no-op
 	ICE_NEVER_CALL(cerr);
 }
@@ -553,7 +554,7 @@ if (!branches) {
  */
 void
 concurrent_actions::execute(const nonmeta_context& c, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	typedef	EventNode	event_type;
 	typedef	size_t		event_index_type;
 	STACKTRACE_VERBOSE;
@@ -967,7 +968,7 @@ deterministic_selection::accept(StateConstructor& s) const {
  */
 void
 deterministic_selection::execute(const nonmeta_context&, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	// drop return value?
 #if 0
 	recheck(c);
@@ -1159,7 +1160,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
  */
 void
 nondeterministic_selection::execute(const nonmeta_context&, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	// drop return value?
 #if 0
 	recheck(c);
@@ -1349,7 +1350,7 @@ metaloop_selection::accept(StateConstructor& s) const {
  */
 void
 metaloop_selection::execute(const nonmeta_context&, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1473,7 +1474,7 @@ assignment::accept(StateConstructor& s) const {
  */
 void
 assignment::execute(const nonmeta_context& c,
-		update_reference_array_type& u) const {
+		global_reference_array_type& u) const {
 	typedef	EventNode		event_type;
 	lval->nonmeta_assign(rval, c, u);
 	// TODO: this should also record the reference updated in @u
@@ -1609,7 +1610,7 @@ condition_wait::accept(StateConstructor& s) const {
  */
 void
 condition_wait::execute(const nonmeta_context&, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1787,7 +1788,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		// resolved members match exactly, return copy
 		return p;
 	} else {
-		count_ptr<this_type> ret(new this_type(cc));
+		const count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->exprs.swap(exprs_c);	// faster than copying/assigning
 		return ret;
@@ -1800,25 +1801,29 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
 	with the update set.  
+	\throws an exception if anything goes wrong with expression
+		evaluation.  
  */
 void
 channel_send::execute(const nonmeta_context& c, 
-		update_reference_array_type& u) const {
-#if 0
+		global_reference_array_type& u) const {
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
+#if 0
+	// don't need
 	const global_entry<channel_tag>&
 		ch(c.sm->get_pool<channel_tag>()[chan_index]);
-	// evaluate rvalues of channel send statement
-	// ChannelWriter writer(nc);
-	// ChannelWriterRef W(writer);	// reference-wrapped
-	// transform(exprs.begin(), exprs.end(), W, 
-	//	nonmeta_expr_evaluator(c));
-	// write to the ChannelState using canonical_fundamental_type
-	// don't forget to track the updated-references (channel)
-	nc.send();
 #endif
-	FINISH_ME(Fang);
+	// evaluate rvalues of channel send statement (may throw!)
+	// write to the ChannelState using canonical_fundamental_type
+	for_each(exprs.begin(), exprs.end(), 
+		nonmeta_expr_evaluator_channel_writer(c, nc));
+	// track the updated-reference (channel)
+	// expressions are only read, no lvalue data modified
+	u.push_back(std::make_pair(
+		size_t(entity::META_TYPE_CHANNEL), chan_index));
+	NEVER_NULL(nc.can_send());	// else run-time exception
+	nc.send();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2009,11 +2014,23 @@ channel_receive::accept(StateConstructor& s) const {
  */
 void
 channel_receive::execute(const nonmeta_context& c, 
-		update_reference_array_type& u) const {
-#if 0
+		global_reference_array_type& u) const {
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
+#if 0
+	// don't need
+	const global_entry<channel_tag>&
+		ch(c.sm->get_pool<channel_tag>()[chan_index]);
 #endif
-	FINISH_ME(Fang);
+	// evaluate lvalues of channel receive statement (may throw!)
+	// read from the ChannelState using canonical_fundamental_type
+	for_each(insts.begin(), insts.end(), 
+		nonmeta_reference_lookup_channel_reader(c, nc, u));
+	// track the updated-reference (channel)
+	u.push_back(std::make_pair(
+		size_t(entity::META_TYPE_CHANNEL), chan_index));
+	INVARIANT(nc.can_receive());	// else run-time exception
+	nc.receive();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2167,7 +2184,7 @@ do_forever_loop::accept(StateConstructor& s) const {
  */
 void
 do_forever_loop::execute(const nonmeta_context&, 
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -2318,7 +2335,7 @@ do_while_loop::accept(StateConstructor& s) const {
  */
 void
 do_while_loop::execute(const nonmeta_context& c,
-		update_reference_array_type&) const {
+		global_reference_array_type&) const {
 	STACKTRACE_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));

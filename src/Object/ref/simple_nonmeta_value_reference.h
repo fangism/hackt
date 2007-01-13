@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.13.12.5 2006/12/27 06:01:40 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.13.12.6 2007/01/13 02:08:20 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -163,6 +163,7 @@ public:
 	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
 
 	NONMETA_ASSIGN_PROTO;
+	DIRECT_ASSIGN_PROTO;
 
 	void
 	accept(nonmeta_expr_visitor&) const;

@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: enum_expr.h,v 1.5.32.2 2006/12/26 21:26:04 fang Exp $
+	$Id: enum_expr.h,v 1.5.32.3 2007/01/13 02:08:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_ENUM_EXPR_H__
@@ -56,6 +56,8 @@ virtual	UNROLL_RESOLVE_COPY_ENUM_PROTO = 0;
 //	TODO: define what enums should resolve to (pints?)
 // virtual	NONMETA_RESOLVE_COPY_ENUM_PROTO = 0;
 virtual	NONMETA_RESOLVE_RVALUE_ENUM_PROTO = 0;
+
+	EVALUATE_WRITE_PROTO;
 #endif
 
 protected:

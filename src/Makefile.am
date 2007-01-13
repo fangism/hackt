@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.17 2007/01/12 03:11:29 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.18 2007/01/13 02:07:57 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -372,6 +372,7 @@ OBJECT_REF_TCC_FILES = \
 	Object/ref/nonmeta_ref_implementation.tcc
 
 OBJECT_REF_H_FILES = \
+	Object/ref/reference_enum.h \
 	Object/ref/references_fwd.h \
 	Object/ref/meta_reference_union.h \
 	Object/ref/aggregate_reference_collection_base.h \
@@ -441,6 +442,7 @@ OBJECT_CC_FILES = \
 	Object/nonmeta_state.cc \
 	Object/nonmeta_variable.cc \
 	Object/nonmeta_context.cc \
+	Object/nonmeta_channel_manipulator.cc \
 	Object/global_entry_context.cc \
 	Object/sizes.cc \
 	Object/type/template_actuals.cc \
@@ -725,7 +727,6 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
 	sim/prsim/ExprAllocFlags.h \
-	sim/chpsim/type_enum.h \
 	sim/chpsim/StateConstructorFlags.h
 
 # libhacktexec sources

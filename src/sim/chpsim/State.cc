@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.19 2006/12/28 04:28:18 fang Exp $
+	$Id: State.cc,v 1.1.2.20 2007/01/13 02:08:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -43,6 +43,7 @@ namespace CHPSIM {
 #include "util/using_ostream.h"
 using entity::bool_tag;
 using entity::int_tag;
+using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
@@ -216,7 +217,7 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	if (event_queue.empty()) {
-		return return_type(INSTANCE_TYPE_NULL, INVALID_NODE_INDEX);
+		return return_type(entity::META_TYPE_NONE, INVALID_NODE_INDEX);
 	}
 
 	const event_placeholder_type ep(dequeue_event());
@@ -274,21 +275,28 @@ State::step(void) {
 		// just collect the affected subscribers
 		// set insertion should maintain uniqueness
 		// events happen to be sorted by index
-		case INSTANCE_TYPE_BOOL: {
+		case entity::META_TYPE_BOOL: {
 			const event_subscribers_type&
 				es(instances.get_pool<bool_tag>()[j]
 					.get_subscribers());
 			copy(es.begin(), es.end(), set_inserter(__rechecks));
 			break;
 		}
-		case INSTANCE_TYPE_INT: {
+		case entity::META_TYPE_INT: {
 			const event_subscribers_type&
 				es(instances.get_pool<int_tag>()[j]
 					.get_subscribers());
 			copy(es.begin(), es.end(), set_inserter(__rechecks));
 			break;
 		}
-		case INSTANCE_TYPE_CHANNEL: {
+		case entity::META_TYPE_ENUM: {
+			const event_subscribers_type&
+				es(instances.get_pool<enum_tag>()[j]
+					.get_subscribers());
+			copy(es.begin(), es.end(), set_inserter(__rechecks));
+			break;
+		}
+		case entity::META_TYPE_CHANNEL: {
 			const event_subscribers_type&
 				es(instances.get_pool<channel_tag>()[j]
 					.get_subscribers());

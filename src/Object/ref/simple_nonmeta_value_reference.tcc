@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.7 2006/12/27 06:01:41 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.8 2007/01/13 02:08:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -45,6 +45,7 @@
 #include "Object/nonmeta_context.h"
 #include "Object/nonmeta_variable.h"
 #include "Object/nonmeta_state.h"
+#include "Object/nonmeta_channel_manipulator.h"
 
 #include "common/ICE.h"
 
@@ -89,7 +90,7 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, datatype_ta
 
 static
 return_type
-unroll_resolve_copy (const reference_type& _this, const unroll_context& c,
+unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		const return_type& p) {
 	typedef	reference_type				this_type;
 	if (_this.array_indices) {
@@ -137,8 +138,7 @@ unroll_resolve_copy (const reference_type& _this, const unroll_context& c,
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
-		const nonmeta_context_base& c, const return_type& p)
-{
+		const nonmeta_context_base& c, const return_type& p) {
 	typedef	reference_type				this_type;
 	simple_meta_instance_reference<Tag>
 		mref(_this.value_collection_ref);
@@ -180,15 +180,15 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Assigns rvalue to lvalue in the run-time, nonmeta context.  
-	TODO: push referenced lvalue into update_reference_array.  
+	TODO: support aggregate expression assignments
  */
 static
 void
 nonmeta_assign(const reference_type& lref, 
 		const count_ptr<const data_expr_base_type>& rval, 
 		const nonmeta_context_base& c, 
-		update_reference_array_type& u)
-{
+		global_reference_array_type& u) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(rval);	// assert dynamic_cast
 	const count_ptr<const const_expr_type>
 		rv(rval->__nonmeta_resolve_rvalue(c, rval));
@@ -198,12 +198,32 @@ nonmeta_assign(const reference_type& lref,
 		THROW_EXIT;
 	}
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
-	INVARIANT(global_ind);	// unless there is an error
+	INVARIANT(global_ind);	// unless there is an error, throw
 	c.values.template get_pool<Tag>()[global_ind].value = 
 		rv->static_constant_value();
-#if 0
-	u.push_back(...(, global_ind));
-#endif
+	u.push_back(std::make_pair(
+		size_t(class_traits<Tag>::type_tag_enum_value), global_ind));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns to lvalue referenced, using the channel_data_reader.  
+	TODO: support aggregate expression assignments
+ */
+static
+void
+direct_assign(const reference_type& lref, 
+		const nonmeta_context_base& c, 
+		global_reference_array_type& u, 
+		channel_data_reader& r) {
+	STACKTRACE_VERBOSE;
+	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
+	INVARIANT(global_ind);	// unless there is an error, throw
+	// post-increment read-iterator
+	c.values.template get_pool<Tag>()[global_ind].value =
+		*r.template iter_ref<Tag>()++;
+	u.push_back(std::make_pair(
+		size_t(class_traits<Tag>::type_tag_enum_value), global_ind));
 }
 
 };	// end struct nonmeta_unroll_resolve_copy_policy
@@ -427,6 +447,7 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 }
 #endif	// USE_NONMETA_RESOLVE
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Meta-parameter references can never be nonmeta-lvalues.  
  */
@@ -435,7 +456,20 @@ void
 nonmeta_assign(const reference_type&, 
 		const count_ptr<const data_expr_base_type>&, 
 		const nonmeta_context_base&, 
-		const update_reference_array_type&) {
+		const global_reference_array_type&) {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Meta-parameter references can never be nonmeta-lvalues.  
+ */
+static
+void
+direct_assign(const reference_type& lref, 
+		const nonmeta_context_base& c, 
+		global_reference_array_type& u, 
+		channel_data_reader& r) {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -696,11 +730,22 @@ void
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_assign(
 		const count_ptr<const data_expr>& rval, 
 		const nonmeta_context_base& c,
-		update_reference_array_type& u) const {
+		global_reference_array_type& u) const {
 	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
 		nonmeta_assign(*this, 
 			rval.template is_a<const data_expr_base_type>(),
 			c, u);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::direct_assign(
+		const nonmeta_context_base& c, 
+		global_reference_array_type& u, 
+		channel_data_reader& r) const {
+	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
+		direct_assign(*this, c, u, r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.4 2007/01/12 03:44:41 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.5 2007/01/13 02:08:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -23,6 +23,8 @@
 #include "common/ICE.h"
 
 #include "util/compose.h"
+#include "util/dereference.h"
+#include "util/member_select.h"
 #include "util/stacktrace.h"
 
 #if ENABLE_STACKTRACE
@@ -37,6 +39,9 @@ namespace entity {
 using std::transform;
 using std::copy;
 using ADS::unary_compose;
+using util::member_select;
+using util::member_select_ref;
+using util::dereference;
 
 //=============================================================================
 /**
@@ -84,10 +89,10 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		typedef	vector<alias_ptr_type>	alias_list_type;
 		typedef	typename traits_type::instance_alias_info_type
 						instance_alias_info_type;
-		typedef	typename instance_alias_info_type::template ptr_to_index_transformer<alias_ptr_type>
-					alias_ptr_to_index_transformer;
 		typedef	typename alias_list_type::const_iterator
 					const_iterator;
+		typedef	typename const_iterator::value_type
+						instance_alias_info_ptr_type;
 		alias_list_type aliases;
 		ic->get_all_aliases(aliases);
 		indices.reserve(aliases.size());	// upper bound
@@ -121,7 +126,11 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 				unary_compose(
 				footprint_frame_transformer(
 					ff->template get_frame_map<Tag>()),
-				alias_ptr_to_index_transformer()
+				unary_compose(
+					member_select_ref(
+						&instance_alias_info_type::instance_index),
+					dereference<instance_alias_info_ptr_type>()
+				)
 				));
 #endif
 #if ENABLE_STACKTRACE
@@ -139,7 +148,12 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 				indices.push_back((*i)->instance_index);
 #else
 			transform(i, e, back_inserter(indices), 
-				alias_ptr_to_index_transformer());
+				unary_compose(
+					member_select_ref(
+						&instance_alias_info_type::instance_index),
+					dereference<instance_alias_info_ptr_type>()
+				)
+			);
 #endif
 		}
 		return good_bool(true);

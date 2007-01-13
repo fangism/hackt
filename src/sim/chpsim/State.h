@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.15 2006/12/28 04:28:20 fang Exp $
+	$Id: State.h,v 1.1.2.16 2007/01/13 02:08:26 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -15,7 +15,6 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
-#include "sim/chpsim/type_enum.h"
 
 namespace HAC {
 namespace SIM {
@@ -54,8 +53,9 @@ private:
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
-	typedef	instance_reference		step_return_type;
-	typedef	vector<instance_reference>	update_reference_array_type;
+	typedef	global_indexed_reference	step_return_type;
+	typedef	vector<global_indexed_reference>
+						update_reference_array_type;
 	enum {
 		/**
 			Whether or not the simulation was halted for any 

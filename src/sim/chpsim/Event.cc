@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.11 2006/12/28 04:28:15 fang Exp $
+	$Id: Event.cc,v 1.1.2.12 2007/01/13 02:08:22 fang Exp $
  */
 
 #include <iostream>
@@ -148,7 +148,7 @@ if (countdown) {
  */
 void
 EventNode::execute(const nonmeta_context& c, 
-		vector<instance_reference>& updates) {
+		vector<global_indexed_reference>& updates) {
 	// reminder: guard expression should be checked before an event
 	// is enqueued.
 	// a re-check here would verify that the guard is *stably* true.  
