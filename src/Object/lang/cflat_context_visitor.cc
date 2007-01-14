@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.5.8.2 2006/12/27 06:01:38 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.5.8.3 2007/01/14 05:38:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -37,19 +37,7 @@ namespace entity {
 size_t
 cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 	STACKTRACE_INDENT_PRINT("lookup_global_bool_id: lni = " << lni << endl);
-#if 0
-	INVARIANT(lni);
-	// cerr << "lni = " << lni << endl;
-	if (fpf) {
-		// see also footprint_frame_transformer in global_entry.h
-		return fpf->get_frame_map<bool_tag>()[lni-1];
-	} else {
-		// is top-level footprint
-		return lni;
-	}
-#else
 	return cflat_context::lookup_global_id<bool_tag>(lni);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

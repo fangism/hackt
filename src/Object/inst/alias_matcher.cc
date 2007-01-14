@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.4.8.2 2007/01/12 00:40:00 fang Exp $
+	$Id: alias_matcher.cc,v 1.4.8.3 2007/01/14 05:38:49 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -98,11 +98,8 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 	if (v.fpf) {
 		v.prefix += ".";
 		// this is not a top-level instance (from recursion)
-		const size_t local_offset = a.instance_index -1;
-		const footprint_frame_map_type&
-			fm(v.fpf->template get_frame_map<Tag>());
-		// footprint_frame yields the global offset
-		gindex = fm[local_offset];
+		gindex = footprint_frame_transformer(*v.fpf, Tag())
+			(a.instance_index);
 	} else {
 		// footprint_frame is null, this is a top-level instance
 		// the instance_index can be used directly as the offset into
@@ -151,11 +148,8 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 	if (v.fpf) {
 		v.prefix += ".";
 		// this is not a top-level instance (from recursion)
-		const size_t local_offset = a.instance_index -1;
-		const footprint_frame_map_type&
-			fm(v.fpf->template get_frame_map<Tag>());
-		// footprint_frame yields the global offset
-		gindex = fm[local_offset];
+		gindex = footprint_frame_transformer(*v.fpf, Tag())
+			(a.instance_index);
 	} else {
 		// footprint_frame is null, this is a top-level instance
 		// the instance_index can be used directly as the offset into

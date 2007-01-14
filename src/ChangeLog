@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-36:
+	  Global clean-up patch:
+		Replaced error prone uses of footprint_frame::get_frame_map
+		with equivalent (more consistent) use of the helper
+		functor, footprint_frame_transformer.  
+	  Wrote global_entry_context::lookup_meta_reference_global_index()
+	  Wrote nonmeta_context_base::lookup_nonmeta_reference_global_index()
+	  Next: back to chpsim tests.
+
+
 2007-01-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-35:

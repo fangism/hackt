@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.19.8.3 2006/12/13 04:12:11 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.19.8.4 2007/01/14 05:38:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -134,6 +134,10 @@ simple_lookup_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param sm the allocated state manager.
+	\param top top-level footprint.
+ */
 template <class Tag>
 static
 const footprint_frame*

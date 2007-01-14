@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.6 2007/01/14 03:00:08 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.7 2007/01/14 05:38:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -14,7 +14,7 @@
 // #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/global_entry_context.tcc"
-#include "Object/nonmeta_context.h"
+#include "Object/nonmeta_context.tcc"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/traits/classification_tags.h"
@@ -125,8 +125,7 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 #else
 			transform(i, e, back_inserter(indices),
 				unary_compose(
-				footprint_frame_transformer(
-					ff->template get_frame_map<Tag>()),
+				footprint_frame_transformer(*ff, Tag()), 
 				unary_compose(
 					member_select_ref(
 						&instance_alias_info_type::instance_index),
@@ -174,15 +173,14 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 				// apply transformation if not top-level
 				transform(indices.begin(), indices.end(), 
 					indices.begin(), 
-					footprint_frame_transformer(
-					ff->template get_frame_map<Tag>()));
+					footprint_frame_transformer(*ff, Tag()));
 			}
 			return good_bool(true);
 		}
 		else return good_bool(false);
 	}
 	return good_bool(false);	// unreachable
-}
+}	// end function __nonmeta_instance_lookup_may_reference_indices_impl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -203,7 +201,6 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 /**
 	Looks up the exact run-time reference.
 	\return globally allocated index, 0 to indicate failure.  
-	TODO: fold this into global_entry_context::lookup()
  */
 template <class reference_type>
 size_t
@@ -211,54 +208,7 @@ __nonmeta_instance_global_lookup_impl(
 		const reference_type& r,
 		const nonmeta_context_base& c, 
 		physical_instance_tag) {
-	typedef	typename reference_type::traits_type	traits_type;
-	typedef	typename traits_type::tag_type		Tag;
-	typedef	typename traits_type::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef	simple_meta_instance_reference<Tag>	meta_reference_type;
-
-	STACKTRACE_VERBOSE;
-	NEVER_NULL(c.sm);
-	NEVER_NULL(c.topfp);
-	const never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
-	meta_reference_type cr(r.get_inst_base_subtype());
-	if (r_ind) {
-		const count_ptr<const const_index_list>
-			cil(r_ind->nonmeta_resolve_copy(c));
-		if (!cil) {
-			cerr << "Run-time error resolving nonmeta indices."
-				<< endl;
-			THROW_EXIT;
-		}
-		cr.attach_indices(cil);
-	}
-	// else is scalar
-	size_t local_index;
-{
-	// see code in simple_nonmeta_value_reference: nonmeta_resolve_rvalue
-	if (c.fpf) {
-		// use local footprint frame's footprint
-		// and translate with map to global
-		const unroll_context uc(c.fpf->_footprint, c.topfp);
-		local_index = cr.lookup_locally_allocated_index(*c.sm, uc);
-#if 0
-		global_index = footprint_frame_transformer(
-			c.fpf->template get_frame_map<Tag>())(local_ind);
-#endif
-	} else {
-		local_index = cr.lookup_globally_allocated_index(
-			*c.sm, *c.topfp);
-#if 0
-		if (!global_index)
-			return 0;
-#endif
-	}
-	if (!local_index)
-		return 0;
-}
-	// this translates local to global if necessary
-	// note: repeated c.fpf test...
-	return c.template lookup_global_id<Tag>(local_index);
+	return c.lookup_nonmeta_reference_global_index(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.9 2007/01/14 03:00:18 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.10 2007/01/14 05:39:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -181,7 +181,7 @@ DependenceSetCollector::visit(const simple_bool_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
 	bool_set.insert(fpf ? footprint_frame_transformer(
-			fpf->get_frame_map<bool_tag>())(i) : i);
+			*fpf, bool_tag())(i) : i);
 #else
 	FINISH_ME(Fang);
 #endif
@@ -193,7 +193,7 @@ DependenceSetCollector::visit(const simple_int_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
 	int_set.insert(fpf ? footprint_frame_transformer(
-			fpf->get_frame_map<int_tag>())(i) : i);
+			*fpf, int_tag())(i) : i);
 #else
 	FINISH_ME(Fang);
 #endif
@@ -205,7 +205,7 @@ DependenceSetCollector::visit(const simple_channel_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
 	channel_set.insert(fpf ? footprint_frame_transformer(
-			fpf->get_frame_map<channel_tag>())(i) : i);
+			*fpf, channel_tag())(i) : i);
 #else
 	FINISH_ME(Fang);
 #endif
@@ -217,7 +217,7 @@ DependenceSetCollector::visit(const bool_member_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
 	bool_set.insert(fpf ? footprint_frame_transformer(
-			fpf->get_frame_map<bool_tag>())(i) : i);
+			*fpf, bool_tag())(i) : i);
 #else
 	FINISH_ME(Fang);
 #endif
@@ -229,7 +229,7 @@ DependenceSetCollector::visit(const int_member_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
 	int_set.insert(fpf ? footprint_frame_transformer(
-			fpf->get_frame_map<int_tag>())(i) : i);
+			*fpf, int_tag())(i) : i);
 #else
 	FINISH_ME(Fang);
 #endif
@@ -241,7 +241,7 @@ DependenceSetCollector::visit(const channel_member_meta_instance_reference& r) {
 	STACKTRACE_VERBOSE;
 	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
 	channel_set.insert(fpf ? footprint_frame_transformer(
-			fpf->get_frame_map<channel_tag>())(i) : i);
+			*fpf, channel_tag())(i) : i);
 #else
 	FINISH_ME(Fang);
 #endif
@@ -257,8 +257,7 @@ if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
 	if (fpf) {
 		transform(indices.begin(), indices.end(),
 			set_inserter(bool_set), 
-			footprint_frame_transformer(
-				fpf->get_frame_map<bool_tag>()));
+			footprint_frame_transformer(*fpf, bool_tag()));
 	} else {
 		copy(indices.begin(), indices.end(), set_inserter(bool_set));
 	}
@@ -282,8 +281,7 @@ if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
 	if (fpf) {
 		transform(indices.begin(), indices.end(),
 			set_inserter(int_set), 
-			footprint_frame_transformer(
-				fpf->get_frame_map<int_tag>()));
+			footprint_frame_transformer(*fpf, int_tag()));
 	} else {
 		copy(indices.begin(), indices.end(), set_inserter(int_set));
 	}
@@ -307,8 +305,7 @@ if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
 	if (fpf) {
 		transform(indices.begin(), indices.end(),
 			set_inserter(channel_set), 
-			footprint_frame_transformer(
-				fpf->get_frame_map<channel_tag>()));
+			footprint_frame_transformer(*fpf, channel_tag()));
 	} else {
 		copy(indices.begin(), indices.end(), set_inserter(channel_set));
 	}

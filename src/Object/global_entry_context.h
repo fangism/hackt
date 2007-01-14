@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.3.42.2 2006/12/27 06:01:32 fang Exp $
+	$Id: global_entry_context.h,v 1.3.42.3 2007/01/14 05:38:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -21,6 +21,7 @@ class footprint_frame;
 class state_manager;
 struct bool_tag;
 template <class> class footprint_frame_map;
+template <class> class simple_meta_instance_reference;
 using std::ostream;
 using util::member_saver;
 
@@ -122,9 +123,17 @@ public:
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
 
+	// param is a local or global index, depending on context
 	template <class Tag>
 	size_t
 	lookup_global_id(const size_t) const;
+
+	// note: also covers member_meta_instance_references
+	template <class Tag>
+	size_t
+	lookup_meta_reference_global_index(
+		const simple_meta_instance_reference<Tag>&) const;
+	
 
 };	// end struct global_entry_context
 

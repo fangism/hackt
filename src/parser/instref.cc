@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.4 2006/10/18 22:52:58 fang Exp $
+	$Id: instref.cc,v 1.4.12.1 2007/01/14 05:39:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -219,10 +219,7 @@ parse_node_to_index(const string& n, const module& m) {
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
 	const state_manager& sm(m.get_state_manager());
-	// const_cast is temporary until call trace is rewritten to 
-	// perform lookup using a read-only target footprint.  
-	// we promise not to modify it in this call.  
-	footprint& top(const_cast<footprint&>(m.get_footprint()));
+	const footprint& top(m.get_footprint());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
 #if 0
 	cerr << "index = " << ret << endl;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.12.8.5 2007/01/12 00:39:49 fang Exp $
+	$Id: global_entry.h,v 1.12.8.6 2007/01/14 05:38:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -35,6 +35,7 @@ class footprint;
 class state_manager;
 class entry_collection;		// defined in "Object/entry_collection.h"
 class port_member_context;
+class footprint_frame;
 
 template <class Tag>
 struct  global_entry;
@@ -91,31 +92,6 @@ protected:
 	__collect_subentries(entry_collection&, const state_manager&) const;
 
 };	// end struct footprint_frame_map
-
-//=============================================================================
-/**
-	Functor for transforming indices via footprint frame lookup.  
- */
-struct footprint_frame_transformer {
-	typedef	size_t				argument_type;
-	typedef	size_t				result_type;
-
-	const footprint_frame_map_type&			ff;
-
-	explicit
-	footprint_frame_transformer(const footprint_frame_map_type& f) :
-		ff(f) { }
-
-	/**
-		\param i footprint-local index.
-		\return global index from allocation.  
-	 */
-	size_t
-	operator () (const size_t i) const {
-		return ff[i -1];
-	}
-	
-};	// end struct footprint_frame_transformer
 
 //=============================================================================
 /**
@@ -216,6 +192,40 @@ private:
 	void
 	get_frame_map_test(void) const;
 };	// end struct footprint_frame
+
+//=============================================================================
+/**
+	Functor for transforming indices via footprint frame lookup.  
+ */
+struct footprint_frame_transformer {
+	typedef	size_t				argument_type;
+	typedef	size_t				result_type;
+
+	const footprint_frame_map_type&			ff;
+
+	explicit
+	footprint_frame_transformer(const footprint_frame_map_type& f) :
+		ff(f) { }
+
+	/**
+		Less error-prone constructor, forcing tag specification.  
+	 */
+	template <class Tag>
+	footprint_frame_transformer(const footprint_frame& f, const Tag) :
+		ff(f.template get_frame_map<Tag>()) { }
+
+	/**
+		Translate a local offset/index to a global index.
+		Automatically does 1-base to 0-base conversion in index.
+		\param i footprint-local index (must be > 0).
+		\return global index from allocation.  
+	 */
+	size_t
+	operator () (const size_t i) const {
+		return ff[i -1];
+	}
+	
+};	// end struct footprint_frame_transformer
 
 //=============================================================================
 template <bool B>

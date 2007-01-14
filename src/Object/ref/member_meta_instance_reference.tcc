@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.21.8.4 2007/01/14 03:00:05 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.21.8.5 2007/01/14 05:38:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -214,9 +214,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
 	}
 	const size_t ind = local_alias->instance_index;
 	INVARIANT(ind);
-	const footprint_frame_map_type& ffm(fpf->template get_frame_map<Tag>());
 	// this lookup returns a globally allocated index
-	return ffm[ind -1];	// 0-indexed offset
+	return footprint_frame_transformer(*fpf, Tag())(ind);
 }	// end method lookup_locally_allocated_index
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

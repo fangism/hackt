@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.1.2.6 2006/12/27 06:01:35 fang Exp $
+	$Id: nonmeta_context.h,v 1.1.2.7 2007/01/14 05:38:44 fang Exp $
  */
 #ifndef	__HAC_OBJECT_NONMETA_CONTEXT_H__
 #define	__HAC_OBJECT_NONMETA_CONTEXT_H__
@@ -40,9 +40,12 @@ protected:
 		global_entry_context(s, f, l), 
 		values(v) { }
 
-
 	// default copy-ctor
 	// default dtor
+public:
+	template <class reference_type>
+	size_t
+	lookup_nonmeta_reference_global_index(const reference_type&) const;
 
 };	// end class nonmeta_context_base
 

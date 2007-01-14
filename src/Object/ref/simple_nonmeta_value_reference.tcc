@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.9 2007/01/14 03:00:11 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.10 2007/01/14 05:38:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -42,7 +42,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
 #include "Object/ref/nonmeta_ref_implementation.tcc"
-#include "Object/nonmeta_context.h"
+#include "Object/nonmeta_context.tcc"
 #include "Object/nonmeta_variable.h"
 #include "Object/nonmeta_state.h"
 #include "Object/nonmeta_channel_manipulator.h"
@@ -142,63 +142,16 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		const nonmeta_context_base& c, const return_type& p) {
 	typedef	reference_type				this_type;
 	STACKTRACE_VERBOSE;
-	simple_meta_instance_reference<Tag>
-		mref(_this.value_collection_ref);
-	// size_t local_ind;
-	if (_this.array_indices) {
-		// resolve the indices
-		// if indices are all meta-valued, then resolve all the way
-		// otherwise there is at least one nonmeta dependence, 
-		// which prevents further compile-time resolution.  
-		const count_ptr<const const_index_list>
-			resolved_indices(_this.array_indices
-				->nonmeta_resolve_copy(c));
-		if (!resolved_indices) {
-			cerr << "Error resolving nonmeta value reference\'s "
-				"indices." << endl;
-			return const_return_type(NULL);
-		}
-		// could be easily more efficient with refactoring...
-		// we know these resolved indices are constant now...
-		mref.attach_indices(resolved_indices);
-		// CAUTION: was intended for top-level lookups only
-		// this may return a footprint-local index
-		// See lookup adaptations in "sim/chpsim/DependenceCollector.cc"
-	} else {
-		STACKTRACE_INDENT_PRINT("scalar" << endl);
-		// is scalar reference (cannot be implicit indices!)
-	}
-#if 0
-	const size_t local_ind = mref.lookup_globally_allocated_index(
-			*c.sm, *c.topfp);
 	const size_t global_index =
-		(c.fpf) ? footprint_frame_transformer(
-			c.fpf->template get_frame_map<Tag>())(local_ind)
-		: local_ind;
-#else
-	// NOTE: this code snippet should be re-usable...
-	// TODO: use global_entry_context::lookup_global_id<>() for consistency
-	size_t global_index;
-	if (c.fpf) {
-		const unroll_context uc(c.fpf->_footprint, c.topfp);
-		const size_t local_ind =
-			mref.lookup_locally_allocated_index(*c.sm, uc);
-		// lookup may fail if run-time out-of-bounds
-		if (!local_ind)
-			return const_return_type(NULL);
-		global_index = footprint_frame_transformer(
-			c.fpf->template get_frame_map<Tag>())(local_ind);
-	} else {
-		global_index = mref.lookup_globally_allocated_index(
-			*c.sm, *c.topfp);
-		if (!global_index)
-			return const_return_type(NULL);
+		c.lookup_nonmeta_reference_global_index(_this);
+	if (!global_index) {
+		cerr << "Run-time error resolving nonmeta reference." << endl;
+		return const_return_type(NULL);
 	}
-#endif
 	return const_return_type(
 		new const_expr_type(
 			c.values.template get_pool<Tag>()[global_index].value));
-}
+}	// end function nonmeta_resolve_value
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
