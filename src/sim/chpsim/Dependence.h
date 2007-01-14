@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.1.2.4 2006/12/15 00:49:43 fang Exp $
+	$Id: Dependence.h,v 1.1.2.5 2007/01/14 23:36:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -9,20 +9,64 @@
 #include <iosfwd>
 #include <valarray>
 #include "sim/common.h"
+#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
+namespace entity {
+	class nonmeta_context_base;
+}
 namespace SIM {
 namespace CHPSIM {
 using std::ostream;
+template <class> struct dependence_collector_base;
 class DependenceSetCollector;	// from "sim/chpsim/DependenceCollector.h"
+using entity::bool_tag;
+using entity::int_tag;
+using entity::enum_tag;
+using entity::channel_tag;
+using entity::nonmeta_context_base;
+
 /**
 	To keep this structure as small as possible, we use
 	a valarray, but to construct the sets, we will use
 	temporary vectors.  
-	Invariant: make this set sorted for efficient set union/difference
+	Invariant: make this set SORT for efficient set union/difference
 	algorithms.  
  */
 typedef	std::valarray<node_index_type>	instance_set_type;
+
+//=============================================================================
+/**
+	TODO: move to detail namespace?
+ */
+template <class Tag>
+class dependence_set_base {
+	typedef	dependence_set_base<Tag>	this_type;
+protected:
+	/**
+		Aggregated during simulator state allocation and construction.  
+		Remains unmodified throughout simulation.  
+	 */
+	instance_set_type			_set;
+
+	dependence_set_base() : _set() { }
+	// default dtor
+
+	this_type&
+	operator = (const this_type&);
+
+	void
+	__import(const dependence_collector_base<Tag>&);
+
+	void
+	__subscribe(const nonmeta_context_base&,
+		const event_index_type) const;
+
+	void
+	__unsubscribe(const nonmeta_context_base&,
+		const event_index_type) const;
+
+};	// end struct dependence_set_base
 
 //=============================================================================
 /**
@@ -39,22 +83,28 @@ typedef	std::valarray<node_index_type>	instance_set_type;
 	all variables in the set accordingly.  
 	current object size: 24B
  */
-struct DependenceSet {
+struct DependenceSet : 
+		public dependence_set_base<bool_tag>,
+		public dependence_set_base<int_tag>,
+		public dependence_set_base<enum_tag>,
+		public dependence_set_base<channel_tag> {
 private:
 	typedef	DependenceSet			this_type;
 public:
-	instance_set_type			bool_set;
-	instance_set_type			int_set;
-	instance_set_type			channel_set;
-
-	DependenceSet() : bool_set(), int_set(), channel_set() { }
-	~DependenceSet() { }
+	DependenceSet();
+	~DependenceSet();
 
 	this_type&
 	operator = (const this_type&);
 
 	void
 	import(const DependenceSetCollector&);
+
+	void
+	subscribe(const nonmeta_context_base&, const event_index_type) const;
+
+	void
+	unsubscribe(const nonmeta_context_base&, const event_index_type) const;
 
 	ostream&
 	dump(ostream&) const;

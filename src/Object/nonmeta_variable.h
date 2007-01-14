@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.7 2007/01/13 21:06:55 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.8 2007/01/14 23:36:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -82,6 +82,12 @@ public:
 
 	const event_subscribers_type&
 	get_subscribers(void) const { return event_subscribers; }
+
+	void
+	subscribe(const size_t e) { event_subscribers.insert(e); }
+
+	void
+	unsubscribe(const size_t e) { event_subscribers.erase(e); }
 
 	// not needed for structural dumps, as this is a dynamic set
 	ostream&

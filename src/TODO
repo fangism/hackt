@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.48.2.1 2006/12/16 23:54:01 fang Exp $
+#	$Id: TODO,v 1.48.2.2 2007/01/14 23:36:18 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -26,10 +26,14 @@ Simulation:
 
 chpsim:
 	stability checking mode:
-		(Does somethiing change between time of enqueue to 
+		(Does something change between time of enqueue to 
 			time of execution?)
 		for guard expressions
 		variables referenced (and their values)
+	maintain a pending set to avoid unnecessary re-subscribing
+		of already blocked events to their dependencies? (enhancemen)
+	eliminate guard_expr from event structure, and handle
+		condition wait like a normal blockable (no-op) event.  
 
 prsim:
 	category of 'debug' commands for inspecting state, etc...

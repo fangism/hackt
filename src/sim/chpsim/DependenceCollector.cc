@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.10 2007/01/14 05:39:02 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.11 2007/01/14 23:36:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -60,8 +60,6 @@ namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::copy;
 using std::transform;
-using entity::bool_tag;
-using entity::int_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
@@ -69,8 +67,20 @@ using entity::footprint_frame;
 using entity::footprint_frame_transformer;
 using entity::simple_nonmeta_instance_reference_base;
 using entity::global_entry_context;
+using entity::simple_meta_instance_reference;
+using entity::member_meta_instance_reference;
+using entity::aggregate_meta_instance_reference;
 using util::set_inserter;
 using util::memory::never_ptr;
+
+//=============================================================================
+// class dependence_collector_base method definitions
+
+template <class Tag>
+dependence_collector_base<Tag>::dependence_collector_base() : _set() { }
+
+template <class Tag>
+dependence_collector_base<Tag>::~dependence_collector_base() { }
 
 //=============================================================================
 // class DependenceSetCollector method definitions
@@ -82,7 +92,10 @@ DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) :
 			&s.get_state_manager().get_pool<process_tag>()
 				[s.current_process_index]._frame
 			: NULL)), 	// don't default to top-level
-		bool_set(), int_set(), enum_set(), channel_set() {
+		dependence_collector_base<bool_tag>(), 
+		dependence_collector_base<int_tag>(), 
+		dependence_collector_base<enum_tag>(), 
+		dependence_collector_base<channel_tag>() {
 	if (s.current_process_index) {
 		NEVER_NULL(fpf);
 	}
@@ -94,10 +107,10 @@ DependenceSetCollector::~DependenceSetCollector() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 DependenceSetCollector::clear(void) {
-	bool_set.clear();
-	int_set.clear();
-	enum_set.clear();
-	channel_set.clear();
+	dependence_collector_base<bool_tag>::_set.clear();
+	dependence_collector_base<int_tag>::_set.clear();
+	dependence_collector_base<enum_tag>::_set.clear();
+	dependence_collector_base<channel_tag>::_set.clear();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -174,150 +187,78 @@ DEFINE_BINARY_VISIT(bool_logical_expr)
 	These are not likely to be called from CHP, which contains
 	nonmeta-typed references (some of which may qualify as meta).
 	\param r scalar reference to a bool.  
+	Could define this as template in base classes...
  */
-void
-DependenceSetCollector::visit(const simple_bool_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
-	bool_set.insert(fpf ? footprint_frame_transformer(
-			*fpf, bool_tag())(i) : i);
-#else
-	FINISH_ME(Fang);
-#endif
-}
 
-void
-DependenceSetCollector::visit(const simple_int_meta_instance_reference& r) {
 #if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
-	int_set.insert(fpf ? footprint_frame_transformer(
-			*fpf, int_tag())(i) : i);
-#else
-	FINISH_ME(Fang);
-#endif
+#define	DEFINE_SINGLE_META_REFERENCE_VISIT(reference, Tag)		\
+void									\
+DependenceSetCollector::visit(const reference<Tag>& r) {		\
+	STACKTRACE_VERBOSE;						\
+	const node_index_type i = 					\
+		r.lookup_globally_allocated_index(*sm, *topfp);		\
+	dependence_collector_base<Tag>::_set.insert(			\
+			fpf ? footprint_frame_transformer(		\
+			*fpf, Tag())(i) : i);				\
 }
+#else
+#define	DEFINE_SINGLE_META_REFERENCE_VISIT(reference, Tag)		\
+void									\
+DependenceSetCollector::visit(const reference<Tag>& r) {		\
+	FINISH_ME(Fang);						\
+}
+#endif
 
-void
-DependenceSetCollector::visit(const simple_channel_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
-	channel_set.insert(fpf ? footprint_frame_transformer(
-			*fpf, channel_tag())(i) : i);
-#else
-	FINISH_ME(Fang);
-#endif
-}
+DEFINE_SINGLE_META_REFERENCE_VISIT(simple_meta_instance_reference, bool_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(simple_meta_instance_reference, int_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(simple_meta_instance_reference, enum_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(simple_meta_instance_reference, channel_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(member_meta_instance_reference, bool_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(member_meta_instance_reference, int_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(member_meta_instance_reference, enum_tag)
+DEFINE_SINGLE_META_REFERENCE_VISIT(member_meta_instance_reference, channel_tag)
 
-void
-DependenceSetCollector::visit(const bool_member_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
-	bool_set.insert(fpf ? footprint_frame_transformer(
-			*fpf, bool_tag())(i) : i);
-#else
-	FINISH_ME(Fang);
-#endif
-}
+#undef	DEFINE_SINGLE_META_REFERENCE_VISIT
 
-void
-DependenceSetCollector::visit(const int_member_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
-	int_set.insert(fpf ? footprint_frame_transformer(
-			*fpf, int_tag())(i) : i);
-#else
-	FINISH_ME(Fang);
-#endif
-}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-void
-DependenceSetCollector::visit(const channel_member_meta_instance_reference& r) {
 #if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	const node_index_type i = r.lookup_globally_allocated_index(*sm, *topfp);
-	channel_set.insert(fpf ? footprint_frame_transformer(
-			*fpf, channel_tag())(i) : i);
-#else
-	FINISH_ME(Fang);
-#endif
+#define	DEFINE_AGGREGATE_META_REFERENCE_VISIT(Tag)			\
+void									\
+DependenceSetCollector::visit(						\
+		const aggregate_meta_instance_reference<Tag>& r) {	\
+	STACKTRACE_VERBOSE;						\
+	vector<node_index_type> indices;				\
+if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {	\
+	if (fpf) {							\
+		transform(indices.begin(), indices.end(),		\
+			set_inserter(dependence_collector_base<Tag>::_set), \
+			footprint_frame_transformer(*fpf, Tag()));	\
+	} else {							\
+		copy(indices.begin(), indices.end(), 			\
+			set_inserter(dependence_collector_base<Tag>::_set)); \
+	}								\
+} else {								\
+	/* TODO: error handling */					\
+	FINISH_ME(Fang);						\
+	THROW_EXIT;							\
+}									\
 }
+#else
+#define	DEFINE_AGGREGATE_META_REFERENCE_VISIT(Tag)			\
+void									\
+DependenceSetCollector::visit(						\
+		const aggregate_meta_instance_reference<Tag>& r) {	\
+	FINISH_ME(Fang);						\
+}
+#endif
 
-void
-DependenceSetCollector::visit(
-		const aggregate_bool_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	vector<node_index_type> indices;
-if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
-	if (fpf) {
-		transform(indices.begin(), indices.end(),
-			set_inserter(bool_set), 
-			footprint_frame_transformer(*fpf, bool_tag()));
-	} else {
-		copy(indices.begin(), indices.end(), set_inserter(bool_set));
-	}
-} else {
-	// TODO: error handling
-	FINISH_ME(Fang);
-	THROW_EXIT;
-}
-#else
-	FINISH_ME(Fang);
-#endif
-}
+DEFINE_AGGREGATE_META_REFERENCE_VISIT(bool_tag)
+DEFINE_AGGREGATE_META_REFERENCE_VISIT(int_tag)
+DEFINE_AGGREGATE_META_REFERENCE_VISIT(enum_tag)
+DEFINE_AGGREGATE_META_REFERENCE_VISIT(channel_tag)
 
-void
-DependenceSetCollector::visit(
-		const aggregate_int_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	vector<node_index_type> indices;
-if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
-	if (fpf) {
-		transform(indices.begin(), indices.end(),
-			set_inserter(int_set), 
-			footprint_frame_transformer(*fpf, int_tag()));
-	} else {
-		copy(indices.begin(), indices.end(), set_inserter(int_set));
-	}
-} else {
-	// TODO: error handling
-	FINISH_ME(Fang);
-	THROW_EXIT;
-}
-#else
-	FINISH_ME(Fang);
-#endif
-}
-
-void
-DependenceSetCollector::visit(
-		const aggregate_channel_meta_instance_reference& r) {
-#if HANDLE_META_REFERENCES
-	STACKTRACE_VERBOSE;
-	vector<node_index_type> indices;
-if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {
-	if (fpf) {
-		transform(indices.begin(), indices.end(),
-			set_inserter(channel_set), 
-			footprint_frame_transformer(*fpf, channel_tag()));
-	} else {
-		copy(indices.begin(), indices.end(), set_inserter(channel_set));
-	}
-} else {
-	// TODO: error handling
-	FINISH_ME(Fang);
-	THROW_EXIT;
-}
-#else
-	FINISH_ME(Fang);
-#endif
-}
+#undef	DEFINE_AGGREGATE_META_REFERENCE_VISIT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // nonmeta references
@@ -330,13 +271,14 @@ DEFINE_NEVER_VISIT(simple_datastruct_nonmeta_instance_reference)
 	Collects all may-references of nonmeta-referenced channel.  
 	Remember: also visit the array_indices.  
  */
-#define	DEFINE_NONMETA_INSTANCE_VISIT(type, set)			\
+#define	DEFINE_NONMETA_INSTANCE_VISIT(type, Tag)			\
 void									\
 DependenceSetCollector::visit(const type& r) {				\
 	STACKTRACE_VERBOSE;						\
 	vector<node_index_type> indices;				\
 	if (r.lookup_may_reference_global_indices(*this, indices).good) { \
-		copy(indices.begin(), indices.end(), set_inserter(set)); \
+		copy(indices.begin(), indices.end(),			\
+			set_inserter(dependence_collector_base<Tag>::_set)); \
 		const never_ptr<const type::index_list_type>		\
 			ind(r.get_indices());				\
 		if (ind) { ind->accept(*this); }			\
@@ -348,13 +290,15 @@ DependenceSetCollector::visit(const type& r) {				\
 }
 
 DEFINE_NONMETA_INSTANCE_VISIT(
-	simple_bool_nonmeta_instance_reference, bool_set)
+	simple_bool_nonmeta_instance_reference, bool_tag)
 DEFINE_NONMETA_INSTANCE_VISIT(
-	simple_int_nonmeta_instance_reference, int_set)
+	simple_int_nonmeta_instance_reference, int_tag)
 DEFINE_NONMETA_INSTANCE_VISIT(
-	simple_enum_nonmeta_instance_reference, enum_set)
+	simple_enum_nonmeta_instance_reference, enum_tag)
 DEFINE_NONMETA_INSTANCE_VISIT(
-	simple_channel_nonmeta_instance_reference, channel_set)
+	simple_channel_nonmeta_instance_reference, channel_tag)
+
+#undef	DEFINE_NONMETA_INSTANCE_VISIT
 
 // meta-value references have no aliases, and thus are only index dependent
 void
@@ -392,13 +336,10 @@ DEFINE_TRIVIAL_VISIT(aggregate_preal_meta_value_reference)
 // enums and structs are so far unsupported, so we ICE for now
 DEFINE_NEVER_VISIT(simple_process_meta_instance_reference)
 DEFINE_NEVER_VISIT(simple_datastruct_meta_instance_reference)
-DEFINE_NEVER_VISIT(simple_enum_meta_instance_reference)
 DEFINE_NEVER_VISIT(process_member_meta_instance_reference)
 DEFINE_NEVER_VISIT(datastruct_member_meta_instance_reference)
-DEFINE_NEVER_VISIT(enum_member_meta_instance_reference)
 DEFINE_NEVER_VISIT(aggregate_process_meta_instance_reference)
 DEFINE_NEVER_VISIT(aggregate_datastruct_meta_instance_reference)
-DEFINE_NEVER_VISIT(aggregate_enum_meta_instance_reference)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #undef	DEFINE_TRIVIAL_VISIT

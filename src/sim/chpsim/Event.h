@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.18 2007/01/14 03:00:21 fang Exp $
+	$Id: Event.h,v 1.1.2.19 2007/01/14 23:36:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -164,6 +164,9 @@ public:
 		deps.import(d);
 	}
 
+	const DependenceSet&
+	get_deps(void) const { return deps; }
+
 	void
 	reset(void);
 
@@ -172,6 +175,7 @@ public:
 
 	bool
 	recheck(const nonmeta_context&);
+
 
 	ostream&
 	dump_brief(ostream&) const;

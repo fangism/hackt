@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.21 2007/01/14 03:00:00 fang Exp $
+	$Id: CHP.cc,v 1.16.2.22 2007/01/14 23:36:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -565,7 +565,8 @@ concurrent_actions::execute(const nonmeta_context& c,
 	typedef	EventNode	event_type;
 	typedef	size_t		event_index_type;
 	STACKTRACE_CHPSIM_VERBOSE;
-	const event_type::successor_list_type& succ(c.event.successor_events);
+	const event_type::successor_list_type&
+		succ(c.get_event().successor_events);
 	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
 }
 
@@ -1487,7 +1488,8 @@ assignment::execute(const nonmeta_context& c,
 	STACKTRACE_CHPSIM_VERBOSE;
 	lval->nonmeta_assign(rval, c, u);
 	// TODO: this should also record the reference updated in @u
-	const event_type::successor_list_type& succ(c.event.successor_events);
+	const event_type::successor_list_type&
+		succ(c.get_event().successor_events);
 	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
 }
 
@@ -2357,7 +2359,7 @@ do_while_loop::execute(const nonmeta_context& c,
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	switch (G.ready.size()) {
-	case 0: c.rechecks.insert(c.event.successor_events[size()]);
+	case 0: c.rechecks.insert(c.get_event().successor_events[size()]);
 		break;
 	case 1: c.rechecks.insert(G.ready.front());
 		break;

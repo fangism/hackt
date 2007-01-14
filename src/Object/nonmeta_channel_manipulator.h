@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_channel_manipulator.h"
 	Helper classes for manipulating channel fields at run-time.  
-	$Id: nonmeta_channel_manipulator.h,v 1.1.2.2 2007/01/14 02:59:59 fang Exp $
+	$Id: nonmeta_channel_manipulator.h,v 1.1.2.3 2007/01/14 23:36:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_CHANNEL_MANIPULATOR_H__
@@ -84,7 +84,7 @@ struct channel_data_reader_base {
 		\post never read out of bounds.  
 	 */
 	~channel_data_reader_base() {
-		INVARIANT(iter < &data.member_fields[data.member_fields.size()]);
+		INVARIANT(iter <= &data.member_fields[data.member_fields.size()]);
 	}
 
 };	// end struct channel_data_reader_base

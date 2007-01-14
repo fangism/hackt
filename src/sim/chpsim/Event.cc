@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.14 2007/01/14 03:00:21 fang Exp $
+	$Id: Event.cc,v 1.1.2.15 2007/01/14 23:36:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -108,13 +108,14 @@ EventNode::reset(void) {
 /**
 	Re-evaluates the guard expression of this event to determine
 	whether or not event should be enqueued.  
+	Caller is responsible for un/subscribing *this* event (by ID)
+		to/from its dependent variables.  
 
 	\param sm the structural state manager (hierarchy)
 	\param p the run-time state of variables and channels.
 	\param enqueue return list of event(s) to enqueue for execution.
 	\return true if *this* event should be enqueued.  
 		This avoids having to pass the index of this event down.  
-	Don't forget to countdown predecessors.
 	Is there a problem with guarded selection statements?
 	TODO: Need to examine how they are constructed...
  */
@@ -173,6 +174,7 @@ EventNode::execute(const nonmeta_context& c,
 		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type
 #if ENABLE_CHP_EXECUTE
+		// execute is responsible for scheduling successors for recheck
 		action_ptr->execute(c, updates);
 		// action_ptr->evaluate_successors(enqueue);
 #endif

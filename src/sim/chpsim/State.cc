@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.22 2007/01/14 03:00:22 fang Exp $
+	$Id: State.cc,v 1.1.2.23 2007/01/14 23:36:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -69,33 +69,48 @@ using util::copy_if;
  */
 struct State::recheck_transformer {
 	this_type&		state;
-	const state_manager&	sm;
-	const footprint&	topfp;
+	// other option is to pass in a pre-made nonmeta_context
+	nonmeta_context		context;
 
 	explicit
 	recheck_transformer(this_type& s) : 
 		state(s), 
-		sm(state.mod.get_state_manager()), 
-		topfp(state.mod.get_footprint()) { }
+		context(state.mod.get_state_manager(), 
+			state.mod.get_footprint(),
+			state.instances, state.__rechecks
+#if CHPSIM_DIRECT_ENQUEUE
+			, state.__enqueue_list
+#endif
+			) { }
 
 	/**
+		This should be the ONLY interface for
+		events entering the event-queue.  
+		(they are sifted into the staging queue, __enqueue_list)
 		\param ei event index to re-evaluate depending on type.
 		Appends event to __enqueue_list if ready to fire.
+		Also manages event-to-variable subscription 
+		for this event index.  
 	 */
 	void
 	operator () (const event_index_type ei) {
 		STACKTRACE("recheck-transformer");
 		STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
-		// TODO: eliminate repeated construction, 
-		// make the event member a pointer instead of reference
-		const nonmeta_context
-			c(sm, topfp, state.instances, e, 
-				state.__rechecks, state.__enqueue_list);
-		if (e.recheck(c)) {
+		context.set_event(e);
+		if (e.recheck(context)) {
+			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
 			state.__enqueue_list.push_back(ei);
+			// unsubscribe the event from its dependent variables
+			e.get_deps().unsubscribe(context, ei);
+		} else {
+			STACKTRACE_INDENT_PRINT("blocked on deps." << endl);
+			// subscribe the event to its dependent variables
+			e.get_deps().subscribe(context, ei);
+			// dump deps
 		}
 	}
+
 };	// end class recheck_transformer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -272,7 +287,11 @@ State::step(void) {
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
 	const nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), 
-		instances, ev, __rechecks, __enqueue_list);
+		instances, ev, __rechecks
+#if CHPSIM_DIRECT_ENQUEUE
+		, __enqueue_list
+#endif
+		);
 	ev.execute(c, __updated_list);
 	// __updated_list lists variables updated
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
@@ -288,7 +307,7 @@ State::step(void) {
 #if 0
 	// print the list of successor events enqueued immediately
 	dump_enqueue_events(cout);
-#else
+#elif	CHPSIM_DIRECT_ENQUEUE
 	// nothing should be enqueued right-away as a result of execution
 	INVARIANT(__enqueue_list.empty());
 #endif
@@ -375,6 +394,8 @@ State::step(void) {
 	// debug: print list of event to enqueue
 	dump_enqueue_events(cout);
 #endif
+	// transfer events from staging queue to event queue, 
+	// and schedule them with some delay
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 		event_enqueuer(*this));
 }

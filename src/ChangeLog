@@ -5,6 +5,24 @@
 
 2007-01-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-37:
+	  channel_data_reader_base: fixed wrong bound-check assert.
+	  nonmeta_variable_base: added subscribe/unsubscribe wrappers.
+	  Rewrote DependenceSet using meta-tag template base classes, 
+		added enum support.
+	  Rewrote DependenceSetCollector using meta-tag template base classes, 
+		completed enum support, cleaned up visit() definitions.
+	  CHPSIM::State:
+		recheck_transformer re-writte: wrap a nonmeta_context member, 
+		now calls subscribe/unsubscribe depending on whether event's
+		recheck results in blocking (pending) or unblocking (enqueue).
+	  CHPSIM::nonmeta_context: no more direct access to __enqueue_list.
+	  Next CHP::action::execute() should be responsible for
+		enqueuing successor events, which depends on whether
+		or not it is a selection-type of event.  
+	  Added some items to TODO list for chpsim.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-36:
 	  Global clean-up patch:
 		Replaced error prone uses of footprint_frame::get_frame_map

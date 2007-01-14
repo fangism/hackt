@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.1.2.6 2007/01/14 03:00:20 fang Exp $
+	$Id: DependenceCollector.h,v 1.1.2.7 2007/01/14 23:36:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -10,6 +10,7 @@
 #include "sim/common.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/global_entry_context.h"
+#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -23,6 +24,10 @@ using entity::footprint;
 using entity::footprint_frame;
 using entity::state_manager;
 using entity::global_entry_context;
+using entity::bool_tag;
+using entity::int_tag;
+using entity::enum_tag;
+using entity::channel_tag;
 class StateConstructor;
 
 using entity::int_range_expr;
@@ -97,23 +102,44 @@ using entity::aggregate_pbool_meta_value_reference;
 using entity::aggregate_preal_meta_value_reference;
 
 //=============================================================================
+typedef	std::set<node_index_type>	dependence_index_set_type;
+
+/**
+	Generic base class for sets of dependencies represented as indices.  
+	Factored out so we can reference using meta-type tags.  
+ */
+template <class Tag>
+struct dependence_collector_base {
+	dependence_index_set_type		_set;
+
+	dependence_collector_base();
+	~dependence_collector_base();
+};	// end struct dependence_collector_base
+
+//=============================================================================
 /**
 	Keep synchronized with declarations in expr_visitor.  
  */
 struct DependenceSetCollector :
 		public entity::nonmeta_expr_visitor, 
-		public global_entry_context {
+		public global_entry_context, 
+		public dependence_collector_base<bool_tag>,
+		public dependence_collector_base<int_tag>,
+		public dependence_collector_base<enum_tag>,
+		public dependence_collector_base<channel_tag> {
 	typedef	entity::nonmeta_expr_visitor	parent_type;
-	typedef	std::set<node_index_type>	set_type;
-	set_type				bool_set;
-	set_type				int_set;
-	set_type				enum_set;
-	set_type				channel_set;
-
 public:
 	DependenceSetCollector(const StateConstructor&);
 
 	~DependenceSetCollector();
+
+#if 0
+	template <class Tag>
+	const dependence_index_set_type&
+	get_set(void) const {
+		return dependence_collector_base<Tag>::_set;
+	}
+#endif
 
 	void
 	clear(void);
