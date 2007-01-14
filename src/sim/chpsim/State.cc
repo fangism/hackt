@@ -1,11 +1,11 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.21 2007/01/13 21:07:01 fang Exp $
+	$Id: State.cc,v 1.1.2.22 2007/01/14 03:00:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
-#define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_STEP			(1 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <iterator>
@@ -13,6 +13,7 @@
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
+#include "sim/chpsim/graph_options.h"
 #include "sim/event.tcc"
 #include "sim/signal_handler.tcc"
 #include "sim/chpsim/nonmeta_context.h"
@@ -83,6 +84,8 @@ struct State::recheck_transformer {
 	 */
 	void
 	operator () (const event_index_type ei) {
+		STACKTRACE("recheck-transformer");
+		STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		// TODO: eliminate repeated construction, 
 		// make the event member a pointer instead of reference
@@ -252,10 +255,13 @@ State::step(void) {
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
+#if 0
+	// first NULL event has index 0!
 	if (!ei) {
 		// possible in the event that last events are killed
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
+#endif
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
 
@@ -279,8 +285,13 @@ State::step(void) {
 	dump_updated_references(cout);
 	// print the list of successor events scheduled for recheck
 	dump_recheck_events(cout);
+#if 0
 	// print the list of successor events enqueued immediately
 	dump_enqueue_events(cout);
+#else
+	// nothing should be enqueued right-away as a result of execution
+	INVARIANT(__enqueue_list.empty());
+#endif
 #endif
 {
 	// list of events to check next
@@ -449,19 +460,19 @@ State::dump_struct(ostream& o) const {
 	Would be nice to distinguish between may and must variables.  
  */
 ostream&
-State::dump_struct_dot(ostream& o) const {
+State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	o << "digraph G {" << endl;
 {
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
 	event_index_type i = 0;		// FIRST_VALID_EVENT;
 	// we use the 0th event to launch initial batch of events
-	const string prefix("EVENT_");
+	const string prefix("EVENT_");	// keep consistent with Event::dump!
 	for ( ; i<es; ++i) {
 		// o << "EVENT_" << i << "\t[label=\"" << i << "\"];";
-		o << prefix << i << "\t";
+		// o << prefix << i << "\t";
 		const event_type& e(event_pool[i]);
-		e.dump_dot_node(o) << endl;
+		e.dump_dot_node(o, i, g) << endl;
 		// iterate over edges
 		const event_index_type* j = &e.successor_events[0];
 		const event_index_type* z =
@@ -535,6 +546,16 @@ bool
 State::load_checkpoint(istream& o) {
 	FINISH_ME(Fang);
 	return false;
+}
+
+//=============================================================================
+// class state_dump_options method definitions
+
+/**
+	Default configuration for dumping.  
+ */
+graph_options::graph_options() :
+		show_event_index(true) {
 }
 
 //=============================================================================

@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.8 2007/01/13 02:08:21 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.9 2007/01/14 03:00:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -134,12 +134,14 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 /**
 	Uses the values held in the run-time instance/value pools to
 	resolve values.  (bool, int, enum)
+	TODO: factor out same code in __nonmeta_instance_global_lookup_impl
  */
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
 		const nonmeta_context_base& c, const return_type& p) {
 	typedef	reference_type				this_type;
+	STACKTRACE_VERBOSE;
 	simple_meta_instance_reference<Tag>
 		mref(_this.value_collection_ref);
 	// size_t local_ind;
@@ -166,12 +168,33 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		STACKTRACE_INDENT_PRINT("scalar" << endl);
 		// is scalar reference (cannot be implicit indices!)
 	}
+#if 0
 	const size_t local_ind = mref.lookup_globally_allocated_index(
 			*c.sm, *c.topfp);
 	const size_t global_index =
 		(c.fpf) ? footprint_frame_transformer(
 			c.fpf->template get_frame_map<Tag>())(local_ind)
 		: local_ind;
+#else
+	// NOTE: this code snippet should be re-usable...
+	// TODO: use global_entry_context::lookup_global_id<>() for consistency
+	size_t global_index;
+	if (c.fpf) {
+		const unroll_context uc(c.fpf->_footprint, c.topfp);
+		const size_t local_ind =
+			mref.lookup_locally_allocated_index(*c.sm, uc);
+		// lookup may fail if run-time out-of-bounds
+		if (!local_ind)
+			return const_return_type(NULL);
+		global_index = footprint_frame_transformer(
+			c.fpf->template get_frame_map<Tag>())(local_ind);
+	} else {
+		global_index = mref.lookup_globally_allocated_index(
+			*c.sm, *c.topfp);
+		if (!global_index)
+			return const_return_type(NULL);
+	}
+#endif
 	return const_return_type(
 		new const_expr_type(
 			c.values.template get_pool<Tag>()[global_index].value));

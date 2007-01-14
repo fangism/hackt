@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.1.2.5 2006/12/27 06:01:42 fang Exp $
+	$Id: DependenceCollector.h,v 1.1.2.6 2007/01/14 03:00:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -107,7 +107,7 @@ struct DependenceSetCollector :
 	typedef	std::set<node_index_type>	set_type;
 	set_type				bool_set;
 	set_type				int_set;
-//	set_type				enum_set;
+	set_type				enum_set;
 	set_type				channel_set;
 
 public:

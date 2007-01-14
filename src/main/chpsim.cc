@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.7 2007/01/12 03:11:49 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.8 2007/01/14 03:00:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
+#include "sim/chpsim/graph_options.h"
 #include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
 #include "util/memory/excl_ptr.h"	// for never_ptr
@@ -28,6 +29,7 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using SIM::CHPSIM::State;
 using SIM::CHPSIM::CommandRegistry;
+using SIM::CHPSIM::graph_options;
 using entity::canonical_fundamental_chan_type_base;
 
 //=============================================================================
@@ -54,6 +56,8 @@ public:
 	/// list of paths to search for sourced scripts
 	typedef	std::list<string>	source_paths_type;
 	source_paths_type		source_paths;
+	/// fine-tuning graph options
+	graph_options			graph_opts;
 
 	chpsim_options() : help_only(false), interactive(true), 
 		run(true), dump_graph_alloc(false), check_structure(true),
@@ -136,7 +140,7 @@ try {
 		sim_state.check_structure();
 #endif
 	if (opt.dump_dot_struct)
-		sim_state.dump_struct_dot(cout) << endl;
+		sim_state.dump_struct_dot(cout, opt.graph_opts) << endl;
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
@@ -235,6 +239,10 @@ static void __chpsim_dump_dot_struct(chpsim_options& o)
 	{ o.dump_dot_struct = true; }
 static void __chpsim_no_dump_dot_struct(chpsim_options& o)
 	{ o.dump_dot_struct = false; }
+static void __chpsim_show_event_index(chpsim_options& o)
+	{ o.graph_opts.show_event_index = true; }
+static void __chpsim_no_show_event_index(chpsim_options& o)
+	{ o.graph_opts.show_event_index = false; }
 
 const chpsim::register_options_modifier
 	chpsim::_default(
@@ -263,7 +271,13 @@ const chpsim::register_options_modifier
 		"print dot-formatted graph structure"), 
 	chpsim::_no_dump_dot_struct(
 		"no-dump-dot-struct", &__chpsim_no_dump_dot_struct,
-		"suppress dot-formatted graph structure (default)");
+		"suppress dot-formatted graph structure (default)"),
+	chpsim::_show_event_index(
+		"show-event-index", &__chpsim_show_event_index,
+		"for dot-graphs: show event indices in graph"), 
+	chpsim::_no_show_event_index(
+		"no-show-event-index", &__chpsim_no_show_event_index,
+		"for dot-graphs: hide event indices");
 
 //=============================================================================
 }	// end namespace HAC

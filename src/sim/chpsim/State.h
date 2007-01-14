@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.17 2007/01/13 21:07:01 fang Exp $
+	$Id: State.h,v 1.1.2.18 2007/01/14 03:00:22 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -23,6 +23,7 @@ using std::vector;
 using entity::nonmeta_state_manager;
 using entity::event_subscribers_type;
 class StateConstructor;
+class graph_options;
 
 //=============================================================================
 /**
@@ -178,7 +179,7 @@ public:
 	dump_struct(ostream&) const;
 
 	ostream&
-	dump_struct_dot(ostream&) const;
+	dump_struct_dot(ostream&, const graph_options&) const;
 
 	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;

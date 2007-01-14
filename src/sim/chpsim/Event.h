@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.17 2007/01/13 21:07:00 fang Exp $
+	$Id: Event.h,v 1.1.2.18 2007/01/14 03:00:21 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -30,6 +30,7 @@ namespace SIM {
 namespace CHPSIM {
 class DependenceSetCollector;
 class nonmeta_context;
+class graph_options;
 using std::ostream;
 using std::string;
 using std::vector;
@@ -182,7 +183,8 @@ public:
 	dump_struct(ostream&) const;
 
 	ostream&
-	dump_dot_node(ostream&) const;
+	dump_dot_node(ostream&, const event_index_type, 
+		const graph_options&) const;
 
 	ostream&
 	dump_dot_edge(ostream&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.h"
 	Interface header for the chpsim module.  
-	$Id: chpsim.h,v 1.1.72.2 2006/12/11 00:40:07 fang Exp $
+	$Id: chpsim.h,v 1.1.72.3 2007/01/14 03:00:16 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_H__
@@ -55,7 +55,8 @@ private:
 		_default, _run, _no_run, 
 		_dump_graph_alloc, _no_dump_graph_alloc,
 		_check_structure, _no_check_structure,
-		_dump_dot_struct, _no_dump_dot_struct;
+		_dump_dot_struct, _no_dump_dot_struct,
+		_show_event_index, _no_show_event_index;
 
 };	// end class chpsim
 

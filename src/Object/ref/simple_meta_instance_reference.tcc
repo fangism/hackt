@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.4 2006/12/14 08:56:50 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.5 2007/01/14 03:00:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -207,7 +207,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	if the footprint is a not the top-level.  In this case, the
 	index returned is a local index which needs to be translated
 	to a global index through a footprint_frame lookup.  
-	Will private subinstances still work on local references???
+	Will private subinstances still work on local references? no
+	\param sm is not used here, but is needed for member lookups, 
+		implemented in the virtual override.  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
@@ -215,6 +217,22 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
+	// should not be virtual call (one hopes)
+	return this->lookup_locally_allocated_index(sm, uc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up a local index, local to lookup-footprint
+	in the unroll_context argument.  
+	To convert to a global index, caller is responsible
+	for translating using the footprint_frame.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
+		const state_manager&, const unroll_context& uc) const {
+	STACKTRACE_VERBOSE;
 	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,

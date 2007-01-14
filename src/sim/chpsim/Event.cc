@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.13 2007/01/13 21:06:59 fang Exp $
+	$Id: Event.cc,v 1.1.2.14 2007/01/14 03:00:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,8 +16,10 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
 #include "sim/chpsim/nonmeta_context.h"
+#include "sim/chpsim/graph_options.h"
 #include "util/STL/valarray_iterator.h"
 #include "util/stacktrace.h"
+#include "util/iterator_more.h"
 
 namespace HAC {
 namespace SIM {
@@ -28,6 +30,7 @@ using std::begin;
 using std::end;
 using std::copy;
 using std::back_inserter;
+using util::set_inserter;
 using entity::expr_dump_context;
 using entity::pbool_const;
 
@@ -118,7 +121,7 @@ EventNode::reset(void) {
 bool
 EventNode::recheck(const nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
-if (countdown) {
+if (countdown > 1) {
 	// then awaiting more predecessors to arrive
 	return false;
 } else {
@@ -148,7 +151,7 @@ if (countdown) {
 		return ready;
 	}
 }
-}
+}	// end method recheck
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -167,6 +170,7 @@ EventNode::execute(const nonmeta_context& c,
 	// is enqueued.
 	// a re-check here would verify that the guard is *stably* true.  
 	if ((event_type != EVENT_NULL) && action_ptr) {
+		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type
 #if ENABLE_CHP_EXECUTE
 		action_ptr->execute(c, updates);
@@ -175,14 +179,17 @@ EventNode::execute(const nonmeta_context& c,
 		// remember to decrement the predecessor-arrival countdown
 		// for all successors
 	} else {	// event is NULL or action_ptr is NULL
+		STACKTRACE_INDENT_PRINT("no action" << endl);
 		// else do nothing
-		// enqueue all successors
+		// recheck all successors
 		copy(begin(successor_events), end(successor_events), 
-			back_inserter(c.queue));
+			set_inserter(c.rechecks));
 		// remember to decrement the predecessor-arrival countdown
 		// for all successors
 	}
-}
+	// reset countdown
+	countdown = predecessors;
+}	// end method execute
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -258,7 +265,9 @@ EventNode::dump_struct(ostream& o) const {
 	Don't print guards here, put guards on edges.  
  */
 ostream&
-EventNode::dump_dot_node(ostream& o) const {
+EventNode::dump_dot_node(ostream& o, const event_index_type i, 
+		const graph_options& g) const {
+	o << "EVENT_" << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
 	case EVENT_NULL:
@@ -273,16 +282,19 @@ EventNode::dump_dot_node(ostream& o) const {
 		ISE(cerr, cerr << "Invalid event type enum: "
 			<< event_type << endl;)
 	}
+	o << ", label=\"";
+	if (g.show_event_index) {
+		o << "[" << i << "] ";
+	}
+	o << "pid=" << process_index;
 	if (action_ptr) {
-		o << ", ";
-		action_ptr->dump_event(o << "label=\"", 
-			expr_dump_context::default_value) 
-			// TODO: pass context scope to suppress scope qualifier
-			<< "\\npid=" << process_index << "\"";
+		// TODO: pass context scope to suppress scope qualifier
+		action_ptr->dump_event(o << "\\n",
+			expr_dump_context::default_value);
 	}
 	// no edges
 	// no deps
-	return o << "];";
+	return o << "\"];";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

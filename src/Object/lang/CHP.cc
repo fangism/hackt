@@ -1,10 +1,11 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.20 2007/01/13 02:08:10 fang Exp $
+	$Id: CHP.cc,v 1.16.2.21 2007/01/14 03:00:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
+#define	ENABLE_STACKTRACE_CHPSIM		(1 && ENABLE_STACKTRACE)
 
 #include <iterator>
 #include <algorithm>
@@ -66,6 +67,12 @@
 #include "util/reference_wrapper.h"
 #include "util/iterator_more.h"		// for set_inserter
 #include "util/numeric/random.h"	// for rand48
+
+#if ENABLE_STACKTRACE_CHPSIM
+#define	STACKTRACE_CHPSIM_VERBOSE	STACKTRACE_VERBOSE
+#else
+#define	STACKTRACE_CHPSIM_VERBOSE
+#endif
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::action_sequence,
@@ -557,7 +564,7 @@ concurrent_actions::execute(const nonmeta_context& c,
 		global_reference_array_type&) const {
 	typedef	EventNode	event_type;
 	typedef	size_t		event_index_type;
-	STACKTRACE_VERBOSE;
+	STACKTRACE_CHPSIM_VERBOSE;
 	const event_type::successor_list_type& succ(c.event.successor_events);
 	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
 }
@@ -570,8 +577,9 @@ concurrent_actions::execute(const nonmeta_context& c,
  */
 bool
 concurrent_actions::recheck(const nonmeta_context&) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	// no-op
-	return false;
+	return true;
 }
 #endif
 
@@ -997,7 +1005,7 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 	//	b) if none are true, and there is an else clause, use it
 	//	c) if none are true, without else clause, 'block',
 	//		subscribing this event to its set of dependents.  
-	STACKTRACE_VERBOSE;
+	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	switch (G.ready.size()) {
@@ -1190,7 +1198,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	//	b) if none are true, and there is an else clause, use it
 	//	c) if none are true, without else clause, 'block',
 	//		subscribing this event to its set of dependents.  
-	STACKTRACE_VERBOSE;
+	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	const size_t m = G.ready.size();
@@ -1476,6 +1484,7 @@ void
 assignment::execute(const nonmeta_context& c,
 		global_reference_array_type& u) const {
 	typedef	EventNode		event_type;
+	STACKTRACE_CHPSIM_VERBOSE;
 	lval->nonmeta_assign(rval, c, u);
 	// TODO: this should also record the reference updated in @u
 	const event_type::successor_list_type& succ(c.event.successor_events);
@@ -1488,6 +1497,7 @@ assignment::execute(const nonmeta_context& c,
  */
 bool
 assignment::recheck(const nonmeta_context&) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	// no-op
 	return true;
 }
@@ -1611,6 +1621,7 @@ condition_wait::accept(StateConstructor& s) const {
 void
 condition_wait::execute(const nonmeta_context&, 
 		global_reference_array_type&) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1621,6 +1632,7 @@ condition_wait::execute(const nonmeta_context&,
  */
 bool
 condition_wait::recheck(const nonmeta_context&) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	return true;
 }
 #endif
@@ -1807,6 +1819,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 void
 channel_send::execute(const nonmeta_context& c, 
 		global_reference_array_type& u) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 #if 0
@@ -1833,6 +1846,7 @@ channel_send::execute(const nonmeta_context& c,
  */
 bool
 channel_send::recheck(const nonmeta_context& c) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	// see if referenced channel is ready to send
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
@@ -2015,6 +2029,7 @@ channel_receive::accept(StateConstructor& s) const {
 void
 channel_receive::execute(const nonmeta_context& c, 
 		global_reference_array_type& u) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 #if 0
@@ -2040,8 +2055,10 @@ channel_receive::execute(const nonmeta_context& c,
  */
 bool
 channel_receive::recheck(const nonmeta_context& c) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	// see if referenced channel is ready to receive
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	STACKTRACE_INDENT_PRINT("chan index " << chan_index << endl);
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_receive();
 }
@@ -2336,7 +2353,7 @@ do_while_loop::accept(StateConstructor& s) const {
 void
 do_while_loop::execute(const nonmeta_context& c,
 		global_reference_array_type&) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	switch (G.ready.size()) {
@@ -2359,6 +2376,7 @@ do_while_loop::execute(const nonmeta_context& c,
  */
 bool
 do_while_loop::recheck(const nonmeta_context&) const {
+	STACKTRACE_CHPSIM_VERBOSE;
 	return true;
 }
 #endif	// ENABLE_CHP_EXECUTE

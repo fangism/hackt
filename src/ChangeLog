@@ -5,6 +5,24 @@
 
 2007-01-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-35:
+	  First signs of life in chpsim, debug-trace-testing
+		a source-sink test case (parser/channel/connect-038.hac).
+	  Reworked chpsim event dot-graph printing, adding graph-options, 
+		now defaulting to printing event index in output.  
+	  Sprinkled stacktrace statements in chpsim execution trace.  
+	  FIXED: some wrong calls to lookup_globally_allocated_index
+		now substituted with (new) lookup_locally_allocated_index, 
+		because reference and context were not from top-level.  
+	  chpsim::DependenceSetCollector: disabled off visitation
+		of meta references (suspiciously wrong and never reached), 
+		also enabled enum_set member for enum support.  
+	  Next: re-factor some meta-reference lookup code into
+		global_entry_context, for consistent re-use.
+	  chpsim: fix step(), event subscription and unsubscription
+		w.r.t. updated references.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-34:
 	  Implemented nonmeta_state reset for chpsim.
 	  Enabled a stripped down 'step' command in chpsim for testing.

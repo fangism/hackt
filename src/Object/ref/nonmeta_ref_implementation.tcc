@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.5 2007/01/13 02:08:16 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.1.2.6 2007/01/14 03:00:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -66,6 +66,7 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 	typedef	typename traits_type::tag_type		Tag;
 	typedef	typename traits_type::instance_collection_generic_type
 				instance_collection_generic_type;
+	STACKTRACE_VERBOSE;
 	const footprint_frame* const ff = c.get_footprint_frame();
 //	if (ff) INVARIANT(ff->_footprint == c.fpf);
 	const footprint* local_fp =
@@ -201,6 +202,8 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 //-----------------------------------------------------------------------------
 /**
 	Looks up the exact run-time reference.
+	\return globally allocated index, 0 to indicate failure.  
+	TODO: fold this into global_entry_context::lookup()
  */
 template <class reference_type>
 size_t
@@ -214,8 +217,11 @@ __nonmeta_instance_global_lookup_impl(
 					instance_collection_generic_type;
 	typedef	simple_meta_instance_reference<Tag>	meta_reference_type;
 
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(c.sm);
+	NEVER_NULL(c.topfp);
 	const never_ptr<const nonmeta_index_list> r_ind(r.get_indices());
-	size_t local_ind;
+	meta_reference_type cr(r.get_inst_base_subtype());
 	if (r_ind) {
 		const count_ptr<const const_index_list>
 			cil(r_ind->nonmeta_resolve_copy(c));
@@ -224,13 +230,35 @@ __nonmeta_instance_global_lookup_impl(
 				<< endl;
 			THROW_EXIT;
 		}
-		const meta_reference_type cr(r.get_inst_base_subtype(), cil);
-		local_ind = cr.lookup_globally_allocated_index(*c.sm, *c.topfp);
-	} else {
-		const meta_reference_type cr(r.get_inst_base_subtype());
-		local_ind = cr.lookup_globally_allocated_index(*c.sm, *c.topfp);
+		cr.attach_indices(cil);
 	}
-	return c.template lookup_global_id<Tag>(local_ind);
+	// else is scalar
+	size_t local_index;
+{
+	// see code in simple_nonmeta_value_reference: nonmeta_resolve_rvalue
+	if (c.fpf) {
+		// use local footprint frame's footprint
+		// and translate with map to global
+		const unroll_context uc(c.fpf->_footprint, c.topfp);
+		local_index = cr.lookup_locally_allocated_index(*c.sm, uc);
+#if 0
+		global_index = footprint_frame_transformer(
+			c.fpf->template get_frame_map<Tag>())(local_ind);
+#endif
+	} else {
+		local_index = cr.lookup_globally_allocated_index(
+			*c.sm, *c.topfp);
+#if 0
+		if (!global_index)
+			return 0;
+#endif
+	}
+	if (!local_index)
+		return 0;
+}
+	// this translates local to global if necessary
+	// note: repeated c.fpf test...
+	return c.template lookup_global_id<Tag>(local_index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

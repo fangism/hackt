@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.24.8.3 2006/12/26 21:26:11 fang Exp $
+	$Id: unroll_context.cc,v 1.24.8.4 2007/01/14 03:00:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -55,6 +55,8 @@ unroll_context::unroll_context(footprint* const f,
 /**
 	Called by reference::lookup_globally_allocated_index
 	No target, just pure lookup.  
+	\param f local lookup footprint.
+	\param t top-level lookup footprint.
  */
 unroll_context::unroll_context(const footprint* const f, 
 		const footprint* const t) :
