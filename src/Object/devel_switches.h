@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37.2.7 2007/01/12 03:11:30 fang Exp $
+	$Id: devel_switches.h,v 1.37.2.8 2007/01/15 06:28:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -159,24 +159,6 @@
 	Pending: well-defined semantics in language
  */
 #define	ENABLE_DATASTRUCTS			0
-
-/**
-	Define to 1 to enable the NONMETA_RESOLVE methods in the
-	expression / references class hierarchies.
-	Goal: 1
-	Application: for run-time resolution of values (simulation)
-	Priority: high
-	Status: done, but untested
- */
-#define	USE_NONMETA_RESOLVE			1
-
-/**
-	Define to 1 to turn on CHP execution virtual functions.
-	Goal: 1
-	Status: temporarily turned off for regression testing
-	Prerequisite: USE_NONMETA_RESOLVE
- */
-#define	ENABLE_CHP_EXECUTE			(1 && USE_NONMETA_RESOLVE)
 
 /**
 	Define to 1 to re-define global_entry<channel> using

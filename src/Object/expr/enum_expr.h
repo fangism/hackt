@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: enum_expr.h,v 1.5.32.3 2007/01/13 02:08:05 fang Exp $
+	$Id: enum_expr.h,v 1.5.32.4 2007/01/15 06:29:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_ENUM_EXPR_H__
@@ -42,7 +42,6 @@ virtual	~enum_expr() { }
 
 virtual	UNROLL_RESOLVE_COPY_ENUM_PROTO = 0;
 
-#if USE_NONMETA_RESOLVE
 #define	NONMETA_RESOLVE_COPY_ENUM_PROTO					\
 	count_ptr<const const_param>					\
 	nonmeta_resolve_copy(const nonmeta_context_base&,		\
@@ -58,12 +57,9 @@ virtual	UNROLL_RESOLVE_COPY_ENUM_PROTO = 0;
 virtual	NONMETA_RESOLVE_RVALUE_ENUM_PROTO = 0;
 
 	EVALUATE_WRITE_PROTO;
-#endif
 
 protected:
-#if USE_NONMETA_RESOLVE
 	NONMETA_RESOLVE_COPY_DATA_PROTO;
-#endif
 	UNROLL_RESOLVE_COPY_DATA_PROTO;
 
 };	// end class enum_expr

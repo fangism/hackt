@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.10 2007/01/14 05:38:59 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.17.8.11 2007/01/15 06:29:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -280,7 +280,6 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NONMETA_RESOLVE
 /**
 	TODO: validate correctness.
  */
@@ -294,7 +293,6 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	INVARIANT(u == l);		// no nonmeta ranges!
 	return __lookup_const_resolved_value(vc, c, u);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -368,15 +366,13 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 }	// end method unroll_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NONMETA_RESOLVE
 /**
 	TODO: recycle as much code as possible, this is too much copying.
  */
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
-		const nonmeta_context_base& c, const return_type& p)
-{
+		const nonmeta_context_base& c, const return_type& p) {
 	typedef	reference_type				this_type;
 	const const_return_type error(NULL);
 	const unroll_context
@@ -421,7 +417,6 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		}
 	}
 }
-#endif	// USE_NONMETA_RESOLVE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -672,7 +667,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NONMETA_RESOLVE
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::const_expr_type>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::__nonmeta_resolve_rvalue(
@@ -699,7 +693,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_resolve_copy(
 	return __nonmeta_resolve_rvalue(c, p);
 }
 
-#endif	// USE_NONMETA_RESOLVE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void

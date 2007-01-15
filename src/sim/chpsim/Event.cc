@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.17 2007/01/15 04:28:38 fang Exp $
+	$Id: Event.cc,v 1.1.2.18 2007/01/15 06:29:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -134,11 +134,8 @@ EventNode::execute(const nonmeta_context& c,
 	if ((event_type != EVENT_NULL) && action_ptr) {
 		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type
-#if ENABLE_CHP_EXECUTE
 		// execute is responsible for scheduling successors for recheck
 		action_ptr->execute(c, updates);
-		// action_ptr->evaluate_successors(enqueue);
-#endif
 		// remember to decrement the predecessor-arrival countdown
 		// for all successors
 	} else {	// event is NULL or action_ptr is NULL

@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.9.12.3 2007/01/13 02:08:04 fang Exp $
+	$Id: data_expr.h,v 1.9.12.4 2007/01/15 06:29:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -17,7 +17,6 @@
 // unroll_resolve_copy is only needed because CHP assignments
 // are not (yet) subtyped, if we ever update this, we can trim here
 #include "Object/type/canonical_type_fwd.h"
-#include "Object/devel_switches.h"
 
 #define	USE_DATA_EXPR_EQUIVALENCE	0
 
@@ -84,7 +83,6 @@ virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 
 virtual	UNROLL_RESOLVE_COPY_DATA_PROTO = 0;
 
-#if USE_NONMETA_RESOLVE
 #define	NONMETA_RESOLVE_COPY_DATA_PROTO					\
 	count_ptr<const const_param>					\
 	nonmeta_resolve_copy(const nonmeta_context_base&,		\
@@ -98,7 +96,6 @@ virtual	NONMETA_RESOLVE_COPY_DATA_PROTO = 0;
 		channel_data_writer&, 					\
 		const count_ptr<const data_expr>&) const
 virtual	EVALUATE_WRITE_PROTO = 0;
-#endif
 
 #define	EXPR_ACCEPT_VISITOR_PROTO					\
 	void								\

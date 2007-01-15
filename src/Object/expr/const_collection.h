@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.15.12.2 2006/12/25 03:27:38 fang Exp $
+	$Id: const_collection.h,v 1.15.12.3 2007/01/15 06:29:02 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -12,7 +12,6 @@
 #include <iosfwd>
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/STL/construct_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
@@ -168,9 +167,7 @@ public:
 
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;
-#if USE_NONMETA_RESOLVE
 	using expr_base_type::nonmeta_resolve_copy;
-#endif
 
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 

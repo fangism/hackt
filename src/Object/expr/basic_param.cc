@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.24.4.3 2006/12/26 21:26:02 fang Exp $
+ 	$Id: basic_param.cc,v 1.24.4.4 2007/01/15 06:28:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -212,7 +212,6 @@ pbool_expr::unroll_resolve_rvalues(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NONMETA_RESOLVE
 /**
 	Don't expect to be called, meta-expressions should've been
 	resolved and substituted by create phase.  
@@ -220,12 +219,7 @@ pbool_expr::unroll_resolve_rvalues(const unroll_context& c,
 count_ptr<const const_param>
 pbool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const bool_expr>& b) const {
-#if 1
 	return __nonmeta_resolve_rvalue(c, b);
-#else
-	FINISH_ME(Fang);
-	return count_ptr<const pbool_const>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -235,7 +229,6 @@ pbool_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c,
 	const unroll_context uc(c);
 	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
-#endif	// USE_NONMETA_REFERENCE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
@@ -389,7 +382,6 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NONMETA_RESOLVE
 /**
 	Don't expect to be called, meta-expressions should've been
 	resolved and substituted by create phase.  
@@ -397,12 +389,7 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 count_ptr<const const_param>
 pint_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const int_expr>& b) const {
-#if 1
 	return __nonmeta_resolve_rvalue(c, b);
-#else
-	FINISH_ME(Fang);
-	return count_ptr<const pint_const>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -412,7 +399,6 @@ pint_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c,
 	const unroll_context uc(c);
 	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
-#endif	// USE_NONMETA_REFERENCE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -566,7 +552,6 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_NONMETA_RESOLVE
 /**
 	Don't expect to be called, meta-expressions should've been
 	resolved and substituted by create phase.  
@@ -574,12 +559,7 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 count_ptr<const const_param>
 preal_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const real_expr>& b) const {
-#if 1
 	return __nonmeta_resolve_rvalue(c, b);
-#else
-	FINISH_ME(Fang);
-	return count_ptr<const preal_const>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -589,7 +569,6 @@ preal_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c,
 	const unroll_context uc(c);
 	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
-#endif	// USE_NONMETA_REFERENCE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-40:
+	  Committed development switches USE_NONMETA_RESOLVE and
+		ENABLE_CHPSIM_EXECUTE.  
+	  Next: fix countdown (forgot to decrement), should be done in 
+		CHP::action::execute().
+	  Let the flood of test-cases begin!
+
+
 2007-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-39:

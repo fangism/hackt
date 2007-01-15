@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.24 2007/01/15 04:28:37 fang Exp $
+	$Id: CHP.cc,v 1.16.2.25 2007/01/15 06:29:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -308,7 +308,6 @@ action_sequence::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
@@ -331,7 +330,6 @@ action_sequence::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return false;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -565,7 +563,6 @@ if (!branches) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
@@ -591,7 +588,6 @@ concurrent_actions::recheck(const nonmeta_context&) const {
 	// no-op
 	return true;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -965,7 +961,6 @@ deterministic_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing other than evaluate guards, via recheck().  
@@ -1017,7 +1012,6 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 	}	// end switch
 	return false;		// unreachable
 }
-#endif	// ENABLE_CHP_EXECUTE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1157,7 +1151,6 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing other than evaluate guards, via recheck().  
@@ -1210,7 +1203,6 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	}	// end switch
 	return false;
 }
-#endif	// ENABLE_CHP_EXECUTE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1347,7 +1339,6 @@ metaloop_selection::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Never called, always expanded.  
  */
@@ -1366,7 +1357,6 @@ metaloop_selection::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return false;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1469,7 +1459,6 @@ assignment::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	lvalue must be bool, int, or enum reference.  
 	\param u collection of references updated by the assignment execution,
@@ -1494,7 +1483,6 @@ assignment::recheck(const nonmeta_context&) const {
 	// no-op
 	return true;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1605,7 +1593,6 @@ condition_wait::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Does nothing, is a NULL event.  
  */
@@ -1642,7 +1629,6 @@ condition_wait::recheck(const nonmeta_context& c) const {
 		return true;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1815,7 +1801,6 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
@@ -1860,7 +1845,6 @@ channel_send::recheck(const nonmeta_context& c) const {
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_send();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2028,7 +2012,6 @@ channel_receive::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
@@ -2071,7 +2054,6 @@ channel_receive::recheck(const nonmeta_context& c) const {
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_receive();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2203,7 +2185,6 @@ do_forever_loop::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	No-op, this should never be called from simulator, as loop
 	body events are expanded.  
@@ -2220,7 +2201,6 @@ do_forever_loop::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return false;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2351,7 +2331,6 @@ do_while_loop::accept(StateConstructor& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_EXECUTE
 /**
 	Evaluate the guards immediately.
 	If evaluation is true, execute the body branch, else take the
@@ -2388,7 +2367,6 @@ do_while_loop::recheck(const nonmeta_context&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	return true;
 }
-#endif	// ENABLE_CHP_EXECUTE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
