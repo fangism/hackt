@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.16 2007/01/15 04:04:19 fang Exp $
+	$Id: Event.cc,v 1.1.2.17 2007/01/15 04:28:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,10 +11,6 @@
 #include <string>
 #include "sim/chpsim/Event.h"
 #include "sim/ISE.h"
-#if CHPSIM_EVENT_GUARDED
-#include "Object/expr/bool_expr.h"
-#include "Object/expr/pbool_const.h"
-#endif
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
 #include "sim/chpsim/nonmeta_context.h"
@@ -34,17 +30,11 @@ using std::copy;
 using std::back_inserter;
 using util::set_inserter;
 using entity::expr_dump_context;
-#if CHPSIM_EVENT_GUARDED
-using entity::pbool_const;
-#endif
 
 //=============================================================================
 // class EventNode method definitions
 
 EventNode::EventNode() :
-#if CHPSIM_EVENT_GUARDED
-		guard_expr(NULL), 
-#endif
 		action_ptr(NULL),
 		successor_events(), 
 		event_type(EVENT_NULL),
@@ -61,9 +51,6 @@ EventNode::EventNode() :
  */
 EventNode::EventNode(const action* a, 
 		const unsigned short t, const size_t pid) :
-#if CHPSIM_EVENT_GUARDED
-		guard_expr(NULL), 
-#endif
 		action_ptr(a),
 		successor_events(), 
 		event_type(t),
@@ -83,9 +70,6 @@ EventNode::~EventNode() { }
  */
 EventNode&
 EventNode::operator = (const this_type& e) {
-#if CHPSIM_EVENT_GUARDED
-	guard_expr = e.guard_expr;
-#endif
 	action_ptr = e.action_ptr;
 	successor_events.resize(e.successor_events.size());
 	copy(begin(e.successor_events), end(e.successor_events), 
@@ -98,14 +82,6 @@ EventNode::operator = (const this_type& e) {
 	deps = e.deps;		// re-defined!
 	return *this;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_EVENT_GUARDED
-void
-EventNode::set_guard_expr(const count_ptr<const bool_expr>& g) {
-	guard_expr = g;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -138,35 +114,7 @@ if (countdown > 1) {
 	// then awaiting more predecessors to arrive
 	return false;
 } else {
-#if CHPSIM_EVENT_GUARDED
-	bool ready = true;
-	if (guard_expr) {
-		// TODO: decide error handling via exceptions?
-		const count_ptr<const pbool_const>
-			g(guard_expr->__nonmeta_resolve_rvalue(c, guard_expr));
-		if (!g) {
-			cerr << "Failure resolving run-time value of "
-				"boolean expression: ";
-			guard_expr->dump(cerr,
-				expr_dump_context::default_value) << endl;
-			// temporary
-			THROW_EXIT;
-		}
-		ready &= g->static_constant_value();
-	}
-	// TODO: if action_ptr is NULL should we refer to successor?
-	if (ready && action_ptr) {
-		// this may or may not enqueue event(s) depending on
-		// selection type (from list of successors)
-#if ENABLE_CHP_EXECUTE
-		return action_ptr->recheck(c);
-#endif
-	} else {
-		return ready;
-	}
-#else	// CHPSIM_EVENT_GUARDED
 	return action_ptr ? action_ptr->recheck(c) : true;
-#endif	// CHPSIM_EVENT_GUARDED
 }
 }	// end method recheck
 
@@ -252,11 +200,6 @@ EventNode::dump_struct(ostream& o) const {
 			<< event_type << endl;)
 	}
 	o << ": ";
-#if CHPSIM_EVENT_GUARDED
-	if (guard_expr) {
-		guard_expr->dump(o, expr_dump_context::default_value) << " -> ";
-	}
-#endif
 	if (action_ptr) {
 		// not the normal dump, but one used for event graphs
 		action_ptr->dump_event(o, expr_dump_context::default_value);
@@ -317,15 +260,10 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 /**
 	Just prints edge label if applicable.
 	TODO: somehow print guards on edges of selection.  
+		Do this in the print of selection.
  */
 ostream&
 EventNode::dump_dot_edge(ostream& o) const {
-#if CHPSIM_EVENT_GUARDED
-	if (guard_expr) {
-		guard_expr->dump(o << "\t[label=\"",
-			expr_dump_context::default_value) << "\"]";
-	}
-#endif
 	return o;
 }
 

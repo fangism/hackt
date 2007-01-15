@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.1.4.4 2007/01/14 23:36:30 fang Exp $
+	$Id: nonmeta_context.cc,v 1.1.4.5 2007/01/15 04:28:43 fang Exp $
  */
 
 #include <vector>
@@ -25,11 +25,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		const footprint& f, 
 		nonmeta_state_manager& v, 
 		event_type& e, 
-		event_subscribers_type& r
-#if CHPSIM_DIRECT_ENQUEUE
-		, enqueue_queue_type& q
-#endif
-		) :
+		event_subscribers_type& r) :
 		nonmeta_context_base(s, f, 
 			(e.get_process_index() ?
 				&s.get_pool<process_tag>()
@@ -37,11 +33,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				: NULL),
 			v),
 		event(&e), 
-		rechecks(r)
-#if CHPSIM_DIRECT_ENQUEUE
-		, queue(q)
-#endif
-		{ }
+		rechecks(r) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -51,18 +43,10 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 nonmeta_context::nonmeta_context(const state_manager& s, 
 		const footprint& f, 
 		nonmeta_state_manager& v, 
-		event_subscribers_type& r
-#if CHPSIM_DIRECT_ENQUEUE
-		, enqueue_queue_type& q
-#endif
-		) :
+		event_subscribers_type& r) :
 		nonmeta_context_base(s, f, NULL, v),
 		event(NULL), 
-		rechecks(r)
-#if CHPSIM_DIRECT_ENQUEUE
-		, queue(q)
-#endif
-		{ }
+		rechecks(r) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_context::~nonmeta_context() { }
@@ -74,14 +58,6 @@ nonmeta_context::set_event(event_type& e) {
 	const size_t pid = e.get_process_index();
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DIRECT_ENQUEUE
-void
-nonmeta_context::enqueue(const size_t i) {
-	queue.push_back(i);
-}
-#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

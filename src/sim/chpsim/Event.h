@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.20 2007/01/15 04:04:20 fang Exp $
+	$Id: Event.h,v 1.1.2.21 2007/01/15 04:28:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -16,25 +16,8 @@
 #include "sim/chpsim/Dependence.h"
 #include "Object/ref/reference_enum.h"
 
-/**
-	Define to 1 to embed a guard expresion in EventNode.
-	Goal: 0
-	Rationale: don't make a special case for condition_wait events, 
-	treat them like any other blockable event.  
- */
-#define	CHPSIM_EVENT_GUARDED		0
-
-#if CHPSIM_EVENT_GUARDED
-#include "util/memory/count_ptr.h"
-#endif
-
 namespace HAC {
 namespace entity {
-#if CHPSIM_EVENT_GUARDED
-	class bool_expr;
-	class state_manager;
-	class footprint;
-#endif
 namespace CHP {
 	class action;
 }
@@ -48,12 +31,6 @@ using std::ostream;
 using std::string;
 using std::vector;
 using std::valarray;
-#if CHPSIM_EVENT_GUARDED
-using util::memory::count_ptr;
-using entity::bool_expr;
-using entity::state_manager;
-using entity::footprint;
-#endif
 using entity::CHP::action;
 using entity::global_indexed_reference;
 
@@ -89,10 +66,6 @@ public:
 	typedef	size_t			event_index_type;
 	typedef	valarray<event_index_type>	successor_list_type;
 private:
-#if CHPSIM_EVENT_GUARDED
-	/// wake-up guard expression for THIS event, if applicable
-	count_ptr<const bool_expr>	guard_expr;
-#endif
 	/**
 		the (atomic) event to occur corresponding to this node
 		Would be nice if some of theses actions were 
@@ -165,11 +138,6 @@ public:
 
 	const size_t
 	get_process_index(void) const { return process_index; }
-
-#if CHPSIM_EVENT_GUARDED
-	void
-	set_guard_expr(const count_ptr<const bool_expr>&);
-#endif
 
 	void
 	set_event_type(const unsigned short t) { event_type = t; }

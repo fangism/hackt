@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.23 2007/01/15 04:04:16 fang Exp $
+	$Id: CHP.cc,v 1.16.2.24 2007/01/15 04:28:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -721,23 +721,7 @@ guarded_action::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	if (stmt) {
 		stmt->accept(s);
-#if CHPSIM_EVENT_GUARDED
-		// just attach the guard expression
-		s.state.event_pool[s.last_event_index].set_guard_expr(guard);
-	} else {
-		// make a NULL event with just the guard
-		const size_t null_index = s.state.event_pool.size();
-		s.state.event_pool.push_back(
-			EventNode(NULL, SIM::CHPSIM::EVENT_NULL,
-				s.current_process_index));
-		EventNode& null_event(s.state.event_pool.back());
-		null_event.set_guard_expr(guard);
-		s.connect_successor_events(null_event);
-		s.count_predecessors(null_event);	// 1 predecessor
-		s.last_event_index = null_index;
-#else
 	// it is the selection's responsibility to evaluate the guards
-#endif
 	}
 }
 
@@ -1603,9 +1587,6 @@ condition_wait::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
 			s.current_process_index));
 	EventNode& new_event(s.state.event_pool.back());
-#if CHPSIM_EVENT_GUARDED
-	new_event.set_guard_expr(cond);		// basically a shortcut
-#endif
 	if (cond) {
 		SIM::CHPSIM::DependenceSetCollector deps(s);
 		cond->accept(deps);
@@ -1632,9 +1613,7 @@ void
 condition_wait::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if !CHPSIM_EVENT_GUARDED
 	recheck_all_successor_events(c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1646,7 +1625,6 @@ condition_wait::execute(const nonmeta_context& c,
 bool
 condition_wait::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if !CHPSIM_EVENT_GUARDED
 	if (cond) {
 		// TODO: decide error handling via exceptions?
 		const count_ptr<const pbool_const>
@@ -1663,7 +1641,6 @@ condition_wait::recheck(const nonmeta_context& c) const {
 	} else {
 		return true;
 	}
-#endif	// CHPSIM_EVENT_GUARDED
 }
 #endif
 

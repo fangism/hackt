@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.24 2007/01/15 04:04:21 fang Exp $
+	$Id: State.cc,v 1.1.2.25 2007/01/15 04:28:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -77,11 +77,7 @@ struct State::recheck_transformer {
 		state(s), 
 		context(state.mod.get_state_manager(), 
 			state.mod.get_footprint(),
-			state.instances, state.__rechecks
-#if CHPSIM_DIRECT_ENQUEUE
-			, state.__enqueue_list
-#endif
-			) { }
+			state.instances, state.__rechecks) { }
 
 	/**
 		This should be the ONLY interface for
@@ -286,12 +282,9 @@ State::step(void) {
 	__updated_list.clear();
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
+	// TODO: re-use this nonmeta-context in the recheck_transformer
 	const nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), 
-		instances, ev, __rechecks
-#if CHPSIM_DIRECT_ENQUEUE
-		, __enqueue_list
-#endif
-		);
+		instances, ev, __rechecks);
 	ev.execute(c, __updated_list);
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
@@ -307,13 +300,6 @@ State::step(void) {
 	dump_updated_references(cout);
 	// print the list of successor events scheduled for recheck
 	dump_recheck_events(cout);
-#if 0
-	// print the list of successor events enqueued immediately
-	dump_enqueue_events(cout);
-#elif	CHPSIM_DIRECT_ENQUEUE
-	// nothing should be enqueued right-away as a result of execution
-	INVARIANT(__enqueue_list.empty());
-#endif
 #endif
 {
 	// list of events to check next

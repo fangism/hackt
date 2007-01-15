@@ -5,6 +5,10 @@
 
 2007-01-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-39:
+	  Minor patch: cleaned up CHPSIM_EVENT_GUARDED, CHPSIM_DIRECT_ENQUEUE.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-38:
 	  Oh, joy! successfully simulated a source-sink pair in chpsim!
 	  chpsim::EventNode: no longer carries a guard-expression with it, 
