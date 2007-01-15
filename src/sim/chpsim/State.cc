@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.23 2007/01/14 23:36:29 fang Exp $
+	$Id: State.cc,v 1.1.2.24 2007/01/15 04:04:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -293,6 +293,9 @@ State::step(void) {
 #endif
 		);
 	ev.execute(c, __updated_list);
+	if (watching_all_events()) {
+		dump_event(cout, ei, current_time);
+	}
 	// __updated_list lists variables updated
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	//	Yes, but do this later...

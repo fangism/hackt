@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.37.6.2 2006/12/14 00:14:08 fang Exp $
+#	$Id: Makefile.am,v 1.37.6.3 2007/01/15 04:04:29 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -51,7 +51,8 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-expectprsimexpr.sh \
 	update-expectsprs.sh \
 	update-expect-prsimrc.sh \
-	update-expect-chpsimalloc.sh
+	update-expect-chpsimalloc.sh \
+	update-expect-chpsimrc.sh
 
 dist_noinst_SCRIPTS = \
 	$(NONCONFIGURED_UPDATESCRIPTS) \

@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.4.4.1 2006/12/16 03:05:56 fang Exp $
+#	$Id: Make.test-prsim,v 1.4.4.2 2007/01/15 04:04:28 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -191,7 +191,7 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 	@$(PRSIMRC_TEST_FILTER_SCRIPT)
 
 if VERBOSE_CHECK
-ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
 else
 ECHO_PRSIMRC_DIFF_COMMAND = :
 endif

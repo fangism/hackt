@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.4 2007/01/13 21:06:57 fang Exp $
+	$Id: Command.cc,v 1.1.2.5 2007/01/15 04:04:17 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1408,30 +1408,28 @@ UnWatch::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAll, "watchall", view, 
-	"print activity on all nodes (flag)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllEvents, "watchall-events", view, 
+	"print activity of all events")
 
 /**
 	Enables a watchall flag to report all transitions.  
  */
 int
-WatchAll::main(State& s, const string_list& a) {
+WatchAllEvents::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.watch_all_nodes();
+	s.watch_all_events();
 	return Command::NORMAL;
 }
 }
 
 void
-WatchAll::usage(ostream& o) {
-	o << "watchall" << endl;
-	o << "print all transitions to stdout." << endl;
+WatchAllEvents::usage(ostream& o) {
+	o << name << endl;
+	o << "print all events to stdout." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1457,34 +1455,37 @@ UnWatchAll::usage(ostream& o) {
 	o << "unwatchall" << endl;
 	o << "clears the watch-list of nodes" << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchAll, "nowatchall", view, 
-	"only print activity on explicitly watched nodes (flag)")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchAllEvents,
+	"nowatchall-events", view, 
+	"only print activity on explicitly watched events")
 
 /**
 	Disables global watchall, but still maintains explicitly
 	watched nodes.  
  */
 int
-NoWatchAll::main(State& s, const string_list& a) {
+NoWatchAllEvents::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.nowatch_all_nodes();
+	s.nowatch_all_events();
 	return Command::NORMAL;
 }
 }
 
 void
-NoWatchAll::usage(ostream& o) {
-	o << "nowatchall" << endl;
-	o << "turns off watchall, printing only explicitly watched nodes"
-		<< endl;
+NoWatchAllEvents::usage(ostream& o) {
+	o << name << endl;
+o << "turns off watchall-events, printing only explicitly watched events"
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watches, "watches", view,
 	"list all nodes that are explicitly watched")
 

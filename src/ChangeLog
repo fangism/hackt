@@ -5,6 +5,21 @@
 
 2007-01-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-38:
+	  Oh, joy! successfully simulated a source-sink pair in chpsim!
+	  chpsim::EventNode: no longer carries a guard-expression with it, 
+		greatly simplifying things.  (1 regression test updated)
+	  CHP::acion::execute:
+		properly select successor events for rechecking.
+		re-implemented selections' ::execute() to perform recheck.  
+	  chpsim added commands:
+		'watchall-events' print all events as they occur, 
+		also 'nowatchall-events' to disable.  
+	  Test suite: added support for chpsim run-commands tests, including
+		the maiden test: parser/channel/connect-038-a.chpsimrc
+	  Next: some cleanup CHPSIM_EVENT_GUARDED, CHPSIM_DIRECT_ENQUEUE.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-37:
 	  channel_data_reader_base: fixed wrong bound-check assert.
 	  nonmeta_variable_base: added subscribe/unsubscribe wrappers.

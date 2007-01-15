@@ -66,6 +66,13 @@ core.*
 *.prsimckpt-diff
 *.prsimopttest
 *.prsimopt-diff
+*.chpsimrc-out
+*.chpsimrc-diff
+*.chpsimtest
+*.chpsimallocdiff
+*.chpsimallocdump
+*.chpsim-event-dot
+*.chpsim-event-ps
 *.sort
 *-sort
 *.sprs

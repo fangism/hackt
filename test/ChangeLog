@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2007-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-38:
+	  Added support for chpsim run-commands tests.
+	  Added update-expect-chpsimrc.sh test update script.
+
+
 2006-12-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-01:

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.18 2007/01/14 03:00:22 fang Exp $
+	$Id: State.h,v 1.1.2.19 2007/01/15 04:04:22 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -66,6 +66,7 @@ private:
 		 */
 		FLAG_STOP_SIMULATION = 0x0001,
 		FLAG_WATCH_QUEUE = 0x0002,
+		FLAG_WATCH_ALL_EVENTS = 0x0004,
 		FLAGS_DEFAULT = 0x0000
 	};
 	struct recheck_transformer;
@@ -161,6 +162,17 @@ public:
 	resume(void) {
 		flags &= ~FLAG_STOP_SIMULATION;
 		interrupted = false;
+	}
+
+	void
+	watch_all_events(void) { flags |= FLAG_WATCH_ALL_EVENTS; }
+
+	void
+	nowatch_all_events(void) { flags &= ~FLAG_WATCH_ALL_EVENTS; }
+
+	bool
+	watching_all_events(void) const {
+		return flags & FLAG_WATCH_ALL_EVENTS;
 	}
 
 	void

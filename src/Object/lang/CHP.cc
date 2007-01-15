@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.22 2007/01/14 23:36:20 fang Exp $
+	$Id: CHP.cc,v 1.16.2.23 2007/01/15 04:04:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -154,6 +154,19 @@ static
 good_bool
 set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&, 
 	const unroll_context&, const bool);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+inline
+void
+recheck_all_successor_events(const nonmeta_context& c) {
+	typedef	EventNode	event_type;
+	typedef	size_t		event_index_type;
+	STACKTRACE_CHPSIM_VERBOSE;
+	const event_type::successor_list_type&
+		succ(c.get_event().successor_events);
+	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
+}
 
 //=============================================================================
 // class action method definitions
@@ -562,12 +575,8 @@ if (!branches) {
 void
 concurrent_actions::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
-	typedef	EventNode	event_type;
-	typedef	size_t		event_index_type;
 	STACKTRACE_CHPSIM_VERBOSE;
-	const event_type::successor_list_type&
-		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
+	recheck_all_successor_events(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -712,6 +721,7 @@ guarded_action::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	if (stmt) {
 		stmt->accept(s);
+#if CHPSIM_EVENT_GUARDED
 		// just attach the guard expression
 		s.state.event_pool[s.last_event_index].set_guard_expr(guard);
 	} else {
@@ -725,6 +735,9 @@ guarded_action::accept(StateConstructor& s) const {
 		s.connect_successor_events(null_event);
 		s.count_predecessors(null_event);	// 1 predecessor
 		s.last_event_index = null_index;
+#else
+	// it is the selection's responsibility to evaluate the guards
+#endif
 	}
 }
 
@@ -976,14 +989,14 @@ deterministic_selection::accept(StateConstructor& s) const {
 		What if guard is unstable?  and conditions change?
  */
 void
-deterministic_selection::execute(const nonmeta_context&, 
+deterministic_selection::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
-	// drop return value?
-#if 0
-	recheck(c);
-#else
-	ICE_NEVER_CALL(cerr);
-#endif
+	const bool b = recheck(c);
+	INVARIANT(b);
+	// violation is possible if guard was true but because
+	// false due to concurrent events
+	// we should alert user with run-time error
+	// TODO: Is it possible to re-subscribe this event for re-checking?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1018,7 +1031,7 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 			"deterministic selection evaluated TRUE!" << endl;
 		THROW_EXIT;
 	}	// end switch
-	return false;
+	return false;		// unreachable
 }
 #endif	// ENABLE_CHP_EXECUTE
 
@@ -1168,14 +1181,11 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 		What if guard is unstable?  and conditions change?
  */
 void
-nondeterministic_selection::execute(const nonmeta_context&, 
+nondeterministic_selection::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
 	// drop return value?
-#if 0
-	recheck(c);
-#else
-	ICE_NEVER_CALL(cerr);
-#endif
+	const bool b = recheck(c);
+	INVARIANT(b);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1486,11 +1496,8 @@ assignment::execute(const nonmeta_context& c,
 		global_reference_array_type& u) const {
 	typedef	EventNode		event_type;
 	STACKTRACE_CHPSIM_VERBOSE;
-	lval->nonmeta_assign(rval, c, u);
-	// TODO: this should also record the reference updated in @u
-	const event_type::successor_list_type&
-		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
+	lval->nonmeta_assign(rval, c, u);	// also tracks updated reference
+	recheck_all_successor_events(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1596,8 +1603,9 @@ condition_wait::accept(StateConstructor& s) const {
 		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
 			s.current_process_index));
 	EventNode& new_event(s.state.event_pool.back());
+#if CHPSIM_EVENT_GUARDED
 	new_event.set_guard_expr(cond);		// basically a shortcut
-
+#endif
 	if (cond) {
 		SIM::CHPSIM::DependenceSetCollector deps(s);
 		cond->accept(deps);
@@ -1621,9 +1629,12 @@ condition_wait::accept(StateConstructor& s) const {
 	Does nothing, is a NULL event.  
  */
 void
-condition_wait::execute(const nonmeta_context&, 
+condition_wait::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
+#if !CHPSIM_EVENT_GUARDED
+	recheck_all_successor_events(c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1633,9 +1644,26 @@ condition_wait::execute(const nonmeta_context&,
 	as a part of event processing.  
  */
 bool
-condition_wait::recheck(const nonmeta_context&) const {
+condition_wait::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
-	return true;
+#if !CHPSIM_EVENT_GUARDED
+	if (cond) {
+		// TODO: decide error handling via exceptions?
+		const count_ptr<const pbool_const>
+			g(cond->__nonmeta_resolve_rvalue(c, cond));
+		if (!g) {
+			cerr << "Failure resolving run-time value of "
+				"boolean expression: ";
+			cond->dump(cerr,
+				expr_dump_context::default_value) << endl;
+			// temporary
+			THROW_EXIT;
+		}
+		return g->static_constant_value();
+	} else {
+		return true;
+	}
+#endif	// CHPSIM_EVENT_GUARDED
 }
 #endif
 
@@ -1839,6 +1867,7 @@ channel_send::execute(const nonmeta_context& c,
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 	NEVER_NULL(nc.can_send());	// else run-time exception
 	nc.send();
+	recheck_all_successor_events(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2048,6 +2077,7 @@ channel_receive::execute(const nonmeta_context& c,
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 	INVARIANT(nc.can_receive());	// else run-time exception
 	nc.receive();
+	recheck_all_successor_events(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
