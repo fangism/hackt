@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.19 2007/01/15 04:04:22 fang Exp $
+	$Id: State.h,v 1.1.2.20 2007/01/15 21:53:40 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -23,6 +23,7 @@ using std::vector;
 using entity::nonmeta_state_manager;
 using entity::event_subscribers_type;
 class StateConstructor;
+class nonmeta_context;
 class graph_options;
 
 //=============================================================================
@@ -35,6 +36,7 @@ class graph_options;
  */
 class State : public state_base {
 friend class StateConstructor;
+friend class nonmeta_context;
 	typedef	State				this_type;
 public:
 	typedef	real_time			time_type;
@@ -78,7 +80,6 @@ private:
 	nonmeta_state_manager			instances;
 
 	// event pools: for each type of event?
-public:
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
 	// event queue: unified priority queue of event_placeholders

@@ -1,11 +1,12 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.1.4.5 2007/01/15 04:28:43 fang Exp $
+	$Id: nonmeta_context.cc,v 1.1.4.6 2007/01/15 21:53:43 fang Exp $
  */
 
 #include <vector>
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/Event.h"
+#include "sim/chpsim/State.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"
@@ -23,17 +24,17 @@ using entity::process_tag;
  */
 nonmeta_context::nonmeta_context(const state_manager& s, 
 		const footprint& f, 
-		nonmeta_state_manager& v, 
 		event_type& e, 
-		event_subscribers_type& r) :
+		State& r) :
 		nonmeta_context_base(s, f, 
 			(e.get_process_index() ?
 				&s.get_pool<process_tag>()
 				[e.get_process_index()]._frame
 				: NULL),
-			v),
+			r.instances),
 		event(&e), 
-		rechecks(r) { }
+		rechecks(r.__rechecks), 
+		event_pool(r.event_pool) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -42,11 +43,11 @@ nonmeta_context::nonmeta_context(const state_manager& s,
  */
 nonmeta_context::nonmeta_context(const state_manager& s, 
 		const footprint& f, 
-		nonmeta_state_manager& v, 
-		event_subscribers_type& r) :
-		nonmeta_context_base(s, f, NULL, v),
+		State& r) :
+		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
-		rechecks(r) { }
+		rechecks(r.__rechecks), 
+		event_pool(r.event_pool) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_context::~nonmeta_context() { }

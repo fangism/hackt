@@ -5,6 +5,14 @@
 
 2007-01-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-41:
+	  Now decrement predecessor countdowns properly upon event execution, 
+		using new helper functor EventNode::countdown_decrementer.
+	  Class clean-ups: nonmeta_context, CHPSIM::State
+		better member privatization and member forwarding.  
+	  No new test cases this round, but coming next.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-40:
 	  Committed development switches USE_NONMETA_RESOLVE and
 		ENABLE_CHPSIM_EXECUTE.  
@@ -42,7 +50,7 @@
 	  Rewrote DependenceSetCollector using meta-tag template base classes, 
 		completed enum support, cleaned up visit() definitions.
 	  CHPSIM::State:
-		recheck_transformer re-writte: wrap a nonmeta_context member, 
+		recheck_transformer re-written: wrap a nonmeta_context member, 
 		now calls subscribe/unsubscribe depending on whether event's
 		recheck results in blocking (pending) or unblocking (enqueue).
 	  CHPSIM::nonmeta_context: no more direct access to __enqueue_list.

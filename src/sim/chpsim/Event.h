@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.21 2007/01/15 04:28:40 fang Exp $
+	$Id: Event.h,v 1.1.2.22 2007/01/15 21:53:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -115,6 +115,11 @@ private:
 		Event fires when countdown reaches zero, post-decrement.  
 		This is dynamic stateful information that needs 
 		to be checkpointed.  
+		This countdown should be decremented when an event is
+		'rechecked' for the first time, as a result of a predecessor
+		executing.  Other rechecks induced by dependent variable
+		status changes should not cause a decrement.  
+		The countdown is reset immediately upon event execution.  
 	 */
 	unsigned short			countdown;
 	/**
@@ -178,6 +183,22 @@ public:
 
 	ostream&
 	dump_dot_edge(ostream&) const;
+
+public:
+	// helper classes
+	class countdown_decrementer {
+		typedef	vector<this_type>	event_pool_type;
+		event_pool_type&		pool;
+	public:
+		explicit
+		countdown_decrementer(event_pool_type& p) : pool(p) { }
+
+		void
+		operator () (const event_index_type ei) const {
+			// INVARIANT checks and assertions?
+			--pool[ei].countdown;
+		}
+	};	// end struct count_decrementer
 
 };	// end class EventNode
 

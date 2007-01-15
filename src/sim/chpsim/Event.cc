@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.18 2007/01/15 06:29:19 fang Exp $
+	$Id: Event.cc,v 1.1.2.19 2007/01/15 21:53:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -28,6 +28,7 @@ using std::begin;
 using std::end;
 using std::copy;
 using std::back_inserter;
+using std::for_each;
 using util::set_inserter;
 using entity::expr_dump_context;
 
@@ -110,7 +111,7 @@ EventNode::reset(void) {
 bool
 EventNode::recheck(const nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
-if (countdown > 1) {
+if (countdown) {
 	// then awaiting more predecessors to arrive
 	return false;
 } else {
@@ -131,24 +132,26 @@ void
 EventNode::execute(const nonmeta_context& c, 
 		vector<global_indexed_reference>& updates) {
 	STACKTRACE_VERBOSE;
+	// reset countdown FIRST (because of self-reference event cycles)
+	countdown = predecessors;
 	if ((event_type != EVENT_NULL) && action_ptr) {
 		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type
 		// execute is responsible for scheduling successors for recheck
+		// and decrement the predecessor-arrival countdown
 		action_ptr->execute(c, updates);
-		// remember to decrement the predecessor-arrival countdown
-		// for all successors
 	} else {	// event is NULL or action_ptr is NULL
 		STACKTRACE_INDENT_PRINT("no action" << endl);
 		// else do nothing
 		// recheck all successors
+		// see also "Object/lang/CHP.cc":recheck_all_successor_events()
+		// whatever is done here should be consistent with that!
+		// remember: decrement successors' predecessor-arrival countdown
 		copy(begin(successor_events), end(successor_events), 
 			set_inserter(c.rechecks));
-		// remember to decrement the predecessor-arrival countdown
-		// for all successors
+		for_each(begin(successor_events), end(successor_events), 
+			countdown_decrementer(c.event_pool));
 	}
-	// reset countdown
-	countdown = predecessors;
 }	// end method execute
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

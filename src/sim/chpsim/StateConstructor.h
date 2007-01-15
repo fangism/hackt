@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.1.2.5 2006/12/25 03:28:03 fang Exp $
+	$Id: StateConstructor.h,v 1.1.2.6 2007/01/15 21:53:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -35,6 +35,7 @@ public:
 	typedef	State				state_type;
 	// typedef	std::default_vector<size_t>::type	return_indices_type;
 	typedef	EventNode			event_type;
+	typedef	state_type::event_pool_type	event_pool_type;
 public:
 	state_type&				state;
 	/**
@@ -68,6 +69,12 @@ public:
 
 	const entity::footprint&
 	get_process_footprint(void) const;
+
+	event_pool_type&
+	event_pool(void) { return state.event_pool; }
+
+	const event_pool_type&
+	event_pool(void) const { return state.event_pool; }
 
 	void
 	connect_successor_events(event_type&) const;
