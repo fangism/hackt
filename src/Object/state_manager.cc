@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.16.8.3 2007/01/12 00:39:52 fang Exp $
+	$Id: state_manager.cc,v 1.16.8.4 2007/01/16 04:57:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,6 +27,7 @@
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
 #include "util/memory/index_pool.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 
 namespace HAC {

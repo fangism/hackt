@@ -5,6 +5,10 @@
 
 2007-01-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-43:
+	  Minor patch: Some explicit template instantiations to satisfy -O3.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-42:
 	  Added channel_data_dumper functor class for printing, 
 		analogous to channel_data_reader for extraction.  

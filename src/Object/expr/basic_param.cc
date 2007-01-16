@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.24.4.4 2007/01/15 06:28:55 fang Exp $
+ 	$Id: basic_param.cc,v 1.24.4.5 2007/01/16 04:57:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -75,6 +75,12 @@ namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pbool_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::preal_const)
+
+// explicit template instantiations, needed for -O3
+template class count_ptr<const HAC::entity::pint_expr>;
+template class count_ptr<const HAC::entity::pbool_expr>;
+template class count_ptr<const HAC::entity::preal_expr>;
+template class count_ptr<const HAC::entity::const_param>;
 }	// end namespace memory
 }	// end namespace util
 

@@ -1,8 +1,8 @@
 /**
 	\file "AST/node_position.cc"
-	$Id: node_position.cc,v 1.2 2005/12/13 04:15:11 fang Exp $
+	$Id: node_position.cc,v 1.2.80.1 2007/01/16 04:57:28 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: node_position.cc,v 1.2 2005/12/13 04:15:11 fang Exp $
+	$Id: node_position.cc,v 1.2.80.1 2007/01/16 04:57:28 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -11,11 +11,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include "AST/node_position.h"
 #include "util/memory/chunk_map_pool.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::parser::node_position, "node_position")
 	SPECIALIZE_UTIL_WHAT(HAC::parser::keyword_position, "keyword_position")
+namespace memory {
+// explicit template instantiation needed for -O3
+	template class count_ptr<const HAC::parser::node_position>;
+}
 }
 
 namespace HAC {

@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.1.4.2 2007/01/12 03:11:43 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.1.4.3 2007/01/16 04:57:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -55,6 +55,8 @@ operator < (const count_ptr<const canonical_fundamental_chan_type_base>& l,
 	return *l < *r;
 }
 
+// explicit template instantiation needed for -O3
+template class count_ptr<const canonical_fundamental_chan_type_base>;
 }	// end namespace memory
 }	// end namespace util
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.20.12.2 2007/01/12 00:40:10 fang Exp $
+ 	$Id: instance_reference.cc,v 1.20.12.3 2007/01/16 04:57:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -103,6 +103,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_channel_meta_instance_reference, 
 		AGGREGATE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+
+namespace memory {
+// explicit template instantiations
+// needed for -O3
+template class count_ptr<HAC::entity::meta_instance_reference_base>;
+}
 }	// end namespace util
 
 //=============================================================================

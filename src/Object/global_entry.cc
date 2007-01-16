@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.9.8.5 2007/01/12 00:39:47 fang Exp $
+	$Id: global_entry.cc,v 1.9.8.6 2007/01/16 04:57:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -460,6 +460,9 @@ global_entry_substructure_base<true>::load_object_base(
 // sometimes needed with aggressive optimizations
 
 template class global_entry<bool_tag>;
+template class global_entry<int_tag>;
+template class global_entry<enum_tag>;
+template class global_entry<channel_tag>;
 
 //=============================================================================
 }	// end namespace entity
