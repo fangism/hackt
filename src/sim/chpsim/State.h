@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.20 2007/01/15 21:53:40 fang Exp $
+	$Id: State.h,v 1.1.2.21 2007/01/16 04:15:12 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -22,6 +22,7 @@ namespace CHPSIM {
 using std::vector;
 using entity::nonmeta_state_manager;
 using entity::event_subscribers_type;
+using entity::global_indexed_reference;
 class StateConstructor;
 class nonmeta_context;
 class graph_options;
@@ -199,6 +200,10 @@ public:
 
 	ostream&
 	dump_event_queue(ostream&) const;
+
+	ostream&
+	print_instance_name_value(ostream&, 
+		const global_indexed_reference&) const;
 
 	bool
 	save_checkpoint(ostream&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.26 2007/01/15 21:53:38 fang Exp $
+	$Id: State.cc,v 1.1.2.27 2007/01/16 04:15:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,11 +19,12 @@
 #include "sim/chpsim/nonmeta_context.h"
 #include "Object/module.h"
 #include "Object/state_manager.h"
-#include "Object/global_entry.h"
+#include "Object/global_channel_entry.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/type/canonical_fundamental_chan_type.h"
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -50,9 +51,18 @@ using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
+using entity::global_entry;
+using entity::ChannelState;
 using entity::event_subscribers_type;
 using entity::class_traits;
 using entity::meta_type_map;
+using entity::META_TYPE_NONE;
+using entity::META_TYPE_BOOL;
+using entity::META_TYPE_INT;
+using entity::META_TYPE_ENUM;
+using entity::META_TYPE_CHANNEL;
+using entity::META_TYPE_PROCESS;
+using entity::canonical_fundamental_chan_type_base;
 using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
@@ -259,7 +269,7 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	if (event_queue.empty()) {
-		return return_type(entity::META_TYPE_NONE, INVALID_NODE_INDEX);
+		return return_type(META_TYPE_NONE, INVALID_NODE_INDEX);
 	}
 
 	const event_placeholder_type ep(dequeue_event());
@@ -331,34 +341,20 @@ State::step(void) {
 		// just collect the affected subscribers
 		// set insertion should maintain uniqueness
 		// events happen to be sorted by index
-		case entity::META_TYPE_BOOL: {
-			const event_subscribers_type&
-				es(instances.get_pool<bool_tag>()[j]
-					.get_subscribers());
-			copy(es.begin(), es.end(), set_inserter(__rechecks));
-			break;
+#define	CASE_META_TYPE_TAG(Tag)						\
+		case class_traits<Tag>::type_tag_enum_value: {		\
+			const event_subscribers_type&			\
+				es(instances.get_pool<Tag>()[j]		\
+					.get_subscribers());		\
+			copy(es.begin(), es.end(),			\
+				set_inserter(__rechecks));		\
+			break;						\
 		}
-		case entity::META_TYPE_INT: {
-			const event_subscribers_type&
-				es(instances.get_pool<int_tag>()[j]
-					.get_subscribers());
-			copy(es.begin(), es.end(), set_inserter(__rechecks));
-			break;
-		}
-		case entity::META_TYPE_ENUM: {
-			const event_subscribers_type&
-				es(instances.get_pool<enum_tag>()[j]
-					.get_subscribers());
-			copy(es.begin(), es.end(), set_inserter(__rechecks));
-			break;
-		}
-		case entity::META_TYPE_CHANNEL: {
-			const event_subscribers_type&
-				es(instances.get_pool<channel_tag>()[j]
-					.get_subscribers());
-			copy(es.begin(), es.end(), set_inserter(__rechecks));
-			break;
-		}
+	CASE_META_TYPE_TAG(bool_tag)
+	CASE_META_TYPE_TAG(int_tag)
+	CASE_META_TYPE_TAG(enum_tag)
+	CASE_META_TYPE_TAG(channel_tag)
+#undef	CASE_META_TYPE_TAG
 		// case INSTANCE_TYPE_NULL:	// should not have been added
 		default:
 			ISE(cerr, cerr << "Unexpected type." << endl;)
@@ -508,12 +504,12 @@ State::dump_updated_references(ostream& o) const {
 	switch (i->first) {
 #define	CASE_PRINT_TYPE_TAG_NAME(V)					\
 	case V: o << class_traits<meta_type_map<V>::type>::tag_name; break;
-	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_BOOL)
-	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_INT)
-	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_ENUM)
-	CASE_PRINT_TYPE_TAG_NAME(entity::META_TYPE_CHANNEL)
+	CASE_PRINT_TYPE_TAG_NAME(META_TYPE_BOOL)
+	CASE_PRINT_TYPE_TAG_NAME(META_TYPE_INT)
+	CASE_PRINT_TYPE_TAG_NAME(META_TYPE_ENUM)
+	CASE_PRINT_TYPE_TAG_NAME(META_TYPE_CHANNEL)
 	default: o << "UNKNOWN";
-#undef	CASE_PRINT_TYPE_TAG_NAME(V)
+#undef	CASE_PRINT_TYPE_TAG_NAME
 	}	// end switch
 		o << '[' << i->second << "], ";
 	}
@@ -536,6 +532,59 @@ State::dump_enqueue_events(ostream& o) const {
 	ostream_iterator<size_t> osi(o, ", ");
 	copy(__enqueue_list.begin(), __enqueue_list.end(), osi);
 	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::print_instance_name_value(ostream& o,
+		const global_indexed_reference& g) const {
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	switch (g.first) {
+	case META_TYPE_BOOL: {
+		o << "bool ";
+		sm.get_pool<bool_tag>()[g.second]
+			.dump_canonical_name(o, topfp, sm);
+		o << " = ";
+		o << size_t(instances.get_pool<bool_tag>()[g.second].value);
+		break;
+	}
+	case META_TYPE_INT: {
+		o << "int ";
+		sm.get_pool<int_tag>()[g.second]
+			.dump_canonical_name(o, topfp, sm);
+		o << " = ";
+		o << instances.get_pool<int_tag>()[g.second].value;
+		break;
+	}
+	case META_TYPE_ENUM: {
+		o << "enum ";
+		sm.get_pool<enum_tag>()[g.second]
+			.dump_canonical_name(o, topfp, sm);
+		o << " = ";
+		o << instances.get_pool<enum_tag>()[g.second].value;
+		break;
+	}
+	case META_TYPE_CHANNEL: {
+		const global_entry<channel_tag>&
+			c(sm.get_pool<channel_tag>()[g.second]);
+		const ChannelState&
+			nc(instances.get_pool<channel_tag>()[g.second]);
+		const canonical_fundamental_chan_type_base& t(*c.channel_type);
+		t.dump(o) << ' ';
+		c.dump_canonical_name(o, topfp, sm);
+		o << " = ";
+		nc.dump(o, t);	// print the channel data using type info
+		break;
+	}
+	case META_TYPE_PROCESS:
+		// print canonical name?
+		o << "(process)";	// has no 'value'
+		break;
+	default:
+		o << "(unsupported)";
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

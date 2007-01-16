@@ -1,10 +1,13 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.1.2.4 2007/01/13 21:06:54 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.1.2.5 2007/01/16 04:14:50 fang Exp $
  */
 
 #include "Object/nonmeta_variable.h"
+#include "Object/nonmeta_channel_manipulator.h"
 #include "Object/def/fundamental_channel_footprint.h"
+#include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/type/canonical_generic_datatype.h"
 
 namespace HAC {
 namespace entity {
@@ -81,6 +84,16 @@ ChannelData::reset(void) {
 	channel_data_base<enum_tag>::__reset();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ChannelData::dump(ostream& o,
+		const canonical_fundamental_chan_type_base& t) const {
+	const canonical_fundamental_chan_type_base::datatype_list_type&
+		l(t.get_datatype_list());
+	for_each(l.begin(), l.end(), channel_data_dumper(*this, o));
+	return o;
+}
+
 //=============================================================================
 // class ChannelState method definitions
 
@@ -101,6 +114,18 @@ void
 ChannelState::reset(void) {
 	ChannelData::reset();
 	full = false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Formatted print of channel contents.  
+	If empty, then shows the last value that was written to it.  
+ */
+ostream&
+ChannelState::dump(ostream& o, 
+		const canonical_fundamental_chan_type_base& t) const {
+	ChannelData::dump(o << '(', t) << ')';
+	return o << (full ? " [full]" : " [empty]");
 }
 
 //=============================================================================

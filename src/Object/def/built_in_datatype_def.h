@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.9.12.2 2007/01/12 03:11:40 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.9.12.3 2007/01/16 04:14:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -82,6 +82,8 @@ public:
 
 	void
 	count_channel_member(fundamental_channel_footprint&) const;
+
+	DUMP_CHANNEL_FIELD_ITERATE_PROTO;
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object

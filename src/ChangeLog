@@ -5,6 +5,20 @@
 
 2007-01-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-42:
+	  Added channel_data_dumper functor class for printing, 
+		analogous to channel_data_reader for extraction.  
+	  Added virtual datatype_definition_base::dump_channel_field_iterate()
+		to print out data in formatted fashion from channel fields.  
+	  Implemented instance_reference::lookup_top_level_reference
+		returning a global_indexed_reference (type-enum, index)-pair.
+	  parser/instref.cc: implemented parser::parse_global_reference, 
+		to lookup a string into a global_indexed_reference.  
+	  chpsim: new command 'get' to print value of any instance or 
+		state of any channel.  
+	  Added new test cases to demonstrate chpsim:'get'.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-41:
 	  Now decrement predecessor countdowns properly upon event execution, 
 		using new helper functor EventNode::countdown_decrementer.

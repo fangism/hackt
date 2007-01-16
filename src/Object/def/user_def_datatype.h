@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.10.12.2 2007/01/12 03:11:43 fang Exp $
+	$Id: user_def_datatype.h,v 1.10.12.3 2007/01/16 04:15:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -109,6 +109,8 @@ public:
 
 	void
 	count_channel_member(fundamental_channel_footprint&) const;
+
+	DUMP_CHANNEL_FIELD_ITERATE_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

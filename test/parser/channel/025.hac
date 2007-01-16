@@ -1,0 +1,12 @@
+// "025.hac"
+// copy-modified from "connect-038.hac"
+// testing chpsim behavior
+
+chan(bool) B;
+bool x;
+chp { *[ B?(x) ] }
+chp { x+; *[ B!(~x) ] }
+
+// expect to see x set to 1, then sent and toggled, alternating in value
+
+

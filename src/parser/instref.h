@@ -1,7 +1,7 @@
 /**
 	\file "parser/instref.h"
 	Interface to reference-parsing.
-	$Id: instref.h,v 1.1 2006/07/31 22:22:41 fang Exp $
+	$Id: instref.h,v 1.1.28.1 2007/01/16 04:15:04 fang Exp $
 	This file originated from "sim/prsim/Reference.h"
 	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
@@ -10,6 +10,7 @@
 #define	__HAC_PARSER_INSTREF_H__
 
 #include <iosfwd>
+#include "Object/ref/reference_enum.h"
 #include "util/string_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/STL/vector_fwd.h"
@@ -40,6 +41,10 @@ extern
 // node_index_type
 size_t
 parse_node_to_index(const std::string&, const entity::module&);
+
+extern
+entity::global_indexed_reference
+parse_global_reference(const std::string&, const entity::module&);
 
 extern
 int

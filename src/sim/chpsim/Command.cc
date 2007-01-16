@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.5 2007/01/15 04:04:17 fang Exp $
+	$Id: Command.cc,v 1.1.2.6 2007/01/16 04:15:05 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -52,7 +52,8 @@ using std::ostream_iterator;
 using std::front_inserter;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
-using parser::parse_node_to_index;
+using entity::global_indexed_reference;
+using parser::parse_global_reference;
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
 using parser::parse_name_to_get_subnodes;
@@ -931,9 +932,8 @@ typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Who, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
-	"print value of node/vector")
+	"print value of instance")
 
 /**
 	Prints current value of the named node.  
@@ -945,14 +945,14 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		// we have ni = the canonically allocated index of the bool node
-		// just look it up in the node_pool
-		Step::print_watched_node(cout, s, ni, objname);
+	const global_indexed_reference
+		gr(parse_global_reference(objname, s.get_module()));
+	if (gr.first) {
+		cout << objname << " : ";
+		s.print_instance_name_value(cout, gr) << endl;
 		return Command::NORMAL;
 	} else {
-		cerr << "No such node found." << endl;
+		cerr << "No such instance found." << endl;
 		return Command::BADARG;
 	}
 }
@@ -960,13 +960,9 @@ if (a.size() != 2) {
 
 void
 Get::usage(ostream& o) {
-	o << "get <node>" << endl;
-	o <<
-"Print the current value of the node and, if applicable, the last arriving\n"
-"signal transition that caused it to become its current value."
-	<< endl;
+	o << "get <name>" << endl;
+	o << "Print the current value of the instance." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.8 2007/01/14 23:36:19 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.9 2007/01/16 04:14:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -23,6 +23,7 @@ class IntVariable;
 class EnumVariable;
 class ChannelState;
 class fundamental_channel_footprint;
+class canonical_fundamental_chan_type_base;
 	// defined in "Object/def/fundamental_channel_footprint.h"
 using std::ostream;
 using std::valarray;
@@ -198,6 +199,9 @@ public:
 	void
 	reset(void);
 
+	ostream&
+	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
+
 };	// end class ChannelData
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -234,6 +238,9 @@ public:
 
 	void
 	reset(void);
+
+	ostream&
+	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
 
 };	// end class ChannelState
 

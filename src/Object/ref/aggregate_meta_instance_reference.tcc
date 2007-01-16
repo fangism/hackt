@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.11.8.3 2006/12/13 04:12:10 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.11.8.4 2007/01/16 04:15:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -143,6 +143,18 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 		const state_manager&, const footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Aggregate lookups with this interface not supported.  
+ */
+AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+global_indexed_reference
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
+		const state_manager&, const footprint&) const {
+	ICE_NEVER_CALL(cerr);
+	return global_indexed_reference(META_TYPE_NONE, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

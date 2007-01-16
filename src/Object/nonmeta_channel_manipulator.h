@@ -1,12 +1,14 @@
 /**
 	\file "Object/nonmeta_channel_manipulator.h"
 	Helper classes for manipulating channel fields at run-time.  
-	$Id: nonmeta_channel_manipulator.h,v 1.1.2.3 2007/01/14 23:36:18 fang Exp $
+	$Id: nonmeta_channel_manipulator.h,v 1.1.2.4 2007/01/16 04:14:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_CHANNEL_MANIPULATOR_H__
 #define	__HAC_OBJECT_NONMETA_CHANNEL_MANIPULATOR_H__
 
+#include <iosfwd>
+#include "Object/type/canonical_type_fwd.h"
 #include "Object/nonmeta_variable.h"
 #include "Object/ref/reference_enum.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -22,6 +24,7 @@ class data_nonmeta_instance_reference;
 class nonmeta_context_base;
 class ChannelData;
 using util::memory::count_ptr;
+using std::ostream;
 
 //=============================================================================
 /**
@@ -140,6 +143,22 @@ struct channel_data_reader :
 	iter_ref(void) { return channel_data_reader_base<Tag>::iter; }
 
 };	// end struct channel_data_reader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor that prints out data, using canonical data-type list.  
+ */
+struct channel_data_dumper : public channel_data_reader {
+	ostream&			out;
+	bool				first;
+
+	channel_data_dumper(const ChannelData& d, ostream& o) :
+		channel_data_reader(d), out(o), first(true) { }
+
+	void
+	operator () (const canonical_generic_datatype&);
+
+};	// end struct channel_data_dumper.
 
 //=============================================================================
 /**

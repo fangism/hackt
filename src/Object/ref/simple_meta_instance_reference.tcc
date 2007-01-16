@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.5 2007/01/14 03:00:10 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.28.4.6 2007/01/16 04:15:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -219,6 +219,15 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	const unroll_context uc(&top, &top);
 	// should not be virtual call (one hopes)
 	return this->lookup_locally_allocated_index(sm, uc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+global_indexed_reference
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
+		const state_manager& sm, const footprint& top) const {
+	return global_indexed_reference(traits_type::type_tag_enum_value, 
+		this->lookup_globally_allocated_index(sm, top));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

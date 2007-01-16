@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.35.4.3 2007/01/12 03:11:41 fang Exp $
+ 	$Id: definition.cc,v 1.35.4.4 2007/01/16 04:14:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -59,6 +59,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/int_traits.h"	// for built_in_definition
 #include "Object/traits/enum_traits.h"	// for type_tag_enum_value
 #include "Object/type/canonical_generic_chan_type.h"
+#include "Object/nonmeta_channel_manipulator.h"
+#include "Object/nonmeta_variable.h"
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -1503,6 +1505,23 @@ built_in_datatype_def::count_channel_member(
 		THROW_EXIT;
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+built_in_datatype_def::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader& r) const {
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	if (this == &bool_traits::built_in_definition) {
+		o << size_t(*r.iter_ref<bool_tag>()++);
+	}
+	else if (this == &int_traits::built_in_definition) {
+		o << *r.iter_ref<int_tag>()++;
+	} else {
+		THROW_EXIT;
+	}
+	return o;
+}
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1896,6 +1915,13 @@ void
 enum_datatype_def::count_channel_member(
 		fundamental_channel_footprint& f) const {
 	++f.size<enum_tag>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+enum_datatype_def::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader& r) const {
+	return o << *r.iter_ref<enum_tag>()++;
 }
 #endif
 
@@ -2379,6 +2405,14 @@ user_def_datatype::count_channel_member(
 		fundamental_channel_footprint& f) const {
 	ICE_NEVER_CALL(cerr);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+user_def_datatype::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader&) const {
+	ICE_NEVER_CALL(cerr);
+	return o;
+}
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2649,6 +2683,14 @@ void
 datatype_definition_alias::count_channel_member(
 		fundamental_channel_footprint& f) const {
 	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+datatype_definition_alias::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader&) const {
+	ICE_NEVER_CALL(cerr);
+	return o;
 }
 #endif
 
