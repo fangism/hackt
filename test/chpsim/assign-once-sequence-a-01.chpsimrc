@@ -1,0 +1,29 @@
+# "assign-once-sequence-a-01.chpsimrc"
+#	$Id: assign-once-sequence-a-01.chpsimrc,v 1.1.2.1 2007/01/17 04:46:47 fang Exp $
+# @haco@ assign-once-sequence-a.haco-a
+
+# below script is same as:
+# source assign-once-parallel-a-01.chpsimrc
+
+# watchall-events
+get b
+get i
+queue
+echo launch initial null event
+step
+get b
+get i
+queue
+echo first event
+step
+get b
+get i
+queue
+echo second event
+step
+get b
+time
+echo now queue should be empty
+queue
+time
+

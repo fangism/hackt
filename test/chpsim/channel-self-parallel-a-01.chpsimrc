@@ -1,0 +1,71 @@
+# "channel-self-parallel-a-01.chpsimrc"
+#	$Id: channel-self-parallel-a-01.chpsimrc,v 1.1.2.1 2007/01/17 04:46:56 fang Exp $
+# @haco@ channel-self-parallel-a.haco-a
+
+# source channel-self-sequence-01.chpsimrc
+# longer than this script because of null-join events
+# might consider coalescing join/split events...
+# consider it an optimization option
+
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+echo expect empty queue, sequence ended
+
+

@@ -1,0 +1,13 @@
+// "assign-once-parallel-a.hac"
+//	$Id: assign-once-parallel-a.hac,v 1.1.2.1 2007/01/17 04:46:39 fang Exp $
+// top-level chp, one-shot statement
+
+// assume for now that initial value will be false
+bool b;
+int i;
+
+// same chp body
+chp {
+	b+,i:=13
+}
+

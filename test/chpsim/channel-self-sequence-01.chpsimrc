@@ -1,0 +1,38 @@
+# "channel-self-sequence-01.chpsimrc"
+#	$Id: channel-self-sequence-01.chpsimrc,v 1.1.2.1 2007/01/17 04:47:00 fang Exp $
+# @haco@ channel-self-sequence.haco-a
+
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+step
+get b
+get X
+queue
+echo expect empty queue, sequence ended
+
+

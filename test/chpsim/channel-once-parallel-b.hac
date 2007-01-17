@@ -1,0 +1,16 @@
+// "channel-once-parallel-b.hac"
+// copy-modified from "channel-once-parallel-a.hac"
+//	$Id: channel-once-parallel-b.hac,v 1.1.2.1 2007/01/17 04:46:55 fang Exp $
+// sends value once, receives once, then deadlocks
+
+chan(int) X;
+int z;
+
+// just written in different order
+chp {
+X?(z)
+}
+chp {
+X!(11)
+}
+

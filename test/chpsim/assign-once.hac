@@ -1,0 +1,11 @@
+// "assign-once.hac"
+//	$Id: assign-once.hac,v 1.1.2.1 2007/01/17 04:46:50 fang Exp $
+// top-level chp, one-shot statement
+
+// assume for now that initial value will be false
+bool b;
+
+chp {
+	b+
+}
+

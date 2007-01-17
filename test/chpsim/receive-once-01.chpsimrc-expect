@@ -1,0 +1,9 @@
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+X : chan(int<32>) X = (0) [empty]
+queue should be empty (deadlock!) 
+event queue:
+	(empty)
+X : chan(int<32>) X = (0) [empty]
+time: 0

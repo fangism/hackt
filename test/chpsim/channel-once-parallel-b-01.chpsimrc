@@ -1,0 +1,6 @@
+# "channel-once-parallel-b-01.chpsimrc"
+#	$Id: channel-once-parallel-b-01.chpsimrc,v 1.1.2.1 2007/01/17 04:46:53 fang Exp $
+# @haco@ channel-once-parallel-b.haco-a
+
+source channel-once-parallel-a-01.chpsimrc
+

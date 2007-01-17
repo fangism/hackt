@@ -1,0 +1,15 @@
+// "channel-self-parallel-b.hac"
+// copy-modified from "channel-self-sequence.hac"
+//	$Id: channel-self-parallel-b.hac,v 1.1.2.1 2007/01/17 04:47:00 fang Exp $
+// channel sends to itself in sequence of parallel sends
+
+chan(bool) X;
+bool b;
+
+chp {
+	// two sequences in parallel!
+	{X!(true);X!(false);X!(true)}, {X?(b);X?(b);X?(b)}
+}
+// should work, because channel is initially ready to send
+// should *still* occur sequentially, with no real concurrency
+
