@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147.2.20 2007/01/14 05:38:42 fang Exp $
+#	$Id: Makefile.am,v 1.147.2.21 2007/01/17 00:11:47 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -142,7 +142,7 @@ config_params.h: $(top_builddir)/config.status
 	@$(ECHO) "#ifndef	CONFIG_PARAMS" > $@
 	@value=`cd $(top_builddir) && $(SHELL) ./config.status --version | \
 		$(GREP) options | \
-		$(SED) 's/^[^"]*["]//g' | $(SED) 's/["]$$//g'` ; \
+		$(SED) -e 's/^[^"]*["]//g' -e 's/["]$$//g'` ; \
 	$(ECHO) "#define	CONFIG_PARAMS	\"$$value\"" >> $@
 	@$(ECHO) "#endif	/* CONFIG_PARAMS */" >> $@
 
@@ -1073,31 +1073,32 @@ $(TYPE_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 
 lexer/$(HACFLAT_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
 
-# why doesn't this work?
-PARSER_TYPES_PIPE = $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-	$(GREP) -v pragma | $(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-	$(SED) '/^[ \t]*$$/d'
+# why didn't this work?
+# fixed: need to escape the '#' character
+PARSER_TYPES_PIPE = $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
+	$(GREP) -v pragma | \
+		$(SED) -e '/^%start/,$$d' -e '/%{/,/%}/d' -e '/^[ \t]*$$/d'
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
-#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-		$(SED) '/^[ \t]*$$/d' > $@
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+#		$(GREP) -v pragma | \
+#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+#		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
-#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-		$(SED) '/^[ \t]*$$/d' > $@
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+#		$(GREP) -v pragma | \
+#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+#		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/type.types: parser/$(TYPE_PARSE_ROOT).yy
-#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-		$(SED) '/^[ \t]*$$/d' > $@
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+#		$(GREP) -v pragma | \
+#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+#		$(SED) '/^[ \t]*$$/d' > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
 # "cut" is not a good idea, if # define is separated... :(
@@ -1106,7 +1107,7 @@ GET_START_TOKEN_ENUM = \
 	$(GREP) "define.*MINIMUM_BOGOSITY" parser/$(HACKT_PARSE_ROOT).h | \
 		$(HEAD) -n1 | $(SED) 's/^.*MINIMUM_BOGOSITY[ \t]*//g' | \
 		$(AWK) '/.*/{printf($$1);}'
-
+# TODO: use configure-time yacc test to determine this
 
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 HACKT_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \

@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.4.4.2 2007/01/15 04:04:28 fang Exp $
+#	$Id: Make.test-prsim,v 1.4.4.3 2007/01/17 00:11:56 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -98,14 +98,6 @@ prsimexprtest.autodepend: Makefile
 	@$(DUMMY_TEST_SCRIPT)
 
 
-# Each run-commands script should include the command to invoke
-# for loading the object, e.g.: hackt prsim foo.haco-a
-# This rule should deduce the input object from the source script.  
-
-# doesn't work :S
-EXTRACT_HACO_PIPE = $(GREP) "^\#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
-	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
-
 # .prsimrc.prsimtest:
 # 	@$(ECHO) "#!$(SHELL)" > $@ ; \
 # 	$(ECHO) "# \"$@\"" >> $@ ; \
@@ -174,8 +166,9 @@ prsimrcfail-out.autodepend: Makefile
 -include prsimrcfail-out.autodepend
 
 PRSIMRC_TEST_FILTER_SCRIPT = \
-	$(CAT) $< | $(SED) '/DELETE FROM HERE/d' | \
-		$(SED) '/DELETE TO HERE/,$$d' | $(PRSIMRC_FILTER_AWK) > $@ ; \
+	$(CAT) $< | \
+		$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' | \
+		$(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
 	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) > $@.tmp ; \
 	    $(MV) $@.tmp $@ ; \

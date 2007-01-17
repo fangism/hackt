@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.11 2006/08/14 22:32:42 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.11.26.1 2007/01/17 00:11:45 fang Exp $
 #	vi: ft=automake
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
@@ -22,8 +22,8 @@ CXXPREPROCESS = $(CXXCOMPILE) -E
 FAST_MAKEDEP_FLAGS = -MMD -MT $@ -MF
 PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
 	-v srcdir=$(srcdir)
-FILTER_HEADER_DEPS = $(SED) 's|[^ ]*config\.h||g' | $(SED) 's|[^ ]*\.cc||g' | \
-	$(SED) 's| /[^ ]*||g'
+FILTER_HEADER_DEPS = $(SED) -e 's|[^ ]*config\.h||g' -e 's|[^ ]*\.cc||g' \
+	-e 's| /[^ ]*||g'
 FAKE_DEP_FILTER = $(GREP) "^#" | $(GREP) -v '\"/' | $(GREP) -v '\"<' | \
 	$(GREP) -v pragma | $(AWK) '{print $$3;}' | $(SORT) -u
 # first filter -- removes any dependencies on config.h for efficiency

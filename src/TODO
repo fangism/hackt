@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.48.2.2 2007/01/14 23:36:18 fang Exp $
+#	$Id: TODO,v 1.48.2.3 2007/01/17 00:11:47 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -34,6 +34,13 @@ chpsim:
 		of already blocked events to their dependencies? (enhancemen)
 	eliminate guard_expr from event structure, and handle
 		condition wait like a normal blockable (no-op) event.  
+	non-atomic expression evaluation: [IMPORTANT] 
+		rvalue and lvalues of assignments, channel send/receive 
+		may contain arbitrary nonmeta-expressions.
+		Q: when/how should they be expanded, at source/tree level,
+			in intermediate representation, or event-generation?
+		Q: when should evaluation of expressions *begin*?
+			do we require flow analysis?
 
 prsim:
 	category of 'debug' commands for inspecting state, etc...

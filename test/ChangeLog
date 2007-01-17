@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2007-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-44:
+	  Global Makefile clean-ups only.  
+
+
 2007-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-38:
