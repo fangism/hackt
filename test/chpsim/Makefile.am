@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.3 2007/01/18 12:45:54 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.4 2007/01/18 17:33:50 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,7 +7,10 @@ include $(top_srcdir)/test/Make.test-head
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \
 	countdown-successor \
-	countdown-loop-a countdown-loop-b
+	countdown-loop-a countdown-loop-b \
+	countdown-nested-a countdown-nested-b \
+	countdown-nested-c countdown-nested-d \
+	countdown-domino-a countdown-domino-b
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -17,7 +20,7 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 # temporary for now:
 HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
-
+# TODO: eventually generate object test cases for all of these:
 HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	defaults \
 	assign-once \
@@ -29,7 +32,9 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	channel-once-parallel-a channel-once-parallel-b \
 	channel-self-sequence \
 	channel-self-parallel-a channel-self-parallel-b \
-	do-while-countdown
+	do-while-countdown \
+	countdown-sequence-a \
+	countdown-parallel-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -49,7 +54,15 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-self-parallel-a-01 channel-self-parallel-b-01 \
 	channel-self-parallel-a-02 channel-self-parallel-b-02 \
 	do-while-countdown-01 do-while-countdown-02 \
-	countdown-successor-01
+	countdown-successor-01 \
+	countdown-loop-a-01 countdown-loop-b-01 \
+	countdown-sequence-a-01 \
+	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-b-01 countdown-nested-b-02 \
+	countdown-nested-c-01 countdown-nested-c-02 \
+	countdown-nested-d-01 countdown-nested-d-02 \
+	countdown-domino-a-01 \
+	countdown-domino-b-01
 
 
 # additional sources not already mentioned

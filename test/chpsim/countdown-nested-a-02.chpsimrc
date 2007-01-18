@@ -1,0 +1,7 @@
+# "countdown-nested-a-02.chpsimrc"
+#	$Id: countdown-nested-a-02.chpsimrc,v 1.1.2.1 2007/01/18 17:34:11 fang Exp $
+# @haco@ countdown-nested-a.haco-a
+
+null-event-delay 0
+source countdown-nested-a-01.chpsimrc
+

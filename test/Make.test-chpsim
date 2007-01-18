@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.1.2.8 2007/01/17 04:46:29 fang Exp $
+#	$Id: Make.test-chpsim,v 1.1.2.9 2007/01/18 17:33:44 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -55,7 +55,7 @@ endif
 chpsimalloctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '{print $$1 ".chpsimallocdiff: $$(srcdir)/" $$1 ".expect-chpsimalloc"; }' > $@ ; \
 	$(TOUCH) $@
 
@@ -136,7 +136,7 @@ AUTO_DEPENDS += chpsimrc-out.autodepend
 chpsimrctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '{print $$1 ".chpsimrc-diff: $$(srcdir)/" $$1 ".chpsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 

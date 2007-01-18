@@ -1,11 +1,18 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.27 2007/01/18 12:45:40 fang Exp $
+	$Id: CHP.cc,v 1.16.2.28 2007/01/18 17:33:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	ENABLE_STACKTRACE_CHPSIM		(1 && ENABLE_STACKTRACE)
+
+/**
+	Various levels of chpsim event generation optimizations, 
+	such as fusion.  
+	TODO: control in execute-time switch.  
+ */
+#define	OPTIMIZE_CHPSIM_EVENTS			1
 
 #include <iterator>
 #include <algorithm>
@@ -2184,6 +2191,7 @@ do_forever_loop::accept(StateConstructor& s) const {
 	// re-link loop
 	loopback_event.successor_events.resize(1);
 	loopback_event.successor_events[0] = s.last_event_index;
+#if OPTIMIZE_CHPSIM_EVENTS
 /***
 	Two exclusive strategies possible from here:
 	1) move the back event to the loopback placeholder slot, 
@@ -2193,7 +2201,6 @@ do_forever_loop::accept(StateConstructor& s) const {
 	2) just free the loopback placeholder, by forwarding around it, 
 		return a reference to the head_event
 ***/
-#if 1
 	const size_t back_index = s.event_pool_size() -1;
 	EventNode& back_event(s.get_event(back_index));
 	STACKTRACE_INDENT_PRINT("considering back: " << back_index << endl);
@@ -2224,7 +2231,7 @@ if (back_event.is_dispensible()) {
 	STACKTRACE_INDENT_PRINT("recycling loopback: " << loopback_index << endl);
 //	s.last_event_index = ret;	// redundant
 }
-#endif
+#endif	// OPTIMIZE_CHPSIM_EVENTS
 	head_event.set_predecessors(1);	// but may have multiple entries
 	// caller will count_predecessors
 }

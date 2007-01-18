@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.64.2.4 2007/01/17 00:11:58 fang Exp $
+#	$Id: Make.test-tail,v 1.64.2.5 2007/01/18 17:33:48 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -27,10 +27,10 @@ HACKT_CHPSIM_EXE = $(HACKT_EXE) chpsim
 TEST_SRCDIR = $(top_srcdir)/test
 TEST_BUILDDIR = $(top_builddir)/test
 
+# SPACES_TO_NEWLINE defined as inline awk command in Make.stddef
 POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
-SPACESTONEWLINE = $(AWK) -f $(TEST_SRCDIR)/spacestonewline.awk
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 
@@ -132,11 +132,16 @@ build-check-local: $(TESTS)
 # executable dependence: if executable is more recent, also rebuild
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 
+ALL_OBJECT_TESTS = \
+	$(HACKT_PARSE_TEST_PASSES) \
+	$(HACKT_PARSE_TEST_WARNINGS) \
+	$(HACKT_PRSIMRC_TEST_SUBJECTS) \
+	$(HACKT_CHPSIMRC_TEST_SUBJECTS)
+
 # source dependencies
 test.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) "$(HACKT_PARSE_TEST_PASSES) $(HACKT_PARSE_TEST_WARNINGS) $(HACKT_PRSIMRC_TEST_SUBJECTS)" | \
-		$(SPACESTONEWLINE) | $(SORT) -u | \
+	$(ECHO) "$(ALL_OBJECT_TESTS)" | $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 		$(AWK) '{print "-include " $$1 ".depend"; }' > $@ ; \
 	$(TOUCH) $@
 

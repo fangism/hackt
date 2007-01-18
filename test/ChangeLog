@@ -1,5 +1,13 @@
 # "test/ChangeLog"
 
+2007-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-47:
+	  Removed accidental duplicate Makefile variable (spelled diff.)
+		SPACESTONEWLINE was supposed to be SPACES_TO_NEWLINE, 
+		now deferring to the definition in Make.stddef.
+
+
 2007-01-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-44:

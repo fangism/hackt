@@ -1,0 +1,118 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	320
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    a = int<32> a
+    b = int<32> b
+    c = int<32> c
+}
+
+top-level chp:
+  concurrent: {
+    sequential: {
+      *[
+        a>0 -> a := a-1
+      ]
+      b := 2
+    }
+    sequential: {
+      *[
+        b>0 -> b := b-1
+      ]
+      c := 3
+    }
+    *[
+      c>0 -> c := c-1
+    ]
+    a := 1
+  }
+footprint: {
+  a = int<32>^0 = a (1) 
+  b = int<32>^0 = b (2) 
+  c = int<32>^0 = c (3) 
+  Created state:
+  int instance pool:
+  1	a
+  2	b
+  3	c
+  resolved concurrent actions:
+    sequential: {
+      *[
+        a>0 -> a := a-1
+      ]
+      b := 2
+    }
+    sequential: {
+      *[
+        b>0 -> b := b-1
+      ]
+      c := 3
+    }
+    *[
+      c>0 -> c := c-1
+    ]
+    a := 1
+}

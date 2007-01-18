@@ -1,0 +1,104 @@
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	10	10	0	c := 3
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	20	8	0	
+c : int c = 3
+event queue:
+	time	eid	pid	event
+	30	9	0	c := c-1
+c : int c = 3
+event queue:
+	time	eid	pid	event
+	40	8	0	
+c : int c = 2
+event queue:
+	time	eid	pid	event
+	50	9	0	c := c-1
+c : int c = 2
+event queue:
+	time	eid	pid	event
+	60	8	0	
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	70	9	0	c := c-1
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	80	8	0	
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	90	6	0	
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	100	7	0	c := c+1
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	110	6	0	
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	120	7	0	c := c+1
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	130	6	0	
+c : int c = 2
+event queue:
+	time	eid	pid	event
+	140	4	0	
+c : int c = 2
+event queue:
+	time	eid	pid	event
+	150	5	0	c := c-1
+c : int c = 2
+event queue:
+	time	eid	pid	event
+	160	4	0	
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	170	5	0	c := c-1
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	180	4	0	
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	190	1	0	
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	200	3	0	c := c+1
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	210	1	0	
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	220	3	0	c := c+1
+c : int c = 1
+event queue:
+	time	eid	pid	event
+	230	1	0	
+c : int c = 2
+event queue:
+	time	eid	pid	event
+	240	2	0	null
+c : int c = 2
+event queue:
+	(empty)
+c : int c = 2
+time: 240

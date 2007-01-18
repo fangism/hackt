@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.48.2.3 2007/01/17 00:11:47 fang Exp $
+#	$Id: TODO,v 1.48.2.4 2007/01/18 17:33:39 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -41,6 +41,9 @@ chpsim:
 			in intermediate representation, or event-generation?
 		Q: when should evaluation of expressions *begin*?
 			do we require flow analysis?
+	support: probe expressions, value probes
+	minor enhancement:
+		coalesce common subtrees of forks and joins [low priority]
 
 prsim:
 	category of 'debug' commands for inspecting state, etc...
