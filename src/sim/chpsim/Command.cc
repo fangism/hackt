@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.6 2007/01/16 04:15:05 fang Exp $
+	$Id: Command.cc,v 1.1.2.7 2007/01/18 12:45:43 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1616,6 +1616,78 @@ EvalOrder::usage(ostream& o) {
 	<< endl;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NullEventDelay, "null-event-delay", modes, 
+	"set/get the delay of trivial events")
+
+int
+NullEventDelay::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	cout << "null-event-delay = " << s.get_null_event_delay() << endl;
+	return Command::NORMAL;
+} else if (a.size() == 2) {
+	State::time_type t;
+	if (string_to_num(a.back(), t)) {
+		cerr << "Error: invalid delay argument, must be real-valued."
+			<< endl;
+		return Command::BADARG;
+	}
+	s.set_null_event_delay(t);
+	// confirmation:
+	cout << "null-event-delay = " << s.get_null_event_delay() << endl;
+	return Command::NORMAL;
+} else {
+	usage(cerr);
+	return Command::SYNTAX;
+}
+}
+
+void
+NullEventDelay::usage(ostream& o) {
+	o << name << " [delay]" << endl;
+	o <<
+"If no delay is given, just reports the current null-event delay.\n"
+"NOTE: null-delay only takes effect when the timing *mode* is uniform."
+	<< endl;
+//	State::help_timing(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UniformDelay, "uniform-delay", modes, 
+	"set/get the uniform delay of events")
+
+int
+UniformDelay::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	cout << "uniform-delay = " << s.get_uniform_delay() << endl;
+	return Command::NORMAL;
+} else if (a.size() == 2) {
+	State::time_type t;
+	if (string_to_num(a.back(), t)) {
+		cerr << "Error: invalid delay argument, must be real-valued."
+			<< endl;
+		return Command::BADARG;
+	}
+	s.set_uniform_delay(t);
+	// confirmation:
+	cout << "uniform-delay = " << s.get_uniform_delay() << endl;
+	return Command::NORMAL;
+} else {
+	usage(cerr);
+	return Command::SYNTAX;
+}
+}
+
+void
+UniformDelay::usage(ostream& o) {
+	o << name << " [delay]" << endl;
+	o <<
+"If no delay is given, just reports the current uniform delay.\n"
+"NOTE: uniform delay only takes effect when the timing *mode* is uniform."
+	<< endl;
+//	State::help_timing(o);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

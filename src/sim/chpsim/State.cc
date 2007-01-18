@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.27 2007/01/16 04:15:10 fang Exp $
+	$Id: State.cc,v 1.1.2.28 2007/01/18 12:45:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -135,7 +135,10 @@ struct State::event_enqueuer {
 	 */
 	void
 	operator () (const event_index_type ei) {
-		const time_type new_time = state.current_time +10;
+		const event_type& e(state.event_pool[ei]);
+		const time_type new_time = state.current_time +
+			(e.is_trivial() ? state.get_null_event_delay()
+				: state.get_uniform_delay());
 		state.event_queue.push(
 			event_placeholder_type(new_time, ei));
 	}
@@ -154,6 +157,8 @@ State::State(const module& m) :
 		event_pool(), 
 		event_queue(), 
 		current_time(0), 
+		uniform_delay(10),
+		null_event_delay(10),	// or 0
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.1.2.11 2007/01/14 23:36:26 fang Exp $
+	$Id: DependenceCollector.cc,v 1.1.2.12 2007/01/18 12:45:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -58,6 +58,7 @@ namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
+using std::vector;
 using std::copy;
 using std::transform;
 using entity::channel_tag;

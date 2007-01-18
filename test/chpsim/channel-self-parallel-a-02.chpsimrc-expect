@@ -1,3 +1,5 @@
+now we set trivial-event delay to 0 
+null-event-delay = 0
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
@@ -7,45 +9,65 @@ b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
 	time	eid	pid	event
-	10	8	0	
+	0	12	0	
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
 	time	eid	pid	event
-	20	4	0	X!(true)
+	10	10	0	X!(true)
 b : bool b = 0
 X : chan(bool<>) X = (1) [full]
 event queue:
 	time	eid	pid	event
-	30	7	0	X?(b)
+	20	11	0	X?(b)
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
 	time	eid	pid	event
-	40	3	0	X!(false)
+	20	9	0	
+b : bool b = 1
+X : chan(bool<>) X = (1) [empty]
+event queue:
+	time	eid	pid	event
+	20	8	0	
+b : bool b = 1
+X : chan(bool<>) X = (1) [empty]
+event queue:
+	time	eid	pid	event
+	30	6	0	X!(false)
 b : bool b = 1
 X : chan(bool<>) X = (0) [full]
 event queue:
 	time	eid	pid	event
-	50	6	0	X?(b)
+	40	7	0	X?(b)
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
 	time	eid	pid	event
-	60	2	0	X!(true)
+	40	5	0	
+b : bool b = 0
+X : chan(bool<>) X = (0) [empty]
+event queue:
+	time	eid	pid	event
+	40	4	0	
+b : bool b = 0
+X : chan(bool<>) X = (0) [empty]
+event queue:
+	time	eid	pid	event
+	50	2	0	X!(true)
 b : bool b = 0
 X : chan(bool<>) X = (1) [full]
 event queue:
 	time	eid	pid	event
-	70	5	0	X?(b)
+	60	3	0	X?(b)
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
 	time	eid	pid	event
-	80	1	0	
+	60	1	0	
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
 	(empty)
 expect empty queue, sequence ended 
-time: 80
+time: 60

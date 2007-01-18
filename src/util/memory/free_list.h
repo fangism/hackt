@@ -3,7 +3,7 @@
 	Container-based free-list implementations.  
 	Technically, this need not be in the memory namespace, 
 	but this is used so frequently in memory management.  
-	$Id: free_list.h,v 1.3 2006/05/06 04:18:58 fang Exp $
+	$Id: free_list.h,v 1.3.36.1 2007/01/18 12:45:53 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_FREE_LIST_H__
@@ -75,7 +75,7 @@ struct free_list<list<T, A> > {
 	static
 	value_type
 	acquire(container_type& c) {
-		const value_type ret = c.back();
+		const value_type ret(c.back());
 		c.pop_back();
 		return ret;
 	}
@@ -104,7 +104,7 @@ struct free_list<vector<T, A> > {
 	static
 	value_type
 	acquire(container_type& c) {
-		const value_type ret = c.back();
+		const value_type ret(c.back());
 		c.pop_back();
 		return ret;
 	}
@@ -132,7 +132,7 @@ struct free_list<queue<T, S> > {
 	static
 	value_type
 	acquire(container_type& c) {
-		const value_type ret = c.front();
+		const value_type ret(c.front());
 		c.pop();
 		return ret;
 	}
@@ -160,7 +160,7 @@ struct free_list<stack<T, S> > {
 	static
 	value_type
 	acquire(container_type& c) {
-		const value_type ret = c.top();
+		const value_type ret(c.top());
 		c.pop();
 		return ret;
 	}

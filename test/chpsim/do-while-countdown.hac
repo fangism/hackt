@@ -1,0 +1,11 @@
+// "do-while-countdown.hac"
+//	$Id: do-while-countdown.hac,v 1.1.2.1 2007/01/18 12:46:27 fang Exp $
+
+int c;
+
+chp {
+	c:=5;
+	*[ (c > 0) -> c := c-1 ]
+}
+// count down to 0 and then halt
+

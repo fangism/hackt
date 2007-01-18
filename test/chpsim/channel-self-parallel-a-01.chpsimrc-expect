@@ -67,8 +67,5 @@ b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
 	(empty)
-b : bool b = 1
-X : chan(bool<>) X = (1) [empty]
-event queue:
-	(empty)
 expect empty queue, sequence ended 
+time: 120

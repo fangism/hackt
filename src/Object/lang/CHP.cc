@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.26 2007/01/15 21:53:35 fang Exp $
+	$Id: CHP.cc,v 1.16.2.27 2007/01/18 12:45:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -516,14 +516,13 @@ if (!branches) {
 }
 // else do the normal thing
 	// create a join event first (bottom-up)
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t join_index = event_pool.size();
-{
-	// join shouldn't need an action ptr (unless we want back-reference)
-	event_pool.push_back(
+	const size_t join_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_JOIN, 
 			s.current_process_index));
-	EventNode& join_event(event_pool.back());
+{
+	STACKTRACE_INDENT_PRINT("join index: " << join_index << endl);
+	// join shouldn't need an action ptr (unless we want back-reference)
+	EventNode& join_event(s.get_event(join_index));
 	s.connect_successor_events(join_event);
 	join_event.set_predecessors(branches);	// expect number of branches
 	// reminder, reference may be invalidated after push_back
@@ -540,18 +539,18 @@ if (!branches) {
 	}
 {
 	// have to set it again!?  must get clobbered by above loop...
-	EventNode& join_event(event_pool[join_index]);
+	EventNode& join_event(s.get_event(join_index));
 	join_event.set_predecessors(branches);
 	s.count_predecessors(join_event);
 }
 
 	// construct successor event graph edge? or caller's responsibility?
-	const size_t fork_index = event_pool.size();
-{
-	event_pool.push_back(
+	const size_t fork_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
 			s.current_process_index));
-	EventNode& fork_event(event_pool.back());
+{
+	STACKTRACE_INDENT_PRINT("fork index: " << fork_index << endl);
+	EventNode& fork_event(s.get_event(fork_index));
 
 	fork_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &fork_event.successor_events[0]);
@@ -796,7 +795,9 @@ struct guarded_action::selection_evaluator {
 
 	void
 	operator () (argument_type g) {
+		STACKTRACE_CHPSIM_VERBOSE;
 		NEVER_NULL(g);
+		STACKTRACE_INDENT_PRINT("evaluating guard " << index << endl);
 	if (g->guard) {
 		const count_ptr<const pbool_const>
 			b(g->guard->__nonmeta_resolve_rvalue(
@@ -912,13 +913,12 @@ deterministic_selection::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
 	const size_t branches = this->size();
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t merge_index = event_pool.size();
-{
-	event_pool.push_back(
+	const size_t merge_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
 			s.current_process_index));
-	EventNode& merge_event(event_pool.back());
+{
+	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
+	EventNode& merge_event(s.get_event(merge_index));
 	s.connect_successor_events(merge_event);
 	merge_event.set_predecessors(1);	// expect ONE branch only
 	s.count_predecessors(merge_event);
@@ -945,12 +945,12 @@ deterministic_selection::accept(StateConstructor& s) const {
 	}
 
 	// construct successor event graph edge? or caller's responsibility?
-	const size_t split_index = event_pool.size();
-{
-	event_pool.push_back(
+	const size_t split_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
 			s.current_process_index));
-	EventNode& split_event(event_pool.back());
+{
+	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
+	EventNode& split_event(s.get_event(split_index));
 	split_event.import_dependencies(deps);
 
 	split_event.successor_events.resize(branches);
@@ -1107,13 +1107,12 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
 	const size_t branches = this->size();
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t merge_index = event_pool.size();
-{
-	event_pool.push_back(
+	const size_t merge_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
 			s.current_process_index));
-	EventNode& merge_event(event_pool.back());
+{
+	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
+	EventNode& merge_event(s.get_event(merge_index));
 	s.connect_successor_events(merge_event);
 	merge_event.set_predecessors(1);	// expect ONE branch only
 	s.count_predecessors(merge_event);
@@ -1140,12 +1139,12 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	}
 
 	// construct successor event graph edge? or caller's responsibility?
-	const size_t split_index = event_pool.size();
-{
-	event_pool.push_back(
+	const size_t split_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
 			s.current_process_index));
-	EventNode& split_event(event_pool.back());
+{
+	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
+	EventNode& split_event(s.get_event(split_index));
 	split_event.import_dependencies(deps);
 
 	split_event.successor_events.resize(branches);
@@ -1454,12 +1453,11 @@ void
 assignment::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	// construct successor event graph edge? or caller's responsibility?
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t new_index = event_pool.size();
-	event_pool.push_back(
+	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_ASSIGN, 
 			s.current_process_index));
-	EventNode& new_event(event_pool.back());
+	STACKTRACE_INDENT_PRINT("new assigment: " << new_index << endl);
+	EventNode& new_event(s.get_event(new_index));
 
 	s.connect_successor_events(new_event);
 	// assignments are atomic and never block
@@ -1586,12 +1584,11 @@ condition_wait::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	// register guard expression dependents
 	// construct successor event graph edge? or caller's responsibility?
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t new_index = event_pool.size();
-	event_pool.push_back(
+	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
 			s.current_process_index));
-	EventNode& new_event(event_pool.back());
+	STACKTRACE_INDENT_PRINT("wait index: " << new_index << endl);
+	EventNode& new_event(s.get_event(new_index));
 	if (cond) {
 		SIM::CHPSIM::DependenceSetCollector deps(s);
 		cond->accept(deps);
@@ -1869,12 +1866,11 @@ channel_send::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	// atomic event
 	// construct event graph
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t new_index = event_pool.size();
-	event_pool.push_back(
+	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SEND, 
 			s.current_process_index));
-	EventNode& new_event(event_pool.back());
+	STACKTRACE_INDENT_PRINT("send index: " << new_index << endl);
+	EventNode& new_event(s.get_event(new_index));
 
 {
 	// can block on channel, so we add dependencies
@@ -2006,12 +2002,11 @@ channel_receive::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
 	// atomic event
 	// construct event graph
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t new_index = event_pool.size();
-	event_pool.push_back(
+	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_RECEIVE, 
 			s.current_process_index));
-	EventNode& new_event(event_pool.back());
+	STACKTRACE_INDENT_PRINT("receive index: " << new_index << endl);
+	EventNode& new_event(s.get_event(new_index));
 
 {
 	// can block on channel, so we add dependencies
@@ -2173,33 +2168,64 @@ do_forever_loop::accept(StateConstructor& s) const {
 	// create a dummy event first (epilogue) and loop it around.
 	// OR use the 0th event slot as the dummy!
 	// -- works only if we need one dummy at a time
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t loopback_index = event_pool.size();
-{
-	// back-reference action pointer is really optional
-	event_pool.push_back(EventNode(this, SIM::CHPSIM::EVENT_NULL,
-		s.current_process_index));
-//	EventNode& loopback_event(event_pool.back());
-}
+	const size_t loopback_index = s.allocate_event(
+		EventNode(this, SIM::CHPSIM::EVENT_NULL,
+			s.current_process_index));
+	STACKTRACE_INDENT_PRINT("forever loopback: " << loopback_index << endl);
 	s.last_event_index = loopback_index;	// point to dummy, pass down
 	body->accept(s);
 	// never blocks, no need for dependency checking
 {
 	// find last event and loop it back to the beginning
-	EventNode& loopback_event(event_pool[loopback_index]);
-	EventNode& head_event(event_pool[s.last_event_index]);
-#if 0
+	EventNode& loopback_event(s.get_event(loopback_index));
+	EventNode& head_event(s.get_event(s.last_event_index));
+	STACKTRACE_INDENT_PRINT("head of body: " << s.last_event_index << endl);
+// some redundant operations going on here...
+	// re-link loop
 	loopback_event.successor_events.resize(1);
 	loopback_event.successor_events[0] = s.last_event_index;
-	// s.last_event_index now points to first action(s) in loop
-	head_event.set_predecessors(1);	// but may have multiple entries
-#else
-	// the last_event_index refers to the most recently allocated event
-	loopback_event = head_event;	// MOVE into placeholder slot!
-	event_pool.pop_back();		// recycle it!
-	loopback_event.set_predecessors(1);	// but may have multiple entries
-	s.last_event_index = loopback_index;
+/***
+	Two exclusive strategies possible from here:
+	1) move the back event to the loopback placeholder slot, 
+		this way minimizes dead-events in the middle.
+		We do this only if it is 'convenient', i.e.
+		the back event is trivial and has a lone successor.  
+	2) just free the loopback placeholder, by forwarding around it, 
+		return a reference to the head_event
+***/
+#if 1
+	const size_t back_index = s.event_pool_size() -1;
+	EventNode& back_event(s.get_event(back_index));
+	STACKTRACE_INDENT_PRINT("considering back: " << back_index << endl);
+if (back_event.is_dispensible()) {
+	// 2) recycle the back event, involves re-linking up to two events
+	// Q: does the loopback already point to back? (corner case)
+	if (back_index != loopback_event.successor_events[0]) {
+		s.forward_successor(loopback_index);	// pointers to loopback
+	}
+	s.forward_successor(back_index, loopback_index, s.last_event_index);
+	// INVARIANT(s.last_event_index != back_index);
+	loopback_event = back_event;	// MOVE into placeholder slot!
+	STACKTRACE_INDENT_PRINT("recycling back: " << back_index << endl);
+	s.deallocate_event(back_index);		// recycle it!
+	if (back_index == s.last_event_index) {
+		STACKTRACE_INDENT_PRINT("back is s.last_event_index" << endl);
+	// need to update return value (head index), using loopback slot
+		s.last_event_index = loopback_index;
+	}
+} else {
+	// 1) then we can recycle the loopback slot safely (tested)
+	// first: forward successors through condemned event
+	const size_t ret = s.forward_successor(loopback_index);
+	INVARIANT(ret == s.last_event_index);
+	// last: free the condemned event
+	s.deallocate_event(loopback_index);		// recycle it!
+	// loopback_event is now dead
+	STACKTRACE_INDENT_PRINT("recycling loopback: " << loopback_index << endl);
+//	s.last_event_index = ret;	// redundant
+}
 #endif
+	head_event.set_predecessors(1);	// but may have multiple entries
 	// caller will count_predecessors
 }
 }
@@ -2312,15 +2338,28 @@ do_while_loop::accept(StateConstructor& s) const {
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	const size_t branches = this->size();
-	StateConstructor::event_pool_type& event_pool(s.event_pool());
-	const size_t loopback_index = event_pool.size();
+	const size_t loopback_index = s.allocate_event(
+		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN,
+			s.current_process_index));
+	STACKTRACE_INDENT_PRINT("do-while loopback index: "
+		<< loopback_index << endl);
 {
-	event_pool.push_back(EventNode(this, 
-		SIM::CHPSIM::EVENT_SELECTION_BEGIN,
-		s.current_process_index));
-	EventNode& loopback_event(event_pool.back());
+	EventNode& loopback_event(s.get_event(loopback_index));
 	loopback_event.successor_events.resize(branches +1);
-	loopback_event.successor_events[branches] = s.last_event_index;	// exit
+	if (s.last_event_index) {
+		// exit
+		loopback_event.successor_events[branches] = s.last_event_index;
+	} else {
+		// there was no successor, create a terminator
+		const size_t terminal_index = s.allocate_event(
+			EventNode(NULL, SIM::CHPSIM::EVENT_NULL,
+				s.current_process_index));
+		// loopback_event reference invalidated by push_back
+		s.get_event(loopback_index).successor_events[branches]
+			= terminal_index;
+		STACKTRACE_INDENT_PRINT("new terminal index: "
+			<< terminal_index << endl);
+	}
 	// convention: 
 	// 1st events will go into the body of the do-while loop
 	// last event will be the exit branch, corresponding to the else clause
@@ -2340,8 +2379,14 @@ do_while_loop::accept(StateConstructor& s) const {
 }
 {
 	// find last event and loop it back to the beginning
-	EventNode& loopback_event(event_pool[loopback_index]);
+	EventNode& loopback_event(s.get_event(loopback_index));
 	copy(tmp.begin(), tmp.end(), &loopback_event.successor_events[0]);
+#if ENABLE_STACKTRACE
+	cerr << "tmp: ";
+	copy(tmp.begin(), tmp.end(), std::ostream_iterator<size_t>(cerr, ","));
+	cerr << endl;
+	cerr << "else: " << loopback_event.successor_events[branches] << endl;
+#endif
 	// loopback_event.successor_events[0] = s.last_event_index;
 	// s.last_event_index now points to first action(s) in loop
 	// EventNode& head_event(event_pool[s.last_event_index]);
@@ -2365,17 +2410,22 @@ do_while_loop::execute(const nonmeta_context& c,
 	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
-	size_t ei = 0;
+	size_t si = 0;
 	switch (G.ready.size()) {
-	case 0: ei = c.get_event().successor_events[size()];
+	case 0:	si = size();
+		// this case should never be reached because the else-clause
+		// has been expanded and is always evaluated true
+		STACKTRACE_INDENT_PRINT("no guards true, fall-through " << si << endl);
 		break;
-	case 1: ei = G.ready.front();
+	case 1:	si = G.ready.front();
+		STACKTRACE_INDENT_PRINT("guard true, taking successor " << si << endl);
 		break;
 	default:
 		cerr << "Run-time error: multiple exclusive guards of "
 			"do-while-loop evaluated TRUE!" << endl;
 		THROW_EXIT;
 	}	// end switch
+	const size_t ei = c.get_event().successor_events[si];
 	c.rechecks.insert(ei);
 	EventNode::countdown_decrementer(c.event_pool)(ei);
 }
@@ -2385,9 +2435,11 @@ do_while_loop::execute(const nonmeta_context& c,
 	This event never blocks and thus never needs to be rechecked for 
 	unblocking because the loop-condition comes with an implicit
 	else-clause which is taken if the evaluated condition is false.  
+	\return false because this event never rechecks itself (never blocks), 
+		only selects a succcessor.  
  */
 bool
-do_while_loop::recheck(const nonmeta_context&) const {
+do_while_loop::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	return true;
 }

@@ -1,0 +1,14 @@
+// "countdown-loop-a.hac"
+// copy-modified from "countdown-successor.hac"
+//	$Id: countdown-loop-a.hac,v 1.1.2.1 2007/01/18 12:46:10 fang Exp $
+
+int c;
+
+chp {
+*[
+	c:=3;
+	*[ (c > 0) -> c := c-1 ]
+]
+}
+// cound t down to 0, and reset and loop
+

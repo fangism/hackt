@@ -3,6 +3,27 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-46:
+	  Along with new tests, come new bug fixes.
+	  Front-end do-while tree checking was broken before, now fixed.  
+	  CHPSIM::StateConstructor: privatized state.event_pool to prevent
+		screw-ups, now provide an event-allocate/deallocate 
+		interface, which uses a new free-list member to recycle events.
+	  Fixed event allocation and reuse in do-forever loop
+		and do-while loop.  (was a pain to debug...)
+	  Do-while event, suppresses successor event generation if 
+		the last_event_index is null (terminal).
+		Also a fixed a missing array index indirection.  
+	  chpsim new commands:
+		'null-event-delay' can set the delay of "trivial" events
+		'uniform-delay' can set the uniform delay unit
+		simulator uses these to determine time of new events.  
+	  New chpsim tests try various combinations and positions
+		of simple do-while loops.  
+
+
 2007-01-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-45:

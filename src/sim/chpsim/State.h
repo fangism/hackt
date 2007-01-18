@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.21 2007/01/16 04:15:12 fang Exp $
+	$Id: State.h,v 1.1.2.22 2007/01/18 12:45:49 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -15,6 +15,7 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
+#include "util/macros.h"
 
 namespace HAC {
 namespace SIM {
@@ -90,7 +91,8 @@ private:
 	//	predecessors? (if we want them, construct separate)ly
 private:
 	time_type				current_time;
-	// time_type				uniform_delay;
+	time_type				uniform_delay;
+	time_type				null_event_delay;
 
 	// mode flags
 	/// is this redundant?
@@ -139,6 +141,28 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	const time_type&
+	get_uniform_delay(void) const { return uniform_delay; }
+
+	void
+	set_uniform_delay(const time_type& t) {
+		if (t >= 0) {
+			uniform_delay = t;
+		}
+		// else error message?
+	}
+
+	const time_type&
+	get_null_event_delay(void) const { return null_event_delay; }
+
+	void
+	set_null_event_delay(const time_type& t) {
+		if (t >= 0) {
+			null_event_delay = t;
+		}
+		// else error message?
+	}
 
 	const event_type&
 	get_event(const event_index_type i) const { return event_pool[i]; }

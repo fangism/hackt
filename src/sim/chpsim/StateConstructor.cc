@@ -1,38 +1,57 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.1.2.4 2006/12/14 23:43:27 fang Exp $
+	$Id: StateConstructor.cc,v 1.1.2.5 2007/01/18 12:45:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
 
+#include <iostream>
 #include <vector>
 #include "sim/chpsim/StateConstructor.h"
+#include "sim/chpsim/State.h"
 #include "sim/chpsim/Event.h"
 #include "Object/module.h"
 #include "Object/global_entry.tcc"
 #include "Object/lang/CHP_footprint.h"
 #include "util/visitor_functor.h"
 #include "util/stacktrace.h"
+#include "util/memory/free_list.h"
+#include "util/STL/valarray_iterator.h"
 
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
+using std::begin;
+using std::end;
 using std::vector;
+using std::endl;
 using entity::process_tag;
 using entity::global_entry_pool;
+using util::memory::free_list_acquire;
+using util::memory::free_list_release;
 
 //=============================================================================
 // class StateConstructor method definitions
 
 StateConstructor::StateConstructor(State& s) : 
 		state(s), 
+		free_list(), 
 		// last_event_indices(), 
 		last_event_index(0), 
 		current_process_index(0)	// top-level
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-StateConstructor::~StateConstructor() { }
+/**
+	Some clean-up to avoid printing dead nodes.  
+ */
+StateConstructor::~StateConstructor() {
+	typedef free_list_type::const_iterator	const_iterator;
+	const_iterator i(free_list.begin()), e(free_list.end());
+	for ( ; i!=e; ++i) {
+		get_event(*i).orphan();
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -96,6 +115,133 @@ StateConstructor::get_process_footprint(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+StateConstructor::event_type&
+StateConstructor::get_event(const event_index_type ei) {
+	return state.event_pool[ei];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const StateConstructor::event_type&
+StateConstructor::get_event(const event_index_type ei) const {
+	return state.get_event(ei);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+StateConstructor::event_pool_size(void) const {
+	return state.event_pool.size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allocates a new event, initializing to the argument.  
+	Also recycles free-slots if available.  
+ */
+event_index_type
+StateConstructor::allocate_event(const event_type& e) {
+	if (free_list.empty()) {
+		const event_index_type ret = state.event_pool.size();
+		state.event_pool.push_back(e);
+		return ret;
+	} else {
+		// take first available index
+		const event_index_type ret = free_list_acquire(free_list);
+		state.event_pool[ret] = e;
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recycles an event slot for recycling for a subsequent allocation
+	request.  
+ */
+void
+StateConstructor::deallocate_event(const event_index_type ei) {
+	// does invariant checking
+	if (ei == event_pool_size() -1) {
+		// if it happens to be the back entry, just pop it
+		state.event_pool.pop_back();
+	} else {
+		// else remember it in free-list
+		free_list_release(free_list, ei);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Performs an event substitution from @f to @f's only successor.  
+	\pre this event @f must have a lone successor, and be trivial/null.
+	\param f the index of the event to forward through.  
+	\param h the hint to the head event from which reachable events 
+		should be scanned and replaced.  
+		This should be the sole successor to event f.
+	\return the lone successor used to replace successors.
+ */
+event_index_type
+StateConstructor::forward_successor(const event_index_type f) {
+	STACKTRACE_VERBOSE;
+	const event_type& skip_me(get_event(f));
+	INVARIANT(skip_me.is_dispensible());	// redundant checks...
+//	const size_t succs = skip_me.successor_events.size();
+	const event_index_type replacement = skip_me.successor_events[0];
+	const event_type& r(get_event(replacement));
+	INVARIANT(r.get_predecessors() < 2);	// 1 or 0
+	forward_successor(f, replacement, replacement);	// wrapped call
+	return replacement;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Variation where the replacement is specified explicitly by caller.  
+	\param f the index of the event to forward through.  
+	\param replacement the index to replace.
+	\param h the head event to start searching and replacing from.
+ */
+void
+StateConstructor::forward_successor(const event_index_type f, 
+		const event_index_type replacement, 
+		const event_index_type h) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("f,r,h = " << f << ", " <<
+		replacement << ", " << h << endl);
+	const event_type& skip_me(get_event(f));
+	INVARIANT(skip_me.is_dispensible());	// redundant checks...
+
+	// collect event nodes reachable from the head (post-dominate?)
+	// using worklist algorithm
+	typedef	std::set<event_index_type>	reachable_set_type;
+	reachable_set_type visited_set;		// covered
+	reachable_set_type worklist;		// to-do list
+	visited_set.insert(f);			// don't check f again
+	worklist.insert(h);
+	while (!worklist.empty()) {
+	const event_index_type ei = free_list_acquire(worklist);
+	if (visited_set.find(ei) == visited_set.end()) {
+		STACKTRACE_INDENT_PRINT("worklist: " << ei << endl);
+		event_type::successor_list_type&
+			s(get_event(ei).successor_events);
+		STACKTRACE_INDENT_PRINT("size: " << s.size() << endl);
+		event_index_type* si = begin(s);
+		event_index_type* se = end(s);
+		// algorithm: find and replace
+		// non-matches should be thrown into work-list
+		for ( ; si!=se; ++si) {
+			if (*si == f) {
+		STACKTRACE_INDENT_PRINT("  replace: " << *si << endl);
+				*si = replacement;
+			} else {
+		STACKTRACE_INDENT_PRINT("  enqueue: " << ei << endl);
+				worklist.insert(*si);
+			}
+		}
+		visited_set.insert(ei);	// mark as finished
+	}	// end if
+	// else already processed, move on
+	}	// end while
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This updates the new event's list of successors using the 
 	current list of successor events.  (Backwards construction.)
@@ -103,7 +249,7 @@ StateConstructor::get_process_footprint(void) const {
  */
 void
 StateConstructor::connect_successor_events(event_type& ev) const {
-	// STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE;
 #if 0
 	typedef	return_indices_type::const_iterator	ret_iterator;
 	const ret_iterator 

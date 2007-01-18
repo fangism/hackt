@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.19 2007/01/15 21:53:37 fang Exp $
+	$Id: Event.cc,v 1.1.2.20 2007/01/18 12:45:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -82,6 +82,16 @@ EventNode::operator = (const this_type& e) {
 	countdown = e.countdown;
 	deps = e.deps;		// re-defined!
 	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Completely resets the event.  
+ */
+void
+EventNode::orphan(void) {
+	this->~EventNode();
+	new (this) EventNode();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

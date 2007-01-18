@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.22 2007/01/15 21:53:37 fang Exp $
+	$Id: Event.h,v 1.1.2.23 2007/01/18 12:45:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -141,6 +141,29 @@ public:
 	this_type&
 	operator = (const this_type&);
 
+	void
+	orphan(void);
+
+	/**
+		\return true if this event type is considered trivial, 
+		such as concurrent 
+	 */
+	bool
+	is_trivial(void) const {
+		return (event_type == EVENT_NULL) ||
+			(event_type == EVENT_CONCURRENT_FORK);
+	}
+
+	/**
+		NOTE: need not be trivial, just copiable and 
+		successor-substitutable.  
+		NOTE: No selection has only one successor.  
+	 */
+	bool
+	is_dispensible(void) const {
+		return (successor_events.size() == 1);
+	}
+
 	const size_t
 	get_process_index(void) const { return process_index; }
 
@@ -149,6 +172,9 @@ public:
 
 	void
 	set_predecessors(const event_index_type n) { predecessors = n; }
+
+	unsigned short
+	get_predecessors(void) const { return predecessors; }
 
 	void
 	import_dependencies(const DependenceSetCollector& d) {

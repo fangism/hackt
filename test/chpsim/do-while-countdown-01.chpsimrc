@@ -1,0 +1,50 @@
+# "do-while-countdown-01.chpsimrc"
+#	$Id: do-while-countdown-01.chpsimrc,v 1.1.2.1 2007/01/18 12:46:22 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+time
+

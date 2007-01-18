@@ -1,0 +1,50 @@
+# "countdown-successor-01.chpsimrc"
+#	$Id: countdown-successor-01.chpsimrc,v 1.1.2.1 2007/01/18 12:46:14 fang Exp $
+# @haco@ countdown-successor.haco-a
+
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+time
+
