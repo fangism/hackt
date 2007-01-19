@@ -1,0 +1,81 @@
+# "wait-indexed-guard-a-01.chpsimrc"
+#	$Id: wait-indexed-guard-a-01.chpsimrc,v 1.1.2.1 2007/01/19 04:59:32 fang Exp $
+# @haco@ wait-indexed-guard-a.haco-a
+
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+step
+queue
+get z
+get y
+time
+

@@ -1,0 +1,113 @@
+null-event-delay = 0
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	0	19	0	
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	10	17	0	a := false
+	10	18	0	b := false
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	10	18	0	b := false
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	10	16	0	
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	10	15	0	
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	20	6	0	a := false
+	20	8	0	b := false
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	20	8	0	b := false
+	30	5	0	a := false
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	30	5	0	a := false
+	30	7	0	b := true
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	30	7	0	b := true
+	40	4	0	a := false
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	30	14	0	[b]
+	40	4	0	a := false
+a : bool a = 0
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	40	4	0	a := false
+a : bool a = 0
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	50	3	0	a := false
+a : bool a = 0
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	60	2	0	a := true
+a : bool a = 0
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	60	13	0	[a]
+a : bool a = 1
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	60	12	0	
+a : bool a = 1
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	70	10	0	a := false
+	70	11	0	b := false
+a : bool a = 1
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	70	11	0	b := false
+a : bool a = 0
+b : bool b = 1
+event queue:
+	time	eid	pid	event
+	70	9	0	
+a : bool a = 0
+b : bool b = 0
+event queue:
+	time	eid	pid	event
+	70	1	0	
+a : bool a = 0
+b : bool b = 0
+event queue:
+	(empty)
+a : bool a = 0
+b : bool b = 0
+time: 70

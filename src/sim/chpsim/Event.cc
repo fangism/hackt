@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.20 2007/01/18 12:45:45 fang Exp $
+	$Id: Event.cc,v 1.1.2.21 2007/01/19 04:58:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -109,23 +109,48 @@ EventNode::reset(void) {
 	whether or not event should be enqueued.  
 	Caller is responsible for un/subscribing *this* event (by ID)
 		to/from its dependent variables.  
+	Only called by State::recheck_transformer, 
+		and now CHP::selection's recheck().
 
-	\param sm the structural state manager (hierarchy)
-	\param p the run-time state of variables and channels.
+	\param ei the index of this event to check
 	\param enqueue return list of event(s) to enqueue for execution.
 	\return true if *this* event should be enqueued.  
 		This avoids having to pass the index of this event down.  
+	\return event
 	Is there a problem with guarded selection statements?
 	TODO: Need to examine how they are constructed...
  */
-bool
-EventNode::recheck(const nonmeta_context& c) {
+void
+EventNode::recheck(const nonmeta_context& c, const event_index_type ei) const {
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
 if (countdown) {
 	// then awaiting more predecessors to arrive
-	return false;
+	// NOTE: caller should NOT subscribe deps in this case
+	STACKTRACE_INDENT_PRINT("countdown at: " << countdown << endl);
+	// don't bother subscribing, let the last arrived event cause subscribe
+	// return RECHECK_COUNT_BLOCK;
 } else {
-	return action_ptr ? action_ptr->recheck(c) : true;
+	if (action_ptr) {
+		const char r = action_ptr->recheck(c);
+		if (r & __RECHECK_ENQUEUE_THIS) {
+			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
+			c.enqueue(ei);
+		} else {
+			STACKTRACE_INDENT_PRINT("blocked." << endl);
+		}
+		if (r & __RECHECK_SUBSCRIBE_THIS) {
+			STACKTRACE_INDENT_PRINT("subscribed." << endl);
+			deps.subscribe(c, ei);
+		} else if (r & __RECHECK_UNSUBSCRIBE_THIS) {
+			STACKTRACE_INDENT_PRINT("unsubscribed." << endl);
+			deps.unsubscribe(c, ei);
+		}
+	} else {
+		// RECHECK_NEVER_BLOCKED
+		STACKTRACE_INDENT_PRINT("null fire." << endl);
+		c.enqueue(ei);
+	}
 }
 }	// end method recheck
 

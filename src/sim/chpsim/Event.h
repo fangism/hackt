@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.23 2007/01/18 12:45:46 fang Exp $
+	$Id: Event.h,v 1.1.2.24 2007/01/19 04:58:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -15,6 +15,7 @@
 #include <vector>
 #include "sim/chpsim/Dependence.h"
 #include "Object/ref/reference_enum.h"
+#include "util/macros.h"
 
 namespace HAC {
 namespace entity {
@@ -48,6 +49,50 @@ enum {
 	EVENT_CONCURRENT_JOIN = EVENT_NULL,	///< convergence event (no-op)
 	EVENT_SELECTION_BEGIN = 5,	///< the start of any selection
 	EVENT_SELECTION_END = EVENT_NULL	///< end of any selection (no-op)
+};
+
+/**
+	Enumerated results for recheck functions.  
+ */
+enum recheck_result {
+	// flag to enqueue this event
+	__RECHECK_ENQUEUE_THIS = 0x01,
+	// flag to subscribe this event to its deps (exclusive with unsub.)
+	__RECHECK_SUBSCRIBE_THIS = 0x02,
+	// flag to unsubscribe this event from deps (exclusive with subscribe)
+	__RECHECK_UNSUBSCRIBE_THIS = 0x04,
+
+	/**
+		The invoking event should be blocked, 
+		and its dependencies subscribed.  
+	 */
+	RECHECK_BLOCKED_THIS = __RECHECK_SUBSCRIBE_THIS,
+	/**
+		The invoking event should be unblocked, 
+		and its dependencies unsubscribed from.  
+	 */
+	RECHECK_UNBLOCKED_THIS = 
+		__RECHECK_ENQUEUE_THIS | __RECHECK_UNSUBSCRIBE_THIS,
+	/**
+		Event is only blocked because predecessors haven't
+		all arrived.  
+	 */
+	RECHECK_COUNT_BLOCK = 0x00,
+	/**
+		Special case of UNBLOCKED_THIS that never requires 
+		subscription management because the event never blocks, 
+		e.g. assignment.  
+		Flagging this saves a call to unsubscribe.  
+	 */
+	RECHECK_NEVER_BLOCKED = __RECHECK_ENQUEUE_THIS,
+	/**
+		Selections only.
+		The selection itself was unblocked, but its immediate
+		successor blocked (or unblocked).  Callee will take 
+		responsibility for successor's un/subscription, 
+		while caller should just unsubscribe this event's deps.  
+	 */
+	RECHECK_DEFERRED_TO_SUCCESSOR = __RECHECK_UNSUBSCRIBE_THIS
 };
 
 //=============================================================================
@@ -181,8 +226,10 @@ public:
 		deps.import(d);
 	}
 
+#if 0
 	const DependenceSet&
 	get_deps(void) const { return deps; }
+#endif
 
 	void
 	reset(void);
@@ -190,9 +237,8 @@ public:
 	void
 	execute(const nonmeta_context&, vector<global_indexed_reference>&);
 
-	bool
-	recheck(const nonmeta_context&);
-
+	void
+	recheck(const nonmeta_context&, const event_index_type) const;
 
 	ostream&
 	dump_brief(ostream&) const;
@@ -222,6 +268,7 @@ public:
 		void
 		operator () (const event_index_type ei) const {
 			// INVARIANT checks and assertions?
+			INVARIANT(pool[ei].countdown);
 			--pool[ei].countdown;
 		}
 	};	// end struct count_decrementer

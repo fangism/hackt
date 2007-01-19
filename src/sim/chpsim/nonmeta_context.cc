@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.1.4.6 2007/01/15 21:53:43 fang Exp $
+	$Id: nonmeta_context.cc,v 1.1.4.7 2007/01/19 04:58:38 fang Exp $
  */
 
 #include <vector>
@@ -33,6 +33,9 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				: NULL),
 			r.instances),
 		event(&e), 
+#if 1
+		enqueue_list(r.__enqueue_list), 
+#endif
 		rechecks(r.__rechecks), 
 		event_pool(r.event_pool) { }
 
@@ -46,6 +49,9 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		State& r) :
 		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
+#if 1
+		enqueue_list(r.__enqueue_list), 
+#endif
 		rechecks(r.__rechecks), 
 		event_pool(r.event_pool) { }
 
@@ -58,6 +64,16 @@ nonmeta_context::set_event(event_type& e) {
 	event = &e;
 	const size_t pid = e.get_process_index();
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre ei is NOT already in queue
+	\post no duplicat entries in enqueue
+ */
+void
+nonmeta_context::enqueue(const event_index_type ei) const {
+	enqueue_list.push_back(ei);
 }
 
 //=============================================================================

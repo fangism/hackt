@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.22 2007/01/18 12:45:49 fang Exp $
+	$Id: State.h,v 1.1.2.23 2007/01/19 04:58:36 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -109,6 +109,9 @@ private:
 		to avoid repeated initial allocations.  
 	 */
 	update_reference_array_type		__updated_list;
+	/**
+		Why not a set, to guarantee uniqueness?
+	 */
 	typedef	vector<event_index_type>	enqueue_list_type;
 	/**
 		List of events to enqueue for certain, accumulated

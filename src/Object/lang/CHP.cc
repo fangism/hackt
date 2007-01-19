@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.28 2007/01/18 17:33:40 fang Exp $
+	$Id: CHP.cc,v 1.16.2.29 2007/01/19 04:58:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -147,6 +147,10 @@ using util::persistent_traits;
 using util::write_value;
 using util::read_value;
 using SIM::CHPSIM::EventNode;
+using SIM::CHPSIM::RECHECK_NEVER_BLOCKED;
+using SIM::CHPSIM::RECHECK_BLOCKED_THIS;
+using SIM::CHPSIM::RECHECK_UNBLOCKED_THIS;
+using SIM::CHPSIM::RECHECK_DEFERRED_TO_SUCCESSOR;
 using util::reference_wrapper;
 using util::set_inserter;
 using util::numeric::rand48;
@@ -332,11 +336,11 @@ action_sequence::execute(const nonmeta_context&,
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
  */
-bool
+char
 action_sequence::recheck(const nonmeta_context&) const {
 	// no-op
 	ICE_NEVER_CALL(cerr);
-	return false;
+	return RECHECK_UNBLOCKED_THIS;	// don't care
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -590,11 +594,11 @@ concurrent_actions::execute(const nonmeta_context& c,
 	so this does nothing.  
 	This event also never blocks, although its successors may block.
  */
-bool
+char
 concurrent_actions::recheck(const nonmeta_context&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	// no-op
-	return true;
+	return RECHECK_NEVER_BLOCKED;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -696,6 +700,7 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 			return unroll_return_type(NULL);
 		}
 	}
+if (stmt) {
 	const action_ptr_type a(stmt->unroll_resolve_copy(c, stmt));
 	if (!a) {
 		cerr << "Error resolving action statement of guarded action."
@@ -708,7 +713,17 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 	} else {
 		return unroll_return_type(new this_type(g, a));
 	}
+} else {
+	// have a 'skip' statement (NULL)
+	if (g == guard) {
+		// resolving resulted in no change
+		return p;
+	} else {
+		return unroll_return_type(
+			new this_type(g, action_ptr_type(NULL)));
+	}
 }
+}	// end method unroll_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -816,10 +831,14 @@ struct guarded_action::selection_evaluator {
 			THROW_EXIT;
 		}
 		if (b->static_constant_value()) {
+			STACKTRACE_INDENT_PRINT("true guard" << endl);
 			ready.push_back(index);
+		} else {
+			STACKTRACE_INDENT_PRINT("false guard" << endl);
 		}
 	} else {
 		// NULL guard is an else clause
+		STACKTRACE_INDENT_PRINT("else guard" << endl);
 		ready.push_back(index);
 	}
 		++index;
@@ -980,8 +999,15 @@ deterministic_selection::accept(StateConstructor& s) const {
 void
 deterministic_selection::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
+	STACKTRACE_CHPSIM_VERBOSE;
+#if 0
 	const bool b = recheck(c);
 	INVARIANT(b);
+#else
+	// never enqueues itself, only successors
+	// see recheck() below
+	ICE_NEVER_CALL(cerr);
+#endif
 	// violation is possible if guard was true but because
 	// false due to concurrent events
 	// we should alert user with run-time error
@@ -990,6 +1016,8 @@ deterministic_selection::execute(const nonmeta_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Selections act like a proxy event that dispatches one of its
+	successors, but never executes "itself" when unblocked.  
 	Action groups should never be used as leaf events, 
 	so this does nothing.
 	When a successor is ready to enqueue, unsubscribe this event from
@@ -998,7 +1026,7 @@ deterministic_selection::execute(const nonmeta_context& c,
 		(only successors are enqueued).
 	Q: this is checked twice?
  */
-bool
+char
 deterministic_selection::recheck(const nonmeta_context& c) const {
 	// 1) evaluate all clauses, which contain guard expressions
 	//	Use functional pass.
@@ -1012,19 +1040,37 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	switch (G.ready.size()) {
-	case 0: return false;		// no successor to enqueue
+	case 0: {
+		return RECHECK_BLOCKED_THIS;	// no successor to enqueue
+		// caller will subscribe this event's dependencies
+	}
 	case 1: {
-		const size_t ei = G.ready.front();
-		c.rechecks.insert(ei);
+		const size_t ei =
+			c.get_event().successor_events[G.ready.front()];
+		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
+		// act like this event (its predecessor) fired
 		EventNode::countdown_decrementer(c.event_pool)(ei);
-		return true;
+#if 0
+		c.rechecks.insert(ei);
+		// HERE TODO: subscribe... check event on the spot, don't insert
+		// return true or false?
+		// never enqueue self?
+		// but we also DON'T want to subscribe this event's deps!
+#else
+		// recheck it on the spot
+		EventNode& suc(c.event_pool[ei]);
+		const nonmeta_context::event_setter x(c, &suc);
+		// temporary, too lazy to copy, will restore upon destruction
+		suc.recheck(c, ei);
+		return RECHECK_DEFERRED_TO_SUCCESSOR;
+#endif
 	}
 	default:
 		cerr << "Run-time error: multiple exclusive guards of "
 			"deterministic selection evaluated TRUE!" << endl;
 		THROW_EXIT;
+		return RECHECK_BLOCKED_THIS;		// unreachable
 	}	// end switch
-	return false;		// unreachable
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1174,7 +1220,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 void
 nondeterministic_selection::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
-	// drop return value?
+	STACKTRACE_CHPSIM_VERBOSE;
 	const bool b = recheck(c);
 	INVARIANT(b);
 }
@@ -1190,7 +1236,7 @@ nondeterministic_selection::execute(const nonmeta_context& c,
 		(only successors are enqueued).
 	Q: this is checked twice?
  */
-bool
+char
 nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	// 1) evaluate all clauses, which contain guard expressions
 	//	Use functional pass.
@@ -1205,24 +1251,46 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	const size_t m = G.ready.size();
 	switch (m) {
-	case 0: return false;		// no successor to enqueue
+	case 0: {
+		// TODO: see determinstic selection
+		return RECHECK_BLOCKED_THIS;	// no successor to enqueue
+	}
 	case 1: {
-		const size_t ei = G.ready.front();
-		c.rechecks.insert(ei);
+		const size_t ei =
+			c.get_event().successor_events[G.ready.front()];
 		EventNode::countdown_decrementer(c.event_pool)(ei);
+#if 0
+		c.rechecks.insert(ei);
 		return true;
+#else
+		// recheck it on the spot
+		EventNode& suc(c.event_pool[ei]);
+		const nonmeta_context::event_setter x(c, &suc);
+		// temporary, too lazy to copy, will restore upon destruction
+		suc.recheck(c, ei);
+		return RECHECK_DEFERRED_TO_SUCCESSOR;
+#endif
 	}
 	default: {
 		// pick one at random
 		static rand48<long> rgen;
-		const size_t r = rgen();
-		const size_t ei = G.ready[r%m];
-		c.rechecks.insert(ei);
+		const size_t r = rgen();	// random-generate
+		const size_t ei = c.get_event().successor_events[G.ready[r%m]];
 		EventNode::countdown_decrementer(c.event_pool)(ei);
+#if 0
+		c.rechecks.insert(ei);
 		return true;
+#else
+		// recheck it on the spot
+		EventNode& suc(c.event_pool[ei]);
+		const nonmeta_context::event_setter x(c, &suc);
+		// temporary, too lazy to copy, will restore upon destruction
+		suc.recheck(c, ei);
+		return RECHECK_DEFERRED_TO_SUCCESSOR;
+#endif
 	}
 	}	// end switch
-	return false;
+	return RECHECK_BLOCKED_THIS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1373,10 +1441,10 @@ metaloop_selection::execute(const nonmeta_context&,
 /**
 	Never called, always expanded.  
  */
-bool
+char
 metaloop_selection::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
-	return false;
+	return RECHECK_BLOCKED_THIS;	// don't care
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1498,11 +1566,11 @@ assignment::execute(const nonmeta_context& c,
 /**
 	Assignments are non-blocking, and thus need no re-evaluation.
  */
-bool
+char
 assignment::recheck(const nonmeta_context&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	// no-op
-	return true;
+	return RECHECK_NEVER_BLOCKED;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1630,7 +1698,7 @@ condition_wait::execute(const nonmeta_context& c,
 	The guard expression is already checked by the caller
 	as a part of event processing.  
  */
-bool
+char
 condition_wait::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	if (cond) {
@@ -1645,9 +1713,10 @@ condition_wait::recheck(const nonmeta_context& c) const {
 			// temporary
 			THROW_EXIT;
 		}
-		return g->static_constant_value();
+		return g->static_constant_value() ?
+			RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 	} else {
-		return true;
+		return RECHECK_UNBLOCKED_THIS;
 	}
 }
 
@@ -1858,13 +1927,13 @@ channel_send::execute(const nonmeta_context& c,
 	Enqueue event if it is ready to execute.  
 	\return true if this event can be unblocked and enqueued for execution.
  */
-bool
+char
 channel_send::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	// see if referenced channel is ready to send
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-	return nc.can_send();
+	return nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2066,14 +2135,14 @@ channel_receive::execute(const nonmeta_context& c,
 	Enqueue event if it is ready to execute.  
 	\return true if this event can be unblocked and enqueued for execution.
  */
-bool
+char
 channel_receive::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	// see if referenced channel is ready to receive
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	STACKTRACE_INDENT_PRINT("chan index " << chan_index << endl);
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-	return nc.can_receive();
+	return nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2249,10 +2318,10 @@ do_forever_loop::execute(const nonmeta_context&,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+char
 do_forever_loop::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
-	return false;
+	return RECHECK_BLOCKED_THIS;	// don't care
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2442,13 +2511,13 @@ do_while_loop::execute(const nonmeta_context& c,
 	This event never blocks and thus never needs to be rechecked for 
 	unblocking because the loop-condition comes with an implicit
 	else-clause which is taken if the evaluated condition is false.  
-	\return false because this event never rechecks itself (never blocks), 
+	\return true because this event never rechecks itself (never blocks), 
 		only selects a succcessor.  
  */
-bool
+char
 do_while_loop::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
-	return true;
+	return RECHECK_NEVER_BLOCKED;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

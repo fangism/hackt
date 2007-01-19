@@ -1,0 +1,100 @@
+null-event-delay = 0
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	0	10	0	
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	10	8	0	z := 0
+	10	9	0	y := 0
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	10	9	0	y := 0
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	10	7	0	
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	10	6	0	
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	20	4	0	
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	30	5	0	z := z+1
+z : int z = 0
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	40	4	0	
+z : int z = 1
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	50	5	0	z := z+1
+z : int z = 1
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	50	3	0	[x[z]!=0]
+	60	4	0	
+z : int z = 2
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	60	4	0	
+	60	2	0	y := 2
+z : int z = 2
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	60	2	0	y := 2
+	70	5	0	z := z+1
+z : int z = 2
+y : int y = 0
+event queue:
+	time	eid	pid	event
+	70	5	0	z := z+1
+z : int z = 2
+y : int y = 2
+event queue:
+	time	eid	pid	event
+	80	4	0	
+z : int z = 3
+y : int y = 2
+event queue:
+	time	eid	pid	event
+	90	5	0	z := z+1
+z : int z = 3
+y : int y = 2
+event queue:
+	time	eid	pid	event
+	100	4	0	
+z : int z = 4
+y : int y = 2
+event queue:
+	time	eid	pid	event
+	100	1	0	
+z : int z = 4
+y : int y = 2
+event queue:
+	(empty)
+z : int z = 4
+y : int y = 2
+time: 100

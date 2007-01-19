@@ -1,0 +1,12 @@
+// "wait-conjunction-a.hac"
+//	$Id: wait-conjunction-a.hac,v 1.1.2.1 2007/01/19 04:59:13 fang Exp $
+// different equivalent ways of wait on more than one condition
+
+bool a, b;
+
+chp {
+a-,b-;
+{a-;a-;a-;a-;a+},{b-;b+},{[a && b];a-,b-}
+	// third body will block until a and b are both true
+}
+

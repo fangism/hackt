@@ -5,6 +5,24 @@
 
 2007-01-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-48:
+	  CHP::action::recheck() now returns a more meaning flag set
+		indicating action taken by the callee, and to be taken
+		by the caller.  New enumerations allow us to suppress
+		subscription activity for events that never block.  
+		New enum values in "sim/chpsim/Event.h".
+	  CHP::guarded_action::unroll_resolve_copy, minor fix, 
+		forgot NULL (skip) statement case.  
+	  Folded subscription work into EventNode::recheck().
+	  CHPSIM::nonmeta_context: added back enqueue_list member
+		to allow events to directly enqueue (only selections!)
+	  Next: trying something ballsy: set the predecessor count
+		for immediate branches of selections to 0 instead of 1, 
+		to avoid wrongful decrementing during recheck().  
+		Beware of skip short cut to the join node!
+		Need to test various configurations of selections.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-47:
 	  No source revision, no new bugs found.
 	  Another batch of new chpsim tests in test/chpsim, 

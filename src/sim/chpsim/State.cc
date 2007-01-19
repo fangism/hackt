@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.28 2007/01/18 12:45:47 fang Exp $
+	$Id: State.cc,v 1.1.2.29 2007/01/19 04:58:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -101,9 +101,11 @@ struct State::recheck_transformer {
 	void
 	operator () (const event_index_type ei) {
 		STACKTRACE("recheck-transformer");
-		STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
+//		STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
+		// can we push this functionality into EventNode?
+#if 0
 		if (e.recheck(context)) {
 			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
 			state.__enqueue_list.push_back(ei);
@@ -115,6 +117,9 @@ struct State::recheck_transformer {
 			e.get_deps().subscribe(context, ei);
 			// dump deps
 		}
+#else
+		e.recheck(context, ei);	// const?
+#endif
 	}
 
 };	// end class recheck_transformer

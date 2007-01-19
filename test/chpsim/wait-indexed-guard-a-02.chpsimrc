@@ -1,0 +1,7 @@
+# "wait-indexed-guard-a-02.chpsimrc"
+#	$Id: wait-indexed-guard-a-02.chpsimrc,v 1.1.2.1 2007/01/19 04:59:33 fang Exp $
+# @haco@ wait-indexed-guard-a.haco-a
+
+null-event-delay 0
+source wait-indexed-guard-a-01.chpsimrc
+

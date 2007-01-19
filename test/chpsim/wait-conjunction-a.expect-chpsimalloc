@@ -1,0 +1,26 @@
+Variables: 
+bool[1]: "a" 
+bool[2]: "b" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 18 
+event[1]: null: , pid: 0, #pred: 3, succ: 
+event[2]: assign: a := true, pid: 0, #pred: 1, succ: 1 
+event[3]: assign: a := false, pid: 0, #pred: 1, succ: 2 
+event[4]: assign: a := false, pid: 0, #pred: 1, succ: 3 
+event[5]: assign: a := false, pid: 0, #pred: 1, succ: 4 
+event[6]: assign: a := false, pid: 0, #pred: 1, succ: 5 
+event[7]: assign: b := true, pid: 0, #pred: 1, succ: 1 
+event[8]: assign: b := false, pid: 0, #pred: 1, succ: 7 
+event[9]: null: , pid: 0, #pred: 2, succ: 1 
+event[10]: assign: a := false, pid: 0, #pred: 1, succ: 9 
+event[11]: assign: b := false, pid: 0, #pred: 1, succ: 9 
+event[12]: fork: , pid: 0, #pred: 1, succ: 10 11 
+event[13]: null: [a&&b], pid: 0, #pred: 1, succ: 12 
+bool deps: 1 2 
+event[14]: fork: , pid: 0, #pred: 1, succ: 6 8 13 
+event[15]: null: , pid: 0, #pred: 2, succ: 14 
+event[16]: assign: a := false, pid: 0, #pred: 1, succ: 15 
+event[17]: assign: b := false, pid: 0, #pred: 1, succ: 15 
+event[18]: fork: , pid: 0, #pred: 1, succ: 16 17 
+
