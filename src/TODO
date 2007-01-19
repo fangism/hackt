@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.48.2.4 2007/01/18 17:33:39 fang Exp $
+#	$Id: TODO,v 1.48.2.5 2007/01/19 22:52:00 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -39,11 +39,23 @@ chpsim:
 		may contain arbitrary nonmeta-expressions.
 		Q: when/how should they be expanded, at source/tree level,
 			in intermediate representation, or event-generation?
+			Q: should we do version tracking?
 		Q: when should evaluation of expressions *begin*?
 			do we require flow analysis?
+		A: safe to start right when channel event is ready, 
+			i.e. predecessors done, and channel state is ready
 	support: probe expressions, value probes
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
+	visualization: 
+		print guard expressions on outgoing edges of selections
+		print process-subgraphs as clusters
+		print allocated instances and dependency edges to them
+	footprint-ize: processes' CHP event subgraphs, easier because
+		they are not shared.  
+	enhancement: Maybe flag references that are meta to avoid re-checking
+		as nonmeta references at run-time.  
+		Possibly cache-it as a redundant pointer in CHP expressions.
 
 prsim:
 	category of 'debug' commands for inspecting state, etc...

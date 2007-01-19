@@ -1,0 +1,13 @@
+// "select-sequence-a.hac"
+//	$Id: select-sequence-a.hac,v 1.1.2.1 2007/01/19 22:52:55 fang Exp $
+// sequence of determinstic selections
+
+bool a, b, c;
+
+chp {
+a-,b-,c-;
+a+;
+[a -> b+; c- [] ~a -> b-];
+[~b -> skip [] else -> c+]
+}
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.21 2007/01/19 04:58:32 fang Exp $
+	$Id: Event.cc,v 1.1.2.22 2007/01/19 22:52:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -168,7 +168,7 @@ EventNode::execute(const nonmeta_context& c,
 		vector<global_indexed_reference>& updates) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
-	countdown = predecessors;
+	reset_countdown();
 	if ((event_type != EVENT_NULL) && action_ptr) {
 		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.29 2007/01/19 04:58:31 fang Exp $
+	$Id: CHP.cc,v 1.16.2.30 2007/01/19 22:52:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -837,9 +837,11 @@ struct guarded_action::selection_evaluator {
 			STACKTRACE_INDENT_PRINT("false guard" << endl);
 		}
 	} else {
-		// NULL guard is an else clause
+		// NULL guard is an else clause (in last position)
 		STACKTRACE_INDENT_PRINT("else guard" << endl);
-		ready.push_back(index);
+		if (ready.empty()) {
+			ready.push_back(index);
+		}
 	}
 		++index;
 	}	// end operator ()
@@ -940,8 +942,9 @@ deterministic_selection::accept(StateConstructor& s) const {
 	// TODO: run-time check for guard exclusion
 	const size_t branches = this->size();
 	const size_t merge_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
+		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
 			s.current_process_index));
+	// don't pass this, as that would cause re-evaluation at join node!
 {
 	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
 	EventNode& merge_event(s.get_event(merge_index));
@@ -1024,7 +1027,8 @@ deterministic_selection::execute(const nonmeta_context& c,
 	its dependencies.  
 	\return false signaling that this event is never enqueued, 
 		(only successors are enqueued).
-	Q: this is checked twice?
+	Q: this is checked twice? A: no, doesn't follow conventional execution
+	TODO: test nested selections!
  */
 char
 deterministic_selection::recheck(const nonmeta_context& c) const {
@@ -1045,10 +1049,11 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 		// caller will subscribe this event's dependencies
 	}
 	case 1: {
-		const size_t ei =
-			c.get_event().successor_events[G.ready.front()];
+		EventNode& t(c.get_event());	// this event
+		const size_t ei = t.successor_events[G.ready.front()];
 		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
-		// act like this event (its predecessor) fired
+		t.reset_countdown();
+		// act like this event (its predecessor) executed
 		EventNode::countdown_decrementer(c.event_pool)(ei);
 #if 0
 		c.rechecks.insert(ei);
@@ -1161,8 +1166,9 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	// TODO: run-time check for guard exclusion
 	const size_t branches = this->size();
 	const size_t merge_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_END, 
+		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
 			s.current_process_index));
+	// don't pass this, as that would cause re-evaluation at join node!
 {
 	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
 	EventNode& merge_event(s.get_event(merge_index));
@@ -1212,6 +1218,17 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: we may want this to behave differently than determinstic sel.
+	We may want to introduce a delay window from recheck to enqueue
+	so multiple input guards may become true to require arbitration, 
+	not just the arrival of the first true guard.
+	In this case, we want recheck behavior upon execution.  
+	Recheck will be slightly different.  
+	Note that the window of delay also allows for the possibility
+	of unstable guards upon re-evaluation!
+	Deterministic selection does not have this problem, 
+	as branch selection occurs immediately.  
+
 	Action groups should never be used as leaf events, 
 	so this does nothing other than evaluate guards, via recheck().  
 	Q: this is checked twice: pre-enqueue, and during execution.
@@ -1221,12 +1238,17 @@ void
 nondeterministic_selection::execute(const nonmeta_context& c, 
 		global_reference_array_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
+#if 0
 	const bool b = recheck(c);
 	INVARIANT(b);
+#else
+	ICE_NEVER_CALL(cerr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: implement this differently, see comment in execute().
 	Action groups should never be used as leaf events, 
 	so this does nothing.
 	When a successor is ready to enqueue, unsubscribe this event from
@@ -1250,6 +1272,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
 	const size_t m = G.ready.size();
+	EventNode& t(c.get_event());
 	switch (m) {
 	case 0: {
 		// TODO: see determinstic selection
@@ -1258,6 +1281,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	case 1: {
 		const size_t ei =
 			c.get_event().successor_events[G.ready.front()];
+		t.reset_countdown();
 		EventNode::countdown_decrementer(c.event_pool)(ei);
 #if 0
 		c.rechecks.insert(ei);
@@ -1276,6 +1300,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 		static rand48<long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = c.get_event().successor_events[G.ready[r%m]];
+		t.reset_countdown();
 		EventNode::countdown_decrementer(c.event_pool)(ei);
 #if 0
 		c.rechecks.insert(ei);

@@ -1,0 +1,14 @@
+// "select-skip-b.hac"
+// copy-modified from "select-skip-a.hac"
+//	$Id: select-skip-b.hac,v 1.1.2.1 2007/01/19 22:53:01 fang Exp $
+
+bool a, b;
+
+chp {
+a-,b-;
+[ a -> b+ [] else -> skip]
+}
+
+// should result in a similar graph to the -a version
+// the skip statement is simply a bypass
+

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.7 2007/01/18 12:45:43 fang Exp $
+	$Id: Command.cc,v 1.1.2.8 2007/01/19 22:52:02 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -285,6 +285,7 @@ if (a.size() > 2) {
 	s.resume();
 	time_type time = s.time();
 	// could check s.pending_events()
+try {
 #if 0
 	while (!s.stopped() && i && GET_NODE((ni = s.step())))
 #else
@@ -330,7 +331,11 @@ if (a.size() > 2) {
 		--i;
 	}	// end while
 	return Command::NORMAL;
+} catch (...) {
+	cerr << "Caught run-time exception during execution.  Halting." << endl;
+	return Command::FATAL;
 }
+}	// end else
 }	// end Step::main()
 
 void

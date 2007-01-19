@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-49:
+	  lang/CHP.cc: (bug fixes)
+		nonmeta_guard evaluator, only add the
+			else-clause event if the match-list is empty.  
+		selection::recheck():
+			reset own event countdown as if executed normally
+		join-event construction:
+			don't pass self action pointer, or it will be
+			wrongfully rechecked at join-time, duh!
+	  sim/chpsim/Command.cc: try-catch safety net for execution exceptions
+	  added more items to TODO under chpsim.
+	  Fresh batch of selection-related test cases to test/chpsim.
+	  Almost ready for first release onto main trunk, just a few more
+		batches of chpsim tests.  
+
+
 2007-01-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-48:
@@ -16,11 +34,6 @@
 	  Folded subscription work into EventNode::recheck().
 	  CHPSIM::nonmeta_context: added back enqueue_list member
 		to allow events to directly enqueue (only selections!)
-	  Next: trying something ballsy: set the predecessor count
-		for immediate branches of selections to 0 instead of 1, 
-		to avoid wrongful decrementing during recheck().  
-		Beware of skip short cut to the join node!
-		Need to test various configurations of selections.  
 
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-47:

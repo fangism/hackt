@@ -1,0 +1,54 @@
+# "select-loop-a-01.chpsimrc"
+#	$Id: select-loop-a-01.chpsimrc,v 1.1.2.1 2007/01/19 22:52:37 fang Exp $
+# @haco@ select-loop-a.haco-a
+
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+time
+assert-queue
+

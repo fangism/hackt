@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.24 2007/01/19 04:58:34 fang Exp $
+	$Id: Event.h,v 1.1.2.25 2007/01/19 22:52:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -47,7 +47,11 @@ enum {
 	EVENT_RECEIVE = 3,
 	EVENT_CONCURRENT_FORK = 4,	///< divergence of concurrent events
 	EVENT_CONCURRENT_JOIN = EVENT_NULL,	///< convergence event (no-op)
-	EVENT_SELECTION_BEGIN = 5,	///< the start of any selection
+	/**
+		the start of any selection: 
+		deterministic, non-deterministic, and do-while loops
+	 */
+	EVENT_SELECTION_BEGIN = 5,
 	EVENT_SELECTION_END = EVENT_NULL	///< end of any selection (no-op)
 };
 
@@ -233,6 +237,9 @@ public:
 
 	void
 	reset(void);
+
+	void
+	reset_countdown(void) { countdown = predecessors; }
 
 	void
 	execute(const nonmeta_context&, vector<global_indexed_reference>&);

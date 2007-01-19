@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.5 2007/01/19 04:58:40 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.6 2007/01/19 22:52:08 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -13,9 +13,13 @@ HACKT_PARSE_TEST_PASSES = \
 	countdown-domino-a countdown-domino-b \
 	wait-basic-a \
 	wait-conjunction-a wait-conjunction-b wait-conjunction-c \
-	wait-indexed-guard-a
-
-# 	select-skip-a select-skip-b
+	wait-indexed-guard-a \
+ 	select-skip-a select-skip-b \
+	select-sequence-a \
+	select-parallel-a \
+	select-loop-a select-loop-b \
+	arbitrate-skip-a arbitrate-skip-b \
+	arbitrate-loop-a
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -72,8 +76,15 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	wait-conjunction-a-01 wait-conjunction-a-02 \
 	wait-conjunction-b-01 wait-conjunction-b-02 \
 	wait-conjunction-c-01 wait-conjunction-c-02 \
-	wait-indexed-guard-a-01 wait-indexed-guard-a-02
+	wait-indexed-guard-a-01 wait-indexed-guard-a-02 \
+	select-skip-a-01 \
+	select-skip-b-01 \
+	select-sequence-a-01 \
+	select-parallel-a-01 \
+	select-loop-a-01 \
+	select-loop-b-01
 
+# arbitrate...
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=

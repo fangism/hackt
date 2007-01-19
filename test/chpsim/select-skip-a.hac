@@ -1,0 +1,10 @@
+// "select-skip-a.hac"
+//	$Id: select-skip-a.hac,v 1.1.2.1 2007/01/19 22:52:58 fang Exp $
+
+bool a, b;
+
+chp {
+a-,b-;
+[ a -> skip [] else -> b+]
+}
+

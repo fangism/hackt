@@ -1,0 +1,34 @@
+# "select-skip-b-01.chpsimrc"
+#	$Id: select-skip-b-01.chpsimrc,v 1.1.2.1 2007/01/19 22:52:59 fang Exp $
+# @haco@ select-skip-b.haco-a
+
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+time
+
+

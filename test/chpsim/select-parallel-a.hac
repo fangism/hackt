@@ -1,0 +1,13 @@
+// "select-parallel-a.hac"
+
+bool a, b, c, d;
+
+chp {
+a-,b-,c-,d-;
+b+,a+;
+// the rest are all concurrent
+[a -> c+ [] else -> skip],
+[b -> d+ [] else -> skip],
+{[c && d]; c-,d-}
+}
+
