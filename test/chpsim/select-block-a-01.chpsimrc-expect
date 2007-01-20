@@ -1,0 +1,179 @@
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+e : bool e = 0
+step 5 
+	0	0	0	null
+	10	29	0	
+	20	27	0	c := false
+	20	28	0	e := false
+	30	26	0	
+event queue:
+	time	eid	pid	event
+	40	25	0	
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+e : bool e = 0
+time: 30
+event[18]: null: [e], pid: 0, #pred: 1, succ: 24 
+bool deps: 4 
+source: [e]
+status: (currently not subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+step 1 
+	40	25	0	
+event[18]: null: [e], pid: 0, #pred: 1, succ: 24 
+bool deps: 4 
+source: [e]
+status: (blocked and subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+bool[4]: "e" : 18 
+step 1 
+	50	2	0	[~e]
+All event subscriptions:
+bool[4]: "e" : 18 
+event queue:
+	time	eid	pid	event
+	60	17	0	
+step 4 
+	60	17	0	
+	70	15	0	a := false
+	70	16	0	b := false
+	80	14	0	
+event 18 still subscribed to `e' 
+event queue:
+	time	eid	pid	event
+	90	13	0	e := true
+event[18]: null: [e], pid: 0, #pred: 1, succ: 24 
+bool deps: 4 
+source: [e]
+status: (blocked and subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+bool[4]: "e" : 18 
+	90	13	0	e := true
+should wake up event 18, now in queue 
+event queue:
+	time	eid	pid	event
+	100	12	0	a := false
+	100	18	0	[e]
+event[18]: null: [e], pid: 0, #pred: 1, succ: 24 
+bool deps: 4 
+source: [e]
+status: (currently not subscribed to its dependencies)
+in queue: yes
+All event subscriptions:
+should have no more subscriptions 
+event[24]: select: , pid: 0, #pred: 1, succ: 22 23 
+bool deps: 1 2 
+source: deterministic: {
+  a -> c := c
+  b -> c := c
+}
+status: (currently not subscribed to its dependencies)
+in queue: no
+step 4 
+	100	12	0	a := false
+	100	18	0	[e]
+	110	11	0	b := false
+	120	10	0	a := false
+event queue:
+	time	eid	pid	event
+	130	9	0	b := false
+event 24 should be subscribed to `a' and `b' 
+event[24]: select: , pid: 0, #pred: 1, succ: 22 23 
+bool deps: 1 2 
+source: deterministic: {
+  a -> c := c
+  b -> c := c
+}
+status: (blocked and subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+bool[1]: "a" : 24 
+bool[2]: "b" : 24 
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+e : bool e = 1
+step 2 
+	130	9	0	b := false
+	140	7	0	b := false
+time: 140
+event queue:
+	time	eid	pid	event
+	150	6	0	a := true
+event[24]: select: , pid: 0, #pred: 1, succ: 22 23 
+bool deps: 1 2 
+source: deterministic: {
+  a -> c := c
+  b -> c := c
+}
+status: (blocked and subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+bool[1]: "a" : 24 
+bool[2]: "b" : 24 
+now a+ should release event 24 
+	150	6	0	a := true
+event queue:
+	time	eid	pid	event
+	160	3	0	null
+	160	22	0	c := c
+event[24]: select: , pid: 0, #pred: 1, succ: 22 23 
+bool deps: 1 2 
+source: deterministic: {
+  a -> c := c
+  b -> c := c
+}
+status: (currently not subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+step 2 
+	160	3	0	null
+	160	22	0	c := c
+event queue:
+	time	eid	pid	event
+	170	21	0	null
+event 2 should now be blocked on `e' 
+event[2]: null: [~e], pid: 0, #pred: 1, succ: 17 
+bool deps: 4 
+source: [~e]
+status: (blocked and subscribed to its dependencies)
+in queue: no
+All event subscriptions:
+bool[4]: "e" : 2 
+step 3 
+	170	21	0	null
+	180	20	0	c := ~c
+	190	19	0	e := false
+time: 190
+event 2 should be released 
+event queue:
+	time	eid	pid	event
+	200	2	0	[~e]
+event[2]: null: [~e], pid: 0, #pred: 1, succ: 17 
+bool deps: 4 
+source: [~e]
+status: (currently not subscribed to its dependencies)
+in queue: yes
+All event subscriptions:
+bool[4]: "e" : 18 
+now event 18 is waiting for handshake on `e' 
+step 5 
+	200	2	0	[~e]
+	210	17	0	
+	220	15	0	a := false
+	220	16	0	b := false
+	230	14	0	
+event queue:
+	time	eid	pid	event
+	240	13	0	e := true
+time: 230
+now we just let it run a while... 

@@ -1,0 +1,93 @@
+# "select-block-a-01.chpsimrc"
+#	$Id: select-block-a-01.chpsimrc,v 1.1.2.1 2007/01/20 21:35:17 fang Exp $
+# @haco@ select-block-a.haco-a
+
+watchall-events
+queue
+get a
+get b
+get c
+get e
+echo step 5
+step 5
+queue
+get a
+get b
+get c
+get e
+time
+dump-event 18
+subscribers-all
+echo step 1
+step 1
+dump-event 18
+subscribers-all
+echo step 1
+step 1
+subscribers-all
+queue
+echo step 4
+step 4
+
+echo event 18 still subscribed to `e'
+queue
+dump-event 18
+subscribers-all
+
+step
+echo should wake up event 18, now in queue
+queue
+dump-event 18
+subscribers-all
+echo should have no more subscriptions
+dump-event 24
+echo step 4
+step 4
+queue
+
+echo event 24 should be subscribed to `a' and `b'
+dump-event 24
+subscribers-all
+get a
+get b
+get c
+get e
+echo step 2
+step 2
+time
+queue
+dump-event 24
+subscribers-all
+
+echo now a+ should release event 24
+step
+queue
+dump-event 24
+subscribers-all
+
+echo step 2
+step 2
+queue
+echo event 2 should now be blocked on `e'
+dump-event 2
+subscribers-all
+
+echo step 3
+step 3
+time
+echo event 2 should be released
+queue
+dump-event 2
+subscribers-all
+echo now event 18 is waiting for handshake on `e'
+
+echo step 5
+step 5
+queue
+time
+
+echo now we just let it run a while...
+nowatchall-events
+step 666
+assert-queue
+

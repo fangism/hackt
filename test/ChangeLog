@@ -2,6 +2,13 @@
 
 2007-01-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-52:
+	  Added chpsim/testlib directory, containing library definitions
+		for testing purposes only.  
+
+
+2007-01-19	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-50:
 	  *.autodepend construction: should filter out empty variables
 		on empty lines which results in bogus suffix-only targets.

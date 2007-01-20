@@ -1,0 +1,8 @@
+// "bool-logic.hac"
+//	$Id: bool-logic.hac,v 1.1.2.1 2007/01/20 21:35:30 fang Exp $
+
+// path: ./ or testlib/ ?
+import "bool-and.hac";
+import "bool-or.hac";
+import "bool-xor.hac";
+

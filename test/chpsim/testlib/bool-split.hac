@@ -1,0 +1,29 @@
+// "bool-split.hac"
+//	$Id: bool-split.hac,v 1.1.2.1 2007/01/20 21:35:37 fang Exp $
+// conditional routing
+
+// TODO: use log(N) bits for select channel
+template <pint N>
+defproc bool_split (chan?(int) C; chan?(bool) I; chan!(bool) O[N]) {
+int c;
+bool x;
+chp {
+*[ C?(c),I?(x);
+//	[ []:i:N: (c == i) -> O[i]!(x) ]
+	O[c]!(x)
+]
+}
+}
+
+// two-way split
+defproc bool_split_2 (chan?(bool) C, I; chan!(bool) O[2]) {
+bool c, x;
+chp {
+*[ C?(c),I?(x);
+	[ c -> O[1]!(x)
+	[] else -> O[0]!(x)
+	]
+]
+}
+}
+

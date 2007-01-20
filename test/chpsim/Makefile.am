@@ -1,8 +1,10 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.8 2007/01/20 07:26:18 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.9 2007/01/20 21:35:14 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
+
+SUBDIRS = testlib .
 
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \
@@ -21,7 +23,8 @@ HACKT_PARSE_TEST_PASSES = \
 	arbitrate-skip-a arbitrate-skip-b \
 	arbitrate-loop-a \
 	select-nested-loop-a select-nested-loop-b \
-	select-fail-a
+	select-fail-a \
+	select-block-a
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -91,7 +94,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	arbitrate-skip-b-01 \
 	arbitrate-loop-a-01 arbitrate-loop-a-02 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
-	select-nested-loop-b-01 select-nested-loop-b-02
+	select-nested-loop-b-01 select-nested-loop-b-02 \
+	select-block-a-01
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01

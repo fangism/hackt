@@ -1,0 +1,212 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	20	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	23	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	44
+	26	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	36	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	39	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	42	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	45	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	48	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	51	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	58	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	61	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	66	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	69	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	71	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	310
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    a = bool<> a
+    b = bool<> b
+    c = bool<> c
+    e = bool<> e
+}
+
+top-level chp:
+  concurrent: {
+    sequential: {
+      concurrent: {
+        c := false
+        e := false
+      }
+      concurrent: {
+        *[
+          sequential: {
+            [~e]
+            concurrent: {
+              a := false
+              b := false
+            }
+            e := true
+            a := false
+            b := false
+            a := false
+            b := false
+            deterministic: {
+              c -> sequential: {
+                a := false
+                b := true
+              }
+              else -> sequential: {
+                b := false
+                a := true
+              }
+            }
+          }
+        ]
+        *[
+          sequential: {
+            [e]
+            deterministic: {
+              a -> c := c
+              b -> c := c
+            }
+            c := ~c
+            e := false
+          }
+        ]
+      }
+    }
+  }
+footprint: {
+  a = bool^0 = a (1) 
+  b = bool^0 = b (2) 
+  c = bool^0 = c (3) 
+  e = bool^0 = e (4) 
+  Created state:
+  bool instance pool:
+  1	a
+  2	b
+  3	c
+  4	e
+  resolved concurrent actions:
+    sequential: {
+      concurrent: {
+        c := false
+        e := false
+      }
+      concurrent: {
+        *[
+          sequential: {
+            [~e]
+            concurrent: {
+              a := false
+              b := false
+            }
+            e := true
+            a := false
+            b := false
+            a := false
+            b := false
+            deterministic: {
+              c -> sequential: {
+                a := false
+                b := true
+              }
+              else -> sequential: {
+                b := false
+                a := true
+              }
+            }
+          }
+        ]
+        *[
+          sequential: {
+            [e]
+            deterministic: {
+              a -> c := c
+              b -> c := c
+            }
+            c := ~c
+            e := false
+          }
+        ]
+      }
+    }
+}

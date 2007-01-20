@@ -1,0 +1,28 @@
+// "bool-merge.hac"
+//	$Id: bool-merge.hac,v 1.1.2.1 2007/01/20 21:35:31 fang Exp $
+// conditional routing
+
+template <pint N>
+defproc bool_merge(chan?(int) C; chan?(bool) I[N]; chan!(bool) O) {
+int c;
+bool x;
+chp {
+*[ C?(c);
+//	[ []i:N: (c == i) -> I[N]?(x) ]
+	I[c]?(x);
+	O!(x)
+]
+}
+}
+
+defproc bool_merge_2(chan?(bool) S, I[2]; chan!(bool) O) {
+bool c, x;
+chp {
+*[ S?(c);
+	[ c -> I[1]?(x) [] else -> I[0]?(x) ];
+	O!(x)
+]
+}
+}
+
+

@@ -1,0 +1,23 @@
+// "bool-and.hac"
+//	$Id: bool-and.hac,v 1.1.2.1 2007/01/20 21:35:29 fang Exp $
+// boolean logical AND
+// TODO: use generalized input array
+
+defproc bool_and(chan?(bool) A, B; chan!(bool) O) {
+bool a, b;
+chp {
+*[A?(a),B?(b); O!(a && b)]
+}
+}
+
+/***
+// pending meta-expression expansion support
+template <pint N>
+defproc bool_and(chan(bool)? A[N]; chan(bool)! O) {
+bool a[N];
+chp {
+*[{,:i:N: A[i]?(a[i])}; O!((&&:i:N: a[i]))]
+}
+}
+***/
+
