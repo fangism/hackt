@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.30 2007/01/20 07:26:17 fang Exp $
+	$Id: State.cc,v 1.1.2.31 2007/01/20 23:12:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -529,12 +529,13 @@ State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	const event_index_type es = event_pool.size();
 	event_index_type i = 0;		// FIRST_VALID_EVENT;
 	// we use the 0th event to launch initial batch of events
-	const string prefix("EVENT_");	// keep consistent with Event::dump!
+	// const string prefix("EVENT_"); // keep consistent with Event::dump!
 	for ( ; i<es; ++i) {
 		// o << "EVENT_" << i << "\t[label=\"" << i << "\"];";
 		// o << prefix << i << "\t";
 		const event_type& e(event_pool[i]);
 		e.dump_dot_node(o, i, g) << endl;
+#if 0
 		// iterate over edges
 		const event_index_type* j = &e.successor_events[0];
 		const event_index_type* z =
@@ -544,6 +545,7 @@ State::dump_struct_dot(ostream& o, const graph_options& g) const {
 			o << prefix << i << " -> " << prefix << h;
 			event_pool[h].dump_dot_edge(o) << ';' << endl;
 		}
+#endif
 	}
 }
 	o << "}" << endl;

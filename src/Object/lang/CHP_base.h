@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7.32.11 2007/01/19 04:58:32 fang Exp $
+	$Id: CHP_base.h,v 1.7.32.12 2007/01/20 23:12:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -18,6 +18,7 @@ namespace CHPSIM {
 	// we need some sort of CHP_visitor refinement!
 	class StateConstructor;
 	class nonmeta_context;
+	class EventNode;
 }	// end namespace CHPSIM
 }	// end namespace SIM
 namespace entity {
@@ -60,6 +61,13 @@ virtual	ostream&
 	dump_event(ostream&, const expr_dump_context&) const
 
 virtual	CHP_DUMP_EVENT_PROTO = 0;
+
+#define	CHP_DUMP_SUCCESSORS_PROTO					\
+	ostream&							\
+	dump_successor_edges(ostream&, const SIM::CHPSIM::EventNode&,	\
+		const size_t, const expr_dump_context&) const
+
+virtual	CHP_DUMP_SUCCESSORS_PROTO;
 
 	/**
 		unroll_context-binding functor.  

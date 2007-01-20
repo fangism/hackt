@@ -5,6 +5,11 @@
 
 2007-01-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-53:
+	  chpsim-event Dot graphs now have guard labels on outgoing
+		edges of selection nodes.  Dude.  Sweet.  
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-52:
 	  No source revision, only new test cases.
 		Added new test-only directory test/chpsim/testlib.

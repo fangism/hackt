@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.32 2007/01/20 07:26:02 fang Exp $
+	$Id: CHP.cc,v 1.16.2.33 2007/01/20 23:12:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -189,6 +189,46 @@ recheck_all_successor_events(const nonmeta_context& c) {
 		event_type::countdown_decrementer(c.event_pool));
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print outgoing edges adorned with guard expressions as labels. 
+ */
+static
+ostream&
+dump_selection_successor_edges(const selection_list_type& l, ostream& o, 
+		const EventNode& e, const size_t i, 
+		const expr_dump_context& c) {
+	typedef	selection_list_type::const_iterator const_iterator;
+	const EventNode::successor_list_type& succ(e.successor_events);
+	const size_t* si = std::begin(succ);
+	const size_t* se = std::end(succ);
+	const_iterator li(l.begin()), le(l.end());
+	for ( ; li!=le; ++li, ++si) {
+		const guarded_action::guard_ptr_type&
+			g((*li)->get_guard());
+		o << EventNode::node_prefix << i << " -> " <<
+			EventNode::node_prefix << *si << "\t[label=\"";
+		if (g) {
+			g->dump(o, c);
+		} else {
+			o << "else";
+		}
+		o << "\"];" << endl;
+	}
+	// guard list may have ONE less than successor list
+	// if there is an implicit else-clause
+	if (si != se) {
+		o << EventNode::node_prefix << i << " -> " <<
+			EventNode::node_prefix << *si <<
+			"\t[label=\"else\"];" << endl;
+		++si;
+		INVARIANT(si == se);
+		
+	}
+	// check for else clause
+	return o;
+}
+
 //=============================================================================
 // class action method definitions
 
@@ -201,6 +241,16 @@ action_ptr_type
 action::transformer::operator () (const action_ptr_type& a) const {
 	NEVER_NULL(a);
 	return a->unroll_resolve_copy(_context, a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	By default print all successor edge, unadorned.  
+ */
+ostream&
+action::dump_successor_edges(ostream& o, const EventNode& e, 
+		const size_t i, const expr_dump_context&) const {
+	return e.dump_successor_edges_default(o, i);
 }
 
 //=============================================================================
@@ -1079,6 +1129,13 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+deterministic_selection::dump_successor_edges(ostream& o, const EventNode& e, 
+		const size_t i, const expr_dump_context& c) const {
+	return dump_selection_successor_edges(*this, o, e, i, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 deterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -1378,6 +1435,14 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 		return RECHECK_BLOCKED_THIS;
 	}
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+nondeterministic_selection::dump_successor_edges(
+		ostream& o, const EventNode& e, 
+		const size_t i, const expr_dump_context& c) const {
+	return dump_selection_successor_edges(*this, o, e, i, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2613,6 +2678,14 @@ char
 do_while_loop::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	return RECHECK_NEVER_BLOCKED;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+do_while_loop::dump_successor_edges(
+		ostream& o, const EventNode& e, 
+		const size_t i, const expr_dump_context& c) const {
+	return dump_selection_successor_edges(*this, o, e, i, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

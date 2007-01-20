@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.12.4.9 2007/01/15 06:29:09 fang Exp $
+	$Id: CHP.h,v 1.12.4.10 2007/01/20 23:12:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -230,6 +230,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
+	CHP_DUMP_SUCCESSORS_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 	CHP_EXECUTE_PROTO;
@@ -258,6 +259,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
+	CHP_DUMP_SUCCESSORS_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 	CHP_EXECUTE_PROTO;
@@ -496,6 +498,7 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
+	CHP_DUMP_SUCCESSORS_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
 	CHP_EXECUTE_PROTO;

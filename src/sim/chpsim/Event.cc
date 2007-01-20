@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.24 2007/01/20 07:26:14 fang Exp $
+	$Id: Event.cc,v 1.1.2.25 2007/01/20 23:12:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -35,6 +35,10 @@ using entity::expr_dump_context;
 //=============================================================================
 // class EventNode method definitions
 
+const char 
+EventNode::node_prefix[] = "EVENT_";
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EventNode::EventNode() :
 		action_ptr(NULL),
 		successor_events(), 
@@ -279,7 +283,7 @@ EventNode::dump_struct(ostream& o) const {
 ostream&
 EventNode::dump_dot_node(ostream& o, const event_index_type i, 
 		const graph_options& g) const {
-	o << "EVENT_" << i << '\t';
+	o << node_prefix << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
 	case EVENT_NULL:
@@ -290,6 +294,7 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	case EVENT_RECEIVE: o << "invhouse"; break;
 	case EVENT_CONCURRENT_FORK: o << "hexagon"; break;
 	case EVENT_SELECTION_BEGIN: o << "trapezium"; break;
+		// TODO: flag for non-deterministic?
 	default:
 		ISE(cerr, cerr << "Invalid event type enum: "
 			<< event_type << endl;)
@@ -306,7 +311,14 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	}
 	// no edges
 	// no deps
-	return o << "\"];";
+	o << "\"];" << endl;
+	if (action_ptr) {
+		action_ptr->dump_successor_edges(o, *this, i, 
+			expr_dump_context::default_value);
+	} else {
+		dump_successor_edges_default(o, i);
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,7 +328,16 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 		Do this in the print of selection.
  */
 ostream&
-EventNode::dump_dot_edge(ostream& o) const {
+EventNode::dump_successor_edges_default(ostream& o, 
+		const event_index_type i) const {
+	// iterate over edges
+	const event_index_type* j = begin(successor_events);
+	const event_index_type* z = end(successor_events);
+	for ( ; j!=z; ++j) {
+		const event_index_type h = *j;
+		o << node_prefix << i << " -> " << node_prefix << h <<
+			';' << endl;
+	}
 	return o;
 }
 

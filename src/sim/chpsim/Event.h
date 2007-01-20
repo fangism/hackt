@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.27 2007/01/20 07:26:15 fang Exp $
+	$Id: Event.h,v 1.1.2.28 2007/01/20 23:12:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -114,6 +114,7 @@ class EventNode {
 public:
 	typedef	size_t			event_index_type;
 	typedef	valarray<event_index_type>	successor_list_type;
+	static const char		node_prefix[];
 private:
 	/**
 		the (atomic) event to occur corresponding to this node
@@ -267,7 +268,7 @@ public:
 		const graph_options&) const;
 
 	ostream&
-	dump_dot_edge(ostream&) const;
+	dump_successor_edges_default(ostream&, const event_index_type) const;
 
 	/// forwarded call
 	ostream&
