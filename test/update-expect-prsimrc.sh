@@ -23,7 +23,16 @@ done
 
 for i
 do
-	cp -f $i.prsimrc-out-filter $srcdir/$i.prsimrc-expect
-	echo "Updated $srcdir/$i.prsimrc-expect"
+	if test -f $i.prsimrc-out-filter
+	then
+		cp -f $i.prsimrc-out-filter $srcdir/$i.prsimrc-expect
+		echo "Updated $srcdir/$i.prsimrc-expect"
+	elif test -f $i.prsimrcfail-out-filter
+	then
+		cp -f $i.prsimrcfail-out-filter $srcdir/$i.prsimrc-expect
+		echo "Updated $srcdir/$i.prsimrc-expect"
+	else
+		echo "Missing $i.prsimrc[fail]-out-filter."
+	fi
 done
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.30 2007/01/19 22:52:01 fang Exp $
+	$Id: CHP.cc,v 1.16.2.31 2007/01/20 02:31:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1239,10 +1239,63 @@ nondeterministic_selection::execute(const nonmeta_context& c,
 		global_reference_array_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 #if 0
-	const bool b = recheck(c);
-	INVARIANT(b);
-#else
 	ICE_NEVER_CALL(cerr);
+#else
+	// 1) evaluate all clauses, which contain guard expressions
+	//	Use functional pass.
+	// 2) if exactly one is true, return reference to it as the successor
+	//	event to enqueue (not execute right away)
+	//	a) if more than one true, signal a run-time error
+	//	b) if none are true, and there is an else clause, use it
+	//	c) if none are true, without else clause, 'block',
+	//		subscribing this event to its set of dependents.  
+	STACKTRACE_CHPSIM_VERBOSE;
+	guarded_action::selection_evaluator G(c);	// needs reference wrap
+	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
+	const size_t m = G.ready.size();
+	EventNode& t(c.get_event());
+	switch (m) {
+	case 0: {
+		// this can happen because guards may be unstable, 
+		// and can thus become invalidated between enqueue and execute
+		c.subscribe_this_event();	// deduce own event index
+		break;
+	}
+	case 1: {
+		const size_t ei = t.successor_events[G.ready.front()];
+#if 0
+		t.reset_countdown();
+		EventNode::countdown_decrementer(c.event_pool)(ei);
+		// recheck it on the spot
+		EventNode& suc(c.event_pool[ei]);
+		const nonmeta_context::event_setter x(c, &suc);
+		// temporary, too lazy to copy, will restore upon destruction
+		suc.recheck(c, ei);
+#else
+		c.rechecks.insert(ei);
+		EventNode::countdown_decrementer(c.event_pool)(ei);
+#endif
+		break;
+	}
+	default: {
+		// pick one at random
+		static rand48<unsigned long> rgen;
+		const size_t r = rgen();	// random-generate
+		const size_t ei = t.successor_events[G.ready[r%m]];
+#if 0
+		t.reset_countdown();
+		EventNode::countdown_decrementer(c.event_pool)(ei);
+		// recheck it on the spot
+		EventNode& suc(c.event_pool[ei]);
+		const nonmeta_context::event_setter x(c, &suc);
+		// temporary, too lazy to copy, will restore upon destruction
+		suc.recheck(c, ei);
+#else
+		c.rechecks.insert(ei);
+		EventNode::countdown_decrementer(c.event_pool)(ei);
+#endif
+	}
+	}	// end switch
 #endif
 }
 
@@ -1271,6 +1324,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
+#if 0
 	const size_t m = G.ready.size();
 	EventNode& t(c.get_event());
 	switch (m) {
@@ -1279,8 +1333,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 		return RECHECK_BLOCKED_THIS;	// no successor to enqueue
 	}
 	case 1: {
-		const size_t ei =
-			c.get_event().successor_events[G.ready.front()];
+		const size_t ei = t.successor_events[G.ready.front()];
 		t.reset_countdown();
 		EventNode::countdown_decrementer(c.event_pool)(ei);
 #if 0
@@ -1299,7 +1352,7 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 		// pick one at random
 		static rand48<long> rgen;
 		const size_t r = rgen();	// random-generate
-		const size_t ei = c.get_event().successor_events[G.ready[r%m]];
+		const size_t ei = t.successor_events[G.ready[r%m]];
 		t.reset_countdown();
 		EventNode::countdown_decrementer(c.event_pool)(ei);
 #if 0
@@ -1316,6 +1369,15 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	}
 	}	// end switch
 	return RECHECK_BLOCKED_THIS;
+#else
+	if (G.ready.size()) {
+		// defer actual selection until the execution phase, 
+		// with some delay
+		return RECHECK_UNBLOCKED_THIS;
+	} else {
+		return RECHECK_BLOCKED_THIS;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

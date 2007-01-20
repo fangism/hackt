@@ -1,9 +1,10 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.1.4.7 2007/01/19 04:58:38 fang Exp $
+	$Id: nonmeta_context.cc,v 1.1.4.8 2007/01/20 02:31:38 fang Exp $
  */
 
 #include <vector>
+// #include <iterator>
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/Event.h"
 #include "sim/chpsim/State.h"
@@ -33,9 +34,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				: NULL),
 			r.instances),
 		event(&e), 
-#if 1
 		enqueue_list(r.__enqueue_list), 
-#endif
 		rechecks(r.__rechecks), 
 		event_pool(r.event_pool) { }
 
@@ -49,9 +48,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		State& r) :
 		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
-#if 1
 		enqueue_list(r.__enqueue_list), 
-#endif
 		rechecks(r.__rechecks), 
 		event_pool(r.event_pool) { }
 
@@ -64,6 +61,19 @@ nonmeta_context::set_event(event_type& e) {
 	event = &e;
 	const size_t pid = e.get_process_index();
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Subscribe this event to its dependencies.
+	Event index is deduced using iterator distance and event pool.  
+	Only called by CHP::nondeterministic_selection::execute()!
+ */
+void
+nonmeta_context::subscribe_this_event(void) const {
+	const event_index_type d = std::distance(&event_pool[0], event);
+	INVARIANT(d < event_pool.size());
+	event->subscribe_deps(*this, d);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

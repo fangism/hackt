@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.27.2.3 2006/12/16 03:05:55 fang Exp $
+#	$Id: Make.test-head,v 1.27.2.4 2007/01/20 02:31:47 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -57,7 +57,8 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacktprsdottest \
 	.chpsimrc .chpsimtest .chpsimrc-out .chpsimrc-diff \
 	.chpsimalloctest .chpsimallocdump .chpsimallocdiff \
-	.chpsim-event-dot .chpsim-event-ps .chpsimdottest
+	.chpsim-event-dot .chpsim-event-ps .chpsimdottest \
+	.chpsimfailtest .chpsimrcfail-out .chpsimrcfail-diff
 
 if USE_UNROLL_PHASE
 SUFFIXES += \
@@ -109,7 +110,8 @@ BOGUS_SUFFIX_TARGETS = \
 	.prsimckpt-O1 .prsimckpt-O1-err .prsimckpt-01-dump .prsimopt-diff \
 	.chpsimrc-out .chpsimrc-diff \
 	.chpsimrc .chpsimallocdump .chpsimallocdiff \
-	.chpsim-event-dot .chpsim-event-ps
+	.chpsim-event-dot .chpsim-event-ps \
+	.chpsimrcfail-out .chpsimrcfail-diff
 
 if USE_UNROLL_PHASE
 BOGUS_SUFFIX_TARGETS += \

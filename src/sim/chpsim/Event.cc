@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.22 2007/01/19 22:52:04 fang Exp $
+	$Id: Event.cc,v 1.1.2.23 2007/01/20 02:31:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -188,6 +188,13 @@ EventNode::execute(const nonmeta_context& c,
 			countdown_decrementer(c.event_pool));
 	}
 }	// end method execute
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+EventNode::subscribe_deps(const nonmeta_context& c, 
+		const event_index_type ei) const {
+	deps.subscribe(c, ei);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

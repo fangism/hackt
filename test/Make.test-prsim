@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.4.4.5 2007/01/18 17:33:47 fang Exp $
+#	$Id: Make.test-prsim,v 1.4.4.6 2007/01/20 02:31:48 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -50,7 +50,7 @@ hacktprsdottest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRS_DOT_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".hacktprsdottest: " $$1 ".prs-dot-O1"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".hacktprsdottest: " $$1 ".prs-dot-O1"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include hacktprsdottest.autodepend
@@ -86,7 +86,7 @@ prsimexprtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMEXPR_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimexprdiff: $$(srcdir)/" $$1 ".expect-prsimexpr"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsimexprdiff: $$(srcdir)/" $$1 ".expect-prsimexpr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimexprtest.autodepend
@@ -233,14 +233,14 @@ prsimtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimrc-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsimrc-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 prsimfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimrcfail-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsimrcfail-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimtest.autodepend
@@ -329,7 +329,7 @@ prsimckpttest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimckpt-diff: " $$1 ".prsimckpt-indump"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsimckpt-diff: " $$1 ".prsimckpt-indump"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimckpttest.autodepend
@@ -392,7 +392,7 @@ prsimopttest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimopt-diff: " $$1 ".prsimckpt"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsimopt-diff: " $$1 ".prsimckpt"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimopttest.autodepend

@@ -1,0 +1,8 @@
+// "select-fail-a.hac"
+//	$Id: select-fail-a.hac,v 1.1.2.1 2007/01/20 02:32:07 fang Exp $
+// determinstic selection run-time error, not exclusive!
+
+chp {
+[ true -> skip [] true -> skip]
+}
+

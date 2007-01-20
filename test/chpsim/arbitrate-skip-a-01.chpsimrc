@@ -1,0 +1,41 @@
+# "arbitrate-skip-a-01.chpsimrc"
+#	$Id: arbitrate-skip-a-01.chpsimrc,v 1.1.2.1 2007/01/20 02:31:58 fang Exp $
+# @haco@ arbitrate-skip-a.haco-a
+
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+time
+

@@ -1,0 +1,40 @@
+# "arbitrate-loop-a-01.chpsimrc"
+#	$Id: arbitrate-loop-a-01.chpsimrc,v 1.1.2.1 2007/01/20 02:31:52 fang Exp $
+# @haco@ arbitrate-loop-a.haco-a
+
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+time
+echo after this point, events are non-deterministic
+echo many steps later...
+step 666
+assert-queue
+time
+

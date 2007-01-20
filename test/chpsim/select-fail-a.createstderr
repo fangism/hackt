@@ -1,0 +1,31 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	20
+	4	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	6	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+}
+
+top-level chp:
+  concurrent: {
+    deterministic: {
+      true -> skip
+      true -> skip
+    }
+  }
+footprint: {
+}

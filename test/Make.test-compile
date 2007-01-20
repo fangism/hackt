@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.4.4.1 2007/01/18 17:33:46 fang Exp $
+#	$Id: Make.test-compile,v 1.4.4.2 2007/01/20 02:31:45 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -94,7 +94,7 @@ compileobjdiff.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_OBJ_TEST_SUBJECTS)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".compileobjdiff: " $$1 ".outdump-filter"; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".compileobjdiff: " $$1 ".outdump-filter"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include compileobjdiff.autodepend
@@ -152,7 +152,7 @@ compilewarntest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_WARNINGS)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".compilewarndiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".compilewarndiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include compilewarntest.autodepend
@@ -210,7 +210,7 @@ compilefailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PARSE_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".compilefaildiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".compilefaildiff: $$(srcdir)/" $$1 ".stderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include compilefailtest.autodepend

@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.5.4.2 2007/01/18 17:33:43 fang Exp $
+#	$Id: Make.test-cflat,v 1.5.4.3 2007/01/20 02:31:43 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -95,7 +95,7 @@ cflatprstest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CFLAT_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsdiff: " $$1 ".prs"; print $$1 ".prsdiff-sort: " $$1 ".prs-sort"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsdiff: " $$1 ".prs"; print $$1 ".prsdiff-sort: " $$1 ".prs-sort"; }' > $@ ; \
 	$(TOUCH) $@
 
 
@@ -225,14 +225,14 @@ cflatlvstest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".lvsprsdiff: " $$1 ".lvsprs"; print $$1 ".lvsprsdiff-sort: " $$1 ".lvsprs-sort"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".lvsprsdiff: " $$1 ".lvsprs"; print $$1 ".lvsprsdiff-sort: " $$1 ".lvsprs-sort"; }' > $@ ; \
 	$(TOUCH) $@
 
 cflatlvsfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CFLAT_LVS_TEST_FAILURES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".lvsfaildiff: " $$1 ".lvsfail"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".lvsfaildiff: " $$1 ".lvsfail"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include cflatlvstest.autodepend
@@ -295,7 +295,7 @@ cflatprsseutest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CFLAT_SEU_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsseudiff: " $$1 ".prsseu"; print $$1 ".prsseudiff-sort: " $$1 ".prsseu-sort"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".prsseudiff: " $$1 ".prsseu"; print $$1 ".prsseudiff-sort: " $$1 ".prsseu-sort"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include cflatprsseutest.autodepend
@@ -358,7 +358,7 @@ cflatsprstest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CFLAT_SPRS_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".sprsdiff: " $$1 ".sprs"; print $$1 ".sprsdiff-sort: " $$1 ".sprs-sort"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".sprsdiff: " $$1 ".sprs"; print $$1 ".sprsdiff-sort: " $$1 ".sprs-sort"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include cflatsprstest.autodepend

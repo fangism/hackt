@@ -1,0 +1,5 @@
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+Run-time error: multiple exclusive guards of deterministic selection evaluated TRUE!
+Caught run-time exception during execution.  Halting.

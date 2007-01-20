@@ -1,5 +1,13 @@
 # "test/ChangeLog"
 
+2007-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-50:
+	  *.autodepend construction: should filter out empty variables
+		on empty lines which results in bogus suffix-only targets.
+	  Added support for chpsim expect-failure tests.
+
+
 2007-01-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-47:

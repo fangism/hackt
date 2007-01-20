@@ -12,48 +12,52 @@ Persistent Object Manager text dump:
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	CHPndtsl	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	19	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	15	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	CHPndtsl	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	26	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	27	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	30	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	36	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	39	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	45	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	40	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	43	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	49	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	296
+	49	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	53	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	296
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -70,31 +74,34 @@ In namespace "", we have: {
 
 top-level chp:
   concurrent: {
-    *[
-      nondeterministic: {
-        a -> sequential: {
-          a := false
-          concurrent: {
-            b := true
-            c := true
+    sequential: {
+      a := true
+      *[
+        nondeterministic: {
+          a -> sequential: {
+            a := false
+            concurrent: {
+              b := true
+              c := true
+            }
+          }
+          b -> sequential: {
+            b := false
+            concurrent: {
+              c := true
+              a := true
+            }
+          }
+          c -> sequential: {
+            c := false
+            concurrent: {
+              a := true
+              b := true
+            }
           }
         }
-        b -> sequential: {
-          b := false
-          concurrent: {
-            c := true
-            a := true
-          }
-        }
-        c -> sequential: {
-          c := false
-          concurrent: {
-            a := true
-            b := true
-          }
-        }
-      }
-    ]
+      ]
+    }
   }
 footprint: {
   a = bool^0 = a (1) 
@@ -106,29 +113,32 @@ footprint: {
   2	b
   3	c
   resolved concurrent actions:
-    *[
-      nondeterministic: {
-        a -> sequential: {
-          a := false
-          concurrent: {
-            b := true
-            c := true
+    sequential: {
+      a := true
+      *[
+        nondeterministic: {
+          a -> sequential: {
+            a := false
+            concurrent: {
+              b := true
+              c := true
+            }
+          }
+          b -> sequential: {
+            b := false
+            concurrent: {
+              c := true
+              a := true
+            }
+          }
+          c -> sequential: {
+            c := false
+            concurrent: {
+              a := true
+              b := true
+            }
           }
         }
-        b -> sequential: {
-          b := false
-          concurrent: {
-            c := true
-            a := true
-          }
-        }
-        c -> sequential: {
-          c := false
-          concurrent: {
-            a := true
-            b := true
-          }
-        }
-      }
-    ]
+      ]
+    }
 }

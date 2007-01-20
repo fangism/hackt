@@ -1,0 +1,8 @@
+# "select-fail-a-01.chpsimrc"
+#	$Id: select-fail-a-01.chpsimrc,v 1.1.2.1 2007/01/20 02:32:04 fang Exp $
+# @haco@ select-fail-a.haco-a
+
+queue
+step
+echo dies before this is reached
+

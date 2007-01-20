@@ -1,6 +1,6 @@
 # "Make.test-unroll"
 #	vi: ft=automake
-#	$Id: Make.test-unroll,v 1.4.2.1 2007/01/18 17:33:48 fang Exp $
+#	$Id: Make.test-unroll,v 1.4.2.2 2007/01/20 02:31:50 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -74,10 +74,13 @@ unrolltest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_UNROLL_TEST_PASSES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".unrolldiff: $$(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".unrolldiff: $$(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
+if USE_UNROLL_PHASE
 -include unrolltest.autodepend
+AUTO_DEPENDS += unrolltest.autodepend
+endif
 
 .hacktunrolltest:
 	@$(DUMMY_TEST_SCRIPT)
@@ -114,13 +117,13 @@ unrollfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_UNROLL_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".unrollfaildiff: $$(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".unrollfaildiff: $$(srcdir)/" $$1 ".unrollstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
+if USE_UNROLL_PHASE
 -include unrollfailtest.autodepend
-
-AUTO_DEPENDS += unrolltest.autodepend \
-	unrollfailtest.autodepend
+AUTO_DEPENDS += unrollfailtest.autodepend
+endif
 
 BOGUS_TESTS += .hacktunrolltest .hacktunrollfailtest
 BOGUS_TARGETS += .unrollstderr .unrolldump .unrollfaildump \

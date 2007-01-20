@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.1.2.9 2007/01/18 17:33:44 fang Exp $
+#	$Id: Make.test-chpsim,v 1.1.2.10 2007/01/20 02:31:44 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -56,7 +56,7 @@ chpsimalloctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".chpsimallocdiff: $$(srcdir)/" $$1 ".expect-chpsimalloc"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".chpsimallocdiff: $$(srcdir)/" $$1 ".expect-chpsimalloc"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include chpsimalloctest.autodepend
@@ -81,8 +81,14 @@ CHPSIMRC_TEST_SCRIPT = \
 	$(HACKT_CHPSIM_EXE) -b -I$(srcdir) "$$obj" < $< > $@ 2>&1 ; \
 	$(TOUCH) $@
 
+# the same until we add checkpointing to the pass test
+CHPSIMRC_FAIL_TEST_SCRIPT = $(CHPSIMRC_TEST_SCRIPT)
+
 .chpsimrc.chpsimrc-out:
 	@$(CHPSIMRC_TEST_SCRIPT)
+
+.chpsimrc.chpsimrcfail-out:
+	-@$(CHPSIMRC_FAIL_TEST_SCRIPT)
 
 if VERBOSE_CHECK
 ECHO_CHPSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
@@ -105,12 +111,32 @@ endif
 	fi ; \
 	$(TOUCH) $@
 
+.chpsimrcfail-out.chpsimrcfail-diff:
+	@stderr=`$(ECHO) $@ |$(SED) 's/\.chpsimrcfail-diff$$/.chpsimrc-expect/g'`; \
+	expect="$(srcdir)/$$stderr" ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_CHPSIMRC_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
 # TODO: write rules for fail-tests
 
 .chpsimrc-diff.chpsimtest:
 	@$(DEFAULT_DIFF_TEST_SCRIPT)
 
+.chpsimrcfail-diff.chpsimfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
 .chpsimtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.chpsimfailtest:
 	@$(DUMMY_TEST_SCRIPT)
 
 chpsimrc-out.autodepend: Makefile
@@ -133,21 +159,52 @@ chpsimrc-out.autodepend: Makefile
 -include chpsimrc-out.autodepend
 AUTO_DEPENDS += chpsimrc-out.autodepend
 
+chpsimrcfail-out.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) -n "" > $@ ; \
+	list='$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES)' ; \
+	exts='chpsimrcfail-out' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.chpsimrc ; \
+	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(ECHO) -n "$$target " >> $@ ; \
+	  done ; \
+	  $(ECHO) ": $$obj" >> $@ ; \
+	done ; \
+	$(TOUCH) $@
+
+-include chpsimfailrc-out.autodepend
+AUTO_DEPENDS += chpsimrcfail-out.autodepend
+
 chpsimrctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".chpsimrc-diff: $$(srcdir)/" $$1 ".chpsimrc-expect"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".chpsimrc-diff: $$(srcdir)/" $$1 ".chpsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include chpsimrctest.autodepend
 AUTO_DEPENDS += chpsimrctest.autodepend
 
 
+chpsimrcfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".chpsimrcfail-diff: $$(srcdir)/" $$1 ".chpsimrc-expect"; }' > $@ ; \
+	$(TOUCH) $@
 
-BOGUS_TESTS += .chpsimalloctest .chpsimtest .chpsimdottest
+-include chpsimrcfailtest.autodepend
+AUTO_DEPENDS += chpsimrcfailtest.autodepend
 
-CHECK_SUMMARIES += chpsimallocdiffs chpsimrcdiffs
+
+
+BOGUS_TESTS += .chpsimalloctest .chpsimtest .chpsimdottest .chpsimfailtest
+
+CHECK_SUMMARIES += chpsimallocdiffs chpsimrcdiffs chpsimrcfaildiffs
 # chpsimrcdiffs chpsimrcfaildiffs 
 
 
@@ -182,7 +239,8 @@ HACKT_CHPSIM_DOT_TEST_SUBJECTS += $(HACKT_CREATE_TEST_PASSES)
 TESTS += \
 	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.chpsimalloctest) \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsimdottest) \
-	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimtest)
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimtest) \
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimfailtest)
 
 HAC_OBJECT_TARGETS += \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco) \
@@ -198,7 +256,9 @@ build-check-local: \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsimdottest) \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out) \
-	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-diff)
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-diff) \
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-out) \
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-diff)
 
 ALL_CHPSIM_DOT = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-dot)
 ALL_CHPSIM_PS = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-ps)
@@ -238,6 +298,9 @@ clean-chpsimtests:
 	-$(RM_PATTERN) "*.chpsimrc-out"
 	-$(RM_PATTERN) "*.chpsimrc-diff"
 	-$(RM_PATTERN) "*.chpsimtest"
+	-$(RM_PATTERN) "*.chpsimrcfail-out"
+	-$(RM_PATTERN) "*.chpsimrcfail-diff"
+	-$(RM_PATTERN) "*.chpsimfailtest"
 
 clean-local: clean-chpsimtests
 

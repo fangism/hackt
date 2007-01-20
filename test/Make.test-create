@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.5.2.1 2007/01/18 17:33:47 fang Exp $
+#	$Id: Make.test-create,v 1.5.2.2 2007/01/20 02:31:45 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -71,7 +71,7 @@ createtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_PASSES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".creatediff: $$(srcdir)/" $$1 ".createstderr"; print $$1 ".createdump: " $$1 ".haco-c-err" ; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".creatediff: $$(srcdir)/" $$1 ".createstderr"; print $$1 ".createdump: " $$1 ".haco-c-err" ; }' > $@ ; \
 	$(TOUCH) $@
 
 -include createtest.autodepend
@@ -116,7 +116,7 @@ createfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_FAILURES)" | \
 		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".createfaildiff: $$(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
+		$(AWK) '/.+/ {print $$1 ".createfaildiff: $$(srcdir)/" $$1 ".createstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include createfailtest.autodepend
@@ -190,7 +190,7 @@ createfromhaco.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_CREATE_TEST_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".create-from-haco-diff: " $$1 ".createdump-filter"; print $$1 ".create-from-haco-dump: " $$1 ".haco-c-from-haco-err"; }' > $@ ; \
+	  $(AWK) '/.+/ {print $$1 ".create-from-haco-diff: " $$1 ".createdump-filter"; print $$1 ".create-from-haco-dump: " $$1 ".haco-c-from-haco-err"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include createfromhaco.autodepend

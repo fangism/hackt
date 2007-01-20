@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.64.2.5 2007/01/18 17:33:48 fang Exp $
+#	$Id: Make.test-tail,v 1.64.2.6 2007/01/20 02:31:49 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -106,10 +106,12 @@ include $(top_srcdir)/test/Make.test-chpsim
 
 BOGUS_TESTS +=
 
-BOGUS_TARGETS += $(BOGUS_TESTS)
+BOGUS_TARGETS +=
 
-CLEANFILES += $(BOGUS_TARGETS)
-DISTHOOK_CLEANFILES += $(BOGUS_TARGETS)
+CLEAN_BOGUS_FILES = $(BOGUS_TESTS) $(BOGUS_TARGETS)
+
+CLEANFILES += $(CLEAN_BOGUS_FILES)
+DISTHOOK_CLEANFILES += $(CLEAN_BOGUS_FILES)
 
 CHECK_SUMMARIES +=
 
@@ -142,7 +144,7 @@ ALL_OBJECT_TESTS = \
 test.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(ALL_OBJECT_TESTS)" | $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-		$(AWK) '{print "-include " $$1 ".depend"; }' > $@ ; \
+		$(AWK) '/.+/ {print "-include " $$1 ".depend"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include test.autodepend

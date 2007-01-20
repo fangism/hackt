@@ -24,7 +24,16 @@ done
 # TODO: expect filtered input file as input
 for i
 do
-	cp -f $i.chpsimrc-out $srcdir/$i.chpsimrc-expect
-	echo "Updated $srcdir/$i.chpsimrc-expect"
+	if test -f $i.chpsimrc-out
+	then
+		cp -f $i.chpsimrc-out $srcdir/$i.chpsimrc-expect
+		echo "Updated $srcdir/$i.chpsimrc-expect"
+	elif test -f $i.chpsimrcfail-out
+	then
+		cp -f $i.chpsimrcfail-out $srcdir/$i.chpsimrc-expect
+		echo "Updated $srcdir/$i.chpsimrc-expect"
+	else
+		echo "Missing $i.chpsimrc[fail]-out"
+	fi
 done
 

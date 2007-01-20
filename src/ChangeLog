@@ -5,6 +5,11 @@
 
 2007-01-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-50:
+	  No source revision.  Another batch of tests:
+		arbitration, selection exclusion violation, selection nesting.
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-49:
 	  lang/CHP.cc: (bug fixes)
 		nonmeta_guard evaluator, only add the

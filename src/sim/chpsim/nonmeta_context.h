@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.1.4.8 2007/01/19 22:52:06 fang Exp $
+	$Id: nonmeta_context.h,v 1.1.4.9 2007/01/20 02:31:39 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -36,10 +36,8 @@ friend class EventNode;
 	// these types must correspond to those used in CHPSIM::State!
 	// but I'm too lazy to include its header here...
 	typedef	EventNode			event_type;
-#if 1
 	typedef	std::default_vector<event_index_type>::type
 							enqueue_queue_type;
-#endif
 	typedef	std::default_vector<event_type>::type	event_pool_type;
 private:
 	/**
@@ -47,13 +45,12 @@ private:
 		Zero-value means top-level.
 	 */
 	event_type*				event;
-#if 1
 	/**
 		may need that enqueue_list again...
-		Selections may need to enqueue successor event directly.  
+		deterministic selections may need to enqueue 
+		successor events directly.  
 	 */
 	enqueue_queue_type&			enqueue_list;
-#endif
 public:
 	/**
 		Set of events to re-evaluate, so see if they 
@@ -64,7 +61,7 @@ public:
 		Global pool of events.  
 	 */
 	event_pool_type&			event_pool;
-#if 1
+
 	typedef	util::member_saver<this_type, event_type*, &this_type::event>
 						event_setter_base;
 	struct event_setter : public util::member_saver<this_type, 
@@ -72,7 +69,7 @@ public:
 		event_setter(const this_type& t, event_type* e) :
 			event_setter_base(const_cast<this_type&>(t), e) { }
 	};
-#endif
+
 public:
 	nonmeta_context(const state_manager&, const footprint&, 
 		event_type&, State&);
@@ -85,20 +82,16 @@ public:
 	void
 	set_event(event_type&);
 
-#if 0
-	const event_type&
-	get_event(void) const { return *event; }
-#endif
-
 	event_type&
 	get_event(void) const { return *event; }
 
-#if 1
+	void
+	subscribe_this_event(void) const;
+
 private:
 	// for EventNode only
 	void
 	enqueue(const event_index_type) const;
-#endif
 
 };	// end class nonmeta_context
 
