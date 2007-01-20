@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.1.2.9 2007/01/16 04:14:52 fang Exp $
+	$Id: nonmeta_variable.h,v 1.1.2.10 2007/01/20 07:25:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -92,7 +92,11 @@ public:
 
 	// not needed for structural dumps, as this is a dynamic set
 	ostream&
-	dump_struct(ostream&) const;
+	dump_subscribers(ostream&) const;
+
+	bool
+	has_subscribers(void) const { return !event_subscribers.empty(); }
+
 };	// end class nonmeta_variable_base
 
 //=============================================================================
@@ -112,7 +116,7 @@ public:
 	value_type				value;
 
 	// for now...
-	using parent_type::dump_struct;
+	using parent_type::dump_subscribers;
 
 	void
 	reset(void);
@@ -132,7 +136,7 @@ public:
 	value_type				value;
 
 	// for now...
-	using parent_type::dump_struct;
+	using parent_type::dump_subscribers;
 
 	void
 	reset(void);
@@ -151,7 +155,7 @@ public:
 	value_type				value;
 
 	// for now...
-	using parent_type::dump_struct;
+	using parent_type::dump_subscribers;
 
 	void
 	reset(void);

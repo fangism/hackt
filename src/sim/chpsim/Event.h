@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.26 2007/01/20 02:31:36 fang Exp $
+	$Id: Event.h,v 1.1.2.27 2007/01/20 07:26:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -34,7 +34,7 @@ using std::vector;
 using std::valarray;
 using entity::CHP::action;
 using entity::global_indexed_reference;
-
+using entity::nonmeta_state_manager;
 
 //=============================================================================
 /**
@@ -254,6 +254,9 @@ public:
 	dump_brief(ostream&) const;
 
 	ostream&
+	dump_source(ostream&) const;
+
+	ostream&
 	dump_pending(ostream&) const;
 
 	ostream&
@@ -265,6 +268,13 @@ public:
 
 	ostream&
 	dump_dot_edge(ostream&) const;
+
+	/// forwarded call
+	ostream&
+	dump_subscribed_status(ostream& o, const nonmeta_state_manager& s, 
+			const event_index_type ei) const {
+		return deps.dump_subscribed_status(o, s, ei);
+	}
 
 public:
 	// helper classes

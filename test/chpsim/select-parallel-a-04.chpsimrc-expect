@@ -1,0 +1,56 @@
+testing new commands 
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+All event subscriptions:
+	0	0	0	null
+All event subscriptions:
+	10	23	0	
+All event subscriptions:
+	20	19	0	a := false
+All event subscriptions:
+	20	21	0	c := false
+All event subscriptions:
+	20	20	0	b := false
+All event subscriptions:
+	20	22	0	d := false
+All event subscriptions:
+	30	18	0	
+All event subscriptions:
+	40	17	0	
+All event subscriptions:
+	50	15	0	b := true
+All event subscriptions:
+	50	16	0	a := true
+All event subscriptions:
+	60	14	0	
+All event subscriptions:
+	70	13	0	
+All event subscriptions:
+bool[3]: "c" : 12 
+bool[4]: "d" : 12 
+	80	3	0	c := true
+All event subscriptions:
+bool[3]: "c" : 12 
+bool[4]: "d" : 12 
+	80	6	0	d := true
+All event subscriptions:
+	90	2	0	null
+All event subscriptions:
+	90	5	0	null
+All event subscriptions:
+	90	12	0	[c&&d]
+All event subscriptions:
+	100	11	0	
+All event subscriptions:
+	110	9	0	c := false
+All event subscriptions:
+	110	10	0	d := false
+All event subscriptions:
+	120	8	0	
+All event subscriptions:
+	130	1	0	
+All event subscriptions:
+event queue:
+	(empty)
+time: 130

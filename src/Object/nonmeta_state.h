@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.1.2.6 2007/01/13 21:06:54 fang Exp $
+	$Id: nonmeta_state.h,v 1.1.2.7 2007/01/20 07:25:55 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -34,6 +34,10 @@ public:
 	typedef	variable_type<Tag>		implementation;
 	typedef	typename implementation::type	instance_type;
 	typedef	vector<instance_type>		pool_type;
+	enum {
+		FIRST_VALID_NODE = 1
+			// == SIM::INVALID_NODE_INDEX +1
+	};
 protected:
 	vector<instance_type>			pool;
 
@@ -44,6 +48,10 @@ protected:
 
 	void
 	reset(void);
+
+	ostream&
+	__dump_all_subscriptions(ostream&, const state_manager&, 
+		const footprint&) const;
 
 };	// end class nonmeta_state_base
 
@@ -95,6 +103,10 @@ public:
 
 	ostream&
 	dump_struct(ostream&, const state_manager&, const footprint&) const;
+
+	ostream&
+	dump_all_subscriptions(ostream&, 
+		const state_manager&, const footprint&) const;
 
 #if 0
 	ostream&

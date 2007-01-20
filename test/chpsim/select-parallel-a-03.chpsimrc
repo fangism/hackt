@@ -1,0 +1,7 @@
+# "select-parallel-a-03.chpsimrc"
+#	$Id: select-parallel-a-03.chpsimrc,v 1.1.2.1 2007/01/20 07:26:24 fang Exp $
+# @haco@ select-parallel-a.haco-a
+
+null-event-delay 0
+source select-parallel-a-02.chpsimrc
+

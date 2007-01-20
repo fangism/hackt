@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.1.2.5 2007/01/14 23:36:24 fang Exp $
+	$Id: Dependence.h,v 1.1.2.6 2007/01/20 07:26:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -14,6 +14,7 @@
 namespace HAC {
 namespace entity {
 	class nonmeta_context_base;
+	class nonmeta_state_manager;
 }
 namespace SIM {
 namespace CHPSIM {
@@ -25,6 +26,7 @@ using entity::int_tag;
 using entity::enum_tag;
 using entity::channel_tag;
 using entity::nonmeta_context_base;
+using entity::nonmeta_state_manager;
 
 /**
 	To keep this structure as small as possible, we use
@@ -64,6 +66,10 @@ protected:
 
 	void
 	__unsubscribe(const nonmeta_context_base&,
+		const event_index_type) const;
+
+	bool
+	__subscribed_to_any(const nonmeta_state_manager&,
 		const event_index_type) const;
 
 };	// end struct dependence_set_base
@@ -108,6 +114,10 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	ostream&
+	dump_subscribed_status(ostream&, const nonmeta_state_manager&, 
+		const event_index_type) const;
 
 };	// end class Dependence
 

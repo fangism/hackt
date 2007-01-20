@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.1.2.23 2007/01/19 04:58:36 fang Exp $
+	$Id: State.h,v 1.1.2.24 2007/01/20 07:26:18 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -90,6 +90,8 @@ private:
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separate)ly
 private:
+	static const char			event_table_header[];
+private:
 	time_type				current_time;
 	time_type				uniform_delay;
 	time_type				null_event_delay;
@@ -170,6 +172,9 @@ public:
 	const event_type&
 	get_event(const event_index_type i) const { return event_pool[i]; }
 
+	size_t
+	event_pool_size(void) const { return event_pool.size(); }
+
 private:
 	event_placeholder_type
 	dequeue_event(void);
@@ -223,6 +228,12 @@ public:
 	dump_struct_dot(ostream&, const graph_options&) const;
 
 	ostream&
+	dump_event(ostream&, const event_index_type) const;
+
+	ostream&
+	dump_event_status(ostream&, const event_index_type) const;
+
+	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;
 
 	ostream&
@@ -231,6 +242,13 @@ public:
 	ostream&
 	print_instance_name_value(ostream&, 
 		const global_indexed_reference&) const;
+
+	ostream&
+	print_instance_name_subscribers(ostream&, 
+		const global_indexed_reference&) const;
+
+	ostream&
+	print_all_subscriptions(ostream&) const;
 
 	bool
 	save_checkpoint(ostream&) const;

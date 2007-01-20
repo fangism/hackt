@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.31 2007/01/20 02:31:35 fang Exp $
+	$Id: CHP.cc,v 1.16.2.32 2007/01/20 07:26:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1771,6 +1771,9 @@ condition_wait::accept(StateConstructor& s) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does nothing, is a NULL event.  
+	NOTE: it is possible that guard is no longer true, 
+		as it may be invalidated since the time it was enqueued.
+		We do not check for guard stability... yet.  
  */
 void
 condition_wait::execute(const nonmeta_context& c, 
@@ -1781,6 +1784,11 @@ condition_wait::execute(const nonmeta_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: (Q?) condition-wait is currently non-atomic, see execute() note.
+	If we wanted true atomicity, then we would have the recheck()
+	enqueue the *succcessor* events, rather than itself, just like
+	deterministic_selection::recheck().  
+
 	The 'guarded' action is a NULL event, which can always occur.  
 	The guard expression is already checked by the caller
 	as a part of event processing.  

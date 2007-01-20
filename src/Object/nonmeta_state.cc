@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.1.2.6 2007/01/13 21:06:53 fang Exp $
+	$Id: nonmeta_state.cc,v 1.1.2.7 2007/01/20 07:25:55 fang Exp $
  */
 
 #include <iostream>
@@ -42,6 +42,28 @@ template <class Tag>
 void
 nonmeta_state_base<Tag>::reset() {
 	for_each(pool.begin(), pool.end(), mem_fun_ref(&instance_type::reset));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o, 
+		const state_manager& sm, const footprint& topfp) const {
+	typedef	class_traits<Tag>		traits_type;
+	const global_entry_pool<Tag>& ip(sm.template get_pool<Tag>());
+	const size_t s = this->pool.size();
+	size_t i = FIRST_VALID_NODE;
+	for ( ; i<s; ++i) {
+		const instance_type& nsi(this->pool[i]);
+		if (nsi.has_subscribers()) {
+			const global_entry<Tag>& ge(ip[i]);
+			o << traits_type::tag_name << "[" << i << "]: \"";
+			ge.dump_canonical_name(o, topfp, sm);
+			o << "\" : ";
+			nsi.dump_subscribers(o) << endl;
+		}
+	}
+	return o;
 }
 
 //=============================================================================
@@ -89,6 +111,9 @@ nonmeta_state_manager::reset(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Formatted printing of names of all instances.  
+ */
 ostream&
 nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm, 
 		const footprint& topfp) const {
@@ -142,6 +167,20 @@ nonmeta_state_manager::dump_struct(ostream& o, const state_manager& sm,
 			o << endl;
 		}
 	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Name all variables with subscribers at the moment.  
+ */
+ostream&
+nonmeta_state_manager::dump_all_subscriptions(ostream& o, 
+		const state_manager& sm, const footprint& topfp) const {
+	nonmeta_state_base<bool_tag>::__dump_all_subscriptions(o, sm, topfp);
+	nonmeta_state_base<int_tag>::__dump_all_subscriptions(o, sm, topfp);
+	nonmeta_state_base<enum_tag>::__dump_all_subscriptions(o, sm, topfp);
+	nonmeta_state_base<channel_tag>::__dump_all_subscriptions(o, sm, topfp);
 	return o;
 }
 

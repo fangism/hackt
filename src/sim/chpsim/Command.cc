@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.8 2007/01/19 22:52:02 fang Exp $
+	$Id: Command.cc,v 1.1.2.9 2007/01/20 07:26:08 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -289,7 +289,7 @@ try {
 #if 0
 	while (!s.stopped() && i && GET_NODE((ni = s.step())))
 #else
-	while (!s.stopped() && i)
+	while (s.pending_events() && !s.stopped() && i)
 #endif
 	{
 		// ignore return for now
@@ -436,8 +436,7 @@ Advance::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Run, "run", simulation,
  	"run until event queue empty or breakpoint")
 
 /**
@@ -447,16 +446,21 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
 	Isn't the while-loop made redundant by State::cycle()?
  */
 int
-Cycle::main(State& s, const string_list & a) {
+Run::main(State& s, const string_list & a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	typedef	State::node_type		node_type;
-	State::step_return_type ni;
+//	typedef	State::node_type		node_type;
+	typedef	State::time_type		time_type;
+//	State::step_return_type ni;
+	time_type time = s.time();
 	s.resume();	// clear STOP flag
 	try {
-	while (!s.stopped() && GET_NODE((ni = s.step()))) {
+	while (s.pending_events() && !s.stopped()) {
+		s.step();
+		time = s.time();
+#if 0
 		if (!GET_NODE(ni))
 			return Command::NORMAL;
 		const node_type& n(s.get_node(GET_NODE(ni)));
@@ -489,23 +493,24 @@ if (a.size() != 1) {
 				// or Command::BREAK; ?
 			}
 		}
+#endif
 	}	// end while (!s.stopped())
-	} catch (State::excl_exception exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (...) {
+		cerr << "Caught run-time exception during execution.  Halting."
+			<< endl;
 		return Command::FATAL;
 	}	// no other exceptions
 	return Command::NORMAL;
 }	// end if
-}	// end Cycle::main()
+}	// end Run::main()
 
 void
-Cycle::usage(ostream& o) {
-	o << "cycle" << endl;
-	o << "Runs until event queue is empty.\n"
-"Simulation will stop prematurely if any event violations are encountered."
+Run::usage(ostream& o) {
+	o << name << endl;
+	o << "Runs until event queue is empty or breakpoint hit.\n"
+"Simulation will stop prematurely if any event anomalies are encountered."
 	<< endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Queue<State>				Queue;
@@ -965,7 +970,7 @@ if (a.size() != 2) {
 
 void
 Get::usage(ostream& o) {
-	o << "get <name>" << endl;
+	o << name << " <name>" << endl;
 	o << "Print the current value of the instance." << endl;
 }
 
@@ -1005,6 +1010,99 @@ GetAll::usage(ostream& o) {
 		<< endl;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Subscribers, "subscribers", info,
+	"list events subscribed to the named instance")
+
+/**
+	Prints current value of the named node.  
+ */
+int
+Subscribers::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const global_indexed_reference
+		gr(parse_global_reference(objname, s.get_module()));
+	if (gr.first) {
+		cout << "events subscribed to `" << objname << "\' : ";
+		s.print_instance_name_subscribers(cout, gr);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such instance found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Subscribers::usage(ostream& o) {
+	o << name << " <name>" << endl;
+	o << "Lists all events currently subscribed to the instance." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SubscribersAll, "subscribers-all", info,
+	"list all events subscribed sorted by instance")
+
+/**
+	Print all subscriber events.
+ */
+int
+SubscribersAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	cout << "All event subscriptions:" << endl;
+	s.print_all_subscriptions(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+SubscribersAll::usage(ostream& o) {
+	o << name << endl;
+	o << "List all instances with subscribed events." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpEvent, "dump-event", info,
+	"print event information")
+
+int
+DumpEvent::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing event index number." << endl;
+		return Command::BADARG;
+	}
+	const size_t z = s.event_pool_size();
+	if (i >= z) {
+		cerr << "Error: index out-of-range, must be < " <<
+			z << "." << endl;
+		return Command::BADARG;
+	}
+	// dump structural information
+	s.dump_event(cout, i);
+	// status: is it subscribed to its dependencies?
+	s.dump_event_status(cout, i);
+	return Command::NORMAL;
+}
+}
+
+void
+DumpEvent::usage(ostream& o) {
+	o << name << " <index>" << endl;
+	o << "Dumps information about the referenced event." << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

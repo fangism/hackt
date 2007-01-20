@@ -1,0 +1,31 @@
+# "channel-once-parallel-a-02.chpsimrc"
+#	$Id: channel-once-parallel-a-02.chpsimrc,v 1.1.2.1 2007/01/20 07:26:20 fang Exp $
+# @haco@ channel-once-parallel-a.haco-a
+
+queue
+get X
+subscribers-all
+step
+queue
+get X
+subscribers-all
+step
+queue
+get X
+subscribers-all
+step
+queue
+get X
+subscribers-all
+step
+echo expect only null join event in queue
+queue
+get X
+subscribers-all
+step
+echo expect empty queue
+queue
+get X
+subscribers-all
+time
+

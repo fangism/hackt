@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.23 2007/01/20 02:31:36 fang Exp $
+	$Id: Event.cc,v 1.1.2.24 2007/01/20 07:26:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -211,6 +211,17 @@ EventNode::dump_brief(ostream& o) const {
 		o << "null";
 	}
 	// countdown/predecessors?
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+EventNode::dump_source(ostream& o) const {
+	if (action_ptr) {
+		action_ptr->dump(o, expr_dump_context::default_value);
+	} else {
+		o << "null";
+	}
 	return o;
 }
 

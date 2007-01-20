@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.1.2.1 2006/12/16 23:54:03 fang Exp $
+	$Id: event.h,v 1.1.2.2 2007/01/20 07:26:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
@@ -30,6 +30,9 @@ using std::vector;
  */
 template <typename T>
 struct EventPlaceholder {
+private:
+	typedef	EventPlaceholder<T>	this_type;
+public:
 	typedef	T			time_type;
 	/**
 		The time at which the event should occur.  
@@ -53,6 +56,20 @@ struct EventPlaceholder {
 	operator < (const EventPlaceholder& r) const {
 		return time > r.time;
 	}
+
+	/**
+		Composition functor of member_select and equality comparison.
+	 */
+	struct index_finder {
+		const event_index_type		index;
+		explicit
+		index_finder(const event_index_type i) : index(i) { }
+
+		bool
+		operator () (const this_type& t) {
+			return t.event_index == this->index;
+		}
+	};
 };	// end struct EventPlaceholder
 
 //=============================================================================

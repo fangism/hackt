@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.29 2007/01/19 04:58:35 fang Exp $
+	$Id: State.cc,v 1.1.2.30 2007/01/20 07:26:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -153,6 +153,10 @@ struct State::event_enqueuer {
 //=============================================================================
 // class State method definitions
 
+const char
+State::event_table_header[] = "\ttime\teid\tpid\tevent";
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Will throw exception upon error.  
  */
@@ -401,7 +405,7 @@ State::step(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints event in brief form for queue.  
+	Prints event in brief form for queue, with time prefixed.  
  */
 ostream&
 State::dump_event(ostream& o, const event_index_type ei,
@@ -417,6 +421,48 @@ State::dump_event(ostream& o, const event_index_type ei,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Dumps structural information for a single event.  
+ */
+ostream&
+State::dump_event(ostream& o, const event_index_type ei) const {
+	INVARIANT(ei < event_pool.size());
+	o << "event[" << ei << "]: ";
+	const event_type& e(event_pool[ei]);
+	e.dump_struct(o);	// << endl;
+	e.dump_source(o << "source: ") << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reports whether or not event is currently subscribed to its
+	dependencies (all or none).  
+	If it lacks dependencies, then say so.  
+ */
+ostream&
+State::dump_event_status(ostream& o, const event_index_type ei) const {
+	INVARIANT(ei < event_pool.size());
+	get_event(ei).dump_subscribed_status(o << "status: ", instances, ei)
+		<< endl;
+{
+	// search wouldn't be necessary if event was flagged in member field
+	temp_queue_type temp;
+	// copy wouldn't be necessary if queue was a map...
+	event_queue.copy_to(temp);
+	o << "in queue: ";
+	if (find_if(temp.begin(), temp.end(), 
+			event_placeholder_type::index_finder(ei))
+			== temp.end()) {
+		o << "no";
+	} else {
+		o << "yes";
+	}
+}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints the event queue.  
  */
 ostream&
@@ -428,7 +474,7 @@ State::dump_event_queue(ostream& o) const {
 	o << "event queue:" << endl;
 	// print header
 	if (i!=e) {
-		o << "\ttime\teid\tpid\tevent" << endl;
+		o << event_table_header << endl;
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
 		}
@@ -545,6 +591,10 @@ State::dump_enqueue_events(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation for the `get' command.  
+	Prints canonical name and current value.  
+ */
 ostream&
 State::print_instance_name_value(ostream& o,
 		const global_indexed_reference& g) const {
@@ -595,6 +645,71 @@ State::print_instance_name_value(ostream& o,
 		o << "(unsupported)";
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ */
+ostream&
+State::print_instance_name_subscribers(ostream& o,
+		const global_indexed_reference& g) const {
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	switch (g.first) {
+	case META_TYPE_BOOL: {
+		o << "bool ";
+		sm.get_pool<bool_tag>()[g.second]
+			.dump_canonical_name(o, topfp, sm);
+		o << " : ";
+		instances.get_pool<bool_tag>()[g.second].dump_subscribers(o);
+		break;
+	}
+	case META_TYPE_INT: {
+		o << "int ";
+		sm.get_pool<int_tag>()[g.second]
+			.dump_canonical_name(o, topfp, sm);
+		o << " : ";
+		instances.get_pool<int_tag>()[g.second].dump_subscribers(o);
+		break;
+	}
+	case META_TYPE_ENUM: {
+		o << "enum ";
+		sm.get_pool<enum_tag>()[g.second]
+			.dump_canonical_name(o, topfp, sm);
+		o << " : ";
+		instances.get_pool<enum_tag>()[g.second].dump_subscribers(o);
+		break;
+	}
+	case META_TYPE_CHANNEL: {
+		const global_entry<channel_tag>&
+			c(sm.get_pool<channel_tag>()[g.second]);
+		const ChannelState&
+			nc(instances.get_pool<channel_tag>()[g.second]);
+		c.dump_canonical_name(o, topfp, sm);
+		o << " : ";
+		nc.dump_subscribers(o);	// print the channel subscribers
+		break;
+	}
+	case META_TYPE_PROCESS:
+		// print canonical name?
+		o << "(process)";	// has no 'value'
+		break;
+	default:
+		o << "(unsupported)";
+	}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints all variables with subscribers, and their precise
+	subscriber sets.  
+	Omits unsubscribed variables.  
+ */
+ostream&
+State::print_all_subscriptions(ostream& o) const {
+	return instances.dump_all_subscriptions(o, 
+		mod.get_state_manager(), mod.get_footprint());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

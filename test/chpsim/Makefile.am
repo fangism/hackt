@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.7 2007/01/20 02:31:51 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.8 2007/01/20 07:26:18 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -61,6 +61,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	send-once-01 \
 	receive-once-01 \
 	channel-once-parallel-a-01 channel-once-parallel-b-01 \
+	channel-once-parallel-a-02 \
 	channel-self-sequence-01 \
 	channel-self-parallel-a-01 channel-self-parallel-b-01 \
 	channel-self-parallel-a-02 channel-self-parallel-b-02 \
@@ -82,7 +83,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	select-skip-a-01 \
 	select-skip-b-01 \
 	select-sequence-a-01 \
-	select-parallel-a-01 \
+	select-parallel-a-01 select-parallel-a-02 \
+	select-parallel-a-03 select-parallel-a-04 \
 	select-loop-a-01 \
 	select-loop-b-01 \
 	arbitrate-skip-a-01 \

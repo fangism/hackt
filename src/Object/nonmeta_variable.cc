@@ -1,8 +1,10 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.1.2.5 2007/01/16 04:14:50 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.1.2.6 2007/01/20 07:25:57 fang Exp $
  */
 
+#include <iostream>
+#include <iterator>
 #include "Object/nonmeta_variable.h"
 #include "Object/nonmeta_channel_manipulator.h"
 #include "Object/def/fundamental_channel_footprint.h"
@@ -11,6 +13,8 @@
 
 namespace HAC {
 namespace entity {
+using std::ostream_iterator;
+
 //=============================================================================
 // class nonmeta_variable_base method definitions
 
@@ -19,6 +23,18 @@ nonmeta_variable_base::nonmeta_variable_base() : event_subscribers() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_variable_base::~nonmeta_variable_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+nonmeta_variable_base::dump_subscribers(ostream& o) const {
+	if (!event_subscribers.empty()) {
+		copy(event_subscribers.begin(), event_subscribers.end(), 
+			ostream_iterator<size_t>(o, " "));
+	} else {
+		o << "(none)";
+	}
+	return o;
+}
 
 //=============================================================================
 // class BoolVariable method definitions

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.cc"
-	$Id: Dependence.cc,v 1.1.2.4 2007/01/14 23:36:22 fang Exp $
+	$Id: Dependence.cc,v 1.1.2.5 2007/01/20 07:26:13 fang Exp $
  */
 
 #include "sim/chpsim/Dependence.h"
@@ -20,6 +20,7 @@ using std::begin;
 using std::end;
 using std::copy;
 using entity::nonmeta_state_base;
+using entity::event_subscribers_type;
 #include "util/using_ostream.h"
 //=============================================================================
 // class dependence_set_base method definitions
@@ -80,6 +81,25 @@ dependence_set_base<Tag>::__unsubscribe(const nonmeta_context_base& c,
 	for ( ; i!=e; ++i) {
 		pool[*i].unsubscribe(ei);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true of any of the variables in this set have the 
+		@ei event subscribed to it.  
+	Remember an event is subscribed to ALL or NONE of its deps.  
+ */
+template <class Tag>
+bool
+dependence_set_base<Tag>::__subscribed_to_any(const nonmeta_state_manager& s, 
+		const event_index_type ei) const {
+	if (this->_set.size()) {
+		const typename nonmeta_state_base<Tag>::pool_type&
+			pool(s.template get_pool<Tag>());
+		const event_subscribers_type&
+			sub(pool[_set[0]].get_subscribers());
+		return sub.find(ei) != sub.end();
+	} else	return false;
 }
 
 //=============================================================================
@@ -168,6 +188,30 @@ DependenceSet::unsubscribe(const nonmeta_context_base& c,
 	dependence_set_base<int_tag>::__unsubscribe(c, ei);
 	dependence_set_base<enum_tag>::__unsubscribe(c, ei);
 	dependence_set_base<channel_tag>::__unsubscribe(c, ei);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	INVARIANT: event is either subscribed to ALL its dependencies or NONE.
+	This fact makes the search FAST.  
+ */
+ostream&
+DependenceSet::dump_subscribed_status(ostream& o,
+		const nonmeta_state_manager& s, 
+		const event_index_type ei) const {
+	if (!dependence_set_base<bool_tag>::_set.size() && 
+		!dependence_set_base<int_tag>::_set.size() && 
+		!dependence_set_base<enum_tag>::_set.size() && 
+		!dependence_set_base<channel_tag>::_set.size()) {
+		return o << "(no dependencies)";
+	} else if (dependence_set_base<bool_tag>::__subscribed_to_any(s, ei) ||
+		dependence_set_base<int_tag>::__subscribed_to_any(s, ei) ||
+		dependence_set_base<enum_tag>::__subscribed_to_any(s, ei) ||
+		dependence_set_base<channel_tag>::__subscribed_to_any(s, ei)) {
+		return o << "(blocked and subscribed to its dependencies)";
+	} else {
+		return o << "(currently not subscribed to its dependencies)";
+	}
 }
 
 //=============================================================================
