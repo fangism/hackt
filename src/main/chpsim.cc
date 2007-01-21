@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.1.72.8 2007/01/14 03:00:14 fang Exp $
+	$Id: chpsim.cc,v 1.1.72.9 2007/01/21 04:03:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -243,6 +243,24 @@ static void __chpsim_show_event_index(chpsim_options& o)
 	{ o.graph_opts.show_event_index = true; }
 static void __chpsim_no_show_event_index(chpsim_options& o)
 	{ o.graph_opts.show_event_index = false; }
+static void __chpsim_show_instances(chpsim_options& o)
+	{ o.graph_opts.show_instances = true;
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	  o.graph_opts.with_antidependencies = true;
+#endif
+	}
+static void __chpsim_no_show_instances(chpsim_options& o)
+	{ o.graph_opts.show_instances = false; }
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+static void __chpsim_antidependencies(chpsim_options& o)
+	{ o.graph_opts.with_antidependencies = true; }
+static void __chpsim_no_antidependencies(chpsim_options& o)
+	{ o.graph_opts.with_antidependencies = false; }
+#endif
+static void __chpsim_process_clusters(chpsim_options& o)
+	{ o.graph_opts.process_event_clusters = true; }
+static void __chpsim_no_process_clusters(chpsim_options& o)
+	{ o.graph_opts.process_event_clusters = false; }
 
 const chpsim::register_options_modifier
 	chpsim::_default(
@@ -277,7 +295,27 @@ const chpsim::register_options_modifier
 		"for dot-graphs: show event indices in graph"), 
 	chpsim::_no_show_event_index(
 		"no-show-event-index", &__chpsim_no_show_event_index,
-		"for dot-graphs: hide event indices");
+		"for dot-graphs: hide event indices"),
+	chpsim::_show_instances(
+		"show-instances", &__chpsim_show_instances,
+		"for dot-graphs: show allocated instances as nodes"), 
+	chpsim::_no_show_instances(
+		"no-show-instances", &__chpsim_no_show_instances,
+		"for dot-graphs: hide allocated instances"),
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	chpsim::_antidependencies(
+		"antidependencies", &__chpsim_antidependencies,
+		"for dot-graphs: show anti-dependence edges"), 
+	chpsim::_no_antidependencies(
+		"no-antidependencies", &__chpsim_no_antidependencies,
+		"for dot-graphs: hide anti-dependence edges"),
+#endif
+	chpsim::_process_clusters(
+		"cluster-processes", &__chpsim_process_clusters,
+		"for dot-graphs: wrap process subgraphs into clusters"), 
+	chpsim::_no_process_clusters(
+		"no-cluster-processes", &__chpsim_no_process_clusters,
+		"for dot-graphs: un-clustered process subgraphs");
 
 //=============================================================================
 }	// end namespace HAC

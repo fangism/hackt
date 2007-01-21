@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.16.2.33 2007/01/20 23:12:01 fang Exp $
+	$Id: CHP.cc,v 1.16.2.34 2007/01/21 04:03:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1030,7 +1030,7 @@ deterministic_selection::accept(StateConstructor& s) const {
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(s.get_event(split_index));
-	split_event.import_dependencies(deps);
+	split_event.import_block_dependencies(deps);
 
 	split_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
@@ -1261,7 +1261,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(s.get_event(split_index));
-	split_event.import_dependencies(deps);
+	split_event.import_block_dependencies(deps);
 
 	split_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
@@ -1686,6 +1686,17 @@ assignment::accept(StateConstructor& s) const {
 	STACKTRACE_INDENT_PRINT("new assigment: " << new_index << endl);
 	EventNode& new_event(s.get_event(new_index));
 
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+{
+	SIM::CHPSIM::ReadDependenceSetCollector rdeps(s);	// rvalues
+	SIM::CHPSIM::WriteDependenceSetCollector wdeps(s);	// lvalues
+	rval->accept(rdeps);
+	lval->accept(wdeps);
+	new_event.import_read_dependencies(rdeps);
+	new_event.import_write_dependencies(wdeps);
+}
+#endif
+
 	s.connect_successor_events(new_event);
 	// assignments are atomic and never block
 	// thus we need no dependencies.  
@@ -1819,7 +1830,7 @@ condition_wait::accept(StateConstructor& s) const {
 	if (cond) {
 		SIM::CHPSIM::DependenceSetCollector deps(s);
 		cond->accept(deps);
-		new_event.import_dependencies(deps);
+		new_event.import_block_dependencies(deps);
 	}
 
 	s.connect_successor_events(new_event);
@@ -2112,7 +2123,7 @@ channel_send::accept(StateConstructor& s) const {
 	// can block on channel, so we add dependencies
 	SIM::CHPSIM::DependenceSetCollector deps(s);
 	chan->accept(deps);
-	new_event.import_dependencies(deps);
+	new_event.import_block_dependencies(deps);
 }
 
 	s.connect_successor_events(new_event);
@@ -2248,7 +2259,7 @@ channel_receive::accept(StateConstructor& s) const {
 	// can block on channel, so we add dependencies
 	SIM::CHPSIM::DependenceSetCollector deps(s);
 	chan->accept(deps);
-	new_event.import_dependencies(deps);
+	new_event.import_block_dependencies(deps);
 }
 	s.connect_successor_events(new_event);
 

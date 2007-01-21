@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.1.2.28 2007/01/20 23:12:04 fang Exp $
+	$Id: Event.h,v 1.1.2.29 2007/01/21 04:03:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -14,6 +14,7 @@
 #include <valarray>
 #include <vector>
 #include "sim/chpsim/Dependence.h"
+#include "sim/chpsim/devel_switches.h"
 #include "Object/ref/reference_enum.h"
 #include "util/macros.h"
 
@@ -174,11 +175,28 @@ private:
 	unsigned short			countdown;
 	/**
 		Set of variables and channels whose update may affect the
-		blocking state of this event.  
-		Consider using an excl_ptr to this if 
+		*blocking* state of this event.  
+		Consider using an excl_ptr to this (sparser) if 
 		a significant number of events don't need this.  
+		TODO: yes, use pointer for private-implementation.
 	 */
-	DependenceSet			deps;
+	DependenceSet			block_deps;
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	/**
+		The set of variables that this event depends on (read)
+		that are NOT already in the block_deps set.  
+		TODO: combine into a pair of dependence sets, so we can
+		use a single pointer for both sets.  
+	 */
+	DependenceSet			read_deps;
+	/**
+		Set of variables and channels that this event MAY affect.
+		Only needed for dot-graph construction.
+		Consider making this an excl_ptr instead, 
+		and its construction optional to save memory.  
+	 */
+	DependenceSet			anti_deps;
+#endif
 public:
 	EventNode();
 
@@ -227,9 +245,16 @@ public:
 	get_predecessors(void) const { return predecessors; }
 
 	void
-	import_dependencies(const DependenceSetCollector& d) {
-		deps.import(d);
+	import_block_dependencies(const DependenceSetCollector& d) {
+		block_deps.import(d);
 	}
+
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	void
+	import_antidependencies(const DependenceSetCollector& d) {
+		anti_deps.import(d);
+	}
+#endif
 
 #if 0
 	const DependenceSet&
@@ -274,7 +299,7 @@ public:
 	ostream&
 	dump_subscribed_status(ostream& o, const nonmeta_state_manager& s, 
 			const event_index_type ei) const {
-		return deps.dump_subscribed_status(o, s, ei);
+		return block_deps.dump_subscribed_status(o, s, ei);
 	}
 
 public:

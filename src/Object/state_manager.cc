@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.16.8.4 2007/01/16 04:57:30 fang Exp $
+	$Id: state_manager.cc,v 1.16.8.5 2007/01/21 04:03:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -51,6 +51,7 @@ global_entry_pool<Tag>::~global_entry_pool() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Print result of global allocation.
 	\param topfp the top-level footprint of the module.  
  */
 template <class Tag>
@@ -60,11 +61,36 @@ if (this->size() > 1) {
 	const state_manager& sm(AS_A(const state_manager&, *this));
 	global_entry_dumper ged(o, sm, topfp);
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
-	ged.index = 1;
+	ged.index = 1;	// 0th entry is NULL
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++, ++ged.index) {
 		i->dump(ged) << endl;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print list of dot-formatted nodes.  
+	TODO: different node attributes for distinctive appearances?
+ */
+template <class Tag>
+ostream&
+global_entry_pool<Tag>::dump_dot_nodes(ostream& o,
+		const footprint& topfp) const {
+if (this->size() > 1) {
+	const state_manager& sm(AS_A(const state_manager&, *this));
+	size_t j = 1;
+	const_iterator i(++this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; ++i, ++j) {
+		o << class_traits<Tag>::tag_name << '_' << j <<
+			"\t[style=bold,label=\"";
+		// other styles: dashed, dotted, bold, invis
+		i->dump_canonical_name(o, topfp, sm);
+		o << "\"];" << endl;
 	}
 }
 	return o;
@@ -151,6 +177,22 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 	global_entry_pool<int_tag>::dump(o, topfp);
 	global_entry_pool<bool_tag>::dump(o, topfp);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Formatted print for dot graphs.  
+	Only print leaf instances, omit processes.  
+ */
+ostream&
+state_manager::dump_dot_instances(ostream& o, const footprint& topfp) const {
+	global_entry_pool<channel_tag>::dump_dot_nodes(o, topfp);
+#if ENABLE_DATASTRUCTS
+	global_entry_pool<datastruct_tag>::dump_dot_nodes(o, topfp);
+#endif
+	global_entry_pool<enum_tag>::dump_dot_nodes(o, topfp);
+	global_entry_pool<int_tag>::dump_dot_nodes(o, topfp);
+	global_entry_pool<bool_tag>::dump_dot_nodes(o, topfp);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.1.2.6 2007/01/20 07:26:13 fang Exp $
+	$Id: Dependence.h,v 1.1.2.7 2007/01/21 04:03:47 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -9,6 +9,7 @@
 #include <iosfwd>
 #include <valarray>
 #include "sim/common.h"
+#include "sim/chpsim/devel_switches.h"
 #include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
@@ -72,6 +73,14 @@ protected:
 	__subscribed_to_any(const nonmeta_state_manager&,
 		const event_index_type) const;
 
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	ostream&
+	__dump_dependence_edges(ostream&, const event_index_type) const;
+
+	ostream&
+	__dump_antidependence_edges(ostream&, const event_index_type) const;
+#endif
+
 };	// end struct dependence_set_base
 
 //=============================================================================
@@ -118,6 +127,14 @@ public:
 	ostream&
 	dump_subscribed_status(ostream&, const nonmeta_state_manager&, 
 		const event_index_type) const;
+
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	ostream&
+	dump_dependence_edges(ostream&, const event_index_type) const;
+
+	ostream&
+	dump_antidependence_edges(ostream&, const event_index_type) const;
+#endif
 
 };	// end class Dependence
 

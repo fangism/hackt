@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16.8.6 2007/01/04 21:44:55 fang Exp $
+	$Id: global_entry.tcc,v 1.16.8.7 2007/01/21 04:03:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -344,7 +344,7 @@ ostream&
 global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	ostream& o(ged.os);
 	o << ged.index << '\t';
-	switch(parent_tag_value) {
+	switch (parent_tag_value) {
 	case PARENT_TYPE_NONE:
 		o << "(top)\t-\t";
 		break;

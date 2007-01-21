@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.1.2.7 2007/01/18 12:45:51 fang Exp $
+	$Id: StateConstructor.h,v 1.1.2.8 2007/01/21 04:03:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -88,13 +88,7 @@ public:
 	// only needed when trying to be clever and recycle useless events
 	void
 	deallocate_event(const event_index_type);
-#if 0
-	event_pool_type&
-	event_pool(void) { return state.event_pool; }
 
-	const event_pool_type&
-	event_pool(void) const { return state.event_pool; }
-#endif
 	size_t
 	event_pool_size(void) const;
 

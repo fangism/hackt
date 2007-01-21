@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.1.2.31 2007/01/20 23:12:06 fang Exp $
+	$Id: State.cc,v 1.1.2.32 2007/01/21 04:03:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -525,27 +525,19 @@ ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	o << "digraph G {" << endl;
 {
+if (g.show_instances) {
+	o << "# Instances: " << endl;
+	mod.get_state_manager().dump_dot_instances(o, mod.get_footprint());
+}
+
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
 	event_index_type i = 0;		// FIRST_VALID_EVENT;
 	// we use the 0th event to launch initial batch of events
-	// const string prefix("EVENT_"); // keep consistent with Event::dump!
 	for ( ; i<es; ++i) {
-		// o << "EVENT_" << i << "\t[label=\"" << i << "\"];";
-		// o << prefix << i << "\t";
 		const event_type& e(event_pool[i]);
 		e.dump_dot_node(o, i, g) << endl;
-#if 0
-		// iterate over edges
-		const event_index_type* j = &e.successor_events[0];
-		const event_index_type* z =
-			&e.successor_events[e.successor_events.size()];
-		for ( ; j!=z; ++j) {
-			const event_index_type h = *j;
-			o << prefix << i << " -> " << prefix << h;
-			event_pool[h].dump_dot_edge(o) << ';' << endl;
-		}
-#endif
+		// includes outgoing edges
 	}
 }
 	o << "}" << endl;
@@ -741,7 +733,12 @@ State::load_checkpoint(istream& o) {
 	Default configuration for dumping.  
  */
 graph_options::graph_options() :
-		show_event_index(true) {
+		show_event_index(true), 
+		show_instances(false), 
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+		with_antidependencies(false),
+#endif
+		process_event_clusters(false) {
 }
 
 //=============================================================================

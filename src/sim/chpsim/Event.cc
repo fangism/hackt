@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.1.2.25 2007/01/20 23:12:03 fang Exp $
+	$Id: Event.cc,v 1.1.2.26 2007/01/21 04:03:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -46,7 +46,12 @@ EventNode::EventNode() :
 		flags(0),
 		process_index(0),
 		predecessors(0),
-		countdown(0) {
+		countdown(0), 
+		block_deps()
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+		, anti_deps()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -62,7 +67,12 @@ EventNode::EventNode(const action* a,
 		flags(0),
 		process_index(pid),
 		predecessors(0),
-		countdown(0) {
+		countdown(0), 
+		block_deps()
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+		, anti_deps()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -84,7 +94,10 @@ EventNode::operator = (const this_type& e) {
 	process_index = e.process_index;
 	predecessors = e.predecessors;
 	countdown = e.countdown;
-	deps = e.deps;		// re-defined!
+	block_deps = e.block_deps;		// re-defined!
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	anti_deps = e.anti_deps;
+#endif
 	return *this;
 }
 
@@ -145,10 +158,10 @@ if (countdown) {
 		}
 		if (r & __RECHECK_SUBSCRIBE_THIS) {
 			STACKTRACE_INDENT_PRINT("subscribed." << endl);
-			deps.subscribe(c, ei);
+			block_deps.subscribe(c, ei);
 		} else if (r & __RECHECK_UNSUBSCRIBE_THIS) {
 			STACKTRACE_INDENT_PRINT("unsubscribed." << endl);
-			deps.unsubscribe(c, ei);
+			block_deps.unsubscribe(c, ei);
 		}
 	} else {
 		// RECHECK_NEVER_BLOCKED
@@ -197,7 +210,7 @@ EventNode::execute(const nonmeta_context& c,
 void
 EventNode::subscribe_deps(const nonmeta_context& c, 
 		const event_index_type ei) const {
-	deps.subscribe(c, ei);
+	block_deps.subscribe(c, ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -272,7 +285,7 @@ EventNode::dump_struct(ostream& o) const {
 	ostream_iterator<event_index_type> osi(o, " ");
 	copy(begin(successor_events), end(successor_events), osi);
 	o << endl;
-	deps.dump(o);	// includes endl already
+	block_deps.dump(o);	// includes endl already
 	return o;
 }
 
@@ -318,6 +331,12 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	} else {
 		dump_successor_edges_default(o, i);
 	}
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	if (g.show_instances) {
+		block_deps.dump_dependence_edges(o, i);
+		anti_deps.dump_antidependence_edges(o, i);
+	}
+#endif
 	return o;
 }
 

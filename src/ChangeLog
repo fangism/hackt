@@ -5,6 +5,13 @@
 
 2007-01-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-54:
+	  Added some graph options to fine-tune chpsim dot-graph dump, 
+		but will not complete until after branch merge.  
+	  Added "sim/chpsim/devel_switches.h" to development.  
+	  Merge up to trunk!
+
+
 	* HACKT-00-01-04-main-00-80-63-chpsim-01-53:
 	  chpsim-event Dot graphs now have guard labels on outgoing
 		edges of selection nodes.  Dude.  Sweet.  
