@@ -1,0 +1,6 @@
+# "assign-once-parallel-b-01.chpsimrc"
+#	$Id: assign-once-parallel-b-01.chpsimrc,v 1.2 2007/01/21 06:02:05 fang Exp $
+# @haco@ assign-once-parallel-b.haco-a
+
+source assign-once-parallel-a-01.chpsimrc
+

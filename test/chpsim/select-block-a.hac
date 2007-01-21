@@ -1,0 +1,29 @@
+// "select-block-a.hac"
+//	$Id: select-block-a.hac,v 1.2 2007/01/21 06:03:28 fang Exp $
+// testing selection behavior when all guards are false (block)
+// this only works with uniform delay for testing
+// can also use null-event-delay 0
+
+bool a, b;	// let these be exclusive high (dual rail)
+bool c;		// is single-rail input
+bool e;		// is acknowledge
+
+chp {
+// mimicking pseudo-bundled-data
+c-,e-;
+// the rest are concurrent:
+*[[~e];
+  a-,b-;
+  e+;
+  a-;b-;a-;b-;	// intentional delay
+  [ c -> a-;b+ [] else -> b-;a+ ]
+],
+*[[e];
+  [ a -> c:=c		// delay
+  [] b -> c:=c		// delay
+  ];
+  c:=~c;		// toggle
+  e-
+]
+}
+

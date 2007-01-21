@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.11 2006/10/18 20:57:34 fang Exp $
+	$Id: CHP.cc,v 1.12 2007/01/21 05:58:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -939,9 +939,13 @@ selection::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper function, scanning for bottom-up errors, 
+	called by selection::check and do_until::check.
+ */
 good_bool
 selection::postorder_check_gcs(checked_gcs_type& gl, context& c) const {
-	INVARIANT(size() > 1);		// otherwise, not a selection!
+	// INVARIANT(size() > 1);		// otherwise, not a selection!
 	check_list(gl, &guarded_command::check_guarded_action, c);
 	typedef	checked_gcs_type::const_iterator	const_checked_iterator;
 	const const_checked_iterator ci(gl.begin());
@@ -974,6 +978,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 statement::return_type
 det_selection::check_action(context& c) const {
 	checked_gcs_type checked_gcs;	// checked guarded commands
+	INVARIANT(size() > 1);
 	if (!postorder_check_gcs(checked_gcs, c).good) {
 		// already have error message
 		return statement::return_type(NULL);
@@ -1002,6 +1007,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 statement::return_type
 nondet_selection::check_action(context& c) const {
 	checked_gcs_type checked_gcs;	// checked guarded commands
+	INVARIANT(size() > 1);
 	if (!postorder_check_gcs(checked_gcs, c).good) {
 		// already have error message
 		return statement::return_type(NULL);
@@ -1162,6 +1168,7 @@ do_until::rightmost(void) const {
 statement::return_type
 do_until::check_action(context& c) const {
 	selection::checked_gcs_type checked_gcs;
+	NEVER_NULL(sel);
 	if (!sel->postorder_check_gcs(checked_gcs, c).good) {
 		return statement::return_type(NULL);
 	}

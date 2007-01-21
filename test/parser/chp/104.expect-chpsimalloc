@@ -1,0 +1,32 @@
+Variables: 
+int[1]: "bar.a" 
+int[2]: "bar.b" 
+int[3]: "bar.z" 
+chan[1]: "bar.A" 
+chan[2]: "bar.B" 
+chan[3]: "bar.C" 
+chan[4]: "bar.D" 
+chan[5]: "bar.E" 
+chan[6]: "bar.F" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 12 
+event[1]: null: null, pid: 0, #pred: 0, succ: 
+event[2]: null: , pid: 1, #pred: 4, succ: 12 
+event[3]: send: foo::C!(foo::z), pid: 1, #pred: 1, succ: 2 
+channel deps: 3 
+event[4]: send: foo::D!(~foo::z), pid: 1, #pred: 1, succ: 2 
+channel deps: 4 
+event[5]: send: foo::E!(foo::a&foo::b), pid: 1, #pred: 1, succ: 2 
+channel deps: 5 
+event[6]: send: foo::F!(foo::a|foo::b), pid: 1, #pred: 1, succ: 2 
+channel deps: 6 
+event[7]: fork: , pid: 1, #pred: 1, succ: 3 4 5 6 
+event[8]: assign: foo::z := foo::a^foo::b, pid: 1, #pred: 1, succ: 7 
+event[9]: null: , pid: 1, #pred: 2, succ: 8 
+event[10]: receive: foo::A?(foo::a), pid: 1, #pred: 1, succ: 9 
+channel deps: 1 
+event[11]: receive: foo::B?(foo::b), pid: 1, #pred: 1, succ: 9 
+channel deps: 2 
+event[12]: fork: , pid: 1, #pred: 1, succ: 10 11 
+

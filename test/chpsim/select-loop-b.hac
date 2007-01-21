@@ -1,0 +1,12 @@
+// "select-loop-b.hac"
+// copy-modified from "select-loop-a.hac"
+//	$Id: select-loop-b.hac,v 1.2 2007/01/21 06:03:35 fang Exp $
+// repeated selection in loop
+
+bool a, b;
+
+chp {
+a-;
+*[[ a -> b+ [] else -> skip]; a+]
+}
+

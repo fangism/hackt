@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.14 2006/10/18 22:52:54 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.15 2007/01/21 05:59:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -13,6 +13,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/ref/reference_enum.h"
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 
@@ -34,11 +35,11 @@ class const_range_list;
 class unroll_context;
 class footprint;
 class aggregate_meta_instance_reference_base;
+class nonmeta_expr_visitor;
 using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-// using std::default_vector;
 using std::istream;
 using std::ostream;
 using util::persistent;
@@ -133,9 +134,16 @@ virtual	CONNECT_PORT_PROTO = 0;
 
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
-	lookup_footprint_frame(const state_manager&, footprint&) const
+	lookup_footprint_frame(const state_manager&, const footprint&) const
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
+
+#define	LOOKUP_TOP_LEVEL_REFERENCE_PROTO				\
+	global_indexed_reference					\
+	lookup_top_level_reference(const state_manager&, 		\
+		const footprint&) const
+
+virtual	LOOKUP_TOP_LEVEL_REFERENCE_PROTO = 0;
 
 #define	COLLECT_ALIASES_PROTO						\
 	void								\
@@ -148,6 +156,9 @@ virtual	COLLECT_ALIASES_PROTO = 0;
 	collect_subentries(const module&, entry_collection&) const
 
 virtual	COLLECT_SUBENTRIES_PROTO = 0;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
 
 private:
 virtual	alias_connection_ptr_type

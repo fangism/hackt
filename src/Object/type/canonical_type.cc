@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.15 2006/12/01 23:28:56 fang Exp $
+	$Id: canonical_type.cc,v 1.16 2007/01/21 05:59:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/struct_traits.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 #include "common/TODO.h"
 
 namespace HAC {
@@ -240,13 +241,56 @@ check_footprint_policy<user_def_datatype>::operator () (
 }
 
 //=============================================================================
+/**
+	Ordering definition for built-in data types.  
+ */
+bool
+operator < (const canonical_generic_datatype& l,
+		const canonical_generic_datatype& r) {
+	const never_ptr<const datatype_definition_base>
+		ld(l.get_base_def()), 
+		rd(r.get_base_def());
+	NEVER_NULL(ld);
+	NEVER_NULL(rd);
+	if (ld != rd) {
+		return ld->less_ordering(*rd);
+	} else {
+		typedef	canonical_type_base::const_param_list_ptr_type
+						params_ptr_type;
+		const params_ptr_type& lp(l.get_raw_template_params());
+		const params_ptr_type& rp(r.get_raw_template_params());
+		// NOTE: empty param lists are considered equivalent to NULL
+		if (lp) {
+			if (rp) {
+				// compare const_param_expr_lists
+				return *lp < *rp;
+			} else {
+				// non-NULL lp cannot possibly be < rp
+				return false;
+			}
+		} else {
+			if (rp) {
+				// if rp is also empty, then lp == rp
+				return !rp->size();
+			} else {
+				return false;
+			}
+		}
+	}
+}
+
+//=============================================================================
 template
 canonical_user_def_data_type::canonical_type(const canonical_generic_datatype&);
+#if ENABLE_DATASTRUCTS
 template
 canonical_generic_datatype::canonical_type(const canonical_user_def_data_type&);
+#endif
 
 template class canonical_type<datatype_definition_base>;
+#if ENABLE_DATASTRUCTS
 template class canonical_type<user_def_datatype>;
+#endif
 template class canonical_type<user_def_chan>;
 template class canonical_type<process_definition>;
 // specialized, defined in "Object/type/canonical_generic_chan_type.cc"

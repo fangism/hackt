@@ -1,0 +1,36 @@
+// "bool-sink.hac"
+//	$Id: bool-sink.hac,v 1.2 2007/01/21 06:04:16 fang Exp $
+// bool buckets
+
+defproc bool_sink(chan?(bool) B) {
+bool b;
+chp {
+*[ B?(b) ]
+}
+}
+
+/***
+// sinks a limited number of times
+template <pint N>
+defproc bool_sink_once(chan?(bool) B) {
+bool b;
+chp {
+{;:i:N: B?(b) }
+}
+}
+***/
+
+/***
+template <pint N, pbool V[N]>
+defproc bool_assert_sink (chan?(bool) B) {
+... $[x == V[i]]
+}
+***/
+
+/***
+template <pint N, pbool V[N]>
+defproc bool_assert_sink_once (chan?(bool) B) {
+...
+}
+***/
+

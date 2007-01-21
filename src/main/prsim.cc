@@ -2,12 +2,13 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.7 2006/07/30 05:49:50 fang Exp $
+	$Id: prsim.cc,v 1.8 2007/01/21 06:00:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
@@ -24,6 +25,7 @@
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State.h"
 #include "sim/prsim/Command.h"
+#include "sim/command_common.h"
 #include "sim/prsim/ExprAllocFlags.h"
 #include "util/string.tcc"	// for string_to_num
 
@@ -75,7 +77,7 @@ public:
 		expr_alloc_flags(), 
 		source_paths() { }
 
-};	// end class options
+};	// end class prsim_options
 
 //=============================================================================
 // class alloc static initializers
@@ -123,7 +125,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 
-	excl_ptr<module> the_module = load_module(ofn);
+	const excl_ptr<module> the_module = load_module(ofn);
 	if (!the_module)
 		return 1;
 
@@ -170,15 +172,11 @@ try {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: -I for search paths for recursive scripts.  
+	TODO: more options!
+	TODO: use getopt_mapped(), see cflat for examples.  
  */
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
-#if 0
-	// using simple template function for now
-	return parse_simple_command_options(
-		argc, argv, o, options_modifier_map);
-#else
 	// now we're adding our own flags
 	static const char optstring[] = "+bd:f:hiI:O:";
 	int c;
@@ -202,7 +200,8 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			const options_modifier_map_iterator
 				mi(options_modifier_map.find(optarg));
 			if (mi == options_modifier_map.end() || !mi->second) {
-				cerr << "Invalid mode: " << optarg << endl;
+				cerr << "Invalid option argument: " 
+					<< optarg << endl;
 				return 1;
 			} else {
 				(mi->second)(o);
@@ -241,7 +240,6 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	}       // end switch
 	}       // end while
 	return 0;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -332,4 +330,6 @@ const prsim::register_options_modifier
 
 //=============================================================================
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

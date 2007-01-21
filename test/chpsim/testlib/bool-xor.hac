@@ -1,0 +1,23 @@
+// "bool-xor.hac"
+//	$Id: bool-xor.hac,v 1.2 2007/01/21 06:04:19 fang Exp $
+// boolean logical XOR
+// TODO: use generalized input array
+
+defproc bool_xor(chan?(bool) A, B; chan!(bool) O) {
+bool a, b;
+chp {
+*[A?(a),B?(b); O!(a != b)]	// want to use ^
+}
+}
+
+/***
+// pending meta-expression expansion support
+template <pint N>
+defproc bool_xor(chan(bool)? A[N]; chan(bool)! O) {
+bool a[N];
+chp {
+*[{,:i:N: A[i]?(a[i])}; O!((!=:i:N: a[i]))]	// want to use ^
+}
+}
+***/
+

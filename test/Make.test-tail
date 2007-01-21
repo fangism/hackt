@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.64 2006/12/01 23:29:00 fang Exp $
+#	$Id: Make.test-tail,v 1.65 2007/01/21 06:01:35 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -21,15 +21,16 @@ HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
 HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
+HACKT_CHPSIM_EXE = $(HACKT_EXE) chpsim
 
 # NOTE: these scripts are configure-generated from their .hac files.  
 TEST_SRCDIR = $(top_srcdir)/test
 TEST_BUILDDIR = $(top_builddir)/test
 
+# SPACES_TO_NEWLINE defined as inline awk command in Make.stddef
 POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
-SPACESTONEWLINE = $(AWK) -f $(TEST_SRCDIR)/spacestonewline.awk
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 
@@ -44,8 +45,10 @@ HACO_FLAGS += -I$(srcdir)
 # caution: concurrent builds of .haco and .depend may clobber this
 # if executable did not successfully build, then skip.
 
-HAC_DEPEND_FILTER = $(SED) '/haco:/s|^$(srcdir)\/||g' | \
-	$(SED) 's/haco:/haco $@:/g'
+HAC_DEPEND_FILTER = $(SED) -e '/haco:/s|^$(srcdir)\/||g' \
+	-e 's/haco:/haco $@:/g'
+# the following works for VPATH, but need to test for srcdir = .
+# -e 's|$(srcdir)|$$(srcdir)|g'
 
 # arg, need to escape the friggin' hash!
 SHELL_INTERPRETER = "\#!$(SHELL)"
@@ -76,6 +79,15 @@ else
 ECHO_FILTERED = :
 endif
 
+# Each run-commands script should include the command to invoke
+# for loading the object, e.g.: hackt prsim foo.haco-a
+# This rule should deduce the input object from the source script.  
+
+# useful for extracting object file name from a source script
+EXTRACT_HACO_PIPE = $(GREP) "^\#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
+	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
+
+
 BOGUS_TESTS =
 BOGUS_TARGETS =
 HAC_OBJECT_TARGETS =
@@ -90,13 +102,16 @@ include $(top_srcdir)/test/Make.test-alloc
 include $(top_srcdir)/test/Make.test-cflat
 include $(top_srcdir)/test/Make.test-graph
 include $(top_srcdir)/test/Make.test-prsim
+include $(top_srcdir)/test/Make.test-chpsim
 
 BOGUS_TESTS +=
 
-BOGUS_TARGETS += $(BOGUS_TESTS)
+BOGUS_TARGETS +=
 
-CLEANFILES += $(BOGUS_TARGETS)
-DISTHOOK_CLEANFILES += $(BOGUS_TARGETS)
+CLEAN_BOGUS_FILES = $(BOGUS_TESTS) $(BOGUS_TARGETS)
+
+CLEANFILES += $(CLEAN_BOGUS_FILES)
+DISTHOOK_CLEANFILES += $(CLEAN_BOGUS_FILES)
 
 CHECK_SUMMARIES +=
 
@@ -119,12 +134,17 @@ build-check-local: $(TESTS)
 # executable dependence: if executable is more recent, also rebuild
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 
+ALL_OBJECT_TESTS = \
+	$(HACKT_PARSE_TEST_PASSES) \
+	$(HACKT_PARSE_TEST_WARNINGS) \
+	$(HACKT_PRSIMRC_TEST_SUBJECTS) \
+	$(HACKT_CHPSIMRC_TEST_SUBJECTS)
+
 # source dependencies
 test.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) "$(HACKT_PARSE_TEST_PASSES) $(HACKT_PRSIMRC_TEST_SUBJECTS)" | \
-		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print "-include " $$1 ".depend"; }' > $@ ; \
+	$(ECHO) "$(ALL_OBJECT_TESTS)" | $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+		$(AWK) '/.+/ {print "-include " $$1 ".depend"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include test.autodepend
@@ -249,6 +269,7 @@ endif
 	@$(ECHO) "	compile-passes: lists TESTS that pass parsing"
 	@$(ECHO) "	bison-outputs: list TESTS whose output is bison-specific"
 	@$(ECHO) "	empty-cflat-prs: list of tests whose cflat-output is empty"
+	@$(ECHO) "	chpsimalloc-tests: lists HACKT_CHPSIM_ALLOC_TEST_SUBJECTS"
 
 include $(top_srcdir)/Make.global
 # help: help-test

@@ -1,0 +1,5 @@
+globID	super		localID	canonical	footprint-frame
+[global channel entries]
+1	(top)	-	1	B	chan(bool<>)
+[global bool entries]
+1	(top)	-	1	x	

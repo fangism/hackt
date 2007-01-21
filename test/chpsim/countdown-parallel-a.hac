@@ -1,0 +1,18 @@
+// "countdown-parallel-a.hac"
+//	$Id: countdown-parallel-a.hac,v 1.2 2007/01/21 06:03:17 fang Exp $
+// concurrent decoupled finite loops counting down
+
+int c, d;
+
+chp {
+c:=2;
+*[ (c > 0) -> c:=c-1 ]
+}
+
+chp {
+d:=3;
+*[ (d > 0) -> d:=d-1 ]
+}
+
+// will terminate
+

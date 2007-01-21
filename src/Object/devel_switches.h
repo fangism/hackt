@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.37 2006/12/01 23:28:33 fang Exp $
+	$Id: devel_switches.h,v 1.38 2007/01/21 05:58:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -80,12 +80,12 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is now defined in config.h by configure.  
 	Define to 1 to fuse unrolling and creating into the same phase.
 	Rationale: with PROPAGATE_CHANNEL_CONNECTIONS_HIERARCHICALLY (perm'd), 
 		we now have no use for an unrolled-but-not-created footprint.
-	This is now defined in config.h by configure.  
 	Goal: 1 (reluctantly)
-	Status: not begun
+	Status: complete
 	Priority: medium-high
 	Affects: top-level executable programs, internal passes 
 		don't need to use this flag.  
@@ -150,6 +150,25 @@
 	Priority: low
  */
 #define	SUBTYPE_FOOTPRINTS			0
+
+/**
+	Define to 1 to instantiate struct collections and references, 
+	which as of the time of writing this, have never been well-defined
+	or used.  
+	Goal: ?
+	Pending: well-defined semantics in language
+ */
+#define	ENABLE_DATASTRUCTS			0
+
+/**
+	Define to 1 to re-define global_entry<channel> using
+	canonical_fundamental_channel footprints.  
+	Also allocate ChannelData accordingly.  
+	Goal: 1
+	Status: done
+	Priority: high (for chpsim)
+ */
+#define	BUILTIN_CHANNEL_FOOTPRINTS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

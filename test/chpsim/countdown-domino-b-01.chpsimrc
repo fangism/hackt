@@ -1,0 +1,146 @@
+# "countdown-domino-b-01.hac"
+#	$Id: countdown-domino-b-01.chpsimrc,v 1.2 2007/01/21 06:02:41 fang Exp $
+# @haco@ countdown-domino-b.haco-a
+
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+time
+
+

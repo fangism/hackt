@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.29 2006/11/07 06:35:18 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.30 2007/01/21 05:59:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -34,6 +34,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
@@ -266,6 +267,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 		// conservatively
 		return false;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_META_VALUE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

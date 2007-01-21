@@ -1,0 +1,7 @@
+# "select-nested-loop-b-02.chpsimrc"
+#	$Id: select-nested-loop-b-02.chpsimrc,v 1.2 2007/01/21 06:03:39 fang Exp $
+# @haco@ select-nested-loop-b.haco-a
+
+null-event-delay 0
+source select-nested-loop-b-01.chpsimrc
+

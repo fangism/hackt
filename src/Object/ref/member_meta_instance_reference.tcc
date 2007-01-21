@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.21 2006/11/07 06:35:15 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.22 2007/01/21 05:59:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -17,6 +17,7 @@
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/global_entry.tcc"
@@ -146,12 +147,27 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	This can be used to lookup private members.  
 	TODO: re-use most of resolve_parent_member_helper, 
 		up until the lookup part?
+	\pre this MUST be a top-level instance reference.  
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm, footprint& top) const {
+		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
+	const unroll_context uc(&top, &top);
+	return this->lookup_locally_allocated_index(sm, uc);
+}	// end method lookup_globally_allocated_index
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up the local index of this reference.  
+	\return a local index (local to footprint) for this reference.  
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+MEMBER_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
+		const state_manager& sm, const unroll_context& uc) const {
+	const footprint& top(*uc.get_top_footprint());
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
 	if (_parent_inst_ref.dimensions()) {
 		// error message copied from above
@@ -188,7 +204,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// now need to compute the offset into the corresponding 
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
-	const unroll_context uc(&top, &top);
 	const instance_alias_info_ptr_type
 		local_alias(__unroll_generic_scalar_reference_no_lookup(
 			pi, this->array_indices, uc));
@@ -199,9 +214,28 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	}
 	const size_t ind = local_alias->instance_index;
 	INVARIANT(ind);
-	const footprint_frame_map_type& ffm(fpf->template get_frame_map<Tag>());
 	// this lookup returns a globally allocated index
-	return ffm[ind -1];	// 0-indexed offset
+	return footprint_frame_transformer(*fpf, Tag())(ind);
+}	// end method lookup_locally_allocated_index
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	\param indices the return set (not sorted or uniqued)
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
+		const state_manager& sm, const footprint& top,
+		vector<size_t>& indices) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+MEMBER_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,7 +331,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm, footprint& top) const {
+		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	return parent_type::substructure_implementation_policy::
 		template member_lookup_footprint_frame<Tag>(*this, sm, top);

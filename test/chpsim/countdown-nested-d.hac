@@ -1,0 +1,20 @@
+// "countdown-nested-d.hac"
+// copy-modified from "countdown-nested-a.hac"
+//	$Id: countdown-nested-d.hac,v 1.2 2007/01/21 06:03:16 fang Exp $
+// nested loop countdowns
+
+int c, d;
+
+chp {
+c:=0;
+*[ (c < 3) ->
+	c:=c+1,			// concurrent
+	{d:=0;
+	*[ (d < 2) ->
+		d:=d+1
+	]}
+]
+}
+// these count UP, I know...
+// will terminate with c = 3, d = 2
+

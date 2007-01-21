@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.21 2006/11/21 22:39:08 fang Exp $
+	$Id: struct_traits.h,v 1.22 2007/01/21 05:59:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -32,6 +32,10 @@ struct class_traits<datastruct_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
+	/**
+		This is pending implementation of set/get semantics.
+	 */
+	static const bool		has_CHP = true;
 	static const bool		is_connection_directional = false;
 	enum {		is_nonmeta_data_lvalue = true		};
 
@@ -63,6 +67,12 @@ struct class_traits<datastruct_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
+	/**
+		This is really unused filler.
+		pint_const is just bogus
+		Data structs are not used yet...
+	 */
+	typedef	pint_const			const_expr_type;
 	typedef	struct_expr			data_expr_base_type;
 	typedef	struct_value_type		data_value_type;
 

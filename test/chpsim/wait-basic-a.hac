@@ -1,0 +1,12 @@
+// "wait-basic-a.hac"
+//	$Id: wait-basic-a.hac,v 1.2 2007/01/21 06:03:55 fang Exp $
+// basic condition waiting, testing blocking and subscribing
+
+bool a, b, c, d;
+
+chp {
+{a-,b-,c-,d-};		// guaranteed initialization
+a+, {[a];b+}, {[b];c+}, {[c];d+}	// concurrent, but domino
+}
+
+

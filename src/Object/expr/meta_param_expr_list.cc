@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.24 2006/10/18 21:38:41 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.25 2007/01/21 05:58:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -27,6 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
@@ -57,6 +58,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::dynamic_param_expr_list,
 		DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY, 0)
+
+namespace memory {
+	// explicit template instantiations, needed for -O3
+template class count_ptr<const HAC::entity::const_param_expr_list>;
+}
 }	// end namespace util
 
 //=============================================================================
@@ -395,6 +401,12 @@ if (a_size != f_size) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_param_expr_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Dereference and compare.
 	Could go in a standard library.  
@@ -701,6 +713,12 @@ if (cpl) {
 	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+dynamic_param_expr_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

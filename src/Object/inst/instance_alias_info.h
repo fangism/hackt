@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.21 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_alias_info.h,v 1.22 2007/01/21 05:59:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__

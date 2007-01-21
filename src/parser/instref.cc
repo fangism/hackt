@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.4 2006/10/18 22:52:58 fang Exp $
+	$Id: instref.cc,v 1.5 2007/01/21 06:00:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,6 +31,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/ref/meta_reference_union.h"
+#include "Object/traits/type_tag_enum.h"
 #include "Object/entry_collection.h"
 #include "common/TODO.h"
 #include "util/libc.h"			// for tmpfile, rewind,...
@@ -55,6 +56,8 @@ using entity::simple_bool_meta_instance_reference;
 using entity::substructure_alias;
 using entity::entry_collection;
 using entity::index_set_type;
+using entity::global_indexed_reference;
+using entity::META_TYPE_NONE;
 using std::vector;
 using std::copy;
 using std::string;
@@ -219,15 +222,33 @@ parse_node_to_index(const string& n, const module& m) {
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
 	const state_manager& sm(m.get_state_manager());
-	// const_cast is temporary until call trace is rewritten to 
-	// perform lookup using a read-only target footprint.  
-	// we promise not to modify it in this call.  
-	footprint& top(const_cast<footprint&>(m.get_footprint()));
+	const footprint& top(m.get_footprint());
 	const size_t ret = b->lookup_globally_allocated_index(sm, top);
 #if 0
 	cerr << "index = " << ret << endl;
 #endif
 	return ret;
+}
+
+//=============================================================================
+/**
+	\returns a (type, index)-pair that references the globally
+	allocated index.  
+	TODO: handle meta value references?
+ */
+global_indexed_reference
+parse_global_reference(const string& n, const module& m) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	if (!r.inst_ref()) {
+		return global_indexed_reference(META_TYPE_NONE, 
+			INVALID_NODE_INDEX);
+	}
+	const state_manager& sm(m.get_state_manager());
+	const footprint& top(m.get_footprint());
+	// is a meta_instance_reference_base
+	return r.inst_ref()->lookup_top_level_reference(sm, top);
 }
 
 //=============================================================================

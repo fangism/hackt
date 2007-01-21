@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_relational_expr.h"
 	Boolean relations between real-valued parameters.  
-	$Id: preal_relational_expr.h,v 1.11 2006/10/18 07:39:41 fang Exp $
+	$Id: preal_relational_expr.h,v 1.12 2007/01/21 05:59:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_RELATIONAL_EXPR_H__
@@ -74,6 +74,12 @@ public:
 
 	~preal_relational_expr();
 
+	const operand_ptr_type&
+	get_first(void) const { return lx; }
+
+	const operand_ptr_type&
+	get_second(void) const { return rx; }
+
 	ostream&
 	what(ostream& o) const;
 
@@ -121,6 +127,7 @@ public:
 		const count_ptr<const pbool_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
 	using parent_type::substitute_default_positional_parameters;
@@ -128,6 +135,7 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+	using parent_type::nonmeta_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

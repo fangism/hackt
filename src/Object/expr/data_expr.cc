@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.13 2006/11/21 22:38:41 fang Exp $
+	$Id: data_expr.cc,v 1.14 2007/01/21 05:58:44 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -27,11 +27,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
+#include "Object/expr/expr_visitor.h"
+#include "Object/nonmeta_channel_manipulator.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/traits/bool_traits.h"
+
+#include "common/TODO.h"
 
 #include "util/reserve.h"
 #include "util/persistent_object_manager.tcc"
@@ -101,6 +107,40 @@ int_expr::unroll_resolve_copy(const unroll_context& c,
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pint_const>
+int_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	INVARIANT(p == this);
+	return __nonmeta_resolve_rvalue(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+int_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+int_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const pint_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+		*w.iter_ref<int_tag>()++ = d->static_constant_value();
+	} else {
+		THROW_EXIT;
+	}
+}
+
 //=============================================================================
 // class bool_expr method definitions
 
@@ -109,6 +149,32 @@ bool_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+bool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+bool_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const pbool_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+		*w.iter_ref<bool_tag>()++ = d->static_constant_value();
+	} else {
+		THROW_EXIT;
+	}
 }
 
 //=============================================================================
@@ -121,6 +187,37 @@ real_expr::unroll_resolve_copy(const unroll_context& c,
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+real_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+real_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const preal_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+#if 0
+		*w.iter_ref<real_tag>()++ = d->static_constant_value();
+#else
+		FINISH_ME(Fang);
+		cerr << "channel_data_writer lacks \'real\' fields." << endl;
+#endif
+	} else {
+		THROW_EXIT;
+	}
+}
+
 //=============================================================================
 // class enum_expr method definitions
 
@@ -129,6 +226,37 @@ enum_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+enum_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+#if 0
+	return nonmeta_resolve_copy(c, p.is_a<const this_type>());
+#else
+	FINISH_ME(Fang);
+	return count_ptr<const const_param>(NULL);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluate, write, and advance iterator.  
+ */
+void
+enum_expr::evaluate_write(const nonmeta_context_base& c,
+		channel_data_writer& w, 
+		const count_ptr<const data_expr>& _this) const {
+	INVARIANT(_this == this);
+	const count_ptr<const pint_const>
+		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
+	if (d) {
+		*w.iter_ref<enum_tag>()++ = d->static_constant_value();
+	} else {
+		THROW_EXIT;
+	}
 }
 
 //=============================================================================
@@ -312,6 +440,12 @@ int_arith_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_arith_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
 int_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
@@ -335,6 +469,33 @@ int_arith_expr::unroll_resolve_copy(const unroll_context& c,
 		// return new resolved expression
 		return count_ptr<const this_type>(new this_type(lc, op, rc));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return resolved constant or NULL if resolution failed.  
+ */
+count_ptr<const pint_const>
+int_arith_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& p) const {
+	typedef	count_ptr<const pint_const>	const_ptr_type;
+	INVARIANT(p == this);
+	const const_ptr_type lc(lx->__nonmeta_resolve_rvalue(c, lx));
+	const const_ptr_type rc(rx->__nonmeta_resolve_rvalue(c, rx));
+	if (!lc || !rc) {
+		return const_ptr_type(NULL);
+	} else {
+		const pint_value_type lv = lc->static_constant_value();
+		const pint_value_type rv = rc->static_constant_value();
+		return const_ptr_type(new pint_const((*op)(lv, rv)));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+int_arith_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& p) const {
+	return __nonmeta_resolve_rvalue(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -533,6 +694,12 @@ int_relational_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_relational_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 int_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -549,6 +716,34 @@ int_relational_expr::unroll_resolve_copy(const unroll_context& c,
 		// return new resolved expression
 		return count_ptr<const this_type>(new this_type(lc, op, rc));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return resolved constant or NULL if resolution failed.  
+ */
+count_ptr<const pbool_const>
+int_relational_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& p) const {
+	typedef	count_ptr<const pint_const>	const_ptr_type;
+	typedef	count_ptr<const pbool_const>	return_type;
+	INVARIANT(p == this);
+	const const_ptr_type lc(lx->__nonmeta_resolve_rvalue(c, lx));
+	const const_ptr_type rc(rx->__nonmeta_resolve_rvalue(c, rx));
+	if (!lc || !rc) {
+		return return_type(NULL);
+	} else {
+		const pint_value_type lv = lc->static_constant_value();
+		const pint_value_type rv = rc->static_constant_value();
+		return return_type(new pbool_const((*op)(lv, rv)));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+int_relational_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& p) const {
+	return __nonmeta_resolve_rvalue(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -726,6 +921,12 @@ bool_logical_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_logical_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 bool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -741,6 +942,33 @@ bool_logical_expr::unroll_resolve_copy(const unroll_context& c,
 		// return new resolved expression
 		return count_ptr<const this_type>(new this_type(lc, op, rc));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return resolved constant or NULL if resolution failed.  
+ */
+count_ptr<const pbool_const>
+bool_logical_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>	const_ptr_type;
+	INVARIANT(p == this);
+	const const_ptr_type lc(lx->__nonmeta_resolve_rvalue(c, lx));
+	const const_ptr_type rc(rx->__nonmeta_resolve_rvalue(c, rx));
+	if (!lc || !rc) {
+		return const_ptr_type(NULL);
+	} else {
+		const pbool_value_type lv = lc->static_constant_value();
+		const pbool_value_type rv = rc->static_constant_value();
+		return const_ptr_type(new pbool_const((*op)(lv, rv)));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+bool_logical_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& p) const {
+	return __nonmeta_resolve_rvalue(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -811,6 +1039,13 @@ int_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_negation_expr::accept(nonmeta_expr_visitor& v) const {
+	// cast diambiguates between data_expr and nonmeta_index_expr_base
+	v.visit(static_cast<const data_expr&>(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
 int_negation_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
@@ -823,6 +1058,32 @@ int_negation_expr::unroll_resolve_copy(const unroll_context& c,
 	} else {
 		return count_ptr<const this_type>(new this_type(oc, op));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return resolved constant or NULL if resolution failed.  
+ */
+count_ptr<const pint_const>
+int_negation_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& p) const {
+	typedef	count_ptr<const pint_const>	const_ptr_type;
+	typedef	const_ptr_type			return_type;
+	INVARIANT(p == this);
+	const const_ptr_type lc(ex->__nonmeta_resolve_rvalue(c, ex));
+	if (!lc) {
+		return return_type(NULL);
+	} else {
+		const pint_value_type lv = lc->static_constant_value();
+		return return_type(new pint_const((op == '-') ? -lv : ~lv));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+int_negation_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& p) const {
+	return __nonmeta_resolve_rvalue(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -884,6 +1145,12 @@ bool_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+bool_negation_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
 bool_negation_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -896,6 +1163,32 @@ bool_negation_expr::unroll_resolve_copy(const unroll_context& c,
 	} else {
 		return count_ptr<const this_type>(new this_type(oc));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return resolved constant or NULL if resolution failed.  
+ */
+count_ptr<const pbool_const>
+bool_negation_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>	const_ptr_type;
+	typedef	const_ptr_type			return_type;
+	INVARIANT(p == this);
+	const const_ptr_type lc(ex->__nonmeta_resolve_rvalue(c, ex));
+	if (!lc) {
+		return return_type(NULL);
+	} else {
+		const pbool_value_type lv = lc->static_constant_value();
+		return return_type(new pbool_const(!lv));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+bool_negation_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& p) const {
+	return __nonmeta_resolve_rvalue(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -948,6 +1241,12 @@ int_range_expr::dump(ostream& o, const expr_dump_context&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_range_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const nonmeta_index_expr_base>
 int_range_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const nonmeta_index_expr_base>& p) const {
@@ -964,6 +1263,16 @@ int_range_expr::unroll_resolve_copy(const unroll_context& c,
 		// return new resolved expression
 		return count_ptr<const this_type>(new this_type(lc, uc));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return NULL No nonmeta ranges exist.
+ */
+count_ptr<const pint_const>
+int_range_expr::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	return count_ptr<const pint_const>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1042,6 +1351,35 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 		else    (*i)->dump(o, c);
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For now nonmeta-index lists may not contain ranges, 
+		only integer indices.  
+	\return list of integer constants representing indices.  
+ */
+count_ptr<const_index_list>
+nonmeta_index_list::nonmeta_resolve_copy(const nonmeta_context_base& c) const {
+	const count_ptr<const_index_list> ret(new const_index_list);
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+		const count_ptr<const pint_const> 
+			ind((*i)->nonmeta_resolve_copy(c, *i));
+		if (ind)
+			ret->push_back(ind);
+		else	return count_ptr<const_index_list>(NULL);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nonmeta_index_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

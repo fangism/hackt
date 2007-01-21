@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.9 2006/10/18 19:07:57 fang Exp $
+	$Id: data_expr.h,v 1.10 2007/01/21 05:58:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -23,8 +23,12 @@
 namespace HAC {
 namespace entity {
 class data_type_reference;
-class unroll_context;
-struct expr_dump_context;
+class unroll_context;		// from "Object/unroll/unroll_context.h"
+class nonmeta_context_base;	// from "Object/nonmeta_context.h"
+struct expr_dump_context;	// from "Object/expr/expr_dump_context.h"
+class nonmeta_expr_visitor;
+class const_param;
+class channel_data_writer;	// from "Object/nonmeta_channel_manipulator.h"
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -78,6 +82,26 @@ virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 		const count_ptr<const data_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_DATA_PROTO = 0;
+
+#define	NONMETA_RESOLVE_COPY_DATA_PROTO					\
+	count_ptr<const const_param>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const data_expr>&) const
+
+virtual	NONMETA_RESOLVE_COPY_DATA_PROTO = 0;
+
+#define	EVALUATE_WRITE_PROTO						\
+	void								\
+	evaluate_write(const nonmeta_context_base&, 			\
+		channel_data_writer&, 					\
+		const count_ptr<const data_expr>&) const
+virtual	EVALUATE_WRITE_PROTO = 0;
+
+#define	EXPR_ACCEPT_VISITOR_PROTO					\
+	void								\
+	accept(nonmeta_expr_visitor&) const
+
+virtual	EXPR_ACCEPT_VISITOR_PROTO = 0;
 
 };	// end class data_expr
 

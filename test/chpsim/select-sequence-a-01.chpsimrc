@@ -1,0 +1,71 @@
+# "select-sequence-a-01.chpsimrc"
+#	$Id: select-sequence-a-01.chpsimrc,v 1.2 2007/01/21 06:03:47 fang Exp $
+# @haco@ select-sequence-a.haco-a
+
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
+time
+
+

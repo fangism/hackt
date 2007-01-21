@@ -3,7 +3,7 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.12 2006/10/18 20:57:54 fang Exp $
+	$Id: meta_index_expr.h,v 1.13 2007/01/21 05:58:53 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
@@ -79,6 +79,9 @@ virtual	UNROLL_RESOLVE_COPY_META_INDEX_PROTO = 0;
 		const count_ptr<const meta_index_expr>&) const
 
 virtual	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO = 0;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
 
 // additional virtual functions for dimensionality...
 };	// end class meta_index_expr

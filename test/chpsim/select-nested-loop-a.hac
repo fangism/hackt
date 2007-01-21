@@ -1,0 +1,14 @@
+// "select-nested-loop-a.hac"
+//	$Id: select-nested-loop-a.hac,v 1.2 2007/01/21 06:03:38 fang Exp $
+// tests nested select statement in loop
+
+bool a, b;
+
+chp {
+a-,b-;
+// two-bit counter FSM
+*[[ a -> [b -> a-,b- [] else -> b+]
+[] else -> [b -> a+,b- [] else -> b+]
+]]
+}
+

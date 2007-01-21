@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_unary_expr.h"
 	Unary negation of meta real value.  
-	$Id: preal_unary_expr.h,v 1.10 2006/10/18 07:39:41 fang Exp $
+	$Id: preal_unary_expr.h,v 1.11 2007/01/21 05:59:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_UNARY_EXPR_H__
@@ -24,17 +24,21 @@ class preal_unary_expr : public preal_expr {
 public:
 	typedef	preal_value_type		value_type;
 	typedef	char			op_type;
+	typedef	count_ptr<const preal_expr>	operand_ptr_type;
 protected:
 	const op_type			op;
 	/** expression argument must be 0-dimensional */
-	count_ptr<const preal_expr>	ex;
+	operand_ptr_type		ex;
 private:
 	preal_unary_expr();
 public:
-	preal_unary_expr(const op_type o, const count_ptr<const preal_expr>& e);
-	preal_unary_expr(const count_ptr<const preal_expr>& e, const op_type o);
+	preal_unary_expr(const op_type o, const operand_ptr_type& e);
+	preal_unary_expr(const operand_ptr_type& e, const op_type o);
 
 	// default destructor
+
+	const operand_ptr_type&
+	get_operand(void) const { return ex; }
 
 	ostream&
 	what(ostream& o) const;
@@ -79,6 +83,7 @@ public:
 		const count_ptr<const preal_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
 	using parent_type::substitute_default_positional_parameters;
@@ -86,6 +91,7 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+	using parent_type::nonmeta_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

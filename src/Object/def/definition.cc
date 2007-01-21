@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.35 2006/11/21 22:38:37 fang Exp $
+ 	$Id: definition.cc,v 1.36 2007/01/21 05:58:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -36,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/channel_definition_alias.h"
 #include "Object/def/process_definition.h"
 #include "Object/def/process_definition_alias.h"
+#include "Object/def/fundamental_channel_footprint.h"
 #include "Object/def/footprint.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
@@ -54,7 +55,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/dump_flags.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/bool_traits.h"	// for built_in_definition
+#include "Object/traits/int_traits.h"	// for built_in_definition
+#include "Object/traits/enum_traits.h"	// for type_tag_enum_value
 #include "Object/type/canonical_generic_chan_type.h"
+#include "Object/nonmeta_channel_manipulator.h"
+#include "Object/nonmeta_variable.h"
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -698,6 +704,15 @@ datatype_definition_base::make_typedef(never_ptr<const scopespace> s,
 		const token_identifier& id) const {
 	return excl_ptr<definition_base>(
 		new datatype_definition_alias(id, s));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+datatype_definition_base::less_ordering(
+		const datatype_definition_base& r) const {
+	const unsigned char le = get_meta_type_enum();
+	const unsigned char re = r.get_meta_type_enum();
+	return (le < re) || ((le == re) && (this < &r));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1454,6 +1469,62 @@ built_in_datatype_def::create_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+unsigned char
+built_in_datatype_def::get_meta_type_enum(void) const {
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	if (this == &bool_traits::built_in_definition) {
+		return bool_traits::type_tag_enum_value;
+	}
+	else if (this == &int_traits::built_in_definition) {
+		return int_traits::type_tag_enum_value;
+	} else {
+		// no other built-in definitions at this time
+		THROW_EXIT;
+		return META_TYPE_NONE;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+built_in_datatype_def::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	if (this == &bool_traits::built_in_definition) {
+		++f.size<bool_tag>();
+	}
+	else if (this == &int_traits::built_in_definition) {
+		++f.size<int_tag>();
+	} else {
+		// no other built-in definitions at this time
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+built_in_datatype_def::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader& r) const {
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	if (this == &bool_traits::built_in_definition) {
+		o << size_t(*r.iter_ref<bool_tag>()++);
+	}
+	else if (this == &int_traits::built_in_definition) {
+		o << *r.iter_ref<int_tag>()++;
+	} else {
+		THROW_EXIT;
+	}
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Leeching off of datatype definition.  
 	Will be handled specially (replaced) by data_type_reference.  
@@ -1830,6 +1901,31 @@ enum_datatype_def::create_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+unsigned char
+enum_datatype_def::get_meta_type_enum(void) const {
+	return class_traits<enum_tag>::type_tag_enum_value;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+enum_datatype_def::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	++f.size<enum_tag>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+enum_datatype_def::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader& r) const {
+	return o << *r.iter_ref<enum_tag>()++;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2183,6 +2279,7 @@ user_def_datatype::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_DATASTRUCTS
 if (defined) {
 	footprint* const f = &footprint_map[p];
 	if (!f->is_unrolled()) {
@@ -2219,6 +2316,9 @@ if (defined) {
 	// parent should print: "instantiated from here"
 	return good_bool(false);
 }
+#else
+	FINISH_ME_EXIT(Fang);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2231,6 +2331,7 @@ user_def_datatype::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_DATASTRUCTS
 if (defined) {
 	footprint* f = &footprint_map[p];
 #if 0
@@ -2276,7 +2377,43 @@ if (defined) {
 	// parent should print: "instantiated from here"
 	return good_bool(false);
 }
+#else
+	FINISH_ME(Fang);
+	return good_bool(false);
+#endif	// ENABLE_DATASTRUCTS
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not supposed to be called.
+	No user-defined data types allowed in built-in channel specifications
+	... yet.
+ */
+unsigned char
+user_def_datatype::get_meta_type_enum(void) const {
+	ICE_NEVER_CALL(cerr);
+	return META_TYPE_NONE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+user_def_datatype::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+user_def_datatype::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader&) const {
+	ICE_NEVER_CALL(cerr);
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2525,6 +2662,37 @@ datatype_definition_alias::create_complete_type(
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Should never be called, as canonical type are supposed to
+	resolve typedef aliases.  
+ */
+unsigned char
+datatype_definition_alias::get_meta_type_enum(void) const {
+	ICE_NEVER_CALL(cerr);
+	return META_TYPE_NONE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	Should we check for int-size limit?  (32 vs. 64)?
+ */
+void
+datatype_definition_alias::count_channel_member(
+		fundamental_channel_footprint& f) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+datatype_definition_alias::dump_channel_field_iterate(ostream& o, 
+		channel_data_reader&) const {
+	ICE_NEVER_CALL(cerr);
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

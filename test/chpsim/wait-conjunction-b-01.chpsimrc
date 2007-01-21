@@ -1,0 +1,97 @@
+# "wait-conjunction-b-01.chpsimrc"
+#	$Id: wait-conjunction-b-01.chpsimrc,v 1.2 2007/01/21 06:03:58 fang Exp $
+# @haco@ wait-conjunction-b.haco-a
+
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+time
+

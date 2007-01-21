@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.24 2006/11/21 22:38:40 fang Exp $
+ 	$Id: basic_param.cc,v 1.25 2007/01/21 05:58:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/const_collection.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
@@ -44,6 +45,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
+#include "Object/nonmeta_context.h"
+#include "Object/unroll/unroll_context.h"
 
 #include "common/TODO.h"
 
@@ -72,6 +75,12 @@ namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pbool_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::preal_const)
+
+// explicit template instantiations, needed for -O3
+template class count_ptr<const HAC::entity::pint_expr>;
+template class count_ptr<const HAC::entity::pbool_expr>;
+template class count_ptr<const HAC::entity::preal_expr>;
+template class count_ptr<const HAC::entity::const_param>;
 }	// end namespace memory
 }	// end namespace util
 
@@ -206,6 +215,25 @@ count_ptr<const const_param>
 pbool_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const param_expr>& b) const {
 	return unroll_resolve_rvalues(c, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+pbool_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& b) const {
+	return __nonmeta_resolve_rvalue(c, b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pbool_const>
+pbool_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const bool_expr>& b) const {
+	const unroll_context uc(c);
+	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -361,6 +389,25 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+pint_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& b) const {
+	return __nonmeta_resolve_rvalue(c, b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pint_const>
+pint_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const int_expr>& b) const {
+	const unroll_context uc(c);
+	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Forwarding function.  
  */
 count_ptr<const param_expr>
@@ -508,6 +555,25 @@ count_ptr<const real_expr>
 preal_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const real_expr>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't expect to be called, meta-expressions should've been
+	resolved and substituted by create phase.  
+ */
+count_ptr<const const_param>
+preal_expr::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const real_expr>& b) const {
+	return __nonmeta_resolve_rvalue(c, b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const preal_const>
+preal_expr::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
+		const count_ptr<const real_expr>& b) const {
+	const unroll_context uc(c);
+	return __unroll_resolve_rvalue(uc, b.is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -709,6 +775,12 @@ pint_const::make_param_expression_assignment_private(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_const::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 pint_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 	i = val;
@@ -872,6 +944,12 @@ good_bool
 pbool_const::resolve_value(value_type& i) const {
 	i = val;
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_const::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1044,6 +1122,12 @@ good_bool
 preal_const::resolve_value(value_type& i) const {
 	i = val;
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_const::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

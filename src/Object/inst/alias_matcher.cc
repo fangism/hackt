@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.4 2006/11/02 22:01:59 fang Exp $
+	$Id: alias_matcher.cc,v 1.5 2007/01/21 05:59:08 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -16,8 +16,12 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/def/footprint.h"
 #include "Object/global_entry.tcc"	// for get_frame_map
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
+#include "Object/devel_switches.h"
 #include "util/macros.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
@@ -94,11 +98,8 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 	if (v.fpf) {
 		v.prefix += ".";
 		// this is not a top-level instance (from recursion)
-		const size_t local_offset = a.instance_index -1;
-		const footprint_frame_map_type&
-			fm(v.fpf->template get_frame_map<Tag>());
-		// footprint_frame yields the global offset
-		gindex = fm[local_offset];
+		gindex = footprint_frame_transformer(*v.fpf, Tag())
+			(a.instance_index);
 	} else {
 		// footprint_frame is null, this is a top-level instance
 		// the instance_index can be used directly as the offset into
@@ -147,11 +148,8 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 	if (v.fpf) {
 		v.prefix += ".";
 		// this is not a top-level instance (from recursion)
-		const size_t local_offset = a.instance_index -1;
-		const footprint_frame_map_type&
-			fm(v.fpf->template get_frame_map<Tag>());
-		// footprint_frame yields the global offset
-		gindex = fm[local_offset];
+		gindex = footprint_frame_transformer(*v.fpf, Tag())
+			(a.instance_index);
 	} else {
 		// footprint_frame is null, this is a top-level instance
 		// the instance_index can be used directly as the offset into
@@ -207,7 +205,9 @@ alias_matcher<Tag>::visit(const instance_alias_info<Tag2>& a) {		\
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(bool_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(int_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(enum_tag)
+#if ENABLE_DATASTRUCTS
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(datastruct_tag)
+#endif
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(channel_tag)
 DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
 
@@ -219,7 +219,9 @@ DEFINE_INSTANCE_ALIAS_INFO_VISITOR(process_tag)
 template struct alias_matcher<bool_tag>;
 template struct alias_matcher<int_tag>;
 template struct alias_matcher<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template struct alias_matcher<datastruct_tag>;
+#endif
 template struct alias_matcher<channel_tag>;
 template struct alias_matcher<process_tag>;
 

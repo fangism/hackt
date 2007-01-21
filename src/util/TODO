@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.13 2006/04/03 05:30:38 fang Exp $
+	$Id: TODO,v 1.14 2007/01/21 06:01:11 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -65,6 +65,22 @@ persistent_object_manager:
 	Consider dictionary support for common small object values
 		such as strings and integers, to avoid replication.  
 		(classification: enhancement)
+
+-------------------------------------------------------------------------------
+preprocessor macros:
+	* NEVER_HEAP_ALLOCATE:
+		overload operator new/delete as private and undefined
+		paste this puppy in classes that should never 
+			be heap-allocated.  
+		This does not apply to placement new/delete, which don't alloc.
+
+-------------------------------------------------------------------------------
+Data structures:
+	* finite_vector wrapper interface to use a fixed size array
+		with a limited vector-like interface.
+		Rationale: one less indirection in array access, 
+			uses same address-space as the wrapping object
+			without heap-allocating.  
 
 -------------------------------------------------------------------------------
 

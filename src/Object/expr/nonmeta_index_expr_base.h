@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: nonmeta_index_expr_base.h,v 1.6 2006/06/26 01:46:02 fang Exp $
+	$Id: nonmeta_index_expr_base.h,v 1.7 2007/01/21 05:58:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
@@ -19,6 +19,10 @@ namespace HAC {
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
+class nonmeta_context_base;
+class nonmeta_expr_visitor;
+class pint_const;
+class const_index;
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -43,6 +47,17 @@ virtual	ostream&
 		const count_ptr<const nonmeta_index_expr_base>&) const
 
 virtual	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO = 0;
+
+/// return pint_const or const_index?
+#define	NONMETA_RESOLVE_COPY_INDEX_PROTO				\
+	count_ptr<const pint_const>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const nonmeta_index_expr_base>&) const
+
+virtual	NONMETA_RESOLVE_COPY_INDEX_PROTO = 0;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
 
 };	// end class nonmeta_index_expr_base
 

@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.15 2006/10/18 07:39:40 fang Exp $
+	$Id: pint_relational_expr.h,v 1.16 2007/01/21 05:59:06 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -76,6 +76,12 @@ public:
 
 	~pint_relational_expr();
 
+	const operand_ptr_type&
+	get_first(void) const { return lx; }
+
+	const operand_ptr_type&
+	get_second(void) const { return rx; }
+
 	ostream&
 	what(ostream& o) const;
 
@@ -123,6 +129,7 @@ public:
 		const count_ptr<const pbool_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
 	using parent_type::substitute_default_positional_parameters;
@@ -130,6 +137,7 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+	using parent_type::nonmeta_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

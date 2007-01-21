@@ -1,0 +1,18 @@
+# "assign-once-01.chpsimrc"
+#	$Id: assign-once-01.chpsimrc,v 1.2 2007/01/21 06:02:02 fang Exp $
+# @haco@ assign-once.haco-a
+
+# watchall-events
+get b
+queue
+step
+get b
+queue
+step
+get b
+queue
+step
+get b
+queue
+time
+

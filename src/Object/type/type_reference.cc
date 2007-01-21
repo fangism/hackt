@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.23 2006/11/21 22:39:11 fang Exp $
+ 	$Id: type_reference.cc,v 1.24 2007/01/21 05:59:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -63,6 +63,9 @@
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/subinstance_manager.h"
 #include "Object/type/canonical_generic_chan_type.h"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/type/canonical_fundamental_chan_type.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 
@@ -299,6 +302,7 @@ data_type_reference::data_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_DATASTRUCTS
 /**
 	Downgrading from canonical to more general type reference.  
  */
@@ -307,6 +311,7 @@ data_type_reference::data_type_reference(
 		fundamental_type_reference(p.get_template_params()), 
 		base_type_def(p.get_base_def()) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
@@ -374,7 +379,7 @@ data_type_reference::must_be_valid(void) const {
  */
 count_ptr<const data_type_reference>
 data_type_reference::unroll_resolve(const unroll_context& c) const {
-	STACKTRACE("data_type_reference::unroll_resolve()");
+	STACKTRACE_VERBOSE;
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
@@ -392,6 +397,48 @@ data_type_reference::unroll_resolve(const unroll_context& c) const {
 			NEVER_NULL(ret);
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		// need to check must_be_valid?
+		const return_type ret(new this_type(base_type_def));
+		INVARIANT(ret->must_be_valid().good);
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copies this type-reference if unrolling resulted in any change.  
+ */
+count_ptr<const data_type_reference>
+data_type_reference::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const this_type>& t) const {
+	STACKTRACE_VERBOSE;
+	typedef	count_ptr<const this_type>	return_type;
+	INVARIANT(t == this);
+	// can this code be factored out to type_ref_base?
+	if (template_args) {
+		// if template actuals depends on other template parameters, 
+		// then we need to pass actuals into its own context!
+		const unroll_context& cc(c);
+		const template_actuals
+			actuals(template_args.unroll_resolve(cc));
+		// check for errors??? at least try-catch
+		if (actuals) {
+			// the final type-check:
+			// now they MUST size-type check
+		if (template_args.must_be_strict_equivalent(actuals)) {
+			return t;
+		} else {
+			const return_type
+				ret(new this_type(base_type_def, actuals));
+			NEVER_NULL(ret);
+			return (ret->must_be_valid().good ?
+				ret : return_type(NULL));
+		}
 		} else {
 			cerr << "ERROR resolving template arguments." << endl;
 			return return_type(NULL);
@@ -457,7 +504,12 @@ data_type_reference::make_instance_collection(
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
+#if ENABLE_DATASTRUCTS
 		return return_type(new struct_instance_placeholder(*s, id, d));
+#else
+		FINISH_ME_EXIT(Fang);
+		return return_type(NULL);
+#endif
 	} else if (alias.is_a<const enum_datatype_def>()) {
 		return return_type(new enum_instance_placeholder(*s, id, d));
 	} else {
@@ -838,7 +890,11 @@ struct builtin_channel_type_reference::datatype_resolver {
 	datatype_ptr_type
 	operator () (const datatype_ptr_type& dt) const {
 		NEVER_NULL(dt);
+#if BUILTIN_CHANNEL_FOOTPRINTS
+		return dt->unroll_resolve_copy(the_context, dt);
+#else
 		return dt->unroll_resolve(the_context);
+#endif
 	}
 };	// end class datatype_resolver
 
@@ -861,10 +917,21 @@ struct builtin_channel_type_reference::datatype_canonicalizer {
 	canonical types.  
  */
 struct builtin_channel_type_reference::yet_another_datatype_canonicalizer {
+#if 0 && BUILTIN_CHANNEL_FOOTPRINTS
+	const unroll_context&			context;
+	explicit
+	yet_another_datatype_canonicalizer(const unroll_context& c) :
+		context(c) { }
+#endif
 	canonical_generic_datatype
 	operator () (const datatype_ptr_type& dt) const {
 		NEVER_NULL(dt);
+#if 0 && BUILTIN_CHANNEL_FOOTPRINTS
+		// TODO: error handling
+		return dt->unroll_resolve(context)->make_canonical_type();
+#else
 		return dt->make_canonical_type();
+#endif
 	}
 };	// end class yet_another_datatype_canonicalizer
 
@@ -1080,7 +1147,34 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
 	TODO: what if template-dependent type appears in type-list, 
 		say inside a definition body?
+	copy-on-modify resolution to reduce replication.  
  */
+count_ptr<const builtin_channel_type_reference>
+builtin_channel_type_reference::unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const this_type>& p) const {
+	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
+	typedef	count_ptr<this_type>	return_type;
+	INVARIANT(p == this);
+	INVARIANT(!template_args);
+	const return_type ret(new this_type);
+	NEVER_NULL(ret);
+	ret->direction = direction;
+	util::reserve(ret->datatype_list, datatype_list.size());
+	transform(datatype_list.begin(), datatype_list.end(),
+		back_inserter(ret->datatype_list), 
+		datatype_resolver(c)	// helper functor
+	);
+	// return copy if there is a difference
+	if (std::equal(datatype_list.begin(), datatype_list.end(), 
+			ret->datatype_list.begin())) {
+		return p;
+	} else {
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const channel_type_reference_base>
 builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
@@ -1136,9 +1230,34 @@ builtin_channel_type_reference::make_instance_collection(
 /**
 	This gets complicated...
 	Temporary hack: see canonical_generic_chan_type.
+	Temporary hack: see canonical_fundamental_chan_type.
+	TODO: add unroll_context argument!
+	\pre this has already been unroll-resolved to constants,
+		no meta-references remain.
  */
+#if BUILTIN_CHANNEL_FOOTPRINTS
+canonical_fundamental_chan_type
+#else
 canonical_generic_chan_type
+#endif
 builtin_channel_type_reference::make_canonical_type(void) const {
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	const count_ptr<canonical_fundamental_chan_type_base>
+		ret_base(new canonical_fundamental_chan_type_base);
+	NEVER_NULL(ret_base);
+	util::reserve(ret_base->get_datatype_list(), datatype_list.size());
+	transform(datatype_list.begin(), datatype_list.end(),
+		back_inserter(ret_base->get_datatype_list()), 
+		yet_another_datatype_canonicalizer()	// helper functor
+		// datatype_resolver(c)	// helper functor
+	);
+	// return a globally shared canonical reference
+	const count_ptr<const canonical_fundamental_chan_type_base>
+		ret_arg(canonical_fundamental_chan_type_base::
+			register_globally(ret_base));
+	canonical_fundamental_chan_type ret(ret_arg);
+	ret.set_direction(direction);
+#else
 	canonical_generic_chan_type ret;
 	ret.direction = direction;
 	util::reserve(ret.datatype_list, datatype_list.size());
@@ -1146,8 +1265,36 @@ builtin_channel_type_reference::make_canonical_type(void) const {
 		back_inserter(ret.datatype_list), 
 		yet_another_datatype_canonicalizer()	// helper functor
 	);
+#endif
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && BUILTIN_CHANNEL_FOOTPRINTS
+/**
+	This gets complicated...
+	Temporary hack: see canonical_generic_chan_type.
+	Temporary hack: see canonical_fundamental_chan_type.
+	TODO: add unroll_context argument!
+	\pre this has already been unroll-resolved to constants
+ */
+canonical_fundamental_chan_type
+builtin_channel_type_reference::make_canonical_type(
+		const unroll_context& c) const {
+	const count_ptr<canonical_fundamental_chan_type_base>
+		ret_base(new canonical_fundamental_chan_type_base);
+	NEVER_NULL(ret_base);
+	util::reserve(ret_base->get_datatype_list(), datatype_list.size());
+	transform(datatype_list.begin(), datatype_list.end(),
+		back_inserter(ret_base->get_datatype_list()), 
+		// datatype_resolver(c)	// helper functor
+		yet_another_datatype_canonicalizer()	// helper functor
+	);
+	canonical_fundamental_chan_type ret(ret_base);
+	ret.set_direction(direction);
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1400,9 +1547,15 @@ channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	FINISH_ME(Fang);
+	cerr << "Cannot instantiate user-defined channel types yet." << endl;
+	return instantiation_statement_ptr_type(NULL);
+#else
 	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
 			t.is_a<const this_type>(), d, a));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1618,7 +1771,8 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
  */
 count_ptr<const process_type_reference>
 process_type_reference::unroll_resolve(void) const {
-	return unroll_resolve(unroll_context(NULL, NULL));
+	return unroll_resolve(
+		unroll_context(static_cast<const footprint*>(NULL), NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.9 2006/11/07 06:34:12 fang Exp $
+	$Id: global_entry.cc,v 1.10 2007/01/21 05:58:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -8,6 +8,9 @@
 
 #include <algorithm>
 #include "Object/global_entry.tcc"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 #include "Object/def/footprint.h"
 #include "Object/port_context.h"
 #include "Object/state_manager.tcc"
@@ -39,7 +42,10 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	In the top-level domain, the frame has offset 1.
+	This should only ever be called from top-level expansion.  
+	In the top-level domain, the frame has offset 1, because the 0th
+	entry is reserved as NULL.  
+	(Called from footprint::expand_unique_subinstances().)
  */
 template <class Tag>
 void
@@ -133,14 +139,20 @@ footprint_frame_map<Tag>::__collect_subentries(entry_collection& e,
 // class footprint_frame method definitions
 
 footprint_frame::footprint_frame() :
-		process_map_type(), channel_map_type(), struct_map_type(), 
+		process_map_type(), channel_map_type(), 
+#if ENABLE_DATASTRUCTS
+		struct_map_type(), 
+#endif
 		enum_map_type(), int_map_type(), bool_map_type(), 
 		_footprint(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint_frame::footprint_frame(const footprint& f) :
-		process_map_type(f), channel_map_type(f), struct_map_type(f), 
+		process_map_type(f), channel_map_type(f), 
+#if ENABLE_DATASTRUCTS
+		struct_map_type(f), 
+#endif
 		enum_map_type(f), int_map_type(f), bool_map_type(f), 
 		_footprint(&f) {
 }
@@ -187,8 +199,10 @@ footprint_frame::dump_frame(ostream& o) const {
 		class_traits<process_tag>::tag_name);
 	dump_id_map(footprint_frame_map<channel_tag>::id_map, o, 
 		class_traits<channel_tag>::tag_name);
+#if ENABLE_DATASTRUCTS
 	dump_id_map(footprint_frame_map<datastruct_tag>::id_map, o, 
 		class_traits<datastruct_tag>::tag_name);
+#endif
 	dump_id_map(footprint_frame_map<enum_tag>::id_map, o, 
 		class_traits<enum_tag>::tag_name);
 	dump_id_map(footprint_frame_map<int_tag>::id_map, o, 
@@ -223,7 +237,9 @@ void
 footprint_frame::init_top_level(void) {
 	footprint_frame_map<process_tag>::__init_top_level();
 	footprint_frame_map<channel_tag>::__init_top_level();
+#if ENABLE_DATASTRUCTS
 	footprint_frame_map<datastruct_tag>::__init_top_level();
+#endif
 	footprint_frame_map<enum_tag>::__init_top_level();
 	footprint_frame_map<int_tag>::__init_top_level();
 	footprint_frame_map<bool_tag>::__init_top_level();
@@ -241,15 +257,21 @@ void
 footprint_frame::allocate_remaining_subinstances(const footprint& fp, 
 		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
 	const size_t process_offset = sm.get_pool<process_tag>().size();
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+#endif
+#if ENABLE_DATASTRUCTS
 	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
+#endif
 	// First just allocate the entries.
 	footprint_frame_map<process_tag>::
 		__allocate_remaining_sub(fp, sm, pt, pid);
 	footprint_frame_map<channel_tag>::
 		__allocate_remaining_sub(fp, sm, pt, pid);
+#if ENABLE_DATASTRUCTS
 	footprint_frame_map<datastruct_tag>::
 		__allocate_remaining_sub(fp, sm, pt, pid);
+#endif
 	footprint_frame_map<enum_tag>::
 		__allocate_remaining_sub(fp, sm, pt, pid);
 	footprint_frame_map<int_tag>::
@@ -259,14 +281,22 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 	// Now this footprint_frame should be good to pass down to subinstances
 	// end expand subinstances...
 	const size_t process_end = sm.get_pool<process_tag>().size();
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	const size_t channel_end = sm.get_pool<channel_tag>().size();
+#endif
+#if ENABLE_DATASTRUCTS
 	const size_t struct_end = sm.get_pool<datastruct_tag>().size();
+#endif
 	footprint_frame_map<process_tag>::
 		__expand_subinstances(fp, sm, process_offset, process_end);
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	footprint_frame_map<channel_tag>::
 		__expand_subinstances(fp, sm, channel_offset, channel_end);
+#endif
+#if ENABLE_DATASTRUCTS
 	footprint_frame_map<datastruct_tag>::
 		__expand_subinstances(fp, sm, struct_offset, struct_end);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -279,7 +309,9 @@ footprint_frame::collect_subentries(entry_collection& e,
 		const state_manager& sm) const {
 	footprint_frame_map<process_tag>::__collect_subentries(e, sm);
 	footprint_frame_map<channel_tag>::__collect_subentries(e, sm);
+#if ENABLE_DATASTRUCTS
 	footprint_frame_map<datastruct_tag>::__collect_subentries(e, sm);
+#endif
 	footprint_frame_map<enum_tag>::__collect_subentries(e, sm);
 	footprint_frame_map<int_tag>::__collect_subentries(e, sm);
 	footprint_frame_map<bool_tag>::__collect_subentries(e, sm);
@@ -308,7 +340,9 @@ footprint_frame::write_object_base(const persistent_object_manager& m,
 	m.write_pointer(o, _footprint);
 	write_id_map(footprint_frame_map<process_tag>::id_map, o);
 	write_id_map(footprint_frame_map<channel_tag>::id_map, o);
+#if ENABLE_DATASTRUCTS
 	write_id_map(footprint_frame_map<datastruct_tag>::id_map, o);
+#endif
 	write_id_map(footprint_frame_map<enum_tag>::id_map, o);
 	write_id_map(footprint_frame_map<int_tag>::id_map, o);
 	write_id_map(footprint_frame_map<bool_tag>::id_map, o);
@@ -330,7 +364,9 @@ footprint_frame::load_object_base(const persistent_object_manager& m,
 	}
 	load_id_map(footprint_frame_map<process_tag>::id_map, i);
 	load_id_map(footprint_frame_map<channel_tag>::id_map, i);
+#if ENABLE_DATASTRUCTS
 	load_id_map(footprint_frame_map<datastruct_tag>::id_map, i);
+#endif
 	load_id_map(footprint_frame_map<enum_tag>::id_map, i);
 	load_id_map(footprint_frame_map<int_tag>::id_map, i);
 	load_id_map(footprint_frame_map<bool_tag>::id_map, i);
@@ -345,7 +381,9 @@ void
 footprint_frame::get_frame_map_test(void) {
 	get_frame_map<process_tag>();
 	get_frame_map<channel_tag>();
+#if ENABLE_DATASTRUCTS
 	get_frame_map<datastruct_tag>();
+#endif
 	get_frame_map<enum_tag>();
 	get_frame_map<int_tag>();
 	get_frame_map<bool_tag>();
@@ -360,20 +398,71 @@ void
 footprint_frame::get_frame_map_test(void) const {
 	get_frame_map<process_tag>();
 	get_frame_map<channel_tag>();
+#if ENABLE_DATASTRUCTS
 	get_frame_map<datastruct_tag>();
+#endif
 	get_frame_map<enum_tag>();
 	get_frame_map<int_tag>();
 	get_frame_map<bool_tag>();
 }
 
 //=============================================================================
-// class global_entry_base method definitions
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects pointers needed for save/restoration of footprint pointers.  
+	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
+ */
+void
+global_entry_substructure_base<true>::collect_transient_info_base(
+		persistent_object_manager& m, 
+		const size_t ind, const footprint& topfp, 
+		const state_manager& sm) const {
+	_frame.collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use global_entry_dumper!
+	TODO: comment: pay attention to ordering, 
+		is crucial for reconstruction.
+	Q: Is persistent object manager really needed?
+	A: yes, some canonical_types contain relaxed template params.
+ */
+void
+global_entry_substructure_base<true>::write_object_base(
+		const persistent_object_manager& m,
+		ostream& o, const size_t ind, const footprint& topfp,
+		const state_manager& sm) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	_frame.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dependent reconstruction ordering:
+	\pre all footprints (top-level and asssociated with complete ypes)
+		have been restored prior to calling this.  
+		Thus it is safe to reference instance placeholders'
+		back-references.  
+		See the reconstruction ordering in module::load_object_base().  
+ */
+void
+global_entry_substructure_base<true>::load_object_base(
+		const persistent_object_manager& m,
+		istream& i, const size_t ind, const footprint& topfp,
+		const state_manager& sm) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	_frame.load_object_base(m, i);
+}
 
 //=============================================================================
 // explicit template instantiations
 // sometimes needed with aggressive optimizations
 
 template class global_entry<bool_tag>;
+template class global_entry<int_tag>;
+template class global_entry<enum_tag>;
+template class global_entry<channel_tag>;
 
 //=============================================================================
 }	// end namespace entity

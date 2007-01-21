@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.7 2006/06/26 01:46:17 fang Exp $
+	$Id: CHP_base.h,v 1.8 2007/01/21 05:59:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -9,16 +9,30 @@
 
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
+#include "util/STL/vector_fwd.h"
+#include "Object/ref/reference_enum.h"
 
 namespace HAC {
+namespace SIM {
+namespace CHPSIM {
+	// we need some sort of CHP_visitor refinement!
+	class StateConstructor;
+	class nonmeta_context;
+	class EventNode;
+}	// end namespace CHPSIM
+}	// end namespace SIM
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
+class nonmeta_state_manager;
 /**
 	Namespace for CHP object classes.  
  */
 namespace CHP {
+using entity::nonmeta_state_manager;
 using std::ostream;
+using SIM::CHPSIM::StateConstructor;
+using SIM::CHPSIM::nonmeta_context;
 using util::persistent;
 using util::persistent_object_manager;
 class action;
@@ -39,6 +53,22 @@ virtual	~action() { }
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
 
+/**
+	Dumps single events only, silent for grouped events.  
+ */
+#define	CHP_DUMP_EVENT_PROTO						\
+	ostream&							\
+	dump_event(ostream&, const expr_dump_context&) const
+
+virtual	CHP_DUMP_EVENT_PROTO = 0;
+
+#define	CHP_DUMP_SUCCESSORS_PROTO					\
+	ostream&							\
+	dump_successor_edges(ostream&, const SIM::CHPSIM::EventNode&,	\
+		const size_t, const expr_dump_context&) const
+
+virtual	CHP_DUMP_SUCCESSORS_PROTO;
+
 	/**
 		unroll_context-binding functor.  
 	 */
@@ -58,6 +88,27 @@ virtual	ostream&
 		const action_ptr_type&) const
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
+
+#define	CHP_ACTION_ACCEPT_PROTO						\
+	void								\
+	accept(StateConstructor&) const
+
+virtual	CHP_ACTION_ACCEPT_PROTO = 0;
+
+#define	CHP_EXECUTE_PROTO						\
+	void								\
+	execute(const nonmeta_context&, global_reference_array_type&) const
+
+virtual	CHP_EXECUTE_PROTO = 0;
+
+/**
+	\return true if the invoking event should be enqueued.
+ */
+#define	CHP_RECHECK_PROTO						\
+	char								\
+	recheck(const nonmeta_context&) const
+
+virtual	CHP_RECHECK_PROTO = 0;
 
 };	// end class action
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.147 2006/12/01 23:28:28 fang Exp $
+#	$Id: Makefile.am,v 1.148 2007/01/21 05:58:11 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,7 +46,7 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt
-bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim
+bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim hacchpsim
 
 CLEANFILES += $(bin_SCRIPTS)
 
@@ -80,6 +80,11 @@ hflat: $(top_builddir)/config.status
 hacprsim: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" >> $@
+	@$(CHMOD) +x $@
+
+hacchpsim: $(top_builddir)/config.status
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -137,7 +142,7 @@ config_params.h: $(top_builddir)/config.status
 	@$(ECHO) "#ifndef	CONFIG_PARAMS" > $@
 	@value=`cd $(top_builddir) && $(SHELL) ./config.status --version | \
 		$(GREP) options | \
-		$(SED) 's/^[^"]*["]//g' | $(SED) 's/["]$$//g'` ; \
+		$(SED) -e 's/^[^"]*["]//g' -e 's/["]$$//g'` ; \
 	$(ECHO) "#define	CONFIG_PARAMS	\"$$value\"" >> $@
 	@$(ECHO) "#endif	/* CONFIG_PARAMS */" >> $@
 
@@ -274,9 +279,9 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/null_collection_type_manager.tcc \
 	Object/inst/int_collection_type_manager.tcc \
 	Object/inst/parameterless_collection_type_manager.tcc \
+	Object/inst/channel_collection_type_manager.tcc \
 	Object/inst/port_alias_tracker.tcc \
 	Object/inst/subinstance_manager.tcc \
-	Object/inst/substructure_alias_base.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \
@@ -307,6 +312,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/null_collection_type_manager.h \
 	Object/inst/int_collection_type_manager.h \
 	Object/inst/parameterless_collection_type_manager.h \
+	Object/inst/channel_collection_type_manager.h \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
@@ -362,9 +368,11 @@ OBJECT_REF_TCC_FILES = \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
 	Object/ref/simple_meta_value_reference.tcc \
-	Object/ref/simple_nonmeta_value_reference.tcc
+	Object/ref/simple_nonmeta_value_reference.tcc \
+	Object/ref/nonmeta_ref_implementation.tcc
 
 OBJECT_REF_H_FILES = \
+	Object/ref/reference_enum.h \
 	Object/ref/references_fwd.h \
 	Object/ref/meta_reference_union.h \
 	Object/ref/aggregate_reference_collection_base.h \
@@ -388,7 +396,8 @@ OBJECT_REF_H_FILES = \
 	Object/ref/simple_nonmeta_instance_reference_base.h \
 	Object/ref/simple_nonmeta_value_reference.h \
 	Object/ref/inst_ref_implementation_fwd.h \
-	Object/ref/inst_ref_implementation.h
+	Object/ref/inst_ref_implementation.h \
+	Object/ref/nonmeta_ref_implementation.h
 
 # all these must have corresponding .h file
 OBJECT_COMMON_CC_FILES = \
@@ -407,6 +416,7 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
 	Object/expr/expr_dump_context.cc \
+	Object/expr/expr_visitor.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -426,14 +436,20 @@ OBJECT_CC_FILES = \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
 	Object/global_entry.cc \
+	Object/global_channel_entry.cc \
 	Object/port_context.cc \
 	Object/state_manager.cc \
+	Object/nonmeta_state.cc \
+	Object/nonmeta_variable.cc \
+	Object/nonmeta_context.cc \
+	Object/nonmeta_channel_manipulator.cc \
 	Object/global_entry_context.cc \
 	Object/sizes.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
 	Object/type/canonical_generic_chan_type.cc \
+	Object/type/canonical_fundamental_chan_type.cc \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \
@@ -451,7 +467,9 @@ OBJECT_CC_FILES = \
 	Object/lang/SPEC.cc \
 	Object/lang/SPEC_common.cc \
 	Object/lang/SPEC_footprint.cc \
-	Object/lang/SPEC_registry.cc
+	Object/lang/SPEC_registry.cc \
+	sim/chpsim/DependenceCollector.cc
+# this really wants to belong to the sim lib, but link dependencies...
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -483,6 +501,8 @@ OBJECT_TCC_FILES = \
 	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \
 	Object/global_entry.tcc \
+	Object/global_entry_context.tcc \
+	Object/nonmeta_context.tcc \
 	Object/state_manager.tcc \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
@@ -511,6 +531,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/struct_traits.h \
 	Object/traits/instance_traits.h \
 	Object/traits/type_tag_enum.h \
+	Object/traits/value_traits.h \
 	Object/def/definition_fwd.h \
 	Object/def/built_in_datatype_def.h \
 	Object/def/channel_definition_alias.h \
@@ -527,6 +548,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/user_def_chan.h \
 	Object/def/user_def_datatype.h \
 	Object/def/footprint_base.h \
+	Object/def/fundamental_channel_footprint.h \
 	Object/expr/expr_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
@@ -608,6 +630,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/instance_management_base.h \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
+	Object/unroll/channel_instantiation_type_ref_base.h \
 	Object/unroll/null_parameter_type.h \
 	Object/unroll/param_expression_assignment.h \
 	Object/unroll/param_instantiation_statement.h \
@@ -669,17 +692,34 @@ PARSER_CC_FILES = \
 SIM_CC_FILES = \
 	sim/ISE.cc \
 	sim/time.cc \
+	sim/command.cc \
+	sim/command_builtin.cc \
+	sim/command_registry.cc \
 	sim/random_time.cc \
+	sim/state_base.cc \
+	sim/signal_handler.cc \
 	sim/prsim/Cause.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event.cc \
 	sim/prsim/State.cc \
-	sim/prsim/Command.cc
+	sim/prsim/Command.cc \
+	sim/chpsim/nonmeta_context.cc \
+	sim/chpsim/Command.cc \
+	sim/chpsim/Dependence.cc \
+	sim/chpsim/Event.cc \
+	sim/chpsim/State.cc \
+	sim/chpsim/StateConstructor.cc
 
 SIM_TCC_FILES = \
-	sim/prsim/Event.tcc \
+	sim/command.tcc \
+	sim/command_builtin.tcc \
+	sim/command_common.tcc \
+	sim/command_category.tcc \
+	sim/command_registry.tcc \
+	sim/signal_handler.tcc \
+	sim/event.tcc \
 	sim/prsim/Rule.tcc
 
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
@@ -687,7 +727,10 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/common.h \
 	sim/devel_switches.h \
 	sim/prsim/devel_switches.h \
-	sim/prsim/ExprAllocFlags.h
+	sim/prsim/ExprAllocFlags.h \
+	sim/chpsim/StateConstructorFlags.h \
+	sim/chpsim/devel_switches.h \
+	sim/chpsim/graph_options.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -1031,31 +1074,32 @@ $(TYPE_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 
 lexer/$(HACFLAT_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
 
-# why doesn't this work?
-PARSER_TYPES_PIPE = $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-	$(GREP) -v pragma | $(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-	$(SED) '/^[ \t]*$$/d'
+# why didn't this work?
+# fixed: need to escape the '#' character
+PARSER_TYPES_PIPE = $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
+	$(GREP) -v pragma | \
+		$(SED) -e '/^%start/,$$d' -e '/%{/,/%}/d' -e '/^[ \t]*$$/d'
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
-#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-		$(SED) '/^[ \t]*$$/d' > $@
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+#		$(GREP) -v pragma | \
+#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+#		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
-#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-		$(SED) '/^[ \t]*$$/d' > $@
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+#		$(GREP) -v pragma | \
+#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+#		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/type.types: parser/$(TYPE_PARSE_ROOT).yy
-#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
-		$(GREP) -v pragma | \
-		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
-		$(SED) '/^[ \t]*$$/d' > $@
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+#		$(GREP) -v pragma | \
+#		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+#		$(SED) '/^[ \t]*$$/d' > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
 # "cut" is not a good idea, if # define is separated... :(
@@ -1064,7 +1108,7 @@ GET_START_TOKEN_ENUM = \
 	$(GREP) "define.*MINIMUM_BOGOSITY" parser/$(HACKT_PARSE_ROOT).h | \
 		$(HEAD) -n1 | $(SED) 's/^.*MINIMUM_BOGOSITY[ \t]*//g' | \
 		$(AWK) '/.*/{printf($$1);}'
-
+# TODO: use configure-time yacc test to determine this
 
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 HACKT_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
@@ -1409,7 +1453,7 @@ DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 OBJECT_DIRS = Object Object/common Object/expr Object/def Object/inst \
 	Object/lang Object/ref Object/traits Object/type Object/unroll
 
-SIM_DIRS = sim sim/prsim
+SIM_DIRS = sim sim/prsim sim/chpsim
 
 CLEANSUBDIRS += lexer parser AST $(OBJECT_DIRS) $(SIM_DIRS)
 
@@ -1481,6 +1525,8 @@ sim/.cvsignore: .cvsignore
 	$(CP) $? $@
 sim/prsim/.cvsignore: .cvsignore
 	$(CP) $? $@
+sim/chpsim/.cvsignore: .cvsignore
+	$(CP) $? $@
 test/.cvsignore: .cvsignore test/local.cvsignore
 	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
@@ -1494,7 +1540,7 @@ SUBDIR_CVSIGNORE += lexer/.cvsignore parser/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
 	Object/unroll/.cvsignore \
 	AST/.cvsignore main/.cvsignore \
-	sim/.cvsignore sim/prsim/.cvsignore \
+	sim/.cvsignore sim/prsim/.cvsignore sim/chpsim/.cvsignore \
 	test/.cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)

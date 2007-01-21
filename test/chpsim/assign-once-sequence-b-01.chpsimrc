@@ -1,0 +1,6 @@
+# "assign-once-sequence-b-01.chpsimrc"
+#	$Id: assign-once-sequence-b-01.chpsimrc,v 1.2 2007/01/21 06:02:13 fang Exp $
+# @haco@ assign-once-sequence-b.haco-a
+
+source assign-once-sequence-a-01.chpsimrc
+

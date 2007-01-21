@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.27 2006/12/01 23:29:00 fang Exp $
+#	$Id: Make.test-head,v 1.28 2007/01/21 06:01:34 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -16,7 +16,7 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.hacflatfailtest .hacf-fail .hacf-fail-filter .hacf-fail-diff \
 	.hacktcreatetest .hacktcreatefailtest \
 	.createdump .createdump-filter .creatediff \
-	.createfaildump .haco-c-dump .haco-c-err \
+	.createfaildump .createfaildiff .haco-c-dump .haco-c-err \
 	.haco-c-from-haco .haco-c-from-haco-err .create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
 	.hacktcreatefromhacotest \
@@ -54,7 +54,11 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.prsimckpt-dupe .prsimckpt-dupe-dump \
 	.prsimopttest .prsimckpt-O1 .prsimckpt-O1-err \
 	.prsimckpt-01-dump .prsimopt-diff \
-	.hacktprsdottest
+	.hacktprsdottest \
+	.chpsimrc .chpsimtest .chpsimrc-out .chpsimrc-diff \
+	.chpsimalloctest .chpsimallocdump .chpsimallocdiff \
+	.chpsim-event-dot .chpsim-event-ps .chpsimdottest \
+	.chpsimfailtest .chpsimrcfail-out .chpsimrcfail-diff
 
 if USE_UNROLL_PHASE
 SUFFIXES += \
@@ -79,7 +83,7 @@ BOGUS_SUFFIX_TARGETS = \
 	.hacf-fail .hacf-fail-filter .hacf-fail-diff \
 	.createstderr \
 	.createdump .createdump-filter .createfaildump .haco-c-dump \
-	.haco-c-err .haco-c-from-haco .haco-c-from-haco-err \
+	.createfaildiff .haco-c-err .haco-c-from-haco .haco-c-from-haco-err \
 	.create-from-haco-dump \
 	.create-from-haco-dump-filter .create-from-haco-diff \
 	.haco-a-dump .haco-a-dump-filter \
@@ -103,7 +107,11 @@ BOGUS_SUFFIX_TARGETS = \
 	.prsimckpt .prsimckpt-dump \
 	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
 	.prsimckpt-dupe .prsimckpt-dupe-dump \
-	.prsimckpt-O1 .prsimckpt-O1-err .prsimckpt-01-dump .prsimopt-diff
+	.prsimckpt-O1 .prsimckpt-O1-err .prsimckpt-01-dump .prsimopt-diff \
+	.chpsimrc-out .chpsimrc-diff \
+	.chpsimrc .chpsimallocdump .chpsimallocdiff \
+	.chpsim-event-dot .chpsim-event-ps \
+	.chpsimrcfail-out .chpsimrcfail-diff
 
 if USE_UNROLL_PHASE
 BOGUS_SUFFIX_TARGETS += \

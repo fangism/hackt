@@ -1,0 +1,14 @@
+// "channel-once-parallel-a.hac"
+//	$Id: channel-once-parallel-a.hac,v 1.2 2007/01/21 06:02:20 fang Exp $
+// sends value once, receives once, then deadlocks
+
+chan(int) X;
+int z;
+
+chp {
+X!(11)
+}
+chp {
+X?(z)
+}
+

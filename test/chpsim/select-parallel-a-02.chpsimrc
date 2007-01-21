@@ -1,0 +1,11 @@
+# "select-parallel-a-02.chpsimrc"
+#	$Id: select-parallel-a-02.chpsimrc,v 1.2 2007/01/21 06:03:42 fang Exp $
+# @haco@ select-parallel-a.haco-a
+
+watchall-events
+queue
+echo run until end
+run
+echo THAT was fast!
+time
+

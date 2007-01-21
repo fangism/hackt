@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.29 2006/12/01 23:28:50 fang Exp $
+	$Id: instance_alias.tcc,v 1.30 2007/01/21 05:59:11 fang Exp $
 	TODO: trim includes
  */
 
@@ -31,7 +31,6 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
-#include "Object/inst/substructure_alias_base.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"
 #include "Object/inst/port_alias_tracker.h"
@@ -497,17 +496,20 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Called recusrively.  
+	This fills in an entry of a footprint_frame with a translated 
+	globally-allocated index.
+	Called recursively.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 		const port_collection_context& pcc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
+	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	// could use footprint_frame_transformer here for consistency
 	const size_t local_offset = this->instance_index -1;
 	STACKTRACE_INDENT_PRINT("local_offset = " << local_offset << endl);
 	STACKTRACE_INDENT_PRINT("global_id = " << pcc.id_map[ind] << endl);
-	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
 	INVARIANT(ind < pcc.size());
 	INVARIANT(local_offset < fm.size());
 	fm[local_offset] = pcc.id_map[ind];
@@ -726,7 +728,7 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias& a) const {
 	\param pcc the port context to assign to.  
 	\param ff the reference footprint_frame.
 	\param sm the global state allocation manager.
-	\param ind
+	\param ind offset into the port_collection_context.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -734,8 +736,9 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 		port_collection_context& pcc, const footprint_frame& ff,
 		const size_t ind) const {
 	STACKTRACE_VERBOSE;
-	const size_t local_placeholder_id = this->instance_index -1;
 	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	// could use footprint_frame_transformer here for consistency
+	const size_t local_placeholder_id = this->instance_index -1;
 	STACKTRACE_INDENT_PRINT("local_id = " << local_placeholder_id << endl);
 	STACKTRACE_INDENT_PRINT("global_id = " << fm[local_placeholder_id]
 		<< endl);

@@ -1,0 +1,15 @@
+// "select-nested-loop-b.hac"
+// copy-modified from "select-nested-loop-a.hac"
+//	$Id: select-nested-loop-b.hac,v 1.2 2007/01/21 06:03:41 fang Exp $
+// tests nested select statement in loop
+
+bool a, b;
+
+chp {
+a-,b-;
+// two-bit gray-code counter
+*[[ a -> [b -> b- [] else -> a-]
+[] else -> [b -> a+ [] else -> b+]
+]]
+}
+

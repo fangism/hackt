@@ -1,0 +1,15 @@
+Variables: 
+bool[1]: "traffic.b" 
+int[1]: "traffic.s" 
+chan[1]: "traffic.B[0]" 
+chan[2]: "traffic.B[1]" 
+chan[3]: "traffic.S" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 
+event[1]: receive: merge::S?(merge::s), pid: 1, #pred: 1, succ: 2 
+channel deps: 3 
+event[2]: receive: merge::B[merge::s]?(merge::b), pid: 1, #pred: 1, succ: 1 
+int deps: 1 
+channel deps: 1 2 
+

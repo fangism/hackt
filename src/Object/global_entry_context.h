@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.3 2006/04/23 07:37:18 fang Exp $
+	$Id: global_entry_context.h,v 1.4 2007/01/21 05:58:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -21,6 +21,7 @@ class footprint_frame;
 class state_manager;
 struct bool_tag;
 template <class> class footprint_frame_map;
+template <class> class simple_meta_instance_reference;
 using std::ostream;
 using util::member_saver;
 
@@ -33,8 +34,14 @@ using util::member_saver;
 class global_entry_context_base {
 	typedef	global_entry_context_base	this_type;
 protected:
+	/**
+		Top-level state manager.
+	 */
 	const state_manager*			sm;
-	const footprint*			fp;
+	/**
+		Top-level footprint for global lookups.  
+	 */
+	const footprint*			topfp;
 
 public:
 	/**
@@ -45,13 +52,12 @@ public:
 		public member_saver<this_type, 
 			const state_manager*, &global_entry_context_base::sm>,
 		public member_saver<this_type, 
-			const footprint*, &global_entry_context_base::fp> {
-		// global_entry_context_base&		ccb;
+			const footprint*, &global_entry_context_base::topfp> {
 		typedef	member_saver<this_type, 
 			const state_manager*, &global_entry_context_base::sm>
 				manager_saver_type;
 		typedef member_saver<this_type, 
-			const footprint*, &global_entry_context_base::fp>
+			const footprint*, &global_entry_context_base::topfp>
 				footprint_saver_type;
 	public:
 		module_setter(global_entry_context_base&, const module&);
@@ -59,10 +65,16 @@ public:
 	} __ATTRIBUTE_UNUSED__ ;	// end class module setter
 
 public:
-	global_entry_context_base() : sm(NULL), fp(NULL) { }
+	global_entry_context_base() : sm(NULL), topfp(NULL) { }
 	global_entry_context_base(const state_manager& _sm, 
-		const footprint& _fp) : sm(&_sm), fp(&_fp) { }
+		const footprint& _fp) : sm(&_sm), topfp(&_fp) { }
 	// default destructor
+
+	const state_manager*
+	get_state_manager(void) const { return sm; }
+
+	const footprint*
+	get_top_footprint_ptr(void) const { return topfp; }
 
 };	// end struct global_entry_context_base
 
@@ -74,6 +86,10 @@ public:
 class global_entry_context : public global_entry_context_base {
 	typedef	global_entry_context		this_type;
 protected:
+	/**
+		Local footprint frame.  
+		Use fpf->_footprint for local-to-global index translation.  
+	 */
 	const footprint_frame*			fpf;
 
 public:
@@ -96,9 +112,28 @@ public:
 public:
 	global_entry_context() : global_entry_context_base(), fpf(NULL) { }
 
+	global_entry_context(const state_manager& s, const footprint& _fp, 
+		const footprint_frame* const ff) : 
+		global_entry_context_base(s, _fp), fpf(ff) { }
+
+	const footprint_frame*
+	get_footprint_frame(void) const { return fpf; }
+
 	template <class Tag>
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
+
+	// param is a local or global index, depending on context
+	template <class Tag>
+	size_t
+	lookup_global_id(const size_t) const;
+
+	// note: also covers member_meta_instance_references
+	template <class Tag>
+	size_t
+	lookup_meta_reference_global_index(
+		const simple_meta_instance_reference<Tag>&) const;
+	
 
 };	// end struct global_entry_context
 
@@ -110,7 +145,7 @@ public:
 struct global_entry_dumper : public global_entry_context_base {
 public:
 	using global_entry_context_base::sm;
-	using global_entry_context_base::fp;
+	using global_entry_context_base::topfp;
 
 	ostream&				os;
 	size_t					index;

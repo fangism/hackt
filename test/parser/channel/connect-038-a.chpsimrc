@@ -1,0 +1,7 @@
+# "connect-038-a.chpsimrc"
+#	$Id: connect-038-a.chpsimrc,v 1.2 2007/01/21 06:05:02 fang Exp $
+# @haco@ connect-038.haco-a
+watchall-events
+step 20
+assert-queue
+

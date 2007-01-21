@@ -1,0 +1,15 @@
+// "wait-conjunction-c.hac"
+// copy-modified from "wait-conjunction-a.hac"
+//	$Id: wait-conjunction-c.hac,v 1.2 2007/01/21 06:04:04 fang Exp $
+// different equivalent ways of wait on more than one condition
+
+bool a, b;
+
+chp {
+a-,b-;
+{a-;a-;a-;a-;a+},{b-;b+},{[b];[a];a-,b-}
+	// third body will block until a and b are both true
+	// expect sequential blocking
+	// Q: should such blocks be fused together?
+}
+

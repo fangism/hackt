@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.5 2006/09/28 03:36:18 fang Exp $
+	$Id: TODO,v 1.6 2007/01/21 05:58:06 fang Exp $
 
 Use configure to generate Makefiles suitable for installations of hackt.  
 Distinguish between build Makefiles and install Makefiles.  
@@ -9,6 +9,11 @@ file organization:
 	to avoid polluting the global "file namespace"
 	which can cause unexpected including of files outside the library.  
 	(If user names her file "channel.hac"...)
+
+sub-language support:
+	What the hell do we do about CHP-only libraries?
+	How should we try to separate CHP libraries from PRS equivalents?
+		Naming convention?
 
 library catalog (documentation):
 	Use doxygen to generate standard library documentation

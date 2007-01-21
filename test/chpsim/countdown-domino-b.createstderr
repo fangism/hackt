@@ -1,0 +1,161 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	16	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	32	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	63	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	68	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	320
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    a = int<32> a
+    b = int<32> b
+    c = int<32> c
+}
+
+top-level chp:
+  concurrent: {
+    sequential: {
+      [a!=0]
+      *[
+        a>0 -> a := a-1
+      ]
+      b := 2
+    }
+    sequential: {
+      b := 0
+      [b!=0]
+      *[
+        b>0 -> b := b-1
+      ]
+      c := 3
+    }
+    sequential: {
+      c := 0
+      [c!=0]
+      *[
+        c>0 -> c := c-1
+      ]
+    }
+    sequential: {
+      a := 0
+      a := 1
+    }
+  }
+footprint: {
+  a = int<32>^0 = a (1) 
+  b = int<32>^0 = b (2) 
+  c = int<32>^0 = c (3) 
+  Created state:
+  int instance pool:
+  1	a
+  2	b
+  3	c
+  resolved concurrent actions:
+    sequential: {
+      [a!=0]
+      *[
+        a>0 -> a := a-1
+      ]
+      b := 2
+    }
+    sequential: {
+      b := 0
+      [b!=0]
+      *[
+        b>0 -> b := b-1
+      ]
+      c := 3
+    }
+    sequential: {
+      c := 0
+      [c!=0]
+      *[
+        c>0 -> c := c-1
+      ]
+    }
+    sequential: {
+      a := 0
+      a := 1
+    }
+}

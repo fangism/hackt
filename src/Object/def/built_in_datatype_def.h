@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.9 2006/10/18 01:19:07 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.10 2007/01/21 05:58:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -79,6 +79,11 @@ public:
 	REGISTER_COMPLETE_TYPE_PROTO;
 	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
+
+	void
+	count_channel_member(fundamental_channel_footprint&) const;
+
+	DUMP_CHANNEL_FIELD_ITERATE_PROTO;
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object
@@ -87,6 +92,10 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+
+	unsigned char
+	get_meta_type_enum(void) const;
+
 };	// end class built_in_datatype_def
 
 //=============================================================================

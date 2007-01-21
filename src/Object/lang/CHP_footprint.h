@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_footprint.h"
 	Class definitions for unrolled CHP action instances.  
-	$Id: CHP_footprint.h,v 1.2 2006/06/26 01:46:18 fang Exp $
+	$Id: CHP_footprint.h,v 1.3 2007/01/21 05:59:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_FOOTPRINT_H__
@@ -15,6 +15,9 @@
 
 namespace HAC {
 namespace entity {
+namespace PRS {
+	class cflat_visitor;
+}
 namespace CHP {
 // typedef	size_t			channel_index_type;
 
@@ -59,7 +62,8 @@ private:
 	std::vector<fp_subscript_ref<pbool_tag> >	pbool_ref_pool;
 	std::vector<fp_subscript_ref<pint_tag> >	pint_ref_pool;
 public:
-
+	void
+	accept(PRS::cflat_visitor&) const;
 };	// end class footprint
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.10 2006/04/11 07:54:38 fang Exp $
+	$Id: state_manager.h,v 1.11 2007/01/21 05:58:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include "util/persistent_fwd.h"
 #include "Object/traits/classification_tags.h"
+#include "Object/devel_switches.h"
 #include "util/list_vector.h"
 #include "util/memory/index_pool.h"
 #include "util/boolean_types.h"
@@ -70,6 +71,9 @@ protected:
 	ostream&
 	dump(ostream&, const footprint&) const;
 
+	ostream&
+	dump_dot_nodes(ostream&, const footprint&) const;
+
 	void
 	collect_transient_info_base(persistent_object_manager&, 
 		const footprint&) const;
@@ -95,14 +99,18 @@ class state_manager :
 	// public cflat_visitee?
 	protected global_entry_pool<process_tag>, 
 	protected global_entry_pool<channel_tag>, 
+#if ENABLE_DATASTRUCTS
 	protected global_entry_pool<datastruct_tag>, 
+#endif
 	protected global_entry_pool<enum_tag>, 
 	protected global_entry_pool<int_tag>, 
 	protected global_entry_pool<bool_tag> {
 	typedef	state_manager				this_type;
 	typedef	global_entry_pool<process_tag>		process_pool_type;
 	typedef	global_entry_pool<channel_tag>		channel_pool_type;
+#if ENABLE_DATASTRUCTS
 	typedef	global_entry_pool<datastruct_tag>	struct_pool_type;
+#endif
 	typedef	global_entry_pool<enum_tag>		enum_pool_type;
 	typedef	global_entry_pool<int_tag>		int_pool_type;
 	typedef	global_entry_pool<bool_tag>		bool_pool_type;
@@ -135,6 +143,9 @@ public:
 
 	ostream&
 	dump(ostream&, const footprint&) const;
+
+	ostream&
+	dump_dot_instances(ostream&, const footprint&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&, 

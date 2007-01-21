@@ -1,0 +1,13 @@
+// "countdown-successor.hac"
+// copy-modified from "do-while-countdown.hac"
+//	$Id: countdown-successor.hac,v 1.2 2007/01/21 06:03:21 fang Exp $
+
+int c;
+
+chp {
+	c:=5;
+	*[ (c > 0) -> c := c-1 ];
+	c:=11
+}
+// count c down to 0, set to 11, then halt
+

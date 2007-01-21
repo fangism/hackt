@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.16 2006/10/18 07:39:38 fang Exp $
+	$Id: param_expr.h,v 1.17 2007/01/21 05:58:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -25,6 +25,7 @@ class unroll_context;
 struct expr_dump_context;
 class template_formals_manager;
 class dynamic_param_expr_list;
+class nonmeta_expr_visitor;
 using util::persistent;
 using std::ostream;
 using util::memory::count_ptr;
@@ -104,6 +105,9 @@ virtual	count_ptr<const const_param>
 		const count_ptr<const param_expr>&) const
 
 virtual	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO = 0;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
 
 private:
 #define	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO				\

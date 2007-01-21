@@ -1,0 +1,16 @@
+// "arbitrate-loop-a.hac"
+//	$Id: arbitrate-loop-a.hac,v 1.2 2007/01/21 06:01:48 fang Exp $
+// repeated arbitrations
+// doesn't terminate
+
+bool a, b, c;
+
+chp {
+a+;
+*[[
+  a -> a-;b+,c+
+: b -> b-;c+,a+
+: c -> c-;a+,b+
+]]
+}
+

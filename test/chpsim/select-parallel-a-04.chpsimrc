@@ -1,0 +1,54 @@
+# "select-parallel-a-04.chpsimrc"
+#	$Id: select-parallel-a-04.chpsimrc,v 1.2 2007/01/21 06:03:45 fang Exp $
+# @haco@ select-parallel-a.haco-a
+
+echo testing new commands
+watchall-events
+queue
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+step
+subscribers-all
+queue
+time

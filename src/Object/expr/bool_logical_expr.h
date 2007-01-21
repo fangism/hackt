@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.11 2006/10/18 19:07:55 fang Exp $
+	$Id: bool_logical_expr.h,v 1.12 2007/01/21 05:58:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -70,6 +70,12 @@ public:
 
 	~bool_logical_expr();
 
+	const operand_ptr_type&
+	get_first(void) const { return lx; }
+
+	const operand_ptr_type&
+	get_second(void) const { return rx; }
+
 	ostream&
 	what(ostream& o) const;
 
@@ -83,8 +89,13 @@ public:
 	GET_RESOLVED_DATA_TYPE_REF_PROTO;
 
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
+	NONMETA_RESOLVE_RVALUE_BOOL_PROTO;
+	NONMETA_RESOLVE_COPY_BOOL_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
+
 protected:
 	using parent_type::unroll_resolve_copy;
+	using parent_type::nonmeta_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

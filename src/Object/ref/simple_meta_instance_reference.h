@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.20 2006/11/21 22:38:58 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.21 2007/01/21 05:59:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -19,6 +19,7 @@
 namespace HAC {
 namespace entity {
 using util::packed_array_generic;
+class nonmeta_expr_visitor;
 class instance_placeholder_base;
 template <class> class collection_interface;
 
@@ -148,12 +149,20 @@ virtual	instance_alias_info_ptr_type
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 
-virtual	size_t
-	lookup_globally_allocated_index(const state_manager&, footprint&) const;
+	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
 
-	good_bool
-	lookup_globally_allocated_indices(const state_manager&, 
-		footprint&, std::default_vector<size_t>::type&) const;
+virtual	size_t
+	lookup_globally_allocated_index(const state_manager&, 
+		const footprint&) const;
+
+virtual	size_t
+	lookup_locally_allocated_index(const state_manager&, 
+		const unroll_context&) const;
+
+	using parent_type::lookup_globally_allocated_indices;
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const;
 
 private:
 	port_connection_ptr_type

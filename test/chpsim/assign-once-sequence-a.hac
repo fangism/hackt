@@ -1,0 +1,12 @@
+// "assign-once-sequence-a.hac"
+//	$Id: assign-once-sequence-a.hac,v 1.2 2007/01/21 06:02:13 fang Exp $
+// top-level chp, one-shot statement, in sequence
+
+// assume for now that initial value will be false
+bool b;
+int i;
+
+chp {
+	b+;i:=13
+}
+

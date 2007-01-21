@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_base.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.6 2006/10/18 01:19:08 fang Exp $
+	$Id: datatype_definition_base.h,v 1.7 2007/01/21 05:58:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
@@ -15,6 +15,9 @@
 namespace HAC {
 namespace entity {
 class data_type_reference;
+class fundamental_channel_footprint;
+class channel_data_reader;	// from "Object/nonmeta_channel_manipulator.h"
+
 //=============================================================================
 /**
 	Base class interface for data type definitions.  
@@ -67,6 +70,28 @@ virtual	good_bool
 virtual	REGISTER_COMPLETE_TYPE_PROTO = 0;
 virtual	UNROLL_COMPLETE_TYPE_PROTO = 0;
 virtual	CREATE_COMPLETE_TYPE_PROTO = 0;
+
+virtual	void
+	count_channel_member(fundamental_channel_footprint&) const = 0;
+
+/**
+	Same idea as simple_nonmeta_value_reference:direct_assign(),
+	where the actual type determines which sub-iterator to read
+	from and advance.  
+ */
+#define	DUMP_CHANNEL_FIELD_ITERATE_PROTO				\
+	ostream&							\
+	dump_channel_field_iterate(ostream&, channel_data_reader&) const
+
+virtual	DUMP_CHANNEL_FIELD_ITERATE_PROTO = 0;
+
+protected:
+virtual	unsigned char
+	get_meta_type_enum(void) const = 0;
+
+public:
+	bool
+	less_ordering(const datatype_definition_base&) const;
 
 protected:
 	using parent_type::collect_transient_info_base;

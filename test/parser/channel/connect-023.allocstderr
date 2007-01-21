@@ -1,0 +1,6 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	march	forward<>
+	channel: 1
+[global channel entries]
+1	(top)	-	1	march.x	chan(bool<>)

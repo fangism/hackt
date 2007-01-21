@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.28 2006/11/21 22:38:59 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.29 2007/01/21 05:59:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -15,6 +15,7 @@
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/common/dump_flags.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
@@ -202,13 +203,45 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	If this is called, we're at the top-level of the instance hierarchy.
 	This should work regardless of whether this type has substructure.  
 	Only called from top-level, context-free.  
+	NOTE: this can also be used to lookup up a local footprint
+	if the footprint is a not the top-level.  In this case, the
+	index returned is a local index which needs to be translated
+	to a global index through a footprint_frame lookup.  
+	Will private subinstances still work on local references? no
+	\param sm is not used here, but is needed for member lookups, 
+		implemented in the virtual override.  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm, footprint& top) const {
+		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(&top, &top);
+	// should not be virtual call (one hopes)
+	return this->lookup_locally_allocated_index(sm, uc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+global_indexed_reference
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_top_level_reference(
+		const state_manager& sm, const footprint& top) const {
+	return global_indexed_reference(traits_type::type_tag_enum_value, 
+		this->lookup_globally_allocated_index(sm, top));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up a local index, local to lookup-footprint
+	in the unroll_context argument.  
+	To convert to a global index, caller is responsible
+	for translating using the footprint_frame.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_locally_allocated_index(
+		const state_manager&, const unroll_context& uc) const {
+	STACKTRACE_VERBOSE;
 	const instance_alias_info_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,
@@ -224,42 +257,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Collects a bunch of instance alias IDs with the same hierarchical
-	prefix, including array slices.  
-	Only called from top-level, context-free.  
- */
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, footprint& top, 
-		vector<size_t>& indices) const {
-	typedef	vector<size_t>				indices_type;
-	typedef	typename alias_collection_type::const_iterator	const_iterator;
-	alias_collection_type aliases;
-	const unroll_context dummy(&top, &top);
-	// reminder: call to unroll_references_packed is virtual
-#if 0
-	if (!__unroll_generic_scalar_references(
-			*this->inst_collection_ref, this->array_indices, 
-			dummy, true, aliases).good)
-#else
-	if (this->unroll_references_packed(dummy, aliases).bad)
-#endif
-	{
-		cerr << "Error resolving collection of aliases." << endl;
-		return good_bool(false);
-	}
-	const_iterator i(aliases.begin()), e(aliases.end());
-	for ( ; i!=e; ++i) {
-		// don't bother checking for duplicates
-		// (easy: just use std::set instead of vector)
-		indices.push_back((*i)->instance_index);
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Since this is a simple_meta_instance_reference, we're 
 	at the top of the reference hierarchy.  
 	We can just lookup the state_manager with the 
@@ -271,12 +268,19 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm, footprint& top) const {
+		const state_manager& sm, const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
 			*this->inst_collection_ref, this->array_indices, 
 				sm, top);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

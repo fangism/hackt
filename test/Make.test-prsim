@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.4 2006/11/21 22:39:16 fang Exp $
+#	$Id: Make.test-prsim,v 1.5 2007/01/21 06:01:35 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -49,8 +49,8 @@ PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
 hacktprsdottest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRS_DOT_TEST_SUBJECTS)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".hacktprsdottest: " $$1 ".prs-dot-O1"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".hacktprsdottest: " $$1 ".prs-dot-O1"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include hacktprsdottest.autodepend
@@ -85,8 +85,8 @@ endif
 prsimexprtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMEXPR_TEST_SUBJECTS)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimexprdiff: $$(srcdir)/" $$1 ".expect-prsimexpr"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".prsimexprdiff: $$(srcdir)/" $$1 ".expect-prsimexpr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimexprtest.autodepend
@@ -97,14 +97,6 @@ prsimexprtest.autodepend: Makefile
 .hacktprsimexprtest:
 	@$(DUMMY_TEST_SCRIPT)
 
-
-# Each run-commands script should include the command to invoke
-# for loading the object, e.g.: hackt prsim foo.haco-a
-# This rule should deduce the input object from the source script.  
-
-# doesn't work :S
-EXTRACT_HACO_PIPE = $(GREP) "^\#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
-	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
 
 # .prsimrc.prsimtest:
 # 	@$(ECHO) "#!$(SHELL)" > $@ ; \
@@ -174,8 +166,9 @@ prsimrcfail-out.autodepend: Makefile
 -include prsimrcfail-out.autodepend
 
 PRSIMRC_TEST_FILTER_SCRIPT = \
-	$(CAT) $< | $(SED) '/DELETE FROM HERE/d' | \
-		$(SED) '/DELETE TO HERE/,$$d' | $(PRSIMRC_FILTER_AWK) > $@ ; \
+	$(CAT) $< | \
+		$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' | \
+		$(PRSIMRC_FILTER_AWK) > $@ ; \
 	case $< in \
 	  *random*) $(CAT) $@ | $(PRSIMRC_TIME_FILTER_AWK) > $@.tmp ; \
 	    $(MV) $@.tmp $@ ; \
@@ -191,7 +184,7 @@ PRSIMRC_TEST_FILTER_SCRIPT = \
 	@$(PRSIMRC_TEST_FILTER_SCRIPT)
 
 if VERBOSE_CHECK
-ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+ECHO_PRSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
 else
 ECHO_PRSIMRC_DIFF_COMMAND = :
 endif
@@ -239,15 +232,15 @@ endif
 prsimtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimrc-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".prsimrc-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 prsimfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimrcfail-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".prsimrcfail-diff: $$(srcdir)/" $$1 ".prsimrc-expect"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimtest.autodepend
@@ -335,8 +328,8 @@ endif
 prsimckpttest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimckpt-diff: " $$1 ".prsimckpt-indump"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".prsimckpt-diff: " $$1 ".prsimckpt-indump"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimckpttest.autodepend
@@ -398,8 +391,8 @@ endif
 prsimopttest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".prsimopt-diff: " $$1 ".prsimckpt"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".prsimopt-diff: " $$1 ".prsimckpt"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include prsimopttest.autodepend
@@ -464,9 +457,13 @@ TESTS += \
 
 HAC_OBJECT_TARGETS += \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco) \
-	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-u) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a)
+
+# deprecated:
+if USE_UNROLL_PHASE
+HAC_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-u)
+endif
 
 build-check-local: \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a) \
@@ -500,11 +497,11 @@ all-prs-dot: $(ALL_PRSIMEXPR_DOT)
 
 all-prs-dot-ps: $(ALL_PRS_DOT_PS)
 
-clean-prs-dot:
-	$(RM) $(ALL_PRSIMEXPR_DOT)
+clean-prs-dot: force
+	-$(RM) $(ALL_PRSIMEXPR_DOT)
 
-clean-prs-dot-ps:
-	$(RM) $(ALL_PRS_DOT_PS)
+clean-prs-dot-ps: force
+	-$(RM) $(ALL_PRS_DOT_PS)
 
 
 echo-prsimexpr-tests: force
@@ -553,5 +550,5 @@ clean-prsimtests:
 
 clean-local: clean-prsimtests
 
-.PHONY: clean-prsimtests
+.PHONY: clean-prsimtests all-prs-dot all-prs-ps
 

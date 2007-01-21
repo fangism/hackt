@@ -2,19 +2,30 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.11 2006/11/21 22:38:59 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.12 2007/01/21 05:59:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 #define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
+#include <vector>
+#include <algorithm>
+
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/common/dump_flags.h"
 #include "Object/expr/nonmeta_index_list.h"
+#include "Object/unroll/unroll_context.h"
+#include "Object/global_entry.h"
+#include "Object/ref/nonmeta_ref_implementation.tcc"
 #include "util/what.h"
 #include "util/persistent_object_manager.tcc"
+
+#if ENABLE_STACKTRACE
+#include <iterator>		// for ostream_iterator
+#endif
 
 // might as well include this, will be needed
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
@@ -131,6 +142,13 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::attach_indices(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Ripped from simple_nonmeta_value_reference::unroll_resolve_copy().
  */
@@ -169,6 +187,40 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
 		// therefore, just return this copy!
 		return p;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This looks up a nonmeta reference and returns a list of all 
+	globally allocated indices that MAY be referenced.
+	The list is precise if the indices are resolved to
+	compile-time constants (meta-parameters).  
+	Called by CHPSIM::DependenceSetCollector::visit().
+	MAINTAINENCE: Don't forget to update "simple_nonmeta_value_reference"
+		__lookup_may_..._impl(), which copied from here...
+	\param fp the *local* footprint to lookup.
+	\param sm the top-level state-manager with global allocation
+		information, and footprint frames.  
+ */
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::lookup_may_reference_global_indices(
+		const global_entry_context& c, 
+		vector<size_t>& indices) const {
+	STACKTRACE_VERBOSE;
+	return __nonmeta_instance_lookup_may_reference_indices_impl(
+		*this, c, indices, Tag());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up a run-time scalar reference.
+ */
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::lookup_nonmeta_global_index(
+		const nonmeta_context_base& c) const {
+	return __nonmeta_instance_global_lookup_impl(*this, c, Tag());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

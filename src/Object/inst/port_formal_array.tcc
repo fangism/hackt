@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.7 2006/12/01 23:28:52 fang Exp $
+	$Id: port_formal_array.tcc,v 1.8 2007/01/21 05:59:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -426,6 +426,19 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::get_all_aliases(
+		typename std::default_vector<const_instance_alias_info_ptr_type>::type& aliases) const {
+	aliases.reserve(this->collection_size());
+	const_iterator i(begin()), e(end());
+	for ( ; i!=e; ++i) {
+		aliases.push_back(const_instance_alias_info_ptr_type(&*i));
+	}
+	// copy(... &util::addressof);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

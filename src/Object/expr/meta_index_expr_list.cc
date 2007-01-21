@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.19 2006/10/18 20:57:54 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.20 2007/01/21 05:58:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -29,6 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -248,6 +249,12 @@ const_index_list::push_back(const const_index_ptr_type& i) {
 bool
 const_index_list::is_static_constant(void) const {
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_index_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -583,6 +590,12 @@ dynamic_meta_index_list::must_be_equivalent_indices(
 		)
 		);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+dynamic_meta_index_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

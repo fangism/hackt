@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_expr.h,v 1.10 2006/10/18 20:57:55 fang Exp $
+	$Id: meta_range_expr.h,v 1.11 2007/01/21 05:58:55 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_EXPR_H__
@@ -85,6 +85,10 @@ virtual	bool
 	static
 	count_ptr<const this_type>
 	make_explicit_range(const count_ptr<const parent_type>&);
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
+
 };	// end class meta_range_expr
 
 //=============================================================================

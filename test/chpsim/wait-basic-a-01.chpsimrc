@@ -1,0 +1,107 @@
+# "wait-basic-a-01.chpsimrc"
+#	$Id: wait-basic-a-01.chpsimrc,v 1.2 2007/01/21 06:03:53 fang Exp $
+# @haco@ wait-basic-a.haco-a
+
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+step
+queue
+get a
+get b
+get c
+get d
+time
+

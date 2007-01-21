@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: nonmeta_range_expr_base.h,v 1.4 2006/01/22 18:19:52 fang Exp $
+	$Id: nonmeta_range_expr_base.h,v 1.5 2007/01/21 05:58:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_RANGE_EXPR_BASE_H__
@@ -28,6 +28,9 @@ protected:
 	nonmeta_range_expr_base() : parent_type() { }
 public:
 virtual	~nonmeta_range_expr_base() { }
+
+virtual	void
+	accept(nonmeta_expr_visitor&) const = 0;
 
 };	// end clas nonmeta_range_expr_base
 

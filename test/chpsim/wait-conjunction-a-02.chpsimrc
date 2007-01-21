@@ -1,0 +1,7 @@
+# "wait-conjunction-a-02.chpsimrc"
+#	$Id: wait-conjunction-a-02.chpsimrc,v 1.2 2007/01/21 06:03:56 fang Exp $
+# @haco@ wait-conjunction-a.haco-a
+
+null-event-delay 0
+source wait-conjunction-a-01.chpsimrc
+

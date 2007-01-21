@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.20 2006/11/21 22:39:04 fang Exp $
+	$Id: chan_traits.h,v 1.21 2007/01/21 05:59:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -10,10 +10,16 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
 template <class> class general_collection_type_manager;
+#if BUILTIN_CHANNEL_FOOTPRINTS
+template <class> class channel_instantiation_type_ref;
+class canonical_fundamental_chan_type;
+#endif
+
 //-----------------------------------------------------------------------------
 /**
 	NOTE: recently split off channel type references into 
@@ -35,9 +41,19 @@ struct class_traits<channel_tag> {
 
 	typedef	never_ptr<instance_alias_info_type>
 						instance_alias_info_ptr_type;
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	static const bool		has_substructure = false;
+	/**
+		Channels are not printed in cflat-ing, at least not yet.
+		Rationale: No legacy tools ever flattened CHP channels.  
+	 */
+	enum { print_cflat_leaf = false };
+#else
 	static const bool		has_substructure = true;
+#endif
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
+	static const bool		has_CHP = true;
 	/**
 		This uses a specialization that adds direction semantics
 		to connections, defined in "Object/inst/connection_policy.h".
@@ -85,7 +101,11 @@ struct class_traits<channel_tag> {
 					instantiation_statement_parent_type;
 	typedef	channel_instantiation_statement
 					instantiation_statement_type;
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	typedef	channel_instantiation_type_ref<tag_type>
+#else
 	typedef	instantiation_statement_type_ref_default<tag_type>
+#endif
 					instantiation_statement_type_ref_base;
 
 	typedef	simple_channel_nonmeta_instance_reference
@@ -104,7 +124,11 @@ struct class_traits<channel_tag> {
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	typedef	builtin_channel_type_reference	type_ref_type;
+#else
 	typedef	channel_type_reference_base	type_ref_type;
+#endif
 	/**
 		Note: may need to split-off built-in and user-defined
 		channel types: built-in types have no template
@@ -114,14 +138,22 @@ struct class_traits<channel_tag> {
 		but that complicates persistence... may have to fake it.  
 		TODO: figure this out.
 	 */
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	typedef	canonical_fundamental_chan_type	instance_collection_parameter_type;
+#else
 	typedef	canonical_generic_chan_type	instance_collection_parameter_type;
 //	typedef	canonical_user_def_chan_type	instance_collection_parameter_type;
+#endif
 
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 
 	// same type info as parameter_type
+#if BUILTIN_CHANNEL_FOOTPRINTS
+	typedef	instance_collection_parameter_type	resolved_type_ref_type;
+#else
 	typedef	canonical_generic_chan_type	resolved_type_ref_type;
+#endif
 	// pointer not necessary
 };	// end struct class_traits<channel_tag>
 
@@ -133,8 +165,8 @@ struct channel_traits::may_contain<Tag> { enum { value = _val }; };
 CHANNELS_MAY_CONTAIN(bool_tag, true)
 CHANNELS_MAY_CONTAIN(int_tag, true)
 CHANNELS_MAY_CONTAIN(enum_tag, true)
-CHANNELS_MAY_CONTAIN(datastruct_tag, true)
-CHANNELS_MAY_CONTAIN(channel_tag, true)
+CHANNELS_MAY_CONTAIN(datastruct_tag, true)	// false!
+CHANNELS_MAY_CONTAIN(channel_tag, true)		// false!
 CHANNELS_MAY_CONTAIN(process_tag, false)
 
 #undef  CHANNELS_MAY_CONTAIN

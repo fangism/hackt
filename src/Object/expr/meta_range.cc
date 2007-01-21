@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.16 2006/10/18 20:57:55 fang Exp $
+ 	$Id: meta_range.cc,v 1.17 2007/01/21 05:58:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pint_arith_expr.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -227,6 +228,12 @@ pint_range::static_constant_range(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_range::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if successfully resolved at unroll-time.
  */
@@ -251,6 +258,16 @@ pint_range::unroll_resolve_copy(const unroll_context& c,
 	} else {
 		return count_ptr<const const_index>(NULL);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return NULL because nonmeta ranges don't exist yet. 
+ */
+count_ptr<const pint_const>
+pint_range::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	return count_ptr<const pint_const>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -519,6 +536,12 @@ const_range::upper_bound(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+const_range::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 const_range::unroll_resolve_range(const unroll_context&, const_range& r) const {
 	r = *this;
@@ -539,6 +562,16 @@ const_range::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const meta_index_expr>& p) const {
 	INVARIANT(p == this);
 	return p.is_a<const const_range>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return NULL because nonmeta ranges don't exist yet. 
+ */
+count_ptr<const pint_const>
+const_range::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	return count_ptr<const pint_const>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

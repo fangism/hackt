@@ -1,0 +1,16 @@
+// "countdown-loop-b.hac"
+// copy-modified from "countdown-loop-a.hac"
+//	$Id: countdown-loop-b.hac,v 1.2 2007/01/21 06:02:57 fang Exp $
+
+int c;
+
+chp {
+c:=0;
+*[
+	*[ (c > 0) -> c := c-1 ];
+	c:=3
+]
+}
+// fall through the first time
+// then countdown subsequent iterations
+

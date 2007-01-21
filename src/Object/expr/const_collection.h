@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.15 2006/10/18 07:39:31 fang Exp $
+	$Id: const_collection.h,v 1.16 2007/01/21 05:58:43 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -25,11 +25,13 @@ namespace entity {
 class const_index_list;
 class const_range_list;
 class unroll_context;
+class nonmeta_context_base;
 class param_expr;
 class const_param;
 struct expr_dump_context;
 class template_formals_manager;
 class dynamic_param_expr_list;
+class nonmeta_expr_visitor;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
@@ -54,6 +56,7 @@ const_collection<Tag>
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 class const_collection :
 		public class_traits<Tag>::expr_base_type,
+		// this is just const_param
 		public class_traits<Tag>::const_collection_parent_type {
 	typedef	CONST_COLLECTION_CLASS			this_type;
 public:
@@ -164,10 +167,14 @@ public:
 
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;
+	using expr_base_type::nonmeta_resolve_copy;
 
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 	count_ptr<const expr_base_type>
 	substitute_default_positional_parameters(

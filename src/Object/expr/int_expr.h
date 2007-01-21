@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.6 2006/06/26 01:46:00 fang Exp $
+	$Id: int_expr.h,v 1.7 2007/01/21 05:58:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_EXPR_H__
@@ -16,6 +16,7 @@
 
 namespace HAC {
 namespace entity {
+class pint_const;
 
 //=============================================================================
 /**
@@ -41,6 +42,26 @@ virtual	ostream&
 		const count_ptr<const int_expr>&) const
 
 virtual UNROLL_RESOLVE_COPY_INT_PROTO = 0;
+
+#define	NONMETA_RESOLVE_COPY_INT_PROTO					\
+	count_ptr<const const_param>					\
+	nonmeta_resolve_copy(const nonmeta_context_base&,		\
+		const count_ptr<const int_expr>&) const
+
+#define	NONMETA_RESOLVE_RVALUE_INT_PROTO				\
+	count_ptr<const pint_const>					\
+	__nonmeta_resolve_rvalue(const nonmeta_context_base&,		\
+		const count_ptr<const int_expr>&) const
+
+virtual	NONMETA_RESOLVE_RVALUE_INT_PROTO = 0;
+virtual	NONMETA_RESOLVE_COPY_INT_PROTO = 0;
+
+	NONMETA_RESOLVE_COPY_DATA_PROTO;
+	NONMETA_RESOLVE_COPY_INDEX_PROTO;
+	EVALUATE_WRITE_PROTO;
+
+	// visitor disambiguation (doesn't matter)
+	using data_expr::accept;
 protected:
 	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
 	UNROLL_RESOLVE_COPY_DATA_PROTO;

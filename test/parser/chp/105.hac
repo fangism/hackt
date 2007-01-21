@@ -1,0 +1,7 @@
+// "105.hac"
+// instantiates definition in "102.hac"
+
+import "102.hac";
+
+foo bar;
+

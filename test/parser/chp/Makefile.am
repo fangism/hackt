@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2006/12/01 23:29:46 fang Exp $
+#	$Id: Makefile.am,v 1.17 2007/01/21 06:05:51 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -25,7 +25,7 @@ HACKT_PARSE_TEST_PASSES = \
 	070 074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
 	090 091 092 093 094 097 098 099 \
-	100 102 \
+	100 102 104 105 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
 	source-sink-01
@@ -42,7 +42,7 @@ HACKT_CREATE_TEST_PASSES = \
 	074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
 	090 091 092 093 094 097 098 099 \
-	100 101 102 103 \
+	100 101 102 103 104 105 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
 	source-sink-01
@@ -53,13 +53,14 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES =
 
-
 # TODO: alloc phase
 # several tests are not ready because we haven't defined
 # footprint frames for built-in channel types yet.  
 # They result in an assertion failure on the frame pointer.  
-# HACKT_ALLOC_TEST_PASSES = \
-#	$(HACKT_CREATE_TEST_PASSES)
+HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
+
+# eventually update to use ALLOC_TEST_PASSES
+HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 019b \

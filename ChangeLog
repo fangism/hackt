@@ -1,5 +1,25 @@
 "ChangeLog"
 
+2007-01-21	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54:
+	  Major branch merge of -chpsim-01.
+	  See src/ChangeLog for gory details.
+	  Short story: we now have chpsim.  
+
+
+2007-01-20	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-52:
+	  New AC_OUTPUT: test/chpsim/testlib/Makefile.
+
+
+2007-01-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-44:
+	  Make.stddef and global Makefile.am clean-ups for maintainability.  
+
+
 2006-12-01	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-merged-channel-02-09:

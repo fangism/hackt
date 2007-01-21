@@ -3,6 +3,780 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54:
+	  Massive chpsim-01 branch merge.  Summary:
+	  First release of chpsim.
+		prsim-like command-line interface.
+			reads object file, allocates simulation state...
+		prints dot-graphs of events (VERY useful)
+		truly concurrent and event-driven execution, 
+			executes CHP semantics precisely.  
+		execution based on subscribing to variables upon blocking, 
+			rechecking upon notification of update, 
+			and unubscription upon enqueuing for execution.  
+			Block dependency sets are evaluated conservatively
+			using may-reference sets.  see CHPSIM::State::step().
+		brief help for all commands: "hackt chpsim -h"
+	  chpsim comes with a bunch of examples and test cases in test/chpsim, 
+		which helped catch and fix the infancy bugs.  
+	  Compiler infrastructure for non-meta variables and run-time
+		state information is completed, as was required.  
+		Includes nonmeta_{variable,state,context} family of classes.
+	  A ton of code re-used fom prsim command classes, after template-ing.  
+	  Regression: Disabled middle-end support for user-defined channels
+		and user-defined datatypes.  (Never worked anyways...)
+	  channel meta-type tag now corresponds only to built-in channel types.
+		Key implementation in canonical_fundamental_chan_type_base.
+	  TODO: list of chpsim tasks to do.
+	  Merge also brings in miscellaneous global Makefile touch-ups.  
+
+
+2007-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-54:
+	  Added some graph options to fine-tune chpsim dot-graph dump, 
+		but will not complete until after branch merge.  
+	  Added "sim/chpsim/devel_switches.h" to development.  
+	  Merge up to trunk!
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-53:
+	  chpsim-event Dot graphs now have guard labels on outgoing
+		edges of selection nodes.  Dude.  Sweet.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-52:
+	  No source revision, only new test cases.
+		Added new test-only directory test/chpsim/testlib.
+	  Next: make dot-struct graphs from chpsim more informative.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-51:
+	  chpsim new commands:
+		'run' -- go until event queue exhausted, or interrupt, 
+			Ctrl-C (SIGINT) works.  (like prsim:cycle)
+		'subscribers' <name> -- list events subscribed to the
+			named instance.
+		'subscribers-all' -- list all instance with their
+			subscribed events.
+		'dump-event' <index> -- prints structural and status 
+			information about the indexed event.
+	  Implemented the obvious functions needed for the above commands.  
+
+
+2007-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-50:
+	  No source revision.  Another batch of tests:
+		arbitration, selection exclusion violation, selection nesting.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-49:
+	  lang/CHP.cc: (bug fixes)
+		nonmeta_guard evaluator, only add the
+			else-clause event if the match-list is empty.  
+		selection::recheck():
+			reset own event countdown as if executed normally
+		join-event construction:
+			don't pass self action pointer, or it will be
+			wrongfully rechecked at join-time, duh!
+	  sim/chpsim/Command.cc: try-catch safety net for execution exceptions
+	  added more items to TODO under chpsim.
+	  Fresh batch of selection-related test cases to test/chpsim.
+	  Almost ready for first release onto main trunk, just a few more
+		batches of chpsim tests.  
+
+
+2007-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-48:
+	  CHP::action::recheck() now returns a more meaningful flag set
+		indicating action taken by the callee, and to be taken
+		by the caller.  New enumerations allow us to suppress
+		subscription activity for events that never block.  
+		New enum values in "sim/chpsim/Event.h".
+	  CHP::guarded_action::unroll_resolve_copy, minor fix, 
+		forgot NULL (skip) statement case.  
+	  Folded subscription work into EventNode::recheck().
+	  CHPSIM::nonmeta_context: added back enqueue_list member
+		to allow events to directly enqueue (only selections!)
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-47:
+	  No source revision, no new bugs found.
+	  Another batch of new chpsim tests in test/chpsim, 
+		stressing do-while loops, concurrency, 
+		and some condition waiting.  
+
+
+2007-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-46:
+	  Along with new tests, come new bug fixes.
+	  Front-end do-while tree checking was broken before, now fixed.  
+	  CHPSIM::StateConstructor: privatized state.event_pool to prevent
+		screw-ups, now provide an event-allocate/deallocate 
+		interface, which uses a new free-list member to recycle events.
+	  Fixed event allocation and reuse in do-forever loop
+		and do-while loop.  (was a pain to debug...)
+	  Do-while event, suppresses successor event generation if 
+		the last_event_index is null (terminal).
+		Also a fixed a missing array index indirection.  
+	  chpsim new commands:
+		'null-event-delay' can set the delay of "trivial" events
+		'uniform-delay' can set the uniform delay unit
+		simulator uses these to determine time of new events.  
+	  New chpsim tests try various combinations and positions
+		of simple do-while loops.  
+
+
+2007-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-45:
+	  No source revision.
+	  Added a bunch of new small tests to test/chpsim, 
+		so far things look good.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-44:
+	  Global Makefile.am clean-ups for sanity and maintainability.  
+	  Added some items to TODO lists for future reference.  
+
+
+2007-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-43:
+	  Minor patch: Some explicit template instantiations to satisfy -O3.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-42:
+	  Added channel_data_dumper functor class for printing, 
+		analogous to channel_data_reader for extraction.  
+	  Added virtual datatype_definition_base::dump_channel_field_iterate()
+		to print out data in formatted fashion from channel fields.  
+	  Implemented instance_reference::lookup_top_level_reference
+		returning a global_indexed_reference (type-enum, index)-pair.
+	  parser/instref.cc: implemented parser::parse_global_reference, 
+		to lookup a string into a global_indexed_reference.  
+	  chpsim: new command 'get' to print value of any instance or 
+		state of any channel.  
+	  Added new test cases to demonstrate chpsim:'get'.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-41:
+	  Now decrement predecessor countdowns properly upon event execution, 
+		using new helper functor EventNode::countdown_decrementer.
+	  Class clean-ups: nonmeta_context, CHPSIM::State
+		better member privatization and member forwarding.  
+	  No new test cases this round, but coming next.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-40:
+	  Committed development switches USE_NONMETA_RESOLVE and
+		ENABLE_CHPSIM_EXECUTE.  
+	  Next: fix countdown (forgot to decrement), should be done in 
+		CHP::action::execute().
+	  Let the flood of test-cases begin!
+
+
+2007-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-39:
+	  Minor patch: cleaned up CHPSIM_EVENT_GUARDED, CHPSIM_DIRECT_ENQUEUE.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-38:
+	  Oh, joy! successfully simulated a source-sink pair in chpsim!
+	  chpsim::EventNode: no longer carries a guard-expression with it, 
+		greatly simplifying things.  (1 regression test updated)
+	  CHP::action::execute:
+		properly select successor events for rechecking.
+		re-implemented selections' ::execute() to perform recheck.  
+	  chpsim added commands:
+		'watchall-events' print all events as they occur, 
+		also 'nowatchall-events' to disable.  
+	  Test suite: added support for chpsim run-commands tests, including
+		the maiden test: parser/channel/connect-038-a.chpsimrc
+	  Next: some cleanup CHPSIM_EVENT_GUARDED, CHPSIM_DIRECT_ENQUEUE.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-37:
+	  channel_data_reader_base: fixed wrong bound-check assert.
+	  nonmeta_variable_base: added subscribe/unsubscribe wrappers.
+	  Rewrote DependenceSet using meta-tag template base classes, 
+		added enum support.
+	  Rewrote DependenceSetCollector using meta-tag template base classes, 
+		completed enum support, cleaned up visit() definitions.
+	  CHPSIM::State:
+		recheck_transformer re-written: wrap a nonmeta_context member, 
+		now calls subscribe/unsubscribe depending on whether event's
+		recheck results in blocking (pending) or unblocking (enqueue).
+	  CHPSIM::nonmeta_context: no more direct access to __enqueue_list.
+	  Next CHP::action::execute() should be responsible for
+		enqueuing successor events, which depends on whether
+		or not it is a selection-type of event.  
+	  Added some items to TODO list for chpsim.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-36:
+	  Global clean-up patch:
+		Replaced error prone uses of footprint_frame::get_frame_map
+		with equivalent (more consistent) use of the helper
+		functor, footprint_frame_transformer.  
+	  Wrote global_entry_context::lookup_meta_reference_global_index()
+	  Wrote nonmeta_context_base::lookup_nonmeta_reference_global_index()
+	  Next: back to chpsim tests.
+
+
+2007-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-35:
+	  First signs of life in chpsim, debug-trace-testing
+		a source-sink test case (parser/channel/connect-038.hac).
+	  Reworked chpsim event dot-graph printing, adding graph-options, 
+		now defaulting to printing event index in output.  
+	  Sprinkled stacktrace statements in chpsim execution trace.  
+	  FIXED: some wrong calls to lookup_globally_allocated_index
+		now substituted with (new) lookup_locally_allocated_index, 
+		because reference and context were not from top-level.  
+	  chpsim::DependenceSetCollector: disabled off visitation
+		of meta references (suspiciously wrong and never reached), 
+		also enabled enum_set member for enum support.  
+	  Next: re-factor some meta-reference lookup code into
+		global_entry_context, for consistent re-use.
+	  chpsim: fix step(), event subscription and unsubscription
+		w.r.t. updated references.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-34:
+	  Implemented nonmeta_state reset for chpsim.
+	  Enabled a stripped down 'step' command in chpsim for testing.
+	  Implemented some diagnostic routines for chpsim State.  
+
+
+2007-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-33:
+	  Completed CHP::channel_{send,receive}::execute().
+		Wrote channel/read/write interface functors in
+			"Object/nonmeta_channel_manipulator.h".
+	  data_expr: added virtual evaluate_write() for
+		channel data packing.
+	  data_nonmeta_instance_reference: added virtual direct_assign()
+		for channel data unpacking.  
+	  Moved sim/chpsim/type_enum.h to Object/ref/reference_enum.h for 
+		tool-independent consistency.  
+	  Object/inst/instance_alias_info.h: deleted obsolete
+		member-lookup member-functor.  
+
+
+2007-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-32:
+	  Defined fundamental_channel_footprint as just a collection
+		of sizes to allocate nonmeta_state's ChannelData fields.  
+	  nonmeta_state_manager: now allocates ChannelData fields corresponding
+		to fundamental channel type upon construction.  
+	  main/chpsim.cc: pre-caches all fundamental_channel_footprints
+		before constructing CHPSIM simulator state.  
+	  virtual datatype_definition_base::count_channel_member() implemented, 
+		to accumulate size of field over meta-types.  
+	  TODO: add support for sized-types and arrays (later).  
+	  Next: finish implementing channel_send/receive::execute().
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-31-merged-channel-04:
+	  Child branch merge.  Summary:
+		Displace generic (incomplete) channel type mechanism with
+		only support for built-in channel types.  
+		Built-in channel type instantiations are maintained
+		uniquely using a global ordered set of them, thus eliminating
+		unnecessary replication.  
+		Allocation now establishes channel types per global channel
+		entry, now usable to the simulation environment.  
+	  Regressions: front-end support for user-defined channel types has
+		been dropped, but never worked fully to begin with.  
+
+
+2007-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-04:
+	  Finally established built-in channel fooprints for global
+		channel entries (alloc phase).
+	  entity::footprint: implemented __set_channel_footprints()
+		for top-level post-allocate type assignment.
+	  Enabled and verified alloc tests in parser/{chp,channel}.
+		Channel entries are properly allocated and 
+		reference correct canonical_fundamental_chan_type_base's.  
+	  This concludes work on this branch -- merge to parent branch.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-03:
+	  Now all canonical_fundamental_chan_type_base's "are belong to"
+		the global registry, all ref-counted, now also pool-allocated.
+		The global canonical pointers are restored upon persistence
+		de-serialization, using wrapped interfaces to
+		static member functions write_pointer/read_pointer.  
+		Object/type_reference.cc: also use register_globally().
+	  Bug fix from previous rev.:
+		Corrected operator < of canonical_generic_datatypes, 
+		forgot to compare parameters lists, duh.  
+	  As a result of sharing built-in channel type pointers, 
+		binary footprints have shrunk, thanks to reduced replication.
+		channel and CHP test cases updated accordingly.  
+
+
+2007-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-02:
+	  Added new specializations for instance management for 
+		built-in channel types:
+		channel_collection_type_manager (collection) and
+		channel_instantiation_type_ref (instantiation_statement).
+		Policies are reflected in "Object/traits/chan_traits.h"
+	  Factored canonical_fundamental_chan_type_base (without direction)
+		and use a ref-counted pointer in the type with direction.  
+	  Dropped support for user-defined channel types in front-end
+		as well as middle-end.  
+		Withdrew all affected regression tests: 
+			parser/connect/{086,086a,086b,087}.hac
+			parser/channel/018.hac
+		No other regressions.  
+	  Next: register canonical_fundamental_chan_type_base with
+		global instantiated set to share pointers.  
+
+
+2007-01-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30-channel-01:
+	  This branch is intended for reworking the channel meta-type
+		system for CHPSIM.  This branch will displace intermediate
+		representation support of user-defined-channels (which have
+		never been clearly specified to begin with *ahem*)
+		in favor of built-in channel types.  
+	  Added Object/global_channel_entry.{h,cc} (specialization).
+	  Added Object/type/canonical_fundamental_chan_type.{h,cc}.
+	  Defined a total-ordering for fundamental data-types: 
+		bool, int, enums.  No user-defined data-types are allowed yet.  
+	  Enabled BUILIN_CHANNEL_FOOTPRINTS switch, but is incomplete.
+	  Test suite shows no regressions.  
+
+
+2007-01-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-30:
+	  Re-structured global_entry_base and substructure parent, 
+		less template code replication, and will make way for
+		built-in channel specialization.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-29:
+	  class_traits<channel_tag>::has_substructure is no longer true:
+		built-in channels do have named subinstances, and thus do
+		not need to be handled like process-ports.  
+		Channels are now treated as leaf types, as far as global
+		allocation and referencing is concerned.  
+		Channel fields are non-aliasable, they have value-semantics.  
+		parser/{chp,channel} create tests updated because of
+		small decrease in binary sizes.  
+	  Changes are wrapped around switch BUILTIN_CHANNEL_FOOTPRINTS.
+	  TODO: built-in-channel-footprints for the sake of allocating
+		ChannelState and ChannelData fields.  
+		Need to extend global_entry<channel> with info field.
+
+
+2007-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-28:
+	  Removed Object/inst/substructure_alias_base.tcc (obsolete).
+	  Starting to plan for global_entry<channel_tag> for simulation state.
+	  Temporary definitions for channel_{send,receive}::execute().
+	  More source documentation in comments.  
+
+
+2006-12-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-27:
+	  Implemented most of remaining execute/recheck CHP functions, 
+		only send/receive left (all untested).
+	  Need to define some sort of CHP footprint or general method for
+		allocating ChannelData field members or use footprint.
+	  Reminder: execute/recheck moves successors to the recheck/enqueue
+		queues depending on the event type.  
+	  CHPSIM::nonmeta_context now has a recheck queue for listing
+		successors to check.  
+
+
+2006-12-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-26:
+	  Cleaned up some of last revisions changes.  
+	  Re-enabled ENABLE_CHP_EXECUTE switch, implemented more
+		CHP::action::execute and ::recheck methods, but still
+		some remain undefined (link fail).  
+	  Moved global ID lookup function to global_entry_context, 
+		for more convenience and consistent reuse by context classes.
+		Added Object/global_entry_context.tcc.
+		Implemented simple_nonmeta_{instance,value}_reference::
+			lookup_nonmeta_global_index().  
+	  CHP::action::recheck now returns a bool to indicate whether or not
+		the *invoking* event should be enqueued for execution.  
+		In other cases, the event's successors are selected from.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-25:
+	  Rewrote a bunch of instance-reference lookup functions to take
+		a bundled global_entry_context argument for ease of 
+		maintainence and correctness-reasoning.  
+	  nonmeta_context_base new derived from global_entry_context
+		for lookup consistency.  
+	  SIM::CHPSIM::DependenceSetCollector now derived from
+		global_entry_context for consistency.
+	  enum_expr: now tentatively uses pint_const as its nonmeta
+		representation type. 
+	  Object/lang/CHP.cc: partial implement execute() and recheck().
+	  Implemented draft of simple_nonmeta_value_reference::nonmeta_assign.
+
+
+2006-12-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-24-merged-expr-07:
+	  Sub-branch merge.  Summary:
+	  Implemented nonmeta expression resolution in expr class hierarchy, 
+		although is only a rouch untested draft.
+	  Rewrote a few pieces of CHPSIM engine to use new nonmeta expression
+		resolution.  
+	  Disabled use of user-defined data-types because their semantics
+		w.r.t. values and references are not defined.  
+	  No regressions from branch, only new untested features.
+	  Better re-organization of some sources and classes, 
+		between simulator-dependent and independent structures.  
+
+
+2006-12-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-07:
+	  Clean-ups only, removing obsolete files and references before merge.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-06:
+	  Finished (untested) simple_nonmeta_value_reference run-time lookup.
+	  Moved CHPsim-specific nonmeta context class into sim/chpsim.
+	  Added enum member instance to nonmeta_state.
+	  Added missing value field to *Variable (nonmeta) classes. 
+	  Rewrote CHPSIM::execute to pass bundled reference context argument.
+	  Branch pretty much ready to merge, though untested.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-05:
+	  It compiles and links again!  (untested)
+	  Completed resolution of nonmeta-indices, which currently
+		forbids use of ranged expressions in indices.
+	  Could use better error handling.
+	  Next: simple_nonmeta_value_reference's implementation for nonmeta
+		resolving data-type value collections, using meta-tag.
+
+
+2006-12-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-04:
+	  Refactored some of nonmeta_value_reference resolution code for
+		better re-use, less duplication.  
+	  Next: need nonmeta-resolution of nonmeta-indices.
+
+
+2006-12-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-03:
+	  More implementation of nonmeta_resolve methods.  
+		Added __nonmeta_resolve_rvalue helper method.  
+		param consts' nonmeta_resolve_copy defers to base classes now.
+		remaining undefined references to simple_nonmeta...
+	  TODO: __unroll_resolve_rvalue and __nonmeta_resolve_rvalue:
+		re-use them in common virtual function in meta-expr base class.
+		Only override for const_collection and other aggregates.  
+	  Consider returning plain values instead of ref-count ptrs
+		in nonmeta resolution, even pool-allocated may bottleneck.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-02:
+	  Re-wrote nonmeta_resolve_copy using unroll_resolve_copy
+		for meta-expressions (compile-time), thereby reducing number
+		of repetitive functions to implement.
+	  Added top-level footprint reference to nonmeta_context_base for
+		top-level value references, used to make an auxiliary
+		unroll_context.  
+	  Remaining: nonmeta expressions resolution (does not link).
+
+
+2006-12-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23-expr-01:
+	  This sub-branch is for implementing run-time expression resolution
+		of nonmeta expressions and references.  
+	  In this initial revision:
+		we tentatively disable all uses of datastruct_tag because
+		they were never well-defined (value semantics?) and inhibit
+		implementation of nonmeta expression evaluation without
+		ugly and meaningless hacks in traits classes.  
+		switch: ENABLE_DATASTRUCTS in Object/devel_switches.h
+		Consequently, footprints and all other structures with
+			datastruct components have changed size, 
+			so test cases have been updated accordingly.
+		Regression introduced: can no longer instantiated
+			user-defined types, which were never used anyhow.
+		Must wait until semantics for those types are better defined.
+	  Method prototypes for nonmeta_resolve_copy() are written, 
+		but switch-disabled in this revision.
+
+
+2006-12-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-23:
+	  Re-wrote event filter/transformations.
+	  Factored out tool-independent nonmeta_context_base for
+		run-time evaluation.  
+	  Next: nonmeta_expression resolution, on branch.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-22:
+	  Worked out more top-down flow code for CHP event execution.
+		Missing implementation details, still undefined references.  
+	  nonmeta_context is (unfortunately) now tied to CHPSIM's 
+		implementation, with reference to CHPSIM::EventNode.
+
+
+2006-12-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-21:
+	  Moved much of CHPSIM state structures to more accessible
+		files and namespaces -- they are now part of the context
+		class used to resolve run-time values.
+	  Obsolete: sim/chpsim/{Channel,Variable,InstancePools}.*
+	  This snapshot has missing definitions for CHP::action::execute().
+	  Next: CHP and nonmeta expression resolution (virtual) functions, 
+		and then CHP execute, with lvalue/rvalue distinctions.
+
+
+2006-12-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-20:
+	  Privatized member implementations of entity::footprint, 
+		namely PRS::footprint, chp_footprint, SPEC::footprint.
+		This breaks an unnecessarily deep chain of header
+		and definition dependencies, thereby speeding up recompiles.
+
+
+2006-12-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-19:
+	  Factored out sim/prsim/Event.h template classes into sim/event.h.
+	  Added event-queue structure to CHPSIM::State.
+	  TODO: main step-execution loop of CHPSIM::State, and general
+		event execution and handling. 
+
+
+2006-12-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-18:
+	  Wrote 'dot' event graph dumper for chpsim events.  
+		run: hackt chpsim -fdump-dot-struct <obj>
+	  Test suite now supports testing chpsim dot graph generation.
+
+
+2006-12-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-17:
+	  Loop-back event slot recycled, no more null-waste.
+		Defined operator = for Event and DependenceSet for 
+		move semantics because std::valarray does not use
+		container move semantics (only element copy, no-resize).  
+	  Updated test-cases accordingly.  
+	  Next: graphical representations of event graphs.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-16:
+	  Now using event[0] as the reserved fork-event for launching
+		the simulation by spawning initial events.  
+		chpsim alloc test dumps updated accordingly.  
+	  Next: loop-null event folding to eliminate waste.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-15:
+	  More chpsim graph fixes and test cases (a bunch).
+		Forgot to count_predecessors in a few places.  
+	  Next: list of initial events to launch.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-14:
+	  Factored out may_reference lookup (nonmeta) into separate file, 
+		eliminating duplicate maintainence through template.  
+		Also fixed wrong dependence index bugs, 
+		and copy-loops re-written functionally.
+	  chpsim/DependenceCollector.cc: fixed index translation by
+		conditionally transforming through footprint frame.  
+	  Object/global_entry.h: struct footprint_frame_transformer
+		useful functor for iterating and transformation.  
+		Should use this more where same operation is expressed, 
+		but now in more functional form.  
+	  Object/inst/instance_alias_info.h:
+		ptr_to_index_transformer functor that dereferences pointer
+			and grabs the instance_index member.  
+	  TODO: more and more test cases...
+
+
+2006-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-13:
+	  First batch of chpsim event allocation dump tests! (parser/channel)
+	  And with it, first set of buglet fixes:
+		Object/lang/CHP.cc: 
+			Suppress listing of null-event as a successor.
+			Evaluate static dependency sets for all types of 
+				events that need them (blocking).
+	  TODO: 6 of the new tests produce incorrect dependencies, fix them.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-12:
+	  Finished DependenceCollector visitor methods, but untested so far.
+		simple_nonmeta_value_reference::lookup_may_reference...
+		implementation ripped off of instance_reference's.
+		Need to check intermediate dumps of dependency sets.  
+	  Compiles and runs, no regressions.  
+
+
+2006-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-11:
+	  Minor patch: fixed kludge with const_cast-ing footprint pointers
+		by replicating pointer members in unroll_context.
+		That's one less hack to have to document/explain/remember...
+	  Back to finishing CHPSIM::DependenceCollector...
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-10:
+	  Links, but DependenceSetCollector temporarily disabled.
+	  Fixed minor regression cause by last revision, regarding
+		unroll_context and its target footprint.  
+		Temporary workaround const_cast-ing, will fix properly next.
+	  Added: instance_collection::get_all_aliases() unstructured
+		collection of aliases.  
+	  simple_meta_instance_reference::lookup_globally_allocated_indices():
+		relocated to meta_instance_reference::...()
+		for trivial reuse.  
+	  Added: simple_nonmeta_instance_reference::lookup_may_reference_global_indices():
+		still yet untested, should grab conservative set of
+		referenceable aliases for static dependency sets.  
+
+
+2006-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-09:
+	  This snapshot doesn't link.
+	  Added visitor interface to expression and reference hierarchy, 
+		affects most Object/{expr,ref}/* files.  
+	  Added accessors to unary and binary expressions for convenient
+		and consistent visitation.  
+	  unroll_context: new constructor taking const footprint*s for both
+		argumenst, when context is only used to lookup (no target).
+	  CHP::concurrent_actions::accept(StateConstructor&):
+		check for degenerate cases of 1 or 0 branches.  
+	  CHP::deterministic_selection::accept():
+		visit branch guards to collect static dependencies
+		in progress...
+	  *_meta_instance_reference::lookup_*: argument updated to
+		be just const footprint& b/c only used to lookup, no target.
+	  CHPSIM::StateConstructor::visit() fix:
+		reset last_event_index before each iteration.  
+	  Next: finish and test dependency collectors: for aggregates
+		and nonmeta references and collections.  
+
+
+2006-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-08:
+	  Started bunch of diagnostic/dump routines to scrutinizing
+		the allocated state and event graph nodes.  
+	  More options to main/chpsim.
+	  Developed more chpsim state data structures: Channel*, Variable*.
+	  Planning for event subscriptions to variables using
+		statically computed dependence sets.  
+	  TODO: evaluate conservative static dependence sets for every event, 
+		probably during event construction pass.
+
+
+2006-12-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-07:
+	  Loaded chpsim with basic commands.
+	  Recycled tons of prsim command code into templates for re-use.  
+	  New: sim/command_builtin.{h,tcc,cc} -- for state-independent base
+		implementations for template-wrapped state-specific adaptations
+	  New: sim/command_common.{h,tcc} -- template command classes
+		for trivially different state-specific implementations
+	  TODO: allocate simulator state
+
+
+2006-12-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-06:
+	  Re-factored bunch of old prsim command registry code into
+		re-usable template code for chpsim.
+		Populated chpsim's interpreter with basic commands, 
+		while other un-ported commands are disabled.  
+		TODO: factor state-indepdent built-in commands.  
+	  sim/state_base.h: new base class for simulator states, 
+		also includes overrideable prompt string.  
+	  sim/command_registry.*: factored out state-indepdendent
+		aliases functionality.  
+
+
+2006-12-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-05:
+	  Factored out prsim Command classes into re-usable template
+		class to reuse with chpsim.  
+		New: sim/{command{,_category,_registry}.{h,tcc,cc}, 
+		and pulled out signal_handler (SIGINT) into re-usable class.
+	  main/chpsim.cc: added more disabled code, following prsim's main.
+	  TODO: un-hardcode the command prompt.  :)
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-04:
+	  Finished first draft of CHP whole-program graph construction, 
+		using reverse (successor to predecessor) ordering.  
+	  devel_switches TODO: privatize implementations of 
+		PRS and CHP footprints in entity::footprint.
+	  Some semantics documentation done in dox/lang/.
+	  TODO: visualize whole-program CHP graph construction, 
+		and write dumpers for diagnostics.
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-03:
+	  Fleshing out more of CHP Event graph structures, and the
+		graph-construction pass.  Much more to come.  
+	  TODO: document decisions about CHP and nonmeta-index
+		dependent guard expressions.  
+
+
+2006-12-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-02:
+	  Supplied empty definitions for CHP::action::accept(), 
+		taking CHPSIM::StateConstructor.  (Poor use of OO.)
+	  More members added to CHPSIM::State.  
+	  main/chpsim.{h,cc} outlined, replacing old dummy program.  
+
+
+	* HACKT-00-01-04-main-00-80-63-chpsim-01-01:
+	  Starting to accomodate chpsim state allocation, much more planning
+		to do.  Also need to resolve interpetation of nonmeta-index
+		dependent expressions in guards (non-atomicity).  
+	  Does not link, missing new definitions in CHP actions.  
+
+
 2006-12-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-63-merged-channel-02-09:

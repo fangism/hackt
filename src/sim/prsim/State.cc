@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.30 2006/11/07 06:35:38 fang Exp $
+	$Id: State.cc,v 1.31 2007/01/21 06:01:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,19 +15,20 @@
 #include <set>
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
-#include "sim/prsim/Event.tcc"
+#include "sim/event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
+#include "sim/signal_handler.tcc"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/lang/PRS_footprint.h"
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
 #include "common/TODO.h"
 #include "util/attributes.h"
-#include "util/signal.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
 #include "util/memory/index_pool.tcc"
@@ -147,13 +148,11 @@ State::pull_to_value[3][3] = {
 /**
 	Allocates simulation state, given a module.
 	TODO: do this work in module?
-	TODO: add support for top-level PRS (outside of procs)
-	TODO: expression minimization pass
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
  */
 State::State(const entity::module& m, const ExprAllocFlags& f) : 
-		mod(m), 
+		state_base(m, "prsim> "), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue(), 
 		rule_map(), 
@@ -171,7 +170,6 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
 		timing_mode(TIMING_DEFAULT),
-		ifstreams(), 
 		__scratch_expr_trace(),
 		__shuffle_indices(0) {
 	const state_manager& sm(mod.get_state_manager());
@@ -2884,13 +2882,6 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_source_paths(ostream& o) const {
-	o << "source paths:" << endl;
-	return ifstreams.dump_paths(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
 State::dump_mk_excl_ring(ostream& o, const ring_set_type& r) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	ISE_INVARIANT(r.size() > 1);
@@ -3480,44 +3471,12 @@ watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
 }
 
 //=============================================================================
-// class State::signal_handler method definitions
-
-/**
-	Global static initializer for handler's bound State reference.  
- */
-State*
-State::signal_handler::_state = NULL;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Preserves the current State* and handler for restoration.  
-	Swaps the current signal handler out for this one.  
- */
-State::signal_handler::signal_handler(State* s) :
-		_prev(_state), _main(signal(SIGINT, main)) {
-	_state = s;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Upon destruction, restores the former signal handler.  
-	Swaps the former signal handler back in.  
- */
-State::signal_handler::~signal_handler() {
-	_state = _prev;
-	signal(SIGINT, _main);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-State::signal_handler::main(int sig) {
-	if (_state) {
-		_state->stop();
-	}
-}
-
-//=============================================================================
 }	// end namespace PRSIM
+
+// explicit template instantiation of signal handler class
+template class signal_handler<PRSIM::State>;
+// template class EventQueue<EventPlaceholder<real_time> >;
+
 }	// end namespace SIM
 }	// end namespace HAC
 

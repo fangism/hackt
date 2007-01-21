@@ -1,0 +1,63 @@
+# "countdown-loop-a-01.chpsimrc"
+#	$Id: countdown-loop-a-01.chpsimrc,v 1.2 2007/01/21 06:02:47 fang Exp $
+# @haco@ countdown-loop-a.haco-a
+
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+step
+queue
+get c
+assert-queue
+
+

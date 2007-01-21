@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.7 2006/11/07 06:35:11 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.8 2007/01/21 05:59:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -84,9 +84,13 @@ public:
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
+	LOOKUP_TOP_LEVEL_REFERENCE_PROTO;
 
 	bad_bool
 	unroll_references_packed(const unroll_context&, alias_collection_type&) const;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 	good_bool
 	append_meta_instance_reference(
@@ -95,6 +99,9 @@ public:
 	good_bool
 	append_meta_instance_reference(
 		const count_ptr<const parent_type>&);
+
+	using parent_type::lookup_globally_allocated_indices;
+
 private:
 	using parent_type::unroll_references_packed_helper;
 	using parent_type::unroll_references_packed_helper_no_lookup;

@@ -3,7 +3,7 @@
 	Class definitions for integer range expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_range_expr.h,v 1.7 2006/06/26 01:46:00 fang Exp $
+	$Id: int_range_expr.h,v 1.8 2007/01/21 05:58:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_RANGE_EXPR_H__
@@ -37,6 +37,12 @@ public:
 	int_range_expr(const bound_ptr_type&, const bound_ptr_type&);
 	~int_range_expr();
 
+	const bound_ptr_type&
+	get_first(void) const { return lower; }
+
+	const bound_ptr_type&
+	get_second(void) const { return upper; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -47,6 +53,10 @@ public:
 	dimensions(void) const { return 0; }	// or bomb
 
 	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
+	NONMETA_RESOLVE_COPY_INDEX_PROTO;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class int_index

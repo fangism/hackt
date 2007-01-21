@@ -1,0 +1,15 @@
+# "send-once-01.chpsimrc"
+#	$Id: send-once-01.chpsimrc,v 1.2 2007/01/21 06:03:53 fang Exp $
+# @haco@ send-once.haco-a
+
+queue
+get X
+step
+queue
+get X
+step
+echo queue should be empty (deadlock!)
+queue
+get X
+time
+

@@ -1,0 +1,39 @@
+# "025-a.chpsimrc"
+#	$Id: 025-a.chpsimrc,v 1.2 2007/01/21 06:04:34 fang Exp $
+# @haco@ 025.haco-a
+
+watchall-events
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+step
+get x
+get B
+assert-queue
+

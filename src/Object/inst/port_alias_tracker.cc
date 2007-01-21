@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.17 2006/11/27 08:29:12 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.18 2007/01/21 05:59:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -452,7 +452,9 @@ port_alias_tracker_base<Tag>::load_map(const footprint& f, istream& i) {
 port_alias_tracker::port_alias_tracker() :
 		port_alias_tracker_base<process_tag>(),
 		port_alias_tracker_base<channel_tag>(),
+#if ENABLE_DATASTRUCTS
 		port_alias_tracker_base<datastruct_tag>(),
+#endif
 		port_alias_tracker_base<enum_tag>(),
 		port_alias_tracker_base<int_tag>(),
 		port_alias_tracker_base<bool_tag>(),
@@ -471,19 +473,23 @@ void
 port_alias_tracker::filter_uniques(void) {
 	port_alias_tracker_base<process_tag>::filter_unique();
 	port_alias_tracker_base<channel_tag>::filter_unique();
+#if ENABLE_DATASTRUCTS
 	port_alias_tracker_base<datastruct_tag>::filter_unique();
+#endif
 	port_alias_tracker_base<enum_tag>::filter_unique();
 	port_alias_tracker_base<int_tag>::filter_unique();
 	port_alias_tracker_base<bool_tag>::filter_unique();
 	has_internal_aliases =
 		!port_alias_tracker_base<process_tag>::_ids.empty() ||
 		!port_alias_tracker_base<channel_tag>::_ids.empty() ||
+#if ENABLE_DATASTRUCTS
 		!port_alias_tracker_base<datastruct_tag>::_ids.empty() ||
+#endif
 		!port_alias_tracker_base<enum_tag>::_ids.empty() ||
 		!port_alias_tracker_base<int_tag>::_ids.empty() ||
 		!port_alias_tracker_base<bool_tag>::_ids.empty();
 }
-#endif
+#endif	// COPY_IF_PORT_ALIASES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
@@ -493,7 +499,9 @@ if (has_internal_aliases) {
 	return good_bool(
 		port_alias_tracker_base<process_tag>::__replay_aliases(s).good &&
 		port_alias_tracker_base<channel_tag>::__replay_aliases(s).good &&
+#if ENABLE_DATASTRUCTS
 		port_alias_tracker_base<datastruct_tag>::__replay_aliases(s).good &&
+#endif
 		port_alias_tracker_base<enum_tag>::__replay_aliases(s).good &&
 		port_alias_tracker_base<int_tag>::__replay_aliases(s).good &&
 		port_alias_tracker_base<bool_tag>::__replay_aliases(s).good
@@ -512,8 +520,10 @@ if (has_internal_aliases) {
 		__shorten_canonical_aliases(f.get_instance_pool<process_tag>());
 	port_alias_tracker_base<channel_tag>::
 		__shorten_canonical_aliases(f.get_instance_pool<channel_tag>());
+#if ENABLE_DATASTRUCTS
 	port_alias_tracker_base<datastruct_tag>::
 		__shorten_canonical_aliases(f.get_instance_pool<datastruct_tag>());
+#endif
 	port_alias_tracker_base<enum_tag>::
 		__shorten_canonical_aliases(f.get_instance_pool<enum_tag>());
 	port_alias_tracker_base<int_tag>::
@@ -546,19 +556,23 @@ port_alias_tracker::import_port_aliases(const this_type& t) {
 	STACKTRACE_VERBOSE;
 	port_alias_tracker_base<process_tag>::__import_port_aliases(t);
 	port_alias_tracker_base<channel_tag>::__import_port_aliases(t);
+#if ENABLE_DATASTRUCTS
 	port_alias_tracker_base<datastruct_tag>::__import_port_aliases(t);
+#endif
 	port_alias_tracker_base<enum_tag>::__import_port_aliases(t);
 	port_alias_tracker_base<int_tag>::__import_port_aliases(t);
 	port_alias_tracker_base<bool_tag>::__import_port_aliases(t);
 	has_internal_aliases =
 		!port_alias_tracker_base<process_tag>::_ids.empty() ||
 		!port_alias_tracker_base<channel_tag>::_ids.empty() ||
+#if ENABLE_DATASTRUCTS
 		!port_alias_tracker_base<datastruct_tag>::_ids.empty() ||
+#endif
 		!port_alias_tracker_base<enum_tag>::_ids.empty() ||
 		!port_alias_tracker_base<int_tag>::_ids.empty() ||
 		!port_alias_tracker_base<bool_tag>::_ids.empty();
 }
-#endif
+#endif	// COPY_IF_PORT_ALIASES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -566,7 +580,9 @@ port_alias_tracker::dump(ostream& o) const {
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::dump_map(o);
 	port_alias_tracker_base<channel_tag>::dump_map(o);
+#if ENABLE_DATASTRUCTS
 	port_alias_tracker_base<datastruct_tag>::dump_map(o);
+#endif
 	port_alias_tracker_base<enum_tag>::dump_map(o);
 	port_alias_tracker_base<int_tag>::dump_map(o);
 	port_alias_tracker_base<bool_tag>::dump_map(o);
@@ -601,7 +617,9 @@ port_alias_tracker::write_object_base(const footprint& m, ostream& o) const {
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::write_map(m, o);
 	port_alias_tracker_base<channel_tag>::write_map(m, o);
+#if ENABLE_DATASTRUCTS
 	port_alias_tracker_base<datastruct_tag>::write_map(m, o);
+#endif
 	port_alias_tracker_base<enum_tag>::write_map(m, o);
 	port_alias_tracker_base<int_tag>::write_map(m, o);
 	port_alias_tracker_base<bool_tag>::write_map(m, o);
@@ -615,7 +633,9 @@ port_alias_tracker::load_object_base(const footprint& m, istream& i) {
 if (has_internal_aliases) {
 	port_alias_tracker_base<process_tag>::load_map(m, i);
 	port_alias_tracker_base<channel_tag>::load_map(m, i);
+#if ENABLE_DATASTRUCTS
 	port_alias_tracker_base<datastruct_tag>::load_map(m, i);
+#endif
 	port_alias_tracker_base<enum_tag>::load_map(m, i);
 	port_alias_tracker_base<int_tag>::load_map(m, i);
 	port_alias_tracker_base<bool_tag>::load_map(m, i);
@@ -632,7 +652,9 @@ template void alias_reference_set<Tag>::push_back(			\
 
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(process_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(channel_tag)
+#if ENABLE_DATASTRUCTS
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag)
+#endif
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)

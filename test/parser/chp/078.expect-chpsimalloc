@@ -1,0 +1,27 @@
+Variables: 
+int[1]: "y2_0.b" 
+int[2]: "y2_1.b" 
+int[3]: "y3_0.b" 
+int[4]: "y3_1.b" 
+int[5]: "y3_2.b" 
+int[6]: "y6_0.b" 
+int[7]: "y6_1.b" 
+int[8]: "y6_2.b" 
+int[9]: "y6_3.b" 
+int[10]: "y6_4.b" 
+int[11]: "y6_5.b" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 3 4 5 6 7 8 9 10 11 
+event[1]: assign: compute_me::b := 0, pid: 1, #pred: 1, succ: 1 
+event[2]: assign: compute_me::b := 1, pid: 2, #pred: 1, succ: 2 
+event[3]: assign: compute_me::b := 4, pid: 3, #pred: 1, succ: 3 
+event[4]: assign: compute_me::b := 9, pid: 4, #pred: 1, succ: 4 
+event[5]: assign: compute_me::b := 16, pid: 5, #pred: 1, succ: 5 
+event[6]: assign: compute_me::b := 0, pid: 6, #pred: 1, succ: 6 
+event[7]: assign: compute_me::b := 1, pid: 7, #pred: 1, succ: 7 
+event[8]: assign: compute_me::b := 4, pid: 8, #pred: 1, succ: 8 
+event[9]: assign: compute_me::b := 9, pid: 9, #pred: 1, succ: 9 
+event[10]: assign: compute_me::b := 16, pid: 10, #pred: 1, succ: 10 
+event[11]: assign: compute_me::b := 25, pid: 11, #pred: 1, succ: 11 
+

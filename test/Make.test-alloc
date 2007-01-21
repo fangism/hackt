@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.4 2006/12/01 23:29:00 fang Exp $
+#	$Id: Make.test-alloc,v 1.5 2007/01/21 06:01:30 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -83,8 +83,8 @@ endif
 alloctest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
-		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".allocdiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
+		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
+		$(AWK) '/.+/ {print $$1 ".allocdiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include alloctest.autodepend
@@ -123,8 +123,8 @@ endif
 allocfailtest.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_FAILURES)" | \
-		$(SPACESTONEWLINE) | $(SORT) -u | \
-		$(AWK) '{print $$1 ".allocfaildiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
+		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
+		$(AWK) '/.+/ {print $$1 ".allocfaildiff: $$(srcdir)/" $$1 ".allocstderr"; }' > $@ ; \
 	$(TOUCH) $@
 
 -include allocfailtest.autodepend
@@ -211,14 +211,14 @@ allocfromhaco.autodepend: Makefile
 if USE_UNROLL_PHASE
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter " $$1 ".alloc-from-u-dump-filter"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter " $$1 ".alloc-from-u-dump-filter"; }' > $@ ; \
 	$(TOUCH) $@
 else
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
-	  $(SPACESTONEWLINE) | $(SORT) -u | \
-	  $(AWK) '{print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter"; }' > $@ ; \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter"; }' > $@ ; \
 	$(TOUCH) $@
 endif
 

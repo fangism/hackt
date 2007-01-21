@@ -1,0 +1,10 @@
+// "send-once.hac"
+//	$Id: send-once.hac,v 1.2 2007/01/21 06:03:53 fang Exp $
+// sends value once, then deadlocks
+
+chan(int) X;
+
+chp {
+X!(11)
+}
+

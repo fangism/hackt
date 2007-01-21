@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.16 2006/11/07 06:34:13 fang Exp $
+	$Id: global_entry.tcc,v 1.17 2007/01/21 05:58:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -37,6 +37,9 @@
 #include "Object/cflat_context.h"
 #include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
+#include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
+#include "Object/lang/CHP.h"		// for concurrent_actions
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/def/process_definition.h"
@@ -121,7 +124,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 	INVARIANT(_footprint);
 	ostream& o(gec.os);
 	const size_t ind(gec.index);
-	const footprint& topfp(*gec.fp);
+	const footprint& topfp(*gec.topfp);
 	const state_manager& sm(*gec.sm);
 	const pool_type& _pool(topfp.template get_instance_pool<Tag>());
 	if (ind >= _pool.size()) {
@@ -139,6 +142,10 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 				o, _footprint);
 			break;
 		}
+#if !BUILTIN_CHANNEL_FOOTPRINTS
+		// case PARENT_TYPE_CHANNEL: ?
+#endif
+#if ENABLE_DATASTRUCTS
 		case PARENT_TYPE_STRUCT: {
 			instance_alias_info<datastruct_tag>::dump_complete_type(
 				extract_parent_formal_instance_alias<
@@ -146,6 +153,7 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 				o, _footprint);
 			break;
 		}
+#endif
 		default:
 			// for now, the only thing that can be parent
 			// is process, append cases later...
@@ -161,11 +169,11 @@ footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 }
 
 //=============================================================================
-// class global_entry_base method definitions
+// class global_entry_substructure_base method definitions
 
 template <class Tag>
 ostream&
-global_entry_base<false>::dump(global_entry_dumper& ged) const {
+global_entry_substructure_base<false>::dump(global_entry_dumper& ged) const {
 	return ged.os;
 }
 
@@ -174,70 +182,11 @@ global_entry_base<false>::dump(global_entry_dumper& ged) const {
 	Prints the type with which the footprint is associated, 
 	and the brief contents of the footprint frame.  
  */
-#if 0
 template <class Tag>
 ostream&
-global_entry_base<true>::dump(ostream& o, const size_t ind, 
-		const footprint& topfp, const state_manager& sm) const {
-	this->_frame.template dump_footprint<Tag>(o, ind, topfp, sm);
-	return this->_frame.dump_frame(o);
-}
-#else
-template <class Tag>
-ostream&
-global_entry_base<true>::dump(global_entry_dumper& ged) const {
+global_entry_substructure_base<true>::dump(global_entry_dumper& ged) const {
 	this->_frame.template dump_footprint<Tag>(ged);
 	return this->_frame.dump_frame(ged.os);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Collects pointers needed for save/restoration of footprint pointers.  
-	NOTE: enumerations are defined in "Object/traits/type_tag_enum.h"
- */
-template <class Tag>
-void
-global_entry_base<true>::collect_transient_info_base(
-		persistent_object_manager& m, 
-		const size_t ind, const footprint& topfp, 
-		const state_manager& sm) const {
-	_frame.collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: use global_entry_dumper!
-	TODO: comment: pay attention to ordering, 
-		is crucial for reconstruction.
-	Q: Is persistent object manager really needed?
-	A: yes, some canonical_types contain relaxed template params.
- */
-template <class Tag>
-void
-global_entry_base<true>::write_object_base(const persistent_object_manager& m,
-		ostream& o, const size_t ind, const footprint& topfp,
-		const state_manager& sm) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	_frame.write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Dependent reconstruction ordering:
-	\pre all footprints (top-level and asssociated with complete ypes)
-		have been restored prior to calling this.  
-		Thus it is safe to reference instance placeholders'
-		back-references.  
-		See the reconstruction ordering in module::load_object_base().  
- */
-template <class Tag>
-void
-global_entry_base<true>::load_object_base(const persistent_object_manager& m,
-		istream& i, const size_t ind, const footprint& topfp,
-		const state_manager& sm) {
-	STACKTRACE_PERSISTENT_VERBOSE;
-	_frame.load_object_base(m, i);
 }
 
 //=============================================================================
@@ -263,6 +212,19 @@ production_rule_substructure::accept(const global_entry<Tag>& _this,
 	const SPEC::footprint&
 		sfp(f->get_spec_footprint());
 	sfp.accept(v);
+}
+
+//=============================================================================
+// class CHP_substructure method definitions
+
+template <class Tag, class Visitor>
+void
+CHP_substructure<true>::accept(const global_entry<Tag>& _this, Visitor& v) {
+	const footprint* const f(_this._frame._footprint);
+	NEVER_NULL(f);
+	const typename Visitor::footprint_frame_setter tmp(v, _this._frame);
+	const CHP::concurrent_actions& cfp(f->get_chp_footprint());
+	cfp.accept(v);
 }
 
 //=============================================================================
@@ -318,6 +280,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#if !BUILTIN_CHANNEL_FOOTPRINTS
 	case PARENT_TYPE_CHANNEL: {
 		const global_entry<channel_tag>&
 			p_ent(extract_parent_entry<channel_tag>(sm, *this));
@@ -329,6 +292,8 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#endif
+#if ENABLE_DATASTRUCTS
 	case PARENT_TYPE_STRUCT: {
 		const global_entry<datastruct_tag>&
 			p_ent(extract_parent_entry<datastruct_tag>(sm, *this));
@@ -340,6 +305,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_lpool[local_offset];
 		break;
 	}
+#endif
 	default:
 		ICE(cerr, 
 			cerr << "Unknown parent tag enumeration: " <<
@@ -354,6 +320,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 /**
 	Wrapped call that formats properly.  
 	\param topfp should be the top-level footprint belonging to the module.
+	This could just take a global_entry_context_base bundled argument.  
  */
 template <class Tag>
 ostream&
@@ -377,7 +344,7 @@ ostream&
 global_entry<Tag>::dump(global_entry_dumper& ged) const {
 	ostream& o(ged.os);
 	o << ged.index << '\t';
-	switch(parent_tag_value) {
+	switch (parent_tag_value) {
 	case PARENT_TYPE_NONE:
 		o << "(top)\t-\t";
 		break;
@@ -394,7 +361,7 @@ global_entry<Tag>::dump(global_entry_dumper& ged) const {
 		THROW_EXIT;
 	}
 	o << local_offset << '\t';
-	dump_canonical_name(o, *ged.fp, *ged.sm) << '\t';
+	dump_canonical_name(o, *ged.topfp, *ged.sm) << '\t';
 	parent_type::template dump<Tag>(ged);
 	return o;
 }
@@ -415,7 +382,7 @@ global_entry<Tag>::write_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
 	write_value(o, local_offset);
 	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-	parent_type::template write_object_base<Tag>(m, o, ind, f, sm);
+	parent_type::write_object_base(m, o, ind, f, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -436,7 +403,7 @@ global_entry<Tag>::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT_PRINT("parent_id = " << parent_id << endl);
 	read_value(i, local_offset);
 	STACKTRACE_PERSISTENT_PRINT("local_offset = " << local_offset << endl);
-	parent_type::template load_object_base<Tag>(m, i, ind, f, sm);
+	parent_type::load_object_base(m, i, ind, f, sm);
 }
 
 //=============================================================================

@@ -1,0 +1,145 @@
+# "countdown-nested-d-01.chpsimrc"
+#	$Id: countdown-nested-d-01.chpsimrc,v 1.2 2007/01/21 06:03:12 fang Exp $
+# @haco@ countdown-nested-d.haco-a
+
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+time
+

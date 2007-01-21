@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.8 2006/10/18 01:19:08 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.9 2007/01/21 05:58:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
@@ -78,6 +78,10 @@ public:
 	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 
+	void
+	count_channel_member(fundamental_channel_footprint&) const;
+
+	DUMP_CHANNEL_FIELD_ITERATE_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -85,6 +89,9 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+
+	unsigned char
+	get_meta_type_enum(void) const;
 
 };	// end class datatype_definition_alias
 

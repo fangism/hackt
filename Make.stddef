@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.20 2006/11/12 05:57:39 fang Exp $
+#	$Id: Make.stddef,v 1.21 2007/01/21 05:58:04 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -63,6 +63,7 @@ DISTCLEANFILES =
 DISTCLEANDIRS =
 EXTRA_DIST =
 TESTS =
+# EXTRA_DIST files that should only be searched from the srcdir
 srcdir_EXTRA_DIST =
 
 # these files are automatically removed from distribution by dist-hook
@@ -71,8 +72,10 @@ DISTHOOK_CLEANFILES =
 # The following macros are custom-defined for use with this project, 
 # in particular for coupled use with Make.global.
 
-SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 # yeah, stupid place to put a globally useful script, move it later...
+# WARNING: don't put spaces in file names!
+# SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
+SPACES_TO_NEWLINE = $(AWK) '{gsub("[ \t]+","\n"); print;}'
 
 # to accumulate and generate automatic .cvsignore
 # we've provided some project wide definitions in Make.global

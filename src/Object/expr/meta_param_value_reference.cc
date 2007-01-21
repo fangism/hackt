@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.10 2006/03/15 04:38:15 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.11 2007/01/21 05:58:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -75,6 +75,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_preal_meta_value_reference, 
 		AGGREGATE_PREAL_META_VALUE_REFERENCE_TYPE_KEY, 0)
+namespace memory {
+	template class count_ptr<HAC::entity::meta_value_reference_base>;
+}
 }	// end namespace util
 
 //=============================================================================

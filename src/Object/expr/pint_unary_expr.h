@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.14 2006/10/18 07:39:40 fang Exp $
+	$Id: pint_unary_expr.h,v 1.15 2007/01/21 05:59:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -27,17 +27,21 @@ class pint_unary_expr : public pint_expr {
 public:
 	typedef	pint_value_type		value_type;
 	typedef	char			op_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 protected:
 	const op_type			op;
 	/** expression argument must be 0-dimensional */
-	count_ptr<const pint_expr>	ex;
+	operand_ptr_type		ex;
 private:
 	pint_unary_expr();
 public:
-	pint_unary_expr(const op_type o, const count_ptr<const pint_expr>& e);
-	pint_unary_expr(const count_ptr<const pint_expr>& e, const op_type o);
+	pint_unary_expr(const op_type o, const operand_ptr_type& e);
+	pint_unary_expr(const operand_ptr_type& e, const op_type o);
 
 	// default destructor
+
+	const operand_ptr_type&
+	get_operand(void) const { return ex; }
 
 	ostream&
 	what(ostream& o) const;
@@ -82,6 +86,7 @@ public:
 		const count_ptr<const pint_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
+	EXPR_ACCEPT_VISITOR_PROTO;
 
 	SUBSTITUTE_DEFAULT_PARAMETERS_PINT_PROTO;
 	using parent_type::substitute_default_positional_parameters;
@@ -89,6 +94,7 @@ public:
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+	using parent_type::nonmeta_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

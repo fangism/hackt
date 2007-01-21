@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.13 2006/10/18 20:58:17 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.14 2007/01/21 05:59:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -13,15 +13,24 @@
 #include "Object/common/multikey_index.h"
 #include "Object/expr/data_expr.h"
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
+#include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "util/STL/vector_fwd.h"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 class const_index_list;
 class unroll_context;
+class nonmeta_context_base;
+class nonmeta_expr_visitor;
+class global_entry_context;
+class state_manager;
+class footprint;
+class footprint_frame;
+class const_param;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -86,6 +95,7 @@ friend struct nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>;
 							parent_type;
 	typedef	typename traits_type::data_expr_base_type
 							data_expr_base_type;
+	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	simple_nonmeta_instance_reference_base	common_base_type;
 	typedef	data_expr_base_type			interface_type;
 protected:
@@ -134,8 +144,31 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const data_expr_base_type>&) const;
 
+	count_ptr<const const_param>
+	nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const data_expr_base_type>&) const;
+
+	count_ptr<const const_expr_type>
+	__nonmeta_resolve_rvalue(const nonmeta_context_base&, 
+		const count_ptr<const data_expr_base_type>&) const;
+
+	good_bool
+	lookup_may_reference_global_indices(
+		const global_entry_context&, 
+		std::default_vector<size_t>::type&) const;
+
+	size_t
+	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
+
+	NONMETA_ASSIGN_PROTO;
+	DIRECT_ASSIGN_PROTO;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
+
 protected:
 	using data_expr_base_type::unroll_resolve_copy;
+	using data_expr_base_type::nonmeta_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

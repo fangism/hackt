@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.12 2006/11/21 22:38:57 fang Exp $
+	$Id: CHP.h,v 1.13 2007/01/21 05:59:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -60,7 +60,15 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
+
+	static
+	void
+	accept_sequence(const action_list_type&, StateConstructor&);
 
 	// helper methods needed for process_definition
 	void
@@ -112,7 +120,11 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	good_bool
 	unroll(const unroll_context&, entity::footprint&) const;
@@ -139,6 +151,9 @@ public:
 	typedef	count_ptr<const bool_expr>	guard_ptr_type;
 	typedef	count_ptr<const action>		stmt_ptr_type;
 	typedef	count_ptr<const guarded_action>	unroll_return_type;
+	/// Functor for evaluating guards
+	struct selection_evaluator;
+	struct selection_evaluator_ref;
 protected:
 	/**
 		In the case of an else-clause, this guard is allowed to 
@@ -158,6 +173,9 @@ public:
 	guarded_action(const guard_ptr_type&, const stmt_ptr_type&);
 	~guarded_action();
 
+	const guard_ptr_type&
+	get_guard(void) const { return guard; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -167,6 +185,11 @@ public:
 	unroll_return_type
 	unroll_resolve_copy(const unroll_context&,
 		const count_ptr<const guarded_action>&) const;
+
+	CHP_DUMP_EVENT_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	struct unroll_resolver {
 		const unroll_context&			_context;
@@ -206,7 +229,12 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
+	CHP_DUMP_SUCCESSORS_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
@@ -230,7 +258,12 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
+	CHP_DUMP_SUCCESSORS_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
@@ -271,7 +304,11 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_selection
@@ -304,7 +341,11 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
@@ -337,7 +378,11 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -374,7 +419,11 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	template <class L>
 	good_bool
@@ -416,7 +465,11 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	template <class L>
 	good_bool
@@ -444,7 +497,12 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
+	CHP_DUMP_SUCCESSORS_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
@@ -473,7 +531,11 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

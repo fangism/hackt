@@ -1,0 +1,26 @@
+// "countdown-domino-a.hac"
+//	$Id: countdown-domino-a.hac,v 1.2 2007/01/21 06:02:40 fang Exp $
+// concurrent but cascading counters waking each other up
+
+int a, b, c;
+
+chp {
+*[ (a > 0) -> a := a-1 ]; b:=2
+}
+
+chp {
+*[ (b > 0) -> b := b-1 ]; c:=3
+}
+
+chp {
+*[ (c > 0) -> c := c-1 ]
+}
+
+chp {
+a := 1		// the kick off
+}
+
+// will eventually terminate with a, b, c = 0
+// actually this was a mistake, since every loop just falls through!
+// we'll keep this test case anyhow
+

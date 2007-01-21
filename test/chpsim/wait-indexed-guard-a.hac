@@ -1,0 +1,14 @@
+// "wait-indexed-guard-a.hac"
+//	$Id: wait-indexed-guard-a.hac,v 1.2 2007/01/21 06:04:07 fang Exp $
+// Testing out proper wake up of variable guard.
+
+pint x[4];
+x = {0,0,1,0};
+int y, z;
+
+chp {
+z:=0,y:=0;
+{[x[z] != 0]; y:=2}, *[(z < 4) -> z:=z+1]
+// expect guard to wake up on third iteration
+}
+

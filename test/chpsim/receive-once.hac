@@ -1,0 +1,11 @@
+// "receive-once.hac"
+//	$Id: receive-once.hac,v 1.2 2007/01/21 06:03:26 fang Exp $
+// tries to receive, but deadlocks right away
+
+int z;
+chan(int) X;
+
+chp {
+X?(z)
+}
+

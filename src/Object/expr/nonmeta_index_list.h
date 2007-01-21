@@ -3,7 +3,7 @@
 	Class definitions for nonmeta index lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: nonmeta_index_list.h,v 1.7 2006/11/21 22:38:45 fang Exp $
+	$Id: nonmeta_index_list.h,v 1.8 2007/01/21 05:58:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_LIST_H__
@@ -21,8 +21,10 @@ namespace entity {
 class nonmeta_index_expr_base;
 struct expr_dump_context;
 class unroll_context;
+class nonmeta_context_base;
 class const_index_list;
 class dynamic_meta_index_list;
+class nonmeta_expr_visitor;
 using std::vector;
 using std::ostream;
 using util::persistent;
@@ -71,7 +73,14 @@ public:
 	count_ptr<dynamic_meta_index_list>
 	make_meta_index_list(void) const;
 
+	count_ptr<const_index_list>
+	nonmeta_resolve_copy(const nonmeta_context_base&) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
+
+	void
+	accept(nonmeta_expr_visitor&) const;
+
 };	// end class nonmeta_index_list
 
 //=============================================================================

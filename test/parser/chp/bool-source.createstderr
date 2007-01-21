@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	250
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

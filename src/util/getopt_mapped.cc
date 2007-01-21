@@ -1,6 +1,6 @@
 /**
 	\file "util/getopt_mapped.cc"
-	$Id: getopt_mapped.cc,v 1.1 2006/07/30 05:50:14 fang Exp $
+	$Id: getopt_mapped.cc,v 1.2 2007/01/21 06:01:11 fang Exp $
  */
 
 #include "util/getopt_mapped.h"
@@ -15,7 +15,7 @@ using std::endl;
  */     
 void
 unknown_option(ostream& os, const int o) {
-       if (isprint(optopt))
+       if (isprint(o))
 		os << "Unknown option `-" << char(o) << "'." << endl;
 	else os << "Unknown option character `" <<
 		reinterpret_cast<void*>(o) << "'." << endl;

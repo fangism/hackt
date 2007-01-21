@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.11 2006/11/21 22:38:59 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.12 2007/01/21 05:59:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -13,12 +13,20 @@
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/packed_array_fwd.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
 class data_expr;
 class unroll_context;
+class nonmeta_context_base;
+class global_entry_context;
+class nonmeta_expr_visitor;
+class state_manager;
+class footprint;
+class footprint_frame;
 using util::packed_array_generic;
+template <class> class simple_meta_instance_reference;
 
 //=============================================================================
 #define	SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
@@ -55,6 +63,12 @@ public:
 	/// the instance collection base type
 	typedef	typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
+	typedef	typename traits_type::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef	simple_meta_instance_reference<Tag>
+					simple_meta_instance_reference_type;
+	typedef	typename traits_type::alias_collection_type
+						alias_collection_type;
 	/// pointer type for instance collections
 	typedef	never_ptr<const instance_placeholder_type>
 						instance_placeholder_ptr_type;
@@ -89,6 +103,17 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const this_type>&) const;
 
+	// wrap arguments in nonmeta_context_base instead?
+	good_bool
+	lookup_may_reference_global_indices(
+		const global_entry_context&, 
+		std::default_vector<size_t>::type&) const;
+
+	size_t
+	lookup_nonmeta_global_index(const nonmeta_context_base&) const;
+
+	void
+	accept(nonmeta_expr_visitor&) const;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

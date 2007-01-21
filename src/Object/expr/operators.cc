@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.21 2006/10/18 20:57:56 fang Exp $
+ 	$Id: operators.cc,v 1.22 2007/01/21 05:58:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -38,6 +38,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/preal_const.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/expr_visitor.h"
 #include "Object/expr/operator_precedence.h"
 #include "Object/persistent_type_hash.h"
 
@@ -108,7 +109,7 @@ pint_unary_expr::pint_unary_expr() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		const op_type o, const count_ptr<const pint_expr>& e) :
+		const op_type o, const operand_ptr_type& e) :
 		pint_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -116,7 +117,7 @@ pint_unary_expr::pint_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::pint_unary_expr(
-		const count_ptr<const pint_expr>& e, const op_type o) :
+		const operand_ptr_type& e, const op_type o) :
 		pint_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -177,6 +178,12 @@ pint_unary_expr::must_be_equivalent(const pint_expr& p) const {
 		// conservatively
 		return false;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_unary_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -311,7 +318,7 @@ preal_unary_expr::preal_unary_expr() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_unary_expr::preal_unary_expr(
-		const op_type o, const count_ptr<const preal_expr>& e) :
+		const op_type o, const operand_ptr_type& e) :
 		preal_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -319,7 +326,7 @@ preal_unary_expr::preal_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_unary_expr::preal_unary_expr(
-		const count_ptr<const preal_expr>& e, const op_type o) :
+		const operand_ptr_type& e, const op_type o) :
 		preal_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -376,6 +383,12 @@ preal_unary_expr::must_be_equivalent(const preal_expr& p) const {
 		// conservatively
 		return false;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_unary_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -502,7 +515,7 @@ pbool_unary_expr::pbool_unary_expr() :
 		
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		const op_type o, const count_ptr<const pbool_expr>& e) :
+		const op_type o, const operand_ptr_type& e) :
 		pbool_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -510,7 +523,7 @@ pbool_unary_expr::pbool_unary_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pbool_unary_expr::pbool_unary_expr(
-		const count_ptr<const pbool_expr>& e, const op_type o) :
+		const operand_ptr_type& e, const op_type o) :
 		pbool_expr(), op(o), ex(e) {
 	NEVER_NULL(ex);
 	INVARIANT(ex->dimensions() == 0);
@@ -571,6 +584,12 @@ pbool_unary_expr::must_be_equivalent(const pbool_expr& b) const {
 const_index_list
 pbool_unary_expr::resolve_dimensions(void) const {
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_unary_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -872,6 +891,12 @@ pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
 const_index_list
 pint_arith_expr::resolve_dimensions(void) const {
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_arith_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1185,6 +1210,12 @@ pint_relational_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pint_relational_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 pint_relational_expr::unroll_resolve_value(const unroll_context& c,
 		value_type& i) const {
@@ -1491,6 +1522,12 @@ preal_arith_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_arith_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if resolved.
  */
@@ -1793,6 +1830,12 @@ preal_relational_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_relational_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 preal_relational_expr::unroll_resolve_value(const unroll_context& c,
 		value_type& i) const {
@@ -2078,6 +2121,12 @@ pbool_logical_expr::must_be_equivalent(const pbool_expr& b) const {
 const_index_list
 pbool_logical_expr::resolve_dimensions(void) const {
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pbool_logical_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

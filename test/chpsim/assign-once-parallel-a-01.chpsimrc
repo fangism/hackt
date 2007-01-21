@@ -1,0 +1,33 @@
+# "assign-once-parallel-a-01.chpsimrc"
+#	$Id: assign-once-parallel-a-01.chpsimrc,v 1.2 2007/01/21 06:02:03 fang Exp $
+# @haco@ assign-once-parallel-a.haco-a
+# this script is re-used for other related tests
+
+# watchall-events
+get b
+get i
+queue
+step
+get b
+get i
+queue
+step
+get b
+get i
+queue
+step
+get b
+get i
+queue
+step
+get b
+get i
+queue
+time
+echo queue should be contain only null (join) event here
+queue
+step
+echo now queue should be empty
+queue
+time
+

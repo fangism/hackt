@@ -1,0 +1,6 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	z	senders<>
+	channel: 1
+[global channel entries]
+1	(top)	-	1	z.a	chan(bool<>)

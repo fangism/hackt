@@ -4,7 +4,7 @@
 	type (T) of a count_ptr isn't complete until later -- 
 	compiles should complain about destructor of incomplete type.  
 
-	$Id: count_ptr.tcc,v 1.6 2006/01/22 06:53:41 fang Exp $
+	$Id: count_ptr.tcc,v 1.7 2007/01/21 06:01:21 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
@@ -123,8 +123,10 @@ COUNT_PTR_CLASS::release(void) {
 			// delete ptr;
 			deallocation_policy()(ptr);
 		}
+#if 1
 		ptr = NULL;
 		this->ref_count = NULL;
+#endif
 	} else {
 		COUNT_PTR_FAST_INVARIANT(!ptr);
 	}
@@ -152,7 +154,8 @@ COUNT_PTR_CLASS::reset(T* p, size_t* c) {
 		// no need to decrement count, both source and
 		// destination are alive.  
 		return;
-	}
+	} else {
+#if 0
 	if(this->ref_count) {
 		COUNT_PTR_FAST_INVARIANT(*this->ref_count);
 		(*this->ref_count)--;
@@ -167,11 +170,15 @@ COUNT_PTR_CLASS::reset(T* p, size_t* c) {
 	} else {
 		COUNT_PTR_FAST_INVARIANT(!ptr);
 	}
+#else
+	this->release();
+#endif
 	ptr = p;
 	this->ref_count = (ptr) ? c : NULL;
 	if (ptr && this->ref_count) {
 		(*this->ref_count)++;
 		REASONABLE_REFERENCE_COUNT;
+	}
 	}
 }
 

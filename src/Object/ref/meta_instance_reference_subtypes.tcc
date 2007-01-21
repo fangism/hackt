@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.18 2006/11/07 06:35:16 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.19 2007/01/21 05:59:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -106,9 +106,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const size_t index = _this.lookup_globally_allocated_index(
-		mod.get_state_manager(), 
-		// temporary kludge until we clean up
-		const_cast<footprint&>(mod.get_footprint()));
+		mod.get_state_manager(), mod.get_footprint());
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
@@ -128,7 +126,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 		_this(IS_A(const simple_reference_type&, *this));
 	const state_manager& sm(mod.get_state_manager());
 	// temporary kludge until we clean up
-	footprint& top(const_cast<footprint&>(mod.get_footprint()));
+	const footprint& top(mod.get_footprint());
 	if (_this.dimensions()) {
 		vector<size_t> inds;
 		if (!_this.lookup_globally_allocated_indices(sm, 
@@ -284,6 +282,10 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const count_ptr<const index_list_type>& ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	_inst.dump(STACKTRACE_INDENT_PRINT("looking up: "),
+		dump_flags::default_value) << endl;
+#endif
 	const never_ptr<physical_instance_collection>
 		inst_p(c.lookup_instance_collection(_inst));
 	NEVER_NULL(inst_p);
@@ -292,6 +294,38 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		inst(IS_A(const collection_interface_type&, *inst_p));
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects a bunch of instance alias IDs with the same hierarchical
+	prefix, including array slices.  
+	Only called from top-level, context-free.  
+	Optional: sort vector.
+	\param sm global state-manager with allocation information.
+	\param top the top-level footprint of the module.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
+		const state_manager& sm, const footprint& top, 
+		vector<size_t>& indices) const {
+	typedef	vector<size_t>				indices_type;
+	typedef	typename alias_collection_type::const_iterator	const_iterator;
+	alias_collection_type aliases;
+	const unroll_context dummy(&top, &top);
+	// reminder: call to unroll_references_packed is virtual
+	if (this->unroll_references_packed(dummy, aliases).bad) {
+		cerr << "Error resolving collection of aliases." << endl;
+		return good_bool(false);
+	}
+	const_iterator i(aliases.begin()), e(aliases.end());
+	for ( ; i!=e; ++i) {
+		// don't bother checking for duplicates
+		// (easy: just use std::set instead of vector)
+		indices.push_back((*i)->instance_index);
+	}
+	return good_bool(true);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

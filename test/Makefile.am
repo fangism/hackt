@@ -1,10 +1,10 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.37 2006/11/15 00:09:22 fang Exp $
+#	$Id: Makefile.am,v 1.38 2007/01/21 06:01:36 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 # this directory first, to clean the test-report
-SUBDIRS = . lexer parser prsim lib benchmarks quarantine
+SUBDIRS = . lexer parser prsim chpsim lib benchmarks quarantine
 
 # bogus test
 TESTS +=
@@ -50,7 +50,9 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-expectprsseu.sh \
 	update-expectprsimexpr.sh \
 	update-expectsprs.sh \
-	update-expect-prsimrc.sh
+	update-expect-prsimrc.sh \
+	update-expect-chpsimalloc.sh \
+	update-expect-chpsimrc.sh
 
 dist_noinst_SCRIPTS = \
 	$(NONCONFIGURED_UPDATESCRIPTS) \
@@ -69,6 +71,9 @@ dist_noinst_SCRIPTS = \
 	prsimckpt-template.prsimrc \
 	prsimckpt-load-template.prsimrc \
 	prsimopt-template.prsimrc
+
+# NOTE: spacestonewline.awk is no longer needed for Makefiles
+# as it defined inline in the top-level Make.stddef
 
 all-local: POM-header-filter.awk
 

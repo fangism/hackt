@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.13 2006/11/07 06:35:13 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.14 2007/01/21 05:59:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -37,8 +37,11 @@
 #include "Object/expr/int_expr.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/enum_expr.h"
+#include "Object/expr/real_expr.h"		// why? (nonmeta_expr_visitor)
 #include "Object/expr/struct_expr.h"
 #include "Object/expr/const_range.h"
+
+#include "Object/devel_switches.h"
 
 // introduced by canonical_type
 #include "Object/def/user_def_datatype.h"
@@ -48,6 +51,7 @@
 #include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/traits/class_traits.h"
+#include "Object/traits/preal_traits.h"	// why? (nonmeta_expr_visitor)
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
@@ -64,9 +68,11 @@ SPECIALIZE_UTIL_WHAT(
 	HAC::entity::simple_bool_meta_instance_reference, "bool-inst-ref")
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::simple_enum_meta_instance_reference, "enum-inst-ref")
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::simple_datastruct_meta_instance_reference,
 							"struct-inst-ref")
+#endif
 
 #if 0
 SPECIALIZE_UTIL_WHAT(
@@ -82,9 +88,11 @@ SPECIALIZE_UTIL_WHAT(
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::simple_enum_nonmeta_instance_reference,
 		"enum-nonmeta-inst-ref")
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::simple_datastruct_nonmeta_instance_reference,
 		"struct-nonmeta-inst-ref")
+#endif
 
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::int_member_meta_instance_reference,
@@ -95,9 +103,11 @@ SPECIALIZE_UTIL_WHAT(
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::enum_member_meta_instance_reference,
 		"enum-member-inst-ref")
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::datastruct_member_meta_instance_reference,
 		"struct-member-inst-ref")
+#endif
 
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::aggregate_int_meta_instance_reference,
@@ -108,9 +118,11 @@ SPECIALIZE_UTIL_WHAT(
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::aggregate_enum_meta_instance_reference,
 		"enum-agg.-inst-ref")
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_UTIL_WHAT(
 	HAC::entity::aggregate_datastruct_meta_instance_reference,
 		"struct-agg.-inst-ref")
+#endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_int_meta_instance_reference, 
@@ -121,9 +133,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_enum_meta_instance_reference, 
 		SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_datastruct_meta_instance_reference, 
 		SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 
 #if 0
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -139,9 +153,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_enum_nonmeta_instance_reference, 
 		SIMPLE_ENUM_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_datastruct_nonmeta_instance_reference, 
 		SIMPLE_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_member_meta_instance_reference, 
@@ -152,9 +168,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::enum_member_meta_instance_reference, 
 		MEMBER_ENUM_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::datastruct_member_meta_instance_reference, 
 		MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_int_meta_instance_reference, 
@@ -165,9 +183,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_enum_meta_instance_reference, 
 		AGGREGATE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#if ENABLE_DATASTRUCTS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_datastruct_meta_instance_reference, 
 		AGGREGATE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 namespace HAC {
@@ -265,6 +285,7 @@ struct data_type_resolver<enum_tag> {
 };	// end class data_type_resolver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_DATASTRUCTS
 template <>
 struct data_type_resolver<datastruct_tag> {
 	typedef	class_traits<datastruct_tag>::simple_nonmeta_instance_reference_type
@@ -296,6 +317,7 @@ struct data_type_resolver<datastruct_tag> {
 	}
 
 };	// end class data_type_resolver
+#endif
 
 //=============================================================================
 #if 0
@@ -359,29 +381,39 @@ data_nonmeta_instance_reference::unroll_resolve_copy(const unroll_context& c,
 template class meta_instance_reference<bool_tag>;
 template class meta_instance_reference<int_tag>;
 template class meta_instance_reference<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template class meta_instance_reference<datastruct_tag>;
+#endif
 
 template class simple_meta_instance_reference<bool_tag>;
 template class simple_meta_instance_reference<int_tag>;
 template class simple_meta_instance_reference<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template class simple_meta_instance_reference<datastruct_tag>;
+#endif
 
 // template class simple_nonmeta_instance_reference<datatype_tag>;
 // recently upgraded from simple_nonmeta_instance_reference
 template class simple_nonmeta_value_reference<bool_tag>;
 template class simple_nonmeta_value_reference<int_tag>;
 template class simple_nonmeta_value_reference<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template class simple_nonmeta_value_reference<datastruct_tag>;
+#endif
 
 template class member_meta_instance_reference<bool_tag>;
 template class member_meta_instance_reference<int_tag>;
 template class member_meta_instance_reference<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template class member_meta_instance_reference<datastruct_tag>;
+#endif
 
 template class aggregate_meta_instance_reference<bool_tag>;
 template class aggregate_meta_instance_reference<int_tag>;
 template class aggregate_meta_instance_reference<enum_tag>;
+#if ENABLE_DATASTRUCTS
 template class aggregate_meta_instance_reference<datastruct_tag>;
+#endif
 
 // NOTE: nonmeta_value_reference<{pint,pbool,preal}_tag> are instantiated in
 // "Object/expr/nonmeta_param_value_reference.cc"

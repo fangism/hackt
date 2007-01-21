@@ -1,0 +1,12 @@
+// "connect-052.hac"
+// is "nonmeta-bool-split.hac" unwrapped to top-level
+
+int<1> s;
+chan(int<1>) S;
+chan(bool) B[2];
+chp {
+	*[ S?(s); B[s]!(true) ]
+}
+
+
+

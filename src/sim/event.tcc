@@ -1,14 +1,16 @@
 /**
-	\file "sim/prsim/Event.tcc"
+	\file "sim/event.tcc"
 	Implementation of prsim event structures.  
-	$Id: Event.tcc,v 1.2 2006/04/03 05:30:36 fang Exp $
+	$Id: event.tcc,v 1.2 2007/01/21 06:00:31 fang Exp $
  */
 
-#include "sim/prsim/Event.h"
+#ifndef	__HAC_SIM_EVENT_TCC__
+#define	__HAC_SIM_EVENT_TCC__
+
+#include "sim/event.h"
 
 namespace HAC {
 namespace SIM {
-namespace PRSIM {
 //=============================================================================
 // class EventQueue method definitions
 
@@ -49,7 +51,8 @@ EVENT_QUEUE_CLASS::copy_to(S& s) const {
 }
 
 //=============================================================================
-}	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC
+
+#endif	// __HAC_SIM_EVENT_TCC__
 

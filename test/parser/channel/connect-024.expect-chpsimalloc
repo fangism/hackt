@@ -1,0 +1,6 @@
+Variables: 
+chan[1]: "email.x" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 
+

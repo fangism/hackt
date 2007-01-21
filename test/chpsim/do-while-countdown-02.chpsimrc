@@ -1,0 +1,8 @@
+# "do-while-countdown-02.chpsimrc"
+#	$Id: do-while-countdown-02.chpsimrc,v 1.2 2007/01/21 06:03:23 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+echo null-delay 0 should make no difference in final time
+null-event-delay 0
+source do-while-countdown-01.chpsimrc
+

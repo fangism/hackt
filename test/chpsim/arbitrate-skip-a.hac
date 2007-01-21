@@ -1,0 +1,12 @@
+// "arbitrate-skip-a.hac"
+//	$Id: arbitrate-skip-a.hac,v 1.2 2007/01/21 06:01:56 fang Exp $
+// testing non-determinstic selection
+// first using exclusive guards, from deterministic examples
+
+bool a, b;
+
+chp {
+a-,b-;
+[ a -> skip : ~a -> b+]
+}
+

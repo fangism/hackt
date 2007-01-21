@@ -1,0 +1,77 @@
+# "countdown-parallel-a-01.chpsimrc"
+#	$Id: countdown-parallel-a-01.chpsimrc,v 1.2 2007/01/21 06:03:16 fang Exp $
+# @haco@ countdown-parallel-a.haco-a
+
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+step
+queue
+get c
+get d
+time
+

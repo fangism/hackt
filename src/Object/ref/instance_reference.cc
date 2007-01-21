@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.20 2006/10/18 05:32:50 fang Exp $
+ 	$Id: instance_reference.cc,v 1.21 2007/01/21 05:59:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -37,6 +37,9 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/traits/int_traits.h"	// dunno why... (nonmeta_expr_visitor)
+#include "Object/traits/bool_traits.h"	// dunno why... (nonmeta_expr_visitor)
+#include "Object/traits/enum_traits.h"	// dunno why... (nonmeta_expr_visitor)
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/unroll/port_connection_base.h"
@@ -46,6 +49,9 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/type/canonical_generic_chan_type.h"
+#if BUILTIN_CHANNEL_FOOTPRINTS
+#include "Object/global_channel_entry.h"
+#endif
 
 #include "common/TODO.h"
 
@@ -97,6 +103,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_channel_meta_instance_reference, 
 		AGGREGATE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+
+namespace memory {
+// explicit template instantiations
+// needed for -O3
+template class count_ptr<HAC::entity::meta_instance_reference_base>;
+}
 }	// end namespace util
 
 //=============================================================================

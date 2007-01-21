@@ -1,0 +1,28 @@
+event queue:
+	time	eid	pid	event
+	0	0	0	null
+run until end 
+	0	0	0	null
+	10	23	0	
+	20	19	0	a := false
+	20	21	0	c := false
+	20	20	0	b := false
+	20	22	0	d := false
+	30	18	0	
+	40	17	0	
+	50	15	0	b := true
+	50	16	0	a := true
+	60	14	0	
+	70	13	0	
+	80	3	0	c := true
+	80	6	0	d := true
+	90	2	0	null
+	90	5	0	null
+	90	12	0	[c&&d]
+	100	11	0	
+	110	9	0	c := false
+	110	10	0	d := false
+	120	8	0	
+	130	1	0	
+THAT was fast! 
+time: 130
