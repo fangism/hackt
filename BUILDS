@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.45 2007/01/21 19:27:23 fang Exp $
+	$Id: BUILDS,v 1.46 2007/01/21 20:20:24 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -90,11 +90,12 @@ lex: flex version 2.5.4
 yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 
-Version: hackt 0.1.4-devel-20061112
-CVS Tag: HACKT-00-01-04-main-00-80-54
+Version: hackt 0.1.4-devel-20070121
+CVS Tag: HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54
 Configured with: '--prefix=/usr/local/cad' '--with-editline' '-C'
 build-triplet: powerpc-apple-darwin8.8.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)
+config-CXXFLAGS: -g -O2
 config-LIBS: -ledit  -lncurses 
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
@@ -121,9 +122,9 @@ lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
 readline: BSD EditLine (histedit interface) ver. 2.9
 
-// -O3 optimized and verified for the first time!
-Version: hackt 0.1.4-devel-20061112
-CVS Tag: HACKT-00-01-04-main-00-80-54
+// -O3 optimized
+Version: hackt 0.1.4-devel-20070121
+CVS Tag: HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54
 Configured with: '--enable-fun' '--with-readline' 'CC=ccache gcc-4' 'CXX=ccache g++-4' 'CFLAGS=-g -O3' 'CXXFLAGS=-g -O3' '-C'
 build-triplet: powerpc-apple-darwin8.8.0
 c++: g++-4 (GCC) 4.2.0 20061107 (prerelease)
@@ -132,6 +133,7 @@ config-LIBS:  -lreadline -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
 readline: GNU readline EditLine wrapper
+
 
 NOTES:
 bison-2.1 still works (last confirmed: 00-01-04-main-00-80-18)
