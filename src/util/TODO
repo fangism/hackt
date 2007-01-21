@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.14 2007/01/21 06:01:11 fang Exp $
+	$Id: TODO,v 1.15 2007/01/21 17:00:31 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -162,6 +162,13 @@ vectorization:
 algorithms:
 	File: optimized_algorithm.h
 	Implement unrolling algorithms.
+
+-------------------------------------------------------------------------------
+pesudo containers:
+	finite history buffer, cyclic array
+		write as an adapter to implementation
+		application: event history tracing, fixed memory
+		need a wrapped iterator construct
 
 -------------------------------------------------------------------------------
 
