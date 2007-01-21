@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.44 2007/01/21 05:59:12 fang Exp $
+	$Id: instance_collection.tcc,v 1.45 2007/01/21 22:05:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -974,8 +974,10 @@ INSTANCE_COLLECTION_CLASS::scope_alias_collector::operator ()
 	element_type& ii(const_cast<element_type&>(a));
 	INVARIANT(ii.instance_index);
 	// 0 is not an acceptable index
-	tracker.template get_id_map<Tag>()[ii.instance_index]
-		.push_back(never_ptr<element_type>(&ii));
+	// the following statement was split up to avoid ICE-ing g++-3.4.0
+	typename port_alias_tracker_base<Tag>::map_type&
+		tm(tracker.template get_id_map<Tag>());
+	tm[ii.instance_index].push_back(never_ptr<element_type>(&ii));
 #if RECURSE_COLLECT_ALIASES
 	ii.collect_port_aliases(tracker);
 #else

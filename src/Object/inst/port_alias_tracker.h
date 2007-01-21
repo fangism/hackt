@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.12 2007/01/21 05:59:13 fang Exp $
+	$Id: port_alias_tracker.h,v 1.13 2007/01/21 22:05:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -171,7 +171,10 @@ class port_alias_tracker_base {
 	typedef	port_alias_tracker_base<Tag>			this_type;
 protected:
 	typedef	Tag						tag_type;
+public:
+	// public for workaround in "Object/inst/instance_collection.tcc"
 	typedef	std::map<size_t, alias_reference_set<Tag> >	map_type;
+protected:
 	typedef	typename map_type::const_iterator		const_iterator;
 	typedef	typename map_type::iterator			iterator;
 	typedef	typename map_type::value_type			value_type;

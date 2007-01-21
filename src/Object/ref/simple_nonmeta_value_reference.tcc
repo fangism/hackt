@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.18 2007/01/21 05:59:37 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.19 2007/01/21 22:05:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -148,9 +148,10 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 		cerr << "Run-time error resolving nonmeta reference." << endl;
 		return const_return_type(NULL);
 	}
-	return const_return_type(
-		new const_expr_type(
-			c.values.template get_pool<Tag>()[global_index].value));
+	// the following statement split up to tolerate a g++-3.4.0 bug
+	const typename nonmeta_state_base<Tag>::pool_type&
+		vp(c.values.template get_pool<Tag>());
+	return const_return_type(new const_expr_type(vp[global_index].value));
 }	// end function nonmeta_resolve_value
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,8 +176,10 @@ nonmeta_assign(const reference_type& lref,
 	}
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
 	INVARIANT(global_ind);	// unless there is an error, throw
-	c.values.template get_pool<Tag>()[global_ind].value = 
-		rv->static_constant_value();
+	// the following statement split up to tolerate a g++-3.4.0 bug
+	typename nonmeta_state_base<Tag>::pool_type&
+		vp(c.values.template get_pool<Tag>());
+	vp[global_ind].value = rv->static_constant_value();
 	u.push_back(std::make_pair(
 		size_t(class_traits<Tag>::type_tag_enum_value), global_ind));
 }
@@ -196,8 +199,10 @@ direct_assign(const reference_type& lref,
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
 	INVARIANT(global_ind);	// unless there is an error, throw
 	// post-increment read-iterator
-	c.values.template get_pool<Tag>()[global_ind].value =
-		*r.template iter_ref<Tag>()++;
+	// the following statement split up to tolerate a g++-3.4.0 bug
+	typename nonmeta_state_base<Tag>::pool_type&
+		vp(c.values.template get_pool<Tag>());
+	vp[global_ind].value = *r.template iter_ref<Tag>()++;
 	u.push_back(std::make_pair(
 		size_t(class_traits<Tag>::type_tag_enum_value), global_ind));
 }

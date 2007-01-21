@@ -5,6 +5,17 @@
 
 2007-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-65:
+	  Post-merge maintainence:
+	  Object/inst/instance_collection.tcc: long complicated statement
+		involving template and overloaded [] causes ICE in g++-3.4.0.
+		Split up with explicit typename to circumvent.  
+	  Object/ref/simple_nonmeta_value_reference.tcc: Likewise
+	  Updated TODO lists and BUILD report.
+
+
+2007-01-21	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54:
 	  Massive chpsim-01 branch merge.  Summary:
 	  First release of chpsim.

@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.6 2007/01/21 06:01:30 fang Exp $
+#	$Id: Make.test-cflat,v 1.7 2007/01/21 22:05:53 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -427,7 +427,7 @@ TESTS += \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest)
 
 
-build-check-local: \
+CFLAT_BUILD_CHECK_LOCAL = \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
@@ -435,7 +435,6 @@ build-check-local: \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseudiff) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco) \
-	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-u) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_CFLAT_LVS_TEST_PASSES:=.lvsprs) \
@@ -443,6 +442,12 @@ build-check-local: \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfail) \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.lvsfaildiff)
 
+if USE_UNROLL_PHASE
+CFLAT_BUILD_CHECK_LOCAL += \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.haco-u)
+endif
+
+build-check-local: $(CFLAT_BUILD_CHECK_LOCAL)
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
