@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.49 2007/01/21 05:58:12 fang Exp $
+#	$Id: TODO,v 1.50 2007/01/21 16:57:45 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -185,6 +185,10 @@ unroll_references:
 	all methods to date unroll packed references into a dense collection.
 	also useful would be a way to unroll sparse or sloppy reference 
 		or alias collections (e.g. prsim::getall)
+
+value-references:
+	what ever happened to mixed aggregate rvalue expressions?
+	we have const_collection, and aggregate_meta_lvalue_references...
 
 ===============================================================================
 command interface:
