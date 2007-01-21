@@ -1,13 +1,13 @@
 /**
 	\file "sim/signal_handler.tcc"
-	$Id: signal_handler.tcc,v 1.2 2007/01/21 06:00:34 fang Exp $
+	$Id: signal_handler.tcc,v 1.3 2007/01/21 07:00:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_SIGNAL_HANDLER_TCC__
 #define	__HAC_SIM_SIGNAL_HANDLER_TCC__
 
 #include "sim/signal_handler.h"
-#include "util/null.h"
+#include "util/NULL.h"
 
 namespace HAC {
 namespace SIM {
