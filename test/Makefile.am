@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.38 2007/01/21 06:01:36 fang Exp $
+#	$Id: Makefile.am,v 1.39 2007/01/22 01:36:37 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -74,6 +74,8 @@ dist_noinst_SCRIPTS = \
 
 # NOTE: spacestonewline.awk is no longer needed for Makefiles
 # as it defined inline in the top-level Make.stddef
+
+AUTO_IGNORE += POM-header-filter.awk
 
 all-local: POM-header-filter.awk
 
