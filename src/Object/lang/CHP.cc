@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.17 2007/01/21 05:59:19 fang Exp $
+	$Id: CHP.cc,v 1.18 2007/01/23 02:43:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
-#define	ENABLE_STACKTRACE_CHPSIM		(1 && ENABLE_STACKTRACE)
+#define	ENABLE_STACKTRACE_CHPSIM		(0 && ENABLE_STACKTRACE)
 
 /**
 	Various levels of chpsim event generation optimizations, 
@@ -94,6 +94,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::nondeterministic_selection,
 		"CHP-nondeterministic-selection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::metaloop_selection,
 		"CHP-metaloop-selection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::metaloop_statement,
+		"CHP-metaloop-statement")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::assignment,
 		"CHP-assignment")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::condition_wait,
@@ -119,6 +121,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::nondeterministic_selection, CHP_NONDET_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::metaloop_selection, CHP_SELECT_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::CHP::metaloop_statement, CHP_ACTION_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::assignment, CHP_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -1547,7 +1551,7 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 	const unroll_context cc(&f, c);
 	for (i = min; i <= max; ++i) {
 		const selection_list_type::value_type	// guarded_action
-			g(body->unroll_resolve_copy(c, body));
+			g(body->unroll_resolve_copy(cc, body));
 		if (!g) {
 			cerr << "Error resolving metaloop_selection at "
 				"iteration " << i << "." << endl;
@@ -1625,6 +1629,167 @@ metaloop_selection::load_object(const persistent_object_manager& m,
 	meta_loop_base::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, selection_type);
+}
+
+//=============================================================================
+// class metaloop_statement method definitions
+
+metaloop_statement::metaloop_statement() :
+		action(), meta_loop_base(), body(), statement_type(false) {
+}
+
+metaloop_statement::metaloop_statement(const ind_var_ptr_type& i, 
+		const range_ptr_type& r, const body_ptr_type& b, 
+		const bool t) :
+		action(), meta_loop_base(i, r), body(b), statement_type(t) {
+	NEVER_NULL(body);
+}
+
+metaloop_statement::~metaloop_statement() { }
+
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(metaloop_statement)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+metaloop_statement::dump(ostream& o, const expr_dump_context& c) const {
+	o << (body ? "concurrent " : "sequential ");
+	o << ind_var->get_name() << ':';
+	range->dump(o, entity::expr_dump_context(c)) <<
+		": {" << endl;
+	{
+		INDENT_SECTION(o);
+		body->dump(o << auto_indent, c) << endl;
+	}
+	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't print anything.  Not a single statement/event.  
+ */
+ostream&
+metaloop_statement::dump_event(ostream& o, const expr_dump_context&) const {
+	ICE_NEVER_CALL(cerr);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This expands a meta-loop into unrolled form.  
+	Partially ripped from entity::PRS::rule_loop::unroll().  
+ */
+action_ptr_type
+metaloop_statement::unroll_resolve_copy(const unroll_context& c,
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr, entity::expr_dump_context::default_value)
+			<< endl;
+		return action_ptr_type(NULL);
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	// if range is empty or backwards, then what?
+	if (min > max) {
+		cerr << "Error: loop range of metaloop_statement is empty."
+			<< endl;
+		return action_ptr_type(NULL);
+	}
+	action_list_type result;	// unroll into here
+	entity::footprint f;
+	const never_ptr<pint_scalar>
+		var(initialize_footprint(f));
+	// create a temporary by unrolling the placeholder 
+	// induction variable into the footprint as an actual variable
+	pint_value_type& i(var->get_instance().value);
+		// acquire direct reference
+	const unroll_context cc(&f, c);
+	for (i = min; i <= max; ++i) {
+		const action_list_type::value_type	// guarded_action
+			g(body->unroll_resolve_copy(cc, body));
+		if (!g) {
+			cerr << "Error resolving metaloop_statement at "
+				"iteration " << i << "." << endl;
+			return action_ptr_type(NULL);
+		}
+		result.push_back(g);
+	}
+	if (statement_type) {
+		const count_ptr<concurrent_actions>
+			ret(new concurrent_actions);
+		NEVER_NULL(ret);
+		ret->swap(result);
+		return ret;
+	} else {
+		const count_ptr<action_sequence>
+			ret(new action_sequence);
+		NEVER_NULL(ret);
+		ret->swap(result);
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Never supposed to be called, because these are expanded.  
+ */
+void
+metaloop_statement::accept(StateConstructor& s) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Never called, always expanded.  
+ */
+void
+metaloop_statement::execute(const nonmeta_context&, 
+		global_reference_array_type&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Never called, always expanded.  
+ */
+char
+metaloop_statement::recheck(const nonmeta_context&) const {
+	ICE_NEVER_CALL(cerr);
+	return RECHECK_BLOCKED_THIS;	// don't care
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_statement::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	STACKTRACE_VERBOSE;
+	meta_loop_base::collect_transient_info_base(m);
+	body->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_statement::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	STACKTRACE_VERBOSE;
+	meta_loop_base::write_object_base(m, o);
+	m.write_pointer(o, body);
+	write_value(o, statement_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_statement::load_object(const persistent_object_manager& m,
+		istream& i) {
+	STACKTRACE_VERBOSE;
+	meta_loop_base::load_object_base(m, i);
+	m.read_pointer(i, body);
+	read_value(i, statement_type);
 }
 
 //=============================================================================

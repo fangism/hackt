@@ -1,0 +1,175 @@
+WARNING: channel HAHA.A lacks connection to a producer.
+WARNING: channel HAHA.O[0] lacks connection to a consumer.
+WARNING: channel HAHA.O[1] lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	48
+	4	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	33	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	354
+	45	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	48
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	48
+	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	68	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	354
+	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  3 typedefs
+  Definitions:
+    bool_copy = process-definition (defined) bool_copy<
+      pint<> N
+      >(
+        chan?(bool<>) A
+        chan!(bool<>) O[0..N-1]
+      )
+      In definition "bool_copy", we have: {
+      Parameters:
+        N = pint<> bool_copy::N
+      Instances:
+        A = chan?(bool<>) bool_copy::A
+        O = chan!(bool<>) bool_copy::O^1
+        a = bool<> bool_copy::a
+      unroll sequence: 
+        chan?(bool<>) A
+        chan!(bool<>) O[0..N-1]
+        bool<> a
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              A?(a)
+              concurrent i:[0..N-1]: {
+                O[$i]!(a)
+              }
+            }
+          ]
+        }
+      footprint collection: {
+        <2> {
+          A = channel chan?(bool<>)^0 = bool_copy::A (1) 
+          N = pint^0 value: 2
+          O = channel chan!(bool<>)^1
+            {
+              [0] = bool_copy::O[0] (2) 
+              [1] = bool_copy::O[1] (3) 
+            }
+          a = bool^0 = bool_copy::a (1) 
+          Created state:
+          channel instance pool:
+          1	bool_copy::A
+          2	bool_copy::O[0]
+          3	bool_copy::O[1]
+          bool instance pool:
+          1	bool_copy::a
+          resolved concurrent actions:
+            *[
+              sequential: {
+                A?(a)
+                concurrent: {
+                  O[0]!(a)
+                  O[1]!(a)
+                }
+              }
+            ]
+        }
+      }
+      }
+
+  Typedefs:
+    bool_copy_2 = process-definition-alias: bool_copy_2
+      = bool_copy<2>
+    bool_copy_3 = process-definition-alias: bool_copy_3
+      = bool_copy<3>
+    bool_copy_4 = process-definition-alias: bool_copy_4
+      = bool_copy<4>
+  Instances:
+    HAHA = bool_copy_2<> HAHA
+}
+
+footprint: {
+  HAHA = process bool_copy<2>^0 = HAHA (1) (
+    A = channel chan?(bool<>)^0 = HAHA.A (1) 
+    O = channel chan!(bool<>)^1
+      {
+        [0] = HAHA.O[0] (2) 
+        [1] = HAHA.O[1] (3) 
+      }
+  )
+  Created state:
+  process instance pool:
+  1	HAHA
+  channel instance pool:
+  1	HAHA.A
+  2	HAHA.O[0]
+  3	HAHA.O[1]
+}

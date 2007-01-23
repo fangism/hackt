@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: CHP_fwd.h,v 1.4 2006/07/16 03:34:43 fang Exp $
+	$Id: CHP_fwd.h,v 1.5 2007/01/23 02:43:04 fang Exp $
 	This file used ot be the following before rename:
 	Id: art_parser_chp_fwd.h,v 1.4.42.1 2005/12/11 00:45:04 fang Exp
  */
@@ -27,6 +27,7 @@ class do_until;
 class wait;
 class selection;
 class metaloop_selection;
+class metaloop_statement;
 class det_selection;
 class nondet_selection;
 class guarded_command;

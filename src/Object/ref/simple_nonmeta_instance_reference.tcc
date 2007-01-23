@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.12 2007/01/21 05:59:36 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.13 2007/01/23 02:43:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -157,6 +157,7 @@ count_ptr<const SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS>
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c,
 		const count_ptr<const this_type>& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	if (this->array_indices) {
 		// resolve the indices

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.12 2007/01/21 05:58:13 fang Exp $
+	$Id: CHP.cc,v 1.13 2007/01/23 02:43:03 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -1104,6 +1104,73 @@ metaloop_selection::check_action(context& c) const {
 		new entity::CHP::metaloop_selection(loop_ind, loop_range, gc, 
 			selection_type->text[0] != ':'));
 }	// end method metaloop_selection::check_action
+
+//=============================================================================
+// class metaloop_statement method definitions
+// copy-ripped from metaloop_selection
+
+metaloop_statement::metaloop_statement(const char_punctuation_type* l, 
+		const char_punctuation_type* st, 
+		const token_identifier* i, 
+		const range* b, 
+		const statement* c, 
+		const char_punctuation_type* r) :
+		parent_type(), 
+		lb(l), statement_type(st), index(i), bounds(b), 
+		body(c), rb(r) {
+	NEVER_NULL(statement_type);
+	NEVER_NULL(index);
+	NEVER_NULL(bounds);
+	NEVER_NULL(body);
+}
+
+metaloop_statement::~metaloop_statement() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(metaloop_statement)
+
+line_position
+metaloop_statement::leftmost(void) const {
+	if (lb)	return lb->leftmost();
+	else	return index->leftmost();
+}
+
+line_position
+metaloop_statement::rightmost(void) const {
+	if (rb)	return rb->rightmost();
+	else	return body->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+statement::return_type
+metaloop_statement::check_action(context& c) const {
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		return return_type(NULL);
+	}
+	const entity::CHP::metaloop_statement::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// induction variable scope in effect until return
+	const context::loop_var_frame _lvf(c, *index);
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return return_type(NULL);
+	}
+	const statement::return_type
+		st(body->check_action(c));
+	if (!st) {
+		cerr << "Error in statement body: at " << where(*body)
+			<< endl;
+		return return_type(NULL);
+	}
+	// statement type is either "," (concurrent) or ";" (sequential)
+	return count_ptr<entity::CHP::metaloop_statement>(
+		new entity::CHP::metaloop_statement(loop_ind, loop_range, st, 
+			statement_type->text[0] != ';'));
+}	// end method metaloop_statement::check_action
 
 //=============================================================================
 // class loop method definitions

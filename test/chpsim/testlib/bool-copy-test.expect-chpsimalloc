@@ -1,0 +1,17 @@
+Variables: 
+bool[1]: "HAHA.a" 
+chan[1]: "HAHA.A" 
+chan[2]: "HAHA.O[0]" 
+chan[3]: "HAHA.O[1]" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 
+event[1]: receive: bool_copy::A?(bool_copy::a), pid: 1, #pred: 1, succ: 5 
+channel deps: 1 
+event[2]: null: , pid: 1, #pred: 2, succ: 1 
+event[3]: send: bool_copy::O[0]!(bool_copy::a), pid: 1, #pred: 1, succ: 2 
+channel deps: 2 
+event[4]: send: bool_copy::O[1]!(bool_copy::a), pid: 1, #pred: 1, succ: 2 
+channel deps: 3 
+event[5]: fork: , pid: 1, #pred: 1, succ: 3 4 
+

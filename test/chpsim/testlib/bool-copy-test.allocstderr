@@ -1,0 +1,11 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	HAHA	bool_copy<2>
+	channel: 1,2,3
+	bool: 1
+[global channel entries]
+1	(top)	-	1	HAHA.A	chan(bool<>)
+2	(top)	-	2	HAHA.O[0]	chan(bool<>)
+3	(top)	-	3	HAHA.O[1]	chan(bool<>)
+[global bool entries]
+1	process	1	1	HAHA.a	

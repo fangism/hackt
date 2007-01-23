@@ -1,22 +1,26 @@
 // "bool-copy.hac"
-//	$Id: bool-copy.hac,v 1.2 2007/01/21 06:04:10 fang Exp $
+//	$Id: bool-copy.hac,v 1.3 2007/01/23 02:43:43 fang Exp $
 // copy processes
 
-/***
 // fanout-of-N copy
 template <pint N>
 defproc bool_copy (chan?(bool) A; chan!(bool) O[N]) {
 bool a;
 chp {
-*[ A?(a); {,:i:N: O[i]!(a) } ]
+*[ A?(a); {,i:N: O[i]!(a) } ]
 }
 }
-***/
 
+/***
 defproc bool_copy_2 (chan?(bool) A; chan!(bool) O[2]) {
 bool a;
 chp {
 *[ A?(a); O[0]!(a), O[1]!(a) ]
 }
 }
+***/
+
+typedef	bool_copy<2>		bool_copy_2;
+typedef	bool_copy<3>		bool_copy_3;
+typedef	bool_copy<4>		bool_copy_4;
 

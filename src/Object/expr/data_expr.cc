@@ -2,13 +2,14 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.14 2007/01/21 05:58:44 fang Exp $
+	$Id: data_expr.cc,v 1.15 2007/01/23 02:43:15 fang Exp $
  */
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE			0
+#define	PARANOID				0
 
 #include <iostream>
 #include "Object/expr/int_arith_expr.h"
@@ -1401,7 +1402,9 @@ nonmeta_index_list::unroll_resolve_copy(const unroll_context& c) const {
 	const const_iterator e(end());
 	for ( ; i!=e; ++i) {
 		NEVER_NULL(*i);
-		ret->push_back((*i)->unroll_resolve_copy(c, *i));
+		const value_type v((*i)->unroll_resolve_copy(c, *i));
+		NEVER_NULL(v);
+		ret->push_back(v);
 	}
 	return ret;
 }
@@ -1437,7 +1440,7 @@ nonmeta_index_list::make_const_index_list(multikey_index_type& l) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Attempts to r
+	Attempts to resolve a meta index list from a nonmeta index list.  
  */
 count_ptr<dynamic_meta_index_list>
 nonmeta_index_list::make_meta_index_list(void) const {
@@ -1466,6 +1469,13 @@ nonmeta_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
+#if PARANOID
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+	}
+#endif
 	m.collect_pointer_list(*this);
 }
 // else already visited
@@ -1479,6 +1489,13 @@ if (!m.register_transient_object(this,
 void
 nonmeta_index_list::write_object(const persistent_object_manager& m,
 		ostream& f) const {
+#if PARANOID
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+	}
+#endif
 	m.write_pointer_list(f, *this);
 }
 
@@ -1498,7 +1515,9 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 	for ( ; i!=e; i++) {
 		const count_ptr<const nonmeta_index_expr_base> ip(*i);
 		NEVER_NULL(ip);
+//		if (ip) {
 		m.load_object_once(&const_cast<nonmeta_index_expr_base&>(*ip));
+//		}
 	}
 #endif
 }
@@ -1512,6 +1531,8 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#undef	PARANOID
 
 DEFAULT_STATIC_TRACE_END
 

@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.19 2007/01/21 22:05:52 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.20 2007/01/23 02:43:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -93,6 +93,7 @@ return_type
 unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		const return_type& p) {
 	typedef	reference_type				this_type;
+	STACKTRACE_VERBOSE;
 	if (_this.array_indices) {
 		// resolve the indices
 		// if indices are all meta-valued, then resolve all the way
@@ -309,6 +310,7 @@ return_type
 unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		const return_type& p) {
 	typedef	reference_type				this_type;
+	STACKTRACE_VERBOSE;
 	static const count_ptr<this_type> error(NULL);
 	if (_this.array_indices) {
 		// resolve the indices
@@ -379,6 +381,7 @@ const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
 		const nonmeta_context_base& c, const return_type& p) {
 	typedef	reference_type				this_type;
+	STACKTRACE_VERBOSE;
 	const const_return_type error(NULL);
 	const unroll_context
 		uc((c.fpf ? c.fpf->_footprint : c.topfp), c.topfp);

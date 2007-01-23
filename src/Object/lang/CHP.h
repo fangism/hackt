@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.13 2007/01/21 05:59:20 fang Exp $
+	$Id: CHP.h,v 1.14 2007/01/23 02:43:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -312,6 +312,49 @@ public:
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_selection
+
+//=============================================================================
+/**
+	A construct for compile-time expanding a regular statement.  
+ */
+class metaloop_statement : public action, public meta_loop_base {
+	typedef	metaloop_statement		this_type;
+public:
+	typedef	meta_loop_base::ind_var_ptr_type	ind_var_ptr_type;
+	typedef	meta_loop_base::range_ptr_type	range_ptr_type;
+	typedef	count_ptr<const action>		body_ptr_type;
+private:
+	/**
+		The one guarded action is presumably dependent on the 
+		induction variable.  Will be expanded into 
+		a full statement statement at unroll-time.  
+	 */
+	body_ptr_type				body;
+	/**
+		True is for concurrent statement, 
+		false is for sequential statement.
+	 */
+	bool					statement_type;
+public:
+	metaloop_statement();
+	metaloop_statement(const ind_var_ptr_type&, const range_ptr_type&, 
+		const body_ptr_type&, const bool);
+	~metaloop_statement();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_DUMP_EVENT_PROTO;
+	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+	CHP_EXECUTE_PROTO;
+	CHP_RECHECK_PROTO;
+
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class metaloop_statement
 
 //=============================================================================
 /**

@@ -1,0 +1,6 @@
+// "bool-copy-test.hac"
+
+import "bool-copy.hac";
+
+bool_copy_2 HAHA;
+

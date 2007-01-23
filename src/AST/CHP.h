@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.5 2006/07/16 03:34:42 fang Exp $
+	$Id: CHP.h,v 1.6 2007/01/23 02:43:04 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -457,6 +457,41 @@ public:
 		const token_identifier*, const range*, 
 		const guarded_command*, const char_punctuation_type*);
 	~metaloop_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHP_CHECK_STMT_PROTO;
+};	// end class metaloop_selection
+
+//=============================================================================
+/**
+	Compile-time expanded loop for statements.  
+	Can use concurrency or sequencing.  
+	e.g.: {,i:N: X[j]!(x) }
+ */
+class metaloop_statement : public statement {
+private:
+	typedef	statement				parent_type;
+private:
+	const excl_ptr<const char_punctuation_type>	lb;
+	const excl_ptr<const char_punctuation_type>	statement_type;
+	const excl_ptr<const token_identifier>		index;
+	const excl_ptr<const range>			bounds;
+	const excl_ptr<const statement>			body;
+	const excl_ptr<const char_punctuation_type>	rb;
+public:
+	metaloop_statement(const char_punctuation_type*, 
+		const char_punctuation_type*,
+		const token_identifier*, const range*, 
+		const statement*, const char_punctuation_type*);
+	~metaloop_statement();
 
 	ostream&
 	what(ostream& o) const;
