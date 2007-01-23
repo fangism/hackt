@@ -1,6 +1,11 @@
 #!`which awk` -f
 # "lexyacc-prefix.h"
-#	$Id: lexyacc-prefix.awk,v 1.1 2004/11/30 03:50:22 fang Exp $
+#	$Id: lexyacc-prefix.awk,v 1.2 2007/01/23 07:21:20 fang Exp $
+
+# NOTE: this file is obsolete.  Its functionality has been replaced
+# by a prefix-substitution generator:
+# "util/lang/lexyacc/lexyacc-prefix-generator.awk"
+# which uses a set of known symbols instead of pattern matching substitution.
 
 #	To get the effect of -p prefix with yacc or bison, 
 #	When compiling the source, pass -v PREFIX=name 

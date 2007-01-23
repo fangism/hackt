@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.148 2007/01/21 05:58:11 fang Exp $
+#	$Id: Makefile.am,v 1.149 2007/01/23 07:21:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1001,6 +1001,8 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
 # need forward declaration for flex 2.5.31
 	$(ECHO) "#include \"parser/hackt-prefix.h\"" > $@
+# need early declaration for flex 2.5.{31,33}
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" >> $@
 	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 # flex scanner purification eliminates need to rename most variables
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
@@ -1009,15 +1011,18 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT)-real.h
 	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" >> $@
 	$(CAT) lexer/$(INSTREF_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 
 lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT)-real.h
 	$(ECHO) "#include \"parser/type-prefix.h\"" > $@
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" >> $@
 	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc
-	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) > $@
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" > $@
+	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 
 $(srcdir)/lexer/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
 

@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: lexyacc-prefix-generator.awk,v 1.2 2006/01/22 06:53:41 fang Exp $
+#	$Id: lexyacc-prefix-generator.awk,v 1.3 2007/01/23 07:21:22 fang Exp $
 # "lexyacc-prefix-generator.awk"
 #
 # generates a header suitable for preprocessing and performing
@@ -113,6 +113,24 @@ BEGIN {
 	roots["wrap"];			# per lexer
 #	roots["unput"];			# static
 #	roots["terminate"];		# macro
+
+# new in flex-2.5.33:
+	roots["get_in"] = 1;
+	roots["get_out"] = 1;
+	roots["get_leng"] = 1;
+	roots["get_lineno"] = 1;
+	roots["get_text"] = 1;
+	roots["get_debug"] = 1;
+	roots["set_in"] = 1;
+	roots["set_out"] = 1;
+	roots["set_lineno"] = 1;
+	roots["set_debug"] = 1;
+	roots["lex_destroy"] = 1;
+	roots["pop_buffer_state"] = 1;
+	roots["push_buffer_state"] = 1;
+	roots["free"] = 1;
+	roots["realloc"] = 1;
+	roots["_flex_debug"] = 1;
 
 	for (r in roots) {
 		print "#define yy" r "\t\t" PREFIX r;

@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.2 2006/11/27 22:59:53 fang Exp $
+	$Id: README.CVS,v 1.3 2007/01/23 07:21:16 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -16,8 +16,8 @@ tarball (.tar.gz, .tar.bz2), then you'll need the following GNU autotools
 installed on your system:
 
 GNUmake-3.79+ is recommended
-automake-1.9+
-autoconf-2.59+
+automake-1.9+ (OK: 1.10)
+autoconf-2.59+ (OK: 2.60)
 libtool-1.5+
 
 These may be obtained from gnu.org.  

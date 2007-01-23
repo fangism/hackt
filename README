@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.15 2006/09/18 02:26:45 fang Exp $
+	$Id: README,v 1.16 2007/01/23 07:21:16 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -71,6 +71,8 @@ Unsupported versions of bison:
 	1.28 -- see comment *1
 Unsupported versions of flex:
 	2.5.33 -- fails -Wundef (__STDC_VERSION__) and -Werror (signed comp.)
+		workaround: pass -Wno-error to CXXFLAGS at configure-time
+		but WORST of all, after workarounds, lexing crashes horribly.
 
 ===============================================================================
 KNOWN ISSUES

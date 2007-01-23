@@ -5,6 +5,23 @@
 
 2007-01-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-67:
+	  DO NOT USE flex 2.5.33.  I hereby blacklist it.  2.5.31 is ok.
+	  Retested for flex-2.5.33, which has some issues, 
+		but is now commonplace in distributions.  
+		It still suffers from undefined __STDC_VERSION__ in
+		C++ mode and a sign/unsigned comparison warning that is
+		promoted to an error.  With this patch, passing
+		CXXFLAGS=...-Wno-error should suffice to compile everything.
+		Sadly, it crashes upon lexing... if you can't duck it...
+	  lexer/purify_flex.awk: careful not to catch yy_init...(), 
+		additional substitutions for yy_init_globals().
+	  lexer/flex_lexer_state.h: include "util/size_t.h"
+	  Makefile.am: lexer/*-lex-real.cc rules now include
+		lexer/flex_lexer_state.h early to guarantee definition
+		apears before rest of transformed source.  
+
+
 	* HACKT-00-01-04-main-00-80-66:
 	  BUG FIX: fatal typo in CHP meta-loop expansion, did not pass
 		down the correct context ('cc' vs. 'c')

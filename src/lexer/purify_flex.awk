@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.5 2006/01/22 06:53:10 fang Exp $
+#	$Id: purify_flex.awk,v 1.6 2007/01/23 07:21:19 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -82,6 +82,7 @@ function append_proto_params(str, decl) {
 }
 
 # to work, there must be only one set or parentheses on this line.  
+# useful for replacing a 'void' parameter
 function replace_call_args(str, arg) {
 	gsub("\\(.*\\)", "(" arg ")", str);
 	return str;
@@ -144,7 +145,8 @@ function append_call_args(str, arg) {
 		# members[extract_yy_identifier($0)] = "";
 		members["yy_c_buf_p"] = "yy_c_buf_p_";
 		comment_out($0);
-	} else if (match($0, "^static int yy_init")) {
+	} else if (match($0, "^static int yy_init[^()]+$")) {
+		# careful not to catch yy_init_globals() from flex 2.5.33!
 		# members[extract_yy_identifier($0)] = "";
 		members["yy_init"] = "yy_init_";
 		comment_out($0);
@@ -423,6 +425,12 @@ function append_call_args(str, arg) {
 		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yylex_destroy(.*)")) {
 		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "static int yy_init_globals(.*)")) {
+		# (2.5.33 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yy_init_globals(.*)")) {
+		# (2.5.33 only)
 		$0 = replace_call_args($0, name);
 	}
 	str = $0;
