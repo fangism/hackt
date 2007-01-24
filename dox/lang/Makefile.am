@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2006/11/26 04:41:05 fang Exp $
+#	$Id: Makefile.am,v 1.22 2007/01/24 04:14:49 fang Exp $
 
 PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -8,7 +8,7 @@ include $(top_srcdir)/dox/Make.dox-head
 
 # have to add these by hand? :S
 EXTRA_DIST += \
-	hac.bib hac.tex \
+	hac.tex \
 	chapters/preface.tex \
 	chapters/goals.tex \
 	chapters/intro.tex \
@@ -36,7 +36,7 @@ EXTRA_DIST += \
 -include hac.dvidepend
 AUTO_DEPENDS += hac.pdfdepend hac.dvidepend
 
-hac.pdf hac.dvi: $(srcdir)/hac.bib
+hac.pdf hac.dvi: $(srcdir)/../common/hac.bib
 
 include $(top_srcdir)/dox/Make.dox-tail
 

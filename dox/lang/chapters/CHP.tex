@@ -1,6 +1,6 @@
 % "chapters/CHP.tex"
 
-%	$Id: CHP.tex,v 1.5 2007/01/21 05:58:05 fang Exp $
+%	$Id: CHP.tex,v 1.6 2007/01/24 04:14:50 fang Exp $
 
 \chapter{Communicating Hardware Processes}
 \label{sec:chp}
@@ -369,6 +369,40 @@ Loop until all guards are false.
 Execution:
 Never blocks because there is an implicit else-clause that
 skips/exits the loop.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Metaparameter loop constructs}
+\label{sec:chp:metaloop}
+
+New syntaces for compile-time expanded repetitive constructs:
+
+\noindent
+\tbf{Sequential composition}
+
+\begin{verbatim}
+{ ; i:N: ... }
+\end{verbatim}
+
+\noindent
+\tbf{Concurrent composition}
+
+\begin{verbatim}
+{ , i:N: ... }
+\end{verbatim}
+
+\noindent
+\tbf{Determinstic selection}
+
+\begin{verbatim}
+[ [] i:N: ... ]
+\end{verbatim}
+
+\noindent
+\tbf{Nondeterminstic selection}
+
+\begin{verbatim}
+[: i:N: ... ]
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Extensions}

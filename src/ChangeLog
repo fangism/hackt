@@ -5,6 +5,12 @@
 
 2007-01-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-68:
+	  No source revision.  Only documentation tidbits.  
+
+
+2007-01-22	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-67:
 	  DO NOT USE flex 2.5.33.  I hereby blacklist it.  2.5.31 is ok.
 	  Retested for flex-2.5.33, which has some issues, 

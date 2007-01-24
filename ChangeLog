@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-01-23	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-68:
+	  configure.ac: now generate dox/{chpsim,prsim}/Makefile
+
+
 2007-01-21	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54:

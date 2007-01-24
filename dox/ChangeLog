@@ -1,11 +1,15 @@
 "dox/ChageLog"
-	$Id: ChangeLog,v 1.9 2007/01/24 03:43:27 fang Exp $
+	$Id: ChangeLog,v 1.10 2007/01/24 04:14:42 fang Exp $
 
 2007-01-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-68:
 	  scantexdepend.awk: more robust for when dependent file names
 		wrap around to next line in the .log file, try again...  
+	  mk/Make.latex: only make .ind if .idx exists
+	  Moved lang/hac.bib to common/hac.bib as shared biblio.
+	  Added placeholder prsim/chpsim documents (empty)
+	  Added CHP comments in cast2hac/CHP.tex and lang/CHP.tex
 
 
 2006-11-26	David Fang		<fangism@users.sourceforge.net>

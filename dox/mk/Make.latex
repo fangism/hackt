@@ -4,12 +4,12 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.12 2006/11/26 21:16:26 fang Exp $
+#	$Id: Make.latex,v 1.13 2007/01/24 04:14:51 fang Exp $
 
 # useful macros
 # some of these are defined to be specific to this (hackt) project
 get_bldroot=`echo "$@" | sed -e 's|^.*/||g' -e 's|\..*$$||g'`
-COMMONINPUTS = .$(PATH_SEPARATOR)$(srcdir)$(PATH_SEPARATOR)$(top_srcdir)/dox/common$(PATH_SEPARATOR)$(top_srcdir)/dox/mk$(PATH_SEPARATOR)
+COMMONINPUTS = .$(PATH_SEPARATOR)$(srcdir)$(PATH_SEPARATOR)$(top_srcdir)/dox/common$(PATH_SEPARATOR)
 AUTOTEXINPUTS = $(COMMONINPUTS)"$$TEXINPUTS"$(PATH_SEPARATOR)
 AUTOBIBINPUTS = $(COMMONINPUTS)"$$BIBINPUTS"$(PATH_SEPARATOR)
 
@@ -79,11 +79,12 @@ if HAVE_LATEX
 	if $(GREP) "TeX capacity" $$bldroot.log; \
 		then $(ECHO) SHIT ; \
 	fi ; \
-	$(MAKE) $$bldroot.bbl $$bldroot.ind ; \
+	if test -f $$bldroot.idx ; then $(MAKE) $$bldroot.ind ; fi ; \
+	$(MAKE) $$bldroot.bbl ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null; \
-		$(MAKE) $$bldroot.ind ; \
+		if test -f $$bldroot.idx ; then $(MAKE) $$bldroot.ind ; fi ; \
 		if $(GREP) "TeX capacity" $$bldroot.log; \
 			then $(ECHO) SHIT; \
 		elif $(GREP) 'LaTeX Warning: Citation' $$bldroot.log; then \
@@ -114,11 +115,12 @@ if HAVE_PDFLATEX
 	if $(GREP) "TeX capacity" $$bldroot.log; \
 		then $(ECHO) SHIT ; \
 	fi ; \
-	$(MAKE) $$bldroot.bbl $$bldroot.ind ; \
+	if test -f $$bldroot.idx ; then $(MAKE) $$bldroot.ind ; fi ; \
+	$(MAKE) $$bldroot.bbl ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
-		$(MAKE) $$bldroot.ind ; \
+		if test -f $$bldroot.idx ; then $(MAKE) $$bldroot.ind ; fi ; \
 		if $(GREP) "TeX capacity" $$bldroot.log; \
 			then $(ECHO) SHIT; \
 		elif $(GREP) 'LaTeX Warning: Citation' $$bldroot.log; then \

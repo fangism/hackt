@@ -1,5 +1,5 @@
-% "cast2hac.tex"
-%	$Id: cast2hac.tex,v 1.12 2007/01/24 04:14:45 fang Exp $
+% "chpsim.tex"
+%	$Id: chpsim.tex,v 1.1 2007/01/24 04:14:47 fang Exp $
 
 \documentclass[12pt]{article}
 
@@ -20,7 +20,7 @@
 \ifpdf
 \usepackage[
 	draft=false,
-	pdftitle={CAST to HAC Migration Guide}, 
+	pdftitle={The HACKT CHPSIM Manual}, 
 	pdfauthor={David Fang}, 
 	hyperfigures, 
 	hyperindex, 
@@ -41,7 +41,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
-\title{CAST to HACKT Migration Guide}
+\title{The HACKT CHPSIM Manual}
 \author{David Fang}
 
 % \ifpdf\pdfbookmark[0]{Title Page}{title}\fi
@@ -53,19 +53,30 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % main contents
 
-\input intro
-\input types
-\input definitions
-\input instances
-\input arrays
-\input connections
-\input loops
-\input templates
-\input typedefs
-\input PRS
-\input CHP
-\input spec
-\input cflat
+\section{Introduction}
+\label{sec:intro}
+
+\ttt{chpsim} is a simulator for the CHP language, 
+which is based on Hoare's CSP~\cite{ref:csp}.  
+
+\subsection{History}
+\label{sec:intro:history}
+
+Where it all began...
+
+% \input intro
+% \input types
+% \input definitions
+% \input instances
+% \input arrays
+% \input connections
+% \input loops
+% \input templates
+% \input typedefs
+% \input PRS
+% \input CHP
+% \input spec
+% \input cflat
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi
