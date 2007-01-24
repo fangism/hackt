@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.50 2007/01/21 16:57:45 fang Exp $
+#	$Id: TODO,v 1.51 2007/01/24 18:37:30 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -30,8 +30,6 @@ chpsim:
 			time of execution?)
 		for guard expressions
 		variables referenced (and their values)
-	maintain a pending set to avoid unnecessary re-subscribing
-		of already blocked events to their dependencies? (enhancemen)
 	eliminate guard_expr from event structure, and handle
 		condition wait like a normal blockable (no-op) event.  
 	non-atomic expression evaluation: [IMPORTANT] 
@@ -44,11 +42,10 @@ chpsim:
 			do we require flow analysis?
 		A: safe to start right when channel event is ready, 
 			i.e. predecessors done, and channel state is ready
-	support: probe expressions, value probes
+	support: probe expressions, value probes, missing from CHP language!
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
 	visualization: 
-		print guard expressions on outgoing edges of selections
 		print process-subgraphs as clusters
 		print allocated instances and dependency edges to them
 	footprint-ize: processes' CHP event subgraphs, easier because
