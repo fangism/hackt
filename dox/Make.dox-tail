@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.7 2006/11/12 05:57:42 fang Exp $
+#	$Id: Make.dox-tail,v 1.8 2007/01/24 23:20:21 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -15,9 +15,9 @@ endif
 
 .PHONY: help-dox
 help-dox:
-	@$(ECHO) "Documentation make targets"
-	@$(ECHO) "    pdf: builds PDF documents"
-	@$(ECHO) "    ps: builds PostScript documents"
+	@$(ECHO) "Documentation make targets" ; \
+	$(ECHO) "    pdf: builds PDF documents" ; \
+	$(ECHO) "    ps: builds PostScript documents"
 
 help-local:
 	@$(CALLMAKE) help-dox 2> /dev/null

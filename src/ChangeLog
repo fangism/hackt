@@ -3,7 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2007-01-22	David Fang		<fangism@users.sourceforge.net>
+2007-01-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69:
+	  No source revision.  Build system maintainence.  
+	  Re-organized make scripts, with better internal re-usability.  
+		Some targets were falsely built in the srcdir, 
+		now fixed with srcdir_strip macro.  
+	  .cvsignores now reference the $(srcdir), long forgotten update.
+
+
+2007-01-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-68:
 	  No source revision.  Only documentation tidbits.  

@@ -1,6 +1,6 @@
 to do list:
 
-#	$Id: TODO,v 1.24 2006/08/25 05:47:40 fang Exp $
+#	$Id: TODO,v 1.25 2007/01/24 23:20:20 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
 Pay more attention to the src/ChangeLog.  
@@ -45,5 +45,9 @@ PACKAGING
 and paths automatically, adjusting library paths, MAN_PATH, etc...
 One should be able to switch between installations in different locations
 by sourcing these scripts.  
+
+-------------------------------------------------------------------------------
+source management:
+	automake: AUTO_IGNORE_PATTERNS for cvsignore
 
 -------------------------------------------------------------------------------

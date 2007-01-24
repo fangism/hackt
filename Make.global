@@ -7,7 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.28 2006/11/27 23:12:27 fang Exp $
+#	$Id: Make.global,v 1.29 2007/01/24 23:20:20 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
@@ -331,41 +331,41 @@ help-local:
 
 # brief description of targets
 help-global:
-	@$(ECHO) "Global make targets:"
-	@$(ECHO) "    help: lists some useful make targets"
-	@$(ECHO) "    all: builds everything (recursive)"
-	@$(ECHO) "    clean: removes make targets (recursive)"
-	@$(ECHO) "    distclean: removes configure targets (recursive)"
-	@$(ECHO) "    cvsdiffs: creates difference patch from CVS"
+	@$(ECHO) "Global make targets:" ; \
+	$(ECHO) "    help: lists some useful make targets" ; \
+	$(ECHO) "    all: builds everything (recursive)" ; \
+	$(ECHO) "    clean: removes make targets (recursive)" ; \
+	$(ECHO) "    distclean: removes configure targets (recursive)" ; \
+	$(ECHO) "    cvsdiffs: creates difference patch from CVS"
 if AUTO_CVSIGNORE
-	@$(ECHO) "    cvsignore: generates $$(srcdir)/.cvsignore (recursive)"
-	@$(ECHO) "    clean-cvsignore: cleans $$(srcdir)/.cvsignore (recursive)"
+	@$(ECHO) "    cvsignore: generates $$(srcdir)/.cvsignore (recursive)" ; \
+	$(ECHO) "    clean-cvsignore: cleans $$(srcdir)/.cvsignore (recursive)"
 endif
-	@$(ECHO) "    check: runs tests (recursive)"
-	@$(ECHO) "    build-check: create/run tests, without check (recursive)"
-	@$(ECHO) "    check.log: logs make check -k"
-	@$(ECHO) "    distdir-subdir: packages subtree of distribution"
-	@$(ECHO) "    pdf: builds PDFs (recursive)"
-	@$(ECHO) "    ps: builds PostScripts (recursive)"
-	@$(ECHO) "    info: builds texinfo files (recursive)"
-	@$(ECHO) "    html: builds HTML files (recursive)"
-	@$(ECHO) "    echo-*:"
-	@$(ECHO) "	config: configure invocation (config.status --version)"
-	@$(ECHO) "	cleanfiles: list of cleaned files"
-	@$(ECHO) "	distcleanfiles: list of distcleaned files"
-	@$(ECHO) "	SUFFIXES: list of Makefile suffixes"
-	@$(ECHO) "	extra-dist: list of EXTRA_DIST files"
-	@$(ECHO) "	srcdir-extra-dist: list of source-only distrib. files"
-	@$(ECHO) "	dist-common: list automatic DIST_COMMON files"
-	@$(ECHO) "	distfiles: list of all DISTFILES"
-	@$(ECHO) "	disthook-cleanfiles: list of all DISTHOOK_CLEANFILES"
-	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"
-	@$(ECHO) "	srcdir, top-srcdir, top-builddir, subdir, "
-	@$(ECHO) "	build, host, prefix, exec-prefix"
-	@$(ECHO) "	subdirs, dist-subdirs"
-	@$(ECHO) "	programs, scripts"
-	@$(ECHO) "	program-transform-name, package{,-version,-bugreport}"
-	@$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
+	@$(ECHO) "    check: runs tests (recursive)" ; \
+	$(ECHO) "    build-check: create/run tests, without check (recursive)" ; \
+	$(ECHO) "    check.log: logs make check -k" ; \
+	$(ECHO) "    distdir-subdir: packages subtree of distribution" ; \
+	$(ECHO) "    pdf: builds PDFs (recursive)" ; \
+	$(ECHO) "    ps: builds PostScripts (recursive)" ; \
+	$(ECHO) "    info: builds texinfo files (recursive)" ; \
+	$(ECHO) "    html: builds HTML files (recursive)" ; \
+	$(ECHO) "    echo-*:" ; \
+	$(ECHO) "	config: configure invocation (config.status --version)" ; \
+	$(ECHO) "	cleanfiles: list of cleaned files" ; \
+	$(ECHO) "	distcleanfiles: list of distcleaned files" ; \
+	$(ECHO) "	SUFFIXES: list of Makefile suffixes" ; \
+	$(ECHO) "	extra-dist: list of EXTRA_DIST files" ; \
+	$(ECHO) "	srcdir-extra-dist: list of source-only distrib. files" ; \
+	$(ECHO) "	dist-common: list automatic DIST_COMMON files" ; \
+	$(ECHO) "	distfiles: list of all DISTFILES" ; \
+	$(ECHO) "	disthook-cleanfiles: list of all DISTHOOK_CLEANFILES" ; \
+	$(ECHO) "	auto-ignore: list of automatic cvsignored files" ; \
+	$(ECHO) "	srcdir, top-srcdir, top-builddir, subdir, " ; \
+	$(ECHO) "	build, host, prefix, exec-prefix" ; \
+	$(ECHO) "	subdirs, dist-subdirs" ; \
+	$(ECHO) "	programs, scripts" ; \
+	$(ECHO) "	program-transform-name, package{,-version,-bugreport}" ; \
+	$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
 
 # standard phony target for unconditional targets
 force:

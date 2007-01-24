@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.65 2007/01/21 06:01:35 fang Exp $
+#	$Id: Make.test-tail,v 1.66 2007/01/24 23:20:25 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -172,7 +172,7 @@ DISTCLEANFILES += local.cvsignore
 
 ALL_LOCAL =
 if AUTO_CVSIGNORE
-ALL_LOCAL += .cvsignore
+ALL_LOCAL += $(srcdir)/.cvsignore
 endif
 
 
@@ -190,7 +190,7 @@ local.cvsignore: $(TEST_SRCDIR)/test.cvsignore
 	$(CP) $? $@
 
 # additional dependence
-.cvsignore: $(TEST_SRCDIR)/Make.test-tail
+$(srcdir)/.cvsignore: $(TEST_SRCDIR)/Make.test-tail
 endif
 
 # clean tests only

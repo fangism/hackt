@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.149 2007/01/23 07:21:18 fang Exp $
+#	$Id: Makefile.am,v 1.150 2007/01/24 23:20:23 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -131,28 +131,28 @@ $(PHONYSOURCES):
 	$(TOUCH) $@
 
 cvstag.h: ChangeLog
-	@$(ECHO) "#ifndef	CVSTAG" > $@
-	tag=`$(HEAD) -n 10 $? | $(GREP) "^	[*].*:" | \
+	@{ $(ECHO) "#ifndef	CVSTAG" ; \
+	tag=`$(HEAD) -n 10 $< | $(GREP) "^	[*].*:" | \
 		$(HEAD) -n 1 | $(SED) 's/:.*$$//g' | $(CUT) -d\  -f 2` ; \
-		$(ECHO) "#define	CVSTAG		\"$$tag\"" >> $@
-	@$(ECHO) "#endif	/* CVSTAG */" >> $@
+		$(ECHO) "#define	CVSTAG		\"$$tag\"" ; \
+	$(ECHO) "#endif	/* CVSTAG */" ;} > $@
 
 # we assume the config-params string is wrapped in quotes, and we strip them
 config_params.h: $(top_builddir)/config.status
-	@$(ECHO) "#ifndef	CONFIG_PARAMS" > $@
-	@value=`cd $(top_builddir) && $(SHELL) ./config.status --version | \
+	@{ $(ECHO) "#ifndef	CONFIG_PARAMS" ; \
+	value=`cd $(top_builddir) && $(SHELL) ./config.status --version | \
 		$(GREP) options | \
 		$(SED) -e 's/^[^"]*["]//g' -e 's/["]$$//g'` ; \
-	$(ECHO) "#define	CONFIG_PARAMS	\"$$value\"" >> $@
-	@$(ECHO) "#endif	/* CONFIG_PARAMS */" >> $@
+	$(ECHO) "#define	CONFIG_PARAMS	\"$$value\"" ; \
+	$(ECHO) "#endif	/* CONFIG_PARAMS */" ;} > $@
 
 # can't include libhacktexec.la because of circular dependence
 # builddate.h:
 # builddate.h: libhackt.la $(LIBFANGUTIL)
 builddate.h: ChangeLog
-	@$(ECHO) "#ifndef	BUILDDATE" > $@
-	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
-	@$(ECHO) "#endif	/* BUILDDATE */" >> $@
+	@{ $(ECHO) "#ifndef	BUILDDATE" ; \
+	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" ; \
+	$(ECHO) "#endif	/* BUILDDATE */" ;} > $@
 
 # most of these should really be generated at configure-time...
 
@@ -912,12 +912,21 @@ SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
 # because yacc has no mechanism for overriding the yyparse prototype
 SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g'
 
+# Oddly, these targets get mistakenly placed in the srcdir
 parser/hackt-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(AWK) -f $? -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > $@
+	$(SED_srcdir_strip_setup) ; \
+	$(AWK) -f $< -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+
 parser/instref-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(AWK) -f $? -v PREFIX=$(INSTREF_YACC_PREFIX) < /dev/null > $@
+	$(SED_srcdir_strip_setup) ; \
+	$(AWK) -f $< -v PREFIX=$(INSTREF_YACC_PREFIX) < /dev/null > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+
 parser/type-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(AWK) -f $? -v PREFIX=$(TYPE_YACC_PREFIX) < /dev/null > $@
+	$(SED_srcdir_strip_setup) ; \
+	$(AWK) -f $< -v PREFIX=$(TYPE_YACC_PREFIX) < /dev/null > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 LEXYACC_PREFIX_H_FILES = parser/hackt-prefix.h \
 	parser/instref-prefix.h parser/type-prefix.h
@@ -972,24 +981,31 @@ parser/$(TYPE_PARSE_ROOT)-real.cc: parser/$(TYPE_PARSE_ROOT).cc \
 	$(CAT) parser/$(TYPE_PARSE_ROOT).cc | $(PARSER_HACK_PIPE) > $@
 
 
+# NOTE: oddly, this sometimes builds in the srcdir, when it shouldn't
 parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
 		parser/hackt-prefix.h
-	$(ECHO) "#include \"parser/hackt-prefix.h\"" > $@
-	$(ECHO) "#include \"parser/hackt-union.h\"" >> $@
-	$(CAT) parser/$(HACKT_PARSE_ROOT).h >> $@
+	$(SED_srcdir_strip_setup) ; \
+	{ $(ECHO) "#include \"parser/hackt-prefix.h\"" ; \
+	$(ECHO) "#include \"parser/hackt-union.h\"" ; \
+	$(CAT) parser/$(HACKT_PARSE_ROOT).h ;} > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 		parser/instref-prefix.h
-	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
-	$(ECHO) "#include \"parser/instref-union.h\"" >> $@
-	$(ECHO) "#include \"parser/instref.h\"" >> $@
-	$(CAT) parser/$(INSTREF_PARSE_ROOT).h >> $@
+	$(SED_srcdir_strip_setup) ; \
+	{ $(ECHO) "#include \"parser/instref-prefix.h\"" ; \
+	$(ECHO) "#include \"parser/instref-union.h\"" ; \
+	$(ECHO) "#include \"parser/instref.h\"" ; \
+	$(CAT) parser/$(INSTREF_PARSE_ROOT).h ;} > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 parser/$(TYPE_PARSE_ROOT)-real.h: parser/$(TYPE_PARSE_ROOT).h \
 		parser/type-prefix.h
-	$(ECHO) "#include \"parser/type-prefix.h\"" > $@
-	$(ECHO) "#include \"parser/type-union.h\"" >> $@
-	$(CAT) parser/$(TYPE_PARSE_ROOT).h >> $@
+	$(SED_srcdir_strip_setup) ; \
+	{ $(ECHO) "#include \"parser/type-prefix.h\"" ; \
+	$(ECHO) "#include \"parser/type-union.h\"" ; \
+	$(CAT) parser/$(TYPE_PARSE_ROOT).h ;} > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
 
 PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 	$(SED) 's/REFERENCE/\&/g'
@@ -1000,29 +1016,29 @@ PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
 # need forward declaration for flex 2.5.31
-	$(ECHO) "#include \"parser/hackt-prefix.h\"" > $@
-# need early declaration for flex 2.5.{31,33}
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" >> $@
-	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
+# need early declaration of flex::lexer_state needed for flex 2.5.{31,33}
+	{ $(ECHO) "#include \"parser/hackt-prefix.h\"" ; \
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 # flex scanner purification eliminates need to rename most variables
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 
 lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
 		parser/$(INSTREF_PARSE_ROOT)-real.h
-	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" >> $@
-	$(CAT) lexer/$(INSTREF_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
+	{ $(ECHO) "#include \"parser/instref-prefix.h\"" ; \
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+	$(CAT) lexer/$(INSTREF_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 
 lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT)-real.h
-	$(ECHO) "#include \"parser/type-prefix.h\"" > $@
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" >> $@
-	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
+	{ $(ECHO) "#include \"parser/type-prefix.h\"" ; \
+	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 
 lexer/$(HACFLAT_LEX_ROOT)-real.cc: lexer/$(HACFLAT_LEX_ROOT).cc
-	$(ECHO) "#include \"lexer/flex_lexer_state.h\"" > $@
-	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
+	{ $(ECHO) "#include \"lexer/flex_lexer_state.h\"" ; \
+	$(CAT) lexer/$(HACFLAT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) ;} > $@
 
 $(srcdir)/lexer/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
 
@@ -1035,25 +1051,33 @@ $(HACKT_PARSE_OUTPUT): parser/$(HACKT_PARSE_ROOT).h
 PARSE_OUTPUT_TO_HEADER_PIPE = $(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
 	-f $(srcdir)/parser/common-output-to-C.awk
 
+# Oddly, the targets sometimes get mistakenly generated in the srcdir...
+PARSE_OUTPUT_HEADER_SCRIPT = \
+	if $(GREP) "conflict" $< ; then exit 1; fi ; \
+	$(SED_srcdir_strip_setup) ; \
+	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > \
+		`$(ECHO) $@ | $(SED_srcdir_strip_fast)`
+
 $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
-	@if $(GREP) "conflict" $?; then exit 1; fi
-	$(CAT) $? | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
-#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+	$(PARSE_OUTPUT_HEADER_SCRIPT)
+#	@if $(GREP) "conflict" $<; then exit 1; fi
+#	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 INSTREF_PARSE_OUTPUT = parser/$(INSTREF_PARSE_ROOT).output
 $(INSTREF_PARSE_OUTPUT): parser/$(INSTREF_PARSE_ROOT).h
 
 $(INSTREF_PARSE_OUTPUT).h: $(INSTREF_PARSE_OUTPUT)
-	@if $(GREP) "conflict" $?; then exit 1; fi
-	$(CAT) $? | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
+	$(PARSE_OUTPUT_HEADER_SCRIPT)
+#	@if $(GREP) "conflict" $<; then exit 1; fi
+#	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 TYPE_PARSE_OUTPUT = parser/$(TYPE_PARSE_ROOT).output
 $(TYPE_PARSE_OUTPUT): parser/$(TYPE_PARSE_ROOT).h
 
 $(TYPE_PARSE_OUTPUT).h: $(TYPE_PARSE_OUTPUT)
-	@if $(GREP) "conflict" $?; then exit 1; fi
-	$(CAT) $? | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
+	$(PARSE_OUTPUT_HEADER_SCRIPT)
+#	@if $(GREP) "conflict" $<; then exit 1; fi
+#	$(CAT) $< | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
@@ -1086,22 +1110,22 @@ PARSER_TYPES_PIPE = $(GREP) -v "\#include" | $(CPP_TRADITIONAL) -P | \
 		$(SED) -e '/^%start/,$$d' -e '/%{/,/%}/d' -e '/^[ \t]*$$/d'
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
-	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $< | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
 #		$(GREP) -v pragma | \
 #		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 #		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
-	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $< | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
 #		$(GREP) -v pragma | \
 #		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 #		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/type.types: parser/$(TYPE_PARSE_ROOT).yy
-	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
-#	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+	$(CAT) $< | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $< | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
 #		$(GREP) -v pragma | \
 #		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 #		$(SED) '/^[ \t]*$$/d' > $@
@@ -1211,15 +1235,15 @@ AM_LDFLAGS = @AUTO_LDFLAGS@
 
 # now extended to include other important flags
 am_cxxflags.h: $(srcdir)/Makefile.am
-	@$(ECHO) "#ifndef	AM_CPPFLAGS" > $@
-	@$(ECHO) "#define	AM_CPPFLAGS \"$(AM_CPPFLAGS)\"" >> $@
-	@$(ECHO) "#endif	/* AM_CPPFLAGS */" >> $@
-	@$(ECHO) "#ifndef	AM_CXXFLAGS" >> $@
-	@$(ECHO) "#define	AM_CXXFLAGS \"$(AM_CXXFLAGS)\"" >> $@
-	@$(ECHO) "#endif	/* AM_CXXFLAGS */" >> $@
-	@$(ECHO) "#ifndef	AM_LDFLAGS" >> $@
-	@$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" >> $@
-	@$(ECHO) "#endif	/* AM_LDFLAGS */" >> $@
+	@{ $(ECHO) "#ifndef	AM_CPPFLAGS" ; \
+	$(ECHO) "#define	AM_CPPFLAGS \"$(AM_CPPFLAGS)\"" ; \
+	$(ECHO) "#endif	/* AM_CPPFLAGS */" ; \
+	$(ECHO) "#ifndef	AM_CXXFLAGS" ; \
+	$(ECHO) "#define	AM_CXXFLAGS \"$(AM_CXXFLAGS)\"" ; \
+	$(ECHO) "#endif	/* AM_CXXFLAGS */" ; \
+	$(ECHO) "#ifndef	AM_LDFLAGS" ; \
+	$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" ; \
+	$(ECHO) "#endif	/* AM_LDFLAGS */" ;} > $@
 
 # flags needed to produce .output from yacc/bison
 AM_YFLAGS = -d -t -v
@@ -1394,25 +1418,25 @@ AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(CONFIG_PARSERS) \
 	$(IGNOREHEADERS) config.log
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "$(srcdir)/$*.sh > $*.output 2>&1" >> $@
-	@$(ECHO) "$(DIFF) -u $(srcdir)/$*.stderr $*.output > $*.diff" >> $@
-	@$(ECHO) "if [ -s $*.diff ]" >> $@
-	@$(ECHO) then >> $@
-		@$(ECHO) "$(ECHO) \"libc getopt behavior differs from expectation!\"" >> $@
-		@$(ECHO) "$(CAT) $*.diff" >> $@
-		@$(ECHO) "exit 1" >> $@
-	@$(ECHO) fi >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SHELL)" ; \
+	$(ECHO) "$(srcdir)/$*.sh > $*.output 2>&1" ; \
+	$(ECHO) "$(DIFF) -u $(srcdir)/$*.stderr $*.output > $*.diff" ; \
+	$(ECHO) "if [ -s $*.diff ]" ; \
+	$(ECHO) then ; \
+	  $(ECHO) "$(ECHO) \"libc getopt behavior differs from expectation!\"" ; \
+	  $(ECHO) "$(CAT) $*.diff" ; \
+	  $(ECHO) "exit 1" ; \
+	$(ECHO) fi ;} > $@ ; \
+	$(CHMOD) +x $@
 
 DISTCLEANFILES += test/getopt_test.test \
 	test/getopt_test.diff \
 	test/getopt_test.output
 
 hackt_persistent_table.sh: hackt
-	@$(ECHO) "#!/bin/sh" > $@
-	@$(ECHO) "./hackt dump_persistent_table" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!/bin/sh" ; \
+	$(ECHO) "./hackt dump_persistent_table" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 # choosing not to distribute lex/yacc-generated sources for now
 CLEANPARSER = \
@@ -1453,6 +1477,7 @@ CLEANLEXER = \
 
 libs: $(LTLIBRARIES)
 
+AUTO_IGNORE += $(CLEANPARSER) $(CLEANLEXER)
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
 OBJECT_DIRS = Object Object/common Object/expr Object/def Object/inst \
@@ -1496,57 +1521,67 @@ clean-local: clean-AST clean-Object clean-lexer clean-parser clean-sim \
 
 # cvsignore targets
 if AUTO_CVSIGNORE
-lexer/.cvsignore: .cvsignore lexer/local.cvsignore
-	$(CAT) .cvsignore $(srcdir)/lexer/local.cvsignore > $@
-parser/.cvsignore: .cvsignore parser/local.cvsignore
-	$(CAT) .cvsignore $(srcdir)/parser/local.cvsignore > $@
-common/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/common/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/def/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/expr/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/inst/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/lang/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/ref/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/traits/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/type/.cvsignore: .cvsignore
-	$(CP) $? $@
-Object/unroll/.cvsignore: .cvsignore
-	$(CP) $? $@
-AST/.cvsignore: .cvsignore
-	$(CP) $? $@
-main/.cvsignore: .cvsignore
-	$(CP) $? $@
-sim/.cvsignore: .cvsignore
-	$(CP) $? $@
-sim/prsim/.cvsignore: .cvsignore
-	$(CP) $? $@
-sim/chpsim/.cvsignore: .cvsignore
-	$(CP) $? $@
-test/.cvsignore: .cvsignore test/local.cvsignore
-	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
+$(srcdir)/lexer/.cvsignore: $(srcdir)/.cvsignore lexer/local.cvsignore
+	$(CAT) $(srcdir)/.cvsignore $(srcdir)/lexer/local.cvsignore > $@
+$(srcdir)/parser/.cvsignore: $(srcdir)/.cvsignore parser/local.cvsignore
+	$(CAT) $(srcdir)/.cvsignore $(srcdir)/parser/local.cvsignore > $@
+$(srcdir)/common/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/common/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/def/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/expr/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/inst/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/lang/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/ref/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/traits/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/type/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/Object/unroll/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/AST/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/main/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/sim/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/sim/prsim/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/sim/chpsim/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
+$(srcdir)/test/.cvsignore: $(srcdir)/.cvsignore test/local.cvsignore
+	@$(CAT) $(srcdir)/.cvsignore $(srcdir)/test/local.cvsignore > $@
 
 # files to ignore in subdirectories
 # can we generate this from suffix appending?
-SUBDIR_CVSIGNORE += lexer/.cvsignore parser/.cvsignore \
-	common/.cvsignore \
-	Object/.cvsignore Object/common/.cvsignore \
-	Object/def/.cvsignore Object/expr/.cvsignore \
-	Object/inst/.cvsignore Object/lang/.cvsignore Object/ref/.cvsignore \
-	Object/traits/.cvsignore Object/type/.cvsignore \
-	Object/unroll/.cvsignore \
-	AST/.cvsignore main/.cvsignore \
-	sim/.cvsignore sim/prsim/.cvsignore sim/chpsim/.cvsignore \
-	test/.cvsignore
+SUBDIR_CVSIGNORE += \
+	$(srcdir)/lexer/.cvsignore \
+	$(srcdir)/parser/.cvsignore \
+	$(srcdir)/common/.cvsignore \
+	$(srcdir)/Object/.cvsignore \
+	$(srcdir)/Object/common/.cvsignore \
+	$(srcdir)/Object/def/.cvsignore \
+	$(srcdir)/Object/expr/.cvsignore \
+	$(srcdir)/Object/inst/.cvsignore \
+	$(srcdir)/Object/lang/.cvsignore \
+	$(srcdir)/Object/ref/.cvsignore \
+	$(srcdir)/Object/traits/.cvsignore \
+	$(srcdir)/Object/type/.cvsignore \
+	$(srcdir)/Object/unroll/.cvsignore \
+	$(srcdir)/AST/.cvsignore \
+	$(srcdir)/main/.cvsignore \
+	$(srcdir)/sim/.cvsignore \
+	$(srcdir)/sim/prsim/.cvsignore \
+	$(srcdir)/sim/chpsim/.cvsignore \
+	$(srcdir)/test/.cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)
 
@@ -1584,22 +1619,22 @@ show-stacktrace-sources: force
 
 help-local:
 	-@$(CALLMAKE) help-check-headers 2> /dev/null
-	@$(ECHO) "Local make targets:"
-	@$(ECHO) "    hackt: the main executable"
-	@$(ECHO) "    libs: all (libtool) libraries"
-	@$(ECHO) "    libhackt.la: core library"
-	@$(ECHO) "    libhacktparsers.la: lexers/parsers library"
-	@$(ECHO) "    libhacktexec.la: subprogram library"
-	@$(ECHO) "    libfangutil.la: common utilities library"
-	@$(ECHO) "    clean-AST: cleans AST subdir's objects"
-	@$(ECHO) "    clean-Object: cleans Object subdir's objects"
-	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
-	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
-	@$(ECHO) "    clean-libs: cleans all libraries and archives"
-	@$(ECHO) "    clean-scripts: cleans built bin scripts"
-	@$(ECHO) "    show-stacktrace-sources: grep for debug-enabled sources"
-	@$(ECHO) "Local echo-* targets:"
-	@$(ECHO) "    libhacktexec-sources"
+	@$(ECHO) "Local make targets:" ; \
+	$(ECHO) "    hackt: the main executable" ; \
+	$(ECHO) "    libs: all (libtool) libraries" ; \
+	$(ECHO) "    libhackt.la: core library" ; \
+	$(ECHO) "    libhacktparsers.la: lexers/parsers library" ; \
+	$(ECHO) "    libhacktexec.la: subprogram library" ; \
+	$(ECHO) "    libfangutil.la: common utilities library" ; \
+	$(ECHO) "    clean-AST: cleans AST subdir's objects" ; \
+	$(ECHO) "    clean-Object: cleans Object subdir's objects" ; \
+	$(ECHO) "    clean-lexer: cleans lexer subdir's objects" ; \
+	$(ECHO) "    clean-parser: cleans parser subdir's objects" ; \
+	$(ECHO) "    clean-libs: cleans all libraries and archives" ; \
+	$(ECHO) "    clean-scripts: cleans built bin scripts" ; \
+	$(ECHO) "    show-stacktrace-sources: grep for debug-enabled sources" ; \
+	$(ECHO) "Local echo-* targets:" ; \
+	$(ECHO) "    libhacktexec-sources"
 
 .PHONY: distclean-deps distclean-local dist-hook
 

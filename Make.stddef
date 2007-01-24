@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.21 2007/01/21 05:58:04 fang Exp $
+#	$Id: Make.stddef,v 1.22 2007/01/24 23:20:20 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -65,6 +65,17 @@ EXTRA_DIST =
 TESTS =
 # EXTRA_DIST files that should only be searched from the srcdir
 srcdir_EXTRA_DIST =
+
+# pipe to strip out srcdir from a name
+# NOTE: this was ripped from $(am__vpath_adj_setup)
+#	and $(am__vpath_adj)
+SED_srcdir_strip_setup = srcdirstrip=`$(ECHO) "$(srcdir)" | $(SED) 's|.|.|g'`
+# SED_srcdir_strip_setup = $(am__vpath_adj_setup)
+SED_srcdir_strip_fast = $(SED) "s|^$$srcdirstrip/||"
+SED_srcdir_strip = { $(SED_srcdir_strip_setup) ; $(SED_srcdir_strip_fast) ;}
+
+# strip all directory prefix (from am__strip_dir)
+SED_stripdir = $(SED) 's|^.*/||'
 
 # these files are automatically removed from distribution by dist-hook
 DISTHOOK_CLEANFILES =

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-01-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69:
+	  Global Makefile maintainence.  Fixed some broken dependencies.  
+	  Make.stddef: added useful strip srcdir macros
+
+
 2007-01-23	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-68:

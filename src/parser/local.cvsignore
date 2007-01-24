@@ -4,6 +4,7 @@
 ignore
 *.types
 *.output
+*.output.h
 *.lo
 *.loT
 *.h
@@ -18,3 +19,5 @@ hackt-parse.yy
 instref-parse.yy
 type-parse.yy
 yacc_version.h
+*-prefix.h
+*-real.h
