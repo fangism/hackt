@@ -1,5 +1,12 @@
 "dox/ChageLog"
-	$Id: ChangeLog,v 1.8 2006/11/26 21:16:23 fang Exp $
+	$Id: ChangeLog,v 1.9 2007/01/24 03:43:27 fang Exp $
+
+2007-01-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-68:
+	  scantexdepend.awk: more robust for when dependent file names
+		wrap around to next line in the .log file, try again...  
+
 
 2006-11-26	David Fang		<fangism@users.sourceforge.net>
 

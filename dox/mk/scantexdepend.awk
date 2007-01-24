@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.3 2006/11/27 22:59:57 fang Exp $
+#	$Id: scantexdepend.awk,v 1.4 2007/01/24 03:43:27 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
@@ -9,11 +9,43 @@ BEGIN {
 	if (length(targets)) {
 		printf("%s:", targets);
 	}
+	hold = "";
 }
 
-/\([/\.]/ {
+function valid_file(str, 
+	ret) {
+	ret = (getline < str);
+	close(str)
+	return ret;
+}
+
+# /\([/\.]/
+{
 	# print "GOT: " $0;
-	while (match($0,"\\(")) {
+	buffer = $0;
+	len = length(hold);
+	if (len) {
+		# print "\nholding: " hold;
+		hold = hold $0;		# concatenate
+		# try substrings of concatenated string until file found
+		# print "cat: " hold;
+		max = length(hold);
+		while (len <= max) {
+			try_file = substr(hold, a, len);
+			# print "try: " try_file;
+			# careful, valid_file clobbers $0
+			if (valid_file(try_file) == 1) {
+				printf("%s", " \\\n\t" try_file);
+				# possibly eat up part of $0
+				break;
+			}
+			++len;
+		}
+	}
+	hold = "";	# always clear it out
+	# the normal file-name search
+	$0 = buffer;
+	while (match($0,"\\([/\\.]")) {
 		# eat up everything up to and including the open-parenthesis
 		sub("^[^(]*\\(", "", $0);
 		# print "HAVE: " $0;
@@ -32,7 +64,14 @@ BEGIN {
 			!match(dep, "\\.out$") &&
 			!match(dep, "\\.toc$")) {
 			# or whatever formatting is convenient
-			printf("%s", " \\\n\t" dep);
+			# verify validity of file
+			if (valid_file(dep) == 1) {
+				printf("%s", " \\\n\t" dep);
+			} else {
+				# uh oh, filename was snipped!
+				# printf("%s_NOT_FOUND", " \\\n\t" dep);
+				hold = dep;
+			}
 		}
 	}
 }
