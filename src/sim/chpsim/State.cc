@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2 2007/01/21 06:00:43 fang Exp $
+	$Id: State.cc,v 1.2.2.1 2007/01/25 22:09:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "sim/event.tcc"
 #include "sim/signal_handler.tcc"
 #include "sim/chpsim/nonmeta_context.h"
+#include "sim/random_time.h"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
@@ -100,26 +101,10 @@ struct State::recheck_transformer {
 	 */
 	void
 	operator () (const event_index_type ei) {
-		STACKTRACE("recheck-transformer");
-//		STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
+		STACKTRACE_INDENT_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
-		// can we push this functionality into EventNode?
-#if 0
-		if (e.recheck(context)) {
-			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
-			state.__enqueue_list.push_back(ei);
-			// unsubscribe the event from its dependent variables
-			e.get_deps().unsubscribe(context, ei);
-		} else {
-			STACKTRACE_INDENT_PRINT("blocked on deps." << endl);
-			// subscribe the event to its dependent variables
-			e.get_deps().subscribe(context, ei);
-			// dump deps
-		}
-#else
-		e.recheck(context, ei);	// const?
-#endif
+		e.recheck(context, ei);
 	}
 
 };	// end class recheck_transformer
@@ -136,16 +121,36 @@ struct State::event_enqueuer {
 	event_enqueuer(this_type& s) : state(s) { }
 
 	/**
-		TODO: add event delays
+		TODO: different timing modes
 	 */
 	void
 	operator () (const event_index_type ei) {
 		const event_type& e(state.event_pool[ei]);
-		const time_type new_time = state.current_time +
-			(e.is_trivial() ? state.get_null_event_delay()
-				: state.get_uniform_delay());
-		state.event_queue.push(
-			event_placeholder_type(new_time, ei));
+		time_type new_delay;
+	switch (state.timing_mode) {
+	case TIMING_UNIFORM:
+		new_delay = (e.is_trivial() ?
+			state.get_null_event_delay() :
+			state.get_uniform_delay());
+		break;
+	case TIMING_PER_EVENT:
+		new_delay = e.get_delay();
+		break;
+	case TIMING_RANDOM:
+		new_delay = random_time<time_type>()();
+		break;
+	default: // huh?
+		new_delay = event_type::default_delay;
+		ISE(cerr, cerr << "unknown timing mode.";)
+	}
+		const time_type new_time = state.current_time +new_delay;
+		const event_placeholder_type new_event(new_time, ei);
+		if (state.watching_event_queue()) {
+			// is this a performance hit, rechecking inside loop?
+			// if so, factor this into two versioned loops.
+			state.dump_event(cout << "enqueue: ", ei, new_time);
+		}
+		state.event_queue.push(new_event);
 	}
 
 };	// end class event_enqueuer
@@ -165,9 +170,10 @@ State::State(const module& m) :
 		instances(m.get_state_manager()), 
 		event_pool(), 
 		event_queue(), 
+		timing_mode(TIMING_DEFAULT), 
 		current_time(0), 
-		uniform_delay(10),
-		null_event_delay(10),	// or 0
+		uniform_delay(event_type::default_delay),
+		null_event_delay(event_type::default_delay),	// or 0
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
@@ -229,16 +235,25 @@ State::initialize(void) {
 	__updated_list.clear();
 	__enqueue_list.clear();
 	__rechecks.clear();
-	// TODO: for-all events: reset countdown and state
 	for_each(event_pool.begin(), event_pool.end(),
 		mem_fun_ref(&event_type::reset)
 	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In addition to initializing the simulator, this also resets
+	any modes that may have changed, like a fresh boot.  
+	See constructor member initializers for reference.  
+ */
 void
 State::reset(void) {
-	// TOOD: write me!
+	initialize();
+	uniform_delay = event_type::default_delay;
+	null_event_delay = event_type::default_delay;
+	timing_mode = TIMING_DEFAULT;
+	interrupted = false;
+	flags = FLAGS_DEFAULT;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,13 +305,7 @@ State::step(void) {
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
-#if 0
-	// first NULL event has index 0!
-	if (!ei) {
-		// possible in the event that last events are killed
-		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-	}
-#endif
+	// first NULL event has index 0, but nothing else should enqueue it
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
 
@@ -402,6 +411,78 @@ State::step(void) {
 	// TODO: finish me: watch list
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 }	// end step() method
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print the current timing mode.  
+ */
+ostream&
+State::dump_timing(ostream& o) const {
+	o << "timing: ";
+switch (timing_mode) {
+	case TIMING_PER_EVENT:
+		o << "per-event";
+		break;
+	case TIMING_UNIFORM:
+		o << "uniform (" << uniform_delay << ")";
+		break;
+	case TIMING_RANDOM:
+		o << "random";
+		break;
+	default: o << "unknown";
+}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there is an error.  
+ */
+bool
+State::set_timing(const string& m, const string_list& a) {
+	/// use delay assign to event upon construction
+	static const string __per_event("per-event");	// use event's delay
+	/// use uniform_delay, possibly overridden for null-event-delay
+	static const string __uniform("uniform");	// fixed delay (default)
+	static const string __random("random");
+	static const string __default("default");
+	if (m == __per_event) {
+		timing_mode = TIMING_PER_EVENT;
+	} else if (m == __uniform) {
+		timing_mode = TIMING_UNIFORM;
+	} else if (m == __random) {
+		timing_mode = TIMING_RANDOM;
+		switch (a.size()) {
+		case 0: break;
+		case 1: {
+			FINISH_ME(Fang);
+			cerr << "TODO: plant random seed." << endl;
+			break;
+		default: return true;	// error
+		}
+		}
+	} else if (m == __default) {
+		timing_mode = TIMING_DEFAULT;
+		// ignore other arguments
+	} else {
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Keep this help consistent with the implementation of set_timing().  
+ */
+ostream&
+State::help_timing(ostream& o) {
+	o << "available timing modes:\n"
+	"\tuniform -- use \'uniform-delay\' to set delay\n"
+	"\tper-event -- use event-specific constant delay\n"
+	"\trandom -- use random delay\n"
+	"\tdefault -- (uniform)" << endl;
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -738,7 +819,8 @@ graph_options::graph_options() :
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 		with_antidependencies(false),
 #endif
-		process_event_clusters(false) {
+		process_event_clusters(false), 
+		show_delays(false) {
 }
 
 //=============================================================================

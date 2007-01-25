@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-01:
+	  New branch for second round of chpsim development.
+	  Split up TODO into sim/prsim/TODO and sim/chpsim/TODO.
+	  chpsim EventNode: added delay member with default value, 
+		currently not set, but will be set during state-construction, 
+		possibly overrideable at simulation time.  
+	  chpsim command:
+		'timing' <mode> -- set/get timing mode of sim.
+			Added timing mode support to CHPSIM::State.
+		Added one small (silent) test case for random timing.  
+	  chpsim dot-graph: added option to display delays of events.  
+
+
 2007-01-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-69:

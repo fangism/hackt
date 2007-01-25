@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2 2007/01/21 06:00:44 fang Exp $
+	$Id: State.h,v 1.2.2.1 2007/01/25 22:09:45 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -16,6 +16,7 @@
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
 #include "util/macros.h"
+#include "util/tokenize_fwd.h"
 
 namespace HAC {
 namespace SIM {
@@ -24,6 +25,7 @@ using std::vector;
 using entity::nonmeta_state_manager;
 using entity::event_subscribers_type;
 using entity::global_indexed_reference;
+using util::string_list;
 class StateConstructor;
 class nonmeta_context;
 class graph_options;
@@ -40,11 +42,14 @@ class State : public state_base {
 friend class StateConstructor;
 friend class nonmeta_context;
 	typedef	State				this_type;
+	typedef	EventNode			event_type;
 public:
-	typedef	real_time			time_type;
+	/**
+		Numeric type for time, currently hard-coded to real (double).
+	 */
+	typedef	event_type::time_type		time_type;
 	typedef	signal_handler<this_type>	signal_handler;
 private:
-	typedef	EventNode			event_type;
 	typedef	vector<event_type>		event_pool_type;
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>
@@ -63,15 +68,55 @@ private:
 	typedef	global_indexed_reference	step_return_type;
 	typedef	vector<global_indexed_reference>
 						update_reference_array_type;
+	/**
+		Various mode flags, settable by user.  
+	 */
 	enum {
 		/**
 			Whether or not the simulation was halted for any 
 			reason, self-stopped on error, or interrupted.  
 		 */
 		FLAG_STOP_SIMULATION = 0x0001,
+		/**
+			When true report event-queue activity, i.e.
+			when events are enqueued.  
+		 */
 		FLAG_WATCH_QUEUE = 0x0002,
+		/**
+			When true, print each event as it is dequeued and
+			executed.  
+		 */
 		FLAG_WATCH_ALL_EVENTS = 0x0004,
+		/**
+			TODO: timing mode flags
+		 */
 		FLAGS_DEFAULT = 0x0000
+	};
+	/**
+		Timing mode enumerations.
+	 */
+	enum {
+		/**
+			Give every event a constant delay.
+			Exception may be granted for "trivial" events
+			by modifying null_event_delay.  
+		 */
+		TIMING_UNIFORM,
+		/**
+			Use the delay value associated with each event.
+		 */
+		TIMING_PER_EVENT,
+		/**
+			Use random delays for all events, 
+			including "trivial" events.  
+			If we introduced 'bullet' semantics, would that be
+			an exception?
+		 */
+		TIMING_RANDOM,
+		/**
+			Default timing mode.  
+		 */
+		TIMING_DEFAULT = TIMING_UNIFORM
 	};
 	struct recheck_transformer;
 	struct event_enqueuer;
@@ -92,6 +137,7 @@ private:
 private:
 	static const char			event_table_header[];
 private:
+	char					timing_mode;
 	time_type				current_time;
 	time_type				uniform_delay;
 	time_type				null_event_delay;
@@ -220,6 +266,16 @@ public:
 
 	void
 	check_structure(void) const;
+
+	bool
+	set_timing(const string&, const string_list&);
+
+	ostream&
+	dump_timing(ostream&) const;
+
+	static
+	ostream&
+	help_timing(ostream&);
 
 	ostream&
 	dump_struct(ostream&) const;

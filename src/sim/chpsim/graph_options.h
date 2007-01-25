@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/graph_options.h"
-	$Id: graph_options.h,v 1.2 2007/01/21 06:00:48 fang Exp $
+	$Id: graph_options.h,v 1.2.2.1 2007/01/25 22:09:46 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -50,6 +50,11 @@ struct graph_options {
 		Default: false
 	 */
 	bool				process_event_clusters;
+	/**
+		Set to true to show delays on events.  
+		Default: false
+	 */
+	bool				show_delays;
 
 
 	graph_options();

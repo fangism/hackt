@@ -1,0 +1,39 @@
+"sim/chpsim/TODO"
+#	$Id: TODO,v 1.1.2.1 2007/01/25 22:09:45 fang Exp $
+
+===============================================================================
+
+chpsim:
+	stability checking mode:
+		(Does something change between time of enqueue to 
+			time of execution?)
+		for guard expressions
+		variables referenced (and their values)
+	eliminate guard_expr from event structure, and handle
+		condition wait like a normal blockable (no-op) event.  
+	non-atomic expression evaluation: [IMPORTANT] 
+		rvalue and lvalues of assignments, channel send/receive 
+		may contain arbitrary nonmeta-expressions.
+		Q: when/how should they be expanded, at source/tree level,
+			in intermediate representation, or event-generation?
+			Q: should we do version tracking?
+		Q: when should evaluation of expressions *begin*?
+			do we require flow analysis?
+		A: safe to start right when channel event is ready, 
+			i.e. predecessors done, and channel state is ready
+	support: probe expressions, value probes, missing from CHP language!
+	minor enhancement:
+		coalesce common subtrees of forks and joins [low priority]
+	visualization: 
+		print process-subgraphs as clusters
+		print allocated instances and dependency edges to them
+	footprint-ize: processes' CHP event subgraphs, easier because
+		they are not shared.  
+	enhancement: Maybe flag references that are meta to avoid re-checking
+		as nonmeta references at run-time.  
+		Possibly cache-it as a redundant pointer in CHP expressions.
+	timing: interface to edit event delays, load back-annotation file?
+	channels: add support for sized types, e.g. bool[4]
+
+
+===============================================================================

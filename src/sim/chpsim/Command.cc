@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3 2007/01/24 18:37:32 fang Exp $
+	$Id: Command.cc,v 1.3.2.1 2007/01/25 22:09:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1626,7 +1626,6 @@ UniformDelay::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
 	"set/get timing mode")
 
@@ -1654,7 +1653,6 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

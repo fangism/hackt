@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.2 2007/01/21 06:00:41 fang Exp $
+	$Id: Event.cc,v 1.2.2.1 2007/01/25 22:09:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -38,6 +38,9 @@ using entity::expr_dump_context;
 const char 
 EventNode::node_prefix[] = "EVENT_";
 
+const EventNode::time_type
+EventNode::default_delay = 10;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EventNode::EventNode() :
 		action_ptr(NULL),
@@ -47,6 +50,7 @@ EventNode::EventNode() :
 		process_index(0),
 		predecessors(0),
 		countdown(0), 
+		delay(default_delay), 
 		block_deps()
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 		, anti_deps()
@@ -68,6 +72,7 @@ EventNode::EventNode(const action* a,
 		process_index(pid),
 		predecessors(0),
 		countdown(0), 
+		delay(default_delay), 
 		block_deps()
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 		, anti_deps()
@@ -94,6 +99,7 @@ EventNode::operator = (const this_type& e) {
 	process_index = e.process_index;
 	predecessors = e.predecessors;
 	countdown = e.countdown;
+	delay = default_delay;
 	block_deps = e.block_deps;		// re-defined!
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 	anti_deps = e.anti_deps;
@@ -232,6 +238,9 @@ EventNode::dump_brief(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: source-annotated delays?
+ */
 ostream&
 EventNode::dump_source(ostream& o) const {
 	if (action_ptr) {
@@ -255,6 +264,7 @@ EventNode::dump_pending(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For diagnostics.  
+	TODO: delays?
  */
 ostream&
 EventNode::dump_struct(ostream& o) const {
@@ -292,6 +302,7 @@ EventNode::dump_struct(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Don't print guards here, put guards on edges.  
+	TODO: delays?
  */
 ostream&
 EventNode::dump_dot_node(ostream& o, const event_index_type i, 
@@ -307,7 +318,7 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	case EVENT_RECEIVE: o << "invhouse"; break;
 	case EVENT_CONCURRENT_FORK: o << "hexagon"; break;
 	case EVENT_SELECTION_BEGIN: o << "trapezium"; break;
-		// TODO: flag for non-deterministic?
+		// TODO: flag for non-deterministic? extra periphery?
 	default:
 		ISE(cerr, cerr << "Invalid event type enum: "
 			<< event_type << endl;)
@@ -315,6 +326,9 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	o << ", label=\"";
 	if (g.show_event_index) {
 		o << "[" << i << "] ";
+	}
+	if (g.show_delays) {
+		o << '@' << delay << ' ';
 	}
 	o << "pid=" << process_index;
 	if (action_ptr) {

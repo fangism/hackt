@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.150 2007/01/24 23:20:23 fang Exp $
+#	$Id: Makefile.am,v 1.150.2.1 2007/01/25 22:09:39 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1378,7 +1378,9 @@ EXTRA_DIST += local.cvsignore \
 	wc-l \
 	sim/README \
 	sim/prsim/README \
-	sim/chpsim/README
+	sim/prsim/TODO \
+	sim/chpsim/README \
+	sim/chpsim/TODO
 
 TESTS += hackt_persistent_table.sh test/getopt_test.test
 
