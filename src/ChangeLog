@@ -5,6 +5,12 @@
 
 2007-01-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-02:
+	  This patch assigns some questionably reasonable default delay
+		value per event, based on event type.  
+	  One test-case added to test/chpsim.
+
+
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-01:
 	  New branch for second round of chpsim development.
 	  Split up TODO into sim/prsim/TODO and sim/chpsim/TODO.

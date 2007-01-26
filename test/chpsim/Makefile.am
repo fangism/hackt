@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.1 2007/01/25 22:09:48 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.2 2007/01/26 01:13:10 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -95,7 +95,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	arbitrate-loop-a-01 arbitrate-loop-a-02 arbitrate-loop-a-03 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
-	select-block-a-01
+	select-block-a-01 select-block-a-02
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01

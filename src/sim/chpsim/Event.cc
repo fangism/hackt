@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.2.2.1 2007/01/25 22:09:43 fang Exp $
+	$Id: Event.cc,v 1.2.2.2 2007/01/26 01:13:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -73,6 +73,29 @@ EventNode::EventNode(const action* a,
 		predecessors(0),
 		countdown(0), 
 		delay(default_delay), 
+		block_deps()
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+		, anti_deps()
+#endif
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param a the CHP::action pointer (may be NULL)
+		using shallow reference, not reference counting.
+ */
+EventNode::EventNode(const action* a, 
+		const unsigned short t, const size_t pid, 
+		const time_type d) :
+		action_ptr(a),
+		successor_events(), 
+		event_type(t),
+		flags(0),
+		process_index(pid),
+		predecessors(0),
+		countdown(0), 
+		delay(d), 
 		block_deps()
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 		, anti_deps()

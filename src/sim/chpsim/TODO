@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.1.2.1 2007/01/25 22:09:45 fang Exp $
+#	$Id: TODO,v 1.1.2.2 2007/01/26 01:13:09 fang Exp $
 
 ===============================================================================
 
@@ -9,8 +9,6 @@ chpsim:
 			time of execution?)
 		for guard expressions
 		variables referenced (and their values)
-	eliminate guard_expr from event structure, and handle
-		condition wait like a normal blockable (no-op) event.  
 	non-atomic expression evaluation: [IMPORTANT] 
 		rvalue and lvalues of assignments, channel send/receive 
 		may contain arbitrary nonmeta-expressions.
@@ -22,18 +20,25 @@ chpsim:
 		A: safe to start right when channel event is ready, 
 			i.e. predecessors done, and channel state is ready
 	support: probe expressions, value probes, missing from CHP language!
+		in-source assertions
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
 	visualization: 
 		print process-subgraphs as clusters
 		print allocated instances and dependency edges to them
+			prereq: static data-dependencies and anti-dependencies
 	footprint-ize: processes' CHP event subgraphs, easier because
 		they are not shared.  
 	enhancement: Maybe flag references that are meta to avoid re-checking
 		as nonmeta references at run-time.  
 		Possibly cache-it as a redundant pointer in CHP expressions.
+		Better yet, cache the resolved index as a
+			global_indexed_reference.  
 	timing: interface to edit event delays, load back-annotation file?
+		possibly more elaborate code to customize delays systematically
 	channels: add support for sized types, e.g. bool[4]
+	error handling:
+		exceptions on out-of-bounds array references.  
 
 
 ===============================================================================

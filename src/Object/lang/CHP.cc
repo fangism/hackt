@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.18 2007/01/23 02:43:16 fang Exp $
+	$Id: CHP.cc,v 1.18.2.1 2007/01/26 01:13:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -583,7 +583,8 @@ if (!branches) {
 	// create a join event first (bottom-up)
 	const size_t join_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_JOIN, 
-			s.current_process_index));
+			s.current_process_index, 0));
+	// no additional delay given
 {
 	STACKTRACE_INDENT_PRINT("join index: " << join_index << endl);
 	// join shouldn't need an action ptr (unless we want back-reference)
@@ -612,7 +613,7 @@ if (!branches) {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t fork_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
-			s.current_process_index));
+			s.current_process_index, 1));	// small delay
 {
 	STACKTRACE_INDENT_PRINT("fork index: " << fork_index << endl);
 	EventNode& fork_event(s.get_event(fork_index));
@@ -997,7 +998,8 @@ deterministic_selection::accept(StateConstructor& s) const {
 	const size_t branches = this->size();
 	const size_t merge_index = s.allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
-			s.current_process_index));
+			s.current_process_index, 0));
+	// no delay at end of selection
 	// don't pass this, as that would cause re-evaluation at join node!
 {
 	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
@@ -1030,7 +1032,11 @@ deterministic_selection::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t split_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
-			s.current_process_index));
+			s.current_process_index, 1));
+	// delay value doesn't matter because this event is never
+	// 'executed' in the traditional sense.
+	// we CAN however use this delay value to incur additional delay
+	// on its successors (but we don't do this yet)
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(s.get_event(split_index));
@@ -1228,8 +1234,9 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	const size_t branches = this->size();
 	const size_t merge_index = s.allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
-			s.current_process_index));
-	// don't pass this, as that would cause re-evaluation at join node!
+			s.current_process_index, 0));
+	// don't pass 'this', as that would cause re-evaluation at join node!
+	// no delay at end of selection
 {
 	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
 	EventNode& merge_event(s.get_event(merge_index));
@@ -1261,7 +1268,10 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t split_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
-			s.current_process_index));
+			s.current_process_index, 15));
+	// NOTE: the delay value used here is the window of time from 
+	// first unblocked evaluation (enqueue) to execution, during which
+	// guards may change!
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(s.get_event(split_index));
@@ -1847,7 +1857,10 @@ assignment::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_ASSIGN, 
-			s.current_process_index));
+			s.current_process_index, 10));
+	// we give a medium delay to assignment
+	// this may favor explicit communications (projection, refactoring)
+	// over variable assignment.  
 	STACKTRACE_INDENT_PRINT("new assigment: " << new_index << endl);
 	EventNode& new_event(s.get_event(new_index));
 
@@ -1989,7 +2002,9 @@ condition_wait::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
-			s.current_process_index));
+			s.current_process_index, 0));
+	// the delay value should have no impact, as this event just
+	// unblocks its successor(s)
 	STACKTRACE_INDENT_PRINT("wait index: " << new_index << endl);
 	EventNode& new_event(s.get_event(new_index));
 	if (cond) {
@@ -2280,7 +2295,8 @@ channel_send::accept(StateConstructor& s) const {
 	// construct event graph
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SEND, 
-			s.current_process_index));
+			s.current_process_index, 2));
+	// default to small delay
 	STACKTRACE_INDENT_PRINT("send index: " << new_index << endl);
 	EventNode& new_event(s.get_event(new_index));
 
@@ -2416,7 +2432,9 @@ channel_receive::accept(StateConstructor& s) const {
 	// construct event graph
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_RECEIVE, 
-			s.current_process_index));
+			s.current_process_index, 5));
+	// default to small delay
+	// this delay would be more meaningful in a handshaking expansion
 	STACKTRACE_INDENT_PRINT("receive index: " << new_index << endl);
 	EventNode& new_event(s.get_event(new_index));
 
@@ -2582,7 +2600,7 @@ do_forever_loop::accept(StateConstructor& s) const {
 	// -- works only if we need one dummy at a time
 	const size_t loopback_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_NULL,
-			s.current_process_index));
+			s.current_process_index, 0));	// no additional delay
 	STACKTRACE_INDENT_PRINT("forever loopback: " << loopback_index << endl);
 	s.last_event_index = loopback_index;	// point to dummy, pass down
 	body->accept(s);
@@ -2752,7 +2770,8 @@ do_while_loop::accept(StateConstructor& s) const {
 	const size_t branches = this->size();
 	const size_t loopback_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN,
-			s.current_process_index));
+			s.current_process_index, 3));
+	// give small delay for selection
 	STACKTRACE_INDENT_PRINT("do-while loopback index: "
 		<< loopback_index << endl);
 {
@@ -2765,7 +2784,7 @@ do_while_loop::accept(StateConstructor& s) const {
 		// there was no successor, create a terminator
 		const size_t terminal_index = s.allocate_event(
 			EventNode(NULL, SIM::CHPSIM::EVENT_NULL,
-				s.current_process_index));
+				s.current_process_index, 0));
 		// loopback_event reference invalidated by push_back
 		s.get_event(loopback_index).successor_events[branches]
 			= terminal_index;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.2.2.1 2007/01/25 22:09:44 fang Exp $
+	$Id: Event.h,v 1.2.2.2 2007/01/26 01:13:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -214,6 +214,9 @@ public:
 	EventNode();
 
 	EventNode(const action*, const unsigned short, const size_t pid);
+
+	EventNode(const action*, const unsigned short, const size_t pid, 
+		const time_type);
 
 	~EventNode();
 
