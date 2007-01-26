@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.110 2007/01/24 04:14:42 fang Exp $
+#	$Id: configure.ac,v 1.111 2007/01/26 18:46:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -110,6 +110,8 @@ HACKT_AM_CONDITIONAL_HAVE_YACC
 HACKT_YACC_PURE_PARSER
 HACKT_YACC_VERSION
 HACKT_LEX_VERSION
+
+AC_CHECK_PROG([PKG_CONFIG], pkg-config, pkg-config)
 
 # comment out until time for release
 # this causes too many rebuilds during development
@@ -341,6 +343,7 @@ AC_CACHE_SAVE
 
 HACKT_CHECK_SANITY
 
+dnl PACKAGE CHECKS
 dnl readline or editline support
 FANG_CHECK_READLINE
 FANG_CHECK_EDITLINE
@@ -350,6 +353,7 @@ FANG_CHECK_READLINE_ARG_CONST
 dnl check for X11 includes and libraries
 AC_PATH_X
 
+FANG_GUILE
 
 dnl TODO: xdr
 dnl for automake consumption

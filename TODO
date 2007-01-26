@@ -1,6 +1,6 @@
 to do list:
 
-#	$Id: TODO,v 1.25 2007/01/24 23:20:20 fang Exp $
+#	$Id: TODO,v 1.26 2007/01/26 18:46:37 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
 Pay more attention to the src/ChangeLog.  
@@ -49,5 +49,23 @@ by sourcing these scripts.
 -------------------------------------------------------------------------------
 source management:
 	automake: AUTO_IGNORE_PATTERNS for cvsignore
+
+-------------------------------------------------------------------------------
+configury:
+	organize configure checks by section:
+		basic build environment
+		programs and paths
+		compiler and required compilation tools
+			headers, standard libraries
+			options, flags, characteristics, conformance...
+		architecture-depedendence
+		library functions
+		headers
+		packages...
+	summarize results of configure at the very end
+	stating which required packages missing
+		which optional packages found, etc...
+	save errors until the very end for summary
+	produce a pkg-config .pc file if available, using configure results
 
 -------------------------------------------------------------------------------
