@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.111 2007/01/26 18:46:37 fang Exp $
+#	$Id: configure.ac,v 1.112 2007/01/27 05:50:51 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -112,6 +112,10 @@ HACKT_YACC_VERSION
 HACKT_LEX_VERSION
 
 AC_CHECK_PROG([PKG_CONFIG], pkg-config, pkg-config)
+AM_CONDITIONAL(HAVE_PKG_CONFIG, test -n "$PKG_CONFIG" )
+# interface generator
+AC_CHECK_PROG([SWIG], swig, swig)
+AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
 
 # comment out until time for release
 # this causes too many rebuilds during development
@@ -216,6 +220,7 @@ AC_CHECK_HEADERS([stddef.h stdlib.h stdint.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
 AC_CHECK_HEADERS([malloc.h])
 AC_CHECK_HEADERS([ctype.h])
+AC_CHECK_HEADERS([sys/stdtypes.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 AC_CHECK_HEADERS([signal.h sys/signal.h])
@@ -352,9 +357,21 @@ FANG_CHECK_READLINE_ARG_CONST
 
 dnl check for X11 includes and libraries
 AC_PATH_X
+if test -d "$ac_x_includes" ; then
+  X11_INCLUDE="-I$ac_x_includes"
+fi
+if test -d "$ac_x_libraries" ; then
+  X11_LDPATH="-L$ac_x_libraries"
+fi
+AC_SUBST(X11_INCLUDE)
+AC_SUBST(X11_LDPATH)
 
+
+
+dnl check for guile-config
 FANG_GUILE
 
+dnl TODO: AC_SUBST these flags into separate options
 dnl TODO: xdr
 dnl for automake consumption
 dnl order would matter if there are cross-conflicting headers installed

@@ -1,6 +1,6 @@
 # "misc/sudoku/Makefile.inc"
 # includable auto-Makefile snippet
-#	$Id: Makefile.inc,v 1.4 2006/06/26 01:46:47 fang Exp $
+#	$Id: Makefile.inc,v 1.5 2007/01/27 05:51:00 fang Exp $
 #	vim: ft=automake
 
 # variables conditionally defined and provided in this Makefile
@@ -49,8 +49,8 @@ ALL_HEADER_FILES += $(LIBSUDOKU_H_FILES)
 ALL_TCC_FILES += $(LIBSUDOKU_TCC_FILES)
 endif
 
-SUBDIR_CVSIGNORE += misc/sudoku/.cvsignore
+SUBDIR_CVSIGNORE += $(srcdir)/misc/sudoku/.cvsignore
 
-misc/sudoku/.cvsignore: .cvsignore
-	$(CP) $? $@
+$(srcdir)/misc/sudoku/.cvsignore: .cvsignore
+	$(CP) $< $@
 

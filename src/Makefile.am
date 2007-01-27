@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.150 2007/01/24 23:20:23 fang Exp $
+#	$Id: Makefile.am,v 1.151 2007/01/27 05:50:52 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -17,6 +17,7 @@ AUTOMAKE_OPTIONS += subdir-objects
 SUBDIRS = util/test .
 
 # cumulative targets
+BUILT_SOURCES =
 PHONYSOURCES =
 CLEANSUBDIRS =
 SUBDIR_CVSIGNORE =
@@ -117,7 +118,7 @@ getopt_test_SOURCES = test/getopt_test.cc
 
 # This says, "always build me first."
 # trying NOT to abuse this, writing explicit dependencies below
-BUILT_SOURCES = parser/hackt-parse.output.h \
+BUILT_SOURCES += parser/hackt-parse.output.h \
 	parser/instref-parse.output.h \
 	parser/type-parse.output.h
 

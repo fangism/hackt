@@ -1,0 +1,7 @@
+# "misc/guile-logo/README"
+#	$Id: README,v 1.1 2007/01/27 05:50:56 fang Exp $
+
+guile-logo is a toy project experimenting with guile and swig as a potential
+interpreter and wrapper to hackt-internals.  It is just a minimalist
+tutorial for the concepts and portability testing.  
+

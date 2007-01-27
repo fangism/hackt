@@ -2,6 +2,10 @@
 
 2007-01-26	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-71:
+	  AC_SUBST X11_INCLUDE and X11_LDPATH.  
+
+
 	* HACKT-00-01-04-main-00-80-70:
 	  configure.ac, config/guile.m4: autoconf macros for checking
 		guile-config and setting appropriate AC_SUBST variables.  

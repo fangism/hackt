@@ -5,6 +5,13 @@
 
 2007-01-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-71:
+	  No *real* source revision.
+	  Added toy logo project using guile/swig, future Easter Egg.  
+	  Added minimalist configury for swig.  
+	  TODO: learn more scheme, write chpsim-trace reader primitives.  
+
+
 	* HACKT-00-01-04-main-00-80-70:
 	  No source revision.  Top-level configury for guile.  
 

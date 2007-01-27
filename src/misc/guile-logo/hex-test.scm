@@ -1,0 +1,13 @@
+(tortoise-move 100)
+(tortoise-turn 60)
+(tortoise-move 100)
+(tortoise-turn 60)
+(tortoise-move 100)
+(tortoise-turn 60)
+(tortoise-move 100)
+(tortoise-turn 60)
+(tortoise-move 100)
+(tortoise-turn 60)
+(tortoise-move 100)
+(tortoise-turn 60)
+

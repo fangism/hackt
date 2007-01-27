@@ -1,7 +1,7 @@
 # "misc/Makefile.inc"
 #	vim: ft=automake
 # includable auto-Makefile snippet
-#	$Id: Makefile.inc,v 1.5 2006/10/07 16:35:29 fang Exp $
+#	$Id: Makefile.inc,v 1.6 2007/01/27 05:50:53 fang Exp $
 
 # variables conditionally defined and provided in this Makefile
 FUNPROGRAMS =
@@ -9,6 +9,7 @@ FUNLIBS =
 LIBMISCFUN =
 
 include $(srcdir)/misc/sudoku/Makefile.inc
+include $(srcdir)/misc/guile-logo/Makefile.inc
 
 if WANT_LIBMISCFUN
 FUNPROGRAMS += sudoku-solver
@@ -38,9 +39,9 @@ EXTRA_DIST += misc/README \
 	misc/sudoku-sample.txt
 
 misc/sudoku-test.sh:
-	@$(ECHO) #!$(SHELL) > $@
-	@$(ECHO) ./sudoku-solver $(srcdir)/misc/sudoku-sample.txt >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SHELL)" ; \
+	$(ECHO) ./sudoku-solver $(srcdir)/misc/sudoku-sample.txt ;} > $@ ; \
+	$(CHMOD) +x $@
 
 CLEANFILES += misc/sudoku-test.sh
 
@@ -48,9 +49,9 @@ if WANT_LIBMISCFUN
 ALL_HEADER_FILES += $(MISCFUN_H_FILES)
 endif
 
-SUBDIR_CVSIGNORE += misc/.cvsignore
+SUBDIR_CVSIGNORE += $(srcdir)/misc/.cvsignore
 
-misc/.cvsignore: .cvsignore
-	$(CP) $? $@
+$(srcdir)/misc/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
 
 
