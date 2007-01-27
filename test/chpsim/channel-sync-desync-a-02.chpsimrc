@@ -1,0 +1,10 @@
+# "channel-sync-desync-a-02.chpsimrc"
+#	$Id: channel-sync-desync-a-02.chpsimrc,v 1.1.2.1 2007/01/27 23:39:23 fang Exp $
+# @haco@ channel-sync-desync-a.haco-a
+
+echo silent operation at random timing
+timing random
+step 666
+echo queue should not be empty
+assert-queue
+

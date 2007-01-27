@@ -1,0 +1,17 @@
+# "bool-memory-write-a-01.chpsimrc"
+#	$Id: bool-memory-write-a-01.chpsimrc,v 1.1.2.1 2007/01/27 23:39:19 fang Exp $
+# @haco@ bool-memory-write-a.haco-a
+
+watchall-events
+get bram.data[0]
+get bram.data[1]
+get bram.data[2]
+get bram.data[3]
+step 80
+get bram.data[0]
+get bram.data[1]
+get bram.data[2]
+get bram.data[3]
+time
+assert-queue
+

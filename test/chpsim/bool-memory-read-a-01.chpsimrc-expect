@@ -1,0 +1,81 @@
+	0	0	0	null
+	10	6	1	
+	10	16	5	bool_source_constant::S!(true)
+	10	11	3	int_source::S!(0)
+	10	17	6	bool_source_constant::S!(false)
+	20	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	20	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	30	14	3	int_source::S!(1)
+	30	3	1	
+	30	17	6	bool_source_constant::S!(false)
+	40	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	50	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	50	6	1	
+	60	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	60	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	60	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	70	7	2	null
+	70	17	6	bool_source_constant::S!(false)
+	70	13	3	int_source::S!(2)
+	70	15	4	bool_sink::B?(bool_sink::b)
+	70	3	1	
+	80	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	90	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	90	6	1	
+	100	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	100	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	100	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	110	7	2	null
+	110	17	6	bool_source_constant::S!(false)
+	110	12	3	int_source::S!(3)
+	110	15	4	bool_sink::B?(bool_sink::b)
+	110	3	1	
+	120	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	130	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	130	6	1	
+	140	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	140	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	140	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	150	7	2	null
+	150	17	6	bool_source_constant::S!(false)
+	150	11	3	int_source::S!(0)
+	150	15	4	bool_sink::B?(bool_sink::b)
+	150	3	1	
+	160	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	170	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	170	6	1	
+	180	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	180	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	180	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	190	7	2	null
+	190	17	6	bool_source_constant::S!(false)
+	190	14	3	int_source::S!(1)
+	190	15	4	bool_sink::B?(bool_sink::b)
+	190	3	1	
+	200	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	210	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	210	6	1	
+	220	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	220	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	220	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	230	7	2	null
+	230	17	6	bool_source_constant::S!(false)
+	230	13	3	int_source::S!(2)
+	230	15	4	bool_sink::B?(bool_sink::b)
+	230	3	1	
+	240	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	250	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	250	6	1	
+	260	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	260	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	260	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	270	7	2	null
+	270	17	6	bool_source_constant::S!(false)
+	270	12	3	int_source::S!(3)
+	270	15	4	bool_sink::B?(bool_sink::b)
+	270	3	1	
+	280	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	290	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	290	6	1	
+	300	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+time: 300

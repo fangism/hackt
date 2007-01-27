@@ -1,5 +1,15 @@
 # "test/ChangeLog"
 
+2007-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-04:
+	  Make.test-*: various shell scripts group echo actions together
+		to perform a single redirection at the end of a group, 
+		rather than repeated appending to a target file.  
+		Rationale, Makefile shell execution performance, and reducing
+		redudant file/stream operations.  
+
+
 2007-01-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54:

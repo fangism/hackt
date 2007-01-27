@@ -1,0 +1,33 @@
+// "int-table.hac"
+//	$Id: int-table.hac,v 1.1.2.1 2007/01/27 23:39:31 fang Exp $
+// No, it's not "pool-table".
+// Lookup-table structures.
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Arbitrary size int lookup table.
+ */
+template <pint W; pint N; pint V[N]>
+defproc int_lookup_table(chan?(int) A; chan!(int<W>) D) {
+int a;
+chp {
+*[ A?(a); D!(V[a]) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Power-of-2 sized ROM.
+	\param AW is the width of the integer address.
+	\param V is a size(2^W) array of constant values.  
+ */
+template <pint W; pint AW; pint V[1<<W]>
+defproc bool_ROM_bank(chan?(int<AW>) A; chan!(int<W>) D) {
+int<AW> a;
+chp {
+*[ A?(a); D!(V[a]) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

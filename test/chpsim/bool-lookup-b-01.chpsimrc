@@ -1,0 +1,8 @@
+# "bool-lookup-b-01.chpsimrc"
+#	$Id: bool-lookup-b-01.chpsimrc,v 1.1.2.1 2007/01/27 23:39:15 fang Exp $
+# @haco@ bool-lookup-b.haco-a
+
+watchall-events
+echo expect run-time error accessing out-of-bounds
+step 100
+echo not reached because of error

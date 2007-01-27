@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.3 2007/01/27 06:33:37 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.4 2007/01/27 23:39:12 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -52,7 +52,11 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	countdown-sequence-a \
 	countdown-parallel-a \
 	bool-split-a bool-split-b \
-	bool-split-select-a bool-split-select-b
+	bool-split-select-a bool-split-select-b \
+	bool-lookup-a bool-lookup-b \
+	channel-sync-desync-a \
+	bool-memory-read-a bool-memory-read-b \
+	bool-memory-write-a bool-memory-write-b
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -101,12 +105,19 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
 	select-block-a-01 select-block-a-02 \
 	bool-split-a-01 \
-	bool-split-select-a-01
+	bool-split-select-a-01 \
+	bool-lookup-a-01 \
+	channel-sync-desync-a-01 channel-sync-desync-a-02 \
+	bool-memory-read-a-01 \
+	bool-memory-write-a-01
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \
 	bool-split-b-01 \
-	bool-split-select-b-01
+	bool-split-select-b-01 \
+	bool-lookup-b-01 \
+	bool-memory-read-b-01 \
+	bool-memory-write-b-01
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=

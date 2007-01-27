@@ -1,0 +1,22 @@
+// "bool-memory-write-a.hac"
+// copy-modified from "bool-memory-read-a.hac"
+//	$Id: bool-memory-write-a.hac,v 1.1.2.1 2007/01/27 23:39:20 fang Exp $
+// Testing RAM writing.  
+
+import "bool-memory.hac";
+import "int-source.hac";
+import "bool-sink.hac";
+import "bool-source.hac";
+import "channel-sync.hac";
+
+chan(bool) Write;
+chan(int) Addr;
+chan(bool, int) AddrReq;
+channel_sync_bool_int<32> reqsync(Write, Addr, AddrReq);	// grouping
+chan(bool) DataWrite, DataRead;
+bool_memory_array<4> bram(AddrReq, DataWrite, DataRead);
+int_source<32, 4, {0,1,2,3}> adsrc(Addr);
+bool_sink bsnk(DataRead);
+bool_source_constant<true> bsrc(DataWrite);
+bool_source_constant<true> rsrc(Write);		// true to request write
+

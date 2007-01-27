@@ -1,0 +1,9 @@
+# "bool-memory-read-a-01.chpsimrc"
+#	$Id: bool-memory-read-a-01.chpsimrc,v 1.1.2.1 2007/01/27 23:39:16 fang Exp $
+# @haco@ bool-memory-read-a.haco-a
+
+watchall-events
+step 80
+time
+assert-queue
+

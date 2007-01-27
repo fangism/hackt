@@ -1,0 +1,9 @@
+# "bool-memory-read-b-01.chpsimrc"
+#	$Id: bool-memory-read-b-01.chpsimrc,v 1.1.2.1 2007/01/27 23:39:18 fang Exp $
+# @haco@ bool-memory-read-b.haco-a
+
+echo expecting out-of-bounds access run-time error
+watchall-events
+step 80
+echo expect do die on run-time error before this is reached
+
