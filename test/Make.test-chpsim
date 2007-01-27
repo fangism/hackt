@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.2 2007/01/21 06:01:31 fang Exp $
+#	$Id: Make.test-chpsim,v 1.2.2.1 2007/01/27 06:33:36 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -176,7 +176,7 @@ chpsimrcfail-out.autodepend: Makefile
 	done ; \
 	$(TOUCH) $@
 
--include chpsimfailrc-out.autodepend
+-include chpsimrcfail-out.autodepend
 AUTO_DEPENDS += chpsimrcfail-out.autodepend
 
 chpsimrctest.autodepend: Makefile

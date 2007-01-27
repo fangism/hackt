@@ -1,10 +1,12 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.2 2007/01/26 01:13:10 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.3 2007/01/27 06:33:37 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
 
 SUBDIRS = testlib .
+
+HACO_FLAGS += -I$(srcdir)/testlib
 
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \
@@ -48,7 +50,9 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	channel-self-parallel-a channel-self-parallel-b \
 	do-while-countdown \
 	countdown-sequence-a \
-	countdown-parallel-a
+	countdown-parallel-a \
+	bool-split-a bool-split-b \
+	bool-split-select-a bool-split-select-b
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -95,10 +99,14 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	arbitrate-loop-a-01 arbitrate-loop-a-02 arbitrate-loop-a-03 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
-	select-block-a-01 select-block-a-02
+	select-block-a-01 select-block-a-02 \
+	bool-split-a-01 \
+	bool-split-select-a-01
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
-	select-fail-a-01
+	select-fail-a-01 \
+	bool-split-b-01 \
+	bool-split-select-b-01
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=

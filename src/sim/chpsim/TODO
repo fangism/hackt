@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.1.2.2 2007/01/26 01:13:09 fang Exp $
+#	$Id: TODO,v 1.1.2.3 2007/01/27 06:33:34 fang Exp $
 
 ===============================================================================
 
@@ -40,5 +40,9 @@ chpsim:
 	error handling:
 		exceptions on out-of-bounds array references.  
 
+
+BUGS:
+	exit status is 0 when there is a run-time exception, 
+		should return with an non-zero exit status, wtf...
 
 ===============================================================================

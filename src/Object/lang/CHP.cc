@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.18.2.1 2007/01/26 01:13:07 fang Exp $
+	$Id: CHP.cc,v 1.18.2.2 2007/01/27 06:33:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -2254,6 +2254,13 @@ channel_send::execute(const nonmeta_context& c,
 		global_reference_array_type& u) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+#define	ASSERT_CHAN_INDEX						\
+	if (!chan_index) {						\
+		chan->dump(cerr << "at: ",				\
+			expr_dump_context::default_value) << endl;	\
+		THROW_EXIT;						\
+	}
+	ASSERT_CHAN_INDEX
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 #if 0
 	// don't need
@@ -2283,6 +2290,7 @@ channel_send::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	// see if referenced channel is ready to send
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	ASSERT_CHAN_INDEX
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 }
@@ -2466,6 +2474,7 @@ channel_receive::execute(const nonmeta_context& c,
 		global_reference_array_type& u) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
+	ASSERT_CHAN_INDEX
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 #if 0
 	// don't need
@@ -2494,10 +2503,12 @@ channel_receive::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	// see if referenced channel is ready to receive
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
-	STACKTRACE_INDENT_PRINT("chan index " << chan_index << endl);
+	ASSERT_CHAN_INDEX
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 }
+
+#undef	ASSERT_CHAN_INDEX
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

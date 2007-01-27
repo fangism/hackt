@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.1 2007/01/25 22:09:45 fang Exp $
+	$Id: State.cc,v 1.2.2.2 2007/01/27 06:33:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -318,7 +318,12 @@ State::step(void) {
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
+try {
 	ev.execute(c, __updated_list);
+} catch (...) {
+	cerr << "Run-time error executing event " << ei << "." << endl;
+	throw;		// rethrow
+}
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
 	}
@@ -393,8 +398,13 @@ State::step(void) {
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
 #endif
+try {
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this));
+} catch (...) {
+	cerr << "Run-time error while rechecking events." << endl;
+	throw;
+}
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
 	// temporarily disabled for regression testing

@@ -1,0 +1,12 @@
+# "bool-split-select-b-01.chpsimrc"
+#	$Id: bool-split-select-b-01.chpsimrc,v 1.1.2.1 2007/01/27 06:33:45 fang Exp $
+# @haco@ bool-split-select-b.haco-a
+
+watchall-events
+step 100
+queue
+time
+echo assert-queue should fail because this is deadlocked
+get split.c
+assert-queue
+

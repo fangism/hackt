@@ -1,14 +1,14 @@
-// "bool-source.hac"
-//	$Id: bool-source.hac,v 1.2.2.1 2007/01/27 06:33:48 fang Exp $
-// cyclic and non-cyclic sources of bool tokens
+// "int-source.hac"
+//	$Id: int-source.hac,v 1.1.2.1 2007/01/27 06:33:49 fang Exp $
+// cyclic and non-cyclic sources of int tokens
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
-	Sources finite sequence of bool values.  
+	Sources finite sequence of int values.  
 ***/
-template <pint N; pbool B[N]>
-defproc bool_source_once(chan!(bool) S) {
+template <pint W; pint N; pint B[N]>
+defproc int_source_once(chan!(int<W>) S) {
 chp {
 {;i:N:
 	S!(B[i])
@@ -18,10 +18,10 @@ chp {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
-	Cycles through finite sequence of bool values.  
+	Cycles through finite sequence of int values.  
 ***/
-template <pint N; pbool B[N]>
-defproc bool_source(chan!(bool) S) {
+template <pint W; pint N; pint B[N]>
+defproc int_source(chan!(int<W>) S) {
 chp {
 *[
 	{;i:N:
@@ -35,8 +35,8 @@ chp {
 /**
 	Could define in terms of generalized bool_source.
  */
-template <pbool V>
-defproc bool_source_constant(chan!(bool) S) {
+template <pint W; pint V>
+defproc int_source_constant(chan!(int<W>) S) {
 chp {
 *[ S!(V) ]
 }

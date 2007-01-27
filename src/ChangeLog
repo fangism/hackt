@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-03:
+	  Added nonmeta-channel-reference exception generation and handling
+		for out-of-bound indexed references, with reasonable
+		error message.  
+	  Added some test cases to trip them.  
+	  Next: test error handling on bad lvalue and rvalue references.  
+
+
 2007-01-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-02:

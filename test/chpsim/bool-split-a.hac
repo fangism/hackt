@@ -1,0 +1,21 @@
+// "bool-split-a.hac"
+//	$Id: bool-split-a.hac,v 1.1.2.1 2007/01/27 06:33:40 fang Exp $
+// should safely operate
+
+// all these are from testlib/
+import "bool-source.hac";
+import "bool-split.hac";
+import "bool-sink.hac";
+import "int-source.hac";
+
+chan(bool) A;
+chan(bool) B[4];
+chan(int) C;
+bool_source_constant<true> src(A);
+int_source<32, 4, {0,1,2,3}> c(C);
+bool_sink snk[4];
+(;i:4:
+	snk[i](B[i]);
+)
+bool_split<4> split(C, A, B);
+

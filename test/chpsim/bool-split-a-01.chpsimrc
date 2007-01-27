@@ -1,0 +1,9 @@
+# "bool-split-a-01.chpsimrc"
+#	$Id: bool-split-a-01.chpsimrc,v 1.1.2.1 2007/01/27 06:33:39 fang Exp $
+# @haco@ bool-split-a.haco-a
+
+watchall-events
+step 80
+time
+assert-queue
+

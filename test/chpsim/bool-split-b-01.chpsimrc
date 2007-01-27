@@ -1,0 +1,8 @@
+# "bool-split-b-01.chpsimrc"
+#	$Id: bool-split-b-01.chpsimrc,v 1.1.2.1 2007/01/27 06:33:40 fang Exp $
+# @haco@ bool-split-b.haco-a
+
+watchall-events
+step 80
+echo expect to error out before this is reached
+

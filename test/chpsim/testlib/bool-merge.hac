@@ -1,7 +1,11 @@
 // "bool-merge.hac"
-//	$Id: bool-merge.hac,v 1.2 2007/01/21 06:04:12 fang Exp $
+//	$Id: bool-merge.hac,v 1.2.2.1 2007/01/27 06:33:47 fang Exp $
 // conditional routing
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version uses array access to do the channel selection.  
+ */
 template <pint N>
 defproc bool_merge(chan?(int) C; chan?(bool) I[N]; chan!(bool) O) {
 int c;
@@ -15,6 +19,10 @@ chp {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization using bool-control input.  
+ */
 defproc bool_merge_2(chan?(bool) S, I[2]; chan!(bool) O) {
 bool c, x;
 chp {
@@ -25,4 +33,21 @@ chp {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version uses array access to do the channel selection.  
+ */
+template <pint N>
+defproc bool_merge_select(chan?(int) C; chan?(bool) I[N]; chan!(bool) O) {
+int c;
+bool x;
+chp {
+*[ C?(c);
+	[ []i:N: (c == i) -> I[N]?(x) ];
+	O!(x)
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

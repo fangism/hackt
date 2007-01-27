@@ -1,0 +1,39 @@
+	0	0	0	null
+	10	1	1	bool_source_constant::S!(true)
+	10	2	2	int_source::S!(0)
+	10	11	3	
+	20	9	3	bool_split::C?(bool_split::c)
+	20	10	3	bool_split::I?(bool_split::x)
+	30	5	2	int_source::S!(1)
+	30	1	1	bool_source_constant::S!(true)
+	30	8	3	
+	40	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	50	6	4	bool_sink::B?(bool_sink::b)
+	50	11	3	
+	60	9	3	bool_split::C?(bool_split::c)
+	60	10	3	bool_split::I?(bool_split::x)
+	70	4	2	int_source::S!(2)
+	70	1	1	bool_source_constant::S!(true)
+	70	8	3	
+	80	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	90	11	3	
+	90	12	5	bool_sink::B?(bool_sink::b)
+	100	9	3	bool_split::C?(bool_split::c)
+	100	10	3	bool_split::I?(bool_split::x)
+	110	3	2	int_source::S!(4)
+	110	1	1	bool_source_constant::S!(true)
+	110	8	3	
+	120	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	130	11	3	
+	130	13	6	bool_sink::B?(bool_sink::b)
+	140	9	3	bool_split::C?(bool_split::c)
+	140	10	3	bool_split::I?(bool_split::x)
+	150	2	2	int_source::S!(0)
+	150	1	1	bool_source_constant::S!(true)
+	150	8	3	
+FATAL: reference to channel chan!(bool<>) with out-of-bounds indices [4]:[4]
+ERROR: unrolling aliases.
+Error resolving a single instance alias.
+at: bool_split::O[bool_split::c]
+Run-time error while rechecking events.
+Caught run-time exception during execution.  Halting.
