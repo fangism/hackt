@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.49 2007/01/23 16:02:07 fang Exp $
+	$Id: BUILDS,v 1.50 2007/01/28 21:38:12 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -128,11 +128,11 @@ readline: BSD EditLine (histedit interface) ver. 2.9
 
 (Fang)
 // -O3 optimized
-Version: hackt 0.1.4-devel-20070121
-CVS Tag: HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54
+Version: hackt 0.1.4-devel-20070123
+CVS Tag: HACKT-00-01-04-main-00-80-71
 Configured with: '--enable-fun' '--with-readline' 'CC=ccache gcc-4' 'CXX=ccache g++-4' 'CFLAGS=-g -O3' 'CXXFLAGS=-g -O3' '-C'
 build-triplet: powerpc-apple-darwin8.8.0
-c++: g++-4 (GCC) 4.2.0 20061107 (prerelease)
+c++: g++-4 (GCC) 4.2.0 20070124 (prerelease)
 config-CXXFLAGS: -g -O3
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
