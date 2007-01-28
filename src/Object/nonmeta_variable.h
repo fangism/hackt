@@ -1,6 +1,7 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.2 2007/01/21 05:58:33 fang Exp $
+	$Id: nonmeta_variable.h,v 1.2.2.1 2007/01/28 22:42:13 fang Exp $
+	TODO: consider including history tracing capabilities here?
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_VARIABLE_H__
@@ -164,7 +165,9 @@ public:
 
 //=============================================================================
 template <class Tag>
-struct channel_data_base {
+class channel_data_base {
+	typedef	channel_data_base<Tag>		this_type;
+public:
 	typedef	typename variable_type<Tag>::type::value_type
 						member_variable_type;
 	typedef	valarray<member_variable_type>	member_variable_array_type;
@@ -172,13 +175,24 @@ struct channel_data_base {
 	member_variable_array_type		member_fields;
 
 protected:
+	channel_data_base() : member_fields() { }
+
+	// custom copy-ctor because of valarray
+	channel_data_base(const this_type&);
+
+	// custom assignment because of valarray
+	this_type&
+	operator = (const this_type&);
+
+	// possible direct assign, when we assert that sizes are the same?
+
 	void
 	__resize(const fundamental_channel_footprint&);
 
 	void
 	__reset(void);
 
-};	// end struct channel_data_base
+};	// end class channel_data_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -194,8 +208,23 @@ class ChannelData :
 	public channel_data_base<bool_tag>,
 	public channel_data_base<int_tag>,
 	public channel_data_base<enum_tag> {
+	typedef	ChannelData			this_type;
 public:
 	// default constructor and destructor
+	ChannelData() : channel_data_base<bool_tag>(),
+		channel_data_base<int_tag>(),
+		channel_data_base<enum_tag>() { }
+
+	// custom copy-ctor because of valarray
+	ChannelData(const this_type&);
+
+	// custom assignment because of valarray
+	this_type&
+	operator = (const this_type&);
+
+	// possible direct assign, when we assert that sizes are the same?
+	// may be needed for X!(Y?) -style events
+	// will be needed to sustain channel performance
 
 	void
 	resize(const fundamental_channel_footprint&);
@@ -210,15 +239,11 @@ public:
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This structure represents the state of a built-in (fundamental) typed
-	channel, consisting of only abstract ints and bools.  
-	The interpretation of the channel data is determined by the 
-	complete type (footprint thereof) to which it is attached.  
-	Q: will we ever support counterflow channel pipelines?  Oooo.
+	We factor out this class for the sake of having a pure state
+	or value structure that can be checkpointed and traced.  
  */
-class ChannelState : public ChannelData, public nonmeta_variable_base {
-	// bitset or vector<bool>
-	// flattened array of integers, currently limited to 32b for now
+class channel_state_base : public ChannelData {
+protected:
 	/**
 		State bit.  
 		If this is true, channel is ready to be received, 
@@ -226,7 +251,7 @@ class ChannelState : public ChannelData, public nonmeta_variable_base {
 	 */
 	bool				full;
 public:
-	ChannelState();
+	channel_state_base();
 
 	bool
 	can_receive(void) const { return full; }
@@ -246,7 +271,56 @@ public:
 	ostream&
 	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
 
+};	// end class channel_state_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This structure represents the state of a built-in (fundamental) typed
+	channel, consisting of only abstract ints and bools.  
+	The interpretation of the channel data is determined by the 
+	complete type (footprint thereof) to which it is attached.  
+	Q: will we ever support counterflow channel pipelines?  Oooo.
+ */
+class ChannelState : public nonmeta_variable_base, public channel_state_base {
+	// bitset or vector<bool>
+	// flattened array of integers, currently limited to 32b for now
+public:
+	ChannelState();
+
 };	// end class ChannelState
+
+//=============================================================================
+/**
+	General raw-data extractor.  
+ */
+template <class Tag>
+struct state_data_extractor {
+	typedef typename variable_type<Tag>::type	var_type;
+	typedef	typename var_type::value_type		value_type;
+
+	/**
+		To extract data variables, access the value member.  
+	 */
+	const value_type&
+	operator () (const var_type& v) const {
+		return v.value;
+	}
+};	// end struct state_data_extractor
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct state_data_extractor<channel_tag> {
+	typedef variable_type<channel_tag>::type	var_type;
+	typedef	channel_state_base			value_type;
+
+	/**
+		To extract channel state, just static_cast.
+	 */
+	const value_type&
+	operator () (const var_type& v) const {
+		return v;
+	}
+};	// end struct state_data_extractor
 
 //=============================================================================
 }	// end namespace entity

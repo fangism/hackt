@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.2 2007/01/21 05:58:32 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.2.2.1 2007/01/28 22:42:13 fang Exp $
  */
 
 #include <iostream>
@@ -66,6 +66,32 @@ EnumVariable::reset(void) {
 //=============================================================================
 // class channel_data_base method definitions
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-default copy-ctor because of valarray assignment.
+ */
+template <class Tag>
+channel_data_base<Tag>::channel_data_base(const this_type& c) :
+		member_fields(c.member_fields.size()) {
+	this->member_fields = c.member_fields;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-default assignment because of valarray assignment.
+ */
+template <class Tag>
+channel_data_base<Tag>&
+channel_data_base<Tag>::operator = (const this_type& t) {
+	// if size is different...
+	if (this->member_fields.size() != t.member_fields.size()) {
+		this->member_fields.resize(t.member_fields.size());
+	}
+	this->member_fields = t.member_fields;
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resizes fields array according to channel type's footprint summary.
  */
@@ -85,6 +111,22 @@ channel_data_base<Tag>::__reset(void) {
 //=============================================================================
 // class ChannelData method definitions
 
+ChannelData::ChannelData(const this_type& t) :
+		channel_data_base<bool_tag>(t), 
+		channel_data_base<int_tag>(t), 
+		channel_data_base<enum_tag>(t) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ChannelData&
+ChannelData::operator = (const this_type& t) {
+	channel_data_base<bool_tag>::operator=(t);
+	channel_data_base<int_tag>::operator=(t);
+	channel_data_base<enum_tag>::operator=(t);
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ChannelData::resize(const fundamental_channel_footprint& f) {
 	channel_data_base<bool_tag>::__resize(f);
@@ -111,13 +153,13 @@ ChannelData::dump(ostream& o,
 }
 
 //=============================================================================
-// class ChannelState method definitions
+// class channel_state_base method definitions
 
 /**
 	All channels should be initialized empty, ready to send.  
  */
-ChannelState::ChannelState() :
-		ChannelData(), nonmeta_variable_base(), full(false) {
+channel_state_base::channel_state_base() :
+		ChannelData(), full(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,7 +169,7 @@ ChannelState::ChannelState() :
 	as they cannot be read until they are written.  
  */
 void
-ChannelState::reset(void) {
+channel_state_base::reset(void) {
 	ChannelData::reset();
 	full = false;
 }
@@ -138,10 +180,17 @@ ChannelState::reset(void) {
 	If empty, then shows the last value that was written to it.  
  */
 ostream&
-ChannelState::dump(ostream& o, 
+channel_state_base::dump(ostream& o, 
 		const canonical_fundamental_chan_type_base& t) const {
 	ChannelData::dump(o << '(', t) << ')';
 	return o << (full ? " [full]" : " [empty]");
+}
+
+//=============================================================================
+// class ChannelState method definitions
+
+ChannelState::ChannelState() :
+		nonmeta_variable_base(), channel_state_base() {
 }
 
 //=============================================================================

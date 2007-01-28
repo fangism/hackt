@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.1 2007/01/25 22:09:45 fang Exp $
+	$Id: State.h,v 1.2.2.2 2007/01/28 22:42:15 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include <vector>
+#include "sim/chpsim/devel_switches.h"
 #include "sim/time.h"
 #include "sim/event.h"
 #include "sim/state_base.h"
@@ -17,6 +18,9 @@
 #include "Object/nonmeta_state.h"
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
+#if CHPSIM_TRACING
+#include "util/memory/excl_ptr.h"
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -26,9 +30,14 @@ using entity::nonmeta_state_manager;
 using entity::event_subscribers_type;
 using entity::global_indexed_reference;
 using util::string_list;
+using std::string;
 class StateConstructor;
 class nonmeta_context;
 class graph_options;
+#if CHPSIM_TRACING
+class TraceManager;
+using util::memory::excl_ptr;
+#endif
 
 //=============================================================================
 /**
@@ -87,6 +96,9 @@ private:
 			executed.  
 		 */
 		FLAG_WATCH_ALL_EVENTS = 0x0004,
+#if CHPSIM_TRACING
+		FLAG_TRACE_ON = 0x8000,
+#endif
 		/**
 			TODO: timing mode flags
 		 */
@@ -133,7 +145,7 @@ private:
 	event_queue_type			event_queue;
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
-	//	predecessors? (if we want them, construct separate)ly
+	//	predecessors? (if we want them, construct separately)
 private:
 	static const char			event_table_header[];
 private:
@@ -172,6 +184,9 @@ private:
 		Set of events to recheck for unblocking.  
 	 */
 	event_subscribers_type			__rechecks;
+#if CHPSIM_TRACING
+	excl_ptr<TraceManager>			trace_manager;
+#endif
 public:
 	explicit
 	State(const module&);
@@ -276,6 +291,11 @@ public:
 	static
 	ostream&
 	help_timing(ostream&);
+
+#if CHPSIM_TRACING
+	bool
+	open_trace(const string&);
+#endif
 
 	ostream&
 	dump_struct(ostream&) const;

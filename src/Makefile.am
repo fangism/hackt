@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.150.2.1 2007/01/25 22:09:39 fang Exp $
+#	$Id: Makefile.am,v 1.150.2.2 2007/01/28 22:42:12 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -710,7 +710,8 @@ SIM_CC_FILES = \
 	sim/chpsim/Dependence.cc \
 	sim/chpsim/Event.cc \
 	sim/chpsim/State.cc \
-	sim/chpsim/StateConstructor.cc
+	sim/chpsim/StateConstructor.cc \
+	sim/chpsim/Trace.cc
 
 SIM_TCC_FILES = \
 	sim/command.tcc \

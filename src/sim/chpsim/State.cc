@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.2 2007/01/27 06:33:34 fang Exp $
+	$Id: State.cc,v 1.2.2.3 2007/01/28 22:42:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,9 @@
 #include "sim/signal_handler.tcc"
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/random_time.h"
+#if CHPSIM_TRACING
+#include "sim/chpsim/Trace.h"
+#endif
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
@@ -179,6 +182,9 @@ State::State(const module& m) :
 		__updated_list(), 
 		__enqueue_list(), 
 		__rechecks()
+#if CHPSIM_TRACING
+		, trace_manager()
+#endif
 		{
 	// perform initializations here
 	event_pool.reserve(256);
@@ -215,6 +221,7 @@ State::State(const module& m) :
 State::~State() {
 	// clean-up
 	// optional, but recommended: run some diagnostics
+	// anything to do with trace_manager?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

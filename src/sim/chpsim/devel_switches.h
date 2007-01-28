@@ -1,18 +1,13 @@
 /**
-	\file "sim/chpsim/Event.h"
-	Various classes of chpsim events.  
-	$Id: devel_switches.h,v 1.2 2007/01/21 06:00:47 fang Exp $
+	\file "sim/chpsim/devel_switches.h"
+	Development feature switches.  
+	$Id: devel_switches.h,v 1.2.2.1 2007/01/28 22:42:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
 #define	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
 
 //=============================================================================
-// if we want project-wide switches
-#if 0
-#include "sim/devel_switches.h"
-#endif
-
 // leave this error enabled for released code
 #if 0
 #error	Production code should NOT include this header file.  \
@@ -37,6 +32,23 @@
 		as BlockDependenceCollector (should rename).  
  */
 #define	CHPSIM_READ_WRITE_DEPENDENCIES		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to enable checkpointing functions.  
+	Goal: 1
+	Priority: medium
+ */
+#define	CHPSIM_CHECKPOINTING			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to enable tracing capabilities.
+	Goal: 1
+	Rationale: thesis work -- trace-mining
+	Priority: TOP
+ */
+#define	CHPSIM_TRACING				1
 
 //=============================================================================
 

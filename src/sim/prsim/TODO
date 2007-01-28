@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.1.2.1 2007/01/25 22:09:47 fang Exp $
+#	$Id: TODO,v 1.1.2.2 2007/01/28 22:42:18 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -17,8 +17,11 @@ Simulation:
 
 prsim:
 	category of 'debug' commands for inspecting state, etc...
+
 	direction-specific breakpoints
+
 	deadlock diagnosis, akin to backtrace, but using fanin state analysis
+
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:
@@ -31,19 +34,27 @@ prsim:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
+
 	concept of environment variables?
+
 	far future: expression evaluation! variable expansion!
 		make use of existing interpreter functions in parser/
+
 	Q: should initialize clear the watching state?
 		in the old prsim, watch/break points are preserved
 		so we keep that behavior for now.  
+
 	for cleanliness:
 		rewrite event queuing system to go through
 			a pending map first before entering queue.
 		rationale: current algorithm is a mess of cases.
+
 	checking: mode to verify that all rules are CMOS implementable
+
 	minor bug: fanout prints duplicate rules because literal
 		may appear in different branches of same rule.  
 		fix: collect unique-list (or set), then print
+
+	trace recording, playback, and analysis (like chpsim)
 
 ===============================================================================

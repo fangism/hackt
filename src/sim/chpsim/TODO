@@ -1,14 +1,13 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.1.2.3 2007/01/27 06:33:34 fang Exp $
+#	$Id: TODO,v 1.1.2.4 2007/01/28 22:42:16 fang Exp $
 
 ===============================================================================
-
 chpsim:
-	stability checking mode:
-		(Does something change between time of enqueue to 
-			time of execution?)
-		for guard expressions
-		variables referenced (and their values)
+
+high-priority:
+	execution trace recording for offline data-mining (thesis work)
+
+medium-priority:
 	non-atomic expression evaluation: [IMPORTANT] 
 		rvalue and lvalues of assignments, channel send/receive 
 		may contain arbitrary nonmeta-expressions.
@@ -21,6 +20,18 @@ chpsim:
 			i.e. predecessors done, and channel state is ready
 	support: probe expressions, value probes, missing from CHP language!
 		in-source assertions
+	timing: interface to edit event delays, load back-annotation file?
+		possibly more elaborate code to customize delays systematically
+	checkpointing: save and restore state of simulation, 
+		will need to remember invocation options in state, 
+		and compare when loading checkpoint.  
+
+low-priority:
+	stability checking mode:
+		(Does something change between time of enqueue to 
+			time of execution?)
+		for guard expressions
+		variables referenced (and their values)
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
 	visualization: 
@@ -34,13 +45,12 @@ chpsim:
 		Possibly cache-it as a redundant pointer in CHP expressions.
 		Better yet, cache the resolved index as a
 			global_indexed_reference.  
-	timing: interface to edit event delays, load back-annotation file?
-		possibly more elaborate code to customize delays systematically
 	channels: add support for sized types, e.g. bool[4]
-	error handling:
-		exceptions on out-of-bounds array references.  
+	int<W>: using integer width to mask values
+		and perform range-checking?
+	integer value formatting preference for dumping?
 
-
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BUGS:
 	exit status is 0 when there is a run-time exception, 
 		should return with an non-zero exit status, wtf...
