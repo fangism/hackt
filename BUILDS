@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.49 2007/01/23 16:02:07 fang Exp $
+	$Id: BUILDS,v 1.49.2.1 2007/01/28 21:38:36 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -188,11 +188,11 @@ yacc: bison (GNU Bison) 2.0
 readline: GNU readline EditLine wrapper
 
 (Fang)
-Version: hackt 0.1.4-devel-20070121
-CVS Tag: HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54
+Version: hackt 0.1.4-devel-20070123
+CVS Tag: HACKT-00-01-04-main-00-80-69-chpsim-02-04
 Configured with: 'CC=ccache gcc-4' 'CXX=ccache g++-4' '-C'
 build-triplet: i686-apple-darwin8.8.1
-c++: g++-4 (GCC) 4.2.0 20060617 (experimental)
+c++: g++-4 (GCC) 4.2.0 20070124 (prerelease)
 config-CXXFLAGS: -g -O2
 config-LIBS:   -lncurses 
 lex: flex version 2.5.4
