@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.2 2007/01/28 22:42:15 fang Exp $
+	$Id: State.h,v 1.2.2.3 2007/01/29 04:44:12 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -37,6 +37,7 @@ class graph_options;
 #if CHPSIM_TRACING
 class TraceManager;
 using util::memory::excl_ptr;
+using util::memory::never_ptr;
 #endif
 
 //=============================================================================
@@ -294,7 +295,30 @@ public:
 
 #if CHPSIM_TRACING
 	bool
+	is_tracing(void) const { return flags & FLAG_TRACE_ON; }
+
+	/// Do we ever want to do this?
+	void
+	stop_trace(void) { flags &= ~FLAG_TRACE_ON; }
+
+	/// unconditionally returns trace_manager
+	never_ptr<TraceManager>
+	get_trace_manager(void) const {
+		return trace_manager;
+	}
+
+	/// returns trace_manager only if flag is enabled
+	never_ptr<TraceManager>
+	get_trace_manager_if_tracing(void) const {
+		return is_tracing() ? trace_manager :
+			never_ptr<TraceManager>(NULL);
+	}
+
+	bool
 	open_trace(const string&);
+
+	void
+	close_trace(void);
 #endif
 
 	ostream&

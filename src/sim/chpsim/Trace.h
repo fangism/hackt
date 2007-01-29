@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.1 2007/01/28 22:42:17 fang Exp $
+	$Id: Trace.h,v 1.1.2.2 2007/01/29 04:44:12 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -59,6 +59,9 @@ struct event_trace_point {
 	time_type			timestamp;
 	/**
 		The index of the event that occured at this time.  
+		NOTE: this might be a limiting factor when it comes
+		to trace size, if this is only 32b.
+		Consider making a 64b version.  
 	 */
 	event_index_type		event_id;
 	/**
@@ -72,6 +75,12 @@ struct event_trace_point {
 	size_t				cause_id;
 };	// end struct event_trace_point
 
+/**
+	Consider making this static/private.
+ */
+ostream&
+operator << (ostream&, const event_trace_point&);
+
 //=============================================================================
 /**
 	Window of event trace events.  
@@ -80,6 +89,10 @@ struct event_trace_window {
 	typedef	std::vector<event_trace_point>	event_array_type;
 	event_array_type		event_array;
 	// default ctor and dtor
+
+	void
+	write(ostream&) const;
+
 };	// end class event_trace_window
 
 //=============================================================================
@@ -91,12 +104,28 @@ struct event_trace_window {
  */
 struct state_trace_point_base {
 	typedef	trace_time_type		time_type;
+#if 0
+	/**
+		Time of event. 
+		This is not needed, as the event_index suffices
+		to deduce the time of event.  
+	 */
 	time_type			timestamp;
+#endif
 	/**
 		Trace index of the event that caused this change, 
 		which tells the event ID.  
+		From the event ID number, the time can be deduced.  
 	 */
 	size_t				event_index;
+	/**
+		The index referencing the allocated data.  
+	 */
+	size_t				global_index;
+
+	void
+	write(ostream&) const;
+
 };	// end struct state_trace_point_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,7 +141,18 @@ struct state_trace_point : public state_trace_point_base {
 	typedef	typename extractor_policy::var_type	var_type;
 	typedef	typename extractor_policy::value_type	value_type;
 	value_type				raw_data;
+
+	void
+	write(ostream&) const;
+
 };	// end struct state_trace_point
+
+/**
+	Consider making this static/private.
+ */
+template <class Tag>
+ostream&
+operator << (ostream&, const state_trace_point<Tag>&);
 
 //=============================================================================
 /**
@@ -125,6 +165,9 @@ struct state_trace_window_base {
 	typedef	state_trace_point<Tag>		data_type;
 	typedef	std::vector<data_type>		data_array_type;
 	data_array_type				data_array;
+
+	void
+	write(ostream&) const;
 
 };	// end struct trace_window_base
 
@@ -147,6 +190,9 @@ class state_trace_time_window :
 		public state_trace_window_base<int_tag>,
 		public state_trace_window_base<enum_tag>,
 		public state_trace_window_base<channel_tag> {
+public:
+	void
+	write(ostream&) const;
 
 };	// end class trace_time_window
 
@@ -175,6 +221,12 @@ struct trace_chunk :
 	 */
 	size_t				buffer_threshold;
 #endif
+	trace_chunk();
+	~trace_chunk();
+
+	void
+	write(ostream&) const;
+
 };	// end struct trace_chunk
 
 //=============================================================================
@@ -245,6 +297,12 @@ class TraceManager {
 	 */
 	excl_ptr<ofstream>			trace_ostream;
 	/**
+		This is the stream to the header, also the final file.  
+		Nothing is actually written to this file until
+		finish() is called.  
+	 */
+	excl_ptr<ofstream>			header_ostream;
+	/**
 		Table of contents.  
 		This is the first section written to the
 		
@@ -263,6 +321,11 @@ public:
 
 	bool
 	good(void) const;
+
+	operator bool () const { return good(); }
+
+	const string&
+	get_trace_name(void) const { return trace_file_name; }
 
 	void
 	flush(void);

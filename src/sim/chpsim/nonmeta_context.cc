@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.2 2007/01/21 06:00:49 fang Exp $
+	$Id: nonmeta_context.cc,v 1.2.2.1 2007/01/29 04:44:12 fang Exp $
  */
 
 #include <vector>
@@ -36,7 +36,12 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		event(&e), 
 		enqueue_list(r.__enqueue_list), 
 		rechecks(r.__rechecks), 
-		event_pool(r.event_pool) { }
+		event_pool(r.event_pool)
+#if CHPSIM_TRACING
+		, trace_manager(r.get_trace_manager_if_tracing())
+#endif
+		{
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -50,7 +55,12 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		event(NULL), 
 		enqueue_list(r.__enqueue_list), 
 		rechecks(r.__rechecks), 
-		event_pool(r.event_pool) { }
+		event_pool(r.event_pool)
+#if CHPSIM_TRACING
+		, trace_manager(r.get_trace_manager_if_tracing())
+#endif
+		{
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_context::~nonmeta_context() { }

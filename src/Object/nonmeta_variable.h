@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.2.2.1 2007/01/28 22:42:13 fang Exp $
+	$Id: nonmeta_variable.h,v 1.2.2.2 2007/01/29 04:44:08 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -192,6 +192,9 @@ protected:
 	void
 	__reset(void);
 
+	void
+	__write(ostream&) const;
+
 };	// end class channel_data_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -235,6 +238,9 @@ public:
 	ostream&
 	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
 
+	void
+	write(ostream&) const;
+
 };	// end class ChannelData
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,6 +277,9 @@ public:
 	ostream&
 	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
 
+	void
+	write(ostream&) const;
+
 };	// end class channel_state_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -305,6 +314,11 @@ struct state_data_extractor {
 	operator () (const var_type& v) const {
 		return v.value;
 	}
+
+	static
+	void
+	write(ostream&, const value_type&);
+
 };	// end struct state_data_extractor
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -320,6 +334,11 @@ struct state_data_extractor<channel_tag> {
 	operator () (const var_type& v) const {
 		return v;
 	}
+
+	static
+	void
+	write(ostream&, const value_type&);
+
 };	// end struct state_data_extractor
 
 //=============================================================================

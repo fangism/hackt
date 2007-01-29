@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.1 2007/01/25 22:09:42 fang Exp $
+	$Id: Command.cc,v 1.3.2.2 2007/01/29 04:44:09 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -29,6 +29,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_registry.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
+#if CHPSIM_TRACING
+#include "sim/chpsim/Trace.h"
+#endif
 
 #include "common/TODO.h"
 #include "util/libc.h"
@@ -66,9 +69,12 @@ static CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
 	simulation("simulation", "simulation commands"),
-	channel("channel", "channel commands"),
+//	channel("channel", "channel commands"),
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
+#if CHPSIM_TRACING
+	tracing("tracing", "trace and checkpoint commands"), 
+#endif
 	modes("modes", "timing model, error handling");
 
 //=============================================================================
@@ -1819,45 +1825,85 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 
-	modes, "enable/disable weak-interference warnings")
+#if CHPSIM_TRACING
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Trace, "trace", tracing, 
+	"record trace of all events to file")
 
 int
-SetMode::main(State& s, const string_list& a) {
-if (a.size() == 1) {
-	s.dump_mode(cout);
-} else if (a.size() == 2) {
-	static const string reset("reset");
-	static const string run("run");
-	const string& m(a.back());
-	if (m == reset) {
-		s.set_mode_reset();
-	} else if (m == run) {
-		s.set_mode_run();
+Trace::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.open_trace(a.back())) {
+		// confirm message
+		cout << "Writing simulation trace to \"" << a.back()
+			<< "\"." << endl;
+		return Command::NORMAL;
 	} else {
-		usage(cerr << "usage: ");
+		cout << "Error opening file \"" << a.back() <<
+			"\" for trace recording." << endl;
 		return Command::BADARG;
 	}
-} else {
-	usage(cerr << "usage: ");
-	return Command::BADARG;
 }
-	return Command::NORMAL;
 }
 
 void
-SetMode::usage(ostream& o) {
-	o << "mode [reset|run]\n"
-"\t\'reset\' disables weak-interference warnings, useful during initialization\n"
-"\t\'run\' (default) enables weak-interference warnings" << endl;
-	o <<
-"Instabilities and interferences still cause simulations to halt, while \n"
-"weak-instabilities trigger warnings." << endl;
+Trace::usage(ostream& o) {
+	o << name << " <file>" << endl;
+	o << "Records all data and events to file for later analysis.\n"
+"Trace-file is completed with a \'trace-finish\' command, or automatically\n"
+"upon termination of ths simulation." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFile, "trace-file", tracing, 
+	"show the name of the active trace file")
+
+int
+TraceFile::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.is_tracing()) {
+		cout << "Active trace file: " <<
+			s.get_trace_manager()->get_trace_name() << endl;
+	} else {
+		cout << "No active trace file." << endl;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+TraceFile::usage(ostream& o) {
+	o << name << endl;
+	o << "Prints the name of the active trace file, if applicable." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceClose, "trace-close", tracing, 
+	"close the active trace file")
+
+int
+TraceClose::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.close_trace();
+	return Command::NORMAL;
+}
+}
+
+void
+TraceClose::usage(ostream& o) {
+	o << name << endl;
+	o << "Stops the active trace and writes it out to file." << endl;
+}
+
+#endif	// CHPSIM_TRACING
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

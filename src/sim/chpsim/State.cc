@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.3 2007/01/28 22:42:14 fang Exp $
+	$Id: State.cc,v 1.2.2.4 2007/01/29 04:44:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -500,6 +500,41 @@ State::help_timing(ostream& o) {
 	"\tdefault -- (uniform)" << endl;
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_TRACING
+/**
+	\return true if result is successful/good.  
+ */
+bool
+State::open_trace(const string& tfn) {
+	if (trace_manager) {
+		cerr << "Error: trace stream already open." << endl;
+	}
+	trace_manager = excl_ptr<TraceManager>(new TraceManager(tfn));
+	NEVER_NULL(trace_manager);
+	if (trace_manager->good()) {
+		flags |= FLAG_TRACE_ON;
+		return true;
+	} else {
+		stop_trace();
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Invoke this if you want tracing to end early.  
+ */
+void
+State::close_trace(void) {
+if (trace_manager) {
+	// destroying the trace manager should cause it to finish writing out.
+	trace_manager = excl_ptr<TraceManager>(NULL);
+}
+	stop_trace();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

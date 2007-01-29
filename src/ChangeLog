@@ -5,6 +5,14 @@
 
 2007-01-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-06:
+	  Added provisional trace-related commands to chpsim.  
+		Added some basic trace interfaces to State.
+	  Implemented majority of trace-writing functions in data structs.  
+	  Implemented nonmeta_variables' trace-writing functions, 
+		eventually need to something about trace-loading.  
+
+
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-05:
 	  Early workings of chpsim trace data structures, in
 		sim/chpsim/Trace.{h,cc}
