@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.1.2.2 2007/01/29 04:44:12 fang Exp $
+	$Id: Trace.cc,v 1.1.2.3 2007/01/29 23:08:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@ namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
+using std::ios_base;
 using std::copy;
 using std::ostream_iterator;
 using std::stringstream;	// string buffer
@@ -29,6 +30,10 @@ using util::read_value;
 //=============================================================================
 // class event_trace_point method definitions
 
+/**
+	Private ostream overload, local to this TU.  
+ */
+static
 ostream&
 operator << (ostream& o, const event_trace_point& e) {
 	write_value(o, e.timestamp);
@@ -40,6 +45,18 @@ operator << (ostream& o, const event_trace_point& e) {
 //=============================================================================
 // class event_trace_window method definitions
 
+/**
+	\return the index of the new traced event, so that other
+		trace data may reference this to get its timestamp.  
+ */
+trace_index_type
+event_trace_window::push_back_event(const event_trace_point& p) {
+	const trace_index_type ret = event_array.size();
+	event_array.push_back(p);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Writes out event (binary).  
  */
@@ -61,6 +78,15 @@ state_trace_point_base::write(ostream& o) const {
 //=============================================================================
 // class state_trace_point method definitions
 
+
+template <class Tag>
+state_trace_point<Tag>::state_trace_point(const value_type& d, 
+		const trace_index_type t, const size_t g) :
+		state_trace_point_base(t, g), 
+		raw_data(d) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
 state_trace_point<Tag>::write(ostream& o) const {
@@ -69,7 +95,11 @@ state_trace_point<Tag>::write(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private ostream overload, local to this TU.  
+ */
 template <class Tag>
+static
 ostream&
 operator << (ostream& o, const state_trace_point<Tag>& p) {
 	p.write(o);
@@ -79,6 +109,17 @@ operator << (ostream& o, const state_trace_point<Tag>& p) {
 //=============================================================================
 // class state_trace_window_base method definitions
 
+/**
+	Extracts the relevant data to save to trace and stores it in a buffer.
+ */
+template <class Tag>
+void
+state_trace_window_base<Tag>::__push_back(const var_type& v, 
+		const trace_index_type t, const size_t g) {
+	data_array.push_back(data_type(extractor_policy()(v), t, g));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For now we just write out the entire vector brainlessly.
 	TODO: (enhancement) group by like-indexed reference.  
@@ -128,6 +169,19 @@ trace_chunk::write(ostream& o) const {
 // class trace_file_contents method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private ostream overload, local to this TU.  
+ */
+static
+ostream&
+operator << (ostream& o, const trace_file_contents::entry& e) {
+	write_value(o, e.start_time);
+	write_value(o, e.file_offset);
+	write_value(o, e.chunk_size);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 trace_file_contents::trace_file_contents() : entry_array() {
 }
 
@@ -135,17 +189,27 @@ trace_file_contents::trace_file_contents() : entry_array() {
 trace_file_contents::~trace_file_contents() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+trace_file_contents::write(ostream& o) const {
+	// o << entry_array.size();
+	ostream_iterator<entry> osi(o);
+	copy(entry_array.begin(), entry_array.end(), osi);
+}
+
 //=============================================================================
 // class TraceManager method definitions
 
 /**
+	Opens the requested file streams in binary mode for writing.  
 	Caller should check good() immediately after construction.  
  */
 TraceManager::TraceManager(const string& fn) : 
 		trace_file_name(fn), 
 		temp_file_name(tmpnam(NULL)), 		// libc/cstdio
-		trace_ostream(new ofstream(temp_file_name.c_str())),
-		header_ostream(new ofstream(fn.c_str())), 
+		trace_ostream(new ofstream(
+			temp_file_name.c_str(), ios_base::binary)),
+		header_ostream(new ofstream(fn.c_str(), ios_base::binary)), 
 		contents(), 
 		current_chunk() {
 }
@@ -194,8 +258,17 @@ TraceManager::finish(void) {
 	flush();
 	// write out header to file to final file
 	// concatenate trace payload (from temp.) to final file.  
+	// close both streams when done
 #endif
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template class state_trace_window_base<bool_tag>;
+template class state_trace_window_base<int_tag>;
+template class state_trace_window_base<enum_tag>;
+template class state_trace_window_base<channel_tag>;
 
 //=============================================================================
 }	// end namespace CHPSIM

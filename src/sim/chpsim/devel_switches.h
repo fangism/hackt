@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.1 2007/01/28 22:42:17 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.2 2007/01/29 23:08:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -35,7 +35,21 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Define to 1 to re-implement State::__updated_list as a 
+	bin of sets or reference indices.  
+	Rationale: This solves the problem of uniqueness of update reference, 
+		and is better restructuring for performance.
+	Goal: 1
+	Priority: low (enhancement)
+ */
+#define	CHPSIM_STATE_UPDATE_BIN_SETS		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Define to 1 to enable checkpointing functions.  
+	Rationale: not only to save and restore state for long simulations, 
+		but as an assistance to playback in trace analyses.  
+		Should be an option to the tracing framework.
 	Goal: 1
 	Priority: medium
  */
@@ -43,10 +57,22 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Define to 1 to track last-event to cause.
+	This is done at enqueue-time.  
+	Rationale: critical path and efficient backward causality tracing.  
+	Goal: 1(?)
+	Priority: medium
+ */
+#define	CHSIM_CAUSE_TRACKING			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Define to 1 to enable tracing capabilities.
 	Goal: 1
 	Rationale: thesis work -- trace-mining
-	Priority: TOP
+	Priority: high (TOP)
+	Prerequisite: possibly CHPSIM_CAUSE_TRACKING
+	Q: what do we do about random timing?
  */
 #define	CHPSIM_TRACING				1
 

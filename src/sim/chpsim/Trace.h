@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.2 2007/01/29 04:44:12 fang Exp $
+	$Id: Trace.h,v 1.1.2.3 2007/01/29 23:08:41 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -21,10 +21,12 @@
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
+class State;		// be-friend me
 using std::ostream;
 using std::ofstream;
 using std::string;
 using std::vector;
+using entity::variable_type;
 using entity::state_data_extractor;
 using entity::bool_tag;
 using entity::int_tag;
@@ -36,6 +38,10 @@ using util::memory::excl_ptr;
 	NOTE: keep consistent with EventNode::time_type
  */
 typedef	real_time			trace_time_type;
+/**
+	Might have to use 64b for large traces...
+ */
+typedef	event_index_type		trace_index_type;
 
 //=============================================================================
 /**
@@ -63,23 +69,31 @@ struct event_trace_point {
 		to trace size, if this is only 32b.
 		Consider making a 64b version.  
 	 */
-	event_index_type		event_id;
+	trace_index_type		event_id;
 	/**
 		The index of the event that caused this event to fire.  
 		Or should this be an index into the trace, following
 		an event counter?  Yes.
 		This allows quick and instant construction of the 
 		critical path.  
-		We should probably interpret 0 as a special NULL-value.  
+		We should probably interpret 0 as a special NULL-value, 
+			meaning "not-applicable" or "unknown".  
 	 */
-	size_t				cause_id;
+	trace_index_type			cause_id;
+
+	event_trace_point(const time_type& t, const trace_index_type ei, 
+			const trace_index_type c = 0) :
+			timestamp(t), event_id(ei), cause_id(c) { }
+
 };	// end struct event_trace_point
 
+#if 0
 /**
 	Consider making this static/private.
  */
 ostream&
 operator << (ostream&, const event_trace_point&);
+#endif
 
 //=============================================================================
 /**
@@ -89,6 +103,12 @@ struct event_trace_window {
 	typedef	std::vector<event_trace_point>	event_array_type;
 	event_array_type		event_array;
 	// default ctor and dtor
+
+	/**
+		\return the index of the new trace point.  
+	 */
+	trace_index_type
+	push_back_event(const event_trace_point&);
 
 	void
 	write(ostream&) const;
@@ -103,25 +123,19 @@ struct event_trace_window {
 	Track causality?
  */
 struct state_trace_point_base {
-	typedef	trace_time_type		time_type;
-#if 0
-	/**
-		Time of event. 
-		This is not needed, as the event_index suffices
-		to deduce the time of event.  
-	 */
-	time_type			timestamp;
-#endif
 	/**
 		Trace index of the event that caused this change, 
 		which tells the event ID.  
-		From the event ID number, the time can be deduced.  
+		From the event ID number, the time and cause can be deduced.  
 	 */
-	size_t				event_index;
+	trace_index_type		event_index;
 	/**
 		The index referencing the allocated data.  
 	 */
 	size_t				global_index;
+
+	state_trace_point_base(const trace_index_type e, const size_t g) :
+		event_index(e), global_index(g) { }
 
 	void
 	write(ostream&) const;
@@ -142,17 +156,22 @@ struct state_trace_point : public state_trace_point_base {
 	typedef	typename extractor_policy::value_type	value_type;
 	value_type				raw_data;
 
+	state_trace_point(const value_type&, 
+		const trace_index_type, const size_t);
+
 	void
 	write(ostream&) const;
 
 };	// end struct state_trace_point
 
+#if 0
 /**
 	Consider making this static/private.
  */
 template <class Tag>
 ostream&
 operator << (ostream&, const state_trace_point<Tag>&);
+#endif
 
 //=============================================================================
 /**
@@ -161,10 +180,21 @@ operator << (ostream&, const state_trace_point<Tag>&);
 	which is a more intrusive approach.  
  */
 template <class Tag>
-struct state_trace_window_base {
+class state_trace_window_base {
+protected:
+	typedef	state_data_extractor<Tag>	extractor_policy;
+	typedef	typename extractor_policy::var_type	var_type;
+	typedef	typename extractor_policy::value_type	value_type;
 	typedef	state_trace_point<Tag>		data_type;
 	typedef	std::vector<data_type>		data_array_type;
 	data_array_type				data_array;
+
+//	state_trace_window_base();
+//	~state_trace_window_base();
+
+	void
+	__push_back(const var_type&, const trace_index_type, 
+			const size_t);
 
 	void
 	write(ostream&) const;
@@ -191,6 +221,16 @@ class state_trace_time_window :
 		public state_trace_window_base<enum_tag>,
 		public state_trace_window_base<channel_tag> {
 public:
+	/**
+		Template forwarding function.  
+	 */
+	template <class Tag>
+	void
+	push_back(const typename variable_type<Tag>::type& v, 
+		const trace_index_type t, const size_t g) {
+		state_trace_window_base<Tag>::__push_back(v, t, g);
+	}
+
 	void
 	write(ostream&) const;
 
@@ -236,7 +276,7 @@ struct trace_chunk :
 	the body containing all the chunks.  
  */
 class trace_file_contents {
-private:
+public:
 	/**
 		Entries are stored in an array.  
 	 */
@@ -261,6 +301,7 @@ private:
 		 */
 		size_t				chunk_size;
 	};	// end struct entry
+private:
 	typedef	vector<entry>			entry_array_type;
 	/**
 		The last chunk at the final finish time will be a 
@@ -270,7 +311,16 @@ private:
 public:
 	trace_file_contents();
 	~trace_file_contents();
+
+	void
+	write(ostream&) const;
+
 };	// end class trace_file_contents
+
+#if 0
+ostream&
+operator << (ostream&, const trace_file_contents::entry&);
+#endif
 
 //=============================================================================
 // TODO: trace slice extraction methods -- when only a piece is required
@@ -283,6 +333,8 @@ public:
 	TODO: trace consistency and integrity checks.  
  */
 class TraceManager {
+	friend class State;
+private:
 	/**
 		Name of the trace file to output to.  
 	 */

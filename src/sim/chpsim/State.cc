@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.4 2007/01/29 04:44:11 fang Exp $
+	$Id: State.cc,v 1.2.2.5 2007/01/29 23:08:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -49,6 +49,7 @@ namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
+using entity::variable_type;		// from "nonmeta_variable.h"
 using entity::bool_tag;
 using entity::int_tag;
 using entity::enum_tag;
@@ -331,6 +332,17 @@ try {
 	cerr << "Run-time error executing event " << ei << "." << endl;
 	throw;		// rethrow
 }
+#if CHPSIM_TRACING
+	// event tracing
+	size_t ti = 0;	// because we'll want to reference it later...
+	if (is_tracing()) {
+		// should only be true if trace opening succeeded
+		NEVER_NULL(trace_manager);
+		ti = trace_manager->current_chunk.push_back_event(
+			event_trace_point(current_time, ei));
+		// TODO: cause tracking
+	}
+#endif
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
 	}
@@ -366,6 +378,14 @@ try {
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
 {
+#if CHPSIM_TRACING
+#define	TRACE_UPDATED_STATE(Tag)					\
+	if (is_tracing()) {						\
+		trace_manager->current_chunk.push_back<Tag>(v, ti, j);	\
+	}
+#else
+#define	TRACE_UPDATED_STATE
+#endif
 	typedef	update_reference_array_type::const_iterator	const_iterator;
 	const_iterator ui(__updated_list.begin()), ue(__updated_list.end());
 	for ( ; ui!=ue; ++ui) {
@@ -378,18 +398,21 @@ try {
 		// events happen to be sorted by index
 #define	CASE_META_TYPE_TAG(Tag)						\
 		case class_traits<Tag>::type_tag_enum_value: {		\
+			const variable_type<Tag>::type&			\
+				v(instances.get_pool<Tag>()[j]);	\
+			TRACE_UPDATED_STATE(Tag)			\
 			const event_subscribers_type&			\
-				es(instances.get_pool<Tag>()[j]		\
-					.get_subscribers());		\
+				es(v.get_subscribers());		\
 			copy(es.begin(), es.end(),			\
 				set_inserter(__rechecks));		\
 			break;						\
 		}
-	CASE_META_TYPE_TAG(bool_tag)
-	CASE_META_TYPE_TAG(int_tag)
-	CASE_META_TYPE_TAG(enum_tag)
-	CASE_META_TYPE_TAG(channel_tag)
+		CASE_META_TYPE_TAG(bool_tag)
+		CASE_META_TYPE_TAG(int_tag)
+		CASE_META_TYPE_TAG(enum_tag)
+		CASE_META_TYPE_TAG(channel_tag)
 #undef	CASE_META_TYPE_TAG
+#undef	TRACE_UPDATED_STATE
 		// case INSTANCE_TYPE_NULL:	// should not have been added
 		default:
 			ISE(cerr, cerr << "Unexpected type." << endl;)
