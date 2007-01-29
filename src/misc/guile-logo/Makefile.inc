@@ -1,5 +1,5 @@
 # "misc/guile-logo/Makefile.inc"
-#	$Id: Makefile.inc,v 1.1 2007/01/27 05:50:54 fang Exp $
+#	$Id: Makefile.inc,v 1.2 2007/01/29 17:04:15 fang Exp $
 #	vim: ft=automake
 # play-testing guile functionality
 
@@ -44,7 +44,7 @@ misc/guile-logo/tortoise_wrap.cxx: misc/guile-logo/tortoise.swig
 if HAVE_SWIG
 	$(SWIG) -Wall -Werror -c++ -guile -scm -o $@ $<
 else
-	@$(ECHO) "No swig found in path, cannot regenerate $@"
+	@$(ECHO) "No swig found in path, cannot regenerate $@" ; exit 1
 endif
 
 EXTRA_DIST += misc/guile-logo/README \
