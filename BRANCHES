@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.6 2006/11/21 22:38:18 fang Exp $
+	$Id: BRANCHES,v 1.7 2007/01/29 04:54:01 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -9,4 +9,6 @@ When a branch is merged for the last time, delete the entry from this file.
 
 Open branches:
 
+HACKT-00-01-04-main-00-80-69-chpsim-02
+	Adding simulation tracing features.
 
