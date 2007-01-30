@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.3 2007/01/29 23:08:41 fang Exp $
+	$Id: Trace.h,v 1.1.2.4 2007/01/30 05:04:56 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -11,6 +11,7 @@
 
 #include "sim/time.h"
 #include "sim/common.h"
+#include "sim/chpsim/devel_switches.h"
 #include "util/attributes.h"
 #include <iosfwd>
 #include <vector>
@@ -22,6 +23,7 @@ namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 class State;		// be-friend me
+class TraceManager;
 using std::ostream;
 using std::ofstream;
 using std::string;
@@ -70,20 +72,26 @@ struct event_trace_point {
 		Consider making a 64b version.  
 	 */
 	trace_index_type		event_id;
+#if CHPSIM_CAUSE_TRACKING
 	/**
-		The index of the event that caused this event to fire.  
-		Or should this be an index into the trace, following
-		an event counter?  Yes.
+		The index of the trace-event that caused this event to fire.  
+		(Not the allocated index of the event.)
 		This allows quick and instant construction of the 
-		critical path.  
+		critical path.  Well, except when there are multiple
+		last events that arrive at the same time (slack 0).  
 		We should probably interpret 0 as a special NULL-value, 
 			meaning "not-applicable" or "unknown".  
 	 */
 	trace_index_type			cause_id;
+#endif
 
 	event_trace_point(const time_type& t, const trace_index_type ei, 
 			const trace_index_type c = 0) :
-			timestamp(t), event_id(ei), cause_id(c) { }
+			timestamp(t), event_id(ei)
+#if CHPSIM_CAUSE_TRACKING
+			, cause_id(c)
+#endif
+			{ }
 
 };	// end struct event_trace_point
 
@@ -99,7 +107,8 @@ operator << (ostream&, const event_trace_point&);
 /**
 	Window of event trace events.  
  */
-struct event_trace_window {
+class event_trace_window {
+protected:
 	typedef	std::vector<event_trace_point>	event_array_type;
 	event_array_type		event_array;
 	// default ctor and dtor
@@ -264,6 +273,8 @@ struct trace_chunk :
 	trace_chunk();
 	~trace_chunk();
 
+	using event_trace_window::push_back_event;
+
 	void
 	write(ostream&) const;
 
@@ -364,6 +375,10 @@ private:
 		Current record of recent history.  
 	 */
 	trace_chunk				current_chunk;
+	/**
+		Running count of events before this chunk.  
+	 */
+	trace_index_type			previous_events;
 public:
 	explicit
 	TraceManager(const string&);
@@ -378,6 +393,11 @@ public:
 
 	const string&
 	get_trace_name(void) const { return trace_file_name; }
+
+	trace_index_type
+	push_back_event(const event_trace_point& p) {
+		return current_chunk.push_back_event(p) +previous_events;
+	}
 
 	void
 	flush(void);

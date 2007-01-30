@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.2.2.2 2007/01/29 04:44:07 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.2.2.3 2007/01/30 05:04:52 fang Exp $
  */
 
 #include <iostream>
@@ -201,11 +201,16 @@ channel_state_base::reset(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Writes out binary to a trace stream.  
+	NOTE: only need to write data when channel become full, 
+		occupied with data (just sent).  When it is empty, 
+		data doesn't change, and doesn't matter.  
  */
 void
 channel_state_base::write(ostream& o) const {
-	ChannelData::write(o);
 	write_value(o, full);	// takes 1 byte
+	if (full) {
+		ChannelData::write(o);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

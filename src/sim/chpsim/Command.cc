@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.2 2007/01/29 04:44:09 fang Exp $
+	$Id: Command.cc,v 1.3.2.3 2007/01/30 05:04:54 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1823,6 +1823,51 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 #endif
 
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_CAUSE_TRACKING
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cause, "cause", view, 
+	"include causality with event diagnostics")
+
+int
+Cause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+Cause::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Print the last event to have triggered this event in diagnostics." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCause, "nocause", view, 
+	"suppress causality of event diagnostics")
+
+int
+NoCause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.no_show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+NoCause::usage(ostream& o) {
+	o << name << endl;
+	o << "Suppress event causalities in diagnostics." << endl;
+}
+#endif	// CHPSIM_CAUSE_TRACKING
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if CHPSIM_TRACING

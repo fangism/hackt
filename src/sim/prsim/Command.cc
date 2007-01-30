@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.21 2007/01/21 06:00:49 fang Exp $
+	$Id: Command.cc,v 1.21.2.1 2007/01/30 05:04:57 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -427,7 +427,6 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
  	"run until event queue empty or breakpoint")
 
 /**
-	TODO: add cause tracing.
 	TODO: handle breakpoint.
 	TODO: implement no/globaltime policy for resetting.  
 	Isn't the while-loop made redundant by State::cycle()?

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.2 2007/01/29 23:08:42 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.3 2007/01/30 05:04:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -60,10 +60,10 @@
 	Define to 1 to track last-event to cause.
 	This is done at enqueue-time.  
 	Rationale: critical path and efficient backward causality tracing.  
-	Goal: 1(?)
+	Goal: 1
 	Priority: medium
  */
-#define	CHSIM_CAUSE_TRACKING			0
+#define	CHPSIM_CAUSE_TRACKING			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

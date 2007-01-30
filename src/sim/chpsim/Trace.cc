@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.1.2.3 2007/01/29 23:08:41 fang Exp $
+	$Id: Trace.cc,v 1.1.2.4 2007/01/30 05:04:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -38,7 +38,9 @@ ostream&
 operator << (ostream& o, const event_trace_point& e) {
 	write_value(o, e.timestamp);
 	write_value(o, e.event_id);
+#if CHPSIM_CAUSE_TRACKING
 	write_value(o, e.cause_id);
+#endif
 	return o;
 }
 
@@ -211,7 +213,8 @@ TraceManager::TraceManager(const string& fn) :
 			temp_file_name.c_str(), ios_base::binary)),
 		header_ostream(new ofstream(fn.c_str(), ios_base::binary)), 
 		contents(), 
-		current_chunk() {
+		current_chunk(),
+		previous_events(0) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

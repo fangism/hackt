@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.3 2007/01/29 04:44:12 fang Exp $
+	$Id: State.h,v 1.2.2.4 2007/01/30 05:04:56 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -61,7 +61,41 @@ public:
 	typedef	signal_handler<this_type>	signal_handler;
 private:
 	typedef	vector<event_type>		event_pool_type;
+#if CHPSIM_CAUSE_TRACKING
+	struct event_placeholder_type : public EventPlaceholder<time_type> {
+		typedef	EventPlaceholder<time_type>	parent_type;
+		/**
+			This is the index corresponding to the
+			statically allocated event.  
+		 */
+		event_index_type			cause_event_id;
+#if CHPSIM_TRACING
+		/**
+			This is the index into the history of all events, 
+			as counted and maintained by the tracing engine.  
+		 */
+		size_t					cause_trace_id;
+#endif
+		event_placeholder_type(const time_type& t, 
+			const event_index_type e, 
+			const event_index_type c = SIM::INVALID_EVENT_INDEX
+#if CHPSIM_TRACING
+			, const size_t i = 0
+#endif
+			) : 
+			parent_type(t, e), 
+			cause_event_id(c) 
+#if CHPSIM_TRACING
+			, cause_trace_id(i)
+#endif
+			{ }
+
+		using parent_type::operator<;
+
+	};	// end struct event_placeholder_type
+#else	// CHPSIM_CAUSE_TRACING
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
+#endif	// CHPSIM_CAUSE_TRACING
 	typedef	EventQueue<event_placeholder_type>
 						event_queue_type;
 	typedef	vector<event_queue_type::value_type>
@@ -90,14 +124,27 @@ private:
 		/**
 			When true report event-queue activity, i.e.
 			when events are enqueued.  
+			Initially off.  
 		 */
 		FLAG_WATCH_QUEUE = 0x0002,
 		/**
 			When true, print each event as it is dequeued and
 			executed.  
+			Initially off.  
 		 */
 		FLAG_WATCH_ALL_EVENTS = 0x0004,
+#if CHPSIM_CAUSE_TRACKING
+		/**
+			Set to true to show last-arrival event-causality.  
+			Initially off.  
+		 */
+		FLAG_SHOW_CAUSE = 0x0008,
+#endif
 #if CHPSIM_TRACING
+		/**
+			Set true if named trace file is opened successfully.  
+			Initially off.  
+		 */
 		FLAG_TRACE_ON = 0x8000,
 #endif
 		/**
@@ -292,6 +339,17 @@ public:
 	static
 	ostream&
 	help_timing(ostream&);
+
+#if CHPSIM_CAUSE_TRACKING
+	bool
+	showing_cause(void) const { return flags & FLAG_SHOW_CAUSE; }
+
+	void
+	show_cause(void) { flags |= FLAG_SHOW_CAUSE; }
+
+	void
+	no_show_cause(void) { flags &= ~FLAG_SHOW_CAUSE; }
+#endif
 
 #if CHPSIM_TRACING
 	bool

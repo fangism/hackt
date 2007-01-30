@@ -5,6 +5,20 @@
 
 2007-01-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-08:
+	  Added and enabled causality tracking of last-predecessor 
+		event, untested.
+		Commands to turn on/off causality reporting: 'cause' 'nocause'
+		CHPSIM_CAUSE_TRACKING and CHPSIM_TRACING flags are messily
+		intermingled, but all combinations should still work.  
+	  Tracing can optionally keep track of event causality.  
+	  TraceManager keeps a running count of events.  
+	  channel_state_base::write(): only write data when data
+		has been sent (full-bit set).  
+	  Next: testing event causality tracking features.  
+	  Soon thereafter: checkpointing for efficient trace playback.  
+
+
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-07:
 	  Added some untested tracing code in State::step(), more to go.
 	  Updated ofstreams to open in binary mode.  

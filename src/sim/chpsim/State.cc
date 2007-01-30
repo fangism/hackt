@@ -1,11 +1,11 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.5 2007/01/29 23:08:40 fang Exp $
+	$Id: State.cc,v 1.2.2.6 2007/01/30 05:04:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
-#define	DEBUG_STEP			(1 && ENABLE_STACKTRACE)
+#define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <iterator>
@@ -20,6 +20,8 @@
 #include "sim/random_time.h"
 #if CHPSIM_TRACING
 #include "sim/chpsim/Trace.h"
+#else
+#include "Object/nonmeta_variable.h"
 #endif
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -120,9 +122,28 @@ struct State::recheck_transformer {
  */
 struct State::event_enqueuer {
 	this_type&		state;
+#if CHPSIM_CAUSE_TRACKING
+	event_index_type	cause_event_id;
+#if CHPSIM_TRACING
+	size_t			cause_trace_id;
+#endif
+#endif
 
+#if CHPSIM_CAUSE_TRACKING
+	event_enqueuer(this_type& s, const event_index_type c
+#if CHPSIM_TRACING
+			, const size_t t
+#endif
+			) : 
+			state(s), cause_event_id(c)
+#if CHPSIM_TRACING
+			, cause_trace_id(t)
+#endif
+			{ }
+#else	// CHPSIM_CAUSE_TRACING
 	explicit
 	event_enqueuer(this_type& s) : state(s) { }
+#endif	// CHPSIM_CAUSE_TRACING
 
 	/**
 		TODO: different timing modes
@@ -148,7 +169,16 @@ struct State::event_enqueuer {
 		ISE(cerr, cerr << "unknown timing mode.";)
 	}
 		const time_type new_time = state.current_time +new_delay;
-		const event_placeholder_type new_event(new_time, ei);
+		const event_placeholder_type
+#if CHPSIM_CAUSE_TRACKING
+#if CHPSIM_TRACING
+			new_event(new_time, ei, cause_event_id, cause_trace_id);
+#else
+			new_event(new_time, ei, cause_event_id);
+#endif
+#else	// CHPSIM_CAUSE_TRACKING
+			new_event(new_time, ei);
+#endif	// CHPSIM_CAUSE_TRACKING
 		if (state.watching_event_queue()) {
 			// is this a performance hit, rechecking inside loop?
 			// if so, factor this into two versioned loops.
@@ -270,25 +300,12 @@ State::reset(void) {
 	Automatically skips and deallocates killed events.  
 	NOTE: possible that last event in queue is killed, 
 		in which case, need to return a NULL placeholder.  
+	\pre before calling this, event_queue must not be empty.  
  */
 State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
-#if 0
-	event_placeholder_type ret(event_queue.pop());
-	while (get_event(ret.event_index).killed()) {
-		__deallocate_killed_event(ret.event_index);
-		if (event_queue.empty()) {
-			return event_placeholder_type(
-				current_time, INVALID_EVENT_INDEX);
-		} else {
-			ret = event_queue.pop();
-		}
-	};
-	return ret;
-#else
 	return event_queue.pop();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,6 +333,14 @@ State::step(void) {
 	// first NULL event has index 0, but nothing else should enqueue it
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
+#if CHPSIM_CAUSE_TRACKING
+	const event_index_type cause_event_id = ep.cause_event_id;
+	DEBUG_STEP_PRINT("caused by = " << cause_event_id << endl);
+#if CHPSIM_TRACING
+	const size_t cause_trace_id = ep.cause_trace_id;
+	DEBUG_STEP_PRINT("at event # = " << cause_trace_id << endl);
+#endif
+#endif
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
@@ -338,13 +363,22 @@ try {
 	if (is_tracing()) {
 		// should only be true if trace opening succeeded
 		NEVER_NULL(trace_manager);
-		ti = trace_manager->current_chunk.push_back_event(
-			event_trace_point(current_time, ei));
-		// TODO: cause tracking
+		ti = trace_manager->push_back_event(
+			event_trace_point(current_time, ei
+#if CHPSIM_CAUSE_TRACKING
+				, cause_trace_id
+#endif
+				));
 	}
 #endif
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
+#if CHPSIM_CAUSE_TRACKING
+		if (showing_cause()) {
+			cout << "\t[by:" << cause_event_id << ']';
+		}
+#endif
+		cout << endl;
 	}
 	// __updated_list lists variables updated
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
@@ -384,7 +418,7 @@ try {
 		trace_manager->current_chunk.push_back<Tag>(v, ti, j);	\
 	}
 #else
-#define	TRACE_UPDATED_STATE
+#define	TRACE_UPDATED_STATE(Tag)
 #endif
 	typedef	update_reference_array_type::const_iterator	const_iterator;
 	const_iterator ui(__updated_list.begin()), ue(__updated_list.end());
@@ -445,7 +479,16 @@ try {
 	// transfer events from staging queue to event queue, 
 	// and schedule them with some delay
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
-		event_enqueuer(*this));
+#if CHPSIM_CAUSE_TRACKING
+#if CHPSIM_TRACING
+		event_enqueuer(*this, ei, ti)
+#else
+		event_enqueuer(*this, ei)
+#endif
+#else	// CHPSIM_CAUSE_TRACKING
+		event_enqueuer(*this)
+#endif	// CHPSIM_CAUSE_TRACKING
+	);
 }
 }
 	// TODO: finish me: watch list
@@ -571,8 +614,7 @@ State::dump_event(ostream& o, const event_index_type ei,
 #if 1
 	o << ei << '\t';
 #endif
-	ev.dump_brief(o) << endl;
-	return o;
+	return ev.dump_brief(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -633,6 +675,12 @@ State::dump_event_queue(ostream& o) const {
 		o << event_table_header << endl;
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
+#if CHPSIM_CAUSE_TRACKING
+			if (showing_cause()) {
+				cout << "\t[by:" << i->cause_event_id << ']';
+			}
+#endif
+			o << endl;
 		}
 	} else {
 		// deadlocked!
