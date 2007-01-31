@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.6 2007/01/30 05:04:55 fang Exp $
+	$Id: State.cc,v 1.2.2.7 2007/01/31 00:48:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -215,6 +215,7 @@ State::State(const module& m) :
 		__rechecks()
 #if CHPSIM_TRACING
 		, trace_manager()
+		, trace_flush_interval(1L<<16)
 #endif
 		{
 	// perform initializations here
@@ -310,6 +311,17 @@ State::dequeue_event(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Peek at the time of the next event.  
+	\pre event queue must not be empty
+ */
+State::time_type
+State::next_event_time(void) const {
+	INVARIANT(event_queue.empty());
+	return event_queue.top().time;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	The main event-driven execution engine of chpsim.  
 	Processes one event at a time.  
 	Q: since multiple instances referenced can be altered, 
@@ -374,7 +386,7 @@ try {
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
 #if CHPSIM_CAUSE_TRACKING
-		if (showing_cause()) {
+		if (showing_cause() && cause_event_id) {
 			cout << "\t[by:" << cause_event_id << ']';
 		}
 #endif
@@ -676,7 +688,7 @@ State::dump_event_queue(ostream& o) const {
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
 #if CHPSIM_CAUSE_TRACKING
-			if (showing_cause()) {
+			if (showing_cause() && i->cause_event_id) {
 				cout << "\t[by:" << i->cause_event_id << ']';
 			}
 #endif

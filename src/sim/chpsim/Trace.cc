@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.1.2.4 2007/01/30 05:04:56 fang Exp $
+	$Id: Trace.cc,v 1.1.2.5 2007/01/31 00:48:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -22,10 +22,12 @@ namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ios_base;
 using std::copy;
+using std::istream_iterator;
 using std::ostream_iterator;
 using std::stringstream;	// string buffer
 using util::write_value;
 using util::read_value;
+using std::streampos;
 
 //=============================================================================
 // class event_trace_point method definitions
@@ -56,6 +58,26 @@ event_trace_window::push_back_event(const event_trace_point& p) {
 	const trace_index_type ret = event_array.size();
 	event_array.push_back(p);
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre event array must not be empty.  
+ */
+trace_time_type
+event_trace_window::start_time(void) const {
+	INVARIANT(event_array.size());
+	return event_array.front().timestamp;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre event array must not be empty.  
+ */
+trace_time_type
+event_trace_window::end_time(void) const {
+	INVARIANT(event_array.size());
+	return event_array.back().timestamp;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -209,19 +231,18 @@ trace_file_contents::write(ostream& o) const {
 TraceManager::TraceManager(const string& fn) : 
 		trace_file_name(fn), 
 		temp_file_name(tmpnam(NULL)), 		// libc/cstdio
-		trace_ostream(new ofstream(
+		trace_ostream(new fstream(	// read and write
 			temp_file_name.c_str(), ios_base::binary)),
 		header_ostream(new ofstream(fn.c_str(), ios_base::binary)), 
 		contents(), 
 		current_chunk(),
+		trace_payload_size(0), 
 		previous_events(0) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TraceManager::~TraceManager() {
-#if NOT_DONE_YET
 	finish();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -244,11 +265,23 @@ TraceManager::good(void) const {
  */
 void
 TraceManager::flush(void) {
-#if NOT_DONE_YET
-	NEVER_NULL(trace_ofstream);
+	NEVER_NULL(trace_ostream);
 	// write out to temp file
+	// INVARIANT, there must be at least ONE event in the trace
+	// otherwise, this flush is just wasted (no-op)
+if (current_chunk.event_count()) {
+	const trace_time_type start_time = current_chunk.start_time();
+	const streampos old_size = trace_ostream->tellp();
+	current_chunk.write(*trace_ostream);
+	trace_payload_size = trace_ostream->tellp();
 	// append entry to contents
-#endif
+	contents.push_back(trace_file_contents::entry(
+		start_time, old_size, trace_payload_size -old_size));
+	// restart chunk, recycling memory
+	current_chunk.~trace_chunk();
+	new (&current_chunk) trace_chunk();
+}
+	// else there is nothing to flush
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -257,12 +290,18 @@ TraceManager::flush(void) {
  */
 void
 TraceManager::finish(void) {
-#if NOT_DONE_YET
-	flush();
+	flush();	// one last flush (if needed)
 	// write out header to file to final file
+	contents.write(*header_ostream);
+	const streampos start_of_objects = header_ostream->tellp();
+	// align to natural boundary? maybe sanity check code.
 	// concatenate trace payload (from temp.) to final file.  
-	// close both streams when done
-#endif
+	copy(istream_iterator<char>(*trace_ostream), istream_iterator<char>(),
+		ostream_iterator<char>(*header_ostream));
+	// close both streams when done (will cause flush)
+	// close stream and release memory
+	trace_ostream = excl_ptr<fstream>(NULL);
+	header_ostream = excl_ptr<ofstream>(NULL);
 }
 
 //=============================================================================

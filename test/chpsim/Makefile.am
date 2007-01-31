@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.4 2007/01/27 23:39:12 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.5 2007/01/31 00:48:39 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -86,6 +86,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	countdown-nested-d-01 countdown-nested-d-02 \
 	countdown-domino-a-01 \
 	countdown-domino-b-01 \
+	countdown-domino-b-02-cause countdown-domino-b-03-cause \
 	wait-basic-a-01 wait-basic-a-02 \
 	wait-conjunction-a-01 wait-conjunction-a-02 \
 	wait-conjunction-b-01 wait-conjunction-b-02 \
@@ -93,7 +94,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	wait-indexed-guard-a-01 wait-indexed-guard-a-02 \
 	select-skip-a-01 \
 	select-skip-b-01 \
-	select-sequence-a-01 \
+	select-sequence-a-01 select-sequence-a-02-cause \
 	select-parallel-a-01 select-parallel-a-02 \
 	select-parallel-a-03 select-parallel-a-04 \
 	select-loop-a-01 \

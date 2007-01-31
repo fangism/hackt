@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.4 2007/01/30 05:04:56 fang Exp $
+	$Id: Trace.h,v 1.1.2.5 2007/01/31 00:48:38 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -25,6 +25,7 @@ namespace CHPSIM {
 class State;		// be-friend me
 class TraceManager;
 using std::ostream;
+using std::fstream;
 using std::ofstream;
 using std::string;
 using std::vector;
@@ -121,6 +122,18 @@ protected:
 
 	void
 	write(ostream&) const;
+
+public:
+	size_t
+	event_count(void) const {
+		return event_array.size();
+	}
+
+	trace_time_type
+	start_time(void) const;
+
+	trace_time_type
+	end_time(void) const;
 
 };	// end class event_trace_window
 
@@ -305,12 +318,21 @@ public:
 #endif
 		/**
 			File offset where chunk begins.  
+			This offset can be relative to the start
+			of the body, which can then be corrected
+			using the size of the header/table-of-contents.  
+			NOTE: could use std::streampos...
 		 */
 		size_t				file_offset;
 		/**
 			Size of chunk.  
+			NOTE: could use std::streampos...
 		 */
 		size_t				chunk_size;
+
+		entry() { }	// undefined values
+		entry(const trace_time_type t, const size_t o, const size_t s) :
+			start_time(t), file_offset(o), chunk_size(s) { }
 	};	// end struct entry
 private:
 	typedef	vector<entry>			entry_array_type;
@@ -322,6 +344,11 @@ private:
 public:
 	trace_file_contents();
 	~trace_file_contents();
+
+	void
+	push_back(const entry& e) {
+		entry_array.push_back(e);
+	}
 
 	void
 	write(ostream&) const;
@@ -342,6 +369,7 @@ operator << (ostream&, const trace_file_contents::entry&);
 	Trace should be replayable.
 	TODO: decide what to record, what to reconstruct.  
 	TODO: trace consistency and integrity checks.  
+	TODO: record chpsim invoked options and compare on trace load
  */
 class TraceManager {
 	friend class State;
@@ -357,8 +385,10 @@ private:
 	string					temp_file_name;
 	/**
 		This is the stream to the temp file.  
+		Bidirectional because we need to read it to finalize
+		the output stream.  
 	 */
-	excl_ptr<ofstream>			trace_ostream;
+	excl_ptr<fstream>			trace_ostream;
 	/**
 		This is the stream to the header, also the final file.  
 		Nothing is actually written to this file until
@@ -375,6 +405,11 @@ private:
 		Current record of recent history.  
 	 */
 	trace_chunk				current_chunk;
+	/**
+		The cumulative size of the body of the trace-file.  
+		Update this each time a chunk is flushed.  
+	 */
+	size_t					trace_payload_size;
 	/**
 		Running count of events before this chunk.  
 	 */

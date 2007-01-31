@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.4 2007/01/30 05:04:56 fang Exp $
+	$Id: State.h,v 1.2.2.5 2007/01/31 00:48:37 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -233,7 +233,32 @@ private:
 	 */
 	event_subscribers_type			__rechecks;
 #if CHPSIM_TRACING
+	/**
+		Private pointer to the event trace manager.  
+		Data checkpointed persistently.  
+	 */
 	excl_ptr<TraceManager>			trace_manager;
+	/**
+		The interval after which the trace_manager should
+		flush out a chunk of trace.  
+		Smaller: more I/O overhead, slower.  
+		Larger: faster, more memory used during execution.
+		Counted by the number of events that have executed.
+		Default: some big number
+	 */
+	size_t					trace_flush_interval;
+#endif
+#if CHPSIM_CHECKPOINTING
+	/**
+		Name of checkpoint file.  
+		The same file is overridden periodically.  
+		Suggestion: write to a temp file first, then mv it over.  
+	 */
+	string					checkpoint_name;
+	/**
+		(inverse) frequency of checkpointing.  
+	 */
+	time_t					checkpoint_interval;
 #endif
 public:
 	explicit
@@ -255,6 +280,9 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	time_type
+	next_event_time(void) const;
 
 	const time_type&
 	get_uniform_delay(void) const { return uniform_delay; }
@@ -377,6 +405,17 @@ public:
 
 	void
 	close_trace(void);
+
+	size_t
+	get_trace_flush_interval(void) const {
+		return trace_flush_interval;
+	}
+
+	void
+	set_trace_flush_interval(const size_t i) {
+		INVARIANT(i);
+		trace_flush_interval = i;
+	}
 #endif
 
 	ostream&

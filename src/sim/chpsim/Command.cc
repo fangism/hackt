@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.3 2007/01/30 05:04:54 fang Exp $
+	$Id: Command.cc,v 1.3.2.4 2007/01/31 00:48:35 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -354,7 +354,6 @@ Step::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 	"advance the simulation in time units")
 
@@ -365,7 +364,6 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
 	time_type add;		// time to add
 	if (string_to_num(a.back(), add)) {
 		cerr << "Error parsing time." << endl;
@@ -375,14 +373,14 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-	State::step_return_type ni;
+//	State::step_return_type ni;
 	s.resume();
 	try {
-	while (!s.stopped() && s.pending_events() &&
-			(s.next_event_time() < stop_time) &&
-			GET_NODE((ni = s.step()))) {
+	while (s.pending_events() && !s.stopped() &&
+			(s.next_event_time() < stop_time)) {
+		s.step();
 		// NB: may need specialization for real-valued (float) time.  
-
+#if 0
 		// honor breakpoints?
 		// tracing stuff here later...
 		const node_type& n(s.get_node(GET_NODE(ni)));
@@ -418,14 +416,18 @@ if (a.size() != 2) {
 				// or Command::BREAK; ?
 			}
 		}
+#endif
 	}	// end while
-	} catch (State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (...) {
+		cerr << "Caught run-time exception during execution.  Halting."
+			<< endl;
 		return Command::FATAL;
 	}	// no other exceptions
+#if 0
 	if (!s.stopped() && s.time() < stop_time) {
 		s.update_time(stop_time);
 	}
+#endif
 	// else leave the time at the time as of the last event
 	return Command::NORMAL;
 }
@@ -439,7 +441,6 @@ Advance::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Run, "run", simulation,
@@ -1946,6 +1947,43 @@ void
 TraceClose::usage(ostream& o) {
 	o << name << endl;
 	o << "Stops the active trace and writes it out to file." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushInterval, 
+	"trace-flush-interval", tracing, 
+	"set/get the current trace chunk granularity")
+
+int
+TraceFlushInterval::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "trace flush interval (events): " <<
+		s.get_trace_flush_interval() << endl;
+	break;
+case 2:
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric interval argument." << endl;
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+	s.set_trace_flush_interval(i);
+	break;
+default:
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+}
+	return Command::NORMAL;
+}
+
+void
+TraceFlushInterval::usage(ostream& o) {
+	o << name << " [interval]" << endl;
+	o <<
+"If argument is passed, then set the trace flush interval to it.\n"
+"Otherwise, just report the current trace flush interval.\n"
+"The interval is counted in number of events that execute." << endl;
 }
 
 #endif	// CHPSIM_TRACING

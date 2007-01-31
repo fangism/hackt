@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-09:
+	  chpsim: added (untested) 'advance' command, since it'll come in 
+		handy for trace testing.  
+		'trace-flush-interval' to get/set trace flush interval, duh!
+	  State: only show non-zero cause event IDs.  
+	  TraceManager: temp file now an fstream, since we need to copy it.
+	  Next: testing chpsim trace production, be able to read in traces,
+		and produce some textual dump for verification.  
+
+
 2007-01-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-08:
