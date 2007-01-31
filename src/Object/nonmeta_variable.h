@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.2.2.2 2007/01/29 04:44:08 fang Exp $
+	$Id: nonmeta_variable.h,v 1.2.2.3 2007/01/31 20:59:28 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -27,6 +27,7 @@ class fundamental_channel_footprint;
 class canonical_fundamental_chan_type_base;
 	// defined in "Object/def/fundamental_channel_footprint.h"
 using std::ostream;
+using std::istream;
 using std::valarray;
 
 /**
@@ -192,8 +193,14 @@ protected:
 	void
 	__reset(void);
 
+	ostream&
+	__raw_dump(ostream&) const;
+
 	void
 	__write(ostream&) const;
+
+	void
+	__read(istream&);
 
 };	// end class channel_data_base
 
@@ -238,8 +245,14 @@ public:
 	ostream&
 	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
 
+	ostream&
+	raw_dump(ostream&) const;
+
 	void
 	write(ostream&) const;
+
+	void
+	read(istream&);
 
 };	// end class ChannelData
 
@@ -280,6 +293,9 @@ public:
 	void
 	write(ostream&) const;
 
+	void
+	read(istream&);
+
 };	// end class channel_state_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -315,9 +331,19 @@ struct state_data_extractor {
 		return v.value;
 	}
 
+	// possibly inline...
 	static
 	void
 	write(ostream&, const value_type&);
+
+	// possibly inline...
+	static
+	void
+	read(istream&, value_type&);
+
+	static
+	ostream&
+	dump(ostream&, const value_type&);
 
 };	// end struct state_data_extractor
 
@@ -338,6 +364,14 @@ struct state_data_extractor<channel_tag> {
 	static
 	void
 	write(ostream&, const value_type&);
+
+	static
+	void
+	read(istream&, value_type&);
+
+	static
+	ostream&
+	dump(ostream&, const value_type&);
 
 };	// end struct state_data_extractor
 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.5 2007/01/31 00:48:38 fang Exp $
+	$Id: Trace.h,v 1.1.2.6 2007/01/31 20:59:30 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -24,6 +24,7 @@ namespace SIM {
 namespace CHPSIM {
 class State;		// be-friend me
 class TraceManager;
+using std::istream;
 using std::ostream;
 using std::fstream;
 using std::ofstream;
@@ -86,6 +87,7 @@ struct event_trace_point {
 	trace_index_type			cause_id;
 #endif
 
+	event_trace_point() { }		// default uninitialized, lazy
 	event_trace_point(const time_type& t, const trace_index_type ei, 
 			const trace_index_type c = 0) :
 			timestamp(t), event_id(ei)
@@ -94,15 +96,16 @@ struct event_trace_point {
 #endif
 			{ }
 
-};	// end struct event_trace_point
+	void
+	write(ostream&) const;
 
-#if 0
-/**
-	Consider making this static/private.
- */
-ostream&
-operator << (ostream&, const event_trace_point&);
-#endif
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
+
+};	// end struct event_trace_point
 
 //=============================================================================
 /**
@@ -122,6 +125,12 @@ protected:
 
 	void
 	write(ostream&) const;
+
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
 
 public:
 	size_t
@@ -156,11 +165,19 @@ struct state_trace_point_base {
 	 */
 	size_t				global_index;
 
+	state_trace_point_base() { }	// uninitialized
+
 	state_trace_point_base(const trace_index_type e, const size_t g) :
 		event_index(e), global_index(g) { }
 
 	void
 	write(ostream&) const;
+
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct state_trace_point_base
 
@@ -178,22 +195,21 @@ struct state_trace_point : public state_trace_point_base {
 	typedef	typename extractor_policy::value_type	value_type;
 	value_type				raw_data;
 
+	state_trace_point() { }		// uninitialized
+
 	state_trace_point(const value_type&, 
 		const trace_index_type, const size_t);
 
 	void
 	write(ostream&) const;
 
-};	// end struct state_trace_point
+	void
+	read(istream&);
 
-#if 0
-/**
-	Consider making this static/private.
- */
-template <class Tag>
-ostream&
-operator << (ostream&, const state_trace_point<Tag>&);
-#endif
+	ostream&
+	dump(ostream&) const;
+
+};	// end struct state_trace_point
 
 //=============================================================================
 /**
@@ -220,6 +236,12 @@ protected:
 
 	void
 	write(ostream&) const;
+
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct trace_window_base
 
@@ -256,6 +278,12 @@ public:
 	void
 	write(ostream&) const;
 
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
+
 };	// end class trace_time_window
 
 //=============================================================================
@@ -270,19 +298,6 @@ public:
 struct trace_chunk : 
 		public state_trace_time_window,
 		public event_trace_window {
-#if 0
-	/**
-		Every addition to this buffer should update this size.  
-	 */
-	size_t				buffer_size;
-	/**
-		When this size is exceeded, it's time to flush out, 
-		and reset.  
-		Alternative, use event-count to determine when to
-		write-out?  Probably better...
-	 */
-	size_t				buffer_threshold;
-#endif
 	trace_chunk();
 	~trace_chunk();
 
@@ -290,6 +305,12 @@ struct trace_chunk :
 
 	void
 	write(ostream&) const;
+
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct trace_chunk
 
@@ -309,13 +330,6 @@ public:
 			Start time of chunk.  
 		 */
 		trace_time_type			start_time;
-#if 0
-		/**
-			Optional.  End time of chunk.
-			Just use start-time of the next chunk.  
-		 */
-		trace_time_type			stop_time;
-#endif
 		/**
 			File offset where chunk begins.  
 			This offset can be relative to the start
@@ -333,6 +347,13 @@ public:
 		entry() { }	// undefined values
 		entry(const trace_time_type t, const size_t o, const size_t s) :
 			start_time(t), file_offset(o), chunk_size(s) { }
+
+		// human readable
+		ostream&
+		dump(ostream&) const;
+
+		istream&
+		read(istream&);
 	};	// end struct entry
 private:
 	typedef	vector<entry>			entry_array_type;
@@ -342,6 +363,8 @@ private:
 	 */
 	entry_array_type			entry_array;
 public:
+	typedef	entry_array_type::const_iterator	const_iterator;
+public:
 	trace_file_contents();
 	~trace_file_contents();
 
@@ -350,15 +373,23 @@ public:
 		entry_array.push_back(e);
 	}
 
+	const_iterator
+	begin(void) const { return entry_array.begin(); }
+
+	const_iterator
+	end(void) const { return entry_array.end(); }
+
 	void
 	write(ostream&) const;
 
+	void
+	read(istream&);
+
+	ostream&
+	dump(ostream&) const;
+
 };	// end class trace_file_contents
 
-#if 0
-ostream&
-operator << (ostream&, const trace_file_contents::entry&);
-#endif
 
 //=============================================================================
 // TODO: trace slice extraction methods -- when only a piece is required
@@ -414,6 +445,9 @@ private:
 		Running count of events before this chunk.  
 	 */
 	trace_index_type			previous_events;
+private:
+	// for temporary construction only
+	TraceManager();
 public:
 	explicit
 	TraceManager(const string&);
@@ -443,6 +477,10 @@ public:
 
 	// text-dump?
 	// load?
+
+	static
+	void
+	text_dump(istream&, ostream&);	// we all stream for istream!
 
 };	// end class Trace
 

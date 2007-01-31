@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.16 2006/04/12 08:53:21 fang Exp $
+	$Id: IO_utils.tcc,v 1.16.50.1 2007/01/31 20:59:33 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <functional>
 #include <utility>		// for std::pair
+#include "util/STL/vector_fwd.h"	// for vector<bool>
 #include "util/macros.h"	// for INVARIANT
 
 // only needed for functional for_each where call_traits are needed.  
@@ -25,6 +26,7 @@
 namespace util {
 using std::ostream;
 using std::istream;
+using std::vector;
 //=============================================================================
 // automatic template instantiation suppression
 
@@ -219,6 +221,38 @@ read_sequence_prealloc(istream& f, S& l) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+namespace detail {
+	template <class S>
+	struct read_sequence_resize_impl {
+		/// since valarray doesn't have reference...
+		typedef	typename S::value_type&		reference;
+
+		template <class R>
+		void
+		operator () (R reader, reference ref) const {
+			reader(ref);
+		}
+	};
+
+	template <class Alloc>
+	struct read_sequence_resize_impl<vector<bool, Alloc> > {
+		typedef	typename vector<bool, Alloc>::value_type
+						value_type;
+		/// This is bit_reference
+		typedef	typename vector<bool, Alloc>::reference
+						reference;
+
+		template <class R>
+		void
+		operator () (R reader, reference ref) const {
+			value_type temp;
+			reader(temp);
+			ref = temp;
+		}
+	};
+}	// end namespace detail
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This variant of sequence reading resizes the container argument
 	with the read size, and proceeds to read in values in-places.  
@@ -228,7 +262,6 @@ read_sequence_prealloc(istream& f, S& l) {
 	\param S a sequence that has concepts: size, forward iterator.
 	\param f the input stream.
 	\param l the sequence of data values to which to load values in-place.
-	TODO: specialize for bools!
  */
 template <class S>
 void
@@ -246,10 +279,7 @@ read_sequence_resize(istream& f, S& l) {
 		// implementation.
 		read_value<value_type>(f, l[j]);
 #else
-		value_type temp;
-		r(temp);
-		// read_value<value_type>(f, temp);
-		l[j] = temp;
+		detail::read_sequence_resize_impl<S>()(r, l[j]);
 #endif
 	}
 }
