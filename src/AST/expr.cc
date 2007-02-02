@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.22 2006/11/02 22:01:46 fang Exp $
+	$Id: expr.cc,v 1.22.16.1 2007/02/02 22:16:17 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -99,6 +99,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::index_expr, "(index-expr)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::arith_expr, "(arith-expr)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::relational_expr, "(relational-expr)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::logical_expr, "(logical-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::loop_operation, "(loop-or)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::array_concatenation, "(array-concatenation)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::loop_concatenation, "(loop-concatenation)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::array_construction, "(array-construction)")
@@ -2128,6 +2129,44 @@ logical_expr::check_prs_expr(context& c) const {
 		return prs_expr_return_type(NULL);
 	}
 }
+
+//=============================================================================
+// class loop_operation method definitions
+
+loop_operation::loop_operation(const char_punctuation_type* l,
+		const char_punctuation_type* o, 
+		const token_identifier* id, const range* b,
+		const expr* e, const char_punctuation_type* r) :
+		lp(l), op(o), index(id), bounds(b), body(e), rp(r) {
+	NEVER_NULL(op);
+	NEVER_NULL(index);
+	NEVER_NULL(bounds);
+	NEVER_NULL(body);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+loop_operation::~loop_operation() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_operation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+loop_operation::leftmost(void) const {
+	if (lp)
+		return lp->leftmost();
+	else	return op->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+loop_operation::rightmost(void) const {
+	if (rp)
+		return rp->leftmost();
+	else	return body->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //=============================================================================
 // class array_concatenation method definitions

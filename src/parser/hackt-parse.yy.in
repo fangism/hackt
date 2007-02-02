@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.22 2007/01/23 02:43:30 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.22.4.1 2007/02/02 22:16:19 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -316,6 +316,7 @@ extern const char* const yyrule[];
 ***/
 	assign_stmt*		_assign_stmt;
 	incdec_stmt*		_incdec_stmt;
+	loop_operation*		_loop_operation;
 	expr_list*		_expr_list;
 	inst_ref_expr_list*	_inst_ref_expr_list;
 	template_argument_list_pair*	_template_argument_list_pair;
@@ -489,6 +490,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_node_position>	INSERT EXTRACT
 %token	<_node_position>	PLUSPLUS MINUSMINUS
 %token	<_node_position>	ASSIGN
+%type	<_node_position>	loop_assoc_op
 
 /* _token_keyword: covert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
@@ -708,6 +710,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_array_construction>		array_construction
 %type	<_expr_list>	complex_aggregate_reference_list
 %type	<_expr_list>	mandatory_complex_aggregate_reference_list
+%type	<_loop_operation>		loop_expr
 
 %start	module
 
@@ -1534,6 +1537,9 @@ chp_selection
 */
 	;
 
+/**
+	Here we drop the extra first ':' to disambiguate.  
+ */
 chp_metaloop_selection
 	: '[' ':' ID ':' range ':' chp_guarded_command ']'
 		{ $$ = new CHP::metaloop_selection($1, $2, $3, $5, $7, $8);
@@ -1545,6 +1551,9 @@ chp_metaloop_selection
 		}
 	;
 
+/**
+	Here we drop the extra first ':' to disambiguate.  
+ */
 chp_metaloop_statement
 	: '{' ',' ID ':' range ':' chp_body '}'
 		{ $$ = new CHP::metaloop_statement($1, $2, $3, $5, $7, $8);
@@ -1608,6 +1617,7 @@ chp_unary_expr
 	: '-' chp_unary_expr
 		{ $$ = new prefix_expr($1, $2); }
 	| chp_unary_bool_expr	/* include all paren exprs */
+	| loop_expr { $$ = $1; }
 	| INT	{ $$ = $1; }
 	| FLOAT	{ $$ = $1; }
 	;
@@ -1623,6 +1633,10 @@ chp_add_expr
 	| chp_add_expr_only
 	;
 
+/**
+	This was factored out to allow the shorthand ID '+' notation
+	for setting booleans without introducing grammar conflicts.  
+ */
 chp_add_expr_only
 	: chp_add_expr '+' chp_mult_expr
 		{ $$ = new arith_expr($1, $2, $3); }
@@ -2197,6 +2211,7 @@ simple_expr
 unary_expr
 	: simple_expr { $$ = $1; }
 	| paren_expr { $$ = $1; }
+	| loop_expr { $$ = $1; }
 	/* no prefix operations, moved to assignment */
 	| '-' unary_expr
 		{ $$ = new prefix_expr($1, $2); }
@@ -2353,11 +2368,33 @@ unary_assignment
 //	reserve them as statements only
 */
 
+/**
+	Here we use the extra first ':' to disambiguate '+' ID.  
+ */
+loop_expr
+	: '(' loop_assoc_op ':' ID ':' range ':' expr ')'
+		{ $$ = new loop_operation($1, $2, $4, $6, $8, $9);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); DELETE_TOKEN($7); }
+	;
+
+/**
+	For now, we restrict to associative and commutative operators.  
+	Maybe specific left-right associativity in semantics for others.  
+ */
+loop_assoc_op
+	: '+'
+	| '*'
+	| '&'
+	| '|'
+	| '^'
+	| LOGICAL_AND 
+	| LOGICAL_OR
+	;
+
 /* THE BASIC EXPRESSION */
 expr
 /*
 //	: conditional_expr		// not supported
-//	: assignment_stmt
 */
 	: logical_or_expr
 	;
@@ -2372,7 +2409,6 @@ optional_expr_in_braces
 strict_relaxed_template_arguments
 	: expr_optional_list_in_angles
 	  optional_template_arguments_in_angles
-/*		{ $$ = $1; DELETE_TOKEN($2); }	*/
 		{ $$ = new template_argument_list_pair($1, $2); }
 	|	{ $$ = NULL; }
 	;
