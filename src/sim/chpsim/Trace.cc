@@ -1,9 +1,15 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.1.2.7 2007/02/02 08:12:44 fang Exp $
+	$Id: Trace.cc,v 1.1.2.8 2007/02/02 20:15:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
+/**
+	Option for the paranoid.  
+	Define to 1 to plan extra sanity check alignment markers
+	in the trace file, e.g. at section boundaries.  
+ */
+#define	CHPSIM_TRACE_ALIGNMENT_MARKERS		1
 
 #include "sim/chpsim/Trace.h"
 #include <iostream>
@@ -144,7 +150,7 @@ if (i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: enumerate events by index, taking an offset argument.
+	Prints table of events ordered by index of occurrence.  
  */
 ostream&
 event_trace_window::dump(ostream& o, const size_t offset) const {
@@ -159,7 +165,7 @@ event_trace_window::dump(ostream& o, const size_t offset) const {
 	const_iterator i(event_array.begin()), e(event_array.end());
 	size_t j = offset;
 	for ( ; i!=e; ++i, ++j) {
-		i->dump(o << '\t' << offset +j);	// has endl already
+		i->dump(o << '\t' << j);	// has endl already
 	}
 #endif
 	return o;
@@ -184,7 +190,6 @@ state_trace_point_base::read(istream& i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 state_trace_point_base::dump(ostream& o) const {
-//	o << "trace_event[" << event_index << "], alloc-index=" << global_index;
 	o << '\t' << event_index << '\t' << global_index;
 	return o;
 }
@@ -225,20 +230,6 @@ state_trace_point<Tag>::dump(ostream& o) const {
 	state_trace_point_base::dump(o) << '\t';
 	extractor_policy::dump(o, raw_data) << endl;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Private ostream overload, local to this TU.  
- */
-template <class Tag>
-static
-ostream&
-operator << (ostream& o, const state_trace_point<Tag>& p) {
-	p.write(o);
-	return o;
-}
-#endif
 
 //=============================================================================
 // class state_trace_window_base method definitions
@@ -542,7 +533,7 @@ TraceManager::TraceManager(const string& fn) :
 		previous_events(0) {
 	NEVER_NULL(trace_ostream);
 	NEVER_NULL(header_ostream);
-	// should be allocate, but not necessarily in a good state
+	// should always be allocated, but not necessarily in a good state
 #if 0
 	cerr << "Trace file name: " << trace_file_name;
 	cerr << ((*header_ostream) ? " (opened)" : " (failed)") << endl;
@@ -591,14 +582,12 @@ if (current_chunk.event_count()) {
 	current_chunk.write(*trace_ostream);
 	trace_ostream->flush();
 	trace_payload_size = trace_ostream->tellp();
-#if ENABLE_STACKTRACE
-	cerr << "chunk written to offsets [" << old_size << ':' <<
-		trace_payload_size << "]." << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("chunk written to offsets [" << old_size <<
+		':' << trace_payload_size << "]." << endl);
 	// append entry to contents
 	contents.push_back(trace_file_contents::entry(
 		start_time, old_size, trace_payload_size -old_size));
-	// restart chunk, recycling memory
+	// restart chunk, recycling memory (placement dtor and ctor)
 	current_chunk.~trace_chunk();
 	new (&current_chunk) trace_chunk();
 }
@@ -621,8 +610,8 @@ if (good()) {
 	const streampos start_of_objects = header_ostream->tellp();
 	STACKTRACE_INDENT_PRINT("header written up to offset: "
 		<< start_of_objects << endl);
-#if 1
-	static const size_t marker = 0xFFFF;
+#if CHPSIM_TRACE_ALIGNMENT_MARKERS
+	static const size_t marker = 0xFFFFFFFF;
 	write_value(*header_ostream, marker);
 	STACKTRACE_INDENT_PRINT("starting body at: "
 		<< header_ostream->tellp() << endl);
@@ -700,15 +689,19 @@ if (i) {
 #endif
 	tm.contents.dump(o);
 	// note header offset? start of payload?
-#if 1
+#if CHPSIM_TRACE_ALIGNMENT_MARKERS
+{
 	size_t check;
 	read_value(i, check);
-	INVARIANT(check == 0xFFFF);
+	INVARIANT(check == 0xFFFFFFFF);
+}
 #endif
-	o << "Trace events and data, by epoch:" << endl;
+//	o << "Trace events and data, by epoch:" << endl;
+	size_t j = 0;
 	trace_file_contents::const_iterator
 		ci(tm.contents.begin()), ce(tm.contents.end());
-	for ( ; ci!=ce; ++ci) {
+	for ( ; ci!=ce; ++ci, ++j) {
+		o << "Epoch " << j << ':' << endl;
 #if ENABLE_STACKTRACE
 		const streampos head = i.tellg();
 #endif
@@ -719,7 +712,7 @@ if (i) {
 			cerr << "read chunk of size: " << tail -head << endl;
 #endif
 			tm.current_chunk.dump(o, tm.previous_events);
-			tm.previous_events += tm.current_chunk.event_count();
+			tm.previous_events += tm.current_event_count();
 		} else {
 			cerr << "Error encountered in reading trace payload!"
 				<< endl;

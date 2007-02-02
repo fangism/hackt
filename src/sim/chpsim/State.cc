@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.7 2007/01/31 00:48:37 fang Exp $
+	$Id: State.cc,v 1.2.2.8 2007/02/02 20:15:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -503,6 +503,13 @@ try {
 	);
 }
 }
+#if CHPSIM_TRACING
+	// check for flush period
+	if (is_tracing() && 
+		trace_manager->current_event_count() >= trace_flush_interval) {
+		trace_manager->flush();
+	}
+#endif
 	// TODO: finish me: watch list
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 }	// end step() method

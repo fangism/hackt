@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.3 2007/01/30 05:04:57 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.4 2007/02/02 20:15:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -52,6 +52,7 @@
 		Should be an option to the tracing framework.
 	Goal: 1
 	Priority: medium
+	Status: not begun
  */
 #define	CHPSIM_CHECKPOINTING			0
 
@@ -62,6 +63,7 @@
 	Rationale: critical path and efficient backward causality tracing.  
 	Goal: 1
 	Priority: medium
+	Status: done and basically tested
  */
 #define	CHPSIM_CAUSE_TRACKING			1
 
@@ -72,6 +74,7 @@
 	Rationale: thesis work -- trace-mining
 	Priority: high (TOP)
 	Prerequisite: possibly CHPSIM_CAUSE_TRACKING
+	Status: first version done, basics tested
 	Q: what do we do about random timing?
  */
 #define	CHPSIM_TRACING				1

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.7 2007/02/02 08:12:44 fang Exp $
+	$Id: Trace.h,v 1.1.2.8 2007/02/02 20:15:09 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -481,6 +481,12 @@ public:
 
 	void
 	flush(void);
+
+	/// \return number of events accumulated in since last flush
+	size_t
+	current_event_count(void) const {
+		return current_chunk.event_count();
+	}
 
 	// write out header
 	void

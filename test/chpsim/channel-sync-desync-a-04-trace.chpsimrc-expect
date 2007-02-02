@@ -14,7 +14,7 @@ Trace file contents: 1 epochs.
 		start	file	chunk
 	epoch	time	offset	size
 	0	0	0	339
-Trace events and data, by epoch:
+Epoch 0:
 	event		event	cause
 	index	time	node	index
 	0	0	0	0
