@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.15 2006/04/24 00:28:10 fang Exp $
+	$Id: stacktrace.h,v 1.16 2007/02/02 19:20:33 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -148,10 +148,10 @@ null_stacktrace_stream = null_stacktrace_stream_type();
 // certain subsets of debugging
 
 #ifndef	STACKTRACE_DESTRUCTORS
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 #endif
 #ifndef	STACKTRACE_CONSTRUCTORS
-#define	STACKTRACE_CONSTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
