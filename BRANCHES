@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.8 2007/01/31 03:40:25 fang Exp $
+	$Id: BRANCHES,v 1.9 2007/02/02 19:56:09 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -12,4 +12,7 @@ Open branches:
 HACKT-00-01-04-main-00-80-69-chpsim-02
 	Adding simulation tracing features.
 	Will also include causality tracking and checkpointing.  
+
+HACKT-00-01-04-main-00-80-71-exprloop-01
+	For adding metaloop-expansions to expressions in general.  
 
