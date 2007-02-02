@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.2.2.3 2007/01/31 20:59:28 fang Exp $
+	$Id: nonmeta_variable.h,v 1.2.2.4 2007/02/02 08:12:42 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -289,6 +289,9 @@ public:
 
 	ostream&
 	dump(ostream&, const canonical_fundamental_chan_type_base&) const;
+
+	ostream&
+	raw_dump(ostream&) const;
 
 	void
 	write(ostream&) const;

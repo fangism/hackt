@@ -91,6 +91,7 @@ core.*
 *.chpsimdottest
 *.chpsim-event-dot
 *.chpsim-event-ps
+*.chpsimtrace
 *.sort
 *-sort
 *.sprs

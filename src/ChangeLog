@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-11:
+	  Bug fixes from testing trace saving and dumping.  
+	  Very basic tracing verified with trace-dump examination.
+	  New trace commands:
+		'trace-flush-notify' -- enable/disable auto-flush notifications
+		'trace-dump' -- textual dump of trace contents, currently
+			NOT attached to any object file, or chpsim config.
+
+
 2007-01-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-10:

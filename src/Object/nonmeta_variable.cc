@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.2.2.4 2007/01/31 20:59:27 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.2.2.5 2007/02/02 08:12:41 fang Exp $
  */
 
 #include <iostream>
@@ -273,6 +273,17 @@ channel_state_base::dump(ostream& o,
 		const canonical_fundamental_chan_type_base& t) const {
 	ChannelData::dump(o << '(', t) << ')';
 	return o << (full ? " [full]" : " [empty]");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_state_base::raw_dump(ostream& o) const {
+	if (full) {
+		ChannelData::raw_dump(o);
+	} else {
+		o << "[ack]";
+	}
+	return o;
 }
 
 //=============================================================================

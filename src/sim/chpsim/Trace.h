@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.6 2007/01/31 20:59:30 fang Exp $
+	$Id: Trace.h,v 1.1.2.7 2007/02/02 08:12:44 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -27,6 +27,7 @@ class TraceManager;
 using std::istream;
 using std::ostream;
 using std::fstream;
+using std::ifstream;
 using std::ofstream;
 using std::string;
 using std::vector;
@@ -130,7 +131,7 @@ protected:
 	read(istream&);
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const size_t offset = 0) const;
 
 public:
 	size_t
@@ -303,6 +304,11 @@ struct trace_chunk :
 
 	using event_trace_window::push_back_event;
 
+	size_t
+	event_count(void) const {
+		return event_array.size();
+	}
+
 	void
 	write(ostream&) const;
 
@@ -310,7 +316,7 @@ struct trace_chunk :
 	read(istream&);
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const size_t pe) const;
 
 };	// end struct trace_chunk
 
@@ -352,7 +358,10 @@ public:
 		ostream&
 		dump(ostream&) const;
 
-		istream&
+		void
+		write(ostream&) const;
+
+		void
 		read(istream&);
 	};	// end struct entry
 private:
@@ -445,6 +454,8 @@ private:
 		Running count of events before this chunk.  
 	 */
 	trace_index_type			previous_events;
+public:
+	static bool				notify_flush;
 private:
 	// for temporary construction only
 	TraceManager();
@@ -480,7 +491,11 @@ public:
 
 	static
 	void
-	text_dump(istream&, ostream&);	// we all stream for istream!
+	text_dump(ifstream&, ostream&);	// we all stream for istream!
+
+	static
+	bool
+	text_dump(const string&, ostream&);
 
 };	// end class Trace
 

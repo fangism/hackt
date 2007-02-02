@@ -1,0 +1,49 @@
+testing trace with one epoch before first auto-flush 
+Writing simulation trace to "channel-sync-desync-a-04.chpsimtrace".
+	0	0	0	null
+	10	1	1	bool_source_constant::S!(true)
+	10	2	2	int_source_constant::S!(17)
+	10	8	3	
+	20	6	3	channel_sync_bool_int::B?(channel_sync_bool_int::x1)	[by:8]
+	20	7	3	channel_sync_bool_int::I?(channel_sync_bool_int::x2)	[by:8]
+	30	1	1	bool_source_constant::S!(true)	[by:6]
+	30	2	2	int_source_constant::S!(17)	[by:7]
+	30	5	3		[by:7]
+	40	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)	[by:5]
+Trace file contents: 1 epochs.
+		start	file	chunk
+	epoch	time	offset	size
+	0	0	0	339
+Trace events and data, by epoch:
+	event		event	cause
+	index	time	node	index
+	0	0	0	0
+	1	10	1	0
+	2	10	2	0
+	3	10	8	0
+	4	20	6	3
+	5	20	7	3
+	6	30	1	4
+	7	30	2	5
+	8	30	5	5
+	9	40	4	8
+bool state trace:
+	event	global	raw
+	index	index	value
+	4	1	1
+int state trace:
+	event	global	raw
+	index	index	value
+	5	1	17
+enum state trace:
+channel state trace:
+	event	global	raw
+	index	index	value
+	1	1	1, 
+	2	2	17, 
+	4	1	[ack]
+	5	2	[ack]
+	6	1	1, 
+	7	2	17, 
+	9	3	1, 17, 
+and we're done 

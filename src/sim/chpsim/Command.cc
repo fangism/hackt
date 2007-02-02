@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.4 2007/01/31 00:48:35 fang Exp $
+	$Id: Command.cc,v 1.3.2.5 2007/02/02 08:12:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1950,6 +1950,43 @@ TraceClose::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushNotify, 
+	"trace-flush-notify", tracing, 
+	"enable/disable trace flush notifications (debug)")
+int
+TraceFlushNotify::main(State&, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "Trace flush notification is ";
+	if (TraceManager::notify_flush) {
+		cout << "enabled." << endl;
+	} else {
+		cout << "disabled." << endl;
+	}
+	return Command::NORMAL;
+case 2:
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric argument." << endl;
+		return Command::BADARG;
+	}
+	TraceManager::notify_flush = i;
+	return Command::NORMAL;
+default:
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+}
+}
+
+void
+TraceFlushNotify::usage(ostream& o) {
+	o << name << " [0|1]" << endl;
+	o << 
+"With argument, enables (1) or disables (0) trace flush notifications\n"
+"Without argument, reports current policy." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushInterval, 
 	"trace-flush-interval", tracing, 
 	"set/get the current trace chunk granularity")
@@ -1984,6 +2021,32 @@ TraceFlushInterval::usage(ostream& o) {
 "If argument is passed, then set the trace flush interval to it.\n"
 "Otherwise, just report the current trace flush interval.\n"
 "The interval is counted in number of events that execute." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceDump, 
+	"trace-dump", tracing, 
+	"spill a human-readable (?) text dump of a trace file")
+
+int
+TraceDump::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (TraceManager::text_dump(a.back(), cout)) {
+		cerr << "Error opening trace file: " << a.back() << endl;
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+TraceDump::usage(ostream& o) {
+	o << name << " <tracefile>" << endl;
+	o << "Dumps contents of a trace file to stdout.\n"
+"Future versions may require a proper object file to be attached." << endl;
 }
 
 #endif	// CHPSIM_TRACING
