@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.2 2007/01/21 05:58:30 fang Exp $
+	$Id: nonmeta_state.cc,v 1.2.2.1 2007/02/03 05:30:48 fang Exp $
  */
 
 #include <iostream>
@@ -16,11 +16,17 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "util/binders.h"
+#include "util/IO_utils.h"
 
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using std::mem_fun_ref;
+using std::for_each;
+using util::bind2nd_argval;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class nonmeta_state_base method definitions
@@ -66,6 +72,54 @@ nonmeta_state_base<Tag>::__dump_all_subscriptions(ostream& o,
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+nonmeta_state_base<Tag>::__dump_state(ostream& o) const {
+	typedef	typename pool_type::const_iterator	const_iterator;
+	typedef	state_data_extractor<Tag>		extractor_type;
+	const_iterator i(++pool.begin()), e(pool.end());
+	size_t j = 1;
+	for ( ; i!=e; ++i, ++j) {
+		extractor_type::dump(o << '[' << j << "]\t", 
+			extractor_type()(*i));
+		// print event subscribers too?
+		i->dump_subscribers(o << ", subs: ") << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checkpoint data value, but not subscribers.  
+ */
+template <class Tag>
+bool
+nonmeta_state_base<Tag>::save_checkpoint(ostream& o) const {
+	const size_t s = pool.size();
+	write_value(o, s);
+	for_each(pool.begin(), pool.end(), 
+		bind2nd_argval(mem_fun_ref(&instance_type::write), o)
+	);
+	return !o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checkpoint data value, but not subscribers.  
+ */
+template <class Tag>
+bool
+nonmeta_state_base<Tag>::load_checkpoint(istream& i) {
+	size_t s;
+	read_value(i, s);
+	pool.resize(s);
+	for_each(pool.begin(), pool.end(), 
+		bind2nd_argval(mem_fun_ref(&instance_type::read), i)
+	);
+	return !i;
+}
+
 //=============================================================================
 // class nonmeta_state_manager method definitions
 
@@ -108,6 +162,23 @@ nonmeta_state_manager::reset(void) {
 	int_base_type::reset();
 	enum_base_type::reset();
 	channel_base_type::reset();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Formatted printing of names of all instances.  
+ */
+ostream&
+nonmeta_state_manager::dump_state(ostream& o) const {
+	o << "bool states:" << endl;
+	nonmeta_state_base<bool_tag>::__dump_state(o);
+	o << "int states:" << endl;
+	nonmeta_state_base<int_tag>::__dump_state(o);
+	o << "enum states:" << endl;
+	nonmeta_state_base<enum_tag>::__dump_state(o);
+	o << "channel states:" << endl;
+	nonmeta_state_base<channel_tag>::__dump_state(o);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -182,6 +253,32 @@ nonmeta_state_manager::dump_all_subscriptions(ostream& o,
 	nonmeta_state_base<enum_tag>::__dump_all_subscriptions(o, sm, topfp);
 	nonmeta_state_base<channel_tag>::__dump_all_subscriptions(o, sm, topfp);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checkpoints only the VALUE of the data, excluding the 
+	state of subscription.  
+	\return true to signal an error.
+ */
+bool
+nonmeta_state_manager::save_checkpoint(ostream& o) const {
+	return nonmeta_state_base<bool_tag>::save_checkpoint(o) ||
+		nonmeta_state_base<int_tag>::save_checkpoint(o) ||
+		nonmeta_state_base<enum_tag>::save_checkpoint(o) ||
+		nonmeta_state_base<channel_tag>::save_checkpoint(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restores the checkpointed VALUE of data, excluding subscription state.
+ */
+bool
+nonmeta_state_manager::load_checkpoint(istream& i) {
+	return nonmeta_state_base<bool_tag>::load_checkpoint(i) ||
+		nonmeta_state_base<int_tag>::load_checkpoint(i) ||
+		nonmeta_state_base<enum_tag>::load_checkpoint(i) ||
+		nonmeta_state_base<channel_tag>::load_checkpoint(i);
 }
 
 //=============================================================================

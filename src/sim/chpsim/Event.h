@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.2.2.2 2007/01/26 01:13:08 fang Exp $
+	$Id: Event.h,v 1.2.2.3 2007/02/03 05:30:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -292,6 +292,12 @@ public:
 
 	void
 	subscribe_deps(const nonmeta_context&, const event_index_type) const;
+
+	bool
+	is_subscribed(const nonmeta_state_manager& s, 
+			const event_index_type ei) const {
+		return block_deps.is_subscribed(s, ei);
+	}
 
 	ostream&
 	dump_brief(ostream&) const;

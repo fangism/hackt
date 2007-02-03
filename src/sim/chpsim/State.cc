@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.8 2007/02/02 20:15:07 fang Exp $
+	$Id: State.cc,v 1.2.2.9 2007/02/03 05:30:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -37,6 +37,8 @@
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
 #include "util/copy_if.h"
+#include "util/IO_utils.h"
+#include "util/binders.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -46,7 +48,55 @@
 #define	STACKTRACE_VERBOSE_STEP
 #endif
 
+// functor specializations
+namespace util {
+using HAC::SIM::CHPSIM::State;
 
+template <>
+struct value_writer<State::event_placeholder_type> {
+	ostream&		os;
+
+	explicit
+	value_writer(ostream& o) : os(o) { }
+
+	void
+	operator () (const State::event_placeholder_type& p) const {
+		write_value(os, p.time);
+		write_value(os, p.event_index);
+#if CHPSIM_CAUSE_TRACKING
+		write_value(os, p.cause_event_id);
+#if CHPSIM_TRACING
+		write_value(os, p.cause_trace_id);
+#endif
+#endif
+	}
+};	// end struct value_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct value_reader<State::event_placeholder_type> {
+	istream&		is;
+
+	explicit
+	value_reader(istream& i) : is(i) { }
+
+	void
+	operator () (State::event_placeholder_type& p) const {
+		read_value(is, p.time);
+		read_value(is, p.event_index);
+#if CHPSIM_CAUSE_TRACKING
+		read_value(is, p.cause_event_id);
+#if CHPSIM_TRACING
+		read_value(is, p.cause_trace_id);
+#endif
+#endif
+	}
+};	// end struct value_reader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}	// end namespace util
+
+//=============================================================================
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
@@ -74,8 +124,13 @@ using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
 using std::ostream_iterator;
+using std::ptr_fun;
 using util::set_inserter;
 using util::copy_if;
+using util::write_value;
+using util::read_value;
+using util::value_writer;
+using util::value_reader;
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -930,23 +985,153 @@ State::print_all_subscriptions(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_CHECKPOINTING
 /**
 	Checkpoint things that are not reconstructible from the object file.
 	checklist:
 	dynamic subscription state, which encodes which events are
 		outstanding and blocked.  
+	TODO: save and re-confirm chpsim options, because it affects
+		the event graph allocationa and enumeration.  
+	TODO: running event count, even when not tracing...
+	\return true to signal an error
  */
 bool
 State::save_checkpoint(ostream& o) const {
-	FINISH_ME(Fang);
+	// save some flags?
+	// save the state of all instances
+	if (instances.save_checkpoint(o)) {
+		return true;
+	}
+	// and which events are subscribed
+{
+	vector<event_index_type> tmp;
+	size_t i=1;
+	for ( ; i<event_pool.size(); ++i) {
+		if (event_pool[i].is_subscribed(instances, i))
+			tmp.push_back(i);
+	}
+	size_t s = tmp.size();
+	write_value(o, s);
+	for_each(tmp.begin(), tmp.end(), value_writer<size_t>(o));
+}{
+	// save the event queue
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+	size_t s = temp.size();
+	write_value(o, s);
+	for_each(temp.begin(), temp.end(), 
+		value_writer<event_placeholder_type>(o));
+}
+	// save current time
+	write_value(o, current_time);
+	// delay settings?
+#if 0
+	write_value(o, uniform_delay);
+	write_value(o, null_event_delay);
+#endif
+//	write_value(o, flags);
+	// skip trace manager
+	// save checkpoint interval?
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restores simulation state from checkpoint.  
+	This simulation checkpoint must use the same object file and 
+	invocation options.  
+	\return true to signal an error
+ */
 bool
-State::load_checkpoint(istream& o) {
-	FINISH_ME(Fang);
+State::load_checkpoint(istream& i) {
+	// restore data/channel/variable state
+	if (instances.load_checkpoint(i)) {
+		return true;
+	}
+	// restore event subscription state
+{
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	const nonmeta_context
+		c(mod.get_state_manager(), mod.get_footprint(), *this);
+	for ( ; j<s; ++j) {
+		event_index_type ei;
+		read_value(i, ei);
+		INVARIANT(ei);
+		if (ei >= event_pool.size()) {
+			cerr << "FATAL: event index out-of-bounds!\n"
+				"Simulation is in an incoherent state!  "
+				"Recommend re-initializing." << endl;
+			// THROW_EXIT;
+			return true;
+		}
+		event_pool[ei].subscribe_deps(c, ei);
+	}
+}{
+	// restore the event queue
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	value_reader<event_placeholder_type> read(i);
+	for ( ; j<s; ++j) {
+		event_placeholder_type ep;
+		read(ep);
+		event_queue.push(ep);
+	}
+}
+	read_value(i, current_time);
+#if 0
+	read_value(i, uniform_delay);
+	read_value(i, null_event_delay);
+#endif
+//	read_value(i, flags);		// but not stopped?
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't know why I'm doing it this way, copying from prsim, haha.  
+	Create a local temporary copy and work with it.  
+	Needs in invoking (this) object to allocate/construct state
+	and events based on the same module.
+ */
+ostream&
+State::dump_checkpoint(ostream& o, istream& i) const {
+	o << "chpsim checkpoint dump:" << endl;
+	State state(this->get_module());
+if (state.load_checkpoint(i)) {
+	return o << "Error loading checkpoint." << endl;
+} else {
+	return state.dump_state(o);
+}
+}
+#endif	// CHPSIM_CHECKPOINTING
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Textual dump of state information saved in checkpoint. 
+	Keep consistent with save/load_checkpoint.  
+ */
+ostream&
+State::dump_state(ostream& o) const {
+	// dump all the information in the checkpoint
+	o << "variable states:" << endl;
+	instances.dump_state(o);
+{
+	o << "events subscribed to their dependencies:" << endl;
+	size_t j=1;
+	for ( ; j<event_pool.size(); ++j) {
+		if (event_pool[j].is_subscribed(instances, j))
+			o << j << ' ';
+	}
+	o << endl;
+}
+	dump_event_queue(o);
+	o << "current time: " << current_time << endl;
+	// other stuff are simulation settings
+	return o;
 }
 
 //=============================================================================

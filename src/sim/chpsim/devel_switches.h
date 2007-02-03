@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.4 2007/02/02 20:15:10 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.5 2007/02/03 05:30:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -54,7 +54,7 @@
 	Priority: medium
 	Status: not begun
  */
-#define	CHPSIM_CHECKPOINTING			0
+#define	CHPSIM_CHECKPOINTING			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

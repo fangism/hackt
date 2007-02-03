@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.2.2.5 2007/02/02 08:12:41 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.2.2.6 2007/02/03 05:30:50 fang Exp $
  */
 
 #include <iostream>
@@ -55,6 +55,18 @@ BoolVariable::reset(void) {
 	value = 0;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+BoolVariable::write(ostream& o) const {
+	write_value(o, value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+BoolVariable::read(istream& i) {
+	read_value(i, value);
+}
+
 //=============================================================================
 // class IntVariable method definitions
 
@@ -63,12 +75,36 @@ IntVariable::reset(void) {
 	value = 0;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+IntVariable::write(ostream& o) const {
+	write_value(o, value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+IntVariable::read(istream& i) {
+	read_value(i, value);
+}
+
 //=============================================================================
 // class EnumVariable method definitions
 
 void
 EnumVariable::reset(void) {
 	value = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+EnumVariable::write(ostream& o) const {
+	write_value(o, value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+EnumVariable::read(istream& i) {
+	read_value(i, value);
 }
 
 //=============================================================================

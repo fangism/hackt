@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.2 2007/01/21 06:00:26 fang Exp $
+	$Id: command_common.tcc,v 1.2.2.1 2007/02/03 05:30:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -395,6 +395,9 @@ if (a.size() != 2) {
 }
 }
 
+/**
+	TODO: customize usage message (file extension) with template policy. 
+ */
 template <class State>
 void
 Save<State>::usage(ostream& o) {

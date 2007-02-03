@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.2 2007/01/21 05:58:31 fang Exp $
+	$Id: nonmeta_state.h,v 1.2.2.1 2007/02/03 05:30:49 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -53,6 +53,15 @@ protected:
 	__dump_all_subscriptions(ostream&, const state_manager&, 
 		const footprint&) const;
 
+	ostream&
+	__dump_state(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
 };	// end class nonmeta_state_base
 
 //=============================================================================
@@ -100,6 +109,9 @@ public:
 
 	void
 	reset(void);
+
+	ostream&
+	dump_state(ostream&) const;
 
 	ostream&
 	dump_struct(ostream&, const state_manager&, const footprint&) const;

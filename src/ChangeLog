@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-13:
+	  Added chpsim checkpointing and state diagnostic facilities, 
+		enabled but yet untested.  
+	  Refactored dependency functions in DependenceSet class.  
+
+
 2007-02-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-12:

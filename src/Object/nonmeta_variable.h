@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.2.2.4 2007/02/02 08:12:42 fang Exp $
+	$Id: nonmeta_variable.h,v 1.2.2.5 2007/02/03 05:30:51 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -111,6 +111,7 @@ public:
 class BoolVariable : public nonmeta_variable_base {
 	typedef	nonmeta_variable_base			parent_type;
 public:
+	typedef	bool_tag			tag_type;
 	/**
 		The value type.
 	 */
@@ -123,6 +124,12 @@ public:
 	void
 	reset(void);
 
+	void
+	write(ostream&) const;
+
+	void
+	read(istream&);
+
 };	// end class BoolVariable
 
 //=============================================================================
@@ -133,6 +140,7 @@ public:
 class IntVariable : public nonmeta_variable_base {
 	typedef	nonmeta_variable_base			parent_type;
 public:
+	typedef	int_tag				tag_type;
 	/// the value type
 	typedef	unsigned int			value_type;
 	value_type				value;
@@ -142,6 +150,12 @@ public:
 
 	void
 	reset(void);
+
+	void
+	write(ostream&) const;
+
+	void
+	read(istream&);
 
 };	// end clas IntVariable
 
@@ -152,6 +166,7 @@ public:
 class EnumVariable : public nonmeta_variable_base {
 	typedef	nonmeta_variable_base			parent_type;
 public:
+	typedef	enum_tag				tag_type;
 	/// the value type
 	typedef	unsigned int			value_type;
 	value_type				value;
@@ -161,6 +176,12 @@ public:
 
 	void
 	reset(void);
+
+	void
+	write(ostream&) const;
+
+	void
+	read(istream&);
 
 };	// end class EnumVariable
 
@@ -313,6 +334,7 @@ class ChannelState : public nonmeta_variable_base, public channel_state_base {
 	// bitset or vector<bool>
 	// flattened array of integers, currently limited to 32b for now
 public:
+	typedef	channel_tag			tag_type;
 	ChannelState();
 
 };	// end class ChannelState

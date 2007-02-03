@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.5 2007/01/31 00:48:37 fang Exp $
+	$Id: State.h,v 1.2.2.6 2007/02/03 05:30:55 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -59,8 +59,6 @@ public:
 	 */
 	typedef	event_type::time_type		time_type;
 	typedef	signal_handler<this_type>	signal_handler;
-private:
-	typedef	vector<event_type>		event_pool_type;
 #if CHPSIM_CAUSE_TRACKING
 	struct event_placeholder_type : public EventPlaceholder<time_type> {
 		typedef	EventPlaceholder<time_type>	parent_type;
@@ -76,6 +74,13 @@ private:
 		 */
 		size_t					cause_trace_id;
 #endif
+		/**
+			default constructor: don't care what values, 
+			going to be overwritten immedately thereafter.  
+		 */
+		event_placeholder_type() : parent_type(0, 0), 
+			cause_event_id(0), cause_trace_id(0) { }
+
 		event_placeholder_type(const time_type& t, 
 			const event_index_type e, 
 			const event_index_type c = SIM::INVALID_EVENT_INDEX
@@ -96,10 +101,13 @@ private:
 #else	// CHPSIM_CAUSE_TRACING
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 #endif	// CHPSIM_CAUSE_TRACING
+private:
 	typedef	EventQueue<event_placeholder_type>
 						event_queue_type;
+	typedef	vector<event_type>		event_pool_type;
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
+
 	typedef	unsigned int			flags_type;
 
 	// NOTE: duplicate definition in InstancePools
@@ -447,11 +455,19 @@ public:
 	ostream&
 	print_all_subscriptions(ostream&) const;
 
+	ostream&
+	dump_state(ostream&) const;
+
+#if CHPSIM_CHECKPOINTING
 	bool
 	save_checkpoint(ostream&) const;
 
 	bool
 	load_checkpoint(istream&);
+
+	ostream&
+	dump_checkpoint(ostream&, istream&) const;
+#endif
 
 private:
 	ostream&

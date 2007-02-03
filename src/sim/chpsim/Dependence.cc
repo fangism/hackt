@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.cc"
-	$Id: Dependence.cc,v 1.2 2007/01/21 06:00:39 fang Exp $
+	$Id: Dependence.cc,v 1.2.2.1 2007/02/03 05:30:53 fang Exp $
  */
 
 #include "sim/chpsim/Dependence.h"
@@ -225,6 +225,33 @@ DependenceSet::unsubscribe(const nonmeta_context_base& c,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if DependenceSet contains any dependencies.  
+ */
+bool
+DependenceSet::has_dependencies(void) const {
+	return dependence_set_base<bool_tag>::_set.size() ||
+		dependence_set_base<int_tag>::_set.size() ||
+		dependence_set_base<enum_tag>::_set.size() ||
+		dependence_set_base<channel_tag>::_set.size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if event @ei is subscribed to any of its dependencies.
+		Recall: an event is either subscribed to ALL of its
+		dependencies or NONE of them.  
+ */
+bool
+DependenceSet::is_subscribed(const nonmeta_state_manager& s, 
+		const event_index_type ei) const {
+	return dependence_set_base<bool_tag>::__subscribed_to_any(s, ei) ||
+		dependence_set_base<int_tag>::__subscribed_to_any(s, ei) ||
+		dependence_set_base<enum_tag>::__subscribed_to_any(s, ei) ||
+		dependence_set_base<channel_tag>::__subscribed_to_any(s, ei);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	INVARIANT: event is either subscribed to ALL its dependencies or NONE.
 	This fact makes the search FAST.  
  */
@@ -232,15 +259,9 @@ ostream&
 DependenceSet::dump_subscribed_status(ostream& o,
 		const nonmeta_state_manager& s, 
 		const event_index_type ei) const {
-	if (!dependence_set_base<bool_tag>::_set.size() && 
-		!dependence_set_base<int_tag>::_set.size() && 
-		!dependence_set_base<enum_tag>::_set.size() && 
-		!dependence_set_base<channel_tag>::_set.size()) {
+	if (!has_dependencies()) {
 		return o << "(no dependencies)";
-	} else if (dependence_set_base<bool_tag>::__subscribed_to_any(s, ei) ||
-		dependence_set_base<int_tag>::__subscribed_to_any(s, ei) ||
-		dependence_set_base<enum_tag>::__subscribed_to_any(s, ei) ||
-		dependence_set_base<channel_tag>::__subscribed_to_any(s, ei)) {
+	} else if (is_subscribed(s, ei)) {
 		return o << "(blocked and subscribed to its dependencies)";
 	} else {
 		return o << "(currently not subscribed to its dependencies)";

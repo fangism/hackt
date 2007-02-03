@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.2 2007/01/21 06:00:40 fang Exp $
+	$Id: Dependence.h,v 1.2.2.1 2007/02/03 05:30:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -121,6 +121,13 @@ public:
 	void
 	unsubscribe(const nonmeta_context_base&, const event_index_type) const;
 
+	bool
+	has_dependencies(void) const;
+
+	bool
+	is_subscribed(const nonmeta_state_manager&, 
+		const event_index_type) const;
+
 	ostream&
 	dump(ostream&) const;
 
@@ -136,7 +143,7 @@ public:
 	dump_antidependence_edges(ostream&, const event_index_type) const;
 #endif
 
-};	// end class Dependence
+};	// end class DependenceSet
 
 //=============================================================================
 }	// end namespace CHPSIM
