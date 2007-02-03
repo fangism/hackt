@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.1.2.8 2007/02/02 20:15:08 fang Exp $
+	$Id: Trace.cc,v 1.1.2.9 2007/02/03 05:44:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -229,6 +229,7 @@ ostream&
 state_trace_point<Tag>::dump(ostream& o) const {
 	state_trace_point_base::dump(o) << '\t';
 	extractor_policy::dump(o, raw_data) << endl;
+	return o;
 }
 
 //=============================================================================
