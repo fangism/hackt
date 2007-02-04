@@ -13,34 +13,36 @@ c : int c = 0
 event queue:
 	time	eid	pid	event
 	20	3	0	
-	20	8	0	
 	20	6	0	
-	20	10	0	a := 1
-a : int a = 0
-b : int b = 0
-c : int c = 0
-event queue:
-	time	eid	pid	event
 	20	8	0	
 	20	10	0	a := 1
+a : int a = 0
+b : int b = 0
+c : int c = 0
+event queue:
+	time	eid	pid	event
 	20	6	0	
+	20	8	0	
+	20	10	0	a := 1
 	30	2	0	b := 2
+a : int a = 0
+b : int b = 0
+c : int c = 0
+event queue:
+	time	eid	pid	event
+	20	8	0	
+	20	10	0	a := 1
+	30	2	0	b := 2
+	30	5	0	c := 3
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
 	time	eid	pid	event
 	20	10	0	a := 1
-	20	6	0	
 	30	2	0	b := 2
+	30	5	0	c := 3
 a : int a = 0
-b : int b = 0
-c : int c = 0
-event queue:
-	time	eid	pid	event
-	20	6	0	
-	30	2	0	b := 2
-a : int a = 1
 b : int b = 0
 c : int c = 0
 event queue:

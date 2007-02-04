@@ -5,8 +5,8 @@ run until end
 	0	0	0	null
 	10	23	0	
 	20	19	0	a := false
-	20	21	0	c := false
 	20	20	0	b := false
+	20	21	0	c := false
 	20	22	0	d := false
 	30	18	0	
 	40	17	0	

@@ -14,48 +14,48 @@
 	60	6	3	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
 	60	7	3	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
 	70	10	4	channel_desync_bool_int::B!(channel_desync_bool_int::x1)
-	70	1	1	bool_source_constant::S!(true)
-	70	5	3	
 	70	11	4	channel_desync_bool_int::I!(channel_desync_bool_int::x2)
+	70	1	1	bool_source_constant::S!(true)
 	70	2	2	int_source_constant::S!(17)
+	70	5	3	
 	80	13	5	bool_sink::B?(bool_sink::b)
+	80	9	4	
 	80	14	6	int_sink::B?(int_sink::b)
 	80	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	80	9	4	
-	90	8	3	
 	90	3	4	channel_desync_bool_int::O?(channel_desync_bool_int::x1,channel_desync_bool_int::x2)
+	90	8	3	
+	100	12	4	
 	100	6	3	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
 	100	7	3	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	100	12	4	
+	110	10	4	channel_desync_bool_int::B!(channel_desync_bool_int::x1)
+	110	11	4	channel_desync_bool_int::I!(channel_desync_bool_int::x2)
+	110	1	1	bool_source_constant::S!(true)
 	110	2	2	int_source_constant::S!(17)
 	110	5	3	
-	110	11	4	channel_desync_bool_int::I!(channel_desync_bool_int::x2)
-	110	10	4	channel_desync_bool_int::B!(channel_desync_bool_int::x1)
-	110	1	1	bool_source_constant::S!(true)
-	120	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
 	120	13	5	bool_sink::B?(bool_sink::b)
 	120	9	4	
 	120	14	6	int_sink::B?(int_sink::b)
-	130	8	3	
+	120	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
 	130	3	4	channel_desync_bool_int::O?(channel_desync_bool_int::x1,channel_desync_bool_int::x2)
+	130	8	3	
+	140	12	4	
 	140	6	3	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
 	140	7	3	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	140	12	4	
+	150	10	4	channel_desync_bool_int::B!(channel_desync_bool_int::x1)
+	150	11	4	channel_desync_bool_int::I!(channel_desync_bool_int::x2)
+	150	1	1	bool_source_constant::S!(true)
 	150	2	2	int_source_constant::S!(17)
 	150	5	3	
-	150	11	4	channel_desync_bool_int::I!(channel_desync_bool_int::x2)
-	150	10	4	channel_desync_bool_int::B!(channel_desync_bool_int::x1)
-	150	1	1	bool_source_constant::S!(true)
-	160	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
 	160	13	5	bool_sink::B?(bool_sink::b)
 	160	9	4	
 	160	14	6	int_sink::B?(int_sink::b)
-	170	8	3	
+	160	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
 	170	3	4	channel_desync_bool_int::O?(channel_desync_bool_int::x1,channel_desync_bool_int::x2)
+	170	8	3	
+	180	12	4	
 	180	6	3	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
 	180	7	3	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	180	12	4	
-	190	2	2	int_source_constant::S!(17)
-	190	5	3	
+	190	10	4	channel_desync_bool_int::B!(channel_desync_bool_int::x1)
 	190	11	4	channel_desync_bool_int::I!(channel_desync_bool_int::x2)
+	190	1	1	bool_source_constant::S!(true)
 time: 190

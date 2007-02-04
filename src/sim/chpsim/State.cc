@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.10 2007/02/04 06:01:00 fang Exp $
+	$Id: State.cc,v 1.2.2.11 2007/02/04 22:11:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -239,7 +239,11 @@ struct State::event_enqueuer {
 			// if so, factor this into two versioned loops.
 			state.dump_event(cout << "enqueue: ", ei, new_time);
 		}
+#if CHPSIM_MULTISET_EVENT_QUEUE
+		state.event_queue.insert(new_event);
+#else
 		state.event_queue.push(new_event);
+#endif
 	}
 
 };	// end class event_enqueuer
@@ -325,7 +329,11 @@ State::initialize(void) {
 	event_queue.clear();
 	// seed events that are ready to go, like active initializations
 	//	note: we use event[0] as the launching event (concurrent)
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	event_queue.insert(event_placeholder_type(current_time, 0));
+#else
 	event_queue.push(event_placeholder_type(current_time, 0));
+#endif
 	__updated_list.clear();
 	__enqueue_list.clear();
 	__rechecks.clear();
@@ -361,7 +369,13 @@ State::reset(void) {
 State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_placeholder_type ret(*event_queue.begin());
+	event_queue.erase(event_queue.begin());
+	return ret;
+#else
 	return event_queue.pop();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -372,7 +386,11 @@ State::dequeue_event(void) {
 State::time_type
 State::next_event_time(void) const {
 	INVARIANT(event_queue.empty());
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	return event_queue.begin()->time;
+#else
 	return event_queue.top().time;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -717,10 +735,14 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	get_event(ei).dump_subscribed_status(o << "status: ", instances, ei)
 		<< endl;
 {
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_queue_type& temp(event_queue);	// just alias
+#else
 	// search wouldn't be necessary if event was flagged in member field
-	temp_queue_type temp;
 	// copy wouldn't be necessary if queue was a map...
+	temp_queue_type temp;
 	event_queue.copy_to(temp);
+#endif
 	o << "in queue: ";
 	if (find_if(temp.begin(), temp.end(), 
 			event_placeholder_type::index_finder(ei))
@@ -739,12 +761,36 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
  */
 ostream&
 State::dump_event_queue(ostream& o) const {
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	typedef	event_queue_type::const_iterator	const_iterator;
+#else
 	typedef	temp_queue_type::const_iterator	const_iterator;
+#endif
+#if 0
+	// checking for stable ordering:
+	// several test cases reveal that the following results in
+	// unstable orderings of events with the same timestamp... f*ck.
+	temp_queue_type pretemp;
+	event_queue.copy_to(pretemp);
+	event_queue_type copy_queue;
+{
+	const_iterator i(pretemp.begin()), e(pretemp.end());
+	for ( ; i!=e; ++i) {
+		copy_queue.push(*i);
+	}
+}
+	temp_queue_type temp;
+	copy_queue.copy_to(temp);
+#else
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_queue_type& temp(event_queue);	// just alias
+#else
 	temp_queue_type temp;
 	event_queue.copy_to(temp);
+#endif
+#endif
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
-	// print header
 	if (i!=e) {
 		o << event_table_header << endl;
 		for ( ; i!=e; ++i) {
@@ -1016,8 +1062,12 @@ State::save_checkpoint(ostream& o) const {
 	for_each(tmp.begin(), tmp.end(), value_writer<size_t>(o));
 }{
 	// save the event queue
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_queue_type& temp(event_queue);	// just alias
+#else
 	temp_queue_type temp;
 	event_queue.copy_to(temp);
+#endif
 	size_t s = temp.size();
 	write_value(o, s);
 	for_each(temp.begin(), temp.end(), 
@@ -1079,7 +1129,11 @@ State::load_checkpoint(istream& i) {
 	for ( ; j<s; ++j) {
 		event_placeholder_type ep;
 		read(ep);
+#if CHPSIM_MULTISET_EVENT_QUEUE
+		event_queue.insert(ep);
+#else
 		event_queue.push(ep);
+#endif
 	}
 }
 	read_value(i, current_time);

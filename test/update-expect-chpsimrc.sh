@@ -21,12 +21,11 @@ do
 	esac
 done
 
-# TODO: expect filtered input file as input
 for i
 do
-	if test -f $i.chpsimrc-out
+	if test -f $i.chpsimrc-out-filter
 	then
-		cp -f $i.chpsimrc-out $srcdir/$i.chpsimrc-expect
+		cp -f $i.chpsimrc-out-filter $srcdir/$i.chpsimrc-expect
 		echo "Updated $srcdir/$i.chpsimrc-expect"
 	elif test -f $i.chpsimrcfail-out
 	then

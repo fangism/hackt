@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.6 2007/02/04 06:01:00 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.7 2007/02/04 22:11:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -15,6 +15,22 @@
 #endif
 
 //=============================================================================
+/**
+	Define to 1 to use std::multiset implementation of event queue
+		instead of a heap-based priority_queue.
+	Rationale: the sorting in the priority queue is not stable for
+		ranges of equal priority elements.  
+	Goal: 1
+	Priority: medium-high for checkpoint consistency verification.  
+	Status: complete, tested, test cases updated accordingly.  
+		Can perm this, after it is better documented. 
+	Nice result is that cause_event_id in traces is now guaranteed
+		to be monotonic, since the queue is now FCFS w.r.t.
+		equal time-stamped events.  
+ */
+#define	CHPSIM_MULTISET_EVENT_QUEUE		1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to always evaluate read-dependencies 
 	and anti-dependencies upon graph construction.  

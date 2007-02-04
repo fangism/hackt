@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.6 2007/02/03 05:30:55 fang Exp $
+	$Id: State.h,v 1.2.2.7 2007/02/04 22:11:47 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -10,6 +10,9 @@
 #include <iosfwd>
 #include <vector>
 #include "sim/chpsim/devel_switches.h"
+#if CHPSIM_MULTISET_EVENT_QUEUE
+#include <set>
+#endif
 #include "sim/time.h"
 #include "sim/event.h"
 #include "sim/state_base.h"
@@ -61,6 +64,7 @@ public:
 	typedef	signal_handler<this_type>	signal_handler;
 #if CHPSIM_CAUSE_TRACKING
 	struct event_placeholder_type : public EventPlaceholder<time_type> {
+		typedef	event_placeholder_type		this_type;
 		typedef	EventPlaceholder<time_type>	parent_type;
 		/**
 			This is the index corresponding to the
@@ -95,14 +99,25 @@ public:
 #endif
 			{ }
 
+#if CHPSIM_MULTISET_EVENT_QUEUE
+		bool
+		operator < (const this_type& t) const {
+			return time < t.time;
+		}
+#else
 		using parent_type::operator<;
+#endif
 
 	};	// end struct event_placeholder_type
 #else	// CHPSIM_CAUSE_TRACING
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 #endif	// CHPSIM_CAUSE_TRACING
 private:
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	typedef	std::multiset<event_placeholder_type>
+#else
 	typedef	EventQueue<event_placeholder_type>
+#endif
 						event_queue_type;
 	typedef	vector<event_type>		event_pool_type;
 	typedef	vector<event_queue_type::value_type>

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.8 2007/02/04 06:01:05 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.9 2007/02/04 22:11:53 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -124,7 +124,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-memory-write-b-01
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
-# HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
+HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
