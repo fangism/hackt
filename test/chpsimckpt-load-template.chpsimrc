@@ -1,0 +1,8 @@
+# "chpsimckpt-load-template.chpsimrc"
+#	$Id: chpsimckpt-load-template.chpsimrc,v 1.1.2.1 2007/02/04 06:01:04 fang Exp $
+
+load LOAD
+cause
+dump-state
+save SAVE
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.2.2.5 2007/02/03 05:30:51 fang Exp $
+	$Id: nonmeta_variable.h,v 1.2.2.6 2007/02/04 06:00:57 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -91,6 +91,9 @@ public:
 
 	void
 	unsubscribe(const size_t e) { event_subscribers.erase(e); }
+
+	void
+	unsubscribe_all(void) { event_subscribers.clear(); }
 
 	// not needed for structural dumps, as this is a dynamic set
 	ostream&
@@ -336,6 +339,12 @@ class ChannelState : public nonmeta_variable_base, public channel_state_base {
 public:
 	typedef	channel_tag			tag_type;
 	ChannelState();
+
+	void
+	reset(void);
+
+	void
+	read(istream&);
 
 };	// end class ChannelState
 

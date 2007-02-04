@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.9 2007/02/03 05:30:55 fang Exp $
+	$Id: State.cc,v 1.2.2.10 2007/02/04 06:01:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1056,6 +1056,7 @@ State::load_checkpoint(istream& i) {
 	size_t j = 0;
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), *this);
+	event_queue.clear();
 	for ( ; j<s; ++j) {
 		event_index_type ei;
 		read_value(i, ei);

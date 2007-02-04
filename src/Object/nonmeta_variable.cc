@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.2.2.6 2007/02/03 05:30:50 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.2.2.7 2007/02/04 06:00:56 fang Exp $
  */
 
 #include <iostream>
@@ -53,6 +53,7 @@ nonmeta_variable_base::dump_subscribers(ostream& o) const {
 void
 BoolVariable::reset(void) {
 	value = 0;
+	unsubscribe_all();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,6 +66,7 @@ BoolVariable::write(ostream& o) const {
 void
 BoolVariable::read(istream& i) {
 	read_value(i, value);
+	unsubscribe_all();
 }
 
 //=============================================================================
@@ -73,6 +75,7 @@ BoolVariable::read(istream& i) {
 void
 IntVariable::reset(void) {
 	value = 0;
+	unsubscribe_all();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -85,6 +88,7 @@ IntVariable::write(ostream& o) const {
 void
 IntVariable::read(istream& i) {
 	read_value(i, value);
+	unsubscribe_all();
 }
 
 //=============================================================================
@@ -93,6 +97,7 @@ IntVariable::read(istream& i) {
 void
 EnumVariable::reset(void) {
 	value = 0;
+	unsubscribe_all();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -105,6 +110,7 @@ EnumVariable::write(ostream& o) const {
 void
 EnumVariable::read(istream& i) {
 	read_value(i, value);
+	unsubscribe_all();
 }
 
 //=============================================================================
@@ -327,6 +333,20 @@ channel_state_base::raw_dump(ostream& o) const {
 
 ChannelState::ChannelState() :
 		nonmeta_variable_base(), channel_state_base() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ChannelState::reset(void) {
+	channel_state_base::reset();
+	unsubscribe_all();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ChannelState::read(istream& i) {
+	channel_state_base::read(i);
+	unsubscribe_all();
 }
 
 //=============================================================================

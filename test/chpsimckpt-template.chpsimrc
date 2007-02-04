@@ -1,0 +1,11 @@
+# "chpsimckpt-template.chpsimrc"
+#	$Id: chpsimckpt-template.chpsimrc,v 1.1.2.1 2007/02/04 06:01:04 fang Exp $
+
+echo DELETE FROM HERE
+source SOURCE
+echo DELETE TO HERE
+# also include causality information in the event queue
+cause
+dump-state
+save CHECKPOINT
+

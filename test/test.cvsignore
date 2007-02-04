@@ -80,6 +80,7 @@ core.*
 *.prsimopttest
 *.prsimopt-diff
 *.chpsimrc-out
+*.chpsimrc-out-filter
 *.chpsimrc-diff
 *.chpsimrcfail-out
 *.chpsimrcfail-diff
@@ -92,6 +93,13 @@ core.*
 *.chpsim-event-dot
 *.chpsim-event-ps
 *.chpsimtrace
+*.chpsimckpt
+*.chpsimckpttest
+*.chpsimckpt-outdump
+*.chpsimckpt-dupe
+*.chpsimckpt-dupe-dump
+*.chpsimckpt-indump
+*.chpsimckpt-diff
 *.sort
 *-sort
 *.sprs

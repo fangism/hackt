@@ -5,6 +5,16 @@
 
 2007-02-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-14:
+	  Minor bug fix: read() and reset() of data/channel state variables
+		also unsubscribes all dependent events.  
+		State::initialize(): forgot to clear the event-queue upon
+			checkpoint loading.  
+	  chpsim: added 'dump-state' command.  
+	  To decide: whether or not to insert periodic checkpoints into
+		saved simulation traces.  
+
+
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-13:
 	  Added chpsim checkpointing and state diagnostic facilities, 
 		enabled but yet untested.  

@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.5.2.1 2007/01/27 23:39:11 fang Exp $
+#	$Id: Make.test-prsim,v 1.5.2.2 2007/02/04 06:01:03 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -265,7 +265,7 @@ NO_OP_SCRIPT = test -f $< && test -f $@
 #	  $(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' > $@
 
 .prsimrc-out.prsimckpt-outdump:
-	@$(CAT) $< | $(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' > $@
+	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@
 
 # no-op: simultaneously produced target
 .prsimrc-out.prsimckpt:

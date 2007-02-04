@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.6 2007/02/03 05:30:52 fang Exp $
+	$Id: Command.cc,v 1.3.2.7 2007/02/04 06:00:57 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -940,6 +940,29 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
 typedef	Load<State>				Load;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
+	"print entire state of the simulation")
+
+int
+DumpState::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_state(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+DumpState::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Prints all the stateful information of variables, channels, and events that\n"
+"would be recorded and restored by a checkpoint." << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	What<State>				What;

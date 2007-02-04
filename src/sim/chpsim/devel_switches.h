@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.5 2007/02/03 05:30:55 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.6 2007/02/04 06:01:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -52,7 +52,7 @@
 		Should be an option to the tracing framework.
 	Goal: 1
 	Priority: medium
-	Status: not begun
+	Status: done, in testing
  */
 #define	CHPSIM_CHECKPOINTING			1
 
@@ -78,6 +78,18 @@
 	Q: what do we do about random timing?
  */
 #define	CHPSIM_TRACING				1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to embed checkpoints periodically in the saved trace
+	for the sake of being able to quickly replay from the middle
+	of a trace.  
+	Goal: 1?
+	Status: not begun
+	Prerequisites: CHPSIM_TRACING, CHPSIM_CHECKPOINTING (of course)
+	Priority: ?
+ */
+#define	CHPSIM_TRACE_WITH_CHECKPOINT	(0 && CHPSIM_TRACING && CHPSIM_CHECKPOINTING)
 
 //=============================================================================
 
