@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.9 2007/02/05 05:02:48 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.10 2007/02/05 05:16:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -62,15 +62,9 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to enable checkpointing functions.  
-	Rationale: not only to save and restore state for long simulations, 
-		but as an assistance to playback in trace analyses.  
-		Should be an option to the tracing framework.
-	Goal: 1
-	Priority: medium
-	Status: done, in testing
+	Checkpointing should provide assistance to playback in trace analyses.  
+	Should be an option to the tracing framework.
  */
-#define	CHPSIM_CHECKPOINTING			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -84,10 +78,9 @@
 	of a trace.  
 	Goal: 1?
 	Status: not begun
-	Prerequisites: CHPSIM_TRACING, CHPSIM_CHECKPOINTING (of course)
 	Priority: ?
  */
-#define	CHPSIM_TRACE_WITH_CHECKPOINT	(0 && CHPSIM_CHECKPOINTING)
+#define	CHPSIM_TRACE_WITH_CHECKPOINT		0
 
 //=============================================================================
 

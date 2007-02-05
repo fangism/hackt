@@ -5,6 +5,11 @@
 
 2007-02-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-19:
+	  Perm'd CHPSIM_CHECKPOINTING switch.
+	  Branch retired now.  Merge to trunk.  
+
+
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-18:
 	  Perm'd CHPSIM_CAUSE_TRACKING switch.
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.14 2007/02/05 05:02:45 fang Exp $
+	$Id: State.cc,v 1.2.2.15 2007/02/05 05:16:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -967,7 +967,6 @@ State::print_all_subscriptions(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_CHECKPOINTING
 /**
 	Checkpoint things that are not reconstructible from the object file.
 	checklist:
@@ -1147,7 +1146,6 @@ if (state.load_checkpoint(i)) {
 	return state.dump_state(o);
 }
 }
-#endif	// CHPSIM_CHECKPOINTING
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.9 2007/02/05 05:02:48 fang Exp $
+	$Id: Trace.h,v 1.1.2.10 2007/02/05 05:16:10 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -11,7 +11,6 @@
 
 #include "sim/time.h"
 #include "sim/common.h"
-#include "sim/chpsim/devel_switches.h"
 #include "util/attributes.h"
 #include <iosfwd>
 #include <vector>

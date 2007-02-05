@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.9 2007/02/05 05:02:44 fang Exp $
+	$Id: Command.cc,v 1.3.2.10 2007/02/05 05:16:07 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -928,14 +928,12 @@ Breaks::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_CHECKPOINTING
 typedef	Save<State>				Save;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Load<State>				Load;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,

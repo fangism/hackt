@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.10 2007/02/05 05:02:47 fang Exp $
+	$Id: State.h,v 1.2.2.11 2007/02/05 05:16:10 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -249,7 +249,6 @@ private:
 		Default: some big number
 	 */
 	size_t					trace_flush_interval;
-#if CHPSIM_CHECKPOINTING
 	/**
 		Name of checkpoint file.  
 		The same file is overridden periodically.  
@@ -260,7 +259,6 @@ private:
 		(inverse) frequency of checkpointing.  
 	 */
 	time_t					checkpoint_interval;
-#endif
 public:
 	explicit
 	State(const module&);
@@ -447,7 +445,6 @@ public:
 	ostream&
 	dump_state(ostream&) const;
 
-#if CHPSIM_CHECKPOINTING
 	bool
 	save_checkpoint(ostream&) const;
 
@@ -460,7 +457,6 @@ public:
 	static
 	ostream&
 	dump_raw_checkpoint(ostream&, istream&);
-#endif
 
 private:
 	ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.2.2.2 2007/02/05 04:50:18 fang Exp $
+	$Id: nonmeta_context.h,v 1.2.2.3 2007/02/05 05:16:10 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -11,7 +11,6 @@
 #include "util/STL/vector_fwd.h"
 #include "sim/common.h"
 #include "util/member_saver.h"
-#include "sim/chpsim/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
