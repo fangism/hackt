@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.cc"
-	$Id: nonmeta_state.cc,v 1.2.2.1 2007/02/03 05:30:48 fang Exp $
+	$Id: nonmeta_state.cc,v 1.2.2.2 2007/02/05 04:32:32 fang Exp $
  */
 
 #include <iostream>
@@ -31,6 +31,10 @@ using util::read_value;
 //=============================================================================
 // class nonmeta_state_base method definitions
 
+template <class Tag>
+nonmeta_state_base<Tag>::nonmeta_state_base() : pool() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
 template <class Tag>
 nonmeta_state_base<Tag>::nonmeta_state_base(const state_manager& sm) :
 		pool() {
@@ -123,6 +127,14 @@ nonmeta_state_base<Tag>::load_checkpoint(istream& i) {
 //=============================================================================
 // class nonmeta_state_manager method definitions
 
+nonmeta_state_manager::nonmeta_state_manager() :
+		bool_base_type(), 
+		int_base_type(), 
+		enum_base_type(), 
+		channel_base_type() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This also allocates the ChannelState's fields according to their
 	corresponding channel types.  

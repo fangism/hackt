@@ -19,7 +19,7 @@
 	160	13	0	[c!=0]	[by:6]
 	170	11	0		[by:13]
 event queue:
-	time	eid	pid	event
+	time	eid	pid	event	cause
 	180	12	0	c := c-1	[by:11]
 time: 170
 a : int a = 0

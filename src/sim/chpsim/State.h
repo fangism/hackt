@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.7 2007/02/04 22:11:47 fang Exp $
+	$Id: State.h,v 1.2.2.8 2007/02/05 04:32:36 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -482,6 +482,10 @@ public:
 
 	ostream&
 	dump_checkpoint(ostream&, istream&) const;
+
+	static
+	ostream&
+	dump_raw_checkpoint(ostream&, istream&);
 #endif
 
 private:

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.2.2.1 2007/01/25 22:09:40 fang Exp $
+	$Id: chpsim.cc,v 1.2.2.2 2007/02/05 04:32:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -53,6 +53,8 @@ public:
 	bool				check_structure;
 	/// whether or not to produce dot graph output before running
 	bool				dump_dot_struct;
+	/// whether or not to print checkpoint dump
+	bool				dump_checkpoint;
 	/// list of paths to search for sourced scripts
 	typedef	std::list<string>	source_paths_type;
 	source_paths_type		source_paths;
@@ -61,7 +63,8 @@ public:
 
 	chpsim_options() : help_only(false), interactive(true), 
 		run(true), dump_graph_alloc(false), check_structure(true),
-		dump_dot_struct(false), source_paths() { }
+		dump_dot_struct(false), dump_checkpoint(false), 
+		source_paths() { }
 };	// end class chpsim_options
 
 //=============================================================================
@@ -93,12 +96,10 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 		usage();
 		return 1;
 	}
-#if 0
 	if (opt.dump_checkpoint) {
 		// dump checkpoint only, doesn't run
 		return 0;
 	}
-#endif
 	if (opt.help_only) {
 		util::string_list args;
 		args.push_back("help");
@@ -164,13 +165,23 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bf:hiI:";
+	static const char optstring[] = "+bd:f:hiI:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
 	case 'b':
 		o.interactive = false;
 		break;
+	case 'd': {
+		o.dump_checkpoint = true;
+		std::ifstream f(optarg, std::ios_base::binary);
+		if (!f) {
+			cerr << "Error opening file \"" << optarg <<
+				"\" for reading." << endl;
+		}
+		State::dump_raw_checkpoint(cout, f);
+		break;
+	}
 	case 'f': {
 		const options_modifier_map_iterator
 			mi(options_modifier_map.find(optarg));
@@ -209,7 +220,7 @@ chpsim::usage(void) {
 	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
 	cerr << "options:" << endl;
 	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
-//	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
+	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
 	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
 	cerr << "\t-i : interactive (default)" << endl;

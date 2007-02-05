@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.2.2.1 2007/02/03 05:30:49 fang Exp $
+	$Id: nonmeta_state.h,v 1.2.2.2 2007/02/05 04:32:33 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -40,6 +40,9 @@ public:
 	};
 protected:
 	vector<instance_type>			pool;
+
+	// only used by State::dump_raw_checkpoint
+	nonmeta_state_base();
 
 	explicit
 	nonmeta_state_base(const state_manager&);
@@ -87,6 +90,9 @@ class nonmeta_state_manager :
 			// == SIM::INVALID_NODE_INDEX +1
 	};
 public:
+	// only used by State::dump_raw_checkpoint
+	nonmeta_state_manager();
+
 	explicit
 	nonmeta_state_manager(const state_manager&);
 

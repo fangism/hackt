@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.11 2007/02/04 22:11:46 fang Exp $
+	$Id: State.cc,v 1.2.2.12 2007/02/05 04:32:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -703,9 +703,7 @@ State::dump_event(ostream& o, const event_index_type ei,
 		const time_type t) const {
 	const event_type& ev(get_event(ei));
 	o << '\t' << t << '\t';
-#if 1
 	o << ei << '\t';
-#endif
 	return ev.dump_brief(o);
 }
 
@@ -792,12 +790,15 @@ State::dump_event_queue(ostream& o) const {
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
 	if (i!=e) {
-		o << event_table_header << endl;
+		o << event_table_header;
+		if (showing_cause())
+			o << "\tcause";
+		o << endl;
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
 #if CHPSIM_CAUSE_TRACKING
 			if (showing_cause() && i->cause_event_id) {
-				cout << "\t[by:" << i->cause_event_id << ']';
+				o << "\t[by:" << i->cause_event_id << ']';
 			}
 #endif
 			o << endl;
@@ -1147,7 +1148,58 @@ State::load_checkpoint(istream& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Don't know why I'm doing it this way, copying from prsim, haha.  
+	This prints the contents of a checkpoint, unattached to 
+	any object file.
+	This should follow load_checkpoint exactly.  
+	The limitation of this is that no event-type information is present.
+ */
+ostream&
+State::dump_raw_checkpoint(ostream& o, istream& i) {
+	nonmeta_state_manager instances;
+	instances.load_checkpoint(i);
+	instances.dump_state(o);
+{
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	o << "events subscribed to their dependencies:" << endl;
+	for ( ; j<s; ++j) {
+		event_index_type ei;
+		read_value(i, ei);
+		o << ei << " ";
+	}
+	o << endl;
+}{
+	// restore the event queue
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	value_reader<event_placeholder_type> read(i);
+	o << "event queue:" << endl;
+	if (s) {
+		o << event_table_header << "\tcause" << endl;
+		for ( ; j<s; ++j) {
+			event_placeholder_type ep;
+			read(ep);
+			o << '\t' << ep.time << '\t' << ep.event_index << '\t';
+			// can't dump_brief b/c not attached to object file
+#if CHPSIM_CAUSE_TRACKING
+			if (ep.cause_event_id) {	// always show
+				o << "\t[by:" << ep.cause_event_id << ']';
+			}
+#endif
+			o << endl;
+		}
+	}
+}
+	time_type current_time;
+	read_value(i, current_time);
+	o << "current time: " << current_time << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Create a local temporary copy and work with it.  
 	Needs in invoking (this) object to allocate/construct state
 	and events based on the same module.

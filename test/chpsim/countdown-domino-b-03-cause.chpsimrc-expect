@@ -9,7 +9,7 @@
 	60	4	0	a := a-1	[by:3]
 	70	3	0		[by:4]
 event queue:
-	time	eid	pid	event
+	time	eid	pid	event	cause
 	80	2	0	b := 2	[by:3]
 time: 70
 a : int a = 0
