@@ -3,6 +3,155 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-72-merged-chpsim-02-19:
+	  Merge of second round of chpsim features:
+		includes checkpointing, cause-tracking, and trace recording.
+		includes some minor bug fixes along the way.  
+		Added a timing mode using 'reasonable' delays by event.  
+
+
+2007-02-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-19:
+	  Perm'd CHPSIM_CHECKPOINTING switch.
+	  Branch retired now.  Merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-18:
+	  Perm'd CHPSIM_CAUSE_TRACKING switch.
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-17:
+	  Perm'd CHPSIM_TRACING switch.
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-16:
+	  Added chpsim -d <checkpoint> to print the object-independent
+		dump of checkpoint contents (requires no object file).  
+	  Branch is matured, next: commit some developer switches, then merge.
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-15:
+	  chpsim's event queue now uses a multiset instead of priority_queue
+		to guarantee stability w.r.t. ordering between events of
+		the same timestamp.  Switch: CHPSIM_MULTISET_EVENT_QUEUE.
+		I wonder if this is necessary for prsim as well...
+	  Old test cases have been re-verified and updated accordingly, 
+		the only differences were re-shufflings of events with the
+		same time, now first-come-first-serve tie-breaker.  
+	  Enabled all chpsim checkpoint tests -- *all passed*.
+
+
+2007-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-14:
+	  Minor bug fix: read() and reset() of data/channel state variables
+		also unsubscribes all dependent events.  
+		State::initialize(): forgot to clear the event-queue upon
+			checkpoint loading.  
+	  chpsim: added 'dump-state' command.  
+	  To decide: whether or not to insert periodic checkpoints into
+		saved simulation traces.  
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-13:
+	  Added chpsim checkpointing and state diagnostic facilities, 
+		enabled but yet untested.  
+	  Refactored dependency functions in DependenceSet class.  
+
+
+2007-02-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-12:
+	  State::step() now periodically checks progress for periodic
+		automatic trace flushing, to use constant memory.  
+	  Fixed minor diagnostic text-dump of trace file.  
+		Added new multi-epoch test case to test/chpsim.
+	  Next: checkpointing work.
+
+
+2007-02-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-11:
+	  Bug fixes from testing trace saving and dumping.  
+	  Very basic tracing verified with trace-dump examination.
+	  New trace commands:
+		'trace-flush-notify' -- enable/disable auto-flush notifications
+		'trace-dump' -- textual dump of trace contents, currently
+			NOT attached to any object file, or chpsim config.
+
+
+2007-01-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-10:
+	  More trace read and dump methods all over.  
+	  Next: testing and debugging traces.  
+
+
+2007-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-09:
+	  chpsim: added (untested) 'advance' command, since it'll come in 
+		handy for trace testing.  
+		'trace-flush-interval' to get/set trace flush interval, duh!
+	  State: only show non-zero cause event IDs.  
+	  TraceManager: temp file now an fstream, since we need to copy it.
+	  Next: testing chpsim trace production, be able to read in traces,
+		and produce some textual dump for verification.  
+
+
+2007-01-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-08:
+	  Added and enabled causality tracking of last-predecessor 
+		event, untested.
+		Commands to turn on/off causality reporting: 'cause' 'nocause'
+		CHPSIM_CAUSE_TRACKING and CHPSIM_TRACING flags are messily
+		intermingled, but all combinations should still work.  
+	  Tracing can optionally keep track of event causality.  
+	  TraceManager keeps a running count of events.  
+	  channel_state_base::write(): only write data when data
+		has been sent (full-bit set).  
+	  Next: testing event causality tracking features.  
+	  Soon thereafter: checkpointing for efficient trace playback.  
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-07:
+	  Added some untested tracing code in State::step(), more to go.
+	  Updated ofstreams to open in binary mode.  
+	  Privated ostream operators for trace implementation details.  
+	  Need to to some cause tracking, perhaps in event placeholders?
+
+
+2007-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-06:
+	  Added provisional trace-related commands to chpsim.  
+		Added some basic trace interfaces to State.
+	  Implemented majority of trace-writing functions in data structs.  
+	  Implemented nonmeta_variables' trace-writing functions, 
+		eventually need to something about trace-loading.  
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-05:
+	  Early workings of chpsim trace data structures, in
+		sim/chpsim/Trace.{h,cc}
+	  Factored out a data-only channel_state_base class, to be used
+		as the unit for channel trace recording.
+	  Added state_data_extractor template policies to assist in
+		trace-data extraction.  
+
+
+2007-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-04:
+	  Implemented basic rvalue/lvalue run-time bounds-check error 
+		handling in Object/ref/simple_nonmeta_value_reference.tcc.  
+	  Added bunch of test cases to exercise error handling.  
+
+
 2007-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-71:
@@ -14,6 +163,37 @@
 
 	* HACKT-00-01-04-main-00-80-70:
 	  No source revision.  Top-level configury for guile.  
+
+
+2007-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-03:
+	  Added nonmeta-channel-reference exception generation and handling
+		for out-of-bound indexed references, with reasonable
+		error message.  
+	  Added some test cases to trip them.  
+	  Next: test error handling on bad lvalue and rvalue references.  
+
+
+2007-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-02:
+	  This patch assigns some questionably reasonable default delay
+		value per event, based on event type.  
+	  One test-case added to test/chpsim.
+
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-01:
+	  New branch for second round of chpsim development.
+	  Split up TODO into sim/prsim/TODO and sim/chpsim/TODO.
+	  chpsim EventNode: added delay member with default value, 
+		currently not set, but will be set during state-construction, 
+		possibly overrideable at simulation time.  
+	  chpsim command:
+		'timing' <mode> -- set/get timing mode of sim.
+			Added timing mode support to CHPSIM::State.
+		Added one small (silent) test case for random timing.  
+	  chpsim dot-graph: added option to display delays of events.  
 
 
 2007-01-24	David Fang		<fangism@users.sourceforge.net>

@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.20 2007/01/23 02:43:29 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.21 2007/02/05 06:39:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -176,7 +176,11 @@ nonmeta_assign(const reference_type& lref,
 		THROW_EXIT;
 	}
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
-	INVARIANT(global_ind);	// unless there is an error, throw
+	if (!global_ind) {
+		cerr << "Run-time error resolving nonmeta lvalue reference."
+			<< endl;
+		THROW_EXIT;
+	}
 	// the following statement split up to tolerate a g++-3.4.0 bug
 	typename nonmeta_state_base<Tag>::pool_type&
 		vp(c.values.template get_pool<Tag>());
@@ -198,7 +202,11 @@ direct_assign(const reference_type& lref,
 		channel_data_reader& r) {
 	STACKTRACE_VERBOSE;
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
-	INVARIANT(global_ind);	// unless there is an error, throw
+	if (!global_ind) {
+		cerr << "Run-time error resolving nonmeta lvalue reference."
+			<< endl;
+		THROW_EXIT;
+	}
 	// post-increment read-iterator
 	// the following statement split up to tolerate a g++-3.4.0 bug
 	typename nonmeta_state_base<Tag>::pool_type&

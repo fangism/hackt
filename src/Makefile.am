@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.151 2007/01/27 05:50:52 fang Exp $
+#	$Id: Makefile.am,v 1.152 2007/02/05 06:39:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -711,7 +711,8 @@ SIM_CC_FILES = \
 	sim/chpsim/Dependence.cc \
 	sim/chpsim/Event.cc \
 	sim/chpsim/State.cc \
-	sim/chpsim/StateConstructor.cc
+	sim/chpsim/StateConstructor.cc \
+	sim/chpsim/Trace.cc
 
 SIM_TCC_FILES = \
 	sim/command.tcc \
@@ -1379,7 +1380,9 @@ EXTRA_DIST += local.cvsignore \
 	wc-l \
 	sim/README \
 	sim/prsim/README \
-	sim/chpsim/README
+	sim/prsim/TODO \
+	sim/chpsim/README \
+	sim/chpsim/TODO
 
 TESTS += hackt_persistent_table.sh test/getopt_test.test
 

@@ -1,0 +1,81 @@
+	0	0	0	null
+	10	1	1	bool_source_constant::S!(true)
+	10	2	2	int_source::S!(0)
+	10	11	3	
+	20	9	3	bool_split::C?(bool_split::c)
+	20	10	3	bool_split::I?(bool_split::x)
+	30	5	2	int_source::S!(1)
+	30	1	1	bool_source_constant::S!(true)
+	30	8	3	
+	40	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	50	6	4	bool_sink::B?(bool_sink::b)
+	50	11	3	
+	60	9	3	bool_split::C?(bool_split::c)
+	60	10	3	bool_split::I?(bool_split::x)
+	70	4	2	int_source::S!(2)
+	70	1	1	bool_source_constant::S!(true)
+	70	8	3	
+	80	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	90	11	3	
+	90	12	5	bool_sink::B?(bool_sink::b)
+	100	9	3	bool_split::C?(bool_split::c)
+	100	10	3	bool_split::I?(bool_split::x)
+	110	3	2	int_source::S!(3)
+	110	1	1	bool_source_constant::S!(true)
+	110	8	3	
+	120	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	130	11	3	
+	130	13	6	bool_sink::B?(bool_sink::b)
+	140	9	3	bool_split::C?(bool_split::c)
+	140	10	3	bool_split::I?(bool_split::x)
+	150	2	2	int_source::S!(0)
+	150	1	1	bool_source_constant::S!(true)
+	150	8	3	
+	160	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	170	11	3	
+	170	14	7	bool_sink::B?(bool_sink::b)
+	180	9	3	bool_split::C?(bool_split::c)
+	180	10	3	bool_split::I?(bool_split::x)
+	190	5	2	int_source::S!(1)
+	190	1	1	bool_source_constant::S!(true)
+	190	8	3	
+	200	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	210	6	4	bool_sink::B?(bool_sink::b)
+	210	11	3	
+	220	9	3	bool_split::C?(bool_split::c)
+	220	10	3	bool_split::I?(bool_split::x)
+	230	4	2	int_source::S!(2)
+	230	1	1	bool_source_constant::S!(true)
+	230	8	3	
+	240	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	250	11	3	
+	250	12	5	bool_sink::B?(bool_sink::b)
+	260	9	3	bool_split::C?(bool_split::c)
+	260	10	3	bool_split::I?(bool_split::x)
+	270	3	2	int_source::S!(3)
+	270	1	1	bool_source_constant::S!(true)
+	270	8	3	
+	280	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	290	11	3	
+	290	13	6	bool_sink::B?(bool_sink::b)
+	300	9	3	bool_split::C?(bool_split::c)
+	300	10	3	bool_split::I?(bool_split::x)
+	310	2	2	int_source::S!(0)
+	310	1	1	bool_source_constant::S!(true)
+	310	8	3	
+	320	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	330	11	3	
+	330	14	7	bool_sink::B?(bool_sink::b)
+	340	9	3	bool_split::C?(bool_split::c)
+	340	10	3	bool_split::I?(bool_split::x)
+	350	5	2	int_source::S!(1)
+	350	1	1	bool_source_constant::S!(true)
+	350	8	3	
+	360	7	3	bool_split::O[bool_split::c]!(bool_split::x)
+	370	6	4	bool_sink::B?(bool_sink::b)
+	370	11	3	
+	380	9	3	bool_split::C?(bool_split::c)
+	380	10	3	bool_split::I?(bool_split::x)
+	390	4	2	int_source::S!(2)
+	390	1	1	bool_source_constant::S!(true)
+time: 390

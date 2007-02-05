@@ -1,0 +1,49 @@
+// "bool-memory.hac"
+//	$Id: bool-memory.hac,v 1.2 2007/02/05 06:40:26 fang Exp $
+// RAM structure for bools
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param N the size of the memory array.
+	\param Req._1 is true to indicate a write operation, false for read.
+	\param Req._2 is the address to reference.  
+ */
+template <pint N>
+defproc bool_memory_array(
+		chan?(bool, int) Req; 
+		chan?(bool) Write; 
+		chan!(bool) Read) {
+bool data[N];
+bool w;
+int a;
+chp {
+*[ Req?(w, a);
+  [w -> Write?(data[a]) [] else -> Read!(data[a]) ]
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param W the number of address bits, log2 the size of the array.
+	\param Req._1 is true to indicate a write operation, false for read.
+	\param Req._2 is the address to reference.  
+ */
+template <pint W>
+defproc bool_memory_bank(
+		chan?(bool, int<W>) Req; 
+		chan?(bool) Write; 
+		chan!(bool) Read) {
+bool data[1<<W];
+bool w;
+int<W> a;
+chp {
+*[ Req?(w, a);
+  [w -> Write?(data[a]) [] else -> Read!(data[a]) ]
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+

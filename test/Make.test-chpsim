@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.2 2007/01/21 06:01:31 fang Exp $
+#	$Id: Make.test-chpsim,v 1.3 2007/02/05 06:40:00 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -8,6 +8,9 @@
 
 CHPSIM_ALLOC_DUMP = $(HACKT_CHPSIM_EXE) -fno-run -fdump-graph-alloc
 CHPSIM_GRAPH_DOT = $(HACKT_CHPSIM_EXE) -fno-run -fdump-dot-struct
+
+CHPSIMCKPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-template.chpsimrc
+CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/chpsimckpt-load-template.chpsimrc
 
 .haco-a.chpsimallocdump:
 	$(CHPSIM_ALLOC_DUMP) $< > $@
@@ -77,12 +80,18 @@ AUTO_DEPENDS += chpsimalloctest.autodepend
 #	maybe using @chpsim-flags@ as a match pattern
 CHPSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	$(ECHO) "$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$obj < $<" ; \
-	$(HACKT_CHPSIM_EXE) -b -I$(srcdir) "$$obj" < $< > $@ 2>&1 ; \
+	ckpt=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimckpt/g'` ; \
+	$(ECHO) "ckpt: $(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$obj < $<" ; \
+	$(CAT) $(CHPSIMCKPT_TEMPLATE_SCRIPT) | \
+	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
+	  $(HACKT_CHPSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1 ; \
 	$(TOUCH) $@
 
 # the same until we add checkpointing to the pass test
-CHPSIMRC_FAIL_TEST_SCRIPT = $(CHPSIMRC_TEST_SCRIPT)
+CHPSIMRC_FAIL_TEST_SCRIPT = \
+	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+	$(ECHO) "$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$obj < $<" ; \
+	$(HACKT_CHPSIM_EXE) -b -I$(srcdir) "$$obj" < $< > $@ 2>&1
 
 .chpsimrc.chpsimrc-out:
 	@$(CHPSIMRC_TEST_SCRIPT)
@@ -96,8 +105,14 @@ else
 ECHO_CHPSIMRC_DIFF_COMMAND = :
 endif
 
+CHPSIMRC_TEST_FILTER_SCRIPT = \
+	$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< > $@
+
+.chpsimrc-out.chpsimrc-out-filter:
+	@$(CHPSIMRC_TEST_FILTER_SCRIPT)
+
 # TODO: introduce filtering scripts and differences
-.chpsimrc-out.chpsimrc-diff:
+.chpsimrc-out-filter.chpsimrc-diff:
 	@stderr=`$(ECHO) $@ |$(SED) 's/\.chpsimrc-diff$$/.chpsimrc-expect/g'`; \
 	expect="$(srcdir)/$$stderr" ; \
 	$(RM) $@ ; \
@@ -150,10 +165,10 @@ chpsimrc-out.autodepend: Makefile
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " >> $@ ; \
+	    $(ECHO) -n "$$target " ; \
 	  done ; \
-	  $(ECHO) ": $$obj" >> $@ ; \
-	done ; \
+	  $(ECHO) ": $$obj" ; \
+	done > $@ ; \
 	$(TOUCH) $@
 
 -include chpsimrc-out.autodepend
@@ -170,13 +185,13 @@ chpsimrcfail-out.autodepend: Makefile
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
-	    $(ECHO) -n "$$target " >> $@ ; \
+	    $(ECHO) -n "$$target " ; \
 	  done ; \
-	  $(ECHO) ": $$obj" >> $@ ; \
-	done ; \
+	  $(ECHO) ": $$obj" ; \
+	done > $@ ; \
 	$(TOUCH) $@
 
--include chpsimfailrc-out.autodepend
+-include chpsimrcfail-out.autodepend
 AUTO_DEPENDS += chpsimrcfail-out.autodepend
 
 chpsimrctest.autodepend: Makefile
@@ -200,13 +215,80 @@ chpsimrcfailtest.autodepend: Makefile
 -include chpsimrcfailtest.autodepend
 AUTO_DEPENDS += chpsimrcfailtest.autodepend
 
+# checkpoint is simultaneously generated
+.chpsimrc-out.chpsimckpt:
+	@$(NO_OP_SCRIPT)
+
+.chpsimrc-out.chpsimckpt-outdump:
+	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@
+
+.chpsimckpt.chpsimckpt-indump:
+	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.chpsimckpt$$/.chpsimrc/g'` ; \
+	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
+	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
+	$(ECHO) "load: $(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$obj" ; \
+	$(CAT) $(CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \
+	  $(SED) -e 's|LOAD|$<|g' -e 's|SAVE|'"$$ckpt"'|g' | \
+	  $(HACKT_CHPSIM_EXE) -b -I$(srcdir) "$$obj" > $@ 2>&1
+
+# simultaneously generated
+.chpsimckpt-indump.chpsimckpt-dupe:
+	@$(NO_OP_SCRIPT)
+
+# this one needs the object file attached
+.chpsimckpt-dupe.chpsimckpt-dupe-dump:
+	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.chpsimckpt-dupe$$/.chpsimrc/g'` ; \
+	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
+	{ $(ECHO) "load $<" ; $(ECHO) "dump-state" ;} | \
+	  $(HACKT_CHPSIM_EXE) -b $< > $@
 
 
-BOGUS_TESTS += .chpsimalloctest .chpsimtest .chpsimdottest .chpsimfailtest
+if VERBOSE_CHECK
+ECHO_CHPSIMCKPT_DIFF_COMMAND = $(ECHO) "$(DIFF) -u $$expect $<"
+else
+ECHO_CHPSIMCKPT_DIFF_COMMAND = :
+endif
 
-CHECK_SUMMARIES += chpsimallocdiffs chpsimrcdiffs chpsimrcfaildiffs
-# chpsimrcdiffs chpsimrcfaildiffs 
+.chpsimckpt-outdump.chpsimckpt-diff:
+	@expect=`$(ECHO) $@ | $(SED) 's/\.chpsimckpt-diff$$/.chpsimckpt-indump/g'` ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_CHPSIMCKPT_DIFF_COMMAND) ; \
+	  $(DIFF) -u "$$expect" $< > $@ 2>&1 ; \
+	  ca=`$(ECHO) $@ | $(SED) 's/-diff$$//g'` ; \
+	  cb=`$(ECHO) $@ | $(SED) 's/-diff$$/-dupe/g'` ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  elif $(DIFF) -q "$$ca" "$$cb" ; then : ; \
+	  else $(MAKE) "$$ca"-dump "$$cb"-dump && \
+	    $(DIFF) -u "$$ca"-dump "$$cb"-dump > $@ ; \
+	    $(ECHO) "$@ is non-empty! (checkpoint binaries differ)" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
 
+.chpsimckpt-diff.chpsimckpttest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.chpsimckpttest:
+	@$(DUMMY_TEST_SCRIPT)
+
+chpsimckpttest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".chpsimckpt-diff: " $$1 ".chpsimckpt-indump"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include chpsimckpttest.autodepend
+AUTO_DEPENDS += chpsimckpttest.autodepend
+
+BOGUS_TESTS += .chpsimalloctest .chpsimtest .chpsimdottest \
+	.chpsimfailtest .chpsimckpttest
+
+CHECK_SUMMARIES += chpsimallocdiffs chpsimrcdiffs chpsimrcfaildiffs \
+	chpsimckptdiffs
 
 chpsimallocdiffs: force
 	-$(CAT) *.chpsimallocdiff > $@
@@ -240,7 +322,8 @@ TESTS += \
 	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.chpsimalloctest) \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsimdottest) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimtest) \
-	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimfailtest)
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimfailtest) \
+	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpttest)
 
 HAC_OBJECT_TARGETS += \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco) \
@@ -256,9 +339,15 @@ build-check-local: \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsimdottest) \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out) \
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out-filter) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-diff) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-out) \
-	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-diff)
+	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-diff) \
+	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt) \
+	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt-outdump) \
+	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt-dupe) \
+	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt-indump) \
+	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt-diff)
 
 ALL_CHPSIM_DOT = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-dot)
 ALL_CHPSIM_PS = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-ps)
@@ -287,6 +376,8 @@ echo-chpsimrc-passes: force
 echo-chpsimrc-failures: force
 	@$(ECHO) $(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES)
 
+echo-chpsimckpt-tests: force
+	@$(ECHO) $(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES)
 
 clean-chpsimtests:
 	-$(RM_PATTERN) "*.chpsimallocdump"
@@ -296,11 +387,19 @@ clean-chpsimtests:
 	-$(RM_PATTERN) "*.chpsim-event-ps"
 	-$(RM_PATTERN) "*.chpsimdottest"
 	-$(RM_PATTERN) "*.chpsimrc-out"
+	-$(RM_PATTERN) "*.chpsimrc-out-filter"
 	-$(RM_PATTERN) "*.chpsimrc-diff"
 	-$(RM_PATTERN) "*.chpsimtest"
 	-$(RM_PATTERN) "*.chpsimrcfail-out"
 	-$(RM_PATTERN) "*.chpsimrcfail-diff"
 	-$(RM_PATTERN) "*.chpsimfailtest"
+	-$(RM_PATTERN) "*.chpsimckpt"
+	-$(RM_PATTERN) "*.chpsimckpt-outdump"
+	-$(RM_PATTERN) "*.chpsimckpt-dupe"
+	-$(RM_PATTERN) "*.chpsimckpt-dupe-dump"
+	-$(RM_PATTERN) "*.chpsimckpt-indump"
+	-$(RM_PATTERN) "*.chpsimckpt-diff"
+	-$(RM_PATTERN) "*.chpsimckpttest"
 
 clean-local: clean-chpsimtests
 

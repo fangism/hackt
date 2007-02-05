@@ -1,10 +1,12 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2007/01/21 06:01:39 fang Exp $
+#	$Id: Makefile.am,v 1.3 2007/02/05 06:40:04 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
 
 SUBDIRS = testlib .
+
+HACO_FLAGS += -I$(srcdir)/testlib
 
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \
@@ -48,7 +50,13 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	channel-self-parallel-a channel-self-parallel-b \
 	do-while-countdown \
 	countdown-sequence-a \
-	countdown-parallel-a
+	countdown-parallel-a \
+	bool-split-a bool-split-b \
+	bool-split-select-a bool-split-select-b \
+	bool-lookup-a bool-lookup-b \
+	channel-sync-desync-a \
+	bool-memory-read-a bool-memory-read-b \
+	bool-memory-write-a bool-memory-write-b
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -78,6 +86,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	countdown-nested-d-01 countdown-nested-d-02 \
 	countdown-domino-a-01 \
 	countdown-domino-b-01 \
+	countdown-domino-b-02-cause countdown-domino-b-03-cause \
 	wait-basic-a-01 wait-basic-a-02 \
 	wait-conjunction-a-01 wait-conjunction-a-02 \
 	wait-conjunction-b-01 wait-conjunction-b-02 \
@@ -85,20 +94,37 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	wait-indexed-guard-a-01 wait-indexed-guard-a-02 \
 	select-skip-a-01 \
 	select-skip-b-01 \
-	select-sequence-a-01 \
+	select-sequence-a-01 select-sequence-a-02-cause \
 	select-parallel-a-01 select-parallel-a-02 \
 	select-parallel-a-03 select-parallel-a-04 \
 	select-loop-a-01 \
 	select-loop-b-01 \
 	arbitrate-skip-a-01 \
 	arbitrate-skip-b-01 \
-	arbitrate-loop-a-01 arbitrate-loop-a-02 \
+	arbitrate-loop-a-01 arbitrate-loop-a-02 arbitrate-loop-a-03 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
-	select-block-a-01
+	select-block-a-01 select-block-a-02 \
+	bool-split-a-01 \
+	bool-split-select-a-01 \
+	bool-lookup-a-01 \
+	channel-sync-desync-a-01 channel-sync-desync-a-02 \
+	channel-sync-desync-a-03-trace \
+	channel-sync-desync-a-04-trace \
+	channel-sync-desync-a-05-trace \
+	bool-memory-read-a-01 \
+	bool-memory-write-a-01
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
-	select-fail-a-01
+	select-fail-a-01 \
+	bool-split-b-01 \
+	bool-split-select-b-01 \
+	bool-lookup-b-01 \
+	bool-memory-read-b-01 \
+	bool-memory-write-b-01
+
+# not yet, three tests report checkpoint diffs due to queue-reorderings
+HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=

@@ -1,0 +1,45 @@
+// "int-source.hac"
+//	$Id: int-source.hac,v 1.2 2007/02/05 06:40:29 fang Exp $
+// cyclic and non-cyclic sources of int tokens
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Sources finite sequence of int values.  
+***/
+template <pint W; pint N; pint B[N]>
+defproc int_source_once(chan!(int<W>) S) {
+chp {
+{;i:N:
+	S!(B[i])
+}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Cycles through finite sequence of int values.  
+***/
+template <pint W; pint N; pint B[N]>
+defproc int_source(chan!(int<W>) S) {
+chp {
+*[
+	{;i:N:
+		S!(B[i])
+	}
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Could define in terms of generalized bool_source.
+ */
+template <pint W; pint V>
+defproc int_source_constant(chan!(int<W>) S) {
+chp {
+*[ S!(V) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

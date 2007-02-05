@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.39 2007/01/22 01:36:37 fang Exp $
+#	$Id: Makefile.am,v 1.40 2007/02/05 06:40:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -70,7 +70,9 @@ dist_noinst_SCRIPTS = \
 	spacestonewline.awk \
 	prsimckpt-template.prsimrc \
 	prsimckpt-load-template.prsimrc \
-	prsimopt-template.prsimrc
+	prsimopt-template.prsimrc \
+	chpsimckpt-template.chpsimrc \
+	chpsimckpt-load-template.chpsimrc
 
 # NOTE: spacestonewline.awk is no longer needed for Makefiles
 # as it defined inline in the top-level Make.stddef

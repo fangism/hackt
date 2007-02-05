@@ -1,0 +1,32 @@
+// "channel-sync.hac"
+//	$Id: channel-sync.hac,v 1.2 2007/02/05 06:40:29 fang Exp $
+// wish: generalized type templates...
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+// NOTE: this adds buffering
+// an alternate version may not add buffering (need probe semantics)
+template <datatype T1, T2>
+defproc channel_sync_2(chan?(T1) I1; chan?(T2) I2; chan!(T1, T2) O) {
+T1 x1;
+T2 x2;
+chp {
+	*[I1?(x1),I2(?x2); O!(x1,x2) ]
+}
+}
+***/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint W>
+defproc channel_sync_bool_int(chan?(bool) B; chan?(int<W>) I; 
+		chan!(bool, int<W>) O) {
+bool x1;
+int<W> x2;
+chp {
+	*[B?(x1),I?(x2); O!(x1,x2) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// define more as they are needed...
+

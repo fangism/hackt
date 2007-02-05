@@ -1,0 +1,17 @@
+// "bool-lookup-a.hac"
+//	$Id: bool-lookup-a.hac,v 1.2 2007/02/05 06:40:06 fang Exp $
+// Testing lookup table.
+
+import "bool-table.hac";
+import "int-source.hac";
+import "bool-sink.hac";
+
+pbool vals[8];
+vals = { true, false, true, false, false, true, false, true};
+
+chan(int) Addr;
+chan(bool) Data;
+bool_lookup_table<8, vals> brom(Addr, Data);
+int_source<32, 8, {0,1,2,3,4,5,6,7}> adsrc(Addr);
+bool_sink bsnk(Data);
+

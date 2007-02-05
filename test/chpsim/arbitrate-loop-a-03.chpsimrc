@@ -1,0 +1,13 @@
+# "arbitrate-loop-a-03.chpsimrc
+#	$Id: arbitrate-loop-a-03.chpsimrc,v 1.2 2007/02/05 06:40:04 fang Exp $
+# @haco@ arbitrate-loop-a.haco-a
+
+echo testing random delays
+echo events are silent
+nowatchall-events
+nowatch-queue
+timing random
+step 9999
+assert-queue
+echo no deadlock, end of test
+

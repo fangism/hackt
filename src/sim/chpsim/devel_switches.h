@@ -1,18 +1,13 @@
 /**
-	\file "sim/chpsim/Event.h"
-	Various classes of chpsim events.  
-	$Id: devel_switches.h,v 1.2 2007/01/21 06:00:47 fang Exp $
+	\file "sim/chpsim/devel_switches.h"
+	Development feature switches.  
+	$Id: devel_switches.h,v 1.3 2007/02/05 06:39:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
 #define	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
 
 //=============================================================================
-// if we want project-wide switches
-#if 0
-#include "sim/devel_switches.h"
-#endif
-
 // leave this error enabled for released code
 #if 0
 #error	Production code should NOT include this header file.  \
@@ -20,6 +15,22 @@
 #endif
 
 //=============================================================================
+/**
+	Define to 1 to use std::multiset implementation of event queue
+		instead of a heap-based priority_queue.
+	Rationale: the sorting in the priority queue is not stable for
+		ranges of equal priority elements.  
+	Goal: 1
+	Priority: medium-high for checkpoint consistency verification.  
+	Status: complete, tested, test cases updated accordingly.  
+		Can perm this, after it is better documented. 
+	Nice result is that cause_event_id in traces is now guaranteed
+		to be monotonic, since the queue is now FCFS w.r.t.
+		equal time-stamped events.  
+ */
+#define	CHPSIM_MULTISET_EVENT_QUEUE		1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to always evaluate read-dependencies 
 	and anti-dependencies upon graph construction.  
@@ -37,6 +48,39 @@
 		as BlockDependenceCollector (should rename).  
  */
 #define	CHPSIM_READ_WRITE_DEPENDENCIES		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to re-implement State::__updated_list as a 
+	bin of sets or reference indices.  
+	Rationale: This solves the problem of uniqueness of update reference, 
+		and is better restructuring for performance.
+	Goal: 1
+	Priority: low (enhancement)
+ */
+#define	CHPSIM_STATE_UPDATE_BIN_SETS		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checkpointing should provide assistance to playback in trace analyses.  
+	Should be an option to the tracing framework.
+ */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Q: what do we do about tracing with random timing?
+ */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to embed checkpoints periodically in the saved trace
+	for the sake of being able to quickly replay from the middle
+	of a trace.  
+	Goal: 1?
+	Status: not begun
+	Priority: ?
+ */
+#define	CHPSIM_TRACE_WITH_CHECKPOINT		0
 
 //=============================================================================
 

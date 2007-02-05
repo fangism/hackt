@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.28 2007/01/21 06:01:34 fang Exp $
+#	$Id: Make.test-head,v 1.29 2007/02/05 06:40:01 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -55,10 +55,13 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.prsimopttest .prsimckpt-O1 .prsimckpt-O1-err \
 	.prsimckpt-01-dump .prsimopt-diff \
 	.hacktprsdottest \
-	.chpsimrc .chpsimtest .chpsimrc-out .chpsimrc-diff \
+	.chpsimrc \
+	.chpsimtest .chpsimrc-out .chpsimrc-out-filter .chpsimrc-diff \
 	.chpsimalloctest .chpsimallocdump .chpsimallocdiff \
 	.chpsim-event-dot .chpsim-event-ps .chpsimdottest \
-	.chpsimfailtest .chpsimrcfail-out .chpsimrcfail-diff
+	.chpsimfailtest .chpsimrcfail-out .chpsimrcfail-diff \
+	.chpsimckpt .chpsimckpt-outdump .chpsimckpt-indump \
+	.chpsimckpt-dupe .chpsimckpt-dupe-dump .chpsimckpt-diff .chpsimckpttest
 
 if USE_UNROLL_PHASE
 SUFFIXES += \
@@ -108,10 +111,12 @@ BOGUS_SUFFIX_TARGETS = \
 	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
 	.prsimckpt-dupe .prsimckpt-dupe-dump \
 	.prsimckpt-O1 .prsimckpt-O1-err .prsimckpt-01-dump .prsimopt-diff \
-	.chpsimrc-out .chpsimrc-diff \
+	.chpsimrc-out .chpsimrc-out-filter .chpsimrc-diff \
 	.chpsimrc .chpsimallocdump .chpsimallocdiff \
 	.chpsim-event-dot .chpsim-event-ps \
-	.chpsimrcfail-out .chpsimrcfail-diff
+	.chpsimrcfail-out .chpsimrcfail-diff \
+	.chpsimckpt .chpsimckpt-outdump .chpsimckpt-indump \
+	.chpsimckpt-dupe .chpsimckpt-dupe-dump .chpsimckpt-diff
 
 if USE_UNROLL_PHASE
 BOGUS_SUFFIX_TARGETS += \

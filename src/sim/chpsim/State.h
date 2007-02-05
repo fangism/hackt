@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2 2007/01/21 06:00:44 fang Exp $
+	$Id: State.h,v 1.3 2007/02/05 06:39:53 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -9,6 +9,10 @@
 
 #include <iosfwd>
 #include <vector>
+#include "sim/chpsim/devel_switches.h"
+#if CHPSIM_MULTISET_EVENT_QUEUE
+#include <set>
+#endif
 #include "sim/time.h"
 #include "sim/event.h"
 #include "sim/state_base.h"
@@ -16,6 +20,8 @@
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
 #include "util/macros.h"
+#include "util/tokenize_fwd.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace SIM {
@@ -24,9 +30,14 @@ using std::vector;
 using entity::nonmeta_state_manager;
 using entity::event_subscribers_type;
 using entity::global_indexed_reference;
+using util::string_list;
+using std::string;
 class StateConstructor;
 class nonmeta_context;
 class graph_options;
+class TraceManager;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
 
 //=============================================================================
 /**
@@ -40,17 +51,62 @@ class State : public state_base {
 friend class StateConstructor;
 friend class nonmeta_context;
 	typedef	State				this_type;
-public:
-	typedef	real_time			time_type;
-	typedef	signal_handler<this_type>	signal_handler;
-private:
 	typedef	EventNode			event_type;
-	typedef	vector<event_type>		event_pool_type;
-	typedef	EventPlaceholder<time_type>	event_placeholder_type;
+public:
+	/**
+		Numeric type for time, currently hard-coded to real (double).
+	 */
+	typedef	event_type::time_type		time_type;
+	typedef	signal_handler<this_type>	signal_handler;
+	struct event_placeholder_type : public EventPlaceholder<time_type> {
+		typedef	event_placeholder_type		this_type;
+		typedef	EventPlaceholder<time_type>	parent_type;
+		/**
+			This is the index corresponding to the
+			statically allocated event.  
+		 */
+		event_index_type			cause_event_id;
+		/**
+			This is the index into the history of all events, 
+			as counted and maintained by the tracing engine.  
+		 */
+		size_t					cause_trace_id;
+		/**
+			default constructor: don't care what values, 
+			going to be overwritten immedately thereafter.  
+		 */
+		event_placeholder_type() : parent_type(0, 0), 
+			cause_event_id(0), cause_trace_id(0) { }
+
+		event_placeholder_type(const time_type& t, 
+			const event_index_type e, 
+			const event_index_type c = SIM::INVALID_EVENT_INDEX, 
+			const size_t i = 0) : 
+			parent_type(t, e), 
+			cause_event_id(c), cause_trace_id(i)
+			{ }
+
+#if CHPSIM_MULTISET_EVENT_QUEUE
+		bool
+		operator < (const this_type& t) const {
+			return time < t.time;
+		}
+#else
+		using parent_type::operator<;
+#endif
+
+	};	// end struct event_placeholder_type
+private:
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	typedef	std::multiset<event_placeholder_type>
+#else
 	typedef	EventQueue<event_placeholder_type>
+#endif
 						event_queue_type;
+	typedef	vector<event_type>		event_pool_type;
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
+
 	typedef	unsigned int			flags_type;
 
 	// NOTE: duplicate definition in InstancePools
@@ -63,15 +119,67 @@ private:
 	typedef	global_indexed_reference	step_return_type;
 	typedef	vector<global_indexed_reference>
 						update_reference_array_type;
+	/**
+		Various mode flags, settable by user.  
+	 */
 	enum {
 		/**
 			Whether or not the simulation was halted for any 
 			reason, self-stopped on error, or interrupted.  
 		 */
 		FLAG_STOP_SIMULATION = 0x0001,
+		/**
+			When true report event-queue activity, i.e.
+			when events are enqueued.  
+			Initially off.  
+		 */
 		FLAG_WATCH_QUEUE = 0x0002,
+		/**
+			When true, print each event as it is dequeued and
+			executed.  
+			Initially off.  
+		 */
 		FLAG_WATCH_ALL_EVENTS = 0x0004,
+		/**
+			Set to true to show last-arrival event-causality.  
+			Initially off.  
+		 */
+		FLAG_SHOW_CAUSE = 0x0008,
+		/**
+			Set true if named trace file is opened successfully.  
+			Initially off.  
+		 */
+		FLAG_TRACE_ON = 0x8000,
+		/**
+			TODO: timing mode flags
+		 */
 		FLAGS_DEFAULT = 0x0000
+	};
+	/**
+		Timing mode enumerations.
+	 */
+	enum {
+		/**
+			Give every event a constant delay.
+			Exception may be granted for "trivial" events
+			by modifying null_event_delay.  
+		 */
+		TIMING_UNIFORM,
+		/**
+			Use the delay value associated with each event.
+		 */
+		TIMING_PER_EVENT,
+		/**
+			Use random delays for all events, 
+			including "trivial" events.  
+			If we introduced 'bullet' semantics, would that be
+			an exception?
+		 */
+		TIMING_RANDOM,
+		/**
+			Default timing mode.  
+		 */
+		TIMING_DEFAULT = TIMING_UNIFORM
 	};
 	struct recheck_transformer;
 	struct event_enqueuer;
@@ -88,10 +196,11 @@ private:
 	event_queue_type			event_queue;
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
-	//	predecessors? (if we want them, construct separate)ly
+	//	predecessors? (if we want them, construct separately)
 private:
 	static const char			event_table_header[];
 private:
+	char					timing_mode;
 	time_type				current_time;
 	time_type				uniform_delay;
 	time_type				null_event_delay;
@@ -126,6 +235,30 @@ private:
 		Set of events to recheck for unblocking.  
 	 */
 	event_subscribers_type			__rechecks;
+	/**
+		Private pointer to the event trace manager.  
+		Data checkpointed persistently.  
+	 */
+	excl_ptr<TraceManager>			trace_manager;
+	/**
+		The interval after which the trace_manager should
+		flush out a chunk of trace.  
+		Smaller: more I/O overhead, slower.  
+		Larger: faster, more memory used during execution.
+		Counted by the number of events that have executed.
+		Default: some big number
+	 */
+	size_t					trace_flush_interval;
+	/**
+		Name of checkpoint file.  
+		The same file is overridden periodically.  
+		Suggestion: write to a temp file first, then mv it over.  
+	 */
+	string					checkpoint_name;
+	/**
+		(inverse) frequency of checkpointing.  
+	 */
+	time_t					checkpoint_interval;
 public:
 	explicit
 	State(const module&);
@@ -146,6 +279,9 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	time_type
+	next_event_time(void) const;
 
 	const time_type&
 	get_uniform_delay(void) const { return uniform_delay; }
@@ -221,6 +357,62 @@ public:
 	void
 	check_structure(void) const;
 
+	bool
+	set_timing(const string&, const string_list&);
+
+	ostream&
+	dump_timing(ostream&) const;
+
+	static
+	ostream&
+	help_timing(ostream&);
+
+	bool
+	showing_cause(void) const { return flags & FLAG_SHOW_CAUSE; }
+
+	void
+	show_cause(void) { flags |= FLAG_SHOW_CAUSE; }
+
+	void
+	no_show_cause(void) { flags &= ~FLAG_SHOW_CAUSE; }
+
+	bool
+	is_tracing(void) const { return flags & FLAG_TRACE_ON; }
+
+	/// Do we ever want to do this?
+	void
+	stop_trace(void) { flags &= ~FLAG_TRACE_ON; }
+
+	/// unconditionally returns trace_manager
+	never_ptr<TraceManager>
+	get_trace_manager(void) const {
+		return trace_manager;
+	}
+
+	/// returns trace_manager only if flag is enabled
+	never_ptr<TraceManager>
+	get_trace_manager_if_tracing(void) const {
+		return is_tracing() ? trace_manager :
+			never_ptr<TraceManager>(NULL);
+	}
+
+	bool
+	open_trace(const string&);
+
+	void
+	close_trace(void);
+
+	size_t
+	get_trace_flush_interval(void) const {
+		return trace_flush_interval;
+	}
+
+	void
+	set_trace_flush_interval(const size_t i) {
+		INVARIANT(i);
+		trace_flush_interval = i;
+	}
+
 	ostream&
 	dump_struct(ostream&) const;
 
@@ -250,11 +442,21 @@ public:
 	ostream&
 	print_all_subscriptions(ostream&) const;
 
+	ostream&
+	dump_state(ostream&) const;
+
 	bool
 	save_checkpoint(ostream&) const;
 
 	bool
 	load_checkpoint(istream&);
+
+	ostream&
+	dump_checkpoint(ostream&, istream&) const;
+
+	static
+	ostream&
+	dump_raw_checkpoint(ostream&, istream&);
 
 private:
 	ostream&

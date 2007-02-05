@@ -1,5 +1,29 @@
 # "test/ChangeLog"
 
+2007-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-72-merged-chpsim-02-19:
+	  Branch merge.  Includes test support for chpsim checkpointing.
+
+
+2007-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-14:
+	  Added support for chpsim checkpoint testing.  All 'pass' chpsimrc
+		tests automatically generate a checkpoint, using a
+		wrapper script that calls the actual script.  
+
+
+2007-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-04:
+	  Make.test-*: various shell scripts group echo actions together
+		to perform a single redirection at the end of a group, 
+		rather than repeated appending to a target file.  
+		Rationale, Makefile shell execution performance, and reducing
+		redudant file/stream operations.  
+
+
 2007-01-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54:

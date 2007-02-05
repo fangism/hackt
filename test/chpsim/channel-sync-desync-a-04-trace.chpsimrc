@@ -1,0 +1,15 @@
+# "channel-sync-desync-a-04-trace.chpsimrc"
+#	$Id: channel-sync-desync-a-04-trace.chpsimrc,v 1.2 2007/02/05 06:40:18 fang Exp $
+# @haco@ channel-sync-desync-a.haco-a
+
+echo testing trace with one epoch before first auto-flush
+cause
+watchall-events
+trace-flush-interval 20
+trace channel-sync-desync-a-04.chpsimtrace
+step 10
+trace-close
+trace-dump channel-sync-desync-a-04.chpsimtrace
+!rm channel-sync-desync-a-04.chpsimtrace
+echo and we're done
+

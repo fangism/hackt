@@ -1,0 +1,22 @@
+// "bool-split-select-b.hac"
+// copy-modified from "bool-split-b.hac"
+//	$Id: bool-split-select-b.hac,v 1.2 2007/02/05 06:40:15 fang Exp $
+// expect to fail on out-of-bounds
+
+// all these are from testlib/
+import "bool-source.hac";
+import "bool-split.hac";
+import "bool-sink.hac";
+import "int-source.hac";
+
+chan(bool) A;
+chan(bool) B[4];
+chan(int) C;
+bool_source_constant<true> src(A);
+int_source<32, 4, {0,1,2,4}> c(C);	// error, out-of-bounds
+bool_sink snk[4];
+(;i:4:
+	snk[i](B[i]);
+)
+bool_split_select<4> split(C, A, B);	// expect to dead-lock
+

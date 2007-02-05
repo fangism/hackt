@@ -1,11 +1,11 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2 2007/01/21 06:00:43 fang Exp $
+	$Id: State.cc,v 1.3 2007/02/05 06:39:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
-#define	DEBUG_STEP			(1 && ENABLE_STACKTRACE)
+#define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <iterator>
@@ -17,6 +17,8 @@
 #include "sim/event.tcc"
 #include "sim/signal_handler.tcc"
 #include "sim/chpsim/nonmeta_context.h"
+#include "sim/random_time.h"
+#include "sim/chpsim/Trace.h"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
@@ -31,6 +33,8 @@
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
 #include "util/copy_if.h"
+#include "util/IO_utils.h"
+#include "util/binders.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -40,11 +44,52 @@
 #define	STACKTRACE_VERBOSE_STEP
 #endif
 
+// functor specializations
+namespace util {
+using HAC::SIM::CHPSIM::State;
 
+template <>
+struct value_writer<State::event_placeholder_type> {
+	ostream&		os;
+
+	explicit
+	value_writer(ostream& o) : os(o) { }
+
+	void
+	operator () (const State::event_placeholder_type& p) const {
+		write_value(os, p.time);
+		write_value(os, p.event_index);
+		write_value(os, p.cause_event_id);
+		write_value(os, p.cause_trace_id);
+	}
+};	// end struct value_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct value_reader<State::event_placeholder_type> {
+	istream&		is;
+
+	explicit
+	value_reader(istream& i) : is(i) { }
+
+	void
+	operator () (State::event_placeholder_type& p) const {
+		read_value(is, p.time);
+		read_value(is, p.event_index);
+		read_value(is, p.cause_event_id);
+		read_value(is, p.cause_trace_id);
+	}
+};	// end struct value_reader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}	// end namespace util
+
+//=============================================================================
 namespace HAC {
 namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
+using entity::variable_type;		// from "nonmeta_variable.h"
 using entity::bool_tag;
 using entity::int_tag;
 using entity::enum_tag;
@@ -67,8 +112,13 @@ using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
 using std::ostream_iterator;
+using std::ptr_fun;
 using util::set_inserter;
 using util::copy_if;
+using util::write_value;
+using util::read_value;
+using util::value_writer;
+using util::value_reader;
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -100,26 +150,10 @@ struct State::recheck_transformer {
 	 */
 	void
 	operator () (const event_index_type ei) {
-		STACKTRACE("recheck-transformer");
-//		STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
+		STACKTRACE_INDENT_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
-		// can we push this functionality into EventNode?
-#if 0
-		if (e.recheck(context)) {
-			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
-			state.__enqueue_list.push_back(ei);
-			// unsubscribe the event from its dependent variables
-			e.get_deps().unsubscribe(context, ei);
-		} else {
-			STACKTRACE_INDENT_PRINT("blocked on deps." << endl);
-			// subscribe the event to its dependent variables
-			e.get_deps().subscribe(context, ei);
-			// dump deps
-		}
-#else
-		e.recheck(context, ei);	// const?
-#endif
+		e.recheck(context, ei);
 	}
 
 };	// end class recheck_transformer
@@ -131,21 +165,51 @@ struct State::recheck_transformer {
  */
 struct State::event_enqueuer {
 	this_type&		state;
+	event_index_type	cause_event_id;
+	size_t			cause_trace_id;
 
-	explicit
-	event_enqueuer(this_type& s) : state(s) { }
+	event_enqueuer(this_type& s, const event_index_type c, 
+			const size_t t) : 
+			state(s), cause_event_id(c), cause_trace_id(t)
+			{ }
 
 	/**
-		TODO: add event delays
+		Enqueues the event with future time depending on the 
+		timing mode.
 	 */
 	void
 	operator () (const event_index_type ei) {
 		const event_type& e(state.event_pool[ei]);
-		const time_type new_time = state.current_time +
-			(e.is_trivial() ? state.get_null_event_delay()
-				: state.get_uniform_delay());
-		state.event_queue.push(
-			event_placeholder_type(new_time, ei));
+		time_type new_delay;
+	switch (state.timing_mode) {
+	case TIMING_UNIFORM:
+		new_delay = (e.is_trivial() ?
+			state.get_null_event_delay() :
+			state.get_uniform_delay());
+		break;
+	case TIMING_PER_EVENT:
+		new_delay = e.get_delay();
+		break;
+	case TIMING_RANDOM:
+		new_delay = random_time<time_type>()();
+		break;
+	default: // huh?
+		new_delay = event_type::default_delay;
+		ISE(cerr, cerr << "unknown timing mode.";)
+	}
+		const time_type new_time = state.current_time +new_delay;
+		const event_placeholder_type
+			new_event(new_time, ei, cause_event_id, cause_trace_id);
+		if (state.watching_event_queue()) {
+			// is this a performance hit, rechecking inside loop?
+			// if so, factor this into two versioned loops.
+			state.dump_event(cout << "enqueue: ", ei, new_time);
+		}
+#if CHPSIM_MULTISET_EVENT_QUEUE
+		state.event_queue.insert(new_event);
+#else
+		state.event_queue.push(new_event);
+#endif
 	}
 
 };	// end class event_enqueuer
@@ -165,14 +229,17 @@ State::State(const module& m) :
 		instances(m.get_state_manager()), 
 		event_pool(), 
 		event_queue(), 
+		timing_mode(TIMING_DEFAULT), 
 		current_time(0), 
-		uniform_delay(10),
-		null_event_delay(10),	// or 0
+		uniform_delay(event_type::default_delay),
+		null_event_delay(event_type::default_delay),	// or 0
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
 		__enqueue_list(), 
-		__rechecks()
+		__rechecks(), 
+		trace_manager(), 
+		trace_flush_interval(1L<<16)
 		{
 	// perform initializations here
 	event_pool.reserve(256);
@@ -209,6 +276,7 @@ State::State(const module& m) :
 State::~State() {
 	// clean-up
 	// optional, but recommended: run some diagnostics
+	// anything to do with trace_manager?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -225,20 +293,33 @@ State::initialize(void) {
 	event_queue.clear();
 	// seed events that are ready to go, like active initializations
 	//	note: we use event[0] as the launching event (concurrent)
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	event_queue.insert(event_placeholder_type(current_time, 0));
+#else
 	event_queue.push(event_placeholder_type(current_time, 0));
+#endif
 	__updated_list.clear();
 	__enqueue_list.clear();
 	__rechecks.clear();
-	// TODO: for-all events: reset countdown and state
 	for_each(event_pool.begin(), event_pool.end(),
 		mem_fun_ref(&event_type::reset)
 	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In addition to initializing the simulator, this also resets
+	any modes that may have changed, like a fresh boot.  
+	See constructor member initializers for reference.  
+ */
 void
 State::reset(void) {
-	// TOOD: write me!
+	initialize();
+	uniform_delay = event_type::default_delay;
+	null_event_delay = event_type::default_delay;
+	timing_mode = TIMING_DEFAULT;
+	interrupted = false;
+	flags = FLAGS_DEFAULT;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,24 +328,32 @@ State::reset(void) {
 	Automatically skips and deallocates killed events.  
 	NOTE: possible that last event in queue is killed, 
 		in which case, need to return a NULL placeholder.  
+	\pre before calling this, event_queue must not be empty.  
  */
 State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
-#if 0
-	event_placeholder_type ret(event_queue.pop());
-	while (get_event(ret.event_index).killed()) {
-		__deallocate_killed_event(ret.event_index);
-		if (event_queue.empty()) {
-			return event_placeholder_type(
-				current_time, INVALID_EVENT_INDEX);
-		} else {
-			ret = event_queue.pop();
-		}
-	};
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_placeholder_type ret(*event_queue.begin());
+	event_queue.erase(event_queue.begin());
 	return ret;
 #else
 	return event_queue.pop();
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Peek at the time of the next event.  
+	\pre event queue must not be empty
+ */
+State::time_type
+State::next_event_time(void) const {
+	INVARIANT(event_queue.empty());
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	return event_queue.begin()->time;
+#else
+	return event_queue.top().time;
 #endif
 }
 
@@ -290,15 +379,13 @@ State::step(void) {
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
-#if 0
-	// first NULL event has index 0!
-	if (!ei) {
-		// possible in the event that last events are killed
-		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-	}
-#endif
+	// first NULL event has index 0, but nothing else should enqueue it
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
+	const event_index_type cause_event_id = ep.cause_event_id;
+	DEBUG_STEP_PRINT("caused by = " << cause_event_id << endl);
+	const size_t cause_trace_id = ep.cause_trace_id;
+	DEBUG_STEP_PRINT("at event # = " << cause_trace_id << endl);
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
@@ -309,9 +396,26 @@ State::step(void) {
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
+try {
 	ev.execute(c, __updated_list);
+} catch (...) {
+	cerr << "Run-time error executing event " << ei << "." << endl;
+	throw;		// rethrow
+}
+	// event tracing
+	size_t ti = 0;	// because we'll want to reference it later...
+	if (is_tracing()) {
+		// should only be true if trace opening succeeded
+		NEVER_NULL(trace_manager);
+		ti = trace_manager->push_back_event(
+			event_trace_point(current_time, ei, cause_trace_id));
+	}
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
+		if (showing_cause() && cause_event_id) {
+			cout << "\t[by:" << cause_event_id << ']';
+		}
+		cout << endl;
 	}
 	// __updated_list lists variables updated
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
@@ -345,6 +449,10 @@ State::step(void) {
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
 {
+#define	TRACE_UPDATED_STATE(Tag)					\
+	if (is_tracing()) {						\
+		trace_manager->current_chunk.push_back<Tag>(v, ti, j);	\
+	}
 	typedef	update_reference_array_type::const_iterator	const_iterator;
 	const_iterator ui(__updated_list.begin()), ue(__updated_list.end());
 	for ( ; ui!=ue; ++ui) {
@@ -357,18 +465,21 @@ State::step(void) {
 		// events happen to be sorted by index
 #define	CASE_META_TYPE_TAG(Tag)						\
 		case class_traits<Tag>::type_tag_enum_value: {		\
+			const variable_type<Tag>::type&			\
+				v(instances.get_pool<Tag>()[j]);	\
+			TRACE_UPDATED_STATE(Tag)			\
 			const event_subscribers_type&			\
-				es(instances.get_pool<Tag>()[j]		\
-					.get_subscribers());		\
+				es(v.get_subscribers());		\
 			copy(es.begin(), es.end(),			\
 				set_inserter(__rechecks));		\
 			break;						\
 		}
-	CASE_META_TYPE_TAG(bool_tag)
-	CASE_META_TYPE_TAG(int_tag)
-	CASE_META_TYPE_TAG(enum_tag)
-	CASE_META_TYPE_TAG(channel_tag)
+		CASE_META_TYPE_TAG(bool_tag)
+		CASE_META_TYPE_TAG(int_tag)
+		CASE_META_TYPE_TAG(enum_tag)
+		CASE_META_TYPE_TAG(channel_tag)
 #undef	CASE_META_TYPE_TAG
+#undef	TRACE_UPDATED_STATE
 		// case INSTANCE_TYPE_NULL:	// should not have been added
 		default:
 			ISE(cerr, cerr << "Unexpected type." << endl;)
@@ -384,8 +495,13 @@ State::step(void) {
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
 #endif
+try {
 	for_each(__rechecks.begin(), __rechecks.end(), 
 		recheck_transformer(*this));
+} catch (...) {
+	cerr << "Run-time error while rechecking events." << endl;
+	throw;
+}
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
 	// temporarily disabled for regression testing
@@ -396,12 +512,124 @@ State::step(void) {
 	// transfer events from staging queue to event queue, 
 	// and schedule them with some delay
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
-		event_enqueuer(*this));
+		event_enqueuer(*this, ei, ti)
+	);
 }
 }
+	// check for flush period
+	// TODO: count events in State, shouldn't depend on TraceManager for it.
+	if (is_tracing() && 
+		trace_manager->current_event_count() >= trace_flush_interval) {
+		trace_manager->flush();
+	}
 	// TODO: finish me: watch list
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 }	// end step() method
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print the current timing mode.  
+ */
+ostream&
+State::dump_timing(ostream& o) const {
+	o << "timing: ";
+switch (timing_mode) {
+	case TIMING_PER_EVENT:
+		o << "per-event";
+		break;
+	case TIMING_UNIFORM:
+		o << "uniform (" << uniform_delay << ")";
+		break;
+	case TIMING_RANDOM:
+		o << "random";
+		break;
+	default: o << "unknown";
+}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there is an error.  
+ */
+bool
+State::set_timing(const string& m, const string_list& a) {
+	/// use delay assign to event upon construction
+	static const string __per_event("per-event");	// use event's delay
+	/// use uniform_delay, possibly overridden for null-event-delay
+	static const string __uniform("uniform");	// fixed delay (default)
+	static const string __random("random");
+	static const string __default("default");
+	if (m == __per_event) {
+		timing_mode = TIMING_PER_EVENT;
+	} else if (m == __uniform) {
+		timing_mode = TIMING_UNIFORM;
+	} else if (m == __random) {
+		timing_mode = TIMING_RANDOM;
+		switch (a.size()) {
+		case 0: break;
+		case 1: {
+			FINISH_ME(Fang);
+			cerr << "TODO: plant random seed." << endl;
+			break;
+		default: return true;	// error
+		}
+		}
+	} else if (m == __default) {
+		timing_mode = TIMING_DEFAULT;
+		// ignore other arguments
+	} else {
+		return true;
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Keep this help consistent with the implementation of set_timing().  
+ */
+ostream&
+State::help_timing(ostream& o) {
+	o << "available timing modes:\n"
+	"\tuniform -- use \'uniform-delay\' to set delay\n"
+	"\tper-event -- use event-specific constant delay\n"
+	"\trandom -- use random delay\n"
+	"\tdefault -- (uniform)" << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if result is successful/good.  
+ */
+bool
+State::open_trace(const string& tfn) {
+	if (trace_manager) {
+		cerr << "Error: trace stream already open." << endl;
+	}
+	trace_manager = excl_ptr<TraceManager>(new TraceManager(tfn));
+	NEVER_NULL(trace_manager);
+	if (trace_manager->good()) {
+		flags |= FLAG_TRACE_ON;
+		return true;
+	} else {
+		stop_trace();
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Invoke this if you want tracing to end early.  
+ */
+void
+State::close_trace(void) {
+if (trace_manager) {
+	// destroying the trace manager should cause it to finish writing out.
+	trace_manager = excl_ptr<TraceManager>(NULL);
+}
+	stop_trace();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -412,11 +640,8 @@ State::dump_event(ostream& o, const event_index_type ei,
 		const time_type t) const {
 	const event_type& ev(get_event(ei));
 	o << '\t' << t << '\t';
-#if 1
 	o << ei << '\t';
-#endif
-	ev.dump_brief(o) << endl;
-	return o;
+	return ev.dump_brief(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -445,10 +670,14 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	get_event(ei).dump_subscribed_status(o << "status: ", instances, ei)
 		<< endl;
 {
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_queue_type& temp(event_queue);	// just alias
+#else
 	// search wouldn't be necessary if event was flagged in member field
-	temp_queue_type temp;
 	// copy wouldn't be necessary if queue was a map...
+	temp_queue_type temp;
 	event_queue.copy_to(temp);
+#endif
 	o << "in queue: ";
 	if (find_if(temp.begin(), temp.end(), 
 			event_placeholder_type::index_finder(ei))
@@ -467,16 +696,47 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
  */
 ostream&
 State::dump_event_queue(ostream& o) const {
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	typedef	event_queue_type::const_iterator	const_iterator;
+#else
 	typedef	temp_queue_type::const_iterator	const_iterator;
+#endif
+#if 0
+	// checking for stable ordering:
+	// several test cases reveal that the following results in
+	// unstable orderings of events with the same timestamp... f*ck.
+	temp_queue_type pretemp;
+	event_queue.copy_to(pretemp);
+	event_queue_type copy_queue;
+{
+	const_iterator i(pretemp.begin()), e(pretemp.end());
+	for ( ; i!=e; ++i) {
+		copy_queue.push(*i);
+	}
+}
+	temp_queue_type temp;
+	copy_queue.copy_to(temp);
+#else
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_queue_type& temp(event_queue);	// just alias
+#else
 	temp_queue_type temp;
 	event_queue.copy_to(temp);
+#endif
+#endif
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
-	// print header
 	if (i!=e) {
-		o << event_table_header << endl;
+		o << event_table_header;
+		if (showing_cause())
+			o << "\tcause";
+		o << endl;
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
+			if (showing_cause() && i->cause_event_id) {
+				o << "\t[by:" << i->cause_event_id << ']';
+			}
+			o << endl;
 		}
 	} else {
 		// deadlocked!
@@ -712,18 +972,204 @@ State::print_all_subscriptions(ostream& o) const {
 	checklist:
 	dynamic subscription state, which encodes which events are
 		outstanding and blocked.  
+	TODO: save and re-confirm chpsim options, because it affects
+		the event graph allocationa and enumeration.  
+	TODO: running event count, even when not tracing...
+	\return true to signal an error
  */
 bool
 State::save_checkpoint(ostream& o) const {
-	FINISH_ME(Fang);
+	// save some flags?
+	// save the state of all instances
+	if (instances.save_checkpoint(o)) {
+		return true;
+	}
+	// and which events are subscribed
+{
+	vector<event_index_type> tmp;
+	size_t i=1;
+	for ( ; i<event_pool.size(); ++i) {
+		if (event_pool[i].is_subscribed(instances, i))
+			tmp.push_back(i);
+	}
+	size_t s = tmp.size();
+	write_value(o, s);
+	for_each(tmp.begin(), tmp.end(), value_writer<size_t>(o));
+}{
+	// save the event queue
+#if CHPSIM_MULTISET_EVENT_QUEUE
+	const event_queue_type& temp(event_queue);	// just alias
+#else
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+#endif
+	size_t s = temp.size();
+	write_value(o, s);
+	for_each(temp.begin(), temp.end(), 
+		value_writer<event_placeholder_type>(o));
+}
+	// save current time
+	write_value(o, current_time);
+	// delay settings?
+#if 0
+	write_value(o, uniform_delay);
+	write_value(o, null_event_delay);
+#endif
+//	write_value(o, flags);
+	// skip trace manager
+	// save checkpoint interval?
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restores simulation state from checkpoint.  
+	This simulation checkpoint must use the same object file and 
+	invocation options.  
+	\return true to signal an error
+ */
 bool
-State::load_checkpoint(istream& o) {
-	FINISH_ME(Fang);
+State::load_checkpoint(istream& i) {
+	// restore data/channel/variable state
+	if (instances.load_checkpoint(i)) {
+		return true;
+	}
+	// restore event subscription state
+{
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	const nonmeta_context
+		c(mod.get_state_manager(), mod.get_footprint(), *this);
+	event_queue.clear();
+	for ( ; j<s; ++j) {
+		event_index_type ei;
+		read_value(i, ei);
+		INVARIANT(ei);
+		if (ei >= event_pool.size()) {
+			cerr << "FATAL: event index out-of-bounds!\n"
+				"Simulation is in an incoherent state!  "
+				"Recommend re-initializing." << endl;
+			// THROW_EXIT;
+			return true;
+		}
+		event_pool[ei].subscribe_deps(c, ei);
+	}
+}{
+	// restore the event queue
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	value_reader<event_placeholder_type> read(i);
+	for ( ; j<s; ++j) {
+		event_placeholder_type ep;
+		read(ep);
+#if CHPSIM_MULTISET_EVENT_QUEUE
+		event_queue.insert(ep);
+#else
+		event_queue.push(ep);
+#endif
+	}
+}
+	read_value(i, current_time);
+#if 0
+	read_value(i, uniform_delay);
+	read_value(i, null_event_delay);
+#endif
+//	read_value(i, flags);		// but not stopped?
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This prints the contents of a checkpoint, unattached to 
+	any object file.
+	This should follow load_checkpoint exactly.  
+	The limitation of this is that no event-type information is present.
+ */
+ostream&
+State::dump_raw_checkpoint(ostream& o, istream& i) {
+	nonmeta_state_manager instances;
+	instances.load_checkpoint(i);
+	instances.dump_state(o);
+{
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	o << "events subscribed to their dependencies:" << endl;
+	for ( ; j<s; ++j) {
+		event_index_type ei;
+		read_value(i, ei);
+		o << ei << " ";
+	}
+	o << endl;
+}{
+	// restore the event queue
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	value_reader<event_placeholder_type> read(i);
+	o << "event queue:" << endl;
+	if (s) {
+		o << event_table_header << "\tcause" << endl;
+		for ( ; j<s; ++j) {
+			event_placeholder_type ep;
+			read(ep);
+			o << '\t' << ep.time << '\t' << ep.event_index << '\t';
+			// can't dump_brief b/c not attached to object file
+			if (ep.cause_event_id) {	// always show
+				o << "\t[by:" << ep.cause_event_id << ']';
+			}
+			o << endl;
+		}
+	}
+}
+	time_type current_time;
+	read_value(i, current_time);
+	o << "current time: " << current_time << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create a local temporary copy and work with it.  
+	Needs in invoking (this) object to allocate/construct state
+	and events based on the same module.
+ */
+ostream&
+State::dump_checkpoint(ostream& o, istream& i) const {
+	o << "chpsim checkpoint dump:" << endl;
+	State state(this->get_module());
+if (state.load_checkpoint(i)) {
+	return o << "Error loading checkpoint." << endl;
+} else {
+	return state.dump_state(o);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Textual dump of state information saved in checkpoint. 
+	Keep consistent with save/load_checkpoint.  
+ */
+ostream&
+State::dump_state(ostream& o) const {
+	// dump all the information in the checkpoint
+	o << "variable states:" << endl;
+	instances.dump_state(o);
+{
+	o << "events subscribed to their dependencies:" << endl;
+	size_t j=1;
+	for ( ; j<event_pool.size(); ++j) {
+		if (event_pool[j].is_subscribed(instances, j))
+			o << j << ' ';
+	}
+	o << endl;
+}
+	dump_event_queue(o);
+	o << "current time: " << current_time << endl;
+	// other stuff are simulation settings
+	return o;
 }
 
 //=============================================================================
@@ -738,7 +1184,8 @@ graph_options::graph_options() :
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 		with_antidependencies(false),
 #endif
-		process_event_clusters(false) {
+		process_event_clusters(false), 
+		show_delays(false) {
 }
 
 //=============================================================================

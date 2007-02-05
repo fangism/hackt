@@ -1,0 +1,41 @@
+// "int-sink.hac"
+//	$Id: int-sink.hac,v 1.2 2007/02/05 06:40:29 fang Exp $
+// int buckets
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint W=32>
+defproc int_sink(chan?(int<W>) B) {
+int<W> b;
+chp {
+*[ B?(b) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	sinks a limited number of times
+ */
+template <pint W; pint N>
+defproc int_sink_once(chan?(int<W>) B) {
+int b;
+chp {
+{;i:N: B?(b) }
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+template <pint W; pint N, pint V[N]>
+defproc int_assert_sink (chan?(int<W>) B) {
+... $[x == V[i]]
+}
+***/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+template <pint W; pint N, pint V[N]>
+defproc int_assert_sink_once (chan?(int<W>) B) {
+...
+}
+***/
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.31 2007/01/21 06:01:02 fang Exp $
+	$Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -3102,14 +3102,7 @@ State::save_checkpoint(ostream& o) const {
 	// node_pool
 	write_value(o, node_pool.size());
 	for_each(node_pool.begin() +1, node_pool.end(), 
-#if 1
 		bind2nd_argval(mem_fun_ref(&node_type::save_state), o)
-#else
-	// doesn't quite work yet!?
-	// might need to wrap the mem_fun_ref to take a wrapper?
-		std::bind2nd(mem_fun_ref(&node_type::save_state),
-			util::ref(o))
-#endif
 	);
 }
 	WRITE_ALIGN_MARKER

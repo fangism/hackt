@@ -1,0 +1,9 @@
+# "bool-memory-write-b-01.chpsimrc"
+#	$Id: bool-memory-write-b-01.chpsimrc,v 1.2 2007/02/05 06:40:10 fang Exp $
+# @haco@ bool-memory-write-b.haco-a
+
+watchall-events
+echo expect failure on bad write-access out-of-bounds
+step 80
+echo simulation terminates before this is reached
+

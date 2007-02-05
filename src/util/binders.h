@@ -2,7 +2,7 @@
  *	\file "util/binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
- *	$Id: binders.h,v 1.7 2006/05/06 04:18:56 fang Exp $
+ *	$Id: binders.h,v 1.8 2007/02/05 06:39:58 fang Exp $
  */
 
 #ifndef	__UTIL_BINDERS_H__
@@ -52,6 +52,11 @@ public:
 
 	result_type
 	operator() (const argument_type& x) const {
+		return op(arg1, x);
+	}
+
+	result_type
+	operator() (argument_type& x) const {
 		return op(arg1, x);
 	}
 };	// end class binder1st_argval
@@ -116,6 +121,11 @@ public:
 	operator() (const argument_type& x) const {
 		return op(x, arg2);
 	}
+
+	result_type
+	operator() (argument_type& x) const {
+		return op(x, arg2);
+	}
 };	// end class binder2nd_argval
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -138,6 +148,11 @@ public:
 
 	void
 	operator() (const argument_type& x) const {
+		op(x, arg2);
+	}
+
+	void
+	operator() (argument_type& x) const {
 		op(x, arg2);
 	}
 };	// end class binder2nd_argval_void

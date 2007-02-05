@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3 2007/01/24 18:37:32 fang Exp $
+	$Id: Command.cc,v 1.4 2007/02/05 06:39:50 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -29,6 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_registry.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
+#include "sim/chpsim/Trace.h"
 
 #include "common/TODO.h"
 #include "util/libc.h"
@@ -66,9 +67,10 @@ static CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
 	simulation("simulation", "simulation commands"),
-	channel("channel", "channel commands"),
+//	channel("channel", "channel commands"),
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
+	tracing("tracing", "trace and checkpoint commands"), 
 	modes("modes", "timing model, error handling");
 
 //=============================================================================
@@ -348,7 +350,6 @@ Step::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 	"advance the simulation in time units")
 
@@ -359,7 +360,6 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::time_type		time_type;
-	typedef	State::node_type		node_type;
 	time_type add;		// time to add
 	if (string_to_num(a.back(), add)) {
 		cerr << "Error parsing time." << endl;
@@ -369,14 +369,14 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-	State::step_return_type ni;
+//	State::step_return_type ni;
 	s.resume();
 	try {
-	while (!s.stopped() && s.pending_events() &&
-			(s.next_event_time() < stop_time) &&
-			GET_NODE((ni = s.step()))) {
+	while (s.pending_events() && !s.stopped() &&
+			(s.next_event_time() < stop_time)) {
+		s.step();
 		// NB: may need specialization for real-valued (float) time.  
-
+#if 0
 		// honor breakpoints?
 		// tracing stuff here later...
 		const node_type& n(s.get_node(GET_NODE(ni)));
@@ -412,14 +412,18 @@ if (a.size() != 2) {
 				// or Command::BREAK; ?
 			}
 		}
+#endif
 	}	// end while
-	} catch (State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
+	} catch (...) {
+		cerr << "Caught run-time exception during execution.  Halting."
+			<< endl;
 		return Command::FATAL;
 	}	// no other exceptions
+#if 0
 	if (!s.stopped() && s.time() < stop_time) {
 		s.update_time(stop_time);
 	}
+#endif
 	// else leave the time at the time as of the last event
 	return Command::NORMAL;
 }
@@ -433,7 +437,6 @@ Advance::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Run, "run", simulation,
@@ -925,13 +928,35 @@ Breaks::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 typedef	Save<State>				Save;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Load<State>				Load;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
+	"print entire state of the simulation")
+
+int
+DumpState::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_state(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+DumpState::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Prints all the stateful information of variables, channels, and events that\n"
+"would be recorded and restored by a checkpoint." << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	What<State>				What;
@@ -1626,7 +1651,6 @@ UniformDelay::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
 	"set/get timing mode")
 
@@ -1654,7 +1678,6 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1821,45 +1844,225 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 
-	modes, "enable/disable weak-interference warnings")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cause, "cause", view, 
+	"include causality with event diagnostics")
 
 int
-SetMode::main(State& s, const string_list& a) {
-if (a.size() == 1) {
-	s.dump_mode(cout);
-} else if (a.size() == 2) {
-	static const string reset("reset");
-	static const string run("run");
-	const string& m(a.back());
-	if (m == reset) {
-		s.set_mode_reset();
-	} else if (m == run) {
-		s.set_mode_run();
+Cause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+Cause::usage(ostream& o) {
+	o << name << endl;
+	o <<
+"Print the last event to have triggered this event in diagnostics." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCause, "nocause", view, 
+	"suppress causality of event diagnostics")
+
+int
+NoCause::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.no_show_cause();
+	return Command::NORMAL;
+}
+}
+
+void
+NoCause::usage(ostream& o) {
+	o << name << endl;
+	o << "Suppress event causalities in diagnostics." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Trace, "trace", tracing, 
+	"record trace of all events to file")
+
+int
+Trace::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.open_trace(a.back())) {
+		// confirm message
+		cout << "Writing simulation trace to \"" << a.back()
+			<< "\"." << endl;
+		return Command::NORMAL;
 	} else {
+		cout << "Error opening file \"" << a.back() <<
+			"\" for trace recording." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Trace::usage(ostream& o) {
+	o << name << " <file>" << endl;
+	o << "Records all data and events to file for later analysis.\n"
+"Trace-file is completed with a \'trace-finish\' command, or automatically\n"
+"upon termination of ths simulation." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFile, "trace-file", tracing, 
+	"show the name of the active trace file")
+
+int
+TraceFile::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.is_tracing()) {
+		cout << "Active trace file: " <<
+			s.get_trace_manager()->get_trace_name() << endl;
+	} else {
+		cout << "No active trace file." << endl;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+TraceFile::usage(ostream& o) {
+	o << name << endl;
+	o << "Prints the name of the active trace file, if applicable." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceClose, "trace-close", tracing, 
+	"close the active trace file")
+
+int
+TraceClose::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.close_trace();
+	return Command::NORMAL;
+}
+}
+
+void
+TraceClose::usage(ostream& o) {
+	o << name << endl;
+	o << "Stops the active trace and writes it out to file." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushNotify, 
+	"trace-flush-notify", tracing, 
+	"enable/disable trace flush notifications (debug)")
+int
+TraceFlushNotify::main(State&, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "Trace flush notification is ";
+	if (TraceManager::notify_flush) {
+		cout << "enabled." << endl;
+	} else {
+		cout << "disabled." << endl;
+	}
+	return Command::NORMAL;
+case 2:
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric argument." << endl;
+		return Command::BADARG;
+	}
+	TraceManager::notify_flush = i;
+	return Command::NORMAL;
+default:
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+}
+}
+
+void
+TraceFlushNotify::usage(ostream& o) {
+	o << name << " [0|1]" << endl;
+	o << 
+"With argument, enables (1) or disables (0) trace flush notifications\n"
+"Without argument, reports current policy." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushInterval, 
+	"trace-flush-interval", tracing, 
+	"set/get the current trace chunk granularity")
+
+int
+TraceFlushInterval::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "trace flush interval (events): " <<
+		s.get_trace_flush_interval() << endl;
+	break;
+case 2:
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing numeric interval argument." << endl;
 		usage(cerr << "usage: ");
 		return Command::BADARG;
 	}
-} else {
+	s.set_trace_flush_interval(i);
+	break;
+default:
 	usage(cerr << "usage: ");
-	return Command::BADARG;
+	return Command::SYNTAX;
 }
 	return Command::NORMAL;
 }
 
 void
-SetMode::usage(ostream& o) {
-	o << "mode [reset|run]\n"
-"\t\'reset\' disables weak-interference warnings, useful during initialization\n"
-"\t\'run\' (default) enables weak-interference warnings" << endl;
+TraceFlushInterval::usage(ostream& o) {
+	o << name << " [interval]" << endl;
 	o <<
-"Instabilities and interferences still cause simulations to halt, while \n"
-"weak-instabilities trigger warnings." << endl;
+"If argument is passed, then set the trace flush interval to it.\n"
+"Otherwise, just report the current trace flush interval.\n"
+"The interval is counted in number of events that execute." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceDump, 
+	"trace-dump", tracing, 
+	"spill a human-readable (?) text dump of a trace file")
+
+int
+TraceDump::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (TraceManager::text_dump(a.back(), cout)) {
+		cerr << "Error opening trace file: " << a.back() << endl;
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+TraceDump::usage(ostream& o) {
+	o << name << " <tracefile>" << endl;
+	o << "Dumps contents of a trace file to stdout.\n"
+"Future versions may require a proper object file to be attached." << endl;
+}
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

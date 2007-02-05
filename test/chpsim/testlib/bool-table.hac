@@ -1,0 +1,33 @@
+// "bool-table.hac"
+//	$Id: bool-table.hac,v 1.2 2007/02/05 06:40:28 fang Exp $
+// No, it's not "pool-table".
+// Lookup-table structures.
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Arbitrary size bool lookup table.
+ */
+template <pint N; pbool V[N]>
+defproc bool_lookup_table(chan?(int) A; chan!(bool) D) {
+int a;
+chp {
+*[ A?(a); D!(V[a]) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Power-of-2 sized ROM.
+	\param W is the width of the integer address.
+	\param V is a size(2^W) array of constant values.  
+ */
+template <pint W; pbool V[1<<W]>
+defproc bool_ROM_bank(chan?(int<W>) A; chan!(bool) D) {
+int<W> a;
+chp {
+*[ A?(a); D!(V[a]) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

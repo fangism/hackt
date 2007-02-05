@@ -1,7 +1,8 @@
 // "bool-sink.hac"
-//	$Id: bool-sink.hac,v 1.2 2007/01/21 06:04:16 fang Exp $
+//	$Id: bool-sink.hac,v 1.3 2007/02/05 06:40:27 fang Exp $
 // bool buckets
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defproc bool_sink(chan?(bool) B) {
 bool b;
 chp {
@@ -9,17 +10,19 @@ chp {
 }
 }
 
-/***
-// sinks a limited number of times
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	sinks a limited number of times
+ */
 template <pint N>
 defproc bool_sink_once(chan?(bool) B) {
 bool b;
 chp {
-{;:i:N: B?(b) }
+{;i:N: B?(b) }
 }
 }
-***/
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 template <pint N, pbool V[N]>
 defproc bool_assert_sink (chan?(bool) B) {
@@ -27,6 +30,7 @@ defproc bool_assert_sink (chan?(bool) B) {
 }
 ***/
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 template <pint N, pbool V[N]>
 defproc bool_assert_sink_once (chan?(bool) B) {

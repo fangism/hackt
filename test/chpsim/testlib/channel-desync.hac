@@ -1,0 +1,33 @@
+// "channel-desync.hac"
+//	$Id: channel-desync.hac,v 1.2 2007/02/05 06:40:28 fang Exp $
+// wish: generalized type templates...
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+// NOTE: this adds buffering
+// an alternate version may not add buffering (need probe semantics)
+template <datatype T1, T2>
+defproc channel_desync_2(chan?(T1, T2) I; chan!(T1) O1; chan!(T2) O2) {
+T1 x1;
+T2 x2;
+chp {
+	*[I?(x1, x2); O1!(x1),O2!(x2) ]
+}
+}
+***/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint W>
+defproc channel_desync_bool_int(
+		chan?(bool, int<W>) O;
+		chan!(bool) B; chan!(int<W>) I) {
+bool x1;
+int<W> x2;
+chp {
+	*[O?(x1,x2); B!(x1),I!(x2) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// define more as they are needed...
+

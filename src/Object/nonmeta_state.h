@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_state.h"
-	$Id: nonmeta_state.h,v 1.2 2007/01/21 05:58:31 fang Exp $
+	$Id: nonmeta_state.h,v 1.3 2007/02/05 06:39:43 fang Exp $
 	Structure that contains the run-time state information of chpsim.  
  */
 
@@ -41,6 +41,9 @@ public:
 protected:
 	vector<instance_type>			pool;
 
+	// only used by State::dump_raw_checkpoint
+	nonmeta_state_base();
+
 	explicit
 	nonmeta_state_base(const state_manager&);
 
@@ -52,6 +55,15 @@ protected:
 	ostream&
 	__dump_all_subscriptions(ostream&, const state_manager&, 
 		const footprint&) const;
+
+	ostream&
+	__dump_state(ostream&) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
 
 };	// end class nonmeta_state_base
 
@@ -78,6 +90,9 @@ class nonmeta_state_manager :
 			// == SIM::INVALID_NODE_INDEX +1
 	};
 public:
+	// only used by State::dump_raw_checkpoint
+	nonmeta_state_manager();
+
 	explicit
 	nonmeta_state_manager(const state_manager&);
 
@@ -100,6 +115,9 @@ public:
 
 	void
 	reset(void);
+
+	ostream&
+	dump_state(ostream&) const;
 
 	ostream&
 	dump_struct(ostream&, const state_manager&, const footprint&) const;

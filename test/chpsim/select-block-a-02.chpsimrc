@@ -1,0 +1,10 @@
+# "select-block-a-02.chpsimrc"
+#	$Id: select-block-a-02.chpsimrc,v 1.2 2007/02/05 06:40:23 fang Exp $
+# @haco@ select-block-a.haco-a
+
+echo same trace with fixed-per-event delays (using defaults)
+echo everything except times stamps should match because
+echo there is little exposed concurrency
+timing per-event
+source select-block-a-01.chpsimrc
+

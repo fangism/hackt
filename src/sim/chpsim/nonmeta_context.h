@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.2 2007/01/21 06:00:49 fang Exp $
+	$Id: nonmeta_context.h,v 1.3 2007/02/05 06:39:55 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -11,6 +11,7 @@
 #include "util/STL/vector_fwd.h"
 #include "sim/common.h"
 #include "util/member_saver.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace SIM {
@@ -23,7 +24,8 @@ using entity::state_manager;
 using entity::nonmeta_state_manager;
 using entity::nonmeta_context_base;
 using entity::event_subscribers_type;
-
+using util::memory::never_ptr;
+class TraceManager;
 
 //=============================================================================
 /**
@@ -61,6 +63,10 @@ public:
 		Global pool of events.  
 	 */
 	event_pool_type&			event_pool;
+	/**
+		Reference to the State's trace_manager.  
+	 */
+	never_ptr<TraceManager>			trace_manager;
 
 	typedef	util::member_saver<this_type, event_type*, &this_type::event>
 						event_setter_base;

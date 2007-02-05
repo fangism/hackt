@@ -1,0 +1,38 @@
+# "bool-lookup-a-01.chpsimrc"
+#	$Id: bool-lookup-a-01.chpsimrc,v 1.2 2007/02/05 06:40:06 fang Exp $
+# @haco@ bool-lookup-a.haco-a
+
+watchall-events
+step 6
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+step 4
+get bsnk.b
+time
+assert-queue
+

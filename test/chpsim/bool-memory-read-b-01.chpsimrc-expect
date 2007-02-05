@@ -1,0 +1,53 @@
+expecting out-of-bounds access run-time error 
+	0	0	0	null
+	10	6	1	
+	10	11	3	int_source::S!(0)
+	10	16	5	bool_source_constant::S!(true)
+	10	17	6	bool_source_constant::S!(false)
+	20	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	20	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	30	14	3	int_source::S!(1)
+	30	3	1	
+	30	17	6	bool_source_constant::S!(false)
+	40	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	50	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	50	6	1	
+	60	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	60	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	60	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	70	7	2	null
+	70	15	4	bool_sink::B?(bool_sink::b)
+	70	17	6	bool_source_constant::S!(false)
+	70	3	1	
+	70	13	3	int_source::S!(2)
+	80	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	90	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	90	6	1	
+	100	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	100	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	100	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	110	7	2	null
+	110	15	4	bool_sink::B?(bool_sink::b)
+	110	17	6	bool_source_constant::S!(false)
+	110	3	1	
+	110	12	3	int_source::S!(5)
+	120	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	130	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	130	6	1	
+	140	9	2	bool_memory_array::Read!(bool_memory_array::data[bool_memory_array::a])
+	140	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	140	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	150	7	2	null
+	150	15	4	bool_sink::B?(bool_sink::b)
+	150	17	6	bool_source_constant::S!(false)
+	150	3	1	
+	150	11	3	int_source::S!(0)
+	160	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	170	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	170	6	1	
+FATAL: reference to uninstantiated bool index [5]
+ERROR: unrolling aliases.
+Error resolving a single instance alias.
+Run-time error resolving nonmeta reference.
+Run-time error executing event 9.
+Caught run-time exception during execution.  Halting.

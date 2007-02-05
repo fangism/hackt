@@ -1,0 +1,20 @@
+# "countdown-domino-b-02-cause.chpsimrc"
+#	$Id: countdown-domino-b-02-cause.chpsimrc,v 1.2 2007/02/05 06:40:20 fang Exp $
+# @haco@ countdown-domino-b.haco-a
+
+watchall-events
+cause
+step 20
+queue
+time
+get a
+get b
+get c
+step 20
+queue
+time
+run
+queue
+echo end of simulation
+time
+

@@ -1,0 +1,42 @@
+	0	0	0	null
+	10	1	1	bool_source_constant::S!(true)
+	10	2	2	int_source::S!(0)
+	10	16	3	
+	20	14	3	bool_split_select::C?(bool_split_select::c)
+	20	15	3	bool_split_select::I?(bool_split_select::x)
+	30	5	2	int_source::S!(1)
+	30	1	1	bool_source_constant::S!(true)
+	30	13	3	
+	40	8	3	bool_split_select::O[0]!(bool_split_select::x)
+	50	6	4	bool_sink::B?(bool_sink::b)
+	50	7	3	null
+	60	16	3	
+	70	14	3	bool_split_select::C?(bool_split_select::c)
+	70	15	3	bool_split_select::I?(bool_split_select::x)
+	80	4	2	int_source::S!(2)
+	80	1	1	bool_source_constant::S!(true)
+	80	13	3	
+	90	9	3	bool_split_select::O[1]!(bool_split_select::x)
+	100	7	3	null
+	100	17	5	bool_sink::B?(bool_sink::b)
+	110	16	3	
+	120	14	3	bool_split_select::C?(bool_split_select::c)
+	120	15	3	bool_split_select::I?(bool_split_select::x)
+	130	3	2	int_source::S!(4)
+	130	1	1	bool_source_constant::S!(true)
+	130	13	3	
+	140	10	3	bool_split_select::O[2]!(bool_split_select::x)
+	150	7	3	null
+	150	18	6	bool_sink::B?(bool_sink::b)
+	160	16	3	
+	170	14	3	bool_split_select::C?(bool_split_select::c)
+	170	15	3	bool_split_select::I?(bool_split_select::x)
+	180	2	2	int_source::S!(0)
+	180	1	1	bool_source_constant::S!(true)
+	180	13	3	
+event queue:
+	(empty)
+time: 180
+assert-queue should fail because this is deadlocked 
+split.c : int split.c = 4
+assert failed: expecting non-empty event queue.

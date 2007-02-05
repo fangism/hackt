@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.2 2007/01/21 06:00:42 fang Exp $
+	$Id: Event.h,v 1.3 2007/02/05 06:39:52 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -13,6 +13,7 @@
 #include <iosfwd>
 #include <valarray>
 #include <vector>
+#include "sim/time.h"
 #include "sim/chpsim/Dependence.h"
 #include "sim/chpsim/devel_switches.h"
 #include "Object/ref/reference_enum.h"
@@ -39,7 +40,8 @@ using entity::nonmeta_state_manager;
 
 //=============================================================================
 /**
-	Plan is to have different event pools... not anymore! is unified.
+	Event type numeration codes.
+	Can also introduce 'special' types of events like I/O.  
  */
 enum {
 	EVENT_NULL = 0,		///< can be used to mean 'skip' or 'no-op'
@@ -113,8 +115,13 @@ enum recheck_result {
 class EventNode {
 	typedef	EventNode		this_type;
 public:
+	/**
+		Hard-coded time type for now.
+	 */
+	typedef	real_time		time_type;
 	typedef	size_t			event_index_type;
 	typedef	valarray<event_index_type>	successor_list_type;
+	static const real_time		default_delay;
 	static const char		node_prefix[];
 private:
 	/**
@@ -174,6 +181,12 @@ private:
 	 */
 	unsigned short			countdown;
 	/**
+		The constant value of delay for this event, 
+		set by the event constructor.  
+		Default: 10 units.  
+	 */
+	time_type			delay;
+	/**
 		Set of variables and channels whose update may affect the
 		*blocking* state of this event.  
 		Consider using an excl_ptr to this (sparser) if 
@@ -201,6 +214,9 @@ public:
 	EventNode();
 
 	EventNode(const action*, const unsigned short, const size_t pid);
+
+	EventNode(const action*, const unsigned short, const size_t pid, 
+		const time_type);
 
 	~EventNode();
 
@@ -256,10 +272,11 @@ public:
 	}
 #endif
 
-#if 0
-	const DependenceSet&
-	get_deps(void) const { return deps; }
-#endif
+	time_type
+	get_delay(void) const { return delay; }
+
+	void
+	set_delay(const time_type t) { delay = t; }
 
 	void
 	reset(void);
@@ -275,6 +292,12 @@ public:
 
 	void
 	subscribe_deps(const nonmeta_context&, const event_index_type) const;
+
+	bool
+	is_subscribed(const nonmeta_state_manager& s, 
+			const event_index_type ei) const {
+		return block_deps.is_subscribed(s, ei);
+	}
 
 	ostream&
 	dump_brief(ostream&) const;

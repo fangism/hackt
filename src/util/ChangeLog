@@ -1,5 +1,22 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.62 2007/01/21 06:01:04 fang Exp $
+#	$Id: ChangeLog,v 1.63 2007/02/05 06:39:57 fang Exp $
+
+2007-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-10:
+	  Added missing reference-binder functor overloads with
+		non-const reference argument types.  
+	  Give me boost::bind or give me a headache!
+	  util/IO_utils.tcc: read_sequence_in_place elides the temporary,
+		which was a stupid oversight, now enabled thanks to 
+		using a quick-and-dirty template specialization functor.  
+
+
+2007-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-05:
+	  Fixed minor typo in "util/libc.h": tmpnam, not tmpname.
+
 
 2007-01-21	David Fang		<fangism@users.sourceforge.net>
 
