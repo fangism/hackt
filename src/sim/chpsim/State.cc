@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.13 2007/02/05 04:50:16 fang Exp $
+	$Id: State.cc,v 1.2.2.14 2007/02/05 05:02:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -59,10 +59,8 @@ struct value_writer<State::event_placeholder_type> {
 	operator () (const State::event_placeholder_type& p) const {
 		write_value(os, p.time);
 		write_value(os, p.event_index);
-#if CHPSIM_CAUSE_TRACKING
 		write_value(os, p.cause_event_id);
 		write_value(os, p.cause_trace_id);
-#endif
 	}
 };	// end struct value_writer
 
@@ -78,10 +76,8 @@ struct value_reader<State::event_placeholder_type> {
 	operator () (State::event_placeholder_type& p) const {
 		read_value(is, p.time);
 		read_value(is, p.event_index);
-#if CHPSIM_CAUSE_TRACKING
 		read_value(is, p.cause_event_id);
 		read_value(is, p.cause_trace_id);
-#endif
 	}
 };	// end struct value_reader
 
@@ -169,23 +165,17 @@ struct State::recheck_transformer {
  */
 struct State::event_enqueuer {
 	this_type&		state;
-#if CHPSIM_CAUSE_TRACKING
 	event_index_type	cause_event_id;
 	size_t			cause_trace_id;
-#endif
 
-#if CHPSIM_CAUSE_TRACKING
 	event_enqueuer(this_type& s, const event_index_type c, 
 			const size_t t) : 
 			state(s), cause_event_id(c), cause_trace_id(t)
 			{ }
-#else	// CHPSIM_CAUSE_TRACING
-	explicit
-	event_enqueuer(this_type& s) : state(s) { }
-#endif	// CHPSIM_CAUSE_TRACING
 
 	/**
-		TODO: different timing modes
+		Enqueues the event with future time depending on the 
+		timing mode.
 	 */
 	void
 	operator () (const event_index_type ei) {
@@ -209,11 +199,7 @@ struct State::event_enqueuer {
 	}
 		const time_type new_time = state.current_time +new_delay;
 		const event_placeholder_type
-#if CHPSIM_CAUSE_TRACKING
 			new_event(new_time, ei, cause_event_id, cause_trace_id);
-#else	// CHPSIM_CAUSE_TRACKING
-			new_event(new_time, ei);
-#endif	// CHPSIM_CAUSE_TRACKING
 		if (state.watching_event_queue()) {
 			// is this a performance hit, rechecking inside loop?
 			// if so, factor this into two versioned loops.
@@ -396,12 +382,10 @@ State::step(void) {
 	// first NULL event has index 0, but nothing else should enqueue it
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
-#if CHPSIM_CAUSE_TRACKING
 	const event_index_type cause_event_id = ep.cause_event_id;
 	DEBUG_STEP_PRINT("caused by = " << cause_event_id << endl);
 	const size_t cause_trace_id = ep.cause_trace_id;
 	DEBUG_STEP_PRINT("at event # = " << cause_trace_id << endl);
-#endif
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
@@ -424,19 +408,13 @@ try {
 		// should only be true if trace opening succeeded
 		NEVER_NULL(trace_manager);
 		ti = trace_manager->push_back_event(
-			event_trace_point(current_time, ei
-#if CHPSIM_CAUSE_TRACKING
-				, cause_trace_id
-#endif
-				));
+			event_trace_point(current_time, ei, cause_trace_id));
 	}
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
-#if CHPSIM_CAUSE_TRACKING
 		if (showing_cause() && cause_event_id) {
 			cout << "\t[by:" << cause_event_id << ']';
 		}
-#endif
 		cout << endl;
 	}
 	// __updated_list lists variables updated
@@ -534,11 +512,7 @@ try {
 	// transfer events from staging queue to event queue, 
 	// and schedule them with some delay
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
-#if CHPSIM_CAUSE_TRACKING
 		event_enqueuer(*this, ei, ti)
-#else	// CHPSIM_CAUSE_TRACKING
-		event_enqueuer(*this)
-#endif	// CHPSIM_CAUSE_TRACKING
 	);
 }
 }
@@ -759,11 +733,9 @@ State::dump_event_queue(ostream& o) const {
 		o << endl;
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
-#if CHPSIM_CAUSE_TRACKING
 			if (showing_cause() && i->cause_event_id) {
 				o << "\t[by:" << i->cause_event_id << ']';
 			}
-#endif
 			o << endl;
 		}
 	} else {
@@ -1146,11 +1118,9 @@ State::dump_raw_checkpoint(ostream& o, istream& i) {
 			read(ep);
 			o << '\t' << ep.time << '\t' << ep.event_index << '\t';
 			// can't dump_brief b/c not attached to object file
-#if CHPSIM_CAUSE_TRACKING
 			if (ep.cause_event_id) {	// always show
 				o << "\t[by:" << ep.cause_event_id << ']';
 			}
-#endif
 			o << endl;
 		}
 	}

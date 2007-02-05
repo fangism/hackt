@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.9 2007/02/05 04:50:17 fang Exp $
+	$Id: State.h,v 1.2.2.10 2007/02/05 05:02:47 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -58,7 +58,6 @@ public:
 	 */
 	typedef	event_type::time_type		time_type;
 	typedef	signal_handler<this_type>	signal_handler;
-#if CHPSIM_CAUSE_TRACKING
 	struct event_placeholder_type : public EventPlaceholder<time_type> {
 		typedef	event_placeholder_type		this_type;
 		typedef	EventPlaceholder<time_type>	parent_type;
@@ -97,9 +96,6 @@ public:
 #endif
 
 	};	// end struct event_placeholder_type
-#else	// CHPSIM_CAUSE_TRACING
-	typedef	EventPlaceholder<time_type>	event_placeholder_type;
-#endif	// CHPSIM_CAUSE_TRACING
 private:
 #if CHPSIM_MULTISET_EVENT_QUEUE
 	typedef	std::multiset<event_placeholder_type>
@@ -144,13 +140,11 @@ private:
 			Initially off.  
 		 */
 		FLAG_WATCH_ALL_EVENTS = 0x0004,
-#if CHPSIM_CAUSE_TRACKING
 		/**
 			Set to true to show last-arrival event-causality.  
 			Initially off.  
 		 */
 		FLAG_SHOW_CAUSE = 0x0008,
-#endif
 		/**
 			Set true if named trace file is opened successfully.  
 			Initially off.  
@@ -375,7 +369,6 @@ public:
 	ostream&
 	help_timing(ostream&);
 
-#if CHPSIM_CAUSE_TRACKING
 	bool
 	showing_cause(void) const { return flags & FLAG_SHOW_CAUSE; }
 
@@ -384,7 +377,6 @@ public:
 
 	void
 	no_show_cause(void) { flags &= ~FLAG_SHOW_CAUSE; }
-#endif
 
 	bool
 	is_tracing(void) const { return flags & FLAG_TRACE_ON; }

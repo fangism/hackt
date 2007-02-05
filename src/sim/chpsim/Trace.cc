@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.1.2.9 2007/02/03 05:44:52 fang Exp $
+	$Id: Trace.cc,v 1.1.2.10 2007/02/05 05:02:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -53,9 +53,7 @@ event_trace_point::write(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	write_value(o, timestamp);
 	write_value(o, event_id);
-#if CHPSIM_CAUSE_TRACKING
 	write_value(o, cause_id);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -64,9 +62,7 @@ event_trace_point::read(istream& i) {
 	STACKTRACE_VERBOSE;
 	read_value(i, timestamp);
 	read_value(i, event_id);
-#if CHPSIM_CAUSE_TRACKING
 	read_value(i, cause_id);
-#endif
 	if (!i) {
 		cerr << "Error reading event trace point." << endl;
 	}
@@ -76,9 +72,7 @@ event_trace_point::read(istream& i) {
 ostream&
 event_trace_point::dump(ostream& o) const {
 	o << '\t' << timestamp << '\t' << event_id;
-#if CHPSIM_CAUSE_TRACKING
 	o << "\t" << cause_id;
-#endif
 	return o << endl;
 }
 

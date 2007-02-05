@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.1.2.8 2007/02/02 20:15:09 fang Exp $
+	$Id: Trace.h,v 1.1.2.9 2007/02/05 05:02:48 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -75,7 +75,6 @@ struct event_trace_point {
 		Consider making a 64b version.  
 	 */
 	trace_index_type		event_id;
-#if CHPSIM_CAUSE_TRACKING
 	/**
 		The index of the trace-event that caused this event to fire.  
 		(Not the allocated index of the event.)
@@ -86,15 +85,11 @@ struct event_trace_point {
 			meaning "not-applicable" or "unknown".  
 	 */
 	trace_index_type			cause_id;
-#endif
 
 	event_trace_point() { }		// default uninitialized, lazy
 	event_trace_point(const time_type& t, const trace_index_type ei, 
 			const trace_index_type c = 0) :
-			timestamp(t), event_id(ei)
-#if CHPSIM_CAUSE_TRACKING
-			, cause_id(c)
-#endif
+			timestamp(t), event_id(ei), cause_id(c)
 			{ }
 
 	void

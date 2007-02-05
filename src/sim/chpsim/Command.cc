@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.8 2007/02/05 04:50:15 fang Exp $
+	$Id: Command.cc,v 1.3.2.9 2007/02/05 05:02:44 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1846,7 +1846,6 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_CAUSE_TRACKING
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cause, "cause", view, 
 	"include causality with event diagnostics")
 
@@ -1888,7 +1887,6 @@ NoCause::usage(ostream& o) {
 	o << name << endl;
 	o << "Suppress event causalities in diagnostics." << endl;
 }
-#endif	// CHPSIM_CAUSE_TRACKING
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Trace, "trace", tracing, 
