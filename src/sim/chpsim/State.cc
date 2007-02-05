@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.2.2.12 2007/02/05 04:32:34 fang Exp $
+	$Id: State.cc,v 1.2.2.13 2007/02/05 04:50:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,11 +18,7 @@
 #include "sim/signal_handler.tcc"
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/random_time.h"
-#if CHPSIM_TRACING
 #include "sim/chpsim/Trace.h"
-#else
-#include "Object/nonmeta_variable.h"
-#endif
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
@@ -65,9 +61,7 @@ struct value_writer<State::event_placeholder_type> {
 		write_value(os, p.event_index);
 #if CHPSIM_CAUSE_TRACKING
 		write_value(os, p.cause_event_id);
-#if CHPSIM_TRACING
 		write_value(os, p.cause_trace_id);
-#endif
 #endif
 	}
 };	// end struct value_writer
@@ -86,9 +80,7 @@ struct value_reader<State::event_placeholder_type> {
 		read_value(is, p.event_index);
 #if CHPSIM_CAUSE_TRACKING
 		read_value(is, p.cause_event_id);
-#if CHPSIM_TRACING
 		read_value(is, p.cause_trace_id);
-#endif
 #endif
 	}
 };	// end struct value_reader
@@ -179,21 +171,13 @@ struct State::event_enqueuer {
 	this_type&		state;
 #if CHPSIM_CAUSE_TRACKING
 	event_index_type	cause_event_id;
-#if CHPSIM_TRACING
 	size_t			cause_trace_id;
-#endif
 #endif
 
 #if CHPSIM_CAUSE_TRACKING
-	event_enqueuer(this_type& s, const event_index_type c
-#if CHPSIM_TRACING
-			, const size_t t
-#endif
-			) : 
-			state(s), cause_event_id(c)
-#if CHPSIM_TRACING
-			, cause_trace_id(t)
-#endif
+	event_enqueuer(this_type& s, const event_index_type c, 
+			const size_t t) : 
+			state(s), cause_event_id(c), cause_trace_id(t)
 			{ }
 #else	// CHPSIM_CAUSE_TRACING
 	explicit
@@ -226,11 +210,7 @@ struct State::event_enqueuer {
 		const time_type new_time = state.current_time +new_delay;
 		const event_placeholder_type
 #if CHPSIM_CAUSE_TRACKING
-#if CHPSIM_TRACING
 			new_event(new_time, ei, cause_event_id, cause_trace_id);
-#else
-			new_event(new_time, ei, cause_event_id);
-#endif
 #else	// CHPSIM_CAUSE_TRACKING
 			new_event(new_time, ei);
 #endif	// CHPSIM_CAUSE_TRACKING
@@ -271,11 +251,9 @@ State::State(const module& m) :
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
 		__enqueue_list(), 
-		__rechecks()
-#if CHPSIM_TRACING
-		, trace_manager()
-		, trace_flush_interval(1L<<16)
-#endif
+		__rechecks(), 
+		trace_manager(), 
+		trace_flush_interval(1L<<16)
 		{
 	// perform initializations here
 	event_pool.reserve(256);
@@ -421,10 +399,8 @@ State::step(void) {
 #if CHPSIM_CAUSE_TRACKING
 	const event_index_type cause_event_id = ep.cause_event_id;
 	DEBUG_STEP_PRINT("caused by = " << cause_event_id << endl);
-#if CHPSIM_TRACING
 	const size_t cause_trace_id = ep.cause_trace_id;
 	DEBUG_STEP_PRINT("at event # = " << cause_trace_id << endl);
-#endif
 #endif
 
 	// 2) execute the event (alter state, variables, channel, etc.)
@@ -442,7 +418,6 @@ try {
 	cerr << "Run-time error executing event " << ei << "." << endl;
 	throw;		// rethrow
 }
-#if CHPSIM_TRACING
 	// event tracing
 	size_t ti = 0;	// because we'll want to reference it later...
 	if (is_tracing()) {
@@ -455,7 +430,6 @@ try {
 #endif
 				));
 	}
-#endif
 	if (watching_all_events()) {
 		dump_event(cout, ei, current_time);
 #if CHPSIM_CAUSE_TRACKING
@@ -497,14 +471,10 @@ try {
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
 {
-#if CHPSIM_TRACING
 #define	TRACE_UPDATED_STATE(Tag)					\
 	if (is_tracing()) {						\
 		trace_manager->current_chunk.push_back<Tag>(v, ti, j);	\
 	}
-#else
-#define	TRACE_UPDATED_STATE(Tag)
-#endif
 	typedef	update_reference_array_type::const_iterator	const_iterator;
 	const_iterator ui(__updated_list.begin()), ue(__updated_list.end());
 	for ( ; ui!=ue; ++ui) {
@@ -565,24 +535,19 @@ try {
 	// and schedule them with some delay
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 #if CHPSIM_CAUSE_TRACKING
-#if CHPSIM_TRACING
 		event_enqueuer(*this, ei, ti)
-#else
-		event_enqueuer(*this, ei)
-#endif
 #else	// CHPSIM_CAUSE_TRACKING
 		event_enqueuer(*this)
 #endif	// CHPSIM_CAUSE_TRACKING
 	);
 }
 }
-#if CHPSIM_TRACING
 	// check for flush period
+	// TODO: count events in State, shouldn't depend on TraceManager for it.
 	if (is_tracing() && 
 		trace_manager->current_event_count() >= trace_flush_interval) {
 		trace_manager->flush();
 	}
-#endif
 	// TODO: finish me: watch list
 	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 }	// end step() method
@@ -660,7 +625,6 @@ State::help_timing(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_TRACING
 /**
 	\return true if result is successful/good.  
  */
@@ -692,7 +656,6 @@ if (trace_manager) {
 }
 	stop_trace();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

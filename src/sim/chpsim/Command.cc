@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.2.7 2007/02/04 06:00:57 fang Exp $
+	$Id: Command.cc,v 1.3.2.8 2007/02/05 04:50:15 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -29,9 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_registry.tcc"
 #include "sim/command_common.tcc"
 #include "parser/instref.h"
-#if CHPSIM_TRACING
 #include "sim/chpsim/Trace.h"
-#endif
 
 #include "common/TODO.h"
 #include "util/libc.h"
@@ -72,9 +70,7 @@ static CommandCategory
 //	channel("channel", "channel commands"),
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
-#if CHPSIM_TRACING
 	tracing("tracing", "trace and checkpoint commands"), 
-#endif
 	modes("modes", "timing model, error handling");
 
 //=============================================================================
@@ -1895,7 +1891,6 @@ NoCause::usage(ostream& o) {
 #endif	// CHPSIM_CAUSE_TRACKING
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_TRACING
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Trace, "trace", tracing, 
 	"record trace of all events to file")
 
@@ -2072,8 +2067,6 @@ TraceDump::usage(ostream& o) {
 	o << "Dumps contents of a trace file to stdout.\n"
 "Future versions may require a proper object file to be attached." << endl;
 }
-
-#endif	// CHPSIM_TRACING
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

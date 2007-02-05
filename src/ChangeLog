@@ -5,6 +5,10 @@
 
 2007-02-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-69-chpsim-02-17:
+	  Perm'd CHPSIM_TRACING switch.
+
+
 	* HACKT-00-01-04-main-00-80-69-chpsim-02-16:
 	  Added chpsim -d <checkpoint> to print the object-independent
 		dump of checkpoint contents (requires no object file).  

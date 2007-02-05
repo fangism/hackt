@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.2.2.8 2007/02/05 04:32:36 fang Exp $
+	$Id: State.h,v 1.2.2.9 2007/02/05 04:50:17 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -21,9 +21,7 @@
 #include "Object/nonmeta_state.h"
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
-#if CHPSIM_TRACING
 #include "util/memory/excl_ptr.h"
-#endif
 
 namespace HAC {
 namespace SIM {
@@ -37,11 +35,9 @@ using std::string;
 class StateConstructor;
 class nonmeta_context;
 class graph_options;
-#if CHPSIM_TRACING
 class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
-#endif
 
 //=============================================================================
 /**
@@ -71,13 +67,11 @@ public:
 			statically allocated event.  
 		 */
 		event_index_type			cause_event_id;
-#if CHPSIM_TRACING
 		/**
 			This is the index into the history of all events, 
 			as counted and maintained by the tracing engine.  
 		 */
 		size_t					cause_trace_id;
-#endif
 		/**
 			default constructor: don't care what values, 
 			going to be overwritten immedately thereafter.  
@@ -87,16 +81,10 @@ public:
 
 		event_placeholder_type(const time_type& t, 
 			const event_index_type e, 
-			const event_index_type c = SIM::INVALID_EVENT_INDEX
-#if CHPSIM_TRACING
-			, const size_t i = 0
-#endif
-			) : 
+			const event_index_type c = SIM::INVALID_EVENT_INDEX, 
+			const size_t i = 0) : 
 			parent_type(t, e), 
-			cause_event_id(c) 
-#if CHPSIM_TRACING
-			, cause_trace_id(i)
-#endif
+			cause_event_id(c), cause_trace_id(i)
 			{ }
 
 #if CHPSIM_MULTISET_EVENT_QUEUE
@@ -163,13 +151,11 @@ private:
 		 */
 		FLAG_SHOW_CAUSE = 0x0008,
 #endif
-#if CHPSIM_TRACING
 		/**
 			Set true if named trace file is opened successfully.  
 			Initially off.  
 		 */
 		FLAG_TRACE_ON = 0x8000,
-#endif
 		/**
 			TODO: timing mode flags
 		 */
@@ -255,7 +241,6 @@ private:
 		Set of events to recheck for unblocking.  
 	 */
 	event_subscribers_type			__rechecks;
-#if CHPSIM_TRACING
 	/**
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
@@ -270,7 +255,6 @@ private:
 		Default: some big number
 	 */
 	size_t					trace_flush_interval;
-#endif
 #if CHPSIM_CHECKPOINTING
 	/**
 		Name of checkpoint file.  
@@ -402,7 +386,6 @@ public:
 	no_show_cause(void) { flags &= ~FLAG_SHOW_CAUSE; }
 #endif
 
-#if CHPSIM_TRACING
 	bool
 	is_tracing(void) const { return flags & FLAG_TRACE_ON; }
 
@@ -439,7 +422,6 @@ public:
 		INVARIANT(i);
 		trace_flush_interval = i;
 	}
-#endif
 
 	ostream&
 	dump_struct(ostream&) const;

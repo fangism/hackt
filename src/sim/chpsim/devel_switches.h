@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.2.2.7 2007/02/04 22:11:48 fang Exp $
+	$Id: devel_switches.h,v 1.2.2.8 2007/02/05 04:50:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -85,15 +85,8 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to enable tracing capabilities.
-	Goal: 1
-	Rationale: thesis work -- trace-mining
-	Priority: high (TOP)
-	Prerequisite: possibly CHPSIM_CAUSE_TRACKING
-	Status: first version done, basics tested
-	Q: what do we do about random timing?
+	Q: what do we do about tracing with random timing?
  */
-#define	CHPSIM_TRACING				1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -105,7 +98,7 @@
 	Prerequisites: CHPSIM_TRACING, CHPSIM_CHECKPOINTING (of course)
 	Priority: ?
  */
-#define	CHPSIM_TRACE_WITH_CHECKPOINT	(0 && CHPSIM_TRACING && CHPSIM_CHECKPOINTING)
+#define	CHPSIM_TRACE_WITH_CHECKPOINT	(0 && CHPSIM_CHECKPOINTING)
 
 //=============================================================================
 
