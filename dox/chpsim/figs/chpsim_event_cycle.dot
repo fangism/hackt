@@ -1,0 +1,33 @@
+# "figs/chpsim_event_cycle.dot"
+#	$Id: chpsim_event_cycle.dot,v 1.1 2007/02/06 21:36:28 fang Exp $
+
+digraph G {
+# fontsize=24;
+
+{ rank=source;
+EXECUTE		[label="Next event in schedule is executed,\nchanging the state of some variables."];
+}
+SUCC_RECHECK_PRED	[label="For all successor events:\nHave all required predecessors arrived?", shape=diamond];
+RECHECK_PRED_NO		[label="Ignore event."];
+SUCC_CHECK_BLOCK	[label="Is event ready to execute?"];
+SUBSCRIBE	[label="Subscribe event to\nits block dependencies."];
+UPDATE		[label="All events subscribed to changed\nvariables are added to the recheck list."];
+UPDATE_RECHECK	[label="For all events in recheck list:\nIs event ready to execute?", shape=diamond];
+UNBLOCK		[label="Unsubscribe event from\nits block dependencies."];
+UPDATE_RECHECK_NO	[label="Ignore event\n(is still subscribed)."];
+SCHEDULE	[label="Schedule event\nwith some delay."];
+
+EXECUTE -> SUCC_RECHECK_PRED;
+SUCC_RECHECK_PRED -> RECHECK_PRED_NO	[label="no"];
+SUCC_RECHECK_PRED -> SUCC_CHECK_BLOCK	[label="yes"];
+SUCC_CHECK_BLOCK -> SUBSCRIBE		[label="no"];
+SUCC_CHECK_BLOCK -> SCHEDULE		[label="yes"];
+EXECUTE -> UPDATE;
+UPDATE -> UPDATE_RECHECK;
+UPDATE_RECHECK -> UPDATE_RECHECK_NO	[label="no"];
+UPDATE_RECHECK -> UNBLOCK		[label="yes"];
+UNBLOCK -> SCHEDULE;
+SCHEDULE -> EXECUTE	[style=dashed];
+
+}
+

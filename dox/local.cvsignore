@@ -16,4 +16,9 @@ core.*
 *.dvi
 *.ps
 *.pdf
+*.eps
+*.pstex
+*.pstex_t
+*.pdftex
+*.pdftex_t
 

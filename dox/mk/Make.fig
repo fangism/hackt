@@ -1,0 +1,76 @@
+# "mk/Make.fig"
+#	$Id: Make.fig,v 1.1 2007/02/06 21:36:30 fang Exp $
+#	vi: ft=automake
+# This makefile includes rules for converting to and from xfig figures.
+
+SUFFIXES += .dot .fig .ps .eps .pdf .pstex .pstex_t .pdftex .pdftex_t .png
+
+# other option is to skip fig and go directly to pdf or ps
+
+ECHO_NO_DOT = $(ECHO) "Sorry, no dot found in path during configure." ; exit 1
+ECHO_NO_FIG2DEV = $(ECHO) "Sorry, no fig2dev found in path during configure." ; exit 1
+
+.dot.fig:
+if HAVE_DOT
+	$(DOT) -Tfig $< -o $@
+else
+	@$(ECHO_NO_DOT)
+endif
+# TODO: make a placeholder dummy box for missing figures.  
+
+.fig.pdf:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lpdf $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.pdftex:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lpdftex $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.pdftex_t:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lpdftex_t $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.ps:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lps $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.eps:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Leps $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.pstex:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lpstex $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.pstex_t:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lpstex_t $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+
+.fig.png:
+if HAVE_FIG2DEV
+	$(FIG2DEV) -Lpng $< $@
+else
+	@$(ECHO_NO_FIG2DEV)
+endif
+

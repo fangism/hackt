@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.8 2007/01/24 23:20:21 fang Exp $
+#	$Id: Make.dox-tail,v 1.9 2007/02/06 21:36:24 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -24,6 +24,7 @@ help-local:
 	@$(CALLMAKE) help-latex 2> /dev/null
 
 include $(top_srcdir)/dox/mk/Make.latex
+include $(top_srcdir)/dox/mk/Make.fig
 include $(top_srcdir)/Make.global
 
 # help: help-dox

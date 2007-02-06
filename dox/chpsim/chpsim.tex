@@ -1,5 +1,5 @@
 % "chpsim.tex"
-%	$Id: chpsim.tex,v 1.1 2007/01/24 04:14:47 fang Exp $
+%	$Id: chpsim.tex,v 1.2 2007/02/06 21:36:25 fang Exp $
 
 \documentclass[12pt]{article}
 
@@ -7,6 +7,7 @@
 \usepackage{verbatim}
 \usepackage{makeidx}
 \usepackage[left=1.5in,right=1in,vmargin=1in,twoside,letterpaper]{geometry}
+\usepackage{graphicx}
 
 % COMPILE OPTIONS
 %\ifpdf
@@ -53,30 +54,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % main contents
 
-\section{Introduction}
-\label{sec:intro}
-
-\ttt{chpsim} is a simulator for the CHP language, 
-which is based on Hoare's CSP~\cite{ref:csp}.  
-
-\subsection{History}
-\label{sec:intro:history}
-
-Where it all began...
-
-% \input intro
-% \input types
-% \input definitions
-% \input instances
-% \input arrays
-% \input connections
-% \input loops
-% \input templates
-% \input typedefs
-% \input PRS
-% \input CHP
-% \input spec
-% \input cflat
+\input intro
+\input execution
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi

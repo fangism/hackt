@@ -1,5 +1,14 @@
-"dox/ChageLog"
-	$Id: ChangeLog,v 1.10 2007/01/24 04:14:42 fang Exp $
+# "dox/ChangeLog"
+#	$Id: ChangeLog,v 1.11 2007/02/06 21:36:23 fang Exp $
+
+2007-02-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-73:
+	  mk/Make.latex: moved SUFFIXES there.
+	  mk/Make.fig: xfig, dot and output format support
+	  chpsim: Added new figure depicting event execution, 
+		includes basic figure support.  
+
 
 2007-01-23	David Fang		<fangism@users.sourceforge.net>
 
