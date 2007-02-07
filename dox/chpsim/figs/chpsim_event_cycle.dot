@@ -1,5 +1,5 @@
 # "figs/chpsim_event_cycle.dot"
-#	$Id: chpsim_event_cycle.dot,v 1.1 2007/02/06 21:36:28 fang Exp $
+#	$Id: chpsim_event_cycle.dot,v 1.2 2007/02/07 19:12:11 fang Exp $
 
 digraph G {
 # fontsize=24;
@@ -9,7 +9,7 @@ EXECUTE		[label="Next event in schedule is executed,\nchanging the state of some
 }
 SUCC_RECHECK_PRED	[label="For all successor events:\nHave all required predecessors arrived?", shape=diamond];
 RECHECK_PRED_NO		[label="Ignore event."];
-SUCC_CHECK_BLOCK	[label="Is event ready to execute?"];
+SUCC_CHECK_BLOCK	[label="Is event ready\nto execute?", shape=diamond];
 SUBSCRIBE	[label="Subscribe event to\nits block dependencies."];
 UPDATE		[label="All events subscribed to changed\nvariables are added to the recheck list."];
 UPDATE_RECHECK	[label="For all events in recheck list:\nIs event ready to execute?", shape=diamond];
