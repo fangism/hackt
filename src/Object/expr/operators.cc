@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.22.4.1 2007/02/07 04:51:58 fang Exp $
+ 	$Id: operators.cc,v 1.22.4.2 2007/02/07 22:44:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -2025,7 +2025,9 @@ pbool_logical_expr::op_map_init(void) {
 	op_map_register("&&", &op_and);
 	op_map_register("||", &op_or);
 	op_map_register("!=", &op_xor);
+//	op_map_register("^", &op_xor);
 	op_map_register("==", &op_xnor);
+//	op_map_register("!^", &op_xnor);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }

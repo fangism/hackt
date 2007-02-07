@@ -1,0 +1,9 @@
+// "loop-expr-03.hac"
+// copy-modified from "loop-expr-01.hac"
+// testing loop expressions -- expect fail
+
+pbool W[4];
+W = {true, false, false, true};
+
+pbool Z = (|:i:4: W[i]);	// reject: | is bit-wise integer OR
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.2.4.1 2007/02/07 04:52:00 fang Exp $
+	$Id: DependenceCollector.h,v 1.2.4.2 2007/02/07 22:44:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -47,6 +47,9 @@ using entity::int_relational_expr;
 // using entity::real_arith_expr;
 // using entity::real_relational_expr;
 using entity::bool_logical_expr;
+using entity::int_arith_loop_expr;
+using entity::bool_logical_loop_expr;
+// using entity::real_arith_loop_expr;
 using entity::pint_unary_expr;
 using entity::pbool_unary_expr;
 using entity::preal_unary_expr;
@@ -160,6 +163,9 @@ public:
 //	VISIT_PROTO(real_negation_expr);
 //	VISIT_PROTO(real_arith_expr);
 //	VISIT_PROTO(real_relational_expr);
+	VISIT_PROTO(int_arith_loop_expr);
+	VISIT_PROTO(bool_logical_loop_expr);
+//	VISIT_PROTO(real_arith_loop_expr);
 	VISIT_PROTO(int_range_expr);
 //	VISIT_PROTO(nonmeta_index_list);
 //	VISIT_PROTO(nonmeta_range_list);

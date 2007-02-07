@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.15 2007/01/23 02:43:15 fang Exp $
+	$Id: data_expr.cc,v 1.15.4.1 2007/02/07 22:44:01 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/loop_nonmeta_expr.tcc"
 #include "Object/expr/expr_visitor.h"
 #include "Object/nonmeta_channel_manipulator.h"
 
@@ -57,6 +58,8 @@ using HAC::entity::int_negation_expr;
 using HAC::entity::bool_negation_expr;
 using HAC::entity::nonmeta_index_list;
 using HAC::entity::int_range_expr;
+using HAC::entity::int_arith_loop_expr;
+using HAC::entity::bool_logical_loop_expr;
 
 	SPECIALIZE_UTIL_WHAT(int_arith_expr, "int-arith-expr")
 	SPECIALIZE_UTIL_WHAT(int_relational_expr, "int-relatonal-expr")
@@ -65,6 +68,8 @@ using HAC::entity::int_range_expr;
 	SPECIALIZE_UTIL_WHAT(bool_negation_expr, "bool-negation-expr")
 	SPECIALIZE_UTIL_WHAT(nonmeta_index_list, "nonmeta-index-list")
 	SPECIALIZE_UTIL_WHAT(int_range_expr, "int-range-expr")
+	SPECIALIZE_UTIL_WHAT(int_arith_loop_expr, "int-arith-loop-expr")
+	SPECIALIZE_UTIL_WHAT(bool_logical_loop_expr, "bool-logical-loop-expr")
 
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_arith_expr, NONMETA_INT_ARITH_EXPR_TYPE_KEY, 0)
@@ -80,6 +85,10 @@ using HAC::entity::int_range_expr;
 		nonmeta_index_list, NONMETA_INDEX_LIST_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_range_expr, NONMETA_RANGE_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		int_arith_loop_expr, NONMETA_INT_ARITH_LOOP_EXPR_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		bool_logical_loop_expr, NONMETA_BOOL_LOGICAL_LOOP_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -308,7 +317,8 @@ int_arith_expr::op_map_size = int_arith_expr::op_map_init();
 	Static initialization of operator map.  
  */
 void
-int_arith_expr::op_map_register(const char c, const op_type* o, const char p) {
+int_arith_expr::op_map_register(const op_key_type c, 
+		const op_type* o, const char p) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = op_info(c, p);
@@ -372,7 +382,6 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_arith_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
-#if 1
 	const op_info& oi(reverse_op_map[op]);
 	const bool a = op->is_associative();
 	const bool p = c.need_parentheses(oi.prec, a);
@@ -386,9 +395,6 @@ int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	rx->dump(o, c);
 	if (p) o << ')';
 	return o;
-#else
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -818,7 +824,7 @@ bool_logical_expr::op_map_size = bool_logical_expr::op_map_init();
 	Static initialization of operator map.  
  */
 void
-bool_logical_expr::op_map_register(const string& s, const op_type* o) {
+bool_logical_expr::op_map_register(const op_key_type& s, const op_type* o) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[s] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
@@ -852,7 +858,7 @@ bool_logical_expr::~bool_logical_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_logical_expr::bool_logical_expr(const operand_ptr_type& l,
-		const string& o, const operand_ptr_type& r) :
+		const op_key_type& o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -1527,6 +1533,9 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 
 // steal nonmeta_value_references from 
 // "Object/expr/nonmeta_param_value_reference.cc"?
+
+template class loop_nonmeta_expr<int_arith_expr>;
+template class loop_nonmeta_expr<bool_logical_expr>;
 
 //=============================================================================
 }	// end namespace entity

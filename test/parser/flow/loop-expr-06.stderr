@@ -1,0 +1,3 @@
+Error: Use '||' for logical-OR on pbools.  [8:11]
+Error in source expression.
+HALT: at least one error in the assignment list.  [8:8..23]

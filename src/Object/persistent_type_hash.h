@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.16.4.1 2007/02/07 04:51:53 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.16.4.2 2007/02/07 22:43:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -197,6 +197,9 @@
 #define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlist"
 #define	NONMETA_RANGE_TYPE_KEY					"nmetarng"
 #define	NONMETA_RANGE_LIST_TYPE_KEY				"nrnglist"
+#define	NONMETA_INT_ARITH_LOOP_EXPR_TYPE_KEY			"niarlpex"
+#define	NONMETA_BOOL_LOGICAL_LOOP_EXPR_TYPE_KEY			"nlgclpex"
+#define	NONMETA_REAL_ARITH_LOOP_EXPR_TYPE_KEY			"nrarlpex"
 
 // Sequential and control statements: (loops and conditionals)
 // including sequential instantiations, assignments and connections:

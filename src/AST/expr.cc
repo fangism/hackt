@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.22.16.2 2007/02/07 04:51:52 fang Exp $
+	$Id: expr.cc,v 1.22.16.3 2007/02/07 22:43:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -59,6 +59,7 @@
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
 #include "Object/expr/loop_meta_expr.h"
+#include "Object/expr/loop_nonmeta_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS.h"
 #include "Object/type/template_actuals.h"
@@ -111,18 +112,47 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::template_argument_list_pair,
 
 //=============================================================================
 namespace HAC {
-using namespace entity;
-
 namespace parser {
 #include "util/using_ostream.h"
 using std::copy;
 using std::back_inserter;
 using std::transform;
 using std::distance;
-using std::_Select1st;
-using std::_Select2nd;
+using std::_Select1st;		// TODO: configure check wrap this
+using std::_Select2nd;		// TODO: configure check wrap this
 using util::back_insert_assigner;
 using entity::expr_dump_context;
+using entity::aggregate_meta_value_reference_base;
+using entity::aggregate_meta_instance_reference_base;
+using entity::meta_instance_reference_base;
+using entity::simple_meta_indexed_reference_base;
+using entity::simple_nonmeta_instance_reference_base;
+using entity::int_expr;
+using entity::bool_expr;
+using entity::real_expr;
+using entity::int_arith_expr;
+using entity::int_negation_expr;
+using entity::int_relational_expr;
+using entity::bool_logical_expr;
+using entity::bool_negation_expr;
+using entity::pint_expr;
+using entity::pint_const;
+using entity::pbool_expr;
+using entity::pbool_const;
+using entity::preal_expr;
+using entity::preal_const;
+using entity::pint_arith_expr;
+using entity::pint_unary_expr;
+using entity::pint_relational_expr;
+using entity::pbool_logical_expr;
+using entity::pbool_unary_expr;
+using entity::preal_arith_expr;
+using entity::preal_unary_expr;
+using entity::preal_relational_expr;
+using entity::meta_loop_base;
+using entity::meta_range_expr;
+using entity::physical_instance_placeholder;
+using entity::param_value_placeholder;
 
 //=============================================================================
 // local prototypes
@@ -1610,6 +1640,10 @@ arith_expr::~arith_expr() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: factor out operator checks into common code somewhere, 
+		for consistency and maintainability.  
+ */
 expr::meta_return_type
 arith_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type	return_type;
@@ -1630,7 +1664,22 @@ arith_expr::check_meta_expr(const context& c) const {
 	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
 	const count_ptr<pbool_expr> rb(ro.is_a<pbool_expr>());
 	const char ch = op->text[0];
+	const char ch2 = op->text[1];
 if (li && ri) {
+#if 1
+	// catch misuse of operators
+	switch (ch2) {
+	case '&':
+		cerr << "Error: Use \'&&\' for logical-AND on pbools.  "
+			<< where(*op) << endl;
+		return return_type(NULL);
+	case '|':
+		cerr << "Error: Use \'||\' for logical-OR on pbools.  "
+			<< where(*op) << endl;
+		return return_type(NULL);
+	default: {}
+	}
+#endif
 	// else is safe to make pint_arith_expr object
 	const count_ptr<pint_arith_expr>
 		ret(new entity::pint_arith_expr(li, ch, ri));
@@ -1671,16 +1720,21 @@ if (li && ri) {
 	string op_str;
 	switch(ch) {
 	case '&':
+		if (!ch2) {
 		cerr << "WARNING: Use \'&&\' for logical-AND on pbools.  "
 			<< where(*op) << endl;
 		op_str = "&&";
+		}
 		break;
 	case '|':
+		if (!ch2) {
 		cerr << "WARNING: Use \'||\' for logical-OR on pbools.  "
 			<< where(*op) << endl;
 		op_str = "||";
+		}
 		break;
 	case '^':
+		// I'm tempted to allow this...
 		cerr << "WARNING: Use \'!=\' for logical-XOR on pbools.  "
 			<< where(*op) << endl;
 		op_str = "!=";
@@ -1736,7 +1790,22 @@ arith_expr::check_nonmeta_expr(const context& c) const {
 	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
 	const count_ptr<bool_expr> rb(ro.is_a<bool_expr>());
 	const char ch = op->text[0];
+	const char ch2 = op->text[1];
 	if (li && ri) {
+#if 1
+		// catch misuse of operators
+		switch (ch2) {
+		case '&':
+			cerr << "Error: Use \'&&\' for logical-AND on pbools.  "
+				<< where(*op) << endl;
+			return return_type(NULL);
+		case '|':
+			cerr << "Error: Use \'||\' for logical-OR on pbools.  "
+				<< where(*op) << endl;
+			return return_type(NULL);
+		default: {}
+		}
+#endif
 		return return_type(new entity::int_arith_expr(li, ch, ri));
 	} else if (lb && rb) {
 		// we'll forgive using the wrong operator for now...
@@ -2209,7 +2278,6 @@ loop_operation::check_meta_expr(const context& c) const {
 	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
 	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
 	const count_ptr<preal_expr> lr(lo.is_a<preal_expr>());
-	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
 if (lb) {
 	entity::pbool_logical_expr::op_type const* const
@@ -2223,6 +2291,20 @@ if (lb) {
 		loop_ind, loop_range, lb, o));
 } else if (li) {
 	const char ch = op->text[0];
+#if 1
+	const char ch2 = op->text[1];
+	switch (ch2) {
+	case '&':
+		cerr << "Error: Use \'&&\' for logical-AND on pbools.  "
+			<< where(*op) << endl;
+		return return_type(NULL);
+	case '|':
+		cerr << "Error: Use \'||\' for logical-OR on pbools.  "
+			<< where(*op) << endl;
+		return return_type(NULL);
+	default: {}
+	}
+#endif
 	entity::pint_arith_expr::op_type const* const
 		o(entity::pint_arith_expr::op_map[ch]);
 	if (!o) {
@@ -2244,6 +2326,76 @@ if (lb) {
 	return return_type(NULL);
 }
 }	// end method loop_operation::check_meta_expr
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: context shouldn't be const, needs temporary loop frame.  
+	TODO: make better re-use of code...
+ */
+nonmeta_expr_return_type
+loop_operation::check_nonmeta_expr(const context& c) const {
+	typedef	nonmeta_expr_return_type	return_type;
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		return return_type(NULL);
+	}
+	const entity::meta_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// create new loop scope for checking:
+	const context::loop_var_frame _lvf(const_cast<context&>(c), *index);
+	// we promise context will be restored before this returns
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return return_type(NULL);
+	}
+
+	const return_type lo(body->check_nonmeta_expr(c));
+	if (!lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		cerr << err_str << where(*body) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
+	const count_ptr<int_expr> li(lo.is_a<int_expr>());
+	const count_ptr<real_expr> lr(lo.is_a<real_expr>());
+	const string op_str(op->text);
+if (lb) {
+	entity::bool_logical_expr::op_type const* const
+		o(entity::bool_logical_expr::op_map[op_str]);
+	if (!o) {
+		cerr << "ERROR: \"" << op_str << "\" is not a valid "
+			"boolean logical operator, at " << where(*op) << endl;
+		return return_type(NULL);
+	}
+	return return_type(new entity::bool_logical_loop_expr(
+		loop_ind, loop_range, lb, o));
+} else if (li) {
+	const char ch = op->text[0];
+	entity::int_arith_expr::op_type const* const
+		o(entity::int_arith_expr::op_map[ch]);
+	if (!o) {
+		cerr << "ERROR: \"" << op_str << "\" is not a valid "
+			"integer arithmetic operator, at " <<
+			where(*op) << endl;
+		return return_type(NULL);
+	}
+	return return_type(new entity::int_arith_loop_expr(
+		loop_ind, loop_range, li, o));
+	return return_type(NULL);
+} else if (lr) {
+	FINISH_ME(Fang);
+	cerr << "Haven\'t expanded this function for reals yet..." << endl;
+	return return_type(NULL);
+} else {
+	FINISH_ME(Fang);
+	cerr << "WTF?" << endl;
+	return return_type(NULL);
+}
+}	// end method loop_operation::check_nonmeta_expr
 
 //=============================================================================
 // class array_concatenation method definitions

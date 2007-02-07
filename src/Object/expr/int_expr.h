@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.7 2007/01/21 05:58:51 fang Exp $
+	$Id: int_expr.h,v 1.7.4.1 2007/02/07 22:44:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_EXPR_H__
@@ -28,6 +28,8 @@ class int_expr : virtual public nonmeta_index_expr_base, public data_expr {
 	typedef	int_expr			this_type;
 	typedef	data_expr			parent_type;
 	typedef	nonmeta_index_expr_base		index_parent_type;
+public:
+	typedef	pint_const			const_expr_type;
 protected:
 	int_expr() : index_parent_type(), parent_type() { }
 public:

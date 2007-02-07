@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.3.4.1 2007/02/07 04:51:54 fang Exp $
+	$Id: expr_fwd.h,v 1.3.4.2 2007/02/07 22:44:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -87,6 +87,15 @@ namespace entity {
 		pbool_logical_loop_expr;
 	typedef	loop_meta_expr<preal_arith_expr>
 		preal_arith_loop_expr;
+
+	template <class>
+	class loop_nonmeta_expr;
+	typedef	loop_nonmeta_expr<int_arith_expr>
+		int_arith_loop_expr;
+	typedef	loop_nonmeta_expr<bool_logical_expr>
+		bool_logical_loop_expr;
+//	typedef	loop_nonmeta_expr<real_arith_expr>
+//		real_arith_loop_expr;
 
 }	// end namespace entity
 }	// end namespace HAC

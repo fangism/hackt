@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/loop_meta_expr.tcc"
-	$Id: loop_meta_expr.tcc,v 1.1.2.1 2007/02/07 04:51:57 fang Exp $
+	$Id: loop_meta_expr.tcc,v 1.1.2.2 2007/02/07 22:44:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_LOOP_META_EXPR_TCC__
@@ -62,11 +62,6 @@ template <class E>
 loop_meta_expr<E>::~loop_meta_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template <class E>
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(loop_meta_expr<E>)
-#endif
-
 template <class E>
 std::ostream&
 loop_meta_expr<E>::what(std::ostream& o) const {
@@ -83,7 +78,6 @@ ostream&
 loop_meta_expr<E>::dump(ostream& o, const expr_dump_context& c) const {
 	NEVER_NULL(this->ind_var);
 	NEVER_NULL(this->range);
-
 	o << '(' << op_key_type(binary_expr_type::reverse_op_map[this->op])
 		<< ':' << this->ind_var->get_name() << ':';
 	this->range->dump(o, c) << ": ";

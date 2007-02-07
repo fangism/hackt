@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: bool_expr.h,v 1.7 2007/01/21 05:58:42 fang Exp $
+	$Id: bool_expr.h,v 1.7.4.1 2007/02/07 22:44:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
@@ -26,6 +26,8 @@ class const_param;
 class bool_expr : public data_expr {
 	typedef	bool_expr			this_type;
 	typedef	data_expr			parent_type;
+public:
+	typedef	pbool_const			const_expr_type;
 protected:
 	bool_expr() : parent_type() { }
 public:

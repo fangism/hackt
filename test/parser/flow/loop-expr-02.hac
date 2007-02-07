@@ -1,0 +1,9 @@
+// "loop-expr-02.hac"
+// copy-modified "loop-expr-01.hac"
+// testing loop expressions
+
+pint W[6];
+W = {1,2,3,4,5,6};
+
+pint Z = (*:i:6: W[i]);
+
