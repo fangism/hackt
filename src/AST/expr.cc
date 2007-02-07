@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.22.16.1 2007/02/02 22:16:17 fang Exp $
+	$Id: expr.cc,v 1.22.16.2 2007/02/07 04:51:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -41,6 +41,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/expr/nonmeta_index_list.h"
@@ -57,6 +58,7 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/loop_meta_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS.h"
 #include "Object/type/template_actuals.h"
@@ -1968,7 +1970,7 @@ if (lb && rb) {
 	return return_type(NULL);
 } else {
 	static const char err_str[] =
-		"ERROR relational_expr expected a pbool, but got a ";
+		"ERROR logical_expr expected a pbool, but got a ";
 	if (!lb) {
 		cerr << err_str << lo->what(cerr) <<
 			" at " << where(*l) << endl;
@@ -2032,7 +2034,7 @@ if (lb && rb) {
 	return return_type(NULL);
 } else {
 	static const char err_str[] =
-		"ERROR relational_expr expected a bool, but got a ";
+		"ERROR logical_expr expected a bool, but got a ";
 	if (!lb) {
 		cerr << err_str << lo->what(cerr) <<
 			" at " << where(*l) << endl;
@@ -2043,7 +2045,7 @@ if (lb && rb) {
 	}
 	return return_type(NULL);
 }
-}
+}	// end method logical_expr::check_nonmeta_expr
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2122,13 +2124,13 @@ logical_expr::check_prs_expr(context& c) const {
 		}
 	} else {
 		ICE(cerr, 
-			cerr << "FATAL: Invalid PRS operor: \'" << op_char <<
+			cerr << "FATAL: Invalid PRS operator: \'" << op_char <<
 				"\' at " << where(*op) <<
 				".  Aborting... have a nice day." << endl;
 		);
 		return prs_expr_return_type(NULL);
 	}
-}
+}	// end method logical_expr::check_prs_expr
 
 //=============================================================================
 // class loop_operation method definitions
@@ -2167,6 +2169,81 @@ loop_operation::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+loop_operation::check_prs_expr(context& c) const {
+	FINISH_ME(Fang);
+	return prs_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: context shouldn't be const, needs temporary loop frame.  
+ */
+expr::meta_return_type
+loop_operation::check_meta_expr(const context& c) const {
+	typedef	expr::meta_return_type	return_type;
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		return return_type(NULL);
+	}
+	const entity::meta_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// create new loop scope for checking:
+	const context::loop_var_frame _lvf(const_cast<context&>(c), *index);
+		// we promise context will be restored before this returns
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return return_type(NULL);
+	}
+
+	const return_type lo(body->check_meta_expr(c));
+	if (!lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		cerr << err_str << where(*body) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
+	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
+	const count_ptr<preal_expr> lr(lo.is_a<preal_expr>());
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+if (lb) {
+	entity::pbool_logical_expr::op_type const* const
+		o(entity::pbool_logical_expr::op_map[op_str]);
+	if (!o) {
+		cerr << "ERROR: \"" << op_str << "\" is not a valid "
+			"boolean logical operator, at " << where(*op) << endl;
+		return return_type(NULL);
+	}
+	return return_type(new entity::pbool_logical_loop_expr(
+		loop_ind, loop_range, lb, o));
+} else if (li) {
+	const char ch = op->text[0];
+	entity::pint_arith_expr::op_type const* const
+		o(entity::pint_arith_expr::op_map[ch]);
+	if (!o) {
+		cerr << "ERROR: \"" << op_str << "\" is not a valid "
+			"integer arithmetic operator, at " <<
+			where(*op) << endl;
+		return return_type(NULL);
+	}
+	return return_type(new entity::pint_arith_loop_expr(
+		loop_ind, loop_range, li, o));
+	return return_type(NULL);
+} else if (lr) {
+	FINISH_ME(Fang);
+	cerr << "Haven\'t expanded this function for preals yet..." << endl;
+	return return_type(NULL);
+} else {
+	FINISH_ME(Fang);
+	cerr << "WTF?" << endl;
+	return return_type(NULL);
+}
+}	// end method loop_operation::check_meta_expr
 
 //=============================================================================
 // class array_concatenation method definitions

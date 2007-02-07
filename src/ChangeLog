@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-71-exprloop-01-02:
+	  Implemented loop_meta_expr template, based on pint_arith_expr, 
+		pbool_logical_expr, and preal_arith_expr, and using
+		their operator maps for consistency.  
+		Had to publicize some member typedefs and maps on the way.
+	  AST/expr.cc: implemented loop_operation::check_meta_expr(),
+		correct a few minor typos in error messages.  
+	  Object/persistent_type_hash.h: added loop_meta_exprs
+	  Object/expr/expr_visitor.h: likewise.
+	  sim/chpsim/DependenceCollector.h: likewise.
+	  Next: implement AST::loop_operation::check_nonmeta_expr, (the
+		only current undefined reference) and
+		implement nonmeta expression counterparts.  
+
+
 2007-02-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-71-exprloop-01-01:

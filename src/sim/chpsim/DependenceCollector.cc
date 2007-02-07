@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.2 2007/01/21 06:00:40 fang Exp $
+	$Id: DependenceCollector.cc,v 1.2.4.1 2007/02/07 04:52:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -154,6 +154,9 @@ DEFINE_NEVER_VISIT(pbool_logical_expr)
 DEFINE_NEVER_VISIT(preal_arith_expr)
 DEFINE_NEVER_VISIT(preal_unary_expr)
 DEFINE_NEVER_VISIT(preal_relational_expr)
+DEFINE_NEVER_VISIT(pint_arith_loop_expr)
+DEFINE_NEVER_VISIT(pbool_logical_loop_expr)
+DEFINE_NEVER_VISIT(preal_arith_loop_expr)
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

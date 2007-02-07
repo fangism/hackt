@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.17 2007/01/21 05:59:00 fang Exp $
+	$Id: pbool_expr.h,v 1.17.4.1 2007/02/07 04:51:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -42,6 +42,7 @@ public:
 		using templates to extend to other parameter types.  
 	 */
 	typedef	pbool_value_type		value_type;
+	typedef	pbool_const			const_expr_type;
 public:
 	pbool_expr() : param_expr(), bool_expr() { }
 
@@ -81,7 +82,7 @@ virtual value_type
 virtual	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const = 0;
 
-virtual	count_ptr<const pbool_const>
+virtual	count_ptr<const const_expr_type>
 	__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const pbool_expr>&) const = 0;
 

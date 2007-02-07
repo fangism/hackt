@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.16 2007/01/21 05:59:01 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.16.4.1 2007/02/07 04:51:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -29,11 +29,12 @@ using util::memory::count_ptr;
  */
 class pbool_logical_expr : public pbool_expr {
 	typedef	pbool_logical_expr			this_type;
-	typedef	pbool_expr				parent_type;
 public:
+	typedef	pbool_expr				parent_type;
 	typedef	pbool_value_type			value_type;
 	typedef	pbool_value_type			arg_type;
 	typedef	count_ptr<const pbool_expr>		operand_ptr_type;
+	typedef	string				op_key_type;
 	typedef	binary_logical_operation<value_type, arg_type>	op_type;
 	static const util::logical_and<value_type, arg_type>	op_and;
 	static const util::logical_or<value_type, arg_type>	op_or;
@@ -41,14 +42,14 @@ public:
 	static const util::logical_xnor<value_type, arg_type>	op_xnor;
 private:
 	// safe to use naked (never-delete) pointers on static objects
-	typedef	default_qmap<string, const op_type*>::type
+	typedef	default_qmap<op_key_type, const op_type*>::type
 						op_map_type;
-	typedef	default_qmap<const op_type*, string>::type
+	typedef	default_qmap<const op_type*, op_key_type>::type
 						reverse_op_map_type;
 public:
 	static const op_map_type		op_map;
-private:
 	static const reverse_op_map_type	reverse_op_map;
+private:
 	static const size_t			op_map_size;
 	static void op_map_register(const string&, const op_type* );
 	static size_t op_map_init(void);

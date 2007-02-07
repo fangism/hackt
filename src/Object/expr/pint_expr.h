@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.17 2007/01/21 05:59:05 fang Exp $
+	$Id: pint_expr.h,v 1.17.4.1 2007/02/07 04:51:59 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -45,6 +45,7 @@ public:
 		using templates to extend to other parameter types.  
 	 */
 	typedef	pint_value_type			value_type;
+	typedef	pint_const			const_expr_type;
 protected:
 	pint_expr() : param_expr(), meta_index_expr(), int_expr() { }
 
@@ -94,7 +95,7 @@ virtual value_type
 virtual	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const = 0;
 
-virtual	count_ptr<const pint_const>
+virtual	count_ptr<const const_expr_type>
 	__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const pint_expr>&) const = 0;
 
