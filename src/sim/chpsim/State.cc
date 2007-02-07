@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.3 2007/02/05 06:39:52 fang Exp $
+	$Id: State.cc,v 1.4 2007/02/07 05:20:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -349,7 +349,7 @@ State::dequeue_event(void) {
  */
 State::time_type
 State::next_event_time(void) const {
-	INVARIANT(event_queue.empty());
+	INVARIANT(!event_queue.empty());
 #if CHPSIM_MULTISET_EVENT_QUEUE
 	return event_queue.begin()->time;
 #else
