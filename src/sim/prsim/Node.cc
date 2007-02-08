@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.9 2006/10/06 23:38:52 fang Exp $
+	$Id: Node.cc,v 1.10 2007/02/08 18:10:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -140,6 +140,7 @@ void
 NodeState::initialize(void) {
 	event_index = INVALID_EVENT_INDEX;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	// placement destruct for good measure?
 	new (&causes) LastCause;	// placement construct to initialize
 #else
 	caused_by_node = INVALID_NODE_INDEX;
@@ -158,6 +159,7 @@ void
 NodeState::reset(void) {
 	event_index = INVALID_EVENT_INDEX;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	// placement destruct for good measure?
 	new (&causes) LastCause;	// placement construct to initialize
 #else
 	caused_by_node = INVALID_NODE_INDEX;
@@ -297,14 +299,14 @@ ostream&
 NodeState::dump_checkpoint_state(ostream& o, istream& i) {
 	this_type temp;
 	temp.load_state(i);
-	return temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
+	temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
 		'\t';
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	temp.causes.dump_checkpoint_state(o);
 #else
 	o << temp.caused_by_node;
 #endif
-	o << '\t' << temp.tcount;
+	return o << '\t' << temp.tcount;
 }
 
 //=============================================================================
