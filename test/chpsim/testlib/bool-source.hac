@@ -1,31 +1,23 @@
 // "bool-source.hac"
-//	$Id: bool-source.hac,v 1.2 2007/01/21 06:04:17 fang Exp $
+//	$Id: bool-source.hac,v 1.2.4.1 2007/02/08 01:19:09 fang Exp $
 // cyclic and non-cyclic sources of bool tokens
 
 
-/***
-template <pint N, pbool B[N]>
+template <pint N; pbool B[N]>
 defproc bool_source_once(chan!(bool) S) {
 chp {
-{;:i:N:
-	S!(B[i])
+{;i:N: S!(B[i]) }
 }
 }
-}
-***/
 
-/***
-template <pint N, pbool B[N]>
+template <pint N; pbool B[N]>
 defproc bool_source(chan!(bool) S) {
 chp {
 *[
-	{;:i:N:
-		S!(B[i])
-	}
+	{;i:N: S!(B[i]) }
 ]
 }
 }
-***/
 
 /**
 	Could define in terms of generalized bool_source.

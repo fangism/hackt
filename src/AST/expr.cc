@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.22.16.3 2007/02/07 22:43:56 fang Exp $
+	$Id: expr.cc,v 1.22.16.4 2007/02/08 01:18:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -2278,8 +2278,17 @@ loop_operation::check_meta_expr(const context& c) const {
 	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
 	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
 	const count_ptr<preal_expr> lr(lo.is_a<preal_expr>());
-	const string op_str(op->text);
+	string op_str(op->text);
 if (lb) {
+#if 1
+	switch (op->text[0]) {
+		// I make an exception for loop operators
+	case '^':
+		op_str = "!=";
+		break;
+	default: {}
+	}
+#endif
 	entity::pbool_logical_expr::op_type const* const
 		o(entity::pbool_logical_expr::op_map[op_str]);
 	if (!o) {
@@ -2362,8 +2371,17 @@ loop_operation::check_nonmeta_expr(const context& c) const {
 	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
 	const count_ptr<int_expr> li(lo.is_a<int_expr>());
 	const count_ptr<real_expr> lr(lo.is_a<real_expr>());
-	const string op_str(op->text);
+	string op_str(op->text);
 if (lb) {
+#if 1
+	switch (op->text[0]) {
+		// I make an exception for loop operators
+	case '^':
+		op_str = "!=";
+		break;
+	default: {}
+	}
+#endif
 	entity::bool_logical_expr::op_type const* const
 		o(entity::bool_logical_expr::op_map[op_str]);
 	if (!o) {
@@ -2375,6 +2393,20 @@ if (lb) {
 		loop_ind, loop_range, lb, o));
 } else if (li) {
 	const char ch = op->text[0];
+#if 1
+	const char ch2 = op->text[1];
+	switch (ch2) {
+	case '&':
+		cerr << "Error: Use \'&&\' for logical-AND on pbools.  "
+			<< where(*op) << endl;
+		return return_type(NULL);
+	case '|':
+		cerr << "Error: Use \'||\' for logical-OR on pbools.  "
+			<< where(*op) << endl;
+		return return_type(NULL);
+	default: {}
+	}
+#endif
 	entity::int_arith_expr::op_type const* const
 		o(entity::int_arith_expr::op_map[ch]);
 	if (!o) {

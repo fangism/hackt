@@ -1,23 +1,19 @@
 // "bool-or.hac"
-//	$Id: bool-or.hac,v 1.2 2007/01/21 06:04:14 fang Exp $
+//	$Id: bool-or.hac,v 1.2.4.1 2007/02/08 01:19:09 fang Exp $
 // boolean logical OR
-// TODO: use generalized input array
 
-defproc bool_or(chan?(bool) A, B; chan!(bool) O) {
+defproc bool_or_2(chan?(bool) A, B; chan!(bool) O) {
 bool a, b;
 chp {
 *[A?(a),B?(b); O!(a || b)]
 }
 }
 
-/***
-// pending meta-expression expansion support
 template <pint N>
-defproc bool_or(chan(bool)? A[N]; chan(bool)! O) {
+defproc bool_or(chan?(bool) A[N]; chan!(bool) O) {
 bool a[N];
 chp {
-*[{,:i:N: A[i]?(a[i])}; O!((||:i:N: a[i]))]
+*[{,i:N: A[i]?(a[i])}; O!((||:i:N: a[i]))]
 }
 }
-***/
 
