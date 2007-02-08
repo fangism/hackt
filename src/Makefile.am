@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.151.2.2 2007/02/07 22:43:55 fang Exp $
+#	$Id: Makefile.am,v 1.151.2.3 2007/02/08 00:09:57 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -574,6 +574,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/int_range_expr.h \
 	Object/expr/int_range_list.h \
 	Object/expr/int_relational_expr.h \
+	Object/expr/loop_meta_expr.h \
+	Object/expr/loop_nonmeta_expr.h \
 	Object/expr/real_expr.h \
 	Object/expr/meta_index_expr.h \
 	Object/expr/meta_index_list.h \
