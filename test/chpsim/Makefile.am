@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2007/02/08 02:11:11 fang Exp $
+#	$Id: Makefile.am,v 1.5 2007/02/08 22:27:53 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -116,7 +116,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-sync-desync-a-04-trace \
 	channel-sync-desync-a-05-trace \
 	bool-memory-read-a-01 \
-	bool-memory-write-a-01
+	bool-memory-write-a-01 \
 	bool-and-test-a-01 \
 	bool-or-test-a-01 \
 	bool-xor-test-a-01
