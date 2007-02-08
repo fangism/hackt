@@ -5,6 +5,14 @@
 
 2007-02-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-77:
+	  Don't use libc's tmpnam anymore, not using mkstemp either, 
+		not using /tmp/ as temp file location, dodging inconvenience
+		and necessary configury required.  Would rather use external 
+		library (*ahem* boost), and wrap around file descriptor.
+		Just append a suffix to call it a temp file.
+
+
 	* HACKT-00-01-04-main-00-80-76:
 	  Object/inst/instance_collection.cc:
 		Added missing definition of instance_placeholder_base::null, 

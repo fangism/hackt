@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.23 2007/01/21 06:01:10 fang Exp $
+#	$Id: Makefile.inc,v 1.24 2007/02/08 20:34:26 fang Exp $
 #	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -107,6 +107,7 @@ UTIL_HEADER_FILES = \
 	util/inttypes.h \
 	util/iterator_more.h \
 	util/libc.h \
+	util/libc_temp.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/macros.h \

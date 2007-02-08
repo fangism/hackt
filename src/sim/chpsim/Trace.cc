@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.2 2007/02/05 06:39:53 fang Exp $
+	$Id: Trace.cc,v 1.3 2007/02/08 20:34:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -20,6 +20,7 @@
 #include <fstream>
 #include "util/stacktrace.h"
 #include <cstdio>			// for tmpnam
+#include "util/libc_temp.h"	// for temp file functions
 #include "util/IO_utils.tcc"	// .tcc?
 #include "util/binders.h"
 
@@ -509,10 +510,11 @@ TraceManager::TraceManager() :
  */
 TraceManager::TraceManager(const string& fn) : 
 		trace_file_name(fn), 
-#if 1
+#if 0
+		// tmpname is flagged dangerous/deprecated on some systems.
 		temp_file_name(tmpnam(NULL)), 		// libc/cstdio
 #else
-		temp_file_name(fn + "-tmp"),
+		temp_file_name(fn + "-tmp"),	// could append random number
 #endif
 		trace_ostream(new fstream(	// read and write
 			temp_file_name.c_str(), 
@@ -526,6 +528,11 @@ TraceManager::TraceManager(const string& fn) :
 		current_chunk(),
 		trace_payload_size(0), 
 		previous_events(0) {
+#if 0 && USE_MKSTEMP
+	// can we assume that 
+	char tmp_template[] = "/tmp/hackt-chpsim-trace-XXXXXXXXXXXXX";	// null
+	// convert file descriptor to fstream
+#endif
 	NEVER_NULL(trace_ostream);
 	NEVER_NULL(header_ostream);
 	// should always be allocated, but not necessarily in a good state
@@ -540,6 +547,11 @@ TraceManager::TraceManager(const string& fn) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TraceManager::~TraceManager() {
 	finish();
+#if 1
+	// remove temp file (libc)
+	remove(temp_file_name.c_str());
+	// check int return value?
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
