@@ -1,0 +1,29 @@
+// a simple test for getting data values
+
+defproc source(chan!(bool) R) {
+  bool b;
+  chp {
+    b+;
+    *[
+    R!(b); b-;
+    R!(b); b+
+    ]
+  }
+}
+
+defproc buf(chan?(bool) l; chan!(bool) r) {
+  bool b;
+  chp {
+    *[l?(b); r!(b)]
+  }
+}
+
+defproc sink(chan?(bool) l) {
+  bool b; 
+  chp { *[l?(b)] }
+}
+
+source src;
+buf b(src.R,);
+sink snk(b.r);
+

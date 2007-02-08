@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.4 2007/02/05 06:39:50 fang Exp $
+	$Id: Command.cc,v 1.5 2007/02/08 22:55:20 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -437,6 +437,103 @@ Advance::usage(ostream& o) {
 "Simulation will stop prematurely if any event violations are encountered."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AdvanceTo, "advance-to", simulation,
+	"advance the simulation to time")
+
+/** TODO: advance simulation time to value specified, 
+ * would need to modify private variable in State.cc
+ * Currently just advances as far as time of last event before time
+ */
+
+// copy-rip from Advance
+
+int
+AdvanceTo::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::time_type		time_type;
+	time_type add;		// time to add
+	if (string_to_num(a.back(), add)) {
+		cerr << "Error parsing time." << endl;
+		return Command::BADARG;
+	} else if (add < 0) {
+		cerr << "Error: time must be non-negative." << endl;
+		return Command::BADARG;
+	}
+	const time_type stop_time = add;
+//	State::step_return_type ni;
+	s.resume();
+	try {
+	while (s.pending_events() && !s.stopped() &&
+			(s.next_event_time() <= stop_time)) {
+		s.step();
+		// NB: may need specialization for real-valued (float) time.  
+#if 0
+		// honor breakpoints?
+		// tracing stuff here later...
+		const node_type& n(s.get_node(GET_NODE(ni)));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Step::main().
+			TODO: factor this out for maintainability.  
+		***/
+		if (s.watching_all_nodes()) {
+			Step::print_watched_node(cout << '\t' << s.time() <<
+				'\t', s, ni);
+		}
+		if (n.is_breakpoint()) {
+			// this includes watchpoints
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(s.get_node_canonical_name(
+				GET_NODE(ni)));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				Step::print_watched_node(cout << '\t' <<
+					s.time() << '\t', s, ni);
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, " <<
+					stop_time -s.time() <<
+					" time left: `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
+		}
+#endif
+	}	// end while
+	} catch (...) {
+		cerr << "Caught run-time exception during execution.  Halting."
+			<< endl;
+		return Command::FATAL;
+	}	// no other exceptions
+#if 0
+	if (!s.stopped() && s.time() < stop_time) {
+		s.update_time(stop_time);
+	}
+#endif
+	// else leave the time at the time as of the last event
+	return Command::NORMAL;
+}
+}	// end AdvanceTo::main()
+
+void
+AdvanceTo::usage(ostream& o) {
+	o << "advance-to <time>" << endl;
+	o <<
+"Advances the simulation until events up to <time> are executed.\n"
+"Simulation will stop prematurely if any event violations are encountered."
+	<< endl;
+}
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Run, "run", simulation,

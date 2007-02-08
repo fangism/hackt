@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2007/02/08 22:27:53 fang Exp $
+#	$Id: Makefile.am,v 1.6 2007/02/08 22:55:22 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -59,7 +59,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bool-lookup-a bool-lookup-b \
 	channel-sync-desync-a \
 	bool-memory-read-a bool-memory-read-b \
-	bool-memory-write-a bool-memory-write-b
+	bool-memory-write-a bool-memory-write-b \
+	buffer-advance-to
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -119,7 +120,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bool-memory-write-a-01 \
 	bool-and-test-a-01 \
 	bool-or-test-a-01 \
-	bool-xor-test-a-01
+	bool-xor-test-a-01 \
+	buffer-advance-to
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \
