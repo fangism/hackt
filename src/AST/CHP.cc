@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.13 2007/01/23 02:43:03 fang Exp $
+	$Id: CHP.cc,v 1.14 2007/02/08 02:10:58 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -64,6 +64,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::det_selection, "(chp-det-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::nondet_selection, "(chp-nondet-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::prob_selection, "(chp-prob-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_selection, "(chp-metaloop-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_statement, "(chp-metaloop-stmt)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")

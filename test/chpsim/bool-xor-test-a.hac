@@ -1,0 +1,19 @@
+// "bool-xor-test-a.hac"
+// copy-modified from "bool-or-test-a.hac"
+//	$Id: bool-xor-test-a.hac,v 1.2 2007/02/08 02:11:24 fang Exp $
+// testing loop-expanded expressions in CHP
+
+import "testlib/bool-source.hac";
+import "testlib/bool-xor.hac";
+import "testlib/bool-sink.hac";
+
+chan(bool) In[3];
+chan(bool) Out;
+
+bool_xor<3> A(In, Out);
+
+bool_source<1,{false}> S0(In[0]);
+bool_source<3,{false,false,true}> S1(In[1]);
+bool_source<4,{true,false,false,true}> S2(In[2]);
+bool_sink Z(Out);
+

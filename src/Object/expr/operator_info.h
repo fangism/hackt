@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/operator_info.h"
 	Some expression specific implementation details.  
-	$Id: operator_info.h,v 1.4 2006/01/22 18:19:52 fang Exp $
+	$Id: operator_info.h,v 1.5 2007/02/08 02:11:05 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_OPERATOR_INFO_H__
@@ -24,6 +24,12 @@ struct op_info {
 	char				prec;
 	op_info() { }
 	op_info(const char o, const char p) : op(o), prec(p) { }
+
+	/**
+		Implicit conversion to char for convenience with
+		using different operator reverse_maps.  
+	 */
+	operator char () const { return op; }
 };	// end struct op_info
 
 //=============================================================================

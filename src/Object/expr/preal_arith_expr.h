@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.12 2007/01/21 05:59:07 fang Exp $
+	$Id: preal_arith_expr.h,v 1.13 2007/02/08 02:11:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -26,13 +26,14 @@ using util::memory::count_ptr;
  */
 class preal_arith_expr : public preal_expr {
 	typedef	preal_arith_expr			this_type;
-	typedef	preal_expr				parent_type;
 public:
+	typedef	preal_expr				parent_type;
 	typedef	preal_value_type			arg_type;
 	typedef	preal_value_type			value_type;
 	typedef	count_ptr<const preal_expr>	operand_ptr_type;
 	typedef	binary_arithmetic_operation<value_type, arg_type>
 						op_type;
+	typedef	char				op_key_type;
 	static const plus<value_type, arg_type>		adder;
 	static const minus<value_type, arg_type>	subtractor;
 	static const multiplies<value_type, arg_type>	multiplier;
@@ -42,13 +43,14 @@ public:
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	expr_detail::op_info		op_info;
-	typedef	char				op_key_type;
 	typedef	default_qmap<op_key_type, const op_type*>::type
 						op_map_type;
 	typedef	default_qmap<const op_type*, op_info>::type
 						reverse_op_map_type;
+public:
 	static const op_map_type		op_map;
 	static const reverse_op_map_type	reverse_op_map;
+private:
 	static const size_t			op_map_size;
 	static void op_map_register(const char, const op_type*, const char);
 	static size_t op_map_init(void);

@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.10 2007/02/05 06:39:39 fang Exp $
+	$Id: BRANCHES,v 1.11 2007/02/08 02:10:55 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -8,7 +8,4 @@ When a branch is merged for the last time, delete the entry from this file.
 
 
 Open branches:
-
-HACKT-00-01-04-main-00-80-71-exprloop-01
-	For adding metaloop-expansions to expressions in general.  
 

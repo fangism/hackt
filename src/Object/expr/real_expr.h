@@ -2,7 +2,7 @@
 	\file "Object/expr/real_expr.h"
 	Base class for boolean data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: real_expr.h,v 1.4 2007/01/21 05:59:08 fang Exp $
+	$Id: real_expr.h,v 1.5 2007/02/08 02:11:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_REAL_EXPR_H__
@@ -22,6 +22,8 @@ class preal_const;
 class real_expr : public data_expr {
 	typedef	real_expr			this_type;
 	typedef	data_expr			parent_type;
+public:
+	typedef	preal_const			const_expr_type;
 protected:
 	real_expr() : parent_type() { }
 public:

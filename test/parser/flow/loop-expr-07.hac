@@ -1,0 +1,9 @@
+// "loop-expr-07.hac"
+// copy-modified from "loop-expr-06.hac"
+// testing loop expressions
+
+pint W[4];
+W = {0xf000, 0xd, 0xee0, 0x0};
+
+pint Z = (|:i:4: W[i]);		// 0xfeed me! (65261)
+

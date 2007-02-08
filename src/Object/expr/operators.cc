@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.22 2007/01/21 05:58:57 fang Exp $
+ 	$Id: operators.cc,v 1.23 2007/02/08 02:11:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -37,6 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/const_range.h"
+#include "Object/expr/loop_meta_expr.tcc"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/expr/operator_precedence.h"
@@ -66,6 +67,12 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::preal_arith_expr,
 		"preal-arith-expr")
 SPECIALIZE_UTIL_WHAT(HAC::entity::preal_relational_expr, 
 		"preal-relational-expr")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_arith_loop_expr, 
+		"pint-arith-loop-expr")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_logical_loop_expr, 
+		"logical-loop-expr")
+SPECIALIZE_UTIL_WHAT(HAC::entity::preal_arith_loop_expr, 
+		"preal-arith-loop-expr")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY, 0)
@@ -83,6 +90,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::preal_arith_expr, PREAL_ARITH_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::preal_relational_expr, PREAL_RELATIONAL_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::pint_arith_loop_expr, PINT_ARITH_LOOP_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::pbool_logical_loop_expr, PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::preal_arith_loop_expr, PREAL_ARITH_LOOP_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -2012,7 +2025,9 @@ pbool_logical_expr::op_map_init(void) {
 	op_map_register("&&", &op_and);
 	op_map_register("||", &op_or);
 	op_map_register("!=", &op_xor);
+//	op_map_register("^", &op_xor);
 	op_map_register("==", &op_xnor);
+//	op_map_register("!^", &op_xnor);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -2260,6 +2275,13 @@ pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) 
 	m.read_pointer(f, lx);
 	m.read_pointer(f, rx);
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template class loop_meta_expr<pint_arith_expr>;
+template class loop_meta_expr<pbool_logical_expr>;
+template class loop_meta_expr<preal_arith_expr>;
 
 //=============================================================================
 }	// end namepace entity

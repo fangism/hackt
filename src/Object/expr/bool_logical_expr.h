@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.12 2007/01/21 05:58:43 fang Exp $
+	$Id: bool_logical_expr.h,v 1.13 2007/02/08 02:11:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -28,8 +28,8 @@ using util::persistent_object_manager;
  */
 class bool_logical_expr : public bool_expr {
 	typedef	bool_logical_expr			this_type;
-	typedef	bool_expr				parent_type;
 public:
+	typedef	bool_expr				parent_type;
 	typedef bool_value_type				value_type;
 	typedef	bool_value_type				arg_type;
 	typedef	count_ptr<const bool_expr>		operand_ptr_type;
@@ -38,18 +38,19 @@ public:
 	static const util::logical_or<value_type, arg_type>	op_or;
 	static const util::logical_xor<value_type, arg_type>	op_xor;
 	static const util::logical_xnor<value_type, arg_type>	op_xnor;
+	typedef	string					op_key_type;
 private:
 	// safe to use naked (never-delete) pointers on static objects
-	typedef default_qmap<string, const op_type*>::type
+	typedef default_qmap<op_key_type, const op_type*>::type
 							op_map_type;
-	typedef default_qmap<const op_type*, string>::type
+	typedef default_qmap<const op_type*, op_key_type>::type
 							reverse_op_map_type;
 public:
 	static const op_map_type		op_map;
-private:
 	static const reverse_op_map_type	reverse_op_map;
+private:
 	static const size_t			op_map_size;
-	static void op_map_register(const string&, const op_type* );
+	static void op_map_register(const op_key_type&, const op_type* );
 	static size_t op_map_init(void);
 
 protected:
@@ -63,7 +64,7 @@ protected:
 private:
 	bool_logical_expr();
 public:
-	bool_logical_expr(const operand_ptr_type& l, const string& o,
+	bool_logical_expr(const operand_ptr_type& l, const op_key_type& o,
 		const operand_ptr_type& r);
 	bool_logical_expr(const operand_ptr_type& l, const op_type* o,
 		const operand_ptr_type& r);

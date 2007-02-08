@@ -3,6 +3,55 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-74-merged-exprloop-01-04:
+	  Branch merge.
+	  Summary: added support for loop expanded expressions in
+		the meta language and non-meta language.
+		e.g. (+:i:6: my_ints[i]) gives a sum of terms.  
+		Only commutative and associative bool/int operators enabled.
+
+
+2007-02-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-71-exprloop-01-04:
+	  Basically tested nonmeta-expr loop expansions with CHP test cases.
+	  Allow use of '^' operator in loop expressions, because '!='
+		just doesn't make sense as an assoc operator for bools.  
+	  Merge to trunk.  
+	  TODO: post-merge, factor out AST loop construction code, to
+		reduce copy-pasting.
+
+
+	* HACKT-00-01-04-main-00-80-71-exprloop-01-03:
+	  Finished writing loop_nonmeta_expr (untested) for use with CHP.
+		Added Object/expr/loop_nonmeta_expr.{h,tcc}
+		Publicized some necessary operator maps for convenience.  
+	  AST/expr.cc: added operator check to reject boolean operators
+		used on ints (nonmeta and meta exprs).
+	  Test cases for loop-parameter expressions added to
+		test/parser/flow.
+	  Next: test loop_nonmeta_expr expansions in CHP.  
+
+
+2007-02-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-71-exprloop-01-02:
+	  Implemented loop_meta_expr template, based on pint_arith_expr, 
+		pbool_logical_expr, and preal_arith_expr, and using
+		their operator maps for consistency.  
+		Had to publicize some member typedefs and maps on the way.
+	  AST/expr.cc: implemented loop_operation::check_meta_expr(),
+		correct a few minor typos in error messages.  
+	  Object/persistent_type_hash.h: added loop_meta_exprs
+	  Object/expr/expr_visitor.h: likewise.
+	  sim/chpsim/DependenceCollector.h: likewise.
+	  Next: implement AST::loop_operation::check_nonmeta_expr, (the
+		only current undefined reference) and
+		implement nonmeta expression counterparts.  
+
+
 2007-02-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-73:
@@ -66,6 +115,16 @@
 	  Added chpsim checkpointing and state diagnostic facilities, 
 		enabled but yet untested.  
 	  Refactored dependency functions in DependenceSet class.  
+
+
+2007-02-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-71-exprloop-01-01:
+	  Branch for adding support for meta-loop expressions to language.
+	  This revision only added the AST class and updated the grammar
+		specification, leaving some undefined references.  
+	  TODO: write intermediate representation classes for expansion.  
+	  TODO: update parser expects for affected test cases (yacc/bison).
 
 
 2007-02-02	David Fang		<fangism@users.sourceforge.net>

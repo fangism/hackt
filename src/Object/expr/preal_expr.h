@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.12 2007/01/21 05:59:07 fang Exp $
+	$Id: preal_expr.h,v 1.13 2007/02/08 02:11:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -42,6 +42,7 @@ public:
 		using templates to extend to other parameter types.  
 	 */
 	typedef	preal_value_type		value_type;
+	typedef	preal_const			const_expr_type;
 public:
 	preal_expr() : param_expr(), real_expr() { }
 
@@ -81,7 +82,7 @@ virtual value_type
 virtual	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const = 0;
 
-virtual	count_ptr<const preal_const>
+virtual	count_ptr<const const_expr_type>
 	__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const preal_expr>&) const = 0;
 

@@ -3,7 +3,7 @@
 	Class definitions for arithmetic int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_arith_expr.h,v 1.12 2007/01/21 05:58:50 fang Exp $
+	$Id: int_arith_expr.h,v 1.13 2007/02/08 02:11:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
@@ -28,8 +28,8 @@ using util::persistent_object_manager;
  */
 class int_arith_expr : public int_expr {
 	typedef	int_arith_expr				this_type;
-	typedef	int_expr				parent_type;
 public:
+	typedef	int_expr				parent_type;
 	/**
 		For arbitrary precision integers, will want a type
 		fom GMP, such as mpz.  
@@ -38,6 +38,7 @@ public:
 	typedef	int_value_type		 		value_type;
 	typedef	binary_arithmetic_operation<value_type, arg_type>
 							op_type;
+	typedef	char					op_key_type;
         static const plus<value_type, arg_type>		adder;
         static const minus<value_type, arg_type>	subtractor;
         static const multiplies<value_type, arg_type>	multiplier;
@@ -50,14 +51,17 @@ public:
         static const bitwise_xor<value_type, arg_type>	hasher;
 private:
 	typedef	expr_detail::op_info			op_info;
-	typedef	default_qmap<char, const op_type*>::type
+	typedef	default_qmap<op_key_type, const op_type*>::type
 							op_map_type;
 	typedef	default_qmap<const op_type*, op_info>::type
 							reverse_op_map_type;
+public:
 	static const op_map_type			op_map;
 	static const reverse_op_map_type		reverse_op_map;
+private:
 	static const size_t				op_map_size;
-	static void op_map_register(const char, const op_type*, const char);
+	static void op_map_register(const op_key_type, 
+		const op_type*, const char);
 	static size_t op_map_init(void);
 public:
 	typedef	count_ptr<const int_expr>		operand_ptr_type;
@@ -68,9 +72,9 @@ protected:
 private:
 	int_arith_expr();
 
+public:
 	int_arith_expr(const operand_ptr_type&, const op_type*, 
 		const operand_ptr_type&);
-public:
 	int_arith_expr(const operand_ptr_type&, const char, 
 		const operand_ptr_type&);
 	~int_arith_expr();

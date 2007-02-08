@@ -1,0 +1,9 @@
+// "loop-expr-08.hac"
+// copy-modified from "loop-expr-07.hac"
+// testing loop expressions
+
+pint W[4];
+W = {0xf00d, 0xd, 0xeed, 0xd};
+
+pint Z = (&:i:4: W[i]);		// 0xd
+

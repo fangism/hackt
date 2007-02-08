@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.2 2007/01/21 06:00:40 fang Exp $
+	$Id: DependenceCollector.cc,v 1.3 2007/02/08 02:11:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -15,6 +15,7 @@
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_negation_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/loop_nonmeta_expr.h"
 #include "Object/expr/enum_expr.h"
 #include "Object/expr/real_expr.h"
 // #include "Object/expr/real_negation_expr.h"
@@ -154,6 +155,9 @@ DEFINE_NEVER_VISIT(pbool_logical_expr)
 DEFINE_NEVER_VISIT(preal_arith_expr)
 DEFINE_NEVER_VISIT(preal_unary_expr)
 DEFINE_NEVER_VISIT(preal_relational_expr)
+DEFINE_NEVER_VISIT(pint_arith_loop_expr)
+DEFINE_NEVER_VISIT(pbool_logical_loop_expr)
+DEFINE_NEVER_VISIT(preal_arith_loop_expr)
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -180,7 +184,9 @@ DEFINE_BINARY_VISIT(int_relational_expr)
 DEFINE_BINARY_VISIT(bool_logical_expr)
 // DEFINE_BINARY_VISIT(real_arith_expr)
 // DEFINE_BINARY_VISIT(real_relational_expr)
-
+DEFINE_UNARY_VISIT(int_arith_loop_expr)
+DEFINE_UNARY_VISIT(bool_logical_loop_expr)
+// DEFINE_UNARY_VISIT(real_arith_loop_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

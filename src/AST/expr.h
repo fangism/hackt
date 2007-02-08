@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.8 2006/07/30 05:49:13 fang Exp $
+	$Id: expr.h,v 1.9 2007/02/08 02:10:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -144,6 +144,40 @@ public:
 	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
 };	// end class logical_expr
+
+//-----------------------------------------------------------------------------
+/**
+	Repetition of production rules in a loop.  
+ */
+class loop_operation : public expr {
+protected:
+	const excl_ptr<const char_punctuation_type>	lp;
+	const excl_ptr<const char_punctuation_type>	op;
+	const excl_ptr<const token_identifier>	index;
+	const excl_ptr<const range>		bounds;
+	const excl_ptr<const expr>		body;
+	const excl_ptr<const char_punctuation_type>	rp;
+public:
+	loop_operation(const char_punctuation_type* l,
+		const char_punctuation_type* o, 
+		const token_identifier* id, const range* b,
+		const expr* e, const char_punctuation_type* r);
+
+	~loop_operation();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
+	CHECK_PRS_EXPR_PROTO;
+};	// end class loop_operation
 
 //=============================================================================
 // typedef	expr_list			array_concatenation_base;
