@@ -5,12 +5,21 @@
 
 2007-02-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-76:
+	  Object/inst/instance_collection.cc:
+		Added missing definition of instance_placeholder_base::null, 
+		which should never be needed as a reference, only for 
+		type deduction purposes (Object/common/namespace.cc).
+		Again, discovered with -O0.  
+
+
 	* HACKT-00-01-04-main-00-80-75:
 	  sim/prsim/Node.cc: latent typo: harmless, misplaced return caused 
 		unreachable code in dump_checkpoint_state().  
 		Adjusted and retested.
-		Thanks to Nathan's compiler for catching this one:
+		Thanks to Nathan's compiler/build for catching this one:
 		gcc (GCC) 4.1.2 20060928 (prerelease) (Ubuntu 4.1.1-13ubuntu5)
+		CXXFLAGS with -O0 is what caught the dead code missing return.
 
 
 2007-02-07	David Fang		<fangism@users.sourceforge.net>

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.27 2007/01/21 05:59:11 fang Exp $
+ 	$Id: instance_collection.cc,v 1.28 2007/02/08 18:31:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -433,6 +433,15 @@ footprint::register_collection_map_entry(const string& k,
 //=============================================================================
 // class instance_placeholder_base method definitions
 
+/**
+	Technically, this reference is never needed, this object is only
+	ever used for pointer-class type deduction.  
+	See uses in "Object/common/namespace.cc".
+ */
+const never_ptr<const instance_placeholder_base>
+instance_placeholder_base::null(NULL);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_placeholder_base::instance_placeholder_base(
 		const scopespace& s, const string& k, const size_t d) :
 		owner(&s), key(k), dimensions(d) {
