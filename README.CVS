@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.4 2007/01/27 05:54:08 fang Exp $
+	$Id: README.CVS,v 1.5 2007/02/09 02:44:14 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -53,6 +53,41 @@ For building HACKT, now refer to "README".
 
 For more on the CVS tags and make conventions, mostly for maintainers, 
 refer to "README.maintainer".
+
+-------------------------------------------------------------------------------
+Updating from CVS:
+
+Occasionally, header files are removed from CVS as they become replaced
+or deprecated.  You see a message like:
+
+	file-xyz.h is no longer in the repository
+
+Unfortunately, this can occasionally leave stale dependencies (in src/)
+that are used for header-validation, a feature I've added to the build
+machinery for this project.  If you see an error message like the following:
+
+	cc1plus: blah.h: No such file or directory
+	make[1]: *** [blah.hchk] Error 1
+
+This means that the source header was removed.  The recommend course of 
+action is the following:
+
+	cd src; make clean-header-deps clean-header-tests
+
+and then return to 'make' or whatever you were doing.  
+This resets all the dependencies and cleans the validation results, which
+will be automatically regenerated upon make.  
+This will never be a problem for those who use source distribution tarballs.  
+
+-------------------------------------------------------------------------------
+Patch creation relative to CVS:
+
+For those contributing patches, the easiest way to create a patch is to run:
+'make cvsdiffs' from anywhere in the build directory, which can be the same
+as the source directory for non-VPATH builds.  (This is a global target in
+all Makefiles, so you can run in most subdirectories.)  If you don't have 
+commit privileges or prior approval, send the resulting file to the 
+developer(s).  
 
 ===============================================================================
 
