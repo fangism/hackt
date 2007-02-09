@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79:
+	  Latent mis-packaging: EXTRA_DIST += parser/yacc-output-to-C.awk
+
+
 2007-02-08	Nathan Smith	<nrs27@cornell.edu>			
 
 	* HACKT-00-01-04-main-00-80-78:

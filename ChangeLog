@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-02-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79:
+	  Makefile.am: distclean Makefile.orig if produced by patching Makefile.
+	  README.CVS: notes about updates and patch creation.
+
+
 2007-02-05	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-72-merged-chpsim-02-19:

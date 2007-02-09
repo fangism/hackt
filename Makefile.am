@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.38 2006/11/12 05:57:40 fang Exp $
+#	$Id: Makefile.am,v 1.39 2007/02/09 04:36:40 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -29,7 +29,11 @@ ACLOCAL_AMFLAGS = -I config
 
 CLEANFILES += $(DOXYGEN_CONFIG) hackt.doxygen.log DevelopmentPlan.ps
 
-DISTCLEANFILES += config.in.h~ distcheck.log
+DISTCLEANFILES += config.in.h~ distcheck.log \
+	config.status.lineno \
+	Makefile.orig
+
+# Makefile.orig comes from patching Makefile
 
 DISTCLEANDIRS += autom4te.cache
 

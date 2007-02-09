@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.153 2007/02/08 02:10:57 fang Exp $
+#	$Id: Makefile.am,v 1.154 2007/02/09 04:36:42 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1343,6 +1343,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/lexyacc-prefix.awk \
 	parser/bison-output-to-C.awk \
 	parser/common-output-to-C.awk \
+	parser/yacc-output-to-C.awk \
 	parser/common-union-type.awk \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
