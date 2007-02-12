@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.14 2007/02/08 02:10:58 fang Exp $
+	$Id: CHP.cc,v 1.14.2.1 2007/02/12 02:26:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -39,6 +39,7 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
+#include "common/TODO.h"
 
 #include "util/wtf.h"
 #include "util/what.h"
@@ -51,6 +52,7 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::body, "(chp-body)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::probe_expr, "(chp-probe-expr)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::statement, "(chp-statement)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::guarded_command, "(chp-guarded-cmd)")
 // SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::else_clause, "(chp-else-clause)")
@@ -95,6 +97,64 @@ using entity::data_nonmeta_instance_reference;
 using entity::data_type_reference;
 using entity::pint_scalar;
 using entity::meta_loop_base;
+
+//=============================================================================
+// class probe_expr method definitions
+
+probe_expr::probe_expr(const char_punctuation_type* o, 
+		const inst_ref_expr* n) :
+		chp_expr(), op(o), ref(n) {
+}
+
+probe_expr::~probe_expr() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(probe_expr)
+
+line_position
+probe_expr::leftmost(void) const {
+	return op->leftmost();
+}
+
+line_position
+probe_expr::rightmost(void) const {
+	return ref->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+probe_expr::check_meta_expr(const context& c) const {
+	typedef	expr::meta_return_type		return_type;
+	cerr << "Probe expressions cannot appear in meta-language." << endl;
+	cerr << "\tat: " << where(*this) << endl;
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+probe_expr::check_prs_expr(context& c) const {
+	cerr << "Probe expressions cannot appear in PRS." << endl;
+	cerr << "\tat: " << where(*this) << endl;
+	return prs_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param c parse context.
+	\return pointer to type-checked expression if successful, else null.  
+ */
+nonmeta_expr_return_type
+probe_expr::check_nonmeta_expr(const context& c) const {
+	typedef	nonmeta_expr_return_type		return_type;
+	const communication::checked_channel_type
+		ch(communication::check_channel(
+			*ref, const_cast<context&>(c)));	// arg...
+	if (!ch) {
+		// already have error message
+		return return_type(NULL);
+	}
+	FINISH_ME(Fang);
+	return return_type(NULL);
+}	// end method probe_expr::check_nonmeta_expr
 
 //=============================================================================
 // class statement method definitions
@@ -734,19 +794,19 @@ communication::leftmost(void) const {
 	Does not check direction here, send and recv will check.  
  */
 communication::checked_channel_type
-communication::check_channel(context& c) const {
+communication::check_channel(const inst_ref_expr& chan, context& c) {
 	typedef	checked_channel_type::element_type	ret_chan_type;
 	const inst_ref_expr::nonmeta_return_type
-		ch(chan->check_nonmeta_reference(c));
+		ch(chan.check_nonmeta_reference(c));
 	if (!ch) {
 		cerr << "ERROR resolving instance reference at " <<
-			where(*chan) << endl;
+			where(chan) << endl;
 		return checked_channel_type(NULL);
 	}
 	const checked_channel_type ret(ch.is_a<ret_chan_type>());
 	if (!ret) {
 		cerr << "ERROR instance referenced at " <<
-			where(*chan) << " is not a channel!" << endl;
+			where(chan) << " is not a channel!" << endl;
 		return checked_channel_type(NULL);
 	}
 	return ret;
@@ -799,7 +859,7 @@ send::rightmost(void) const {
 statement::return_type
 send::check_action(context& c) const {
 	const communication::checked_channel_type
-		sender(check_channel(c));
+		sender(check_channel(*chan, c));
 	if (!sender) {
 		return statement::return_type(NULL);
 	}
@@ -860,7 +920,7 @@ receive::rightmost(void) const {
 statement::return_type
 receive::check_action(context& c) const {
 	const communication::checked_channel_type
-		receiver(check_channel(c));
+		receiver(check_channel(*chan, c));
 	typedef	data_nonmeta_instance_reference			lref_type;
 	if (!receiver) {
 		return statement::return_type(NULL);

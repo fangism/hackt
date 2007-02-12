@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.6 2007/01/23 02:43:04 fang Exp $
+	$Id: CHP.h,v 1.6.6.1 2007/02/12 02:26:47 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -13,6 +13,7 @@
 #include "AST/token_string.h"
 #include "AST/statement.h"
 #include "AST/definition_item.h"
+#include "AST/expr_base.h"
 #include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
@@ -40,6 +41,35 @@ using std::default_vector;
 //=============================================================================
 /// for now, just a carbon copy of expr class type, type-check later
 typedef	expr	chp_expr;
+
+//=============================================================================
+/**
+	Probe expressions, only valid in nonmeta languages like CHP.  
+	NOTE: this is not the same as value-probe, 
+	which has different semantics.
+	TODO: value_probe
+ */
+class probe_expr : public chp_expr {
+protected:
+	const excl_ptr<const char_punctuation_type>	op;	///< the operator, may be null
+	const excl_ptr<const inst_ref_expr>	ref;	///< the argument ref
+public:
+	probe_expr(const char_punctuation_type*, const inst_ref_expr*);
+	~probe_expr();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
+	CHECK_PRS_EXPR_PROTO;
+};	// end class probe_expr
 
 //=============================================================================
 /// CHP statement base class
@@ -283,7 +313,7 @@ public:
 
 class communication : public statement {
 	typedef	statement			parent_type;
-protected:
+public:
 	typedef	count_ptr<entity::simple_channel_nonmeta_instance_reference>
 						checked_channel_type;
 protected:
@@ -301,10 +331,11 @@ virtual	~communication();
 	line_position
 	leftmost(void) const;
 
-protected:
+	static
 	checked_channel_type
-	check_channel(context& c) const;
+	check_channel(const inst_ref_expr&, context&);
 
+protected:
 	static
 	char
 	get_channel_direction(const checked_channel_type::element_type&);
@@ -561,7 +592,10 @@ public:
 };	// end class do_until
 
 //=============================================================================
-/// CHP log statement
+/**
+	CHP log statement.
+	NOTE: I want to deprecate this legacy feature from the original chpsim.
+ */
 class log : public statement {
 protected:
 	const excl_ptr<const generic_keyword_type>	lc;

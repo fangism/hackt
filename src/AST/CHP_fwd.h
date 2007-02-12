@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: CHP_fwd.h,v 1.5 2007/01/23 02:43:04 fang Exp $
+	$Id: CHP_fwd.h,v 1.5.6.1 2007/02/12 02:26:48 fang Exp $
 	This file used ot be the following before rename:
 	Id: art_parser_chp_fwd.h,v 1.4.42.1 2005/12/11 00:45:04 fang Exp
  */
@@ -37,6 +37,7 @@ class send;
 class receive;
 class binary_assignment;
 class bool_assignment;
+class probe_expr;
 
 }	// end namespace CHP
 }	// end namespace parser

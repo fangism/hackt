@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.154 2007/02/09 04:36:42 fang Exp $
+#	$Id: Makefile.am,v 1.154.2.1 2007/02/12 02:26:45 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -416,8 +416,10 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
+	Object/expr/exceptions.cc \
 	Object/expr/expr_dump_context.cc \
 	Object/expr/expr_visitor.cc \
+	Object/expr/channel_probe.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -553,6 +555,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/footprint_base.h \
 	Object/def/fundamental_channel_footprint.h \
 	Object/expr/expr_fwd.h \
+	Object/expr/exceptions_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
 	Object/expr/bool_negation_expr.h \

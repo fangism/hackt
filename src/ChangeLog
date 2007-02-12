@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-01:
+	  Third epoch of chpsim features.
+	  Proposals: add probe semantics (affects language front-middle ends)
+		add CHP assert statements, add CHP wait statements, 
+		chpsim: watch-*, break-*.
+		May not get around to all of them this round...
+	  This revision: added probe statements to parser and AST, 
+		Object and CHP lang classes not done yet, coming up.  
+		After grammar update, a few compile-fail expect dumps updated.
+	  Added some exception classes for expressions, not yet used.  
+
+
 2007-02-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-79:

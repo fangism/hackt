@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.23 2007/02/08 02:11:09 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.23.2.1 2007/02/12 02:26:53 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -621,6 +621,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_receive>	chp_recv
 %type	<_expr>		chp_guard_expr
 %type	<_expr>		chp_unary_bool_expr chp_simple_bool_expr chp_unary_expr
+%type	<_expr>		chp_probe_expr
 %type	<_expr>		chp_mult_expr chp_add_expr chp_add_expr_only
 %type	<_expr>		chp_paren_add_expr chp_shift_expr chp_relational_expr
 %type	<_expr>		chp_logical_and_expr chp_logical_or_expr chp_not_expr
@@ -1605,6 +1606,12 @@ chp_unary_bool_expr
 	| chp_not_expr
 	| '(' chp_logical_or_expr ')'
 		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
+	| chp_probe_expr
+	;
+
+chp_probe_expr
+	: '#' member_index_expr
+		{ $$ = new CHP::probe_expr($1, $2); }
 	;
 
 chp_simple_bool_expr

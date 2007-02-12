@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.2 2007/01/21 05:59:33 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.2.6.1 2007/02/12 02:26:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -99,30 +99,9 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 		indices.reserve(aliases.size());	// upper bound
 		// translate to global_indices
 		const const_iterator i(aliases.begin()), e(aliases.end());
-#if 0
-		STACKTRACE_INDENT_PRINT("local indices = ");
-		copy(i, e, std::ostream_iterator<size_t>(cerr, " "));
-		cerr << endl;
-#endif
 		if (ff) {
 			STACKTRACE_INDENT_PRINT("footprint-framed" << endl);
 			// need to translate local to global
-#if 0
-			const footprint_frame_map_type&
-				ffm(ff->template get_frame_map<Tag>());
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT_PRINT("frame-map = ");
-			copy(ffm.begin(), ffm.end(), 
-				std::ostream_iterator<size_t>(cerr, " "));
-			cerr << endl;
-#endif
-			for ( ; i!=e; ++i) {
-				// NOTE: 1-indexed to 0-indexed
-				const size_t j = (*i)->instance_index;
-				STACKTRACE_INDENT_PRINT("j = " << j << endl);
-				indices.push_back(ffm[j-1]);
-			}
-#else
 			transform(i, e, back_inserter(indices),
 				unary_compose(
 				footprint_frame_transformer(*ff, Tag()), 
@@ -132,7 +111,6 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 					dereference<instance_alias_info_ptr_type>()
 				)
 				));
-#endif
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT_PRINT("global indices = ");
 			copy(indices.begin(), indices.end(), 
@@ -143,10 +121,6 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 			STACKTRACE_INDENT_PRINT("top-level" << endl);
 			// local indices -1 == global indices
 			// copy(i, e, back_inserter(indices));	// WRONG
-#if 0
-			for ( ; i!=e; ++i)
-				indices.push_back((*i)->instance_index);
-#else
 			transform(i, e, back_inserter(indices), 
 				unary_compose(
 					member_select_ref(
@@ -154,7 +128,6 @@ __nonmeta_instance_lookup_may_reference_indices_impl(
 					dereference<instance_alias_info_ptr_type>()
 				)
 			);
-#endif
 		}
 		return good_bool(true);
 	} else {

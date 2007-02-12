@@ -18,6 +18,7 @@ state	value
 in state #STATE#, possible rules are:
 	chp_unmatched_det_guarded_command_list: chp_unmatched_det_guarded_command_list THICKBAR . chp_guarded_command  (#RULE#)
 acceptable tokens are: 
+	'#' (shift)
 	'(' (shift)
 	'-' (shift)
 	'~' (shift)
