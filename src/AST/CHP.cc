@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.14.2.1 2007/02/12 02:26:46 fang Exp $
+	$Id: CHP.cc,v 1.14.2.2 2007/02/12 04:51:18 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -28,6 +28,7 @@
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/meta_range_expr.h"
+#include "Object/expr/channel_probe.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -152,8 +153,7 @@ probe_expr::check_nonmeta_expr(const context& c) const {
 		// already have error message
 		return return_type(NULL);
 	}
-	FINISH_ME(Fang);
-	return return_type(NULL);
+	return return_type(new entity::channel_probe(ch));
 }	// end method probe_expr::check_nonmeta_expr
 
 //=============================================================================

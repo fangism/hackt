@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/channel_probe.h"
-	$Id: channel_probe.h,v 1.1.2.1 2007/02/12 02:26:50 fang Exp $
+	$Id: channel_probe.h,v 1.1.2.2 2007/02/12 04:51:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CHANNEL_PROBE_H__
@@ -20,16 +20,20 @@ using util::persistent_object_manager;
 	Probe evaluates true if channel is full, i.e. is ready to receive.
  */
 class channel_probe : public bool_expr {
+	typedef channel_probe				this_type;
 	typedef	bool_expr				parent_type;
 	typedef	simple_channel_nonmeta_instance_reference
 							chan_ref_type;
 	typedef	count_ptr<const chan_ref_type>		chan_ref_ptr_type;
 	chan_ref_ptr_type				chan;
-protected:
+private:
 	channel_probe();
 public:
 	channel_probe(const chan_ref_ptr_type&);
 	~channel_probe();
+
+	const chan_ref_ptr_type&
+	get_channel(void) const { return chan; }
 
 	ostream&
 	what(ostream&) const;
@@ -39,6 +43,9 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }
+
+	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
+	GET_RESOLVED_DATA_TYPE_REF_PROTO;
 
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
 	NONMETA_RESOLVE_RVALUE_BOOL_PROTO;

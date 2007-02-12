@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.4 2007/02/08 02:11:03 fang Exp $
+	$Id: expr_fwd.h,v 1.4.2.1 2007/02/12 04:51:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -33,6 +33,7 @@ namespace entity {
 //	class real_negation_expr;
 	class real_arith_expr;
 	class real_relational_expr;
+	class channel_probe;
 
 	class param_expr;
 	class const_param;

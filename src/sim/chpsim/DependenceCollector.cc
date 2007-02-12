@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.3 2007/02/08 02:11:10 fang Exp $
+	$Id: DependenceCollector.cc,v 1.3.2.1 2007/02/12 04:51:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -21,6 +21,7 @@
 // #include "Object/expr/real_negation_expr.h"
 // #include "Object/expr/real_arith_expr.h"
 // #include "Object/expr/real_relational_expr.h"
+#include "Object/expr/channel_probe.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -187,6 +188,12 @@ DEFINE_BINARY_VISIT(bool_logical_expr)
 DEFINE_UNARY_VISIT(int_arith_loop_expr)
 DEFINE_UNARY_VISIT(bool_logical_loop_expr)
 // DEFINE_UNARY_VISIT(real_arith_loop_expr)
+
+void
+DependenceSetCollector::visit(const channel_probe& t) {
+	STACKTRACE_VERBOSE;
+	t.get_channel()->accept(*this);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

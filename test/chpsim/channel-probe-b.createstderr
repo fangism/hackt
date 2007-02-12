@@ -1,0 +1,307 @@
+WARNING: channel A lacks connection to a producer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	25	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
+	28	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	30	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	40	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	footprnt	0	#HEAD#	#TAIL#	289
+	52	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	procdefn	0	#HEAD#	#TAIL#	105
+	55	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	56	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	63	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	66	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	68	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	21
+	70	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	71	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	74	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	82	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	83	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	84	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	88	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	90	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	92	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	93	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	95	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	97	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	21
+	98	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	99	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	101	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	102	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	104	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	110	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	111	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	112	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	114	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	116	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	118	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	121	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	122	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	123	##ADDR##	chanprob	0	#HEAD#	#TAIL#	12
+	124	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	125	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	126	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	128	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	129	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	130	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	131	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
+	132	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  5 definitions
+  0 typedefs
+  Definitions:
+    bool_sink = process-definition (defined) bool_sink(
+        chan?(bool<>) B
+      )
+      In definition "bool_sink", we have: {
+      Instances:
+        B = chan?(bool<>) bool_sink::B
+        b = bool<> bool_sink::b
+      unroll sequence: 
+        chan?(bool<>) B
+        bool<> b
+      chp:
+        concurrent: {
+          *[
+            B?(b)
+          ]
+        }
+      footprint: {
+        B = channel chan?(bool<>)^0 = bool_sink::B (1) 
+        b = bool^0 = bool_sink::b (1) 
+        Created state:
+        channel instance pool:
+        1	bool_sink::B
+        bool instance pool:
+        1	bool_sink::b
+        resolved concurrent actions:
+          *[
+            B?(b)
+          ]
+      }
+      }
+
+    bool_sink_once = process-definition (defined) bool_sink_once<
+      pint<> N
+      >(
+        chan?(bool<>) B
+      )
+      In definition "bool_sink_once", we have: {
+      Parameters:
+        N = pint<> bool_sink_once::N
+      Instances:
+        B = chan?(bool<>) bool_sink_once::B
+        b = bool<> bool_sink_once::b
+      unroll sequence: 
+        chan?(bool<>) B
+        bool<> b
+      chp:
+        concurrent: {
+          concurrent i:[0..N-1]: {
+            B?(b)
+          }
+        }
+      }
+
+    bool_source = process-definition (defined) bool_source<
+      pint<> N
+      pbool<> B[0..N-1]
+      >(
+        chan!(bool<>) S
+      )
+      In definition "bool_source", we have: {
+      Parameters:
+        B = pbool<> bool_source::B^1
+        N = pint<> bool_source::N
+      Instances:
+        S = chan!(bool<>) bool_source::S
+      unroll sequence: 
+        chan!(bool<>) S
+      chp:
+        concurrent: {
+          *[
+            concurrent i:[0..N-1]: {
+              S!(B[$i])
+            }
+          ]
+        }
+      }
+
+    bool_source_constant = process-definition (defined) bool_source_constant<
+      pbool<> V
+      >(
+        chan!(bool<>) S
+      )
+      In definition "bool_source_constant", we have: {
+      Parameters:
+        V = pbool<> bool_source_constant::V
+      Instances:
+        S = chan!(bool<>) bool_source_constant::S
+      unroll sequence: 
+        chan!(bool<>) S
+      chp:
+        concurrent: {
+          *[
+            S!(V)
+          ]
+        }
+      }
+
+    bool_source_once = process-definition (defined) bool_source_once<
+      pint<> N
+      pbool<> B[0..N-1]
+      >(
+        chan!(bool<>) S
+      )
+      In definition "bool_source_once", we have: {
+      Parameters:
+        B = pbool<> bool_source_once::B^1
+        N = pint<> bool_source_once::N
+      Instances:
+        S = chan!(bool<>) bool_source_once::S
+      unroll sequence: 
+        chan!(bool<>) S
+      chp:
+        concurrent: {
+          concurrent i:[0..N-1]: {
+            S!(B[$i])
+          }
+        }
+      }
+
+  Instances:
+    A = chan(bool<>) A
+    B = chan(bool<>) B
+    a = bool<> a
+    snk = bool_sink<> snk
+}
+
+top-level chp:
+  concurrent: {
+    *[
+      sequential: {
+        [#A]
+        A?(a)
+        B!(a)
+      }
+    ]
+  }
+footprint: {
+  A = channel chan(bool<>)^0 = A (2) 
+  B = channel chan(bool<>)^0 = B (1) 
+  a = bool^0 = a (1) 
+  snk = process bool_sink<>^0 = snk (1) (
+    B = channel chan?(bool<>)^0 = B (1) 
+  )
+  Created state:
+  process instance pool:
+  1	snk
+  channel instance pool:
+  1	B
+  2	A
+  bool instance pool:
+  1	a
+  resolved concurrent actions:
+    *[
+      sequential: {
+        [#A]
+        A?(a)
+        B!(a)
+      }
+    ]
+}

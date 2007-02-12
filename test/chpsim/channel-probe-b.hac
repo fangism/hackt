@@ -1,0 +1,20 @@
+// "channel-probe-b.hac"
+// copy-modified from "channel-probe-a.hac"
+//	$Id: channel-probe-b.hac,v 1.1.2.1 2007/02/12 04:51:33 fang Exp $
+// testing channel probe semantics
+
+import "testlib/bool-sink.hac";
+import "testlib/bool-source.hac";
+
+chan(bool) A, B;
+bool a;
+
+chp {
+*[ [#A]; A?(a); B!(a) ]
+}
+
+// bool_source<2, {true,false}> bs(A);		// dangling source
+bool_sink snk(B);
+
+// expect deadlock
+

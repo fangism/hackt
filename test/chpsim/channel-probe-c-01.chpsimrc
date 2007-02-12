@@ -1,0 +1,12 @@
+# "channel-probe-c-01.chpsimrc"
+#	$Id: channel-probe-c-01.chpsimrc,v 1.1.2.1 2007/02/12 04:51:33 fang Exp $
+# @haco@ channel-probe-c.haco-a
+
+# test case would be more interesting with some explicit delays
+# timing random
+watchall-events
+step 40
+assert-queue
+time
+
+

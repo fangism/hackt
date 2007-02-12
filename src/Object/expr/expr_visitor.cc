@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/expr_visitor.cc"
-	$Id: expr_visitor.cc,v 1.2 2007/01/21 05:58:49 fang Exp $
+	$Id: expr_visitor.cc,v 1.2.6.1 2007/02/12 04:51:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -48,7 +48,7 @@ nonmeta_expr_visitor::visit(const type& e) {				\
 	e.accept(*this);						\
 }
 
-DEFINE_CATCH_ALL_EXPR_VISITOR(data_expr)
+DEFINE_CATCH_ALL_EXPR_VISITOR(data_expr)	// is this a good idea?
 // DEFINE_CATCH_ALL_EXPR_VISITOR(bool_expr)
 // DEFINE_CATCH_ALL_EXPR_VISITOR(int_expr)
 // DEFINE_CATCH_ALL_EXPR_VISITOR(real_expr)
