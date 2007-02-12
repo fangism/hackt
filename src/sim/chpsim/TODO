@@ -1,16 +1,20 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.3.2.1 2007/02/12 02:26:56 fang Exp $
+#	$Id: TODO,v 1.3.2.2 2007/02/12 21:39:47 fang Exp $
 
 ===============================================================================
 chpsim:
 
 high-priority:
 	execution trace recording for offline data-mining (thesis work)
+		[STATUS: trace recording complete]
 	primitive trace querying functions
 	guile/scheme wrapper interface to trace primitives
 	data structures for results of queries
+		guile-scm interface using 'smobs' small-objects
+	channel probes: [STATUS: DONE]
 
 medium-priority:
+	trace replay mechanism, seeking to specific state/time.
 	non-atomic expression evaluation: [IMPORTANT] 
 		rvalue and lvalues of assignments, channel send/receive 
 		may contain arbitrary nonmeta-expressions.
@@ -21,17 +25,24 @@ medium-priority:
 			do we require flow analysis?
 		A: safe to start right when channel event is ready, 
 			i.e. predecessors done, and channel state is ready
-	support: probe expressions, value probes, missing from CHP language!
+	support: value probes, missing from CHP language!
 		in-source assertions
 		delay statements
+		these will be implemented as CHP statement attributes,
+			BUT we may have two flavors of attributes:
+			compile-time (same as construction time)
+			and run-time (upon event execution).  
 	timing: interface to edit event delays, load back-annotation file?
 		possibly more elaborate code to customize delays systematically
-	checkpointing:
+	checkpointing: [STATUS: basics done]
 		need to remember invocation options in state, 
 		and compare when loading checkpoint for consistency.  
 	watch points and break points
 
 low-priority:
+	expr_dump_context: enhance with optional prefix string for
+		the enclosing process, useful for printing events with
+		more reasonable process names (instead of just pid number)
 	stability checking mode:
 		(Does something change between time of enqueue to 
 			time of execution?)

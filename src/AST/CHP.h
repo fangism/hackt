@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.6.6.1 2007/02/12 02:26:47 fang Exp $
+	$Id: CHP.h,v 1.6.6.2 2007/02/12 21:39:42 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -27,6 +27,7 @@ namespace entity {
 namespace CHP {
 	class action;
 	class guarded_action;
+	class attribute;
 }
 }	// end namespace entity
 
@@ -37,10 +38,6 @@ namespace parser {
 namespace CHP {
 using util::good_bool;
 using std::default_vector;
-
-//=============================================================================
-/// for now, just a carbon copy of expr class type, type-check later
-typedef	expr	chp_expr;
 
 //=============================================================================
 /**
@@ -72,10 +69,17 @@ public:
 };	// end class probe_expr
 
 //=============================================================================
-/// CHP statement base class
+/**
+	CHP statement base class
+ */
 class statement {
 public:
 	typedef	count_ptr<entity::CHP::action>		return_type;
+protected:
+	/**
+		Optional attributes. 
+	 */
+	excl_ptr<const stmt_attr_list>			attrs;
 public:
 	statement();
 
@@ -90,9 +94,16 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
+	void
+	prepend_attributes(const stmt_attr_list*);
+
 #define	CHP_CHECK_STMT_PROTO						\
 	CHP::statement::return_type					\
 	check_action(context&) const
+
+	/// to be called by all statements, return some list...
+	void
+	check_attributes(context&) const;
 
 virtual	CHP_CHECK_STMT_PROTO = 0;
 };	// end class statement
@@ -590,6 +601,33 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class do_until
+
+//=============================================================================
+/**
+	Key-value pair for CHP statement attribute.  
+ */
+class stmt_attribute {
+	const excl_ptr<const token_identifier>		key;
+	const excl_ptr<const chp_expr>			value;
+public:
+	typedef	entity::CHP::attribute			return_type;
+public:
+	stmt_attribute(const token_identifier*, const chp_expr*);
+	~stmt_attribute();
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	return_type
+	check(context&) const;
+
+};	// end class stmt_attribute
 
 //=============================================================================
 /**

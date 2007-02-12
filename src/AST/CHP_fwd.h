@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: CHP_fwd.h,v 1.5.6.1 2007/02/12 02:26:48 fang Exp $
+	$Id: CHP_fwd.h,v 1.5.6.2 2007/02/12 21:39:42 fang Exp $
 	This file used ot be the following before rename:
 	Id: art_parser_chp_fwd.h,v 1.4.42.1 2005/12/11 00:45:04 fang Exp
  */
@@ -13,9 +13,11 @@
 
 namespace HAC {
 namespace parser {
+class expr;
 namespace CHP {
 // the following class are defined in "AST/CHP.h"
 
+typedef	expr	chp_expr;
 class body;
 class statement;
 typedef	node_list<const statement>		stmt_list_base;
@@ -38,6 +40,8 @@ class receive;
 class binary_assignment;
 class bool_assignment;
 class probe_expr;
+class stmt_attribute;
+typedef	node_list<const stmt_attribute>		stmt_attr_list;
 
 }	// end namespace CHP
 }	// end namespace parser

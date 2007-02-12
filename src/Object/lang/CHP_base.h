@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.8 2007/01/21 05:59:20 fang Exp $
+	$Id: CHP_base.h,v 1.8.6.1 2007/02/12 21:39:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -9,7 +9,7 @@
 
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
-#include "util/STL/vector_fwd.h"
+// #include "util/STL/vector_fwd.h"
 #include "Object/ref/reference_enum.h"
 
 namespace HAC {

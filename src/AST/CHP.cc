@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.14.2.2 2007/02/12 04:51:18 fang Exp $
+	$Id: CHP.cc,v 1.14.2.3 2007/02/12 21:39:41 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -164,6 +164,14 @@ statement::statement() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
+
+/**
+	\param al exclusively owned attribute list pointer.
+ */
+void
+statement::prepend_attributes(const stmt_attr_list* al) {
+	attrs = excl_ptr<const stmt_attr_list>(al);
+}
 
 //=============================================================================
 // class stmt_list method definitions
@@ -1308,6 +1316,40 @@ do_until::check_action(context& c) const {
 }
 
 //=============================================================================
+// class stmt_attribute method definitions
+
+stmt_attribute::stmt_attribute(const token_identifier* i, const chp_expr* e) :
+		key(i), value(e) {
+	NEVER_NULL(key);
+	NEVER_NULL(value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+stmt_attribute::~stmt_attribute() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(stmt_attribute)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+stmt_attribute::leftmost(void) const {
+	return key->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+stmt_attribute::rightmost(void) const {
+	return value->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+stmt_attribute::return_type
+stmt_attribute::check(context& c) const {
+}
+#endif
+
+//=============================================================================
 // class log method definitions
 
 CONSTRUCTOR_INLINE
@@ -1341,7 +1383,22 @@ log::check_action(context& c) const {
 }	// end namespace CHP
 
 //=============================================================================
-// EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
+// EXPLICIT TEMPLATE INSTANTIATIONS
+
+template 
+node_list<const CHP::stmt_attribute>::node_list(const CHP::stmt_attribute*);
+
+template 
+ostream&
+node_list<const CHP::stmt_attribute>::what(ostream&) const;
+
+template 
+line_position
+node_list<const CHP::stmt_attribute>::leftmost(void) const;
+
+template 
+line_position
+node_list<const CHP::stmt_attribute>::rightmost(void) const;
 
 //=============================================================================
 }	// end namespace parser

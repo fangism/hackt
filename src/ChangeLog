@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-03:
+	  Parser and AST revisions to allow attributes to be prepended to any
+		CHP statement, intended to use for delay and assertions.
+		New lexer token: '$'.  
+		Updated one test case's compile-stderr (yacc-only).  
+	  TODO: middle-end+ support and possibly a CHP attribute registry.
+		Decide how to distinguish between compile-time (event-graph
+		generation time) and run-time attributes/directives.  
+
+
 2007-02-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-79-chpsim-03-02:
