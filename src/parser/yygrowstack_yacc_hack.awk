@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "yygrowstack_yacc_hack.awk"
-#	$Id: yygrowstack_yacc_hack.awk,v 1.2 2005/11/12 08:45:36 fang Exp $
+#	$Id: yygrowstack_yacc_hack.awk,v 1.3 2007/02/12 06:54:43 fang Exp $
 
 # Yacc is a piece of shit.  
 # Yacc is unable to produce re-entrant parsers because it uses exclusively
@@ -21,6 +21,15 @@
 # yygrowstack also must initially have a prototype with one variable argument, 
 # and void return (in one line), for the purposes of pattern matching.  
 
+# NOTE: FreeBSD's byacc skeletons have evolved a little over time,
+# in some cases the yygrowstack prototype appears *before* YYSTYPE
+# is declared, which means we have to hold the prototype in a buffer
+# and flush the buffer once we are certain we've seen YYSTYPE's definition.
+
+# NOTE: In a recent version of the skeleton, yygrowstack's proto is wrapped
+# in #if conditionals, which means we may have to pick one.
+# One proto may have a 'void' argument, while the other may be empty.
+
 BEGIN {
 	prototype_regex = "int[ \t]+yygrowstack[ ]?[A-Za-z_]+\\(.*\\);";
 	# prototype has the __P((void)) proto and a ;
@@ -31,6 +40,20 @@ BEGIN {
 	new_formals = "short*REFERENCE yyss, short*REFERENCE yyssp, YYSTYPE*REFERENCE yyvs, " \
 		"YYSTYPE*REFERENCE yyvsp, short*REFERENCE yysslim, intREFERENCE yystacksize)";
 	new_actuals = "yyss, yyssp, yyvs, yyvsp, yysslim, yystacksize)";
+	seen_yystype_begin = 0;
+	seen_yystype_end = 0;
+	proto_buffer = "";
+}
+
+# look for YYSTYPE union definition, 
+# hope there are no more union definitions!
+/typedef.*union/ {
+	seen_yystype_begin = 1;
+}
+
+/}.*YYSTYPE;/ {
+	seen_yystype_end = seen_yystype_begin;
+	# print "/* found definition of YYSTYPE */";
 }
 
 /yygrowstack.*\(.*\)/ {
@@ -41,11 +64,20 @@ BEGIN {
 		proto = substr(str, ind, RLENGTH);	# length of match
 		# assuming there is only one ')' in proto:
 		# insert new formal arguments
-		gsub("\\)", new_formals, proto);
+		if (match(proto, "\\(void\\)")) {
+			gsub("void\\)", new_formals, proto);
+		} else {
+			gsub("\\)", new_formals, proto);
+		}
 		# just gimme a goddam '&' character!!! (doesn't work)
 		# gsub("REFERENCE", "\\&", proto);
 		gsub(definition_regex, proto, str);
-		print str;
+		if (seen_yystype_end) {
+			print str;
+		} else {
+			# save it for later
+			proto_buffer = str;
+		}
 	} else if (match(str, prototype_regex)) {
 		# just delete the prototype which may look something like:
 		# static int yygrowstack __P((void));
@@ -62,5 +94,11 @@ BEGIN {
 
 !/yygrowstack.*\(.*\)/ {
 	print;			# echo back out
+	if (seen_yystype_end && length(proto_buffer)) {
+		print proto_buffer;
+		proto_buffer = "";
+		see_yystype_begin = 0;	# unnecessary
+		see_yystype_end = 0;	# unnecessary
+	}
 }
 

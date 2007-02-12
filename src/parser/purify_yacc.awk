@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_yacc.awk"
-#	$Id: purify_yacc.awk,v 1.4 2006/01/22 06:53:25 fang Exp $
+#	$Id: purify_yacc.awk,v 1.5 2007/02/12 06:54:41 fang Exp $
 # helper script to transform yacc's generated parser into a pure-parser.
 # one that is re-entrant.  
 
@@ -17,8 +17,8 @@
 # int yystacksize;
 
 BEGIN {
-	this_script = "\"parser/purify_yacc.awk\"";
-	# associaltive array with (optional) initial values
+	this_script = "\"$(srcdir)/parser/purify_yacc.awk\"";
+	# associative array with (optional) initial values
 	# delete declarations;	# this is not POSIX
 	for (d in declarations) delete declarations[d];	# this IS
 }
@@ -63,10 +63,12 @@ function comment_out(str) {
 	} else if (match($0, "^int yystacksize;")) {
 		declarations[$0] = "1";
 		comment_out($0);
-	} else if (match($0, "^yyparse\\(.*\\)")) {
+	} else if (match($0, "^yyparse[ ]*\\(.*\\)[^{]*$")) {	# no open brace
 		print;
-		getline;	# expecting open brace
-		print;
+		do {
+			getline;	# expecting open brace
+			print;
+		} while (!match($0, "\\{"));
 		print "/* Injected by " this_script " */";
 		for (d in declarations) {
 			init = declarations[d];

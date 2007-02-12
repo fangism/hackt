@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-parse-options.h,v 1.3 2006/07/01 21:00:33 fang Exp $
+	$Id: instref-parse-options.h,v 1.4 2007/02/12 06:54:41 fang Exp $
  */
 
 #ifndef	__PARSER_INSTREF_PARSE_OPTIONS_H__
@@ -58,13 +58,17 @@
 #define	YYPARSE_PARAM		null, YYSTYPE& instref_lval, FILE* infile
 #endif
 
+#if defined(YYBYACC)
 #if USING_YACC
 // we need more drastic measure to hack the prototype...
 #endif
-
 #if USING_BYACC
 // ?
 #endif
+// some versons of byacc use YYPARSE_PARAM_TYPE
+#define	YYPARSE_PARAM
+#define	YYPARSE_PARAM_TYPE	void*, YYSTYPE& instref_lval, FILE* infile
+#endif	// YYBYACC
 
 #endif	// __PARSER_INSTREF_PARSE_OPTIONS_H__
 
