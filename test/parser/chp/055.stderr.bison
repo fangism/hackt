@@ -23,9 +23,9 @@ in state #STATE#, possible rules are:
 	chp_metaloop_selection: '[' . ':' ID ':' range ':' chp_guarded_command ']'  (#RULE#)
 	                      | '[' . THICKBAR ID ':' range ':' chp_guarded_command ']'  (#RULE#)
 acceptable tokens are: 
-	'#' (shift)
 	'(' (shift)
 	':' (shift)
+	'#' (shift)
 	'-' (shift)
 	'~' (shift)
 	ID (shift)
