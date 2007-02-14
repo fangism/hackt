@@ -1,10 +1,10 @@
 /**
-	\file "sim/command.cc"
-	$Id: command.cc,v 1.3 2007/01/21 08:10:52 fang Exp $
+	\file "sim/command_base.cc"
+	$Id: command_base.cc,v 1.1 2007/02/14 04:57:23 fang Exp $
  */
 
 #include <iostream>
-#include "sim/command.h"
+#include "sim/command_base.h"
 #include "util/NULL.h"
 
 namespace HAC {

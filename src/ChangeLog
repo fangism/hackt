@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-82:
+	  Lesson: don't name translation units with same name, even if they
+		reside in different subdirectories.  On systems with
+		case-insensitive filenames (darwin/HFS), libtool and the
+		linker may be confused when moving and renaming object files.
+	  Renamed sim/command.{h,tcc,cc} to sim/command_base.{h,tcc,cc}, 
+		which fixes a "dyld: lazy symbol binding failed" error.
+
+
 2007-02-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-81:

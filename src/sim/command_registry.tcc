@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.2 2007/01/21 06:00:29 fang Exp $
+	$Id: command_registry.tcc,v 1.3 2007/02/14 04:57:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -9,7 +9,7 @@
 #include <iostream>
 
 #include "sim/command_registry.h"
-#include "sim/command.h"
+#include "sim/command_base.h"
 #include "sim/command_category.h"
 #include "util/readline_wrap.h"
 #include "util/named_ifstream_manager.h"

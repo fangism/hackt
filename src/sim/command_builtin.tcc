@@ -1,13 +1,13 @@
 /**
 	\file "sim/command_builtin.tcc"
-	$Id: command_builtin.tcc,v 1.2 2007/01/21 06:00:23 fang Exp $
+	$Id: command_builtin.tcc,v 1.3 2007/02/14 04:57:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_BUILTIN_TCC__
 #define	__HAC_SIM_COMMAND_BUILTIN_TCC__
 
 #include "sim/command_builtin.h"
-#include "sim/command.h"
+#include "sim/command_base.h"
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
 #include <list>

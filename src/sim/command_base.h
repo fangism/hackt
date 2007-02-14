@@ -2,11 +2,11 @@
 	\file "sim/command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: command.h,v 1.2 2007/01/21 06:00:18 fang Exp $
+	$Id: command_base.h,v 1.1 2007/02/14 04:57:23 fang Exp $
  */
 
-#ifndef	__HAC_SIM_COMMAND_H__
-#define	__HAC_SIM_COMMAND_H__
+#ifndef	__HAC_SIM_COMMAND_BASE_H__
+#define	__HAC_SIM_COMMAND_BASE_H__
 
 #include <iosfwd>
 #include <string>
@@ -190,5 +190,5 @@ private:
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_COMMAND_H__
+#endif	// __HAC_SIM_COMMAND_BASE_H__
 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.cc"
-	$Id: command_registry.cc,v 1.2 2007/01/21 06:00:26 fang Exp $
+	$Id: command_registry.cc,v 1.3 2007/02/14 04:57:24 fang Exp $
  */
 
 #include <iostream>
@@ -9,7 +9,7 @@
 #include <list>
 #include <string>
 #include "sim/command_registry.h"
-#include "sim/command.h"
+#include "sim/command_base.h"
 #include "util/qmap.tcc"
 
 namespace HAC {

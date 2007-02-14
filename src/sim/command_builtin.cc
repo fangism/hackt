@@ -2,11 +2,11 @@
 	\file "sim/command_builtin.cc"
 	NOTE: this file should NOT contain any global static initializations
 	because their initialization ordering is not defined between TUs.  
-	$Id: command_builtin.cc,v 1.2 2007/01/21 06:00:19 fang Exp $
+	$Id: command_builtin.cc,v 1.3 2007/02/14 04:57:24 fang Exp $
  */
 
 #include "sim/command_builtin.h"
-#include "sim/command.h"
+#include "sim/command_base.h"
 #include <list>
 #include <string>
 #include <iostream>

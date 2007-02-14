@@ -2,7 +2,7 @@
 	\file "sim/chpsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.2 2007/01/21 06:00:38 fang Exp $
+	$Id: Command.h,v 1.3 2007/02/14 04:57:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_COMMAND_H__
@@ -11,7 +11,7 @@
 #include <iosfwd>
 #include <string>
 #include "util/macros.h"
-#include "sim/command.h"
+#include "sim/command_base.h"
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
 

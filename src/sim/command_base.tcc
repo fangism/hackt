@@ -1,13 +1,13 @@
 /**
-	\file "sim/command.tcc"
-	$Id: command.tcc,v 1.2 2007/01/21 06:00:19 fang Exp $
+	\file "sim/command_base.tcc"
+	$Id: command_base.tcc,v 1.1 2007/02/14 04:57:23 fang Exp $
  */
 
-#ifndef	__HAC_SIM_COMMAND_TCC__
-#define	__HAC_SIM_COMMAND_TCC__
+#ifndef	__HAC_SIM_COMMAND_BASE_TCC__
+#define	__HAC_SIM_COMMAND_BASE_TCC__
 
 #include <iostream>
-#include "sim/command.h"
+#include "sim/command_base.h"
 
 namespace HAC {
 namespace SIM {
@@ -47,5 +47,5 @@ Command<State>::main(state_type& s, const string_list& args) const {
 }	// end namespace SIM
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_COMMAND_TCC__
+#endif	// __HAC_SIM_COMMAND_BASE_TCC__
 

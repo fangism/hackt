@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.5 2007/02/08 22:55:20 fang Exp $
+	$Id: Command.cc,v 1.6 2007/02/14 04:57:24 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -23,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "sim/chpsim/Command.h"
 #include "sim/chpsim/State.h"
-#include "sim/command.tcc"
+#include "sim/command_base.tcc"
 #include "sim/command_builtin.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
