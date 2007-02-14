@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2007-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-81:
+	  Tests now run with shared-library built executables by making
+		soft-link to built src/.libs.
+
+
 2007-02-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-72-merged-chpsim-02-19:

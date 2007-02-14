@@ -2,7 +2,7 @@
  *	\file "lexer/type-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: type-lex.ll,v 1.1 2006/07/30 05:49:40 fang Exp $
+ *	$Id: type-lex.ll,v 1.2 2007/02/14 00:31:11 fang Exp $
  */
 
 %{
@@ -78,7 +78,7 @@ static	token_position string_pos(1, 0, 1);
 
 /*
 static	char string_buf[STRING_MAX_LEN];
-static	char* string_buf_ptr = NULL;
+static	char* string_buf_ptr = string_buf;
 */
 
 /**

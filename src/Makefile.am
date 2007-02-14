@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.154 2007/02/09 04:36:42 fang Exp $
+#	$Id: Makefile.am,v 1.155 2007/02/14 00:31:02 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -54,39 +54,39 @@ CLEANFILES += $(bin_SCRIPTS)
 # no need to use $(DESTDIR) (typically used for a staged install)
 # installcheck is never run on the staged install, only on the final
 haco: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 hacunroll: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 haccreate: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 hacalloc: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 hflat: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 hacprsim: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@$(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 hacchpsim: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" >> $@
-	@$(CHMOD) +x $@
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" ;} > $@ ; \
+	$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation
 noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
@@ -98,6 +98,9 @@ noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
 	libhacktcommon.la libhacktsim.la $(FUNLIBS) \
 	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
+pkglib_LTLIBRARIES = libhacktlib.la
+# lib_LTLIBRARIES = libhacktlib.la
+
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
 LIBBOGUS_LA = libbogus_la
@@ -105,14 +108,18 @@ LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
 
+libhacktlib_la_SOURCES =
+libhacktlib_la_LIBADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
+	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
+	$(LIBFANGUTIL)
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
-	$(LIBFANGUTIL)
-# libhackt.la includes libhacktparsers.la, dependency below
+hackt_LDADD = libhacktlib.la
+#	libhacktexec.la libhacktsim.la libhacktparsers.la \
+#	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
+#	$(LIBFANGUTIL)
 
 getopt_test_SOURCES = test/getopt_test.cc
 
@@ -863,9 +870,6 @@ lexer/$(LIBBOGUS3_LA)-$(TYPE_LEX_ROOT).lo \
 # parser/$(HACKT_PARSE_ROOT).$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
 # this creates cyclic dependencies (bad)
 # parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.h
-
-# libhackt used to include all of libhacktparsers
-# libhackt_la_LIBADD = libhacktparsers.la
 
 # compile lexer and parser into separate library to for convenient way
 # of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS

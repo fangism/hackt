@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.1 2006/11/15 00:08:55 fang Exp $
+ *	$Id: hacflat-lex.ll,v 1.2 2007/02/14 00:31:09 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -82,7 +82,7 @@ static	token_position string_pos(1, 0, 1);
 ***/
 /* for string matching and escape sequence expansion */
 static	char string_buf[STRING_MAX_LEN];
-static	char* string_buf_ptr = NULL;
+static	char* string_buf_ptr = string_buf;
 
 /**
 	Thie macro is intended for use with ostream& operator << .

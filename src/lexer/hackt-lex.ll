@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.17 2006/07/30 05:49:36 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.18 2007/02/14 00:31:10 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -143,7 +143,7 @@ static	token_position string_pos(1, 0, 1);
 
 /* for string matching */
 static	char string_buf[STRING_MAX_LEN];
-static	char* string_buf_ptr = NULL;
+static	char* string_buf_ptr = string_buf;
 
 /**
 	Thie macro is intended for use with ostream& operator << .

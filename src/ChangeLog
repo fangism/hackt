@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-81:
+	  NEW: We are now using a massive installed dynamic shared library:
+		${exec_prefix}/hackt/libhacktlib.la, 
+		after I figured out BSD shared library issues.
+		Basically, need to soft-link .libs locally when built
+		executable is invoked out-of-path (done in test/).  
+	  FreeBSD-4.3's installed executables don't quite work with shlibs, 
+		something not quite right, use --disable-shared, until 
+		I figure it out.  (There is no curse in perl appropriate 
+		for this fiasco.)
+	  BUG FIX: Latent lexer bug fixed: poorly initialized string_buf_ptr, 
+		only exposed with shlib linking, possibly related to 
+		static global initialization ordering.
+
+
 2007-02-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-80:
