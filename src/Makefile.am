@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.155 2007/02/14 00:31:02 fang Exp $
+#	$Id: Makefile.am,v 1.156 2007/02/14 02:04:29 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -79,7 +79,7 @@ hflat: $(top_builddir)/config.status
 	$(CHMOD) +x $@
 
 hacprsim: $(top_builddir)/config.status
-	@$(ECHO) "#!$(SH_PATH)" ; \
+	@{ $(ECHO) "#!$(SH_PATH)" ; \
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" ;} > $@ ; \
 	$(CHMOD) +x $@
 
