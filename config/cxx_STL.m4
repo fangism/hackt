@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.5 2006/05/09 05:39:15 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.6 2007/02/21 17:00:21 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -507,6 +507,65 @@ if test "$fang_cv_cxx_stl_functional_select2nd" = yes ; then
 		[Define if STL contains _Select2nd functor])
 fi
 
+])dnl
+
+
+dnl @synopsis FANG_CXX_STL_BITSET_EXTENSIONS
+dnl
+dnl Two tests combined in one.
+dnl Checks if <bitset> has member functions _Find_first(), _Find_next(),
+dnl as given by GLIBC++'s SGI extensions.  
+dnl Defines HAVE_STD_BITSET_FIND_FIRST, HAVE_STD_BITSET_FIND_NEXT
+dnl respectively, if they are available and defined.  
+dnl In source, "util/bitset.h" provides a common interface in either case.
+dnl
+dnl @category Cxx
+dnl @version 2007-02-20
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_BITSET_EXTENSIONS],
+[AC_REQUIRE([FANG_HEADER_STDCXX])
+
+AC_CACHE_CHECK([whether std::bitset contains _Find_first()],
+[fang_cv_cxx_stl_bitset_find_first],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		#include <bitset>
+	], [
+		std::bitset<24> foo(0xbad0);
+		return (foo._Find_first() != 4);
+	]),
+	[fang_cv_cxx_stl_bitset_find_first=yes],
+	[fang_cv_cxx_stl_bitset_find_first=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_bitset_find_first" = yes ; then
+	AC_DEFINE(HAVE_STD_BITSET_FIND_FIRST, [],
+		[Define if std::bitset has _Find_first() method])
+fi
+
+AC_CACHE_CHECK([whether std::bitset contains _Find_next()],
+[fang_cv_cxx_stl_bitset_find_next],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		#include <bitset>
+	], [
+		std::bitset<24> foo(0xf00d);
+		return (foo._Find_next(7) != 12);
+	]),
+	[fang_cv_cxx_stl_bitset_find_next=yes],
+	[fang_cv_cxx_stl_bitset_find_next=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_bitset_find_next" = yes ; then
+	AC_DEFINE(HAVE_STD_BITSET_FIND_NEXT, [],
+		[Define if std::bitset has _Find_next() method])
+fi
 ])dnl
 
 

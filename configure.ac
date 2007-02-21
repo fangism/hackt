@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.118 2007/02/14 00:30:49 fang Exp $
+#	$Id: configure.ac,v 1.119 2007/02/21 17:00:19 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -210,7 +210,12 @@ FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
 FANG_CXX_STD_IFSTREAM_DEV_STDIN
 FANG_CXX_STD_OFSTREAM_DEV_STDOUT
 FANG_CXX_STD_OFSTREAM_DEV_STDERR
+FANG_CXX_STL_BITSET_EXTENSIONS
+dnl check for compiler's built-in functions
 FANG_C_BUILTIN_EXPECT
+AC_LANG_PUSH(C++)
+FANG_FUNC_BUILTIN_BITOPS
+AC_LANG_POP(C++)
 
 AC_CACHE_SAVE
 
@@ -296,6 +301,7 @@ dnl wait3 and wait4 are not specificed by POSIX, avoid using them if possible
 
 dnl the following are expected to be in glibc
 AC_CHECK_FUNCS([fmemopen open_memstream])
+
 
 dnl but keep errors for type checks.  
 CFLAGS="$CONFTEST_CFLAGS"

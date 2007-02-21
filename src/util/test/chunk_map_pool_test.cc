@@ -1,7 +1,7 @@
 /**
 	\file "chunk_map_pool_test.cc"
 	Testing functionality of chunk_map_pool allocator.  
-	$Id: chunk_map_pool_test.cc,v 1.5 2006/02/26 02:28:03 fang Exp $
+	$Id: chunk_map_pool_test.cc,v 1.6 2007/02/21 17:00:30 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "util/using_ostream.h"
-using util::memory::chunk_map_pool_chunk;
+using util::memory::fixed_pool_chunk;
 using util::memory::chunk_map_pool;
 using util::memory::excl_ptr;
 
@@ -34,10 +34,10 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(foo, "foo")
 }
 
-typedef	chunk_map_pool_chunk<foo,8>		small_chunk_type;
-typedef	chunk_map_pool_chunk<foo,16>		medium_chunk_type;
-typedef	chunk_map_pool_chunk<foo,32>		large_chunk_type;
-typedef	chunk_map_pool_chunk<foo, HUGE_SIZE>	huge_chunk_type;
+typedef	fixed_pool_chunk<foo,8>			small_chunk_type;
+typedef	fixed_pool_chunk<foo,16>		medium_chunk_type;
+typedef	fixed_pool_chunk<foo,32>		large_chunk_type;
+typedef	fixed_pool_chunk<foo, HUGE_SIZE>	huge_chunk_type;
 
 typedef	chunk_map_pool<foo,8>			small_pool_type;
 typedef	chunk_map_pool<foo,16>			medium_pool_type;

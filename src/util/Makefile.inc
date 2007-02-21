@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.24 2007/02/08 20:34:26 fang Exp $
+#	$Id: Makefile.inc,v 1.25 2007/02/21 17:00:26 fang Exp $
 #	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -26,8 +26,10 @@ UTIL_TCC_FILES = \
 	util/list_vector.tcc \
 	util/memory/chunk_map_pool.tcc \
 	util/memory/destruction_policy.tcc \
+	util/memory/fixed_pool_chunk.tcc \
 	util/memory/index_pool.tcc \
 	util/memory/list_vector_pool.tcc \
+	util/memory/typeless_memory_chunk.tcc \
 	util/memory/count_ptr.tcc \
 	util/memory/count_array_ptr.tcc \
 	util/memory/count_malloc_ptr.tcc \

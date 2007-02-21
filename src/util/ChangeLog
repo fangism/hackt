@@ -1,5 +1,17 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.64 2007/02/08 20:34:25 fang Exp $
+#	$Id: ChangeLog,v 1.65 2007/02/21 17:00:25 fang Exp $
+
+2007-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-83:
+	  util/bitset.h: fleshed out more of util::bitset wrapper class
+		and added functor specializations for it.
+	  util/memory/chunk_map_pool.{h,tcc}: factored out re-usable
+		code into finite_pool_chunk (was chunk_map_pool_chunk)
+		and typeless_memory_chunk.  
+		typeless_memory_chunk now uses util::bitset for
+		member map management.  
+
 
 2007-02-08	David Fang		<fangism@users.sourceforge.net>
 

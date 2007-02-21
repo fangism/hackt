@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.13 2007/01/21 05:59:07 fang Exp $
+	$Id: preal_const.h,v 1.14 2007/02/21 17:00:24 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -115,7 +115,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 
 	enum {
-#ifdef	HAVE_UINT64_TYPE
+#if	0 && defined(HAVE_UINT64_TYPE)
 		pool_chunk_size = 64
 #else
 		pool_chunk_size = 32

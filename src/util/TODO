@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.15 2007/01/21 17:00:31 fang Exp $
+	$Id: TODO,v 1.16 2007/02/21 17:00:26 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -35,6 +35,9 @@ hash_qmap, qmap: replace inheritance from hash_map and map
 	But I feel it's worth it.  
 
 Do this with hash_qmap, qmap, multikey_qmap, etc. first to see benefit.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+use std::bitset where possible (or at least util::bitset wrapper)
 
 -------------------------------------------------------------------------------
 persistent_object_manager:

@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.12 2006/05/06 22:08:41 fang Exp $
+	$Id: chunk_map_pool.h,v 1.13 2007/02/21 17:00:27 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -14,15 +14,8 @@
 #include "util/memory/chunk_map_pool_fwd.h"
 #include "util/numeric/inttype_traits.h"
 #include "util/macros.h"
-#include "util/bitset.h"
-#include "util/attributes.h"
+#include "util/memory/fixed_pool_chunk.h"
 #include "util/cppcat.h"
-
-#define	CHUNK_MAP_POOL_CHUNK_CLASS					\
-chunk_map_pool_chunk<T,C>
-
-#define	CHUNK_MAP_POOL_CLASS						\
-chunk_map_pool<T,C,Threaded>
 
 //=============================================================================
 /**
@@ -212,192 +205,6 @@ namespace util {
 namespace memory {
 using std::ostream;
 
-#if 0
-// OBSOLETE
-/**
-	Chunk size must be some power-of-2.
-	Currently, we only provide specializations for 8, 16, 32.  
- */
-template <size_t C>
-struct chunk_size_traits;
-
-template <>
-struct chunk_size_traits<8> {
-//	enum { size = 8 };
-//	typedef	uint8			bit_map_type;
-	// concept_check sizeof(bit_map_type)/size == 1
-	typedef	size_t			print_type;
-};
-
-template <>
-struct chunk_size_traits<16> {
-//	enum { size = 16 };
-//	typedef	uint16			bit_map_type;
-	typedef	size_t			print_type;
-};
-
-template <>
-struct chunk_size_traits<32> {
-//	enum { size = 32 };
-//	typedef	uint32			bit_map_type;
-	typedef	size_t			print_type;
-};
-
-// will be compiler/architecture -specific
-template <>
-struct chunk_size_traits<64> {
-//	enum { size = 64 };
-//	typedef	uint64			bit_map_type;
-#if	defined(HAVE_UINT64_TYPE)
-	typedef	uint64			print_type;
-#elif	defined(HAVE_INT64_TYPE)
-	// signed type will also do
-	typedef	int64			print_type;
-#else
-#error	"Missing 64b type, need some help."
-#endif
-};
-#endif
-
-//=============================================================================
-#define	TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE			\
-template <size_t S, size_t C>
-
-#define	TYPELESS_MEMORY_CHUNK_CLASS					\
-typeless_memory_chunk<S,C>
-
-/**
-	Micro memory manager for a fixed size block of allocation.  
-	Only applicable to allocating and deallocating one element at time.  
-	This class is not responsible for any construction or destruction.  
-	\param S sizeof an element.
-	\param C chunk size, must be a power of 2.
- */
-template <size_t S, size_t C>
-class typeless_memory_chunk {
-	typedef	TYPELESS_MEMORY_CHUNK_CLASS	this_type;
-protected:
-	typedef	char				storage_type[S];
-public:
-	/**
-		Bit mask type signedness matter if we ever shift right.  
-	 */
-#if 0
-	typedef	typename chunk_size_traits<C>::bit_map_type
-#else
-	typedef	typename numeric::uint_of_size<C>::type
-#endif
-						bit_map_type;
-	enum { element_size = S };
-	enum { chunk_size = C };
-protected:
-	/// chunk of memory, as plain old data
-	storage_type				elements[C];
-	/**
-		The free-mask is used to determine which elements 
-		are available for allocation, and which are live
-		(already allocated out).
-		0 means free, 1 means allocated.
-		The interface should follow that of std::bitset();
-	 */
-	bit_map_type				free_mask;
-
-protected:
-	/**
-		Default constructor, leaves elements uninitialized.
-	 */
-	typeless_memory_chunk() : free_mask(0) { }
-
-public:
-	/**
-		Non-default copy-constructor, nothing is actually copied.  
-	 */
-	typeless_memory_chunk(const this_type& ) : free_mask(0) { }
-
-	/**
-		No safety checks in this destructor.  
-	 */
-	~typeless_memory_chunk() { }
-
-	/// empty means every element is available for allocation
-	bool
-	empty(void) const
-#if 0
-		{ return !this->free_mask; }
-#else
-		{ return !any_bits<bit_map_type>()(this->free_mask); }
-#endif
-
-	/// free means no element is available for allocation
-	bool
-	full(void) const
-#if 0
-		{ return !bit_map_type(this->free_mask +1); }
-//		{ return this->free_mask == bit_map_type(-1); }
-#else
-		{ return all_bits<bit_map_type>()(this->free_mask); }
-#endif
-
-	const void*
-	start_address(void) const {
-		return this->elements;
-	}
-
-	const void*
-	past_end_address(void) const {
-		return &this->elements[C];
-	}
-
-	bool
-	contains(void*) const;
-
-protected:		// really only intended for internal use
-	void*
-	__allocate(void) __ATTRIBUTE_MALLOC__;
-
-	void
-	__deallocate(void*);
-
-};	// end class typeless_memory_chunk
-
-//=============================================================================
-/**
-	Fixed size type-specific chunk.
-	Defined as a struct with public members, but the allocator
-	shouldn't ever leak out a reference to this type.  
-	Even this alone may be useful for local allocation.  
-	Consider making a thread-locked variation...
-	currently, this is thread-blind.
- */
-CHUNK_MAP_POOL_CHUNK_TEMPLATE_SIGNATURE
-class chunk_map_pool_chunk : public typeless_memory_chunk<sizeof(T), C> {
-	typedef	CHUNK_MAP_POOL_CHUNK_CLASS	this_type;
-protected:
-	typedef	typeless_memory_chunk<sizeof(T), C>	parent_type;
-public:
-	typedef	typename parent_type::bit_map_type	bit_map_type;
-	typedef	T				value_type;
-	typedef	T*				pointer;
-public:
-	chunk_map_pool_chunk();
-
-	~chunk_map_pool_chunk();
-
-	bool
-	contains(pointer) const;
-
-	/// wrap around parent's
-	pointer
-	allocate(void) __ATTRIBUTE_MALLOC__ ;
-
-	void
-	deallocate(pointer);
-
-	ostream&
-	status(ostream&) const;
-
-};	// end class chunk_map_pool_chunk
-
 //=============================================================================
 // specialization
 template <size_t C, bool Threaded>
@@ -442,7 +249,7 @@ public:
 	struct rebind {	typedef	chunk_map_pool<S,C>	other; };
 protected:
 	// or use typeless_memory_chunk?
-	typedef	chunk_map_pool_chunk<T,C>		chunk_type;
+	typedef	fixed_pool_chunk<T,C>		chunk_type;
 	// possibly be able to pass in underlying allocator to chunk_set
 	typedef	std::list<chunk_type>			chunk_set_type;
 	typedef	typename chunk_set_type::iterator	chunk_set_iterator;

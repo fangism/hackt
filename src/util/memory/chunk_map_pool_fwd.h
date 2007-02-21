@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool_fwd.h"
 	Forward declarations for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool_fwd.h,v 1.7 2006/04/27 00:17:28 fang Exp $
+	$Id: chunk_map_pool_fwd.h,v 1.8 2007/02/21 17:00:28 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
@@ -57,12 +57,6 @@ public:									\
 
 namespace util {
 namespace memory {
-
-#define CHUNK_MAP_POOL_CHUNK_TEMPLATE_SIGNATURE				\
-template <class T, size_t C>
-
-CHUNK_MAP_POOL_CHUNK_TEMPLATE_SIGNATURE
-class chunk_map_pool_chunk;
 
 
 #define	CHUNK_MAP_POOL_TEMPLATE_SIGNATURE				\
