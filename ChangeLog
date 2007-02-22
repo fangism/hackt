@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2007-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-86:
+	  config/cxx_STL.m4: check whether SGI extension bitset member 
+		functions are actually *linkable* using g++.
+		Extends tests to compile and link (separately)
+
+
 2007-02-21	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-83:

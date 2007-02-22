@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.66 2007/02/22 01:09:14 fang Exp $
+#	$Id: ChangeLog,v 1.67 2007/02/22 22:27:38 fang Exp $
+
+2007-02-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-86:
+	  Workaround for missing library definition of std::bitset's
+		_M_do_find_first (suse-linux-g++-3.3).  
+
 
 2007-02-21	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.6 2007/02/21 17:00:21 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.7 2007/02/22 22:27:37 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -52,6 +52,7 @@ dnl @synopsis FANG_CXX_STD_IFSTREAM_DEV_STDIN
 dnl
 dnl Checks to see if std::ifstream can open "/dev/stdin"
 dnl Defines HAVE_STD_IFSTREAM_DEV_STDIN if successful.  
+dnl TODO: if cross-compiling, assume yes instead of testing
 dnl
 dnl @category Cxx
 dnl @version 2006-05-08
@@ -545,6 +546,28 @@ AC_LANG_POP(C++)
 if test "$fang_cv_cxx_stl_bitset_find_first" = yes ; then
 	AC_DEFINE(HAVE_STD_BITSET_FIND_FIRST, [],
 		[Define if std::bitset has _Find_first() method])
+	dnl added this test because at least one system fails
+	AC_CACHE_CHECK([whether std::bitset::_Find_first is defined in libstdc++],
+		[fang_cv_cxx_stl_bitset_find_first_in_lib],
+	[AC_LANG_PUSH(C++)
+		AC_LINK_IFELSE(
+			AC_LANG_PROGRAM([
+				#include <bitset>
+			], [
+				std::bitset<24> foo(0xbad0);
+				return (foo._Find_first() != 4);
+			]),
+			[fang_cv_cxx_stl_bitset_find_first_in_lib=yes],
+			[fang_cv_cxx_stl_bitset_find_first_in_lib=no]
+		)
+	AC_LANG_POP(C++)
+	])
+	if test "$fang_cv_cxx_stl_bitset_find_first_in_lib" = yes ; then
+		AC_DEFINE(HAVE_STD_BITSET_FIND_FIRST_IN_LIB, [],
+			[Define if std::bitset::_Find_first() is in libstdc++])
+	else
+		AC_MSG_NOTICE([Lovely, your libstdc++ is horked...])
+	fi
 fi
 
 AC_CACHE_CHECK([whether std::bitset contains _Find_next()],
@@ -565,6 +588,28 @@ AC_LANG_POP(C++)
 if test "$fang_cv_cxx_stl_bitset_find_next" = yes ; then
 	AC_DEFINE(HAVE_STD_BITSET_FIND_NEXT, [],
 		[Define if std::bitset has _Find_next() method])
+	dnl added this test because at least one system fails
+	AC_CACHE_CHECK([whether std::bitset::_Find_next is defined in libstdc++],
+		[fang_cv_cxx_stl_bitset_find_next_in_lib],
+	[AC_LANG_PUSH(C++)
+		AC_LINK_IFELSE(
+		AC_LANG_PROGRAM([
+			#include <bitset>
+		], [
+			std::bitset<24> foo(0xf00d);
+			return (foo._Find_next(7) != 12);
+		]),
+			[fang_cv_cxx_stl_bitset_find_next_in_lib=yes],
+			[fang_cv_cxx_stl_bitset_find_next_in_lib=no]
+		)
+	AC_LANG_POP(C++)
+	])
+	if test "$fang_cv_cxx_stl_bitset_find_next_in_lib" = yes ; then
+		AC_DEFINE(HAVE_STD_BITSET_FIND_NEXT_IN_LIB, [],
+			[Define if std::bitset::_Find_next() is in libstdc++])
+	else
+		AC_MSG_NOTICE([Wonderful, your libstdc++ is horked...])
+	fi
 fi
 ])dnl
 

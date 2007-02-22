@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-86:
+	  See util/ChangeLog for workaround to missing bitset::_Find_first().
+
+
 2007-02-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-85:
