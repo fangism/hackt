@@ -1,7 +1,15 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.65 2007/02/21 17:00:25 fang Exp $
+#	$Id: ChangeLog,v 1.66 2007/02/22 01:09:14 fang Exp $
 
 2007-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-84:
+	  Re-checking 64b-ness on amd64.  
+	  util/test/Makefile.am: add util/bitset.cc to libfangutil.la
+		for 64b builds.
+	  util/bitset.h: qualify 1 with 1UL (unsigned long)
+	  util/bitset.cc: pretty-print formatting
+
 
 	* HACKT-00-01-04-main-00-80-83:
 	  util/bitset.h: fleshed out more of util::bitset wrapper class

@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.53 2007/01/21 06:01:25 fang Exp $
+#	$Id: Makefile.am,v 1.54 2007/02/22 01:09:15 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -85,7 +85,8 @@ EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
 
 AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
-BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc \
+BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
+	ref_count_pool.cc bitset.cc \
 	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -106,6 +107,7 @@ list_vector_test_SOURCES = list_vector_test.cc
 list_vector_pool_test_SOURCES = list_vector_pool_test.cc
 list_vector_pool_test_LDADD = libfangutil.la
 chunk_map_pool_test_SOURCES = chunk_map_pool_test.cc
+chunk_map_pool_test_LDADD = libfangutil.la
 chunk_pool_ref_count_test_SOURCES = chunk_pool_ref_count_test.cc
 chunk_pool_ref_count_test_LDADD = libfangutil.la
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
@@ -150,7 +152,7 @@ collection_pool_test_SOURCES = collection_pool_test.cc
 collection_pool_test_LDADD = libfangutil.la
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
-	ref_count_pool.cc
+	ref_count_pool.cc bitset.cc
 libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.h static_trace.cc
 libpooled_la_SOURCES = \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
@@ -190,6 +192,9 @@ thread_lock.cc: ../memory/thread_lock.cc
 	$(LN_S) $? $@
 
 ref_count_pool.cc: ../memory/ref_count_pool.cc
+	$(LN_S) $? $@
+
+bitset.cc: ../bitset.cc
 	$(LN_S) $? $@
 
 friend_function_formal_bug.stderr:

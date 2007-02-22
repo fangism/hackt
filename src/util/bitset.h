@@ -2,7 +2,7 @@
 	\file "util/bitset.h"
 	Extended bitset.
 	Also contains wrapper functors for other bit-operations.  
-	$Id: bitset.h,v 1.5 2007/02/21 17:00:26 fang Exp $
+	$Id: bitset.h,v 1.6 2007/02/22 01:09:14 fang Exp $
  */
 
 #ifndef	__UTIL_BITSET_H__
@@ -147,7 +147,7 @@ struct all_bits<bitset<NB> > {
 #if 0
 		return (~t).any();
 #else
-		return t.to_ulong() +1 == (1 << NB);
+		return t.to_ulong() +1 == (1UL << NB);
 #endif
 	}
 };	// end struct all_bits
