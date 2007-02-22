@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.4 2007/01/24 03:43:27 fang Exp $
+#	$Id: scantexdepend.awk,v 1.5 2007/02/22 05:30:11 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
@@ -12,10 +12,13 @@ BEGIN {
 	hold = "";
 }
 
+# be careful to preserve $0
 function valid_file(str, 
-	ret) {
+	ret, buf) {
+	buf = $0;
 	ret = (getline < str);
 	close(str)
+	$0 = buf;
 	return ret;
 }
 
@@ -48,11 +51,12 @@ function valid_file(str,
 	while (match($0,"\\([/\\.]")) {
 		# eat up everything up to and including the open-parenthesis
 		sub("^[^(]*\\(", "", $0);
-		# print "HAVE: " $0;
+		# print "\n# HAVE: " $0;
 		ntoks = split($0, toks);
 		dep = toks[1];
 		# eat closing paren if attached to first token
 		gsub("[)]+", "", dep);
+		# print "\n# DEP: " dep;
 		# File name must end with a 'normal' character.
 		# Suppress auxiliary dependencies, because they are cleaned
 		# and we do not write suffix rules for them (yet).
@@ -73,6 +77,7 @@ function valid_file(str,
 				hold = dep;
 			}
 		}
+		# print "\n# LEFT: " $0;
 	}
 }
 

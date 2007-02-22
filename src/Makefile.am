@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.157 2007/02/14 04:57:21 fang Exp $
+#	$Id: Makefile.am,v 1.158 2007/02/22 05:30:12 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -108,12 +108,16 @@ LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
 
-libhacktlib_la_SOURCES =
+# pass in a C++ file to coerce --tag=CXX linkage
+libhacktlib_la_SOURCES = libhacktlib.cc
 libhacktlib_la_LIBADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
 	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
 	$(LIBFANGUTIL)
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
+libhacktlib.cc:
+	$(TOUCH) $@
+CLEANFILES += libhacktlib.cc
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktlib.la

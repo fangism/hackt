@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.cc"
 	Implementation of core hackt program registration interface.  
-	$Id: program_registry.cc,v 1.4 2005/12/13 04:15:48 fang Exp $
+	$Id: program_registry.cc,v 1.5 2007/02/22 05:30:13 fang Exp $
  */
 
 #include <iostream>
@@ -63,4 +63,14 @@ register_hackt_program(const char* name,
 
 //=============================================================================
 }	// end namespace HAC
+
+//=============================================================================
+namespace util {
+namespace memory {
+// explicit template instantiations
+
+template class count_ptr<HAC::program_entry::program_registry_type>;
+
+}	// end namespace memory
+}	// end namespace util
 

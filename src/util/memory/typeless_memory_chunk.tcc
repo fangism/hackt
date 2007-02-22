@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/typeless_memory_chunk.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: typeless_memory_chunk.tcc,v 1.1 2007/02/21 17:00:29 fang Exp $
+	$Id: typeless_memory_chunk.tcc,v 1.2 2007/02/22 05:30:14 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_TYPELESS_MEMORY_CHUNK_TCC__
@@ -134,7 +134,8 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 		cerr << "PANIC!" << endl;
 	}
 #endif
-	INVARIANT(any_bits<bit_map_type>()(free_mask & dealloc_mask));
+	// .operator() needed for g++-3.3 :S
+	INVARIANT(any_bits<bit_map_type>().operator()(free_mask & dealloc_mask));
 #if	TYPELESS_MEMORY_CHUNK_USE_BITSET
 	free_mask = free_mask.to_ulong() - dealloc_mask.to_ulong();
 #else

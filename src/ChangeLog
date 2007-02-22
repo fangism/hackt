@@ -5,6 +5,14 @@
 
 2007-02-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-85:
+	  Re-testing on powerpc-apple-darwin7-gcc-3.3, needed patch:
+	  libhacktlib.la: needs a C++ source as a libtool hint for --tag=CXX
+	  main/program_registry.cc: explicit template instantiation
+		of count_ptr<program_entry::program_registry_type>.
+	  util/memory/typeless_memory_chunk.tcc: .operator() for g++-3.3.
+
+
 	* HACKT-00-01-04-main-00-80-84:
 	  Minor 64b adjustments, see util/ChangeLog.
 
