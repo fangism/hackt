@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.6.6.2 2007/02/12 21:39:42 fang Exp $
+	$Id: CHP.h,v 1.6.6.3 2007/02/23 18:49:17 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -102,8 +102,8 @@ virtual	line_position
 	check_action(context&) const
 
 	/// to be called by all statements, return some list...
-	void
-	check_attributes(context&) const;
+	bool
+	check_attributes(context&, entity::CHP::action&) const;
 
 virtual	CHP_CHECK_STMT_PROTO = 0;
 };	// end class statement

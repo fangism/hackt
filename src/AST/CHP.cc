@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.14.2.3 2007/02/12 21:39:41 fang Exp $
+	$Id: CHP.cc,v 1.14.2.4 2007/02/23 18:49:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -29,6 +29,9 @@
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/channel_probe.h"
+#if CHP_ACTION_DELAYS
+#include "Object/expr/preal_expr.h"
+#endif
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -171,6 +174,50 @@ statement::~statement() { }
 void
 statement::prepend_attributes(const stmt_attr_list* al) {
 	attrs = excl_ptr<const stmt_attr_list>(al);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Attach attributes to CHP action.  
+	Currently, we only accept one attribute: delay.  
+	TODO: full-fledged attributes system for CHP.  
+	\return true if there is an error.
+ */
+bool
+statement::check_attributes(context& c, entity::CHP::action& a) const {
+#if CHP_ACTION_DELAYS
+if (attrs) {
+	if (attrs->size() == 1) {
+		const stmt_attribute::return_type
+			ret(attrs->front()->check(c));
+		// but we strip out hard-coded delay attribute
+		const string& k(ret.key());
+		if (k == "after") {
+			const count_ptr<const entity::preal_expr>
+				pr(ret.value().is_a<const entity::preal_expr>());
+			if (!pr) {
+				cerr <<
+"Error: attribute is not real-valued expression." << endl;
+				return true;
+			}
+			a.set_delay(pr);
+			return false;
+		} else {
+			cerr <<
+"Present limitation: only `after\' attribute is supported for now." << endl;
+			return true;
+		}
+	} else {
+cerr << "Present limitation: CHP attributes expect only one delay attribute."
+<< endl;
+		return true;
+	}
+} else {
+	return false;
+}
+#else
+	return false;
+#endif
 }
 
 //=============================================================================
@@ -1343,11 +1390,15 @@ stmt_attribute::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 stmt_attribute::return_type
 stmt_attribute::check(context& c) const {
+	const expr::meta_return_type v(value->check_meta_expr(c));
+	if (!v) {
+		cerr << "Error in CHP attribute value expression. "
+			<< where(*value) << endl;
+	}
+	return return_type(*key, v);
 }
-#endif
 
 //=============================================================================
 // class log method definitions

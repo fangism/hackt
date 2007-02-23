@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	8	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	10	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	304
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

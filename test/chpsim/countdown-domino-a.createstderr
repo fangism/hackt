@@ -9,53 +9,53 @@ Persistent Object Manager text dump:
 	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	22	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
 	31	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	36	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
 	44	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	320
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	324
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

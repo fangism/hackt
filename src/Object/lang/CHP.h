@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.14 2007/01/23 02:43:21 fang Exp $
+	$Id: CHP.h,v 1.14.6.1 2007/02/23 18:49:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -10,6 +10,9 @@
 #include <list>
 #include <vector>
 #include "Object/lang/CHP_base.h"
+#if CHP_ACTION_DELAYS
+#include <string>
+#endif
 #include "Object/ref/references_fwd.h"
 #include "Object/expr/expr_fwd.h"
 #include "Object/unroll/meta_loop_base.h"
@@ -38,6 +41,31 @@ using util::persistent_object_manager;
 	Typical action list.  
  */
 typedef	list<action_ptr_type>			action_list_type;
+
+//=============================================================================
+/**
+	General purpose attribute.
+	Later, if needed: extend to support multiple values per key. 
+ */
+class attribute {
+//	typedef	dynamic_param_expr_list		values_type;
+	typedef	count_ptr<const param_expr>	value_type;
+//	typedef	const value_type&		const_reference;
+//	typedef	value_type&			reference;
+private:
+	std::string				_key;
+	value_type				_value;
+public:
+	attribute(const std::string&, const value_type&);
+	~attribute();
+
+	const std::string&
+	key(void) const { return _key; }
+
+	const value_type&
+	value(void) const { return _value; }
+
+};	// end class attributes
 
 //=============================================================================
 /**
@@ -275,6 +303,7 @@ public:
  */
 class metaloop_selection : public action, public meta_loop_base {
 	typedef	metaloop_selection		this_type;
+	typedef	action				parent_type;
 public:
 	typedef	meta_loop_base::ind_var_ptr_type	ind_var_ptr_type;
 	typedef	meta_loop_base::range_ptr_type	range_ptr_type;
@@ -319,6 +348,7 @@ public:
  */
 class metaloop_statement : public action, public meta_loop_base {
 	typedef	metaloop_statement		this_type;
+	typedef	action				parent_type;
 public:
 	typedef	meta_loop_base::ind_var_ptr_type	ind_var_ptr_type;
 	typedef	meta_loop_base::range_ptr_type	range_ptr_type;

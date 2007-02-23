@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.19 2007/02/05 06:39:45 fang Exp $
+	$Id: CHP.cc,v 1.19.2.1 2007/02/23 18:49:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -49,6 +49,9 @@
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
+#if CHP_ACTION_DELAYS
+#include "Object/expr/preal_const.h"
+#endif
 #include "Object/def/template_formals_manager.h"
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
@@ -248,6 +251,40 @@ action::transformer::operator () (const action_ptr_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default destructor
+action::action() : persistent()
+#if CHP_ACTION_DELAYS
+	, delay()
+#endif
+{ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default destructor
+action::~action() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_DELAYS
+void
+action::set_delay(const delay_ptr_type& d) {
+	delay = d;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prefix dump_event with after-attribute.
+ */
+ostream&
+action::dump_event_with_attributes(ostream& o, 
+		const expr_dump_context& d) const {
+	if (delay) {
+		delay->dump(o << "[after=", d) << "] ";
+	}
+	return this->dump_event(o, d);
+}
+
+#endif	// CHP_ACTION_DELAYS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	By default print all successor edge, unadorned.  
  */
@@ -256,6 +293,43 @@ action::dump_successor_edges(ostream& o, const EventNode& e,
 		const size_t i, const expr_dump_context&) const {
 	return e.dump_successor_edges_default(o, i);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+action::collect_transient_info_base(persistent_object_manager& m) const {
+#if CHP_ACTION_DELAYS
+	if (delay)
+		delay->collect_transient_info(m);
+#endif
+}
+
+void
+action::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+#if CHP_ACTION_DELAYS
+	m.write_pointer(o, delay);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+action::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+#if CHP_ACTION_DELAYS
+	m.read_pointer(i, delay);
+#endif
+}
+
+//=============================================================================
+// class attribute method definitions
+
+attribute::attribute(const string& k, const value_type& v) :
+		_key(k), _value(v) {
+	NEVER_NULL(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+attribute::~attribute() { }
 
 //=============================================================================
 // struct data_expr_unroll_resolver method definitions
@@ -401,6 +475,7 @@ action_sequence::recheck(const nonmeta_context&) const {
 void
 action_sequence::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 
@@ -417,6 +492,7 @@ if (!m.register_transient_object(this,
 void
 action_sequence::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -431,6 +507,7 @@ action_sequence::write_object(const persistent_object_manager& m,
 void
 action_sequence::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -660,6 +737,7 @@ concurrent_actions::recheck(const nonmeta_context&) const {
 void
 concurrent_actions::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 
@@ -676,6 +754,7 @@ if (!m.register_transient_object(this,
 void
 concurrent_actions::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -690,6 +769,7 @@ concurrent_actions::write_object(const persistent_object_manager& m,
 void
 concurrent_actions::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -1151,6 +1231,7 @@ deterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 }
@@ -1159,6 +1240,7 @@ if (!m.register_transient_object(this,
 void
 deterministic_selection::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -1166,6 +1248,7 @@ deterministic_selection::write_object(const persistent_object_manager& m,
 void
 deterministic_selection::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -1465,6 +1548,7 @@ nondeterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 }
@@ -1473,6 +1557,7 @@ if (!m.register_transient_object(this,
 void
 nondeterministic_selection::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -1480,6 +1565,7 @@ nondeterministic_selection::write_object(const persistent_object_manager& m,
 void
 nondeterministic_selection::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -1619,6 +1705,7 @@ metaloop_selection::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	meta_loop_base::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 	body->collect_transient_info(m);
 }
 }
@@ -1628,6 +1715,7 @@ void
 metaloop_selection::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	meta_loop_base::write_object_base(m, o);
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, body);
 	write_value(o, selection_type);
 }
@@ -1637,6 +1725,7 @@ void
 metaloop_selection::load_object(const persistent_object_manager& m,
 		istream& i) {
 	meta_loop_base::load_object_base(m, i);
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, selection_type);
 }
@@ -1778,6 +1867,7 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	STACKTRACE_VERBOSE;
 	meta_loop_base::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 	body->collect_transient_info(m);
 }
 }
@@ -1788,6 +1878,7 @@ metaloop_statement::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_VERBOSE;
 	meta_loop_base::write_object_base(m, o);
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, body);
 	write_value(o, statement_type);
 }
@@ -1798,6 +1889,7 @@ metaloop_statement::load_object(const persistent_object_manager& m,
 		istream& i) {
 	STACKTRACE_VERBOSE;
 	meta_loop_base::load_object_base(m, i);
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, statement_type);
 }
@@ -1919,6 +2011,7 @@ void
 assignment::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	lval->collect_transient_info(m);
 	rval->collect_transient_info(m);
 }
@@ -1928,6 +2021,7 @@ if (!m.register_transient_object(this,
 void
 assignment::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, lval);
 	m.write_pointer(o, rval);
 }
@@ -1936,6 +2030,7 @@ assignment::write_object(const persistent_object_manager& m,
 void
 assignment::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, lval);
 	m.read_pointer(i, rval);
 }
@@ -2076,6 +2171,7 @@ void
 condition_wait::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	cond->collect_transient_info(m);
 }
 }
@@ -2084,6 +2180,7 @@ if (!m.register_transient_object(this,
 void
 condition_wait::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, cond);
 }
 
@@ -2091,6 +2188,7 @@ condition_wait::write_object(const persistent_object_manager& m,
 void
 condition_wait::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, cond);
 }
 
@@ -2331,6 +2429,7 @@ void
 channel_send::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	chan->collect_transient_info(m);
 	m.collect_pointer_list(exprs);
 }
@@ -2340,6 +2439,7 @@ if (!m.register_transient_object(this,
 void
 channel_send::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, chan);
 	m.write_pointer_list(o, exprs);
 }
@@ -2348,6 +2448,7 @@ channel_send::write_object(const persistent_object_manager& m,
 void
 channel_send::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, exprs);
 }
@@ -2515,6 +2616,7 @@ void
 channel_receive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	chan->collect_transient_info(m);
 	m.collect_pointer_list(insts);
 }
@@ -2524,6 +2626,7 @@ if (!m.register_transient_object(this,
 void
 channel_receive::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, chan);
 	m.write_pointer_list(o, insts);
 }
@@ -2532,6 +2635,7 @@ channel_receive::write_object(const persistent_object_manager& m,
 void
 channel_receive::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, insts);
 }
@@ -2694,6 +2798,7 @@ void
 do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	body->collect_transient_info(m);
 }
 }
@@ -2702,6 +2807,7 @@ if (!m.register_transient_object(this,
 void
 do_forever_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, body);
 }
 
@@ -2709,6 +2815,7 @@ do_forever_loop::write_object(const persistent_object_manager& m,
 void
 do_forever_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 }
 
@@ -2900,6 +3007,7 @@ do_while_loop::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 }
@@ -2908,6 +3016,7 @@ if (!m.register_transient_object(this,
 void
 do_while_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -2915,6 +3024,7 @@ do_while_loop::write_object(const persistent_object_manager& m,
 void
 do_while_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 

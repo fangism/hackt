@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.8.6.1 2007/02/12 21:39:43 fang Exp $
+	$Id: CHP_base.h,v 1.8.6.2 2007/02/23 18:49:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -11,6 +11,7 @@
 #include "util/memory/count_ptr.h"
 // #include "util/STL/vector_fwd.h"
 #include "Object/ref/reference_enum.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
@@ -25,12 +26,16 @@ namespace entity {
 struct expr_dump_context;
 class unroll_context;
 class nonmeta_state_manager;
+#if CHP_ACTION_DELAYS
+class preal_expr;
+#endif
 /**
 	Namespace for CHP object classes.  
  */
 namespace CHP {
 using entity::nonmeta_state_manager;
 using std::ostream;
+using std::istream;
 using SIM::CHPSIM::StateConstructor;
 using SIM::CHPSIM::nonmeta_context;
 using util::persistent;
@@ -38,6 +43,9 @@ using util::persistent_object_manager;
 class action;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
+#if CHP_ACTION_DELAYS
+typedef	count_ptr<const  preal_expr>		delay_ptr_type;
+#endif
 
 //=============================================================================
 /**
@@ -46,9 +54,21 @@ typedef	count_ptr<const action>			action_ptr_type;
 class action : public persistent {
 public:
 	typedef	action_ptr_type			unroll_return_type;
+protected:
+#if CHP_ACTION_DELAYS
+	delay_ptr_type				delay;
+#endif
+	action();
+public:
+virtual	~action();
 
-	action() { }
-virtual	~action() { }
+#if CHP_ACTION_DELAYS
+	void
+	set_delay(const delay_ptr_type&);
+
+	const delay_ptr_type&
+	get_delay(void) const { return delay; }
+#endif
 
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
@@ -61,6 +81,11 @@ virtual	ostream&
 	dump_event(ostream&, const expr_dump_context&) const
 
 virtual	CHP_DUMP_EVENT_PROTO = 0;
+
+#if CHP_ACTION_DELAYS
+	ostream&
+	dump_event_with_attributes(ostream&, const expr_dump_context&) const;
+#endif
 
 #define	CHP_DUMP_SUCCESSORS_PROTO					\
 	ostream&							\
@@ -109,6 +134,16 @@ virtual	CHP_EXECUTE_PROTO = 0;
 	recheck(const nonmeta_context&) const
 
 virtual	CHP_RECHECK_PROTO = 0;
+
+// these were added just for the delay member pointer
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class action
 

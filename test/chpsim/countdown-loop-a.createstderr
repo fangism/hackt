@@ -7,25 +7,25 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	22	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	272
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	276
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

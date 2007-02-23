@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -58,7 +58,7 @@ Persistent Object Manager text dump:
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	666
+	57	##ADDR##	footprnt	0	#HEAD#	#TAIL#	670
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
