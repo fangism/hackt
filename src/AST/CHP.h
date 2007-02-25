@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.6.6.3 2007/02/23 18:49:17 fang Exp $
+	$Id: CHP.h,v 1.6.6.4 2007/02/25 03:01:34 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -99,7 +99,10 @@ virtual	line_position
 
 #define	CHP_CHECK_STMT_PROTO						\
 	CHP::statement::return_type					\
-	check_action(context&) const
+	__check_action(context&) const
+
+	CHP::statement::return_type
+	check_action(context&) const;
 
 	/// to be called by all statements, return some list...
 	bool

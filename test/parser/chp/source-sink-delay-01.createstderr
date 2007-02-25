@@ -1,0 +1,155 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	293
+	17	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	23	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	24	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	cnvtpipr	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	288
+	37	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	389
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    chp_bool_sink = process-definition (defined) chp_bool_sink(
+        chan?(bool<>) S
+      )
+      In definition "chp_bool_sink", we have: {
+      Instances:
+        S = chan?(bool<>) chp_bool_sink::S
+        x = bool<> chp_bool_sink::x
+      unroll sequence: 
+        chan?(bool<>) S
+        bool<> x
+      chp:
+        concurrent: {
+          *[
+            S?(x)
+          ]
+        }
+      footprint: {
+        S = channel chan?(bool<>)^0 = chp_bool_sink::S (1) 
+        x = bool^0 = chp_bool_sink::x (1) 
+        Created state:
+        channel instance pool:
+        1	chp_bool_sink::S
+        bool instance pool:
+        1	chp_bool_sink::x
+        resolved concurrent actions:
+          *[
+            S?(x)
+          ]
+      }
+      }
+
+    chp_bool_source_delay = process-definition (defined) chp_bool_source_delay<
+      pbool<> B
+      >(
+        chan!(bool<>) S
+      )
+      In definition "chp_bool_source_delay", we have: {
+      Parameters:
+        B = pbool<> chp_bool_source_delay::B
+      Instances:
+        S = chan!(bool<>) chp_bool_source_delay::S
+      unroll sequence: 
+        chan!(bool<>) S
+      chp:
+        concurrent: {
+          *[
+            [after=preal(20)] S!(B)
+          ]
+        }
+      footprint collection: {
+        <true> {
+          B = pbool^0 value: 1
+          S = channel chan!(bool<>)^0 = chp_bool_source_delay::S (1) 
+          Created state:
+          channel instance pool:
+          1	chp_bool_source_delay::S
+          resolved concurrent actions:
+            *[
+              [after=20] S!(true)
+            ]
+        }
+      }
+      }
+
+  Instances:
+    B = chan(bool<>) B
+    b = chp_bool_sink<> b
+    s = chp_bool_source_delay<true> s
+}
+
+footprint: {
+  B = channel chan(bool<>)^0 = B (1) 
+  b = process chp_bool_sink<>^0 = b (2) (
+    S = channel chan?(bool<>)^0 = B (1) 
+  )
+  s = process chp_bool_source_delay<true>^0 = s (1) (
+    S = channel chan!(bool<>)^0 = B (1) 
+  )
+  Created state:
+  process instance pool:
+  1	s
+  2	b
+  channel instance pool:
+  1	B
+}

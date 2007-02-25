@@ -1,12 +1,13 @@
-// "source-sink-01.hac"
+// "source-sink-delay-01.hac"
+// copy-modified from "source-sink-01.hac"
 // top-level instantiating source and sink and connecting them.
 // this should pass all the way to allocation, and can be simulated.  
 
-import "bool-source.hac";
+import "bool-source-delay.hac";
 import "bool-sink.hac";
 
 chan(bool) B;
 
-chp_bool_source<true> s(B);
+chp_bool_source_delay<true> s(B);
 chp_bool_sink b(B);
 

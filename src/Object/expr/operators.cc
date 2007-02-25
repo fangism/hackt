@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.23 2007/02/08 02:11:06 fang Exp $
+ 	$Id: operators.cc,v 1.23.2.1 2007/02/25 03:01:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -40,7 +40,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/loop_meta_expr.tcc"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/expr_visitor.h"
+#include "Object/expr/convert_expr.tcc"
 #include "Object/expr/operator_precedence.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/numeric/sign_traits.h"
@@ -73,6 +75,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_logical_loop_expr,
 		"logical-loop-expr")
 SPECIALIZE_UTIL_WHAT(HAC::entity::preal_arith_loop_expr, 
 		"preal-arith-loop-expr")
+SPECIALIZE_UTIL_WHAT(HAC::entity::convert_pint_to_preal_expr, 
+		"convert-pint-to-preal")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY, 0)
@@ -96,6 +100,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_logical_loop_expr, PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::preal_arith_loop_expr, PREAL_ARITH_LOOP_EXPR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::convert_pint_to_preal_expr,
+	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -184,7 +191,7 @@ pint_unary_expr::static_constant_value(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_unary_expr::must_be_equivalent(const pint_expr& p) const {
-	const pint_unary_expr* const ue = IS_A(const pint_unary_expr*, &p);
+	const this_type* const ue = IS_A(const this_type*, &p);
 	if (ue) {
 		return op == ue->op && ex->must_be_equivalent(*ue->ex);
 	} else {
@@ -389,7 +396,7 @@ preal_unary_expr::evaluate(const op_type op, const value_type v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_unary_expr::must_be_equivalent(const preal_expr& p) const {
-	const preal_unary_expr* const ue = IS_A(const preal_unary_expr*, &p);
+	const this_type* const ue = IS_A(const this_type*, &p);
 	if (ue) {
 		return op == ue->op && ex->must_be_equivalent(*ue->ex);
 	} else {
@@ -584,7 +591,7 @@ pbool_unary_expr::evaluate(const op_type op, const value_type v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::must_be_equivalent(const pbool_expr& b) const {
-	const pbool_unary_expr* const be = IS_A(const pbool_unary_expr*, &b);
+	const this_type* const be = IS_A(const this_type*, &b);
 	if (be) {
 		return ex->must_be_equivalent(*be->ex);
 	} else {
@@ -883,7 +890,7 @@ pint_arith_expr::evaluate(const op_type* op,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
-	const pint_arith_expr* const ae = IS_A(const pint_arith_expr*, &p);
+	const this_type* const ae = IS_A(const this_type*, &p);
 	if (ae) {
 		// for now structural equivalence only,
 		return (op == ae->op) &&
@@ -1202,8 +1209,8 @@ pint_relational_expr::evaluate(const op_type* op, const value_type l,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_relational_expr::must_be_equivalent(const pbool_expr& b) const {
-	const pint_relational_expr* const
-		re = IS_A(const pint_relational_expr*, &b);
+	const this_type* const
+		re = IS_A(const this_type*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -1511,7 +1518,7 @@ preal_arith_expr::evaluate(const op_type* op,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_arith_expr::must_be_equivalent(const preal_expr& p) const {
-	const preal_arith_expr* const ae = IS_A(const preal_arith_expr*, &p);
+	const this_type* const ae = IS_A(const this_type*, &p);
 	if (ae) {
 		// for now structural equivalence only,
 		return (op == ae->op) &&
@@ -1822,8 +1829,8 @@ preal_relational_expr::evaluate(const op_type* op, const value_type l,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_relational_expr::must_be_equivalent(const pbool_expr& b) const {
-	const preal_relational_expr* const
-		re = IS_A(const preal_relational_expr*, &b);
+	const this_type* const
+		re = IS_A(const this_type*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -2119,7 +2126,7 @@ pbool_logical_expr::evaluate(const op_type* op,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_logical_expr::must_be_equivalent(const pbool_expr& b) const {
-	const pbool_logical_expr* const re = IS_A(const pbool_logical_expr*, &b);
+	const this_type* const re = IS_A(const this_type*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -2282,6 +2289,8 @@ pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) 
 template class loop_meta_expr<pint_arith_expr>;
 template class loop_meta_expr<pbool_logical_expr>;
 template class loop_meta_expr<preal_arith_expr>;
+
+template class convert_expr<preal_expr, pint_expr>;
 
 //=============================================================================
 }	// end namepace entity

@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.17.2.1 2007/02/12 04:51:19 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.17.2.2 2007/02/25 03:01:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -187,6 +187,9 @@
 #define	PINT_ARITH_LOOP_EXPR_TYPE_KEY				"piarthlp"
 #define	PBOOL_LOGICAL_LOOP_EXPR_TYPE_KEY			"pblogclp"
 #define	PREAL_ARITH_LOOP_EXPR_TYPE_KEY				"prarthlp"
+
+	// convert expressions
+#define	CONVERT_PINT_TO_PREAL_EXPR_TYPE_KEY			"cnvtpipr"
 
 // nonmeta expressions
 #define	NONMETA_INT_ARITH_EXPR_TYPE_KEY				"narithex"

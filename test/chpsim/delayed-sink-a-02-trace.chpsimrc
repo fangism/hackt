@@ -1,0 +1,10 @@
+# "delayed-sink-a-02-trace.chpsimrc"
+#	$Id: delayed-sink-a-02-trace.chpsimrc,v 1.1.2.1 2007/02/25 03:01:51 fang Exp $
+# @haco@ delayed-sink-a.haco-a
+
+trace delayed-sink-a-02.chpsimtrace
+source delayed-sink-a-01.chpsimrc
+trace-close
+trace-dump delayed-sink-a-02.chpsimtrace
+!rm delayed-sink-a-02.chpsimtrace
+

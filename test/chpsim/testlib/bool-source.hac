@@ -1,5 +1,5 @@
 // "bool-source.hac"
-//	$Id: bool-source.hac,v 1.4 2007/02/08 02:11:25 fang Exp $
+//	$Id: bool-source.hac,v 1.4.2.1 2007/02/25 03:01:55 fang Exp $
 // cyclic and non-cyclic sources of bool tokens
 
 
@@ -23,6 +23,20 @@ defproc bool_source(chan!(bool) S) {
 chp {
 *[
 	{;i:N: S!(B[i]) }
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Cycles through finite sequence of bool values.
+	Takes an extra delay parameter, that overrides default send delay.  
+ */
+template <pint N; pbool B[N]; preal D>
+defproc bool_source_delay(chan!(bool) S) {
+chp {
+*[
+	{;i:N: $(after=D) S!(B[i]) }
 ]
 }
 }

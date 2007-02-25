@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.8.6.2 2007/02/23 18:49:21 fang Exp $
+	$Id: CHP_base.h,v 1.8.6.3 2007/02/25 03:01:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -54,11 +54,19 @@ typedef	count_ptr<const  preal_expr>		delay_ptr_type;
 class action : public persistent {
 public:
 	typedef	action_ptr_type			unroll_return_type;
+	/**
+		TODO: Eventually generalize this to attribute list.  
+	 */
+	typedef	delay_ptr_type			attributes_type;
 protected:
 #if CHP_ACTION_DELAYS
-	delay_ptr_type				delay;
+	attributes_type				delay;
 #endif
 	action();
+#if CHP_ACTION_DELAYS
+	explicit
+	action(const attributes_type&);
+#endif
 public:
 virtual	~action();
 
@@ -81,6 +89,9 @@ virtual	ostream&
 	dump_event(ostream&, const expr_dump_context&) const
 
 virtual	CHP_DUMP_EVENT_PROTO = 0;
+
+	ostream&
+	dump_attributes(ostream&, const expr_dump_context&) const;
 
 #if CHP_ACTION_DELAYS
 	ostream&

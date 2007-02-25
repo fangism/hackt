@@ -1,0 +1,11 @@
+// "bool-source-delay.hac"
+// copy-modified from "bool-source.hac"
+// boolean-valued channel source, with delay on sends
+
+template <pbool B>
+defproc chp_bool_source_delay (chan!(bool) S) {
+chp {
+	*[ $(after=20) S!(B) ]
+}
+}
+

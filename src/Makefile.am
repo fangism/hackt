@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.154.2.1 2007/02/12 02:26:45 fang Exp $
+#	$Id: Makefile.am,v 1.154.2.2 2007/02/25 03:01:32 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -493,6 +493,7 @@ OBJECT_CC_NO_H_FILES = \
 OBJECT_TCC_FILES = \
 	Object/def/footprint.tcc \
 	Object/expr/const_collection.tcc \
+	Object/expr/convert_expr.tcc \
 	Object/expr/loop_meta_expr.tcc \
 	Object/expr/loop_nonmeta_expr.tcc \
 	Object/def/footprint_base.tcc \
@@ -566,6 +567,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/const_param_expr_list.h \
 	Object/expr/const_range.h \
 	Object/expr/const_range_list.h \
+	Object/expr/convert_expr.h \
 	Object/expr/data_expr.h \
 	Object/expr/dynamic_meta_index_list.h \
 	Object/expr/dynamic_meta_range_list.h \

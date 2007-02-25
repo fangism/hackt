@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.4.2.1 2007/02/12 04:51:22 fang Exp $
+	$Id: expr_fwd.h,v 1.4.2.2 2007/02/25 03:01:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -71,6 +71,7 @@ namespace entity {
 	class const_index_list;
 	class dynamic_meta_index_list;
 
+	// from "Object/expr/const_collection.h"
 	template <class>
 	class const_collection;
 	typedef const_collection<pint_tag>
@@ -80,6 +81,7 @@ namespace entity {
 	typedef const_collection<preal_tag>
 		preal_const_collection;
 
+	// from "Object/expr/loop_meta_expr.h"
 	template <class>
 	class loop_meta_expr;
 	typedef	loop_meta_expr<pint_arith_expr>
@@ -89,6 +91,7 @@ namespace entity {
 	typedef	loop_meta_expr<preal_arith_expr>
 		preal_arith_loop_expr;
 
+	// from "Object/expr/loop_nonmeta_expr.h"
 	template <class>
 	class loop_nonmeta_expr;
 	typedef	loop_nonmeta_expr<int_arith_expr>
@@ -97,6 +100,12 @@ namespace entity {
 		bool_logical_loop_expr;
 //	typedef	loop_nonmeta_expr<real_arith_expr>
 //		real_arith_loop_expr;
+
+	// from "Object/expr/convert_expr.h"
+	template <class, class>
+	class convert_expr;
+	typedef	convert_expr<preal_expr, pint_expr>
+		convert_pint_to_preal_expr;
 
 }	// end namespace entity
 }	// end namespace HAC

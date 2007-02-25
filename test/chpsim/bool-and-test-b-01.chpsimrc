@@ -1,0 +1,154 @@
+# "bool-and-test-b-01.chpsimrc"
+#	$Id: bool-and-test-b-01.chpsimrc,v 1.1.2.1 2007/02/25 03:01:46 fang Exp $
+# @haco@ bool-and-test-b.haco-a
+
+watchall-events
+timing per-event
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+step
+get Out
+time
+

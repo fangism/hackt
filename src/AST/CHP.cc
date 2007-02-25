@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.14.2.4 2007/02/23 18:49:16 fang Exp $
+	$Id: CHP.cc,v 1.14.2.5 2007/02/25 03:01:33 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -31,6 +31,7 @@
 #include "Object/expr/channel_probe.h"
 #if CHP_ACTION_DELAYS
 #include "Object/expr/preal_expr.h"
+#include "Object/expr/convert_expr.h"
 #endif
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
@@ -101,6 +102,7 @@ using entity::data_nonmeta_instance_reference;
 using entity::data_type_reference;
 using entity::pint_scalar;
 using entity::meta_loop_base;
+using entity::convert_pint_to_preal_expr;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -177,6 +179,17 @@ statement::prepend_attributes(const stmt_attr_list* al) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+statement::return_type
+statement::check_action(context& c) const {
+	const return_type ret(this->__check_action(c));
+	if (ret) {
+		if (check_attributes(c, *ret))
+			return return_type(NULL);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Attach attributes to CHP action.  
 	Currently, we only accept one attribute: delay.  
@@ -187,38 +200,49 @@ bool
 statement::check_attributes(context& c, entity::CHP::action& a) const {
 #if CHP_ACTION_DELAYS
 if (attrs) {
-	if (attrs->size() == 1) {
-		const stmt_attribute::return_type
-			ret(attrs->front()->check(c));
-		// but we strip out hard-coded delay attribute
-		const string& k(ret.key());
-		if (k == "after") {
-			const count_ptr<const entity::preal_expr>
-				pr(ret.value().is_a<const entity::preal_expr>());
-			if (!pr) {
+if (attrs->size() == 1) {
+	const stmt_attribute::return_type
+		ret(attrs->front()->check(c));
+	// but we strip out hard-coded delay attribute
+	const string& k(ret.key());
+	if (k == "after") {
+		const count_ptr<const entity::preal_expr>
+			pr(ret.value().is_a<const entity::preal_expr>());
+		if (!pr) {
+			const count_ptr<const entity::pint_expr>
+				pi(ret.value().is_a<const entity::pint_expr>());
+			if (!pi) {
 				cerr <<
 "Error: attribute is not real-valued expression." << endl;
 				return true;
+			} else {
+				// cast conversion expression: pint -> preal
+				a.set_delay(
+					count_ptr<const convert_pint_to_preal_expr>(
+					new convert_pint_to_preal_expr(pi)));
+				return false;
 			}
+		} else {
 			a.set_delay(pr);
 			return false;
-		} else {
-			cerr <<
-"Present limitation: only `after\' attribute is supported for now." << endl;
-			return true;
 		}
 	} else {
-cerr << "Present limitation: CHP attributes expect only one delay attribute."
-<< endl;
+		cerr <<
+"Present limitation: only `after\' attribute is supported for now." << endl;
 		return true;
 	}
+} else {
+cerr << "Present limitation: CHP attributes expect only one delay attribute."
+<< endl;
+	return true;
+}	// end if (size == 1)
 } else {
 	return false;
 }
 #else
 	return false;
 #endif
-}
+}	// end method check_attributes
 
 //=============================================================================
 // class stmt_list method definitions
@@ -270,7 +294,7 @@ stmt_list::postorder_check_stmts(checked_stmts_type& sl, context& c) const {
 	\return singular or collective checked CHP action.  
  */
 statement::return_type
-stmt_list::check_action(context& c) const {
+stmt_list::__check_action(context& c) const {
 if (size() == 1) {
 	// single actions can be returned more efficiently, no need to group
 	return front()->check_action(c);
@@ -300,7 +324,7 @@ if (size() == 1) {
 		return return_type(NULL);
 	}
 }	// endif size() == 1
-}	// end stmt_list::check_action
+}	// end stmt_list::__check_action
 
 //=============================================================================
 // class body method definitions
@@ -586,7 +610,7 @@ skip::rightmost(void) const {
 	and thus, must be handled exceptionally by calls to check_action.  
  */
 statement::return_type
-skip::check_action(context& c) const {
+skip::__check_action(context& c) const {
 	return statement::return_type(NULL);
 }
 
@@ -619,7 +643,7 @@ wait::rightmost(void) const {
 	TODO: far future: handle template-dependent types
  */
 statement::return_type
-wait::check_action(context& c) const {
+wait::__check_action(context& c) const {
 //	typedef	statement::return_type		return_type;
 	const expr::nonmeta_return_type ret(cond->check_nonmeta_expr(c));
 	if (!ret) {
@@ -676,7 +700,7 @@ binary_assignment::rightmost(void) const {
 	Type checks a nonmeta value assignment.  
  */
 statement::return_type
-binary_assignment::check_action(context& c) const {
+binary_assignment::__check_action(context& c) const {
 	typedef	data_nonmeta_instance_reference			lref_type;
 	const inst_ref_expr::nonmeta_data_return_type
 		lr(lval->check_nonmeta_data_reference(c));
@@ -747,7 +771,7 @@ binary_assignment::check_action(context& c) const {
 	}
 	// at this point, all is good
 	return statement::return_type(new entity::CHP::assignment(lref, rv));
-}	// end method binary_assignment::check_action
+}	// end method binary_assignment::__check_action
 
 //=============================================================================
 // class bool_assignment method definitions
@@ -777,7 +801,7 @@ bool_assignment::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-bool_assignment::check_action(context& c) const {
+bool_assignment::__check_action(context& c) const {
 	typedef	entity::bool_traits	bool_traits;
 	typedef	data_nonmeta_instance_reference			lref_type;
 	static const bool_traits::type_ref_ptr_type&
@@ -912,7 +936,7 @@ send::rightmost(void) const {
 	Checks list of expressions send across channel.  
  */
 statement::return_type
-send::check_action(context& c) const {
+send::__check_action(context& c) const {
 	const communication::checked_channel_type
 		sender(check_channel(*chan, c));
 	if (!sender) {
@@ -973,7 +997,7 @@ receive::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-receive::check_action(context& c) const {
+receive::__check_action(context& c) const {
 	const communication::checked_channel_type
 		receiver(check_channel(*chan, c));
 	typedef	data_nonmeta_instance_reference			lref_type;
@@ -1092,7 +1116,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-det_selection::check_action(context& c) const {
+det_selection::__check_action(context& c) const {
 	checked_gcs_type checked_gcs;	// checked guarded commands
 	INVARIANT(size() > 1);
 	if (!postorder_check_gcs(checked_gcs, c).good) {
@@ -1121,7 +1145,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-nondet_selection::check_action(context& c) const {
+nondet_selection::__check_action(context& c) const {
 	checked_gcs_type checked_gcs;	// checked guarded commands
 	INVARIANT(size() > 1);
 	if (!postorder_check_gcs(checked_gcs, c).good) {
@@ -1150,7 +1174,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(prob_selection)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-prob_selection::check_action(context& c) const {
+prob_selection::__check_action(context& c) const {
 	cerr << "Fang, finish CHP::prob_selection::check_action()!" << endl;
 	return statement::return_type(NULL);
 }
@@ -1191,7 +1215,7 @@ metaloop_selection::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-metaloop_selection::check_action(context& c) const {
+metaloop_selection::__check_action(context& c) const {
 	const range::meta_return_type rng(bounds->check_meta_index(c));
 	if (!rng) {
 		cerr << "Error in loop range at " << where(*bounds) << endl;
@@ -1219,7 +1243,7 @@ metaloop_selection::check_action(context& c) const {
 	return count_ptr<entity::CHP::metaloop_selection>(
 		new entity::CHP::metaloop_selection(loop_ind, loop_range, gc, 
 			selection_type->text[0] != ':'));
-}	// end method metaloop_selection::check_action
+}	// end method metaloop_selection::__check_action
 
 //=============================================================================
 // class metaloop_statement method definitions
@@ -1258,7 +1282,7 @@ metaloop_statement::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-metaloop_statement::check_action(context& c) const {
+metaloop_statement::__check_action(context& c) const {
 	const range::meta_return_type rng(bounds->check_meta_index(c));
 	if (!rng) {
 		cerr << "Error in loop range at " << where(*bounds) << endl;
@@ -1286,7 +1310,7 @@ metaloop_statement::check_action(context& c) const {
 	return count_ptr<entity::CHP::metaloop_statement>(
 		new entity::CHP::metaloop_statement(loop_ind, loop_range, st, 
 			statement_type->text[0] != ';'));
-}	// end method metaloop_statement::check_action
+}	// end method metaloop_statement::__check_action
 
 //=============================================================================
 // class loop method definitions
@@ -1312,7 +1336,7 @@ loop::rightmost(void) const {
 }
 
 statement::return_type
-loop::check_action(context& c) const {
+loop::__check_action(context& c) const {
 	STACKTRACE_VERBOSE;
 	const statement::return_type
 		body(commands->check_action(c));
@@ -1349,7 +1373,7 @@ do_until::rightmost(void) const {
 }
 
 statement::return_type
-do_until::check_action(context& c) const {
+do_until::__check_action(context& c) const {
 	selection::checked_gcs_type checked_gcs;
 	NEVER_NULL(sel);
 	if (!sel->postorder_check_gcs(checked_gcs, c).good) {
@@ -1425,7 +1449,7 @@ log::rightmost(void) const {
 }
 
 statement::return_type
-log::check_action(context& c) const {
+log::__check_action(context& c) const {
 	cerr << "Fang, finish CHP::log::check_action()!" << endl;
 	return statement::return_type(NULL);
 }

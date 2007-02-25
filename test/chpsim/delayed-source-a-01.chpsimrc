@@ -1,0 +1,35 @@
+# "delayed-source-a-01.chpsimrc"
+#	$Id: delayed-source-a-01.chpsimrc,v 1.1.2.1 2007/02/25 03:01:52 fang Exp $
+# @haco@ delayed-source-a.haco-a
+
+watchall-events
+timing per-event
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+step
+queue
+get X
+time
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.3 2007/02/05 06:39:52 fang Exp $
+	$Id: Event.cc,v 1.3.2.1 2007/02/25 03:01:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -122,7 +122,7 @@ EventNode::operator = (const this_type& e) {
 	process_index = e.process_index;
 	predecessors = e.predecessors;
 	countdown = e.countdown;
-	delay = default_delay;
+	delay = e.delay;
 	block_deps = e.block_deps;		// re-defined!
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 	anti_deps = e.anti_deps;
