@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.21 2007/02/05 06:39:45 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.21.2.1 2007/02/25 19:54:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -83,6 +83,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, datatype_ta
 							const_expr_type;
 	typedef	typename reference_type::data_expr_base_type
 							data_expr_base_type;
+	typedef	typename reference_type::assign_update_arg_type
+							assign_update_arg_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
 	typedef	count_ptr<const typename reference_type::const_expr_type>
@@ -165,7 +167,7 @@ void
 nonmeta_assign(const reference_type& lref, 
 		const count_ptr<const data_expr_base_type>& rval, 
 		const nonmeta_context_base& c, 
-		global_reference_array_type& u) {
+		assign_update_arg_type& u) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(rval);	// assert dynamic_cast
 	const count_ptr<const const_expr_type>
@@ -198,7 +200,7 @@ static
 void
 direct_assign(const reference_type& lref, 
 		const nonmeta_context_base& c, 
-		global_reference_array_type& u, 
+		assign_update_arg_type& u, 
 		channel_data_reader& r) {
 	STACKTRACE_VERBOSE;
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
@@ -230,6 +232,8 @@ struct __VISIBILITY_HIDDEN__ nonmeta_unroll_resolve_copy_policy<Tag, parameter_v
 							index_list_type;
 	typedef	typename reference_type::data_expr_base_type
 							data_expr_base_type;
+	typedef	typename reference_type::assign_update_arg_type
+							assign_update_arg_type;
 	typedef	count_ptr<const typename reference_type::data_expr_base_type>
 							return_type;
 	typedef	count_ptr<const typename reference_type::const_expr_type>
@@ -443,7 +447,7 @@ void
 nonmeta_assign(const reference_type&, 
 		const count_ptr<const data_expr_base_type>&, 
 		const nonmeta_context_base&, 
-		const global_reference_array_type&) {
+		const assign_update_arg_type&) {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -455,7 +459,7 @@ static
 void
 direct_assign(const reference_type& lref, 
 		const nonmeta_context_base& c, 
-		global_reference_array_type& u, 
+		assign_update_arg_type& u, 
 		channel_data_reader& r) {
 	ICE_NEVER_CALL(cerr);
 }
@@ -715,7 +719,7 @@ void
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_assign(
 		const count_ptr<const data_expr>& rval, 
 		const nonmeta_context_base& c,
-		global_reference_array_type& u) const {
+		assign_update_arg_type& u) const {
 	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
 		nonmeta_assign(*this, 
 			rval.template is_a<const data_expr_base_type>(),
@@ -727,7 +731,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::direct_assign(
 		const nonmeta_context_base& c, 
-		global_reference_array_type& u, 
+		assign_update_arg_type& u, 
 		channel_data_reader& r) const {
 	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
 		direct_assign(*this, c, u, r);

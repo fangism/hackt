@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.3 2007/02/05 06:39:53 fang Exp $
+	$Id: State.h,v 1.3.2.1 2007/02/25 19:54:45 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -19,6 +19,9 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+#include "Object/ref/reference_set.h"
+#endif
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -116,8 +119,15 @@ private:
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
+	/**
+		Return type is not used yet.  
+	 */
 	typedef	global_indexed_reference	step_return_type;
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	entity::global_references_set
+#else
 	typedef	vector<global_indexed_reference>
+#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
 						update_reference_array_type;
 	/**
 		Various mode flags, settable by user.  

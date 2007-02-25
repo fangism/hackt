@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.8.6.3 2007/02/25 03:01:41 fang Exp $
+	$Id: CHP_base.h,v 1.8.6.4 2007/02/25 19:54:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -12,6 +12,10 @@
 // #include "util/STL/vector_fwd.h"
 #include "Object/ref/reference_enum.h"
 #include "Object/devel_switches.h"
+#include "sim/chpsim/devel_switches.h"
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+#include "Object/ref/reference_set.h"
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -54,6 +58,11 @@ typedef	count_ptr<const  preal_expr>		delay_ptr_type;
 class action : public persistent {
 public:
 	typedef	action_ptr_type			unroll_return_type;
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	entity::global_references_set	execute_arg_type;
+#else
+	typedef	global_references_array_type	execute_arg_type;
+#endif
 	/**
 		TODO: Eventually generalize this to attribute list.  
 	 */
@@ -133,7 +142,7 @@ virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 
 #define	CHP_EXECUTE_PROTO						\
 	void								\
-	execute(const nonmeta_context&, global_reference_array_type&) const
+	execute(const nonmeta_context&, execute_arg_type&) const
 
 virtual	CHP_EXECUTE_PROTO = 0;
 

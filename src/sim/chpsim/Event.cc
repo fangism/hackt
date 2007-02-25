@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.3.2.1 2007/02/25 03:01:43 fang Exp $
+	$Id: Event.cc,v 1.3.2.2 2007/02/25 19:54:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -211,7 +211,12 @@ if (countdown) {
  */
 void
 EventNode::execute(const nonmeta_context& c, 
-		vector<global_indexed_reference>& updates) {
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+		entity::global_references_set&
+#else
+		vector<global_indexed_reference>& 
+#endif
+		updates) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();

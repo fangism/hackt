@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.19.2.2 2007/02/25 03:01:40 fang Exp $
+	$Id: CHP.cc,v 1.19.2.3 2007/02/25 19:54:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -493,8 +493,7 @@ action_sequence::accept(StateConstructor& s) const {
 	so this does nothing.  
  */
 void
-action_sequence::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+action_sequence::execute(const nonmeta_context&, execute_arg_type&) const {
 	// no-op
 	ICE_NEVER_CALL(cerr);
 }
@@ -764,8 +763,7 @@ if (!branches) {
 	ready to execute.  
  */
 void
-concurrent_actions::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+concurrent_actions::execute(const nonmeta_context& c, execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	recheck_all_successor_events(c);
 }
@@ -1199,7 +1197,7 @@ deterministic_selection::accept(StateConstructor& s) const {
  */
 void
 deterministic_selection::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+		execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 #if 0
 	const bool b = recheck(c);
@@ -1448,7 +1446,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
  */
 void
 nondeterministic_selection::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+		execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 #if 0
 	ICE_NEVER_CALL(cerr);
@@ -1745,8 +1743,7 @@ metaloop_selection::accept(StateConstructor& s) const {
 	Never called, always expanded.  
  */
 void
-metaloop_selection::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+metaloop_selection::execute(const nonmeta_context&, execute_arg_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1909,8 +1906,7 @@ metaloop_statement::accept(StateConstructor& s) const {
 	Never called, always expanded.  
  */
 void
-metaloop_statement::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+metaloop_statement::execute(const nonmeta_context&, execute_arg_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -2081,8 +2077,7 @@ assignment::accept(StateConstructor& s) const {
 		namely, the lvalues.
  */
 void
-assignment::execute(const nonmeta_context& c,
-		global_reference_array_type& u) const {
+assignment::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	typedef	EventNode		event_type;
 	STACKTRACE_CHPSIM_VERBOSE;
 	lval->nonmeta_assign(rval, c, u);	// also tracks updated reference
@@ -2237,8 +2232,7 @@ condition_wait::accept(StateConstructor& s) const {
 		We do not check for guard stability... yet.  
  */
 void
-condition_wait::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+condition_wait::execute(const nonmeta_context& c, execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	recheck_all_successor_events(c);
 }
@@ -2467,8 +2461,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		evaluation.  
  */
 void
-channel_send::execute(const nonmeta_context& c, 
-		global_reference_array_type& u) const {
+channel_send::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 #define	ASSERT_CHAN_INDEX						\
@@ -2711,8 +2704,7 @@ channel_receive::accept(StateConstructor& s) const {
 	so we register them all with the update set.  
  */
 void
-channel_receive::execute(const nonmeta_context& c, 
-		global_reference_array_type& u) const {
+channel_receive::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	ASSERT_CHAN_INDEX
@@ -2937,8 +2929,7 @@ if (back_event.is_dispensible()) {
 	body events are expanded.  
  */
 void
-do_forever_loop::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+do_forever_loop::execute(const nonmeta_context&, execute_arg_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -3123,8 +3114,7 @@ do_while_loop::accept(StateConstructor& s) const {
 	\return true, as this node is never blocking.  
  */
 void
-do_while_loop::execute(const nonmeta_context& c,
-		global_reference_array_type&) const {
+do_while_loop::execute(const nonmeta_context& c, execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));

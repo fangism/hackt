@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.4 2007/02/07 05:20:20 fang Exp $
+	$Id: State.cc,v 1.4.2.1 2007/02/25 19:54:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -244,7 +244,9 @@ State::State(const module& m) :
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
+#if !CHPSIM_STATE_UPDATE_BIN_SETS
 	__updated_list.reserve(16);	// optional pre-allocation
+#endif
 	__enqueue_list.reserve(16);	// optional pre-allocation
 {
 	StateConstructor v(*this);	// + option flags
@@ -449,6 +451,32 @@ try {
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
 {
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	update_reference_array_type::ref_bin_type::const_iterator
+							const_iterator;
+#define	CASE_META_TYPE_TAG(Tag)						\
+	{								\
+	const update_reference_array_type::ref_bin_type&		\
+		ub(__updated_list.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	const_iterator ui(ub.begin()), ue(ub.end());			\
+	for ( ; ui!=ue; ++ui) {						\
+		const variable_type<Tag>::type&				\
+			v(instances.get_pool<Tag>()[*ui]);		\
+		if (is_tracing()) {					\
+			trace_manager->current_chunk			\
+				.push_back<Tag>(v, ti, *ui);		\
+		}							\
+		const event_subscribers_type& es(v.get_subscribers());	\
+		copy(es.begin(), es.end(), set_inserter(__rechecks));	\
+	}								\
+	}
+	CASE_META_TYPE_TAG(bool_tag)
+	CASE_META_TYPE_TAG(int_tag)
+	CASE_META_TYPE_TAG(enum_tag)
+	CASE_META_TYPE_TAG(channel_tag)
+#undef	CASE_META_TYPE_TAG
+#else	// CHPSIM_STATE_UPDATE_BIN_SETS
 #define	TRACE_UPDATED_STATE(Tag)					\
 	if (is_tracing()) {						\
 		trace_manager->current_chunk.push_back<Tag>(v, ti, j);	\
@@ -485,6 +513,7 @@ try {
 			ISE(cerr, cerr << "Unexpected type." << endl;)
 		}	// end switch
 	}	// end for
+#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
 }
 	// 4) immediately include this event's successors in list
 	//	to evaluate if ready to enqueue.
@@ -807,6 +836,27 @@ if (g.show_instances) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_updated_references(ostream& o) const {
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	update_reference_array_type::ref_bin_type::const_iterator
+							const_iterator;
+	o << "updated references:" << endl;
+
+#define	CASE_PRINT_TYPE_TAG_NAME(Tag)					\
+{									\
+	const update_reference_array_type::ref_bin_type&		\
+		ub(__updated_list.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	const_iterator i(ub.begin()), e(ub.end());			\
+	for ( ; i!=e; ++i) {						\
+		o << class_traits<Tag>::tag_name << '[' << *i << "], ";	\
+	}								\
+}
+	CASE_PRINT_TYPE_TAG_NAME(bool_tag)
+	CASE_PRINT_TYPE_TAG_NAME(int_tag)
+	CASE_PRINT_TYPE_TAG_NAME(enum_tag)
+	CASE_PRINT_TYPE_TAG_NAME(channel_tag)
+#undef	CASE_PRINT_TYPE_TAG_NAME
+#else	// CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	update_reference_array_type::const_iterator	const_iterator;
 	o << "updated references:" << endl;
 	const_iterator i(__updated_list.begin()), e(__updated_list.end());
@@ -823,6 +873,7 @@ State::dump_updated_references(ostream& o) const {
 	}	// end switch
 		o << '[' << i->second << "], ";
 	}
+#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
 	return o << endl;
 }
 

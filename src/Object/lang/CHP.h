@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.14.6.1 2007/02/23 18:49:20 fang Exp $
+	$Id: CHP.h,v 1.14.6.2 2007/02/25 19:54:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -179,6 +179,7 @@ public:
 	typedef	count_ptr<const bool_expr>	guard_ptr_type;
 	typedef	count_ptr<const action>		stmt_ptr_type;
 	typedef	count_ptr<const guarded_action>	unroll_return_type;
+	typedef	action::execute_arg_type	execute_arg_type;
 	/// Functor for evaluating guards
 	struct selection_evaluator;
 	struct selection_evaluator_ref;

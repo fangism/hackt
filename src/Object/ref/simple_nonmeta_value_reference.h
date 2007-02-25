@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.14 2007/01/21 05:59:37 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.14.6.1 2007/02/25 19:54:41 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -98,6 +98,8 @@ friend struct nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>;
 	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	simple_nonmeta_instance_reference_base	common_base_type;
 	typedef	data_expr_base_type			interface_type;
+	typedef	typename parent_type::assign_update_arg_type
+							assign_update_arg_type;
 protected:
 	typedef	typename traits_type::instance_placeholder_type
 							value_collection_type;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.3 2007/02/05 06:39:54 fang Exp $
+	$Id: devel_switches.h,v 1.3.2.1 2007/02/25 19:54:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -56,9 +56,11 @@
 	Rationale: This solves the problem of uniqueness of update reference, 
 		and is better restructuring for performance.
 	Goal: 1
-	Priority: low (enhancement)
+	Priority: medium (enhancement to enable diagnostics)
+		This is also necessary for a decent implementation of
+		watch-points and break-points for linear time checking.  
  */
-#define	CHPSIM_STATE_UPDATE_BIN_SETS		0
+#define	CHPSIM_STATE_UPDATE_BIN_SETS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
