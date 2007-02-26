@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.4.2.3 2007/02/26 06:11:55 fang Exp $
+	$Id: State.cc,v 1.4.2.4 2007/02/26 19:30:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -219,6 +219,15 @@ struct State::event_enqueuer {
 
 const char
 State::event_table_header[] = "\ttime\teid\tpid\tevent";
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the event table header, always includeing 'cause'
+ */
+ostream&
+State::dump_event_table_header(ostream& o) {
+	return o << event_table_header << "\tcause" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -732,6 +741,7 @@ State::unwatch_event(const event_index_type ei) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Remove all events that are NOT break points.  
+	NOTE: breaks is subset of watches
  */
 void
 State::unwatch_all_events(void) {
@@ -857,6 +867,9 @@ State::unwatch_value(const global_indexed_reference& g) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reminder: breaks is subset of watches.  
+ */
 void
 State::unwatch_all_values(void) {
 	value_watches = value_breaks;

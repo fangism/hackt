@@ -68,7 +68,7 @@ watch:	110	3	0	c := c-1	[by:1]
 	*** break, 4 steps left.
 time: 110
 time: 130
-testing unwatchall-events 
+testing unbreakall-events 
 break events: 0, 1, 2, 3, 4
 break events: 
 restarting... 

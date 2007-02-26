@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.5.2.2 2007/02/26 06:11:54 fang Exp $
+	$Id: Command.cc,v 1.5.2.3 2007/02/26 19:30:19 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -180,85 +180,12 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
-#if 0
-	static ostream& print_watched_node(ostream&, const State&, 
-		const node_index_type, const string&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&, const string&);
-#endif
 private:
 	static const size_t             receipt_id;
 };      // end class Step
 
 INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 	"step through single event")
-
-#if 0
-static
-inline
-node_index_type
-GET_NODE(const State::step_return_type& x) {
-	return x.first;
-}
-
-static
-inline
-node_index_type
-GET_CAUSE(const State::step_return_type& x) {
-	return x.second;
-}
-
-/**
-	Yeah, I know looking up already looked up node, but we don't
-	care because printing and diagnostics are not performance-critical.  
-	\param nodename the name to use for reporting, which need not be
-		the canonical name of the node, but some equivalent.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r, const string& nodename) {
-	const node_index_type ni = GET_NODE(r);
-	// const string nodename(s.get_node_canonical_name(ni));
-	const State::node_type& n(s.get_node(ni));
-	n.dump_value(o << nodename << " : ");
-	const node_index_type ci = GET_CAUSE(r);
-	if (ci) {
-		const string causename(s.get_node_canonical_name(ci));
-		const State::node_type& c(s.get_node(ci));
-		c.dump_value(o << "\t[by " << causename << ":=") << ']';
-	}
-	if (s.show_tcounts()) {
-		o << "\t(" << n.tcount << " T)";
-	}
-	return o << endl;
-}
-
-/**
-	This automatically uses the canonical name.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r) {
-	const node_index_type ni = GET_NODE(r);
-	const string nodename(s.get_node_canonical_name(ni));
-	return print_watched_node(o, s, r, nodename);
-}
-
-/**
-	This variation deduces the cause of the given node's last transition,
-	the last arriving input to a firing rule.  
-	\param nodename the name to use for reporting.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const node_index_type ni, const string& nodename) {
-	return print_watched_node(o, s,
-		State::step_return_type(ni, s.get_node(ni).get_cause_node()), 
-		nodename);
-}
-#endif
 
 /**
 	Command to advance one event in simulation.  
@@ -1104,6 +1031,28 @@ GetAll::usage(ostream& o) {
 		<< endl;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(PrintEventHeader, 
+	"print-event-header", info,
+	"print the event table header")
+
+int
+PrintEventHeader::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	State::dump_event_table_header(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+PrintEventHeader::usage(ostream& o) {
+	o << name << endl;
+	o << "Prints out the event table header, for diagnostics." << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Subscribers, "subscribers", info,

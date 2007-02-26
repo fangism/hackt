@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6.2.3 2007/02/26 01:34:21 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.4 2007/02/26 19:30:22 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -88,6 +88,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	do-while-countdown-03-watch \
 	do-while-countdown-04-break \
 	do-while-countdown-05-break \
+	do-while-countdown-06-watch \
+	do-while-countdown-07-break \
 	countdown-successor-01 \
 	countdown-loop-a-01 countdown-loop-b-01 \
 	countdown-sequence-a-01 \
@@ -126,6 +128,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bool-memory-read-a-01 \
 	bool-memory-write-a-01 \
 	bool-and-test-a-01 \
+	bool-and-test-a-02-break \
 	bool-and-test-b-01 bool-and-test-b-02-trace \
 	bool-or-test-a-01 \
 	bool-xor-test-a-01 \

@@ -1,0 +1,125 @@
+# "do-while-countdown-07-break.chpsimrc"
+#	$Id: do-while-countdown-07-break.chpsimrc,v 1.1.2.1 2007/02/26 19:30:26 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+cause
+break-value c
+show-value-watches
+show-value-breaks
+echo expect to see int c
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+
+echo initializing...
+initialize
+show-value-watches
+show-value-breaks
+echo resetting...
+reset
+cause
+show-value-watches
+show-value-breaks
+
+echo testing unbreak-value
+initialize
+unbreak-value c
+show-value-breaks
+# redundant
+unbreak-value c
+show-value-breaks
+break-value c
+show-value-breaks
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+
+echo testing unbreakall-values
+initialize
+break-value c
+show-value-breaks
+unbreakall-values
+show-value-breaks
+
+echo restarting...
+echo testing watch-events with break-value
+initialize
+watch-event 2 3 4
+break-value c
+show-event-watches
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+
+# echo testing nowatchall-values with watched values
+# initialize
+# nowatchall-values
+# show-value-watches
+# step 10
+# time
+# step 10
+# time
+# step 10
+# time
+# step 10
+# time
+# step 10
+# time
+# step 10
+# time
+# step 10
+# time
+
+echo testing unbreakall-values
+initialize
+show-value-breaks
+echo expect warning about unwatching breakpoints
+unwatchall-values
+show-value-breaks
+unbreakall-values
+show-value-breaks
+
+echo no value-breaks, only event-watches
+step 30
+time
+
+initialize
+unwatchall-events
+echo no value-breaks, no event-watches
+step 30
+time
+queue
+

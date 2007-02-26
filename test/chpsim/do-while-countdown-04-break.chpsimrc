@@ -1,5 +1,5 @@
 # "do-while-countdown-04-break.chpsimrc"
-#	$Id: do-while-countdown-04-break.chpsimrc,v 1.1.2.1 2007/02/26 01:34:24 fang Exp $
+#	$Id: do-while-countdown-04-break.chpsimrc,v 1.1.2.2 2007/02/26 19:30:24 fang Exp $
 # @haco@ do-while-countdown.haco-a
 
 cause
@@ -72,7 +72,7 @@ time
 step 5
 time
 
-echo testing unwatchall-events
+echo testing unbreakall-events
 initialize
 break-event 0 1 2 3 4
 show-event-breaks

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.3.2.3 2007/02/26 06:11:57 fang Exp $
+	$Id: State.h,v 1.3.2.4 2007/02/26 19:30:21 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -512,6 +512,10 @@ public:
 
 	ostream&
 	dump_struct_dot(ostream&, const graph_options&) const;
+
+	static
+	ostream&
+	dump_event_table_header(ostream&);
 
 	ostream&
 	dump_event(ostream&, const event_index_type) const;
