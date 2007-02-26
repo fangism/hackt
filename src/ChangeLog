@@ -5,6 +5,12 @@
 
 2007-02-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-10:
+	  Decided not to bother perm-ing switches from this branch, 
+		let it mature for a few releases.
+	  Updated comments and status remarks, and TODO lists.
+
+
 	* HACKT-00-01-04-main-00-80-79-chpsim-03-09:
 	  chpsim: new command 'print-event-header' to print the event 
 		table header upon request.  

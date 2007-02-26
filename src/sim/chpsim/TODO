@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.3.2.3 2007/02/26 19:30:21 fang Exp $
+#	$Id: TODO,v 1.3.2.4 2007/02/26 19:44:39 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -11,7 +11,6 @@ high-priority:
 	guile/scheme wrapper interface to trace primitives
 	data structures for results of queries
 		guile-scm interface using 'smobs' small-objects
-	channel probes: [STATUS: DONE]
 
 medium-priority:
 	trace replay mechanism, seeking to specific state/time.
@@ -27,7 +26,6 @@ medium-priority:
 			i.e. predecessors done, and channel state is ready
 	support: value probes, missing from CHP language!
 		in-source assertions
-		delay statements
 		these will be implemented as CHP statement attributes,
 			BUT we may have two flavors of attributes:
 			compile-time (same as construction time)
@@ -40,7 +38,8 @@ medium-priority:
 	'nobreakall' or 'breaks-off' and 'breaks-on'
 	'nowatchall' is done, maybe alias to 'watches-on' and 'watches-off'
 		purpose: to be able to quickly turn off and restore
-			previous watch/breakpoint configuration
+			previous watch/breakpoint configuration, 
+			same as prsim
 
 low-priority:
 	expr_dump_context: enhance with optional prefix string for
@@ -71,5 +70,12 @@ low-priority:
 
 ===============================================================================
 BUGS:
+
+===============================================================================
+completed work (for the record):
+
+	channel probes: [STATUS: DONE]
+	checkpointing: [STATUS: basics done]
+	trace recording: [STATUS: basics done]
 
 ===============================================================================

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.38.6.1 2007/02/23 18:49:18 fang Exp $
+	$Id: devel_switches.h,v 1.38.6.2 2007/02/26 19:44:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -175,9 +175,9 @@
 	as an optional pointer to a delay expression. 
 	This value will be used to override per-event delays.
 	This is quick-and-dirty.
-	Future alternative, use general CHP::attributes.
-	Goal: 1 (for now)
-	Status: in progress
+	Future alternative: general CHP::attributes.
+	Goal: 1
+	Status: done, basically tested, can perm this at any time
 	Priority: high (for chpsim)
  */
 #define	CHP_ACTION_DELAYS			1

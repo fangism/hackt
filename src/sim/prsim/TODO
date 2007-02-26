@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.2 2007/02/05 06:39:56 fang Exp $
+#	$Id: TODO,v 1.2.2.1 2007/02/26 19:44:42 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -56,5 +56,13 @@ prsim:
 		fix: collect unique-list (or set), then print
 
 	trace recording, playback, and analysis (like chpsim)
+
+sprsim:
+	size-based timing prsim
+	connect with chpsim in mixed simulation
+	back for back-annotating sized-based delays to chpsim
+
+grusim (pronounced 'gruesome')
+	the GRand Unified SIMulator, haha.
 
 ===============================================================================

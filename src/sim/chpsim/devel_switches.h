@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.3.2.3 2007/02/26 06:11:57 fang Exp $
+	$Id: devel_switches.h,v 1.3.2.4 2007/02/26 19:44:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -68,7 +68,7 @@
 	Prerequisite: CHPSIM_STATE_UPDATE_BIN_SETS, for sorting
 	Goal: 1
 	Priority: low-medium (for diagnostics)
-	Status: beginning
+	Status: complete, basically tested, can perm.
  */
 #define CHPSIM_BREAK_VALUES		(1 && CHPSIM_STATE_UPDATE_BIN_SETS)
 
