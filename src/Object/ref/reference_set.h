@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/reference_set.h"
 	Container for unique-sorted set of indexed references.  
-	$Id: reference_set.h,v 1.1.2.1 2007/02/25 19:54:40 fang Exp $
+	$Id: reference_set.h,v 1.1.2.2 2007/02/26 06:11:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCE_SET_H__
@@ -35,11 +35,22 @@ struct global_references_set {
 	void
 	clear(void);
 
+	bool
+	empty(void) const;
+
 	void
 	push_back(const global_indexed_reference& r) {
 		// assert(r.first < MAX);
 		ref_bin[r.first].insert(r.second);
 	}
+
+	void
+	set_difference(const global_references_set&, 
+		global_references_set&) const;
+
+	void
+	set_intersection(const global_references_set&, 
+		global_references_set&) const;
 
 };	// end struct global_references_set
 

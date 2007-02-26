@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.5.2.1 2007/02/26 01:34:15 fang Exp $
+	$Id: Command.cc,v 1.5.2.2 2007/02/26 06:11:54 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -831,13 +831,37 @@ UnBreakAllEvents::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
-	"set breakpoint on node")	// no vector support yet
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowEventBreaks, 
+	"show-event-breaks", simulation,
+	"list all events that are breakpoints")
 
 int
-BreakPt::main(State& s, const string_list& a) {
+ShowEventBreaks::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_break_events(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+ShowEventBreaks::usage(ostream& o) {
+	o << name << endl;
+	o << "Lists all breakpoint events." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_BREAK_VALUES
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakValue, "break-value", simulation, 
+	"set breakpoint on selected variables")
+
+/**
+	Adds variables to the watch list.  
+ */
+int
+BreakValue::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -847,12 +871,12 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
-		const node_index_type ni =
-			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.set_node_breakpoint(ni);
+		const global_indexed_reference
+			r(parse_global_reference(objname, s.get_module()));
+		if (r.first) {
+			s.break_value(r);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such instance found: " << objname << endl;
 			badarg = true;
 		}
 	}
@@ -861,20 +885,21 @@ if (a.size() < 2) {
 }
 
 void
-BreakPt::usage(ostream& o) {
-	o << "breakpt <nodes>" << endl;
-	o << "causes simulation to stop upon any transition of the named nodes"
-		<< endl;
+BreakValue::usage(ostream& o) {
+	o << name << " <var-names ...>" << endl;
+	o << "sets breakpoints on variable(s)." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
-	"remove breakpoint on node")	// no vector support yet
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakValue, 
+	"unbreak-value", simulation, 
+	"remove breakpoint on selected variables")
 
+/**
+	Removes a variable from the breakpoint list.  
+ */
 int
-NoBreakPt::main(State& s, const string_list& a) {
+UnBreakValue::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -884,12 +909,12 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
-		const node_index_type ni =
-			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.clear_node_breakpoint(ni);
+		const global_indexed_reference
+			r(parse_global_reference(objname, s.get_module()));
+		if (r.first) {
+			s.unbreak_value(r);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such instance found: " << objname << endl;
 			badarg = true;
 		}
 	}
@@ -898,27 +923,55 @@ if (a.size() < 2) {
 }
 
 void
-NoBreakPt::usage(ostream& o) {
-	o << "nobreakpt <nodes>" << endl;
-	o << "removes named node from breakpoint list" << endl;
+UnBreakValue::usage(ostream& o) {
+	o << name << " <nodes>" << endl;
+	o << "removes non-breakpoint variables from watch-list" << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreak, "unbreak", simulation,
-	"alias for \'nobreakpt\'")	// no vector support yet
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAllValues,
+	"unbreakall-values", simulation, 
+	"clear all variable breakpoints")
 
 int
-UnBreak::main(State& s, const string_list& a) {
-	return NoBreakPt::main(s, a);
+UnBreakAllValues::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unbreak_all_values();
+	return Command::NORMAL;
+}
 }
 
 void
-UnBreak::usage(ostream& o) {
-	NoBreakPt::usage(o);
+UnBreakAllValues::usage(ostream& o) {
+	o << name << endl;
+	o << "removes all breakpoint variables." << endl;
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowValueBreaks,
+	"show-value-breaks", simulation, 
+	"list breakpoint variables with values")
+
+int
+ShowValueBreaks::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_break_values(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+ShowValueBreaks::usage(ostream& o) {
+	o << name << endl;
+	o << "Print all breakpoint variables with current values." << endl;
+}
+#endif	// CHPSIM_BREAK_VALUES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -942,47 +995,6 @@ NoBreakPtAll::usage(ostream& o) {
 	o << "clears all breakpoints" << endl;
 }
 #endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAll, "unbreakall", simulation,
-	"alias for \'nobreakptall\'")
-
-/**
-	Just an alias to nobreakptall.
- */
-int
-UnBreakAll::main(State& s, const string_list& a) {
-	return NoBreakPtAll::main(s, a);
-}
-
-void
-UnBreakAll::usage(ostream& o) {
-	NoBreakPtAll::usage(o);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowEventBreaks, 
-	"show-event-breaks", simulation,
-	"list all events that are breakpoints")
-
-int
-ShowEventBreaks::main(State& s, const string_list& a) {
-if (a.size() != 1) {
-	usage(cerr << "usage: ");
-	return Command::SYNTAX;
-} else {
-	s.dump_break_events(cout);
-	return Command::NORMAL;
-}
-}
-
-void
-ShowEventBreaks::usage(ostream& o) {
-	o << name << endl;
-	o << "Lists all breakpoint events." << endl;
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Save<State>				Save;
@@ -1435,16 +1447,15 @@ UnWatchAllEvents::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
-	"print activity on selected nodes")
+#if CHPSIM_BREAK_VALUES
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchValue, "watch-value", view, 
+	"print activity on selected variables")
 
 /**
-	Adds nodes to the watch list.  
-	TODO: watch defined structures!
+	Adds variables to the watch list.  
  */
 int
-Watch::main(State& s, const string_list& a) {
+WatchValue::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1454,12 +1465,12 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
-		const node_index_type ni =
-			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.watch_node(ni);
+		const global_indexed_reference
+			r(parse_global_reference(objname, s.get_module()));
+		if (r.first) {
+			s.watch_value(r);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such instance found: " << objname << endl;
 			badarg = true;
 		}
 	}
@@ -1468,23 +1479,21 @@ if (a.size() < 2) {
 }
 
 void
-Watch::usage(ostream& o) {
-	o << "watch <nodes>" << endl;
-	o << "adds node(s) to watch-list.\n"
-"Watched nodes print their transitions to stdout." << endl;
+WatchValue::usage(ostream& o) {
+	o << name << " <var-names ...>" << endl;
+	o << "adds variable(s) to watch-list.\n"
+"Watched variables print their value transitions to stdout." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
-	"silence activity reporting on selected nodes")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchValue, "unwatch-value", view, 
+	"silence activity reporting on selected variables")
 
 /**
-	Removes a node from the watch list.  
+	Removes a variable from the watch list.  
  */
 int
-UnWatch::main(State& s, const string_list& a) {
+UnWatchValue::main(State& s, const string_list& a) {
 if (a.size() < 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1494,12 +1503,12 @@ if (a.size() < 2) {
 	bool badarg = false;
 	for ( ; i!=e; ++i) {
 		const string& objname(*i);
-		const node_index_type ni =
-			parse_node_to_index(objname, s.get_module());
-		if (ni) {
-			s.unwatch_node(ni);
+		const global_indexed_reference
+			r(parse_global_reference(objname, s.get_module()));
+		if (r.first) {
+			s.unwatch_value(r);
 		} else {
-			cerr << "No such node found: " << objname << endl;
+			cerr << "No such instance found: " << objname << endl;
 			badarg = true;
 		}
 	}
@@ -1508,11 +1517,55 @@ if (a.size() < 2) {
 }
 
 void
-UnWatch::usage(ostream& o) {
-	o << "unwatch <nodes>" << endl;
-	o << "removes nodes from watch-list" << endl;
+UnWatchValue::usage(ostream& o) {
+	o << name << " <nodes>" << endl;
+	o << "removes non-breakpoint variables from watch-list" << endl;
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAllValues,
+	"unwatchall-values", view, 
+	"silence activity reporting on all variables")
+
+int
+UnWatchAllValues::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unwatch_all_values();
+	return Command::NORMAL;
+}
+}
+
+void
+UnWatchAllValues::usage(ostream& o) {
+	o << name << endl;
+	o << "removes all non-breakpoint variables from watch-list" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowValueWatches,
+	"show-value-watches", view, 
+	"list watched variables with values")
+
+int
+ShowValueWatches::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_watch_values(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+ShowValueWatches::usage(ostream& o) {
+	o << name << endl;
+	o << "Print all watched variables with current values." << endl;
+}
+#endif	// CHPSIM_BREAK_VALUES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllEvents, "watchall-events", view, 

@@ -12,7 +12,7 @@ break events: 1, 2, 3
 watch events: 1, 2, 3
 expect break 1 2 3 
 WARNING: not de-listing because event 2 is also listed as a breakpoint.
-To remove this watchpoint, use 'unbreak.'
+To remove this watchpoint, use 'unbreak-event.'
 break events: 1, 2, 3
 watch events: 1, 2, 3
 expect break 1 2 3 

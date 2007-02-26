@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-08:
+	  Added value-based (variable) watchpoints and breakpoints.  
+	  Object/ref/reference_set.{h,cc}: added more aggregate set
+		operations using STL set algorithms.  
+	  TODO: test cases for break-value and watch-value.  
+		maybe implement 'nobreakall-*' to allow run while
+		sustaining breakpoints.  
+	  This is the last feature before merge to trunk.  
+
+
 2007-02-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-79-chpsim-03-07:

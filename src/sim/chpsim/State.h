@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.3.2.2 2007/02/26 01:34:17 fang Exp $
+	$Id: State.h,v 1.3.2.3 2007/02/26 06:11:57 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -41,6 +41,9 @@ class graph_options;
 class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+using entity::global_references_set;
+#endif
 
 //=============================================================================
 /**
@@ -124,7 +127,10 @@ private:
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
 #if CHPSIM_STATE_UPDATE_BIN_SETS
-	typedef	entity::global_references_set
+	/**
+		Array of sets, binned by meta-type.  
+	 */
+	typedef	global_references_set
 #else
 	typedef	vector<global_indexed_reference>
 #endif	// CHPSIM_STATE_UPDATE_BIN_SETS
@@ -250,13 +256,29 @@ private:
 	event_subscribers_type			__rechecks;
 	/**
 		Events to print when they are executed.  
+		Not preserved by checkpointing.  
 	 */
 	event_watch_list_type			event_watches;
 	/**
 		Events to cause break.  
 		This is a maintained as subset of event_watches.  
+		Not preserved by checkpointing.  
 	 */
 	event_watch_list_type			event_breaks;
+#if CHPSIM_BREAK_VALUES
+	/**
+		Set of values and states to watch.  
+		Compare this against the __updated_list.
+		Not preserved by checkpointing.  
+	 */
+	global_references_set			value_watches;
+	/**
+		Set of values and states to watch.  
+		Compare this against the __updated_list.
+		Not preserved by checkpointing.  
+	 */
+	global_references_set			value_breaks;
+#endif
 	/**
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
@@ -391,6 +413,31 @@ public:
 	ostream&
 	dump_break_events(ostream&) const;
 
+#if CHPSIM_BREAK_VALUES
+	void
+	watch_value(const global_indexed_reference&);
+
+	void
+	unwatch_value(const global_indexed_reference&);
+
+	void
+	unwatch_all_values(void);
+
+	ostream&
+	dump_watch_values(ostream&) const;
+
+	void
+	break_value(const global_indexed_reference&);
+
+	void
+	unbreak_value(const global_indexed_reference&);
+
+	void
+	unbreak_all_values(void);
+
+	ostream&
+	dump_break_values(ostream&) const;
+#endif	// CHPSIM_BREAK_VALUES
 
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }

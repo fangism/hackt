@@ -30,10 +30,10 @@
 	140	10	3	bool_split::I?(bool_split::x)
 	150	2	2	int_source::S!(0)
 	150	1	1	bool_source_constant::S!(true)
-	150	8	3	
 FATAL: reference to channel chan!(bool<>) with out-of-bounds indices [4]:[4]
 ERROR: unrolling aliases.
 Error resolving a single instance alias.
 at: bool_split::O[bool_split::c]
 Run-time error while rechecking events.
+event[8]:	150	8	3		[by:10]
 Caught run-time exception during execution.  Halting.
