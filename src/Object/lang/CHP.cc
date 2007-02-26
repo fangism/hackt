@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.19.2.3 2007/02/25 19:54:35 fang Exp $
+	$Id: CHP.cc,v 1.19.2.4 2007/02/26 01:34:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -144,10 +144,12 @@ namespace HAC {
 namespace entity {
 namespace CHP {
 using std::equal;
+using std::copy;
 using std::find;
 using std::transform;
 using std::back_inserter;
 using std::for_each;
+using util::set_inserter;
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
@@ -159,7 +161,6 @@ using SIM::CHPSIM::RECHECK_BLOCKED_THIS;
 using SIM::CHPSIM::RECHECK_UNBLOCKED_THIS;
 using SIM::CHPSIM::RECHECK_DEFERRED_TO_SUCCESSOR;
 using util::reference_wrapper;
-using util::set_inserter;
 using util::numeric::rand48;
 #if CHP_ACTION_DELAYS
 using entity::preal_const;

@@ -1,0 +1,65 @@
+# "do-while-countdown-03-watch.chpsimrc"
+#	$Id: do-while-countdown-03-watch.chpsimrc,v 1.1.2.1 2007/02/26 01:34:23 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+cause
+watch-event 1
+show-event-watches
+show-event-breaks
+echo expect to see event 1
+step 30
+time
+echo initializing...
+initialize
+show-event-watches
+show-event-breaks
+echo resetting...
+reset
+cause
+show-event-watches
+show-event-breaks
+
+echo restarting...
+watch-event 2 3
+show-event-watches
+step 30
+time
+
+echo testing unwatch-event
+initialize
+unwatch-event 2 5
+show-event-watches
+unwatch-event 3
+show-event-watches
+watch-event 3
+show-event-watches
+step 30
+time
+
+echo testing unwatchall-events
+initialize
+watch-event 0 1 2 3 4
+show-event-watches
+unwatchall-events
+show-event-watches
+
+echo restarting...
+initialize
+watch-event 2 3 4
+watchall-events
+step 30
+time
+
+echo testing nowatchall-events with watched events
+initialize
+nowatchall-events
+show-event-watches
+step 30
+time
+
+echo testing unwatchall-events
+unwatchall-events
+show-event-watches
+
+queue
+

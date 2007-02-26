@@ -1,0 +1,57 @@
+# "do-while-countdown-05-break.chpsimrc"
+#	$Id: do-while-countdown-05-break.chpsimrc,v 1.1.2.1 2007/02/26 01:34:25 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+
+echo just testing break and watching of events (no running)
+show-event-breaks
+show-event-watches
+
+echo expect watch 1 2 3
+watch-event 1 2 3
+show-event-breaks
+show-event-watches
+
+echo expect watch 1 2
+unbreak-event 3 4
+show-event-breaks
+show-event-watches
+
+reset
+echo expect break 1 2 3
+break-event 1 2 3
+show-event-breaks
+show-event-watches
+
+echo expect break 1 2 3
+unwatch-event 2
+show-event-breaks
+show-event-watches
+
+echo expect break 1 2 3
+unwatchall-events
+show-event-breaks
+show-event-watches
+
+echo expect no breaks
+unbreakall-events
+show-event-breaks
+show-event-watches
+
+echo expect watch 1 2 3
+watch-event 1 2 3
+show-event-breaks
+show-event-watches
+
+echo expect watch 1 2 3
+unbreakall-events
+show-event-breaks
+show-event-watches
+
+echo expect watch 1 3
+break-event 2
+unbreak-event 2
+show-event-breaks
+show-event-watches
+
+

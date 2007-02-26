@@ -1,12 +1,13 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.3.2.2 2007/02/25 03:01:42 fang Exp $
+	$Id: DependenceCollector.cc,v 1.3.2.3 2007/02/26 01:34:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/StateConstructor.h"
 
@@ -63,6 +64,7 @@ namespace CHPSIM {
 using std::vector;
 using std::copy;
 using std::transform;
+using util::set_inserter;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
@@ -73,7 +75,6 @@ using entity::global_entry_context;
 using entity::simple_meta_instance_reference;
 using entity::member_meta_instance_reference;
 using entity::aggregate_meta_instance_reference;
-using util::set_inserter;
 using util::memory::never_ptr;
 
 //=============================================================================

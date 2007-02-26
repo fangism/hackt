@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.4.2.1 2007/02/25 19:54:44 fang Exp $
+	$Id: State.cc,v 1.4.2.2 2007/02/26 01:34:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -238,6 +238,8 @@ State::State(const module& m) :
 		__updated_list(), 
 		__enqueue_list(), 
 		__rechecks(), 
+		event_watches(), 
+		event_breaks(),
 		trace_manager(), 
 		trace_flush_interval(1L<<16)
 		{
@@ -322,6 +324,8 @@ State::reset(void) {
 	timing_mode = TIMING_DEFAULT;
 	interrupted = false;
 	flags = FLAGS_DEFAULT;
+	event_watches.clear();
+	event_breaks.clear();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -365,7 +369,7 @@ State::next_event_time(void) const {
 	Processes one event at a time.  
 	Q: since multiple instances referenced can be altered, 
 		should we check against the watch-list here (set-intersection)?
-	\return reference to the variable that was just modified, if any.
+	\return true to break if breakpoint tripped.  
  */
 State::step_return_type
 State::step(void) {
@@ -374,13 +378,13 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	if (event_queue.empty()) {
-		return return_type(META_TYPE_NONE, INVALID_NODE_INDEX);
+		return false;
 	}
-
+	return_type ret = false;
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
-	const event_index_type& ei(ep.event_index);
+	const event_index_type ei(ep.event_index);
 	// first NULL event has index 0, but nothing else should enqueue it
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
@@ -412,7 +416,12 @@ try {
 		ti = trace_manager->push_back_event(
 			event_trace_point(current_time, ei, cause_trace_id));
 	}
-	if (watching_all_events()) {
+	// is it being watched?
+	ret = (event_watches.find(ei) != event_watches.end());
+	if (watching_all_events() || ret) {
+		if (ret) {
+			cout << "watch:";
+		}
 		dump_event(cout, ei, current_time);
 		if (showing_cause() && cause_event_id) {
 			cout << "\t[by:" << cause_event_id << ']';
@@ -552,7 +561,9 @@ try {
 		trace_manager->flush();
 	}
 	// TODO: finish me: watch list
-	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+//	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+//	return false;
+	return ret && (event_breaks.find(ei) != event_breaks.end());
 }	// end step() method
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -625,6 +636,140 @@ State::help_timing(ostream& o) {
 	"\trandom -- use random delay\n"
 	"\tdefault -- (uniform)" << endl;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::watch_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		event_watches.insert(ei);
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::unwatch_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		// don't remove if it is a breakpoint
+		if (event_breaks.find(ei) != event_breaks.end()) {
+			cerr << "WARNING: not de-listing because event " << ei 
+				<< " is also listed as a breakpoint." << endl;
+			cerr << "To remove this watchpoint, use \'unbreak.\'"
+				<< endl;
+		} else {
+			event_watches.erase(ei);
+		}
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Remove all events that are NOT break points.  
+ */
+void
+State::unwatch_all_events(void) {
+	event_watches = event_breaks;
+	if (event_watches.size()) {
+		cerr << 
+"NOTE: break-events were not removed from the watch-event list." << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print list of watched events.  
+ */
+ostream&
+State::dump_watch_events(ostream& o) const {
+	o << "watch events: ";
+	switch (event_watches.size()) {
+	case 0: break;
+	case 1: o << *event_watches.begin(); break;
+	default: {
+		const event_watch_list_type::const_iterator
+			l(--event_watches.end());
+		copy(event_watches.begin(), l, 
+			ostream_iterator<event_index_type>(o, ", "));
+		o << *l;
+	}
+	}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::break_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		event_breaks.insert(ei);
+		event_watches.insert(ei);
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::unbreak_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		event_breaks.erase(ei);
+		event_watches.erase(ei);
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Removes breakpoints from the watch list and break list.
+ */
+void
+State::unbreak_all_events(void) {
+	event_watch_list_type temp;
+	std::set_difference(event_watches.begin(), event_watches.end(), 
+		event_breaks.begin(), event_breaks.end(), set_inserter(temp));
+	event_breaks.clear();
+	event_watches.swap(temp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print list of breaking events.  
+ */
+ostream&
+State::dump_break_events(ostream& o) const {
+	o << "break events: ";
+	switch (event_breaks.size()) {
+	case 0: break;
+	case 1: o << *event_breaks.begin(); break;
+	default: {
+		const event_watch_list_type::const_iterator
+			l(--event_breaks.end());
+		copy(event_breaks.begin(), l, 
+			ostream_iterator<event_index_type>(o, ", "));
+		o << *l;
+	}
+	}
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.3.2.1 2007/02/25 19:54:45 fang Exp $
+	$Id: State.h,v 1.3.2.2 2007/02/26 01:34:17 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -99,6 +99,10 @@ public:
 #endif
 
 	};	// end struct event_placeholder_type
+	/**
+		Return true to break.  
+	 */
+	typedef	bool				step_return_type;
 private:
 #if CHPSIM_MULTISET_EVENT_QUEUE
 	typedef	std::multiset<event_placeholder_type>
@@ -119,10 +123,6 @@ private:
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
-	/**
-		Return type is not used yet.  
-	 */
-	typedef	global_indexed_reference	step_return_type;
 #if CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	entity::global_references_set
 #else
@@ -193,6 +193,9 @@ private:
 	};
 	struct recheck_transformer;
 	struct event_enqueuer;
+
+	// diagnostic structures and types
+	typedef	std::set<event_index_type>	event_watch_list_type;
 private:
 	/**
 		Collection of variable values and channel state.
@@ -245,6 +248,15 @@ private:
 		Set of events to recheck for unblocking.  
 	 */
 	event_subscribers_type			__rechecks;
+	/**
+		Events to print when they are executed.  
+	 */
+	event_watch_list_type			event_watches;
+	/**
+		Events to cause break.  
+		This is a maintained as subset of event_watches.  
+	 */
+	event_watch_list_type			event_breaks;
 	/**
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
@@ -354,6 +366,31 @@ public:
 	watching_all_events(void) const {
 		return flags & FLAG_WATCH_ALL_EVENTS;
 	}
+
+	void
+	watch_event(const event_index_type);
+
+	void
+	unwatch_event(const event_index_type);
+
+	void
+	unwatch_all_events(void);
+
+	ostream&
+	dump_watch_events(ostream&) const;
+
+	void
+	break_event(const event_index_type);
+
+	void
+	unbreak_event(const event_index_type);
+
+	void
+	unbreak_all_events(void);
+
+	ostream&
+	dump_break_events(ostream&) const;
+
 
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }

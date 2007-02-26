@@ -5,6 +5,20 @@
 
 2007-02-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-07:
+	  Implemented watch/break points on events.
+	  new chpsim commands: (mostly self-explanatory)
+		break-event, unbreak-event, 
+		unbreakall-events, show-event-breaks,
+		watch-event, unwatch-event, 
+		unwatchall-events, show-event-watchss
+	  NOTE: breaks are subset of watches, and so maintained.
+		Cannot unwatch a breakpoint, must use unbreak.  
+	  CHPSIM::State's return type is now bool, 
+		and used for break detection.  
+	  Next: watch/break points on state values.  
+
+
 	* HACKT-00-01-04-main-00-80-79-chpsim-03-06:
 	  switch: CHPSIM_STATE_UPDATE_BIN_SETS (enabled)
 		Instead of using a vector<pair<type,index> >, 

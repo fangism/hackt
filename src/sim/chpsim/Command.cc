@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.5 2007/02/08 22:55:20 fang Exp $
+	$Id: Command.cc,v 1.5.2.1 2007/02/26 01:34:15 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -274,7 +274,6 @@ if (a.size() > 2) {
 	typedef	State::time_type		time_type;
 	size_t i;		// the number of events to advance
 		// not necessarily == the number of discrete events
-//	State::step_return_type ni;	// also stores the cause of the event
 	if (a.size() == 2) {
 		if (string_to_num(a.back(), i)) {
 			cerr << "Error parsing #steps." << endl;
@@ -285,51 +284,17 @@ if (a.size() > 2) {
 		i = 1;
 	}
 	s.resume();
-	time_type time = s.time();
+	// time_type time = s.time();	// unused
 	// could check s.pending_events()
 try {
-#if 0
-	while (!s.stopped() && i && GET_NODE((ni = s.step())))
-#else
-	while (s.pending_events() && !s.stopped() && i)
-#endif
-	{
-		// ignore return for now
-		s.step();
-		time = s.time();
-#if 0
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Advance::main().
-			tracing stuff here later...
-		***/
-		if (s.watching_all_nodes()) {
-			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+	while (s.pending_events() && !s.stopped() && i) {
+		const State::step_return_type brk = s.step();
+		// time = s.time();	// unused
+		if (brk) {
+			// already printed diagnostics in step()
+			cout << "\t*** break, " << i << " steps left." << endl;
+			break;
 		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(
-				s.get_node_canonical_name(GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' << ct << '\t',
-					s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " << i <<
-					" steps left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-#endif
 		--i;
 	}	// end while
 	return Command::NORMAL;
@@ -369,50 +334,17 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-//	State::step_return_type ni;
 	s.resume();
 	try {
 	while (s.pending_events() && !s.stopped() &&
 			(s.next_event_time() < stop_time)) {
-		s.step();
-		// NB: may need specialization for real-valued (float) time.  
-#if 0
-		// honor breakpoints?
-		// tracing stuff here later...
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Step::main().
-			TODO: factor this out for maintainability.  
-		***/
-		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
+		const State::step_return_type brk = s.step();
+		if (brk) {
+			// already printed diagnostics in step()
+			cout << "\t*** break, " << stop_time -s.time() <<
+				" time left." << endl;
+			break;
 		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " <<
-					stop_time -s.time() <<
-					" time left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-#endif
 	}	// end while
 	} catch (...) {
 		cerr << "Caught run-time exception during execution.  Halting."
@@ -465,50 +397,17 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = add;
-//	State::step_return_type ni;
 	s.resume();
 	try {
 	while (s.pending_events() && !s.stopped() &&
 			(s.next_event_time() <= stop_time)) {
-		s.step();
-		// NB: may need specialization for real-valued (float) time.  
-#if 0
-		// honor breakpoints?
-		// tracing stuff here later...
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Step::main().
-			TODO: factor this out for maintainability.  
-		***/
-		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
+		const State::step_return_type brk = s.step();
+		if (brk) {
+			// already printed diagnostics in step()
+			cout << "\t*** break, " << stop_time -s.time() <<
+				" time left." << endl;
+			break;
 		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " <<
-					stop_time -s.time() <<
-					" time left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-#endif
 	}	// end while
 	} catch (...) {
 		cerr << "Caught run-time exception during execution.  Halting."
@@ -553,47 +452,18 @@ if (a.size() != 1) {
 } else {
 //	typedef	State::node_type		node_type;
 	typedef	State::time_type		time_type;
-//	State::step_return_type ni;
-	time_type time = s.time();
+//	time_type time = s.time();		// unused
 	s.resume();	// clear STOP flag
 	try {
 	while (s.pending_events() && !s.stopped()) {
-		s.step();
-		time = s.time();
-#if 0
-		if (!GET_NODE(ni))
-			return Command::NORMAL;
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Step::main() and Advance::main().
-		***/
-		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
+		const State::step_return_type brk = s.step();
+		// time = s.time();		// unused
+		if (brk) {
+			// already printed diagnostics in step()
+			cout << "\t*** break, at time " <<
+				s.time() << "." << endl;
+			break;
 		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-#endif
 	}	// end while (!s.stopped())
 	} catch (...) {
 		cerr << "Caught run-time exception during execution.  Halting."
@@ -871,6 +741,97 @@ SetrF::usage(ostream& o) {
 //	"set node with random delay after event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakEvent, "break-event", simulation,
+	"set breakpoint on event")
+
+int
+BreakEvent::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& eid(*i);
+		event_index_type t;
+		if (string_to_num(eid, t)) {
+			cerr << "Error: non-numeric argument \"" 
+				<< eid << "\"." << endl;
+			badarg = true;
+		} else {
+			s.break_event(t);
+		}
+	}
+	return badarg ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+BreakEvent::usage(ostream& o) {
+	o << name << " <event-id ...>" << endl;
+	o << "causes simulation to stop upon execution of listed events"<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakEvent, "unbreak-event", simulation,
+	"remove breakpoint and watchpoint on event")
+
+int
+UnBreakEvent::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& eid(*i);
+		event_index_type t;
+		if (string_to_num(eid, t)) {
+			cerr << "Error: non-numeric argument \"" 
+				<< eid << "\"." << endl;
+			badarg = true;
+		} else {
+			s.unbreak_event(t);
+		}
+	}
+	return badarg ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+UnBreakEvent::usage(ostream& o) {
+	o << name << " <event-id ...>" << endl;
+	o << "removes events from breakpoint and watchpoint lists"<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAllEvents, 
+	"unbreakall-events", simulation, 
+	"remove all breakpoint events")
+
+int
+UnBreakAllEvents::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unbreak_all_events();
+	return Command::NORMAL;
+}
+}
+
+void
+UnBreakAllEvents::usage(ostream& o) {
+	o << name << endl;
+	o << "Clears all event breakpoints." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 #if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 	"set breakpoint on node")	// no vector support yet
@@ -1002,27 +963,26 @@ UnBreakAll::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Breaks, "breaks", simulation,
-	"list all nodes that are breakpoints")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowEventBreaks, 
+	"show-event-breaks", simulation,
+	"list all events that are breakpoints")
 
 int
-Breaks::main(State& s, const string_list& a) {
+ShowEventBreaks::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.dump_breakpoints(cout);
+	s.dump_break_events(cout);
 	return Command::NORMAL;
 }
 }
 
 void
-Breaks::usage(ostream& o) {
-	o << "breaks";
-	o << "lists all breakpoint nodes" << endl;
+ShowEventBreaks::usage(ostream& o) {
+	o << name << endl;
+	o << "Lists all breakpoint events." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Save<State>				Save;
@@ -1382,6 +1342,99 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Time, CHPSIM::info)
 //	"confirm assertions silently")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchEvent, "watch-event", view, 
+	"print activity on selected events")
+
+int
+WatchEvent::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& eid(*i);
+		event_index_type t;
+		if (string_to_num(eid, t)) {
+			cerr << "Error: non-numeric argument \"" 
+				<< eid << "\"." << endl;
+			badarg = true;
+		} else {
+			s.watch_event(t);
+		}
+	}
+	return badarg ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+WatchEvent::usage(ostream& o) {
+	o << name << "<event-id ...>";
+	o << 
+"Added events to the watch list, which are printed upon execution." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchEvent, "unwatch-event", view, 
+	"silence activity on selected events")
+
+int
+UnWatchEvent::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& eid(*i);
+		event_index_type t;
+		if (string_to_num(eid, t)) {
+			cerr << "Error: non-numeric argument \"" 
+				<< eid << "\"." << endl;
+			badarg = true;
+		} else {
+			s.unwatch_event(t);
+		}
+	}
+	return badarg ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+UnWatchEvent::usage(ostream& o) {
+	o << name << "<event-id ...>";
+	o << 
+"Removes events from the watch list, which are printed upon execution.\n"
+"However, events listed as breakpoints are NOT removed." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAllEvents, 
+	"unwatchall-events", view, 
+	"remove all non-breakpoint events from watch list")
+
+int
+UnWatchAllEvents::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unwatch_all_events();
+	return Command::NORMAL;
+}
+}
+
+void
+UnWatchAllEvents::usage(ostream& o) {
+	o << name << endl;
+	o << "Clears the watch-list of all events EXCEPT breakpoints." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
 	"print activity on selected nodes")
@@ -1539,27 +1592,26 @@ o << "turns off watchall-events, printing only explicitly watched events"
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watches, "watches", view,
-	"list all nodes that are explicitly watched")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowEventWatches, 
+	"show-event-watches", view,
+	"list all events that are explicitly watched")
 
 int
-Watches::main(State& s, const string_list& a) {
+ShowEventWatches::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.dump_watched_nodes(cout);
+	s.dump_watch_events(cout);
 	return Command::NORMAL;
 }
 }
 
 void
-Watches::usage(ostream& o) {
-	o << "watches" << endl;
-	o << "show list of explicitly watched nodes" << endl;
+ShowEventWatches::usage(ostream& o) {
+	o << name << endl;
+	o << "Show list of explicitly watched events." << endl;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	WatchQueue<State>			WatchQueue;

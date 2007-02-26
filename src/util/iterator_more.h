@@ -1,7 +1,7 @@
 /**
 	\file "util/iterator_more.h"
 	More iterator functionality.  
-	$Id: iterator_more.h,v 1.3 2006/05/28 19:27:14 fang Exp $
+	$Id: iterator_more.h,v 1.3.42.1 2007/02/26 01:34:18 fang Exp $
  */
 
 #ifndef	__UTIL_ITERATOR_MORE_H__
@@ -196,6 +196,8 @@ pusher(_Container& __x) {
 //=============================================================================
 /**
 	Analogous to std::insert_iterator, 
+	Unlike std::insert_iterator, however, this does not require an 
+	additional iterator argument.  
 	but uses push() interface instead of insert.  
 	This works for queues and stacks.  
  */
@@ -237,7 +239,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	\return Instance of a front_insert_assign_iterator.  
+	\return Instance of a set_insert_iterator.  
  */
 template<typename _Container>
 inline
