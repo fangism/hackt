@@ -1,0 +1,9 @@
+# "channel-probe-a-01.chpsimrc"
+#	$Id: channel-probe-a-01.chpsimrc,v 1.2 2007/02/26 22:01:17 fang Exp $
+# @haco@ channel-probe-a.haco-a
+
+watchall-events
+step 20
+assert-queue
+time
+

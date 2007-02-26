@@ -8,25 +8,25 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	21	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

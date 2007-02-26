@@ -1,0 +1,33 @@
+just testing break and watching of events (no running) 
+break events: 
+watch events: 
+expect watch 1 2 3 
+break events: 
+watch events: 1, 2, 3
+expect watch 1 2 
+break events: 
+watch events: 1, 2
+expect break 1 2 3 
+break events: 1, 2, 3
+watch events: 1, 2, 3
+expect break 1 2 3 
+WARNING: not de-listing because event 2 is also listed as a breakpoint.
+To remove this watchpoint, use 'unbreak-event.'
+break events: 1, 2, 3
+watch events: 1, 2, 3
+expect break 1 2 3 
+NOTE: break-events were not removed from the watch-event list.
+break events: 1, 2, 3
+watch events: 1, 2, 3
+expect no breaks 
+break events: 
+watch events: 
+expect watch 1 2 3 
+break events: 
+watch events: 1, 2, 3
+expect watch 1 2 3 
+break events: 
+watch events: 1, 2, 3
+expect watch 1 3 
+break events: 
+watch events: 1, 3

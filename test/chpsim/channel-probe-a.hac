@@ -1,0 +1,17 @@
+// "channel-probe-a.hac"
+//	$Id: channel-probe-a.hac,v 1.2 2007/02/26 22:01:19 fang Exp $
+// testing channel probe semantics
+
+import "testlib/bool-sink.hac";
+import "testlib/bool-source.hac";
+
+chan(bool) A, B;
+bool a;
+
+chp {
+*[ [#A]; A?(a); B!(a) ]
+}
+
+bool_source<2, {true,false}> bs(A);
+bool_sink snk(B);
+

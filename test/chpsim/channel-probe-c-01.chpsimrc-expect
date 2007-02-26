@@ -1,0 +1,41 @@
+	0	0	0	null
+	10	11	0	
+	10	12	1	bool_source::S!(true)
+	10	14	2	bool_source::S!(true)
+	20	2	0	X?(x)
+	30	3	0	Y!(x)
+	30	15	2	bool_source::S!(false)
+	40	4	0	[#A&&#Y]
+	40	2	0	X?(x)
+	50	10	0	
+	50	14	2	bool_source::S!(true)
+	60	7	0	A?(a)
+	60	9	0	Y?(z)
+	70	6	0	B!(a)
+	70	13	1	bool_source::S!(false)
+	70	3	0	Y!(x)
+	70	8	0	Z!(z)
+	80	16	3	bool_sink::B?(bool_sink::b)
+	80	2	0	X?(x)
+	80	5	0	
+	80	17	4	bool_sink::B?(bool_sink::b)
+	90	15	2	bool_source::S!(false)
+	90	4	0	[#A&&#Y]
+	100	10	0	
+	110	7	0	A?(a)
+	110	9	0	Y?(z)
+	120	6	0	B!(a)
+	120	12	1	bool_source::S!(true)
+	120	3	0	Y!(x)
+	120	8	0	Z!(z)
+	130	16	3	bool_sink::B?(bool_sink::b)
+	130	2	0	X?(x)
+	130	5	0	
+	130	17	4	bool_sink::B?(bool_sink::b)
+	140	14	2	bool_source::S!(true)
+	140	4	0	[#A&&#Y]
+	150	10	0	
+	160	7	0	A?(a)
+	160	9	0	Y?(z)
+	170	6	0	B!(a)
+time: 170

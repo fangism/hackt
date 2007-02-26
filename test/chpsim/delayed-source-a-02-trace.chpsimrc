@@ -1,0 +1,10 @@
+# "delayed-source-a-02-trace.chpsimrc"
+#	$Id: delayed-source-a-02-trace.chpsimrc,v 1.2 2007/02/26 22:01:34 fang Exp $
+# @haco@ delayed-source-a.haco-a
+
+trace delayed-source-a-02.chpsimtrace
+source delayed-source-a-01.chpsimrc
+trace-close
+trace-dump delayed-source-a-02.chpsimtrace
+!rm delayed-source-a-02.chpsimtrace
+

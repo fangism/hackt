@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.18 2007/02/14 00:31:10 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.19 2007/02/26 22:00:55 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -336,7 +336,7 @@ WHITESPACE	[ \t]+
 NEWLINE		"\n"
 WS		{WHITESPACE}
 
-POSITIONTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]
+POSITIONTOKEN	[][(){}<>*%/=:;|!?~&^.,#$+-]
 
 /* AT		"@"	*/
 /* POUND		"#"	*/

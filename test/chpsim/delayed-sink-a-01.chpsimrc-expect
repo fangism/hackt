@@ -1,0 +1,46 @@
+	0	0	0	null
+event queue:
+	time	eid	pid	event
+	2	1	1	bool_source::S!(true)
+X : chan(bool<>) X = (0) [empty]
+	2	1	1	bool_source::S!(true)
+event queue:
+	time	eid	pid	event
+	27	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+X : chan(bool<>) X = (1) [full]
+	27	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+event queue:
+	time	eid	pid	event
+	29	2	1	bool_source::S!(false)
+X : chan(bool<>) X = (1) [empty]
+	29	2	1	bool_source::S!(false)
+event queue:
+	time	eid	pid	event
+	54	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+X : chan(bool<>) X = (0) [full]
+	54	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+event queue:
+	time	eid	pid	event
+	56	1	1	bool_source::S!(true)
+X : chan(bool<>) X = (0) [empty]
+	56	1	1	bool_source::S!(true)
+event queue:
+	time	eid	pid	event
+	81	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+X : chan(bool<>) X = (1) [full]
+	81	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+event queue:
+	time	eid	pid	event
+	83	2	1	bool_source::S!(false)
+X : chan(bool<>) X = (1) [empty]
+	83	2	1	bool_source::S!(false)
+event queue:
+	time	eid	pid	event
+	108	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+X : chan(bool<>) X = (0) [full]
+	108	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+event queue:
+	time	eid	pid	event
+	110	1	1	bool_source::S!(true)
+X : chan(bool<>) X = (0) [empty]
+time: 108

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2007/02/08 22:55:22 fang Exp $
+#	$Id: Makefile.am,v 1.7 2007/02/26 22:01:08 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -29,7 +29,8 @@ HACKT_PARSE_TEST_PASSES = \
 	select-block-a \
 	bool-and-test-a \
 	bool-or-test-a \
-	bool-xor-test-a
+	bool-xor-test-a \
+	channel-probe-a channel-probe-b channel-probe-c
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -60,7 +61,10 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	channel-sync-desync-a \
 	bool-memory-read-a bool-memory-read-b \
 	bool-memory-write-a bool-memory-write-b \
-	buffer-advance-to
+	buffer-advance-to \
+	delayed-source-a \
+	delayed-sink-a \
+	bool-and-test-b
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -81,6 +85,11 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	channel-self-parallel-a-01 channel-self-parallel-b-01 \
 	channel-self-parallel-a-02 channel-self-parallel-b-02 \
 	do-while-countdown-01 do-while-countdown-02 \
+	do-while-countdown-03-watch \
+	do-while-countdown-04-break \
+	do-while-countdown-05-break \
+	do-while-countdown-06-watch \
+	do-while-countdown-07-break \
 	countdown-successor-01 \
 	countdown-loop-a-01 countdown-loop-b-01 \
 	countdown-sequence-a-01 \
@@ -119,9 +128,14 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bool-memory-read-a-01 \
 	bool-memory-write-a-01 \
 	bool-and-test-a-01 \
+	bool-and-test-a-02-break \
+	bool-and-test-b-01 bool-and-test-b-02-trace \
 	bool-or-test-a-01 \
 	bool-xor-test-a-01 \
-	buffer-advance-to
+	buffer-advance-to \
+	channel-probe-a-01 channel-probe-b-01 channel-probe-c-01 \
+	delayed-source-a-01 delayed-source-a-02-trace \
+	delayed-sink-a-01 delayed-sink-a-02-trace
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \

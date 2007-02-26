@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_visitor.h"
 	Expression visitor interface.  
-	$Id: expr_visitor.h,v 1.3 2007/02/08 02:11:04 fang Exp $
+	$Id: expr_visitor.h,v 1.4 2007/02/26 22:00:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_VISITOR_H__
@@ -88,6 +88,7 @@ virtual	VISIT_PROTO(int_range_expr) = 0;
 virtual	VISIT_PROTO(int_arith_loop_expr) = 0;
 virtual	VISIT_PROTO(bool_logical_loop_expr) = 0;
 // virtual	VISIT_PROTO(real_arith_loop_expr) = 0;
+virtual	VISIT_PROTO(channel_probe) = 0;
 
 virtual	VISIT_PROTO(nonmeta_index_list);	// defaulting list traversal
 // virtual	VISIT_PROTO(nonmeta_range_list); // defaulting list traversal
@@ -109,6 +110,7 @@ virtual	VISIT_PROTO(pbool_logical_expr) = 0;
 virtual	VISIT_PROTO(pint_arith_loop_expr) = 0;
 virtual	VISIT_PROTO(pbool_logical_loop_expr) = 0;
 virtual	VISIT_PROTO(preal_arith_loop_expr) = 0;
+virtual	VISIT_PROTO(convert_pint_to_preal_expr) = 0;
 virtual	VISIT_PROTO(pint_range) = 0;
 virtual	VISIT_PROTO(const_range) = 0;
 virtual	VISIT_PROTO(const_range_list);		// defaulting list traversal

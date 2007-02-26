@@ -1,0 +1,148 @@
+watched values:
+int(s): 
+int c = 0
+break values:
+int(s): 
+int c = 0
+expect to see int c 
+updated int(s): 
+int c = 5
+watch:	10	4	0	c := 5
+	*** break, 9 steps left.
+time: 10
+updated int(s): 
+int c = 4
+watch:	30	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 30
+updated int(s): 
+int c = 3
+watch:	50	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 50
+updated int(s): 
+int c = 2
+watch:	70	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 70
+updated int(s): 
+int c = 1
+watch:	90	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 90
+updated int(s): 
+int c = 0
+watch:	110	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 110
+time: 130
+initializing... 
+watched values:
+int(s): 
+int c = 0
+break values:
+int(s): 
+int c = 0
+resetting... 
+watched values:
+break values:
+testing unbreak-value 
+break values:
+break values:
+break values:
+int(s): 
+int c = 0
+updated int(s): 
+int c = 5
+watch:	10	4	0	c := 5
+	*** break, 4 steps left.
+time: 10
+updated int(s): 
+int c = 4
+watch:	30	3	0	c := c-1	[by:1]
+	*** break, 4 steps left.
+time: 30
+updated int(s): 
+int c = 3
+watch:	50	3	0	c := c-1	[by:1]
+	*** break, 4 steps left.
+time: 50
+updated int(s): 
+int c = 2
+watch:	70	3	0	c := c-1	[by:1]
+	*** break, 4 steps left.
+time: 70
+updated int(s): 
+int c = 1
+watch:	90	3	0	c := c-1	[by:1]
+	*** break, 4 steps left.
+time: 90
+updated int(s): 
+int c = 0
+watch:	110	3	0	c := c-1	[by:1]
+	*** break, 4 steps left.
+time: 110
+time: 130
+testing unbreakall-values 
+break values:
+int(s): 
+int c = 0
+break values:
+restarting... 
+testing watch-events with break-value 
+watch events: 2, 3, 4
+updated int(s): 
+int c = 5
+watch:	10	4	0	c := 5
+	*** break, 9 steps left.
+time: 10
+updated int(s): 
+int c = 4
+watch:	30	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 30
+updated int(s): 
+int c = 3
+watch:	50	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 50
+updated int(s): 
+int c = 2
+watch:	70	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 70
+updated int(s): 
+int c = 1
+watch:	90	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 90
+updated int(s): 
+int c = 0
+watch:	110	3	0	c := c-1	[by:1]
+	*** break, 9 steps left.
+time: 110
+watch:	130	2	0	null	[by:1]
+time: 130
+testing unbreakall-values 
+break values:
+int(s): 
+int c = 0
+expect warning about unwatching breakpoints 
+NOTE: break-values were not removed from the watch-value list.
+break values:
+int(s): 
+int c = 0
+break values:
+no value-breaks, only event-watches 
+watch:	10	4	0	c := 5
+watch:	30	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:1]
+watch:	130	2	0	null	[by:1]
+time: 130
+no value-breaks, no event-watches 
+time: 130
+event queue:
+	(empty)

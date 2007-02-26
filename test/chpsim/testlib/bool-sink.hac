@@ -1,12 +1,27 @@
 // "bool-sink.hac"
-//	$Id: bool-sink.hac,v 1.3 2007/02/05 06:40:27 fang Exp $
+//	$Id: bool-sink.hac,v 1.4 2007/02/26 22:01:45 fang Exp $
 // bool buckets
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain infinite sink.  
+ */
 defproc bool_sink(chan?(bool) B) {
 bool b;
 chp {
 *[ B?(b) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain infinite sink, with configurable delay.  
+ */
+template <preal D>
+defproc bool_sink_delay(chan?(bool) B) {
+bool b;
+chp {
+*[ $(after=D) B?(b) ]
 }
 }
 

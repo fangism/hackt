@@ -5,26 +5,26 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
 	5	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	277
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
+	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	20	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	277
-	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
+	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	360
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	364
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 

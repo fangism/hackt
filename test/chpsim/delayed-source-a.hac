@@ -1,0 +1,13 @@
+// "delayed-source-a.hac"
+//	$Id: delayed-source-a.hac,v 1.2 2007/02/26 22:01:36 fang Exp $
+// testing source-sink with extra source delay
+
+import "bool-source.hac";
+import "bool-sink.hac";
+
+chan(bool) X;
+bool_source_delay<2, {true,false}, 25.0> src(X);
+// TODO: allow cast expressions preal(25)
+bool_sink snk(X);
+
+

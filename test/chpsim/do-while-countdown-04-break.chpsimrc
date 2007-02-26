@@ -1,0 +1,131 @@
+# "do-while-countdown-04-break.chpsimrc"
+#	$Id: do-while-countdown-04-break.chpsimrc,v 1.2 2007/02/26 22:01:37 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+cause
+break-event 1
+show-event-watches
+show-event-breaks
+echo expect to see event 1
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+
+
+echo initializing...
+initialize
+show-event-watches
+show-event-breaks
+echo resetting...
+reset
+cause
+show-event-watches
+show-event-breaks
+
+echo restarting...
+break-event 2 3
+show-event-breaks
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+
+echo testing unbreak-event
+initialize
+unbreak-event 2 5
+show-event-breaks
+unbreak-event 3
+show-event-breaks
+break-event 3
+show-event-breaks
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+step 5
+time
+
+echo testing unbreakall-events
+initialize
+break-event 0 1 2 3 4
+show-event-breaks
+unbreakall-events
+show-event-breaks
+
+echo restarting...
+initialize
+break-event 2 3 4
+watchall-events
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+
+echo testing nowatchall-events with watched events
+initialize
+nowatchall-events
+show-event-watches
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+step 10
+time
+
+echo testing unbreakall-events
+initialize
+unwatchall-events
+show-event-breaks
+unbreakall-events
+show-event-breaks
+
+echo no breaks
+step 30
+time
+queue
+

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.158 2007/02/22 05:30:12 fang Exp $
+#	$Id: Makefile.am,v 1.159 2007/02/26 22:00:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -369,7 +369,8 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 OBJECT_REF_CC_FILES = \
 	Object/ref/instance_reference.cc \
 	Object/ref/instance_reference_datatype.cc \
-	Object/expr/nonmeta_param_value_reference.cc
+	Object/expr/nonmeta_param_value_reference.cc \
+	Object/ref/reference_set.cc
 
 OBJECT_REF_TCC_FILES = \
 	Object/ref/aggregate_reference_collection_base.tcc \
@@ -385,6 +386,7 @@ OBJECT_REF_TCC_FILES = \
 
 OBJECT_REF_H_FILES = \
 	Object/ref/reference_enum.h \
+	Object/ref/reference_set.h \
 	Object/ref/references_fwd.h \
 	Object/ref/meta_reference_union.h \
 	Object/ref/aggregate_reference_collection_base.h \
@@ -427,8 +429,10 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 
 OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
+	Object/expr/exceptions.cc \
 	Object/expr/expr_dump_context.cc \
 	Object/expr/expr_visitor.cc \
+	Object/expr/channel_probe.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -502,6 +506,7 @@ OBJECT_CC_NO_H_FILES = \
 OBJECT_TCC_FILES = \
 	Object/def/footprint.tcc \
 	Object/expr/const_collection.tcc \
+	Object/expr/convert_expr.tcc \
 	Object/expr/loop_meta_expr.tcc \
 	Object/expr/loop_nonmeta_expr.tcc \
 	Object/def/footprint_base.tcc \
@@ -564,6 +569,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/footprint_base.h \
 	Object/def/fundamental_channel_footprint.h \
 	Object/expr/expr_fwd.h \
+	Object/expr/exceptions_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
 	Object/expr/bool_negation_expr.h \
@@ -574,6 +580,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/const_param_expr_list.h \
 	Object/expr/const_range.h \
 	Object/expr/const_range_list.h \
+	Object/expr/convert_expr.h \
 	Object/expr/data_expr.h \
 	Object/expr/dynamic_meta_index_list.h \
 	Object/expr/dynamic_meta_range_list.h \

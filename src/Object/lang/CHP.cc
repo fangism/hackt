@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.19 2007/02/05 06:39:45 fang Exp $
+	$Id: CHP.cc,v 1.20 2007/02/26 22:00:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -49,6 +49,9 @@
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
+#if CHP_ACTION_DELAYS
+#include "Object/expr/preal_const.h"
+#endif
 #include "Object/def/template_formals_manager.h"
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
@@ -141,10 +144,12 @@ namespace HAC {
 namespace entity {
 namespace CHP {
 using std::equal;
+using std::copy;
 using std::find;
 using std::transform;
 using std::back_inserter;
 using std::for_each;
+using util::set_inserter;
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
@@ -156,8 +161,10 @@ using SIM::CHPSIM::RECHECK_BLOCKED_THIS;
 using SIM::CHPSIM::RECHECK_UNBLOCKED_THIS;
 using SIM::CHPSIM::RECHECK_DEFERRED_TO_SUCCESSOR;
 using util::reference_wrapper;
-using util::set_inserter;
 using util::numeric::rand48;
+#if CHP_ACTION_DELAYS
+using entity::preal_const;
+#endif
 
 //=============================================================================
 /// helper routines
@@ -248,6 +255,54 @@ action::transformer::operator () (const action_ptr_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default destructor
+action::action() : persistent()
+#if CHP_ACTION_DELAYS
+	, delay()
+#endif
+{ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_DELAYS
+action::action(const attributes_type& a) : persistent(), delay(a) { }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default destructor
+action::~action() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_DELAYS
+void
+action::set_delay(const delay_ptr_type& d) {
+	delay = d;
+}
+#endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+action::dump_attributes(ostream& o, const expr_dump_context& d) const {
+#if CHP_ACTION_DELAYS
+	if (delay) {
+		delay->dump(o << "[after=", d) << "] ";
+	}
+#endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_DELAYS
+/**
+	Prefix dump_event with after-attribute.
+ */
+ostream&
+action::dump_event_with_attributes(ostream& o, 
+		const expr_dump_context& d) const {
+	dump_attributes(o, d);
+	return this->dump_event(o, d);
+}
+#endif	// CHP_ACTION_DELAYS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	By default print all successor edge, unadorned.  
  */
@@ -256,6 +311,43 @@ action::dump_successor_edges(ostream& o, const EventNode& e,
 		const size_t i, const expr_dump_context&) const {
 	return e.dump_successor_edges_default(o, i);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+action::collect_transient_info_base(persistent_object_manager& m) const {
+#if CHP_ACTION_DELAYS
+	if (delay)
+		delay->collect_transient_info(m);
+#endif
+}
+
+void
+action::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+#if CHP_ACTION_DELAYS
+	m.write_pointer(o, delay);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+action::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+#if CHP_ACTION_DELAYS
+	m.read_pointer(i, delay);
+#endif
+}
+
+//=============================================================================
+// class attribute method definitions
+
+attribute::attribute(const string& k, const value_type& v) :
+		_key(k), _value(v) {
+	NEVER_NULL(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+attribute::~attribute() { }
 
 //=============================================================================
 // struct data_expr_unroll_resolver method definitions
@@ -289,6 +381,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(action_sequence)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 action_sequence::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << "sequential: {" << endl;
 	{
 		INDENT_SECTION(o);
@@ -317,6 +410,22 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
+// consider using __unroll_resolve_rvalue -> preal_const
+#if CHP_ACTION_DELAYS
+#define	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)				\
+	if (delay) {							\
+		const attributes_type					\
+			atts(delay->unroll_resolve_copy(c, delay));	\
+		if (!atts) {						\
+			cerr << "Error unrolling attributes." << endl;	\
+			return action_ptr_type(NULL);			\
+		}							\
+		ret->set_delay(atts);					\
+	}
+#else
+#define	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
+#endif
+	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 #if 0
 	try {
 		transform(begin(), end(), back_inserter(*ret), 
@@ -336,7 +445,12 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error unrolling action_sequence." << endl;
 		return action_ptr_type(NULL);
 	}
-	if (equal(begin(), end(), ret->begin()))
+	if (
+#if CHP_ACTION_DELAYS
+		// eventually to attribute list pointer comparison
+		(delay == ret->delay) && 
+#endif
+		equal(begin(), end(), ret->begin()))
 		return p;
 	else	return ret;
 #endif
@@ -346,6 +460,7 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 /**
 	Constructs a sequence of events backwards from back to
 	front, where each event 'connects' to its successor(s).
+	NOTE: no delay addition anywhere here
  */
 void
 action_sequence::accept_sequence(const action_list_type& l, 
@@ -379,8 +494,7 @@ action_sequence::accept(StateConstructor& s) const {
 	so this does nothing.  
  */
 void
-action_sequence::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+action_sequence::execute(const nonmeta_context&, execute_arg_type&) const {
 	// no-op
 	ICE_NEVER_CALL(cerr);
 }
@@ -401,6 +515,7 @@ action_sequence::recheck(const nonmeta_context&) const {
 void
 action_sequence::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 
@@ -417,6 +532,7 @@ if (!m.register_transient_object(this,
 void
 action_sequence::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -431,6 +547,7 @@ action_sequence::write_object(const persistent_object_manager& m,
 void
 action_sequence::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -467,6 +584,7 @@ concurrent_actions::__dump(ostream& o, const expr_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << "concurrent: {" << endl;
 	{
 		INDENT_SECTION(o);
@@ -484,7 +602,9 @@ ostream&
 concurrent_actions::dump(ostream& o, const entity::footprint& f,
 		const expr_dump_context& c) const {
 if (!empty()) {
-	o << auto_indent << "resolved concurrent actions:" << endl;
+	o << auto_indent;
+	dump_attributes(o, c);
+	o << "resolved concurrent actions:" << endl;
 	{
 		INDENT_SECTION(o);
 		__dump(o, c);
@@ -533,6 +653,7 @@ concurrent_actions::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
+	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 	if (__unroll(c, *ret).good) {
 		if (equal(begin(), end(), ret->begin()))
 			return p;
@@ -613,7 +734,13 @@ if (!branches) {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t fork_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
-			s.current_process_index, 1));	// small delay
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			1));	// small delay
 {
 	STACKTRACE_INDENT_PRINT("fork index: " << fork_index << endl);
 	EventNode& fork_event(s.get_event(fork_index));
@@ -637,8 +764,7 @@ if (!branches) {
 	ready to execute.  
  */
 void
-concurrent_actions::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+concurrent_actions::execute(const nonmeta_context& c, execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	recheck_all_successor_events(c);
 }
@@ -660,6 +786,7 @@ concurrent_actions::recheck(const nonmeta_context&) const {
 void
 concurrent_actions::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 
@@ -676,6 +803,7 @@ if (!m.register_transient_object(this,
 void
 concurrent_actions::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -690,6 +818,7 @@ concurrent_actions::write_object(const persistent_object_manager& m,
 void
 concurrent_actions::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -945,6 +1074,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(deterministic_selection)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << "deterministic: {" << endl;
 	{
 		INDENT_SECTION(o);
@@ -973,6 +1103,7 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> r(new this_type);
+	UNROLL_ATTACH_RESULT_ATTRIBUTES(r)
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
 		cerr << "Error unrolling deterministic selection." << endl;
 		return action_ptr_type(NULL);
@@ -1032,7 +1163,13 @@ deterministic_selection::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t split_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
-			s.current_process_index, 1));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			1));
 	// delay value doesn't matter because this event is never
 	// 'executed' in the traditional sense.
 	// we CAN however use this delay value to incur additional delay
@@ -1061,7 +1198,7 @@ deterministic_selection::accept(StateConstructor& s) const {
  */
 void
 deterministic_selection::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+		execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 #if 0
 	const bool b = recheck(c);
@@ -1115,20 +1252,12 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 		t.reset_countdown();
 		// act like this event (its predecessor) executed
 		EventNode::countdown_decrementer(c.event_pool)(ei);
-#if 0
-		c.rechecks.insert(ei);
-		// HERE TODO: subscribe... check event on the spot, don't insert
-		// return true or false?
-		// never enqueue self?
-		// but we also DON'T want to subscribe this event's deps!
-#else
 		// recheck it on the spot
 		EventNode& suc(c.event_pool[ei]);
 		const nonmeta_context::event_setter x(c, &suc);
 		// temporary, too lazy to copy, will restore upon destruction
 		suc.recheck(c, ei);
 		return RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
 	}
 	default:
 		cerr << "Run-time error: multiple exclusive guards of "
@@ -1151,6 +1280,7 @@ deterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 }
@@ -1159,6 +1289,7 @@ if (!m.register_transient_object(this,
 void
 deterministic_selection::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -1166,6 +1297,7 @@ deterministic_selection::write_object(const persistent_object_manager& m,
 void
 deterministic_selection::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -1182,6 +1314,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nondeterministic_selection)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << "nondeterministic: {" << endl;
 	{
 		INDENT_SECTION(o);
@@ -1210,6 +1343,7 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> r(new this_type);
+	UNROLL_ATTACH_RESULT_ATTRIBUTES(r)
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
 		cerr << "Error unrolling nondeterministic selection." << endl;
 		return action_ptr_type(NULL);
@@ -1268,7 +1402,13 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t split_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
-			s.current_process_index, 15));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			15));
 	// NOTE: the delay value used here is the window of time from 
 	// first unblocked evaluation (enqueue) to execution, during which
 	// guards may change!
@@ -1307,7 +1447,7 @@ nondeterministic_selection::accept(StateConstructor& s) const {
  */
 void
 nondeterministic_selection::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+		execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 #if 0
 	ICE_NEVER_CALL(cerr);
@@ -1465,6 +1605,7 @@ nondeterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 }
@@ -1473,6 +1614,7 @@ if (!m.register_transient_object(this,
 void
 nondeterministic_selection::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -1480,6 +1622,7 @@ nondeterministic_selection::write_object(const persistent_object_manager& m,
 void
 nondeterministic_selection::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 
@@ -1504,6 +1647,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(metaloop_selection)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << (body ? "deterministic " : "nondeterministic ");
 	o << ind_var->get_name() << ':';
 	range->dump(o, entity::expr_dump_context(c)) <<
@@ -1574,12 +1718,14 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 			ret(new deterministic_selection);
 		NEVER_NULL(ret);
 		ret->swap(result);
+		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	} else {
 		const count_ptr<nondeterministic_selection>
 			ret(new nondeterministic_selection);
 		NEVER_NULL(ret);
 		ret->swap(result);
+		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	}
 }
@@ -1598,8 +1744,7 @@ metaloop_selection::accept(StateConstructor& s) const {
 	Never called, always expanded.  
  */
 void
-metaloop_selection::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+metaloop_selection::execute(const nonmeta_context&, execute_arg_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1619,6 +1764,7 @@ metaloop_selection::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	meta_loop_base::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 	body->collect_transient_info(m);
 }
 }
@@ -1628,6 +1774,7 @@ void
 metaloop_selection::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	meta_loop_base::write_object_base(m, o);
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, body);
 	write_value(o, selection_type);
 }
@@ -1637,6 +1784,7 @@ void
 metaloop_selection::load_object(const persistent_object_manager& m,
 		istream& i) {
 	meta_loop_base::load_object_base(m, i);
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, selection_type);
 }
@@ -1662,6 +1810,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(metaloop_statement)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 metaloop_statement::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << (body ? "concurrent " : "sequential ");
 	o << ind_var->get_name() << ':';
 	range->dump(o, entity::expr_dump_context(c)) <<
@@ -1732,12 +1881,14 @@ metaloop_statement::unroll_resolve_copy(const unroll_context& c,
 			ret(new concurrent_actions);
 		NEVER_NULL(ret);
 		ret->swap(result);
+		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	} else {
 		const count_ptr<action_sequence>
 			ret(new action_sequence);
 		NEVER_NULL(ret);
 		ret->swap(result);
+		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	}
 }
@@ -1756,8 +1907,7 @@ metaloop_statement::accept(StateConstructor& s) const {
 	Never called, always expanded.  
  */
 void
-metaloop_statement::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+metaloop_statement::execute(const nonmeta_context&, execute_arg_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1778,6 +1928,7 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	STACKTRACE_VERBOSE;
 	meta_loop_base::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 	body->collect_transient_info(m);
 }
 }
@@ -1788,6 +1939,7 @@ metaloop_statement::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_VERBOSE;
 	meta_loop_base::write_object_base(m, o);
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, body);
 	write_value(o, statement_type);
 }
@@ -1798,6 +1950,7 @@ metaloop_statement::load_object(const persistent_object_manager& m,
 		istream& i) {
 	STACKTRACE_VERBOSE;
 	meta_loop_base::load_object_base(m, i);
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, statement_type);
 }
@@ -1820,6 +1973,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(assignment)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 assignment::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
 	return rval->dump(lval->dump(o, c) << " := ", c);
 }
@@ -1841,12 +1995,35 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	const lval_ptr_type lc(lval->unroll_resolve_copy(c, lval));
 	const rval_ptr_type rc(rval->unroll_resolve_copy(c, rval));
+// consider using __unroll_resolve_rvalue -> preal_const
+#if CHP_ACTION_DELAYS
+#define	UNROLL_COPY_ATTRIBUTES						\
+	attributes_type atts;						\
+	if (delay) {							\
+		atts = delay->unroll_resolve_copy(c, delay);		\
+		if (!atts) {						\
+			cerr << "Error unrolling attributes." << endl;	\
+			return action_ptr_type(NULL);			\
+		}							\
+	}
+#else
+#define	UNROLL_COPY_ATTRIBUTES
+#endif
+	UNROLL_COPY_ATTRIBUTES
 	if (!lc || !rc) {
 		return action_ptr_type(NULL);
-	} else if (lc == lval && rc == rval) {
+	} else if (
+#if CHP_ACTION_DELAYS
+		(delay == atts) &&
+#endif
+		(lc == lval) && (rc == rval)) {
 		return p;
 	} else {
-		return action_ptr_type(new this_type(lc, rc));
+		const count_ptr<this_type> ret(new this_type(lc, rc));
+#if CHP_ACTION_DELAYS
+		ret->set_delay(atts);
+#endif
+		return ret;
 	}
 }
 
@@ -1857,7 +2034,13 @@ assignment::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_ASSIGN, 
-			s.current_process_index, 10));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			10));
 	// we give a medium delay to assignment
 	// this may favor explicit communications (projection, refactoring)
 	// over variable assignment.  
@@ -1895,8 +2078,7 @@ assignment::accept(StateConstructor& s) const {
 		namely, the lvalues.
  */
 void
-assignment::execute(const nonmeta_context& c,
-		global_reference_array_type& u) const {
+assignment::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	typedef	EventNode		event_type;
 	STACKTRACE_CHPSIM_VERBOSE;
 	lval->nonmeta_assign(rval, c, u);	// also tracks updated reference
@@ -1919,6 +2101,7 @@ void
 assignment::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	lval->collect_transient_info(m);
 	rval->collect_transient_info(m);
 }
@@ -1928,6 +2111,7 @@ if (!m.register_transient_object(this,
 void
 assignment::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, lval);
 	m.write_pointer(o, rval);
 }
@@ -1936,6 +2120,7 @@ assignment::write_object(const persistent_object_manager& m,
 void
 assignment::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, lval);
 	m.read_pointer(i, rval);
 }
@@ -1958,6 +2143,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(condition_wait)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 condition_wait::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	return cond->dump(o << '[', c) << ']';
 }
 
@@ -1977,13 +2163,22 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const cond_ptr_type g(cond->unroll_resolve_copy(c, cond));
+	UNROLL_COPY_ATTRIBUTES
 	if (!g) {
 		cerr << "Error resolving condition-wait." << endl;
 		return action_ptr_type(NULL);
-	} else if (g == cond) {
+	} else if (
+#if CHP_ACTION_DELAYS
+		(delay == atts) &&
+#endif
+		(g == cond)) {
 		return p;
 	} else {
-		return action_ptr_type(new this_type(g));
+		const count_ptr<this_type> ret(new this_type(g));
+#if CHP_ACTION_DELAYS
+		ret->set_delay(atts);
+#endif
+		return ret;
 	}
 }
 
@@ -2002,7 +2197,13 @@ condition_wait::accept(StateConstructor& s) const {
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
-			s.current_process_index, 0));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			0));
 	// the delay value should have no impact, as this event just
 	// unblocks its successor(s)
 	STACKTRACE_INDENT_PRINT("wait index: " << new_index << endl);
@@ -2032,8 +2233,7 @@ condition_wait::accept(StateConstructor& s) const {
 		We do not check for guard stability... yet.  
  */
 void
-condition_wait::execute(const nonmeta_context& c, 
-		global_reference_array_type&) const {
+condition_wait::execute(const nonmeta_context& c, execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	recheck_all_successor_events(c);
 }
@@ -2076,6 +2276,7 @@ void
 condition_wait::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	cond->collect_transient_info(m);
 }
 }
@@ -2084,6 +2285,7 @@ if (!m.register_transient_object(this,
 void
 condition_wait::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, cond);
 }
 
@@ -2091,6 +2293,7 @@ condition_wait::write_object(const persistent_object_manager& m,
 void
 condition_wait::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, cond);
 }
 
@@ -2180,6 +2383,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_send)
 ostream&
 channel_send::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	expr_list_type::const_iterator	const_iterator;
+	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
 	chan->dump(o, c) << "!(";
 	INVARIANT(!exprs.empty());
@@ -2222,6 +2426,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 #endif
+	UNROLL_COPY_ATTRIBUTES
 	typedef	expr_list_type::const_iterator	const_iterator;
 	const const_iterator
 		f(find(exprs_c.begin(), exprs_c.end(), data_ptr_type(NULL)));
@@ -2230,13 +2435,20 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 			<< endl;
 		return action_ptr_type(NULL);
 	}
-	if (cc == chan && equal(exprs.begin(), exprs.end(), exprs_c.begin())) {
+	if ((cc == chan) && 
+#if CHP_ACTION_DELAYS
+		(atts == delay) &&
+#endif
+			equal(exprs.begin(), exprs.end(), exprs_c.begin())) {
 		// resolved members match exactly, return copy
 		return p;
 	} else {
 		const count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->exprs.swap(exprs_c);	// faster than copying/assigning
+#if CHP_ACTION_DELAYS
+		ret->set_delay(atts);
+#endif
 		return ret;
 	}
 }
@@ -2250,8 +2462,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		evaluation.  
  */
 void
-channel_send::execute(const nonmeta_context& c, 
-		global_reference_array_type& u) const {
+channel_send::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 #define	ASSERT_CHAN_INDEX						\
@@ -2303,7 +2514,13 @@ channel_send::accept(StateConstructor& s) const {
 	// construct event graph
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SEND, 
-			s.current_process_index, 2));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			2));
 	// default to small delay
 	STACKTRACE_INDENT_PRINT("send index: " << new_index << endl);
 	EventNode& new_event(s.get_event(new_index));
@@ -2331,6 +2548,7 @@ void
 channel_send::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	chan->collect_transient_info(m);
 	m.collect_pointer_list(exprs);
 }
@@ -2340,6 +2558,7 @@ if (!m.register_transient_object(this,
 void
 channel_send::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, chan);
 	m.write_pointer_list(o, exprs);
 }
@@ -2348,6 +2567,7 @@ channel_send::write_object(const persistent_object_manager& m,
 void
 channel_send::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, exprs);
 }
@@ -2371,6 +2591,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_receive)
 ostream&
 channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
+	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
 	chan->dump(o, c) << "?(";
 	INVARIANT(!insts.empty());
@@ -2413,6 +2634,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 #endif
+	UNROLL_COPY_ATTRIBUTES
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
 	const const_iterator
 		f(find(refs.begin(), refs.end(), inst_ref_ptr_type(NULL)));
@@ -2421,13 +2643,20 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 			<< endl;
 		return action_ptr_type(NULL);
 	}
-	if (cc == chan && equal(insts.begin(), insts.end(), refs.begin())) {
+	if ((cc == chan) &&
+#if CHP_ACTION_DELAYS
+		(atts == delay) && 
+#endif
+			equal(insts.begin(), insts.end(), refs.begin())) {
 		// resolved members match exactly, return copy
 		return p;
 	} else {
 		count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->insts.swap(refs);	// faster than copying/assigning
+#if CHP_ACTION_DELAYS
+		ret->set_delay(atts);
+#endif
 		return ret;
 	}
 }
@@ -2440,7 +2669,13 @@ channel_receive::accept(StateConstructor& s) const {
 	// construct event graph
 	const size_t new_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_RECEIVE, 
-			s.current_process_index, 5));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			5));
 	// default to small delay
 	// this delay would be more meaningful in a handshaking expansion
 	STACKTRACE_INDENT_PRINT("receive index: " << new_index << endl);
@@ -2470,8 +2705,7 @@ channel_receive::accept(StateConstructor& s) const {
 	so we register them all with the update set.  
  */
 void
-channel_receive::execute(const nonmeta_context& c, 
-		global_reference_array_type& u) const {
+channel_receive::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	ASSERT_CHAN_INDEX
@@ -2515,6 +2749,7 @@ void
 channel_receive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	chan->collect_transient_info(m);
 	m.collect_pointer_list(insts);
 }
@@ -2524,6 +2759,7 @@ if (!m.register_transient_object(this,
 void
 channel_receive::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, chan);
 	m.write_pointer_list(o, insts);
 }
@@ -2532,6 +2768,7 @@ channel_receive::write_object(const persistent_object_manager& m,
 void
 channel_receive::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, insts);
 }
@@ -2556,6 +2793,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(do_forever_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << "*[" << endl;
 	{
 		INDENT_SECTION(o);
@@ -2584,12 +2822,21 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error resolving do-forever loop." << endl;
 		return action_ptr_type(NULL);
 	}
-	if (b == body) {
+	UNROLL_COPY_ATTRIBUTES
+	if (
+#if CHP_ACTION_DELAYS
+		(atts == delay) && 
+#endif
+		(b == body)) {
 		// return self-copy
 		return p;
 	} else {
 		// return newly constructed copy
-		return action_ptr_type(new this_type(b));
+		const count_ptr<this_type> ret(new this_type(b));
+#if CHP_ACTION_DELAYS
+		ret->set_delay(atts);
+#endif
+		return ret;
 	}
 }
 
@@ -2611,7 +2858,13 @@ do_forever_loop::accept(StateConstructor& s) const {
 	// -- works only if we need one dummy at a time
 	const size_t loopback_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_NULL,
-			s.current_process_index, 0));	// no additional delay
+			s.current_process_index, 
+#if (0 && CHP_ACTION_DELAYS)
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			0));	// no additional delay
 	STACKTRACE_INDENT_PRINT("forever loopback: " << loopback_index << endl);
 	s.last_event_index = loopback_index;	// point to dummy, pass down
 	body->accept(s);
@@ -2677,8 +2930,7 @@ if (back_event.is_dispensible()) {
 	body events are expanded.  
  */
 void
-do_forever_loop::execute(const nonmeta_context&, 
-		global_reference_array_type&) const {
+do_forever_loop::execute(const nonmeta_context&, execute_arg_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -2694,6 +2946,7 @@ void
 do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	body->collect_transient_info(m);
 }
 }
@@ -2702,6 +2955,7 @@ if (!m.register_transient_object(this,
 void
 do_forever_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer(o, body);
 }
 
@@ -2709,6 +2963,7 @@ do_forever_loop::write_object(const persistent_object_manager& m,
 void
 do_forever_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 }
 
@@ -2725,6 +2980,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(do_while_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
+	dump_attributes(o, c);
 	o << "*[" << endl;
 	{
 		INDENT_SECTION(o);
@@ -2752,11 +3008,17 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> r(new this_type);
+	NEVER_NULL(r);
+	UNROLL_ATTACH_RESULT_ATTRIBUTES(r)
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
 		cerr << "Error unrolling do-while loop." << endl;
 		return action_ptr_type(NULL);
 	}
-	if (equal(begin(), end(), r->begin())) {
+	if (
+#if CHP_ACTION_DELAYS
+		(delay == r->delay) &&
+#endif
+		equal(begin(), end(), r->begin())) {
 		// return self-copy
 		return p;
 	} else {
@@ -2781,7 +3043,13 @@ do_while_loop::accept(StateConstructor& s) const {
 	const size_t branches = this->size();
 	const size_t loopback_index = s.allocate_event(
 		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN,
-			s.current_process_index, 3));
+			s.current_process_index, 
+#if CHP_ACTION_DELAYS
+			// assert dynamic_cast
+			delay ? delay.is_a<const preal_const>()
+				->static_constant_value() :
+#endif
+			3));
 	// give small delay for selection
 	STACKTRACE_INDENT_PRINT("do-while loopback index: "
 		<< loopback_index << endl);
@@ -2847,8 +3115,7 @@ do_while_loop::accept(StateConstructor& s) const {
 	\return true, as this node is never blocking.  
  */
 void
-do_while_loop::execute(const nonmeta_context& c,
-		global_reference_array_type&) const {
+do_while_loop::execute(const nonmeta_context& c, execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	guarded_action::selection_evaluator G(c);	// needs reference wrap
 	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
@@ -2900,6 +3167,7 @@ do_while_loop::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
 	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 }
@@ -2908,6 +3176,7 @@ if (!m.register_transient_object(this,
 void
 do_while_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
+	parent_type::write_object_base(m, o);
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
@@ -2915,6 +3184,7 @@ do_while_loop::write_object(const persistent_object_manager& m,
 void
 do_while_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
+	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 }
 

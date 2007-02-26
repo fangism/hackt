@@ -3,6 +3,106 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10:
+	  Branch merge: -chpsim-03
+	  Summary:
+		CHP added probe support (but not value probes)
+		CHP statements can now be optionally prefixed with $(...)
+			attributes, but currently only one delay
+			value is supported (after=value).
+		Supported delay expressions and event annotations in
+			middle-end through CHPSIM.
+		Added cast-conversion expression to intermediate rep.
+		chpsim: update variable set re-structured to be sorted, 
+			facilitating efficient watch/break point
+			implementation.
+		watch/break points are implemented w.r.t. events and 
+			variables.  
+
+
+2007-02-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-10:
+	  Decided not to bother perm-ing switches from this branch, 
+		let it mature for a few releases.
+	  Updated comments and status remarks, and TODO lists.
+
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-09:
+	  chpsim: new command 'print-event-header' to print the event 
+		table header upon request.  
+	  Added value-watch and value-break test cases to test suite.
+	  Branch is done, possibly one more clean-up revision before merge.
+
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-08:
+	  Added value-based (variable) watchpoints and breakpoints.  
+	  Object/ref/reference_set.{h,cc}: added more aggregate set
+		operations using STL set algorithms.  
+	  TODO: test cases for break-value and watch-value.  
+		maybe implement 'nobreakall-*' to allow run while
+		sustaining breakpoints.  
+	  This is the last feature before merge to trunk.  
+
+
+2007-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-07:
+	  Implemented watch/break points on events.
+	  new chpsim commands: (mostly self-explanatory)
+		break-event, unbreak-event, 
+		unbreakall-events, show-event-breaks,
+		watch-event, unwatch-event, 
+		unwatchall-events, show-event-watchss
+	  NOTE: breaks are subset of watches, and so maintained.
+		Cannot unwatch a breakpoint, must use unbreak.  
+	  CHPSIM::State's return type is now bool, 
+		and used for break detection.  
+	  Next: watch/break points on state values.  
+
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-06:
+	  switch: CHPSIM_STATE_UPDATE_BIN_SETS (enabled)
+		Instead of using a vector<pair<type,index> >, 
+		we now use set<index>[types] to maintain update lists.  
+		The motivation for this is linear time set operations
+		when checking against watch sets and break sets.  
+	  Added Object/ref/reference_set.{h,cc}.
+	  Amazingly, no tweaks in test suite.  
+
+
+2007-02-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-05:
+	  Object/expr/convert_expr.{h,tcc}: cast/conversion of rvalues, 
+		template class, but only instantiated for pint->preal.
+		No parser interface yet, just internal use so far.  
+	  front-end now checks a single attribute for CHP, event-delay, 
+		and annotates CHP actions accordingly.  
+		Will not bother generalizing attributes in middle-end yet.
+	  Object/lang/CHP.cc: now dumps delay if applicable, 
+		and applies delays to override default values 
+		in constructed events.  
+	  sim/chpsim/Event.cc: minor bug fix: delay member assignment
+	  Test suite: added test cases for CHP delay, 
+		including simulation tests with tracing.  
+		Can demonstrate critical path tracing (visually).  
+
+
+2007-02-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-04:
+	  Punted general CHP attributes for simple-hacked in support 
+		for action delay (prefix-notation).  
+	  Added switch CHP_ACTION_DELAYS to disable if needed.  
+	  TODO: unroll-resolve delay expressions, 
+		and apply during event creation, 
+		test cases using per-event delay, 
+		update CHP event dumps to show delay
+
+
 2007-02-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-86:
@@ -71,6 +171,38 @@
 			definition (beginning) to inject local variables.
 		parser/*-parse-options.h: check for YYBYACC and define
 			YYPARSE_PARAM_TYPE as needed (like bison)
+
+
+2007-02-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-03:
+	  Parser and AST revisions to allow attributes to be prepended to any
+		CHP statement, intended to use for delay and assertions.
+		New lexer token: '$'.  
+		Updated one test case's compile-stderr (yacc-only).  
+	  TODO: middle-end+ support and possibly a CHP attribute registry.
+		Decide how to distinguish between compile-time (event-graph
+		generation time) and run-time attributes/directives.  
+
+
+2007-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-02:
+	  Finished implementing channel probes through CHP and chpsim.  
+	  Added 3 sets of test cases in test/chpsim with probes.
+	  Value-probes probably won't happen on this branch, needs specs.
+
+
+	* HACKT-00-01-04-main-00-80-79-chpsim-03-01:
+	  Third epoch of chpsim features.
+	  Proposals: add probe semantics (affects language front-middle ends)
+		add CHP assert statements, add CHP wait statements, 
+		chpsim: watch-*, break-*.
+		May not get around to all of them this round...
+	  This revision: added probe statements to parser and AST, 
+		Object and CHP lang classes not done yet, coming up.  
+		After grammar update, a few compile-fail expect dumps updated.
+	  Added some exception classes for expressions, not yet used.  
 
 
 2007-02-08	David Fang		<fangism@users.sourceforge.net>

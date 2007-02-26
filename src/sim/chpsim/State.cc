@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.4 2007/02/07 05:20:20 fang Exp $
+	$Id: State.cc,v 1.5 2007/02/26 22:01:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -222,6 +222,15 @@ State::event_table_header[] = "\ttime\teid\tpid\tevent";
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Prints the event table header, always includeing 'cause'
+ */
+ostream&
+State::dump_event_table_header(ostream& o) {
+	return o << event_table_header << "\tcause" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Will throw exception upon error.  
  */
 State::State(const module& m) : 
@@ -238,13 +247,21 @@ State::State(const module& m) :
 		__updated_list(), 
 		__enqueue_list(), 
 		__rechecks(), 
+		event_watches(), 
+		event_breaks(),
+#if CHPSIM_BREAK_VALUES
+		value_watches(), 
+		value_breaks(), 
+#endif
 		trace_manager(), 
 		trace_flush_interval(1L<<16)
 		{
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
+#if !CHPSIM_STATE_UPDATE_BIN_SETS
 	__updated_list.reserve(16);	// optional pre-allocation
+#endif
 	__enqueue_list.reserve(16);	// optional pre-allocation
 {
 	StateConstructor v(*this);	// + option flags
@@ -320,6 +337,12 @@ State::reset(void) {
 	timing_mode = TIMING_DEFAULT;
 	interrupted = false;
 	flags = FLAGS_DEFAULT;
+	event_watches.clear();
+	event_breaks.clear();
+#if CHPSIM_BREAK_VALUES
+	value_watches.clear();
+	value_breaks.clear();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -363,7 +386,7 @@ State::next_event_time(void) const {
 	Processes one event at a time.  
 	Q: since multiple instances referenced can be altered, 
 		should we check against the watch-list here (set-intersection)?
-	\return reference to the variable that was just modified, if any.
+	\return true to break if breakpoint tripped.  
  */
 State::step_return_type
 State::step(void) {
@@ -372,13 +395,13 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	if (event_queue.empty()) {
-		return return_type(META_TYPE_NONE, INVALID_NODE_INDEX);
+		return false;
 	}
-
+	return_type event_trig = false;
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
-	const event_index_type& ei(ep.event_index);
+	const event_index_type ei(ep.event_index);
 	// first NULL event has index 0, but nothing else should enqueue it
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	// no need to deallocate event, they are all statically pre-allocated
@@ -410,13 +433,6 @@ try {
 		ti = trace_manager->push_back_event(
 			event_trace_point(current_time, ei, cause_trace_id));
 	}
-	if (watching_all_events()) {
-		dump_event(cout, ei, current_time);
-		if (showing_cause() && cause_event_id) {
-			cout << "\t[by:" << cause_event_id << ']';
-		}
-		cout << endl;
-	}
 	// __updated_list lists variables updated
 	// Q: should __updated_list be set-sorted to eliminate duplicates?
 	//	Yes, but do this later...
@@ -429,7 +445,6 @@ try {
 	// print the list of successor events scheduled for recheck
 	dump_recheck_events(cout);
 #endif
-{
 	// list of events to check next
 	// 3) check if the alteration of state/variable triggers new events
 	//	each variable affected has a dynamic set of 
@@ -449,6 +464,32 @@ try {
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
 {
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	update_reference_array_type::ref_bin_type::const_iterator
+							const_iterator;
+#define	CASE_META_TYPE_TAG(Tag)						\
+	{								\
+	const update_reference_array_type::ref_bin_type&		\
+		ub(__updated_list.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	const_iterator ui(ub.begin()), ue(ub.end());			\
+	for ( ; ui!=ue; ++ui) {						\
+		const variable_type<Tag>::type&				\
+			v(instances.get_pool<Tag>()[*ui]);		\
+		if (is_tracing()) {					\
+			trace_manager->current_chunk			\
+				.push_back<Tag>(v, ti, *ui);		\
+		}							\
+		const event_subscribers_type& es(v.get_subscribers());	\
+		copy(es.begin(), es.end(), set_inserter(__rechecks));	\
+	}								\
+	}
+	CASE_META_TYPE_TAG(bool_tag)
+	CASE_META_TYPE_TAG(int_tag)
+	CASE_META_TYPE_TAG(enum_tag)
+	CASE_META_TYPE_TAG(channel_tag)
+#undef	CASE_META_TYPE_TAG
+#else	// CHPSIM_STATE_UPDATE_BIN_SETS
 #define	TRACE_UPDATED_STATE(Tag)					\
 	if (is_tracing()) {						\
 		trace_manager->current_chunk.push_back<Tag>(v, ti, j);	\
@@ -485,12 +526,12 @@ try {
 			ISE(cerr, cerr << "Unexpected type." << endl;)
 		}	// end switch
 	}	// end for
+#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
 }
 	// 4) immediately include this event's successors in list
 	//	to evaluate if ready to enqueue.
 	// selection of successors will depend on event_type, of course
 	//	This has been folded into the execution of this event.
-{
 #if DEBUG_STEP
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
@@ -500,8 +541,68 @@ try {
 		recheck_transformer(*this));
 } catch (...) {
 	cerr << "Run-time error while rechecking events." << endl;
+	cerr << "event[" << ei << "]:";
+	dump_event(cerr, ei, current_time);
+	if (cause_event_id) {
+		cerr << "\t[by:" << cause_event_id << ']';
+	}
+	cerr << endl;
 	throw;
 }
+	bool value_trig = false;
+#if CHPSIM_BREAK_VALUES
+	bool value_break = false;
+{
+	typedef	global_references_set::ref_bin_type::const_iterator
+							const_iterator;
+	global_references_set watch_matches;
+	__updated_list.set_intersection(value_watches, watch_matches);
+	// the following is slow, but fortunately infrequent
+#define	PRINT_WATCHED_VALUES(Tag)					\
+{									\
+	const global_references_set::ref_bin_type&			\
+		ub(watch_matches.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	if (ub.size()) {						\
+		cout << "updated " << class_traits<Tag>::tag_name <<	\
+			"(s): " << endl;				\
+		const_iterator ui(ub.begin()), ue(ub.end());		\
+		for ( ; ui!=ue; ++ui) {					\
+			print_instance_name_value(cout, 		\
+				global_indexed_reference(		\
+				class_traits<Tag>::type_tag_enum_value,	\
+				*ui)) << endl;				\
+		}							\
+		value_trig = true;					\
+	}								\
+}
+	PRINT_WATCHED_VALUES(bool_tag)
+	PRINT_WATCHED_VALUES(int_tag)
+	PRINT_WATCHED_VALUES(enum_tag)
+	PRINT_WATCHED_VALUES(channel_tag)
+#undef	PRINT_WATCHED_VALUES
+	// see if any updated values are breakpoints
+	if (value_trig) {
+		global_references_set break_matches;
+		value_watches.set_intersection(value_breaks, break_matches);
+		if (!break_matches.empty()) {
+			value_break = true;
+		}
+	}
+}
+#endif	// CHPSIM_BREAK_VALUES
+	// is event being watched? or were any watched values updated?
+	event_trig = (event_watches.find(ei) != event_watches.end());
+	if (watching_all_events() || event_trig || value_trig) {
+		if (event_trig || value_trig) {
+			cout << "watch:";
+		}
+		dump_event(cout, ei, current_time);
+		if (showing_cause() && cause_event_id) {
+			cout << "\t[by:" << cause_event_id << ']';
+		}
+		cout << endl;
+	}
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
 	// temporarily disabled for regression testing
@@ -514,16 +615,19 @@ try {
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 		event_enqueuer(*this, ei, ti)
 	);
-}
-}
 	// check for flush period
 	// TODO: count events in State, shouldn't depend on TraceManager for it.
 	if (is_tracing() && 
 		trace_manager->current_event_count() >= trace_flush_interval) {
 		trace_manager->flush();
 	}
-	// TODO: finish me: watch list
-	return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+	const bool event_break =
+		event_trig && (event_breaks.find(ei) != event_breaks.end());
+#if CHPSIM_BREAK_VALUES
+	return value_break || event_break;
+#else
+	return event_break;
+#endif
 }	// end step() method
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -597,6 +701,280 @@ State::help_timing(ostream& o) {
 	"\tdefault -- (uniform)" << endl;
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::watch_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		event_watches.insert(ei);
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::unwatch_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		// don't remove if it is a breakpoint
+		if (event_breaks.find(ei) != event_breaks.end()) {
+			cerr << "WARNING: not de-listing because event " << ei 
+				<< " is also listed as a breakpoint." << endl;
+			cerr << "To remove this watchpoint, use \'unbreak-event.\'"
+				<< endl;
+		} else {
+			event_watches.erase(ei);
+		}
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Remove all events that are NOT break points.  
+	NOTE: breaks is subset of watches
+ */
+void
+State::unwatch_all_events(void) {
+	event_watches = event_breaks;
+	if (event_watches.size()) {
+		cerr << 
+"NOTE: break-events were not removed from the watch-event list." << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print list of watched events.  
+ */
+ostream&
+State::dump_watch_events(ostream& o) const {
+	o << "watch events: ";
+	switch (event_watches.size()) {
+	case 0: break;
+	case 1: o << *event_watches.begin(); break;
+	default: {
+		const event_watch_list_type::const_iterator
+			l(--event_watches.end());
+		copy(event_watches.begin(), l, 
+			ostream_iterator<event_index_type>(o, ", "));
+		o << *l;
+	}
+	}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::break_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		event_breaks.insert(ei);
+		event_watches.insert(ei);
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: maintain breaks as subset of watches.  
+	\param ei the event of the index to break on. 
+ */
+void
+State::unbreak_event(const event_index_type ei) {
+	if (ei < event_pool.size()) {
+		event_breaks.erase(ei);
+		event_watches.erase(ei);
+	} else {
+		cerr << "Invalid event index: " << ei << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Removes breakpoints from the watch list and break list.
+ */
+void
+State::unbreak_all_events(void) {
+	event_watch_list_type temp;
+	std::set_difference(event_watches.begin(), event_watches.end(), 
+		event_breaks.begin(), event_breaks.end(), set_inserter(temp));
+	event_breaks.clear();
+	event_watches.swap(temp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print list of breaking events.  
+ */
+ostream&
+State::dump_break_events(ostream& o) const {
+	o << "break events: ";
+	switch (event_breaks.size()) {
+	case 0: break;
+	case 1: o << *event_breaks.begin(); break;
+	default: {
+		const event_watch_list_type::const_iterator
+			l(--event_breaks.end());
+		copy(event_breaks.begin(), l, 
+			ostream_iterator<event_index_type>(o, ", "));
+		o << *l;
+	}
+	}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_BREAK_VALUES
+/**
+	\param g pair<type,index>, must be well-formed.  
+ */
+void
+State::watch_value(const global_indexed_reference& g) {
+	value_watches.ref_bin[g.first].insert(g.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Remove variable from watch list if it is not a break point.  
+ */
+void
+State::unwatch_value(const global_indexed_reference& g) {
+	const global_references_set::ref_bin_type&
+		vb(value_breaks.ref_bin[g.first]);
+	if (vb.find(g.first) != vb.end()) {
+		cerr << "WARNING: not un-watching because variable (" << 
+			g.first << "," << g.second <<
+			") is also listed as a breakpoint." << endl;
+		cerr << "To remove this watchpoint, use \'unbreak-value.\'"
+			<< endl;
+	} else {
+		value_watches.ref_bin[g.first].erase(g.second);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reminder: breaks is subset of watches.  
+ */
+void
+State::unwatch_all_values(void) {
+	value_watches = value_breaks;
+	if (!value_breaks.empty()) {
+		cout <<
+"NOTE: break-values were not removed from the watch-value list." << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints name and value of *all* watched variables.  
+ */
+ostream&
+State::dump_watch_values(ostream& o) const {
+	typedef	global_references_set::ref_bin_type::const_iterator
+							const_iterator;
+	o << "watched values:" << endl;
+#define	PRINT_WATCHED_VALUES(Tag)					\
+{									\
+	const global_references_set::ref_bin_type&			\
+		ub(value_watches.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	if (ub.size()) {						\
+		cout << class_traits<Tag>::tag_name << "(s): " << endl;	\
+		const_iterator ui(ub.begin()), ue(ub.end());		\
+		for ( ; ui!=ue; ++ui) {					\
+			print_instance_name_value(cout, 		\
+				global_indexed_reference(		\
+				class_traits<Tag>::type_tag_enum_value,	\
+				*ui)) << endl;				\
+		}							\
+	}								\
+}
+	PRINT_WATCHED_VALUES(bool_tag)
+	PRINT_WATCHED_VALUES(int_tag)
+	PRINT_WATCHED_VALUES(enum_tag)
+	PRINT_WATCHED_VALUES(channel_tag)
+#undef	PRINT_WATCHED_VALUES
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Variable is added as a breakpoint AND watchpoint. 
+	\param g pair<type,index>, must be well-formed.  
+ */
+void
+State::break_value(const global_indexed_reference& g) {
+	value_watches.ref_bin[g.first].insert(g.second);
+	value_breaks.ref_bin[g.first].insert(g.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Remove variable from watch list if it is not a break point.  
+ */
+void
+State::unbreak_value(const global_indexed_reference& g) {
+	value_watches.ref_bin[g.first].erase(g.second);
+	value_breaks.ref_bin[g.first].erase(g.second);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::unbreak_all_values(void) {
+	global_references_set temp;
+	value_watches.set_difference(value_breaks, temp);
+	value_breaks.clear();
+	value_watches = temp;	// no swap member function, drat
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints name and value of *all* breakpoint variables.  
+ */
+ostream&
+State::dump_break_values(ostream& o) const {
+	typedef	global_references_set::ref_bin_type::const_iterator
+							const_iterator;
+	o << "break values:" << endl;
+#define	PRINT_WATCHED_VALUES(Tag)					\
+{									\
+	const global_references_set::ref_bin_type&			\
+		ub(value_breaks.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	if (ub.size()) {						\
+		cout << class_traits<Tag>::tag_name << "(s): " << endl;	\
+		const_iterator ui(ub.begin()), ue(ub.end());		\
+		for ( ; ui!=ue; ++ui) {					\
+			print_instance_name_value(cout, 		\
+				global_indexed_reference(		\
+				class_traits<Tag>::type_tag_enum_value,	\
+				*ui)) << endl;				\
+		}							\
+	}								\
+}
+	PRINT_WATCHED_VALUES(bool_tag)
+	PRINT_WATCHED_VALUES(int_tag)
+	PRINT_WATCHED_VALUES(enum_tag)
+	PRINT_WATCHED_VALUES(channel_tag)
+#undef	PRINT_WATCHED_VALUES
+	return o;
+}
+#endif	// CHPSIM_BREAK_VALUES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -807,6 +1185,27 @@ if (g.show_instances) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_updated_references(ostream& o) const {
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	update_reference_array_type::ref_bin_type::const_iterator
+							const_iterator;
+	o << "updated references:" << endl;
+
+#define	CASE_PRINT_TYPE_TAG_NAME(Tag)					\
+{									\
+	const update_reference_array_type::ref_bin_type&		\
+		ub(__updated_list.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	const_iterator i(ub.begin()), e(ub.end());			\
+	for ( ; i!=e; ++i) {						\
+		o << class_traits<Tag>::tag_name << '[' << *i << "], ";	\
+	}								\
+}
+	CASE_PRINT_TYPE_TAG_NAME(bool_tag)
+	CASE_PRINT_TYPE_TAG_NAME(int_tag)
+	CASE_PRINT_TYPE_TAG_NAME(enum_tag)
+	CASE_PRINT_TYPE_TAG_NAME(channel_tag)
+#undef	CASE_PRINT_TYPE_TAG_NAME
+#else	// CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	update_reference_array_type::const_iterator	const_iterator;
 	o << "updated references:" << endl;
 	const_iterator i(__updated_list.begin()), e(__updated_list.end());
@@ -823,6 +1222,7 @@ State::dump_updated_references(ostream& o) const {
 	}	// end switch
 		o << '[' << i->second << "], ";
 	}
+#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
 	return o << endl;
 }
 

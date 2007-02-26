@@ -1,0 +1,22 @@
+// "channel-probe-c.hac"
+// copy-modified from "channel-probe-a.hac"
+//	$Id: channel-probe-c.hac,v 1.2 2007/02/26 22:01:25 fang Exp $
+// testing channel probe semantics, taking logical AND of probes
+
+import "testlib/bool-sink.hac";
+import "testlib/bool-source.hac";
+
+chan(bool) A, B, X, Y, Z;
+bool a, x, z;
+
+chp {
+// buffer X, to add some delay
+*[ X?(x); Y!(x) ]
+}
+chp {
+*[ [#A&&#Y]; {A?(a); B!(a)}, {Y?(z); Z!(z)} ]	// synchronized receive
+}
+
+bool_source<2, {true,false}> bs(A), xs(X);
+bool_sink snk0(B), sink1(Z);
+

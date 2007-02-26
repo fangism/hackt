@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.3 2007/02/05 06:39:54 fang Exp $
+	$Id: devel_switches.h,v 1.4 2007/02/26 22:01:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -56,9 +56,21 @@
 	Rationale: This solves the problem of uniqueness of update reference, 
 		and is better restructuring for performance.
 	Goal: 1
-	Priority: low (enhancement)
+	Priority: medium (enhancement to enable diagnostics)
+		This is also necessary for a decent implementation of
+		watch-points and break-points for linear time checking.  
+	Status: done, and tested, perm it when convenient.
  */
-#define	CHPSIM_STATE_UPDATE_BIN_SETS		0
+#define	CHPSIM_STATE_UPDATE_BIN_SETS		1
+
+/**
+	Define to 1 to enable instance value break/watch points.  
+	Prerequisite: CHPSIM_STATE_UPDATE_BIN_SETS, for sorting
+	Goal: 1
+	Priority: low-medium (for diagnostics)
+	Status: complete, basically tested, can perm.
+ */
+#define CHPSIM_BREAK_VALUES		(1 && CHPSIM_STATE_UPDATE_BIN_SETS)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -69,6 +81,7 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Q: what do we do about tracing with random timing?
+	At least issue a warning that analysis will be nonsense?
  */
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

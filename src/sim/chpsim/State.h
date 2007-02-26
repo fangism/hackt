@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.3 2007/02/05 06:39:53 fang Exp $
+	$Id: State.h,v 1.4 2007/02/26 22:01:01 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -19,6 +19,9 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+#include "Object/ref/reference_set.h"
+#endif
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -38,6 +41,9 @@ class graph_options;
 class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+using entity::global_references_set;
+#endif
 
 //=============================================================================
 /**
@@ -96,6 +102,10 @@ public:
 #endif
 
 	};	// end struct event_placeholder_type
+	/**
+		Return true to break.  
+	 */
+	typedef	bool				step_return_type;
 private:
 #if CHPSIM_MULTISET_EVENT_QUEUE
 	typedef	std::multiset<event_placeholder_type>
@@ -116,8 +126,14 @@ private:
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
-	typedef	global_indexed_reference	step_return_type;
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	/**
+		Array of sets, binned by meta-type.  
+	 */
+	typedef	global_references_set
+#else
 	typedef	vector<global_indexed_reference>
+#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
 						update_reference_array_type;
 	/**
 		Various mode flags, settable by user.  
@@ -183,6 +199,9 @@ private:
 	};
 	struct recheck_transformer;
 	struct event_enqueuer;
+
+	// diagnostic structures and types
+	typedef	std::set<event_index_type>	event_watch_list_type;
 private:
 	/**
 		Collection of variable values and channel state.
@@ -235,6 +254,31 @@ private:
 		Set of events to recheck for unblocking.  
 	 */
 	event_subscribers_type			__rechecks;
+	/**
+		Events to print when they are executed.  
+		Not preserved by checkpointing.  
+	 */
+	event_watch_list_type			event_watches;
+	/**
+		Events to cause break.  
+		This is a maintained as subset of event_watches.  
+		Not preserved by checkpointing.  
+	 */
+	event_watch_list_type			event_breaks;
+#if CHPSIM_BREAK_VALUES
+	/**
+		Set of values and states to watch.  
+		Compare this against the __updated_list.
+		Not preserved by checkpointing.  
+	 */
+	global_references_set			value_watches;
+	/**
+		Set of values and states to watch.  
+		Compare this against the __updated_list.
+		Not preserved by checkpointing.  
+	 */
+	global_references_set			value_breaks;
+#endif
 	/**
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
@@ -346,6 +390,56 @@ public:
 	}
 
 	void
+	watch_event(const event_index_type);
+
+	void
+	unwatch_event(const event_index_type);
+
+	void
+	unwatch_all_events(void);
+
+	ostream&
+	dump_watch_events(ostream&) const;
+
+	void
+	break_event(const event_index_type);
+
+	void
+	unbreak_event(const event_index_type);
+
+	void
+	unbreak_all_events(void);
+
+	ostream&
+	dump_break_events(ostream&) const;
+
+#if CHPSIM_BREAK_VALUES
+	void
+	watch_value(const global_indexed_reference&);
+
+	void
+	unwatch_value(const global_indexed_reference&);
+
+	void
+	unwatch_all_values(void);
+
+	ostream&
+	dump_watch_values(ostream&) const;
+
+	void
+	break_value(const global_indexed_reference&);
+
+	void
+	unbreak_value(const global_indexed_reference&);
+
+	void
+	unbreak_all_values(void);
+
+	ostream&
+	dump_break_values(ostream&) const;
+#endif	// CHPSIM_BREAK_VALUES
+
+	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
 
 	void
@@ -418,6 +512,10 @@ public:
 
 	ostream&
 	dump_struct_dot(ostream&, const graph_options&) const;
+
+	static
+	ostream&
+	dump_event_table_header(ostream&);
 
 	ostream&
 	dump_event(ostream&, const event_index_type) const;

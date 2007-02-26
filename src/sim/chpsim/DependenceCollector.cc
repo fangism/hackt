@@ -1,12 +1,13 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.3 2007/02/08 02:11:10 fang Exp $
+	$Id: DependenceCollector.cc,v 1.4 2007/02/26 22:00:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
 
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/StateConstructor.h"
 
@@ -21,6 +22,7 @@
 // #include "Object/expr/real_negation_expr.h"
 // #include "Object/expr/real_arith_expr.h"
 // #include "Object/expr/real_relational_expr.h"
+#include "Object/expr/channel_probe.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
@@ -62,6 +64,7 @@ namespace CHPSIM {
 using std::vector;
 using std::copy;
 using std::transform;
+using util::set_inserter;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::global_entry_pool;
@@ -72,7 +75,6 @@ using entity::global_entry_context;
 using entity::simple_meta_instance_reference;
 using entity::member_meta_instance_reference;
 using entity::aggregate_meta_instance_reference;
-using util::set_inserter;
 using util::memory::never_ptr;
 
 //=============================================================================
@@ -158,7 +160,7 @@ DEFINE_NEVER_VISIT(preal_relational_expr)
 DEFINE_NEVER_VISIT(pint_arith_loop_expr)
 DEFINE_NEVER_VISIT(pbool_logical_loop_expr)
 DEFINE_NEVER_VISIT(preal_arith_loop_expr)
-
+DEFINE_NEVER_VISIT(convert_pint_to_preal_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DEFINE_UNARY_VISIT(type)					\
@@ -187,6 +189,12 @@ DEFINE_BINARY_VISIT(bool_logical_expr)
 DEFINE_UNARY_VISIT(int_arith_loop_expr)
 DEFINE_UNARY_VISIT(bool_logical_loop_expr)
 // DEFINE_UNARY_VISIT(real_arith_loop_expr)
+
+void
+DependenceSetCollector::visit(const channel_probe& t) {
+	STACKTRACE_VERBOSE;
+	t.get_channel()->accept(*this);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

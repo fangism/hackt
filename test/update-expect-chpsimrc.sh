@@ -32,7 +32,7 @@ do
 		cp -f $i.chpsimrcfail-out $srcdir/$i.chpsimrc-expect
 		echo "Updated $srcdir/$i.chpsimrc-expect"
 	else
-		echo "Missing $i.chpsimrc[fail]-out"
+		echo "Missing $i.chpsimrc[fail]-out-filter"
 	fi
 done
 

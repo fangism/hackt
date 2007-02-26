@@ -1,4 +1,4 @@
-// "source-sink.hac"
+// "source-sink-01.hac"
 // top-level instantiating source and sink and connecting them.
 // this should pass all the way to allocation, and can be simulated.  
 

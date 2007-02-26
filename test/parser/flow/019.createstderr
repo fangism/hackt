@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	161
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	165
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -70,16 +70,16 @@ Persistent Object Manager text dump:
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	424
+	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	428
 	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	470
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	75	##ADDR##	footprnt	0	#HEAD#	#TAIL#	466
+	75	##ADDR##	footprnt	0	#HEAD#	#TAIL#	470
 	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	522
+	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	526
 	79	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	80	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	81	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
@@ -96,7 +96,7 @@ Persistent Object Manager text dump:
 	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	94	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1116
+	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1120
 	96	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	97	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20

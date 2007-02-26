@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_channel_manipulator.h"
 	Helper classes for manipulating channel fields at run-time.  
-	$Id: nonmeta_channel_manipulator.h,v 1.2 2007/01/21 05:58:26 fang Exp $
+	$Id: nonmeta_channel_manipulator.h,v 1.3 2007/02/26 22:00:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_CHANNEL_MANIPULATOR_H__
@@ -10,7 +10,12 @@
 #include <iosfwd>
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/nonmeta_variable.h"
+#include "sim/chpsim/devel_switches.h"
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+#include "Object/ref/reference_set.h"
+#else
 #include "Object/ref/reference_enum.h"
+#endif
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/macros.h"
 
@@ -188,11 +193,16 @@ public:
  */
 class nonmeta_reference_lookup_channel_reader {
 	const nonmeta_context_base&		context;
-	global_reference_array_type&		updates;
+#if CHPSIM_STATE_UPDATE_BIN_SETS
+	typedef	global_references_set		updates_type;
+#else
+	typedef	global_reference_array_type	updates_type;
+#endif
+	updates_type&				updates;
 	channel_data_reader			reader;
 public:
 	nonmeta_reference_lookup_channel_reader(const nonmeta_context_base& c, 
-		const ChannelData& d, global_reference_array_type& u) :
+		const ChannelData& d, updates_type& u) :
 		context(c), updates(u), reader(d) { }
 
 	void

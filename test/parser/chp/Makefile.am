@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2007/01/21 06:05:51 fang Exp $
+#	$Id: Makefile.am,v 1.18 2007/02/26 22:02:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -28,7 +28,9 @@ HACKT_PARSE_TEST_PASSES = \
 	100 102 104 105 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
-	source-sink-01
+	source-sink-01 \
+	bool-source-delay \
+	source-sink-delay-01
 
 HACKT_PARSE_TEST_WARNINGS = \
 	101 103
@@ -45,7 +47,9 @@ HACKT_CREATE_TEST_PASSES = \
 	100 101 102 103 104 105 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
-	source-sink-01
+	source-sink-01 \
+	bool-source-delay \
+	source-sink-delay-01
 
 # TODO:
 # 091 094: diagnostic improvement -- 

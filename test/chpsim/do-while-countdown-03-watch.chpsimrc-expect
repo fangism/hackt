@@ -1,0 +1,69 @@
+watch events: 1
+break events: 
+expect to see event 1 
+watch: 	20	1	0		[by:4]
+watch: 	40	1	0		[by:3]
+watch: 	60	1	0		[by:3]
+watch: 	80	1	0		[by:3]
+watch: 	100	1	0		[by:3]
+watch: 	120	1	0		[by:3]
+time: 130
+initializing... 
+watch events: 1
+break events: 
+resetting... 
+watch events: 
+break events: 
+restarting... 
+watch events: 2, 3
+watch: 	30	3	0	c := c-1	[by:1]
+watch: 	50	3	0	c := c-1	[by:1]
+watch: 	70	3	0	c := c-1	[by:1]
+watch: 	90	3	0	c := c-1	[by:1]
+watch: 	110	3	0	c := c-1	[by:1]
+watch: 	130	2	0	null	[by:1]
+time: 130
+testing unwatch-event 
+Invalid event index: 5
+watch events: 3
+watch events: 
+watch events: 3
+watch: 	30	3	0	c := c-1	[by:1]
+watch: 	50	3	0	c := c-1	[by:1]
+watch: 	70	3	0	c := c-1	[by:1]
+watch: 	90	3	0	c := c-1	[by:1]
+watch: 	110	3	0	c := c-1	[by:1]
+time: 130
+testing unwatchall-events 
+watch events: 0, 1, 2, 3, 4
+watch events: 
+restarting... 
+	0	0	0	null
+watch: 	10	4	0	c := 5
+	20	1	0		[by:4]
+watch: 	30	3	0	c := c-1	[by:1]
+	40	1	0		[by:3]
+watch: 	50	3	0	c := c-1	[by:1]
+	60	1	0		[by:3]
+watch: 	70	3	0	c := c-1	[by:1]
+	80	1	0		[by:3]
+watch: 	90	3	0	c := c-1	[by:1]
+	100	1	0		[by:3]
+watch: 	110	3	0	c := c-1	[by:1]
+	120	1	0		[by:3]
+watch: 	130	2	0	null	[by:1]
+time: 130
+testing nowatchall-events with watched events 
+watch events: 2, 3, 4
+watch: 	10	4	0	c := 5
+watch: 	30	3	0	c := c-1	[by:1]
+watch: 	50	3	0	c := c-1	[by:1]
+watch: 	70	3	0	c := c-1	[by:1]
+watch: 	90	3	0	c := c-1	[by:1]
+watch: 	110	3	0	c := c-1	[by:1]
+watch: 	130	2	0	null	[by:1]
+time: 130
+testing unwatchall-events 
+watch events: 
+event queue:
+	(empty)

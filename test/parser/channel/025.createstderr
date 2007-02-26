@@ -9,23 +9,23 @@ Persistent Object Manager text dump:
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	293
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	297
 	25	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 

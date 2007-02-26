@@ -21,6 +21,7 @@ state	value
 in state #STATE#, possible rules are:
 	chp_nondet_guarded_command_list : chp_guarded_command ':' . chp_guarded_command  (#RULE#)
 acceptable tokens are: 
+	'#' (shift)
 	'(' (shift)
 	'-' (shift)
 	'~' (shift)

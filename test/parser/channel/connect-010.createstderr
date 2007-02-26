@@ -6,22 +6,22 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
 	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	289
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	293
 	18	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
 	21	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	328
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
@@ -42,10 +42,10 @@ Persistent Object Manager text dump:
 	38	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	42	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	336
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

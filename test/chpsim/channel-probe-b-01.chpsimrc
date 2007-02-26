@@ -1,0 +1,10 @@
+# "channel-probe-b-01.chpsimrc"
+#	$Id: channel-probe-b-01.chpsimrc,v 1.2 2007/02/26 22:01:20 fang Exp $
+# @haco@ channel-probe-b.haco-a
+
+watchall-events
+step 10
+echo expect empty queue, deadlock
+queue
+time
+
