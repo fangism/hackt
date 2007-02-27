@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.16 2007/02/02 19:20:33 fang Exp $
+	$Id: stacktrace.h,v 1.17 2007/02/27 05:37:42 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -260,6 +260,27 @@ public:
 	static
 	void
 	full_dump(void);
+
+private:
+	// and undefined
+	// non-copy-able
+	explicit
+	stacktrace(const stacktrace&);
+
+	// non-assignable
+	stacktrace&
+	operator = (const stacktrace&);
+
+	// non-heap allocatable
+	static void* operator new (size_t);
+	static void operator delete (void*);
+	static void* operator new (size_t, void*);
+	static void operator delete (void*, void*);
+	static void* operator new [] (size_t);
+	static void operator delete [] (void*);
+	static void* operator new [] (size_t, void*);
+	static void operator delete [] (void*, void*);
+
 } __ATTRIBUTE_UNUSED__ ;	// end class stacktrace
 
 //-----------------------------------------------------------------------------
@@ -304,6 +325,15 @@ public:
 struct stacktrace::echo {
 	echo(const int i = 1);
 	~echo();
+
+private:
+	// non-copy-able
+	explicit
+	echo(const echo&);
+
+	// non-assignable
+	echo&
+	operator = (const echo&);
 } __ATTRIBUTE_UNUSED__ ;	// end struct echo
 
 //-----------------------------------------------------------------------------
@@ -314,6 +344,14 @@ struct stacktrace::echo {
 struct stacktrace::redirect {
 	redirect(std::ostream&);
 	~redirect();
+private:
+	// non-copy-able
+	explicit
+	redirect(const redirect&);
+
+	// non-assignable
+	redirect&
+	operator = (const redirect&);
 } __ATTRIBUTE_UNUSED__ ;	// end struct redirect
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "util/value_saver.h"
-	$Id: value_saver.h,v 1.2 2006/04/11 07:54:48 fang Exp $
+	$Id: value_saver.h,v 1.3 2007/02/27 05:37:44 fang Exp $
  */
 
 #ifndef	__UTIL_VALUE_SAVER_H__
@@ -38,6 +38,10 @@ private:
 	// undefined copy-constructing
 	explicit
 	value_saver(const value_saver&);
+
+	// undefined assignment
+	value_saver<T>&
+	operator = (const value_saver<T>&);
 
 } __ATTRIBUTE_UNUSED__ ;	// end class value_saver
 

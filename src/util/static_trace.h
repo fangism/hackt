@@ -2,7 +2,7 @@
 	\file "util/static_trace.h"
 	Utility class for identifiying global static initialization
 	and destruction of modules, and debugging ordering...
-	$Id: static_trace.h,v 1.5 2006/01/22 06:53:37 fang Exp $
+	$Id: static_trace.h,v 1.6 2007/02/27 05:37:43 fang Exp $
  */
 
 #ifndef	__UTIL_STATIC_TRACE_H__
@@ -51,51 +51,65 @@
 
 #include <string>
 // #include "util/attributes.h"		// for __unused__
+#include <ios>			// for std::ios_base::Init
 
 namespace util {
-using std::string;
+
+//=============================================================================
+/**
+	Base class for static-debug objects.  
+	Non-copy-able, non-assignable.  
+ */
+class static_common {
+private:
+	const std::ios_base::Init	ios_init;
+protected:
+	/// string that uniquely identifies this module
+	const std::string		msg;
+
+	explicit
+	static_common(const std::string&);
+	~static_common();
+
+};	// end class static_common
 
 //=============================================================================
 /**
 	Class intended for diagnosing when static initialization of a module
 	(translation unit) begins, and when its destruction ends.  
  */
-class static_begin {
-private:
-	/// string that uniquely identifies this module
-	const string	msg;
+class static_begin : private static_common {
 public:
 	explicit
-	static_begin(const string&);
+	static_begin(const std::string&);
 	~static_begin();
 
-};	// end class static begin
+};	// end class static_begin
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Class intended for diagnosing when static initialization of a module
 	(translation unit) ends, and when its destruction begins.  
  */
-class static_end {
-private:
-	/// string that uniquely identifies this module
-	const string	msg;
+class static_end : private static_common {
 public:
 	explicit
-	static_end(const string&);
+	static_end(const std::string&);
 	~static_end();
-};	// end class static end
+};	// end class static_end
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-class static_here {
-private:
-	/// string that uniquely identifies this module
-	const string	msg;
+/**
+	Debugging placeholder for anywhere in translation unit.  
+	Useful for marking initialization/destruction progress
+	in the middle of a translation unit.  
+ */
+class static_here : private static_common {
 public:
 	explicit
-	static_here(const string&);
+	static_here(const std::string&);
 	~static_here();
-};	// end class static end
+};	// end class static_here
 
 //=============================================================================
 
