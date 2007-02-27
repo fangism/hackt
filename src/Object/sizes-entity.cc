@@ -1,15 +1,15 @@
 /**
-	\file "Object/sizes.cc"
+	\file "Object/sizes-entity.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.7 2006/11/07 06:34:15 fang Exp $
+	$Id: sizes-entity.cc,v 1.1 2007/02/27 02:27:55 fang Exp $
  */
 
 #include <iostream>
 
-#include "common/sizes.h"
+#include "common/sizes-common.h"
 #include "util/what.tcc"	// use default typeinfo-based mangled names
-#include "Object/sizes.h"
+#include "Object/sizes-entity.h"
 
 // include all Object/*.h header files to evaluate struct sizes.
 #include "Object/module.h"

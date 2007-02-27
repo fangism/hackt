@@ -1,6 +1,6 @@
 /**
-	\file "common/sizes.cc"
-	$Id: sizes.cc,v 1.1 2006/08/23 20:57:23 fang Exp $
+	\file "common/sizes-common.cc"
+	$Id: sizes-common.cc,v 1.1 2007/02/27 02:27:57 fang Exp $
  */
 
 #include <iostream>
@@ -15,7 +15,7 @@
 #include "config.h"
 #include "util/size_t.h"
 #include "util/what.tcc"
-#include "common/sizes.h"
+#include "common/sizes-common.h"
 
 namespace HAC {
 using std::ostream;

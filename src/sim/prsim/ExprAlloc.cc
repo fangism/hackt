@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.16 2006/09/09 06:59:18 fang Exp $
+	$Id: ExprAlloc.cc,v 1.17 2007/02/27 02:28:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,7 +13,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include <iterator>
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Expr.h"
-#include "sim/prsim/State.h"
+#include "sim/prsim/State-prsim.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_expr.h"

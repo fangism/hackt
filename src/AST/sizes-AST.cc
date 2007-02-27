@@ -1,7 +1,7 @@
 /**
-	\file "AST/sizes.cc"
+	\file "AST/sizes-AST.cc"
 	Just dumps the sizeof for most HAC::entity classes.
-	$Id: sizes.cc,v 1.1 2006/08/23 20:57:14 fang Exp $
+	$Id: sizes-AST.cc,v 1.1 2007/02/27 02:27:52 fang Exp $
  */
 
 #include <iostream>
@@ -9,9 +9,9 @@
 #include <vector>
 #include <list>
 
-#include "common/sizes.h"
+#include "common/sizes-common.h"
 #include "util/what.tcc"	// use default typeinfo-based mangled names
-#include "AST/sizes.h"
+#include "AST/sizes-AST.h"
 
 // include all AST/*.h header files to evaluate struct sizes.
 #include "AST/parse_context.h"

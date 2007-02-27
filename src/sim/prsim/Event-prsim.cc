@@ -1,13 +1,18 @@
 /**
-	\file "sim/prsim/Event.cc"
+	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp $
+	$Id: Event-prsim.cc,v 1.1 2007/02/27 02:28:05 fang Exp $
+
+	NOTE: file was renamed from:
+	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
+	to avoid dyld object base name conflict with chpsim's Event.  
+	Sadly, this breaks continuity in revision history.
  */
 
 #include <iostream>
 #include <iterator>
 #include <numeric>
-#include "sim/prsim/Event.h"
+#include "sim/prsim/Event-prsim.h"
 #include "sim/time.h"
 #include "util/memory/index_pool.tcc"
 #include "util/IO_utils.tcc"

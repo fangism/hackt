@@ -2,7 +2,7 @@
 	\file "main/dump_persistent_table.cc"
 	Just dumps the registered persistent type table.  
 	This file came from "art_persistent_table.cc".
-	$Id: dump_persistent_table.cc,v 1.4 2006/08/23 20:57:24 fang Exp $
+	$Id: dump_persistent_table.cc,v 1.5 2007/02/27 02:28:00 fang Exp $
  */
 
 #include <iostream>
@@ -12,9 +12,9 @@
 #include "util/what.tcc"	// use default typeinfo-based mangled names
 #include "Object/module.h"
 
-#include "common/sizes.h"
-#include "AST/sizes.h"
-#include "Object/sizes.h"
+#include "common/sizes-common.h"
+#include "AST/sizes-AST.h"
+#include "Object/sizes-entity.h"
 
 namespace HAC {
 using std::ostream;

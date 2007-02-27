@@ -1,8 +1,13 @@
 /**
-	\file "sim/prsim/Command.h"
+	\file "sim/prsim/Command-prsim.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.8 2007/02/14 04:57:27 fang Exp $
+	$Id: Command-prsim.h,v 1.1 2007/02/27 02:28:03 fang Exp $
+
+	Earlier version was:
+	Id: Command.h,v 1.8 2007/02/14 04:57:27 fang Exp
+	but renamed along with Command.cc to avoid name clash 
+		with dynamic shared library linking (conflict with CHPSIM).
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__

@@ -5,6 +5,24 @@
 
 2007-02-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-88:
+	  Post-merge patching :S
+	  Forced to rename files sim/prsim/{State,Command}.{h,cc} to
+		work around dynamic linker object base name collision bug, 
+		which ONLY manifests on i686-apple-darwin8 dyld, 
+		when trying to run the built executable.  
+		Sad consequence: break in continutity of revision history
+			for those files.  
+		May have to the do the same for chpsim's files to make way
+			for future simulators.  
+		Likewise had to rename {AST,Object,common}.sizes.{h,cc}.
+		Observation: this only seems to occur in libhacktsim.la
+			where objects with the same base name occur in the 
+			*same* convenience library.  For example, AST/CHP.cc
+			and Object/lang/CHP.cc don't have this problem.
+		Considering filing a bug-report or asking on mailing list...
+
+
 	* HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10:
 	  Branch merge: -chpsim-03
 	  Summary:

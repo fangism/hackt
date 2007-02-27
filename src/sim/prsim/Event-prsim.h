@@ -2,7 +2,11 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp $
+	$Id: Event-prsim.h,v 1.1 2007/02/27 02:28:05 fang Exp $
+
+	NOTE: file was renamed from:
+	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
+	to avoid base-name conflict on dyld with chpsim's.  
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__

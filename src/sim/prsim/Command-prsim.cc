@@ -1,5 +1,5 @@
 /**
-	\file "sim/prsim/Command.cc"
+	\file "sim/prsim/Command-prsim.cc"
 	All built-in commands should be statically registered 
 	in this translation unit to guarantee proper static object
 	initialization ordering; the command_map must be constructed
@@ -8,7 +8,14 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp $
+	$Id: Command-prsim.cc,v 1.1 2007/02/27 02:28:02 fang Exp $
+
+	NOTE: earlier version of this file was:
+	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
+	but had to be renamed to avoid base-object file name clashes
+		which broke dyld on i686-apple-darwin, cause Command.o
+		to fail to be loaded due to conflict with chpsim's.  
+	Painful discontinuity in revision history...
  */
 
 #include "util/static_trace.h"
@@ -20,8 +27,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <iterator>
 
-#include "sim/prsim/Command.h"
-#include "sim/prsim/State.h"
+#include "sim/prsim/Command-prsim.h"
+#include "sim/prsim/State-prsim.h"
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
 #include "sim/command_registry.tcc"
@@ -104,7 +111,12 @@ INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Echo, "echo", PRSIM::builtin,
 
 //-----------------------------------------------------------------------------
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Help, PRSIM::builtin)
+}	// end namespace PRSIM
 
+// template needs to be instantiated in correct namespace
+template class Help<PRSIM::State>;
+
+namespace PRSIM {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	stateless_command_wrapper<CommentPound, State>		CommentPound;
 typedef	stateless_command_wrapper<CommentComment, State>	CommentComment;

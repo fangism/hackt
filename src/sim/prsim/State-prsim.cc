@@ -1,7 +1,12 @@
 /**
-	\file "sim/prsim/State.cc"
+	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp $
+	$Id: State-prsim.cc,v 1.1 2007/02/27 02:28:06 fang Exp $
+
+	This module was renamed from:
+	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
+	to avoid object base name collisions.
+	A sad discontinuity in revision history...
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,7 +18,7 @@
 #include <functional>
 #include <string>
 #include <set>
-#include "sim/prsim/State.h"
+#include "sim/prsim/State-prsim.h"
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/event.tcc"
 #include "sim/prsim/Rule.tcc"

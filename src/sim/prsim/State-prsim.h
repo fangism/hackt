@@ -1,7 +1,11 @@
 /**
-	\file "sim/prsim/State.h"
+	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp $
+	$Id: State-prsim.h,v 1.1 2007/02/27 02:28:06 fang Exp $
+
+	This file was renamed from:
+	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
+	to avoid object name collision in shared libraries.  
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -15,7 +19,7 @@
 #include "sim/state_base.h"
 #include "sim/signal_handler.h"
 #include "sim/event.h"
-#include "sim/prsim/Event.h"
+#include "sim/prsim/Event-prsim.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/Rule.h"

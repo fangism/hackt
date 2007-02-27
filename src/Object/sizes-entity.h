@@ -1,6 +1,6 @@
 /**
-	\file "Object/sizes.h"
-	$Id: sizes.h,v 1.1 2006/08/23 20:57:17 fang Exp $
+	\file "Object/sizes-entity.h"
+	$Id: sizes-entity.h,v 1.1 2007/02/27 02:27:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_SIZES_H__

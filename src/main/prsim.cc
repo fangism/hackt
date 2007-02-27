@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.8 2007/01/21 06:00:09 fang Exp $
+	$Id: prsim.cc,v 1.9 2007/02/27 02:28:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,8 +23,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/simple_options.tcc"
 #include "util/getopt_mapped.h"
 #include "util/persistent_object_manager.h"
-#include "sim/prsim/State.h"
-#include "sim/prsim/Command.h"
+#include "sim/prsim/State-prsim.h"
+#include "sim/prsim/Command-prsim.h"
 #include "sim/command_common.h"
 #include "sim/prsim/ExprAllocFlags.h"
 #include "util/string.tcc"	// for string_to_num

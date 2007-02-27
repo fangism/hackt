@@ -1,7 +1,7 @@
 /**
-	\file "common/sizes.h"
+	\file "common/sizes-common.h"
 	How big is the struct?
-	$Id: sizes.h,v 1.2 2006/08/24 02:01:33 fang Exp $
+	$Id: sizes-common.h,v 1.1 2007/02/27 02:27:58 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_SIZES_H__

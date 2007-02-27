@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.159 2007/02/26 22:00:41 fang Exp $
+#	$Id: Makefile.am,v 1.160 2007/02/27 02:27:51 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -239,7 +239,7 @@ AST_CC_FILES = \
 	AST/statement.cc \
 	AST/import_root.cc \
 	AST/parse_context.cc \
-	AST/sizes.cc
+	AST/sizes-AST.cc
 
 AST_TCC_FILES = \
 	AST/node_list.tcc \
@@ -460,7 +460,7 @@ OBJECT_CC_FILES = \
 	Object/nonmeta_context.cc \
 	Object/nonmeta_channel_manipulator.cc \
 	Object/global_entry_context.cc \
-	Object/sizes.cc \
+	Object/sizes-entity.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
@@ -721,13 +721,13 @@ SIM_CC_FILES = \
 	sim/random_time.cc \
 	sim/state_base.cc \
 	sim/signal_handler.cc \
+	sim/prsim/Command-prsim.cc \
 	sim/prsim/Cause.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
 	sim/prsim/ExprAlloc.cc \
-	sim/prsim/Event.cc \
-	sim/prsim/State.cc \
-	sim/prsim/Command.cc \
+	sim/prsim/Event-prsim.cc \
+	sim/prsim/State-prsim.cc \
 	sim/chpsim/nonmeta_context.cc \
 	sim/chpsim/Command.cc \
 	sim/chpsim/Dependence.cc \
@@ -788,10 +788,10 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/compile_options.h
 
 COMMON_H_FILES = \
-	common/sizes.h
+	common/sizes-common.h
 
 COMMON_FILES = $(COMMON_H_FILES) \
-	common/sizes.cc
+	common/sizes-common.cc
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(HACKT_PARSE_ROOT)-real.cc

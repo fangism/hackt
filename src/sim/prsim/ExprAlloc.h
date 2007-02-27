@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.7 2006/05/06 04:18:53 fang Exp $
+	$Id: ExprAlloc.h,v 1.8 2007/02/27 02:28:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -9,7 +9,7 @@
 #include <queue>
 #include "Object/lang/cflat_context_visitor.h"
 #include "sim/prsim/ExprAllocFlags.h"
-#include "sim/prsim/State.h"		// for nested typedefs
+#include "sim/prsim/State-prsim.h"		// for nested typedefs
 #include "sim/common.h"
 
 namespace HAC {
