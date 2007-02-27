@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.56 2007/02/27 03:37:22 fang Exp $
+	$Id: BUILDS,v 1.59 2007/02/27 04:03:04 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -97,9 +97,9 @@ yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 
 (Fang)
-Version: hackt 0.1.4-devel-20070121
-CVS Tag: HACKT-00-01-04-main-00-80-64-merged-chpsim-01-54
-Configured with: '--prefix=/usr/local/cad' '--with-editline' '-C'
+Version: hackt 0.1.4-devel-20070226
+CVS Tag: HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10
+Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '-C'
 build-triplet: powerpc-apple-darwin8.8.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)
 config-CXXFLAGS: -g -O2
@@ -271,8 +271,8 @@ readline: none
 amd64-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070213
-CVS Tag: HACKT-00-01-04-main-00-80-86
+Version: hackt 0.1.4-devel-20070226
+CVS Tag: HACKT-00-01-04-main-00-80-88
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '--disable-docs' 'CXXFLAGS=-g0 -O2' '-C'
 build-triplet: x86_64-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
@@ -292,8 +292,7 @@ NOTE: -g0 was necessary because of disk space limitation.
 i386-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070213
-CVS Tag: HACKT-00-01-04-main-00-80-86
+CVS Tag: HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10
 Configured with: '--disable-docs' '--prefix=/usr/local/compiler' '--with-readline' 'CFLAGS=-g0 -O2 -Wno-undef' 'CXXFLAGS=-g0 -O2 -Wno-undef' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0' '-C'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
