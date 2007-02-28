@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.23 2007/02/08 02:10:59 fang Exp $
+	$Id: expr.cc,v 1.24 2007/02/28 21:22:07 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1688,7 +1688,7 @@ if (li && ri) {
 		try {
 			return return_type(
 				new pint_const(ret->static_constant_value()));
-		} catch (std::exception& e) {
+		} catch (const std::exception& e) {
 			// possibly divide by zero
 			cerr << e.what() << endl;
 			cerr << "Caught numerical exception." << endl;
@@ -1705,7 +1705,7 @@ if (li && ri) {
 		try {
 			return return_type(
 				new preal_const(ret->static_constant_value()));
-		} catch (std::exception& e) {
+		} catch (const std::exception& e) {
 			// possibly divide by zero
 			cerr << e.what() << endl;
 			cerr << "Caught numerical exception." << endl;

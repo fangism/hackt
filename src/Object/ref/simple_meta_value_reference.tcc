@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.30 2007/01/21 05:59:35 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.31 2007/02/28 21:22:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -799,7 +799,7 @@ if (_vals.get_dimensions()) {
 			array_sizes(crl.resolve_sizes());
 		a.resize(array_sizes);
 		// a.resize(upper -lower +ones);
-	} catch (const_range_list::bad_range r) {
+	} catch (const const_range_list::bad_range& r) {
 		const_range::diagnose_bad_range(cerr << "got: ", r) << endl;
 		cerr << "Error during resolution of indexed reference to:"
 			<< endl;;

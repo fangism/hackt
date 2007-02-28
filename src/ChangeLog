@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-02-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-90:
+	  Testing with -O3 on suse-linux-g++-3.3 revealed one fatal error
+		in test/parser/template/087.hac (expect fail), 
+		caused by improper exception catching (by value, oops).
+	  Gone through all code and fixed exception catching blunders.  
+	  Tests now pass with -O3 on i686-suse-linux.  
+
+
 2007-02-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-89:

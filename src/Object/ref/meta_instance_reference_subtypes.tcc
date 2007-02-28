@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.19 2007/01/21 05:59:30 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.20 2007/02/28 21:22:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -230,10 +230,10 @@ if (inst.get_dimensions()) {
 			array_sizes(crl.resolve_sizes());
 		a.resize(array_sizes);
 		// a.resize(upper -lower +ones);
-	} catch (const_range_list::bad_range r) {
+	} catch (const const_range_list::bad_range& r) {
 		const_range::diagnose_bad_range(cerr << "got: ", r) << endl;
 		cerr << "Error during resolution of indexed reference to:"
-			<< endl;;
+			<< endl;
 		inst.dump(cerr << "\tcollection state: ",
 			dump_flags::verbose) << endl;
 		return bad_bool(true);

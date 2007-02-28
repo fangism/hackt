@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.20 2007/01/21 05:58:43 fang Exp $
+ 	$Id: const_collection.tcc,v 1.21 2007/02/28 21:22:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -497,7 +497,7 @@ try {
 	} while (key_gen != key_gen.get_lower_corner());
 	INVARIANT(coll_iter == ret.values.end());
 	return ret;
-} catch (const_range_list::bad_range r) {
+} catch (const const_range_list::bad_range& r) {
 	// convert exception to std::range_error
 	const_range::diagnose_bad_range(cerr << "got: ", r) << endl;
 	cerr << "Error during attempt to extrace slice of values from " <<

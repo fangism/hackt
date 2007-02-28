@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.1 2007/02/27 02:28:02 fang Exp $
+	$Id: Command-prsim.cc,v 1.2 2007/02/28 21:22:08 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -331,7 +331,7 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
-	} catch (State::excl_exception& exex) {
+	} catch (const State::excl_exception& exex) {
 		s.inspect_excl_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
@@ -413,7 +413,7 @@ if (a.size() != 2) {
 			}
 		}
 	}	// end while
-	} catch (State::excl_exception& exex) {
+	} catch (const State::excl_exception& exex) {
 		s.inspect_excl_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
@@ -487,7 +487,7 @@ if (a.size() != 1) {
 			}
 		}
 	}	// end while (!s.stopped())
-	} catch (State::excl_exception exex) {
+	} catch (const State::excl_exception& exex) {
 		s.inspect_excl_exception(exex, cerr);
 		return Command::FATAL;
 	}	// no other exceptions
