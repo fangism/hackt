@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.61 2007/03/01 03:58:51 fang Exp $
+	$Id: BUILDS,v 1.62 2007/03/01 19:51:34 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -98,7 +98,7 @@ readline: GNU readline 5.0
 
 (Fang)
 Version: hackt 0.1.4-devel-20070226
-CVS Tag: HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10
+CVS Tag: HACKT-00-01-04-main-00-80-91
 Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '-C'
 build-triplet: powerpc-apple-darwin8.8.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)

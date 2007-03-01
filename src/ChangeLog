@@ -10,6 +10,7 @@
 		Object/common/extern_templates.cc to pass -O3 on 
 		i686-apple-darwin-g++-4.0.  dyld was failing on
 		missing write_value template function.  
+	  configury: ifstream/ofstream tests assume OK for cross-compile.
 
 
 	* HACKT-00-01-04-main-00-80-90:

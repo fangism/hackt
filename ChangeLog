@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-03-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-91:
+	  config/cxx_STL.m4: fstream tests assume OK if cross compiling.
+
+
 2007-02-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10:

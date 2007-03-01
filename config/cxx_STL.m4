@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.7 2007/02/22 22:27:37 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.8 2007/03/01 19:51:34 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -52,10 +52,9 @@ dnl @synopsis FANG_CXX_STD_IFSTREAM_DEV_STDIN
 dnl
 dnl Checks to see if std::ifstream can open "/dev/stdin"
 dnl Defines HAVE_STD_IFSTREAM_DEV_STDIN if successful.  
-dnl TODO: if cross-compiling, assume yes instead of testing
 dnl
 dnl @category Cxx
-dnl @version 2006-05-08
+dnl @version 2007-02-27
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -83,7 +82,12 @@ AC_LINK_IFELSE(
 			cout << "You lose." << endl;
 		}
 	]]),
-	[echo "Hello, world!" > conftest.in
+	[
+	if test "$cross_compiling" = yes ; then
+		fang_cv_cxx_std_ifstream_dev_stdin=yes
+		AC_MSG_NOTICE([Assuming yes because cross-compiling...])
+	else
+	echo "Hello, world!" > conftest.in
 	echo "That's all, folks!" >> conftest.in
 	./conftest$ac_exeext < conftest.in > conftest.out 2>&1
 	if diff conftest.in conftest.out > /dev/null 2>&1
@@ -91,6 +95,7 @@ AC_LINK_IFELSE(
 		fang_cv_cxx_std_ifstream_dev_stdin=yes
 	fi
 	rm -f conftest.in conftest.out
+	fi
 	],
 	[]
 )
@@ -136,7 +141,12 @@ AC_LINK_IFELSE(
 			cout << "You lose." << endl;
 		}
 	]]),
-	[echo "Hello, world!" > conftest.in
+	[
+	if test "$cross_compiling" = yes ; then
+		fang_cv_cxx_std_ofstream_dev_stdout=yes
+		AC_MSG_NOTICE([Assuming yes because cross-compiling...])
+	else
+	echo "Hello, world!" > conftest.in
 	echo "That's all, folks!" >> conftest.in
 	./conftest$ac_exeext < conftest.in > conftest.out 2>&1
 	if diff conftest.in conftest.out > /dev/null 2>&1
@@ -144,6 +154,7 @@ AC_LINK_IFELSE(
 		fang_cv_cxx_std_ofstream_dev_stdout=yes
 	fi
 	rm -f conftest.in conftest.out
+	fi
 	],
 	[]
 )
@@ -189,7 +200,12 @@ AC_LINK_IFELSE(
 			cerr << "You lose." << endl;
 		}
 	]]),
-	[echo "Hello, world!" > conftest.in
+	[
+	if test "$cross_compiling" = yes ; then
+		fang_cv_cxx_std_ofstream_dev_stderr=yes
+		AC_MSG_NOTICE([Assuming yes because cross-compiling...])
+	else
+	echo "Hello, world!" > conftest.in
 	echo "That's all, folks!" >> conftest.in
 	./conftest$ac_exeext < conftest.in > conftest.out 2>&1
 	if diff conftest.in conftest.out > /dev/null 2>&1
@@ -197,6 +213,7 @@ AC_LINK_IFELSE(
 		fang_cv_cxx_std_ofstream_dev_stderr=yes
 	fi
 	rm -f conftest.in conftest.out
+	fi
 	],
 	[]
 )
