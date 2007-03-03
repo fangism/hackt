@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.160 2007/02/27 02:27:51 fang Exp $
+#	$Id: Makefile.am,v 1.161 2007/03/03 04:12:13 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -933,6 +933,10 @@ SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
 # because yacc has no mechanism for overriding the yyparse prototype
 SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g'
 
+# some old yacc skeletons assign string literals to char*, which is deprecated
+# e.g apple ships yacc skeleton 1.14
+SED_CONST_CHAR_P = $(AWK) -f $(srcdir)/parser/yacc_const_char.awk
+
 # Oddly, these targets get mistakenly placed in the srcdir
 parser/hackt-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
 	$(SED_srcdir_strip_setup) ; \
@@ -971,6 +975,7 @@ PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED_CXX_REFERENCE) | \
+	$(SED_CONST_CHAR_P) | \
 	$(SED_YACC_YYPARSE) | \
 	$(AWK) -f $(srcdir)/parser/patch_byacc.awk
 endif
@@ -981,6 +986,7 @@ PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED_CXX_REFERENCE) | \
+	$(SED_CONST_CHAR_P) | \
 	$(SED_YACC_YYPARSE)
 endif
 
@@ -1300,6 +1306,10 @@ if HAVE_BYACC
 MORE_BOGUS_CPPFLAGS += -DYYDEBUG=0
 MORE_BOGUS_CXXFLAGS += -Wno-error
 endif
+# as a workaround for non-standard-conforming yacc skeletons
+if HAVE_YACC
+MORE_BOGUS_CXXFLAGS += -Wno-error
+endif
 BOGUS_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(MORE_BOGUS_CPPFLAGS)
 BOGUS_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
 
@@ -1369,6 +1379,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/purify_flex.awk \
 	parser/purify_yacc.awk \
 	parser/try_lex_catch.awk \
+	parser/yacc_const_char.awk \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
 	lexer/local.cvsignore \
