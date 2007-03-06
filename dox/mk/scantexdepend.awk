@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.5 2007/02/22 05:30:11 fang Exp $
+#	$Id: scantexdepend.awk,v 1.6 2007/03/06 05:28:44 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
@@ -12,14 +12,9 @@ BEGIN {
 	hold = "";
 }
 
-# be careful to preserve $0
-function valid_file(str, 
-	ret, buf) {
-	buf = $0;
-	ret = (getline < str);
-	close(str)
-	$0 = buf;
-	return ret;
+# valid readable file? (not a directory)
+function valid_file(str) {
+	return !system("test -f " str " && test -r " str);
 }
 
 # /\([/\.]/
