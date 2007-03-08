@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.121 2007/03/03 04:12:11 fang Exp $
+#	$Id: configure.ac,v 1.122 2007/03/08 23:07:25 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070302, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070308, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -113,9 +113,9 @@ HACKT_LEX_VERSION
 
 AC_CHECK_PROG([PKG_CONFIG], pkg-config, pkg-config)
 AM_CONDITIONAL(HAVE_PKG_CONFIG, test -n "$PKG_CONFIG" )
-# interface generator
-AC_CHECK_PROG([SWIG], swig, swig)
-AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
+# interface generator, no longer needed
+dnl AC_CHECK_PROG([SWIG], swig, swig)
+dnl AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
 
 # comment out until time for release
 # this causes too many rebuilds during development

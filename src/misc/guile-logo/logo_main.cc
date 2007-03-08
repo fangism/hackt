@@ -1,18 +1,19 @@
 /**
 	\file "misc/guile-logo/logo_main.cc"
-	$Id: logo_main.cc,v 1.1 2007/01/27 05:50:58 fang Exp $
+	$Id: logo_main.cc,v 1.2 2007/03/08 23:07:28 fang Exp $
  */
 
 #include "config.h"
 #include <iostream>
 #include <fstream>
 #include "tortoise.h"
+#include "tortoise-wrap.h"
 
 // guile's <libguile/scmconfig.h> also defines this, arg...
 #ifdef	SIZEOF_LONG_LONG
 #undef	SIZEOF_LONG_LONG
 #endif
-#include <guile/gh.h>
+// #include <guile/gh.h>	// use scm, not deprecated gh
 
 // #include "tortoise_wrap.cxx"
 #include "util/c_decl.h"
@@ -20,7 +21,7 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 BEGIN_C_DECLS
-extern void SWIG_init(void);
+extern void logo_guile_init(void);
 END_C_DECLS
 
 using std::ostream;
@@ -49,7 +50,7 @@ static
 void
 logo_main_interactive(void* closure, int argc, char **argv) {
 	cout << "Welcome to guile-logo!" << endl;
-	SWIG_init();		// registers procedures
+	logo_guile_init();		// registers procedures
 	// gh_repl(argc, argv);	// read-eval-print-loop
 	scm_shell(argc, argv);	// read-eval-print-loop
 	// nothing after here is reached...
@@ -70,7 +71,7 @@ logo_main_script(void* closure, int argc, char **argv) {
 		return;
 	}
 	f.close();
-	SWIG_init();		// registers procedures
+	logo_guile_init();		// registers procedures
 	// gh_eval_file(fname);
 	scm_c_primitive_load(fname);
 	sleep(2);

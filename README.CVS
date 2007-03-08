@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.5 2007/02/09 02:44:14 fang Exp $
+	$Id: README.CVS,v 1.6 2007/03/08 23:07:25 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -44,8 +44,7 @@ which is the equivalent of a cvs-clean.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Other tools needed:
 
-swig-1.3.20+ (wrapped interface generator)
-	This generates guile-scm wrappers from C/C++ headers.  
+(used to require swig, Simplified Wrapper Interface Generator, but not anymore.)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
