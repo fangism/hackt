@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.14.38.1 2007/03/10 02:51:59 fang Exp $
+	$Id: cflat.cc,v 1.14.38.2 2007/03/10 07:29:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -704,40 +704,7 @@ if (modes) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Prints an alias as specified by the flags.  
-	Publicly accessible.  
- */
-void
-cflat::print_alias(ostream& o, const string& canonical, const string& alias,
-		const options& cf) {
-if (cf.dump_self_connect || alias != canonical) {
-	switch (cf.connect_style) {
-		case cflat_options::CONNECT_STYLE_CONNECT:
-			o << "connect ";
-			break;  
-		case cflat_options::CONNECT_STYLE_EQUAL:
-			o << "= ";
-			break;  
-		case cflat_options::CONNECT_STYLE_WIRE:
-			o << "wire ";
-			break;  
-		default:
-			o << "alias ";
-			break;  
-	}       
-	if (cf.enquote_names) {
-		o << '\"' << canonical << "\" \"" << alias << '\"';
-	} else {
-		o << canonical << ' ' << alias;
-	}       
-	o << endl;
-}       
-}
-#else
-// relocated to "Object/inst/alias_printer.cc"
-#endif
+// cflat::print_alias relocated to "Object/inst/alias_printer.cc"
 
 //=============================================================================
 }	// end namespace HAC

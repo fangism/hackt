@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.2.8.1 2007/03/10 02:52:05 fang Exp $
+	$Id: StateConstructor.cc,v 1.2.8.2 2007/03/10 07:29:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -80,7 +80,6 @@ StateConstructor::reset(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Constructs a sequence of events backwards from back to
 	front, where each event 'connects' to its successor(s).
@@ -98,20 +97,6 @@ StateConstructor::visit(const action_sequence& l) {
 		// events will link themselves (callee responsible)
 	} while (i!=e);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Do we need to construct event successor edges and graphs?
-	NOTE: this does not actually allocate an event for itself.  
-	Constructs events in a backwards order to simplify event-chaining
-	of predecessors to successors.  
- */
-void
-action_sequence::accept(StateConstructor& s) const {
-	accept_sequence(*this, s);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -698,9 +683,6 @@ StateConstructor::visit(const do_while_loop& dw) {
 	last_event_index = loopback_index;
 }
 }	// end visit(const do_while_loop&)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#endif	// accept-visitors
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

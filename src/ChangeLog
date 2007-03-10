@@ -5,6 +5,15 @@
 
 2007-03-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-01-shlib-01-02:
+	  haccreate is now a executable linked to dynamic library.
+	  Initial attempts at installing sub-libraries of libhacktlib.la
+		resulted in unexpected intra-library dependencies, 
+		will have to revisit later, some notes in Makefile.am.
+	  Filtered out bunch of unnecessary headers in recently edited files.
+	  More clean-up with committing switches...
+
+
 	* HACKT-00-01-04-main-00-81-01-shlib-01-01:
 	  This branch is for rearranging shared libraries.
 	  This revision: 'haco' script is now built as an executable

@@ -2,6 +2,10 @@
 
 2007-03-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-01-shlib-01-02:
+	  'hackt create' replaced by called to dynamically linked 'haccreate'.
+
+
 	* HACKT-00-01-04-main-00-81-01-shlib-01-01:
 	  Compile now uses shlib-linked 'haco' executable.  
 

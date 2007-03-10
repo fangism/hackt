@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.15.2.1 2007/03/10 02:51:54 fang Exp $
+	$Id: CHP.h,v 1.15.2.2 2007/03/10 07:29:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -94,12 +94,6 @@ public:
 #if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
-#endif
-
-#if 0
-	static
-	void
-	accept_sequence(const action_list_type&, StateConstructor&);
 #endif
 
 	// helper methods needed for process_definition

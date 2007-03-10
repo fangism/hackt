@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.161.2.1 2007/03/10 02:51:45 fang Exp $
+#	$Id: Makefile.am,v 1.161.2.2 2007/03/10 07:29:42 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,22 +46,47 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = hackt haco
-bin_SCRIPTS = haccreate hacalloc hflat hacprsim hacchpsim
+bin_PROGRAMS = hackt haco haccreate
+bin_SCRIPTS = hacalloc hflat hacprsim hacchpsim
 if USE_UNROLL_PHASE
 bin_SCRIPTS += hacunroll
 endif
 
 CLEANFILES += $(bin_SCRIPTS)
 
+# dirgen is completely bogus, workaround to coerce directory generation
+noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
+noinst_SCRIPTS = hackt_persistent_table.sh
+
+# convenience libraries
+# want to install libhackt.la next...
+noinst_LTLIBRARIES = libhackt.la \
+	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
+	libhacktcommon.la $(FUNLIBS) \
+	libbogus.la libbogus2.la libbogus3.la libbogus4.la
+
+pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
+	libhacktparsers.la libhacktast.la
+# lib_LTLIBRARIES = libhacktlib.la
+
+hackt_SOURCES = main/hackt.cc
+hackt_LDADD = libhacktexec.la
+#	libhacktexec.la libhacktsim.la libhacktparsers.la \
+#	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
+#	$(LIBFANGUTIL)
+
 # no need to use $(DESTDIR) (typically used for a staged install)
 # installcheck is never run on the staged install, only on the final
+
+haco_SOURCES = main/compile.cc
+haco_CXXFLAGS = -DWITH_MAIN
+haco_LDADD = libhacktlib.la
+# goal: just libhacktparsers.la
 
 # haco: $(top_builddir)/config.status
 #	@{ $(ECHO) "#!$(SH_PATH)" ; \
 #	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" ;} > $@ ; \
 #	$(CHMOD) +x $@
-
 
 if USE_UNROLL_PHASE
 hacunroll: $(top_builddir)/config.status
@@ -70,10 +95,14 @@ hacunroll: $(top_builddir)/config.status
 	$(CHMOD) +x $@
 endif
 
-haccreate: $(top_builddir)/config.status
-	@{ $(ECHO) "#!$(SH_PATH)" ; \
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" ;} > $@ ; \
-	$(CHMOD) +x $@
+haccreate_SOURCES = main/create.cc
+haccreate_CXXFLAGS = -DWITH_MAIN
+haccreate_LDADD = libhacktlib.la
+
+# haccreate: $(top_builddir)/config.status
+#	@{ $(ECHO) "#!$(SH_PATH)" ; \
+#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" ;} > $@ ; \
+#	$(CHMOD) +x $@
 
 hacalloc: $(top_builddir)/config.status
 	@{ $(ECHO) "#!$(SH_PATH)" ; \
@@ -95,21 +124,6 @@ hacchpsim: $(top_builddir)/config.status
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" ;} > $@ ; \
 	$(CHMOD) +x $@
 
-# dirgen is completely bogus, workaround to coerce directory generation
-noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
-noinst_SCRIPTS = hackt_persistent_table.sh
-
-# convenience libraries
-noinst_LTLIBRARIES = libhackt.la \
-	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
-	libhacktcommon.la $(FUNLIBS) \
-	libbogus.la libbogus2.la libbogus3.la libbogus4.la
-
-pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
-	libhacktparsers.la libhacktast.la
-#	libhacktcore.la 
-# lib_LTLIBRARIES = libhacktlib.la
-
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
 LIBBOGUS_LA = libbogus_la
@@ -121,20 +135,11 @@ libhacktexec_la_LIBADD = libhacktsim.la
 
 # pass in a C++ file to coerce --tag=CXX linkage
 libhacktlib_la_SOURCES = main/main_funcs.cc
+# want to split-off:  main/parse_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
 
 libhacktsim_la_LIBADD = libhacktlib.la
-
-#	libhacktparsers.la \
-#	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
-#	$(LIBFANGUTIL)
-
-# libhacktcore_la_SOURCES = libhacktlib.cc
-# libhacktcore_la_LIBADD = libhacktparsers.la
-#	libhacktast.la \
-#	libhackt.la libhacktinstref.la libhacktcommon.la \
-#	$(LIBFANGUTIL)
 
 libhacktparsers_la_LIBADD = libhacktast.la
 
@@ -142,22 +147,15 @@ libhacktast_la_LIBADD = \
 	libhackt.la libhacktinstref.la libhacktcommon.la \
 	$(LIBFANGUTIL)
 
+# want to break, but have cyclic dependency through qualified_id_slice...
+# libhackt_la_LIBADD = libhacktinstref.la libhacktcommon.la \
+#	$(LIBFANGUTIL)
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 libhacktlib.cc:
 	$(TOUCH) $@
 CLEANFILES += libhacktlib.cc
-
-hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la
-#	libhacktexec.la libhacktsim.la libhacktparsers.la \
-#	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
-#	$(LIBFANGUTIL)
-
-haco_SOURCES = main/compile.cc
-haco_CXXFLAGS = -DWITH_MAIN
-haco_LDADD = libhacktlib.la
 
 getopt_test_SOURCES = test/getopt_test.cc
 
@@ -1466,7 +1464,7 @@ installcheck-local:
 			$(ECHO) "======== running: $$run ================" ; \
 			$$run || : ; \
 			$(ECHO) "======== running: $$run version ========" ; \
-			$$run version ; \
+			$$run version || : ; \
 		else : ; \
 		fi; \
 	done

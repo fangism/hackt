@@ -1,61 +1,33 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.1.2.1 2007/03/10 02:52:05 fang Exp $
+	$Id: EventExecutor.cc,v 1.1.2.2 2007/03/10 07:29:47 fang Exp $
+	Early revision history of most of these functions can be found 
+	(some on branches) in Object/lang/CHP.cc.  
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	ENABLE_STACKTRACE_CHPSIM		(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
-#include <iterator>
 #include <algorithm>
-#include <exception>
 
 #include "sim/chpsim/EventExecutor.h"
-
 #include "Object/lang/CHP.h"
-#include "Object/expr/bool_expr.h"
-#include "Object/expr/int_expr.h"
-#include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/expr/nonmeta_index_list.h"
-#include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/pbool_const.h"
-#include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
-#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/persistent_type_hash.h"
-#include "Object/type/data_type_reference.h"
-#include "Object/type/channel_type_reference_base.h"
 #include "Object/traits/chan_traits.h"
-#include "Object/inst/datatype_instance_collection.h"
-#include "Object/inst/channel_instance_collection.h"
-#include "Object/inst/instance_placeholder.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/connection_policy.h"
-#include "Object/def/footprint.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/common/dump_flags.h"
-#include "Object/expr/const_range.h"
-#include "Object/expr/const_param_expr_list.h"
 #if CHP_ACTION_DELAYS
 #include "Object/expr/preal_const.h"
 #endif
-#include "Object/def/template_formals_manager.h"
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
 #include "Object/nonmeta_channel_manipulator.h"
 
-// chpsim headers
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/State.h"
@@ -63,13 +35,8 @@
 
 #include "common/ICE.h"
 #include "common/TODO.h"
-#include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
-#include "util/visitor_functor.h"
-#include "util/value_saver.h"
-#include "util/indent.h"
-#include "util/IO_utils.tcc"
 #include "util/STL/valarray_iterator.h"
 #include "util/reference_wrapper.h"
 #include "util/iterator_more.h"		// for set_inserter
@@ -89,28 +56,13 @@ namespace CHP {
 }
 namespace SIM {
 namespace CHPSIM {
-using std::equal;
 using std::copy;
-using std::find;
-using std::transform;
-using std::back_inserter;
 using std::for_each;
 using entity::expr_dump_context;
 using entity::ChannelState;
 using entity::CHP::selection_list_type;
 using util::set_inserter;
-using util::auto_indent;
-using util::persistent_traits;
 #include "util/using_ostream.h"
-using util::write_value;
-using util::read_value;
-#if 0
-using SIM::CHPSIM::EventNode;
-using SIM::CHPSIM::RECHECK_NEVER_BLOCKED;
-using SIM::CHPSIM::RECHECK_BLOCKED_THIS;
-using SIM::CHPSIM::RECHECK_UNBLOCKED_THIS;
-using SIM::CHPSIM::RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
 using util::reference_wrapper;
 using util::numeric::rand48;
 using util::memory::count_ptr;
@@ -259,7 +211,7 @@ EventRechecker::visit(const concurrent_actions&) {
 
 //=============================================================================
 // class guarded_action::selection_evaluator definition
-#if 1
+
 /**
 	Functor for evaluating guarded statements.  
 	This class can be given hidden visibility (local to module).  
@@ -341,7 +293,6 @@ public:
 	}
 
 };	// end class selection_evaluator_ref
-#endif
 
 //=============================================================================
 DEFAULT_EVENT_SUCCESSOR_DUMPER(guarded_action)
@@ -369,18 +320,9 @@ EventRechecker::visit(const guarded_action&) {
 void
 EventExecutor::visit(const deterministic_selection&) {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if 0
-	const bool b = recheck(c);
-	INVARIANT(b);
-#else
 	// never enqueues itself, only successors
 	// see recheck() below
 	ICE_NEVER_CALL(cerr);
-#endif
-	// violation is possible if guard was true but because
-	// false due to concurrent events
-	// we should alert user with run-time error
-	// TODO: Is it possible to re-subscribe this event for re-checking?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -468,9 +410,6 @@ EventSuccessorDumper::visit(const deterministic_selection& ds) {
 void
 EventExecutor::visit(const nondeterministic_selection& ns) {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if 0
-	ICE_NEVER_CALL(cerr);
-#else
 	// 1) evaluate all clauses, which contain guard expressions
 	//	Use functional pass.
 	// 2) if exactly one is true, return reference to it as the successor
@@ -494,18 +433,8 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	}
 	case 1: {
 		const size_t ei = t.successor_events[G.ready.front()];
-#if 0
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-#else
 		context.rechecks.insert(ei);
 		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
 		break;
 	}
 	default: {
@@ -513,21 +442,10 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		static rand48<unsigned long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = t.successor_events[G.ready[r%m]];
-#if 0
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-#else
 		context.rechecks.insert(ei);
 		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
 	}
 	}	// end switch
-#endif
 }	// end visit(const nondeterministic_selection&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -556,52 +474,6 @@ EventRechecker::visit(const nondeterministic_selection& ns) {
 	guarded_action::selection_evaluator G(context);	// needs reference wrap
 	for_each(ns.begin(), ns.end(),
 		guarded_action::selection_evaluator_ref(G));
-#if 0
-	const size_t m = G.ready.size();
-	EventNode& t(c.get_event());
-	switch (m) {
-	case 0: {
-		// TODO: see determinstic selection
-		return RECHECK_BLOCKED_THIS;	// no successor to enqueue
-	}
-	case 1: {
-		const size_t ei = t.successor_events[G.ready.front()];
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-#if 0
-		c.rechecks.insert(ei);
-		return true;
-#else
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-		return RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
-	}
-	default: {
-		// pick one at random
-		static rand48<long> rgen;
-		const size_t r = rgen();	// random-generate
-		const size_t ei = t.successor_events[G.ready[r%m]];
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-#if 0
-		c.rechecks.insert(ei);
-		return true;
-#else
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-		return RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
-	}
-	}	// end switch
-	return RECHECK_BLOCKED_THIS;
-#else
 	if (G.ready.size()) {
 		// defer actual selection until the execution phase, 
 		// with some delay
@@ -609,7 +481,6 @@ EventRechecker::visit(const nondeterministic_selection& ns) {
 	} else {
 		ret = RECHECK_BLOCKED_THIS;
 	}
-#endif
 }	// end visit(const nondeterministic_selection&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -775,11 +646,6 @@ EventExecutor::visit(const channel_send& cs) {
 	}
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if 0
-	// don't need
-	const global_entry<channel_tag>&
-		ch(c.sm->get_pool<channel_tag>()[chan_index]);
-#endif
 	// evaluate rvalues of channel send statement (may throw!)
 	// write to the ChannelState using canonical_fundamental_type
 	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
@@ -828,11 +694,6 @@ EventExecutor::visit(const channel_receive& cr) {
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if 0
-	// don't need
-	const global_entry<channel_tag>&
-		ch(c.sm->get_pool<channel_tag>()[chan_index]);
-#endif
 	// evaluate lvalues of channel receive statement (may throw!)
 	// read from the ChannelState using canonical_fundamental_type
 	for_each(cr.get_insts().begin(), cr.get_insts().end(), 
