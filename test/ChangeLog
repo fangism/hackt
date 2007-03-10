@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2007-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-01:
+	  Compile now uses shlib-linked 'haco' executable.  
+
+
 2007-02-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10:
