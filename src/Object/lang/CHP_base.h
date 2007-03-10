@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.9.2.2 2007/03/10 20:32:30 fang Exp $
+	$Id: CHP_base.h,v 1.9.2.3 2007/03/10 21:15:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -31,9 +31,7 @@ namespace CHPSIM {
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
-#if CHP_ACTION_DELAYS
 class preal_expr;
-#endif
 /**
 	Namespace for CHP object classes.  
  */
@@ -50,9 +48,7 @@ class action;
 class chp_visitor;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
-#if CHP_ACTION_DELAYS
 typedef	count_ptr<const  preal_expr>		delay_ptr_type;
-#endif
 
 //=============================================================================
 /**
@@ -69,24 +65,20 @@ public:
 	 */
 	typedef	delay_ptr_type			attributes_type;
 protected:
-#if CHP_ACTION_DELAYS
 	attributes_type				delay;
-#endif
+protected:
 	action();
-#if CHP_ACTION_DELAYS
+
 	explicit
 	action(const attributes_type&);
-#endif
 public:
 virtual	~action();
 
-#if CHP_ACTION_DELAYS
 	void
 	set_delay(const delay_ptr_type&);
 
 	const delay_ptr_type&
 	get_delay(void) const { return delay; }
-#endif
 
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
@@ -103,10 +95,8 @@ virtual	CHP_DUMP_EVENT_PROTO = 0;
 	ostream&
 	dump_attributes(ostream&, const expr_dump_context&) const;
 
-#if CHP_ACTION_DELAYS
 	ostream&
 	dump_event_with_attributes(ostream&, const expr_dump_context&) const;
-#endif
 
 #if !CHPSIM_VISIT_EXECUTE
 #define	CHP_DUMP_SUCCESSORS_PROTO					\

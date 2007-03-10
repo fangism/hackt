@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.39 2007/02/26 22:00:43 fang Exp $
+	$Id: devel_switches.h,v 1.39.2.1 2007/03/10 21:14:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -171,16 +171,13 @@
 #define	BUILTIN_CHANNEL_FOOTPRINTS		1
 
 /**
-	Define to 1 to hardcode a member of Object::entity::CHP::action
-	as an optional pointer to a delay expression. 
-	This value will be used to override per-event delays.
-	This is quick-and-dirty.
-	Future alternative: general CHP::attributes.
+	Define to 1 to generalize CHP attributes in 
+	intermediate representation.
+	Rationale: currently CHP actions have one hard-coded delay attribute.
 	Goal: 1
-	Status: done, basically tested, can perm this at any time
-	Priority: high (for chpsim)
+	Priority: low (not needed before graduation)
  */
-#define	CHP_ACTION_DELAYS			1
+#define	CHP_GENERAL_ATTRIBUTES			0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

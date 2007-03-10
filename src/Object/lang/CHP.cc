@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.20.2.2 2007/03/10 07:29:43 fang Exp $
+	$Id: CHP.cc,v 1.20.2.3 2007/03/10 21:15:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -44,9 +44,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
-#if CHP_ACTION_DELAYS
 #include "Object/expr/preal_const.h"
-#endif
 #include "Object/def/template_formals_manager.h"
 #if !CHPSIM_VISIT_EXECUTE
 #include "Object/nonmeta_context.h"
@@ -153,9 +151,7 @@ using util::read_value;
 using util::reference_wrapper;
 using util::numeric::rand48;
 #endif
-#if CHP_ACTION_DELAYS
 using entity::preal_const;
-#endif
 
 //=============================================================================
 /// helper routines
@@ -249,41 +245,31 @@ action::transformer::operator () (const action_ptr_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
-action::action() : persistent()
-#if CHP_ACTION_DELAYS
-	, delay()
-#endif
-{ }
+action::action() : persistent(), delay() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHP_ACTION_DELAYS
 action::action(const attributes_type& a) : persistent(), delay(a) { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
 action::~action() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHP_ACTION_DELAYS
 void
 action::set_delay(const delay_ptr_type& d) {
 	delay = d;
 }
-#endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 action::dump_attributes(ostream& o, const expr_dump_context& d) const {
-#if CHP_ACTION_DELAYS
 	if (delay) {
 		delay->dump(o << "[after=", d) << "] ";
 	}
-#endif
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHP_ACTION_DELAYS
 /**
 	Prefix dump_event with after-attribute.
  */
@@ -293,7 +279,6 @@ action::dump_event_with_attributes(ostream& o,
 	dump_attributes(o, d);
 	return this->dump_event(o, d);
 }
-#endif	// CHP_ACTION_DELAYS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !CHPSIM_VISIT_EXECUTE
@@ -310,27 +295,21 @@ action::dump_successor_edges(ostream& o, const EventNode& e,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action::collect_transient_info_base(persistent_object_manager& m) const {
-#if CHP_ACTION_DELAYS
 	if (delay)
 		delay->collect_transient_info(m);
-#endif
 }
 
 void
 action::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-#if CHP_ACTION_DELAYS
 	m.write_pointer(o, delay);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-#if CHP_ACTION_DELAYS
 	m.read_pointer(i, delay);
-#endif
 }
 
 //=============================================================================
@@ -406,7 +385,6 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
 // consider using __unroll_resolve_rvalue -> preal_const
-#if CHP_ACTION_DELAYS
 #define	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)				\
 	if (delay) {							\
 		const attributes_type					\
@@ -417,9 +395,6 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		}							\
 		ret->set_delay(atts);					\
 	}
-#else
-#define	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
-#endif
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 #if 0
 	try {
@@ -441,10 +416,8 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if (
-#if CHP_ACTION_DELAYS
 		// eventually to attribute list pointer comparison
 		(delay == ret->delay) && 
-#endif
 		equal(begin(), end(), ret->begin()))
 		return p;
 	else	return ret;
@@ -1750,7 +1723,6 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 	const lval_ptr_type lc(lval->unroll_resolve_copy(c, lval));
 	const rval_ptr_type rc(rval->unroll_resolve_copy(c, rval));
 // consider using __unroll_resolve_rvalue -> preal_const
-#if CHP_ACTION_DELAYS
 #define	UNROLL_COPY_ATTRIBUTES						\
 	attributes_type atts;						\
 	if (delay) {							\
@@ -1760,23 +1732,16 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 			return action_ptr_type(NULL);			\
 		}							\
 	}
-#else
-#define	UNROLL_COPY_ATTRIBUTES
-#endif
 	UNROLL_COPY_ATTRIBUTES
 	if (!lc || !rc) {
 		return action_ptr_type(NULL);
 	} else if (
-#if CHP_ACTION_DELAYS
 		(delay == atts) &&
-#endif
 		(lc == lval) && (rc == rval)) {
 		return p;
 	} else {
 		const count_ptr<this_type> ret(new this_type(lc, rc));
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
@@ -1886,16 +1851,12 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error resolving condition-wait." << endl;
 		return action_ptr_type(NULL);
 	} else if (
-#if CHP_ACTION_DELAYS
 		(delay == atts) &&
-#endif
 		(g == cond)) {
 		return p;
 	} else {
 		const count_ptr<this_type> ret(new this_type(g));
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
@@ -2119,9 +2080,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if ((cc == chan) && 
-#if CHP_ACTION_DELAYS
 		(atts == delay) &&
-#endif
 			equal(exprs.begin(), exprs.end(), exprs_c.begin())) {
 		// resolved members match exactly, return copy
 		return p;
@@ -2129,9 +2088,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->exprs.swap(exprs_c);	// faster than copying/assigning
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
@@ -2293,9 +2250,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if ((cc == chan) &&
-#if CHP_ACTION_DELAYS
 		(atts == delay) && 
-#endif
 			equal(insts.begin(), insts.end(), refs.begin())) {
 		// resolved members match exactly, return copy
 		return p;
@@ -2303,9 +2258,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->insts.swap(refs);	// faster than copying/assigning
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
@@ -2439,18 +2392,14 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 	}
 	UNROLL_COPY_ATTRIBUTES
 	if (
-#if CHP_ACTION_DELAYS
 		(atts == delay) && 
-#endif
 		(b == body)) {
 		// return self-copy
 		return p;
 	} else {
 		// return newly constructed copy
 		const count_ptr<this_type> ret(new this_type(b));
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
@@ -2554,9 +2503,7 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if (
-#if CHP_ACTION_DELAYS
 		(delay == r->delay) &&
-#endif
 		equal(begin(), end(), r->begin())) {
 		// return self-copy
 		return p;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.1.2.2 2007/03/10 07:29:47 fang Exp $
+	$Id: EventExecutor.cc,v 1.1.2.3 2007/03/10 21:15:02 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -20,9 +20,7 @@
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/traits/chan_traits.h"
-#if CHP_ACTION_DELAYS
 #include "Object/expr/preal_const.h"
-#endif
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
@@ -66,9 +64,7 @@ using util::set_inserter;
 using util::reference_wrapper;
 using util::numeric::rand48;
 using util::memory::count_ptr;
-#if CHP_ACTION_DELAYS
 using entity::preal_const;
-#endif
 
 //=============================================================================
 /// helper routines

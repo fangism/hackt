@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.2.8.2 2007/03/10 07:29:47 fang Exp $
+	$Id: StateConstructor.cc,v 1.2.8.3 2007/03/10 21:15:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -158,12 +158,10 @@ if (!branches) {
 	const size_t fork_index = allocate_event(
 		EventNode(&ca, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			ca.get_delay() ?
 				ca.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			1));	// small delay
 {
 	STACKTRACE_INDENT_PRINT("fork index: " << fork_index << endl);
@@ -246,12 +244,10 @@ StateConstructor::visit(const deterministic_selection& ds) {
 	const size_t split_index = allocate_event(
 		EventNode(&ds, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			ds.get_delay() ?
 				ds.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			1));
 	// delay value doesn't matter because this event is never
 	// 'executed' in the traditional sense.
@@ -318,12 +314,10 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 	const size_t split_index = allocate_event(
 		EventNode(&ns, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			ns.get_delay() ?
 				ns.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			15));
 	// NOTE: the delay value used here is the window of time from 
 	// first unblocked evaluation (enqueue) to execution, during which
@@ -363,11 +357,9 @@ StateConstructor::visit(const assignment& a) {
 	const size_t new_index = allocate_event(
 		EventNode(&a, SIM::CHPSIM::EVENT_ASSIGN, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			a.get_delay() ? a.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			10));
 	// we give a medium delay to assignment
 	// this may favor explicit communications (projection, refactoring)
@@ -415,12 +407,10 @@ StateConstructor::visit(const condition_wait& cw) {
 	const size_t new_index = allocate_event(
 		EventNode(&cw, SIM::CHPSIM::EVENT_NULL, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			cw.get_delay() ?
 				cw.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			0));
 	// the delay value should have no impact, as this event just
 	// unblocks its successor(s)
@@ -452,12 +442,10 @@ StateConstructor::visit(const channel_send& cs) {
 	const size_t new_index = allocate_event(
 		EventNode(&cs, SIM::CHPSIM::EVENT_SEND, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			cs.get_delay() ?
 				cs.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			2));
 	// default to small delay
 	STACKTRACE_INDENT_PRINT("send index: " << new_index << endl);
@@ -490,12 +478,10 @@ StateConstructor::visit(const channel_receive& cr) {
 	const size_t new_index = allocate_event(
 		EventNode(&cr, SIM::CHPSIM::EVENT_RECEIVE, 
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			cr.get_delay() ?
 				cr.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			5));
 	// default to small delay
 	// this delay would be more meaningful in a handshaking expansion
@@ -538,7 +524,7 @@ StateConstructor::visit(const do_forever_loop& fl) {
 	const size_t loopback_index = allocate_event(
 		EventNode(&fl, SIM::CHPSIM::EVENT_NULL,
 			current_process_index, 
-#if (0 && CHP_ACTION_DELAYS)
+#if 0
 			// assert dynamic_cast
 			fl.get_delay() ?
 				fl.get_delay().is_a<const preal_const>()
@@ -621,12 +607,10 @@ StateConstructor::visit(const do_while_loop& dw) {
 	const size_t loopback_index = allocate_event(
 		EventNode(&dw, SIM::CHPSIM::EVENT_SELECTION_BEGIN,
 			current_process_index, 
-#if CHP_ACTION_DELAYS
 			// assert dynamic_cast
 			dw.get_delay() ? 
 				dw.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-#endif
 			3));
 	// give small delay for selection
 	STACKTRACE_INDENT_PRINT("do-while loopback index: "

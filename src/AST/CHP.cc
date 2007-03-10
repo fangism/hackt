@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.15.2.1 2007/03/10 02:51:46 fang Exp $
+	$Id: CHP.cc,v 1.15.2.2 2007/03/10 21:14:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -29,10 +29,8 @@
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/channel_probe.h"
-#if CHP_ACTION_DELAYS
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/convert_expr.h"
-#endif
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -208,7 +206,6 @@ statement::check_action(context& c) const {
  */
 bool
 statement::check_attributes(context& c, entity::CHP::action& a) const {
-#if CHP_ACTION_DELAYS
 if (attrs) {
 if (attrs->size() == 1) {
 	const stmt_attribute::return_type
@@ -249,9 +246,6 @@ cerr << "Present limitation: CHP attributes expect only one delay attribute."
 } else {
 	return false;
 }
-#else
-	return false;
-#endif
 }	// end method check_attributes
 
 //=============================================================================

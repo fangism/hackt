@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.15.2.2 2007/03/10 07:29:44 fang Exp $
+	$Id: CHP.h,v 1.15.2.3 2007/03/10 21:15:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -10,9 +10,7 @@
 #include <list>
 #include <vector>
 #include "Object/lang/CHP_base.h"
-#if CHP_ACTION_DELAYS
 #include <string>
-#endif
 #include "Object/ref/references_fwd.h"
 #include "Object/expr/expr_fwd.h"
 #include "Object/unroll/meta_loop_base.h"
