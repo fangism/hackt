@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.4.2.1 2007/03/10 20:32:35 fang Exp $
+	$Id: State.h,v 1.4.2.2 2007/03/10 22:18:51 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -257,7 +257,6 @@ private:
 		Not preserved by checkpointing.  
 	 */
 	event_watch_list_type			event_breaks;
-#if CHPSIM_BREAK_VALUES
 	/**
 		Set of values and states to watch.  
 		Compare this against the __updated_list.
@@ -270,7 +269,6 @@ private:
 		Not preserved by checkpointing.  
 	 */
 	global_references_set			value_breaks;
-#endif
 	/**
 		Private pointer to the event trace manager.  
 		Data checkpointed persistently.  
@@ -405,7 +403,6 @@ public:
 	ostream&
 	dump_break_events(ostream&) const;
 
-#if CHPSIM_BREAK_VALUES
 	void
 	watch_value(const global_indexed_reference&);
 
@@ -429,7 +426,6 @@ public:
 
 	ostream&
 	dump_break_values(ostream&) const;
-#endif	// CHPSIM_BREAK_VALUES
 
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.4.2.2 2007/03/10 20:32:36 fang Exp $
+	$Id: devel_switches.h,v 1.4.2.3 2007/03/10 22:18:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -48,15 +48,6 @@
 		as BlockDependenceCollector (should rename).  
  */
 #define	CHPSIM_READ_WRITE_DEPENDENCIES		0
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to enable instance value break/watch points.  
-	Goal: 1
-	Priority: low-medium (for diagnostics)
-	Status: complete, basically tested, can perm.
- */
-#define CHPSIM_BREAK_VALUES			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

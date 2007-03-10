@@ -5,6 +5,10 @@
 
 2007-03-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-01-shlib-01-05:
+	  Perm'd CHP_BREAK_VALUES.
+
+
 	* HACKT-00-01-04-main-00-81-01-shlib-01-04:
 	  Perm'd CHP_ACTION_DELAYS.
 	  TODO: dylib hacalloc, hacflat, hacprsim, and hacchpsim.

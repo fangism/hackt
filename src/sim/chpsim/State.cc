@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.5.2.1 2007/03/10 20:32:35 fang Exp $
+	$Id: State.cc,v 1.5.2.2 2007/03/10 22:18:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -249,10 +249,8 @@ State::State(const module& m) :
 		__rechecks(), 
 		event_watches(), 
 		event_breaks(),
-#if CHPSIM_BREAK_VALUES
 		value_watches(), 
 		value_breaks(), 
-#endif
 		trace_manager(), 
 		trace_flush_interval(1L<<16)
 		{
@@ -336,10 +334,8 @@ State::reset(void) {
 	flags = FLAGS_DEFAULT;
 	event_watches.clear();
 	event_breaks.clear();
-#if CHPSIM_BREAK_VALUES
 	value_watches.clear();
 	value_breaks.clear();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -508,7 +504,6 @@ try {
 	throw;
 }
 	bool value_trig = false;
-#if CHPSIM_BREAK_VALUES
 	bool value_break = false;
 {
 	typedef	global_references_set::ref_bin_type::const_iterator
@@ -548,7 +543,6 @@ try {
 		}
 	}
 }
-#endif	// CHPSIM_BREAK_VALUES
 	// is event being watched? or were any watched values updated?
 	event_trig = (event_watches.find(ei) != event_watches.end());
 	if (watching_all_events() || event_trig || value_trig) {
@@ -581,11 +575,7 @@ try {
 	}
 	const bool event_break =
 		event_trig && (event_breaks.find(ei) != event_breaks.end());
-#if CHPSIM_BREAK_VALUES
 	return value_break || event_break;
-#else
-	return event_break;
-#endif
 }	// end step() method
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -796,7 +786,6 @@ State::dump_break_events(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_BREAK_VALUES
 /**
 	\param g pair<type,index>, must be well-formed.  
  */
@@ -932,7 +921,6 @@ State::dump_break_values(ostream& o) const {
 #undef	PRINT_WATCHED_VALUES
 	return o;
 }
-#endif	// CHPSIM_BREAK_VALUES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
