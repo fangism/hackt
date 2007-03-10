@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.4 2007/02/26 22:00:59 fang Exp $
+	$Id: Event.cc,v 1.4.2.1 2007/03/10 02:52:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,6 +15,9 @@
 #include "Object/lang/CHP_base.h"
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/graph_options.h"
+#if CHPSIM_VISIT_EXECUTE
+#include "sim/chpsim/EventExecutor.h"
+#endif
 #include "util/STL/valarray_iterator.h"
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
@@ -178,7 +181,13 @@ if (countdown) {
 	// return RECHECK_COUNT_BLOCK;
 } else {
 	if (action_ptr) {
+#if CHPSIM_VISIT_EXECUTE
+		EventRechecker rc(c);
+		action_ptr->accept(rc);
+		const char r = rc.ret;
+#else
 		const char r = action_ptr->recheck(c);
+#endif
 		if (r & __RECHECK_ENQUEUE_THIS) {
 			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
 			c.enqueue(ei);
@@ -225,7 +234,12 @@ EventNode::execute(const nonmeta_context& c,
 		// at the same time, enqueue successors, depending on event_type
 		// execute is responsible for scheduling successors for recheck
 		// and decrement the predecessor-arrival countdown
+#if CHPSIM_VISIT_EXECUTE
+		EventExecutor x(c, updates);
+		action_ptr->accept(x);
+#else
 		action_ptr->execute(c, updates);
+#endif
 	} else {	// event is NULL or action_ptr is NULL
 		STACKTRACE_INDENT_PRINT("no action" << endl);
 		// else do nothing
@@ -368,8 +382,14 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	// no deps
 	o << "\"];" << endl;
 	if (action_ptr) {
+#if CHPSIM_VISIT_EXECUTE
+		EventSuccessorDumper d(o, *this, i,
+			expr_dump_context::default_value);
+		action_ptr->accept(d);
+#else
 		action_ptr->dump_successor_edges(o, *this, i, 
 			expr_dump_context::default_value);
+#endif
 	} else {
 		dump_successor_edges_default(o, i);
 	}

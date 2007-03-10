@@ -1,7 +1,7 @@
 /**
 	\file "AST/HSE.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: HSE.cc,v 1.3 2006/02/20 20:50:57 fang Exp $
+	$Id: HSE.cc,v 1.3.68.1 2007/03/10 02:51:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_hse.cc,v 1.14.48.1 2005/12/11 00:45:07 fang Exp
  */
@@ -37,7 +37,15 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::nondet_selection, "(hse-nondet-sel)")
 // SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::prob_selection, "(hse-prob-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::loop, "(hse-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::do_until, "(hse-do-until)")
-}
+
+namespace memory {
+// explicit template instantiations
+using HAC::parser::HSE::statement;
+using HAC::parser::HSE::guarded_command;
+template class count_ptr<const statement>;
+template class count_ptr<const guarded_command>;
+}	// end namespace memory
+}	// end namespace util
 
 
 namespace HAC {

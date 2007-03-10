@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.14 2006/08/14 04:50:07 fang Exp $
+	$Id: cflat.cc,v 1.14.38.1 2007/03/10 02:51:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -704,6 +704,7 @@ if (modes) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Prints an alias as specified by the flags.  
 	Publicly accessible.  
@@ -734,6 +735,9 @@ if (cf.dump_self_connect || alias != canonical) {
 	o << endl;
 }       
 }
+#else
+// relocated to "Object/inst/alias_printer.cc"
+#endif
 
 //=============================================================================
 }	// end namespace HAC

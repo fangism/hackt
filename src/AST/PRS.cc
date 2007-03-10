@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.23 2006/11/21 05:00:10 fang Exp $
+	$Id: PRS.cc,v 1.23.16.1 2007/03/10 02:51:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -65,7 +65,15 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::conditional, "(prs-conditional)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::body, "(prs-body)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::guarded_body, "(prs-guarded-body)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
-}
+
+namespace memory {
+// explicit template instantiations
+using HAC::parser::PRS::attribute;
+using HAC::parser::PRS::body_item;
+template class count_ptr<const attribute>;
+template class count_ptr<const body_item>;
+}	// end namespace memory
+}	// end namespace util
 
 namespace HAC {
 namespace parser {

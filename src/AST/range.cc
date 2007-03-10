@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.8 2006/11/02 22:01:47 fang Exp $
+	$Id: range.cc,v 1.8.20.1 2007/03/10 02:51:49 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.8 2006/11/02 22:01:47 fang Exp $
+	$Id: range.cc,v 1.8.20.1 2007/03/10 02:51:49 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -49,7 +49,13 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT_DEFINITION(HAC::parser::range, "(range)")
-}
+
+namespace memory {
+// explicit template instantiations
+using HAC::parser::range;
+template class count_ptr<const range>;
+}	// end namespace memory
+}	// end namespace HAC
 
 //=============================================================================
 namespace HAC {
@@ -678,6 +684,13 @@ dense_range_list::check_formal_dense_ranges(const context& c) const {
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
 // template class node_list<const range>;			// range_list
+
+template
+node_list<const range>::~node_list();
+
+template
+ostream&
+node_list<const range>::what(ostream&) const;
 
 template
 line_position

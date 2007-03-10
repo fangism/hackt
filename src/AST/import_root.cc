@@ -1,6 +1,6 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.5 2006/07/30 16:04:42 fang Exp $
+	$Id: import_root.cc,v 1.5.40.1 2007/03/10 02:51:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,7 +21,12 @@
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root, "(imported-root)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root_list, "(imported-root-list)")
-}
+
+namespace memory {
+// explicit template instantiation
+template class count_ptr<const HAC::parser::imported_root>;
+}	// end namespace memory
+}	// end namespace util
 
 namespace HAC {
 namespace parser {

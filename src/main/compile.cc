@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.13 2006/07/30 05:49:41 fang Exp $
+	$Id: compile.cc,v 1.13.40.1 2007/03/10 02:52:01 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include "main/compile.h"
 #include "main/main_funcs.h"
 #include "main/compile_options.h"
+#include "main/global_options.h"
 #include "lexer/file_manager.h"
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
@@ -64,8 +65,10 @@ compile::name[] = "compile";
 const char
 compile::brief_str[] = "Compiles HACKT source to object file.";
 
+#ifndef	WITH_MAIN
 const size_t
 compile::program_id = register_hackt_program_class<compile>();
+#endif	// WITH_MAIN
 
 /**
 	Options modifier map must be initialized before any registrations.  
@@ -319,4 +322,18 @@ compile_options::export_include_paths(file_manager& fm) const {
 //=============================================================================
 
 }	// end namespace HAC
+
+//=============================================================================
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::compile::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
+
+
 

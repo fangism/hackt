@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.9 2007/02/26 22:00:50 fang Exp $
+	$Id: CHP_base.h,v 1.9.2.1 2007/03/10 02:51:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -10,26 +10,30 @@
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
 // #include "util/STL/vector_fwd.h"
-#include "Object/ref/reference_enum.h"
 #include "Object/devel_switches.h"
 #include "sim/chpsim/devel_switches.h"
+
+#if !CHPSIM_VISIT_EXECUTE
+#include "Object/ref/reference_enum.h"
 #if CHPSIM_STATE_UPDATE_BIN_SETS
 #include "Object/ref/reference_set.h"
 #endif
+#endif
 
 namespace HAC {
+#if !CHPSIM_VISIT_EXECUTE
 namespace SIM {
 namespace CHPSIM {
 	// we need some sort of CHP_visitor refinement!
-	class StateConstructor;
+//	class StateConstructor;
 	class nonmeta_context;
 	class EventNode;
 }	// end namespace CHPSIM
 }	// end namespace SIM
+#endif
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
-class nonmeta_state_manager;
 #if CHP_ACTION_DELAYS
 class preal_expr;
 #endif
@@ -37,14 +41,16 @@ class preal_expr;
 	Namespace for CHP object classes.  
  */
 namespace CHP {
-using entity::nonmeta_state_manager;
 using std::ostream;
 using std::istream;
-using SIM::CHPSIM::StateConstructor;
+#if !CHPSIM_VISIT_EXECUTE
+// using SIM::CHPSIM::StateConstructor;
 using SIM::CHPSIM::nonmeta_context;
+#endif
 using util::persistent;
 using util::persistent_object_manager;
 class action;
+class chp_visitor;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
 #if CHP_ACTION_DELAYS
@@ -58,10 +64,12 @@ typedef	count_ptr<const  preal_expr>		delay_ptr_type;
 class action : public persistent {
 public:
 	typedef	action_ptr_type			unroll_return_type;
+#if !CHPSIM_VISIT_EXECUTE
 #if CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	entity::global_references_set	execute_arg_type;
 #else
 	typedef	global_references_array_type	execute_arg_type;
+#endif
 #endif
 	/**
 		TODO: Eventually generalize this to attribute list.  
@@ -107,12 +115,14 @@ virtual	CHP_DUMP_EVENT_PROTO = 0;
 	dump_event_with_attributes(ostream&, const expr_dump_context&) const;
 #endif
 
+#if !CHPSIM_VISIT_EXECUTE
 #define	CHP_DUMP_SUCCESSORS_PROTO					\
 	ostream&							\
 	dump_successor_edges(ostream&, const SIM::CHPSIM::EventNode&,	\
 		const size_t, const expr_dump_context&) const
 
 virtual	CHP_DUMP_SUCCESSORS_PROTO;
+#endif
 
 	/**
 		unroll_context-binding functor.  
@@ -136,10 +146,11 @@ virtual	CHP_UNROLL_ACTION_PROTO = 0;
 
 #define	CHP_ACTION_ACCEPT_PROTO						\
 	void								\
-	accept(StateConstructor&) const
+	accept(chp_visitor&) const
 
 virtual	CHP_ACTION_ACCEPT_PROTO = 0;
 
+#if !CHPSIM_VISIT_EXECUTE
 #define	CHP_EXECUTE_PROTO						\
 	void								\
 	execute(const nonmeta_context&, execute_arg_type&) const
@@ -154,6 +165,7 @@ virtual	CHP_EXECUTE_PROTO = 0;
 	recheck(const nonmeta_context&) const
 
 virtual	CHP_RECHECK_PROTO = 0;
+#endif
 
 // these were added just for the delay member pointer
 	void

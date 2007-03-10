@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.15 2007/02/26 22:00:42 fang Exp $
+	$Id: CHP.cc,v 1.15.2.1 2007/03/10 02:51:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -75,6 +75,16 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_statement, "(chp-metaloop-stmt)"
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
+
+namespace memory {
+// explicit template instantiations
+using HAC::parser::CHP::stmt_attribute;
+using HAC::parser::CHP::guarded_command;
+using HAC::parser::CHP::statement;
+template class count_ptr<const stmt_attribute>;
+template class count_ptr<const guarded_command>;
+template class count_ptr<const statement>;
+}	// end namespace memory
 }	// end namespace util
 
 namespace HAC {
@@ -1462,6 +1472,9 @@ log::__check_action(context& c) const {
 
 template 
 node_list<const CHP::stmt_attribute>::node_list(const CHP::stmt_attribute*);
+
+template 
+node_list<const CHP::stmt_attribute>::~node_list();
 
 template 
 ostream&

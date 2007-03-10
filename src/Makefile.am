@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.161 2007/03/03 04:12:13 fang Exp $
+#	$Id: Makefile.am,v 1.161.2.1 2007/03/10 02:51:45 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,22 +46,29 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = hackt
-bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim hacchpsim
+bin_PROGRAMS = hackt haco
+bin_SCRIPTS = haccreate hacalloc hflat hacprsim hacchpsim
+if USE_UNROLL_PHASE
+bin_SCRIPTS += hacunroll
+endif
 
 CLEANFILES += $(bin_SCRIPTS)
 
 # no need to use $(DESTDIR) (typically used for a staged install)
 # installcheck is never run on the staged install, only on the final
-haco: $(top_builddir)/config.status
-	@{ $(ECHO) "#!$(SH_PATH)" ; \
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" ;} > $@ ; \
-	$(CHMOD) +x $@
 
+# haco: $(top_builddir)/config.status
+#	@{ $(ECHO) "#!$(SH_PATH)" ; \
+#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" ;} > $@ ; \
+#	$(CHMOD) +x $@
+
+
+if USE_UNROLL_PHASE
 hacunroll: $(top_builddir)/config.status
 	@{ $(ECHO) "#!$(SH_PATH)" ; \
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll \"$$""@\"" ;} > $@ ; \
 	$(CHMOD) +x $@
+endif
 
 haccreate: $(top_builddir)/config.status
 	@{ $(ECHO) "#!$(SH_PATH)" ; \
@@ -93,12 +100,14 @@ noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
-noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
+noinst_LTLIBRARIES = libhackt.la \
 	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
-	libhacktcommon.la libhacktsim.la $(FUNLIBS) \
+	libhacktcommon.la $(FUNLIBS) \
 	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
-pkglib_LTLIBRARIES = libhacktlib.la
+pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
+	libhacktparsers.la libhacktast.la
+#	libhacktcore.la 
 # lib_LTLIBRARIES = libhacktlib.la
 
 # this name is needed for libtool objects
@@ -108,11 +117,32 @@ LIBBOGUS2_LA = libbogus2_la
 LIBBOGUS3_LA = libbogus3_la
 LIBBOGUS4_LA = libbogus4_la
 
+libhacktexec_la_LIBADD = libhacktsim.la
+
 # pass in a C++ file to coerce --tag=CXX linkage
-libhacktlib_la_SOURCES = libhacktlib.cc
-libhacktlib_la_LIBADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
+libhacktlib_la_SOURCES = main/main_funcs.cc
+libhacktlib_la_LIBADD = libhacktparsers.la
+# libhacktexec.la
+
+libhacktsim_la_LIBADD = libhacktlib.la
+
+#	libhacktparsers.la \
+#	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
+#	$(LIBFANGUTIL)
+
+# libhacktcore_la_SOURCES = libhacktlib.cc
+# libhacktcore_la_LIBADD = libhacktparsers.la
+#	libhacktast.la \
+#	libhackt.la libhacktinstref.la libhacktcommon.la \
+#	$(LIBFANGUTIL)
+
+libhacktparsers_la_LIBADD = libhacktast.la
+
+libhacktast_la_LIBADD = \
+	libhackt.la libhacktinstref.la libhacktcommon.la \
 	$(LIBFANGUTIL)
+
+
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 libhacktlib.cc:
@@ -120,10 +150,14 @@ libhacktlib.cc:
 CLEANFILES += libhacktlib.cc
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktlib.la
+hackt_LDADD = libhacktexec.la
 #	libhacktexec.la libhacktsim.la libhacktparsers.la \
 #	libhacktast.la libhackt.la libhacktinstref.la libhacktcommon.la \
 #	$(LIBFANGUTIL)
+
+haco_SOURCES = main/compile.cc
+haco_CXXFLAGS = -DWITH_MAIN
+haco_LDADD = libhacktlib.la
 
 getopt_test_SOURCES = test/getopt_test.cc
 
@@ -480,12 +514,11 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
+	Object/lang/CHP_visitor.cc \
 	Object/lang/SPEC.cc \
 	Object/lang/SPEC_common.cc \
 	Object/lang/SPEC_footprint.cc \
-	Object/lang/SPEC_registry.cc \
-	sim/chpsim/DependenceCollector.cc
-# this really wants to belong to the sim lib, but link dependencies...
+	Object/lang/SPEC_registry.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -731,7 +764,9 @@ SIM_CC_FILES = \
 	sim/chpsim/nonmeta_context.cc \
 	sim/chpsim/Command.cc \
 	sim/chpsim/Dependence.cc \
+	sim/chpsim/DependenceCollector.cc \
 	sim/chpsim/Event.cc \
+	sim/chpsim/EventExecutor.cc \
 	sim/chpsim/State.cc \
 	sim/chpsim/StateConstructor.cc \
 	sim/chpsim/Trace.cc
@@ -760,7 +795,6 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 MAIN_EXEC_CC_FILES = \
 	main/force_load.cc \
 	main/program_registry.cc \
-	main/main_funcs.cc \
 	main/parse_test.cc \
 	main/flatten.cc \
 	main/compile.cc \
@@ -785,7 +819,9 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
 	main/hackt_fwd.h \
 	main/cflat_options.h \
-	main/compile_options.h
+	main/compile_options.h \
+	main/global_options.h \
+	main/main_funcs.h
 
 COMMON_H_FILES = \
 	common/sizes-common.h
@@ -828,7 +864,7 @@ libhacktexec_la_SOURCES = \
 echo-libhacktexec-sources:
 	@$(ECHO) $(libhacktexec_la_SOURCES)
 
-libhacktexec_la_LIBADD = $(LIBMISCFUN)
+libhacktexec_la_LIBADD += $(LIBMISCFUN)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 

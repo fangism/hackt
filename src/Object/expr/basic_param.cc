@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.25 2007/01/21 05:58:42 fang Exp $
+ 	$Id: basic_param.cc,v 1.25.8.1 2007/03/10 02:51:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -80,6 +80,9 @@ namespace memory {
 template class count_ptr<const HAC::entity::pint_expr>;
 template class count_ptr<const HAC::entity::pbool_expr>;
 template class count_ptr<const HAC::entity::preal_expr>;
+template class count_ptr<const HAC::entity::pint_const>;
+template class count_ptr<const HAC::entity::pbool_const>;
+template class count_ptr<const HAC::entity::preal_const>;
 template class count_ptr<const HAC::entity::const_param>;
 }	// end namespace memory
 }	// end namespace util

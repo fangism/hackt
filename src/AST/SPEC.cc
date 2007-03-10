@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.7 2006/11/21 05:00:12 fang Exp $
+	$Id: SPEC.cc,v 1.7.16.1 2007/03/10 02:51:48 fang Exp $
  */
 
 #include <iostream>
@@ -27,6 +27,13 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
+namespace util {
+namespace memory {
+// explicit template instantiations
+using HAC::parser::SPEC::directive;
+template class count_ptr<const directive>;
+}	// end namespace memory
+}	// end namespace util
 
 namespace HAC {
 namespace parser {

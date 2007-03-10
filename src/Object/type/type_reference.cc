@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.24 2007/01/21 05:59:51 fang Exp $
+ 	$Id: type_reference.cc,v 1.24.8.1 2007/03/10 02:51:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -89,6 +89,13 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		USER_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY, 0)
+
+namespace memory {
+using namespace HAC::entity;
+	// explicit template instantiations
+template class count_ptr<const fundamental_type_reference>;
+template class count_ptr<const process_type_reference>;
+}	// end namespace memory
 }	// end namespace util
 
 namespace HAC {

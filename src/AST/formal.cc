@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.cc"
 	Class method definitions for HAC::parser for formal-related classes.
-	$Id: formal.cc,v 1.6 2006/10/18 20:57:35 fang Exp $
+	$Id: formal.cc,v 1.6.24.1 2007/03/10 02:51:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.cc,v 1.27.10.1 2005/12/11 00:45:06 fang Exp
  */
@@ -55,7 +55,18 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::port_formal_decl, "(port-formal-decl)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_id, "(template-formal-id)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_decl, "(template-formal-decl)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_decl_list_pair, "(template-formal-decl-list-pair)")
-}
+
+namespace memory {
+// explicit template instantiations
+using namespace HAC::parser;
+template class count_ptr<const data_param_id>;
+template class count_ptr<const data_param_decl>;
+template class count_ptr<const port_formal_id>;
+template class count_ptr<const port_formal_decl>;
+template class count_ptr<const template_formal_id>;
+template class count_ptr<const template_formal_decl>;
+}	// end namespace memory
+}	// end namespace util
 
 //=============================================================================
 namespace HAC {

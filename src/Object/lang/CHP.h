@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.15 2007/02/26 22:00:49 fang Exp $
+	$Id: CHP.h,v 1.15.2.1 2007/03/10 02:51:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -76,7 +76,7 @@ private:
 	typedef	action				parent_type;
 	typedef	action_list_type		list_type;
 	typedef	action_sequence			this_type;
-protected:
+public:
 	typedef	list_type::const_iterator	const_iterator;
 public:
 	action_sequence();
@@ -91,12 +91,16 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
+#if 0
 	static
 	void
 	accept_sequence(const action_list_type&, StateConstructor&);
+#endif
 
 	// helper methods needed for process_definition
 	void
@@ -121,6 +125,8 @@ private:
 	typedef	action				parent_type;
 	typedef	action_list_type		list_type;
 	typedef	concurrent_actions		this_type;
+public:
+	typedef	action_list_type::const_iterator	const_iterator;
 public:
 	concurrent_actions();
 	~concurrent_actions();
@@ -151,8 +157,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	good_bool
 	unroll(const unroll_context&, entity::footprint&) const;
@@ -179,7 +187,9 @@ public:
 	typedef	count_ptr<const bool_expr>	guard_ptr_type;
 	typedef	count_ptr<const action>		stmt_ptr_type;
 	typedef	count_ptr<const guarded_action>	unroll_return_type;
+#if !CHPSIM_VISIT_EXECUTE
 	typedef	action::execute_arg_type	execute_arg_type;
+#endif
 	/// Functor for evaluating guards
 	struct selection_evaluator;
 	struct selection_evaluator_ref;
@@ -205,6 +215,9 @@ public:
 	const guard_ptr_type&
 	get_guard(void) const { return guard; }
 
+	const stmt_ptr_type&
+	get_action(void) const { return stmt; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -217,8 +230,10 @@ public:
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	struct unroll_resolver {
 		const unroll_context&			_context;
@@ -259,11 +274,15 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_DUMP_SUCCESSORS_PROTO;
+#endif
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
@@ -288,11 +307,15 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_DUMP_SUCCESSORS_PROTO;
+#endif
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
@@ -337,8 +360,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_selection
@@ -381,8 +406,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_statement
@@ -409,6 +436,12 @@ public:
 	assignment(const lval_ptr_type&, const rval_ptr_type&);
 	~assignment();
 
+	const lval_ptr_type&
+	get_lval(void) const { return lval; }
+
+	const rval_ptr_type&
+	get_rval(void) const { return rval; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -418,8 +451,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
@@ -435,6 +470,7 @@ public:
 class condition_wait : public action {
 	typedef	action					parent_type;
 	typedef	condition_wait				this_type;
+public:
 	typedef	count_ptr<const bool_expr>		cond_ptr_type;
 private:
 	cond_ptr_type					cond;
@@ -446,6 +482,9 @@ public:
 
 	~condition_wait();
 
+	const cond_ptr_type&
+	get_guard(void) const { return cond; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -455,8 +494,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -487,6 +528,12 @@ public:
 	channel_send(const chan_ptr_type&);
 	~channel_send();
 
+	const chan_ptr_type&
+	get_chan(void) const { return chan; }
+
+	const expr_list_type&
+	get_exprs(void) const { return exprs; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -496,8 +543,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	template <class L>
 	good_bool
@@ -533,6 +582,12 @@ public:
 	channel_receive(const chan_ptr_type&);
 	~channel_receive();
 
+	const chan_ptr_type&
+	get_chan(void) const { return chan; }
+
+	const inst_ref_list_type&
+	get_insts(void) const { return insts; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -542,8 +597,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	template <class L>
 	good_bool
@@ -572,11 +629,15 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_DUMP_SUCCESSORS_PROTO;
+#endif
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
@@ -599,6 +660,9 @@ public:
 	do_forever_loop(const body_ptr_type&);
 	~do_forever_loop();
 
+	const body_ptr_type&
+	get_body(void) const { return body; }
+
 	ostream&
 	what(ostream&) const;
 
@@ -608,8 +672,10 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
+#if !CHPSIM_VISIT_EXECUTE
 	CHP_EXECUTE_PROTO;
 	CHP_RECHECK_PROTO;
+#endif
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

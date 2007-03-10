@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.4 2007/02/26 22:01:05 fang Exp $
+	$Id: devel_switches.h,v 1.4.2.1 2007/03/10 02:52:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -94,6 +94,18 @@
 	Priority: ?
  */
 #define	CHPSIM_TRACE_WITH_CHECKPOINT		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to implement CHP event execution and rechecking
+	as a visitor instead of a direct virtual method.  
+	Cost: execution slower due to double virtual dispatch
+	Benefit: acyclic library dependence
+	Goal: 1?
+	Status: in progress
+	Priority: high -- for shared library arrangements
+ */
+#define	CHPSIM_VISIT_EXECUTE			1
 
 //=============================================================================
 

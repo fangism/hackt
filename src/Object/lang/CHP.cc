@@ -1,18 +1,20 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.20 2007/02/26 22:00:48 fang Exp $
+	$Id: CHP.cc,v 1.20.2.1 2007/03/10 02:51:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	ENABLE_STACKTRACE_CHPSIM		(0 && ENABLE_STACKTRACE)
 
+#if 0
 /**
 	Various levels of chpsim event generation optimizations, 
 	such as fusion.  
 	TODO: control in execute-time switch.  
  */
 #define	OPTIMIZE_CHPSIM_EVENTS			1
+#endif
 
 #include <iterator>
 #include <algorithm>
@@ -58,11 +60,13 @@
 #include "Object/global_channel_entry.h"
 #include "Object/nonmeta_channel_manipulator.h"
 
+#if 1
 // chpsim headers
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/nonmeta_context.h"
+#endif
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -155,11 +159,13 @@ using util::persistent_traits;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+#if 1
 using SIM::CHPSIM::EventNode;
 using SIM::CHPSIM::RECHECK_NEVER_BLOCKED;
 using SIM::CHPSIM::RECHECK_BLOCKED_THIS;
 using SIM::CHPSIM::RECHECK_UNBLOCKED_THIS;
 using SIM::CHPSIM::RECHECK_DEFERRED_TO_SUCCESSOR;
+#endif
 using util::reference_wrapper;
 using util::numeric::rand48;
 #if CHP_ACTION_DELAYS
@@ -179,6 +185,7 @@ set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&,
 	const unroll_context&, const bool);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	For all non-selection events that execute, schedule all successor
 	events for recheck.
@@ -239,6 +246,7 @@ dump_selection_successor_edges(const selection_list_type& l, ostream& o,
 	// check for else clause
 	return o;
 }
+#endif
 
 //=============================================================================
 // class action method definitions
@@ -303,6 +311,7 @@ action::dump_event_with_attributes(ostream& o,
 #endif	// CHP_ACTION_DELAYS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	By default print all successor edge, unadorned.  
  */
@@ -311,6 +320,7 @@ action::dump_successor_edges(ostream& o, const EventNode& e,
 		const size_t i, const expr_dump_context&) const {
 	return e.dump_successor_edges_default(o, i);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -457,6 +467,7 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Constructs a sequence of events backwards from back to
 	front, where each event 'connects' to its successor(s).
@@ -487,8 +498,15 @@ void
 action_sequence::accept(StateConstructor& s) const {
 	accept_sequence(*this, s);
 }
+#else
+void
+action_sequence::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
@@ -510,6 +528,7 @@ action_sequence::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_UNBLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -676,6 +695,7 @@ concurrent_actions::unroll(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Fork and join graph structure.  
 	TODO: this dependencies for this event is the union of 
@@ -755,8 +775,15 @@ if (!branches) {
 	s.last_event_index = fork_index;
 	// construct an event join graph-node?
 }
+#else
+void
+concurrent_actions::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
@@ -781,6 +808,7 @@ concurrent_actions::recheck(const nonmeta_context&) const {
 	// no-op
 	return RECHECK_NEVER_BLOCKED;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -910,6 +938,7 @@ if (stmt) {
 }	// end method unroll_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\pre a slection-merge event is pointed to by s.last_event_index.
 	Plan: construct guards in all branches first
@@ -927,6 +956,12 @@ guarded_action::accept(StateConstructor& s) const {
 	// it is the selection's responsibility to evaluate the guards
 	}
 }
+#else
+void
+guarded_action::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1118,6 +1153,7 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Almost exact same code for non-deterministic selection.
 	TODO: static dependency sets of guards.
@@ -1188,8 +1224,15 @@ deterministic_selection::accept(StateConstructor& s) const {
 	// leave trail of this event for predecessor
 	s.last_event_index = split_index;
 }
+#else
+void
+deterministic_selection::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing other than evaluate guards, via recheck().  
@@ -1266,13 +1309,16 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 		return RECHECK_BLOCKED_THIS;		// unreachable
 	}	// end switch
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 ostream&
 deterministic_selection::dump_successor_edges(ostream& o, const EventNode& e, 
 		const size_t i, const expr_dump_context& c) const {
 	return dump_selection_successor_edges(*this, o, e, i, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1358,6 +1404,7 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Code ripped from deterministic_selection::accept().
  */
@@ -1426,8 +1473,15 @@ nondeterministic_selection::accept(StateConstructor& s) const {
 	// leave trail of this event for predecessor
 	s.last_event_index = split_index;
 }
+#else
+void
+nondeterministic_selection::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	TODO: we may want this to behave differently than determinstic sel.
 	We may want to introduce a delay window from recheck to enqueue
@@ -1590,14 +1644,17 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	}
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 ostream&
 nondeterministic_selection::dump_successor_edges(
 		ostream& o, const EventNode& e, 
 		const size_t i, const expr_dump_context& c) const {
 	return dump_selection_successor_edges(*this, o, e, i, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1731,6 +1788,7 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Never supposed to be called, because these are expanded.  
  */
@@ -1738,8 +1796,15 @@ void
 metaloop_selection::accept(StateConstructor& s) const {
 	ICE_NEVER_CALL(cerr);
 }
+#else
+void
+metaloop_selection::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Never called, always expanded.  
  */
@@ -1757,6 +1822,7 @@ metaloop_selection::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_BLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1894,6 +1960,7 @@ metaloop_statement::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Never supposed to be called, because these are expanded.  
  */
@@ -1901,8 +1968,15 @@ void
 metaloop_statement::accept(StateConstructor& s) const {
 	ICE_NEVER_CALL(cerr);
 }
+#else
+void
+metaloop_statement::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Never called, always expanded.  
  */
@@ -1920,6 +1994,7 @@ metaloop_statement::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_BLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2028,6 +2103,7 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 assignment::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
@@ -2070,8 +2146,15 @@ assignment::accept(StateConstructor& s) const {
 	// updates successors' predecessor-counts
 	s.count_predecessors(new_event);
 }
+#else
+void
+assignment::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	lvalue must be bool, int, or enum reference.  
 	\param u collection of references updated by the assignment execution,
@@ -2095,6 +2178,7 @@ assignment::recheck(const nonmeta_context&) const {
 	// no-op
 	return RECHECK_NEVER_BLOCKED;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2183,6 +2267,7 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	TODO: alternative: fuse this event with successor if single.  
 		rationale: every CHPSIM event is "guarded"
@@ -2224,8 +2309,15 @@ condition_wait::accept(StateConstructor& s) const {
 	// updates successors' predecessor-counts
 	s.count_predecessors(new_event);
 }
+#else
+void
+condition_wait::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Does nothing, is a NULL event.  
 	NOTE: it is possible that guard is no longer true, 
@@ -2270,6 +2362,7 @@ condition_wait::recheck(const nonmeta_context& c) const {
 		return RECHECK_UNBLOCKED_THIS;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2454,6 +2547,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
@@ -2505,8 +2599,10 @@ channel_send::recheck(const nonmeta_context& c) const {
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 channel_send::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
@@ -2542,6 +2638,12 @@ channel_send::accept(StateConstructor& s) const {
 	// updates successors' predecessor-counts
 	s.count_predecessors(new_event);
 }
+#else
+void
+channel_send::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2662,6 +2764,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 channel_receive::accept(StateConstructor& s) const {
 	STACKTRACE_VERBOSE;
@@ -2697,8 +2800,15 @@ channel_receive::accept(StateConstructor& s) const {
 	// updates successors' predecessor-counts
 	s.count_predecessors(new_event);
 }
+#else
+void
+channel_receive::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
@@ -2743,6 +2853,7 @@ channel_receive::recheck(const nonmeta_context& c) const {
 }
 
 #undef	ASSERT_CHAN_INDEX
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2841,6 +2952,7 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	NOTE: nothing can follow a do-forever loop, 
 	so we need not worry about an initial successor.  
@@ -2923,8 +3035,15 @@ if (back_event.is_dispensible()) {
 	// caller will count_predecessors
 }
 }
+#else
+void
+do_forever_loop::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	No-op, this should never be called from simulator, as loop
 	body events are expanded.  
@@ -2940,6 +3059,7 @@ do_forever_loop::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_BLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3028,6 +3148,7 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Code ripped from do_forever_loop::accept().
 	Need to synthesize a deterministic selection with an exit branch.
@@ -3105,8 +3226,15 @@ do_while_loop::accept(StateConstructor& s) const {
 	s.last_event_index = loopback_index;
 }
 }
+#else
+void
+do_while_loop::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Evaluate the guards immediately.
 	If evaluation is true, execute the body branch, else take the
@@ -3152,14 +3280,17 @@ do_while_loop::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	return RECHECK_NEVER_BLOCKED;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 ostream&
 do_while_loop::dump_successor_edges(
 		ostream& o, const EventNode& e, 
 		const size_t i, const expr_dump_context& c) const {
 	return dump_selection_successor_edges(*this, o, e, i, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

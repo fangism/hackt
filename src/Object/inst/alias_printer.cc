@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.5 2007/01/21 05:59:08 fang Exp $
+	$Id: alias_printer.cc,v 1.5.8.1 2007/03/10 02:51:51 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -34,6 +34,12 @@ namespace HAC {
 namespace entity {
 using std::ostringstream;
 //=============================================================================
+static
+void
+cflat_print_alias(ostream&, const string&, const string&,
+		const cflat_options&);
+
+//=============================================================================
 /**
 	Defined by specialization only.  
 	\param HasSubstructure whether or not the meta-class type
@@ -57,7 +63,7 @@ struct alias_printer_recursion_policy<false> {
 		const string& canonical(os.str());
 	if (!c.cf.check_prs) {
 		if (!c.cf.wire_mode) {
-			cflat::print_alias(c.o, canonical, c.prefix, c.cf);
+			cflat_print_alias(c.o, canonical, c.prefix, c.cf);
 		} else if (canonical != c.prefix) {
 			// this should only be done for bool_tag!
 			INVARIANT(gi < c.wires.size());
@@ -134,6 +140,38 @@ if (this->fpf) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints an alias as specified by the flags.  
+	Should be publicly accessible.  
+ */
+void
+cflat_print_alias(ostream& o, const string& canonical, const string& alias,
+		const cflat_options& cf) {
+if (cf.dump_self_connect || alias != canonical) {
+	switch (cf.connect_style) {
+		case cflat_options::CONNECT_STYLE_CONNECT:
+			o << "connect ";
+			break;  
+		case cflat_options::CONNECT_STYLE_EQUAL:
+			o << "= ";
+			break;  
+		case cflat_options::CONNECT_STYLE_WIRE:
+			o << "wire ";
+			break;  
+		default:
+			o << "alias ";
+			break;  
+	}       
+	if (cf.enquote_names) {
+		o << '\"' << canonical << "\" \"" << alias << '\"';
+	} else {
+		o << canonical << ' ' << alias;
+	}       
+	o << endl;
+}       
+}
+
+//=============================================================================
 #define	DEFINE_INSTANCE_ALIAS_INFO_VISITOR(Tag)				\
 void									\
 alias_printer::visit(const instance_alias_info<Tag>& a) {		\

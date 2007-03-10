@@ -3,6 +3,33 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-01:
+	  This branch is for rearranging shared libraries.
+	  This revision: 'haco' script is now built as an executable
+		using shared library.
+		Re-ordered some shlib dependencies, tentatively installing
+		a few of them, gradually installing all of them.  
+	  New: Object/lang/CHP_visitor.{h,cc}: re-directing all 
+		chpsim functions involving CHP nodes through visitor
+		interface, which slows down dispatches, but brings 
+		better modularity and breaks cyclic library dependence.  
+		New switch: CHPSIM_VISIT_EXECUTE in sim/chpsim/devel_switches.h
+		Moved DependenceCollector to libhacktsim.la.
+	  Added sim/chpsim/EventExecutor.{h,cc}: to encapsulate implementation
+		of the old CHP::action::{execute,recheck}.
+	  sim/chpsim/StateConstructor now implemented through visitor.
+	  Added many explicit template instantiations to AST/ units
+		to enable dynamic linking.  
+	  main/cflat.cc: cflat_print_alias relocated to
+		Object/inst/alias_printer.cc to break cyclic dep.
+	  Confirmed with no regressions, also validated with --disable-shared.  
+	  Next major clean-up: Object/lang/CHP_base.h, 
+		commit some devel switches, reduce includes in newly
+		affected files: Object/lang/CHP.*, sim/chpsim/EventExecutor.*
+
+
 2007-03-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81:

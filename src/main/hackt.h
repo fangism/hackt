@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt.h"
 	Header for the interface to the main program.  
-	$Id: hackt.h,v 1.4 2006/04/28 03:20:14 fang Exp $
+	$Id: hackt.h,v 1.4.50.1 2007/03/10 02:52:02 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_HACKT_H__
@@ -13,6 +13,7 @@
 #include <string>
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
+#include "main/global_options.h"
 
 namespace HAC {
 using std::string;
@@ -20,14 +21,6 @@ using std::ostream;
 using util::memory::count_ptr;
 
 //=============================================================================
-/**
-	Global program options.  
-	TODO: fill me in.
- */
-struct global_options {
-};
-
-//-----------------------------------------------------------------------------
 /**
 	Instanceless class for the main program dispatcher.  
 	Move this to "hackt.h"?
