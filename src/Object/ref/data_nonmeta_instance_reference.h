@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.7 2007/02/26 22:00:51 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.7.2.1 2007/03/10 20:32:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -9,12 +9,7 @@
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "util/memory/count_ptr.h"
 #include "Object/type/canonical_type_fwd.h"
-#include "sim/chpsim/devel_switches.h"	// for CHPSIM_STATE_UPDATE_BIN_SETS
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 #include "Object/ref/reference_set.h"	// for update_reference_array_type
-#else
-#include "Object/ref/reference_enum.h"	// for update_reference_array_type
-#endif
 
 namespace HAC {
 namespace entity {
@@ -36,11 +31,7 @@ private:
 	typedef	data_nonmeta_instance_reference		this_type;
 public:
 	typedef	nonmeta_instance_reference_base		parent_type;
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	global_references_set	 		assign_update_arg_type;
-#else
-	typedef	global_reference_array_type 		assign_update_arg_type;
-#endif
 	data_nonmeta_instance_reference() : parent_type() { }
 
 virtual	~data_nonmeta_instance_reference() { }

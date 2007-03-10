@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.4.2.1 2007/03/10 02:52:06 fang Exp $
+	$Id: devel_switches.h,v 1.4.2.2 2007/03/10 20:32:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -51,26 +51,12 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to re-implement State::__updated_list as a 
-	bin of sets or reference indices.  
-	Rationale: This solves the problem of uniqueness of update reference, 
-		and is better restructuring for performance.
-	Goal: 1
-	Priority: medium (enhancement to enable diagnostics)
-		This is also necessary for a decent implementation of
-		watch-points and break-points for linear time checking.  
-	Status: done, and tested, perm it when convenient.
- */
-#define	CHPSIM_STATE_UPDATE_BIN_SETS		1
-
-/**
 	Define to 1 to enable instance value break/watch points.  
-	Prerequisite: CHPSIM_STATE_UPDATE_BIN_SETS, for sorting
 	Goal: 1
 	Priority: low-medium (for diagnostics)
 	Status: complete, basically tested, can perm.
  */
-#define CHPSIM_BREAK_VALUES		(1 && CHPSIM_STATE_UPDATE_BIN_SETS)
+#define CHPSIM_BREAK_VALUES			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

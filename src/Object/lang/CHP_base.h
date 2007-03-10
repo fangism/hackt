@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.9.2.1 2007/03/10 02:51:55 fang Exp $
+	$Id: CHP_base.h,v 1.9.2.2 2007/03/10 20:32:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -14,10 +14,7 @@
 #include "sim/chpsim/devel_switches.h"
 
 #if !CHPSIM_VISIT_EXECUTE
-#include "Object/ref/reference_enum.h"
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 #include "Object/ref/reference_set.h"
-#endif
 #endif
 
 namespace HAC {
@@ -65,11 +62,7 @@ class action : public persistent {
 public:
 	typedef	action_ptr_type			unroll_return_type;
 #if !CHPSIM_VISIT_EXECUTE
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	entity::global_references_set	execute_arg_type;
-#else
-	typedef	global_references_array_type	execute_arg_type;
-#endif
 #endif
 	/**
 		TODO: Eventually generalize this to attribute list.  

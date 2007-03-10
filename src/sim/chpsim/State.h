@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.4 2007/02/26 22:01:01 fang Exp $
+	$Id: State.h,v 1.4.2.1 2007/03/10 20:32:35 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -19,9 +19,7 @@
 #include "sim/signal_handler.h"
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 #include "Object/ref/reference_set.h"
-#endif
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -41,9 +39,7 @@ class graph_options;
 class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 using entity::global_references_set;
-#endif
 
 //=============================================================================
 /**
@@ -126,15 +122,11 @@ private:
 		/// index of the first valid event
 		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
 	};
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 	/**
 		Array of sets, binned by meta-type.  
+		Using bins of sets maintains sortedness and uniqueness.
 	 */
-	typedef	global_references_set
-#else
-	typedef	vector<global_indexed_reference>
-#endif	// CHPSIM_STATE_UPDATE_BIN_SETS
-						update_reference_array_type;
+	typedef	global_references_set		update_reference_array_type;
 	/**
 		Various mode flags, settable by user.  
 	 */

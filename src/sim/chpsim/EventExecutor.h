@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.1.2.1 2007/03/10 02:52:05 fang Exp $
+	$Id: EventExecutor.h,v 1.1.2.2 2007/03/10 20:32:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -10,10 +10,7 @@
 #include <iosfwd>
 #include "Object/lang/CHP_visitor.h"
 #include "sim/chpsim/devel_switches.h"
-#include "Object/ref/reference_enum.h"
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 #include "Object/ref/reference_set.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -48,11 +45,7 @@ class EventNode;
  */
 class EventExecutor : public chp_visitor {
 	typedef	EventExecutor			this_type;
-#if CHPSIM_STATE_UPDATE_BIN_SETS
 	typedef	entity::global_references_set	execute_arg_type;
-#else
-	typedef	global_references_array_type	execute_arg_type;
-#endif
 protected:
 	const nonmeta_context&			context;
 	execute_arg_type&			global_refs;
