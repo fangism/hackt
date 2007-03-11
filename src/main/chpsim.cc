@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.3 2007/02/05 06:39:47 fang Exp $
+	$Id: chpsim.cc,v 1.3.4.1 2007/03/11 05:13:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,6 +15,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/program_registry.h"	// to register with hackt's dispatcher
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
+#include "main/global_options.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
@@ -76,8 +77,10 @@ chpsim::name[] = "chpsim";
 const char
 chpsim::brief_str[] = "An event-driven CHP simulator";
 
+#ifndef	WITH_MAIN
 const size_t
 chpsim::program_id = register_hackt_program_class<chpsim>();
+#endif
 
 //=============================================================================
 // class chpsim member definitions
@@ -340,6 +343,17 @@ const chpsim::register_options_modifier
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::chpsim::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 
 DEFAULT_STATIC_TRACE_END
 

@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.12.18.1 2007/03/10 07:29:47 fang Exp $
+	$Id: main_funcs.cc,v 1.12.18.2 2007/03/11 05:13:56 fang Exp $
  */
 
 #include <iostream>
@@ -42,6 +42,7 @@ using util::memory::excl_ptr;
 #include "lexer/hacflat-yystype.h"
 #endif
 #include "util/libc.h"			// for remove
+#include "util/dirent.h"		// configured wrapper around <dirent.h>
 
 #if KEEP_PARSE_FUNCS
 /**
@@ -70,6 +71,7 @@ using std::ios_base;
 using parser::root_body;
 using util::persistent;
 using util::persistent_object_manager;
+using lexer::file_manager;
 #if KEEP_PARSE_FUNCS
 using lexer::yyin_manager;
 #endif
@@ -396,6 +398,30 @@ load_module_debug(const char* fname) {
 	persistent::warn_unimplemented = true;
 	persistent_object_manager::dump_reconstruction_table = true;
 	return load_module(fname);
+}
+
+//=============================================================================
+// class compile_options method definitions
+
+void
+compile_options::export_include_paths(file_manager& fm) const {
+	typedef	include_paths_type::const_iterator	const_iterator;
+	const_iterator i(include_paths.begin());
+	const const_iterator e(include_paths.end());
+	for ( ; i!=e; i++) {
+		const string& s(*i);
+		// check if path exists, otherwise, don't bother adding...
+		if (util::dir_exists(s.c_str())) {
+			fm.add_path(s);
+			if (dump_include_paths) {
+				cerr << "Added to search path: " << s << endl;
+			}
+		} else {
+			if (dump_include_paths) {
+				cerr << "Couldn\'t open dir: " << s << endl;
+			}
+		}
+	}
 }
 
 //=============================================================================

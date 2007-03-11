@@ -1,7 +1,7 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.7 2006/07/27 05:55:36 fang Exp $
+	$Id: compile_options.h,v 1.7.40.1 2007/03/11 05:13:55 fang Exp $
  */
 
 #include <list>
@@ -51,7 +51,7 @@ public:
 		include_paths()
 		{ }
 
-	// NOTE: this is defined in "main/compile.cc"
+	// NOTE: this is defined in "main/main_funcs.cc"
 	void
 	export_include_paths(lexer::file_manager&) const;
 

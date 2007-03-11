@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.9 2007/02/27 02:28:01 fang Exp $
+	$Id: prsim.cc,v 1.9.2.1 2007/03/11 05:13:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
 #include "main/simple_options.tcc"
+#include "main/global_options.h"
 #include "util/getopt_mapped.h"
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State-prsim.h"
@@ -88,8 +89,10 @@ prsim::name[] = "prsim";
 const char
 prsim::brief_str[] = "A simple production rule simulator, based on an old one.";
 
+#ifndef	WITH_MAIN
 const size_t
 prsim::program_id = register_hackt_program_class<prsim>();
+#endif
 
 //=============================================================================
 prsim::prsim() { }
@@ -330,6 +333,17 @@ const prsim::register_options_modifier
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::prsim::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 
 DEFAULT_STATIC_TRACE_END
 

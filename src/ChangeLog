@@ -5,6 +5,17 @@
 
 2007-03-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-01-shlib-01-06:
+	  Moved compile_options::export_include_path to main/main_funcs.cc.
+	  Executables: hacpp (flatten), hacobjdump, hacalloc, hacprsim, 
+		hacchpsim are all now dynamically-linked to shlibs.  
+	  Observation: on powerpc-apple-darwin7, statically linked executables
+		load much faster than dyld.  
+	  End of branch.  
+
+
+2007-03-10	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-01-shlib-01-05:
 	  Perm'd CHP_BREAK_VALUES.
 

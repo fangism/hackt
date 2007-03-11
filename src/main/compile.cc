@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.13.40.1 2007/03/10 02:52:01 fang Exp $
+	$Id: compile.cc,v 1.13.40.2 2007/03/11 05:13:55 fang Exp $
  */
 
 #include <iostream>
@@ -18,7 +18,6 @@
 #include "lexer/file_manager.h"
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
-#include "util/dirent.h"		// configured wrapper around <dirent.h>
 #include "util/attributes.h"
 
 extern HAC::lexer::file_manager
@@ -296,31 +295,6 @@ compile::usage(void) {
 }
 
 //=============================================================================
-// class compile_options method definitions
-
-void
-compile_options::export_include_paths(file_manager& fm) const {
-	typedef	include_paths_type::const_iterator	const_iterator;
-	const_iterator i(include_paths.begin());
-	const const_iterator e(include_paths.end());
-	for ( ; i!=e; i++) {
-		const string& s(*i);
-		// check if path exists, otherwise, don't bother adding...
-		if (util::dir_exists(s.c_str())) {
-			fm.add_path(s);
-			if (dump_include_paths) {
-				cerr << "Added to search path: " << s << endl;
-			}
-		} else {
-			if (dump_include_paths) {
-				cerr << "Couldn\'t open dir: " << s << endl;
-			}
-		}
-	}
-}
-
-//=============================================================================
-
 }	// end namespace HAC
 
 //=============================================================================

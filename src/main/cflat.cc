@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.14.38.2 2007/03/10 07:29:45 fang Exp $
+	$Id: cflat.cc,v 1.14.38.3 2007/03/11 05:13:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,6 +19,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
+#include "main/global_options.h"
 
 #include "AST/type_base.h"
 #include "Object/type/process_type_reference.h"
@@ -73,8 +74,10 @@ cflat::brief_str[] =
 
 STATIC_TRACE_HERE("before cflat registry")
 
+#ifndef	WITH_MAIN
 const size_t
 cflat::program_id = register_hackt_program_class<cflat>();
+#endif
 
 //=============================================================================
 static const char default_options_brief[] = "(CAST cflat preset)";
@@ -708,6 +711,17 @@ if (modes) {
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::cflat::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 
 DEFAULT_STATIC_TRACE_END
 
