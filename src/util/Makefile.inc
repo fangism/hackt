@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.25 2007/02/21 17:00:26 fang Exp $
+#	$Id: Makefile.inc,v 1.26 2007/03/11 21:16:54 fang Exp $
 #	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -110,6 +110,7 @@ UTIL_HEADER_FILES = \
 	util/iterator_more.h \
 	util/libc.h \
 	util/libc_temp.h \
+	util/libguile.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/macros.h \
@@ -227,6 +228,17 @@ util/using_istream.hchk:
 
 util/using_ostream.hchk:
 	@$(TOUCH) $@
+
+# exceptions to work-around guile header dependencies
+GUILE_WARN_FLAGS = -Wno-long-long -Wno-error
+# -Wno-undef
+LIBGUILE_HCHK_FLAGS = $(GUILE_CPPFLAGS) $(GUILE_WARN_FLAGS)
+
+# extending default header check
+util/libguile.hchk: util/libguile.h
+	@$(ECHO) "Validating $< ... " ; \
+	more_hchk_flags="$(LIBGUILE_HCHK_FLAGS)" ; \
+	$(H_CHECK_TEST_SCRIPT)
 
 LEXYACC_PREFIX_GENERATOR = util/lang/lexyacc/lexyacc-prefix-generator.awk
 

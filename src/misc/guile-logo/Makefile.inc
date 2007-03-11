@@ -1,5 +1,5 @@
 # "misc/guile-logo/Makefile.inc"
-#	$Id: Makefile.inc,v 1.3 2007/03/08 23:07:28 fang Exp $
+#	$Id: Makefile.inc,v 1.4 2007/03/11 21:16:52 fang Exp $
 #	vim: ft=automake
 # play-testing guile functionality
 
@@ -16,9 +16,7 @@ misc_guile_logo_libtortoise_la_SOURCES = \
 	misc/guile-logo/tortoise.h
 
 GUILE_LOGO_CPPFLAGS = -I$(srcdir)/$(GUILE_LOGO_DIR)
-# exceptions to work-around guile header deficiencies
-GUILE_WARN_FLAGS = -Wno-long-long -Wno-error
-# -Wno-undef
+# GUILE_WARN_FLAGS defined in util/Makefile.inc
 
 misc_guile_logo_libtortoise_la_CPPFLAGS = \
 	$(AM_CPPFLAGS) $(GUILE_LOGO_CPPFLAGS) $(X11_INCLUDE)
@@ -74,8 +72,9 @@ ALL_HEADER_FILES += \
 endif
 
 TORTOISE_WRAP_HCHK_FLAGS = \
-	$(misc_guile_logo_libtortoise_guile_la_CPPFLAGS) \
-	$(misc_guile_logo_libtortoise_guile_la_CXXFLAGS)
+	$(LIBGUILE_HCHK_FLAGS)
+#	$(misc_guile_logo_libtortoise_guile_la_CPPFLAGS) \
+#	$(misc_guile_logo_libtortoise_guile_la_CXXFLAGS)
 
 # overriding default header check
 misc/guile-logo/tortoise-wrap.hchk: misc/guile-logo/tortoise-wrap.h

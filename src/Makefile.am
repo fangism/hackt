@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.162 2007/03/11 16:34:12 fang Exp $
+#	$Id: Makefile.am,v 1.163 2007/03/11 21:16:49 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -47,7 +47,8 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate hacalloc \
-	hacobjdump hflat hacpp hacprsim hacchpsim
+	hacobjdump hflat hacpp hacprsim hacchpsim \
+	hacguile
 if USE_UNROLL_PHASE
 bin_PROGRAMS += hacunroll
 endif
@@ -153,6 +154,14 @@ hacchpsim_LDADD = libhacktsim.la
 #	@{ $(ECHO) "#!$(SH_PATH)" ; \
 #	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" ;} > $@ ; \
 #	$(CHMOD) +x $@
+
+hacguile_SOURCES = main/guile.cc \
+	main/libhackt-wrap.cc \
+	main/libhackt-wrap.h
+hacguile_CPPFLAGS = $(GUILE_CPPFLAGS)
+hacguile_CXXFLAGS = -DWITH_MAIN
+hacguile_LDADD = libhacktsim.la
+hacguile_LDFLAGS = $(GUILE_LDFLAGS)
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -849,7 +858,9 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/cflat_options.h \
 	main/compile_options.h \
 	main/global_options.h \
-	main/main_funcs.h
+	main/main_funcs.h \
+	main/libhackt-wrap.h \
+	main/guile.h
 
 COMMON_H_FILES = \
 	common/sizes-common.h

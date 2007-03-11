@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.68 2007/02/27 05:37:42 fang Exp $
+#	$Id: ChangeLog,v 1.69 2007/03/11 21:16:53 fang Exp $
+
+2007-03-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-03:
+	  util/libguile.h: wrapped header
+
 
 2007-02-27	David Fang		<fangism@users.sourceforge.net>
 
