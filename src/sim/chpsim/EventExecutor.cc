@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.1.2.3 2007/03/10 21:15:02 fang Exp $
+	$Id: EventExecutor.cc,v 1.1.2.4 2007/03/11 08:08:02 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -50,8 +50,95 @@ namespace HAC {
 namespace entity {
 namespace CHP {
 #include "util/using_ostream.h"
-}
-}
+//=============================================================================
+// class guarded_action::selection_evaluator definition
+
+/**
+	Functor for evaluating guarded statements.  
+	This class can be given hidden visibility (local to module).  
+ */
+struct guarded_action::selection_evaluator {
+	// operator on selection_list_type::const_reference
+	typedef	const count_ptr<const guarded_action>&	argument_type;
+	const nonmeta_context_base& 		context;
+	/// successor index (induction variable)
+	size_t					index;
+	/// list of successors whose guards evaluated true (accumulate)
+	vector<size_t>				ready;
+
+	explicit
+	selection_evaluator(const nonmeta_context_base& c) :
+			context(c), index(0), ready() {
+		ready.reserve(2);
+	}
+
+	void
+	operator () (argument_type g) {
+		STACKTRACE_CHPSIM_VERBOSE;
+		NEVER_NULL(g);
+		STACKTRACE_INDENT_PRINT("evaluating guard " << index << endl);
+	if (g->guard) {
+		const count_ptr<const pbool_const>
+			b(g->guard->__nonmeta_resolve_rvalue(
+				context, g->guard));
+		// error handling
+		if (!b) {
+			cerr <<
+				"Run-time error evaluating guard expression."
+				<< endl;
+			THROW_EXIT;
+		}
+		if (b->static_constant_value()) {
+			STACKTRACE_INDENT_PRINT("true guard" << endl);
+			ready.push_back(index);
+		} else {
+			STACKTRACE_INDENT_PRINT("false guard" << endl);
+		}
+	} else {
+		// NULL guard is an else clause (in last position)
+		STACKTRACE_INDENT_PRINT("else guard" << endl);
+		if (ready.empty()) {
+			ready.push_back(index);
+		}
+	}
+		++index;
+	}	// end operator ()
+
+private:
+	typedef	selection_evaluator		this_type;
+
+	/// no-copy or assign
+	explicit
+	selection_evaluator(const this_type&);
+
+};	// end class selection_evaluator
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor reference wrapper.
+ */
+class guarded_action::selection_evaluator_ref :
+	public util::reference_wrapper<guarded_action::selection_evaluator> {
+	typedef	util::reference_wrapper<guarded_action::selection_evaluator>
+				parent_type;
+	typedef	parent_type::type::argument_type	argument_type;
+public:
+	selection_evaluator_ref(reference r) : parent_type(r) { }
+
+	/**
+		Forwarding operator to underlying reference.  
+	 */
+	void
+	operator () (argument_type a) {
+		get()(a);
+	}
+
+};	// end class selection_evaluator_ref
+
+}	// end namespace CHP
+}	// end namespace entity
+
+//=============================================================================
 namespace SIM {
 namespace CHPSIM {
 using std::copy;
@@ -201,94 +288,6 @@ EventRechecker::visit(const concurrent_actions&) {
 	// no-op
 	ret = RECHECK_NEVER_BLOCKED;
 }
-
-//=============================================================================
-// struct guarded_action::unroll_resolver method definitions
-
-//=============================================================================
-// class guarded_action::selection_evaluator definition
-
-/**
-	Functor for evaluating guarded statements.  
-	This class can be given hidden visibility (local to module).  
- */
-struct guarded_action::selection_evaluator {
-	// operator on selection_list_type::const_reference
-	typedef	const count_ptr<const guarded_action>&	argument_type;
-	const nonmeta_context_base& 		context;
-	/// successor index (induction variable)
-	size_t					index;
-	/// list of successors whose guards evaluated true (accumulate)
-	vector<size_t>				ready;
-
-	explicit
-	selection_evaluator(const nonmeta_context_base& c) :
-			context(c), index(0), ready() {
-		ready.reserve(2);
-	}
-
-	void
-	operator () (argument_type g) {
-		STACKTRACE_CHPSIM_VERBOSE;
-		NEVER_NULL(g);
-		STACKTRACE_INDENT_PRINT("evaluating guard " << index << endl);
-	if (g->guard) {
-		const count_ptr<const pbool_const>
-			b(g->guard->__nonmeta_resolve_rvalue(
-				context, g->guard));
-		// error handling
-		if (!b) {
-			cerr <<
-				"Run-time error evaluating guard expression."
-				<< endl;
-			THROW_EXIT;
-		}
-		if (b->static_constant_value()) {
-			STACKTRACE_INDENT_PRINT("true guard" << endl);
-			ready.push_back(index);
-		} else {
-			STACKTRACE_INDENT_PRINT("false guard" << endl);
-		}
-	} else {
-		// NULL guard is an else clause (in last position)
-		STACKTRACE_INDENT_PRINT("else guard" << endl);
-		if (ready.empty()) {
-			ready.push_back(index);
-		}
-	}
-		++index;
-	}	// end operator ()
-
-private:
-	typedef	selection_evaluator		this_type;
-
-	/// no-copy or assign
-	explicit
-	selection_evaluator(const this_type&);
-
-};	// end class selection_evaluator
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Functor reference wrapper.
- */
-class guarded_action::selection_evaluator_ref :
-	public util::reference_wrapper<guarded_action::selection_evaluator> {
-	typedef	util::reference_wrapper<guarded_action::selection_evaluator>
-				parent_type;
-	typedef	parent_type::type::argument_type	argument_type;
-public:
-	selection_evaluator_ref(reference r) : parent_type(r) { }
-
-	/**
-		Forwarding operator to underlying reference.  
-	 */
-	void
-	operator () (argument_type a) {
-		get()(a);
-	}
-
-};	// end class selection_evaluator_ref
 
 //=============================================================================
 DEFAULT_EVENT_SUCCESSOR_DUMPER(guarded_action)
