@@ -4,13 +4,14 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.5 2005/12/13 04:15:47 fang Exp $
+	$Id: objdump.cc,v 1.6 2007/03/11 16:34:35 fang Exp $
  */
 
 #include <iostream>
 #include "main/objdump.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
+#include "main/global_options.h"
 #include "util/using_ostream.h"
 
 namespace HAC {
@@ -27,8 +28,10 @@ objdump::name[] = "objdump";
 const char
 objdump::brief_str[] = "Dumps HACKT object semi-human-readably to stdout.";
 
+#ifndef	WITH_MAIN
 const size_t
 objdump::program_id = register_hackt_program_class<objdump>();
+#endif
 
 //=============================================================================
 // class objdump member definitions
@@ -63,4 +66,15 @@ objdump::usage(void) {
 //=============================================================================
 
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::objdump::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 

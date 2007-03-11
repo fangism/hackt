@@ -1,6 +1,6 @@
 /**
 	\file "guile-logo/tortoise-wrap.cc"
-	$Id: tortoise-wrap.cc,v 1.1 2007/03/08 23:07:28 fang Exp $
+	$Id: tortoise-wrap.cc,v 1.2 2007/03/11 16:34:36 fang Exp $
 	Wrapper implementation.  
  */
 
@@ -68,11 +68,12 @@ using namespace logo::guile;
  */
 void
 logo_guile_init(void) {
+	typedef	SCM (*scm_gsubr_type)();	// necessary reinterpret_cast
 	scm_c_define_gsubr("tortoise-reset", 0, 0, 0, wrap_tortoise_reset);
 	scm_c_define_gsubr("tortoise-pendown", 0, 0, 0, wrap_tortoise_pendown);
 	scm_c_define_gsubr("tortoise-penup", 0, 0, 0, wrap_tortoise_penup);
-	scm_c_define_gsubr("tortoise-turn", 1, 0, 0, wrap_tortoise_turn);
-	scm_c_define_gsubr("tortoise-move", 1, 0, 0, wrap_tortoise_move);
+	scm_c_define_gsubr("tortoise-turn", 1, 0, 0, (scm_gsubr_type) wrap_tortoise_turn);
+	scm_c_define_gsubr("tortoise-move", 1, 0, 0, (scm_gsubr_type) wrap_tortoise_move);
 }
 
 }	// extern "C"

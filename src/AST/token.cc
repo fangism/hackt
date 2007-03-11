@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.9 2006/10/18 20:57:36 fang Exp $
+	$Id: token.cc,v 1.10 2007/03/11 16:34:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -79,6 +79,12 @@ namespace memory {
 }
 }
 #endif
+namespace util {
+namespace memory {
+// explicit template instantiation
+template class count_ptr<const HAC::parser::token_identifier>;
+}	// end namespace memory
+}	// end namespace util
 
 namespace HAC {
 namespace parser {

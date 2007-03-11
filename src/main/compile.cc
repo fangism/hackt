@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.13 2006/07/30 05:49:41 fang Exp $
+	$Id: compile.cc,v 1.14 2007/03/11 16:34:33 fang Exp $
  */
 
 #include <iostream>
@@ -14,10 +14,10 @@
 #include "main/compile.h"
 #include "main/main_funcs.h"
 #include "main/compile_options.h"
+#include "main/global_options.h"
 #include "lexer/file_manager.h"
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
-#include "util/dirent.h"		// configured wrapper around <dirent.h>
 #include "util/attributes.h"
 
 extern HAC::lexer::file_manager
@@ -64,8 +64,10 @@ compile::name[] = "compile";
 const char
 compile::brief_str[] = "Compiles HACKT source to object file.";
 
+#ifndef	WITH_MAIN
 const size_t
 compile::program_id = register_hackt_program_class<compile>();
+#endif	// WITH_MAIN
 
 /**
 	Options modifier map must be initialized before any registrations.  
@@ -293,30 +295,19 @@ compile::usage(void) {
 }
 
 //=============================================================================
-// class compile_options method definitions
-
-void
-compile_options::export_include_paths(file_manager& fm) const {
-	typedef	include_paths_type::const_iterator	const_iterator;
-	const_iterator i(include_paths.begin());
-	const const_iterator e(include_paths.end());
-	for ( ; i!=e; i++) {
-		const string& s(*i);
-		// check if path exists, otherwise, don't bother adding...
-		if (util::dir_exists(s.c_str())) {
-			fm.add_path(s);
-			if (dump_include_paths) {
-				cerr << "Added to search path: " << s << endl;
-			}
-		} else {
-			if (dump_include_paths) {
-				cerr << "Couldn\'t open dir: " << s << endl;
-			}
-		}
-	}
-}
+}	// end namespace HAC
 
 //=============================================================================
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::compile::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 
-}	// end namespace HAC
+
 

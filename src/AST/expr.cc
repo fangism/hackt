@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.24 2007/02/28 21:22:07 fang Exp $
+	$Id: expr.cc,v 1.25 2007/03/11 16:34:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -108,7 +108,14 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::loop_concatenation, "(loop-concatenation)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::array_construction, "(array-construction)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::template_argument_list_pair,
 		"(expr-list-pair)")
-}
+namespace memory {
+// explicit template instantiations
+using HAC::parser::expr;
+using HAC::parser::inst_ref_expr;
+template class count_ptr<const expr>;
+template class count_ptr<const inst_ref_expr>;
+}	// end namespace memory
+}	// end namespace util
 
 //=============================================================================
 namespace HAC {

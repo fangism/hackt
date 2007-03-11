@@ -3,6 +3,85 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-02-merged-shlib-01-07:
+	  Branch merge:
+	  install-scripts replaced by shlib-linked executables.
+	  chpsim functions implemented as visitors to facilitate
+		library decoupling, and acyclic dependencies.
+	  A few flags perm'd for maintainability and comprehensibility.
+	  Validated on {powerpc,i686}-apple-darwin.  
+
+
+2007-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-07:
+	  sim/chpsim/EventExecutor.cc: helper class in wrong namespace.
+
+
+2007-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-06:
+	  Moved compile_options::export_include_path to main/main_funcs.cc.
+	  Executables: hacpp (flatten), hacobjdump, hacalloc, hacprsim, 
+		hacchpsim are all now dynamically-linked to shlibs.  
+	  Observation: on powerpc-apple-darwin7, statically linked executables
+		load much faster than dyld.  
+	  End of branch.  
+
+
+2007-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-05:
+	  Perm'd CHP_BREAK_VALUES.
+
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-04:
+	  Perm'd CHP_ACTION_DELAYS.
+	  TODO: dylib hacalloc, hacflat, hacprsim, and hacchpsim.
+
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-03:
+	  Perm'd CHPSIM_STATE_UPDATE_BIN_SETS.
+
+
+2007-03-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-02:
+	  haccreate is now a executable linked to dynamic library.
+	  Initial attempts at installing sub-libraries of libhacktlib.la
+		resulted in unexpected intra-library dependencies, 
+		will have to revisit later, some notes in Makefile.am.
+	  Filtered out bunch of unnecessary headers in recently edited files.
+	  More clean-up with committing switches...
+
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-01:
+	  This branch is for rearranging shared libraries.
+	  This revision: 'haco' script is now built as an executable
+		using shared library.
+		Re-ordered some shlib dependencies, tentatively installing
+		a few of them, gradually installing all of them.  
+	  New: Object/lang/CHP_visitor.{h,cc}: re-directing all 
+		chpsim functions involving CHP nodes through visitor
+		interface, which slows down dispatches, but brings 
+		better modularity and breaks cyclic library dependence.  
+		New switch: CHPSIM_VISIT_EXECUTE in sim/chpsim/devel_switches.h
+		Moved DependenceCollector to libhacktsim.la.
+	  Added sim/chpsim/EventExecutor.{h,cc}: to encapsulate implementation
+		of the old CHP::action::{execute,recheck}.
+	  sim/chpsim/StateConstructor now implemented through visitor.
+	  Added many explicit template instantiations to AST/ units
+		to enable dynamic linking.  
+	  main/cflat.cc: cflat_print_alias relocated to
+		Object/inst/alias_printer.cc to break cyclic dep.
+	  Confirmed with no regressions, also validated with --disable-shared.  
+	  Next major clean-up: Object/lang/CHP_base.h, 
+		commit some devel switches, reduce includes in newly
+		affected files: Object/lang/CHP.*, sim/chpsim/EventExecutor.*
+
+
 2007-03-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81:

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.14 2007/01/21 05:59:26 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.15 2007/03/11 16:34:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -188,6 +188,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::aggregate_datastruct_meta_instance_reference, 
 		AGGREGATE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 #endif
+
+namespace memory {
+// explicit template instantiations
+using HAC::entity::simple_bool_meta_instance_reference;
+template class count_ptr<const simple_bool_meta_instance_reference>;
+}	// end namespace memory
 }	// end namespace util
 
 namespace HAC {

@@ -1,30 +1,26 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.20 2007/02/26 22:00:48 fang Exp $
+	$Id: CHP.cc,v 1.21 2007/03/11 16:34:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	ENABLE_STACKTRACE_CHPSIM		(0 && ENABLE_STACKTRACE)
 
-/**
-	Various levels of chpsim event generation optimizations, 
-	such as fusion.  
-	TODO: control in execute-time switch.  
- */
-#define	OPTIMIZE_CHPSIM_EVENTS			1
-
 #include <iterator>
 #include <algorithm>
 #include <exception>
 #include "Object/lang/CHP.h"
+#include "Object/lang/CHP_visitor.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
+#if !CHPSIM_VISIT_EXECUTE
 #include "Object/expr/pbool_const.h"
+#endif
 #include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -44,25 +40,18 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/connection_policy.h"
-#include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
-#if CHP_ACTION_DELAYS
 #include "Object/expr/preal_const.h"
-#endif
 #include "Object/def/template_formals_manager.h"
+#if !CHPSIM_VISIT_EXECUTE
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
 #include "Object/nonmeta_channel_manipulator.h"
-
-// chpsim headers
-#include "sim/chpsim/StateConstructor.h"
-#include "sim/chpsim/DependenceCollector.h"
-#include "sim/chpsim/State.h"
-#include "sim/chpsim/nonmeta_context.h"
+#endif
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -70,13 +59,14 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/visitor_functor.h"
-#include "util/value_saver.h"
 #include "util/indent.h"
 #include "util/IO_utils.tcc"
+#if !CHPSIM_VISIT_EXECUTE
 #include "util/STL/valarray_iterator.h"
 #include "util/reference_wrapper.h"
 #include "util/iterator_more.h"		// for set_inserter
 #include "util/numeric/random.h"	// for rand48
+#endif
 
 #if ENABLE_STACKTRACE_CHPSIM
 #define	STACKTRACE_CHPSIM_VERBOSE	STACKTRACE_VERBOSE
@@ -149,22 +139,19 @@ using std::find;
 using std::transform;
 using std::back_inserter;
 using std::for_each;
+#if !CHPSIM_VISIT_EXECUTE
 using util::set_inserter;
+#endif
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
-using SIM::CHPSIM::EventNode;
-using SIM::CHPSIM::RECHECK_NEVER_BLOCKED;
-using SIM::CHPSIM::RECHECK_BLOCKED_THIS;
-using SIM::CHPSIM::RECHECK_UNBLOCKED_THIS;
-using SIM::CHPSIM::RECHECK_DEFERRED_TO_SUCCESSOR;
+#if !CHPSIM_VISIT_EXECUTE
 using util::reference_wrapper;
 using util::numeric::rand48;
-#if CHP_ACTION_DELAYS
-using entity::preal_const;
 #endif
+using entity::preal_const;
 
 //=============================================================================
 /// helper routines
@@ -179,6 +166,7 @@ set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&,
 	const unroll_context&, const bool);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	For all non-selection events that execute, schedule all successor
 	events for recheck.
@@ -239,6 +227,7 @@ dump_selection_successor_edges(const selection_list_type& l, ostream& o,
 	// check for else clause
 	return o;
 }
+#endif
 
 //=============================================================================
 // class action method definitions
@@ -256,41 +245,31 @@ action::transformer::operator () (const action_ptr_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
-action::action() : persistent()
-#if CHP_ACTION_DELAYS
-	, delay()
-#endif
-{ }
+action::action() : persistent(), delay() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHP_ACTION_DELAYS
 action::action(const attributes_type& a) : persistent(), delay(a) { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
 action::~action() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHP_ACTION_DELAYS
 void
 action::set_delay(const delay_ptr_type& d) {
 	delay = d;
 }
-#endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 action::dump_attributes(ostream& o, const expr_dump_context& d) const {
-#if CHP_ACTION_DELAYS
 	if (delay) {
 		delay->dump(o << "[after=", d) << "] ";
 	}
-#endif
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHP_ACTION_DELAYS
 /**
 	Prefix dump_event with after-attribute.
  */
@@ -300,9 +279,9 @@ action::dump_event_with_attributes(ostream& o,
 	dump_attributes(o, d);
 	return this->dump_event(o, d);
 }
-#endif	// CHP_ACTION_DELAYS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	By default print all successor edge, unadorned.  
  */
@@ -311,31 +290,26 @@ action::dump_successor_edges(ostream& o, const EventNode& e,
 		const size_t i, const expr_dump_context&) const {
 	return e.dump_successor_edges_default(o, i);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action::collect_transient_info_base(persistent_object_manager& m) const {
-#if CHP_ACTION_DELAYS
 	if (delay)
 		delay->collect_transient_info(m);
-#endif
 }
 
 void
 action::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-#if CHP_ACTION_DELAYS
 	m.write_pointer(o, delay);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-#if CHP_ACTION_DELAYS
 	m.read_pointer(i, delay);
-#endif
 }
 
 //=============================================================================
@@ -411,7 +385,6 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
 // consider using __unroll_resolve_rvalue -> preal_const
-#if CHP_ACTION_DELAYS
 #define	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)				\
 	if (delay) {							\
 		const attributes_type					\
@@ -422,9 +395,6 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		}							\
 		ret->set_delay(atts);					\
 	}
-#else
-#define	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
-#endif
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 #if 0
 	try {
@@ -446,10 +416,8 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if (
-#if CHP_ACTION_DELAYS
 		// eventually to attribute list pointer comparison
 		(delay == ret->delay) && 
-#endif
 		equal(begin(), end(), ret->begin()))
 		return p;
 	else	return ret;
@@ -457,38 +425,13 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Constructs a sequence of events backwards from back to
-	front, where each event 'connects' to its successor(s).
-	NOTE: no delay addition anywhere here
- */
 void
-action_sequence::accept_sequence(const action_list_type& l, 
-		StateConstructor& s) {
-	STACKTRACE_VERBOSE;
-//	for_each(rbegin(), rend(), util::visitor_ptr(s));
-	const_iterator i(l.begin()), e(l.end());
-	INVARIANT(i!=e);	// else would be empty
-	do {
-		--e;
-		(*e)->accept(s);
-		// events will link themselves (callee responsible)
-	} while (i!=e);
+action_sequence::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Do we need to construct event successor edges and graphs?
-	NOTE: this does not actually allocate an event for itself.  
-	Constructs events in a backwards order to simplify event-chaining
-	of predecessors to successors.  
- */
-void
-action_sequence::accept(StateConstructor& s) const {
-	accept_sequence(*this, s);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
@@ -510,6 +453,7 @@ action_sequence::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_UNBLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -676,87 +620,13 @@ concurrent_actions::unroll(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Fork and join graph structure.  
-	TODO: this dependencies for this event is the union of 
-		all dependencies of the respective guards.  
-		If there is an else clause, we may omit dependencies, 
-		as a branch is always taken immediately.
-		Will we ever check for guard stability?
- */
 void
-concurrent_actions::accept(StateConstructor& s) const {
-	// TODO: using footprint frame, allocate event edge graph
-	// there will be multiple outgoing edges
-	STACKTRACE_VERBOSE;
-	const size_t branches = this->size();
-	STACKTRACE_INDENT_PRINT("branches: " << branches << endl);
-// check for degenerate cases first: 0, 1
-// these can arise from meta-expansions
-if (!branches) {
-	return;
-} else if (branches == 1) {
-	// don't bother forking and joining
-	front()->accept(s);
-	return;
-}
-// else do the normal thing
-	// create a join event first (bottom-up)
-	const size_t join_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_JOIN, 
-			s.current_process_index, 0));
-	// no additional delay given
-{
-	STACKTRACE_INDENT_PRINT("join index: " << join_index << endl);
-	// join shouldn't need an action ptr (unless we want back-reference)
-	EventNode& join_event(s.get_event(join_index));
-	s.connect_successor_events(join_event);
-	join_event.set_predecessors(branches);	// expect number of branches
-	// reminder, reference may be invalidated after push_back
-}
-	// NOTE: no dependencies to track, unblocked concurrency
-	const_iterator i(begin()), e(end());
-	vector<size_t> tmp;
-	tmp.reserve(branches);
-	// construct concurrent chains
-	for ( ; i!=e; ++i) {
-		s.last_event_index = join_index;	// pass down
-		(*i)->accept(s);
-		tmp.push_back(s.last_event_index);	// head of each chain
-	}
-{
-	// have to set it again!?  must get clobbered by above loop...
-	EventNode& join_event(s.get_event(join_index));
-	join_event.set_predecessors(branches);
-	s.count_predecessors(join_event);
-}
-
-	// construct successor event graph edge? or caller's responsibility?
-	const size_t fork_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_CONCURRENT_FORK, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			1));	// small delay
-{
-	STACKTRACE_INDENT_PRINT("fork index: " << fork_index << endl);
-	EventNode& fork_event(s.get_event(fork_index));
-
-	fork_event.successor_events.resize(branches);
-	copy(tmp.begin(), tmp.end(), &fork_event.successor_events[0]);
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(fork_event);
-}
-	// leave trail of this event for predecessor
-	s.last_event_index = fork_index;
-	// construct an event join graph-node?
+concurrent_actions::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
@@ -781,6 +651,7 @@ concurrent_actions::recheck(const nonmeta_context&) const {
 	// no-op
 	return RECHECK_NEVER_BLOCKED;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -910,22 +781,9 @@ if (stmt) {
 }	// end method unroll_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\pre a slection-merge event is pointed to by s.last_event_index.
-	Plan: construct guards in all branches first
-	(guarded actions), then move them into a union.  
-	It is the selection' (caller) responsibility to collect
-		guard-dependencies for subscription sets.  
-		The dependencies for the guarded action are computed
-		by the action sequence.  
- */
 void
-guarded_action::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	if (stmt) {
-		stmt->accept(s);
-	// it is the selection's responsibility to evaluate the guards
-	}
+guarded_action::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -978,6 +836,7 @@ unroll_resolve_selection_list(const selection_list_type& s,
 }
 
 //=============================================================================
+#if !CHPSIM_VISIT_EXECUTE
 // class guarded_action::selection_evaluator definition
 
 /**
@@ -1060,6 +919,7 @@ public:
 	}
 
 };	// end class selection_evaluator_ref
+#endif
 
 //=============================================================================
 // class deterministic_selection method definitions
@@ -1118,78 +978,13 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Almost exact same code for non-deterministic selection.
-	TODO: static dependency sets of guards.
- */
 void
-deterministic_selection::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// TODO: run-time check for guard exclusion
-	const size_t branches = this->size();
-	const size_t merge_index = s.allocate_event(
-		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
-			s.current_process_index, 0));
-	// no delay at end of selection
-	// don't pass this, as that would cause re-evaluation at join node!
-{
-	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
-	EventNode& merge_event(s.get_event(merge_index));
-	s.connect_successor_events(merge_event);
-	merge_event.set_predecessors(1);	// expect ONE branch only
-	s.count_predecessors(merge_event);
-}
-
-	const_iterator i(begin()), e(end());
-	SIM::CHPSIM::DependenceSetCollector deps(s);	// args
-	vector<size_t> tmp;
-	tmp.reserve(branches);
-	// construct concurrent chains
-	for ( ; i!=e; ++i) {
-		s.last_event_index = merge_index;	// pass down
-		(*i)->accept(s);
-		tmp.push_back(s.last_event_index);	// head of each chain
-		const guarded_action::guard_ptr_type& g((*i)->get_guard());
-		if (g) {
-			g->accept(deps);
-		} else {
-			// is else clause, don't need any guard dependencies!
-			deps.clear();
-			// TODO: check terminating clause *first*
-			// before bothering...
-		}
-	}
-
-	// construct successor event graph edge? or caller's responsibility?
-	const size_t split_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			1));
-	// delay value doesn't matter because this event is never
-	// 'executed' in the traditional sense.
-	// we CAN however use this delay value to incur additional delay
-	// on its successors (but we don't do this yet)
-{
-	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
-	EventNode& split_event(s.get_event(split_index));
-	split_event.import_block_dependencies(deps);
-
-	split_event.successor_events.resize(branches);
-	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(split_event);
-}
-	// leave trail of this event for predecessor
-	s.last_event_index = split_index;
+deterministic_selection::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing other than evaluate guards, via recheck().  
@@ -1200,18 +995,9 @@ void
 deterministic_selection::execute(const nonmeta_context& c, 
 		execute_arg_type&) const {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if 0
-	const bool b = recheck(c);
-	INVARIANT(b);
-#else
 	// never enqueues itself, only successors
 	// see recheck() below
 	ICE_NEVER_CALL(cerr);
-#endif
-	// violation is possible if guard was true but because
-	// false due to concurrent events
-	// we should alert user with run-time error
-	// TODO: Is it possible to re-subscribe this event for re-checking?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1266,13 +1052,16 @@ deterministic_selection::recheck(const nonmeta_context& c) const {
 		return RECHECK_BLOCKED_THIS;		// unreachable
 	}	// end switch
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 ostream&
 deterministic_selection::dump_successor_edges(ostream& o, const EventNode& e, 
 		const size_t i, const expr_dump_context& c) const {
 	return dump_selection_successor_edges(*this, o, e, i, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1358,76 +1147,13 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Code ripped from deterministic_selection::accept().
- */
 void
-nondeterministic_selection::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// TODO: run-time check for guard exclusion
-	const size_t branches = this->size();
-	const size_t merge_index = s.allocate_event(
-		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
-			s.current_process_index, 0));
-	// don't pass 'this', as that would cause re-evaluation at join node!
-	// no delay at end of selection
-{
-	STACKTRACE_INDENT_PRINT("merge index: " << merge_index << endl);
-	EventNode& merge_event(s.get_event(merge_index));
-	s.connect_successor_events(merge_event);
-	merge_event.set_predecessors(1);	// expect ONE branch only
-	s.count_predecessors(merge_event);
-}
-
-	const_iterator i(begin()), e(end());
-	SIM::CHPSIM::DependenceSetCollector deps(s);	// args
-	vector<size_t> tmp;
-	tmp.reserve(branches);
-	// construct concurrent chains
-	for ( ; i!=e; ++i) {
-		s.last_event_index = merge_index;	// pass down
-		(*i)->accept(s);
-		tmp.push_back(s.last_event_index);	// head of each chain
-		const guarded_action::guard_ptr_type& g((*i)->get_guard());
-		if (g) {
-			g->accept(deps);
-		} else {
-			// is else clause, don't need any guard dependencies!
-			deps.clear();
-			// TODO: check terminating clause *first*
-			// before bothering...
-		}
-	}
-
-	// construct successor event graph edge? or caller's responsibility?
-	const size_t split_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			15));
-	// NOTE: the delay value used here is the window of time from 
-	// first unblocked evaluation (enqueue) to execution, during which
-	// guards may change!
-{
-	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
-	EventNode& split_event(s.get_event(split_index));
-	split_event.import_block_dependencies(deps);
-
-	split_event.successor_events.resize(branches);
-	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(split_event);
-}
-	// leave trail of this event for predecessor
-	s.last_event_index = split_index;
+nondeterministic_selection::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	TODO: we may want this to behave differently than determinstic sel.
 	We may want to introduce a delay window from recheck to enqueue
@@ -1590,14 +1316,17 @@ nondeterministic_selection::recheck(const nonmeta_context& c) const {
 	}
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 ostream&
 nondeterministic_selection::dump_successor_edges(
 		ostream& o, const EventNode& e, 
 		const size_t i, const expr_dump_context& c) const {
 	return dump_selection_successor_edges(*this, o, e, i, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1731,15 +1460,13 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Never supposed to be called, because these are expanded.  
- */
 void
-metaloop_selection::accept(StateConstructor& s) const {
-	ICE_NEVER_CALL(cerr);
+metaloop_selection::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Never called, always expanded.  
  */
@@ -1757,6 +1484,7 @@ metaloop_selection::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_BLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1894,15 +1622,13 @@ metaloop_statement::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Never supposed to be called, because these are expanded.  
- */
 void
-metaloop_statement::accept(StateConstructor& s) const {
-	ICE_NEVER_CALL(cerr);
+metaloop_statement::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Never called, always expanded.  
  */
@@ -1920,6 +1646,7 @@ metaloop_statement::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_BLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1996,7 +1723,6 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 	const lval_ptr_type lc(lval->unroll_resolve_copy(c, lval));
 	const rval_ptr_type rc(rval->unroll_resolve_copy(c, rval));
 // consider using __unroll_resolve_rvalue -> preal_const
-#if CHP_ACTION_DELAYS
 #define	UNROLL_COPY_ATTRIBUTES						\
 	attributes_type atts;						\
 	if (delay) {							\
@@ -2006,72 +1732,28 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 			return action_ptr_type(NULL);			\
 		}							\
 	}
-#else
-#define	UNROLL_COPY_ATTRIBUTES
-#endif
 	UNROLL_COPY_ATTRIBUTES
 	if (!lc || !rc) {
 		return action_ptr_type(NULL);
 	} else if (
-#if CHP_ACTION_DELAYS
 		(delay == atts) &&
-#endif
 		(lc == lval) && (rc == rval)) {
 		return p;
 	} else {
 		const count_ptr<this_type> ret(new this_type(lc, rc));
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-assignment::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// construct successor event graph edge? or caller's responsibility?
-	const size_t new_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_ASSIGN, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			10));
-	// we give a medium delay to assignment
-	// this may favor explicit communications (projection, refactoring)
-	// over variable assignment.  
-	STACKTRACE_INDENT_PRINT("new assigment: " << new_index << endl);
-	EventNode& new_event(s.get_event(new_index));
-
-#if CHPSIM_READ_WRITE_DEPENDENCIES
-{
-	SIM::CHPSIM::ReadDependenceSetCollector rdeps(s);	// rvalues
-	SIM::CHPSIM::WriteDependenceSetCollector wdeps(s);	// lvalues
-	rval->accept(rdeps);
-	lval->accept(wdeps);
-	new_event.import_read_dependencies(rdeps);
-	new_event.import_write_dependencies(wdeps);
-}
-#endif
-
-	s.connect_successor_events(new_event);
-	// assignments are atomic and never block
-	// thus we need no dependencies.  
-
-	// leave trail of this event for predecessor
-	// s.last_event_indices.resize(1);
-	// s.last_event_indices[0] = new_index;
-	s.last_event_index = new_index;
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(new_event);
+assignment::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	lvalue must be bool, int, or enum reference.  
 	\param u collection of references updated by the assignment execution,
@@ -2095,6 +1777,7 @@ assignment::recheck(const nonmeta_context&) const {
 	// no-op
 	return RECHECK_NEVER_BLOCKED;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2168,64 +1851,24 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error resolving condition-wait." << endl;
 		return action_ptr_type(NULL);
 	} else if (
-#if CHP_ACTION_DELAYS
 		(delay == atts) &&
-#endif
 		(g == cond)) {
 		return p;
 	} else {
 		const count_ptr<this_type> ret(new this_type(g));
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: alternative: fuse this event with successor if single.  
-		rationale: every CHPSIM event is "guarded"
-	TODO: what if several conditional waits occur in succession?
-		Take conjunction or sequential evaluation
-		using auxiliary null events?
- */
 void
-condition_wait::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// register guard expression dependents
-	// construct successor event graph edge? or caller's responsibility?
-	const size_t new_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_NULL, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			0));
-	// the delay value should have no impact, as this event just
-	// unblocks its successor(s)
-	STACKTRACE_INDENT_PRINT("wait index: " << new_index << endl);
-	EventNode& new_event(s.get_event(new_index));
-	if (cond) {
-		SIM::CHPSIM::DependenceSetCollector deps(s);
-		cond->accept(deps);
-		new_event.import_block_dependencies(deps);
-	}
-
-	s.connect_successor_events(new_event);
-
-	// leave trail of this event for predecessor
-	// s.last_event_indices.resize(1);
-	// s.last_event_indices[0] = new_index;
-	s.last_event_index = new_index;
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(new_event);
+condition_wait::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Does nothing, is a NULL event.  
 	NOTE: it is possible that guard is no longer true, 
@@ -2270,6 +1913,7 @@ condition_wait::recheck(const nonmeta_context& c) const {
 		return RECHECK_UNBLOCKED_THIS;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2436,9 +2080,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if ((cc == chan) && 
-#if CHP_ACTION_DELAYS
 		(atts == delay) &&
-#endif
 			equal(exprs.begin(), exprs.end(), exprs_c.begin())) {
 		// resolved members match exactly, return copy
 		return p;
@@ -2446,14 +2088,13 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->exprs.swap(exprs_c);	// faster than copying/assigning
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
@@ -2473,11 +2114,6 @@ channel_send::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	}
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-#if 0
-	// don't need
-	const global_entry<channel_tag>&
-		ch(c.sm->get_pool<channel_tag>()[chan_index]);
-#endif
 	// evaluate rvalues of channel send statement (may throw!)
 	// write to the ChannelState using canonical_fundamental_type
 	for_each(exprs.begin(), exprs.end(), 
@@ -2505,42 +2141,12 @@ channel_send::recheck(const nonmeta_context& c) const {
 	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
 	return nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_send::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// atomic event
-	// construct event graph
-	const size_t new_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_SEND, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			2));
-	// default to small delay
-	STACKTRACE_INDENT_PRINT("send index: " << new_index << endl);
-	EventNode& new_event(s.get_event(new_index));
-
-{
-	// can block on channel, so we add dependencies
-	SIM::CHPSIM::DependenceSetCollector deps(s);
-	chan->accept(deps);
-	new_event.import_block_dependencies(deps);
-}
-
-	s.connect_successor_events(new_event);
-
-	// leave trail of this event for predecessor
-	// s.last_event_indices.resize(1);
-	// s.last_event_indices[0] = new_index;
-	s.last_event_index = new_index;
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(new_event);
+channel_send::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2644,9 +2250,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if ((cc == chan) &&
-#if CHP_ACTION_DELAYS
 		(atts == delay) && 
-#endif
 			equal(insts.begin(), insts.end(), refs.begin())) {
 		// resolved members match exactly, return copy
 		return p;
@@ -2654,51 +2258,19 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->insts.swap(refs);	// faster than copying/assigning
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_receive::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// atomic event
-	// construct event graph
-	const size_t new_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_RECEIVE, 
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			5));
-	// default to small delay
-	// this delay would be more meaningful in a handshaking expansion
-	STACKTRACE_INDENT_PRINT("receive index: " << new_index << endl);
-	EventNode& new_event(s.get_event(new_index));
-
-{
-	// can block on channel, so we add dependencies
-	SIM::CHPSIM::DependenceSetCollector deps(s);
-	chan->accept(deps);
-	new_event.import_block_dependencies(deps);
-}
-	s.connect_successor_events(new_event);
-
-	// leave trail of this event for predecessor
-	// s.last_event_indices.resize(1);
-	// s.last_event_indices[0] = new_index;
-	s.last_event_index = new_index;
-
-	// updates successors' predecessor-counts
-	s.count_predecessors(new_event);
+channel_receive::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
@@ -2710,11 +2282,6 @@ channel_receive::execute(const nonmeta_context& c, execute_arg_type& u) const {
 	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-#if 0
-	// don't need
-	const global_entry<channel_tag>&
-		ch(c.sm->get_pool<channel_tag>()[chan_index]);
-#endif
 	// evaluate lvalues of channel receive statement (may throw!)
 	// read from the ChannelState using canonical_fundamental_type
 	for_each(insts.begin(), insts.end(), 
@@ -2743,6 +2310,7 @@ channel_receive::recheck(const nonmeta_context& c) const {
 }
 
 #undef	ASSERT_CHAN_INDEX
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2824,107 +2392,26 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 	}
 	UNROLL_COPY_ATTRIBUTES
 	if (
-#if CHP_ACTION_DELAYS
 		(atts == delay) && 
-#endif
 		(b == body)) {
 		// return self-copy
 		return p;
 	} else {
 		// return newly constructed copy
 		const count_ptr<this_type> ret(new this_type(b));
-#if CHP_ACTION_DELAYS
 		ret->set_delay(atts);
-#endif
 		return ret;
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	NOTE: nothing can follow a do-forever loop, 
-	so we need not worry about an initial successor.  
-	However, there may be entries into an infinite loop, so we
-	must return the index to the first event in the loop.  
-	TODO: optimization: overwrite the loopback null event slot
-		if the event is trivial -- may result in self-reference, OK.
- */
 void
-do_forever_loop::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// construct cyclic event graph
-	// create a dummy event first (epilogue) and loop it around.
-	// OR use the 0th event slot as the dummy!
-	// -- works only if we need one dummy at a time
-	const size_t loopback_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_NULL,
-			s.current_process_index, 
-#if (0 && CHP_ACTION_DELAYS)
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			0));	// no additional delay
-	STACKTRACE_INDENT_PRINT("forever loopback: " << loopback_index << endl);
-	s.last_event_index = loopback_index;	// point to dummy, pass down
-	body->accept(s);
-	// never blocks, no need for dependency checking
-{
-	// find last event and loop it back to the beginning
-	EventNode& loopback_event(s.get_event(loopback_index));
-	EventNode& head_event(s.get_event(s.last_event_index));
-	STACKTRACE_INDENT_PRINT("head of body: " << s.last_event_index << endl);
-// some redundant operations going on here...
-	// re-link loop
-	loopback_event.successor_events.resize(1);
-	loopback_event.successor_events[0] = s.last_event_index;
-#if OPTIMIZE_CHPSIM_EVENTS
-/***
-	Two exclusive strategies possible from here:
-	1) move the back event to the loopback placeholder slot, 
-		this way minimizes dead-events in the middle.
-		We do this only if it is 'convenient', i.e.
-		the back event is trivial and has a lone successor.  
-	2) just free the loopback placeholder, by forwarding around it, 
-		return a reference to the head_event
-***/
-	const size_t back_index = s.event_pool_size() -1;
-	EventNode& back_event(s.get_event(back_index));
-	STACKTRACE_INDENT_PRINT("considering back: " << back_index << endl);
-if (back_event.is_dispensible()) {
-	// 2) recycle the back event, involves re-linking up to two events
-	// Q: does the loopback already point to back? (corner case)
-	if (back_index != loopback_event.successor_events[0]) {
-		s.forward_successor(loopback_index);	// pointers to loopback
-	}
-	s.forward_successor(back_index, loopback_index, s.last_event_index);
-	// INVARIANT(s.last_event_index != back_index);
-	loopback_event = back_event;	// MOVE into placeholder slot!
-	STACKTRACE_INDENT_PRINT("recycling back: " << back_index << endl);
-	s.deallocate_event(back_index);		// recycle it!
-	if (back_index == s.last_event_index) {
-		STACKTRACE_INDENT_PRINT("back is s.last_event_index" << endl);
-	// need to update return value (head index), using loopback slot
-		s.last_event_index = loopback_index;
-	}
-} else {
-	// 1) then we can recycle the loopback slot safely (tested)
-	// first: forward successors through condemned event
-	const size_t ret = s.forward_successor(loopback_index);
-	INVARIANT(ret == s.last_event_index);
-	// last: free the condemned event
-	s.deallocate_event(loopback_index);		// recycle it!
-	// loopback_event is now dead
-	STACKTRACE_INDENT_PRINT("recycling loopback: " << loopback_index << endl);
-//	s.last_event_index = ret;	// redundant
-}
-#endif	// OPTIMIZE_CHPSIM_EVENTS
-	head_event.set_predecessors(1);	// but may have multiple entries
-	// caller will count_predecessors
-}
+do_forever_loop::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	No-op, this should never be called from simulator, as loop
 	body events are expanded.  
@@ -2940,6 +2427,7 @@ do_forever_loop::recheck(const nonmeta_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return RECHECK_BLOCKED_THIS;	// don't care
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -3015,9 +2503,7 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	if (
-#if CHP_ACTION_DELAYS
 		(delay == r->delay) &&
-#endif
 		equal(begin(), end(), r->begin())) {
 		// return self-copy
 		return p;
@@ -3028,85 +2514,13 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Code ripped from do_forever_loop::accept().
-	Need to synthesize a deterministic selection with an exit branch.
-	Semantics: never blocking, as there is an implicit else-clause
-	that skips past the loop.  
-	Reminder: guards cannot include an explicit else clause.  
- */
 void
-do_while_loop::accept(StateConstructor& s) const {
-	STACKTRACE_VERBOSE;
-	// construct cyclic event graph
-	// create a dummy event first (epilogue) and loop it around.
-	const size_t branches = this->size();
-	const size_t loopback_index = s.allocate_event(
-		EventNode(this, SIM::CHPSIM::EVENT_SELECTION_BEGIN,
-			s.current_process_index, 
-#if CHP_ACTION_DELAYS
-			// assert dynamic_cast
-			delay ? delay.is_a<const preal_const>()
-				->static_constant_value() :
-#endif
-			3));
-	// give small delay for selection
-	STACKTRACE_INDENT_PRINT("do-while loopback index: "
-		<< loopback_index << endl);
-{
-	EventNode& loopback_event(s.get_event(loopback_index));
-	loopback_event.successor_events.resize(branches +1);
-	if (s.last_event_index) {
-		// exit
-		loopback_event.successor_events[branches] = s.last_event_index;
-	} else {
-		// there was no successor, create a terminator
-		const size_t terminal_index = s.allocate_event(
-			EventNode(NULL, SIM::CHPSIM::EVENT_NULL,
-				s.current_process_index, 0));
-		// loopback_event reference invalidated by push_back
-		s.get_event(loopback_index).successor_events[branches]
-			= terminal_index;
-		STACKTRACE_INDENT_PRINT("new terminal index: "
-			<< terminal_index << endl);
-	}
-	// convention: 
-	// 1st events will go into the body of the do-while loop
-	// last event will be the exit branch, corresponding to the else clause
-}
-	// NOTE: no need to add guard dependencies because
-	// action is always taken immediately (implicit else-clause skips body)
-	vector<size_t> tmp;
-	tmp.reserve(branches);
-{
-	const_iterator i(begin()), e(end());
-	// construct concurrent chains
-	for ( ; i!=e; ++i) {
-		s.last_event_index = loopback_index;	// pass down
-		(*i)->accept(s);		// guarded actions
-		tmp.push_back(s.last_event_index);	// head of each chain
-	}
-}
-{
-	// find last event and loop it back to the beginning
-	EventNode& loopback_event(s.get_event(loopback_index));
-	copy(tmp.begin(), tmp.end(), &loopback_event.successor_events[0]);
-#if ENABLE_STACKTRACE
-	cerr << "tmp: ";
-	copy(tmp.begin(), tmp.end(), std::ostream_iterator<size_t>(cerr, ","));
-	cerr << endl;
-	cerr << "else: " << loopback_event.successor_events[branches] << endl;
-#endif
-	// loopback_event.successor_events[0] = s.last_event_index;
-	// s.last_event_index now points to first action(s) in loop
-	// EventNode& head_event(event_pool[s.last_event_index]);
-	// head_event.set_predecessors(1);	// but may have multiple entries
-	s.count_predecessors(loopback_event);
-	s.last_event_index = loopback_index;
-}
+do_while_loop::accept(chp_visitor& v) const {
+	v.visit(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 /**
 	Evaluate the guards immediately.
 	If evaluation is true, execute the body branch, else take the
@@ -3152,14 +2566,17 @@ do_while_loop::recheck(const nonmeta_context& c) const {
 	STACKTRACE_CHPSIM_VERBOSE;
 	return RECHECK_NEVER_BLOCKED;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_VISIT_EXECUTE
 ostream&
 do_while_loop::dump_successor_edges(
 		ostream& o, const EventNode& e, 
 		const size_t i, const expr_dump_context& c) const {
 	return dump_selection_successor_edges(*this, o, e, i, c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

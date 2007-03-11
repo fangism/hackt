@@ -2,7 +2,7 @@
 	\file "main/alloc.cc"
 	Allocates global unique state.  
 
-	$Id: alloc.cc,v 1.4 2005/12/13 04:15:45 fang Exp $
+	$Id: alloc.cc,v 1.5 2007/03/11 16:34:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
+#include "main/global_options.h"
 #include "util/persistent_object_manager.h"
 
 namespace HAC {
@@ -37,8 +38,10 @@ alloc::name[] = "alloc";
 const char
 alloc::brief_str[] = "Globally allocates unique state for simulation";
 
+#ifndef	WITH_MAIN
 const size_t
 alloc::program_id = register_hackt_program_class<alloc>();
+#endif
 
 //=============================================================================
 alloc::alloc() { }
@@ -95,4 +98,15 @@ alloc::usage(void) {
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::alloc::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 

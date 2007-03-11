@@ -2,7 +2,7 @@
 	\file "main/create.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: create.cc,v 1.6 2005/12/13 04:15:46 fang Exp $
+	$Id: create.cc,v 1.7 2007/03/11 16:34:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
+#include "main/global_options.h"
 #include "util/persistent_object_manager.h"
 
 namespace HAC {
@@ -37,8 +38,10 @@ create::name[] = "create";
 const char
 create::brief_str[] = "Creates unique state for aliased objects for simulation";
 
+#ifndef	WITH_MAIN
 const size_t
 create::program_id = register_hackt_program_class<create>();
+#endif
 
 //=============================================================================
 create::create() { }
@@ -95,4 +98,15 @@ create::usage(void) {
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::create::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 

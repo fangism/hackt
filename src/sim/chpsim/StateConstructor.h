@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.2 2007/01/21 06:00:44 fang Exp $
+	$Id: StateConstructor.h,v 1.3 2007/03/11 16:34:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -9,7 +9,7 @@
 
 #include <vector>
 #include <set>		// or use util/memory/free_list interface
-#include "Object/lang/cflat_context_visitor.h"
+#include "Object/lang/CHP_visitor.h"
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/common.h"
 
@@ -24,6 +24,21 @@ using entity::PRS::footprint_rule;
 using entity::PRS::footprint_macro;
 using entity::PRS::footprint_expr_node;
 using entity::SPEC::footprint_directive;
+using entity::CHP::chp_visitor;
+using entity::CHP::action;
+using entity::CHP::action_sequence;
+using entity::CHP::concurrent_actions;
+using entity::CHP::guarded_action;
+using entity::CHP::deterministic_selection;
+using entity::CHP::nondeterministic_selection;
+using entity::CHP::metaloop_selection;
+using entity::CHP::metaloop_statement;
+using entity::CHP::assignment;
+using entity::CHP::condition_wait;
+using entity::CHP::channel_send;
+using entity::CHP::channel_receive;
+using entity::CHP::do_while_loop;
+using entity::CHP::do_forever_loop;
 
 //=============================================================================
 /**
@@ -31,7 +46,7 @@ using entity::SPEC::footprint_directive;
 	TODO: re-factor code to not refer to non-CHP visitees.  
 	This clearly lacks good organization.  :S
  */
-class StateConstructor : public cflat_context_visitor {
+class StateConstructor : public chp_visitor {
 public:
 	typedef	State				state_type;
 	// typedef	std::default_vector<size_t>::type	return_indices_type;
@@ -76,6 +91,7 @@ public:
 	const entity::footprint&
 	get_process_footprint(void) const;
 
+protected:
 	event_type&
 	get_event(const event_index_type ei);
 
@@ -95,9 +111,11 @@ public:
 	void
 	connect_successor_events(event_type&) const;
 
+public:
 	void
 	count_predecessors(const event_type&) const;
 
+protected:
 	event_index_type
 	forward_successor(const event_index_type);
 
@@ -105,8 +123,48 @@ public:
 	forward_successor(const event_index_type, const event_index_type, 
 		const event_index_type);
 
+public:
+	void
+	visit(const action_sequence&);
+
+	void
+	visit(const concurrent_actions&);
+
+	void
+	visit(const guarded_action&);
+
+	void
+	visit(const deterministic_selection&);
+
+	void
+	visit(const nondeterministic_selection&);
+
+	void
+	visit(const metaloop_selection&);
+
+	void
+	visit(const metaloop_statement&);
+
+	void
+	visit(const assignment&);
+
+	void
+	visit(const condition_wait&);
+
+	void
+	visit(const channel_send&);
+
+	void
+	visit(const channel_receive&);
+
+	void
+	visit(const do_while_loop&);
+
+	void
+	visit(const do_forever_loop&);
+
 protected:
-	using cflat_context_visitor::visit;
+	using chp_visitor::visit;
 
 	void
 	reset(void);
@@ -114,23 +172,6 @@ protected:
 	// overrides
 	void
 	visit(const state_manager&);
-
-	// overrides
-	void
-	visit(const entity::PRS::footprint&);	// no-op
-
-	void
-	visit(const footprint_rule&);	// no-op
-
-	void
-	visit(const footprint_expr_node&);	// no-op
-
-	void
-	visit(const footprint_macro&);	// no-op
-
-	void
-	visit(const entity::SPEC::footprint_directive&);	// no-op
-
 
 };	// end class StateConstructor
 

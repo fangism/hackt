@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.10 2006/07/30 05:49:40 fang Exp $
+	$Id: cflat.h,v 1.11 2007/03/11 16:34:31 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -60,10 +60,6 @@ public:
 	static
 	int
 	main(const int, char*[], const global_options&);
-
-	static
-	void
-	print_alias(ostream&, const string&, const string&, const options&);
 
 private:
 	static

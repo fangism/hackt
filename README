@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.17 2007/01/27 05:54:07 fang Exp $
+	$Id: README,v 1.18 2007/03/11 16:34:09 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -12,7 +12,7 @@ Quick start:
 The majority of this section is described in more detail in INSTALL.  
 To start the build run "./configure" with your elected options.  
 Assuming configure is happy with the system, you're ready to run "make".  
-(You should, however, read the next section on requirements and portablility.)
+(You should, however, read the next section on requirements and portability.)
 
 After the build is finished, I strongly recommend running "make check"
 from the root directory to run the test suite on the built executables.  
@@ -22,7 +22,7 @@ Requirements and Portability:
 
 To maximize compatibility, the HACKT project is build with the strictest
 compiler settings: strictly conforming to the ISO C++ 1998 standard (c++98), 
-in particular, GNU extensions are rejected by the -pendantic-error flag.  
+in particular, GNU extensions are rejected by the -pedantic-error flag.  
 In the future, we may decided to upgrade the standard to the C++0x
 standard, which is currently in review.  
 
@@ -86,7 +86,7 @@ KNOWN ISSUES
 	aware of the AM_CXXFLAGS in src/Makefile.am.
 	Some of the results (such as testing for long long) may
 	be inconsistent.  
-	Workaround: explictly pass the relevant flags to CXXFLAGS
+	Workaround: explicitly pass the relevant flags to CXXFLAGS
 	at configure time to guarantee consistency.
 	TODO: find way to coordinate use and selection of flags
 	between autoconf and automake.  
@@ -116,8 +116,8 @@ Here's the reason why: from the man (3) page of linux's getopt:
 	first  character of optstring is '-', then each non-option
 	argv-element is handled as if it were the argument  of  an
 	option  with  character code 1.  (This is used by programs
-	that were written to expect options  and  other  argv-ele­
-	ments in any order and that care about the ordering of the
+	that were written to expect options  and  other  arguments
+	in  any order  and that  care about  the ordering  of  the
 	two.)  The special argument '--' forces an end of  option-
 	scanning regardless of the scanning mode.
 The problem is fixed by passing '+' to enforce POSIX behavior.  

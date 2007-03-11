@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.15 2007/02/26 22:00:42 fang Exp $
+	$Id: CHP.cc,v 1.16 2007/03/11 16:34:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -29,10 +29,8 @@
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/channel_probe.h"
-#if CHP_ACTION_DELAYS
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/convert_expr.h"
-#endif
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -75,6 +73,16 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_statement, "(chp-metaloop-stmt)"
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
+
+namespace memory {
+// explicit template instantiations
+using HAC::parser::CHP::stmt_attribute;
+using HAC::parser::CHP::guarded_command;
+using HAC::parser::CHP::statement;
+template class count_ptr<const stmt_attribute>;
+template class count_ptr<const guarded_command>;
+template class count_ptr<const statement>;
+}	// end namespace memory
 }	// end namespace util
 
 namespace HAC {
@@ -198,7 +206,6 @@ statement::check_action(context& c) const {
  */
 bool
 statement::check_attributes(context& c, entity::CHP::action& a) const {
-#if CHP_ACTION_DELAYS
 if (attrs) {
 if (attrs->size() == 1) {
 	const stmt_attribute::return_type
@@ -239,9 +246,6 @@ cerr << "Present limitation: CHP attributes expect only one delay attribute."
 } else {
 	return false;
 }
-#else
-	return false;
-#endif
 }	// end method check_attributes
 
 //=============================================================================
@@ -1462,6 +1466,9 @@ log::__check_action(context& c) const {
 
 template 
 node_list<const CHP::stmt_attribute>::node_list(const CHP::stmt_attribute*);
+
+template 
+node_list<const CHP::stmt_attribute>::~node_list();
 
 template 
 ostream&

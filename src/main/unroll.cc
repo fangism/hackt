@@ -5,7 +5,7 @@
 	NOTE: this command is now obsolete, having been fused with
 	the create phase.  
 
-	$Id: unroll.cc,v 1.7 2006/12/01 23:28:57 fang Exp $
+	$Id: unroll.cc,v 1.8 2007/03/11 16:34:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
+#include "main/global_options.h"
 #include "util/persistent_object_manager.h"
 
 namespace HAC {
@@ -45,8 +46,10 @@ unroll::brief_str[] =
 "Unrolls an object file, saving to another object file (deprecated)";
 #endif
 
+#ifndef	WITH_MAIN
 const size_t
 unroll::program_id = register_hackt_program_class<unroll>();
+#endif
 
 //=============================================================================
 unroll::unroll() { }
@@ -109,4 +112,15 @@ unroll::usage(void) {
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::unroll::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 

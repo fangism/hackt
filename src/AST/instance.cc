@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.20 2006/11/21 22:38:32 fang Exp $
+	$Id: instance.cc,v 1.21 2007/03/11 16:34:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -85,7 +85,16 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_statement,
 	"(type-completion)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_connection_statement, 
 	"(type-completion-connection)")
-}
+
+namespace memory {
+// explicit template instantiations
+using namespace HAC::parser;
+template class count_ptr<const guarded_instance_management>;
+template class count_ptr<const instance_management>;
+template class count_ptr<const instance_base>;
+
+}	// end namespace memory
+}	// end namespace util
 
 //=============================================================================
 namespace HAC {

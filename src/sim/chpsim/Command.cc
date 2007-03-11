@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.7 2007/02/26 22:00:58 fang Exp $
+	$Id: Command.cc,v 1.8 2007/03/11 16:34:37 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -780,7 +780,6 @@ ShowEventBreaks::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_BREAK_VALUES
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakValue, "break-value", simulation, 
 	"set breakpoint on selected variables")
 
@@ -898,7 +897,6 @@ ShowValueBreaks::usage(ostream& o) {
 	o << name << endl;
 	o << "Print all breakpoint variables with current values." << endl;
 }
-#endif	// CHPSIM_BREAK_VALUES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1396,7 +1394,6 @@ UnWatchAllEvents::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_BREAK_VALUES
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchValue, "watch-value", view, 
 	"print activity on selected variables")
 
@@ -1514,7 +1511,6 @@ ShowValueWatches::usage(ostream& o) {
 	o << name << endl;
 	o << "Print all watched variables with current values." << endl;
 }
-#endif	// CHPSIM_BREAK_VALUES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllEvents, "watchall-events", view, 

@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.14 2006/08/14 04:50:07 fang Exp $
+	$Id: cflat.cc,v 1.15 2007/03/11 16:34:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,6 +19,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
+#include "main/global_options.h"
 
 #include "AST/type_base.h"
 #include "Object/type/process_type_reference.h"
@@ -73,8 +74,10 @@ cflat::brief_str[] =
 
 STATIC_TRACE_HERE("before cflat registry")
 
+#ifndef	WITH_MAIN
 const size_t
 cflat::program_id = register_hackt_program_class<cflat>();
+#endif
 
 //=============================================================================
 static const char default_options_brief[] = "(CAST cflat preset)";
@@ -704,39 +707,21 @@ if (modes) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Prints an alias as specified by the flags.  
-	Publicly accessible.  
- */
-void
-cflat::print_alias(ostream& o, const string& canonical, const string& alias,
-		const options& cf) {
-if (cf.dump_self_connect || alias != canonical) {
-	switch (cf.connect_style) {
-		case cflat_options::CONNECT_STYLE_CONNECT:
-			o << "connect ";
-			break;  
-		case cflat_options::CONNECT_STYLE_EQUAL:
-			o << "= ";
-			break;  
-		case cflat_options::CONNECT_STYLE_WIRE:
-			o << "wire ";
-			break;  
-		default:
-			o << "alias ";
-			break;  
-	}       
-	if (cf.enquote_names) {
-		o << '\"' << canonical << "\" \"" << alias << '\"';
-	} else {
-		o << canonical << ' ' << alias;
-	}       
-	o << endl;
-}       
-}
+// cflat::print_alias relocated to "Object/inst/alias_printer.cc"
 
 //=============================================================================
 }	// end namespace HAC
+
+#ifdef	WITH_MAIN
+/**
+	Assumes no global hackt options.  
+ */
+int
+main(const int argc, char* argv[]) {
+	const HAC::global_options g;
+	return HAC::cflat::main(argc, argv, g);
+}
+#endif	// WITH_MAIN
 
 DEFAULT_STATIC_TRACE_END
 

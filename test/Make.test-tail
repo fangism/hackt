@@ -3,25 +3,34 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.69 2007/02/22 01:09:15 fang Exp $
+#	$Id: Make.test-tail,v 1.70 2007/03/11 16:34:45 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
-HACKT_COMPILE_EXE = $(HACKT_EXE) compile
-HACKT_FLATTEN_EXE = $(HACKT_EXE) flatten
-HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
-# if USE_UNROLL_PHASE
-HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
-# endif
-HACKT_CREATE_EXE = $(HACKT_EXE) create
-HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
-HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
+# HACKT_COMPILE_EXE = $(HACKT_EXE) compile
+HACKT_COMPILE_EXE = $(top_builddir)/src/haco
+# HACKT_FLATTEN_EXE = $(HACKT_EXE) flatten
+HACKT_FLATTEN_EXE = $(top_builddir)/src/hacpp
+# HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
+HACKT_OBJDUMP_EXE = $(top_builddir)/src/hacobjdump
+if USE_UNROLL_PHASE
+# HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
+HACKT_UNROLL_EXE = $(top_builddir)/src/hacunroll
+endif
+# HACKT_CREATE_EXE = $(HACKT_EXE) create
+HACKT_CREATE_EXE = $(top_builddir)/src/haccreate
+# HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
+HACKT_ALLOC_EXE = $(top_builddir)/src/hacalloc
+# HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
+HACKT_CFLAT_EXE = $(top_builddir)/src/hflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
 HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
 HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
-HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
-HACKT_CHPSIM_EXE = $(HACKT_EXE) chpsim
+# HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
+HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
+# HACKT_CHPSIM_EXE = $(HACKT_EXE) chpsim
+HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
 
 # NOTE: these scripts are configure-generated from their .hac files.  
 TEST_SRCDIR = $(top_srcdir)/test
@@ -132,6 +141,9 @@ HAC_OBJECT_TARGETS +=
 build-check-local: $(TESTS)
 
 # executable dependence: if executable is more recent, also rebuild
+# if we really cared we could subdivide this by the executable that
+# generated the output, e.g. haco, haccreate, hacalloc...
+# depending on the hackt dispatcher should cover everything
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 
 $(HACKT_EXE): .libs

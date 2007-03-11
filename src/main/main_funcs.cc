@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.12 2006/11/15 00:09:00 fang Exp $
+	$Id: main_funcs.cc,v 1.13 2007/03/11 16:34:35 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,12 @@
 
 #define	ENABLE_STACKTRACE		0
 #define	ENABLE_STATIC_TRACE		0
+
+/**
+	Eventually split out parser functions to parser library
+	for better modularity.  
+ */
+#define	KEEP_PARSE_FUNCS		1
 
 #include "config.h"			// for USING_BISON / USING_YACC
 
@@ -25,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/getopt_portable.h"
 #include "util/persistent_object_manager.h"
 
+#if KEEP_PARSE_FUNCS
 // forward declarations needed for YSTYPE
 #include "parser/hackt-parse-real.h"	// for YYSTYPE
 using util::memory::excl_ptr;
@@ -33,13 +40,11 @@ using util::memory::excl_ptr;
 #include "lexer/yyin_manager.h"
 #include "lexer/flex_lexer_state.h"
 #include "lexer/hacflat-yystype.h"
-#include "util/libc.h"			// for remove
-#if 0
-/**
-	This is the file pointer used by hackt_parse().  
- */
-extern	FILE*	hackt_in;
 #endif
+#include "util/libc.h"			// for remove
+#include "util/dirent.h"		// configured wrapper around <dirent.h>
+
+#if KEEP_PARSE_FUNCS
 /**
 	This prototype for yyparse is either set by
 	YYPARSE_PARAM for bison, or hacked by scripts for yacc.  
@@ -54,6 +59,7 @@ namespace lexer {
 extern	good_bool	__flatten_source(FILE*);
 }	// end namespace lexer
 }	// end namespace HAC
+#endif
 
 #include "util/stacktrace.h"
 
@@ -65,7 +71,10 @@ using std::ios_base;
 using parser::root_body;
 using util::persistent;
 using util::persistent_object_manager;
+using lexer::file_manager;
+#if KEEP_PARSE_FUNCS
 using lexer::yyin_manager;
+#endif
 #include "util/using_ostream.h"
 typedef	parser::context		parse_context;
 
@@ -141,6 +150,7 @@ check_file_writeable(const char* fname) {
 }
 
 //=============================================================================
+#if KEEP_PARSE_FUNCS
 /**
 	Parses a file as an independent module, resulting in a root body.
 	No error handling here.  
@@ -212,8 +222,10 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	}
 	return return_type(hackt_val._root_body);
 }
+#endif
 
 //=============================================================================
+#if KEEP_PARSE_FUNCS
 /**
 	Phase 1 of type-check.  
  */
@@ -233,8 +245,10 @@ check_AST(const root_body& r, const char* name) {
 	}
 	return mod;
 }
+#endif
 
 //=============================================================================
+#if KEEP_PARSE_FUNCS
 /**
 	Prints flattened source (expanding imports) to stdout.  
 	NOTE: uses global hackt_parse_file_manager.  :/
@@ -306,6 +320,7 @@ parse_and_check(const char* name, const compile_options& opt) {
 	// error message would be nice
 	return check_AST(*AST, name ? name : dflt);
 }
+#endif
 
 //=============================================================================
 /**
@@ -383,6 +398,30 @@ load_module_debug(const char* fname) {
 	persistent::warn_unimplemented = true;
 	persistent_object_manager::dump_reconstruction_table = true;
 	return load_module(fname);
+}
+
+//=============================================================================
+// class compile_options method definitions
+
+void
+compile_options::export_include_paths(file_manager& fm) const {
+	typedef	include_paths_type::const_iterator	const_iterator;
+	const_iterator i(include_paths.begin());
+	const const_iterator e(include_paths.end());
+	for ( ; i!=e; i++) {
+		const string& s(*i);
+		// check if path exists, otherwise, don't bother adding...
+		if (util::dir_exists(s.c_str())) {
+			fm.add_path(s);
+			if (dump_include_paths) {
+				cerr << "Added to search path: " << s << endl;
+			}
+		} else {
+			if (dump_include_paths) {
+				cerr << "Couldn\'t open dir: " << s << endl;
+			}
+		}
+	}
 }
 
 //=============================================================================
