@@ -1,5 +1,16 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.69 2007/03/11 21:16:53 fang Exp $
+#	$Id: ChangeLog,v 1.70 2007/03/12 07:38:14 fang Exp $
+
+2007-03-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-04:
+	  util/sfinae_types.h: new tools using SFINAE for Jedi
+		template meta-programming.
+
+	  util/memory/deallocation_policy_fwd.h: determine if
+		pointee has operator delete [] and call it.
+		Used to check for possible bug in standard conformance.
+
 
 2007-03-11	David Fang		<fangism@users.sourceforge.net>
 

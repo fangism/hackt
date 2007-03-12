@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.26 2007/03/11 21:16:54 fang Exp $
+#	$Id: Makefile.inc,v 1.27 2007/03/12 07:38:15 fang Exp $
 #	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -169,6 +169,7 @@ UTIL_HEADER_FILES = \
 	util/reserve.h \
 	util/ring_node_fwd.h \
 	util/signal.h \
+	util/sfinae_types.h \
 	util/size_t.h \
 	util/sstream.h \
 	util/stacktrace.h \

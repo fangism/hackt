@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.54 2007/02/22 01:09:15 fang Exp $
+#	$Id: Makefile.am,v 1.55 2007/03/12 07:38:17 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -37,6 +37,7 @@ noinst_PROGRAMS = \
 	link_test \
 	pointer_classes_test \
 	excl_ptr_variant_test \
+	gxx-pr29164-operator-delete \
 	count_ptr_test \
 	count_ptr_variant_test \
 	sublist_test \
@@ -95,6 +96,8 @@ count_ptr_variant_test_SOURCES = count_ptr_variant_test.cc
 count_ptr_variant_test_LDADD = libfangutil.la
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
 count_ptr_test_LDADD = libfangutil.la
+gxx_pr29164_operator_delete_SOURCES = gxx-pr29164-operator-delete.cc \
+	one_array_only.cc one_array_only.h
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 deque_iterator_test_LDADD = libfangutil.la

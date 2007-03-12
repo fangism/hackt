@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-03-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-04:
+	  config/builtin_funcs.m4: added long long tests and parity tests.
+
+
 2007-03-11	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-02-merged-shlib-01-07:
