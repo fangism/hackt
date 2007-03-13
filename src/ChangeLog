@@ -5,6 +5,10 @@
 
 2007-03-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-05:
+	  Previous patch disabled, due to g++-3.3 ICEs, see util/ChangeLog.
+
+
 	* HACKT-00-01-04-main-00-81-04:
 	  No hackt source revision, see util/ChangeLog.
 

@@ -2,14 +2,21 @@
 	\file "util/memory/deallocation_policy_fwd.h"
 	Forward declarations of names of deallocation policies.  
 	Their definitions appear in "util/memory/deallocation_policy.h".
-	$Id: deallocation_policy_fwd.h,v 1.4 2007/03/12 07:38:15 fang Exp $
+	$Id: deallocation_policy_fwd.h,v 1.5 2007/03/13 02:37:50 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_FWD_H__
 #define	__UTIL_MEMORY_DEALLOCATION_POLICY_FWD_H__
 
+/**
+	Should be 1, but gcc-3.3.x ICEs during attempted substitution.
+	So we just disable it, there's no harm.  
+ */
+#define	UTIL_USE_SFINAE_OPERATOR_DELETE_ARRAY		0
+
+#if UTIL_USE_SFINAE_OPERATOR_DELETE_ARRAY
 #include "util/sfinae_types.h"
-// #include <cassert>		// for assert debugging
+#endif
 
 namespace util {
 namespace memory {
@@ -29,6 +36,7 @@ struct delete_tag {
 };      // end struct delete_tag
 
 //-----------------------------------------------------------------------------
+#if UTIL_USE_SFINAE_OPERATOR_DELETE_ARRAY
 /**
 	Uses SFINAE to determine whether or not class has operator delete[].
  */
@@ -75,6 +83,7 @@ void
 operator_delete_array(T* t) {
 	array_deleter<T, has_class_operator_delete_array<T>::value>()(t);
 }
+#endif	// UTIL_USE_SFINAE_OPERATOR_DELETE_ARRAY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -86,10 +95,10 @@ struct delete_array_tag {
 	inline
 	void
 	operator () (T* t) const {
-#if 0
-		delete [] t;
-#else
+#if UTIL_USE_SFINAE_OPERATOR_DELETE_ARRAY
 		operator_delete_array(t);
+#else
+		delete [] t;
 #endif
 	}
 };      // end struct delete_array_tag
