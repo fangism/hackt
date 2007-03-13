@@ -2,6 +2,12 @@
 
 2007-03-12	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-05:
+	  config/guile.m4: more specific function tests.
+	  README: we now require guile-1.8 for now, until we re-write
+		wrappers for 1.6's missing interfaces.  
+
+
 	* HACKT-00-01-04-main-00-81-04:
 	  config/builtin_funcs.m4: added long long tests and parity tests.
 

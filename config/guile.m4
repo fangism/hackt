@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.1 2007/01/26 18:46:38 fang Exp $
+dnl	$Id: guile.m4,v 1.2 2007/03/13 04:04:33 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -61,10 +61,15 @@ save_CPPFLAGS="$CPPFLAGS"
 save_LDFLAGS="$LDFLAGS"
 CPPFLAGS="$GUILE_CPPFLAGS $CPPFLAGS"
 LDFLAGS="$GUILE_LDFLAGS $LDFLAGS"
-AC_CHECK_HEADERS([libguile.h])
+AC_CHECK_HEADERS([libguile.h guile/gh.h])
+dnl <guile/gh.h> is deprecated but may have some interfaces for compatibility
 AC_CHECK_LIB(guile, scm_boot_guile)
 dnl what does the following test for?
 AC_CHECK_FUNCS(scm_boot_guile, , libguile_b=no)
+AC_CHECK_FUNCS(scm_num2ulong)
+AC_CHECK_FUNCS(gh_scm2ulong)
+AC_CHECK_FUNCS(scm_is_pair)
+AC_CHECK_FUNCS(scm_is_string)
 dnl test "$libguile_b" = "no" ... warn...
 dnl pop flags
 LDFLAGS="$save_LDFLAGS"

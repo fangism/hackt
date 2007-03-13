@@ -5,6 +5,17 @@
 
 2007-03-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-06:
+	  Object/module.cc: added explicit template instantiations for
+		match_aliases member function.
+	  NOTE: we now require guile-1.8 until we have to time re-write
+		wrappers for interfaces missing in guile-1.6.  
+	  util/libhackt-wrap.cc: wrapped implementations of:
+		parse_global_reference, lookup_reference_aliases.
+	  see also util/ChangeLog.
+	  TODO: hacguile tests! configury to make guile optional.  
+
+
 	* HACKT-00-01-04-main-00-81-05:
 	  Previous patch disabled, due to g++-3.3 ICEs, see util/ChangeLog.
 

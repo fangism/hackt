@@ -1,7 +1,16 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.71 2007/03/13 02:37:49 fang Exp $
+#	$Id: ChangeLog,v 1.72 2007/03/13 04:04:38 fang Exp $
 
 2007-03-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-06:
+	  NOTE: we now require guile-1.8 until we have to time re-write
+		wrappers for interfaces missing in guile-1.6.  
+	  Added util/guile_gh.h for deprecated interfaces, 
+		util/guile_STL.h for STL converters and wrapper interfaces,
+			this woulld make a nice contribution to scheme's API.  
+		Essence: linear number of orthogonally composable
+			recursive type/container manipulators.  
 
 	* HACKT-00-01-04-main-00-81-05:
 	  Previous patch reverted because two separate g++-3.3 compilers

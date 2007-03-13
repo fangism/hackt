@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.29 2007/01/21 05:58:25 fang Exp $
+ 	$Id: module.cc,v 1.30 2007/03/13 04:04:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -52,6 +52,7 @@ using util::write_string;
 using util::read_string;
 using util::persistent_traits;
 using util::auto_indent;
+using util::string_list;
 
 //=============================================================================
 /**
@@ -500,6 +501,29 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, allocated);
 	global_state.load_object_base(m, f, _footprint);
 }
+
+//=============================================================================
+// explicit template instantiations
+
+template
+void
+module::match_aliases<bool_tag>(string_list&, const size_t) const;
+
+template
+void
+module::match_aliases<int_tag>(string_list&, const size_t) const;
+
+template
+void
+module::match_aliases<enum_tag>(string_list&, const size_t) const;
+
+template
+void
+module::match_aliases<channel_tag>(string_list&, const size_t) const;
+
+template
+void
+module::match_aliases<process_tag>(string_list&, const size_t) const;
 
 //=============================================================================
 }	// end namespace entity
