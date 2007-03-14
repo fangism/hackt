@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.h"
-	$Id: libhackt-wrap.h,v 1.1 2007/03/11 21:16:51 fang Exp $
+	$Id: libhackt-wrap.h,v 1.2 2007/03/14 04:06:23 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_LIBACKT_WRAP_H__
@@ -45,6 +45,7 @@ using entity::module;
 /**
 	Top-level object module to be loaded before passing control
 	over to guile/scheme interpreter.
+	Shouldn't be const, because we may need to allocate.
  */
 extern	excl_ptr<module>	obj_module;
 }	// end namespace guile

@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.1 2007/03/13 04:04:40 fang Exp $
+	$Id: guile_STL.h,v 1.2 2007/03/14 04:06:25 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -15,6 +15,8 @@
 #endif
 
 #include "util/libguile.h"
+#ifdef	HAVE_LIBGUILE_H
+
 #include <functional>
 #include <string>
 #include <utility>
@@ -459,5 +461,7 @@ struct scm_builder<list<T, A> > : public unary_function<list<T, A>, SCM> {
 }	// end namespace guile
 }	// end namespace util
 
+#endif	// HAVE_LIBGUILE_H
+// otherwise skip entire file
 #endif	// __UTIL_GUILE_STL_H__
 

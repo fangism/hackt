@@ -1,0 +1,9 @@
+#!hacguile -b
+!#
+;; "006-08.hacscm"
+;;	$Id: 006-08.hacscm,v 1.1 2007/03/14 04:06:35 fang Exp $
+;; vi: ft=scheme
+;; @haco@ 006.haco-a
+
+(print-canonical-reference (parse-reference "sneeze"))
+

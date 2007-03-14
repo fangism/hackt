@@ -1,0 +1,25 @@
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    blah = int<32> blah
+    copier = int<32> copier
+    sneeze = int<32> sneeze
+}
+
+footprint: {
+  blah = int<32>^0 = blah (1) 
+  copier = int<32>^0 = blah (1) 
+  sneeze = int<32>^0 = blah (1) 
+  Created state:
+  int instance pool:
+  1	blah
+}
+Globally allocated state:
+globID	super		localID	canonical	footprint-frame
+[global int entries]
+1	(top)	-	1	blah	

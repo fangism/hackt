@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.29 2007/02/05 06:40:01 fang Exp $
+#	$Id: Make.test-head,v 1.30 2007/03/14 04:06:28 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -61,7 +61,10 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.chpsim-event-dot .chpsim-event-ps .chpsimdottest \
 	.chpsimfailtest .chpsimrcfail-out .chpsimrcfail-diff \
 	.chpsimckpt .chpsimckpt-outdump .chpsimckpt-indump \
-	.chpsimckpt-dupe .chpsimckpt-dupe-dump .chpsimckpt-diff .chpsimckpttest
+	.chpsimckpt-dupe .chpsimckpt-dupe-dump \
+	.chpsimckpt-diff .chpsimckpttest \
+	.hacscm .hacscm-out .hacscmfail-out .hacscm-diff .hacscmfail-diff \
+	.hacscmtest .hacscmfailtest
 
 if USE_UNROLL_PHASE
 SUFFIXES += \
@@ -116,7 +119,8 @@ BOGUS_SUFFIX_TARGETS = \
 	.chpsim-event-dot .chpsim-event-ps \
 	.chpsimrcfail-out .chpsimrcfail-diff \
 	.chpsimckpt .chpsimckpt-outdump .chpsimckpt-indump \
-	.chpsimckpt-dupe .chpsimckpt-dupe-dump .chpsimckpt-diff
+	.chpsimckpt-dupe .chpsimckpt-dupe-dump .chpsimckpt-diff \
+	.hacscm .hacscm-out .hacscmfail-out .hacscm-diff .hacscmfail-diff
 
 if USE_UNROLL_PHASE
 BOGUS_SUFFIX_TARGETS += \

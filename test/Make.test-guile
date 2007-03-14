@@ -1,0 +1,192 @@
+# "Make.test-guile"
+#	vi: ft=automake
+#	$Id: Make.test-guile,v 1.1 2007/03/14 04:06:27 fang Exp $
+# This is just a portion of the Make.test-tail template included by
+# Makefile.am's in the test/ directory subtree.  
+# This depends on variables defined in Make.test-tail, and thus, 
+# should not be included by itself.  
+
+HACSCM_OUTPUT_FILTER = \
+	$(SED) '/module created/s/: [^ ]*[ ]/: \#\#FILE\#\# /g'
+
+HACSCM_TEST_SCRIPT = \
+	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
+	$(ECHO) "$(HACKT_GUILE_EXE) -b $$obj < $< > $@" ; \
+	$(HACKT_GUILE_EXE) -b "$$obj" < $< 2>&1 | $(HACSCM_OUTPUT_FILTER) > $@
+
+HACSCM_FAIL_TEST_SCRIPT = $(HACSCM_TEST_SCRIPT)
+
+.hacscm.hacscm-out:
+	@$(HACSCM_TEST_SCRIPT)
+
+.hacscm.hacscmfail-out:
+	-@$(HACSCM_FAIL_TEST_SCRIPT)
+
+
+if VERBOSE_CHECK
+ECHO_HACSCM_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+else
+ECHO_HACSCM_DIFF_COMMAND = :
+endif
+
+
+# TODO: introduce filtering scripts and differences
+.hacscm-out-filter.hacscm-diff:
+	@stderr=`$(ECHO) $@ |$(SED) 's/\.hacscm-diff$$/.hacscm-expect/g'`; \
+	expect="$(srcdir)/$$stderr" ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_HACSCM_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+.hacscmfail-out.hacscmfail-diff:
+	@stderr=`$(ECHO) $@ |$(SED) 's/\.hacscmfail-diff$$/.hacscm-expect/g'`; \
+	expect="$(srcdir)/$$stderr" ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_HACSCM_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  if test -s $@ ; then \
+	    $(ECHO) "$@ is non-empty!" ; \
+	  fi ; \
+	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
+	fi ; \
+	$(TOUCH) $@
+
+# TODO: write rules for fail-tests
+
+.hacscm-diff.hacscmtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacscmfail-diff.hacscmfailtest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.hacscmtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+.hacscmfailtest:
+	@$(DUMMY_TEST_SCRIPT)
+
+hacscm-out.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) -n "" > $@ ; \
+	list='$(HACKT_GUILE_TEST_SCRIPTS_PASSES)' ; \
+	exts='hacscm-out' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.hacscm ; \
+	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(ECHO) -n "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$obj" ; \
+	done > $@ ; \
+	$(TOUCH) $@
+
+-include hacscm-out.autodepend
+AUTO_DEPENDS += hacscm-out.autodepend
+
+hacscmfail-out.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) -n "" > $@ ; \
+	list='$(HACKT_GUILE_TEST_SCRIPTS_FAILURES)' ; \
+	exts='hacscmfail-out' ; \
+	test -z "$$list" || \
+	for d in $$list ; do \
+	  src=$(srcdir)/$$d.hacscm ; \
+	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  for e in $$exts ; do \
+	    target=$$d.$$e ; \
+	    $(ECHO) -n "$$target " ; \
+	  done ; \
+	  $(ECHO) ": $$obj" ; \
+	done > $@ ; \
+	$(TOUCH) $@
+
+-include hacscmfail-out.autodepend
+AUTO_DEPENDS += hacscmfail-out.autodepend
+
+hacscmtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_GUILE_TEST_SCRIPTS_PASSES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".hacscm-diff: $$(srcdir)/" $$1 ".hacscm-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hacscmtest.autodepend
+AUTO_DEPENDS += hacscmtest.autodepend
+
+
+hacscmfailtest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_GUILE_TEST_SCRIPTS_FAILURES)" | \
+	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
+	  $(AWK) '/.+/ {print $$1 ".hacscmfail-diff: $$(srcdir)/" $$1 ".hacscm-expect"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hacscmfailtest.autodepend
+AUTO_DEPENDS += hacscmfailtest.autodepend
+
+
+BOGUS_TESTS += .hacscmtest .hacscmfailtest
+
+CHECK_SUMMARIES += hacscmdiffs hacscmfaildiffs
+
+hacscmdiffs: force
+	-$(CAT) *.hacscm-diff > $@
+
+hacscmfaildiffs: force
+	-$(CAT) *.hacscmfail-diff > $@
+
+
+HACKT_HACSCM_TEST_SCRIPTS_BASES = \
+	$(HACKT_HACSCM_TEST_SCRIPTS_PASSES) \
+	$(HACKT_HACSCM_TEST_SCRIPTS_FAILURES)
+
+srcdir_EXTRA_DIST += \
+	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm) \
+	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm-expect)
+
+
+TESTS += \
+	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscmtest) \
+	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfailtest)
+
+HAC_OBJECT_TARGETS += \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.haco) \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a)
+
+build-check-local: \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
+	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscm-out) \
+	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscm-diff) \
+	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfail-out) \
+	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfail-diff)
+
+echo-hacscm-passes: force
+	@$(ECHO) $(HACKT_GUILE_TEST_SCRIPTS_PASSES)
+
+echo-hacscm-failures: force
+	@$(ECHO) $(HACKT_GUILE_TEST_SCRIPTS_FAILURES)
+
+
+clean-hacscmtests:
+	-$(RM_PATTERN) "*.hacscm-out"
+	-$(RM_PATTERN) "*.hacscm-diff"
+	-$(RM_PATTERN) "*.hacscmtest"
+	-$(RM_PATTERN) "*.hacscmfail-out"
+	-$(RM_PATTERN) "*.hacscmfail-diff"
+	-$(RM_PATTERN) "*.hacscmfailtest"
+
+clean-local: clean-hacscmtests
+
+.PHONY: clean-hacscmtests
+

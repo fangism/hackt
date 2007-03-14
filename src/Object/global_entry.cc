@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.10 2007/01/21 05:58:22 fang Exp $
+	$Id: global_entry.cc,v 1.11 2007/03/14 04:06:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -463,6 +463,7 @@ template class global_entry<bool_tag>;
 template class global_entry<int_tag>;
 template class global_entry<enum_tag>;
 template class global_entry<channel_tag>;
+template class global_entry<process_tag>;
 
 //=============================================================================
 }	// end namespace entity

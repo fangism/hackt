@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2007-03-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-07:
+	  Added test support for hacscm (hacguile).
+
+
 2007-03-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-01-shlib-01-06:

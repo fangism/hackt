@@ -1,0 +1,11 @@
+unexpected character: '-' on line 1:4
+Caught exception from lexer, aborting parsing.
+Error parsing instance name: bad-parse
+
+In standard input:
+   8: 0* [parse-reference "bad-parse"]
+
+standard input:8:1: In procedure parse-reference in expression (parse-reference "bad-parse"):
+standard input:8:1: Error: invalid scalar instance reference.
+Backtrace:
+ABORT: (misc-error)

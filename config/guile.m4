@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.2 2007/03/13 04:04:33 fang Exp $
+dnl	$Id: guile.m4,v 1.3 2007/03/14 04:06:17 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -14,19 +14,16 @@ dnl	GUILE_LDFLAGS (link path to libraries)
 dnl
 AC_DEFUN([FANG_GUILE], 
 [
-dnl or AC_ARG_VAR GUILE_CONFIG?
-dnl AC_ARG_WITH(guile,
-dnl [[  --with-guile[=PATH]     GNU Scheme extension language.]])
-dnl guile_include=
-dnl guile_ldpath=
-dnl if test "$with_guile" && test x"$with_guile" != xno ; then
-dnl if test "$with_guile" != yes ; then
-dnl	guile_include="-I$with_guile/include"
-dnl	guile_ldpath="-L$with_guile/lib"
-dnl fi
-dnl fi
-
-AC_PATH_PROG(GUILE_CONFIG, guile-config)
+dnl now we can pss a different guile-config, e.g. guile-1.8-config
+AC_ARG_WITH(guile-config,
+AS_HELP_STRING(
+	[--with-guile-config]
+	[GNU Scheme extension language configuration (default=guile-config)]),
+	[guile_config=$with_guile_config],
+	[guile_config="guile-config"]
+)
+dnl check path for the guile-config specified by the user
+AC_PATH_PROG(GUILE_CONFIG, $guile_config)
 dnl lilypond's stepmake/aclocal.m4 has example of how to check
 dnl for cross-compiled with target/host
 dnl AC_MSG_CHECKING([for guile-config])
@@ -52,6 +49,7 @@ fi
 AC_SUBST(GUILE_CPPFLAGS)
 AC_SUBST(GUILE_LDFLAGS)
 
+if test -n "$GUILE_CONFIG" ; then
 dnl is it required or optional?
 dnl version checking?
 
@@ -63,19 +61,28 @@ CPPFLAGS="$GUILE_CPPFLAGS $CPPFLAGS"
 LDFLAGS="$GUILE_LDFLAGS $LDFLAGS"
 AC_CHECK_HEADERS([libguile.h guile/gh.h])
 dnl <guile/gh.h> is deprecated but may have some interfaces for compatibility
+if test "$ac_cv_header_libguile_h" = "yes" ; then
 AC_CHECK_LIB(guile, scm_boot_guile)
 dnl what does the following test for?
 AC_CHECK_FUNCS(scm_boot_guile, , libguile_b=no)
+dnl AC_CHECK_FUNCS(scm_from_ulong)
 AC_CHECK_FUNCS(scm_num2ulong)
 AC_CHECK_FUNCS(gh_scm2ulong)
+dnl the following are in guile-1.8, but not earlier
 AC_CHECK_FUNCS(scm_is_pair)
 AC_CHECK_FUNCS(scm_is_string)
+AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
+test "$ac_cv_func_scm_is_pair" = "yes" ||
+	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
+fi
 dnl test "$libguile_b" = "no" ... warn...
 dnl pop flags
 LDFLAGS="$save_LDFLAGS"
 CPPFLAGS="$save_CPPFLAGS"
 AC_LANG_POP(C++)
-
+else
+	AC_MSG_WARN([[guile-config missing, disabling building with guile!]])
+fi
 dnl TODO: extract guile version information
 ])dnl
 

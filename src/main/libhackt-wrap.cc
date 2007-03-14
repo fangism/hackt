@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.2 2007/03/13 04:04:37 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3 2007/03/14 04:06:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,8 @@
 #include "util/libguile.h"
 #include <iostream>
 #include "Object/module.h"
+#include "Object/global_entry.h"
+#include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
 #include "parser/instref.h"
 #include "util/guile_gh.h"
@@ -41,6 +43,8 @@ namespace HAC {
 namespace guile_wrap {
 #include "util/using_ostream.h"
 using entity::module;
+using entity::state_manager;
+using entity::footprint;
 using util::memory::excl_malloc_ptr;
 using entity::global_indexed_reference;
 using entity::meta_type_map;
@@ -52,6 +56,7 @@ using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using util::guile::make_scm;
+using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
 using util::guile::scm_is_pair;
 #endif
@@ -61,6 +66,7 @@ using util::guile::scm_is_string;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // static global initialization
+
 excl_ptr<module>	obj_module(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -96,8 +102,9 @@ wrap_parse_global_reference(SCM s_str) {
 		const char* peek = scm_to_locale_string(s_str);	// 1.8
 #endif
 		// alternately string_to_locale_stringbuf
+		const module& mod(*obj_module);
 		const global_indexed_reference
-			ref(parser::parse_global_reference(peek, *obj_module));
+			ref(parser::parse_global_reference(peek, mod));
 		if (ref.first && ref.second) {
 			// would like to translate first (type)
 			// into a scm quoted tag, like 'bool-tag
@@ -130,21 +137,18 @@ static
 SCM
 wrap_lookup_reference_aliases(SCM s_pair) {
 #define	FUNC_NAME "lookup-reference-aliases"
-#ifdef	HAVE_SCM_NUM2ULONG
-#define	SCM_TO_ULONG(x)		scm_num2ulong(x, 1, FUNC_NAME)
-#elif	defined(HAVE_GH_SCM2ULONG)
-#define	SCM_TO_ULONG(x)		gh_scm2ulong(x)
-#else
-#error	"Need to convert SCM to unsigned long!"
-#endif
 	STACKTRACE_VERBOSE;
 if (scm_is_pair(s_pair)) {
-	const size_t index = SCM_TO_ULONG(SCM_CDR(s_pair));
+	size_t index;
+	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
 	string_list aliases;
-	switch (SCM_TO_ULONG(SCM_CAR(s_pair))) {
+	size_t type;
+	extract_scm(SCM_CAR(s_pair), type);	// already error-handled
+	const module& mod(*obj_module);
+	switch (type) {
 #define	CASE_TYPE(Tag)							\
 	case class_traits<Tag>::type_tag_enum_value:			\
-		obj_module->match_aliases<Tag>(aliases, index);		\
+		mod.match_aliases<Tag>(aliases, index);			\
 		break;
 	CASE_TYPE(bool_tag)
 	CASE_TYPE(int_tag)
@@ -156,7 +160,7 @@ if (scm_is_pair(s_pair)) {
 		scm_misc_error(FUNC_NAME, 
 			"Error: invalid meta-type enum.", SCM_EOL);
 		return SCM_BOOL_F;
-	}
+	}	// end switch
 	// construct scm_list from std::list
 	return make_scm(aliases);
 } else {
@@ -164,12 +168,93 @@ if (scm_is_pair(s_pair)) {
 	scm_wrong_type_arg(FUNC_NAME, 1, s_pair);
 	return SCM_BOOL_F;
 }
-#undef	SCM_TO_ULONG
 #undef	FUNC_NAME
 }	// wrap_lookup_reference_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-}	// end namespace guile
+/**
+	Prett-prints a type-index pair using the meta-type tag name.
+	We may have to use a guile print-port instead of cout/cerr.
+ */
+static
+SCM
+wrap_print_reference_index(SCM s_pair) {
+#define	FUNC_NAME	"print-reference-index"
+if (scm_is_pair(s_pair)) {
+	size_t index;
+	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
+	size_t type;
+	extract_scm(SCM_CAR(s_pair), type);	// already error-handled
+	switch (type) {
+#define	CASE_TYPE(Tag)							\
+	case class_traits<Tag>::type_tag_enum_value:			\
+		cout << class_traits<Tag>::tag_name;			\
+		break;
+	CASE_TYPE(bool_tag)
+	CASE_TYPE(int_tag)
+	CASE_TYPE(enum_tag)
+	CASE_TYPE(channel_tag)
+	CASE_TYPE(process_tag)
+#undef	CASE_TYPE
+	default:
+		scm_misc_error(FUNC_NAME, 
+			"Error: invalid meta-type enum.", SCM_EOL);
+		return SCM_UNSPECIFIED;
+	}	// end switch
+	cout << '[' << index << ']' << endl;
+} else {
+	cerr << "Error: expecting pair(type, index) argument." << endl;
+	scm_wrong_type_arg(FUNC_NAME, 1, s_pair);
+}
+	return SCM_UNSPECIFIED;
+#undef	FUNC_NAME
+}	// end wrap_print_reference_index
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+SCM
+wrap_print_canonical_reference(SCM s_pair) {
+#define	FUNC_NAME	"print-canonical-reference"
+if (scm_is_pair(s_pair)) {
+	size_t index;
+	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
+	size_t type;
+	extract_scm(SCM_CAR(s_pair), type);	// already error-handled
+	const module& mod(*obj_module);
+	const state_manager& sm(mod.get_state_manager());
+	const footprint& topfp(mod.get_footprint());
+	if (!index) {
+		scm_misc_error(FUNC_NAME, "Error: invalid index.", SCM_EOL);
+		// TODO: check upper bound of index too
+		return SCM_UNSPECIFIED;
+	}
+	switch (type) {
+#define	CASE_TYPE(Tag)							\
+	case class_traits<Tag>::type_tag_enum_value:			\
+		sm.get_pool<Tag>()[index]				\
+			.dump_canonical_name(cout, topfp, sm);		\
+		break;
+	CASE_TYPE(bool_tag)
+	CASE_TYPE(int_tag)
+	CASE_TYPE(enum_tag)
+	CASE_TYPE(channel_tag)
+	CASE_TYPE(process_tag)
+#undef	CASE_TYPE
+	default:
+		scm_misc_error(FUNC_NAME, 
+			"Error: invalid meta-type enum.", SCM_EOL);
+		return SCM_UNSPECIFIED;
+	}	// end switch
+} else {
+	cerr << "Error: expecting pair(type, index) argument." << endl;
+	scm_wrong_type_arg(FUNC_NAME, 1, s_pair);
+}
+	return SCM_UNSPECIFIED;
+#undef	FUNC_NAME
+}	// end wrap_print_canonical_reference
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}	// end namespace guile_wrap
 }	// end namespace HAC
 
 //=============================================================================
@@ -192,9 +277,14 @@ libhackt_guile_init(void) {
 #endif
 	scm_c_define_gsubr("parse-reference", 1, 0, 0,
 		(scm_gsubr_type) wrap_parse_global_reference);
+	scm_c_define_gsubr("print-reference-index", 1, 0, 0,
+		(scm_gsubr_type) wrap_print_reference_index);
+	scm_c_define_gsubr("print-canonical-reference", 1, 0, 0,
+		(scm_gsubr_type) wrap_print_canonical_reference);
 	scm_c_define_gsubr("lookup-reference-aliases", 1, 0, 0,
 		(scm_gsubr_type) wrap_lookup_reference_aliases);
-}
+}	// end libhackt_guile_init
+
 END_C_DECLS
 
 

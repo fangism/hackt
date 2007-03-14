@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-07:
+	  hacguile now listed as optional program (depending on guile)
+	  hacguile script mode suppresses prompt, interactive mode
+		uses new prompt to distinguish from standard guile.
+	  main/libhackt-wrap.cc: new interfaces
+		print-reference-index -- print type[index]
+		print-canonical-reference -- prints reference's canonical name
+	  More portions of Makefiles made conditional on HAVE_LIBGUILE.
+	  Added some first hacguile test cases to test/parser/connect.
+
+
 2007-03-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-06:

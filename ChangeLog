@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2007-03-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-07:
+	  config/guile.m4: restructured configure tests more, 
+		now AM_CONDITIONAL(HAVE_LIBGUILE) requires correct API (1.8)
+		AC_CHECK_FUNC on true symbol function, not macro function.
+		Now allow user to pass specific guile-config as
+			--with-guile-config=... for version selection.  
+	  configure.ac: generate test/guile/Makefile
+
+
 2007-03-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-05:

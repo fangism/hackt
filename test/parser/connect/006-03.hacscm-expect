@@ -1,0 +1,9 @@
+object "nonexistent" not found, ERROR!  [1:1..11]
+
+In standard input:
+   8: 0* [parse-reference "nonexistent"]
+
+standard input:8:1: In procedure parse-reference in expression (parse-reference "nonexistent"):
+standard input:8:1: Error: invalid scalar instance reference.
+Backtrace:
+ABORT: (misc-error)

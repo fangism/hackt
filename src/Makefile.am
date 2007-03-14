@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.163 2007/03/11 21:16:49 fang Exp $
+#	$Id: Makefile.am,v 1.164 2007/03/14 04:06:19 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -47,11 +47,14 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt haco haccreate hacalloc \
-	hacobjdump hflat hacpp hacprsim hacchpsim \
-	hacguile
+	hacobjdump hflat hacpp hacprsim hacchpsim
+if HAVE_LIBGUILE
+bin_PROGRAMS += hacguile
+endif
 if USE_UNROLL_PHASE
 bin_PROGRAMS += hacunroll
 endif
+EXTRA_PROGRAMS = hacguile
 
 CLEANFILES += $(bin_SCRIPTS)
 

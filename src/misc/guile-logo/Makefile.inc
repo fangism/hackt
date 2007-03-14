@@ -1,14 +1,16 @@
 # "misc/guile-logo/Makefile.inc"
-#	$Id: Makefile.inc,v 1.4 2007/03/11 21:16:52 fang Exp $
+#	$Id: Makefile.inc,v 1.5 2007/03/14 04:06:24 fang Exp $
 #	vim: ft=automake
 # play-testing guile functionality
 
 GUILE_LOGO_DIR = misc/guile-logo
 
 if WANT_LIBMISCFUN
+if HAVE_LIBGUILE
 FUNPROGRAMS += misc/guile-logo/demo1 misc/guile-logo/guile-logo
 FUNLIBS += misc/guile-logo/libtortoise.la \
 	misc/guile-logo/libtortoise-guile.la
+endif
 endif
 
 misc_guile_logo_libtortoise_la_SOURCES = \
@@ -66,9 +68,11 @@ misc_guile_logo_guile_logo_LDADD = misc/guile-logo/libtortoise-guile.la
 # endif
 
 if WANT_LIBMISCFUN
+if HAVE_LIBGUILE
 ALL_HEADER_FILES += \
 	misc/guile-logo/tortoise.h \
 	misc/guile-logo/tortoise-wrap.h
+endif
 endif
 
 TORTOISE_WRAP_HCHK_FLAGS = \

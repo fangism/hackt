@@ -1,7 +1,7 @@
 /**
 	\file "main/guile.cc"
 	Main module for new CHPSIM.
-	$Id: guile.cc,v 1.1 2007/03/11 21:16:50 fang Exp $
+	$Id: guile.cc,v 1.2 2007/03/14 04:06:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -63,6 +63,7 @@ guile::guile() { }
 void
 guile::main_interactive(void* closure, int argc, char** argv) {
 	cout << "Welcome to hackt-guile!" << endl;
+	scm_c_eval_string("(set-repl-prompt! \"hacguile> \")");
 	libhackt_guile_init();
 	scm_shell(argc, argv);	// read-eval-print
 	// never returns :S
@@ -70,10 +71,14 @@ guile::main_interactive(void* closure, int argc, char** argv) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just expect redirected input from stdin.
+ */
 void
 guile::main_script(void* closure, int argc, char** argv) {
+#if 0
 	const char* fname = argv[argc-1];
-	// cout << "file: " << fname << endl;
+	cout << "file: " << fname << endl;
 	std::ifstream f(fname);
 	if (!f) {
 		cerr << "Error opening file: " << fname << endl;
@@ -82,6 +87,12 @@ guile::main_script(void* closure, int argc, char** argv) {
 	f.close();
 	libhackt_guile_init();
 	scm_c_primitive_load(fname);
+#else
+	scm_c_eval_string("(set-repl-prompt! \"\")");	// disable-prompt
+	libhackt_guile_init();
+	scm_shell(argc, argv);	// read-eval-print
+	// never returns :S
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
