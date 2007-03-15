@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.164 2007/03/14 04:06:19 fang Exp $
+#	$Id: Makefile.am,v 1.165 2007/03/15 06:11:02 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -83,7 +83,7 @@ hackt_LDADD = libhacktexec.la
 # installcheck is never run on the staged install, only on the final
 
 haco_SOURCES = main/compile.cc
-haco_CXXFLAGS = -DWITH_MAIN
+haco_CPPFLAGS = -DWITH_MAIN
 haco_LDADD = libhacktlib.la
 # goal: just libhacktparsers.la
 
@@ -93,16 +93,16 @@ haco_LDADD = libhacktlib.la
 #	$(CHMOD) +x $@
 
 hacobjdump_SOURCES = main/objdump.cc
-hacobjdump_CXXFLAGS = -DWITH_MAIN
+hacobjdump_CPPFLAGS = -DWITH_MAIN
 hacobjdump_LDADD = libhacktlib.la
 
 hacpp_SOURCES = main/flatten.cc
-hacpp_CXXFLAGS = -DWITH_MAIN
+hacpp_CPPFLAGS = -DWITH_MAIN
 hacpp_LDADD = libhacktlib.la
 
 if USE_UNROLL_PHASE
 hacunroll_SOURCES = main/unroll.cc
-hacunroll_CXXFLAGS = -DWITH_MAIN
+hacunroll_CPPFLAGS = -DWITH_MAIN
 hacunroll_LDADD = libhacktlib.la
 
 # hacunroll: $(top_builddir)/config.status
@@ -112,7 +112,7 @@ hacunroll_LDADD = libhacktlib.la
 endif
 
 haccreate_SOURCES = main/create.cc
-haccreate_CXXFLAGS = -DWITH_MAIN
+haccreate_CPPFLAGS = -DWITH_MAIN
 haccreate_LDADD = libhacktlib.la
 
 # haccreate: $(top_builddir)/config.status
@@ -121,7 +121,7 @@ haccreate_LDADD = libhacktlib.la
 #	$(CHMOD) +x $@
 
 hacalloc_SOURCES = main/alloc.cc
-hacalloc_CXXFLAGS = -DWITH_MAIN
+hacalloc_CPPFLAGS = -DWITH_MAIN
 hacalloc_LDADD = libhacktlib.la
 
 # hacalloc: $(top_builddir)/config.status
@@ -130,7 +130,7 @@ hacalloc_LDADD = libhacktlib.la
 #	$(CHMOD) +x $@
 
 hflat_SOURCES = main/cflat.cc
-hflat_CXXFLAGS = -DWITH_MAIN
+hflat_CPPFLAGS = -DWITH_MAIN
 hflat_LDADD = libhacktlib.la
 
 # hflat: $(top_builddir)/config.status
@@ -139,7 +139,7 @@ hflat_LDADD = libhacktlib.la
 #	$(CHMOD) +x $@
 
 hacprsim_SOURCES = main/prsim.cc
-hacprsim_CXXFLAGS = -DWITH_MAIN
+hacprsim_CPPFLAGS = -DWITH_MAIN
 hacprsim_LDADD = libhacktsim.la
 # goal: reduce to libhacktsim.la
 
@@ -149,7 +149,7 @@ hacprsim_LDADD = libhacktsim.la
 #	$(CHMOD) +x $@
 
 hacchpsim_SOURCES = main/chpsim.cc
-hacchpsim_CXXFLAGS = -DWITH_MAIN
+hacchpsim_CPPFLAGS = -DWITH_MAIN
 hacchpsim_LDADD = libhacktsim.la
 # goal: reduce to libhacktsim.la
 
@@ -161,10 +161,11 @@ hacchpsim_LDADD = libhacktsim.la
 hacguile_SOURCES = main/guile.cc \
 	main/libhackt-wrap.cc \
 	main/libhackt-wrap.h
-hacguile_CPPFLAGS = $(GUILE_CPPFLAGS)
-hacguile_CXXFLAGS = -DWITH_MAIN
-hacguile_LDADD = libhacktsim.la
-hacguile_LDFLAGS = $(GUILE_LDFLAGS)
+hacguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
+hacguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
+	-Wno-old-style-cast -Werror 
+hacguile_LDADD = libhacktsim.la libguileutil.la
+#hacguile_LDFLAGS = $(GUILE_LDFLAGS)
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la

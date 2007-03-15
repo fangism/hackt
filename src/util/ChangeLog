@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.72 2007/03/13 04:04:38 fang Exp $
+#	$Id: ChangeLog,v 1.73 2007/03/15 06:11:08 fang Exp $
+
+2007-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-08:
+	  Partially split out guile-related sources into own variable
+		and own library.  
+	  More additions to libguile, which is now a separate library.
+	  Added more test cases to test/parser/connect.
+
 
 2007-03-12	David Fang		<fangism@users.sourceforge.net>
 

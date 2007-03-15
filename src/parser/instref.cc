@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.5 2007/01/21 06:00:09 fang Exp $
+	$Id: instref.cc,v 1.6 2007/03/15 06:11:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -186,6 +186,7 @@ parse_and_check_reference(const char* s, const module& m) {
 
 //=============================================================================
 /**
+	Finds the allocated index for a bool (node).  
 	TODO: figure out a way to parse a string without
 		going through a friggin' temp file.  
 		This is really sad.  

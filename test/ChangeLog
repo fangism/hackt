@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2007-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-01-shlib-01-08:
+	  Test support for hacguile is now conditional on HAVE_LIBGUILE.
+
+
 2007-03-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-01-shlib-01-07:

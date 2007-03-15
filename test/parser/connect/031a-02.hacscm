@@ -1,0 +1,13 @@
+#!hacguile -b
+!#
+;; "031a-02.hacscm"
+;;	$Id: 031a-02.hacscm,v 1.1 2007/03/15 06:11:17 fang Exp $
+;; vi: ft=scheme
+;; @haco@ 031a.haco-a
+
+(define (print-canonical-newline x) (print-canonical-reference x) (newline))
+
+(for-each print-canonical-newline
+  (collect-reference-subinstances (parse-raw-reference "load"))
+)
+

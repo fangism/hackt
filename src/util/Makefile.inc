@@ -1,11 +1,13 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.28 2007/03/13 04:04:39 fang Exp $
+#	$Id: Makefile.inc,v 1.29 2007/03/15 06:11:09 fang Exp $
+
+# TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
 LIBFANGUTIL = libfangutil.la
-UTILLIBS = $(LIBFANGUTIL)
+UTILLIBS = $(LIBFANGUTIL) libguileutil.la
 
 util-programs: $(UTILPROGRAMS)
 util-libs: $(UTILLIBS)
@@ -110,9 +112,6 @@ UTIL_HEADER_FILES = \
 	util/iterator_more.h \
 	util/libc.h \
 	util/libc_temp.h \
-	util/libguile.h \
-	util/guile_gh.h \
-	util/guile_STL.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/macros.h \
@@ -219,6 +218,27 @@ UTIL_CC_FILES = \
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 
+GUILE_UTIL_H_FILES = \
+	util/libguile.h \
+	util/guile_gh.h \
+	util/guile_STL.h
+
+UTIL_HEADER_FILES += $(GUILE_UTIL_H_FILES)
+
+# exceptions to work-around guile header dependencies
+GUILE_WARN_FLAGS = -Wno-long-long -Wno-error
+# -Wno-old-style-cast -Wno-undef
+LIBGUILE_HCHK_FLAGS = $(GUILE_CPPFLAGS) $(GUILE_WARN_FLAGS)
+
+
+libguileutil_la_SOURCES = \
+	util/libguile.cc \
+	$(GUILE_UTIL_H_FILES)
+libguileutil_la_CPPFLAGS = $(GUILE_CPPFLAGS)
+libguileutil_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS)
+libguileutil_la_LDFLAGS = $(GUILE_LDFLAGS)
+# libguileutil_la_LIBADD =
+
 util_progs_readline_toy_SOURCES = util/progs/readline_toy.cc
 util_progs_readline_toy_LDADD = $(LIBFANGUTIL)
 
@@ -232,16 +252,18 @@ util/using_istream.hchk:
 util/using_ostream.hchk:
 	@$(TOUCH) $@
 
-# exceptions to work-around guile header dependencies
-GUILE_WARN_FLAGS = -Wno-long-long -Wno-error
-# -Wno-old-style-cast -Wno-undef
-LIBGUILE_HCHK_FLAGS = $(GUILE_CPPFLAGS) $(GUILE_WARN_FLAGS)
-
 # extending default header check
-LIBGUILE_HCHK_TEST_SCRIPT = \
+LIBGUILE_HCHK_TEST_SCRIPT =
+if HAVE_LIBGUILE
+LIBGUILE_HCHK_TEST_SCRIPT += \
 	$(ECHO) "Validating $< ... " ; \
 	more_hchk_flags="$(LIBGUILE_HCHK_FLAGS)" ; \
 	$(H_CHECK_TEST_SCRIPT)
+else
+LIBGUILE_HCHK_TEST_SCRIPT += \
+	$(ECHO) "Skipping $< ... " ; \
+	$(TOUCH) $@
+endif
 
 util/libguile.hchk: util/libguile.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)

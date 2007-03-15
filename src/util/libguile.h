@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.2 2007/03/13 04:04:41 fang Exp $
+	$Id: libguile.h,v 1.3 2007/03/15 06:11:12 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -18,6 +18,10 @@
 
 namespace util {
 namespace guile {
+/**
+	Function pointer type for procedure casting.  Ewww...
+ */
+typedef	SCM (*scm_gsubr_type)();
 
 //-----------------------------------------------------------------------------
 /// wrapper for scm_pair_p, provided by guile 1.8
@@ -39,6 +43,13 @@ scm_is_string(const SCM& s) {
 	return SCM_NFALSEP(scm_string_p(s));
 }
 #endif
+
+//-----------------------------------------------------------------------------
+void
+scm_assert_string(const SCM&, const char* fn, const int pos);
+
+void
+scm_assert_pair(const SCM&, const char* fn, const int pos);
 
 //-----------------------------------------------------------------------------
 }	// end namespace guile

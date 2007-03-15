@@ -1,11 +1,13 @@
 /**
 	\file "Object/ref/reference_set.cc"
-	$Id: reference_set.cc,v 1.2 2007/02/26 22:00:52 fang Exp $
+	$Id: reference_set.cc,v 1.3 2007/03/15 06:11:04 fang Exp $
  */
 
 #include "Object/ref/reference_set.h"
 #include <functional>
 #include <algorithm>
+#include "Object/entry_collection.h"
+#include "Object/traits/instance_traits.h"
 #include "util/iterator_more.h"
 
 namespace HAC {
@@ -37,6 +39,24 @@ global_references_set::empty(void) const {
 		++i;
 	} while (i<MAX);
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Clobbers this set of sets, by taking all sets from the 
+	entry collection parameter.  
+ */
+void
+global_references_set::import_entry_collection(const entry_collection& c) {
+#define	GRAB_SET(Tag)							\
+	ref_bin[class_traits<Tag>::type_tag_enum_value] =		\
+		c.get_index_set<Tag>();
+	GRAB_SET(bool_tag)
+	GRAB_SET(int_tag)
+	GRAB_SET(enum_tag)
+	GRAB_SET(channel_tag)
+	GRAB_SET(process_tag)
+#undef	GRAB_SET
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

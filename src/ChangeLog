@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-08:
+	  Makefile.am: adjusted some flags to hacguile automake vars.  
+	  Object/ref/reference_set: added import interface to entry_collections.
+	  main/libhackt-wrap.cc:
+		introduced my first smob! meta_reference_union
+			which we call raw-reference in the wrapper domain.  
+		wrote more wrapped functions, improved diagnostics, 
+		using scm_puts on ostringstream instead of cout directly.
+		new: parse-raw-reference, print-reference-type, 
+			collect-reference-subinstances.
+
+
 2007-03-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-07:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/reference_set.h"
 	Container for unique-sorted set of indexed references.  
-	$Id: reference_set.h,v 1.2 2007/02/26 22:00:53 fang Exp $
+	$Id: reference_set.h,v 1.3 2007/03/15 06:11:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCE_SET_H__
@@ -13,11 +13,15 @@
 
 namespace HAC {
 namespace entity {
+struct entry_collection;
+
 //=============================================================================
 /**
 	Set of set of sorted reference indices, binned by meta type.  
 	Advantage: sortedness automatically filters uniques, 
 	and facilitates linear time set operations.  
+	NOTE: this is very closely related to struct entry_collection, 
+		can these be combined?
  */
 struct global_references_set {
 	/**
@@ -43,6 +47,9 @@ struct global_references_set {
 		// assert(r.first < MAX);
 		ref_bin[r.first].insert(r.second);
 	}
+
+	void
+	import_entry_collection(const entry_collection&);
 
 	void
 	set_difference(const global_references_set&, 

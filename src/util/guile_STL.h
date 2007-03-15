@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.2 2007/03/14 04:06:25 fang Exp $
+	$Id: guile_STL.h,v 1.3 2007/03/15 06:11:09 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -100,6 +100,29 @@ good_bool
 extract_scm(const SCM& s, T& t) {
 	return scm_extractor<T>()(s, t);
 }
+
+//=============================================================================
+// scm_builder specializations for scm!
+
+/**
+	No transformation necessary!
+ */
+template <>
+struct scm_builder<SCM> : public unary_function<SCM, SCM> {
+	SCM
+	operator () (const argument_type& s) {
+		return s;
+	}
+};
+
+template <>
+struct scm_extractor<SCM> {
+	good_bool
+	operator () (const SCM& s, SCM& t) {
+		t = s;
+		return good_bool(true);
+	}
+};
 
 //=============================================================================
 // scm_builder specializations for fundamental types

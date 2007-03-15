@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.h"
-	$Id: libhackt-wrap.h,v 1.2 2007/03/14 04:06:23 fang Exp $
+	$Id: libhackt-wrap.h,v 1.3 2007/03/15 06:11:06 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_LIBACKT_WRAP_H__
@@ -54,6 +54,12 @@ extern	excl_ptr<module>	obj_module;
 
 //=============================================================================
 BEGIN_C_DECLS
+#if 0
+extern
+void
+raw_reference_smob_init(void);
+#endif
+
 extern
 void
 libhackt_guile_init(void);
