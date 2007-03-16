@@ -1,7 +1,7 @@
 /**
 	\file "AST/namespace.cc"
 	Class method definitions for namespace and other root item classes.
-	$Id: namespace.cc,v 1.4 2007/03/11 16:34:16 fang Exp $
+	$Id: namespace.cc,v 1.5 2007/03/16 07:07:16 fang Exp $
  */
 
 #ifndef	__HAC_AST_NAMESPACE_CC__
@@ -42,6 +42,7 @@ namespace memory {
 // explicit template instantiations
 using namespace HAC::parser;
 template class count_ptr<const root_item>;
+template class count_ptr<root_body>;
 }	// end namespace memory
 }	// end namespace util
 

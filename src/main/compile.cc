@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.14 2007/03/11 16:34:33 fang Exp $
+	$Id: compile.cc,v 1.15 2007/03/16 07:07:21 fang Exp $
  */
 
 #include <iostream>
@@ -25,7 +25,6 @@ hackt_parse_file_manager;
 
 namespace HAC {
 #include "util/using_ostream.h"
-using util::memory::excl_ptr;
 using entity::module;
 using std::list;
 using std::string;
@@ -200,8 +199,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 	}
 
 	// parse it
-	const excl_ptr<module> mod =
-		parse_and_check(argv[0], opt);
+	const count_ptr<const module> mod(parse_and_check(argv[0], opt));
 	if (!mod) {
 		return 1;
 	}

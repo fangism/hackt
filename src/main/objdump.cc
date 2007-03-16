@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.6 2007/03/11 16:34:35 fang Exp $
+	$Id: objdump.cc,v 1.7 2007/03/16 07:07:24 fang Exp $
  */
 
 #include <iostream>
@@ -47,8 +47,7 @@ objdump::main(int argc, char* argv[], const global_options&) {
 	}
 	if (!check_object_loadable(argv[1]).good)
 		return 1;
-	excl_ptr<module> the_module =
-		load_module_debug(argv[1]);
+	count_ptr<const module> the_module(load_module_debug(argv[1]));
 		// load_module(argv[1]);
 	if (!the_module)
 		return 1;

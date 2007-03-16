@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.34 2006/11/07 06:35:40 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.35 2007/03/16 07:07:25 fang Exp $
  */
 
 // flags and switches
@@ -119,7 +119,12 @@ using std::stringstream;
 using std::stringbuf;
 using std::streamsize;
 using std::ostringstream;
+using util::memory::excl_ptr;
 using util::memory::excl_array_ptr;
+
+namespace memory {
+template class count_ptr<persistent>;
+}	// end namespace memory
 
 //=============================================================================
 /**
@@ -500,7 +505,7 @@ persistent_object_manager::persistent_object_manager() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	If the auto-managed excl_ptr for the global root is not 
+	If the auto-managed count_ptr for the global root is not 
 	transfered away, then the manager will take care of 
 	deleting it.  
 	By construction of typed and managed pointers, 
@@ -1194,7 +1199,7 @@ persistent_object_manager::load_objects(void) {
 	Loads hierarchical object collection from file.
 	\returns a dynamically cast owned pointer to the root object.
  */
-excl_ptr<persistent>
+count_ptr<persistent>
 persistent_object_manager::load_object_from_file(const string& s) {
 	ifstream f(s.c_str(), ios_base::binary);
 	persistent_object_manager pom;
@@ -1270,7 +1275,7 @@ persistent_object_manager::reset_for_loading(void) {
 	Should essentially make a deep copy of the hierarchical object
 	rooted at the global namespace.
  */
-excl_ptr<persistent>
+count_ptr<persistent>
 persistent_object_manager::self_test_no_file(const persistent& m) {
 	STACKTRACE("pom::self_test_no_file()");
 	persistent_object_manager pom;
@@ -1299,7 +1304,7 @@ persistent_object_manager::self_test_no_file(const persistent& m) {
 /**
 	Writes out and reads back in, through an intermediate file.
  */
-excl_ptr<persistent>
+count_ptr<persistent>
 persistent_object_manager::self_test(const string& s, const persistent& m) {
 	save_object_to_file(s, m);
 	return load_object_from_file(s);
@@ -1308,18 +1313,18 @@ persistent_object_manager::self_test(const string& s, const persistent& m) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The first non-NULL object is special: it is the root module.
-	Returning an excl_ptr guarantees that memory will
+	Returning an count_ptr guarantees that memory will
 	be managed properly.
-	When the excl_ptr hits the end of a scope, unless ownership
+	When the count_ptr hits the end of a scope, unless ownership
 	has been transferred, the memory should be recursively reclaimed.
 	Thus, this is not a const method.
  */
-excl_ptr<persistent>
+count_ptr<persistent>
 persistent_object_manager::get_root(void) {
 	NEVER_NULL(root);           // necessary?
-	return root.is_a_xfer<persistent>();
+	return root.is_a<persistent>();
 	// this relinquishes ownership and responsibility for deleting
-	// to whomever consumes the returned excl_ptr
+	// to whomever consumes the returned count_ptr
 }
 
 

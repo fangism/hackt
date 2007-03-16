@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.30 2007/03/13 04:04:36 fang Exp $
+ 	$Id: module.cc,v 1.31 2007/03/16 07:07:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -33,6 +33,7 @@
 
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 #include "util/indent.h"
 #include "common/TODO.h"
@@ -40,6 +41,11 @@
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::module, MODULE_TYPE_KEY, 0)
+namespace memory {
+using HAC::entity::module;
+template class count_ptr<module>;
+template class count_ptr<const module>;
+}	// end namespace memory
 }	// end namespace util
 
 namespace HAC {

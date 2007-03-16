@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.24 2006/04/28 03:20:15 fang Exp $
+	$Id: persistent_object_manager.h,v 1.25 2007/03/16 07:07:26 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -14,7 +14,6 @@
 #include "util/persistent.h"
 
 #include "util/STL/hash_map.h"
-#include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/IO_utils.h"		// for read and write to streams
 
@@ -25,7 +24,6 @@ using std::ostream;
 using std::streampos;
 using std::ofstream;
 using std::ifstream;
-using memory::excl_ptr;
 using memory::count_ptr;
 USING_UTIL_MEMORY_POINTER_TRAITS
 
@@ -174,7 +172,7 @@ private:
 	/** file position after the header */
 	streampos				start_of_objects;
 	/** temporary place to keep ownership of root pointer */
-	excl_ptr<persistent>			root;
+	count_ptr<persistent>			root;
 
 public:
 	static bool				dump_reconstruction_table;
@@ -437,16 +435,16 @@ public:
 
 //	template <class T>
 	static
-	excl_ptr<persistent>
+	count_ptr<persistent>
 	load_object_from_file(const string& s);
 
 // self-test functions
 	static
-	excl_ptr<persistent>
+	count_ptr<persistent>
 	self_test(const string& s, const persistent& m);
 
 	static
-	excl_ptr<persistent>
+	count_ptr<persistent>
 	self_test_no_file(const persistent& m);
 
 private:
@@ -480,7 +478,7 @@ private:
 	void
 	reconstruct(void);
 
-	excl_ptr<persistent>
+	count_ptr<persistent>
 	get_root(void);
 
 	void

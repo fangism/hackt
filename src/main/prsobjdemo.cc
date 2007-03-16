@@ -2,7 +2,7 @@
 	\file "main/prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.6 2005/12/13 04:15:48 fang Exp $
+	$Id: prsobjdemo.cc,v 1.7 2007/03/16 07:07:24 fang Exp $
  */
 
 #include <iostream>
@@ -59,7 +59,7 @@ prsobjdemo::main(int argc, char* argv[], const global_options&) {
 	if (!check_file_writeable(argv[2]).good)
 		return 1;
 
-	excl_ptr<module> the_module = load_module(argv[1]);
+	const count_ptr<module> the_module(load_module(argv[1]));
 	if (!the_module)
 		return 1;
 

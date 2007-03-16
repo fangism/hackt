@@ -1,7 +1,7 @@
 /**
 	\file "main/guile.cc"
 	Main module for new CHPSIM.
-	$Id: guile.cc,v 1.2 2007/03/14 04:06:22 fang Exp $
+	$Id: guile.cc,v 1.3 2007/03/16 07:07:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,15 +16,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
-#include "main/libhackt-wrap.h"
+#include "guile/libhackt-wrap.h"
 #include "util/getopt_mapped.h"		// for getopt()
-#include "util/memory/excl_ptr.h"	// for never_ptr
-#include "util/libguile.h"
+#include "util/libguile.h"		// for getopt()
 
 namespace HAC {
 #include "util/using_ostream.h"
-using util::memory::excl_ptr;
-using util::memory::never_ptr;
 using guile_wrap::obj_module;		// global module pointer
 
 //=============================================================================

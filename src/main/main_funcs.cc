@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.13 2007/03/11 16:34:35 fang Exp $
+	$Id: main_funcs.cc,v 1.14 2007/03/16 07:07:23 fang Exp $
  */
 
 #include <iostream>
@@ -34,7 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #if KEEP_PARSE_FUNCS
 // forward declarations needed for YSTYPE
 #include "parser/hackt-parse-real.h"	// for YYSTYPE
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 
 #include "lexer/file_manager.h"
 #include "lexer/yyin_manager.h"
@@ -157,9 +157,9 @@ check_file_writeable(const char* fname) {
 	\param yyin is an already opened file.
 	\return NULL on failure.
  */
-excl_ptr<root_body>
+count_ptr<root_body>
 parse_to_AST(FILE* yyin) {
-	typedef	excl_ptr<root_body>		return_type;
+	typedef	count_ptr<root_body>		return_type;
 	YYSTYPE lval;			// root token (was yyval)
 	NEVER_NULL(yyin);
 	try {
@@ -178,9 +178,9 @@ parse_to_AST(FILE* yyin) {
 	\return allocated AST.
  */
 static
-excl_ptr<root_body>
+count_ptr<root_body>
 parse_to_AST(const char* c, const compile_options& opt) {
-	typedef	excl_ptr<root_body>		return_type;
+	typedef	count_ptr<root_body>		return_type;
 	STACKTRACE_VERBOSE;
 	YYSTYPE hackt_val;		// root token (was yyval)
 	hackt_val._root_body = NULL;
@@ -230,9 +230,9 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	Phase 1 of type-check.  
  */
 static
-excl_ptr<module>
+count_ptr<module>
 check_AST(const root_body& r, const char* name) {
-	typedef	excl_ptr<module>	return_type;
+	typedef	count_ptr<module>	return_type;
 	STACKTRACE_VERBOSE;
 	return_type mod(new module(name));
 	NEVER_NULL(mod);
@@ -299,9 +299,9 @@ flatten_source(const char* name) {
 	\return if parse and type-check are successful, then return
 		a pointer to top-level constructed module, else NULL.  
  */
-excl_ptr<module>
+count_ptr<module>
 parse_and_check(const char* name, const compile_options& opt) {
-	typedef	excl_ptr<module>	return_type;
+	typedef	count_ptr<module>	return_type;
 	STACKTRACE_VERBOSE;
 	static const char* dflt = "-stdin-";
 	// test file existence and readibility first
@@ -315,7 +315,7 @@ parse_and_check(const char* name, const compile_options& opt) {
 		}
 	}
 	// error message would be nice
-	excl_ptr<root_body> AST = parse_to_AST(name, opt);
+	count_ptr<root_body> AST = parse_to_AST(name, opt);
 	if (!AST) return return_type(NULL);
 	// error message would be nice
 	return check_AST(*AST, name ? name : dflt);
@@ -332,9 +332,9 @@ good_bool
 self_test_module(const module& m) {
 	STACKTRACE_VERBOSE;
 try {
-	const excl_ptr<module> module_copy =
-		persistent_object_manager::self_test_no_file(m)
-			.is_a_xfer<module>();
+	const count_ptr<module>
+		module_copy(persistent_object_manager::self_test_no_file(m)
+			.is_a<module>());
 	NEVER_NULL(module_copy);
 } catch(...) {
 	cerr << "Unhandled exception in "
@@ -379,11 +379,11 @@ save_module_debug(const module& m, const char* name, const bool d) {
 /**
 	Loads object file and reconstructs module in memory.  
  */
-excl_ptr<module>
+count_ptr<module>
 load_module(const char* fname) {
 	STACKTRACE_VERBOSE;
 	return persistent_object_manager::load_object_from_file(fname)
-		.is_a_xfer<module>();
+		.is_a<module>();
 }
 
 //=============================================================================
@@ -392,7 +392,7 @@ load_module(const char* fname) {
 	Side-effect: sets debugging flags (sticky) for persistent
 	and persistent_object_manager classes.  
  */
-excl_ptr<module>
+count_ptr<module>
 load_module_debug(const char* fname) {
 	STACKTRACE_VERBOSE;
 	persistent::warn_unimplemented = true;

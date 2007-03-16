@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.165 2007/03/15 06:11:02 fang Exp $
+#	$Id: Makefile.am,v 1.166 2007/03/16 07:07:15 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -70,7 +70,7 @@ noinst_LTLIBRARIES = libhackt.la \
 	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
 pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
-	libhacktparsers.la libhacktast.la
+	libhacktparsers.la libhacktast.la libhacktguile.la
 # lib_LTLIBRARIES = libhacktlib.la
 
 hackt_SOURCES = main/hackt.cc
@@ -158,14 +158,11 @@ hacchpsim_LDADD = libhacktsim.la
 #	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" ;} > $@ ; \
 #	$(CHMOD) +x $@
 
-hacguile_SOURCES = main/guile.cc \
-	main/libhackt-wrap.cc \
-	main/libhackt-wrap.h
+hacguile_SOURCES = main/guile.cc
 hacguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 hacguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror 
-hacguile_LDADD = libhacktsim.la libguileutil.la
-#hacguile_LDFLAGS = $(GUILE_LDFLAGS)
+hacguile_LDADD = libhacktguile.la libhacktsim.la 
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -189,6 +186,16 @@ libhacktparsers_la_LIBADD = libhacktast.la
 libhacktast_la_LIBADD = \
 	libhackt.la libhacktinstref.la libhacktcommon.la \
 	$(LIBFANGUTIL)
+
+libhacktguile_la_SOURCES = \
+	guile/libhackt-wrap.cc \
+	guile/libhackt-wrap.h \
+	guile/scm_reference.cc \
+	guile/scm_reference.h
+libhacktguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
+libhacktguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
+	-Wno-old-style-cast -Werror
+libhacktguile_la_LIBADD = libguileutil.la
 
 # want to break, but have cyclic dependency through qualified_id_slice...
 # libhackt_la_LIBADD = libhacktinstref.la libhacktcommon.la \
@@ -863,8 +870,14 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/compile_options.h \
 	main/global_options.h \
 	main/main_funcs.h \
-	main/libhackt-wrap.h \
 	main/guile.h
+
+LIBHACKTGUILE_H_FILES = \
+	guile/libhackt-wrap.h \
+	guile/scm_reference.h
+
+guile/scm_reference.hchk: guile/scm_reference.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
 COMMON_H_FILES = \
 	common/sizes-common.h
@@ -976,6 +989,7 @@ ALL_HEADER_FILES += \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
+	$(LIBHACKTGUILE_H_FILES) \
 	$(MAIN_EXEC_H_FILES)
 
 ALL_TCC_FILES += \

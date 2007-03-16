@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-10:
+	  Now use count_ptr instead of excl_ptr for all main_funcs, 
+		so we can use reference-count tracking while loading
+		dynamic shared libraries, and ensure proper lifetime.
+	  Moved guile-related files to guile/ directory, some files
+		were renamed, losing some early revision history...
+	  Split off new guile/scm_reference.{h,cc} for the
+		meta_reference_union* SMOB.  
+	  TODO: chpsim guile wrapper leading into trace stuff...
+
+
 2007-03-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-09:

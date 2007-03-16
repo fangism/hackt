@@ -2,7 +2,7 @@
 	\file "main/create.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: create.cc,v 1.7 2007/03/11 16:34:33 fang Exp $
+	$Id: create.cc,v 1.8 2007/03/16 07:07:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -68,7 +68,7 @@ create::main(const int argc, char* argv[], const global_options&) {
 	persistent_object_manager::dump_reconstruction_table = false;
 	persistent::warn_unimplemented = true;	// for verbosity
 
-	excl_ptr<module> the_module = load_module(argv[1]);
+	const count_ptr<module> the_module(load_module(argv[1]));
 	if (!the_module)
 		return 1;
 

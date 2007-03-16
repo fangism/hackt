@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.2 2007/03/11 16:34:33 fang Exp $
+	$Id: flatten.cc,v 1.3 2007/03/16 07:07:22 fang Exp $
  */
 
 #include <iostream>
@@ -26,7 +26,6 @@ hackt_parse_file_manager;
 
 namespace HAC {
 #include "util/using_ostream.h"
-using util::memory::excl_ptr;
 using std::list;
 using std::string;
 using lexer::file_manager;

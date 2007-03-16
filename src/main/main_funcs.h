@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.7 2006/11/15 00:09:02 fang Exp $
+	$Id: main_funcs.h,v 1.8 2007/03/16 07:07:24 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
@@ -9,11 +9,11 @@
 
 #include "util/boolean_types.h"
 #include "Object/module.h"
-#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 using util::good_bool;
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 using entity::module;
 class compile_options;		// defined in "main/compile_options.h"
 
@@ -35,7 +35,7 @@ good_bool
 flatten_source(const char*);
 
 extern
-excl_ptr<module>
+count_ptr<module>
 parse_and_check(const char*, const compile_options&);
 
 extern
@@ -51,11 +51,11 @@ void
 save_module_debug(const module&, const char*, const bool = false);
 
 extern
-excl_ptr<module>
+count_ptr<module>
 load_module(const char*);
 
 extern
-excl_ptr<module>
+count_ptr<module>
 load_module_debug(const char*);
 
 //=============================================================================

@@ -1,14 +1,14 @@
 /**
-	\file "main/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.5 2007/03/16 01:17:30 fang Exp $
+	\file "guile/libhackt-wrap.cc"
+	$Id: libhackt-wrap.cc,v 1.1 2007/03/16 07:07:18 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
+	Prior history, file was "main/libhackt-wrap.cc"
  */
 
 #define	ENABLE_STACKTRACE			0
 
-#include "main/libhackt-wrap.h"
 #include <iostream>
 #include <sstream>
 #include <memory>
@@ -20,6 +20,8 @@
 #include "Object/traits/instance_traits.h"
 #include "Object/entry_collection.h"
 #include "parser/instref.h"
+#include "guile/libhackt-wrap.h"
+#include "guile/scm_reference.h"
 #include "util/libguile.h"
 #include "util/guile_STL.h"
 #include "util/tokenize.h"
@@ -28,105 +30,6 @@
 
 //=============================================================================
 // smob wrapped structures
-
-namespace HAC {
-namespace guile_wrap {
-using HAC::entity::meta_reference_union;
-using std::ostringstream;
-
-/**
-	Tag identifier initialized by raw_reference_smob_init().
-	This tag corresponds to entity::meta_reference_union* (naked pointer).  
- */
-static
-scm_t_bits raw_reference_tag;
-
-#if 0
-/**
-	Nothing to recursively mark.  
- */
-static
-SCM
-mark_raw_reference(SCM obj) {
-	return SCM_UNSPECIFIED;
-}
-#endif
-
-/**
-	Not bothering to use the scm_gc_malloc/free.  
-	\return 0 always.
- */
-static
-size_t
-free_raw_reference(SCM obj) {
-	// pointer must be heap-allocated
-//	std::cerr << "freeing raw-reference." << std::endl;
-	meta_reference_union* ptr = 
-		reinterpret_cast<meta_reference_union*>(SCM_SMOB_DATA(obj));
-	if (ptr) {
-		delete ptr;
-		ptr = NULL;	// and STAY dead!
-	}
-	return 0;
-}
-
-/**
-	\return non-zero to indicate success.
- */
-static
-int
-print_raw_reference(SCM obj, SCM port, scm_print_state* p) {
-	scm_puts("#<raw-reference ", port);
-	const meta_reference_union* ptr = 
-		reinterpret_cast<const meta_reference_union*>
-			(SCM_SMOB_DATA(obj));
-	if (ptr && ptr->inst_ref()) {
-		ostringstream oss;
-		ptr->inst_ref()->what(oss) << " ";
-		ptr->inst_ref()->dump_type_size(oss);
-		scm_puts(oss.str().c_str(), port);
-	} else {
-		scm_puts("null", port);
-	}
-	scm_puts(" >", port);
-	return 1;
-}
-
-#if 0
-static
-SCM
-equalp_raw_reference(SCM o1, SCM o2) {
-}
-#endif
-
-/**
-	Registers our own raw-reference type as a smob to guile.  
-	Direct use of this type should be avoided where possible.  
-	This registers the type exactly once.
- */
-static
-void
-raw_reference_smob_init(void) {
-//	std::cout << raw_reference_tag << std::endl;	// is 0
-if (!raw_reference_tag) {	// first time reads 0-initialized
-	raw_reference_tag = scm_make_smob_type("raw-reference",
-		sizeof(HAC::entity::meta_reference_union));
-#if 0
-	// experiment: what happens?  VERY VERY BAD
-	std::cout << raw_reference_tag << std::endl;
-	raw_reference_tag = scm_make_smob_type("raw-reference",
-		sizeof(HAC::entity::meta_reference_union));
-	std::cout << raw_reference_tag << std::endl;
-#endif
-//	scm_set_smob_mark(raw_reference_tag, mark_raw_reference);
-	scm_set_smob_free(raw_reference_tag, free_raw_reference);
-	scm_set_smob_print(raw_reference_tag, print_raw_reference);
-//	scm_set_smob_equalp(raw_reference_tag, equalp_raw_reference);
-}
-}	// end raw_reference_smob_init
-
-}	// end namespace guile_wrap
-}	// end namespace HAC
 
 //=============================================================================
 // convention: all function names shall begin with 'wrap_'
@@ -152,6 +55,7 @@ namespace HAC {
 namespace guile_wrap {
 #include "util/using_ostream.h"
 using std::transform;
+using std::ostringstream;
 using entity::module;
 using entity::state_manager;
 using entity::footprint;
@@ -168,6 +72,7 @@ using entity::int_tag;
 using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
+using entity::meta_reference_union;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
@@ -182,7 +87,7 @@ using util::guile::scm_assert_string;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // static global initialization
 
-excl_ptr<module>	obj_module(NULL);
+count_ptr<module>	obj_module(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

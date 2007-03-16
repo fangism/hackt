@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.4 2007/03/11 16:34:32 fang Exp $
+	$Id: chpsim.cc,v 1.5 2007/03/16 07:07:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -22,12 +22,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/chpsim/graph_options.h"
 #include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
-#include "util/memory/excl_ptr.h"	// for never_ptr
 
 namespace HAC {
 #include "util/using_ostream.h"
-using util::memory::excl_ptr;
-using util::memory::never_ptr;
 using SIM::CHPSIM::State;
 using SIM::CHPSIM::CommandRegistry;
 using SIM::CHPSIM::graph_options;
@@ -119,7 +116,7 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 	const char* const ofn = argv[optind];
 	if (!check_object_loadable(ofn).good)
 		return 1;
-	const excl_ptr<module> the_module = load_module(ofn);
+	const count_ptr<module> the_module(load_module(ofn));
 		// load_module_debug(ofn);
 	if (!the_module)
 		return 1;

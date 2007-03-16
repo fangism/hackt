@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.15 2007/03/11 16:34:31 fang Exp $
+	$Id: cflat.cc,v 1.16 2007/03/16 07:07:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -563,7 +563,7 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 
-	excl_ptr<module> the_module = load_module(ofn);
+	const count_ptr<module> the_module(load_module(ofn));
 	if (!the_module)
 		return 1;
 

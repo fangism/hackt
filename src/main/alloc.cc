@@ -2,7 +2,7 @@
 	\file "main/alloc.cc"
 	Allocates global unique state.  
 
-	$Id: alloc.cc,v 1.5 2007/03/11 16:34:30 fang Exp $
+	$Id: alloc.cc,v 1.6 2007/03/16 07:07:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -68,7 +68,7 @@ alloc::main(const int argc, char* argv[], const global_options&) {
 	persistent_object_manager::dump_reconstruction_table = false;
 	persistent::warn_unimplemented = true;	// for verbosity
 
-	excl_ptr<module> the_module = load_module(argv[1]);
+	const count_ptr<module> the_module(load_module(argv[1]));
 	if (!the_module)
 		return 1;
 

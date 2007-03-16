@@ -6,7 +6,7 @@
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.7 2006/07/27 05:55:37 fang Exp $
+	$Id: parse_test.cc,v 1.8 2007/03/16 07:07:24 fang Exp $
  */
 
 #include <iostream>
@@ -27,7 +27,7 @@ hackt_parse_file_manager;
 
 namespace HAC {
 
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 using entity::module;
 
 //=============================================================================
@@ -68,8 +68,8 @@ parse_test::main(const int argc, char* argv[],
 	if (index != argc) {
 		opt.source_file = argv[index];
 	}
-	const excl_ptr<module> mod =
-		parse_and_check((index != argc) ? argv[index] : NULL, opt);
+	const count_ptr<const module>
+		mod(parse_and_check((index != argc) ? argv[index] : NULL, opt));
 	if (!mod)
 		return 1;
 	good_bool g(self_test_module(*mod));

@@ -1,34 +1,14 @@
 /**
 	\file "main/libhackt-wrap.h"
-	$Id: libhackt-wrap.h,v 1.3 2007/03/15 06:11:06 fang Exp $
+	$Id: libhackt-wrap.h,v 1.1 2007/03/16 07:07:19 fang Exp $
+	Earliest history, file was "main/libhackt-wrap.h"
  */
 
-#ifndef	__HAC_MAIN_LIBACKT_WRAP_H__
-#define	__HAC_MAIN_LIBACKT_WRAP_H__
+#ifndef	__HAC_GUILE_LIBACKT_WRAP_H__
+#define	__HAC_GUILE_LIBACKT_WRAP_H__
 
 #include "util/c_decl.h"
-#include "util/memory/excl_ptr.h"
-
-#if 0
-#include "util/libguile.h"
-
-namespace HAC {
-//=============================================================================
-// convention: all function names shall begin with 'wrap_'
-namespace guile {
-extern
-void
-wrap_objdump(void);
-}	// end namespace guile
-
-namespace entity {
-
-}	// end namespace entity
-//=============================================================================
-}	// end namespace HAC
-#else
-// what if we just expose the interface loader only?
-#endif
+#include "util/memory/count_ptr.h"
 
 //=============================================================================
 // global data to be made accessible to guile interpreter
@@ -40,14 +20,16 @@ class module;
 
 /// namespace for guile-wrappers and interfaces
 namespace guile_wrap {
-using util::memory::excl_ptr;
+using util::memory::count_ptr;
 using entity::module;
 /**
 	Top-level object module to be loaded before passing control
 	over to guile/scheme interpreter.
 	Shouldn't be const, because we may need to allocate.
+	This is reference-counted so other plug-ins may safely copy
+	the reference and ensure proper lifetime.  
  */
-extern	excl_ptr<module>	obj_module;
+extern	count_ptr<module>	obj_module;
 }	// end namespace guile
 }	// end namespace HAC
 
@@ -65,5 +47,5 @@ void
 libhackt_guile_init(void);
 END_C_DECLS
 
-#endif	// __HAC_MAIN_LIBACKT_WRAP_H__
+#endif	// __HAC_GUILE_LIBACKT_WRAP_H__
 

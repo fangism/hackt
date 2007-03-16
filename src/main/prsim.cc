@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.10 2007/03/11 16:34:36 fang Exp $
+	$Id: prsim.cc,v 1.11 2007/03/16 07:07:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -128,7 +128,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 
-	const excl_ptr<module> the_module = load_module(ofn);
+	const count_ptr<module> the_module(load_module(ofn));
 	if (!the_module)
 		return 1;
 
