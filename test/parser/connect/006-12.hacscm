@@ -1,9 +1,9 @@
 #!hacguile -b
 !#
 ;; "006-12.hacscm"
-;;	$Id: 006-12.hacscm,v 1.1 2007/03/15 06:11:16 fang Exp $
+;;	$Id: 006-12.hacscm,v 1.2 2007/03/16 01:17:34 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 006.haco-a
 
-(print-reference-type (parse-raw-reference "sneeze"))
+(reference-type->string (parse-raw-reference "sneeze"))
 

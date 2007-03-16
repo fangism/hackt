@@ -1,10 +1,10 @@
 #!hacguile -b
 !#
 ;; "006-13.hacscm"
-;;	$Id: 006-13.hacscm,v 1.1 2007/03/15 06:11:16 fang Exp $
+;;	$Id: 006-13.hacscm,v 1.2 2007/03/16 01:17:34 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 006.haco-a
 
-(print-reference-index (parse-reference "blah"))
-(print-reference-index (parse-reference "sneeze"))
+(reference-index->string (parse-reference "blah"))
+(reference-index->string (parse-reference "sneeze"))
 

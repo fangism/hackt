@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.4 2007/03/15 06:11:05 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.5 2007/03/16 01:17:30 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -41,6 +41,7 @@ using std::ostringstream;
 static
 scm_t_bits raw_reference_tag;
 
+#if 0
 /**
 	Nothing to recursively mark.  
  */
@@ -49,6 +50,7 @@ SCM
 mark_raw_reference(SCM obj) {
 	return SCM_UNSPECIFIED;
 }
+#endif
 
 /**
 	Not bothering to use the scm_gc_malloc/free.  
@@ -100,17 +102,28 @@ equalp_raw_reference(SCM o1, SCM o2) {
 /**
 	Registers our own raw-reference type as a smob to guile.  
 	Direct use of this type should be avoided where possible.  
+	This registers the type exactly once.
  */
 static
 void
 raw_reference_smob_init(void) {
+//	std::cout << raw_reference_tag << std::endl;	// is 0
+if (!raw_reference_tag) {	// first time reads 0-initialized
 	raw_reference_tag = scm_make_smob_type("raw-reference",
 		sizeof(HAC::entity::meta_reference_union));
-	scm_set_smob_mark(raw_reference_tag, mark_raw_reference);
+#if 0
+	// experiment: what happens?  VERY VERY BAD
+	std::cout << raw_reference_tag << std::endl;
+	raw_reference_tag = scm_make_smob_type("raw-reference",
+		sizeof(HAC::entity::meta_reference_union));
+	std::cout << raw_reference_tag << std::endl;
+#endif
+//	scm_set_smob_mark(raw_reference_tag, mark_raw_reference);
 	scm_set_smob_free(raw_reference_tag, free_raw_reference);
 	scm_set_smob_print(raw_reference_tag, print_raw_reference);
 //	scm_set_smob_equalp(raw_reference_tag, equalp_raw_reference);
 }
+}	// end raw_reference_smob_init
 
 }	// end namespace guile_wrap
 }	// end namespace HAC
@@ -318,10 +331,14 @@ wrap_lookup_reference_aliases(SCM s_pair) {
 }	// wrap_lookup_reference_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a string with type-size info.
+	TODO: return as SCM objects instead of strings.  
+ */
 static
 SCM
-wrap_print_reference_type(SCM s_ref) {
-#define	FUNC_NAME "print-reference-type"
+wrap_reference_type_to_string(SCM s_ref) {
+#define	FUNC_NAME "reference-type->string"
 	scm_assert_smob_type(raw_reference_tag, s_ref);
 	const meta_reference_union* ptr = 
 		reinterpret_cast<const meta_reference_union*>
@@ -329,12 +346,15 @@ wrap_print_reference_type(SCM s_ref) {
 	if (ptr && ptr->inst_ref()) {
 		ostringstream oss;
 		ptr->inst_ref()->what(oss) << " ";
-		ptr->inst_ref()->dump_type_size(oss) << endl;
-		scm_puts(oss.str().c_str(), scm_current_output_port());
+		ptr->inst_ref()->dump_type_size(oss);	// << endl;
+		// scm_puts(oss.str().c_str(), scm_current_output_port());
+		return make_scm(oss.str());
 	} else {
-		scm_puts("(null)", scm_current_output_port());
+		// scm_puts("(null)", scm_current_output_port());
+		scm_misc_error(FUNC_NAME, "Error: raw-reference.", SCM_EOL);
+		return SCM_UNSPECIFIED;
 	}
-	return SCM_UNSPECIFIED;
+	// return SCM_UNSPECIFIED;
 #undef	FUNC_NAME
 }
 
@@ -342,11 +362,12 @@ wrap_print_reference_type(SCM s_ref) {
 /**
 	Prett-prints a type-index pair using the meta-type tag name.
 	We may have to use a guile print-port instead of cout/cerr.
+	\return SCM string.
  */
 static
 SCM
-wrap_print_reference_index(SCM s_pair) {
-#define	FUNC_NAME	"print-reference-index"
+wrap_reference_index_to_string(SCM s_pair) {
+#define	FUNC_NAME	"reference-index->string"
 	scm_assert_pair(s_pair, FUNC_NAME, 1);
 	size_t index;
 	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
@@ -368,20 +389,22 @@ wrap_print_reference_index(SCM s_pair) {
 		scm_misc_error(FUNC_NAME, 
 			"Error: invalid meta-type enum.", SCM_EOL);
 	}	// end switch
-	oss << '[' << index << ']' << endl;
-	scm_puts(oss.str().c_str(), scm_current_output_port());
-	return SCM_UNSPECIFIED;
+	oss << '[' << index << ']';	// << endl;
+	return make_scm(oss.str());
+//	scm_puts(oss.str().c_str(), scm_current_output_port());
+//	return SCM_UNSPECIFIED;
 #undef	FUNC_NAME
-}	// end wrap_print_reference_index
+}	// end wrap_reference_index_to_string
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param s_pair a [type,index] pair (global_indexed_reference)
+	\return string representation of named reference.
  */
 static
 SCM
-wrap_print_canonical_reference(SCM s_pair) {
-#define	FUNC_NAME	"print-canonical-reference"
+wrap_canonical_reference_to_string(SCM s_pair) {
+#define	FUNC_NAME	"canonical-reference->string"
 	scm_assert_pair(s_pair, FUNC_NAME, 1);
 	size_t index;
 	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
@@ -412,10 +435,11 @@ wrap_print_canonical_reference(SCM s_pair) {
 		scm_misc_error(FUNC_NAME, 
 			"Error: invalid meta-type enum.", SCM_EOL);
 	}	// end switch
-	scm_puts(oss.str().c_str(), scm_current_output_port());
-	return SCM_UNSPECIFIED;
+	return make_scm(oss.str());
+//	scm_puts(oss.str().c_str(), scm_current_output_port());
+//	return SCM_UNSPECIFIED;
 #undef	FUNC_NAME
-}	// end wrap_print_canonical_reference
+}	// end wrap_canonical_reference_to_string
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -465,19 +489,19 @@ libhackt_guile_init(void) {
 	// ugh, function pointer reinterpret_cast...
 	scm_c_define_gsubr("objdump", 0, 0, 0, wrap_objdump);
 	scm_c_define_gsubr("parse-reference", 1, 0, 0,
-		(scm_gsubr_type) wrap_parse_global_reference);
+		reinterpret_cast<scm_gsubr_type>(wrap_parse_global_reference));
 	scm_c_define_gsubr("parse-raw-reference", 1, 0, 0,
-		(scm_gsubr_type) wrap_parse_raw_reference);
-	scm_c_define_gsubr("print-reference-type", 1, 0, 0,
-		(scm_gsubr_type) wrap_print_reference_type);
-	scm_c_define_gsubr("print-reference-index", 1, 0, 0,
-		(scm_gsubr_type) wrap_print_reference_index);
-	scm_c_define_gsubr("print-canonical-reference", 1, 0, 0,
-		(scm_gsubr_type) wrap_print_canonical_reference);
+		reinterpret_cast<scm_gsubr_type>(wrap_parse_raw_reference));
+	scm_c_define_gsubr("reference-type->string", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_reference_type_to_string));
+	scm_c_define_gsubr("reference-index->string", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_reference_index_to_string));
+	scm_c_define_gsubr("canonical-reference->string", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_canonical_reference_to_string));
 	scm_c_define_gsubr("lookup-reference-aliases", 1, 0, 0,
-		(scm_gsubr_type) wrap_lookup_reference_aliases);
+		reinterpret_cast<scm_gsubr_type>(wrap_lookup_reference_aliases));
 	scm_c_define_gsubr("collect-reference-subinstances", 1, 0, 0,
-		(scm_gsubr_type) wrap_collect_reference_subinstances);
+		reinterpret_cast<scm_gsubr_type>(wrap_collect_reference_subinstances));
 }	// end libhackt_guile_init
 
 END_C_DECLS
