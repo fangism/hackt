@@ -1,6 +1,6 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.6 2007/03/11 16:34:15 fang Exp $
+	$Id: import_root.cc,v 1.7 2007/03/17 19:58:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -44,13 +44,17 @@ imported_root::imported_root(excl_ptr<root_body>& r,
 		name(n), seen(s) {
 	NEVER_NULL(import);
 	NEVER_NULL(rel_file);
+	STACKTRACE_INDENT_PRINT("at " << this << endl);
+	STACKTRACE_INDENT_PRINT("import (token) " << &*import << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 imported_root::~imported_root() {
 	STACKTRACE_DTOR_VERBOSE;
-#if STACKTRACE_DTORS
 	STACKTRACE_INDENT_PRINT("at " << this << endl);
+	STACKTRACE_INDENT_PRINT("import (token) " << &*import << endl);
+#if STACKTRACE_DTORS
+	keyword_position::pool.status(cerr);
 #endif
 }
 
@@ -109,7 +113,9 @@ imported_root_list::imported_root_list(const imported_root* i) :
 		root_item(), parent_type(i) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-imported_root_list::~imported_root_list() { }
+imported_root_list::~imported_root_list() {
+	STACKTRACE_DTOR_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(imported_root_list)

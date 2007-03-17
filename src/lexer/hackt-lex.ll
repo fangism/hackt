@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.19 2007/02/26 22:00:55 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.20 2007/03/17 19:58:15 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -61,7 +61,7 @@
 %{
 /* scanner-specific header */
 
-#define	ENABLE_STACKTRACE		0 && !defined(LIBBOGUS)
+#define	ENABLE_STACKTRACE		(0 && !defined(LIBBOGUS))
 
 #include <iostream>
 #include <iomanip>
@@ -116,7 +116,7 @@ yy_union_lookup_dump(const YYSTYPE&, const int, std::ostream&);
 namespace HAC {
 
 // defined in "main/main_funcs.cc"
-extern excl_ptr<root_body>
+extern count_ptr<root_body>
 parse_to_AST(FILE*);
 
 /**
@@ -196,6 +196,10 @@ NEWLINE_UPDATE(void) {
 static inline void
 KEYWORD_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 	hackt_lval._keyword_position = new keyword_position(yytext, CURRENT);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("new keyword at " <<
+		hackt_lval._keyword_position << endl);
+#endif
 	TOKEN_UPDATE(foo);
 }
 
@@ -482,6 +486,7 @@ EXPORT		"export"
 	NEVER_NULL(kw_import);
 	// meh, just re-use the passed in lval, rather than local temporary
 	YYSTYPE& temp(*hackt_lval);
+	// YYSTYPE temp;
 	/* OK to reuse this lexer state in recursive lex */
 	{
 	const int expect_string = __hackt_lex(&temp, foo);
@@ -554,7 +559,9 @@ EXPORT		"export"
 		STACKTRACE("import new file");
 		DUMP_FILE_NAME_STACK(cerr);
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
-		excl_ptr<root_body> _root = HAC::parse_to_AST(ym.get_file());
+		excl_ptr<root_body>
+			_root(HAC::parse_to_AST(ym.get_file())
+				.exclusive_release());	// take from count_ptr
 		if (!_root) {
 			// presumably already have error message from callee
 			cerr << "From: \"" << pstr << "\":" <<

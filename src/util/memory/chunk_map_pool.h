@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.13 2007/02/21 17:00:27 fang Exp $
+	$Id: chunk_map_pool.h,v 1.14 2007/03/17 19:58:19 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -312,6 +312,15 @@ public:
 
 	ostream&
 	status(ostream& o) const;
+
+private:
+	// non-copyable
+	explicit
+	chunk_map_pool(const this_type&);
+
+	// non-assignable
+	this_type&
+	operator = (const this_type&);
 
 };	// end class chunk_map_pool
 

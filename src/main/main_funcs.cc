@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.14 2007/03/16 07:07:23 fang Exp $
+	$Id: main_funcs.cc,v 1.15 2007/03/17 19:58:17 fang Exp $
  */
 
 #include <iostream>
@@ -315,7 +315,7 @@ parse_and_check(const char* name, const compile_options& opt) {
 		}
 	}
 	// error message would be nice
-	count_ptr<root_body> AST = parse_to_AST(name, opt);
+	const count_ptr<root_body> AST(parse_to_AST(name, opt));
 	if (!AST) return return_type(NULL);
 	// error message would be nice
 	return check_AST(*AST, name ? name : dflt);

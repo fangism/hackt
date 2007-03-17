@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-12:
+	  Critical fix: hackt lexer was corrupting pointer due to improper
+		pointer class assignment, which compiler SHOULD have rejected.
+		Oddly, this problem manifested on g++-4.0.1, but not 3.3.
+		Neither compiler caught the problem... because the only
+		change was in the return type of the parse_to_AST prototype!
+		This fix is only necessary relative to the recent -81-10 patch.
+	  Added some debugging code to AST sources in the process.
+
+
 2007-03-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-11:

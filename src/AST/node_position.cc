@@ -1,9 +1,13 @@
 /**
 	\file "AST/node_position.cc"
-	$Id: node_position.cc,v 1.3 2007/01/21 05:58:14 fang Exp $
+	$Id: node_position.cc,v 1.4 2007/03/17 19:58:15 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: node_position.cc,v 1.3 2007/01/21 05:58:14 fang Exp $
+	$Id: node_position.cc,v 1.4 2007/03/17 19:58:15 fang Exp $
  */
+
+#define	ENABLE_STATIC_TRACE		0
+#define	DEBUG_CHUNK_MAP_POOL		0
+#define	ENABLE_STACKTRACE		0
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -20,6 +24,7 @@ namespace util {
 namespace memory {
 // explicit template instantiation needed for -O3
 	template class count_ptr<const HAC::parser::node_position>;
+	template class count_ptr<const HAC::parser::keyword_position>;
 }
 }
 

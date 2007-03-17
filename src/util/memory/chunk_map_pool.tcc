@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.12 2007/02/21 17:00:27 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.13 2007/03/17 19:58:20 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -19,13 +19,24 @@
 #define	EXTERN_TEMPLATE_UTIL_WHAT
 #endif
 
+#ifndef	DEBUG_CHUNK_MAP_POOL
+#define	DEBUG_CHUNK_MAP_POOL			0
+#endif
+
 #include "util/memory/fixed_pool_chunk.tcc"
 #include "util/memory/destruction_policy.tcc"
 #include "util/what.tcc"
+#if DEBUG_CHUNK_MAP_POOL
+#include "util/stacktrace.h"
+#endif
 
 namespace util {
 namespace memory {
 #include "util/using_ostream.h"
+
+#if DEBUG_CHUNK_MAP_POOL
+REQUIRES_STACKTRACE_STATIC_INIT	
+#endif
 
 //=============================================================================
 // class chunk_map_pool method definitions
@@ -33,11 +44,19 @@ namespace memory {
 CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 CHUNK_MAP_POOL_CLASS::chunk_map_pool() :
 		chunk_set(), chunk_map(), avail_set() {
+#if DEBUG_CHUNK_MAP_POOL
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("at " << this << endl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 CHUNK_MAP_POOL_CLASS::~chunk_map_pool() {
+#if DEBUG_CHUNK_MAP_POOL
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("at " << this << endl);
+#endif
 	if (!this->chunk_map.empty()) {
 		cerr << "WARNING: chunk_map_pool<" << what<T>::name() <<
 			"> destroyed while chunks were live!" << endl;
@@ -75,6 +94,9 @@ CHUNK_MAP_POOL_CLASS::contains(pointer p) const {
 CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 typename CHUNK_MAP_POOL_CLASS::pointer
 CHUNK_MAP_POOL_CLASS::allocate(void) {
+#if DEBUG_CHUNK_MAP_POOL
+	STACKTRACE_VERBOSE;
+#endif
 	if (this->avail_set.empty()) {
 		// need to create a chunk
 		// instead of push_back, which calls constructor, 
@@ -88,7 +110,11 @@ CHUNK_MAP_POOL_CLASS::allocate(void) {
 		const chunk_set_iterator last = --chunk_set.end();
 		chunk_map[last->begin()] = last;
 		avail_set.insert(&*last);
-		return last->allocate();
+		const pointer ret = last->allocate();
+#if DEBUG_CHUNK_MAP_POOL
+		STACKTRACE_INDENT_PRINT("alloc " << ret << endl);
+#endif
+		return ret;
 	} else {
 		// pick any chunk with a free element
 		// any selectable policy? FIFO? LIFO? LRU?
@@ -100,6 +126,9 @@ CHUNK_MAP_POOL_CLASS::allocate(void) {
 		if (use_chunk->full()) {
 			avail_set.erase(first);
 		}
+#if DEBUG_CHUNK_MAP_POOL
+		STACKTRACE_INDENT_PRINT("alloc " << ret << endl);
+#endif
 		// chunk_map doesn't change
 		return ret;
 	}
@@ -109,6 +138,10 @@ CHUNK_MAP_POOL_CLASS::allocate(void) {
 CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 void
 CHUNK_MAP_POOL_CLASS::deallocate(pointer p) {
+#if DEBUG_CHUNK_MAP_POOL
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("dealloc " << p << endl);
+#endif
 	NEVER_NULL(p);
 #if 0
 	INVARIANT(!chunk_map.empty());
