@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.65 2007/03/08 23:07:24 fang Exp $
+	$Id: BUILDS,v 1.66 2007/03/17 20:32:50 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -109,9 +109,9 @@ yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 
 (Fang)
-Version: hackt 0.1.4-devel-20070226
-CVS Tag: HACKT-00-01-04-main-00-80-91
-Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '-C'
+Version: hackt 0.1.4-devel-20070311
+CVS Tag: HACKT-00-01-04-main-00-81-12
+Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '-C'
 build-triplet: powerpc-apple-darwin8.8.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)
 config-CXXFLAGS: -g -O2
@@ -119,6 +119,7 @@ config-LIBS: -ledit  -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 2.3
 readline: BSD EditLine (histedit interface) ver. 2.9
+build-date: Sat Mar 17 15:00:02 EDT 2007
 
 (Fang)
 // -O3 optimized
