@@ -4,7 +4,7 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.14 2007/02/06 21:36:31 fang Exp $
+#	$Id: Make.latex,v 1.15 2007/03/17 00:35:46 fang Exp $
 
 SUFFIXES += .ps .dvi .tex .pdf .ind .idx .bbl .aux \
 	.dvidepend .pdfdepend
@@ -83,7 +83,7 @@ if HAVE_LATEX
 		then $(ECHO) SHIT ; \
 	fi ; \
 	if test -f $$bldroot.idx ; then $(MAKE) $$bldroot.ind ; fi ; \
-	$(MAKE) $$bldroot.bbl ; \
+	if test -f $$bldroot.aux ; then $(MAKE) $$bldroot.bbl ; fi ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null; \
@@ -119,7 +119,7 @@ if HAVE_PDFLATEX
 		then $(ECHO) SHIT ; \
 	fi ; \
 	if test -f $$bldroot.idx ; then $(MAKE) $$bldroot.ind ; fi ; \
-	$(MAKE) $$bldroot.bbl ; \
+	if test -f $$bldroot.aux ; then $(MAKE) $$bldroot.bbl ; fi ; \
 	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
