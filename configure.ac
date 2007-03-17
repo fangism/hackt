@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.124 2007/03/14 04:06:16 fang Exp $
+#	$Id: configure.ac,v 1.125 2007/03/17 02:51:43 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -293,6 +293,7 @@ AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
 AC_CHECK_FUNCS([drand48 erand48 lrand48 nrand48])
 AC_CHECK_FUNCS([mrand48 jrand48 srand48 seed48 lcong48])
 AC_CHECK_FUNCS([system exec])
+AC_CHECK_FUNCS([atexit])
 AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 AC_CHECK_FUNCS([pipe fork vfork popen pclose dup dup2])
 dnl vfork is not always available

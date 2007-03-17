@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-03-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-11:
+	  AC_CHECK_FUNC(atexit), because we need it for guile-ism.
+	  config/guile.m4: also check for scm_init_guile()
+
+
 2007-03-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-07:

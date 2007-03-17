@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.3 2007/03/14 04:06:17 fang Exp $
+dnl	$Id: guile.m4,v 1.4 2007/03/17 02:51:44 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -63,6 +63,7 @@ AC_CHECK_HEADERS([libguile.h guile/gh.h])
 dnl <guile/gh.h> is deprecated but may have some interfaces for compatibility
 if test "$ac_cv_header_libguile_h" = "yes" ; then
 AC_CHECK_LIB(guile, scm_boot_guile)
+AC_CHECK_LIB(guile, scm_init_guile)
 dnl what does the following test for?
 AC_CHECK_FUNCS(scm_boot_guile, , libguile_b=no)
 dnl AC_CHECK_FUNCS(scm_from_ulong)

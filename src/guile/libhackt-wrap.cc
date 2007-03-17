@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.1 2007/03/16 07:07:18 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.2 2007/03/17 02:51:47 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -88,6 +88,23 @@ using util::guile::scm_assert_string;
 // static global initialization
 
 count_ptr<module>	obj_module(NULL);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_ATEXIT
+/**
+	Since guile isn't kind enough to return and clean up the stack upon
+	exit, we employ ::atexit to assist us in cleaning up.  
+ */
+static
+void
+release_libhackt_wrap_resources_at_exit(void) {
+//	STACKTRACE_VERBOSE;	// would REQUIRE_STATIC_STACKTRACE_INIT
+	if (obj_module) {
+		obj_module = count_ptr<module>(NULL);
+		// deallocate please!
+	}
+}
+#endif	// HAVE_ATEXIT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -407,6 +424,10 @@ libhackt_guile_init(void) {
 		reinterpret_cast<scm_gsubr_type>(wrap_lookup_reference_aliases));
 	scm_c_define_gsubr("collect-reference-subinstances", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_collect_reference_subinstances));
+#if HAVE_ATEXIT
+	const int x = atexit(release_libhackt_wrap_resources_at_exit);
+	INVARIANT(!x);	// must have succeeded!
+#endif
 }	// end libhackt_guile_init
 
 END_C_DECLS

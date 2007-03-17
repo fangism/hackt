@@ -5,6 +5,15 @@
 
 2007-03-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-11:
+	  Critical fix: globally allocated resource obj_module (libhacktwrap)
+		won't necessarily be deallocated in time due to
+		guile no-returning, thuse we must register a manual
+		destructor using atexit(), which is the first thing called
+		upon exit().  
+	  This fixes memory leak false-alert in guile test cases.
+
+
 	* HACKT-00-01-04-main-00-81-10:
 	  Now use count_ptr instead of excl_ptr for all main_funcs, 
 		so we can use reference-count tracking while loading
