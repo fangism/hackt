@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.2 2007/03/17 02:51:47 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3 2007/03/18 00:24:58 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -94,14 +94,18 @@ count_ptr<module>	obj_module(NULL);
 /**
 	Since guile isn't kind enough to return and clean up the stack upon
 	exit, we employ ::atexit to assist us in cleaning up.  
+	NOTE: atexit is called *after* main, but before any other
+	global destructors are called.  
  */
 static
 void
 release_libhackt_wrap_resources_at_exit(void) {
-//	STACKTRACE_VERBOSE;	// would REQUIRE_STATIC_STACKTRACE_INIT
+	STACKTRACE_VERBOSE;	// would REQUIRE_STATIC_STACKTRACE_INIT?
 	if (obj_module) {
 		obj_module = count_ptr<module>(NULL);
 		// deallocate please!
+		// there shouldn't be any other references to it
+		// should we assert?
 	}
 }
 #endif	// HAVE_ATEXIT
@@ -109,6 +113,7 @@ release_libhackt_wrap_resources_at_exit(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Functor for generating pair from indices.  
+	TODO: attribute visibility hidden
  */
 struct type_bound_global_reference_maker {
 	const size_t				type;
@@ -150,6 +155,7 @@ global_references_set_export_scm_refs(const global_references_set& s) {
 /**
 	Wrapped call to 'objdump'.
 	NOTE: this uses cout instead of an ostringstream.  
+	\return nothing
  */
 static
 SCM
@@ -403,10 +409,13 @@ using util::guile::scm_gsubr_type;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Register wrapped functions.  
-	\pre guile is already booted.
+	Safe to call this multiple times.  
+	\pre guile is already booted, and obj_module pointer is set.
+	\post obj_module pointer remains unchanged.
  */
 void
 libhackt_guile_init(void) {
+	NEVER_NULL(obj_module);
 	raw_reference_smob_init();
 	// ugh, function pointer reinterpret_cast...
 	scm_c_define_gsubr("objdump", 0, 0, 0, wrap_objdump);

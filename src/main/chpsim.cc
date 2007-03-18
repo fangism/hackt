@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.5 2007/03/16 07:07:21 fang Exp $
+	$Id: chpsim.cc,v 1.6 2007/03/18 00:25:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <list>
 #include "main/chpsim.h"
+#include "main/chpsim_options.h"
 #include "main/program_registry.h"	// to register with hackt's dispatcher
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
@@ -34,38 +35,6 @@ using entity::canonical_fundamental_chan_type_base;
 template class options_modifier_policy<chpsim_options>;
 
 //=============================================================================
-/**
-	Has a lot in common with chpsim_options (main/prsim.cc)
- */
-class chpsim_options {
-public:
-	/// just print help and exit
-	bool				help_only;
-	/// interactive vs. batch mode
-	bool				interactive;
-	/// whether or not to run, or just run some other diagnostics
-	bool				run;
-	/// show result of graph allocation
-	bool				dump_graph_alloc;
-	/// check structure
-	bool				check_structure;
-	/// whether or not to produce dot graph output before running
-	bool				dump_dot_struct;
-	/// whether or not to print checkpoint dump
-	bool				dump_checkpoint;
-	/// list of paths to search for sourced scripts
-	typedef	std::list<string>	source_paths_type;
-	source_paths_type		source_paths;
-	/// fine-tuning graph options
-	graph_options			graph_opts;
-
-	chpsim_options() : help_only(false), interactive(true), 
-		run(true), dump_graph_alloc(false), check_structure(true),
-		dump_dot_struct(false), dump_checkpoint(false), 
-		source_paths() { }
-};	// end class chpsim_options
-
-//=============================================================================
 // class chpsim static initializers
 
 const char
@@ -74,7 +43,7 @@ chpsim::name[] = "chpsim";
 const char
 chpsim::brief_str[] = "An event-driven CHP simulator";
 
-#ifndef	WITH_MAIN
+#if	!defined(WITH_MAIN) && !defined(NO_REGISTER)
 const size_t
 chpsim::program_id = register_hackt_program_class<chpsim>();
 #endif

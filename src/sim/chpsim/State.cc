@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.6 2007/03/11 16:34:42 fang Exp $
+	$Id: State.cc,v 1.7 2007/03/18 00:25:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,6 +31,7 @@
 #include "common/TODO.h"
 #include "sim/ISE.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"	// for explicit instantiation
 #include "util/iterator_more.h"
 #include "util/copy_if.h"
 #include "util/IO_utils.h"
@@ -80,6 +81,13 @@ struct value_reader<State::event_placeholder_type> {
 		read_value(is, p.cause_trace_id);
 	}
 };	// end struct value_reader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+namespace memory {
+using HAC::SIM::CHPSIM::State;
+// explicit template specialization needed for guile-module
+template class count_ptr<State>;
+}	// end namespace memory
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace util

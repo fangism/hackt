@@ -1,6 +1,14 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.9 2006/11/07 06:34:00 fang Exp $
+	$Id: BUGS,v 1.10 2007/03/18 00:24:55 fang Exp $
+
+guile: [CRITICAL]
+	This is an issue primarily with guile.
+	guile uses C-style exception handling with setjmp/longjmp, 
+	which screws up proper stack unwinding and destruction of local objects
+	consequence: errors during guile will leak resources like crazy
+	Issue has been raised on guile-users@gnu.org.
+	Propose to re-implement their exception mechanism.
 
 editline: 2006-07-09
 	piping or redirecting script into editline-histedit

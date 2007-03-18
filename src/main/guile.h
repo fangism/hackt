@@ -1,7 +1,7 @@
 /**
 	\file "main/guile.h"
 	Interface header for guile module.  
-	$Id: guile.h,v 1.1 2007/03/11 21:16:50 fang Exp $
+	$Id: guile.h,v 1.2 2007/03/18 00:25:02 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_GUILE_H__
@@ -16,6 +16,8 @@ class guile_options;
 //=============================================================================
 /**
 	Instance-less class.  
+	NOTE: unlike other module dispatch classes, we do not intend
+	to make this a dispatchable subprogram.  
 	Yes, most everything is private, not supposed to use this directly, 
 	but rather, through program registration.  
  */

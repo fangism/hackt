@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.166 2007/03/16 07:07:15 fang Exp $
+#	$Id: Makefile.am,v 1.167 2007/03/18 00:24:56 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -49,12 +49,12 @@ endif
 bin_PROGRAMS = hackt haco haccreate hacalloc \
 	hacobjdump hflat hacpp hacprsim hacchpsim
 if HAVE_LIBGUILE
-bin_PROGRAMS += hacguile
+bin_PROGRAMS += hacguile hacchpsimguile
 endif
 if USE_UNROLL_PHASE
 bin_PROGRAMS += hacunroll
 endif
-EXTRA_PROGRAMS = hacguile
+EXTRA_PROGRAMS = hacguile hacchpsimguile
 
 CLEANFILES += $(bin_SCRIPTS)
 
@@ -162,7 +162,22 @@ hacguile_SOURCES = main/guile.cc
 hacguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 hacguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror 
-hacguile_LDADD = libhacktguile.la libhacktsim.la 
+hacguile_LDADD = libhacktguile.la libhacktlib.la 
+
+LIBHACKTGUILE_H_FILES = \
+	guile/libhackt-wrap.h \
+	guile/scm_reference.h \
+	guile/chpsim-wrap.h
+
+hacchpsimguile_SOURCES = \
+	main/chpsim-guile.cc \
+	main/chpsim.cc \
+	guile/chpsim-wrap.cc \
+	$(LIBHACKTGUILE_H_FILES)
+hacchpsimguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
+hacchpsimguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
+	-Wno-old-style-cast -Werror 
+hacchpsimguile_LDADD = libhacktguile.la libhacktsim.la 
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -869,12 +884,10 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/cflat_options.h \
 	main/compile_options.h \
 	main/global_options.h \
+	main/chpsim_options.h \
 	main/main_funcs.h \
-	main/guile.h
-
-LIBHACKTGUILE_H_FILES = \
-	guile/libhackt-wrap.h \
-	guile/scm_reference.h
+	main/guile.h \
+	main/chpsim-guile.h
 
 guile/scm_reference.hchk: guile/scm_reference.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
