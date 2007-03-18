@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.5 2007/03/18 21:53:46 fang Exp $
+dnl	$Id: guile.m4,v 1.6 2007/03/18 23:00:50 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -36,9 +36,9 @@ dnl    GUILE_CONFIG=$guile_config
 dnl    break
 dnl  fi
 dnl done
-AC_SUBST(GUILE_CONFIG)
 
-if test -x $GUILE_CONFIG ; then
+if test -n "$GUILE_CONFIG" ; then
+if test -x "$GUILE_CONFIG" ; then
   AC_MSG_CHECKING([guile compile flags])
   GUILE_CPPFLAGS="`$GUILE_CONFIG compile`"
   AC_MSG_RESULT($GUILE_CPPFLAGS)
@@ -46,10 +46,7 @@ if test -x $GUILE_CONFIG ; then
   GUILE_LDFLAGS="`$GUILE_CONFIG link`"
   AC_MSG_RESULT($GUILE_LDFLAGS)
 fi
-AC_SUBST(GUILE_CPPFLAGS)
-AC_SUBST(GUILE_LDFLAGS)
 
-if test -n "$GUILE_CONFIG" ; then
 dnl is it required or optional?
 dnl version checking?
 
@@ -84,6 +81,9 @@ AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
 test "$ac_cv_func_scm_is_pair" = "yes" ||
 	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
 fi
+AC_SUBST(GUILE_CONFIG)
+AC_SUBST(GUILE_CPPFLAGS)
+AC_SUBST(GUILE_LDFLAGS)
 dnl TODO: extract guile version information
 ])dnl
 
