@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.6 2007/03/18 23:00:50 fang Exp $
+dnl	$Id: guile.m4,v 1.7 2007/03/18 23:13:02 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -77,10 +77,10 @@ AC_LANG_POP(C++)
 else
 	AC_MSG_WARN([[guile-config missing, disabling building with guile!]])
 fi
+fi
 AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
 test "$ac_cv_func_scm_is_pair" = "yes" ||
 	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
-fi
 AC_SUBST(GUILE_CONFIG)
 AC_SUBST(GUILE_CPPFLAGS)
 AC_SUBST(GUILE_LDFLAGS)
