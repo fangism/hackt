@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.4 2007/03/17 02:51:44 fang Exp $
+dnl	$Id: guile.m4,v 1.5 2007/03/18 21:53:46 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -72,10 +72,6 @@ AC_CHECK_FUNCS(gh_scm2ulong)
 dnl the following are in guile-1.8, but not earlier
 AC_CHECK_FUNCS(scm_is_pair)
 AC_CHECK_FUNCS(scm_is_string)
-AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
-test "$ac_cv_func_scm_is_pair" = "yes" ||
-	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
-fi
 dnl test "$libguile_b" = "no" ... warn...
 dnl pop flags
 LDFLAGS="$save_LDFLAGS"
@@ -83,6 +79,10 @@ CPPFLAGS="$save_CPPFLAGS"
 AC_LANG_POP(C++)
 else
 	AC_MSG_WARN([[guile-config missing, disabling building with guile!]])
+fi
+AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
+test "$ac_cv_func_scm_is_pair" = "yes" ||
+	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
 fi
 dnl TODO: extract guile version information
 ])dnl
