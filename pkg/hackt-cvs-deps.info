@@ -1,0 +1,25 @@
+Package: hackt-cvs-deps
+Version: 20070311
+Revision: 1
+Description: Build-deps for HACKT (CVS)
+Type: bundle
+Maintainer: David Fang <fangism@users.sourceforge.net>
+
+BuildDependsOnly: true
+BuildDepends: <<
+  automake1.9,
+  autoconf	(>= 2.59-1),
+  libtool14	(>= 1.5.6-1),
+  hackt-dist-deps
+<<
+
+Homepage: http://www.csl.cornell.edu/~fang/hackt/
+DescDetail: <<
+Installing this bundle will install all prerequisites for building HACKT
+from a CVS checkout.  
+<<
+
+DescPackaging: <<
+Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-14.  
+<<
+

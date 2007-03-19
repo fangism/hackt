@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.19 2007/03/13 04:04:33 fang Exp $
+	$Id: README,v 1.20 2007/03/19 02:37:18 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -75,6 +75,10 @@ Unsupported versions of flex:
 		but WORST of all, after workarounds, lexing crashes horribly.
 
 Other required tools:
+dot (part of the graphviz package)
+	graph figure generator, needed for documentation building.
+latex,pdflatex (part of tetex package)
+	needed for building documentation.
 guile-1.6+
 	Guile is a scheme environment for extensible languages.  
 	NOTE: for now, require guile 1.8+ because 1.6 is lacking many

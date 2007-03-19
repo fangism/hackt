@@ -1,0 +1,37 @@
+Package: hackt-dist-deps
+Version: 20070311
+Revision: 1
+Description: Build-deps for HACKT (dist)
+Type: bundle
+Maintainer: David Fang <fangism@users.sourceforge.net>
+
+BuildDependsOnly: true
+BuildDepends: <<
+  readline5	(>= 5.0-1),
+  bison		(>= 1.875-1),
+  guile18	(>= 1.8.1-1),
+  graphviz	(>= 1.12-1),
+  transfig,
+  tetex-base	(>= 3.0-1)
+<<
+
+Homepage: http://www.csl.cornell.edu/~fang/hackt/
+DescDetail: <<
+Installing this bundle will install all prerequisites for building HACKT
+from a distribution tarball.
+.
+Bison can be replaced with /usr/bin/yacc, anything BUT Apple's bison-1.28.
+Known good versions of flex include 2.5.4, 2.5.31, NOT 2.5.33.
+Issue: guile18-dev is BuildDependsOnly, only need guile18-shlibs installed.
+The hackt package should BuildDepends guile18-dev.
+GraphViz is needed for dot.
+tetex-base is needed for documentation builds (latex).
+transfig is needed for fig2dev (xfig)
+readline5 is optional, but we list it here anyways (4.3 works too).
+<<
+
+DescPackaging: <<
+Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-14.  
+Could make a no-guile version too, I suppose.  
+<<
+

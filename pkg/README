@@ -1,0 +1,32 @@
+"pkg/README"
+
+This directory contains miscellaneous package descriptions for HACKT.
+Until this directory gets a Makefile.am of its own, list these files
+in the parent directory's Makefile.am under EXTRA_DIST.  
+
+=============================================================================
+Fink: (Mac OS X)
+
+hackt-dist-deps.info: distribution dependencies
+hackt-cvs-deps.info: CVS build dependencies
+
+To use these, copy the files to /sw/fink/dists/local/main/finkinfo/
+and re-run 'fink index'.  
+Then 'fink install hackt-dist-deps' (or the cvs variant) to install 
+the necessary dependent packages.
+These are dummy packages that may be removed at any time.  
+They use the BuildDepends mechanism to temporarily install the required
+packages.  
+
+TODO: fink packages for hackt itself.  Those should have true dependencies
+on the necessary shlibs.  
+
+DISCLAIMER: these fake packages have not undergone any real validation.
+
+=============================================================================
+Debian:
+
+=============================================================================
+BSD Ports:
+
+

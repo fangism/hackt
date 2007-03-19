@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2007-03-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-14:
+	  config/guile.m4: fixed conditional AM_CONDITIONAL to unconditional.
+	  README, README.CVS: additional instructions.
+	  Added pkg/README, pkg/hackt-{cvs,dist}-deps.info fink packages.
+		Listed them in EXTRA_DIST of Makefile.am.
+
+
 2007-03-16	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-11:
