@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.167 2007/03/18 00:24:56 fang Exp $
+#	$Id: Makefile.am,v 1.168 2007/03/19 02:03:44 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -54,7 +54,7 @@ endif
 if USE_UNROLL_PHASE
 bin_PROGRAMS += hacunroll
 endif
-EXTRA_PROGRAMS = hacguile hacchpsimguile
+# no need to name EXTRA_PROGRAMS = hacguile hacchpsimguile
 
 CLEANFILES += $(bin_SCRIPTS)
 
@@ -70,8 +70,12 @@ noinst_LTLIBRARIES = libhackt.la \
 	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
 pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
-	libhacktparsers.la libhacktast.la libhacktguile.la
+	libhacktparsers.la libhacktast.la
 # lib_LTLIBRARIES = libhacktlib.la
+if HAVE_LIBGUILE
+pkglib_LTLIBRARIES += libhacktguile.la
+endif
+# no need to name EXTRA_LTLIBRARIES += libhacktguile.la
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la
@@ -211,6 +215,7 @@ libhacktguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 libhacktguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror
 libhacktguile_la_LIBADD = libguileutil.la
+# libhacktguile_la_LDFLAGS = -rpath '$(pkglibdir)'
 
 # want to break, but have cyclic dependency through qualified_id_slice...
 # libhackt_la_LIBADD = libhacktinstref.la libhacktcommon.la \
