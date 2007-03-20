@@ -1,5 +1,13 @@
 # "test/ChangeLog"
 
+2007-03-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15:
+	  Added support for hacchpsimscm guile tests to test harness.
+	  Also hacchpsimscm test can take additional trace-file dependencies,
+		using the @chpsimtrace@ directive, for auto-depend.
+
+
 2007-03-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-01-shlib-01-08:

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2007/02/26 22:01:08 fang Exp $
+#	$Id: Makefile.am,v 1.8 2007/03/20 02:24:21 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -148,8 +148,15 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
 
+HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
+	channel-sync-desync-a-01
+
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
+
+# Additional dependencies from known-side effects
+channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
+	@:
 
 include $(top_srcdir)/test/Make.test-tail
 

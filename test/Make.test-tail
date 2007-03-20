@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.73 2007/03/15 23:10:01 fang Exp $
+#	$Id: Make.test-tail,v 1.74 2007/03/20 02:24:20 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -32,6 +32,7 @@ HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
 # HACKT_CHPSIM_EXE = $(HACKT_EXE) chpsim
 HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
 HACKT_GUILE_EXE = $(top_builddir)/src/hacguile
+HACKT_CHPSIM_GUILE_EXE = $(top_builddir)/src/hacchpsimguile
 
 # NOTE: these scripts are configure-generated from their .hac files.  
 TEST_SRCDIR = $(top_srcdir)/test
@@ -106,6 +107,13 @@ endif
 EXTRACT_HACO_PIPE = $(GREP) "@haco@" | $(HEAD) -n1 | \
 	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
 
+# This analogously extracts the name of a tracefile from source.
+EXTRACT_CHPSIMTRACE_PIPE = $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
+	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
+
+# This mechanism could be generalized to produce extra dependencies
+# that do not need to be named as arguments to the invoking command.  
+# For example, dependencies known by the user or hard-coded names.  
 
 BOGUS_TESTS =
 BOGUS_TARGETS =
@@ -164,6 +172,12 @@ HACGUILE_TARGETS = \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscmfail-out)
 
 $(HACGUILE_TARGETS): $(HACKT_GUILE_EXE)
+
+HACCHPSIMGUILE_TARGETS = \
+	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscm-out) \
+	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscmfail-out)
+
+$(HACCHPSIMGUILE_TARGETS): $(HACKT_CHPSIM_GUILE_EXE)
 
 .libs: $(top_builddir)/src/.libs
 	$(LN_S) $< $@

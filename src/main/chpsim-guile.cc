@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim-guile.cc"
 	Main module for new CHPSIM guile interface.
-	$Id: chpsim-guile.cc,v 1.1 2007/03/18 00:24:59 fang Exp $
+	$Id: chpsim-guile.cc,v 1.2 2007/03/20 02:24:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,20 +10,15 @@
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
-// #include <list>
 #include "main/chpsim-guile.h"
 #include "main/chpsim.h"
 #include "main/chpsim_options.h"
 #include "main/program_registry.h"	// to register with hackt's dispatcher
 #include "main/main_funcs.h"		// for save/load_module()
-// #include "main/options_modifier.tcc"
 #include "main/global_options.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "sim/chpsim/State.h"
-// #include "sim/chpsim/Command.h"
 #include "sim/chpsim/graph_options.h"
-// #include "sim/command_common.h"
-// #include "util/getopt_mapped.h"		// for getopt()
 #include "guile/libhackt-wrap.h"
 #include "guile/chpsim-wrap.h"
 #include "util/libguile.h"
@@ -46,8 +41,8 @@ chpsim_guile::chpsim_guile() { }
 void
 chpsim_guile::main_interactive(void* closure, int argc, char** argv) {
 	cout << "Welcome to hackt-chpsim-guile!" << endl;
-	scm_c_eval_string("(set-repl-prompt! \"hacchpsimguile> \"");
-	libhackt_guile_init();
+	scm_c_eval_string("(set-repl-prompt! \"hacchpsimguile> \")");
+	libhacktsim_guile_init();
 	scm_shell(argc, argv);	// no-return
 }
 
@@ -58,8 +53,8 @@ chpsim_guile::main_interactive(void* closure, int argc, char** argv) {
 void
 chpsim_guile::main_script(void* closure, int argc, char** argv) {
 	// suppress prompt
-	scm_c_eval_string("(set-repl-prompt! \"\"");
-	libhackt_guile_init();
+	scm_c_eval_string("(set-repl-prompt! \"\")");
+	libhacktsim_guile_init();
 	scm_shell(argc, argv);	// no-return
 }
 
@@ -116,6 +111,7 @@ try {
 		// may throw
 	NEVER_NULL(chpsim_state);
 	// install interrupt signal handler
+	// do we really need this?
 	const State::signal_handler int_handler(&*chpsim_state);
 #if 0
 	if (opt.dump_graph_alloc)

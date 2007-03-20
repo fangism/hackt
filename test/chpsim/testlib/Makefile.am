@@ -1,5 +1,5 @@
 # "test/chpsim/testlib/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2007/02/05 06:40:25 fang Exp $
+#	$Id: Makefile.am,v 1.5 2007/03/20 02:24:23 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -26,6 +26,9 @@ HACKT_CHPSIMRC_TEST_SUBJECTS =
 HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES =
 
 # HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES =
+
+HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
+	bool-copy-test-01
 
 # additional sources not already mentioned
 srcdir_EXTRA_DIST += README

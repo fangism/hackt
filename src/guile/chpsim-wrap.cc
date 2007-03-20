@@ -1,21 +1,25 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.1 2007/03/18 00:24:56 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2 2007/03/20 02:24:15 fang Exp $
  */
 
 #include <iostream>
 #include "guile/chpsim-wrap.h"
 #include "guile/libhackt-wrap.h"
 #include "sim/chpsim/State.h"
+#include "sim/chpsim/Trace.h"
 // #include "sim/chpsim/graph_options.h"
 #include "util/stacktrace.h"
 #include "util/libguile.h"
+#include "util/guile_STL.h"
 
 namespace HAC {
 namespace guile_wrap {
 using SIM::CHPSIM::State;
+using SIM::CHPSIM::TraceManager;
 // using SIM::CHPSIM::graph_options;
 #include "util/using_ostream.h"
+using util::guile::scm_assert_string;
 
 //=============================================================================
 /**
@@ -62,6 +66,24 @@ wrap_chpsim_dump_graph_alloc(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints text dump of chpsim trace fo stdout.
+	\param s_str the name of trace file.
+ */
+static
+SCM
+wrap_chpsim_dump_trace(SCM s_str) {
+#define	FUNC_NAME "dump-trace"
+	scm_assert_string(s_str, FUNC_NAME, 1);
+	const char* tf = scm_to_locale_string(s_str);
+	if (TraceManager::text_dump(tf, cout)) {
+		cerr << "Error opening trace file: " << tf << endl;
+	}
+	return SCM_UNSPECIFIED;
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap
 }	// end namespace HAC
 
@@ -77,9 +99,12 @@ void
 libhacktsim_guile_init(void) {
 	NEVER_NULL(chpsim_state);
 	libhackt_guile_init();		// prerequisite module
+	// (use-modules (ice-9 streams))?
 	// initialize any smob types we use
 	scm_c_define_gsubr("dump-chpsim-struct", 0, 0, 0, 
 		wrap_chpsim_dump_graph_alloc);
+	scm_c_define_gsubr("dump-trace", 1, 0, 0, 
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_dump_trace));
 #if HAVE_ATEXIT
 	const int x = atexit(release_chpsim_wrap_resources_at_exit);
 	INVARIANT(!x);
