@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2 2007/03/20 02:24:15 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.1 2007/03/20 23:10:34 fang Exp $
  */
 
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "util/stacktrace.h"
 #include "util/libguile.h"
 #include "util/guile_STL.h"
+#include "guile/scm_chpsim_trace_streamer.h"
 
 namespace HAC {
 namespace guile_wrap {
@@ -99,6 +100,7 @@ void
 libhacktsim_guile_init(void) {
 	NEVER_NULL(chpsim_state);
 	libhackt_guile_init();		// prerequisite module
+	raw_chpsim_trace_stream_smob_init();
 	// (use-modules (ice-9 streams))?
 	// initialize any smob types we use
 	scm_c_define_gsubr("dump-chpsim-struct", 0, 0, 0, 

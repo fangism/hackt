@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3 2007/02/08 20:34:25 fang Exp $
+	$Id: Trace.cc,v 1.3.6.1 2007/03/20 23:10:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@
 #define	CHPSIM_TRACE_ALIGNMENT_MARKERS		1
 
 #include "sim/chpsim/Trace.h"
+#include "sim/chpsim/TraceStreamer.h"
 #include <iostream>
 #include <sstream>
 #include <iterator>
@@ -149,7 +150,6 @@ if (i) {
  */
 ostream&
 event_trace_window::dump(ostream& o, const size_t offset) const {
-	typedef	event_array_type::const_iterator const_iterator;
 	o << "\tevent\t\tevent\tcause" << endl;
 	o << "\tindex\ttime\tnode\tindex" << endl;
 #if 0
@@ -729,6 +729,92 @@ if (i) {
 } else {
 	cerr << "Error encountered in reading trace header!" << endl;
 }
+}
+
+//=============================================================================
+// class TraceManager::event_streamer method definitions
+
+TraceManager::entry_streamer::entry_streamer(const string& fn) :
+		fin(fn.c_str(), ios_base::binary),
+		tracefile(),
+		epoch_iter(),
+		event_iter() {
+	init();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default dtor manager everything
+TraceManager::entry_streamer::~entry_streamer() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initializes trace-stream state's nested iterator.
+	Reads the table of contents and the first chunk.  
+ */
+good_bool
+TraceManager::entry_streamer::init(void) {
+if (fin) {
+	tracefile.contents.read(fin);
+	if (fin) {
+		epoch_iter = tracefile.contents.begin();
+		if (epoch_iter != tracefile.contents.end()) {
+			tracefile.current_chunk.read(fin);
+			event_iter = tracefile.current_chunk.begin();
+			// make sure iterator is valid
+			return good_bool(
+				event_iter != tracefile.current_chunk.end());
+		}
+	}
+}
+	// catch-all
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the status of the stream, true if good.  
+ */
+bool
+TraceManager::entry_streamer::good(void) const {
+	return fin &&
+		(epoch_iter != tracefile.contents.end()) &&
+		(event_iter != tracefile.current_chunk.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre all 
+ */
+const event_trace_point&
+TraceManager::entry_streamer::current_event_record(void) const {
+	INVARIANT(good());
+	return *event_iter;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Advances to next entry, iterator-like.
+	\return bad if there are no more events, we've reached end of stream, 
+		and the current_event_record() is thus invalid.  
+ */
+good_bool
+TraceManager::entry_streamer::advance(void) {
+	++event_iter;
+	if (event_iter == tracefile.current_chunk.end()) {
+		// load next epoch
+		// safety guard, in case user tries to abuse
+		if (epoch_iter != tracefile.contents.end()) {
+			++epoch_iter;
+			if (epoch_iter != tracefile.contents.end()) {
+				tracefile.current_chunk.read(fin);
+				event_iter = tracefile.current_chunk.begin();
+				return good_bool(event_iter !=
+					tracefile.current_chunk.end());
+			}
+		}
+	}
+	// catch-all
+	return good_bool(false);
 }
 
 //=============================================================================

@@ -1,0 +1,6 @@
+"scm/TODO"
+
+Populate this directory with Scheme modules for working with HACKT.
+
+Top priority: hackt's chpsim trace interface for analysis
+

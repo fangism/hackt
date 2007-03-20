@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.168 2007/03/19 02:03:44 fang Exp $
+#	$Id: Makefile.am,v 1.168.2.1 2007/03/20 23:10:33 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -14,7 +14,7 @@ AUTOMAKE_OPTIONS += subdir-objects
 
 # for recursive make only, all other subdirectories (not listed)
 # are managed by this Makefile (flat)
-SUBDIRS = util/test .
+SUBDIRS = util/test . scm
 
 # cumulative targets
 BUILT_SOURCES =
@@ -171,12 +171,14 @@ hacguile_LDADD = libhacktguile.la libhacktlib.la
 LIBHACKTGUILE_H_FILES = \
 	guile/libhackt-wrap.h \
 	guile/scm_reference.h \
+	guile/scm_chpsim_trace_streamer.h \
 	guile/chpsim-wrap.h
 
 hacchpsimguile_SOURCES = \
 	main/chpsim-guile.cc \
 	main/chpsim.cc \
 	guile/chpsim-wrap.cc \
+	guile/scm_chpsim_trace_streamer.cc \
 	$(LIBHACKTGUILE_H_FILES)
 hacchpsimguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
 hacchpsimguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
@@ -857,7 +859,8 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/prsim/ExprAllocFlags.h \
 	sim/chpsim/StateConstructorFlags.h \
 	sim/chpsim/devel_switches.h \
-	sim/chpsim/graph_options.h
+	sim/chpsim/graph_options.h \
+	sim/chpsim/TraceStreamer.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -895,6 +898,9 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/chpsim-guile.h
 
 guile/scm_reference.hchk: guile/scm_reference.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+
+guile/scm_chpsim_trace_streamer.hchk: guile/scm_chpsim_trace_streamer.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
 COMMON_H_FILES = \

@@ -1,0 +1,12 @@
+"scm/ChangeLog"
+
+2007-03-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-01:
+	  Birth of this directory, home of scheme macros and interfaces
+		other handy routines for working with hackt.  
+	  Added TODO, Makefile.am, README.
+	  Added hackt/streams.scm, which includes some functions missing
+		from ice-9/streams.  
+	  TODO: handle GUILE_LOAD_PATH during testing and post-install.
+

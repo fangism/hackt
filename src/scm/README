@@ -1,0 +1,14 @@
+"src/scm/README"
+	$Id: README,v 1.1.2.1 2007/03/20 23:10:40 fang Exp $
+
+This directory contains scheme modules used by hackt.  
+We keep the source directory structure the same as the install
+directory hierarchy because the first part of the module name must
+be consistent with the location.  In our case, the base directory is 'hackt'.  
+This way we don't need any additional magic to test the built package
+before vs. after installation.  
+
+Not sure whether this is the best home for scheme modules.
+This could also fit lib/scm/hackt.  
+We'll how how this works out over time; migration is always an option.
+

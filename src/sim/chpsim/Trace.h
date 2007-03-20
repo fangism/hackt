@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2 2007/02/05 06:39:54 fang Exp $
+	$Id: Trace.h,v 1.2.6.1 2007/03/20 23:10:44 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -128,6 +128,14 @@ protected:
 	dump(ostream&, const size_t offset = 0) const;
 
 public:
+	typedef	event_array_type::const_iterator	const_iterator;
+
+	const_iterator
+	begin(void) const { return event_array.begin(); }
+
+	const_iterator
+	end(void) const { return event_array.end(); }
+
 	size_t
 	event_count(void) const {
 		return event_array.size();
@@ -497,7 +505,10 @@ public:
 	bool
 	text_dump(const string&, ostream&);
 
-};	// end class Trace
+	// defined in "sim/chpsim/TraceStreamer.h"
+	class entry_streamer;
+
+};	// end class TraceManager
 
 //=============================================================================
 }	// end namespace CHPSIM

@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.cc"
-	$Id: scm_reference.cc,v 1.1 2007/03/16 07:07:19 fang Exp $
+	$Id: scm_reference.cc,v 1.1.2.1 2007/03/20 23:10:36 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -33,7 +33,7 @@ scm_t_bits __raw_reference_tag;
 const
 scm_t_bits& raw_reference_tag(__raw_reference_tag);
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Nothing to recursively mark.  
@@ -45,6 +45,7 @@ mark_raw_reference(SCM obj) {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not bothering to use the scm_gc_malloc/free.  
 	\return 0 always.
@@ -63,6 +64,7 @@ free_raw_reference(SCM obj) {
 	return 0;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return non-zero to indicate success.
  */
@@ -85,6 +87,7 @@ print_raw_reference(SCM obj, SCM port, scm_print_state* p) {
 	return 1;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 static
 SCM
@@ -92,6 +95,7 @@ equalp_raw_reference(SCM o1, SCM o2) {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Registers our own raw-reference type as a smob to guile.  
 	Direct use of this type should be avoided where possible.  
@@ -103,7 +107,7 @@ raw_reference_smob_init(void) {
 if (!raw_reference_tag) {	// first time reads 0-initialized
 	__raw_reference_tag =
 		scm_make_smob_type("raw-reference",
-			sizeof(HAC::entity::meta_reference_union));
+			sizeof(meta_reference_union));
 #if 0
 	// experiment: what happens?  VERY VERY BAD
 	std::cout << raw_reference_tag << std::endl;
