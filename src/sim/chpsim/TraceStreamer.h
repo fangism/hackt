@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/TraceStreamer.h"
-	$Id: TraceStreamer.h,v 1.1.2.1 2007/03/20 23:10:45 fang Exp $
+	$Id: TraceStreamer.h,v 1.1.2.2 2007/03/21 20:19:31 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -30,6 +30,7 @@ class TraceManager::entry_streamer {
 	TraceManager					tracefile;
 	trace_file_contents::const_iterator		epoch_iter;
 	event_trace_window::const_iterator		event_iter;
+	size_t						_index;
 public:
 	explicit
 	entry_streamer(const string&);
@@ -41,6 +42,9 @@ public:
 
 	bool
 	good(void) const;
+
+	size_t
+	index(void) const { return _index; }
 
 private:
 	good_bool

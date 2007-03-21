@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.3 2007/03/15 06:11:09 fang Exp $
+	$Id: guile_STL.h,v 1.3.2.1 2007/03/21 20:19:34 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -370,6 +370,56 @@ struct scm_extractor<unsigned long long> {
 	}
 };
 #endif	// SIZEOF_LONG_LONG
+
+//-----------------------------------------------------------------------------
+#ifdef	SIZEOF_FLOAT
+template <>
+struct scm_builder<float> :
+		public unary_function<float, SCM> {
+	SCM
+	operator () (const argument_type& s) {
+#if FORCE_GUILE_API_1_8
+		return scm_from_double(s);	// convert up to double
+#endif
+	}
+};	// end struct scm_builder<unsigned long>
+
+template <>
+struct scm_extractor<float> {
+	good_bool
+	operator () (const SCM& s, float& i) {
+#if FORCE_GUILE_API_1_8
+		i = scm_to_double(s);	// got error handling?
+		return good_bool(true);
+#endif
+	}
+};
+#endif	// SIZEOF_FLOAT
+
+//-----------------------------------------------------------------------------
+#ifdef	SIZEOF_DOUBLE
+template <>
+struct scm_builder<double> :
+		public unary_function<double, SCM> {
+	SCM
+	operator () (const argument_type& s) {
+#if FORCE_GUILE_API_1_8
+		return scm_from_double(s);	// convert up to double
+#endif
+	}
+};	// end struct scm_builder<unsigned long>
+
+template <>
+struct scm_extractor<double> {
+	good_bool
+	operator () (const SCM& s, double& i) {
+#if FORCE_GUILE_API_1_8
+		i = scm_to_double(s);	// got error handling?
+		return good_bool(true);
+#endif
+	}
+};
+#endif	// SIZEOF_DOUBLE
 
 //=============================================================================
 // scm_builder specializations for STL containers

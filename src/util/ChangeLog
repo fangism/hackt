@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.75 2007/03/17 19:58:18 fang Exp $
+#	$Id: ChangeLog,v 1.75.2.1 2007/03/21 20:19:33 fang Exp $
+
+2007-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-02:
+	  util/guile_STL.h: added conversion wrappers for float and double.  
+
 
 2007-03-17	David Fang		<fangism@users.sourceforge.net>
 

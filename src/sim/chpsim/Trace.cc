@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.1 2007/03/20 23:10:43 fang Exp $
+	$Id: Trace.cc,v 1.3.6.2 2007/03/21 20:19:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -738,7 +738,8 @@ TraceManager::entry_streamer::entry_streamer(const string& fn) :
 		fin(fn.c_str(), ios_base::binary),
 		tracefile(),
 		epoch_iter(),
-		event_iter() {
+		event_iter(), 
+		_index(0) {
 	init();
 }
 
@@ -756,6 +757,13 @@ TraceManager::entry_streamer::init(void) {
 if (fin) {
 	tracefile.contents.read(fin);
 	if (fin) {
+#if CHPSIM_TRACE_ALIGNMENT_MARKERS
+{
+	size_t check;
+	read_value(fin, check);
+	INVARIANT(check == 0xFFFFFFFF);
+}
+#endif
 		epoch_iter = tracefile.contents.begin();
 		if (epoch_iter != tracefile.contents.end()) {
 			tracefile.current_chunk.read(fin);
@@ -800,6 +808,7 @@ TraceManager::entry_streamer::current_event_record(void) const {
 good_bool
 TraceManager::entry_streamer::advance(void) {
 	++event_iter;
+	++_index;
 	if (event_iter == tracefile.current_chunk.end()) {
 		// load next epoch
 		// safety guard, in case user tries to abuse

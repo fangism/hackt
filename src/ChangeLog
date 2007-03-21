@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-02:
+	  New chpsim-scm primitives:
+		open-chpsim-trace-stream -- creates a trace stream SMOB
+		chpsim-trace-valid? -- validity of trace stream SMOB
+		current-trace-entry -- reads current entry and advances one
+	  sim/chpsim/Trace.cc: bug fix -- forgot to read alignment marker
+		TraceStreamer.h: added index running counter
+
+
 2007-03-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-01:

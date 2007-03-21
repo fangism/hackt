@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.1 2007/03/20 23:10:35 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.2 2007/03/21 20:19:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -36,7 +36,7 @@ static
 size_t
 free_raw_chpsim_trace_stream(SCM obj) {
 	TraceManager::entry_streamer* ptr =
-		reinterpret_cast<TraceManager::entry_streamer*>(
+		reinterpret_cast<scm_chpsim_trace_stream*>(
 			SCM_SMOB_DATA(obj));
 	if (ptr) {
 		delete ptr;
@@ -63,7 +63,8 @@ raw_chpsim_trace_stream_smob_init(void) {
 if (!raw_chpsim_trace_stream_tag) {
 	__raw_chpsim_trace_stream_tag = 
 		scm_make_smob_type("raw-chpsim-trace-stream",
-			sizeof(TraceManager::entry_streamer));
+			sizeof(scm_chpsim_trace_stream));
+	INVARIANT(raw_chpsim_trace_stream_tag);
 //	scm_set_smob_mark(raw_chpsim_trace_stream_tag, ...);
 	scm_set_smob_free(raw_chpsim_trace_stream_tag,
 		free_raw_chpsim_trace_stream);
