@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.1 2007/03/22 05:17:52 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.2 2007/03/22 21:33:44 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -29,6 +29,7 @@
 ) ;; end define
 
 ;; we provided this in C++
+;; (use-modules (hackt hackt-primitives))
 (use-modules (hackt chpsim-trace-primitives))
 (use-modules (ice-9 streams))
 (use-modules (hackt streams))
@@ -51,4 +52,17 @@
     trace-stream
   ) ; end make-stream
 ) ; end define
+
+;; convenient combined definition
+(define-public (open-chpsim-trace-stream tf)
+  (make-chpsim-trace-stream (open-chpsim-trace tf))
+) ; end define
+
+;; These struct accessors must be kept consistent with the construct
+;; used in guile/chpsim-wrap.cc's wrap_chpsim_trace_entry_to_scm.
+;; Later, thes may be replaced with primitive implementations if needed.  
+(define-public (chpsim-trace-entry-index e) (car e))
+(define-public (chpsim-trace-entry-time e) (cadr e))
+(define-public (chpsim-trace-entry-event e) (caddr e))
+(define-public (chpsim-trace-entry-critical e) (cdddr e))
 
