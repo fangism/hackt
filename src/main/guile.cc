@@ -1,7 +1,7 @@
 /**
 	\file "main/guile.cc"
 	Main module for new CHPSIM.
-	$Id: guile.cc,v 1.4 2007/03/18 00:25:02 fang Exp $
+	$Id: guile.cc,v 1.4.2.1 2007/03/22 19:02:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,7 +18,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/global_options.h"
 #include "guile/libhackt-wrap.h"
 #include "util/getopt_mapped.h"		// for getopt()
-#include "util/libguile.h"		// for getopt()
+#include "util/libguile.h"
 
 namespace HAC {
 #include "util/using_ostream.h"
@@ -57,15 +57,29 @@ guile::program_id = register_hackt_program_class<guile>();
 guile::guile() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
 void
-guile::main_interactive(void* closure, int argc, char** argv) {
-	cout << "Welcome to hackt-guile!" << endl;
-	scm_c_eval_string("(set-repl-prompt! \"hacguile> \")");
+__guile_main(int argc, char* argv[]) {
+#if 0
 	libhackt_guile_init();
+#else
+	// load definitions into a guile module, and load the module
+	scm_init_hackt_libhackt_primitives_module();
+	scm_c_use_module("hackt hackt-primitives");
+#endif
 	scm_shell(argc, argv);	// read-eval-print
 	// never returns :S
 	// how the f--- am I supposed to clean up memory?
 	// A: atexit()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+guile::main_interactive(void* closure, int argc, char** argv) {
+	cout << "Welcome to hackt-guile!" << endl;
+	scm_c_eval_string("(set-repl-prompt! \"hacguile> \")");
+	__guile_main(argc, argv);
+	// never returns :S
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,7 +90,7 @@ void
 guile::main_script(void* closure, int argc, char** argv) {
 	scm_c_eval_string("(set-repl-prompt! \"\")");	// disable-prompt
 	libhackt_guile_init();
-	scm_shell(argc, argv);	// read-eval-print
+	__guile_main(argc, argv);
 	// never returns :S
 }
 

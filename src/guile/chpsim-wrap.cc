@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.3 2007/03/22 05:17:46 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.4 2007/03/22 19:02:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -179,7 +179,12 @@ static
 void
 __libhacktsim_guile_init(void* unused) {
 	NEVER_NULL(chpsim_state);
+#if 0
 	libhackt_guile_init();		// prerequisite module
+#else
+	scm_init_hackt_libhackt_primitives_module();
+	scm_c_use_module("hackt hackt-primitives");
+#endif
 	raw_chpsim_trace_stream_smob_init();
 	// (use-modules (ice-9 streams))?
 	// initialize any smob types we use

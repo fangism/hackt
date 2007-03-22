@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-04:
+	  guile/libhackt-wrap.cc: now defines primitives in module
+		"hackt hackt-primitives", autoloaded as such on startup.
+	  guile::main() and guile/chpsim-wrap.cc now use these.
+	  No tests were affected.  
+
+
 2007-03-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-03:

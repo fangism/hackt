@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3 2007/03/18 00:24:58 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.1 2007/03/22 19:02:49 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -413,10 +413,12 @@ using util::guile::scm_gsubr_type;
 	\pre guile is already booted, and obj_module pointer is set.
 	\post obj_module pointer remains unchanged.
  */
+static
 void
-libhackt_guile_init(void) {
+__libhackt_guile_init(void* unused) {
 	NEVER_NULL(obj_module);
 	raw_reference_smob_init();
+	// TODO: raw-reference?
 	// ugh, function pointer reinterpret_cast...
 	scm_c_define_gsubr("objdump", 0, 0, 0, wrap_objdump);
 	scm_c_define_gsubr("parse-reference", 1, 0, 0,
@@ -433,11 +435,34 @@ libhackt_guile_init(void) {
 		reinterpret_cast<scm_gsubr_type>(wrap_lookup_reference_aliases));
 	scm_c_define_gsubr("collect-reference-subinstances", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_collect_reference_subinstances));
+	// export interface of module
+	scm_c_export("objdump", NULL);
+	scm_c_export("parse-reference", NULL);
+	scm_c_export("parse-raw-reference", NULL);
+	scm_c_export("reference-type->string", NULL);
+	scm_c_export("reference-index->string", NULL);
+	scm_c_export("lookup-reference-aliases", NULL);
+	scm_c_export("collect-reference-subinstances", NULL);
 #if HAVE_ATEXIT
 	const int x = atexit(release_libhackt_wrap_resources_at_exit);
 	INVARIANT(!x);	// must have succeeded!
 #endif
 }	// end libhackt_guile_init
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+libhackt_guile_init(void) {
+	__libhackt_guile_init(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+scm_init_hackt_libhackt_primitives_module(void) {
+	scm_c_define_module("hackt hackt-primitives", 
+		__libhackt_guile_init, NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 END_C_DECLS
 

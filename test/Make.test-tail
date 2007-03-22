@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.75 2007/03/20 05:35:30 fang Exp $
+#	$Id: Make.test-tail,v 1.74.2.1 2007/03/22 19:02:52 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -165,26 +165,22 @@ build-check-local: $(TESTS)
 # depending on the hackt dispatcher should cover everything
 $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 
-$(HACKT_EXE): .libs
+# $(HACKT_EXE): .libs
 
 HACGUILE_TARGETS = \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm-out) \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscmfail-out)
 
-if HAVE_LIBGUILE
 $(HACGUILE_TARGETS): $(HACKT_GUILE_EXE)
-endif
 
 HACCHPSIMGUILE_TARGETS = \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscm-out) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscmfail-out)
 
-if HAVE_LIBGUILE
 $(HACCHPSIMGUILE_TARGETS): $(HACKT_CHPSIM_GUILE_EXE)
-endif
 
-.libs: $(top_builddir)/src/.libs
-	$(LN_S) $< $@
+# .libs: $(top_builddir)/src/.libs
+#	$(LN_S) $< $@
 
 ALL_OBJECT_TESTS = \
 	$(HACKT_PARSE_TEST_PASSES) \
@@ -195,7 +191,7 @@ ALL_OBJECT_TESTS = \
 HAC_OBJECT_DEPS = $(ALL_OBJECT_TESTS:=.depend)
 # HAC_OBJECT_DEPS = $(HAC_OBJECT_TARGETS:.haco=.depend)
 # $(HAC_OBJECT_DEPS): $(HACKT_EXE)
-$(HAC_OBJECT_DEPS): .libs
+# $(HAC_OBJECT_DEPS): .libs
 
 # source dependencies
 test.autodepend: Makefile
