@@ -10,11 +10,4 @@
 (7 30.0 2 . 5)
 (8 30.0 5 . 5)
 (9 40.0 4 . 8)
-
-In standard input:
-  28: 0* [current-trace-entry <raw-chpsim-trace-stream>]
-
-standard input:28:1: In procedure current-trace-entry in expression (current-trace-entry x):
-standard input:28:1: Error: invalid trace stream state.
-Backtrace:
-ABORT: (misc-error)
+()

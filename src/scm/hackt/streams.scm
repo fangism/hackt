@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.1 2007/03/20 23:10:42 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.2 2007/03/22 05:17:53 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -14,6 +14,8 @@
 	stream-concat
   )
 )
+
+;; could also use define-public instead of exporting... same thing
 
 (define the-empty-stream '())
 

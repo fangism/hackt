@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim-guile.cc"
 	Main module for new CHPSIM guile interface.
-	$Id: chpsim-guile.cc,v 1.2 2007/03/20 02:24:17 fang Exp $
+	$Id: chpsim-guile.cc,v 1.2.2.1 2007/03/22 05:17:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -38,12 +38,25 @@ using guile_wrap::chpsim_state;
 chpsim_guile::chpsim_guile() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+__guile_main(int argc, char* argv[]) {
+#if 0
+	libhacktsim_guile_init();
+#else
+	// definitions loaded into modules, then load the module
+	scm_init_hackt_chpsim_trace_primitives_module();
+	scm_c_use_module("hackt chpsim-trace-primitives");
+#endif
+	scm_shell(argc, argv);	// no-return
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 chpsim_guile::main_interactive(void* closure, int argc, char** argv) {
 	cout << "Welcome to hackt-chpsim-guile!" << endl;
 	scm_c_eval_string("(set-repl-prompt! \"hacchpsimguile> \")");
-	libhacktsim_guile_init();
-	scm_shell(argc, argv);	// no-return
+	__guile_main(argc, argv);	// no-return
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,8 +67,7 @@ void
 chpsim_guile::main_script(void* closure, int argc, char** argv) {
 	// suppress prompt
 	scm_c_eval_string("(set-repl-prompt! \"\")");
-	libhacktsim_guile_init();
-	scm_shell(argc, argv);	// no-return
+	__guile_main(argc, argv);	// no-return
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.2 2007/03/21 20:19:29 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.3 2007/03/22 05:17:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -95,9 +95,9 @@ wrap_chpsim_dump_trace(SCM s_str) {
  */
 static
 SCM
-wrap_open_chpsim_trace_stream(SCM s_str) {
+wrap_open_chpsim_trace(SCM s_str) {
 	STACKTRACE_VERBOSE;
-#define	FUNC_NAME "open-chpsim-trace-stream"
+#define	FUNC_NAME "open-chpsim-trace"
 	const std::string peek(scm_to_locale_string(s_str));	// 1.8
 	// alternately string_to_locale_stringbuf
 	// alert: heap-allocating though naked pointer, copy-constructing
@@ -114,7 +114,8 @@ wrap_open_chpsim_trace_stream(SCM s_str) {
 	Reads an entry AND advances one position.
 	\param s_tr a smob corresponding to the opened trace file that
 		we're streaming from.
-	\return scm object representing entry, or end-of-stream marker.  
+	\return scm object representing entry, or end-of-stream marker
+		which is null (SCM_EOL).  
  */
 static
 SCM
@@ -125,9 +126,13 @@ wrap_chpsim_trace_entry_to_scm(SCM s_tr) {
 	scm_chpsim_trace_stream* const ptr =
 		reinterpret_cast<scm_chpsim_trace_stream*>(SCM_SMOB_DATA(s_tr));
 	if (!(ptr && ptr->good())) {
+#if 0
 		scm_misc_error(FUNC_NAME, 
 			"Error: invalid trace stream state.",
 			SCM_EOL);
+#else
+		return SCM_EOL;
+#endif
 	}
 	const event_trace_point& tp(ptr->current_event_record());
 	const SCM ret = scm_cons(make_scm(ptr->index()), 
@@ -168,9 +173,11 @@ using util::guile::scm_gsubr_type;
 
 /**
 	Registers shared library functions for to guile interpreter.
+	TODO: namespace-ing exported functions?
  */
+static
 void
-libhacktsim_guile_init(void) {
+__libhacktsim_guile_init(void* unused) {
 	NEVER_NULL(chpsim_state);
 	libhackt_guile_init();		// prerequisite module
 	raw_chpsim_trace_stream_smob_init();
@@ -180,17 +187,43 @@ libhacktsim_guile_init(void) {
 		wrap_chpsim_dump_graph_alloc);
 	scm_c_define_gsubr("dump-trace", 1, 0, 0, 
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_dump_trace));
-	scm_c_define_gsubr("open-chpsim-trace-stream", 1, 0, 0, 
-		reinterpret_cast<scm_gsubr_type>(wrap_open_chpsim_trace_stream));
+	scm_c_define_gsubr("open-chpsim-trace", 1, 0, 0, 
+		reinterpret_cast<scm_gsubr_type>(wrap_open_chpsim_trace));
 	scm_c_define_gsubr("chpsim-trace-valid?", 1, 0, 0, 
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_trace_stream_valid_p));
 	scm_c_define_gsubr("current-trace-entry", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_trace_entry_to_scm));
+	// export as part of module interface
+	scm_c_export("dump-chpsim-struct", NULL);
+	scm_c_export("dump-trace", NULL);
+	scm_c_export("open-chpsim-trace", NULL);
+	scm_c_export("chpsim-trace-valid?", NULL);
+	scm_c_export("current-trace-entry", NULL);
 #if HAVE_ATEXIT
 	const int x = atexit(release_chpsim_wrap_resources_at_exit);
 	INVARIANT(!x);
 #endif
 }	// end libhacktsim_guile_init
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Register interface function, wrapped call.  
+ */
+void
+libhacktsim_guile_init(void) {
+	__libhacktsim_guile_init(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Call this to load the functions into a module.  
+ */
+void
+scm_init_hackt_chpsim_trace_primitives_module(void) {
+	scm_c_define_module("hackt chpsim-trace-primitives",
+		__libhacktsim_guile_init, NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 END_C_DECLS
 

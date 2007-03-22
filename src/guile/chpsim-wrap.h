@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.h"
-	$Id: chpsim-wrap.h,v 1.1 2007/03/18 00:24:57 fang Exp $
+	$Id: chpsim-wrap.h,v 1.1.2.1 2007/03/22 05:17:47 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_CHPSIM_WRAP_H__
@@ -30,6 +30,10 @@ BEGIN_C_DECLS
 extern
 void
 libhacktsim_guile_init(void);
+
+extern
+void
+scm_init_hackt_chpsim_trace_primitives_module(void);
 
 END_C_DECLS
 

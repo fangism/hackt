@@ -5,6 +5,18 @@
 
 2007-03-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-03:
+	  Glory!  Successfully demonstrated working C/Scheme module.
+	  current-trace-entry: now returns EOL instead of throwing error
+		upon end of stream.  
+	  guile/chpsim-wrap.{h,cc}: can now load module-exported symbols
+		through scm_init_hackt_chpsim_trace_primitives_module().
+	  main/chpsim-guile.cc: now import chpsim symbols into a module
+		and open that module (hackt chpsim-trace-primitives).
+	  Added scm/hackt/chpsim-trace.scm, building on primitives.
+	  Next: move libhackt-wrap symbols into a hackt-primitives module.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-02:
 	  New chpsim-scm primitives:
 		open-chpsim-trace-stream -- creates a trace stream SMOB
