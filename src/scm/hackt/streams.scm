@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.3 2007/03/22 21:33:45 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.4 2007/03/23 02:37:34 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -15,6 +15,7 @@
 
 ;; delayed tail construction
 ;; (define-public (cons-stream h t) (cons h (delay t)))
+;; NOTE: this is defined as such to match stream-car/cdr in ice-9 streams
 (define-public (cons-stream h t) (delay (cons h t)))
 
 ;; produces a stream as a filtered subset of the argument stream
@@ -25,24 +26,25 @@
 		(stream-filter pred (stream-cdr stream))))
 	(else (stream-filter pred (stream-cdr stream)))
   )
-)
+) ; end define
 
 (define-public (stream-accumulate op initial stream)
   (if (stream-null? stream) initial
     (op (stream-car stream) (stream-accumulate op initial (stream-cdr stream)))
   )
-)
+) ; end define
 
 ;; like append-streams from SICP, exhaust first finite stream, then use 2nd
 (define-public (stream-concat s1 s2)
   (if (stream-null? s1) s2
      (cons-stream (stream-car s1) (stream-concat (stream-cdr s1) s2))
   )
-)
+) ; end define
+;; define variadically, to take arbitrary number of streams
 
 ;; like flatten from SICP, 
 ;; converts stream-of-streams into single stream via concatenation
 (define-public (stream-flatten strstr)
   (stream-accumulate stream-concat the-empty-stream strstr)
-)
+) ; end define
 

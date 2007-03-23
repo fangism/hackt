@@ -5,6 +5,14 @@
 
 2007-03-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-06:
+	  Bug fixed: chpsim trace_manager wasn't updating previous_events
+		counter per flush, resulting in badly offset cause event IDs.
+	  Minor: return value of prsim and chpsim clamped to 0 and 1, 
+		was letting interpreter's return value code escape to exit.
+	  More scm test cases added, and growing...
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-05:
 	  scm/hackt/streams.scm: fixed definition of stream-filter and tested, 
 		added and used cons-stream, slightly different definition

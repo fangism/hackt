@@ -1,0 +1,20 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-07.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-08.hacchpsimscm,v 1.1.2.1 2007/03/23 02:37:40 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-concat
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define y (open-chpsim-trace-stream "channel-sync-desync-a-04.chpsimtrace"))
+
+(define zz (stream-concat y y))
+zz
+(stream->list zz)
+; expect to see same trace sequence twice
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.2 2007/03/21 20:19:30 fang Exp $
+	$Id: Trace.cc,v 1.3.6.3 2007/03/23 02:37:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -586,6 +586,7 @@ if (current_chunk.event_count()) {
 	}
 	const trace_time_type start_time = current_chunk.start_time();
 	const streampos old_size = trace_ostream->tellp();
+	previous_events += current_chunk.event_count();
 	current_chunk.write(*trace_ostream);
 	trace_ostream->flush();
 	trace_payload_size = trace_ostream->tellp();
