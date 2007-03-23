@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.1 2007/03/22 19:02:49 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.2 2007/03/23 23:16:20 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -73,6 +73,7 @@ using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::meta_reference_union;
+using util::guile::scm_c_define_gsubr_exported;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
@@ -420,29 +421,21 @@ __libhackt_guile_init(void* unused) {
 	raw_reference_smob_init();
 	// TODO: raw-reference?
 	// ugh, function pointer reinterpret_cast...
-	scm_c_define_gsubr("objdump", 0, 0, 0, wrap_objdump);
-	scm_c_define_gsubr("parse-reference", 1, 0, 0,
+	scm_c_define_gsubr_exported("objdump", 0, 0, 0, wrap_objdump);
+	scm_c_define_gsubr_exported("parse-reference", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_parse_global_reference));
-	scm_c_define_gsubr("parse-raw-reference", 1, 0, 0,
+	scm_c_define_gsubr_exported("parse-raw-reference", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_parse_raw_reference));
-	scm_c_define_gsubr("reference-type->string", 1, 0, 0,
+	scm_c_define_gsubr_exported("reference-type->string", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_reference_type_to_string));
-	scm_c_define_gsubr("reference-index->string", 1, 0, 0,
+	scm_c_define_gsubr_exported("reference-index->string", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_reference_index_to_string));
-	scm_c_define_gsubr("canonical-reference->string", 1, 0, 0,
+	scm_c_define_gsubr_exported("canonical-reference->string", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_canonical_reference_to_string));
-	scm_c_define_gsubr("lookup-reference-aliases", 1, 0, 0,
+	scm_c_define_gsubr_exported("lookup-reference-aliases", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_lookup_reference_aliases));
-	scm_c_define_gsubr("collect-reference-subinstances", 1, 0, 0,
+	scm_c_define_gsubr_exported("collect-reference-subinstances", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_collect_reference_subinstances));
-	// export interface of module
-	scm_c_export("objdump", NULL);
-	scm_c_export("parse-reference", NULL);
-	scm_c_export("parse-raw-reference", NULL);
-	scm_c_export("reference-type->string", NULL);
-	scm_c_export("reference-index->string", NULL);
-	scm_c_export("lookup-reference-aliases", NULL);
-	scm_c_export("collect-reference-subinstances", NULL);
 #if HAVE_ATEXIT
 	const int x = atexit(release_libhackt_wrap_resources_at_exit);
 	INVARIANT(!x);	// must have succeeded!

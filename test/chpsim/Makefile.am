@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.4 2007/03/23 02:37:36 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.5 2007/03/23 23:16:28 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -153,7 +153,8 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	channel-sync-desync-a-03 channel-sync-desync-a-04 \
 	channel-sync-desync-a-05 channel-sync-desync-a-06 \
 	channel-sync-desync-a-07 channel-sync-desync-a-08 \
-	channel-sync-desync-a-09 channel-sync-desync-a-10
+	channel-sync-desync-a-09 channel-sync-desync-a-10 \
+	channel-sync-desync-a-11
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 

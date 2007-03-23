@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-07:
+	  Added chpsim event node pointer SMOB.  We can use a pointer because
+		for the lifetime of the interpreter, the event pool is
+		statically allocated.  
+	  Added simple print-all events scm test case.  
+	  Next: event accessor functions (more notes in scm/TODO)
+
+
 2007-03-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-06:

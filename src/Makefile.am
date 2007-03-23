@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.168.2.1 2007/03/20 23:10:33 fang Exp $
+#	$Id: Makefile.am,v 1.168.2.2 2007/03/23 23:16:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -172,6 +172,7 @@ LIBHACKTGUILE_H_FILES = \
 	guile/libhackt-wrap.h \
 	guile/scm_reference.h \
 	guile/scm_chpsim_trace_streamer.h \
+	guile/scm_chpsim_event_node.h \
 	guile/chpsim-wrap.h
 
 hacchpsimguile_SOURCES = \
@@ -179,6 +180,7 @@ hacchpsimguile_SOURCES = \
 	main/chpsim.cc \
 	guile/chpsim-wrap.cc \
 	guile/scm_chpsim_trace_streamer.cc \
+	guile/scm_chpsim_event_node.cc \
 	$(LIBHACKTGUILE_H_FILES)
 hacchpsimguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
 hacchpsimguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
@@ -901,6 +903,9 @@ guile/scm_reference.hchk: guile/scm_reference.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
 guile/scm_chpsim_trace_streamer.hchk: guile/scm_chpsim_trace_streamer.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+
+guile/scm_chpsim_event_node.hchk: guile/scm_chpsim_event_node.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
 COMMON_H_FILES = \

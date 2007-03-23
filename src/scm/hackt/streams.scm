@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.4 2007/03/23 02:37:34 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.5 2007/03/23 23:16:24 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -46,5 +46,15 @@
 ;; converts stream-of-streams into single stream via concatenation
 (define-public (stream-flatten strstr)
   (stream-accumulate stream-concat the-empty-stream strstr)
+) ; end define
+
+
+;; random utilities
+
+; finite stream of integers
+(define-public (enumerate-interval-stream low high)
+  (if (> low high) (delay the-empty-stream)
+    (cons-stream low (enumerate-interval-stream (1+ low) high))
+  ) ; end if
 ) ; end define
 

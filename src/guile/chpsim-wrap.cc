@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.4 2007/03/22 19:02:49 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.5 2007/03/23 23:16:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,6 +15,7 @@
 #include "util/libguile.h"
 #include "util/guile_STL.h"
 #include "guile/scm_chpsim_trace_streamer.h"
+#include "guile/scm_chpsim_event_node.h"
 
 namespace HAC {
 namespace guile_wrap {
@@ -25,6 +26,8 @@ using SIM::CHPSIM::event_trace_point;
 #include "util/using_ostream.h"
 using util::guile::scm_assert_string;
 using util::guile::make_scm;
+using util::guile::extract_scm;
+using util::guile::scm_c_define_gsubr_exported;
 
 //=============================================================================
 /**
@@ -163,6 +166,44 @@ wrap_chpsim_trace_stream_valid_p(SCM s_tr) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s_ei globally allocated event index.  
+	\return pair(index, event-smob).
+ */
+static
+SCM
+wrap_chpsim_get_event(SCM s_ei) {
+#define	FUNC_NAME "chpsim-get-event"
+	size_t ei;
+	extract_scm(s_ei, ei);	// can throw error (returns good_bool)
+	const size_t max = chpsim_state->event_pool_size();
+	if (ei < max) {
+		SCM ret_smob;
+		SCM_NEWSMOB(ret_smob, raw_chpsim_event_node_ptr_tag,
+			&chpsim_state->get_event(ei));
+		return scm_cons(s_ei, ret_smob);	// pair
+	} else {
+		scm_misc_error(FUNC_NAME, 
+			"Error: invalid event index.", SCM_EOL);
+		// max is max
+		return SCM_UNSPECIFIED;
+	}
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the size of the chpsim-state's event pool (fixed).
+ */
+static
+SCM
+wrap_chpsim_num_events(void) {
+#define	FUNC_NAME "chpsim-num-events"
+	return make_scm(chpsim_state->event_pool_size());
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap
 }	// end namespace HAC
 
@@ -186,24 +227,25 @@ __libhacktsim_guile_init(void* unused) {
 	scm_c_use_module("hackt hackt-primitives");
 #endif
 	raw_chpsim_trace_stream_smob_init();
+	raw_chpsim_event_node_ptr_smob_init();
 	// (use-modules (ice-9 streams))?
 	// initialize any smob types we use
-	scm_c_define_gsubr("dump-chpsim-struct", 0, 0, 0, 
+	// export all functions as part of module interface
+	scm_c_define_gsubr_exported("dump-chpsim-struct", 0, 0, 0, 
 		wrap_chpsim_dump_graph_alloc);
-	scm_c_define_gsubr("dump-trace", 1, 0, 0, 
+	scm_c_define_gsubr_exported("dump-trace", 1, 0, 0, 
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_dump_trace));
-	scm_c_define_gsubr("open-chpsim-trace", 1, 0, 0, 
+	scm_c_define_gsubr_exported("open-chpsim-trace", 1, 0, 0, 
 		reinterpret_cast<scm_gsubr_type>(wrap_open_chpsim_trace));
-	scm_c_define_gsubr("chpsim-trace-valid?", 1, 0, 0, 
+	scm_c_define_gsubr_exported("chpsim-trace-valid?", 1, 0, 0, 
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_trace_stream_valid_p));
-	scm_c_define_gsubr("current-trace-entry", 1, 0, 0,
+	scm_c_define_gsubr_exported("current-trace-entry", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_trace_entry_to_scm));
-	// export as part of module interface
-	scm_c_export("dump-chpsim-struct", NULL);
-	scm_c_export("dump-trace", NULL);
-	scm_c_export("open-chpsim-trace", NULL);
-	scm_c_export("chpsim-trace-valid?", NULL);
-	scm_c_export("current-trace-entry", NULL);
+	// event-node stuff
+	scm_c_define_gsubr_exported("chpsim-get-event", 1, 0, 0, 
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_get_event));
+	scm_c_define_gsubr_exported("chpsim-num-events", 0, 0, 0, 
+		wrap_chpsim_num_events);
 #if HAVE_ATEXIT
 	const int x = atexit(release_chpsim_wrap_resources_at_exit);
 	INVARIANT(!x);

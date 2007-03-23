@@ -2,5 +2,31 @@
 
 Populate this directory with Scheme modules for working with HACKT.
 
-Top priority: hackt's chpsim trace interface for analysis
+Top priority: hackt's chpsim trace interface for analysis (under way)
+
+global-reference pairs: replace first element (type enum) with some
+	quoted tag, like 'bool, etc...
+	rationale: for comprehensibility
+
+accessor functions to event-node-ptr SMOB
+	type info
+	successors and predecessors
+	block dependencies
+
+other stream interfaces:
+	all-static-events (easily built in pure scheme, already in test case)
+	stream of modified state (by event-index) per type of variable, 
+		which can then be unified
+	stream of read (accessed) state/variables? may be difficult
+
+event-filtering predicates
+
+reverse-streams: critical path?
+slack-time annotation?
+
+scm structures for variable sets
+
+trees and sets in scheme library? (associative structures)
+
+stream merge algorithms (like set_intersection, set_union, set_difference)
 
