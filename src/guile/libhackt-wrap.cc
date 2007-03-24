@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.2 2007/03/23 23:16:20 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.3 2007/03/24 03:30:38 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -73,7 +73,6 @@ using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
 using entity::meta_reference_union;
-using util::guile::scm_c_define_gsubr_exported;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
@@ -405,6 +404,8 @@ wrap_collect_reference_subinstances(SCM s_ref) {
 BEGIN_C_DECLS
 using namespace HAC::guile_wrap;
 using util::guile::scm_gsubr_type;
+using util::guile::scm_c_define_exported;
+using util::guile::scm_c_define_gsubr_exported;
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -420,6 +421,18 @@ __libhackt_guile_init(void* unused) {
 	NEVER_NULL(obj_module);
 	raw_reference_smob_init();
 	// TODO: raw-reference?
+	// define some global constants
+	scm_c_define_exported("bool-tag",
+		make_scm<int>(class_traits<bool_tag>::type_tag_enum_value));
+	scm_c_define_exported("int-tag",
+		make_scm<int>(class_traits<int_tag>::type_tag_enum_value));
+	scm_c_define_exported("enum-tag",
+		make_scm<int>(class_traits<enum_tag>::type_tag_enum_value));
+	scm_c_define_exported("channel-tag",
+		make_scm<int>(class_traits<channel_tag>::type_tag_enum_value));
+	scm_c_define_exported("process-tag",
+		make_scm<int>(class_traits<process_tag>::type_tag_enum_value));
+
 	// ugh, function pointer reinterpret_cast...
 	scm_c_define_gsubr_exported("objdump", 0, 0, 0, wrap_objdump);
 	scm_c_define_gsubr_exported("parse-reference", 1, 0, 0,

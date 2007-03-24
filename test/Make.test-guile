@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.4.2.1 2007/03/22 05:17:54 fang Exp $
+#	$Id: Make.test-guile,v 1.4.2.2 2007/03/24 03:30:46 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -9,12 +9,18 @@
 HACSCM_OUTPUT_FILTER = \
 	$(SED) '/module created/s/: [^ ]*[ ]/: \#\#FILE\#\# /g'
 
+HACSCM_TEST_ENVIRONMENT = \
+	GUILE_LOAD_PATH=$(top_srcdir)/src/scm
+
+HACKT_GUILE_ENV_EXE = \
+	$(HACSCM_TEST_ENVIRONMENT) $(HACKT_GUILE_EXE)
+
 HACSCM_TEST_SCRIPT =
 if HAVE_LIBGUILE
 HACSCM_TEST_SCRIPT += \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-	$(ECHO) "$(HACKT_GUILE_EXE) -b $$obj < $< > $@" ; \
-	$(HACKT_GUILE_EXE) -b "$$obj" < $< 2>&1 | $(HACSCM_OUTPUT_FILTER) > $@
+	$(ECHO) "$(HACKT_GUILE_ENV_EXE) -b $$obj < $< > $@" ; \
+	$(HACKT_GUILE_ENV_EXE) -b "$$obj" < $< 2>&1 | $(HACSCM_OUTPUT_FILTER) > $@
 else
 	$(ECHO) "Not configured with libguile." > $@
 endif

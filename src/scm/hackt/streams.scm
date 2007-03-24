@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.5 2007/03/23 23:16:24 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.6 2007/03/24 03:30:43 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -12,6 +12,8 @@
 ;; could also use define-public instead of exporting... same thing
 
 (define-public the-empty-stream '())
+; (define-public delay-empty-stream (delay the-empty-stream))
+; doesn't work as expected
 
 ;; delayed tail construction
 ;; (define-public (cons-stream h t) (cons h (delay t)))
@@ -26,6 +28,20 @@
 		(stream-filter pred (stream-cdr stream))))
 	(else (stream-filter pred (stream-cdr stream)))
   )
+) ; end define
+
+; returns a pair of streams, satisfying the predicate, and unsatisfied
+(define-public (stream-filter-split pred stream)
+  (if (stream-null? stream)
+    (cons (delay the-empty-stream) (delay the-empty-stream))
+    (let ((head (stream-car stream))
+	  (rem (stream-filter-split pred (stream-cdr stream))))
+	(if (pred head)
+	  (cons (cons-stream head (car rem)) (cdr rem))
+	  (cons (car rem) (cons-stream head (cdr rem)))
+	) ; end if
+    ) ; end let
+  ) ; end if
 ) ; end define
 
 (define-public (stream-accumulate op initial stream)

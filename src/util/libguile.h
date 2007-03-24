@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.3.2.1 2007/03/23 23:16:27 fang Exp $
+	$Id: libguile.h,v 1.3.2.2 2007/03/24 03:30:44 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -28,6 +28,11 @@ typedef	SCM (*scm_gsubr_type)();
 SCM
 scm_c_define_gsubr_exported(const char*, const int, const int, const int, 
 	scm_gsubr_type);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// defines a symbol value instead of a procedure
+SCM
+scm_c_define_exported(const char*, const SCM&);
 
 //-----------------------------------------------------------------------------
 /// wrapper for scm_pair_p, provided by guile 1.8

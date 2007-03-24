@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.75.2.1 2007/03/21 20:19:33 fang Exp $
+#	$Id: ChangeLog,v 1.75.2.2 2007/03/24 03:30:43 fang Exp $
+
+2007-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-08:
+	  util/libguile.{h,cc}: added combined define-and-export functions
+		for convenience.
+
 
 2007-03-21	David Fang		<fangism@users.sourceforge.net>
 

@@ -5,6 +5,17 @@
 
 2007-03-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-08:
+	  Added scm: hackt/hackt.scm (API built on top of hackt-primitives),
+		hackt/algorithm.scm typical cookbook algorithm for
+			higher-order functions
+		hackt/streams.scm: added stream-filter-split to save away
+			the stream that fails a predicate, returning pair
+			of streams.  
+		Added new test cases for these modifications.  
+	  guile/libhackt-wrap.cc: added define constants for type-tag-enums.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-07:
 	  Added chpsim event node pointer SMOB.  We can use a pointer because
 		for the lifetime of the interpreter, the event pool is

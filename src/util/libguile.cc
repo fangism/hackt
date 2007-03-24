@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.cc"
-	$Id: libguile.cc,v 1.1.2.1 2007/03/23 23:16:26 fang Exp $
+	$Id: libguile.cc,v 1.1.2.2 2007/03/24 03:30:44 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -22,6 +22,17 @@ scm_c_define_gsubr_exported(const char* fn, const int req, const int opt,
 		const int rest, scm_gsubr_type f) {
 	const SCM ret = scm_c_define_gsubr(fn, req, opt, rest, f);
 	scm_c_export(fn, NULL);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define and export a value, associated with a symbol.  
+ */
+SCM
+scm_c_define_exported(const char* sym, const SCM& val) {
+	const SCM ret = scm_c_define(sym, val);
+	scm_c_export(sym, NULL);
 	return ret;
 }
 

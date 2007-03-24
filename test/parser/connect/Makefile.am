@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/03/15 06:11:17 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.1 2007/03/24 03:30:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -147,7 +147,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 HACKT_GUILE_TEST_SCRIPTS_PASSES = \
 	006-01 006-04 006-05 006-06 006-07 006-08 006-09 \
 	006-10 006-11 006-12 006-13 \
-	031a-01 031a-02
+	031a-01 031a-02 031a-03 031a-04
 
 HACKT_GUILE_TEST_SCRIPTS_FAILURES = \
 	006-02 006-03
