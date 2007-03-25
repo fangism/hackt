@@ -1,15 +1,19 @@
 /**
 	\file "guile/scm_chpsim_event_node.h"
-	$Id: scm_chpsim_event_node.h,v 1.1.2.1 2007/03/23 23:16:21 fang Exp $
+	$Id: scm_chpsim_event_node.h,v 1.1.2.2 2007/03/25 02:25:38 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_SCM_CHPSIM_EVENT_NODE_H__
 #define	__HAC_GUILE_SCM_CHPSIM_EVENT_NODE_H__
 
 #include "util/libguile.h"
-#include "sim/chpsim/Event.h"
 
 namespace HAC {
+namespace SIM {
+namespace CHPSIM {
+	class EventNode;
+}	// end namespace CHPSIM
+}	// end namespace SIM
 namespace guile_wrap {
 //=============================================================================
 /**

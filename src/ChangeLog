@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-09:
+	  Relocated chpsim-trace functions from guile/chpsim-wrap.cc
+		to guile/scm_chpsim_trace_streamer.cc (cleaner boundary).
+	  guile/scm_chpsim_event_node.cc:
+		Added bunch of (untested) event-node type predicates.  
+	  guile/chpsim-wrap.cc: split into two modules, one for general
+		chpsim primitives, another for trace-related primitives.
+	  See also scm/ChangeLog.
+
+
 2007-03-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-08:

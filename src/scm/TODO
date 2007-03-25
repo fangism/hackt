@@ -27,6 +27,8 @@ slack-time annotation?
 scm structures for variable sets
 
 trees and sets in scheme library? (associative structures)
+	look into guile's alist (associative list?)
+	also srfi/srfi-1 alist
 
 stream merge algorithms (like set_intersection, set_union, set_difference)
 

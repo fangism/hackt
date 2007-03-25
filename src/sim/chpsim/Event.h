@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.5 2007/03/11 16:34:39 fang Exp $
+	$Id: Event.h,v 1.5.2.1 2007/03/25 02:25:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -253,6 +253,9 @@ public:
 
 	void
 	set_event_type(const unsigned short t) { event_type = t; }
+
+	unsigned short
+	get_event_type(void) const { return event_type; }
 
 	void
 	set_predecessors(const event_index_type n) { predecessors = n; }

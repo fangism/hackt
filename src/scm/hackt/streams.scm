@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.6 2007/03/24 03:30:43 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.7 2007/03/25 02:25:43 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -27,7 +27,7 @@
 	  (cons-stream (stream-car stream)
 		(stream-filter pred (stream-cdr stream))))
 	(else (stream-filter pred (stream-cdr stream)))
-  )
+  ) ; end cond
 ) ; end define
 
 ; returns a pair of streams, satisfying the predicate, and unsatisfied
@@ -42,6 +42,25 @@
 	) ; end if
     ) ; end let
   ) ; end if
+) ; end define
+
+; forward the stream from the point at which pred is satisfied
+; pred is basically a start trigger, this beheads the stream until pred is true
+(define-public (stream-start pred stream)
+  (cond ((stream-null? stream) (delay the-empty-stream))
+	((pred (stream-car stream)) stream) ; pass the remainder of the stream
+	(else (stream-start pred (stream-cdr stream)))
+  ) ; end cond
+) ; end define
+
+; cuts the stream once the predicate is satisfied (inclusive)
+(define-public (stream-stop pred stream)
+  (cond ((stream-null? stream) (delay the-empty-stream))
+	((pred (stream-car stream))
+	  (cons-stream (stream-car stream) the-empty-stream)) ; drop the remainder of the stream
+	(else (cons-stream (stream-car stream)
+	  (stream-stop pred (stream-cdr stream))))
+  ) ; end cond
 ) ; end define
 
 (define-public (stream-accumulate op initial stream)

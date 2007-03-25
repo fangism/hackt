@@ -1,5 +1,16 @@
 "scm/ChangeLog"
 
+2007-03-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-09:
+	  Ooops, forgot about this ChangeLog.
+	  hackt/streams.scm:
+		deifned stream-start and stream-stop which truncate
+		streams at the head or tail based on a predicate.
+	  Added hackt/chpsim.scm: for functions that pertain to chpsim, 
+		but do not involve trace file reading.  
+
+
 2007-03-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-01:

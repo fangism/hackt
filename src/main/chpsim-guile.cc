@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim-guile.cc"
 	Main module for new CHPSIM guile interface.
-	$Id: chpsim-guile.cc,v 1.2.2.1 2007/03/22 05:17:48 fang Exp $
+	$Id: chpsim-guile.cc,v 1.2.2.2 2007/03/25 02:25:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -45,6 +45,8 @@ __guile_main(int argc, char* argv[]) {
 	libhacktsim_guile_init();
 #else
 	// definitions loaded into modules, then load the module
+	scm_init_hackt_libhackt_primitives_module();
+	scm_init_hackt_chpsim_primitives_module();
 	scm_init_hackt_chpsim_trace_primitives_module();
 	scm_c_use_module("hackt chpsim-trace-primitives");
 #endif

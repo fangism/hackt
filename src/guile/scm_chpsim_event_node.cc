@@ -1,19 +1,24 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.1 2007/03/23 23:16:21 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.2 2007/03/25 02:25:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include "guile/scm_chpsim_event_node.h"
+#include "sim/chpsim/Event.h"
 // #include <iostream>		// temporary
 #include <sstream>
+#include "util/guile_STL.h"
 
 namespace HAC {
 namespace guile_wrap {
 using HAC::SIM::CHPSIM::EventNode;
 // using std::cout;		// temporary
 using std::ostringstream;
+using util::guile::make_scm;
+using util::guile::scm_gsubr_type;
+using util::guile::scm_c_define_gsubr_exported;
 
 //=============================================================================
 /**
@@ -28,6 +33,19 @@ scm_t_bits __raw_chpsim_event_node_ptr_tag;
  */
 const
 scm_t_bits& raw_chpsim_event_node_ptr_tag(__raw_chpsim_event_node_ptr_tag);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Extracts event pointer from SMOB.  
+	\return pointer to entry (never trivial).
+	\throw SCM exception if type assertion fails.  
+ */
+static
+scm_chpsim_event_node_ptr
+scm_smob_to_chpsim_event_node_ptr(SCM obj) {
+	scm_assert_smob_type(raw_chpsim_event_node_ptr_tag, obj);
+	return reinterpret_cast<scm_chpsim_event_node_ptr>(SCM_SMOB_DATA(obj));
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -54,7 +72,7 @@ print_raw_chpsim_event_node_ptr(SCM obj, SCM port, scm_print_state* p) {
 	// TODO: print something about state?
 	scm_assert_smob_type(raw_chpsim_event_node_ptr_tag, obj);
 	const scm_chpsim_event_node_ptr ptr =
-		reinterpret_cast<scm_chpsim_event_node_ptr>(SCM_SMOB_DATA(obj));
+		scm_smob_to_chpsim_event_node_ptr(obj);
 	NEVER_NULL(ptr);
 	ostringstream oss;
 	ptr->dump_struct(oss);
@@ -81,15 +99,126 @@ if (!raw_chpsim_event_node_ptr_tag) {
 }
 
 //=============================================================================
+// guile primitive functions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\return #t if event is trivial type, which includes joins 
+		and end-of-selection, but not concurrent forks.
+ */
+static
+SCM
+wrap_chpsim_event_trivial_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-trivial?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_NULL);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\return #t if event is an assignment.
+ */
+static
+SCM
+wrap_chpsim_event_assign_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-assign?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_ASSIGN);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\return #t if event is a send.
+ */
+static
+SCM
+wrap_chpsim_event_send_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-send?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_SEND);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\return #t if event is a receive.
+ */
+static
+SCM
+wrap_chpsim_event_receive_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-send?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_RECEIVE);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\return #t if event is a concurrent fork.
+ */
+static
+SCM
+wrap_chpsim_event_fork_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-fork?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_CONCURRENT_FORK);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\return #t if event is a selection (deterministic or non).
+ */
+static
+SCM
+wrap_chpsim_event_select_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-select?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN);
+#undef	FUNC_NAME
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Register some basic event_node interface functions?
+	This will be loaded into the current (active) module.  
+	\pre chpsim-event-node SMOB tag already initialized.  
  */
 void
 import_chpsim_event_node_functions(void) {
 	INVARIANT(raw_chpsim_event_node_ptr_tag);
-	
+	scm_c_define_gsubr_exported("chpsim-event-trivial?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_trivial_p));
+	scm_c_define_gsubr_exported("chpsim-event-assign?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_assign_p));
+	scm_c_define_gsubr_exported("chpsim-event-send?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_send_p));
+	scm_c_define_gsubr_exported("chpsim-event-receive?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_receive_p));
+	scm_c_define_gsubr_exported("chpsim-event-fork?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_fork_p));
+	scm_c_define_gsubr_exported("chpsim-event-select?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_select_p));
 }
 
 //=============================================================================
