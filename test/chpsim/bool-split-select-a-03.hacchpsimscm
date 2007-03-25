@@ -1,0 +1,39 @@
+#!hacchpsimguile -b
+!#
+;; "bool-split-select-a-03.hacchpsimscm"
+;;	$Id: bool-split-select-a-03.hacchpsimscm,v 1.1.2.1 2007/03/25 04:43:05 fang Exp $
+;; vi: ft=scheme
+;; @haco@ bool-split-select-a.haco-a
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define x (static-event-stream))
+
+; don't forget cdr, because each event is a paired with its index
+"corresponding process IDs of all events:"
+(define y (stream-map (lambda (e) (chpsim-event-process-id (cdr e))) x))
+(stream->list y)
+
+"corresponding delays of all events:"
+(define y (stream-map (lambda (e) (chpsim-event-delay (cdr e))) x))
+(stream->list y)
+
+"corresponding #predecessors of all events:"
+(define y (stream-map (lambda (e) (chpsim-event-num-predecessors (cdr e))) x))
+(stream->list y)
+
+"all events belonging to process ID 3:"
+(define y (stream-filter
+  (lambda (e) (= 3 (chpsim-event-process-id (cdr e)))) x)
+)
+(stream-for-each-display-newline y)
+
+"all receive events belonging to process ID 3:"
+(define z (stream-filter
+  (lambda (e) (chpsim-event-receive? (cdr e))) y)
+)
+(stream-for-each-display-newline z)
+

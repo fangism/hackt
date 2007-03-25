@@ -2,6 +2,11 @@
 
 2007-03-24	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-10:
+	  hackt/streams.scm: tested and fixed stream-stop, 
+		added stream-crop, which combines stream-start and stream-stop.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-09:
 	  Ooops, forgot about this ChangeLog.
 	  hackt/streams.scm:

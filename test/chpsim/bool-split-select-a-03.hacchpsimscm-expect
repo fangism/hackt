@@ -1,0 +1,41 @@
+"corresponding process IDs of all events:"
+(0 1 2 2 2 2 4 3 3 3 3 3 3 3 3 3 3 5 6 7)
+"corresponding delays of all events:"
+(10.0 2.0 2.0 2.0 2.0 2.0 5.0 0.0 2.0 2.0 2.0 2.0 1.0 0.0 5.0 5.0 1.0 5.0 5.0 5.0)
+"corresponding #predecessors of all events:"
+(0 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1)
+"all events belonging to process ID 3:"
+(7 . <raw-chpsim-event-node: null: null, pid: 3, #pred: 1, succ: 16 
+>)
+(8 . <raw-chpsim-event-node: send: bool_split_select::O[0]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+channel deps: 3 
+>)
+(9 . <raw-chpsim-event-node: send: bool_split_select::O[1]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+channel deps: 4 
+>)
+(10 . <raw-chpsim-event-node: send: bool_split_select::O[2]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+channel deps: 5 
+>)
+(11 . <raw-chpsim-event-node: send: bool_split_select::O[3]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+channel deps: 6 
+>)
+(12 . <raw-chpsim-event-node: select: , pid: 3, #pred: 1, succ: 8 9 10 11 
+int deps: 1 
+>)
+(13 . <raw-chpsim-event-node: null: , pid: 3, #pred: 2, succ: 12 
+>)
+(14 . <raw-chpsim-event-node: receive: bool_split_select::C?(bool_split_select::c), pid: 3, #pred: 1, succ: 13 
+channel deps: 2 
+>)
+(15 . <raw-chpsim-event-node: receive: bool_split_select::I?(bool_split_select::x), pid: 3, #pred: 1, succ: 13 
+channel deps: 1 
+>)
+(16 . <raw-chpsim-event-node: fork: , pid: 3, #pred: 1, succ: 14 15 
+>)
+"all receive events belonging to process ID 3:"
+(14 . <raw-chpsim-event-node: receive: bool_split_select::C?(bool_split_select::c), pid: 3, #pred: 1, succ: 13 
+channel deps: 2 
+>)
+(15 . <raw-chpsim-event-node: receive: bool_split_select::I?(bool_split_select::x), pid: 3, #pred: 1, succ: 13 
+channel deps: 1 
+>)

@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.7 2007/03/25 02:25:43 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.8 2007/03/25 04:43:01 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -57,10 +57,19 @@
 (define-public (stream-stop pred stream)
   (cond ((stream-null? stream) (delay the-empty-stream))
 	((pred (stream-car stream))
-	  (cons-stream (stream-car stream) the-empty-stream)) ; drop the remainder of the stream
+	  (delay the-empty-stream)
+	  ; (cons-stream (stream-car stream) (delay the-empty-stream))
+	)
+	; drop the remainder of the stream
 	(else (cons-stream (stream-car stream)
 	  (stream-stop pred (stream-cdr stream))))
   ) ; end cond
+) ; end define
+
+; combined call to start and stop
+; starts once p1 is true, stops once p2 is true
+(define-public (stream-crop p1 p2 stream)
+  (stream-stop p2 (stream-start p1 stream))
 ) ; end define
 
 (define-public (stream-accumulate op initial stream)
@@ -85,6 +94,11 @@
 
 
 ;; random utilities
+
+; common: print each element separated by newline
+(define-public (stream-for-each-display-newline s)
+  (stream-for-each (lambda (x) (display x) (newline)) s)
+) ; end define
 
 ; finite stream of integers
 (define-public (enumerate-interval-stream low high)

@@ -5,6 +5,14 @@
 
 2007-03-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-10:
+	  guile/scm_chpsim_event_node.cc: 
+		Added new field accessor functions to get the process-index, 
+		delay, num-predecessors of (static) events.
+	  Added test cases for these.
+	  Minor additions/fix in scm/ChangeLog.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-09:
 	  Relocated chpsim-trace functions from guile/chpsim-wrap.cc
 		to guile/scm_chpsim_trace_streamer.cc (cleaner boundary).

@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.2 2007/03/25 02:25:38 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.3 2007/03/25 04:42:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -99,11 +99,12 @@ if (!raw_chpsim_event_node_ptr_tag) {
 }
 
 //=============================================================================
-// guile primitive functions
+// guile primitive functions that operate on chpsim-event SMOBs
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is trivial type, which includes joins 
 		and end-of-selection, but not concurrent forks.
  */
@@ -121,6 +122,7 @@ wrap_chpsim_event_trivial_p(SCM obj) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is an assignment.
  */
 static
@@ -137,6 +139,7 @@ wrap_chpsim_event_assign_p(SCM obj) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is a send.
  */
 static
@@ -153,6 +156,7 @@ wrap_chpsim_event_send_p(SCM obj) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is a receive.
  */
 static
@@ -169,6 +173,7 @@ wrap_chpsim_event_receive_p(SCM obj) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is a concurrent fork.
  */
 static
@@ -185,6 +190,7 @@ wrap_chpsim_event_fork_p(SCM obj) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is a selection (deterministic or non).
  */
 static
@@ -195,6 +201,55 @@ wrap_chpsim_event_select_p(SCM obj) {
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
 		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unary function.
+	\param SMOB of the scm chpsim-event.
+	\return process id of the allocated event, which may be 0
+		to denote a top-level event.
+ */
+static
+SCM
+wrap_chpsim_event_process_index(SCM obj) {
+#define	FUNC_NAME "chpsim-event-process-id"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm(ptr->get_process_index());
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unary function.
+	\param SMOB of the scm chpsim-event.
+	\return delay value of event.  
+ */
+static
+SCM
+wrap_chpsim_event_delay(SCM obj) {
+#define	FUNC_NAME "chpsim-event-delay"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm(ptr->get_delay());
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unary function.
+	\param SMOB of the scm chpsim-event.
+	\return number of mandatory predecessors.  
+ */
+static
+SCM
+wrap_chpsim_event_num_predecessors(SCM obj) {
+#define	FUNC_NAME "chpsim-event-num-predecessors"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm(ptr->get_predecessors());
 #undef	FUNC_NAME
 }
 
@@ -219,6 +274,12 @@ import_chpsim_event_node_functions(void) {
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_fork_p));
 	scm_c_define_gsubr_exported("chpsim-event-select?", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_select_p));
+	scm_c_define_gsubr_exported("chpsim-event-process-id", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_process_index));
+	scm_c_define_gsubr_exported("chpsim-event-delay", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_delay));
+	scm_c_define_gsubr_exported("chpsim-event-num-predecessors", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_num_predecessors));
 }
 
 //=============================================================================

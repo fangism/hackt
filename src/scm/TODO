@@ -1,4 +1,5 @@
 "scm/TODO"
+	$Id: TODO,v 1.1.2.4 2007/03/25 04:43:00 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -6,29 +7,32 @@ Top priority: hackt's chpsim trace interface for analysis (under way)
 
 global-reference pairs: replace first element (type enum) with some
 	quoted tag, like 'bool, etc...
-	rationale: for comprehensibility
+	rationale: for comprehensibility, currently using define'd constants
 
 accessor functions to event-node-ptr SMOB
-	type info
+	type info [partially done, in the form of predicates, can be refined]
 	successors and predecessors
 	block dependencies
+	may-read/write dependencies
 
 other stream interfaces:
-	all-static-events (easily built in pure scheme, already in test case)
 	stream of modified state (by event-index) per type of variable, 
 		which can then be unified
 	stream of read (accessed) state/variables? may be difficult
 
-event-filtering predicates
 
 reverse-streams: critical path?
 slack-time annotation?
+	requires reconstructing precise causality graph of all events?
+		could be major memory hog...
 
 scm structures for variable sets
+	plain list of references (type-index pairs)
 
 trees and sets in scheme library? (associative structures)
 	look into guile's alist (associative list?)
 	also srfi/srfi-1 alist
 
 stream merge algorithms (like set_intersection, set_union, set_difference)
+	prerequisite: streams already sorted
 
