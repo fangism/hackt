@@ -5,6 +5,10 @@
 
 2007-03-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-12:
+	  No source revision, test/Make.test-* tuning only.  
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-11:
 	  guile/chpsim-wrap.cc: Updated chpsim-event-trivial? with is_trivial()
 		which now includes forks as trivial events.

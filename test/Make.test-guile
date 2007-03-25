@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.4.2.2 2007/03/24 03:30:46 fang Exp $
+#	$Id: Make.test-guile,v 1.4.2.3 2007/03/25 22:54:14 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -360,12 +360,15 @@ TESTS += \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscmtest) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfailtest)
 
-HAC_OBJECT_TARGETS += \
+HAC_COMPILE_OBJECT_TARGETS += \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco) \
+	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco)
+# not bothering with unroll anymore...
+HAC_CREATE_OBJECT_TARGETS += \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-c)
+HAC_ALLOC_OBJECT_TARGETS += \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
-	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco) \
-	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-a)
 
 build-check-local: \

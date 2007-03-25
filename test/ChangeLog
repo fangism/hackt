@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2007-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-12:
+	  Make.test-*: changed dependencies on HACKT_EXE to specific
+		subprograms, which avoids unnecessary retesting of 
+		front/middle end objects when only back-end tools change.
+		Hooray for shorter testing cycles.  
+
+
 2007-03-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-08:

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.74.2.1 2007/03/22 19:02:52 fang Exp $
+#	$Id: Make.test-tail,v 1.74.2.2 2007/03/25 22:54:15 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -117,7 +117,10 @@ EXTRACT_CHPSIMTRACE_PIPE = $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
 
 BOGUS_TESTS =
 BOGUS_TARGETS =
-HAC_OBJECT_TARGETS =
+HAC_COMPILE_OBJECT_TARGETS =
+HAC_UNROLL_OBJECT_TARGETS =
+HAC_CREATE_OBJECT_TARGETS =
+HAC_ALLOC_OBJECT_TARGETS =
 CHECK_SUMMARIES =
 
 # These included templates contain all the rules
@@ -154,7 +157,13 @@ srcdir_EXTRA_DIST +=
 
 TESTS +=
 
-HAC_OBJECT_TARGETS +=
+HAC_OBJECT_TARGETS = \
+	$(HAC_COMPILE_OBJECT_TARGETS) \
+	$(HAC_CREATE_OBJECT_TARGETS) \
+	$(HAC_ALLOC_OBJECT_TARGETS)
+if USE_UNROLL_PHASE
+HAC_OBJECT_TARGETS += $(HAC_UNROLL_OBJECT_TARGETS)
+endif
 
 # build all tests, but don't run the resulting test scripts
 build-check-local: $(TESTS)
@@ -163,7 +172,13 @@ build-check-local: $(TESTS)
 # if we really cared we could subdivide this by the executable that
 # generated the output, e.g. haco, haccreate, hacalloc...
 # depending on the hackt dispatcher should cover everything
-$(HAC_OBJECT_TARGETS): $(HACKT_EXE)
+# $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
+$(HAC_COMPILE_OBJECT_TARGETS): $(HACKT_COMPILE_EXE)
+if USE_UNROLL_PHASE
+$(HAC_UNROLL_OBJECT_TARGETS): $(HACKT_UNROLL_EXE)
+endif
+$(HAC_CREATE_OBJECT_TARGETS): $(HACKT_CREATE_EXE)
+$(HAC_ALLOC_OBJECT_TARGETS): $(HACKT_ALLOC_EXE)
 
 # $(HACKT_EXE): .libs
 
