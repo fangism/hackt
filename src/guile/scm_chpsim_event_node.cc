@@ -1,12 +1,13 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.3 2007/03/25 04:42:57 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.4 2007/03/25 21:03:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
-#include "guile/scm_chpsim_event_node.h"
 #include "sim/chpsim/Event.h"
+#include "Object/lang/CHP.h"	// for dynamic_cast on actions
+#include "guile/scm_chpsim_event_node.h"
 // #include <iostream>		// temporary
 #include <sstream>
 #include "util/guile_STL.h"
@@ -14,6 +15,9 @@
 namespace HAC {
 namespace guile_wrap {
 using HAC::SIM::CHPSIM::EventNode;
+using HAC::entity::CHP::action;
+using HAC::entity::CHP::deterministic_selection;
+using HAC::entity::CHP::nondeterministic_selection;
 // using std::cout;		// temporary
 using std::ostringstream;
 using util::guile::make_scm;
@@ -106,7 +110,9 @@ if (!raw_chpsim_event_node_ptr_tag) {
 	Predicate.
 	\param SMOB of the scm chpsim-event.
 	\return #t if event is trivial type, which includes joins 
-		and end-of-selection, but not concurrent forks.
+		end-of-selection, and concurrent forks, 
+		but not condition waits.
+	See EventNode::is_trivial.
  */
 static
 SCM
@@ -114,8 +120,26 @@ wrap_chpsim_event_trivial_p(SCM obj) {
 #define	FUNC_NAME "chpsim-event-trivial?"
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
+//	const action* const a = ptr->get_chp_action();
+//	const unsigned short t = ptr->get_event_type();
+	return make_scm<bool>(ptr->is_trivial());
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is an condition wait.
+ */
+static
+SCM
+wrap_chpsim_event_wait_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-wait?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_NULL);
+		HAC::SIM::CHPSIM::EVENT_CONDITION_WAIT);
 #undef	FUNC_NAME
 }
 
@@ -206,6 +230,42 @@ wrap_chpsim_event_select_p(SCM obj) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is a deterministic selection.
+ */
+static
+SCM
+wrap_chpsim_event_select_det_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-select-det?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>((ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN) &&
+		IS_A(const deterministic_selection*, ptr->get_chp_action()));
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is a nondeterministic selection.
+ */
+static
+SCM
+wrap_chpsim_event_select_nondet_p(SCM obj) {
+#define	FUNC_NAME "chpsim-event-select-nondet?"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>((ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN) &&
+		IS_A(const nondeterministic_selection*, ptr->get_chp_action()));
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Unary function.
 	\param SMOB of the scm chpsim-event.
 	\return process id of the allocated event, which may be 0
@@ -264,6 +324,8 @@ import_chpsim_event_node_functions(void) {
 	INVARIANT(raw_chpsim_event_node_ptr_tag);
 	scm_c_define_gsubr_exported("chpsim-event-trivial?", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_trivial_p));
+	scm_c_define_gsubr_exported("chpsim-event-wait?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_wait_p));
 	scm_c_define_gsubr_exported("chpsim-event-assign?", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_assign_p));
 	scm_c_define_gsubr_exported("chpsim-event-send?", 1, 0, 0,
@@ -274,6 +336,10 @@ import_chpsim_event_node_functions(void) {
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_fork_p));
 	scm_c_define_gsubr_exported("chpsim-event-select?", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_select_p));
+	scm_c_define_gsubr_exported("chpsim-event-select-det?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_select_det_p));
+	scm_c_define_gsubr_exported("chpsim-event-select-nondet?", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_select_nondet_p));
 	scm_c_define_gsubr_exported("chpsim-event-process-id", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_process_index));
 	scm_c_define_gsubr_exported("chpsim-event-delay", 1, 0, 0,

@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-11:
+	  guile/chpsim-wrap.cc: Updated chpsim-event-trivial? with is_trivial()
+		which now includes forks as trivial events.
+		Added chpsim-event-wait? -select-det? select-nondet?
+			primtive predicates.
+	  sim/chpsim/Event.{h,cc}: split out condition-wait into its own
+		code EVENT_CONDITION_WAIT, updated switch-cases.
+		Added has_trivial_delay() to work as before.
+		Renamed is_indispensible -> is_movable.  
+		Added get_chp_action pointer accessor.
+		sim/chpsim/State.cc, StateConstructor.cc updated accordingly.
+	  Test suites were updated trivially to account for new revisions.  
+
+
 2007-03-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-10:

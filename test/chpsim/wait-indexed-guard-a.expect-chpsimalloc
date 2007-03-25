@@ -6,7 +6,7 @@ Event graph:
 event[0]: fork: null, pid: 0, #pred: 0, succ: 10 
 event[1]: null: , pid: 0, #pred: 2, succ: 
 event[2]: assign: y := 2, pid: 0, #pred: 1, succ: 1 
-event[3]: null: [x[z]!=0], pid: 0, #pred: 1, succ: 2 
+event[3]: wait: [x[z]!=0], pid: 0, #pred: 1, succ: 2 
 int deps: 2 
 event[4]: select: , pid: 0, #pred: 1, succ: 5 1 
 event[5]: assign: z := z+1, pid: 0, #pred: 1, succ: 4 

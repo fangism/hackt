@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.3 2007/03/11 16:34:43 fang Exp $
+	$Id: StateConstructor.cc,v 1.3.2.1 2007/03/25 21:03:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -405,7 +405,7 @@ StateConstructor::visit(const condition_wait& cw) {
 	// register guard expression dependents
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = allocate_event(
-		EventNode(&cw, SIM::CHPSIM::EVENT_NULL, 
+		EventNode(&cw, SIM::CHPSIM::EVENT_CONDITION_WAIT, 
 			current_process_index, 
 			// assert dynamic_cast
 			cw.get_delay() ?
@@ -557,7 +557,7 @@ StateConstructor::visit(const do_forever_loop& fl) {
 	const size_t back_index = event_pool_size() -1;
 	EventNode& back_event(get_event(back_index));
 	STACKTRACE_INDENT_PRINT("considering back: " << back_index << endl);
-if (back_event.is_dispensible()) {
+if (back_event.is_movable()) {
 	// 2) recycle the back event, involves re-linking up to two events
 	// Q: does the loopback already point to back? (corner case)
 	if (back_index != loopback_event.successor_events[0]) {
@@ -787,7 +787,7 @@ event_index_type
 StateConstructor::forward_successor(const event_index_type f) {
 	STACKTRACE_VERBOSE;
 	const event_type& skip_me(get_event(f));
-	INVARIANT(skip_me.is_dispensible());	// redundant checks...
+	INVARIANT(skip_me.is_movable());	// redundant checks...
 //	const size_t succs = skip_me.successor_events.size();
 	const event_index_type replacement = skip_me.successor_events[0];
 	const event_type& r(get_event(replacement));
@@ -811,7 +811,7 @@ StateConstructor::forward_successor(const event_index_type f,
 	STACKTRACE_INDENT_PRINT("f,r,h = " << f << ", " <<
 		replacement << ", " << h << endl);
 	const event_type& skip_me(get_event(f));
-	INVARIANT(skip_me.is_dispensible());	// redundant checks...
+	INVARIANT(skip_me.is_movable());	// redundant checks...
 
 	// collect event nodes reachable from the head (post-dominate?)
 	// using worklist algorithm

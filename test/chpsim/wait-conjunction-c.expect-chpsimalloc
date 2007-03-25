@@ -16,9 +16,9 @@ event[9]: null: , pid: 0, #pred: 2, succ: 1
 event[10]: assign: a := false, pid: 0, #pred: 1, succ: 9 
 event[11]: assign: b := false, pid: 0, #pred: 1, succ: 9 
 event[12]: fork: , pid: 0, #pred: 1, succ: 10 11 
-event[13]: null: [a], pid: 0, #pred: 1, succ: 12 
+event[13]: wait: [a], pid: 0, #pred: 1, succ: 12 
 bool deps: 1 
-event[14]: null: [b], pid: 0, #pred: 1, succ: 13 
+event[14]: wait: [b], pid: 0, #pred: 1, succ: 13 
 bool deps: 2 
 event[15]: fork: , pid: 0, #pred: 1, succ: 6 8 14 
 event[16]: null: , pid: 0, #pred: 2, succ: 15 

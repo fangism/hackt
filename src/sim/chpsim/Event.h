@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.5.2.1 2007/03/25 02:25:44 fang Exp $
+	$Id: Event.h,v 1.5.2.2 2007/03/25 21:03:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -55,7 +55,8 @@ enum {
 		deterministic, non-deterministic, and do-while loops
 	 */
 	EVENT_SELECTION_BEGIN = 5,
-	EVENT_SELECTION_END = EVENT_NULL	///< end of any selection (no-op)
+	EVENT_SELECTION_END = EVENT_NULL,	///< end of any selection (no-op)
+	EVENT_CONDITION_WAIT = 6
 };
 
 /**
@@ -230,7 +231,10 @@ public:
 
 	/**
 		\return true if this event type is considered trivial, 
-		such as concurrent 
+			such as concurrent forks and joins, end-select, 
+			but NOT condition waits.  
+			This determines whether or not meta-events may
+			be combined in event graph optimization.  
 	 */
 	bool
 	is_trivial(void) const {
@@ -239,14 +243,31 @@ public:
 	}
 
 	/**
+		Condition-waits are classified as having "trivial-delay", 
+		even though they take up an action event node.
+		They shouldn't incur additional delay unless set otherwise.
+	 */
+	bool
+	has_trivial_delay(void) const {
+		return is_trivial() || (event_type == EVENT_CONDITION_WAIT);
+	}
+
+	/**
 		NOTE: need not be trivial, just copiable and 
 		successor-substitutable.  
 		NOTE: No selection has only one successor.  
 	 */
 	bool
-	is_dispensible(void) const {
+	is_movable(void) const {
 		return (successor_events.size() == 1);
 	}
+
+	/**
+		this 'leaks' out the pointer, it is not meant to be misused, 
+		only short-lived temporary references.  
+	 */
+	const action*
+	get_chp_action(void) const { return action_ptr; }
 
 	const size_t
 	get_process_index(void) const { return process_index; }

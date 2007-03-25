@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-02.hacchpsimscm"
-;;	$Id: bool-split-select-a-02.hacchpsimscm,v 1.1.2.1 2007/03/25 04:43:03 fang Exp $
+;;	$Id: bool-split-select-a-02.hacchpsimscm,v 1.1.2.2 2007/03/25 21:03:29 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -15,13 +15,18 @@
 ; don't forget cdr, because each event is a paired with its index
 (define y (stream-filter (lambda (e) (chpsim-event-trivial? (cdr e))) x))
 
-; show only trivial events
-"all null-events:"
+; show only trivial events (include forks)
+"all trivial-events:"
 (stream-for-each-display-newline y)
 (newline)
 
 (define y (stream-filter (lambda (e) (chpsim-event-fork? (cdr e))) x))
 "all fork-events:"
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (chpsim-event-wait? (cdr e))) x))
+"all wait-events"
 (stream-for-each-display-newline y)
 (newline)
 
