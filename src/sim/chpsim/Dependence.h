@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Dependence.h"
-	$Id: Dependence.h,v 1.3 2007/02/05 06:39:52 fang Exp $
+	$Id: Dependence.h,v 1.3.6.1 2007/03/26 02:49:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCE_H__
@@ -142,6 +142,12 @@ public:
 	ostream&
 	dump_antidependence_edges(ostream&, const event_index_type) const;
 #endif
+
+	template <class Tag>
+	const instance_set_type&
+	get_instance_set(void) const {
+		return dependence_set_base<Tag>::_set;
+	}
 
 };	// end class DependenceSet
 

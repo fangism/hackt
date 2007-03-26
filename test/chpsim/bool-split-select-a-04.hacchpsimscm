@@ -1,0 +1,23 @@
+#!hacchpsimguile -b
+!#
+;; "bool-split-select-a-04.hacchpsimscm"
+;;	$Id: bool-split-select-a-04.hacchpsimscm,v 1.1.2.1 2007/03/26 02:49:16 fang Exp $
+;; vi: ft=scheme
+;; @haco@ bool-split-select-a.haco-a
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define x (static-event-stream))
+
+; don't forget cdr, because each event is a paired with its index
+"corresponding #successors of all events:"
+(define y (stream-map (lambda (e) (chpsim-event-num-successors (cdr e))) x))
+(stream->list y)
+
+"corresponding successors of all events:"
+(define y (stream-map (lambda (e) (chpsim-event-successors (cdr e))) x))
+(stream-for-each-display-newline y)
+

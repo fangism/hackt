@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-03-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  Added hackt-config.in as an installed configure flag script.
+
+
 2007-03-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-14:

@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.1.2.4 2007/03/25 04:43:00 fang Exp $
+	$Id: TODO,v 1.1.2.5 2007/03/26 02:49:07 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -11,8 +11,7 @@ global-reference pairs: replace first element (type enum) with some
 
 accessor functions to event-node-ptr SMOB
 	type info [partially done, in the form of predicates, can be refined]
-	successors and predecessors
-	block dependencies
+	predecessors (will take some effort to construct)
 	may-read/write dependencies
 
 other stream interfaces:
@@ -35,4 +34,7 @@ trees and sets in scheme library? (associative structures)
 
 stream merge algorithms (like set_intersection, set_union, set_difference)
 	prerequisite: streams already sorted
+
+histogram of event frequency, by counting immediate successors of selections
+	use either a vector or sparse representation
 

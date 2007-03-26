@@ -8,3 +8,4 @@ configure_with_ccache.sh
 hackt-*.*.*
 *.hchk
 stamp-h*
+hackt-config

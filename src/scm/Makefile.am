@@ -1,9 +1,10 @@
 # "src/scm/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.4 2007/03/25 02:25:41 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.5 2007/03/26 02:49:06 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 # this path should be consistent with scripts/init_hackt.[c]sh
+# also keep consistent with hackt-config.in
 scmdir = $(pkgdatadir)/scm
 
 # install as $(pkgdatadir)/scm/hackt/...

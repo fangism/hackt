@@ -5,6 +5,14 @@
 
 2007-03-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  Added installed-script: hackt-config (configured from .in)
+	  guile/scm_chpsim_event_node.cc: added primitive functions for
+		event successor-lists and may-block-dependencies.  
+		Added minimal test cases for new procedures.  
+	  See also util/ChangeLog, scm/ChangeLog.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-12:
 	  No source revision, test/Make.test-* tuning only.  
 

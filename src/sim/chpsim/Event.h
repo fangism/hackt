@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.5.2.2 2007/03/25 21:03:28 fang Exp $
+	$Id: Event.h,v 1.5.2.3 2007/03/26 02:49:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -288,6 +288,9 @@ public:
 	import_block_dependencies(const DependenceSetCollector& d) {
 		block_deps.import(d);
 	}
+
+	const DependenceSet&
+	get_block_dependencies(void) const { return block_deps; }
 
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 	void

@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.75.2.2 2007/03/24 03:30:43 fang Exp $
+#	$Id: ChangeLog,v 1.75.2.3 2007/03/26 02:49:12 fang Exp $
+
+2007-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  util/guile_STL.h: added scm_list_builder class functor for re-use, 
+		and make_scm_list() helper function (argument deduction).
+
 
 2007-03-23	David Fang		<fangism@users.sourceforge.net>
 

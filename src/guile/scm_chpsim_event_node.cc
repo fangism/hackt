@@ -1,12 +1,14 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.4 2007/03/25 21:03:25 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.5 2007/03/26 02:49:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include "sim/chpsim/Event.h"
+#include "sim/chpsim/Dependence.h"
 #include "Object/lang/CHP.h"	// for dynamic_cast on actions
+#include "Object/traits/classification_tags_fwd.h"
 #include "guile/scm_chpsim_event_node.h"
 // #include <iostream>		// temporary
 #include <sstream>
@@ -18,9 +20,15 @@ using HAC::SIM::CHPSIM::EventNode;
 using HAC::entity::CHP::action;
 using HAC::entity::CHP::deterministic_selection;
 using HAC::entity::CHP::nondeterministic_selection;
+using HAC::SIM::CHPSIM::DependenceSet;
+using HAC::entity::bool_tag;
+using HAC::entity::int_tag;
+using HAC::entity::enum_tag;
+using HAC::entity::channel_tag;
 // using std::cout;		// temporary
 using std::ostringstream;
 using util::guile::make_scm;
+using util::guile::make_scm_list;
 using util::guile::scm_gsubr_type;
 using util::guile::scm_c_define_gsubr_exported;
 
@@ -301,7 +309,8 @@ wrap_chpsim_event_delay(SCM obj) {
 /**
 	Unary function.
 	\param SMOB of the scm chpsim-event.
-	\return number of mandatory predecessors.  
+	\return number of *mandatory* predecessors, the number of events
+		that must arrive (in graph) before this event fires.  
  */
 static
 SCM
@@ -310,6 +319,59 @@ wrap_chpsim_event_num_predecessors(SCM obj) {
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm(ptr->get_predecessors());
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unary function.
+	\param SMOB of the scm chpsim-event.
+	\return number of successors.  
+ */
+static
+SCM
+wrap_chpsim_event_num_successors(SCM obj) {
+#define	FUNC_NAME "chpsim-event-num-successors"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm(ptr->successor_events.size());
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param SMOB of the scm chpsim-event.
+	\return number list of successors.  
+ */
+static
+SCM
+wrap_chpsim_event_successors(SCM obj) {
+#define	FUNC_NAME "chpsim-event-successors"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm_list(ptr->successor_events);
+#undef	FUNC_NAME
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Internal function that needs to be post-processed
+	by "hackt/chpsim.scm": chpsim-event-may-block-deps,
+		which adds the appropriate tags.  
+	Make sure this is used consistently, by construction.  
+ */
+static
+SCM
+wrap_chpsim_event_may_block_deps_internal(SCM obj) {
+#define	FUNC_NAME "chpsim-event-may-block-deps-internal"
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	const DependenceSet bds(ptr->get_block_dependencies());
+	SCM b = make_scm_list(bds.get_instance_set<bool_tag>());
+	SCM i = make_scm_list(bds.get_instance_set<int_tag>());
+	SCM e = make_scm_list(bds.get_instance_set<enum_tag>());
+	SCM c = make_scm_list(bds.get_instance_set<channel_tag>());
+	return scm_cons(b, scm_cons(i, scm_cons(e, scm_cons(c, SCM_EOL))));
 #undef	FUNC_NAME
 }
 
@@ -346,6 +408,12 @@ import_chpsim_event_node_functions(void) {
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_delay));
 	scm_c_define_gsubr_exported("chpsim-event-num-predecessors", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_num_predecessors));
+	scm_c_define_gsubr_exported("chpsim-event-num-successors", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_num_successors));
+	scm_c_define_gsubr_exported("chpsim-event-successors", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_successors));
+	scm_c_define_gsubr_exported("chpsim-event-may-block-deps-internal", 1, 0, 0,
+		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_event_may_block_deps_internal));
 }
 
 //=============================================================================

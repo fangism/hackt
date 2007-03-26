@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.3.2.1 2007/03/21 20:19:34 fang Exp $
+	$Id: guile_STL.h,v 1.3.2.2 2007/03/26 02:49:14 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -23,6 +23,7 @@
 // #include <tr1/tuple>
 #include <list>
 #include <vector>
+#include <valarray>
 // maybe even include "gmpxx.h"
 #include <iterator>
 #include "util/boolean_types.h"
@@ -42,6 +43,7 @@ using std::string;
 using std::pair;
 using std::unary_function;
 using std::list;
+using std::valarray;
 
 // TODO:
 // goals of library: orthogonal design
@@ -495,6 +497,68 @@ scm_list_inserter(const SCM& l) {
 	return scm_list_insert_iterator(l);
 }
 
+/// overload that defaults to initializing with empty list
+inline
+scm_list_insert_iterator
+scm_list_inserter(void) {
+	return scm_list_insert_iterator(SCM_LIST0);
+		// ignore old-cast expanded from SCM_PACK(x)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	List construct from any container with a begin/end interface, 
+	such as vector.  
+ */
+template <class L>
+struct scm_list_builder : public unary_function<L, SCM> {
+	typedef	scm_list_builder<L>		this_type;
+	/**
+		Start with empty list and accumulate.
+		Construct backwards to preserve order.  
+	 */
+	SCM
+	operator () (const typename this_type::argument_type& l) {
+		STACKTRACE_VERBOSE;
+		return (*copy(l.rbegin(), l.rend(),
+			scm_list_inserter())).list;
+	}
+};	// end struct scm_list_builder
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor that constructs an SCM list.
+	Specialization for valarray, damn pseudo-container...
+ */
+template <class V>
+struct scm_list_builder<valarray<V> > :
+		public unary_function<valarray<V>, SCM> {
+	typedef	scm_list_builder<valarray<V> >		this_type;
+	/**
+		Same as container, but using indexing for begin/end.  
+	 */
+	SCM
+	operator () (const typename this_type::argument_type& l) {
+		STACKTRACE_VERBOSE;
+		return (*std::reverse_copy(&l[0], &l[l.size()], 
+			scm_list_inserter())).list;
+	}
+};	// end struct scm_list_builder<valarray>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// helper functions
+
+/**
+	Helper function to dispatch scm_list_builder functor, 
+	using template argument deduction on type. 
+ */
+template <class L>
+inline
+SCM
+make_scm_list(const L& l) {
+	return scm_list_builder<L>()(l);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	std::list specialization, for the love of STL.  
@@ -502,20 +566,9 @@ scm_list_inserter(const SCM& l) {
 	Should work now, with extra allocator template parameter.  
  */
 template <class T, class A>
-struct scm_builder<list<T, A> > : public unary_function<list<T, A>, SCM> {
-	typedef	scm_builder<list<T, A> >		this_type;
-	/**
-		Construct backwards to preserve order.  
-	 */
-	SCM
-	operator () (const typename this_type::argument_type& l) {
-	//	typedef	typename list<T>::const_iterator	const_iterator;
-		STACKTRACE_VERBOSE;
-		// start with empty list and accumulate
-		return (*copy(l.rbegin(), l.rend(),
-			scm_list_inserter(SCM_LIST0))).list;
-		// ignore old-cast expanded from SCM_PACK(x)
-	}
+struct scm_builder<list<T, A> > : public scm_list_builder<list<T, A> > {
+	typedef	scm_list_builder<list<T, A> >	parent_type;
+	using parent_type::operator();
 };	// end struct scm_builder<list>
 
 //-----------------------------------------------------------------------------
@@ -524,8 +577,14 @@ struct scm_builder<list<T, A> > : public unary_function<list<T, A>, SCM> {
 //-----------------------------------------------------------------------------
 // vector, array, valarray
 
+// scm_vector_builder
+// make_scm_vector
+
 //-----------------------------------------------------------------------------
 // queues, stacks
+
+//-----------------------------------------------------------------------------
+// streams (ice-9 streams)
 
 //-----------------------------------------------------------------------------
 // maps (associative)

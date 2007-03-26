@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.40 2007/03/19 02:37:18 fang Exp $
+#	$Id: Makefile.am,v 1.40.2.1 2007/03/26 02:49:00 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -55,6 +55,7 @@ doc_DATA = \
 	README \
 	TODO
 
+bin_SCRIPTS = hackt-config
 noinst_SCRIPTS = install_transform.sh
 
 # Many of these are already in DIST_COMMON
@@ -67,6 +68,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	README.CVS \
 	README.maintainer \
 	$(DOXYGEN_CONFIG).in \
+	hackt-config.in \
 	config/macro-value.h.in \
 	config/config_subst.awk \
 	config/ylwrap \

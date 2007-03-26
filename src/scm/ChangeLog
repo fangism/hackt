@@ -1,5 +1,13 @@
 "scm/ChangeLog"
 
+2007-03-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  hackt/chpsim.scm: chpsim-event-may-block-deps to add type-tags
+		to the list-of-list structure returned by the primitive
+		chpsim-event-may-block-deps-internal.
+
+
 2007-03-24	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-10:

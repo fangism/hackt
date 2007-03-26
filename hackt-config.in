@@ -1,0 +1,133 @@
+#!/bin/sh
+#	$Id: hackt-config.in,v 1.1.2.1 2007/03/26 02:49:01 fang Exp $
+# vi: ft=sh
+# "hackt-config.in" -- configure-generated script to be installed
+# ripped off of other packages' config files
+# MAINTAINENCE: keep these flags consistent with [auto]makefile variables.
+
+# TODO: *test* whether libraries referenced for linking are sufficient
+#	preferably with an installcheck-local
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+pkglibdir=${libdir}/@PACKAGE@
+includedir=@includedir@
+pkgincludedir=${includedir}/@PACKAGE@
+datadir=@datarootdir@
+pkgdatadir=${datadir}/@PACKAGE@
+# keep consistent with src/scm/Makefile.am
+scmdir=${pkgdatadir}/scm
+
+usage()
+{
+  cat <<EOF
+Usage: hackt-config [OPTIONS] [LIBRARIES]
+Options:
+  --prefix[=DIR]	base installation path of hackt
+  --exec-prefix[=DIR]	architecture-dependent install path
+  --version		version string
+  --cflags		C++ include headers (for CPPFLAGS=-I...)
+  --ldflags		linker library paths (for LDFLAGS=-L...)
+  --libs		hackt libraries (archives)
+  --rlibs		modules and plug-ins
+  --libtool		libtool libraries
+  --scmpath		Scheme modules path (for GUILE_LOAD_PATH)
+EOF
+  exit $1
+}
+
+if test $# -eq 0 ; then
+  usage 1 1>&2
+fi
+
+while test $# -gt 0 ; do
+  case "$1" in
+  -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+  *) optarg= ;;
+  esac
+
+  case $1 in
+  --prefix=*)
+    prefix=$optarg
+    local_prefix=yes
+    ;;
+  --prefix)
+    echo_prefix=yes
+    ;;
+  --exec-prefix=*)
+    exec_prefix=$optarg
+    exec_prefix_set=yes
+    local_prefix=yes
+    ;;
+  --exec-prefix)
+    echo_exec_prefix=yes
+    ;;
+  --version)
+    echo @PACKAGE_VERSION@
+    exit 0
+    ;;
+  --cflags)
+    echo_cflags=yes
+    ;;
+  --ldflags)
+    echo_ldflags=yes
+    ;;
+  --libs)
+    echo_libs=yes
+    ;;
+  --rlibs)
+    echo_rlibs=yes
+    ;;
+  --libtool)
+    echo_libtool=yes
+    ;;
+  --scmpath)
+    echo_scmpath=yes
+    ;;
+  *)
+    usage 1 1>&2
+    ;;
+  esac
+  shift
+done
+
+if test "$local_prefix" = "yes" ; then
+    if test "$exec_prefix_set" != "yes" ; then
+      exec_prefix=$prefix
+    fi
+fi
+
+if test "$echo_prefix" = "yes" ; then
+ echo "$prefix"
+fi
+
+if test "$echo_exec_prefix" = "yes" ; then
+ echo $exec_prefix
+fi
+
+if test "$echo_cflags" = "yes" ; then
+ echo "-I$pkgincludedir $cflags"
+fi
+
+if test "$echo_ldflags" = "yes" ; then
+ echo "-L$pkglibdir"
+fi
+
+if test "$echo_libs" = "yes" ; then
+ echo "-lhacktlib"
+fi
+
+if test "$echo_rlibs" = "yes" ; then
+ echo ""
+fi
+
+if test "$echo_libtool" = "yes" ; then
+ echo "$pkglibdir/libhacktlib.la"
+fi
+
+if test "$echo_scmpath" = "yes" ; then
+ echo "$scmdir"
+fi
+
+
