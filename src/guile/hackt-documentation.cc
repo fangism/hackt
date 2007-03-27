@@ -1,6 +1,6 @@
 /**
 	\file "guile/hackt-documentation.cc"
-	$Id: hackt-documentation.cc,v 1.1.2.1 2007/03/27 06:20:37 fang Exp $
+	$Id: hackt-documentation.cc,v 1.1.2.2 2007/03/27 22:00:38 fang Exp $
  */
 
 #include "guile/hackt-documentation.h"
@@ -16,12 +16,16 @@ using util::guile::make_scm;
 //=============================================================================
 /**
 	Global documentation table.  
-	0-initialized, set by first invocation of add_function_documentation.
+	0-initialized, set by first invocation of add_function_documentation().
  */
 static
 SCM
 doc_hash_table;
 
+/**
+	Global HACKT scheme function registry.  
+	Also initialized by add_function_documentation().
+ */
 static
 SCM
 doc_symbol;
@@ -58,7 +62,8 @@ if (strlen(docstring)) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 HAC_GUILE_DEFINE_PUBLIC(get_all_function_documentation, 
 	"hac:get-all-function-documentation", 0, 0, 0, (), local_registry,
-	"Get a hash table with all HACKT Scheme extension functions.")
+"Return a global hash table with all HACKT Scheme extension functions."
+"This is also used to generate documentation files for functions.")
 {
 	return doc_hash_table;
 }

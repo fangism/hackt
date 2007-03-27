@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.sh"
-#	$Id: init_hackt.sh.in,v 1.1.2.1 2007/03/27 06:20:44 fang Exp $
+#	$Id: init_hackt.sh.in,v 1.1.2.2 2007/03/27 22:00:41 fang Exp $
 #	vi: ft=sh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.csh counterpart
@@ -25,7 +25,9 @@ prepend_path()
 
 # or somehow set this using Makefile substitution?
 prefix=@prefix@
-pkgdatadir=@datarootdir@/@PACKAGE@
+datadir=@datarootdir@
+pkgdatadir=${datadir}/@PACKAGE@
+infodir=@infodir@
 
 # TODO: possible setup PATH? right now we assume PATH already set
 
@@ -41,7 +43,13 @@ export GUILE_LOAD_PATH
 
 # TODO: setup hackt library path
 # TODO: setup MANPATH
-# TODO: setup INFOPATH
+
+if test -z "$INFOPATH" ; then
+	INFOPATH=${infodir}:/usr/share/info
+else
+	prepend_path INFOPATH ${infodir}
+fi
+export INFOPATH
 
 # TODO: per-extension initialization scripts
 

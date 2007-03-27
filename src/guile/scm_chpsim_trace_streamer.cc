@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.3 2007/03/25 02:25:38 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.4 2007/03/27 22:00:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,9 @@
 #include <iostream>
 // #include <sstream>
 #include "util/guile_STL.h"
+#include "guile/hackt-documentation.h"
+#include "util/for_all.h"
+#include "util/caller.h"
 
 namespace HAC {
 namespace guile_wrap {
@@ -33,6 +36,15 @@ scm_t_bits __raw_chpsim_trace_stream_tag;
  */
 const
 scm_t_bits& raw_chpsim_trace_stream_tag(__raw_chpsim_trace_stream_tag);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// local initialization registry
+static
+std::vector<scm_init_func_type>		local_registry;
+
+#define HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
+HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT,			\
+	VAR, ARGLIST, local_registry, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -101,10 +113,9 @@ scm_smob_to_chpsim_trace_stream_ptr(const SCM& obj) {
 	Prints text dump of chpsim trace fo stdout.
 	\param s_str the name of trace file.
  */
-static
-SCM
-wrap_chpsim_dump_trace(SCM s_str) {
 #define	FUNC_NAME "dump-trace"
+HAC_GUILE_DEFINE(wrap_chpsim_dump_trace, FUNC_NAME, 1, 0, 0, (SCM s_str),
+"Produces a textual dump of a trace-file''s contents to stdout.") {
 	scm_assert_string(s_str, FUNC_NAME, 1);
 	const char* tf = scm_to_locale_string(s_str);
 	if (TraceManager::text_dump(tf, cout)) {
@@ -112,20 +123,20 @@ wrap_chpsim_dump_trace(SCM s_str) {
 		cerr << "Error opening trace file: " << tf << endl;
 	}
 	return SCM_UNSPECIFIED;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param s_str the name of the tracefile (string)
 	\return smob of the newly opened tracefile.
  */
-static
-SCM
-wrap_open_chpsim_trace(SCM s_str) {
-	STACKTRACE_VERBOSE;
 #define	FUNC_NAME "open-chpsim-trace"
-	const std::string peek(scm_to_locale_string(s_str));	// 1.8
+HAC_GUILE_DEFINE(wrap_open_chpsim_trace, FUNC_NAME, 1, 0, 0, (SCM trfn),
+"Opens a trace file named @var{trfn} for forward reading as a stream-like "
+"object.  The return object is a smob representing the trace as a stream.") {
+	STACKTRACE_VERBOSE;
+	const std::string peek(scm_to_locale_string(trfn));	// 1.8
 	// alternately string_to_locale_stringbuf
 	// alert: heap-allocating though naked pointer, copy-constructing
 	std::auto_ptr<scm_chpsim_trace_stream>
@@ -133,24 +144,24 @@ wrap_open_chpsim_trace(SCM s_str) {
 	SCM ret_smob;
 	SCM_NEWSMOB(ret_smob, raw_chpsim_trace_stream_tag, tf.release());
 	return ret_smob;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
 	\return true if the trace-stream is still valid.  
  */
-static
-SCM
-wrap_chpsim_trace_stream_valid_p(SCM s_tr) {
-	STACKTRACE_VERBOSE;
 #define	FUNC_NAME "chpsim-trace-valid?"
+HAC_GUILE_DEFINE(wrap_chpsim_trace_stream_valid_p, FUNC_NAME, 1, 0, 0, 
+		(SCM trfs),
+"Is the trace stream @var{trfs} still valid (entries remain)?") {
+	STACKTRACE_VERBOSE;
 	const scm_chpsim_trace_stream* const ptr =
-		scm_smob_to_chpsim_trace_stream_ptr(s_tr);
+		scm_smob_to_chpsim_trace_stream_ptr(trfs);
 	return make_scm<bool>(ptr && ptr->good());
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -160,12 +171,7 @@ wrap_chpsim_trace_stream_valid_p(SCM s_tr) {
 void
 import_hackt_chpsim_trace_stream_functions(void) {
 	INVARIANT(raw_chpsim_trace_stream_tag);
-	scm_c_define_gsubr_exported("dump-trace", 1, 0, 0, 
-		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_dump_trace));
-	scm_c_define_gsubr_exported("open-chpsim-trace", 1, 0, 0, 
-		reinterpret_cast<scm_gsubr_type>(wrap_open_chpsim_trace));
-	scm_c_define_gsubr_exported("chpsim-trace-valid?", 1, 0, 0, 
-		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_trace_stream_valid_p));
+	util::for_all(local_registry, util::caller());
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.6 2007/03/25 02:25:36 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.7 2007/03/27 22:00:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,6 +16,9 @@
 #include "util/guile_STL.h"
 #include "guile/scm_chpsim_trace_streamer.h"
 #include "guile/scm_chpsim_event_node.h"
+#include "guile/hackt-documentation.h"
+#include "util/for_all.h"
+#include "util/caller.h"
 
 namespace HAC {
 namespace guile_wrap {
@@ -37,6 +40,23 @@ using util::guile::scm_c_define_gsubr_exported;
 	NOTE: this object requires a valid obj_module module reference.  
  */
 count_ptr<State> chpsim_state(NULL);
+
+/**
+	Local SCM function initialization registry.  
+ */
+static
+std::vector<scm_init_func_type>		local_chpsim_registry;
+
+static
+std::vector<scm_init_func_type>		local_chpsim_trace_registry;
+
+/**
+        Don't use line-continuation right before ARGLIST, triggers cpp bug?
+ */
+#define HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, 	\
+		REGISTRY, DOCSTRING)					\
+HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT,			\
+	VAR, ARGLIST, REGISTRY, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if HAVE_ATEXIT
@@ -62,33 +82,37 @@ release_chpsim_wrap_resources_at_exit(void) {
 	\return nothing
 	TODO: somehow pass options to it, SCM arguments?
  */
-static
-SCM
-wrap_chpsim_dump_graph_alloc(void) {
 #define	FUNC_NAME "dump-chpsim-struct"
+HAC_GUILE_DEFINE(wrap_chpsim_dump_graph_alloc, FUNC_NAME, 0, 0, 0, (void),
+	local_chpsim_registry, 
+"Produces textual dump of chpsim\'s allocated state structure to stdout, "
+"like \"chpsim -fno-run -fdump-struct\".") {
 	NEVER_NULL(chpsim_state);
 //	graph_options dflt;
 	chpsim_state->dump_struct(cout);
 	return SCM_UNSPECIFIED;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reads an entry AND advances one position.
-	\param s_tr a smob corresponding to the opened trace file that
+	This call is usually memoized to avoid accidentally calling twice
+	at the same position.  
+	\param strm a smob corresponding to the opened trace file that
 		we're streaming from.
 	\return scm object representing entry, or end-of-stream marker
 		which is null (SCM_EOL).  
  */
-static
-SCM
-wrap_chpsim_trace_entry_to_scm(SCM s_tr) {
-	STACKTRACE_VERBOSE;
 #define	FUNC_NAME "current-trace-entry"
-	scm_assert_smob_type(raw_chpsim_trace_stream_tag, s_tr);
+HAC_GUILE_DEFINE(wrap_chpsim_trace_entry_to_scm, FUNC_NAME, 1, 0, 0, 
+	(SCM strm), local_chpsim_trace_registry, 
+"Interprets the current event-trace entry of the (smob) trace stream @var{str} "
+"*and* advances one position in the stream.") {
+	STACKTRACE_VERBOSE;
+	scm_assert_smob_type(raw_chpsim_trace_stream_tag, strm);
 	scm_chpsim_trace_stream* const ptr =
-		scm_smob_to_chpsim_trace_stream_ptr(s_tr);
+		scm_smob_to_chpsim_trace_stream_ptr(strm);
 	if (!(ptr && ptr->good())) {
 #if 0
 		scm_misc_error(FUNC_NAME, 
@@ -106,50 +130,52 @@ wrap_chpsim_trace_entry_to_scm(SCM s_tr) {
 	// alternatively, last pair can be made with SCM_EOL
 	ptr->advance();	// should never fail, really...
 	return ret;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param s_ei globally allocated event index.  
 	\return pair(index, event-smob).
  */
-static
-SCM
-wrap_chpsim_get_event(SCM s_ei) {
 #define	FUNC_NAME "chpsim-get-event"
+HAC_GUILE_DEFINE(wrap_chpsim_get_event, FUNC_NAME, 1, 0, 0, (SCM sei),
+	local_chpsim_registry, 
+"Looks up the raw-event entry indexed at @var{sei}, and returns a pair of "
+"(index . event-smob).") {
 	size_t ei;
-	extract_scm(s_ei, ei);	// can throw error (returns good_bool)
+	extract_scm(sei, ei);	// can throw error (returns good_bool)
 	const size_t max = chpsim_state->event_pool_size();
 	if (ei < max) {
 		SCM ret_smob;
 		SCM_NEWSMOB(ret_smob, raw_chpsim_event_node_ptr_tag,
 			&chpsim_state->get_event(ei));
-		return scm_cons(s_ei, ret_smob);	// pair
+		return scm_cons(sei, ret_smob);	// pair
 	} else {
 		scm_misc_error(FUNC_NAME, 
 			"Error: invalid event index.", SCM_EOL);
 		// max is max
 		return SCM_UNSPECIFIED;
 	}
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the size of the chpsim-state's event pool (fixed).
  */
-static
-SCM
-wrap_chpsim_num_events(void) {
 #define	FUNC_NAME "chpsim-num-events"
+HAC_GUILE_DEFINE(wrap_chpsim_num_events, FUNC_NAME, 0, 0, 0, (void),
+	local_chpsim_registry, 
+"Returns the fixed size of chpsim\'s allocated event pool.") {
 	return make_scm(chpsim_state->event_pool_size());
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap
 }	// end namespace HAC
+#undef	HAC_GUILE_DEFINE
 
 //=============================================================================
 BEGIN_C_DECLS
@@ -158,6 +184,7 @@ using util::guile::scm_gsubr_type;
 
 /**
 	Registers shared library functions for to guile interpreter.
+	These functions are INDEPENDENT of the trace mechanism.
 	TODO: namespace-ing exported functions?
  */
 static
@@ -175,15 +202,7 @@ __libhackt_chpsim_guile_init(void* unused) {
 
 	// native operations on chpsim-event SMOBs.
 	import_chpsim_event_node_functions();
-
-	// export all functions as part of module interface
-	scm_c_define_gsubr_exported("dump-chpsim-struct", 0, 0, 0, 
-		wrap_chpsim_dump_graph_alloc);
-	// event-node stuff
-	scm_c_define_gsubr_exported("chpsim-get-event", 1, 0, 0, 
-		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_get_event));
-	scm_c_define_gsubr_exported("chpsim-num-events", 0, 0, 0, 
-		wrap_chpsim_num_events);
+	util::for_all(local_chpsim_registry, util::caller());
 #if HAVE_ATEXIT
 	const int x = atexit(release_chpsim_wrap_resources_at_exit);
 	INVARIANT(!x);
@@ -193,6 +212,7 @@ __libhackt_chpsim_guile_init(void* unused) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Registers shared library functions for to guile interpreter.
+	These functions are DEPENDENT on the trace mechanism.
 	TODO: namespace-ing exported functions?
  */
 static
@@ -213,8 +233,7 @@ __libhackt_chpsim_trace_guile_init(void* unused) {
 	import_hackt_chpsim_trace_stream_functions();
 	// more trace-related functions
 	// export all functions as part of module interface
-	scm_c_define_gsubr_exported("current-trace-entry", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_chpsim_trace_entry_to_scm));
+	util::for_all(local_chpsim_trace_registry, util::caller());
 }	// end libhackt_chpsim_guile_init
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

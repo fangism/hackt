@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.csh"
-#	$Id: init_hackt.csh.in,v 1.1.2.1 2007/03/27 06:20:42 fang Exp $
+#	$Id: init_hackt.csh.in,v 1.1.2.2 2007/03/27 22:00:40 fang Exp $
 #	vi: ft=csh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.sh counterpart
@@ -8,13 +8,16 @@
 # define append_path and prepend_path (ripped from fink)
 # add to end of path
 alias append_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:\!:2 && $\!:1 !~ \!:2 ) setenv \!:1 ${\!:1}\:\!:2'
-# add to front of path
+
+# add to front of path (needs sed in PATH)
 alias prepend_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:\!:2 && $\!:1 !~ \!:2 ) setenv \!:1 \!:2\:${\!:1}; if ( $\!:1 !~ \!:2\:* ) setenv \!:1 \!:2`echo \:${\!:1} | /usr/bin/sed -e s%^\!:2\:%% -e s%:\!:2\:%:%g -e s%:\!:2\$%%`'
 
 
 # or somehow set this using Makefile substitution?
 set prefix=@prefix@
-set pkgdatadir=@datarootdir@/@PACKAGE@
+set datadir=@datarootdir@
+set pkgdatadir=${datadir}/@PACKAGE@
+set infodir=@infodir@
 
 # TODO: possibly setup PATH? right now we assume PATH is already set
 
@@ -29,7 +32,13 @@ endif
 
 # TODO: setup hackt library path
 # TODO: setup MANPATH
-# TODO: setup INFOPATH
+
+if ( $?INFOPATH ) ; then
+	setenv INFOPATH ${infodir}:/usr/share/info
+else
+	prepend_path INFOPATH ${infodir}
+endif
+
 
 # TODO: per-extension initialization scripts
 

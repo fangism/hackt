@@ -1,9 +1,10 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.4 2007/03/27 06:20:38 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.5 2007/03/27 22:00:39 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
+	TODO: some of these functions are better in guile/scm_reference.cc.
 	Prior history, file was "main/libhackt-wrap.cc"
  */
 
@@ -65,7 +66,7 @@ using entity::meta_reference_union;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
-using util::guile::scm_is_pair;
+using util::guile::scm_irpair;
 #endif
 #ifndef	HAVE_SCM_IS_STRING
 using util::guile::scm_is_string;
@@ -157,25 +158,24 @@ global_references_set_export_scm_refs(const global_references_set& s) {
 	NOTE: this uses cout instead of an ostringstream.  
 	\return nothing
  */
-static
-SCM
-wrap_objdump(void) {
 #define	FUNC_NAME "objdump"
+HAC_GUILE_DEFINE(wrap_objdump, FUNC_NAME, 0, 0, 0, (void),
+"Same result as running standalone `hacobjdump', also dumped to stdout.") {
 	NEVER_NULL(obj_module);
 	obj_module->dump(cout);
 	return SCM_UNSPECIFIED;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Parses and returns a raw-reference (unchecked).  
  */
-static
-SCM
-wrap_parse_raw_reference(SCM s_str) {
 #define	FUNC_NAME "parse-raw-reference"
-	const char* peek = scm_to_locale_string(s_str);	// 1.8
+HAC_GUILE_DEFINE(wrap_parse_raw_reference, FUNC_NAME, 1, 0, 0, (SCM sref),
+"Parses a reference string @var{sref} as it might appear in HAC source, and "
+"returns an internal representation (smob:raw-reference) of the reference.") {
+	const char* peek = scm_to_locale_string(sref);	// 1.8
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
 	// alert: heap-allocating though naked pointer, copy-constructing
@@ -185,8 +185,8 @@ wrap_parse_raw_reference(SCM s_str) {
 	SCM ret_smob;
 	SCM_NEWSMOB(ret_smob, raw_reference_tag, ref.release());
 	return ret_smob;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -195,13 +195,12 @@ wrap_parse_raw_reference(SCM s_str) {
  */
 #define	FUNC_NAME "parse-reference"
 HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0, 
-	(SCM s_str), 
-	"Parses a reference string as it might appear in HAC source, "
-	"type-checks it, and returns a (type . index) pair.")
-{
+	(SCM sref), 
+"Parses a reference string @var{sref} as it might appear in HAC source, "
+"type-checks it, and returns a (type . index) pair.") {
 	STACKTRACE_VERBOSE;
-	scm_assert_string(s_str, FUNC_NAME, 1);
-	const char* peek = scm_to_locale_string(s_str);	// 1.8
+	scm_assert_string(sref, FUNC_NAME, 1);
+	const char* peek = scm_to_locale_string(sref);	// 1.8
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
 	const global_indexed_reference
@@ -227,17 +226,16 @@ HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0,
 	Collect all aliases of a name.  
 	\return list of strings for all equivalent aliases.  
  */
-static
-SCM
-wrap_lookup_reference_aliases(SCM s_pair) {
 #define	FUNC_NAME "lookup-reference-aliases"
+HAC_GUILE_DEFINE(wrap_lookup_reference_aliases, FUNC_NAME, 1, 0, 0, (SCM rpair),
+"Returns a list of all aliases (strings) of the instance named @var{rpair}.") {
 	STACKTRACE_VERBOSE;
-	scm_assert_pair(s_pair, FUNC_NAME, 1);
+	scm_assert_pair(rpair, FUNC_NAME, 1);	// redundant?
 	size_t index;
-	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
+	extract_scm(SCM_CDR(rpair), index);	// already error-handled
 	string_list aliases;
 	size_t type;
-	extract_scm(SCM_CAR(s_pair), type);	// already error-handled
+	extract_scm(SCM_CAR(rpair), type);	// already error-handled
 	const module& mod(*obj_module);
 	switch (type) {
 #define	CASE_TYPE(Tag)							\
@@ -257,22 +255,22 @@ wrap_lookup_reference_aliases(SCM s_pair) {
 	}	// end switch
 	// construct scm_list from std::list
 	return make_scm(aliases);
-#undef	FUNC_NAME
 }	// wrap_lookup_reference_aliases
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return a string with type-size info.
 	TODO: return as SCM objects instead of strings.  
  */
-static
-SCM
-wrap_reference_type_to_string(SCM s_ref) {
 #define	FUNC_NAME "reference-type->string"
-	scm_assert_smob_type(raw_reference_tag, s_ref);
+HAC_GUILE_DEFINE(wrap_reference_type_to_string, FUNC_NAME, 1, 0, 0, (SCM sref),
+"Extracts the type and size information of a (smob) raw-reference @var{sref} "
+"as a string, returned.") {
+	scm_assert_smob_type(raw_reference_tag, sref);
 	const meta_reference_union* ptr = 
 		reinterpret_cast<const meta_reference_union*>
-			(SCM_SMOB_DATA(s_ref));
+			(SCM_SMOB_DATA(sref));
 	if (ptr && ptr->inst_ref()) {
 		ostringstream oss;
 		ptr->inst_ref()->what(oss) << " ";
@@ -285,8 +283,8 @@ wrap_reference_type_to_string(SCM s_ref) {
 		return SCM_UNSPECIFIED;
 	}
 	// return SCM_UNSPECIFIED;
-#undef	FUNC_NAME
 }
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -294,15 +292,16 @@ wrap_reference_type_to_string(SCM s_ref) {
 	We may have to use a guile print-port instead of cout/cerr.
 	\return SCM string.
  */
-static
-SCM
-wrap_reference_index_to_string(SCM s_pair) {
 #define	FUNC_NAME	"reference-index->string"
-	scm_assert_pair(s_pair, FUNC_NAME, 1);
+HAC_GUILE_DEFINE(wrap_reference_index_to_string, FUNC_NAME, 1, 0, 0, 
+	(SCM rpair),
+"Pretty-prints a type-index pair @var{rpair} using the meta-type tag name, and "
+"the globally allocated index assigned to the reference, returns a string.") {
+	scm_assert_pair(rpair, FUNC_NAME, 1);	// redundant
 	size_t index;
-	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
+	extract_scm(SCM_CDR(rpair), index);	// already error-handled
 	size_t type;
-	extract_scm(SCM_CAR(s_pair), type);	// already error-handled
+	extract_scm(SCM_CAR(rpair), type);	// already error-handled
 	ostringstream oss;
 	switch (type) {
 #define	CASE_TYPE(Tag)							\
@@ -321,25 +320,24 @@ wrap_reference_index_to_string(SCM s_pair) {
 	}	// end switch
 	oss << '[' << index << ']';	// << endl;
 	return make_scm(oss.str());
-//	scm_puts(oss.str().c_str(), scm_current_output_port());
-//	return SCM_UNSPECIFIED;
-#undef	FUNC_NAME
 }	// end wrap_reference_index_to_string
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param s_pair a [type,index] pair (global_indexed_reference)
+	\param rpair a [type,index] pair (global_indexed_reference)
 	\return string representation of named reference.
  */
-static
-SCM
-wrap_canonical_reference_to_string(SCM s_pair) {
 #define	FUNC_NAME	"canonical-reference->string"
-	scm_assert_pair(s_pair, FUNC_NAME, 1);
+HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0, 
+	(SCM rpair),
+"Returns the canonical name of the instance referenced by @var{rpair}, "
+"a type-index pair.") {
+	scm_assert_pair(rpair, FUNC_NAME, 1);	// redundant
 	size_t index;
-	extract_scm(SCM_CDR(s_pair), index);	// already error-handled
+	extract_scm(SCM_CDR(rpair), index);	// already error-handled
 	size_t type;
-	extract_scm(SCM_CAR(s_pair), type);	// already error-handled
+	extract_scm(SCM_CAR(rpair), type);	// already error-handled
 	const module& mod(*obj_module);
 	const state_manager& sm(mod.get_state_manager());
 	const footprint& topfp(mod.get_footprint());
@@ -366,25 +364,24 @@ wrap_canonical_reference_to_string(SCM s_pair) {
 			"Error: invalid meta-type enum.", SCM_EOL);
 	}	// end switch
 	return make_scm(oss.str());
-//	scm_puts(oss.str().c_str(), scm_current_output_port());
-//	return SCM_UNSPECIFIED;
-#undef	FUNC_NAME
 }	// end wrap_canonical_reference_to_string
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param s_ref a raw_reference smob.  
+	\param sref a raw_reference smob.  
 	\return list of references (type,index)-pairs that are subinstances, 
 		reachable aliases.  
  */
-static
-SCM
-wrap_collect_reference_subinstances(SCM s_ref) {
 #define	FUNC_NAME "collect-reference-subinstances"
-	scm_assert_smob_type(raw_reference_tag, s_ref);
+HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
+	(SCM sref),
+"Returns a list of unique (type-index) references that are reachable "
+"subinstances of @var{sref}, usually a process.") {
+	scm_assert_smob_type(raw_reference_tag, sref);
 	const meta_reference_union* ptr = 
 		reinterpret_cast<const meta_reference_union*>
-			(SCM_SMOB_DATA(s_ref));
+			(SCM_SMOB_DATA(sref));
 	if (ptr && ptr->inst_ref()) {
 		entry_collection e;
 		ptr->inst_ref()->collect_subentries(*obj_module, e);
@@ -394,8 +391,8 @@ wrap_collect_reference_subinstances(SCM s_ref) {
 	} else {
 		return SCM_EOL;
 	}
-#undef	FUNC_NAME
 }	// wrap_collect_reference_subinstances
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap
@@ -436,27 +433,9 @@ __libhackt_guile_init(void* unused) {
 	scm_c_define_exported("process-tag",
 		make_scm<int>(class_traits<process_tag>::type_tag_enum_value));
 
-	// ugh, function pointer reinterpret_cast...
 	init_documentation();
-	scm_c_define_gsubr_exported("objdump", 0, 0, 0, wrap_objdump);
-#if 0
-	scm_c_define_gsubr_exported("parse-reference", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_parse_global_reference));
-#else
 	util::for_all(hackt_primitives_registry, util::caller());
-#endif
-	scm_c_define_gsubr_exported("parse-raw-reference", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_parse_raw_reference));
-	scm_c_define_gsubr_exported("reference-type->string", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_reference_type_to_string));
-	scm_c_define_gsubr_exported("reference-index->string", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_reference_index_to_string));
-	scm_c_define_gsubr_exported("canonical-reference->string", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_canonical_reference_to_string));
-	scm_c_define_gsubr_exported("lookup-reference-aliases", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_lookup_reference_aliases));
-	scm_c_define_gsubr_exported("collect-reference-subinstances", 1, 0, 0,
-		reinterpret_cast<scm_gsubr_type>(wrap_collect_reference_subinstances));
+	// ugh, function pointer reinterpret_cast...
 #if HAVE_ATEXIT
 	const int x = atexit(release_libhackt_wrap_resources_at_exit);
 	INVARIANT(!x);	// must have succeeded!
