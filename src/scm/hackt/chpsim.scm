@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.2 2007/03/26 02:49:08 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.3 2007/03/27 06:20:39 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -41,13 +41,11 @@
   ) ; end define
   ; rr is untagged set of indices, now we pair them up with type tags
   (let ((rr (chpsim-event-may-block-deps-internal ev)))
-    (cons (attach-tag bool-tag (dependence-set-bools rr))
-      (cons (attach-tag int-tag (dependence-set-ints rr))
-        (cons (attach-tag enum-tag (dependence-set-enums rr))
-          (cons (attach-tag channel-tag (dependence-set-channels rr)) '())
-        ) ; end cons
-      ) ; end cons
-    ) ; end cons
+    (list (attach-tag bool-tag (dependence-set-bools rr))
+      (attach-tag int-tag (dependence-set-ints rr))
+      (attach-tag enum-tag (dependence-set-enums rr))
+      (attach-tag channel-tag (dependence-set-channels rr))
+    ) ; end list
   ) ; end let
 ) ; end define
 

@@ -1,0 +1,39 @@
+#!/bin/sh
+# "init_hackt.csh"
+#	$Id: init_hackt.csh.in,v 1.1.2.1 2007/03/27 06:20:42 fang Exp $
+#	vi: ft=csh
+# source this file to sets up environment variables
+# MAINTAINENCE: keep this consistent with its init_hackt.sh counterpart
+
+# define append_path and prepend_path (ripped from fink)
+# add to end of path
+alias append_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:\!:2 && $\!:1 !~ \!:2 ) setenv \!:1 ${\!:1}\:\!:2'
+# add to front of path
+alias prepend_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:\!:2 && $\!:1 !~ \!:2 ) setenv \!:1 \!:2\:${\!:1}; if ( $\!:1 !~ \!:2\:* ) setenv \!:1 \!:2`echo \:${\!:1} | /usr/bin/sed -e s%^\!:2\:%% -e s%:\!:2\:%:%g -e s%:\!:2\$%%`'
+
+
+# or somehow set this using Makefile substitution?
+set prefix=@prefix@
+set pkgdatadir=@datarootdir@/@PACKAGE@
+
+# TODO: possibly setup PATH? right now we assume PATH is already set
+
+# TODO: posible push this into an extension startup script
+# should be consistent with scm/Makefile.am's scmdir definition.
+set HACKT_GUILE_PATH=$pkgdatadir/scm
+if ( $?GUILE_LOAD_PATH ) then
+	append_path GUILE_LOAD_PATH ${HACKT_GUILE_PATH}
+else
+	setenv GUILE_LOAD_PATH ${HACKT_GUILE_PATH}
+endif
+
+# TODO: setup hackt library path
+# TODO: setup MANPATH
+# TODO: setup INFOPATH
+
+# TODO: per-extension initialization scripts
+
+unset prefix
+unset pkgdatadir
+unset HACKT_GUILE_PATH
+

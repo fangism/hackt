@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.75.2.3 2007/03/26 02:49:12 fang Exp $
+#	$Id: ChangeLog,v 1.75.2.4 2007/03/27 06:20:44 fang Exp $
+
+2007-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-14:
+	  util/for_all.h: lazy man's std::for_each.
+	  util/caller.h: functor that *calls* the argument, e.g. function-ptr.
+	  util/guile_STL.h: added const char* specialization to scm_builder.
+
 
 2007-03-25	David Fang		<fangism@users.sourceforge.net>
 

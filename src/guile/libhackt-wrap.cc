@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.3 2007/03/24 03:30:38 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.4 2007/03/27 06:20:38 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -21,32 +21,21 @@
 #include "Object/entry_collection.h"
 #include "parser/instref.h"
 #include "guile/libhackt-wrap.h"
+#include "guile/hackt-documentation.h"
 #include "guile/scm_reference.h"
 #include "util/libguile.h"
 #include "util/guile_STL.h"
 #include "util/tokenize.h"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/stacktrace.h"
+#include "util/for_all.h"
+#include "util/caller.h"
 
 //=============================================================================
 // smob wrapped structures
 
 //=============================================================================
 // convention: all function names shall begin with 'wrap_'
-
-#if 0
-namespace HAC {
-namespace guile_wrap {
-static
-SCM
-wrap_objdump(void);
-}	// end namespace guile
-namespace entity {
-
-}	// end namespace entity
-//=============================================================================
-}	// end namespace HAC
-#endif
 
 //=============================================================================
 // implementations
@@ -88,6 +77,17 @@ using util::guile::scm_assert_string;
 // static global initialization
 
 count_ptr<module>	obj_module(NULL);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+std::vector<scm_init_func_type>		hackt_primitives_registry;
+
+/**
+	Don't use line-continuation right before ARGLIST, triggers cpp bug?
+ */
+#define	HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
+HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT, 			\
+	VAR, ARGLIST, hackt_primitives_registry, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if HAVE_ATEXIT
@@ -193,10 +193,12 @@ wrap_parse_raw_reference(SCM s_str) {
 	Wrapped call to parse_global_reference.
 	\return pair (cons type index)
  */
-static
-SCM
-wrap_parse_global_reference(SCM s_str) {
 #define	FUNC_NAME "parse-reference"
+HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0, 
+	(SCM s_str), 
+	"Parses a reference string as it might appear in HAC source, "
+	"type-checks it, and returns a (type . index) pair.")
+{
 	STACKTRACE_VERBOSE;
 	scm_assert_string(s_str, FUNC_NAME, 1);
 	const char* peek = scm_to_locale_string(s_str);	// 1.8
@@ -217,8 +219,8 @@ wrap_parse_global_reference(SCM s_str) {
 		// will unwinding clean up the stack C++ style?
 		return SCM_UNSPECIFIED;
 	}
-#undef	FUNC_NAME
 }	// end wrap_parse_global_reference
+#undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -399,6 +401,7 @@ wrap_collect_reference_subinstances(SCM s_ref) {
 }	// end namespace guile_wrap
 }	// end namespace HAC
 
+#undef	HAC_GUILE_DEFINE
 //=============================================================================
 
 BEGIN_C_DECLS
@@ -434,9 +437,14 @@ __libhackt_guile_init(void* unused) {
 		make_scm<int>(class_traits<process_tag>::type_tag_enum_value));
 
 	// ugh, function pointer reinterpret_cast...
+	init_documentation();
 	scm_c_define_gsubr_exported("objdump", 0, 0, 0, wrap_objdump);
+#if 0
 	scm_c_define_gsubr_exported("parse-reference", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_parse_global_reference));
+#else
+	util::for_all(hackt_primitives_registry, util::caller());
+#endif
 	scm_c_define_gsubr_exported("parse-raw-reference", 1, 0, 0,
 		reinterpret_cast<scm_gsubr_type>(wrap_parse_raw_reference));
 	scm_c_define_gsubr_exported("reference-type->string", 1, 0, 0,

@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.3.2.2 2007/03/24 03:30:44 fang Exp $
+	$Id: libguile.h,v 1.3.2.3 2007/03/27 06:20:47 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -15,6 +15,8 @@
 #endif	// b/c redefined by <libguile/__scm.h>
 #include <libguile.h>
 // really only need <libguile/tags.h> for the SCM type
+
+//=============================================================================
 
 namespace util {
 namespace guile {

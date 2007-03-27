@@ -1,6 +1,6 @@
 /**
 	\file "util/algorithm.h"
-	$Id: algorithm.h,v 1.1 2006/11/27 08:29:20 fang Exp $
+	$Id: algorithm.h,v 1.1.18.1 2007/03/27 06:20:46 fang Exp $
 	More (non-standard) algorithms added.  
  */
 
@@ -9,6 +9,7 @@
 
 #include "util/conditional.h"	// for_each_if, compare_if
 #include "util/copy_if.h"
+#include "util/for_all.h"	// includes <functional>
 
 #endif	// __UTIL_ALGORITHM_H__
 

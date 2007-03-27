@@ -1,0 +1,47 @@
+#!/bin/sh
+# "init_hackt.sh"
+#	$Id: init_hackt.sh.in,v 1.1.2.1 2007/03/27 06:20:44 fang Exp $
+#	vi: ft=sh
+# source this file to sets up environment variables
+# MAINTAINENCE: keep this consistent with its init_hackt.csh counterpart
+
+# define append_path and prepend_path (ripped from fink's)
+# add to end of path
+append_path()
+{
+  if ! eval test -z "\"\${$1##*:$2:*}\"" -o -z "\"\${$1%%*:$2}\"" -o -z "\"\${$1##$2:*}\"" -o -z "\"\${$1##$2}\"" ; then
+    eval "$1=\$$1:$2"
+  fi
+}
+
+# add to front of path
+prepend_path()
+{
+  if ! eval test -z "\"\${$1##*:$2:*}\"" -o -z "\"\${$1%%*:$2}\"" -o -z "\"\${$1##$2:*}\"" -o -z "\"\${$1##$2}\"" ; then
+    eval "$1=$2:\$$1"
+  fi
+}
+
+
+# or somehow set this using Makefile substitution?
+prefix=@prefix@
+pkgdatadir=@datarootdir@/@PACKAGE@
+
+# TODO: possible setup PATH? right now we assume PATH already set
+
+# TODO: possibly push this into extension
+# should be consistent with scm/Makefile.am's scmdir definition.
+HACKT_GUILE_PATH=${pkgdatadir}/scm
+if test -z "$GUILE_LOAD_PATH" ; then
+	GUILE_LOAD_PATH=$HACKT_GUILE_PATH
+else
+	append_path GUILE_LOAD_PATH $HACKT_GUILE_PATH
+fi
+export GUILE_LOAD_PATH
+
+# TODO: setup hackt library path
+# TODO: setup MANPATH
+# TODO: setup INFOPATH
+
+# TODO: per-extension initialization scripts
+
