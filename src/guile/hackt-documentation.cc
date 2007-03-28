@@ -1,6 +1,6 @@
 /**
 	\file "guile/hackt-documentation.cc"
-	$Id: hackt-documentation.cc,v 1.1.2.2 2007/03/27 22:00:38 fang Exp $
+	$Id: hackt-documentation.cc,v 1.1.2.3 2007/03/28 06:11:51 fang Exp $
  */
 
 #include "guile/hackt-documentation.h"
@@ -61,7 +61,7 @@ if (strlen(docstring)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 HAC_GUILE_DEFINE_PUBLIC(get_all_function_documentation, 
-	"hac:get-all-function-documentation", 0, 0, 0, (), local_registry,
+	"get-all-function-documentation", 0, 0, 0, (), local_registry,
 "Return a global hash table with all HACKT Scheme extension functions."
 "This is also used to generate documentation files for functions.")
 {

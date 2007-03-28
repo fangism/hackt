@@ -1,6 +1,6 @@
 /**
 	\file "main/libhackt-wrap.cc"
-	$Id: scm_reference.cc,v 1.1.2.1 2007/03/20 23:10:36 fang Exp $
+	$Id: scm_reference.cc,v 1.1.2.2 2007/03/28 06:11:52 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -34,6 +34,17 @@ const
 scm_t_bits& raw_reference_tag(__raw_reference_tag);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Extracts pointer to raw-reference from smob.  
+ */
+const scm_reference_union*
+scm_smob_to_raw_reference_ptr(const SCM& sref) {
+	scm_assert_smob_type(raw_reference_tag, sref);
+	return reinterpret_cast<const meta_reference_union*>
+			(SCM_SMOB_DATA(sref));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	Nothing to recursively mark.  
@@ -55,8 +66,7 @@ size_t
 free_raw_reference(SCM obj) {
 	// pointer must be heap-allocated
 //	std::cerr << "freeing raw-reference." << std::endl;
-	meta_reference_union* ptr = 
-		reinterpret_cast<meta_reference_union*>(SCM_SMOB_DATA(obj));
+	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(obj);
 	if (ptr) {
 		delete ptr;
 		ptr = NULL;	// and STAY dead!
@@ -72,9 +82,7 @@ static
 int
 print_raw_reference(SCM obj, SCM port, scm_print_state* p) {
 	scm_puts("#<raw-reference ", port);
-	const meta_reference_union* ptr = 
-		reinterpret_cast<const meta_reference_union*>
-			(SCM_SMOB_DATA(obj));
+	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(obj);
 	if (ptr && ptr->inst_ref()) {
 		ostringstream oss;
 		ptr->inst_ref()->what(oss) << " ";

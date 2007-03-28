@@ -11,6 +11,12 @@
 
 ;; from "wrap_parse_global_reference",
 ;; the global reference is represented as a type-index pair
-(define-public (reference-type ref) (car ref))
-(define-public (reference-index ref) (cdr ref))
+(define-public (reference-type ref)
+  "Extracts the meta-type tag from a pair-reference." (car ref))
+(define-public (reference-index ref)
+  "Extracts the global index from a pair-reference." (cdr ref))
+
+;; shorthand for extracting embedded documentation
+;; also works on non-hackt-related procedures that are so-documented
+(define-public (help-hackt proc) procedure-documentation proc)
 

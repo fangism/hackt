@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.3.2.3 2007/03/27 06:20:47 fang Exp $
+	$Id: guile_STL.h,v 1.3.2.4 2007/03/28 06:12:01 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -142,6 +142,16 @@ struct scm_builder<const char*> : public unary_function<const char*, SCM> {
 #endif
 	}
 };	// end struct scm_builder<string>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ 	Explicitly decay-array-to-pointer. 
+ */
+inline
+SCM
+make_scm(const char s[]) {
+	return scm_builder<const char*>()(s);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // strings

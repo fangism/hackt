@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-03-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-17:
+	  Added common/config.{h,cc}: where most of old main/version.{h,cc}
+		functionality was relocated, so other extensions may use it.
+		Also exposed most config-strings as public const char[].
+	  Added guile/hackt-config.{h,cc} to export guile-wrapped configure
+		information as scheme functions.  
+	  Added smob-to-raw-reference wrapper func in guile/scm_reference.
+
+
 2007-03-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-16:

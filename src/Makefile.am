@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.168.2.3 2007/03/27 06:20:34 fang Exp $
+#	$Id: Makefile.am,v 1.168.2.4 2007/03/28 06:11:46 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -177,6 +177,7 @@ hacguile_LDADD = libhacktguile.la libhacktlib.la
 
 LIBHACKTGUILE_H_FILES = \
 	guile/libhackt-wrap.h \
+	guile/hackt-config.h \
 	guile/hackt-documentation.h \
 	guile/scm_reference.h \
 	guile/scm_chpsim_trace_streamer.h \
@@ -221,6 +222,8 @@ libhacktast_la_LIBADD = \
 libhacktguile_la_SOURCES = \
 	guile/libhackt-wrap.cc \
 	guile/libhackt-wrap.h \
+	guile/hackt-config.cc \
+	guile/hackt-config.h \
 	guile/hackt-documentation.cc \
 	guile/hackt-documentation.h \
 	guile/scm_reference.cc \
@@ -541,6 +544,7 @@ OBJECT_COMMON_CC_FILES = \
 	Object/common/object_base.cc \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
+	common/config.cc \
 	common/ICE.cc \
 	common/TODO.cc
 
@@ -978,7 +982,7 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
 common/ICE.lo common/ICE.o: cvstag.h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
-main/version.lo main/version.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
+common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
 	parser/yacc_version.h lexer/lex_version.h
 lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.o: \

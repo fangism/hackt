@@ -1,5 +1,16 @@
 "scm/ChangeLog"
 
+2007-03-27	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-17:
+	  Added documentation strings to nearly all functions, which can
+		be read interactively using 'help-hackt' which is just
+		an alias for 'procedure-documentation'.
+	  Added "hackt/docs.scm" and "hackt/doc-lib.scm" which are works
+		in progress ripped from LilyPond -- for documentation 
+		generation.  
+
+
 2007-03-25	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-13:

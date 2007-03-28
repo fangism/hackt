@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.5 2007/03/27 22:00:39 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.6 2007/03/28 06:11:52 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -22,6 +22,7 @@
 #include "Object/entry_collection.h"
 #include "parser/instref.h"
 #include "guile/libhackt-wrap.h"
+#include "guile/hackt-config.h"
 #include "guile/hackt-documentation.h"
 #include "guile/scm_reference.h"
 #include "util/libguile.h"
@@ -268,9 +269,7 @@ HAC_GUILE_DEFINE(wrap_reference_type_to_string, FUNC_NAME, 1, 0, 0, (SCM sref),
 "Extracts the type and size information of a (smob) raw-reference @var{sref} "
 "as a string, returned.") {
 	scm_assert_smob_type(raw_reference_tag, sref);
-	const meta_reference_union* ptr = 
-		reinterpret_cast<const meta_reference_union*>
-			(SCM_SMOB_DATA(sref));
+	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(sref);
 	if (ptr && ptr->inst_ref()) {
 		ostringstream oss;
 		ptr->inst_ref()->what(oss) << " ";
@@ -379,9 +378,7 @@ HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
 "Returns a list of unique (type-index) references that are reachable "
 "subinstances of @var{sref}, usually a process.") {
 	scm_assert_smob_type(raw_reference_tag, sref);
-	const meta_reference_union* ptr = 
-		reinterpret_cast<const meta_reference_union*>
-			(SCM_SMOB_DATA(sref));
+	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(sref);
 	if (ptr && ptr->inst_ref()) {
 		entry_collection e;
 		ptr->inst_ref()->collect_subentries(*obj_module, e);
@@ -434,6 +431,7 @@ __libhackt_guile_init(void* unused) {
 		make_scm<int>(class_traits<process_tag>::type_tag_enum_value));
 
 	init_documentation();
+	hackt_config_init();
 	util::for_all(hackt_primitives_registry, util::caller());
 	// ugh, function pointer reinterpret_cast...
 #if HAVE_ATEXIT

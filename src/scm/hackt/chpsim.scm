@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.4 2007/03/28 01:58:27 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.5 2007/03/28 06:11:58 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -11,20 +11,25 @@
 (use-modules (hackt streams))
 (use-modules (ice-9 streams))
 
-;; represent all statically allocated events as a stream
 (define-public (static-event-stream)
+  "Represents the set of all statically allocated events as a stream."
   (stream-map (lambda (i) (hac:chpsim-get-event i))
     (enumerate-interval-stream 0 (1- (hac:chpsim-num-events))))
 ) ; end define
 
 ;; accessing type-specific subsets of dependence sets
-(define-public (dependence-set-bools d) (car d))
-(define-public (dependence-set-ints d) (cadr d))
-(define-public (dependence-set-enums d) (caddr d))
-(define-public (dependence-set-channels d) (cadddr d))
+(define-public (dependence-set-bools d)
+  "Extracts the bool subset of dependencies." (car d))
+(define-public (dependence-set-ints d)
+  "Extracts the integer subset of dependencies." (cadr d))
+(define-public (dependence-set-enums d)
+  "Extracts the enumeral subset of dependencies." (caddr d))
+(define-public (dependence-set-channels d)
+  "Extracts the channel subset of dependencies." (cadddr d))
 
 ;; dispatch based on type-tag, returns a procedure object
 (define-public (dependence-set-subset t)
+  "Dispatches a subset extractor based on tag @var{t}"
   (cond
     ((= t bool-tag) dependence-set-bools)
     ((= t int-tag) dependence-set-ints)
@@ -36,6 +41,7 @@
 
 ;; adds proper tags to construct (type, index)-pair references
 (define-public (chpsim-event-may-block-deps ev)
+  "Extracts the set of instances that event @var{ev} may block on."
   (define (attach-tag tag lst)
     (map (lambda (i) (cons tag i)) lst)
   ) ; end define

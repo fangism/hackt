@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.3 2007/03/28 01:58:25 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.4 2007/03/28 06:11:57 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -40,6 +40,7 @@
 ;; Make sure we return a proper end-of-stream marker '() eventually
 ;; test error handling here.
 (define-public (make-chpsim-trace-stream trace-stream)
+"Creates a trace stream from an opened trace file (smob)."
 ;; if stream is still valid, note: only evaluate current-trace-entry ONCE!
   (make-stream
     (lambda (s) 
@@ -55,14 +56,19 @@
 
 ;; convenient combined definition
 (define-public (open-chpsim-trace-stream tf)
+  "Opens the named trace file and returns a stream interface in one fell swoop."
   (make-chpsim-trace-stream (hac:open-chpsim-trace tf))
 ) ; end define
 
 ;; These struct accessors must be kept consistent with the construct
 ;; used in guile/chpsim-wrap.cc's wrap_chpsim_trace_entry_to_scm.
 ;; Later, thes may be replaced with primitive implementations if needed.  
-(define-public (chpsim-trace-entry-index e) (car e))
-(define-public (chpsim-trace-entry-time e) (cadr e))
-(define-public (chpsim-trace-entry-event e) (caddr e))
-(define-public (chpsim-trace-entry-critical e) (cdddr e))
+(define-public (chpsim-trace-entry-index e)
+  "Extracts the trace-entry's event index." (car e))
+(define-public (chpsim-trace-entry-time e)
+  "Extracts the trace-entry's event timestamp." (cadr e))
+(define-public (chpsim-trace-entry-event e)
+  "Extracts the trace-entry's static event index" (caddr e))
+(define-public (chpsim-trace-entry-critical e)
+  "Extracts the trace-entry's last arriving event index." (cdddr e))
 
