@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.4 2007/03/27 22:00:40 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.5 2007/03/28 19:36:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -71,7 +71,7 @@ free_raw_chpsim_trace_stream(SCM obj) {
 static
 int
 print_raw_chpsim_trace_stream(SCM obj, SCM port, scm_print_state* p) {
-	scm_puts("<raw-chpsim-trace-stream>", port);
+	scm_puts("#<raw-chpsim-trace-stream>", port);
 	// TODO: print something about state?
 	return 1;
 }

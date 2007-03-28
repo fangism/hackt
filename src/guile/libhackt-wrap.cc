@@ -1,10 +1,9 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.6 2007/03/28 06:11:52 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.7 2007/03/28 19:36:56 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
-	TODO: some of these functions are better in guile/scm_reference.cc.
 	Prior history, file was "main/libhackt-wrap.cc"
  */
 
@@ -12,14 +11,10 @@
 
 #include <iostream>
 #include <sstream>
-#include <memory>
 #include "Object/module.h"
 #include "Object/global_entry.h"
 #include "Object/global_channel_entry.h"
-#include "Object/ref/meta_reference_union.h"
-#include "Object/ref/reference_set.h"
 #include "Object/traits/instance_traits.h"
-#include "Object/entry_collection.h"
 #include "parser/instref.h"
 #include "guile/libhackt-wrap.h"
 #include "guile/hackt-config.h"
@@ -52,10 +47,7 @@ using entity::state_manager;
 using entity::footprint;
 using util::memory::excl_malloc_ptr;
 using entity::global_indexed_reference;
-using entity::global_references_set;
-using entity::entry_collection;
 using entity::meta_type_map;
-using entity::class_traits;
 using util::string_list;
 using entity::class_traits;
 using entity::bool_tag;
@@ -63,11 +55,10 @@ using entity::int_tag;
 using entity::enum_tag;
 using entity::channel_tag;
 using entity::process_tag;
-using entity::meta_reference_union;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 #ifndef	HAVE_SCM_IS_PAIR
-using util::guile::scm_irpair;
+using util::guile::scm_is_pair;
 #endif
 #ifndef	HAVE_SCM_IS_STRING
 using util::guile::scm_is_string;
@@ -114,47 +105,6 @@ release_libhackt_wrap_resources_at_exit(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Functor for generating pair from indices.  
-	TODO: attribute visibility hidden
- */
-struct type_bound_global_reference_maker {
-	const size_t				type;
-
-	explicit
-	type_bound_global_reference_maker(const size_t t) : type(t) { }
-
-	SCM
-	operator () (const size_t i) const {
-		return scm_cons(make_scm(type), make_scm(i));
-	}
-};	// end struct type_bound_global_reference_maker
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Convert a set of references into list of pairs suitable for scheme.  
- */
-static
-SCM
-global_references_set_export_scm_refs(const global_references_set& s) {
-	util::guile::scm_list_insert_iterator ret(SCM_LIST0);
-#define	TRANSFORM(Tag)							\
-{									\
-	const size_t tag_num = class_traits<Tag>::type_tag_enum_value;	\
-	const global_references_set::ref_bin_type& b(s.ref_bin[tag_num]); \
-	const type_bound_global_reference_maker t(tag_num);		\
-	ret = transform(b.begin(), b.end(), ret, t);			\
-}
-	TRANSFORM(bool_tag)
-	TRANSFORM(int_tag)
-	TRANSFORM(enum_tag)
-	TRANSFORM(channel_tag)
-	TRANSFORM(process_tag)
-#undef	TRANSFORM
-	return ret.list;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Wrapped call to 'objdump'.
 	NOTE: this uses cout instead of an ostringstream.  
 	\return nothing
@@ -165,27 +115,6 @@ HAC_GUILE_DEFINE(wrap_objdump, FUNC_NAME, 0, 0, 0, (void),
 	NEVER_NULL(obj_module);
 	obj_module->dump(cout);
 	return SCM_UNSPECIFIED;
-}
-#undef	FUNC_NAME
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Parses and returns a raw-reference (unchecked).  
- */
-#define	FUNC_NAME "parse-raw-reference"
-HAC_GUILE_DEFINE(wrap_parse_raw_reference, FUNC_NAME, 1, 0, 0, (SCM sref),
-"Parses a reference string @var{sref} as it might appear in HAC source, and "
-"returns an internal representation (smob:raw-reference) of the reference.") {
-	const char* peek = scm_to_locale_string(sref);	// 1.8
-	// alternately string_to_locale_stringbuf
-	const module& mod(*obj_module);
-	// alert: heap-allocating though naked pointer, copy-constructing
-	std::auto_ptr<meta_reference_union>
-		ref(new meta_reference_union(
-			parser::parse_and_check_reference(peek, mod)));
-	SCM ret_smob;
-	SCM_NEWSMOB(ret_smob, raw_reference_tag, ref.release());
-	return ret_smob;
 }
 #undef	FUNC_NAME
 
@@ -257,32 +186,6 @@ HAC_GUILE_DEFINE(wrap_lookup_reference_aliases, FUNC_NAME, 1, 0, 0, (SCM rpair),
 	// construct scm_list from std::list
 	return make_scm(aliases);
 }	// wrap_lookup_reference_aliases
-#undef	FUNC_NAME
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return a string with type-size info.
-	TODO: return as SCM objects instead of strings.  
- */
-#define	FUNC_NAME "reference-type->string"
-HAC_GUILE_DEFINE(wrap_reference_type_to_string, FUNC_NAME, 1, 0, 0, (SCM sref),
-"Extracts the type and size information of a (smob) raw-reference @var{sref} "
-"as a string, returned.") {
-	scm_assert_smob_type(raw_reference_tag, sref);
-	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(sref);
-	if (ptr && ptr->inst_ref()) {
-		ostringstream oss;
-		ptr->inst_ref()->what(oss) << " ";
-		ptr->inst_ref()->dump_type_size(oss);	// << endl;
-		// scm_puts(oss.str().c_str(), scm_current_output_port());
-		return make_scm(oss.str());
-	} else {
-		// scm_puts("(null)", scm_current_output_port());
-		scm_misc_error(FUNC_NAME, "Error: raw-reference.", SCM_EOL);
-		return SCM_UNSPECIFIED;
-	}
-	// return SCM_UNSPECIFIED;
-}
 #undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -367,31 +270,6 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 #undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param sref a raw_reference smob.  
-	\return list of references (type,index)-pairs that are subinstances, 
-		reachable aliases.  
- */
-#define	FUNC_NAME "collect-reference-subinstances"
-HAC_GUILE_DEFINE(wrap_collect_reference_subinstances, FUNC_NAME, 1, 0, 0,
-	(SCM sref),
-"Returns a list of unique (type-index) references that are reachable "
-"subinstances of @var{sref}, usually a process.") {
-	scm_assert_smob_type(raw_reference_tag, sref);
-	const meta_reference_union* ptr = scm_smob_to_raw_reference_ptr(sref);
-	if (ptr && ptr->inst_ref()) {
-		entry_collection e;
-		ptr->inst_ref()->collect_subentries(*obj_module, e);
-		global_references_set s;
-		s.import_entry_collection(e);
-		return global_references_set_export_scm_refs(s);
-	} else {
-		return SCM_EOL;
-	}
-}	// wrap_collect_reference_subinstances
-#undef	FUNC_NAME
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap
 }	// end namespace HAC
 
@@ -430,8 +308,9 @@ __libhackt_guile_init(void* unused) {
 	scm_c_define_exported("process-tag",
 		make_scm<int>(class_traits<process_tag>::type_tag_enum_value));
 
-	init_documentation();
-	hackt_config_init();
+	init_documentation();		// from "guile/hackt-documentation.h"
+	load_raw_reference_functions();	// from "guile/scm_reference.cc"
+	hackt_config_init();		// from "guile/hackt-config.h"
 	util::for_all(hackt_primitives_registry, util::caller());
 	// ugh, function pointer reinterpret_cast...
 #if HAVE_ATEXIT

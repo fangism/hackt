@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.6 2007/03/27 22:00:40 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.7 2007/03/28 19:36:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -92,7 +92,7 @@ free_raw_chpsim_event_node_ptr(SCM obj) {
 static
 int
 print_raw_chpsim_event_node_ptr(SCM obj, SCM port, scm_print_state* p) {
-	scm_puts("<raw-chpsim-event-node: ", port);	// "#<"
+	scm_puts("#<raw-chpsim-event-node: ", port);	// "#<"
 	// TODO: print something about state?
 	scm_assert_smob_type(raw_chpsim_event_node_ptr_tag, obj);
 	const scm_chpsim_event_node_ptr ptr =

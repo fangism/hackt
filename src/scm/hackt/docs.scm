@@ -1,5 +1,5 @@
 ;; "hackt/docs.scm"
-;;	$Id: docs.scm,v 1.1.2.1 2007/03/28 06:11:59 fang Exp $
+;;	$Id: docs.scm,v 1.1.2.2 2007/03/28 19:36:59 fang Exp $
 ;; Documentation module for HACKT scheme.  This is not a module, just source.
 ;; Blatantly ripped from lilypond source: "scm/document-functions.scm"
 
@@ -8,9 +8,10 @@
 
 ; (define-module (hackt docs)) ?
 (use-modules (ice-9 regex))
+(use-modules (hackt hackt-primitives))
 
 (define (dashify-underscores str)
-   "Converts a string's dashes to underscores, duh."
+   "Converts a string's underscores to dashes, duh."
    (regexp-substitute/global #f "_" str 'pre "-" 'post))
 
 (define (format-c-header c-h)
