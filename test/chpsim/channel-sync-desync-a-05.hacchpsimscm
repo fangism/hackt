@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-05.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-05.hacchpsimscm,v 1.1.2.1 2007/03/22 21:33:47 fang Exp $
+;;	$Id: channel-sync-desync-a-05.hacchpsimscm,v 1.1.2.2 2007/03/28 01:58:30 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
@@ -11,7 +11,7 @@
 (use-modules (ice-9 streams))
 (use-modules (hackt streams))
 
-(define x (open-chpsim-trace "channel-sync-desync-a-04.chpsimtrace"))
+(define x (hac:open-chpsim-trace "channel-sync-desync-a-04.chpsimtrace"))
 (define y (make-chpsim-trace-stream x))
 
 (define yind (stream-map chpsim-trace-entry-index y))

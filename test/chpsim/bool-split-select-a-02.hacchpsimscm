@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-02.hacchpsimscm"
-;;	$Id: bool-split-select-a-02.hacchpsimscm,v 1.1.2.2 2007/03/25 21:03:29 fang Exp $
+;;	$Id: bool-split-select-a-02.hacchpsimscm,v 1.1.2.3 2007/03/28 01:58:27 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -13,39 +13,39 @@
 (define x (static-event-stream))
 
 ; don't forget cdr, because each event is a paired with its index
-(define y (stream-filter (lambda (e) (chpsim-event-trivial? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-trivial? (cdr e))) x))
 
 ; show only trivial events (include forks)
 "all trivial-events:"
 (stream-for-each-display-newline y)
 (newline)
 
-(define y (stream-filter (lambda (e) (chpsim-event-fork? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-fork? (cdr e))) x))
 "all fork-events:"
 (stream-for-each-display-newline y)
 (newline)
 
-(define y (stream-filter (lambda (e) (chpsim-event-wait? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-wait? (cdr e))) x))
 "all wait-events"
 (stream-for-each-display-newline y)
 (newline)
 
-(define y (stream-filter (lambda (e) (chpsim-event-assign? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-assign? (cdr e))) x))
 "all assign-events:"
 (stream-for-each-display-newline y)
 (newline)
 
-(define y (stream-filter (lambda (e) (chpsim-event-send? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-send? (cdr e))) x))
 "all send-events:"
 (stream-for-each-display-newline y)
 (newline)
 
-(define y (stream-filter (lambda (e) (chpsim-event-receive? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-receive? (cdr e))) x))
 "all receive-events:"
 (stream-for-each-display-newline y)
 (newline)
 
-(define y (stream-filter (lambda (e) (chpsim-event-select? (cdr e))) x))
+(define y (stream-filter (lambda (e) (hac:chpsim-event-select? (cdr e))) x))
 "all select-events:"
 (stream-for-each-display-newline y)
 (newline)

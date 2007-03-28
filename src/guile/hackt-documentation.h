@@ -2,7 +2,7 @@
 	\file "guile/hackt-documentation.h"
 	Snarfing and documentation macros, specific to this project.
 	Inspired by lilypond's "lily/include/lily-guile-macros.hh"!
-	$Id: hackt-documentation.h,v 1.1.2.1 2007/03/27 06:20:38 fang Exp $
+	$Id: hackt-documentation.h,v 1.1.2.2 2007/03/28 01:58:23 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_HACKT_DOCUMENTATION_H__
@@ -55,21 +55,42 @@ static const size_t UNIQUIFY(func_receipt) =			\
 	\param REGISTRY container with which to register function.
 	\param DOCSTRING documentation string for (help procedure).
  */
-#define HAC_GUILE_DEFINE_PUBLIC_WITHOUT_DECL(				\
+#define HAC_GUILE_DEFINE_PUBLIC_WITHOUT_DECL_WITHOUT_PREFIX(		\
 		INITPREFIX, FNAME, PRIMNAME, REQ, OPT, VAR, 		\
 		ARGLIST, REGISTRY, DOCSTRING)				\
   static SCM FNAME ## _proc;						\
   static void								\
   INITPREFIX ## _init (void) {						\
-    FNAME ## _proc = scm_c_define_gsubr (PRIMNAME, REQ, OPT, VAR,	\
+    FNAME ## _proc = scm_c_define_gsubr (PRIMNAME, 			\
+		REQ, OPT, VAR,						\
 		reinterpret_cast<util::guile::scm_gsubr_type>(FNAME));	\
-    add_function_documentation (FNAME ## _proc, PRIMNAME, #ARGLIST,	\
-				DOCSTRING);				\
+    add_function_documentation (FNAME ## _proc, 			\
+		PRIMNAME, #ARGLIST, DOCSTRING);				\
     scm_c_export (PRIMNAME, NULL);					\
   }									\
   ADD_SCM_INIT_FUNC(INITPREFIX ## _init, REGISTRY);			\
   SCM									\
   FNAME ARGLIST
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We automatically prefix all primitives with this string
+	to help identity our functions from others'.
+	\param x is a string, so we have string concatenation.
+ */
+#define	PREFIX_NAME(x)	"hac:" x
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	By default, we slap on a prefix as a poor-man's namespace
+	and for ease of identification.
+ */
+#define HAC_GUILE_DEFINE_PUBLIC_WITHOUT_DECL(				\
+		INITPREFIX, FNAME, PRIMNAME, REQ, OPT, VAR, 		\
+		ARGLIST, REGISTRY, DOCSTRING)				\
+HAC_GUILE_DEFINE_PUBLIC_WITHOUT_DECL_WITHOUT_PREFIX(			\
+		INITPREFIX, FNAME, PREFIX_NAME(PRIMNAME), 		\
+		REQ, OPT, VAR, ARGLIST, REGISTRY, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

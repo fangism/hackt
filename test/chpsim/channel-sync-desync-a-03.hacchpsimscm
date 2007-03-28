@@ -1,30 +1,30 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-03.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-03.hacchpsimscm,v 1.1.2.2 2007/03/22 05:17:57 fang Exp $
+;;	$Id: channel-sync-desync-a-03.hacchpsimscm,v 1.1.2.3 2007/03/28 01:58:30 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
 
 ;; Testing failure to open trace file.
 
-(define x (open-chpsim-trace "channel-sync-desync-a-04.chpsimtrace"))
+(define x (hac:open-chpsim-trace "channel-sync-desync-a-04.chpsimtrace"))
 x
 
-(chpsim-trace-valid? x)
+(hac:chpsim-trace-valid? x)
 ;; expect #f
 
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
-(current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
+(hac:current-trace-entry x)
 
-(current-trace-entry x)
+(hac:current-trace-entry x)
 ;; last one should error-out
 

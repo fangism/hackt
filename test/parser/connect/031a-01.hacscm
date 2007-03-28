@@ -1,9 +1,9 @@
 #!hacguile -b
 !#
 ;; "031a-01.hacscm"
-;;	$Id: 031a-01.hacscm,v 1.1 2007/03/15 06:11:17 fang Exp $
+;;	$Id: 031a-01.hacscm,v 1.1.2.1 2007/03/28 01:58:38 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 031a.haco-a
 
-(collect-reference-subinstances (parse-raw-reference "load"))
+(hac:collect-reference-subinstances (hac:parse-raw-reference "load"))
 

@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-11.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-11.hacchpsimscm,v 1.1.2.2 2007/03/25 02:25:49 fang Exp $
+;;	$Id: channel-sync-desync-a-11.hacchpsimscm,v 1.1.2.3 2007/03/28 01:58:31 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ channel-sync-desync-a.haco-a
 
@@ -9,18 +9,18 @@
 (use-modules (hackt streams))
 (use-modules (ice-9 streams))
 
-(chpsim-num-events)
+(hac:chpsim-num-events)
 ; expect 15: number of unique events allocated
 
 ; dump event 1
-(chpsim-get-event 1)
+(hac:chpsim-get-event 1)
 
 (define all-event-indices-stream
-  (enumerate-interval-stream 0 (1- (chpsim-num-events)))
+  (enumerate-interval-stream 0 (1- (hac:chpsim-num-events)))
 ) ; end define
 
 (define event-stream
-  (stream-map (lambda (i) (chpsim-get-event i)) all-event-indices-stream)
+  (stream-map (lambda (i) (hac:chpsim-get-event i)) all-event-indices-stream)
 ) ; end define
 
 ; print all events

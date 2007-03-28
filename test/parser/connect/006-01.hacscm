@@ -1,9 +1,9 @@
 #!hacguile -b
 !#
 ;; "006-01.hacscm"
-;;	$Id: 006-01.hacscm,v 1.1 2007/03/14 04:06:30 fang Exp $
+;;	$Id: 006-01.hacscm,v 1.1.2.1 2007/03/28 01:58:33 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 006.haco-a
 
-(objdump)
+(hac:objdump)
 

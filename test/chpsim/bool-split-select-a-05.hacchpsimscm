@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-05.hacchpsimscm"
-;;	$Id: bool-split-select-a-05.hacchpsimscm,v 1.1.2.1 2007/03/26 02:49:17 fang Exp $
+;;	$Id: bool-split-select-a-05.hacchpsimscm,v 1.1.2.2 2007/03/28 01:58:29 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -16,7 +16,7 @@
 "untagged dependence sets of all events"
 (define y
   (stream-map (lambda (e)
-    (cons (car e) (chpsim-event-may-block-deps-internal (cdr e))))
+    (cons (car e) (hac:chpsim-event-may-block-deps-internal (cdr e))))
   x)
 )
 ; (stream->list y)

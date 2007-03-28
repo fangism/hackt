@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.2 2007/03/22 21:33:44 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.3 2007/03/28 01:58:25 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -43,7 +43,7 @@
 ;; if stream is still valid, note: only evaluate current-trace-entry ONCE!
   (make-stream
     (lambda (s) 
-      (let ((p (current-trace-entry s)))
+      (let ((p (hac:current-trace-entry s)))
         (if (null? p) '()
 	  (cons p s)
 	) ; end if
@@ -55,7 +55,7 @@
 
 ;; convenient combined definition
 (define-public (open-chpsim-trace-stream tf)
-  (make-chpsim-trace-stream (open-chpsim-trace tf))
+  (make-chpsim-trace-stream (hac:open-chpsim-trace tf))
 ) ; end define
 
 ;; These struct accessors must be kept consistent with the construct

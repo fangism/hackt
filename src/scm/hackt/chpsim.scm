@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.3 2007/03/27 06:20:39 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.4 2007/03/28 01:58:27 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -13,8 +13,8 @@
 
 ;; represent all statically allocated events as a stream
 (define-public (static-event-stream)
-  (stream-map (lambda (i) (chpsim-get-event i))
-    (enumerate-interval-stream 0 (1- (chpsim-num-events))))
+  (stream-map (lambda (i) (hac:chpsim-get-event i))
+    (enumerate-interval-stream 0 (1- (hac:chpsim-num-events))))
 ) ; end define
 
 ;; accessing type-specific subsets of dependence sets
@@ -40,7 +40,7 @@
     (map (lambda (i) (cons tag i)) lst)
   ) ; end define
   ; rr is untagged set of indices, now we pair them up with type tags
-  (let ((rr (chpsim-event-may-block-deps-internal ev)))
+  (let ((rr (hac:chpsim-event-may-block-deps-internal ev)))
     (list (attach-tag bool-tag (dependence-set-bools rr))
       (attach-tag int-tag (dependence-set-ints rr))
       (attach-tag enum-tag (dependence-set-enums rr))

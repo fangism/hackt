@@ -5,6 +5,15 @@
 
 2007-03-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-16:
+	  Re-named all guile-primitives with "hac:" prefix, while 
+		non-primitives remain unchanged.  We may re-export
+		some of these functions without the prefix later...
+		Scheme sources and test cases updated accordingly.  
+	  Next: documentation strings for (procedure-documentation)
+		for all non-primitives, and maybe define a (help-hackt).
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-15:
 	  Re-defined all guile-primtive functions using HAC_GUILE_DEFINE
 		registration macro.  
