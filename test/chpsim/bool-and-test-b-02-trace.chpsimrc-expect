@@ -147,9 +147,9 @@ Out : chan(bool<>) Out = (1) [empty]
 Out : chan(bool<>) Out = (1) [empty]
 time: 150
 Trace file contents: 1 epochs.
-		start	file	chunk
-	epoch	time	offset	size
-	0	0	0	2414
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	0	2414
 Epoch 0:
 	event		event	cause
 	index	time	node	index

@@ -5,11 +5,11 @@ trace manager: flushing out another epoch of trace.
 trace manager: flushing out another epoch of trace.
 trace manager: trace file complete.
 Trace file contents: 3 epochs.
-		start	file	chunk
-	epoch	time	offset	size
-	0	0	0	662
-	1	80	662	663
-	2	140	1325	331
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	0	662
+	1	20	80	662	663
+	2	40	140	1325	331
 Epoch 0:
 	event		event	cause
 	index	time	node	index

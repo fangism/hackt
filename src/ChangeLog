@@ -5,6 +5,13 @@
 
 2007-03-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-19:
+	  sim/chpsim/Trace.h: added start_index field to contents entry
+		to make it easier to do random access and reverse streaming.
+		Few test cases updated trivially.  
+	  In progress: reverse-entry-stream.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-18:
 	  Fixed some smob print strings to adhere to convention.
 	  Relocated some raw-reference smob functions from 

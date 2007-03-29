@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2.6.2 2007/03/23 02:37:36 fang Exp $
+	$Id: Trace.h,v 1.2.6.3 2007/03/29 02:45:45 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -17,6 +17,13 @@
 #include <string>
 #include "Object/nonmeta_variable.h"
 #include "util/memory/excl_ptr.h"
+
+/**
+	Define to 1 to record the first index of the event
+	in each epoch in the table of contents. 
+	Rationale: to facilitate random access and seekability.  
+ */
+#define	TRACE_ENTRY_START_INDEX		1
 
 namespace HAC {
 namespace SIM {
@@ -129,6 +136,9 @@ protected:
 
 public:
 	typedef	event_array_type::const_iterator	const_iterator;
+
+	bool
+	empty(void) const { return event_array.empty(); }
 
 	const_iterator
 	begin(void) const { return event_array.begin(); }
@@ -332,8 +342,15 @@ class trace_file_contents {
 public:
 	/**
 		Entries are stored in an array.  
+		Each entry represents an epoch (chunk).  
 	 */
 	struct entry {
+#if TRACE_ENTRY_START_INDEX
+		/**
+			The index of the first event in an epoch.  
+		 */
+		size_t				start_index;
+#endif
 		/**
 			Start time of chunk.  
 		 */
@@ -353,7 +370,15 @@ public:
 		size_t				chunk_size;
 
 		entry() { }	// undefined values
-		entry(const trace_time_type t, const size_t o, const size_t s) :
+		entry(
+#if TRACE_ENTRY_START_INDEX
+			const size_t i, 
+#endif
+			const trace_time_type t, const size_t o, 
+			const size_t s) :
+#if TRACE_ENTRY_START_INDEX
+			start_index(i), 
+#endif
 			start_time(t), file_offset(o), chunk_size(s) { }
 
 		// human readable
@@ -383,6 +408,9 @@ public:
 	push_back(const entry& e) {
 		entry_array.push_back(e);
 	}
+
+	bool
+	empty(void) const { return entry_array.empty(); }
 
 	const_iterator
 	begin(void) const { return entry_array.begin(); }
@@ -514,6 +542,7 @@ public:
 
 	// defined in "sim/chpsim/TraceStreamer.h"
 	class entry_streamer;
+	class entry_reverse_streamer;
 
 };	// end class TraceManager
 

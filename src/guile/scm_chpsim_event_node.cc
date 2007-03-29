@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.7 2007/03/28 19:36:57 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.8 2007/03/29 02:45:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -41,15 +41,6 @@ using util::guile::scm_c_define_gsubr_exported;
  */
 static
 scm_t_bits __raw_chpsim_event_node_ptr_tag;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static
-std::vector<scm_init_func_type>		local_registry;
-
-// convenient macro for registration
-#define HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
-HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT,			\
-	VAR, ARGLIST, local_registry, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -124,6 +115,15 @@ if (!raw_chpsim_event_node_ptr_tag) {
 
 //=============================================================================
 // guile primitive functions that operate on chpsim-event SMOBs
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+std::vector<scm_init_func_type>		local_registry;
+
+// convenient macro for registration
+#define HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
+HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT,			\
+	VAR, ARGLIST, local_registry, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -380,6 +380,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_may_block_deps_internal, FUNC_NAME, 1, 0, 0,
 }
 #undef	FUNC_NAME
 
+#undef	HAC_GUILE_DEFINE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Register some basic event_node interface functions?

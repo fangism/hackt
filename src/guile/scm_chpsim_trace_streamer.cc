@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.5 2007/03/28 19:36:58 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.6 2007/03/29 02:45:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -36,15 +36,6 @@ scm_t_bits __raw_chpsim_trace_stream_tag;
  */
 const
 scm_t_bits& raw_chpsim_trace_stream_tag(__raw_chpsim_trace_stream_tag);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/// local initialization registry
-static
-std::vector<scm_init_func_type>		local_registry;
-
-#define HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
-HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT,			\
-	VAR, ARGLIST, local_registry, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -107,6 +98,14 @@ scm_smob_to_chpsim_trace_stream_ptr(const SCM& obj) {
 //=============================================================================
 // primitive functions for trace-stream SMOBS
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// local initialization registry
+static
+std::vector<scm_init_func_type>		local_registry;
+
+#define HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
+HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT,			\
+	VAR, ARGLIST, local_registry, DOCSTRING)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -163,6 +162,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_stream_valid_p, FUNC_NAME, 1, 0, 0,
 }
 #undef	FUNC_NAME
 
+#undef	HAC_GUILE_DEFINE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Export primitive functions in current module.

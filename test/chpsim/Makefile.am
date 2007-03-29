@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.9 2007/03/26 02:49:14 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.10 2007/03/29 02:45:46 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -165,12 +165,18 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
 
+KEEP_CHPSIM_TRACE_FILES = \
+	channel-sync-desync-a-04.chpsimtrace \
+	channel-sync-desync-a-05.chpsimtrace
+
 # Additional dependencies from known-side effects
 channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
-	@:
+	@test -f $<
 
 channel-sync-desync-a-05.chpsimtrace: channel-sync-desync-a-05-trace.chpsimrc-out
-	@:
+	@test -f $<
+
+$(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
 
 include $(top_srcdir)/test/Make.test-tail
 
