@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/TraceStreamer.h"
-	$Id: TraceStreamer.h,v 1.1.2.3 2007/03/29 02:45:45 fang Exp $
+	$Id: TraceStreamer.h,v 1.1.2.4 2007/03/30 15:47:58 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -80,12 +80,19 @@ public:
 	explicit
 	entry_reverse_streamer(const string&);
 
-	using parent_type::current_event_record;
+	const event_trace_point&
+	current_event_record(void) const;
+
+	bool
+	good(void) const;
+
+	using parent_type::index;
 
 private:
 	good_bool
 	init(void);
 
+public:
 	good_bool
 	retreat(void);
 

@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.4 2007/03/28 06:11:57 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.5 2007/03/30 15:47:56 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -54,10 +54,43 @@
   ) ; end make-stream
 ) ; end define
 
+; same, but opens a reverse trace stream
+(define-public (make-chpsim-trace-reverse-stream trace-stream)
+"Creates a trace reverse stream from an opened trace file (smob)."
+;; if stream is still valid, note: only evaluate current-trace-entry ONCE!
+  (make-stream
+    (lambda (s) 
+      (let ((p (hac:current-trace-reverse-entry s)))
+        (if (null? p) '()
+	  (cons p s)
+	) ; end if
+      ) ; end let
+    ) ; end lambda
+    trace-stream
+  ) ; end make-stream
+) ; end define
+
+; TODO: use symbolic representation of stream type to dispatch accordingly
+(define-public (current-trace-entry strm)
+"Grabs the current trace stream entry, based on the stream type of @var{strm}."
+  (cond ((hac:chpsim-trace? strm)
+		(hac:current-trace-entry strm))
+	((hac:chpsim-trace-reverse? strm)
+		(hac:current-trace-reverse-entry strm))
+	(else (error "Unregistered trace stream type: " strm))
+  ) ; end cond
+) ; end define
+
 ;; convenient combined definition
 (define-public (open-chpsim-trace-stream tf)
   "Opens the named trace file and returns a stream interface in one fell swoop."
   (make-chpsim-trace-stream (hac:open-chpsim-trace tf))
+) ; end define
+
+(define-public (open-chpsim-trace-reverse-stream tf)
+  "Opens the named trace file and returns a reverse-stream interface "
+"in one fell swoop."
+  (make-chpsim-trace-reverse-stream (hac:open-chpsim-trace-reverse tf))
 ) ; end define
 
 ;; These struct accessors must be kept consistent with the construct

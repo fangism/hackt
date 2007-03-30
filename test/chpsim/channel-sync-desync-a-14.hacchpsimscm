@@ -1,0 +1,30 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-14.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-14.hacchpsimscm,v 1.1.2.1 2007/03/30 15:48:02 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+
+;; Testing open trace file in reverse mode.
+
+(define x (hac:open-chpsim-trace-reverse "channel-sync-desync-a-04.chpsimtrace"))
+x
+
+(hac:chpsim-trace-reverse-valid? x)
+;; expect #f
+
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+(hac:current-trace-reverse-entry x)
+
+(hac:current-trace-reverse-entry x)
+;; last one should be EOL
+

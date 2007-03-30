@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
-;; "channel-sync-desync-a-07.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-08.hacchpsimscm,v 1.1.2.1 2007/03/23 02:37:40 fang Exp $
+;; "channel-sync-desync-a-08.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-08.hacchpsimscm,v 1.1.2.2 2007/03/30 15:48:01 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace

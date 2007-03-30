@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.7 2007/03/27 22:00:38 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.8 2007/03/30 15:47:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -135,6 +135,45 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_entry_to_scm, FUNC_NAME, 1, 0, 0,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Reads an entry AND retreats one position (reverse stream).
+	This call is usually memoized to avoid accidentally calling twice
+	at the same position.  
+	\param strm a smob corresponding to the opened trace file that
+		we're reverse-streaming from.
+	\return scm object representing entry, or end-of-stream marker
+		which is null (SCM_EOL).  
+ */
+#define	FUNC_NAME "current-trace-reverse-entry"
+HAC_GUILE_DEFINE(wrap_chpsim_reverse_trace_entry_to_scm, FUNC_NAME, 1, 0, 0, 
+	(SCM strm), local_chpsim_trace_registry, 
+"Interprets the current event-trace entry of the (smob) trace reverse stream "
+"@var{str} *and* retreats one position in the stream.") {
+	STACKTRACE_VERBOSE;
+	scm_assert_smob_type(raw_chpsim_trace_reverse_stream_tag, strm);
+	scm_chpsim_trace_reverse_stream* const ptr =
+		scm_smob_to_chpsim_trace_reverse_stream_ptr(strm);
+	if (!(ptr && ptr->good())) {
+#if 0
+		scm_misc_error(FUNC_NAME, 
+			"Error: invalid trace stream state.",
+			SCM_EOL);
+#else
+		return SCM_EOL;
+#endif
+	}
+	const event_trace_point& tp(ptr->current_event_record());
+	const SCM ret = scm_cons(make_scm(ptr->index()), 
+		scm_cons(make_scm(tp.timestamp), 
+		scm_cons(make_scm(tp.event_id),
+			make_scm(tp.cause_id))));
+	// alternatively, last pair can be made with SCM_EOL
+	ptr->retreat();	// should never fail, really...
+	return ret;
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param s_ei globally allocated event index.  
 	\return pair(index, event-smob).
  */
@@ -228,6 +267,7 @@ __libhackt_chpsim_trace_guile_init(void* unused) {
 #endif
 	// initialize any smob types we use
 	raw_chpsim_trace_stream_smob_init();
+	raw_chpsim_trace_reverse_stream_smob_init();
 
 	// native operations on chpsim-event SMOBs.
 	import_hackt_chpsim_trace_stream_functions();

@@ -1,0 +1,30 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-22.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-22.hacchpsimscm,v 1.1.2.1 2007/03/30 15:48:14 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-filter-split on reverse-stream
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define y (open-chpsim-trace-reverse-stream "channel-sync-desync-a-04.chpsimtrace"))
+
+; only look at event 2 (using predicate)
+(define (event-two? e) (= 2 (chpsim-trace-entry-event e)))
+(define (event-three? e) (= 3 (chpsim-trace-entry-event e)))
+
+(define zz (stream-filter-split event-two? y))
+; zz
+(stream->list (car zz))
+(stream->list (cdr zz))
+; (stream->list (stream-filter event-two? y))
+
+(define ww (stream-filter-split event-three? y))
+; ww
+(stream->list (car ww))
+(stream->list (cdr ww))
+

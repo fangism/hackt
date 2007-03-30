@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.h"
-	$Id: scm_chpsim_trace_streamer.h,v 1.1.2.3 2007/03/25 02:25:39 fang Exp $
+	$Id: scm_chpsim_trace_streamer.h,v 1.1.2.4 2007/03/30 15:47:53 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_SCM_CHPSIM_TRACE_STREAMER_H__
@@ -17,6 +17,8 @@ namespace guile_wrap {
 	of a trace file.
  */
 typedef	HAC::SIM::CHPSIM::TraceManager::entry_streamer	scm_chpsim_trace_stream;
+typedef	HAC::SIM::CHPSIM::TraceManager::entry_reverse_streamer
+						scm_chpsim_trace_reverse_stream;
 
 /**
 	Run-time type identifier set upon guile's SMOB registration.  
@@ -25,12 +27,23 @@ extern
 const scm_t_bits& raw_chpsim_trace_stream_tag;
 
 extern
+const scm_t_bits& raw_chpsim_trace_reverse_stream_tag;
+
+extern
 scm_chpsim_trace_stream*
 scm_smob_to_chpsim_trace_stream_ptr(const SCM&);
 
 extern
+scm_chpsim_trace_reverse_stream*
+scm_smob_to_chpsim_trace_reverse_stream_ptr(const SCM&);
+
+extern
 void
 raw_chpsim_trace_stream_smob_init(void);
+
+extern
+void
+raw_chpsim_trace_reverse_stream_smob_init(void);
 
 extern
 void

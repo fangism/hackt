@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.4 2007/03/29 02:45:44 fang Exp $
+	$Id: Trace.cc,v 1.3.6.5 2007/03/30 15:47:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -879,24 +879,78 @@ TraceManager::entry_streamer::advance(void) {
 }
 
 //=============================================================================
+// class TraceManager::entry_reverse_streamer method definitions
+
 TraceManager::entry_reverse_streamer::entry_reverse_streamer(
 		const string& s) : 
 		parent_type(s, partial_init_tag()),
 		start_of_epochs(0) {
+	STACKTRACE_VERBOSE;
 	init();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const event_trace_point&
+TraceManager::entry_reverse_streamer::current_event_record(void) const {
+	INVARIANT(good());
+	return event_iter[-1];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+TraceManager::entry_reverse_streamer::good(void) const {
+	return fin &&
+		((epoch_iter != tracefile.contents.begin()) ||
+		(event_iter != tracefile.current_chunk.begin()));
+	// could just look at index...
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 TraceManager::entry_reverse_streamer::init(void) {
+	STACKTRACE_VERBOSE;
 	if (partial_init().good) {
 		// remember the position to adjust seek pointers
 		start_of_epochs = fin.tellg();
 		INVARIANT(!tracefile.contents.empty());
 		epoch_iter = --tracefile.contents.end();
-		// TODO: finish me...
+		const size_t start_of_end = epoch_iter->start_index;
+		// seek to last epoch, and read its whole chunk
+		fin.seekg(epoch_iter->file_offset + start_of_epochs);
+		tracefile.current_chunk.read(fin);
+		INVARIANT(!tracefile.current_chunk.empty());
+		// point to one-past-the-end
+		event_iter = tracefile.current_chunk.end();
+		_index = start_of_end +tracefile.current_chunk.event_count() -1;
 	}
 	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+TraceManager::entry_reverse_streamer::retreat(void) {
+	STACKTRACE_VERBOSE;
+	if (_index) {
+		// pre-decrement
+		--event_iter;
+	} else {
+		if (event_iter != tracefile.current_chunk.begin()) {
+			--event_iter;		// to terminate
+		}
+		return good_bool(false);
+	}
+	if (event_iter == tracefile.current_chunk.begin()) {
+		INVARIANT(epoch_iter != tracefile.contents.begin());
+		--epoch_iter;
+		fin.seekg(epoch_iter->file_offset + start_of_epochs);
+		tracefile.current_chunk.read(fin);
+		event_iter = tracefile.current_chunk.end();
+		INVARIANT(_index == 
+			(epoch_iter->start_index +
+			tracefile.current_chunk.event_count()));
+	}
+	--_index;
+	return good_bool(true);
 }
 
 //=============================================================================
