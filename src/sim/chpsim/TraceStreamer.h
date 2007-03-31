@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/TraceStreamer.h"
-	$Id: TraceStreamer.h,v 1.1.2.4 2007/03/30 15:47:58 fang Exp $
+	$Id: TraceStreamer.h,v 1.1.2.5 2007/03/31 04:40:22 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -25,6 +25,7 @@ using util::good_bool;
 	We only need to keep track of position-state.  
 	The scheme interface uses this class.  
 	This class may be heap-allocated and managed by guile's gc.
+	TODO: factor this into a protected base class.
  */
 class TraceManager::entry_streamer {
 protected:
@@ -74,8 +75,11 @@ public:
 class TraceManager::entry_reverse_streamer : 
 		protected entry_streamer {
 	typedef	entry_streamer		parent_type;
+protected:
 	/// offset to be able to seek epochs
 	size_t				start_of_epochs;
+	/// total number of entries in trace
+	size_t				_total_entries;
 public:
 	explicit
 	entry_reverse_streamer(const string&);
@@ -88,6 +92,9 @@ public:
 
 	using parent_type::index;
 
+	size_t
+	num_entries(void) const { return _total_entries; }
+
 private:
 	good_bool
 	init(void);
@@ -96,7 +103,33 @@ public:
 	good_bool
 	retreat(void);
 
-};	// end class trace_entry_reverse_streamer
+};	// end class TraceManager::entry_reverse_streamer
+
+//=============================================================================
+/**
+	Interface for accessing random entries in trace file.  
+	Why inherit? we just want the start_of_epochs.
+	Consecutive access that 'hit' the same epoch will be efficient.
+	Each time an epoch is re-loaded, we incur file reading cost.  
+	This class keeps one epoch loaded at a time.  
+ */
+class TraceManager::random_accessor : protected entry_reverse_streamer {
+	typedef	entry_reverse_streamer			parent_type;
+protected:
+public:
+	explicit
+	random_accessor(const string&);
+
+	// index must be valid, pre-checked
+	const event_trace_point&
+	operator [] (const size_t);
+
+	using parent_type::num_entries;
+
+	bool
+	good(void) const;
+
+};	// end class TraceManager::random_accessor
 
 //=============================================================================
 }	// end namespace CHPSIM

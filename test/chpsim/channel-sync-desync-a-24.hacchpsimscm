@@ -1,0 +1,12 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-24.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-24.hacchpsimscm,v 1.1.2.1 2007/03/31 04:40:25 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+
+;; Testing trace entry count
+
+(hac:chpsim-trace-num-entries "channel-sync-desync-a-04.chpsimtrace")
+

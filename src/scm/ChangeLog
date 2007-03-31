@@ -2,6 +2,10 @@
 
 2007-03-30	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-21:
+	  hackt/streams.scm: added enumerate-interval-reverse-stream.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-20:
 	  Added reverse-stream procedures building on respective primitives.
 

@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.9 2007/03/28 06:12:00 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.10 2007/03/31 04:40:19 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -120,6 +120,14 @@ then truncates the stream after the second predicate is satisfied."
   "Generate a stream of integers from [low,high]."
   (if (> low high) (delay the-empty-stream)
     (cons-stream low (enumerate-interval-stream (1+ low) high))
+  ) ; end if
+) ; end define
+
+; finite stream of integers, decreasing
+(define-public (enumerate-interval-reverse-stream low high)
+  "Generate a stream of integers from [high,low]."
+  (if (> low high) (delay the-empty-stream)
+    (cons-stream high (enumerate-interval-reverse-stream low (1- high)))
   ) ; end if
 ) ; end define
 

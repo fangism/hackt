@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.8 2007/03/30 15:47:52 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.9 2007/03/31 04:40:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -96,6 +96,19 @@ HAC_GUILE_DEFINE(wrap_chpsim_dump_graph_alloc, FUNC_NAME, 0, 0, 0, (void),
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Construct an SCM struct from a single event entry from trace.
+ */
+static
+SCM
+scm_from_event_trace_point(const event_trace_point& tp, const size_t i) {
+	return scm_cons(make_scm(i), 
+		scm_cons(make_scm(tp.timestamp), 
+		scm_cons(make_scm(tp.event_id),
+			make_scm(tp.cause_id))));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads an entry AND advances one position.
 	This call is usually memoized to avoid accidentally calling twice
 	at the same position.  
@@ -123,10 +136,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_entry_to_scm, FUNC_NAME, 1, 0, 0,
 #endif
 	}
 	const event_trace_point& tp(ptr->current_event_record());
-	const SCM ret = scm_cons(make_scm(ptr->index()), 
-		scm_cons(make_scm(tp.timestamp), 
-		scm_cons(make_scm(tp.event_id),
-			make_scm(tp.cause_id))));
+	const SCM ret = scm_from_event_trace_point(tp, ptr->index());
 	// alternatively, last pair can be made with SCM_EOL
 	ptr->advance();	// should never fail, really...
 	return ret;
@@ -162,13 +172,42 @@ HAC_GUILE_DEFINE(wrap_chpsim_reverse_trace_entry_to_scm, FUNC_NAME, 1, 0, 0,
 #endif
 	}
 	const event_trace_point& tp(ptr->current_event_record());
-	const SCM ret = scm_cons(make_scm(ptr->index()), 
-		scm_cons(make_scm(tp.timestamp), 
-		scm_cons(make_scm(tp.event_id),
-			make_scm(tp.cause_id))));
+	const SCM ret = scm_from_event_trace_point(tp, ptr->index());
 	// alternatively, last pair can be made with SCM_EOL
 	ptr->retreat();	// should never fail, really...
 	return ret;
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param tr the chpsim trace, random-access handle.
+	\param ind the dynamic event to access, NOT the static event.
+ */
+#define	FUNC_NAME "lookup-trace-entry"
+HAC_GUILE_DEFINE(wrap_chpsim_lookup_trace_entry, 
+	FUNC_NAME, 2, 0, 0, (SCM tr, SCM ind),
+	local_chpsim_registry, 
+"Given a random-access chpsim trace handle @var{tr}, return the dynamic event "
+"occurring at index @var{ind}.") {
+	size_t index;
+	extract_scm(ind, index);	// will throw on error
+	scm_assert_smob_type(raw_chpsim_trace_random_accessor_tag, tr);
+	scm_chpsim_trace_random_accessor* const ptr =
+		scm_smob_to_chpsim_trace_random_accessor_ptr(tr);
+	if (!(ptr && ptr->good())) {
+		scm_misc_error(FUNC_NAME,
+			"CHPSIM trace random-access handle invalid.", SCM_EOL);
+		return SCM_UNSPECIFIED;
+	}
+	const size_t max = ptr->num_entries();
+	if (index >= max) {
+		scm_misc_error(FUNC_NAME, 
+			"Error: invalid event index.", SCM_EOL);
+		return SCM_UNSPECIFIED;
+	}
+	const event_trace_point& tp((*ptr)[index]);
+	return scm_from_event_trace_point(tp, index);
 }
 #undef	FUNC_NAME
 
@@ -266,8 +305,7 @@ __libhackt_chpsim_trace_guile_init(void* unused) {
 	scm_c_use_module("hackt chpsim-primitives");
 #endif
 	// initialize any smob types we use
-	raw_chpsim_trace_stream_smob_init();
-	raw_chpsim_trace_reverse_stream_smob_init();
+	raw_chpsim_trace_modes_smob_init();
 
 	// native operations on chpsim-event SMOBs.
 	import_hackt_chpsim_trace_stream_functions();

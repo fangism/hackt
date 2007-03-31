@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2.6.3 2007/03/29 02:45:45 fang Exp $
+	$Id: Trace.h,v 1.2.6.4 2007/03/31 04:40:22 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -145,6 +145,12 @@ public:
 
 	const_iterator
 	end(void) const { return event_array.end(); }
+
+	/// unchecked local event index, use sparingly
+	const event_trace_point&
+	get_event(const size_t ei) const {
+		return event_array[ei];
+	}
 
 	size_t
 	event_count(void) const {
@@ -390,6 +396,24 @@ public:
 
 		void
 		read(istream&);
+
+#if TRACE_ENTRY_START_INDEX
+		/**
+			Index comparator functor, for binary search.
+			See std::lower_bound for use context.
+		 */
+		struct event_index_less_than {
+			bool
+			operator () (const entry& e, const size_t i) const {
+				return e.start_index < i;
+			}
+
+			bool
+			operator () (const size_t i, const entry& e) const {
+				return i < e.start_index;
+			}
+		};
+#endif
 	};	// end struct entry
 private:
 	typedef	vector<entry>			entry_array_type;
@@ -543,6 +567,7 @@ public:
 	// defined in "sim/chpsim/TraceStreamer.h"
 	class entry_streamer;
 	class entry_reverse_streamer;
+	class random_accessor;
 
 };	// end class TraceManager
 

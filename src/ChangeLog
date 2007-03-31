@@ -5,6 +5,18 @@
 
 2007-03-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-21:
+	  Implemented trace-file random-access interface, indexed by
+		event entry number.  Added to file 
+		"guile/scm_chpsim_trace_stream.{h,cc}" though is not stream.
+		new primitives: hac:lookup-trace-entry, 
+			hac:chpsim-trace-num-entries, 
+			hac:open-chpsim-trace-accessor
+	  Added added new test cases to go along with.
+	  sim/chpsim/Trace.cc: entry_reverse_streamer now caches the
+		total number of entries in tracefile upon init.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-20:
 	  Implemented and tested initial reverse trace stream interface.
 		sim/chpsim/Trace.cc: implemented it.

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.5 2007/03/30 15:47:57 fang Exp $
+	$Id: Trace.cc,v 1.3.6.6 2007/03/31 04:40:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -884,7 +884,7 @@ TraceManager::entry_streamer::advance(void) {
 TraceManager::entry_reverse_streamer::entry_reverse_streamer(
 		const string& s) : 
 		parent_type(s, partial_init_tag()),
-		start_of_epochs(0) {
+		start_of_epochs(0), _total_entries(0) {
 	STACKTRACE_VERBOSE;
 	init();
 }
@@ -922,6 +922,8 @@ TraceManager::entry_reverse_streamer::init(void) {
 		// point to one-past-the-end
 		event_iter = tracefile.current_chunk.end();
 		_index = start_of_end +tracefile.current_chunk.event_count() -1;
+		_total_entries = epoch_iter->start_index
+			+tracefile.current_chunk.event_count();
 	}
 	return good_bool(false);
 }
@@ -952,6 +954,67 @@ TraceManager::entry_reverse_streamer::retreat(void) {
 	--_index;
 	return good_bool(true);
 }
+
+//=============================================================================
+// class TraceManager::random_accessor method definitions
+
+/**
+	Initialize to last epoch to get _total_entries count.
+ */
+TraceManager::random_accessor::random_accessor(const string& fn) :
+		parent_type(fn) {
+	// parent's constructor will initialize to the last epoch
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if trace file handle is in valid state. 
+	Doesn't use the epoch-local event iterator.
+ */
+bool
+TraceManager::random_accessor::good(void) const {
+	return fin &&
+		(epoch_iter != tracefile.contents.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if TRACE_ENTRY_START_INDEX
+/**
+	\param ei event_index, MUST be valid, not checked here.
+	\return a reference to the indexed entry.
+	The caller should NOT store the reference long, it is at best
+		short-lived, and thus should be copied.
+ */
+const event_trace_point&
+TraceManager::random_accessor::operator [] (const size_t ei) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("ei = " << ei << endl);
+	INVARIANT(ei < _total_entries);
+	const size_t si = epoch_iter->start_index;
+	if ((ei >= si) && (ei < si +tracefile.current_chunk.event_count())) {
+		// hit in same epoch
+		const size_t offset = ei - si;
+		return tracefile.current_chunk.get_event(offset);
+	} else {
+		// lookup by epoch
+		trace_file_contents::const_iterator
+			e_iter(std::upper_bound(tracefile.contents.begin(),
+				tracefile.contents.end(), ei,
+				trace_file_contents::entry::event_index_less_than()));
+		INVARIANT(e_iter != tracefile.contents.begin());
+		--e_iter;
+		STACKTRACE_INDENT_PRINT("epoch: " <<
+			distance(tracefile.contents.begin(), e_iter) << endl);
+		INVARIANT(e_iter != epoch_iter);	// else we would've hit
+		epoch_iter = e_iter;
+		fin.seekg(start_of_epochs + epoch_iter->file_offset);
+		tracefile.current_chunk.read(fin);
+		const size_t offset = ei - epoch_iter->start_index;
+		return tracefile.current_chunk.get_event(offset);
+	}
+}
+#endif	// TRACE_ENTRY_START_INDEX
 
 //=============================================================================
 // explicit template instantiations

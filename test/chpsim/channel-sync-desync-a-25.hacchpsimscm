@@ -1,0 +1,12 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-25.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-25.hacchpsimscm,v 1.1.2.1 2007/03/31 04:40:26 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+
+;; Testing tace entry coun
+
+(hac:chpsim-trace-num-entries "channel-sync-desync-a-05.chpsimtrace")
+

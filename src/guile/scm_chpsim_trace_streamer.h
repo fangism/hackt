@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.h"
-	$Id: scm_chpsim_trace_streamer.h,v 1.1.2.4 2007/03/30 15:47:53 fang Exp $
+	$Id: scm_chpsim_trace_streamer.h,v 1.1.2.5 2007/03/31 04:40:17 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_SCM_CHPSIM_TRACE_STREAMER_H__
@@ -18,8 +18,11 @@ namespace guile_wrap {
  */
 typedef	HAC::SIM::CHPSIM::TraceManager::entry_streamer	scm_chpsim_trace_stream;
 typedef	HAC::SIM::CHPSIM::TraceManager::entry_reverse_streamer
-						scm_chpsim_trace_reverse_stream;
+					scm_chpsim_trace_reverse_stream;
+typedef	HAC::SIM::CHPSIM::TraceManager::random_accessor
+					scm_chpsim_trace_random_accessor;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Run-time type identifier set upon guile's SMOB registration.  
  */
@@ -30,6 +33,10 @@ extern
 const scm_t_bits& raw_chpsim_trace_reverse_stream_tag;
 
 extern
+const scm_t_bits& raw_chpsim_trace_random_accessor_tag;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+extern
 scm_chpsim_trace_stream*
 scm_smob_to_chpsim_trace_stream_ptr(const SCM&);
 
@@ -38,6 +45,11 @@ scm_chpsim_trace_reverse_stream*
 scm_smob_to_chpsim_trace_reverse_stream_ptr(const SCM&);
 
 extern
+scm_chpsim_trace_random_accessor*
+scm_smob_to_chpsim_trace_random_accessor_ptr(const SCM&);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+extern
 void
 raw_chpsim_trace_stream_smob_init(void);
 
@@ -45,6 +57,17 @@ extern
 void
 raw_chpsim_trace_reverse_stream_smob_init(void);
 
+extern
+void
+raw_chpsim_trace_random_accessor_smob_init(void);
+
+/// All of the above
+extern
+void
+raw_chpsim_trace_modes_smob_init(void);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// includes forward-stream, reverse-stream, random-access
 extern
 void
 import_hackt_chpsim_trace_stream_functions(void);
