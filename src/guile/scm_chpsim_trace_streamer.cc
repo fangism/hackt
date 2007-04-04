@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.8 2007/03/31 04:40:17 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.9 2007/04/04 04:31:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -249,6 +249,82 @@ scm_smob_to_chpsim_trace_random_accessor_ptr(const SCM& obj) {
 		SCM_SMOB_DATA(obj));
 }
 
+//=============================================================================
+// chpsim-trace state-change stream SMOB
+
+/**
+	Writeable private tag.  Write once-only please!
+ */
+static
+scm_t_bits __raw_chpsim_state_change_stream_tag;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Public read-only reference/alias.
+ */
+const
+scm_t_bits&
+raw_chpsim_state_change_stream_tag(__raw_chpsim_state_change_stream_tag);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This pattern is repetitive, define as template-bound function
+	using util::memory::deallocation_policy?
+	\return 0 always
+ */
+static
+size_t
+free_raw_chpsim_state_change_stream(SCM obj) {
+	TraceManager::state_change_streamer* ptr =
+		scm_smob_to_chpsim_state_change_stream_ptr(obj);
+	if (ptr) {
+		delete ptr;
+		ptr = NULL;
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return non-zero to indicate success.
+ */
+static
+int
+print_raw_chpsim_state_change_stream(SCM obj, SCM port, scm_print_state* p) {
+	scm_puts("#<raw-chpsim-state-change-stream>", port);
+	// TODO: print something about state?
+	return 1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+raw_chpsim_state_change_stream_smob_init(void) {
+if (!raw_chpsim_state_change_stream_tag) {
+	__raw_chpsim_state_change_stream_tag = 
+		scm_make_smob_type("raw-chpsim-state-change-stream",
+			sizeof(scm_chpsim_state_change_stream));
+	INVARIANT(raw_chpsim_state_change_stream_tag);
+//	scm_set_smob_mark(raw_chpsim_state_change_stream_tag, ...);
+	scm_set_smob_free(raw_chpsim_state_change_stream_tag,
+		free_raw_chpsim_state_change_stream);
+	scm_set_smob_print(raw_chpsim_state_change_stream_tag,
+		print_raw_chpsim_state_change_stream);
+//	scm_set_smob_equalp(raw_chpsim_state_change_stream_tag, ...);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return pointer to trace stream.  
+	\throw C exception if type-assert fails.  
+ */
+scm_chpsim_state_change_stream*
+scm_smob_to_chpsim_state_change_stream_ptr(const SCM& obj) {
+	scm_assert_smob_type(raw_chpsim_state_change_stream_tag, obj);
+	return reinterpret_cast<scm_chpsim_state_change_stream*>(
+		SCM_SMOB_DATA(obj));
+}
+
 //-----------------------------------------------------------------------------
 /**
 	Register all smob types defined in this translation unit.
@@ -258,6 +334,7 @@ raw_chpsim_trace_modes_smob_init(void) {
 	raw_chpsim_trace_stream_smob_init();
 	raw_chpsim_trace_reverse_stream_smob_init();
 	raw_chpsim_trace_random_accessor_smob_init();
+	raw_chpsim_state_change_stream_smob_init();
 }
 
 //=============================================================================
@@ -375,8 +452,27 @@ HAC_GUILE_DEFINE(wrap_open_chpsim_random_accessor, FUNC_NAME, 1, 0, 0,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Opens up a file-handle of state/variable changes.  
+ */
+#define	FUNC_NAME "open-chpsim-state-trace"
+HAC_GUILE_DEFINE(wrap_open_chpsim_state_trace, FUNC_NAME, 1, 0, 0,
+	(SCM trfn),
+"Open a trace file for named @var{trfn} for state-change streaming.") {
+	STACKTRACE_VERBOSE;
+	const std::string peek(scm_to_locale_string(trfn));	// 1.8
+	std::auto_ptr<scm_chpsim_state_change_stream>
+		tf(new scm_chpsim_state_change_stream(peek));
+	SCM ret_smob;
+	SCM_NEWSMOB(ret_smob, raw_chpsim_state_change_stream_tag,
+		tf.release());
+	return ret_smob;
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Predicate.
-	\return true if object is a trace-stream.
+	\return true if object is an event trace-stream.
  */
 #define	FUNC_NAME "chpsim-trace?"
 HAC_GUILE_DEFINE(wrap_chpsim_trace_stream_p, FUNC_NAME, 1, 0, 0, 
@@ -418,12 +514,26 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_random_accessor_p, FUNC_NAME, 1, 0, 0,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Predicate.
+	\return true if object is a trace random-accessor.
+ */
+#define	FUNC_NAME "chpsim-state-trace?"
+HAC_GUILE_DEFINE(wrap_chpsim_state_trace_p, FUNC_NAME, 1, 0, 0, 
+		(SCM obj),
+"Is @var{obj} a chpsim trace file opened in state-change stream mode?") {
+	return make_scm<bool>(
+		SCM_SMOB_PREDICATE(raw_chpsim_state_change_stream_tag, obj));
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
 	\return true if the trace-stream is still valid.  
  */
 #define	FUNC_NAME "chpsim-trace-valid?"
 HAC_GUILE_DEFINE(wrap_chpsim_trace_stream_valid_p, FUNC_NAME, 1, 0, 0, 
 		(SCM trfs),
-"Is the trace stream @var{trfs} still valid (entries remain)?") {
+"Is the event trace stream @var{trfs} still valid (entries remain)?") {
 	STACKTRACE_VERBOSE;
 	const scm_chpsim_trace_stream* const ptr =
 		scm_smob_to_chpsim_trace_stream_ptr(trfs);
@@ -448,22 +558,22 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_reverse_stream_valid_p, FUNC_NAME, 1, 0, 0,
 #undef	FUNC_NAME
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Predicate.
-	\return true if the trace-stream is still valid (always).  
+	\return true if the trace-stream is still valid.  
  */
-#define	FUNC_NAME "chpsim-trace-accessor-valid?"
-HAC_GUILE_DEFINE(wrap_chpsim_trace_random_accessor_valid_p, FUNC_NAME, 1, 0, 0, 
+#define	FUNC_NAME "chpsim-state-trace-valid?"
+HAC_GUILE_DEFINE(wrap_chpsim_state_change_stream_valid_p, FUNC_NAME, 1, 0, 0, 
 		(SCM trfs),
-"Is the trace accessor @var{trfs} still valid?") {
+"Is the state-change trace stream @var{trfs} still valid (entries remain)?") {
 	STACKTRACE_VERBOSE;
-	const scm_chpsim_trace_random_accessor* const ptr =
-		scm_smob_to_chpsim_trace_random_accessor_ptr(trfs);
-	return make_scm<bool>(ptr && ptr->good());	// not defined
+	const scm_chpsim_state_change_stream* const ptr =
+		scm_smob_to_chpsim_state_change_stream_ptr(trfs);
+	return make_scm<bool>(ptr && ptr->good());
 }
 #undef	FUNC_NAME
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #undef	HAC_GUILE_DEFINE
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

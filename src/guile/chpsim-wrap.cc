@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.9 2007/03/31 04:40:16 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.10 2007/04/04 04:31:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -78,6 +78,13 @@ release_chpsim_wrap_resources_at_exit(void) {
 
 //-----------------------------------------------------------------------------
 /**
+	Re-usable constant symbol, can use this in C,C++.  
+	Saves symbol creation and replication.  
+ */
+// HAC_GUILE_SYMBOL(symbol_ack, "ack");
+
+//-----------------------------------------------------------------------------
+/**
 	Prints dump of dot structure to stdout.  
 	\return nothing
 	TODO: somehow pass options to it, SCM arguments?
@@ -97,6 +104,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_dump_graph_alloc, FUNC_NAME, 0, 0, 0, (void),
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Construct an SCM struct from a single event entry from trace.
+	MAINTAINENCE: Keep this consistent with "scm/hackt/chpsim.scm"
  */
 static
 SCM
@@ -105,6 +113,21 @@ scm_from_event_trace_point(const event_trace_point& tp, const size_t i) {
 		scm_cons(make_scm(tp.timestamp), 
 		scm_cons(make_scm(tp.event_id),
 			make_scm(tp.cause_id))));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Converts current state-change entry into SCM object.
+	Basically contains records of reference-value tuples.  
+ */
+static
+SCM
+scm_from_state_trace_point(
+		const TraceManager::state_change_streamer::
+			pseudo_const_iterator_range& tp, 
+		const size_t i) {
+	// TODO: construct structure of references, FINISH_ME
+	return scm_cons(make_scm(i), SCM_EOL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,13 +150,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_trace_entry_to_scm, FUNC_NAME, 1, 0, 0,
 	scm_chpsim_trace_stream* const ptr =
 		scm_smob_to_chpsim_trace_stream_ptr(strm);
 	if (!(ptr && ptr->good())) {
-#if 0
-		scm_misc_error(FUNC_NAME, 
-			"Error: invalid trace stream state.",
-			SCM_EOL);
-#else
 		return SCM_EOL;
-#endif
 	}
 	const event_trace_point& tp(ptr->current_event_record());
 	const SCM ret = scm_from_event_trace_point(tp, ptr->index());
@@ -163,18 +180,44 @@ HAC_GUILE_DEFINE(wrap_chpsim_reverse_trace_entry_to_scm, FUNC_NAME, 1, 0, 0,
 	scm_chpsim_trace_reverse_stream* const ptr =
 		scm_smob_to_chpsim_trace_reverse_stream_ptr(strm);
 	if (!(ptr && ptr->good())) {
-#if 0
-		scm_misc_error(FUNC_NAME, 
-			"Error: invalid trace stream state.",
-			SCM_EOL);
-#else
 		return SCM_EOL;
-#endif
 	}
 	const event_trace_point& tp(ptr->current_event_record());
 	const SCM ret = scm_from_event_trace_point(tp, ptr->index());
 	// alternatively, last pair can be made with SCM_EOL
 	ptr->retreat();	// should never fail, really...
+	return ret;
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reads an state-change entry AND advances one position.
+	This call is usually memoized to avoid accidentally calling twice
+	at the same position.  
+	\param strm a smob corresponding to the opened trace file that
+		we're streaming from.
+	\return scm object representing entry, or end-of-stream marker
+		which is null (SCM_EOL).  
+ */
+#define	FUNC_NAME "current-state-trace-entry"
+HAC_GUILE_DEFINE(wrap_chpsim_state_change_trace_entry_to_scm, 
+	FUNC_NAME, 1, 0, 0, 
+	(SCM strm), local_chpsim_trace_registry, 
+"Interprets the current state-trace entry of the (smob) trace stream @var{str} "
+"*and* advances one position in the stream.") {
+	STACKTRACE_VERBOSE;
+	scm_assert_smob_type(raw_chpsim_state_change_stream_tag, strm);
+	scm_chpsim_state_change_stream* const ptr =
+		scm_smob_to_chpsim_state_change_stream_ptr(strm);
+	if (!(ptr && ptr->good())) {
+		return SCM_EOL;
+	}
+	const TraceManager::state_change_streamer::pseudo_const_iterator_range&
+		tp(ptr->current_state_iter());
+	const SCM ret = scm_from_state_trace_point(tp, ptr->index());
+	// alternatively, last pair can be made with SCM_EOL
+	ptr->advance();	// should never fail, really...
 	return ret;
 }
 #undef	FUNC_NAME

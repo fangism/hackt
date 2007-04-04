@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.5 2007/03/30 15:47:56 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.6 2007/04/04 04:31:29 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -33,6 +33,8 @@
 (use-modules (hackt chpsim-trace-primitives))
 (use-modules (ice-9 streams))
 (use-modules (hackt streams))
+
+;; TODO: use symbolic dispatch
 
 ;; open-chpsim-trace is defined as a primitive in guile/chpsim-wrap.cc
 ;; use it to create a stream to pass to as a trace-stream argument.  
@@ -70,6 +72,21 @@
   ) ; end make-stream
 ) ; end define
 
+(define-public (make-chpsim-state-trace-stream trace-stream)
+"Creates a state-change trace stream from an opened trace file (smob)."
+;; if stream is still valid, note: only evaluate current-trace-entry ONCE!
+  (make-stream
+    (lambda (s) 
+      (let ((p (hac:current-state-trace-entry s)))
+        (if (null? p) '()
+	  (cons p s)
+	) ; end if
+      ) ; end let
+    ) ; end lambda
+    trace-stream
+  ) ; end make-stream
+) ; end define
+
 ; TODO: use symbolic representation of stream type to dispatch accordingly
 (define-public (current-trace-entry strm)
 "Grabs the current trace stream entry, based on the stream type of @var{strm}."
@@ -77,21 +94,32 @@
 		(hac:current-trace-entry strm))
 	((hac:chpsim-trace-reverse? strm)
 		(hac:current-trace-reverse-entry strm))
+	((hac:chpsim-state-trace? strm)
+		(hac:current-state-trace-entry strm))
 	(else (error "Unregistered trace stream type: " strm))
   ) ; end cond
 ) ; end define
 
 ;; convenient combined definition
 (define-public (open-chpsim-trace-stream tf)
-  "Opens the named trace file and returns a stream interface in one fell swoop."
+  "Opens the named trace file and returns a event stream interface 
+in one fell swoop."
   (make-chpsim-trace-stream (hac:open-chpsim-trace tf))
 ) ; end define
 
 (define-public (open-chpsim-trace-reverse-stream tf)
-  "Opens the named trace file and returns a reverse-stream interface "
-"in one fell swoop."
+  "Opens the named trace file and returns a reverse-stream interface 
+in one fell swoop."
   (make-chpsim-trace-reverse-stream (hac:open-chpsim-trace-reverse tf))
 ) ; end define
+
+;; convenient combined definition
+(define-public (open-chpsim-state-trace-stream tf)
+  "Opens the named trace file and returns a state-change stream interface 
+in one fell swoop."
+  (make-chpsim-state-trace-stream (hac:open-chpsim-state-trace tf))
+) ; end define
+
 
 ;; These struct accessors must be kept consistent with the construct
 ;; used in guile/chpsim-wrap.cc's wrap_chpsim_trace_entry_to_scm.

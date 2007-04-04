@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-22:
+	  Added sim/chpsim/TraceIterators.h for handy state-change
+		trace iterator classes (defined as nested).  
+	  Implemented most of state-change trace stream interface.
+	  Next: consider replacing hac:bool-tag constants with
+		SCM symbols like 'hac:bool-tag.  
+	  TODO: finish state-change to SCM constructor.
+		utility scm functions to operate on state-change stream.
+
+
 2007-03-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-21:

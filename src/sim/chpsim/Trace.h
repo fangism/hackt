@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2.6.4 2007/03/31 04:40:22 fang Exp $
+	$Id: Trace.h,v 1.2.6.5 2007/04/04 04:31:31 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -22,6 +22,7 @@
 	Define to 1 to record the first index of the event
 	in each epoch in the table of contents. 
 	Rationale: to facilitate random access and seekability.  
+	Status: stable, tested, can perm it.
  */
 #define	TRACE_ENTRY_START_INDEX		1
 
@@ -198,6 +199,24 @@ struct state_trace_point_base {
 	ostream&
 	dump(ostream&) const;
 
+	/**
+		Ordering comparator.  
+		Since data_array is appended in increasing order of
+		event_indices.  
+	 */
+	struct event_index_less_than {
+		bool
+		operator () (const state_trace_point_base& l, 
+			const trace_index_type r) const {
+			return l.event_index < r;
+		}
+
+		bool
+		operator () (const trace_index_type l,
+			const state_trace_point_base& r) {
+			return l < r.event_index;
+		}
+	};	// end struct event_index_less_than
 };	// end struct state_trace_point_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -244,6 +263,19 @@ protected:
 	typedef	typename extractor_policy::value_type	value_type;
 	typedef	state_trace_point<Tag>		data_type;
 	typedef	std::vector<data_type>		data_array_type;
+protected:
+	typedef	typename data_array_type::const_iterator
+					iter_type;
+	/**
+		Iterator that only conditionally increments.  
+		Useful for emulating a stream of state changes.  
+	 */
+	struct __pseudo_const_iterator;
+	struct __pseudo_const_iterator_range;
+
+	typedef	std::pair<iter_type, iter_type>	__pseudo_const_iterator_pair;
+
+protected:
 	data_array_type				data_array;
 
 //	state_trace_window_base();
@@ -279,10 +311,31 @@ protected:
 		for subsequent time windows.  So don't delete this yet!
  */
 class state_trace_time_window : 
-		public state_trace_window_base<bool_tag>,
-		public state_trace_window_base<int_tag>,
-		public state_trace_window_base<enum_tag>,
-		public state_trace_window_base<channel_tag> {
+		protected state_trace_window_base<bool_tag>,
+		protected state_trace_window_base<int_tag>,
+		protected state_trace_window_base<enum_tag>,
+		protected state_trace_window_base<channel_tag> {
+protected:
+	typedef state_trace_window_base<bool_tag>::__pseudo_const_iterator
+				bool_pseudo_const_iterator;
+	typedef state_trace_window_base<int_tag>::__pseudo_const_iterator
+				int_pseudo_const_iterator;
+	typedef state_trace_window_base<enum_tag>::__pseudo_const_iterator
+				enum_pseudo_const_iterator;
+	typedef state_trace_window_base<channel_tag>::__pseudo_const_iterator
+				channel_pseudo_const_iterator;
+
+	typedef state_trace_window_base<bool_tag>::__pseudo_const_iterator_range
+				bool_pseudo_const_iterator_range;
+	typedef state_trace_window_base<int_tag>::__pseudo_const_iterator_range
+				int_pseudo_const_iterator_range;
+	typedef state_trace_window_base<enum_tag>::__pseudo_const_iterator_range
+				enum_pseudo_const_iterator_range;
+	typedef state_trace_window_base<channel_tag>::__pseudo_const_iterator_range
+				channel_pseudo_const_iterator_range;
+public:
+	struct pseudo_const_iterator;
+	struct pseudo_const_iterator_range;
 public:
 	/**
 		Template forwarding function.  
@@ -294,6 +347,14 @@ public:
 		state_trace_window_base<Tag>::__push_back(v, t, g);
 	}
 
+protected:
+	template <class Tag>
+	typename state_trace_window_base<Tag>::pseudo_const_iterator
+	end(void) const {
+		return state_trace_window_base<Tag>::data_array.end();
+	}
+
+public:
 	void
 	write(ostream&) const;
 
@@ -321,6 +382,7 @@ struct trace_chunk :
 	~trace_chunk();
 
 	using event_trace_window::push_back_event;
+	using event_trace_window::end;
 
 	size_t
 	event_count(void) const {
@@ -568,6 +630,7 @@ public:
 	class entry_streamer;
 	class entry_reverse_streamer;
 	class random_accessor;
+	class state_change_streamer;
 
 };	// end class TraceManager
 

@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.h"
-	$Id: scm_chpsim_trace_streamer.h,v 1.1.2.5 2007/03/31 04:40:17 fang Exp $
+	$Id: scm_chpsim_trace_streamer.h,v 1.1.2.6 2007/04/04 04:31:27 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_SCM_CHPSIM_TRACE_STREAMER_H__
@@ -11,16 +11,24 @@
 
 namespace HAC {
 namespace guile_wrap {
+using HAC::SIM::CHPSIM::TraceManager;
+
 //=============================================================================
 /**
 	Heap-allocated object that manages a read-only single pass 
 	of a trace file.
+	These handles provide an interface to the 'events' that occur.  
  */
-typedef	HAC::SIM::CHPSIM::TraceManager::entry_streamer	scm_chpsim_trace_stream;
-typedef	HAC::SIM::CHPSIM::TraceManager::entry_reverse_streamer
+typedef	TraceManager::entry_streamer	scm_chpsim_trace_stream;
+typedef	TraceManager::entry_reverse_streamer
 					scm_chpsim_trace_reverse_stream;
-typedef	HAC::SIM::CHPSIM::TraceManager::random_accessor
-					scm_chpsim_trace_random_accessor;
+typedef	TraceManager::random_accessor	scm_chpsim_trace_random_accessor;
+
+/**
+	The trace handle that provides an interface to the stream
+	of variable and state value changes.  
+ */
+typedef	TraceManager::state_change_streamer	scm_chpsim_state_change_stream;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -35,6 +43,9 @@ const scm_t_bits& raw_chpsim_trace_reverse_stream_tag;
 extern
 const scm_t_bits& raw_chpsim_trace_random_accessor_tag;
 
+extern
+const scm_t_bits& raw_chpsim_state_change_stream_tag;
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
 scm_chpsim_trace_stream*
@@ -48,6 +59,10 @@ extern
 scm_chpsim_trace_random_accessor*
 scm_smob_to_chpsim_trace_random_accessor_ptr(const SCM&);
 
+extern
+scm_chpsim_state_change_stream*
+scm_smob_to_chpsim_state_change_stream_ptr(const SCM&);
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 extern
 void
@@ -60,6 +75,10 @@ raw_chpsim_trace_reverse_stream_smob_init(void);
 extern
 void
 raw_chpsim_trace_random_accessor_smob_init(void);
+
+extern
+void
+raw_chpsim_state_change_stream_smob_init(void);
 
 /// All of the above
 extern

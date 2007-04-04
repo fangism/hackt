@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.6 2007/03/31 04:40:21 fang Exp $
+	$Id: Trace.cc,v 1.3.6.7 2007/04/04 04:31:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -289,6 +289,32 @@ if (data_array.size()) {
 }
 
 //=============================================================================
+// struct state_trace_window_base::__pseudo_const_iterator_range method definitions
+
+/**
+	Find the range over which the referenced variables were
+	modified by event `ti'.  
+	Iterator pair basically inch-worms forward.
+	Boundary conditions OK? (end)
+ */
+template <class Tag>
+void
+state_trace_window_base<Tag>::__pseudo_const_iterator_range::advance(
+		const trace_index_type ti, 
+		const state_trace_window_base<Tag>& w) {
+#if 0
+	p = std::equal_range(p.second, w.data_array.end(), ti, 
+		state_trace_point_base::event_index_less_than());
+#else
+	// more efficient
+	p.first = p.second;
+	p.second = std::upper_bound(p.second, w.data_array.end(), ti, 
+		state_trace_point_base::event_index_less_than());
+#endif
+}
+
+
+//=============================================================================
 // class state_trace_time_window method definitions
 
 void
@@ -326,6 +352,19 @@ state_trace_time_window::dump(ostream& o) const {
 	o << "channel state trace:" << endl;
 	state_trace_window_base<channel_tag>::dump(o);
 	return o;
+}
+
+//=============================================================================
+// struct state_trace_time_window::pseudo_const_iterator_range method definitions
+
+void
+state_trace_time_window::pseudo_const_iterator_range::advance(
+		const trace_index_type ti, 
+		const state_trace_time_window& w) {
+	bool_pseudo_const_iterator_range::advance(ti, w);
+	int_pseudo_const_iterator_range::advance(ti, w);
+	enum_pseudo_const_iterator_range::advance(ti, w);
+	channel_pseudo_const_iterator_range::advance(ti, w);
 }
 
 //=============================================================================
@@ -1015,6 +1054,54 @@ TraceManager::random_accessor::operator [] (const size_t ei) {
 	}
 }
 #endif	// TRACE_ENTRY_START_INDEX
+
+//=============================================================================
+// class TraceManager::state_change_streamer method definitions
+
+/**
+	Do full initialization of parent class, opening stream for forward
+	reading, one epoch at a time.  
+ */
+TraceManager::state_change_streamer::state_change_streamer(const string& fn) :
+		parent_type(fn), state_iter() {
+	if (good()) {
+		begin();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the state-change iterator to the beginning of the chunk.  
+	(Not the same as parent_type::init()
+ */
+void
+TraceManager::state_change_streamer::begin(void) {
+	// this could be combined into a single set operation, who cares...
+	state_iter.begin(tracefile.current_chunk);
+	state_iter.advance(_index, tracefile.current_chunk);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\post if stream is valid, state_iter 'points' to a valid
+		set of modifications.  
+ */
+good_bool
+TraceManager::state_change_streamer::advance(void) {
+	const trace_file_contents::const_iterator last_epoch(epoch_iter);
+	const good_bool ret(parent_type::advance());
+	if (ret.good) {
+		// reference is still good
+		// _index should have incremented
+		if (last_epoch != epoch_iter) {
+			// re-establish the state-iterator
+			begin();
+		} else {
+			state_iter.advance(_index, tracefile.current_chunk);
+		}
+	}
+	return ret;
+}
 
 //=============================================================================
 // explicit template instantiations

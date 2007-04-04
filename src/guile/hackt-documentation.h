@@ -2,7 +2,7 @@
 	\file "guile/hackt-documentation.h"
 	Snarfing and documentation macros, specific to this project.
 	Inspired by lilypond's "lily/include/lily-guile-macros.hh"!
-	$Id: hackt-documentation.h,v 1.1.2.2 2007/03/28 01:58:23 fang Exp $
+	$Id: hackt-documentation.h,v 1.1.2.3 2007/04/04 04:31:25 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_HACKT_DOCUMENTATION_H__
@@ -112,6 +112,21 @@ HAC_GUILE_DEFINE_PUBLIC_WITHOUT_DECL_WITHOUT_PREFIX(			\
 		REQ, OPT, VAR, ARGLIST, REGISTRY, DOCSTRING)		\
 HAC_GUILE_DEFINE_PUBLIC_LINKAGE(FNAME, PRIMNAME, static,		\
 		REQ, OPT, VAR, ARGLIST, REGISTRY, DOCSTRING)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define a 'NAME symbol in scheme, with static linkage.
+	Q: should we prefix symbol with "hac:"?
+	reminder: need ';' after this macro.
+ */
+#define	HAC_GUILE_SYMBOL(C_NAME, SYM_STR)				\
+	SCM_SYMBOL(C_NAME, PREFIX_NAME(SYM_STR))
+
+/**
+	Define a 'NAME symbol in scheme, with external linkage.
+ */
+#define	HAC_GUILE_SYMBOL_PUBLIC(C_NAME, SYM_STR)			\
+	SCM_GLOBAL_SYMBOL(C_NAME, PREFIX_NAME(SYM_STR))
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap

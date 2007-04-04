@@ -1,5 +1,11 @@
 "scm/ChangeLog"
 
+2007-04-03	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-22:
+	  hackt/chpsim-trace.scm: Added support for state-change streams.
+
+
 2007-03-30	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-21:

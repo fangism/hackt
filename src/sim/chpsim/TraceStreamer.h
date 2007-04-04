@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/TraceStreamer.h"
-	$Id: TraceStreamer.h,v 1.1.2.5 2007/03/31 04:40:22 fang Exp $
+	$Id: TraceStreamer.h,v 1.1.2.6 2007/04/04 04:31:35 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -9,7 +9,7 @@
 #ifndef	__HAC_SIM_CHPSIM_TRACESTREAMER_H__
 #define	__HAC_SIM_CHPSIM_TRACESTREAMER_H__
 
-#include "sim/chpsim/Trace.h"
+#include "sim/chpsim/TraceIterators.h"
 #include <fstream>
 #include "util/boolean_types.h"
 
@@ -130,6 +130,40 @@ public:
 	good(void) const;
 
 };	// end class TraceManager::random_accessor
+
+//=============================================================================
+/**
+	This forward stream (slice) indicates what values and state were 
+	changed with each event.  
+	The parent's entry_iter is never used to get entry reference.  
+ */
+class TraceManager::state_change_streamer : protected entry_streamer {
+	typedef	entry_streamer				parent_type;
+public:
+	typedef	state_trace_time_window::pseudo_const_iterator_range
+					pseudo_const_iterator_range;
+protected:
+	pseudo_const_iterator_range			state_iter;
+public:
+	explicit
+	state_change_streamer(const string&);
+
+	// default parent destructor
+
+	using parent_type::index;
+	using parent_type::good;
+
+	good_bool
+	advance(void);
+
+	const pseudo_const_iterator_range&
+	current_state_iter(void) const {
+		return state_iter;
+	}
+private:
+	void
+	begin(void);
+};	// end class TraceManager::entry_streamer
 
 //=============================================================================
 }	// end namespace CHPSIM
