@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.1 2007/02/27 02:28:06 fang Exp $
+	$Id: State-prsim.cc,v 1.2 2007/04/05 17:14:36 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1101,6 +1101,13 @@ State::help_timing(ostream& o) {
 	o << "\trandom [seed]" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
+	o <<
+"Random mode uses a heavy-tailed distribution random-variable for delay, "
+"*except* where a delay is marked with [after=0].\n"
+"Uniform mode ignores all after-delay annotations and uses a fixed delay "
+"for all events, which can be used to count transitions.\n"
+"After mode uses fixed after-annotated delays for timing, and assumes "
+"default delays where none are given." << endl;
 	return o;
 }
 
