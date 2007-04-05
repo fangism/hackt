@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.69 2007/04/05 22:46:59 fang Exp $
+	$Id: BUILDS,v 1.70 2007/04/05 23:39:21 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -322,14 +322,16 @@ readline: none
 (Clint Kelly)
 Version: hackt 0.1.4-devel-20070318
 CVS Tag: HACKT-00-01-04-main-00-81-15
-Configured with: '--disable-docs' '--disable-shared'
+Configured with: '--disable-docs' '--disable-shared' '--with-editline=/usr/local'
 build-triplet: x86_64-redhat-linux-gnu
 c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-3)
+AM_CPPFLAGS: -I. -I/usr/local/include
+AM_LDFLAGS: -L/usr/local/lib
 config-CXXFLAGS: -g -O2
-config-LIBS:   -lncurses
+config-LIBS: -ledit  -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875c
-readline: none
+readline: BSD EditLine (histedit interface) ver. 2.10
 
 
 ===============================================================================
