@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.68 2007/04/05 18:21:16 fang Exp $
+	$Id: BUILDS,v 1.69 2007/04/05 22:46:59 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -272,6 +272,7 @@ yacc: bison (GNU Bison) 1.875c
 readline: GNU readline 4.3
 
 
+// What the hell do you guys have against shared libraries?
 (Virantha Ekanayake)
 Version: hackt 0.1.4-devel-20070318
 CVS Tag: HACKT-00-01-04-main-00-81-15
@@ -298,7 +299,7 @@ readline: none
 
 
 ===============================================================================
-x86_64-suse-linux
+x86_64-*-linux
 
 NOTE: Many subjects in the regression test suite are reported as FAIL, 
 due to size difference in the binary objects as a result of 64b native
@@ -315,6 +316,21 @@ config-LIBS: -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: none
+
+
+// What the hell do you guys have against shared libraries?
+(Clint Kelly)
+Version: hackt 0.1.4-devel-20070318
+CVS Tag: HACKT-00-01-04-main-00-81-15
+Configured with: '--disable-docs' '--disable-shared'
+build-triplet: x86_64-redhat-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-3)
+config-CXXFLAGS: -g -O2
+config-LIBS:   -lncurses
+lex: flex version 2.5.4
+yacc: bison (GNU Bison) 1.875c
+readline: none
+
 
 ===============================================================================
 amd64-unknown-freebsd
