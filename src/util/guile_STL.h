@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.3.2.4 2007/03/28 06:12:01 fang Exp $
+	$Id: guile_STL.h,v 1.3.2.5 2007/04/05 01:04:54 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -166,7 +166,15 @@ struct scm_builder<string> : public unary_function<string, SCM> {
 
 // TODO: finish me
 template <>
-struct scm_extractor<string>;
+struct scm_extractor<string> {
+	good_bool
+	operator () (const SCM& s, string& i) {
+#if FORCE_GUILE_API_1_8
+		i = scm_to_locale_string(s);	// got error handling?
+		return good_bool(true);
+#endif
+	}
+};	// end struct scm_extractor<string>
 
 //-----------------------------------------------------------------------------
 // numerical types

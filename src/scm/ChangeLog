@@ -1,5 +1,12 @@
 "scm/ChangeLog"
 
+2007-04-04	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-23:
+	  hackt/chpsim.scm: replaced bool-tag with 'bool, likewise for
+		other constants-to-symbols.
+
+
 2007-04-03	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-22:

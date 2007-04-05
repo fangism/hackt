@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.168.2.5 2007/04/04 04:31:22 fang Exp $
+#	$Id: Makefile.am,v 1.168.2.6 2007/04/05 01:04:46 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -227,7 +227,8 @@ libhacktguile_la_SOURCES = \
 	guile/hackt-documentation.cc \
 	guile/hackt-documentation.h \
 	guile/scm_reference.cc \
-	guile/scm_reference.h
+	guile/scm_reference.h \
+	guile/devel_switches.h
 libhacktguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 libhacktguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror
@@ -920,6 +921,9 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/main_funcs.h \
 	main/guile.h \
 	main/chpsim-guile.h
+
+guile/libhackt-wrap.hchk: guile/libhackt-wrap.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
 guile/hackt-documentation.hchk: guile/hackt-documentation.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)

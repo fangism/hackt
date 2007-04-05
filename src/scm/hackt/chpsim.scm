@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.5 2007/03/28 06:11:58 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.6 2007/04/05 01:04:52 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -31,10 +31,10 @@
 (define-public (dependence-set-subset t)
   "Dispatches a subset extractor based on tag @var{t}"
   (cond
-    ((= t bool-tag) dependence-set-bools)
-    ((= t int-tag) dependence-set-ints)
-    ((= t enum-tag) dependence-set-enums)
-    ((= t channel-tag) dependence-set-channels)
+    ((= t 'bool) dependence-set-bools)
+    ((= t 'int) dependence-set-ints)
+    ((= t 'enum) dependence-set-enums)
+    ((= t 'channel) dependence-set-channels)
     (else (error "Invalid tag: " t))
   ) ; end cond
 ) ; end define
@@ -47,10 +47,10 @@
   ) ; end define
   ; rr is untagged set of indices, now we pair them up with type tags
   (let ((rr (hac:chpsim-event-may-block-deps-internal ev)))
-    (list (attach-tag bool-tag (dependence-set-bools rr))
-      (attach-tag int-tag (dependence-set-ints rr))
-      (attach-tag enum-tag (dependence-set-enums rr))
-      (attach-tag channel-tag (dependence-set-channels rr))
+    (list (attach-tag 'bool (dependence-set-bools rr))
+      (attach-tag 'int (dependence-set-ints rr))
+      (attach-tag 'enum (dependence-set-enums rr))
+      (attach-tag 'channel (dependence-set-channels rr))
     ) ; end list
   ) ; end let
 ) ; end define

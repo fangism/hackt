@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.3.2.7 2007/03/28 19:36:56 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.3.2.8 2007/04/05 01:04:50 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -16,14 +16,14 @@
 #include "Object/global_channel_entry.h"
 #include "Object/traits/instance_traits.h"
 #include "parser/instref.h"
+#include "guile/devel_switches.h"
 #include "guile/libhackt-wrap.h"
 #include "guile/hackt-config.h"
 #include "guile/hackt-documentation.h"
 #include "guile/scm_reference.h"
-#include "util/libguile.h"
-#include "util/guile_STL.h"
 #include "util/tokenize.h"
 #include "util/memory/excl_malloc_ptr.h"
+#include "util/guile_STL.h"
 #include "util/stacktrace.h"
 #include "util/for_all.h"
 #include "util/caller.h"
@@ -40,6 +40,7 @@
 namespace HAC {
 namespace guile_wrap {
 #include "util/using_ostream.h"
+using std::string;
 using std::transform;
 using std::ostringstream;
 using entity::module;
@@ -81,6 +82,25 @@ std::vector<scm_init_func_type>		hackt_primitives_registry;
 #define	HAC_GUILE_DEFINE(FNAME, PRIMNAME, REQ, OPT, VAR, ARGLIST, DOCSTRING) \
 HAC_GUILE_DEFINE_PUBLIC(FNAME, PRIMNAME, REQ, OPT, 			\
 	VAR, ARGLIST, hackt_primitives_registry, DOCSTRING)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SCM_USE_SYMBOLIC_TYPE_TAGS
+/**
+	Unique SCM symbols 'bool, 'int...
+	To be initialized...
+	Should be publicly read-only.
+ */
+SCM
+scm_type_symbols[HAC::entity::META_TYPES_ALL] = { NULL };
+
+
+/**
+	This map performs reverse lookup, using the pointer
+	to a permanent symbol as the key.  
+	This is populated during procedure-loading initialization, below.  
+ */
+scm_symbol_to_enum_map_type		scm_symbol_to_enum_map;
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if HAVE_ATEXIT
@@ -129,7 +149,7 @@ HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0,
 "Parses a reference string @var{sref} as it might appear in HAC source, "
 "type-checks it, and returns a (type . index) pair.") {
 	STACKTRACE_VERBOSE;
-	scm_assert_string(sref, FUNC_NAME, 1);
+	scm_assert_string(sref, FUNC_NAME, 1);	// redundant
 	const char* peek = scm_to_locale_string(sref);	// 1.8
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
@@ -138,7 +158,14 @@ HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0,
 	if (ref.first && ref.second) {
 		// would like to translate first (type)
 		// into a scm quoted tag, like 'bool-tag
-		return scm_cons(make_scm(ref.first), 
+		INVARIANT(ref.first < HAC::entity::META_TYPES_ALL);
+		INVARIANT(scm_type_symbols[ref.first]);
+		return scm_cons(
+#if SCM_USE_SYMBOLIC_TYPE_TAGS
+			scm_type_symbols[ref.first],
+#else
+			make_scm(ref.first), 
+#endif
 			make_scm(ref.second));
 	} else {
 	// PARANOIA: in case C unwinding fails to clean up stack?
@@ -162,10 +189,24 @@ HAC_GUILE_DEFINE(wrap_lookup_reference_aliases, FUNC_NAME, 1, 0, 0, (SCM rpair),
 	STACKTRACE_VERBOSE;
 	scm_assert_pair(rpair, FUNC_NAME, 1);	// redundant?
 	size_t index;
+#if SCM_USE_SYMBOLIC_TYPE_TAGS
+#define	EXTRACT_TYPE_ENUM(rpair, type)					\
+	{								\
+		string s;						\
+		extract_scm(scm_symbol_to_string(SCM_CAR(rpair)), s);	\
+		const scm_symbol_to_enum_map_type::const_iterator	\
+			f(scm_symbol_to_enum_map.find(s));		\
+		INVARIANT(f != scm_symbol_to_enum_map.end());		\
+		type = f->second;					\
+	}
+#else
+#define	EXTRACT_TYPE_ENUM(rpair, index)					\
+	extract_scm(SCM_CAR(rpair), index);
+#endif	// SCM_USE_SYMBOLIC_TYPE_TAGS
 	extract_scm(SCM_CDR(rpair), index);	// already error-handled
 	string_list aliases;
 	size_t type;
-	extract_scm(SCM_CAR(rpair), type);	// already error-handled
+	EXTRACT_TYPE_ENUM(rpair, type);		// already error-handled
 	const module& mod(*obj_module);
 	switch (type) {
 #define	CASE_TYPE(Tag)							\
@@ -203,7 +244,7 @@ HAC_GUILE_DEFINE(wrap_reference_index_to_string, FUNC_NAME, 1, 0, 0,
 	size_t index;
 	extract_scm(SCM_CDR(rpair), index);	// already error-handled
 	size_t type;
-	extract_scm(SCM_CAR(rpair), type);	// already error-handled
+	EXTRACT_TYPE_ENUM(rpair, type);		// already error-handled
 	ostringstream oss;
 	switch (type) {
 #define	CASE_TYPE(Tag)							\
@@ -239,7 +280,7 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 	size_t index;
 	extract_scm(SCM_CDR(rpair), index);	// already error-handled
 	size_t type;
-	extract_scm(SCM_CAR(rpair), type);	// already error-handled
+	EXTRACT_TYPE_ENUM(rpair, type);		// already error-handled
 	const module& mod(*obj_module);
 	const state_manager& sm(mod.get_state_manager());
 	const footprint& topfp(mod.get_footprint());
@@ -273,15 +314,15 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 }	// end namespace guile_wrap
 }	// end namespace HAC
 
+#undef	EXTRACT_TYPE_ENUM
 #undef	HAC_GUILE_DEFINE
 //=============================================================================
 
 BEGIN_C_DECLS
 using namespace HAC::guile_wrap;
-using util::guile::scm_gsubr_type;
+// using util::guile::scm_gsubr_type;
 using util::guile::scm_c_define_exported;
-using util::guile::scm_c_define_gsubr_exported;
-
+// using util::guile::scm_c_define_gsubr_exported;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -297,6 +338,23 @@ __libhackt_guile_init(void* unused) {
 	raw_reference_smob_init();
 	// TODO: raw-reference?
 	// define some global constants
+#if SCM_USE_SYMBOLIC_TYPE_TAGS
+	// like scm_gc_protect without unprotect
+#define	REGISTER_PERMANENT_SYMBOL(Tag)					\
+{									\
+	const SCM sym = scm_permanent_object(				\
+		scm_from_locale_symbol(class_traits<Tag>::tag_name));	\
+	scm_type_symbols[class_traits<Tag>::type_tag_enum_value] = sym;	\
+	scm_symbol_to_enum_map[class_traits<Tag>::tag_name] = 		\
+		class_traits<Tag>::type_tag_enum_value;			\
+}
+	REGISTER_PERMANENT_SYMBOL(bool_tag)		// makes 'bool
+	REGISTER_PERMANENT_SYMBOL(int_tag)		// makes 'int
+	REGISTER_PERMANENT_SYMBOL(enum_tag)		// makes 'enum
+	REGISTER_PERMANENT_SYMBOL(channel_tag)		// makes 'channel
+	REGISTER_PERMANENT_SYMBOL(process_tag)		// makes 'process
+#undef	REGISTER_PERMANENT_SYMBOL
+#else	// SCM_USE_SYMBOLIC_TYPE_TAGS
 	scm_c_define_exported("bool-tag",
 		make_scm<int>(class_traits<bool_tag>::type_tag_enum_value));
 	scm_c_define_exported("int-tag",
@@ -307,6 +365,7 @@ __libhackt_guile_init(void* unused) {
 		make_scm<int>(class_traits<channel_tag>::type_tag_enum_value));
 	scm_c_define_exported("process-tag",
 		make_scm<int>(class_traits<process_tag>::type_tag_enum_value));
+#endif	// SCM_USE_SYMBOLIC_TYPE_TAGS
 
 	init_documentation();		// from "guile/hackt-documentation.h"
 	load_raw_reference_functions();	// from "guile/scm_reference.cc"

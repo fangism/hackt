@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_reference.h"
-	$Id: scm_reference.h,v 1.1.2.3 2007/03/28 19:36:58 fang Exp $
+	$Id: scm_reference.h,v 1.1.2.4 2007/04/05 01:04:51 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -27,6 +27,7 @@ extern
 const scm_reference_union*
 scm_smob_to_raw_reference_ptr(const SCM&);
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// registers the smob type
 extern
 void

@@ -1,7 +1,7 @@
 #!hacguile -b
 !#
 ;; "031a-03.hacscm"
-;;	$Id: 031a-04.hacscm,v 1.1.2.2 2007/03/28 01:58:39 fang Exp $
+;;	$Id: 031a-04.hacscm,v 1.1.2.3 2007/04/05 01:04:59 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 031a.haco-a
 
@@ -12,7 +12,7 @@
   (hac:collect-reference-subinstances (hac:parse-raw-reference "load")))
 
 ; expect two lists of references: processes and non-processes
-(define pl (filter-split (lambda (r) (= process-tag (reference-type r))) refs))
+(define pl (filter-split (lambda (r) (eq? 'process (reference-type r))) refs))
 pl
 ; select the first list
 (car pl)

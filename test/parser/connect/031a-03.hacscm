@@ -1,7 +1,7 @@
 #!hacguile -b
 !#
 ;; "031a-03.hacscm"
-;;	$Id: 031a-03.hacscm,v 1.1.2.2 2007/03/28 01:58:39 fang Exp $
+;;	$Id: 031a-03.hacscm,v 1.1.2.3 2007/04/05 01:04:59 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 031a.haco-a
 
@@ -14,7 +14,7 @@
 (map reference-type refs)
 (map reference-index refs)
 
-(filter (lambda (r) (= process-tag (reference-type r))) refs)
-(filter (lambda (r) (= int-tag (reference-type r))) refs)
-(filter (lambda (r) (= bool-tag (reference-type r))) refs)
+(filter (lambda (r) (eq? 'process (reference-type r))) refs)
+(filter (lambda (r) (eq? 'int (reference-type r))) refs)
+(filter (lambda (r) (eq? 'bool (reference-type r))) refs)
 

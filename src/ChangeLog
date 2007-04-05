@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-23:
+	  Added guile/devel_switches.h for switches:
+		using flag SCM_USE_SYMBOLIC_TYPE_TAGS to replace
+		scm-constants with quoted symbols, such as 'bool.
+	  guile/libhackt-wrap.{h,cc}: added scm_type_symbols array
+		of unique-symbols 'bool, 'int, etc...
+		which initializes the array (and reverse-map) at 
+		procedure-load time.  
+
+
 2007-04-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-22:
