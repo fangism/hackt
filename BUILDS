@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.67 2007/03/18 01:55:11 fang Exp $
+	$Id: BUILDS,v 1.68 2007/04/05 18:21:16 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -265,10 +265,25 @@ CVS Tag: HACKT-00-01-04-main-00-80-30-merged-instance-00-39
 Configured with: '--with-readline' '--enable-fun' '--disable-docs' '-C'
 build-triplet: i686-redhat-linux-gnu
 c++: g++ (GCC) 3.4.3 20041212 (Red Hat 3.4.3-9.EL4)
+config-CXXFLAGS: -g -O2
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875c
 readline: GNU readline 4.3
+
+
+(Virantha Ekanayake)
+Version: hackt 0.1.4-devel-20070318
+CVS Tag: HACKT-00-01-04-main-00-81-15
+Configured with: '--disable-docs' '--prefix=/usr/local/cad' '--disable-shared'
+build-triplet: i686-redhat-linux-gnu
+c++: g++ (GCC) 3.4.6 20060404 (Red Hat 3.4.6-3)
+config-CXXFLAGS: -g -O2
+config-LIBS: -lncurses
+lex: flex version 2.5.4
+yacc: bison (GNU Bison) 1.875c
+readline: none
+
 
 (Nathan Smith)
 Version: hackt 0.1.4-devel-20070121
