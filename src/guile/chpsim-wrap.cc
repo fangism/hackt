@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.12 2007/04/06 03:26:47 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.13 2007/04/06 03:52:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -141,7 +141,6 @@ scm_from_event_trace_point(const event_trace_point& tp, const size_t i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SCM_USE_SYMBOLIC_TYPE_TAGS
 class changed_state_extractor_base {
 protected:
 	const state_manager& 		sm;
@@ -255,7 +254,6 @@ struct changed_state_extractor<channel_tag> :
 			scm_dat);
 	}
 };	// end struct changed_state_extractor
-#endif	// SCM_USE_SYMBOLIC_TYPE_TAGS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.8 2007/04/06 03:26:48 fang Exp $
+	$Id: Trace.cc,v 1.3.6.9 2007/04/06 03:52:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -432,10 +432,8 @@ trace_file_contents::entry::dump(ostream& o) const {
 		"\tchunk size: " << chunk_size << endl;
 	return o;
 #else
-#if TRACE_ENTRY_START_INDEX
-	o << '\t' << start_index;
-#endif
-	o << '\t' << start_time <<
+	o << '\t' << start_index <<
+		'\t' << start_time <<
 		'\t' << file_offset <<
 		'\t'<< chunk_size << endl;
 #endif
@@ -446,9 +444,7 @@ trace_file_contents::entry::dump(ostream& o) const {
 void
 trace_file_contents::entry::write(ostream& o) const {
 	STACKTRACE_VERBOSE;
-#if TRACE_ENTRY_START_INDEX
 	write_value(o, start_index);
-#endif
 	write_value(o, start_time);
 	write_value(o, file_offset);
 	write_value(o, chunk_size);
@@ -459,9 +455,7 @@ trace_file_contents::entry::write(ostream& o) const {
 void
 trace_file_contents::entry::read(istream& i) {
 	STACKTRACE_VERBOSE;
-#if TRACE_ENTRY_START_INDEX
 	read_value(i, start_index);
-#endif
 	read_value(i, start_time);
 	read_value(i, file_offset);
 	read_value(i, chunk_size);
@@ -483,13 +477,8 @@ ostream&
 trace_file_contents::dump(ostream& o) const {
 	o << "Trace file contents: " << entry_array.size() <<
 		" epochs." << endl;
-#if TRACE_ENTRY_START_INDEX
 	o << "\t\tstart\tstart\tfile\tchunk\n"
 		"\tepoch\tindex\ttime\toffset\tsize" << endl;
-#else
-	o << "\t\tstart\tfile\tchunk\n"
-		"\tepoch\ttime\toffset\tsize" << endl;
-#endif
 #if 0
 	for_each(entry_array.begin(), entry_array.end(),
 		bind2nd_argval(mem_fun_ref(&entry::dump), o)
@@ -644,9 +633,7 @@ if (current_chunk.event_count()) {
 	}
 	const trace_time_type start_time = current_chunk.start_time();
 	const streampos old_size = trace_ostream->tellp();
-#if TRACE_ENTRY_START_INDEX
 	const size_t prev = previous_events;
-#endif
 	previous_events += current_chunk.event_count();
 	current_chunk.write(*trace_ostream);
 	trace_ostream->flush();
@@ -654,10 +641,7 @@ if (current_chunk.event_count()) {
 	STACKTRACE_INDENT_PRINT("chunk written to offsets [" << old_size <<
 		':' << trace_payload_size << "]." << endl);
 	// append entry to contents
-	contents.push_back(trace_file_contents::entry(
-#if TRACE_ENTRY_START_INDEX
-		prev, 
-#endif
+	contents.push_back(trace_file_contents::entry(prev, 
 		start_time, old_size, trace_payload_size -old_size));
 	// restart chunk, recycling memory (placement dtor and ctor)
 	current_chunk.~trace_chunk();
@@ -1027,7 +1011,6 @@ TraceManager::random_accessor::good(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if TRACE_ENTRY_START_INDEX
 /**
 	\param ei event_index, MUST be valid, not checked here.
 	\return a reference to the indexed entry.
@@ -1062,7 +1045,6 @@ TraceManager::random_accessor::operator [] (const size_t ei) {
 		return tracefile.current_chunk.get_event(offset);
 	}
 }
-#endif	// TRACE_ENTRY_START_INDEX
 
 //=============================================================================
 // class TraceManager::state_change_streamer method definitions

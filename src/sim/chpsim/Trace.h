@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2.6.6 2007/04/06 03:26:49 fang Exp $
+	$Id: Trace.h,v 1.2.6.7 2007/04/06 03:52:39 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -17,14 +17,6 @@
 #include <string>
 #include "Object/nonmeta_variable.h"
 #include "util/memory/excl_ptr.h"
-
-/**
-	Define to 1 to record the first index of the event
-	in each epoch in the table of contents. 
-	Rationale: to facilitate random access and seekability.  
-	Status: stable, tested, can perm it.
- */
-#define	TRACE_ENTRY_START_INDEX		1
 
 namespace HAC {
 namespace SIM {
@@ -411,12 +403,10 @@ public:
 		Each entry represents an epoch (chunk).  
 	 */
 	struct entry {
-#if TRACE_ENTRY_START_INDEX
 		/**
 			The index of the first event in an epoch.  
 		 */
 		size_t				start_index;
-#endif
 		/**
 			Start time of chunk.  
 		 */
@@ -436,15 +426,10 @@ public:
 		size_t				chunk_size;
 
 		entry() { }	// undefined values
-		entry(
-#if TRACE_ENTRY_START_INDEX
-			const size_t i, 
-#endif
+		entry(const size_t i, 
 			const trace_time_type t, const size_t o, 
 			const size_t s) :
-#if TRACE_ENTRY_START_INDEX
 			start_index(i), 
-#endif
 			start_time(t), file_offset(o), chunk_size(s) { }
 
 		// human readable
@@ -457,7 +442,6 @@ public:
 		void
 		read(istream&);
 
-#if TRACE_ENTRY_START_INDEX
 		/**
 			Index comparator functor, for binary search.
 			See std::lower_bound for use context.
@@ -472,8 +456,7 @@ public:
 			operator () (const size_t i, const entry& e) const {
 				return i < e.start_index;
 			}
-		};
-#endif
+		};	// end struct event_index_less_than
 	};	// end struct entry
 private:
 	typedef	vector<entry>			entry_array_type;

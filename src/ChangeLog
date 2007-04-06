@@ -5,6 +5,13 @@
 
 2007-04-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-25:
+	  Quick clean-up only:
+		Perm'd SCM_USE_SYMBOLIC_TYPE_TAGS and TRACE_ENTRY_START_INDEX.
+		Purged unused code in sim/chpsim/TraceIterators.h.
+	  scm/TODO: update: removed completed entries
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-24:
 	  guile/chpsim-wrap.cc: Finished implementing state-change-stream 
 		interface to chpsim trace files.

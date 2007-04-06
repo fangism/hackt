@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_reference.cc"
-	$Id: scm_reference.cc,v 1.1.2.4 2007/04/05 01:04:51 fang Exp $
+	$Id: scm_reference.cc,v 1.1.2.5 2007/04/06 03:52:37 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -181,11 +181,7 @@ struct type_bound_global_reference_maker {
 	SCM
 	operator () (const size_t i) const {
 		return scm_cons(
-#if SCM_USE_SYMBOLIC_TYPE_TAGS
 			scm_type_symbols[type],
-#else
-			make_scm(type),
-#endif
 			make_scm(i));
 	}
 };	// end struct type_bound_global_reference_maker
