@@ -1,0 +1,20 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-31.hacchpsimscm"
+;; copy-modified from "channel-sync-desync-a-28.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: channel-sync-desync-a-31.hacchpsimscm,v 1.1.2.1 2007/04/06 03:26:57 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define x (open-chpsim-state-trace-stream "channel-sync-desync-a-05.chpsimtrace"))
+x
+
+(stream-for-each (lambda (x) (display x) (newline)) x)
+

@@ -1,14 +1,23 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.11 2007/04/05 01:04:48 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.12 2007/04/06 03:26:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include "sim/chpsim/State.h"
-#include "sim/chpsim/Trace.h"
+#include "sim/chpsim/TraceIterators.h"
 // #include "sim/chpsim/graph_options.h"
+#include "Object/traits/instance_traits.h"
+#include "Object/module.h"
+#include "Object/global_channel_entry.h"
+#include "Object/nonmeta_channel_manipulator.h"
+#include "Object/nonmeta_variable.h"
+#include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/type/canonical_generic_datatype.h"
+#include "Object/def/built_in_datatype_def.h"
+#include "Object/def/enum_datatype_def.h"
 #include "util/stacktrace.h"
 #include "util/libguile.h"
 #include "util/guile_STL.h"
@@ -25,8 +34,24 @@ namespace guile_wrap {
 using SIM::CHPSIM::State;
 using SIM::CHPSIM::TraceManager;
 using SIM::CHPSIM::event_trace_point;
+using SIM::CHPSIM::state_trace_window_base;
+using SIM::CHPSIM::state_trace_time_window;
+using entity::canonical_fundamental_chan_type_base;
+using entity::canonical_generic_datatype;
+using entity::datatype_definition_base;
+using entity::built_in_datatype_def;
+using entity::enum_datatype_def;
+using entity::ChannelData;
+using entity::channel_data_reader;
+using entity::state_manager;
+using entity::class_traits;
+using entity::bool_tag;
+using entity::int_tag;
+using entity::enum_tag;
+using entity::channel_tag;
 // using SIM::CHPSIM::graph_options;
 #include "util/using_ostream.h"
+using util::memory::never_ptr;
 using util::guile::scm_assert_string;
 using util::guile::make_scm;
 using util::guile::extract_scm;
@@ -116,18 +141,163 @@ scm_from_event_trace_point(const event_trace_point& tp, const size_t i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SCM_USE_SYMBOLIC_TYPE_TAGS
+class changed_state_extractor_base {
+protected:
+	const state_manager& 		sm;
+
+	explicit
+	changed_state_extractor_base(const state_manager& s) : sm(s) { }
+
+};	// end struct changed_state_extractor_base
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convert a state_trace_point into SCM.  
+ */
+template <class Tag>
+struct changed_state_extractor : protected changed_state_extractor_base {
+	/**
+		\param s the state_manager is unused and not needed.
+	 */
+	explicit
+	changed_state_extractor(const state_manager& s) :
+		changed_state_extractor_base(s) { }
+
+	SCM
+	operator () (const typename state_trace_window_base<Tag>::iter_type::value_type& i) const {
+		return scm_cons(scm_cons(
+			scm_type_symbols[
+				class_traits<Tag>::type_tag_enum_value],
+			make_scm(i.global_index)),
+			make_scm(i.raw_data));
+			// specialize bool for #t and #f? too lazy...
+	}
+};	// end struct changed_state_extractor
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor to conver packed data into list of SCMs.  
+ */
+struct channel_data_scm_extractor {
+	channel_data_reader			reader;
+
+	explicit
+	channel_data_scm_extractor(const ChannelData& d) : reader(d) { }
+
+	/**
+		Temporary 'dirty' implementation.  
+		b/c don't feel like supporting an invasive virtual function.
+		TODO: visitor?
+		For reference, see "Object/nonmeta_channel_manipulator.cc".
+	 */
+	SCM
+	operator () (const canonical_generic_datatype& d) {
+		const never_ptr<const datatype_definition_base>
+			b(d.get_base_def());
+		const never_ptr<const built_in_datatype_def>
+			bd(b.is_a<const built_in_datatype_def>());
+		if (bd) {
+			if (bd == &class_traits<bool_tag>::built_in_definition) {
+				return make_scm(*reader.iter_ref<bool_tag>()++);
+			} else if (bd == &class_traits<int_tag>::built_in_definition) {
+				return make_scm(*reader.iter_ref<int_tag>()++);
+			} else {
+				cerr << "Unexpected built-in data type."
+					<< endl;
+			}
+		} else {
+			const never_ptr<const enum_datatype_def>
+				ed(b.is_a<const enum_datatype_def>());
+			if (ed) {
+				return make_scm(*reader.iter_ref<enum_tag>()++);
+			} else {
+				cerr << "Unexpected built-in data type."
+					<< endl;
+			}
+		}
+		THROW_EXIT;
+	}
+};	// end struct channel_data_scm_extractor
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	specialization for channel
+	Needs module information to extract channels in correct tuple order.
+ */
+template <>
+struct changed_state_extractor<channel_tag> :
+		protected changed_state_extractor_base {
+	explicit
+	changed_state_extractor(const state_manager& s) :
+		changed_state_extractor_base(s) { }
+
+	SCM
+	operator () (const state_trace_window_base<channel_tag>::iter_type::value_type& i) const {
+		// TODO: construct structure of references, FINISH_ME
+		static const SCM scm_ack = scm_permanent_object(
+			scm_from_locale_symbol("ack"));	// 'ack symbol
+		SCM scm_dat = scm_ack;
+		if (i.raw_data.can_receive()) {
+			const canonical_fundamental_chan_type_base::datatype_list_type&
+				cdl(sm.get_pool<channel_tag>()[i.global_index]
+					.channel_type->get_datatype_list());
+			scm_dat = scm_reverse(
+				(*transform(cdl.begin(), cdl.end(),
+					util::guile::scm_list_inserter(), 
+					channel_data_scm_extractor(i.raw_data)))
+				.list);
+		}
+		return scm_cons(scm_cons(
+			scm_type_symbols[
+				class_traits<channel_tag>::type_tag_enum_value],
+			make_scm(i.global_index)),
+			scm_dat);
+	}
+};	// end struct changed_state_extractor
+#endif	// SCM_USE_SYMBOLIC_TYPE_TAGS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+static
+SCM
+__collect_changed_values(
+		const state_trace_time_window::pseudo_const_iterator_range& r, 
+		const state_manager& s) {
+	const typename state_trace_window_base<Tag>::__pseudo_const_iterator_pair&
+		p(r.template get<Tag>());
+	
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("distance = " <<
+		std::distance(p.first, p.second) << endl);
+	// note: construction via forward iteration results in reverse list
+	return (*transform(p.first, p.second, 
+		util::guile::scm_list_inserter(),
+		changed_state_extractor<Tag>(s))).list;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Converts current state-change entry into SCM object.
 	Basically contains records of reference-value tuples.  
+	\param i is the trace-event-index.
+	\param tp is an iterator-paired slice of the state-changed
+		variables for this event (and must be short-lived!)
  */
 static
 SCM
 scm_from_state_trace_point(
 		const TraceManager::state_change_streamer::
 			pseudo_const_iterator_range& tp, 
-		const size_t i) {
-	// TODO: construct structure of references, FINISH_ME
-	return scm_cons(make_scm(i), SCM_EOL);
+		const size_t i, 
+		const state_manager& s) {
+	STACKTRACE_VERBOSE;
+	return scm_cons(make_scm(i), 
+		scm_cons(__collect_changed_values<bool_tag>(tp, s), 
+		scm_cons(__collect_changed_values<int_tag>(tp, s),
+		scm_cons(__collect_changed_values<enum_tag>(tp, s), 
+		scm_cons(__collect_changed_values<channel_tag>(tp, s), 
+			SCM_EOL)))));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -202,8 +372,8 @@ HAC_GUILE_DEFINE(wrap_chpsim_reverse_trace_entry_to_scm, FUNC_NAME, 1, 0, 0,
  */
 #define	FUNC_NAME "current-state-trace-entry"
 HAC_GUILE_DEFINE(wrap_chpsim_state_change_trace_entry_to_scm, 
-	FUNC_NAME, 1, 0, 0, 
-	(SCM strm), local_chpsim_trace_registry, 
+	FUNC_NAME, 1, 0, 0, (SCM strm), 
+	local_chpsim_trace_registry, 
 "Interprets the current state-trace entry of the (smob) trace stream @var{str} "
 "*and* advances one position in the stream.") {
 	STACKTRACE_VERBOSE;
@@ -215,7 +385,8 @@ HAC_GUILE_DEFINE(wrap_chpsim_state_change_trace_entry_to_scm,
 	}
 	const TraceManager::state_change_streamer::pseudo_const_iterator_range&
 		tp(ptr->current_state_iter());
-	const SCM ret = scm_from_state_trace_point(tp, ptr->index());
+	const SCM ret = scm_from_state_trace_point(tp, ptr->index(), 
+		obj_module->get_state_manager());
 	// alternatively, last pair can be made with SCM_EOL
 	ptr->advance();	// should never fail, really...
 	return ret;

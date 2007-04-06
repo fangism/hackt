@@ -1,0 +1,27 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-29.hacchpsimscm"
+;; copy-modified from "channel-sync-desync-a-04.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: channel-sync-desync-a-29.hacchpsimscm,v 1.1.2.1 2007/04/06 03:26:55 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+
+(define x (hac:open-chpsim-state-trace "channel-sync-desync-a-04.chpsimtrace"))
+(define y (make-chpsim-state-trace-stream x))
+
+(stream-car y)
+;; expect first entry
+
+(stream-car (stream-cdr y))
+;; expect second entry
+
+(stream-car (stream-cdr y))
+;; expect second entry!
+
+(for-each (lambda (x) (display x) (newline)) (stream->list y))
+;; expand list of all entries
+

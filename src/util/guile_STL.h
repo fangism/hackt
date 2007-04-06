@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.3.2.5 2007/04/05 01:04:54 fang Exp $
+	$Id: guile_STL.h,v 1.3.2.6 2007/04/06 03:26:51 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -482,6 +482,12 @@ struct scm_list_insert_iterator :
 	 */
 	SCM					list;
 
+	/**
+		Default to constructing an empty list. 
+		Warning: Ignore old-cast expanded from SCM_PACK(x)
+	 */
+	scm_list_insert_iterator() : list(SCM_LIST0) { }
+
 	explicit
 	scm_list_insert_iterator(const SCM& _l) : list(_l) { }
 
@@ -530,8 +536,7 @@ scm_list_inserter(const SCM& l) {
 inline
 scm_list_insert_iterator
 scm_list_inserter(void) {
-	return scm_list_insert_iterator(SCM_LIST0);
-		// ignore old-cast expanded from SCM_PACK(x)
+	return scm_list_insert_iterator();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2.6.5 2007/04/04 04:31:31 fang Exp $
+	$Id: Trace.h,v 1.2.6.6 2007/04/06 03:26:49 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -263,16 +263,14 @@ protected:
 	typedef	typename extractor_policy::value_type	value_type;
 	typedef	state_trace_point<Tag>		data_type;
 	typedef	std::vector<data_type>		data_array_type;
-protected:
-	typedef	typename data_array_type::const_iterator
-					iter_type;
 	/**
 		Iterator that only conditionally increments.  
 		Useful for emulating a stream of state changes.  
 	 */
 	struct __pseudo_const_iterator;
 	struct __pseudo_const_iterator_range;
-
+public:
+	typedef	typename data_array_type::const_iterator	iter_type;
 	typedef	std::pair<iter_type, iter_type>	__pseudo_const_iterator_pair;
 
 protected:

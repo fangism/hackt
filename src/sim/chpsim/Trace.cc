@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3.6.7 2007/04/04 04:31:30 fang Exp $
+	$Id: Trace.cc,v 1.3.6.8 2007/04/06 03:26:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -302,6 +302,8 @@ void
 state_trace_window_base<Tag>::__pseudo_const_iterator_range::advance(
 		const trace_index_type ti, 
 		const state_trace_window_base<Tag>& w) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("trace-entry-index = " << ti << endl);
 #if 0
 	p = std::equal_range(p.second, w.data_array.end(), ti, 
 		state_trace_point_base::event_index_less_than());
@@ -310,6 +312,8 @@ state_trace_window_base<Tag>::__pseudo_const_iterator_range::advance(
 	p.first = p.second;
 	p.second = std::upper_bound(p.second, w.data_array.end(), ti, 
 		state_trace_point_base::event_index_less_than());
+	STACKTRACE_INDENT_PRINT("new distance = " <<
+		std::distance(p.first, p.second) << endl);
 #endif
 }
 
@@ -875,6 +879,7 @@ TraceManager::entry_streamer::init(void) {
  */
 bool
 TraceManager::entry_streamer::good(void) const {
+	STACKTRACE_VERBOSE;
 	return fin &&
 		(epoch_iter != tracefile.contents.end()) &&
 		(event_iter != tracefile.current_chunk.end());
@@ -895,15 +900,19 @@ TraceManager::entry_streamer::current_event_record(void) const {
 	Advances to next entry, iterator-like.
 	\return bad if there are no more events, we've reached end of stream, 
 		and the current_event_record() is thus invalid.  
+	This return value is useless...
  */
 good_bool
 TraceManager::entry_streamer::advance(void) {
+	STACKTRACE_VERBOSE;
 	++event_iter;
 	++_index;
 	if (event_iter == tracefile.current_chunk.end()) {
+		STACKTRACE_INDENT_PRINT("at end of epoch\n");
 		// load next epoch
 		// safety guard, in case user tries to abuse
 		if (epoch_iter != tracefile.contents.end()) {
+			STACKTRACE_INDENT_PRINT("loading next epoch\n");
 			++epoch_iter;
 			if (epoch_iter != tracefile.contents.end()) {
 				tracefile.current_chunk.read(fin);
@@ -1076,6 +1085,7 @@ TraceManager::state_change_streamer::state_change_streamer(const string& fn) :
  */
 void
 TraceManager::state_change_streamer::begin(void) {
+	STACKTRACE_VERBOSE;
 	// this could be combined into a single set operation, who cares...
 	state_iter.begin(tracefile.current_chunk);
 	state_iter.advance(_index, tracefile.current_chunk);
@@ -1088,17 +1098,29 @@ TraceManager::state_change_streamer::begin(void) {
  */
 good_bool
 TraceManager::state_change_streamer::advance(void) {
+	STACKTRACE_VERBOSE;
 	const trace_file_contents::const_iterator last_epoch(epoch_iter);
-	const good_bool ret(parent_type::advance());
+	parent_type::advance();
+	const good_bool ret(parent_type::good());
 	if (ret.good) {
 		// reference is still good
 		// _index should have incremented
 		if (last_epoch != epoch_iter) {
-			// re-establish the state-iterator
+			STACKTRACE_INDENT_PRINT("new epoch\n");
+			// if epoch changed, re-establish the state-iterator
 			begin();
 		} else {
+			STACKTRACE_INDENT_PRINT("same epoch\n");
 			state_iter.advance(_index, tracefile.current_chunk);
 		}
+	} else {
+		STACKTRACE_INDENT_PRINT("fin: " << size_t(bool(fin)) << endl);
+		STACKTRACE_INDENT_PRINT("!end-epoch: " <<
+			size_t(epoch_iter != tracefile.contents.end()) << endl);
+		STACKTRACE_INDENT_PRINT("!end-entry: " <<
+			size_t(event_iter != tracefile.current_chunk.end())
+			<< endl);
+		STACKTRACE_INDENT_PRINT("good? " << size_t(ret.good) << endl);
 	}
 	return ret;
 }

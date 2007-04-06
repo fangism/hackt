@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/TraceIterators.h"
-	$Id: TraceIterators.h,v 1.1.2.1 2007/04/04 04:31:35 fang Exp $
+	$Id: TraceIterators.h,v 1.1.2.2 2007/04/06 03:26:50 fang Exp $
 	Nested iterator class definitions
  */
 
@@ -38,6 +38,7 @@ public:
 	__pseudo_const_iterator(const state_trace_window_base& a) :
 		__iter(a.data_array.begin()) { }
 
+#if 0
 	bool
 	operator == (const iter_type i) const {
 		return this->__iter == i;
@@ -47,6 +48,7 @@ public:
 	operator != (const iter_type i) const {
 		return this->__iter != i;
 	}
+#endif
 
 #if 0
 	void
@@ -59,11 +61,13 @@ public:
 	}
 #endif
 
+#if 0
 	/// \pre __iter is NOT already at end()
 	bool
 	at(const trace_index_type ei) const {
 		return this->__iter->event_index == ei;
 	}
+#endif
 
 };	// end struct __pseudo_const_iterator
 
@@ -125,6 +129,7 @@ struct state_trace_time_window::pseudo_const_iterator :
 		enum_pseudo_const_iterator(e), 
 		channel_pseudo_const_iterator(c) { }
 
+#if 0
 	void
 	begin(const state_trace_time_window& w) {
 		bool_pseudo_const_iterator::begin(w);
@@ -132,6 +137,7 @@ struct state_trace_time_window::pseudo_const_iterator :
 		enum_pseudo_const_iterator::begin(w);
 		channel_pseudo_const_iterator::begin(w);
 	}
+#endif
 
 #if 0
 	void
@@ -163,6 +169,13 @@ struct state_trace_time_window::pseudo_const_iterator_range :
 
 	void
 	advance(const trace_index_type, const state_trace_time_window&);
+
+	template <class Tag>
+	const typename state_trace_window_base<Tag>::__pseudo_const_iterator_pair&
+	get(void) const {
+		return state_trace_window_base<Tag>::__pseudo_const_iterator_range::p;
+	}
+
 #if 0
 	pseudo_const_iterator
 	lower(void) const {
