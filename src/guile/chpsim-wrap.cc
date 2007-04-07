@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.2.2.13 2007/04/06 03:52:34 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.2.2.14 2007/04/07 20:28:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -241,11 +241,12 @@ struct changed_state_extractor<channel_tag> :
 			const canonical_fundamental_chan_type_base::datatype_list_type&
 				cdl(sm.get_pool<channel_tag>()[i.global_index]
 					.channel_type->get_datatype_list());
-			scm_dat = scm_reverse(
+			 // reverse! is destructive, and saves allocation
+			scm_dat = scm_reverse_x(
 				(*transform(cdl.begin(), cdl.end(),
 					util::guile::scm_list_inserter(), 
 					channel_data_scm_extractor(i.raw_data)))
-				.list);
+				.list, SCM_LIST0);
 		}
 		return scm_cons(scm_cons(
 			scm_type_symbols[

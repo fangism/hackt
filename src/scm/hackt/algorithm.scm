@@ -1,5 +1,5 @@
 ;; "hackt/algorithm.scm"
-;;	$Id: algorithm.scm,v 1.1.2.2 2007/03/28 06:11:55 fang Exp $
+;;	$Id: algorithm.scm,v 1.1.2.3 2007/04/07 20:28:44 fang Exp $
 ;; Additional handy algorithms not fund in guile scheme libs.
 
 (define-module (hackt algorithm))
@@ -42,4 +42,29 @@ predicate, the second of which failed the predicate."
   ) ; end let
   ) ; end if
 ) ; end define
+
+;; more 'STL' algorithms
+;; map == transform
+
+;; searching algorithms (using predicates)
+(define-public (list-contains? pred lst)
+"Predicate is true if list contains at least one element that satisfies 
+the predicate.  Implemented as short-circuit: return as soon as true."
+(if (null? lst)
+  #f
+  (if (pred (car lst))
+    #t
+    (list-contains? pred (cdr lst))
+  ) ; end if
+)) ; end if, end define
+; list-find-first
+; list-count
+; search (find matching subsequences)
+; binary-search
+
+; set algorithm (sorted precondition)
+; set-intersection
+; set-union
+; set-difference
+; set-symmetric-difference
 

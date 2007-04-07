@@ -1,0 +1,44 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-34.hacchpsimscm"
+;; copy-modified from "channel-sync-desync-a-33.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: channel-sync-desync-a-34.hacchpsimscm,v 1.1.2.1 2007/04/07 20:28:49 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+
+;; Developing more general query functions...
+
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt algorithm))	; for list-contains?
+(use-modules (hackt hackt))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define x (open-chpsim-state-trace-stream "channel-sync-desync-a-05.chpsimtrace"))
+
+; an equivalent construction
+(define y (chpsim-state-trace-filter-reference x '(channel . 3)))
+(stream-for-each-display-newline y)
+
+; cut out non-channel data
+(define z (chpsim-state-trace-focus-reference y '(channel . 3)))
+(stream-for-each-display-newline z)
+
+; this shows what happens when you don't filter first
+(define w (chpsim-state-trace-focus-reference x '(channel . 3)))
+(stream-for-each-display-newline w)
+
+; now we re-structure z
+(define q
+(cons (list-ref (stream-car z) 1)
+  (stream-map (lambda (e) (cons (car e) (cddr e)))
+    z)
+))
+q
+
+"trace of: "
+(car q)
+"event values: "
+(stream-for-each-display-newline (cdr q))
+

@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.6 2007/04/04 04:31:29 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.7 2007/04/07 20:28:45 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -32,7 +32,9 @@
 ;; (use-modules (hackt hackt-primitives))
 (use-modules (hackt chpsim-trace-primitives))
 (use-modules (ice-9 streams))
+(use-modules (hackt algorithm)) ; for list-contains?
 (use-modules (hackt streams))
+(use-modules (hackt hackt)) ; for reference-equal?, type-tag->offset
 
 ;; TODO: use symbolic dispatch
 
@@ -132,4 +134,72 @@ in one fell swoop."
   "Extracts the trace-entry's static event index" (caddr e))
 (define-public (chpsim-trace-entry-critical e)
   "Extracts the trace-entry's last arriving event index." (cdddr e))
+
+
+;; This section pertains to the state-change stream
+(define-public (chpsim-state-trace-entry-index s)
+  "Extracts the state-trace-entry's event index." (car s))
+(define-public (chpsim-state-trace-entry-subset s tag)
+"General interface to extracting a typed subset of modified state variables
+from a state-change stream, with @var{tag} being a type symbol, such as 'int.  
+Internally, we add 1 to the offset because the first position of the entry is 
+the event index."
+  (list-ref s (1+ (type-tag->offset tag)))
+) ; end define
+
+(define-public (chpsim-state-trace-entry-bools s)
+  "Extracts the bool subset of modified variables from state-trace."
+  (chpsim-state-trace-entry-subset s 'bool)
+)
+(define-public (chpsim-state-trace-entry-ints s)
+  "Extracts the int subset of modified variables from state-trace."
+  (chpsim-state-trace-entry-subset s 'int)
+)
+(define-public (chpsim-state-trace-entry-enums s)
+  "Extracts the snum subset of modified variables from state-trace."
+  (chpsim-state-trace-entry-subset s 'enum)
+)
+(define-public (chpsim-state-trace-entry-channels s)
+  "Extracts the channel subset of modified variables from state-trace."
+  (chpsim-state-trace-entry-subset s 'channel)
+)
+
+(define-public (chpsim-state-trace-filter-reference s rpair)
+"Filters out a state-change trace stream @var{s} to only events that modify a 
+particular reference, @var{rpair}, a type-index pair, e.g. '(int . 4).  
+The stream still retains information for other changes made in the same event, 
+so later processing may choose to filter them out.  The resulting stream is
+just a subset of the input."
+  (stream-filter
+    (lambda (t)
+	; (car e) refers to the reference of the reference-value pair
+	; OPTIMIZATION: since we've already filtered for matching types
+	; we really only need to compare just the index of the pairs.
+      (list-contains? (lambda (e) (reference-equal? (car e) rpair))
+        (chpsim-state-trace-entry-subset t (reference-type rpair))
+      ) ; end list-contains?
+    ) ; end lambda
+  s) ; end stream-filter
+) ; end define
+
+(define-public (chpsim-state-trace-focus-reference s rpair)
+"Not only filters out, but *remaps* the event stream to focus only on the 
+referenced variable @var{rpair} (dropping other changes in the same event).  
+The output stream retains the event-index in car. "
+(stream-map
+  (lambda (x)
+    (cons (chpsim-state-trace-entry-index x)
+	; same OPTIMIZATION comment as in -filter-reference
+      (let ((p (filter (lambda (e) (reference-equal? (car e) rpair))
+          (chpsim-state-trace-entry-subset x (reference-type rpair))
+        ) ; end filter
+        ))
+        (if (null? p) '() (car p))
+	; there can be only one! (or none)
+      ) ; end let
+    ) ; end cons
+  ) ; end lambda
+s) ; end stream-map
+) ; end define
+
 

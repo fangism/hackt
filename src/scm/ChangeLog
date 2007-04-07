@@ -1,5 +1,20 @@
 "scm/ChangeLog"
 
+2007-04-07	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-26:
+	  hackt/algorithm.scm: added list-contains? predicate
+	  hackt/hackt.scm: added type-tag->offset for consistency
+	  hackt/chpsim-trace.scm: added tons of stuff:
+		chpsim-state-trace-entry-subset (based on type-tag)
+		chpsim-state-trace-filter-reference to zoom in on
+			events that affect a particular reference.
+		chpsim-state-strace-focus-reference to prune-away 
+			state changes not referenced.
+	  Added test cases to test suite for new functions.  
+	  Analyses are just over the horizon.  
+
+
 2007-04-04	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-23:
