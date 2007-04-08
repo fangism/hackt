@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.7 2007/04/07 20:28:45 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.8 2007/04/08 21:28:55 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -31,10 +31,12 @@
 ;; we provided this in C++
 ;; (use-modules (hackt hackt-primitives))
 (use-modules (hackt chpsim-trace-primitives))
+(use-modules (hackt chpsim-primitives)) ; for hac:lookup-trace-entry
 (use-modules (ice-9 streams))
 (use-modules (hackt algorithm)) ; for list-contains?
 (use-modules (hackt streams))
-(use-modules (hackt hackt)) ; for reference-equal?, type-tag->offset
+(use-modules (hackt hackt)) ; for reference-equal?
+(use-modules (hackt chpsim)) ; for type-tag->offset
 
 ;; TODO: use symbolic dispatch
 
@@ -202,4 +204,47 @@ The output stream retains the event-index in car. "
 s) ; end stream-map
 ) ; end define
 
+(define-public (chpsim-state-trace-single-reference s rpair)
+"Combines chpsim-state-trace-filter-reference and 
+chpsim-state-trace-focus-reference into a single call, 
+resulting a stream of events that change a single referenced variable
+with their repective values."
+(chpsim-state-trace-focus-reference
+  (chpsim-state-trace-filter-reference s rpair)
+  rpair)
+) ; end define
+
+; not exported (yet), but can be
+(define (chpsim-trace-critical-path-iterator rand-trace entry)
+"Returns the index of the next critical event in the trace."
+  (hac:lookup-trace-entry rand-trace (chpsim-trace-entry-critical entry))
+)
+
+(define-public (chpsim-trace-critical-path-from rand-trace ev)
+"Constructs a critical path stream starting from event index @var{ev} in 
+opened random-access trace handle @var{rand-trace}."
+(make-stream
+    (lambda (s) 
+      (if (null? s) '()
+      (let ((ci (chpsim-trace-critical-path-iterator rand-trace s)))
+	; presumably, the only time when an event is self-referential is 0
+        (if (= (chpsim-state-trace-entry-index s)
+            (chpsim-trace-entry-index ci)) (cons s '())
+	  (cons s ci)
+	) ; end if
+      ) ; end let
+      ) ; end if
+    ) ; end lambda
+    (hac:lookup-trace-entry rand-trace ev)
+  )
+) ; end define
+
+(define-public (chpsim-trace-critical-path tr-name)
+"Reports the precise critical path of events (in reverse-order), given 
+trace-file name @var{tr-name}.  Starts at the last event in trace by default."
+  (chpsim-trace-critical-path-from
+    (hac:open-chpsim-trace-accessor tr-name)
+    (1- (hac:chpsim-trace-num-entries tr-name))
+  )
+) ; end define
 

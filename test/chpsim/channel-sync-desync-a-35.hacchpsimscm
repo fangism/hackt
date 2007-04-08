@@ -1,0 +1,39 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-27.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-35.hacchpsimscm,v 1.1.2.1 2007/04/08 21:28:58 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+
+;; Testing critical path
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define trace-name "channel-sync-desync-a-05.chpsimtrace")
+(define rand-trace (hac:open-chpsim-trace-accessor trace-name))
+(define rev-trace (hac:open-chpsim-trace-reverse trace-name))
+(define rev-trace-stream (make-chpsim-trace-reverse-stream rev-trace))
+(define N (hac:chpsim-trace-num-entries rev-trace))
+"num trace entries:"
+N
+
+(hac:lookup-trace-entry rand-trace 0)
+(hac:lookup-trace-entry rand-trace (1- N))
+
+"reverse-trace:"
+(define R (stream-map (lambda (x) (hac:lookup-trace-entry rand-trace x))
+  (enumerate-interval-reverse-stream 0 (1- N))))
+
+(stream-for-each-display-newline R)
+; expect reverse list
+
+"critical-path:"
+(define crit (chpsim-trace-critical-path trace-name))
+
+(stream-for-each-display-newline crit)
+
+

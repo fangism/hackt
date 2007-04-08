@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_trace_streamer.cc"
-	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.9 2007/04/04 04:31:27 fang Exp $
+	$Id: scm_chpsim_trace_streamer.cc,v 1.1.2.10 2007/04/08 21:28:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -416,15 +416,27 @@ HAC_GUILE_DEFINE(wrap_open_chpsim_reverse_trace, FUNC_NAME, 1, 0, 0, (SCM trfn),
 /**
 	Uses a temporary reverse stream because it is already opened to the
 	last epoch.  
+	\param trf can either be the string naming a tracefile, or a
+		a reverse-opened tracefile.  
  */
 #define	FUNC_NAME "chpsim-trace-num-entries"
 HAC_GUILE_DEFINE(wrap_chpsim_trace_num_entries, FUNC_NAME, 1, 0, 0, (SCM trf),
-"Returns the number of trace event entries in trace file @var{trf}.") {
+"Returns the number of trace event entries in trace file @var{trf}.  "
+"@var{trf} can either be a string naming the tracefile, or an already opened "
+"reverse entry trace handle.") {
+	STACKTRACE_VERBOSE;
+if (scm_is_string(trf)) {
 	const std::string peek(scm_to_locale_string(trf));	// 1.8
 	const std::auto_ptr<scm_chpsim_trace_reverse_stream>
 		tf(new scm_chpsim_trace_reverse_stream(peek));
 //	NEVER_NULL(tf);
 	return make_scm(tf->num_entries());
+} else {
+	// then must be a reverse-stream smob
+	const scm_chpsim_trace_reverse_stream* const tf = 
+		scm_smob_to_chpsim_trace_reverse_stream_ptr(trf);
+	return make_scm(tf->num_entries());
+}
 }
 #undef	FUNC_NAME
 

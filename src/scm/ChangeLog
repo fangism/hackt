@@ -1,5 +1,16 @@
 "scm/ChangeLog"
 
+2007-04-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-27:
+	  hackt/chpsim-trace.scm: added critical path functions
+		chpsim-trace-critical-path[-from] to report
+		precise critical path.  Single test added to test suite.
+	  hackt/hackt.scm -> hackt/chpsim.scm: moved type-tag->offset
+		because the mapping only pertains to chpsim-related tools.
+		Rewrote some dispatchers using type-tag->offset for consistency.
+
+
 2007-04-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-26:
