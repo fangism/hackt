@@ -1,0 +1,8 @@
+// "024.hac"
+// expect fail: redeclare instance as different meta-type
+// contributed by Clint Kelly
+
+defproc globals() { }
+globals g;
+bool g;
+

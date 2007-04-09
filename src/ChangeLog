@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16:
+	  Minor bug fix: lacking diagnostic when redeclaring an instance
+		with different meta-type.  Fixed by catching a std::bad_cast.
+		Added test-case basic/024.
+
+
 2007-03-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15:

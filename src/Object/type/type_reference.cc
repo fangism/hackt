@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.25 2007/03/11 16:34:28 fang Exp $
+ 	$Id: type_reference.cc,v 1.26 2007/04/09 01:25:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -577,9 +577,13 @@ data_type_reference::canonical_compare_result_type
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\throws std::bad_cast if type doesn't match
+ */
 bool
 data_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
@@ -1051,6 +1055,7 @@ builtin_channel_type_reference::index_datatype(const size_t i) const {
 bool
 builtin_channel_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
+	STACKTRACE_VERBOSE;
 	const this_type* const bct(IS_A(const this_type*, &t));
 	return bct ? may_be_collectibly_channel_type_equivalent(*bct) : false;
 }
@@ -1508,9 +1513,13 @@ channel_type_reference::canonical_compare_result_type
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\throws std::bad_cast if type doesn't match
+ */
 bool
 channel_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
@@ -1887,9 +1896,13 @@ process_type_reference::canonical_compare_result_type
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\throws std::bad_cast if type doesn't match
+ */
 bool
 process_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
@@ -2098,9 +2111,13 @@ param_type_reference::make_canonical_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\throws std::bad_cast if type doesn't match
+ */
 bool
 param_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	return must_be_type_equivalent(t);
 }

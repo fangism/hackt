@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.24 2006/10/24 07:26:58 fang Exp $
+ 	$Id: namespace.cc,v 1.25 2007/04/09 01:25:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -22,6 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <numeric>
 #include <string>
+#include <typeinfo>		// for std::bad_cast
 
 #include "util/STL/functional.h"
 #include "util/ptrs_functional.h"
@@ -392,6 +393,8 @@ if (probe) {
 		}
 		// type comparison is conservative, in the 
 		// case of dynamic template parameters.  
+		try {
+			// may throw a bad_cast exception
 		if (!old_type->may_be_collectibly_type_equivalent(*new_type)) {
 			cerr << "ERROR: type of redeclaration of "
 				<< id << " does not match "
@@ -401,7 +404,17 @@ if (probe) {
 			new_type->dump(cerr) << " ERROR!  ";
 			return return_type(NULL);
 		}	// else good to continue
-		
+		} catch (const std::bad_cast& b) {
+			// copied from right above
+			cerr << "ERROR: type of redeclaration of "
+				<< id << " does not match "
+				"previous declaration: " << endl <<
+				"\twas: ";
+			old_type->dump(cerr) << ", got: ";
+			new_type->dump(cerr) << " ERROR!  ";
+			return return_type(NULL);
+		}
+
 		// compare dimensions
 		const size_t p_dim = probe_inst->get_dimensions();
 #if 0
