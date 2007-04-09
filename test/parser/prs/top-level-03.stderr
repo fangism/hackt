@@ -22,5 +22,6 @@ acceptable tokens are:
 	'<' (reduce)
 	'[' (shift)
 	'|' (reduce)
+	'}' (reduce)
 	IMPLIES (reduce)
 	RARROW (reduce)

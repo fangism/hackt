@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-01:
+	  Branchlet to support Clint's proposed PRS annotations.
+	  This revision augmented the prs_and and prs_or syntax to support
+		an (optional) operator-suffix attribute for precharge notation.
+		The tokens, however, are just deleted, and not processed,
+			as per request.  
+		A scant few test expect-fails updated (yacc-only), no changes
+			necessary for bison.  
+
+
 2007-04-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-16:

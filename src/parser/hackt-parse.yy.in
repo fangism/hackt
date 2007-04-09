@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.24 2007/02/26 22:00:57 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.24.6.1 2007/04/09 22:02:51 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2059,15 +2059,28 @@ prs_not
 	;
 
 prs_and
-	: prs_and '&' prs_not
-		{ $$ = new logical_expr($1, $2, $3); }
+	: prs_and '&' prs_operator_attribute_optional prs_not
+		{ $$ = new logical_expr($1, $2, $4); }
 	| prs_not { $$ = $1; }
 	;
 
 prs_or
-	: prs_or '|' prs_and
-		{ $$ = new logical_expr($1, $2, $3); }
+	: prs_or '|' prs_operator_attribute_optional prs_and
+		{ $$ = new logical_expr($1, $2, $4); }
 	| prs_and { $$ = $1; }
+	;
+
+/* even the operators get attributes now... no token left behind! */
+prs_operator_attribute
+	: '{' dir prs_expr '}'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($2); 
+			DELETE_TOKEN($3); DELETE_TOKEN($4); }
+	;
+
+/* for now, no return type yet */
+prs_operator_attribute_optional
+	: prs_operator_attribute
+	|
 	;
 
 /* non-short-circuit AND */
