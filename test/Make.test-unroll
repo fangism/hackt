@@ -1,6 +1,6 @@
 # "Make.test-unroll"
 #	vi: ft=automake
-#	$Id: Make.test-unroll,v 1.5 2007/01/21 06:01:35 fang Exp $
+#	$Id: Make.test-unroll,v 1.5.12.1 2007/04/11 05:22:29 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -174,17 +174,8 @@ echo-unroll-tests: force
 	@$(ECHO) $(HACKT_UNROLL_TEST_SUBJECTS)
 
 clean-unrolltests:
-	-$(RM_PATTERN) "*.hacktobjtest"
 	-$(RM_PATTERN) "*.hacktunrolltest"
 	-$(RM_PATTERN) "*.hacktunrollfailtest"
-	-$(RM_PATTERN) "*.indump"
-	-$(RM_PATTERN) "*.outdump"
-	-$(RM_PATTERN) "*.objdiff"
-	-$(RM_PATTERN) "*.indump-filter"
-	-$(RM_PATTERN) "*.outdump-filter"
-	-$(RM_PATTERN) "*.compileobjdiff"
-	-$(RM_PATTERN) "*.haco"
-	-$(RM_PATTERN) "*.haco-dump"
 	-$(RM_PATTERN) "*.haco-u"
 	-$(RM_PATTERN) "*.haco-u-dump"
 	-$(RM_PATTERN) "*.haco-u-fail"

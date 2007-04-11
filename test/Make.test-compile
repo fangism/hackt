@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.6 2007/02/05 06:40:01 fang Exp $
+#	$Id: Make.test-compile,v 1.6.8.1 2007/04/11 05:22:28 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -323,6 +323,15 @@ echo-parse-tests: force
 	@$(ECHO) $(HACKT_PARSE_TEST_SUBJECTS)
 
 clean-compiletests:
+	-$(RM_PATTERN) "*.haco"
+	-$(RM_PATTERN) "*.hacktobjtest"
+	-$(RM_PATTERN) "*.indump"
+	-$(RM_PATTERN) "*.outdump"
+	-$(RM_PATTERN) "*.objdiff"
+	-$(RM_PATTERN) "*.indump-filter"
+	-$(RM_PATTERN) "*.outdump-filter"
+	-$(RM_PATTERN) "*.haco-dump"
+	-$(RM_PATTERN) "*.compileobjdiff"
 	-$(RM_PATTERN) "*.compiledump"
 	-$(RM_PATTERN) "*.compiledump-filter"
 	-$(RM_PATTERN) "*.compilewarndiff"

@@ -4,9 +4,9 @@
 defproc bogus(bool x, y, z) {
 prs {
 	x -> y-
-}
 subckt {
 	~y -> z+
+}
 }
 }
 

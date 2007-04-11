@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.4 2006/05/06 04:18:36 fang Exp $
+	$Id: node_list.tcc,v 1.4.52.1 2007/04/11 05:22:27 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -163,8 +163,8 @@ void
 node_list<T>::check_list(R& r, 
 		typename R::value_type (T::*f)(A&) const, A& a) const {
 	INVARIANT(r.empty());
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		r.push_back(mem_fun_ref(f)(**i, a));
@@ -183,11 +183,32 @@ void
 node_list<T>::check_list_optional(R& r, 
 		typename R::value_type (T::*f)(A&) const, A& a) const {
 	INVARIANT(r.empty());
-	const_iterator i = this->begin();
-	const const_iterator e = this->end();
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
 		r.push_back((*i) ? mem_fun_ref(f)(**i, a) :
 			typename R::value_type());
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Another check method, but input elements are allowed to 
+	be NULL, in which case, null checked values are *omitted*
+	from the result list.  
+ */
+NODE_LIST_TEMPLATE_SIGNATURE
+template <class R, class A>
+void
+node_list<T>::check_list_omit_null(R& r, 
+		typename R::value_type (T::*f)(A&) const, A& a) const {
+	INVARIANT(r.empty());
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		if (*i) {
+			r.push_back(mem_fun_ref(f)(**i, a));
+		}
 	}
 }
 

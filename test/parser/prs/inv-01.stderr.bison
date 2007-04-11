@@ -18,3 +18,5 @@ acceptable tokens are:
 	'(' (shift)
 	'~' (shift)
 	ID (shift)
+	TREE_LANG (shift)
+	SUBCKT_LANG (shift)

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-03:
+	  Minor fix to prev. patch: tree/subckt language bodies are
+		only nested inside PRS.  
+	  AST/PRS.cc: body::check_build() PRS body items may now be NULL, 
+		as returned by ignored language extension constructs.  
+
+
 2007-04-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-16-PRS-07-02:

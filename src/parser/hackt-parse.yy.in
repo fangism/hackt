@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.24.6.2 2007/04/11 03:50:50 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.24.6.3 2007/04/11 05:22:27 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1456,15 +1456,6 @@ language_body
 		{ WRAP_LIST($2, $3, $4); $$ = new PRS::body($1, $3); }
 	| SPEC_LANG '{' spec_body '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new SPEC::body($1, $3); }
-	/* extensions requested by Clint for forked tool-chain */
-	| TREE_LANG optional_template_arguments_in_angles '{' prs_body '}'
-		{ DELETE_TOKEN($1); DELETE_TOKEN($2);
-		  DELETE_TOKEN($3); DELETE_TOKEN($4); DELETE_TOKEN($5); 
-		  $$ = NULL; }
-	| SUBCKT_LANG '{' prs_body '}'
-		{ DELETE_TOKEN($1); DELETE_TOKEN($2);
-		  DELETE_TOKEN($3); DELETE_TOKEN($4);
-		  $$ = NULL; }
 	;
 
 /* --- Language: CHP --- */
@@ -1934,6 +1925,15 @@ prs_body_item
 	| prs_loop { $$ = $1; }
 	| prs_conditional { $$ = $1; }
 	| prs_macro { $$ = $1; }
+	/* extensions requested by Clint for forked tool-chain */
+	| TREE_LANG optional_template_arguments_in_angles '{' prs_body '}'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($2);
+		  DELETE_TOKEN($3); DELETE_TOKEN($4); DELETE_TOKEN($5); 
+		  $$ = NULL; }
+	| SUBCKT_LANG '{' prs_body '}'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($2);
+		  DELETE_TOKEN($3); DELETE_TOKEN($4);
+		  $$ = NULL; }
 	;
 
 /* looks like a function call */
