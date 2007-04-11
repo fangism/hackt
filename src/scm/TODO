@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.1.2.9 2007/04/06 03:52:37 fang Exp $
+	$Id: TODO,v 1.1.2.10 2007/04/11 03:05:04 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -22,8 +22,9 @@ scm structures for variable sets
 
 trees and sets in scheme library? (associative structures)
 	look into guile's alist (associative list?)
-	also srfi/srfi-1 alist
+	also srfi/srfi-1 alist (use this for now... sucks)
 	They better have red-black-trees or AVL trees somewhere...
+	found MIT-scheme's implementation: port to GOOPS
 
 stream merge algorithms (like set_intersection, set_union, set_difference)
 	precondition: streams already sorted/ordered

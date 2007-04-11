@@ -1,21 +1,27 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.7 2007/04/08 21:28:55 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.8 2007/04/11 03:05:07 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
 
-(define-module (hackt chpsim))
+(define-module (hackt chpsim)
+#:autoload (ice-9 streams) (stream-map)
+#:autoload (hackt streams) (stream-filter enumerate-interval-stream)
+)
 
-(use-modules (hackt hackt-primitives))	; for tag-constants
+; (use-modules (hackt hackt-primitives))	; for tag-constants
 (use-modules (hackt chpsim-primitives))
-(use-modules (hackt streams))
-(use-modules (ice-9 streams))
+; (use-modules (hackt streams))		; now autoloaded
+; (use-modules (ice-9 streams))		; now autoloaded
 
-(define-public (static-event-stream)
+(define (static-event-stream)
   "Represents the set of all statically allocated events as a stream."
   (stream-map (lambda (i) (hac:chpsim-get-event i))
     (enumerate-interval-stream 0 (1- (hac:chpsim-num-events))))
 ) ; end define
+
+; global stream variable, lazy evaluated
+(define-public all-static-events-stream (static-event-stream))
 
 ; this is only defined for chpsim modules, not hackt in general
 (define-public (type-tag->offset t)
@@ -73,5 +79,48 @@ Primitive implementations *should* adhere to this ordering."
 ;      (attach-tag 'channel (dependence-set-channels rr))
 ;    ) ; end list
   ) ; end let
+) ; end define
+
+; filters all selection events, deterministic and nondeterministic
+(define-public (chpsim-filter-static-events-select static-events-stream)
+"Select only selection events out of static event stream.  
+Argument is a stream of static events."
+  (stream-filter (lambda (e) (hac:chpsim-event-select? (cdr e)))
+    static-events-stream)
+) ; end define
+
+(define-public (chpsim-assoc-event-successors static-event-stream)
+"Given a static event stream, produces a set of event-successor pairs 
+(which look like lists).  The resulting list can be viewed as an associative 
+list, with the key being the first element and the value being the rest (cdr)."
+  (stream-map (lambda (e) (cons (car e) (hac:chpsim-event-successors (cdr e))))
+    static-event-stream)
+)
+
+(define-public (chpsim-assoc-event-pred-from-succ succ-assoc-strm)
+"Construct predecessor associations given a stream of associated 
+successor lists.  Each input stream element is an associated list of a 
+static event index paired with its list of successors.  
+May result in multiple associations among predecessors in returned list.  "
+  (stream-map
+    (lambda (a)
+      (map
+        (lambda (b) (cons b (car a)))
+        (cdr a)
+      )
+    )
+  succ-assoc-strm)
+) ; end define
+
+(define-public (chpsim-successor-lists->histogram succ-list)
+"Constructs a zero-initialized associative histogram of successor events 
+visited, based on the input list of associated successor lists."
+  (map
+    (lambda (x)
+      (cons (car x)
+        (map (lambda (y) (cons y 0)) (cdr x))
+      ) ; end cons
+    ) ; end lambda
+  succ-list) ; end map
 ) ; end define
 

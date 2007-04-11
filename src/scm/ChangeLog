@@ -1,5 +1,25 @@
 "scm/ChangeLog"
 
+2007-04-10	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-28:
+	  hackt/algorithm.scm: implemented list-flatten, list-flatten-reverse.
+		re-defined filter-split in terms of srfi-1::partition.
+		list-contains is removed, just use srfi-1::any.
+		implemented find-assoc-ref, using srfi-1::find (on car of elem).
+	  hackt/chpsim-trace.scm: use srfi-1::any, 
+		and hackt::algorithm::find-assoc-ref.
+		NEW: completed branch-selection histogram accumulation:
+			'make-select-branch-histogram'
+	  hackt/chpsim.scm: autoload stream modules now
+		implemented: chpsim-assoc-event-successors, 
+			chpsim-assoc-event-pred-from-succ, 
+			chpsim-successor-lists->histogram
+	  hackt/streams.scm: added
+		nth-stream (a.k.a. stream-ref)
+		stream-of-lists->stream
+
+
 2007-04-08	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-27:

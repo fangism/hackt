@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-04.hacchpsimscm"
-;;	$Id: bool-split-select-a-04.hacchpsimscm,v 1.1.2.2 2007/03/28 01:58:29 fang Exp $
+;;	$Id: bool-split-select-a-04.hacchpsimscm,v 1.1.2.3 2007/04/11 03:05:11 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -10,7 +10,7 @@
 (use-modules (ice-9 streams))
 (use-modules (hackt streams))
 
-(define x (static-event-stream))
+(define x all-static-events-stream)
 
 ; don't forget cdr, because each event is a paired with its index
 "corresponding #successors of all events:"

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.15 2007/04/08 21:28:57 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.16 2007/04/11 03:05:09 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -116,6 +116,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	arbitrate-skip-b-01 \
 	arbitrate-loop-a-01 arbitrate-loop-a-02 arbitrate-loop-a-03 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
+	select-nested-loop-a-03-trace \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
 	select-block-a-01 select-block-a-02 \
 	bool-split-a-01 \
@@ -169,7 +170,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	channel-sync-desync-a-28 channel-sync-desync-a-29 \
 	channel-sync-desync-a-30 channel-sync-desync-a-31 \
 	channel-sync-desync-a-32 channel-sync-desync-a-33 \
-	channel-sync-desync-a-34 channel-sync-desync-a-35
+	channel-sync-desync-a-34 channel-sync-desync-a-35 \
+	select-nested-loop-a-01 select-nested-loop-a-02 \
+	select-nested-loop-a-03 select-nested-loop-a-04
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
@@ -182,10 +185,13 @@ KEEP_CHPSIM_TRACE_FILES = \
 
 # Additional dependencies from known-side effects
 channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
-	@test -f $<
+	@test -f $@
 
 channel-sync-desync-a-05.chpsimtrace: channel-sync-desync-a-05-trace.chpsimrc-out
-	@test -f $<
+	@test -f $@
+
+select-nested-loop-a-03.chpsimtrace: select-nested-loop-a-03-trace.chpsimrc-out
+	@test -f $@
 
 $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
 

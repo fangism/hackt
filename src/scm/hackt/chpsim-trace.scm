@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.8 2007/04/08 21:28:55 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.9 2007/04/11 03:05:06 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -20,6 +20,8 @@
 ;; in other words, we have to export the imports.  :S
 
 (define-module (hackt chpsim-trace)
+#:autoload (srfi srfi-1) (any)
+#:autoload (hackt algorithm) (find-assoc-ref)
 ;;	#:export (make-chpsim-trace-stream
 		;; we need to export what we use, how inconvenient (note above)
 		;; the following are defined by guile/chpsim-wrap.cc
@@ -33,10 +35,9 @@
 (use-modules (hackt chpsim-trace-primitives))
 (use-modules (hackt chpsim-primitives)) ; for hac:lookup-trace-entry
 (use-modules (ice-9 streams))
-(use-modules (hackt algorithm)) ; for list-contains?
 (use-modules (hackt streams))
 (use-modules (hackt hackt)) ; for reference-equal?
-(use-modules (hackt chpsim)) ; for type-tag->offset
+(use-modules (hackt chpsim)) ; for type-tag->offset, all-static-events-stream
 
 ;; TODO: use symbolic dispatch
 
@@ -177,9 +178,9 @@ just a subset of the input."
 	; (car e) refers to the reference of the reference-value pair
 	; OPTIMIZATION: since we've already filtered for matching types
 	; we really only need to compare just the index of the pairs.
-      (list-contains? (lambda (e) (reference-equal? (car e) rpair))
+      (any (lambda (e) (reference-equal? (car e) rpair))
         (chpsim-state-trace-entry-subset t (reference-type rpair))
-      ) ; end list-contains?
+      ) ; end any
     ) ; end lambda
   s) ; end stream-filter
 ) ; end define
@@ -220,6 +221,7 @@ with their repective values."
   (hac:lookup-trace-entry rand-trace (chpsim-trace-entry-critical entry))
 )
 
+;;;;;;;;;;; CRITICAL PATH ANALYSIS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-public (chpsim-trace-critical-path-from rand-trace ev)
 "Constructs a critical path stream starting from event index @var{ev} in 
 opened random-access trace handle @var{rand-trace}."
@@ -246,5 +248,46 @@ trace-file name @var{tr-name}.  Starts at the last event in trace by default."
     (hac:open-chpsim-trace-accessor tr-name)
     (1- (hac:chpsim-trace-num-entries tr-name))
   )
+) ; end define
+
+;;;;;;;;;;; BRANCH FREQUENCY ANALYSIS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-public (make-select-branch-histogram trace-stream)
+"Constructs a histogram of taken branches/selections from event trace stream."
+(let ((select-succ-lists (chpsim-assoc-event-successors (
+    chpsim-filter-static-events-select all-static-events-stream))
+  )) ; end select-succ-lists
+  (let ((ll-histo (chpsim-successor-lists->histogram
+          (stream->list select-succ-lists)))
+        (sorted-assoc-pred (sort-list (stream->list
+            (stream-of-lists->stream
+              (chpsim-assoc-event-pred-from-succ select-succ-lists)))
+          (lambda (s t) (< (car s) (car t)))))
+       )
+(define (count-selects x)
+"Local function.  Increments histogram counter for each occurred select event."
+  (let ((f (find-assoc-ref sorted-assoc-pred x)))
+    (if f (let ((y (find-assoc-ref ll-histo (cdr f))))
+;      (display (car f)) (display ": ") (display (cdr y))
+      (let ((z (find-assoc-ref (cdr y) x)))
+;       (display "++") (display z) (newline)
+        (set-cdr! z (1+ (cdr z)))
+        (let ((p (stream-ref (cdr f) all-static-events-stream)))
+;          (display "p: ") (display p) (newline)
+          (if (hac:chpsim-event-select? (cdr p))
+            ; recurse to predecessor because selections are not 'executed'
+            (count-selects (car p))
+          ) ; end if
+        ) ; end let
+      ) ; end let
+    )) ; end if
+  ) ; end let
+) ; end define
+  (stream-for-each
+    (lambda (e) (count-selects (chpsim-trace-entry-event e)))
+    trace-stream) ; end stream-for-each
+  ll-histo ; return this
+  ) ; end let
+) ; end let
 ) ; end define
 

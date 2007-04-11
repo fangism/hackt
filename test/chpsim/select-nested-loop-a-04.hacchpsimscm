@@ -1,0 +1,33 @@
+#!hacchpsimguile -b
+!#
+;; "select-nested-loop-a-04.hacchpsimscm"
+;; copy-modified from "select-nested-loop-a-03.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: select-nested-loop-a-04.hacchpsimscm,v 1.1.2.1 2007/04/11 03:05:16 fang Exp $
+;; @haco@ select-nested-loop-a.haco-a
+;; @chpsimtrace@ select-nested-loop-a-03.chpsimtrace
+
+;; Testing histogram construction for branch statistics
+
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for find-assoc-ref
+; (use-modules (hackt streams))
+; (use-modules (ice-9 streams))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+
+(define trace-name "select-nested-loop-a-03.chpsimtrace")
+
+; "trace:"
+(define whole-trace (open-chpsim-trace-stream trace-name))
+; (stream-for-each-display-newline whole-trace)
+
+(define ll-histo (make-select-branch-histogram whole-trace))
+"interpret the following:"
+"branch-event-node (successor . count) ..."
+(for-each (lambda (x) (display x) (newline)) ll-histo)
+
+
+

@@ -1,0 +1,65 @@
+#!hacchpsimguile -b
+!#
+;; "select-nested-loop-a-02.hacchpsimscm"
+;; copy-modified from "select-nested-loop-a-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: select-nested-loop-a-02.hacchpsimscm,v 1.1.2.1 2007/04/11 03:05:13 fang Exp $
+;; @haco@ select-nested-loop-a.haco-a
+;; @chpsimtrace@ select-nested-loop-a-03.chpsimtrace
+
+;; Testing histogram construction, using defined functions
+
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for list-flatten
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+
+(define trace-name "select-nested-loop-a-03.chpsimtrace")
+; (define rand-trace (hac:open-chpsim-trace-accessor trace-name))
+
+"critical-path:"
+(define crit (chpsim-trace-critical-path trace-name))
+(stream-for-each-display-newline crit)
+
+; "all static events:"
+; (define all-static-events-stream (static-event-stream))
+; (stream-for-each-display-newline all-static-events-stream)
+
+(define select-events
+  (chpsim-filter-static-events-select all-static-events-stream))
+; "all select-events:"
+; (stream-for-each-display-newline select-events)
+
+; "successors (cdr) of select events (car):"
+(define select-successor-lists (chpsim-assoc-event-successors select-events))
+; (stream-for-each-display-newline select-successor-lists)
+
+"list of successor lists, associated by common predecessor:"
+(define ll (stream->list select-successor-lists))
+ll
+
+"re-structure into branch-predecessor pairs association:"
+(define ll-reverse-assoc-succ
+  (chpsim-assoc-event-pred-from-succ select-successor-lists))
+(stream-for-each-display-newline ll-reverse-assoc-succ)
+
+
+"flatten into single associative list:"
+(define assoc-pred (stream-of-lists->stream ll-reverse-assoc-succ))
+(stream-for-each-display-newline assoc-pred)
+; unordered
+
+"and sort (predecessor cdr is branch):"
+; (set! assoc-pred (sort! assoc-pred (lambda (s t) (< (car s) (car t)))))
+(define sorted-assoc-pred
+  (sort-list (stream->list assoc-pred) (lambda (s t) (< (car s) (car t)))))
+sorted-assoc-pred
+
+"make a zero-initialized histogram from successor-lists:"
+(define ll-histo (chpsim-successor-lists->histogram ll))
+ll-histo
+

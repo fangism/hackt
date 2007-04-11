@@ -1,12 +1,12 @@
 ;;;; "hackt/doc-lib.scm" -- Assorted Functions for generated documentation
-;;;;	$Id: doc-lib.scm,v 1.1.2.1 2007/03/28 06:11:59 fang Exp $
+;;;;	$Id: doc-lib.scm,v 1.1.2.2 2007/04/11 03:05:08 fang Exp $
 ;;;; blatantly ripped from LilyPond source: "scm/documentation-lib.scm"
 ;;;;
 ;;;; This scheme code is to be loaded
 
-(use-modules (oop goops)
+(use-modules (oop goops) ; to define class
 	     (srfi srfi-13)
-	     (srfi srfi-1)
+	     (srfi srfi-1) ; list and search library
 )
 
 ; using GOOPS

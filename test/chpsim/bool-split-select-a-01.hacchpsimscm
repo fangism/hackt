@@ -1,12 +1,12 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-01.hacchpsimscm"
-;;	$Id: bool-split-select-a-01.hacchpsimscm,v 1.1.2.1 2007/03/25 02:25:48 fang Exp $
+;;	$Id: bool-split-select-a-01.hacchpsimscm,v 1.1.2.2 2007/04/11 03:05:09 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
 (use-modules (hackt chpsim))
 (use-modules (ice-9 streams))
 
-(stream-for-each (lambda (x) (display x) (newline)) (static-event-stream))
+(stream-for-each (lambda (x) (display x) (newline)) all-static-events-stream)
 

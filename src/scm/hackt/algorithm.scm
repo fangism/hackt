@@ -1,8 +1,11 @@
 ;; "hackt/algorithm.scm"
-;;	$Id: algorithm.scm,v 1.1.2.3 2007/04/07 20:28:44 fang Exp $
+;;	$Id: algorithm.scm,v 1.1.2.4 2007/04/11 03:05:05 fang Exp $
 ;; Additional handy algorithms not fund in guile scheme libs.
 
-(define-module (hackt algorithm))
+(define-module (hackt algorithm)
+#:autoload (srfi srfi-1) (partition find find-tail any)
+#:autoload (ice-9 receive) (receive)
+)
 
 ; std::accumulate: iteratively applies binary operator over elements (forward)
 (define-public (forward-accumulate binop init lst)
@@ -24,6 +27,18 @@ its second argument"
 ; alias, by default
 (define-public accumulate forward-accumulate)
 
+; flatten list-of-lists
+(define-public (list-flatten lstlst)
+"Converts a list-of-lists into a single flat list."
+  (reverse-accumulate append '() lstlst)
+) ; end define
+
+; flatten list-of-lists
+(define-public (list-flatten-reverse lstlst)
+"Converts a list-of-lists into a single flat list (reverse-constructed)."
+  (accumulate append '() lstlst)
+) ; end define
+
 ;; private definition
 ; (define (filter-split-helper) ...)
 
@@ -32,6 +47,11 @@ its second argument"
 (define-public (filter-split pred lst)
   "Partitions a list into a pair of lists, the first of which satisfied the 
 predicate, the second of which failed the predicate."
+  (receive (sat unsat) ; to capture multi-valued return
+    (partition pred lst)
+    (cons sat unsat)
+  )
+#!
   (if (null? lst) (cons '() '() ) ; return pair of empty lists (true, false)
   (let ((head (car lst))
       (rem (filter-split pred (cdr lst)))) ; yuck, not tail-recursive...
@@ -41,24 +61,70 @@ predicate, the second of which failed the predicate."
     ) ; end if
   ) ; end let
   ) ; end if
+!#
 ) ; end define
 
 ;; more 'STL' algorithms
 ;; map == transform
 
+#!
+(define-public (find-first-sublist pred lst)
+"Finds the sublist of list @var{lst} for which the first element satisfies 
+the predicate, using a plain linear search.  Similar to the 
+srfi-1 `member' procedure.  Returns #f if none found, like assoc-ref."
+  (find-tail pred lst)
+; (if (null? lst)
+;   #f
+;   (let ((this (car lst)))
+;     (if (pred this) lst (find-first pred (cdr lst)))
+;   ) ; end let
+; )
+) ; end define
+!#
+
+#!
+(define-public (find-first pred lst)
+"Finds the first element of the list @var{lst} that satisfies the predicate, 
+using a plain linear search.  Returns #f if none found, like assoc-ref."
+  (find pred lst)
+; (if (null? lst)
+;   #f
+;   (let ((this (car lst)))
+;     (if (pred this) this (find-first pred (cdr lst)))
+;   ) ; end let
+; )
+) ; end define
+!#
+
+#!
 ;; searching algorithms (using predicates)
 (define-public (list-contains? pred lst)
 "Predicate is true if list contains at least one element that satisfies 
 the predicate.  Implemented as short-circuit: return as soon as true."
-(if (null? lst)
-  #f
-  (if (pred (car lst))
-    #t
-    (list-contains? pred (cdr lst))
-  ) ; end if
-)) ; end if, end define
-; list-find-first
-; list-count
+  (any pred lst)
+; (if (null? lst)
+;   #f
+;  (if (pred (car lst))
+;     #t
+;     (list-contains? pred (cdr lst))
+;   ) ; end if
+; )
+) ; end if, end define
+!#
+
+(define-public (find-assoc-ref alst key)
+"Finds the key-value *pair* in an associative list using equal?, given a key.  
+In contrast, assoc-ref returns only the value."
+  (find (lambda (x) (equal? (car x) key)) alst)
+#!
+  (if (null? alst) #f
+    (if (equal? (caar alst) key) (car alst) (assoc-ref-pair (cdr alst) key))
+  )
+!#
+)
+
+; list-find-first: use srfi-1::find
+; list-count: just filter and length
 ; search (find matching subsequences)
 ; binary-search
 

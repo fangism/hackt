@@ -3,17 +3,17 @@
 ;; "channel-sync-desync-a-33.hacchpsimscm"
 ;; copy-modified from "channel-sync-desync-a-31.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: channel-sync-desync-a-33.hacchpsimscm,v 1.1.2.1 2007/04/07 20:28:48 fang Exp $
+;;	$Id: channel-sync-desync-a-33.hacchpsimscm,v 1.1.2.2 2007/04/11 03:05:11 fang Exp $
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
 
 ;; Testing failure to open trace file.
 
 (use-modules (hackt chpsim-trace))
-(use-modules (hackt algorithm))	; for list-contains?
 (use-modules (hackt hackt))
 (use-modules (hackt streams))
 (use-modules (ice-9 streams))
+(use-modules (srfi srfi-1)) ; for any
 
 (define x (open-chpsim-state-trace-stream "channel-sync-desync-a-05.chpsimtrace"))
 x
@@ -24,11 +24,11 @@ x
 ; finds channel.3 modifications
 (define y (stream-filter
   (lambda (s)
-    (list-contains?
+    (any
       channel-3?
 	; caar is the type tag, cdar is the global index
       (chpsim-state-trace-entry-channels s) ; from (hackt chpsim-trace)
-    ) ; end list-contains
+    ) ; end any
   ) ; end lambda
   x) ; end stream-filter
 )
@@ -49,11 +49,11 @@ y))
 ; an equivalent construction
 (define y2 (stream-filter
   (lambda (s)
-    (list-contains?
+    (any
       (lambda (e) (reference-equal? (car e) '(channel . 3)))
 	; caar is the type tag, cdar is the global index
       (chpsim-state-trace-entry-channels s) ; from (hackt chpsim-trace)
-    ) ; end list-contains
+    ) ; end any
   ) ; end lambda
   x) ; end stream-filter
 )

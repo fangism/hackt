@@ -3,15 +3,13 @@
 ;; "channel-sync-desync-a-34.hacchpsimscm"
 ;; copy-modified from "channel-sync-desync-a-33.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: channel-sync-desync-a-34.hacchpsimscm,v 1.1.2.2 2007/04/08 21:28:57 fang Exp $
+;;	$Id: channel-sync-desync-a-34.hacchpsimscm,v 1.1.2.3 2007/04/11 03:05:12 fang Exp $
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
 
 ;; Developing more general query functions...
 
 (use-modules (hackt chpsim-trace))
-(use-modules (hackt algorithm))	; for list-contains?
-; (use-modules (hackt hackt))
 (use-modules (hackt streams))
 (use-modules (ice-9 streams))
 

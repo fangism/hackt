@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.1.2.10 2007/03/31 04:40:19 fang Exp $
+;;	$Id: streams.scm,v 1.1.2.11 2007/04/11 03:05:08 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -21,6 +21,14 @@
 (define-public (cons-stream h t)
   "Constructs a stream from a pair, using delayed evaluation."
   (delay (cons h t)))
+
+(define-public (nth-stream n s)
+  "References the Nth element of the stream."
+  (if (= n 0) (stream-car s) (nth-stream (- n 1) (stream-cdr s)))
+) ; end define
+
+; an alias for nth-stream
+(define-public stream-ref nth-stream)
 
 ;; produces a stream as a filtered subset of the argument stream
 (define-public (stream-filter pred stream)
@@ -83,7 +91,8 @@ then truncates the stream after the second predicate is satisfied."
 ) ; end define
 
 (define-public (stream-accumulate op initial stream)
-  "The accumulate algorithm, adapted for streams."
+  "The accumulate algorithm, adapted for streams.
+@var{op} should be a binary functor."
   (if (stream-null? stream) initial
     (op (stream-car stream) (stream-accumulate op initial (stream-cdr stream)))
   )
@@ -106,6 +115,11 @@ then truncates the stream after the second predicate is satisfied."
   (stream-accumulate stream-concat the-empty-stream strstr)
 ) ; end define
 
+(define-public (stream-of-lists->stream strlst)
+  "Flattens a stream of lists into a single concatenated stream."
+  (stream-accumulate (lambda (x y) (stream-concat (list->stream x) y))
+      (delay the-empty-stream) strlst)
+) ; end define
 
 ;; random utilities
 
