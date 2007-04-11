@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.20.4.1 2007/04/09 22:02:49 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.20.4.2 2007/04/11 03:50:48 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -400,6 +400,8 @@ CHP		"chp"
 HSE		"hse"
 PRS		"prs"
 SPEC		"spec"
+TREE		"tree"
+SUBCKT		"subckt"
 SKIP		"skip"
 ELSE		"else"
 LOG		"log"
@@ -619,6 +621,8 @@ EXPORT		"export"
 {CHP}		{ KEYWORD_UPDATE(*hackt_lval, foo); return CHP_LANG; }
 {HSE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return HSE_LANG; }
 {PRS}		{ KEYWORD_UPDATE(*hackt_lval, foo); return PRS_LANG; }
+{TREE}		{ KEYWORD_UPDATE(*hackt_lval, foo); return TREE_LANG; }
+{SUBCKT}	{ KEYWORD_UPDATE(*hackt_lval, foo); return SUBCKT_LANG; }
 {SPEC}		{ KEYWORD_UPDATE(*hackt_lval, foo); return SPEC_LANG; }
 {SKIP}		{ KEYWORD_UPDATE(*hackt_lval, foo); return SKIP; }
 {ELSE}		{ ELSE_UPDATE(*hackt_lval, foo); return ELSE; }
