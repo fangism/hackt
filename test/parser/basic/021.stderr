@@ -30,6 +30,8 @@ acceptable tokens are:
 	HSE_LANG (shift)
 	PRS_LANG (shift)
 	SPEC_LANG (shift)
+	TREE_LANG (shift)
+	SUBCKT_LANG (shift)
 	DEFINE (reduce)
 	DEFPROC (reduce)
 	DEFCHAN (reduce)
