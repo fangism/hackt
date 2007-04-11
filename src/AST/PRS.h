@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.5 2006/07/17 02:53:30 fang Exp $
+	$Id: PRS.h,v 1.5.44.1 2007/04/11 20:50:07 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -88,14 +88,26 @@ class literal : public inst_ref_expr {
 	/// not const, b/c we may wish to transfer it to macro
 	excl_ptr<const expr_list>			params;
 public:
+	explicit
+	literal(inst_ref_expr*);
+
 	literal(inst_ref_expr*, const expr_list*);
+
 	~literal();
+
+	excl_ptr<inst_ref_expr>&
+	release_reference(void) {
+		return ref;
+	}
 
 	excl_ptr<const token_identifier>
 	extract_identifier(void);
 
 	excl_ptr<const expr_list>
 	extract_parameters(void);
+
+	void
+	attach_parameters(const expr_list*);
 
 	ostream&
 	what(ostream&) const;
@@ -138,7 +150,7 @@ protected:
 public:
 	rule(const attribute_list*, const expr* g, 
 		const char_punctuation_type* a,
-		const inst_ref_expr* rhs, const char_punctuation_type* d);
+		literal* rhs, const char_punctuation_type* d);
 
 	~rule();
 

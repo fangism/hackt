@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.24.6.3 2007/04/11 05:22:27 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.24.6.4 2007/04/11 20:50:07 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -468,7 +468,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_node_position>	'+' '-' '*' '/' '%'
 %type	<_node_position>	'~' '&' '|' '^'
 %type	<_node_position>	'!' '?'
-%type	<_node_position>	'$'
+%type	<_node_position>	'$' '@'
 
 /*
 	the following tokens are defined below because they consist of
@@ -684,6 +684,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_inst_ref_expr>	relative_member_index_expr
 %type	<_inst_ref_expr>	grouped_reference
+%type	<_prs_literal>	prs_literal_base
 %type	<_prs_literal>	prs_literal
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
@@ -1991,9 +1992,9 @@ single_prs
 	/* note: type-check prs_expr as boolean return type */
 	/* conflict: expr can end ID, and prs_expr can start ID, S/R on :: */
 	: prs_rule_attribute_list_in_brackets
-		prs_expr prs_arrow relative_member_index_expr dir
+		prs_expr prs_arrow prs_literal_base dir
 		{ $$ = new PRS::rule($1, $2, $3, $4, $5); }
-	| prs_expr prs_arrow relative_member_index_expr dir
+	| prs_expr prs_arrow prs_literal_base dir
 		{ $$ = new PRS::rule(NULL, $1, $2, $3, $4); }
 	;
 
@@ -2049,10 +2050,22 @@ prs_paren_expr
 		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
+/* internal node annotation, just parsed and ignored for now */
+prs_literal_base
+	: prs_internal_optional relative_member_index_expr
+		{ $$ = new PRS::literal($2); }
+	;
+
 /* the optional expr-list are transistor sizes */
 prs_literal
-	: relative_member_index_expr expr_list_in_angles_optional
-		{ $$ = new PRS::literal($1, $2); }
+	: prs_literal_base expr_list_in_angles_optional
+		{ $$ = $1; $$->attach_parameters($2); }
+	;
+
+/* internal node annotation, just parsed and ignored for now */
+prs_internal_optional
+	: '@' { DELETE_TOKEN($1); }
+	|
 	;
 
 prs_unary_expr

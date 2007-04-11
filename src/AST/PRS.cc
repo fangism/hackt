@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.24.4.1 2007/04/11 05:22:25 fang Exp $
+	$Id: PRS.cc,v 1.24.4.2 2007/04/11 20:50:06 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -106,6 +106,12 @@ literal::literal(inst_ref_expr* r, const expr_list* p) :
 	// params are optional
 }
 
+literal::literal(inst_ref_expr* r) :
+		ref(r), params(NULL) {
+	NEVER_NULL(ref);
+	// params are optional
+}
+
 literal::~literal() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(literal)
@@ -142,6 +148,15 @@ literal::extract_identifier(void) {
 excl_ptr<const expr_list>
 literal::extract_parameters(void) {
 	return params;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param e is exclusivel owned (or freshly allocated).
+ */
+void
+literal::attach_parameters(const expr_list* e) {
+	params = excl_ptr<const expr_list>(e);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,9 +232,9 @@ literal::check_nonmeta_reference(const context& c) const {
 CONSTRUCTOR_INLINE
 rule::rule(const attribute_list* atts, const expr* g, 
 		const char_punctuation_type* a,
-		const inst_ref_expr* rhs, const char_punctuation_type* d) :
+		literal* rhs, const char_punctuation_type* d) :
 		body_item(), attribs(atts), guard(g), arrow(a),
-		r(rhs), dir(d) {
+		r(rhs->release_reference()), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
 }
 

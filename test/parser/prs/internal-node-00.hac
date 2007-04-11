@@ -1,0 +1,12 @@
+// "internal-node-00.hac"
+// testing grammatic extensions to language
+// NOTE: '@' is just ignored, front-end and middle-end don't interpret it
+
+defproc bogus(bool x, y, z, w) {
+prs {
+	x & y		-> @z-
+	~@z & w		-> w-
+}
+}
+
+

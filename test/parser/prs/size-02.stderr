@@ -12,10 +12,10 @@ state	value
 #STATE#	{ [5:5]
 #STATE#	(prs-literal) [6:2]
 #STATE#	=> [6:4]
-#STATE#	(id-expr): b [6:7]
+#STATE#	(prs-literal) [6:7]
 #STATE#	< [6:8]
 in state #STATE#, possible rules are:
-	single_prs : prs_expr prs_arrow relative_member_index_expr . dir  (#RULE#)
+	single_prs : prs_expr prs_arrow prs_literal_base . dir  (#RULE#)
 acceptable tokens are: 
 	'+' (shift)
 	'-' (shift)

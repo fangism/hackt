@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.30.18.1 2007/04/11 03:50:51 fang Exp $
+#	$Id: Makefile.am,v 1.30.18.2 2007/04/11 20:50:10 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -42,7 +42,8 @@ HACKT_PARSE_TEST_PASSES = \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
 	tree-00 tree-01 \
-	subckt-00
+	subckt-00 \
+	internal-node-00
 
 # coincidentally:
 HACKT_UNROLL_TEST_PASSES = $(HACKT_OBJ_TEST_SUBJECTS)

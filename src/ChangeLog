@@ -5,6 +5,15 @@
 
 2007-04-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-16-PRS-07-04:
+	  grammar: allow prs_literal to take an optional '@' prefix
+		for provisional internal-node notation.  
+		Token is just ignored and has no impact on rest of front-end.  
+	  Minor restructuring to AST/PRS.{h,cc} to accomodate 
+		prs_literal_base construction.  
+	  Handful of parse expect-fail tests updated.  
+
+
 	* HACKT-00-01-04-main-00-81-16-PRS-07-03:
 	  Minor fix to prev. patch: tree/subckt language bodies are
 		only nested inside PRS.  
