@@ -5,6 +5,10 @@
 
 2007-04-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-30:
+	  Scheme-only revision: see scm/ChangeLog: rb-tree enhancements.
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-29:
 	  Scheme-only revision: see scm/ChangeLog: new rb-tree implementation.
 

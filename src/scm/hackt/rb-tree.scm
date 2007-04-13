@@ -2,7 +2,7 @@
 "hackt/rb-tree.scm"
 Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-$Id: rb-tree.scm,v 1.1.2.1 2007/04/13 01:55:08 fang Exp $
+$Id: rb-tree.scm,v 1.1.2.2 2007/04/13 03:57:26 fang Exp $
 
 Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -77,6 +77,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 ) ; end define class
 
 (define (make-node key value) (make <rb-tree-node> #:key key #:value value))
+
+(define-public (node-pair node)
+"Use the node as the key and value (node for a set)."
+  (cons (node-key node) (node-value node)))
 
 ;;; The algorithms are left/right symmetric, so abstract "directions"
 ;;; permit code to be used for either symmetry:
@@ -198,21 +202,10 @@ replacing old one."
 ; disable interrupts to prevent structure corruption
 (define without-interrupts call-with-blocked-asyncs
 #!
-  (without-interrupts thunk)
-  (call-with-blocked-asyncs thunk)
-!#
-#!
   ; deprecated
   (mask-signals)
   (thunk)
   (unmask-signals)
-!#
-#!
-  (let ((interrupt-mask (set-interrupt-enables! interrupt-mask/gc-ok)))
-    (thunk)
-    (set-interrupt-enables! interrupt-mask)
-    (noop)
-  ) ; end let
 !#
 ) ; end define
 
@@ -287,31 +280,31 @@ replacing old one."
 			(rotate-! tree w d)
 			(case-4 (get-link- u d)))))))))))
 
-(define-public (rb-tree/lookup tree key default)
-"TODO: this pattern of code can be re-used... accept a thunk."
-  (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
+(define (lookup-node tree key proc default)
   (let ((key=? (tree-key=? tree))
 	(key<? (tree-key<? tree)))
     (let loop ((x (tree-root tree)))
       (cond ((not x) default)
-	    ((key=? key (node-key x)) (node-value x))
+	    ((key=? key (node-key x)) (proc x))
 	    ((key<? key (node-key x)) (loop (node-left x)))
 	    (else (loop (node-right x)))))))
+
+(define-public (rb-tree/lookup tree key default)
+"Return the value associated with @var{key}."
+  (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
+  (lookup-node tree key node-value default)
+)
 
 (define-public (rb-tree/lookup-mutate! tree key proc-1 default)
 "Alter the value associated with key, using procedure @var{proc-1}."
   (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
-  (let ((key=? (tree-key=? tree))
-	(key<? (tree-key<? tree)))
-    (let loop ((x (tree-root tree)))
-      (cond ((not x) default)
-	    ((key=? key (node-key x))
-                (set-node-value! x (proc-1 (node-value x))))
-	    ((key<? key (node-key x)) (loop (node-left x)))
-	    (else (loop (node-right x)))))))
+  (lookup-node tree key
+    (lambda (x) (set-node-value! x (proc-1 (node-value x))))
+    default)
+)
 
 (define-public (rb-tree/copy tree)
-"Create a deep-copy of the tree."
+"Create a deep-copy of the tree nodes."
   (guarantee-rb-tree tree 'RB-TREE/COPY)
   (let ((result (make-rb-tree (tree-key=? tree) (tree-key<? tree))))
     (set-tree-root!
@@ -326,21 +319,25 @@ replacing old one."
 	      node*))))
     result))
 
+
+(define (reduce-visit tree proc-2 default)
+"Reduction visit of all nodes in the tree, O(n)."
+  (let loop ((node (tree-root tree)))
+    (if node
+	(proc-2 (loop (node-left node)) (loop (node-right node)))
+	default)))
+
 (define-public (rb-tree/height tree)
 "Return the maximum depth of the tree, O(n)."
   (guarantee-rb-tree tree 'RB-TREE/HEIGHT)
-  (let loop ((node (tree-root tree)))
-    (if node
-	(+ 1 (max (loop (node-left node)) (loop (node-right node))))
-	0)))
+  (reduce-visit tree (lambda (l r) (1+ (max l r))) 0)
+)
 
 (define-public (rb-tree/size tree)
 "Return number of key-value pairs in tree, O(n)."
   (guarantee-rb-tree tree 'RB-TREE/SIZE)
-  (let loop ((node (tree-root tree)))
-    (if node
-	(+ 1 (loop (node-left node)) (loop (node-right node)))
-	0)))
+  (reduce-visit tree (lambda (l r) (+ 1 l r)) 0)
+)
 
 (define-public (rb-tree/empty? tree)
 "Are there any key-value pairs?"
@@ -361,138 +358,38 @@ replacing old one."
 		    (value=? (node-value nx) (node-value ny))
 		    (loop (next-node nx) (next-node ny))))))))
 
-; TODO: re-use code!
+(define-public (rb-tree/map-nodes tree node-proc)
+"Maps tree-leaves into list, forward iterated."
+  (guarantee-rb-tree tree 'RB-TREE/MAP-NODES)
+  (let ((node (min-node tree)))
+    (if node
+	(let ((result (list (node-proc node))))
+	  (let loop ((node (next-node node)) (prev result))
+	    (if node
+		(let ((pair (list (node-proc node))))
+		  (set-cdr! prev pair)
+		  (loop (next-node node) pair))))
+	  result)
+	'()))
+) ; end define
+
 (define-public (rb-tree->alist tree)
 "Converts tree into a non-sorted associative-list."
   (guarantee-rb-tree tree 'RB-TREE->ALIST)
-  (let ((node (min-node tree)))
-    (if node
-	(let ((result (list (cons (node-key node) (node-value node)))))
-	  (let loop ((node (next-node node)) (prev result))
-	    (if node
-		(let ((pair (list (cons (node-key node) (node-value node)))))
-		  (set-cdr! prev pair)
-		  (loop (next-node node) pair))))
-	  result)
-	'())))
+  (rb-tree/map-nodes tree node-pair)
+) ; end define
 
 (define-public (rb-tree/key-list tree)
+"Return list of keys (sorted)."
   (guarantee-rb-tree tree 'RB-TREE/KEY-LIST)
-  (let ((node (min-node tree)))
-    (if node
-	(let ((result (list (node-key node))))
-	  (let loop ((node (next-node node)) (prev result))
-	    (if node
-		(let ((pair (list (node-key node))))
-		  (set-cdr! prev pair)
-		  (loop (next-node node) pair))))
-	  result)
-	'())))
+  (rb-tree/map-nodes tree node-key)
+) ; end define
 
 (define-public (rb-tree/value-list tree)
-  (guarantee-rb-tree tree 'RB-TREE/DATUM-LIST)
-  (let ((node (min-node tree)))
-    (if node
-	(let ((result (list (node-value node))))
-	  (let loop ((node (next-node node)) (prev result))
-	    (if node
-		(let ((pair (list (node-value node))))
-		  (set-cdr! prev pair)
-		  (loop (next-node node) pair))))
-	  result)
-	'())))
-
-(define-public (rb-tree/min tree default)
-  (guarantee-rb-tree tree 'RB-TREE/MIN)
-  (let ((node (min-node tree)))
-    (if node
-	(node-key node)
-	default)))
-
-(define-public (rb-tree/min-value tree default)
-  (guarantee-rb-tree tree 'RB-TREE/MIN-DATUM)
-  (let ((node (min-node tree)))
-    (if node
-	(node-value node)
-	default)))
-
-(define-public (rb-tree/min-pair tree)
-  (guarantee-rb-tree tree 'RB-TREE/MIN-PAIR)
-  (let ((node (min-node tree)))
-    (and node
-	 (node-pair node))))
-
-(define-public (rb-tree/delete-min! tree default)
-  (guarantee-rb-tree tree 'RB-TREE/DELETE-MIN!)
-  (let ((node (min-node tree)))
-    (if node
-	(let ((key (node-key node)))
-	  (delete-node! tree node)
-	  key)
-	default)))
-
-(define-public (rb-tree/delete-min-value! tree default)
-  (guarantee-rb-tree tree 'RB-TREE/DELETE-MIN-DATUM!)
-  (let ((node (min-node tree)))
-    (if node
-	(let ((value (node-value node)))
-	  (delete-node! tree node)
-	  value)
-	default)))
-
-(define-public (rb-tree/delete-min-pair! tree)
-  (guarantee-rb-tree tree 'RB-TREE/DELETE-MIN-PAIR!)
-  (let ((node (min-node tree)))
-    (and node
-	 (let ((pair (node-pair node)))
-	   (delete-node! tree node)
-	   pair))))
-
-(define-public (rb-tree/max tree default)
-  (guarantee-rb-tree tree 'RB-TREE/MAX)
-  (let ((node (max-node tree)))
-    (if node
-	(node-key node)
-	default)))
-
-(define-public (rb-tree/max-value tree default)
-  (guarantee-rb-tree tree 'RB-TREE/MAX-DATUM)
-  (let ((node (max-node tree)))
-    (if node
-	(node-value node)
-	default)))
-
-(define-public (rb-tree/max-pair tree)
-  (guarantee-rb-tree tree 'RB-TREE/MAX-PAIR)
-  (let ((node (max-node tree)))
-    (and node
-	 (node-pair node))))
-
-(define-public (rb-tree/delete-max! tree default)
-  (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX!)
-  (let ((node (max-node tree)))
-    (if node
-	(let ((key (node-key node)))
-	  (delete-node! tree node)
-	  key)
-	default)))
-
-(define-public (rb-tree/delete-max-value! tree default)
-  (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX-DATUM!)
-  (let ((node (max-node tree)))
-    (if node
-	(let ((value (node-value node)))
-	  (delete-node! tree node)
-	  value)
-	default)))
-
-(define-public (rb-tree/delete-max-pair! tree)
-  (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX-PAIR!)
-  (let ((node (max-node tree)))
-    (and node
-	 (let ((pair (node-pair node)))
-	   (delete-node! tree node)
-	   pair))))
+"Return list of values, in order of appearance by key."
+  (guarantee-rb-tree tree 'RB-TREE/VALUE-LIST)
+  (rb-tree/map-nodes tree node-value)
+) ; end define
 
 (define (min-node tree)
 "Leftmost node of tree."
@@ -511,7 +408,7 @@ replacing old one."
 	     x))))
 
 (define (next-node x)
-"Node iteration."
+"Node forward iteration."
   (if (node-right x)
        (let loop ((x (node-right x)))
 	 (if (node-left x)
@@ -523,7 +420,82 @@ replacing old one."
 	      (loop y)
 	      y)))))
 
-(define-public (node-pair node)
-"Use the node as the key and value (node for a set)."
-  (cons (node-key node) (node-value node)))
+; not used, defined for the hell of it
+(define (prev-node x)
+"Node reverse iteration."
+  (if (node-left x)
+       (let loop ((x (node-left x)))
+	 (if (node-right x)
+	     (loop (node-right x))
+	     x))
+      (let loop ((x x))
+	(let ((y (node-up x)))
+	  (if (and y (eq? x (node-left y)))
+	      (loop y)
+	      y)))))
+
+(define (mm-find tree seek ret-proc root-default)
+  (let ((node (seek tree)))
+    (if node
+	(ret-proc node)
+	root-default))
+)
+
+(define (mm-del tree seek ret-proc root-default)
+  (mm-find tree seek
+    (lambda (node) 
+      (let ((ret (ret-proc node)))
+        (delete-node! tree node)
+	ret)
+    )
+    root-default)
+)
+
+(define-public (rb-tree/min-key tree default)
+  (guarantee-rb-tree tree 'RB-TREE/MIN-KEY)
+  (mm-find tree min-node node-key default))
+
+(define-public (rb-tree/min-value tree default)
+  (guarantee-rb-tree tree 'RB-TREE/MIN-VALUE)
+  (mm-find tree min-node node-value default))
+
+(define-public (rb-tree/min-pair tree)
+  (guarantee-rb-tree tree 'RB-TREE/MIN-PAIR)
+  (mm-find tree min-node node-pair #f))
+
+(define-public (rb-tree/delete-min! tree default)
+  (guarantee-rb-tree tree 'RB-TREE/DELETE-MIN!)
+  (mm-del tree min-node node-key default))
+
+(define-public (rb-tree/delete-min-value! tree default)
+  (guarantee-rb-tree tree 'RB-TREE/DELETE-MIN-VALUE!)
+  (mm-del tree min-node node-value default))
+
+(define-public (rb-tree/delete-min-pair! tree)
+  (guarantee-rb-tree tree 'RB-TREE/DELETE-MIN-PAIR!)
+  (mm-del tree min-node node-pair #f))
+
+(define-public (rb-tree/max-key tree default)
+  (guarantee-rb-tree tree 'RB-TREE/MAX-KEY)
+  (mm-find tree max-node node-key default))
+
+(define-public (rb-tree/max-value tree default)
+  (guarantee-rb-tree tree 'RB-TREE/MAX-VALUE)
+  (mm-find tree max-node node-value default))
+
+(define-public (rb-tree/max-pair tree)
+  (guarantee-rb-tree tree 'RB-TREE/MAX-PAIR)
+  (mm-find tree max-node node-pair #f))
+
+(define-public (rb-tree/delete-max! tree default)
+  (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX!)
+  (mm-del tree max-node node-key default))
+
+(define-public (rb-tree/delete-max-value! tree default)
+  (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX-VALUE!)
+  (mm-del tree max-node node-value default))
+
+(define-public (rb-tree/delete-max-pair! tree)
+  (guarantee-rb-tree tree 'RB-TREE/DELETE-MAX-PAIR!)
+  (mm-del tree max-node node-pair #f))
 

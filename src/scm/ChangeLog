@@ -2,6 +2,12 @@
 
 2007-04-12	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-30:
+	  hackt/rb-tree.scm: re-wrote repetitive procedures using higher
+		levels of abstraction for clarity and brevity.
+		And because I feel like flexing scheme skillz...
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-29:
 	  Added hackt/rb-tree.scm, implementation of red-black tree
 		borrowed from MIT-scheme library, and adapted to guile.

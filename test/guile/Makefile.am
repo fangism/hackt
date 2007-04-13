@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.1 2007/04/13 01:55:10 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.2 2007/04/13 03:57:28 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -31,7 +31,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES =
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
 
 HACKT_GUILE_TEST_SCRIPTS_PASSES = \
-	rb-tree-01 rb-tree-02
+	rb-tree-01 rb-tree-02 rb-tree-03
 
 HACKT_GUILE_TEST_SCRIPTS_FAILURES =
 
