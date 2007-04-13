@@ -1,5 +1,16 @@
 "scm/ChangeLog"
 
+2007-04-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-31:
+	  Re-wrote chpsim histogram analyses to use rb-trees, replacing
+		linear-search associative lists.
+	  Test cases updated with only formatting differences.  
+	  FYI: we favor rb-trees because of linear time set operations
+		on sorted sets.
+	  TODO: rb-tree merge operations, set-intersection/union/difference...
+
+
 2007-04-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-30:

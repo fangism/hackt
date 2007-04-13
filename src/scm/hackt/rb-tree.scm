@@ -2,7 +2,7 @@
 "hackt/rb-tree.scm"
 Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-$Id: rb-tree.scm,v 1.1.2.2 2007/04/13 03:57:26 fang Exp $
+$Id: rb-tree.scm,v 1.1.2.3 2007/04/13 06:19:58 fang Exp $
 
 Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -297,7 +297,7 @@ replacing old one."
 
 (define-public (rb-tree/lookup-mutate! tree key proc-1 default)
 "Alter the value associated with key, using procedure @var{proc-1}."
-  (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
+  (guarantee-rb-tree tree 'RB-TREE/LOOKUP-MUTATE!)
   (lookup-node tree key
     (lambda (x) (set-node-value! x (proc-1 (node-value x))))
     default)
@@ -358,8 +358,8 @@ replacing old one."
 		    (value=? (node-value nx) (node-value ny))
 		    (loop (next-node nx) (next-node ny))))))))
 
-(define-public (rb-tree/map-nodes tree node-proc)
-"Maps tree-leaves into list, forward iterated."
+(define (rb-tree/map-nodes tree node-proc)
+"Maps tree-leaves (nodes) into list, forward iterated."
   (guarantee-rb-tree tree 'RB-TREE/MAP-NODES)
   (let ((node (min-node tree)))
     (if node
@@ -373,11 +373,20 @@ replacing old one."
 	'()))
 ) ; end define
 
+(define-public (rb-tree/map-pairs tree pair-proc)
+"Map tree-leaves (key-value pairs) into list, forward iterated."
+  (rb-tree/map-nodes tree (lambda (n) (pair-proc (node-pair n)))))
+
 (define-public (rb-tree->alist tree)
 "Converts tree into a non-sorted associative-list."
   (guarantee-rb-tree tree 'RB-TREE->ALIST)
   (rb-tree/map-nodes tree node-pair)
 ) ; end define
+
+(define-method (write (obj <rb-tree>) port)
+"Prints red-black tree as an associative list."
+  (write (rb-tree->alist obj) port)
+)
 
 (define-public (rb-tree/key-list tree)
 "Return list of keys (sorted)."

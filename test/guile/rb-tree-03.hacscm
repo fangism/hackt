@@ -2,7 +2,7 @@
 !#
 ;; "rb-tree-03.hacscm"
 ;; vi: ft=scheme
-;;	$Id: rb-tree-03.hacscm,v 1.1.2.1 2007/04/13 03:57:30 fang Exp $
+;;	$Id: rb-tree-03.hacscm,v 1.1.2.2 2007/04/13 06:20:03 fang Exp $
 ;; @haco@ empty.haco-a
 
 (use-modules (hackt rb-tree))
@@ -26,7 +26,7 @@
  ))
  ints)
 
-(rb-tree->alist int-map)
+int-map ; same as converting to alist and displaying
 (rb-tree/height int-map)
 (rb-tree/size int-map)
 (rb-tree/min-key int-map #f)

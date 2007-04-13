@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.9 2007/04/11 03:05:06 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.10 2007/04/13 06:19:56 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -22,6 +22,8 @@
 (define-module (hackt chpsim-trace)
 #:autoload (srfi srfi-1) (any)
 #:autoload (hackt algorithm) (find-assoc-ref)
+#:autoload (hackt rb-tree)
+  (make-rb-tree rb-tree/insert! rb-tree/lookup rb-tree/lookup-mutate!)
 ;;	#:export (make-chpsim-trace-stream
 		;; we need to export what we use, how inconvenient (note above)
 		;; the following are defined by guile/chpsim-wrap.cc
@@ -259,27 +261,35 @@ trace-file name @var{tr-name}.  Starts at the last event in trace by default."
   )) ; end select-succ-lists
   (let ((ll-histo (chpsim-successor-lists->histogram
           (stream->list select-succ-lists)))
-        (sorted-assoc-pred (sort-list (stream->list
-            (stream-of-lists->stream
-              (chpsim-assoc-event-pred-from-succ select-succ-lists)))
-          (lambda (s t) (< (car s) (car t)))))
-       )
+        (sorted-assoc-pred 
+          (let ((pred-map (make-rb-tree = <)))
+	; stuff the pairs into a sorted map
+            (stream-for-each
+              (lambda (s) (rb-tree/insert! pred-map (car s) (cdr s)))
+              (stream-of-lists->stream
+                (chpsim-assoc-event-pred-from-succ select-succ-lists)))
+            pred-map
+          ))
+       ) ; in let
 (define (count-selects x)
 "Local function.  Increments histogram counter for each occurred select event."
-  (let ((f (find-assoc-ref sorted-assoc-pred x)))
-    (if f (let ((y (find-assoc-ref ll-histo (cdr f))))
+  (let ((f (rb-tree/lookup sorted-assoc-pred x #f)))
+    (if f (let ((y (rb-tree/lookup ll-histo f #f)))
 ;      (display (car f)) (display ": ") (display (cdr y))
-      (let ((z (find-assoc-ref (cdr y) x)))
-;       (display "++") (display z) (newline)
-        (set-cdr! z (1+ (cdr z)))
-        (let ((p (stream-ref (cdr f) all-static-events-stream)))
-;          (display "p: ") (display p) (newline)
-          (if (hac:chpsim-event-select? (cdr p))
-            ; recurse to predecessor because selections are not 'executed'
-            (count-selects (car p))
-          ) ; end if
-        ) ; end let
-      ) ; end let
+      (rb-tree/lookup-mutate! y x
+        (lambda (z) 
+;         (display "++") (display z) (newline)
+          (let ((p (stream-ref f all-static-events-stream)))
+;            (display "p: ") (display p) (newline)
+            (if (hac:chpsim-event-select? (cdr p))
+              ; recurse to predecessor because selections are not 'executed'
+              (count-selects (car p))
+            ) ; end if
+          ) ; end let
+          (1+ z)
+        ) ; end lambda
+        #f
+      ) ; end lookup-mutate
     )) ; end if
   ) ; end let
 ) ; end define

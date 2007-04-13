@@ -3,7 +3,7 @@
 ;; "select-nested-loop-a-04.hacchpsimscm"
 ;; copy-modified from "select-nested-loop-a-03.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: select-nested-loop-a-04.hacchpsimscm,v 1.1.2.1 2007/04/11 03:05:16 fang Exp $
+;;	$Id: select-nested-loop-a-04.hacchpsimscm,v 1.1.2.2 2007/04/13 06:20:01 fang Exp $
 ;; @haco@ select-nested-loop-a.haco-a
 ;; @chpsimtrace@ select-nested-loop-a-03.chpsimtrace
 
@@ -17,6 +17,7 @@
 ; (use-modules (hackt streams))
 ; (use-modules (ice-9 streams))
 ; (use-modules (srfi srfi-1))	; for alist (associative lists)
+(use-modules (hackt rb-tree))
 
 (define trace-name "select-nested-loop-a-03.chpsimtrace")
 
@@ -27,7 +28,7 @@
 (define ll-histo (make-select-branch-histogram whole-trace))
 "interpret the following:"
 "branch-event-node (successor . count) ..."
-(for-each (lambda (x) (display x) (newline)) ll-histo)
-
+; ll-histo
+(for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
 
 

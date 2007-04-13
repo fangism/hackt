@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.8 2007/04/11 03:05:07 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.9 2007/04/13 06:19:57 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -7,6 +7,7 @@
 (define-module (hackt chpsim)
 #:autoload (ice-9 streams) (stream-map)
 #:autoload (hackt streams) (stream-filter enumerate-interval-stream)
+#:autoload (hackt rb-tree) (make-rb-tree rb-tree/insert!)
 )
 
 ; (use-modules (hackt hackt-primitives))	; for tag-constants
@@ -101,26 +102,35 @@ list, with the key being the first element and the value being the rest (cdr)."
 "Construct predecessor associations given a stream of associated 
 successor lists.  Each input stream element is an associated list of a 
 static event index paired with its list of successors.  
-May result in multiple associations among predecessors in returned list.  "
+May result in multiple associations among predecessors in returned list.  
+Relies on fact that branch-successors must succeed only a single branch event."
   (stream-map
     (lambda (a)
+; don't make rb-tree yet, just leave as stream of lists
       (map
         (lambda (b) (cons b (car a)))
         (cdr a)
       )
-    )
+    ) ; end lambda
   succ-assoc-strm)
 ) ; end define
 
 (define-public (chpsim-successor-lists->histogram succ-list)
 "Constructs a zero-initialized associative histogram of successor events 
-visited, based on the input list of associated successor lists."
+visited, based on the input list of associated successor lists.  
+Implementation: map-of-maps, using rb-tree."
+(let ((ret-histo (make-rb-tree = <)))
   (map
     (lambda (x)
-      (cons (car x)
-        (map (lambda (y) (cons y 0)) (cdr x))
+      (rb-tree/insert! ret-histo (car x)
+        (let ((sub-histo (make-rb-tree = <)))
+          (for-each (lambda (y) (rb-tree/insert! sub-histo y 0)) (cdr x))
+          sub-histo
+        ) ; end let
       ) ; end cons
     ) ; end lambda
-  succ-list) ; end map
+  succ-list) ; end map, resulting in an alist
+  ret-histo
+) ; end let
 ) ; end define
 
