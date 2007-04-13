@@ -1,0 +1,29 @@
+#!hacguile -b
+!#
+;; "rb-tree-01.hacscm"
+;; vi: ft=scheme
+;;	$Id: rb-tree-02.hacscm,v 1.1.2.1 2007/04/13 01:55:14 fang Exp $
+;; @haco@ empty.haco-a
+
+(use-modules (hackt rb-tree))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define int-map (make-rb-tree = <))
+; int-map
+
+(define ints (enumerate-interval-stream 1 20))
+(stream-for-each (lambda (x) (
+   rb-tree/insert! int-map x (- 31 x)
+ ))
+ ints)
+
+(rb-tree->alist int-map)
+(rb-tree/key-list int-map)
+(rb-tree/value-list int-map)
+
+(rb-tree/lookup int-map 18 #f)
+(rb-tree/lookup int-map 42 #f)
+(rb-tree/lookup-mutate! int-map 18 (lambda (x) (* 2 x)) #f)
+(rb-tree/lookup int-map 18 #f)
+

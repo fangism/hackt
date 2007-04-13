@@ -1,5 +1,14 @@
 "scm/ChangeLog"
 
+2007-04-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-29:
+	  Added hackt/rb-tree.scm, implementation of red-black tree
+		borrowed from MIT-scheme library, and adapted to guile.
+	  Also added a few test cases to test/guile.  
+	  TODO: use rb-tree in place of assoc-lists in analysis library.
+
+
 2007-04-10	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-28:

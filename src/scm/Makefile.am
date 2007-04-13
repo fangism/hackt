@@ -1,5 +1,5 @@
 # "src/scm/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.5 2007/03/26 02:49:06 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.6 2007/04/13 01:55:06 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -11,6 +11,7 @@ scmdir = $(pkgdatadir)/scm
 nobase_dist_scm_DATA = \
 	hackt/algorithm.scm \
 	hackt/streams.scm \
+	hackt/rb-tree.scm \
 	hackt/hackt.scm \
 	hackt/chpsim.scm \
 	hackt/chpsim-trace.scm
