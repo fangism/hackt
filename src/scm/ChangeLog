@@ -1,5 +1,14 @@
 "scm/ChangeLog"
 
+2007-04-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-32:
+	  hackt/chpsim.scm: use named car/cdr for clarity
+	  hackt/chpsim-trace.scm: Likewise
+	  hackt/rb-tree.scm: more lookup functions, copy-subtree, 
+		tree traversals, merge and intersect.  
+
+
 2007-04-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-31:

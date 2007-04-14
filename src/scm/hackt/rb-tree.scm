@@ -2,7 +2,7 @@
 "hackt/rb-tree.scm"
 Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-$Id: rb-tree.scm,v 1.1.2.3 2007/04/13 06:19:58 fang Exp $
+$Id: rb-tree.scm,v 1.1.2.4 2007/04/14 23:05:51 fang Exp $
 
 Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -153,7 +153,7 @@ replacing old one."
 		(lambda ()
 		  (set-node-up! z y)
 		  (cond ((not y) (set-tree-root! tree z))
-			((eq? 'LEFT d) (set-node-left! y z))
+			((left? d) (set-node-left! y z))
 			(else (set-node-right! y z)))
 		  (red! z)
 		  (insert-fixup! tree z)))))
@@ -289,10 +289,22 @@ replacing old one."
 	    ((key<? key (node-key x)) (loop (node-left x)))
 	    (else (loop (node-right x)))))))
 
+(define-public (rb-tree/lookup-key tree key default)
+"Return the key if it is associated in the tree to some value.  "
+  (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
+  (lookup-node tree key node-key default)
+)
+
 (define-public (rb-tree/lookup tree key default)
 "Return the value associated with @var{key}."
   (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
   (lookup-node tree key node-value default)
+)
+
+(define-public (rb-tree/lookup-pair tree key default)
+"Return the key-value pair associated with @var{key}."
+  (guarantee-rb-tree tree 'RB-TREE/LOOKUP)
+  (lookup-node tree key node-pair default)
 )
 
 (define-public (rb-tree/lookup-mutate! tree key proc-1 default)
@@ -303,12 +315,25 @@ replacing old one."
     default)
 )
 
+(define (copy-subtree node up)
+  (and node
+    (let ((node* (make-node (node-key node) (node-value node))))
+      (set-node-color! node* (node-color node))
+      (set-node-up! node* up)
+      (set-node-left! node* (copy-subtree (node-left node) node*))
+      (set-node-right! node* (copy-subtree (node-right node) node*))
+      node*)
+  ) ; end and
+) ; end define
+
 (define-public (rb-tree/copy tree)
 "Create a deep-copy of the tree nodes."
   (guarantee-rb-tree tree 'RB-TREE/COPY)
   (let ((result (make-rb-tree (tree-key=? tree) (tree-key<? tree))))
     (set-tree-root!
      result
+     (copy-subtree (tree-root tree) #f)
+#!
      (let loop ((node (tree-root tree)) (up #f))
        (and node
 	    (let ((node* (make-node (node-key node) (node-value node))))
@@ -316,16 +341,32 @@ replacing old one."
 	      (set-node-up! node* up)
 	      (set-node-left! node* (loop (node-left node) node*))
 	      (set-node-right! node* (loop (node-right node) node*))
-	      node*))))
-    result))
+	      node*))
+     ) ; end let
+!#
+    ) ; end let
+    result)
+) ; end define
 
+
+(define (reduce-nodes node proc-2 default)
+"Reduction visit of all nodes in the tree, O(n)."
+  (if node
+    (proc-2 (reduce-nodes (node-left node) proc-2 default)
+      (reduce-nodes (node-right node) proc-2 default))
+    default)
+)
 
 (define (reduce-visit tree proc-2 default)
 "Reduction visit of all nodes in the tree, O(n)."
+  (reduce-nodes (tree-root tree) proc-2 default)
+#!
   (let loop ((node (tree-root tree)))
     (if node
 	(proc-2 (loop (node-left node)) (loop (node-right node)))
-	default)))
+	default))
+!#
+)
 
 (define-public (rb-tree/height tree)
 "Return the maximum depth of the tree, O(n)."
@@ -358,6 +399,118 @@ replacing old one."
 		    (value=? (node-value nx) (node-value ny))
 		    (loop (next-node nx) (next-node ny))))))))
 
+; returns nothing, maybe generalize like map-node or map-pairs?
+; then apply, copy and treansform can share same code
+(define (in-order-walk n thunk)
+  (if n (begin
+    (in-order-walk (node-left n) thunk)
+    (thunk n)
+    (in-order-walk (node-right n) thunk)
+  ))
+)
+
+(define (pre-order-walk n thunk)
+  (if n (begin
+    (thunk n)
+    (pre-order-walk (node-left n) thunk)
+    (pre-order-walk (node-right n) thunk)
+  ))
+)
+
+(define (post-order-walk n thunk)
+  (if n (begin
+    (post-order-walk (node-left n) thunk)
+    (post-order-walk (node-right n) thunk)
+    (thunk n)
+  ))
+)
+
+; see also rb-tree/map-pairs
+(define-public (rb-tree/for-each pair-proc tree)
+"Apply a function to all key-value pairs, non destructive."
+  (guarantee-rb-tree tree 'RB-TREE/FOR-EACH)
+  (in-order-walk (tree-root tree) (lambda (n) (pair-proc (node-pair n))))
+) ; endefine
+
+(define-public (rb-tree/for-each-display-newline tree)
+"Displays each key-value pair of rb-tree on its own line."
+  (rb-tree/for-each (lambda (p) (display p) (newline)) tree)
+) ; endefine
+
+; TODO: reverse walks
+
+(define (copy-insert-node node tree)
+  (rb-tree/insert! tree (node-key node) (node-value node))
+)
+
+; untested! -- union (by key)
+(define-public (rb-tree/merge x y combine-value)
+"Merges two trees together, non-destructively.  
+Apply combine-value on two values when their keys match."
+  (guarantee-rb-tree x 'RB-TREE/MERGE)
+  (guarantee-rb-tree y 'RB-TREE/MERGE)
+  (let ((key=? (tree-key=? x))
+        (key<? (tree-key<? x)))
+    (and (eq? key=? (tree-key=? y))
+      (eq? key<? (tree-key<? y))
+      (let (ret (make-rb-tree key=? key<?))
+	(let loop ((nx (min-node x)) (ny (min-node y)))
+	  (cond
+	    ((and nx ny)
+              (cond
+                ((key<? (node-key nx) (node-key ny))
+                   (copy-insert-node nx ret)
+                   (loop (next-node nx) ny))
+                ((key=? (node-key nx) (node-key ny))
+                   (rb-tree/insert! ret (node-key nx)
+                     (combine-value (node-value nx) (node-value ny))
+                   (loop (next-node nx) (next-node ny))))
+	        (else ; (key<? (node-key ny) (node-key nx))
+                   (copy-insert-node ny ret)
+                   (loop nx (next-node ny)))
+              ) ; end cond
+            ) ; end case
+            (nx (in-order-walk nx (lambda (n) (copy-insert-node n ret))))
+            (ny (in-order-walk ny (lambda (n) (copy-insert-node n ret))))
+          ) ; end cond
+        ) ; end let
+        ret
+      ) ; end let
+    ) ; end and
+  ) ; end let
+) ; end define
+
+; untested! -- intersection (by key)
+(define-public (rb-tree/intersect x y combine-value)
+"Creates intersection of two trees, non-destructively.  
+Apply combine-value on two values when their keys match."
+  (guarantee-rb-tree x 'RB-TREE/INTERSECT)
+  (guarantee-rb-tree y 'RB-TREE/INTERSECT)
+  (let ((key=? (tree-key=? x))
+        (key<? (tree-key<? x)))
+    (and (eq? key=? (tree-key=? y))
+      (eq? key<? (tree-key<? y))
+      (let (ret (make-rb-tree key=? key<?))
+	(let loop ((nx (min-node x)) (ny (min-node y)))
+	    (if (and nx ny)
+              (cond
+                ((key<? (node-key nx) (node-key ny))
+                   (loop (next-node nx) ny))
+                ((key=? (node-key nx) (node-key ny))
+                   (rb-tree/insert! ret (node-key nx)
+                     (combine-value (node-value nx) (node-value ny))
+                   (loop (next-node nx) (next-node ny))))
+	        (else ; (key<? (node-key ny) (node-key nx))
+                   (loop nx (next-node ny)))
+              ) ; end cond
+            ) ; end case
+        ) ; end let
+        ret
+      ) ; end let
+    ) ; end and
+  ) ; end let
+) ; end define
+
 (define (rb-tree/map-nodes tree node-proc)
 "Maps tree-leaves (nodes) into list, forward iterated."
   (guarantee-rb-tree tree 'RB-TREE/MAP-NODES)
@@ -373,6 +526,7 @@ replacing old one."
 	'()))
 ) ; end define
 
+; see also rb-tree/for-each
 (define-public (rb-tree/map-pairs tree pair-proc)
 "Map tree-leaves (key-value pairs) into list, forward iterated."
   (rb-tree/map-nodes tree (lambda (n) (pair-proc (node-pair n)))))

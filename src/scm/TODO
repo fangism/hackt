@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.1.2.11 2007/04/13 06:19:56 fang Exp $
+	$Id: TODO,v 1.1.2.12 2007/04/14 23:05:48 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -25,6 +25,9 @@ stream merge algorithms (like set_intersection, set_union, set_difference)
 
 histogram of event frequency, by counting immediate successors of selections
 	use either a vector or sparse representation
+
+testing:
+	have scripts exit-upon-first-error, to simplify debugging
 
 ===============================================================================
 NAMING CONVENTION:

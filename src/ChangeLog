@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-32:
+	  Added some more chpsim-event primitive predicates.
+	  More in scm/ChangeLog.
+
+
 2007-04-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-31:

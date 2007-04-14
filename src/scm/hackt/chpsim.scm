@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.9 2007/04/13 06:19:57 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.10 2007/04/14 23:05:50 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -82,11 +82,16 @@ Primitive implementations *should* adhere to this ordering."
   ) ; end let
 ) ; end define
 
+; in case the representation changes
+(define-public static-event-node-index car)
+(define-public static-event-raw-entry cdr)
+
 ; filters all selection events, deterministic and nondeterministic
 (define-public (chpsim-filter-static-events-select static-events-stream)
 "Select only selection events out of static event stream.  
 Argument is a stream of static events."
-  (stream-filter (lambda (e) (hac:chpsim-event-select? (cdr e)))
+  (stream-filter (lambda (e)
+      (hac:chpsim-event-select? (static-event-raw-entry e)))
     static-events-stream)
 ) ; end define
 
@@ -94,7 +99,9 @@ Argument is a stream of static events."
 "Given a static event stream, produces a set of event-successor pairs 
 (which look like lists).  The resulting list can be viewed as an associative 
 list, with the key being the first element and the value being the rest (cdr)."
-  (stream-map (lambda (e) (cons (car e) (hac:chpsim-event-successors (cdr e))))
+  (stream-map (lambda (e)
+    (cons (static-event-node-index e)
+      (hac:chpsim-event-successors (static-event-raw-entry e))))
     static-event-stream)
 )
 
@@ -133,4 +140,5 @@ Implementation: map-of-maps, using rb-tree."
   ret-histo
 ) ; end let
 ) ; end define
+
 

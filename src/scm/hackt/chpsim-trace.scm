@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.10 2007/04/13 06:19:56 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.11 2007/04/14 23:05:49 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -279,11 +279,11 @@ trace-file name @var{tr-name}.  Starts at the last event in trace by default."
       (rb-tree/lookup-mutate! y x
         (lambda (z) 
 ;         (display "++") (display z) (newline)
-          (let ((p (stream-ref f all-static-events-stream)))
+          (let ((p (hac:chpsim-get-event f)))
 ;            (display "p: ") (display p) (newline)
-            (if (hac:chpsim-event-select? (cdr p))
+            (if (hac:chpsim-event-select? (static-event-raw-entry p))
               ; recurse to predecessor because selections are not 'executed'
-              (count-selects (car p))
+              (count-selects f)
             ) ; end if
           ) ; end let
           (1+ z)

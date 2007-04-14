@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.1.2.8 2007/03/29 02:45:43 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.1.2.9 2007/04/14 23:05:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,6 +21,7 @@ namespace HAC {
 namespace guile_wrap {
 using HAC::SIM::CHPSIM::EventNode;
 using HAC::entity::CHP::action;
+using HAC::entity::CHP::do_while_loop;
 using HAC::entity::CHP::deterministic_selection;
 using HAC::entity::CHP::nondeterministic_selection;
 using HAC::SIM::CHPSIM::DependenceSet;
@@ -229,6 +230,25 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_fork_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 /**
 	Predicate.
 	\param SMOB of the scm chpsim-event.
+	\return #t if event is a concurrent join.
+		By construction, there are no degenerate (preds == 1) join, 
+		so we can just count the number of necessary predecessors.  
+ */
+#define	FUNC_NAME "chpsim-event-join?"
+HAC_GUILE_DEFINE(wrap_chpsim_event_join_p, FUNC_NAME, 1, 0, 0, (SCM obj),
+"Is the event @var{obj} a concurrent join?") {
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_CONCURRENT_JOIN &&
+		(ptr->get_predecessors() > 1));
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
 	\return #t if event is a selection (deterministic or non).
  */
 #define	FUNC_NAME "chpsim-event-select?"
@@ -273,6 +293,41 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_select_nondet_p, FUNC_NAME, 1, 0, 0,
 	return make_scm<bool>((ptr->get_event_type() ==
 		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN) &&
 		IS_A(const nondeterministic_selection*, ptr->get_chp_action()));
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is a branch (deterministic or non), 
+		which includes selections that are not do-while loops.
+ */
+#define	FUNC_NAME "chpsim-event-branch?"
+HAC_GUILE_DEFINE(wrap_chpsim_event_branch_p, FUNC_NAME, 1, 0, 0, (SCM obj),
+"Is the event @var{obj} a branch? (a non-loop selection)") {
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN &&
+		!IS_A(const do_while_loop*, ptr->get_chp_action()));
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is a selection of a while loop.
+ */
+#define	FUNC_NAME "chpsim-event-do-while?"
+HAC_GUILE_DEFINE(wrap_chpsim_event_do_while_p, FUNC_NAME, 1, 0, 0, (SCM obj),
+"Is the event @var{obj} a do-while selection?") {
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN &&
+		IS_A(const do_while_loop*, ptr->get_chp_action()));
 }
 #undef	FUNC_NAME
 
