@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/loop_nonmeta_expr.tcc"
-	$Id: loop_nonmeta_expr.tcc,v 1.2 2007/02/08 02:11:05 fang Exp $
+	$Id: loop_nonmeta_expr.tcc,v 1.3 2007/04/15 05:52:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_LOOP_NONMETA_EXPR_TCC__
@@ -169,8 +169,8 @@ loop_nonmeta_expr<E>::unroll_resolve_copy(const unroll_context& c,
  */
 template <class E>
 count_ptr<const typename loop_nonmeta_expr<E>::const_expr_type>
-loop_nonmeta_expr<E>::__nonmeta_resolve_rvalue(const nonmeta_context_base& c, 
-		const count_ptr<const expr_base_type>& p) const {
+loop_nonmeta_expr<E>::__nonmeta_resolve_rvalue(const nonmeta_context_base&, 
+		const count_ptr<const expr_base_type>&) const {
 	ICE_NEVER_CALL(cerr);
 	return count_ptr<const const_expr_type>(NULL);
 }

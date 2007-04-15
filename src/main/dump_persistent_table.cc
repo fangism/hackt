@@ -2,7 +2,7 @@
 	\file "main/dump_persistent_table.cc"
 	Just dumps the registered persistent type table.  
 	This file came from "art_persistent_table.cc".
-	$Id: dump_persistent_table.cc,v 1.5 2007/02/27 02:28:00 fang Exp $
+	$Id: dump_persistent_table.cc,v 1.6 2007/04/15 05:52:25 fang Exp $
  */
 
 #include <iostream>
@@ -41,7 +41,7 @@ dump_persistent_table::dump_persistent_table() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
-dump_persistent_table::main(int argc, char* argv[], const global_options&) {
+dump_persistent_table::main(int, char*[], const global_options&) {
 	// just print out the registered persistent type map's pairs
 	persistent_object_manager::dump_registered_type_map(cerr);
 	// NOTE: comment on lazy-linking moved to "main/force_load.cc"

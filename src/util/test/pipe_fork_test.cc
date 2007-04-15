@@ -1,6 +1,6 @@
 /**
 	\file "util/test/pipe_fork_test.cc"
-	$Id: pipe_fork_test.cc,v 1.1 2006/11/15 00:09:18 fang Exp $
+	$Id: pipe_fork_test.cc,v 1.2 2007/04/15 05:52:36 fang Exp $
 	Ripped from: libc.info.gz (info2html.sourceforge.net)
 
 	Here is an example of a simple program that creates a pipe.  This
@@ -50,7 +50,7 @@ write_to_pipe (const int file) {
 }
 
 int
-main (int argc, char* argv[]) {
+main (int, char*[]) {
 	int mypipe[2];
 	/* Create the pipe. */
 	if (pipe (mypipe)) {

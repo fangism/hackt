@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.12 2006/10/18 20:58:02 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.13 2007/04/15 05:52:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -50,7 +50,7 @@ struct INT_COLLECTION_TYPE_MANAGER_CLASS::dumper {
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
 INT_COLLECTION_TYPE_MANAGER_CLASS::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
+		const persistent_object_manager&, ostream& o) const {
 	write_value(o, this->type_parameter);
 }
 
@@ -58,7 +58,7 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::write_object_base(
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
 INT_COLLECTION_TYPE_MANAGER_CLASS::load_object_base(
-		const persistent_object_manager& m, istream& i) {
+		const persistent_object_manager&, istream& i) {
 	read_value(i, this->type_parameter);
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/convert_expr.tcc"
-	$Id: convert_expr.tcc,v 1.2 2007/02/26 22:00:45 fang Exp $
+	$Id: convert_expr.tcc,v 1.3 2007/04/15 05:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONVERT_EXPR_TCC__
@@ -131,6 +131,7 @@ count_ptr<const typename CONVERT_EXPR_CLASS::const_expr_type>
 CONVERT_EXPR_CLASS::__unroll_resolve_rvalue(const unroll_context& c, 
 		const count_ptr<const parent_type>& t) const {
 	typedef	count_ptr<const const_expr_type>	return_type;
+	INVARIANT(t == this);
 	rvalue_value_type v;
 	if (this->rvalue_expr->unroll_resolve_value(c, v).good) {
 		return return_type(new const_expr_type(value_type(v)));

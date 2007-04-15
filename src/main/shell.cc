@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.6 2006/01/22 06:53:11 fang Exp $
+	$Id: shell.cc,v 1.7 2007/04/15 05:52:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -141,7 +141,7 @@ shell::main(const int argc, char* argv[], const global_options&) {
 	\return 0 on succsess, 1 on error.  
  */
 int
-shell::parse_command_options(const int argc, char* argv[], options& o) {
+shell::parse_command_options(const int, char*[], options&) {
 	return 0;
 }
 

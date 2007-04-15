@@ -3,7 +3,7 @@
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
- *	$Id: ptrs_functional.h,v 1.9 2005/10/08 01:40:03 fang Exp $
+ *	$Id: ptrs_functional.h,v 1.10 2007/04/15 05:52:32 fang Exp $
  */
 
 #ifndef	__UTIL_PTRS_FUNCTIONAL_H__
@@ -205,10 +205,14 @@ public:
 
 //-----------------------------------------------------------------------------
 // helper wrapper function
+/**
+	The extra parameter is not used, and can be null, only used for
+	the sake of template argument deduction.  
+ */
 template <class R, template <class> class P, class T, class A>
 inline
 const_mem_fun1_p_t<R, P, T, A>
-mem_fun(R (T::*f)(A) const, const P<const T>& null) {
+mem_fun(R (T::*f)(A) const, const P<const T>&) {
 	return const_mem_fun1_p_t<R, P, T, A>(f);
 }
 

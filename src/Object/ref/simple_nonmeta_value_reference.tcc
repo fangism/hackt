@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.22 2007/02/26 22:00:54 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.23 2007/04/15 05:52:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -142,7 +142,7 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
-		const nonmeta_context_base& c, const return_type& p) {
+		const nonmeta_context_base& c, const return_type&) {
 	typedef	reference_type				this_type;
 	STACKTRACE_VERBOSE;
 	const size_t global_index =
@@ -391,7 +391,7 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 static
 const_return_type
 nonmeta_resolve_rvalue(const reference_type& _this,
-		const nonmeta_context_base& c, const return_type& p) {
+		const nonmeta_context_base& c, const return_type&) {
 	typedef	reference_type				this_type;
 	STACKTRACE_VERBOSE;
 	const const_return_type error(NULL);
@@ -457,10 +457,10 @@ nonmeta_assign(const reference_type&,
  */
 static
 void
-direct_assign(const reference_type& lref, 
-		const nonmeta_context_base& c, 
-		assign_update_arg_type& u, 
-		channel_data_reader& r) {
+direct_assign(const reference_type&, 
+		const nonmeta_context_base&, 
+		assign_update_arg_type&, 
+		channel_data_reader&) {
 	ICE_NEVER_CALL(cerr);
 }
 

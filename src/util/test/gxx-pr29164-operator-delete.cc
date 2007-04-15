@@ -5,7 +5,7 @@
 	is elided when pointer is NULL, not miscompiled.  
 	Incidentally, several compilers are reported to behave similarly.  
 	This test case will detect if behavior ever changes.  
-	$Id: gxx-pr29164-operator-delete.cc,v 1.2 2007/03/13 02:37:50 fang Exp $
+	$Id: gxx-pr29164-operator-delete.cc,v 1.3 2007/04/15 05:52:35 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -30,7 +30,7 @@ using util::memory::excl_array_ptr;
 #endif
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 {
 	one_array_only* p = new one_array_only[12];
 //	delete [] p;		// triggers bug

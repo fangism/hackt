@@ -2,7 +2,7 @@
 	\file "util/indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.7 2005/09/04 21:15:07 fang Exp $
+	$Id: indent.cc,v 1.8 2007/04/15 05:52:31 fang Exp $
  */
 
 #include <iostream>
@@ -194,7 +194,7 @@ const auto_indenter				auto_indent = auto_indenter();
 	\param a is bogus, unused.
  */
 ostream&
-operator << (ostream& o, const auto_indenter& a) {
+operator << (ostream& o, const auto_indenter& /* a */) {
 	return o << ostream_indent_map[&o];
 }
 

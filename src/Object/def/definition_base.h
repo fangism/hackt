@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.11 2006/10/18 20:57:47 fang Exp $
+	$Id: definition_base.h,v 1.12 2007/04/15 05:52:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -224,7 +224,7 @@ virtual	excl_ptr<definition_base>
 
 /** definition signature comparison, true if equal */
 virtual	good_bool
-	require_signature_match(const never_ptr<const definition_base> d) const
+	require_signature_match(const never_ptr<const definition_base>) const
 		{ return good_bool(false); }	// temporary, should be pure
 
 /**

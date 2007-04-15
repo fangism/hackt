@@ -1,6 +1,6 @@
 /**
 	\file "sim/signal_handler.tcc"
-	$Id: signal_handler.tcc,v 1.3 2007/01/21 07:00:57 fang Exp $
+	$Id: signal_handler.tcc,v 1.4 2007/04/15 05:52:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_SIGNAL_HANDLER_TCC__
@@ -48,7 +48,7 @@ signal_handler<State>::~signal_handler() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class State>
 void
-signal_handler<State>::main(int sig) {
+signal_handler<State>::main(int) {
 	if (_state) {
 		_state->stop();
 	}

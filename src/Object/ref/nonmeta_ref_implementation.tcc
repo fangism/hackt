@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/nonmeta_ref_implementation.tcc"
 	Policy-based implementations of some nonmeta reference functions.  
- 	$Id: nonmeta_ref_implementation.tcc,v 1.3 2007/02/26 22:00:52 fang Exp $
+ 	$Id: nonmeta_ref_implementation.tcc,v 1.4 2007/04/15 05:52:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_REF_IMPLEMENTATION_TCC__
@@ -165,7 +165,7 @@ good_bool
 __nonmeta_instance_lookup_may_reference_indices_impl(
 		const simple_nonmeta_value_reference<Tag>&, 
 		const global_entry_context&, 
-		vector<size_t>& indices, parameter_value_tag) {
+		vector<size_t>&, parameter_value_tag) {
 	// no-op!
 	return good_bool(true);
 }

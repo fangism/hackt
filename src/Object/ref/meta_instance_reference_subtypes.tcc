@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.20 2007/02/28 21:22:07 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.21 2007/04/15 05:52:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -158,7 +158,7 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 META_INSTANCE_REFERENCE_CLASS::must_be_type_equivalent(
-		const meta_instance_reference_base& r) const {
+		const meta_instance_reference_base&) const {
 	return false;
 }
 
@@ -307,7 +307,7 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, const footprint& top, 
+		const state_manager& /* sm */, const footprint& top, 
 		vector<size_t>& indices) const {
 	typedef	vector<size_t>				indices_type;
 	typedef	typename alias_collection_type::const_iterator	const_iterator;

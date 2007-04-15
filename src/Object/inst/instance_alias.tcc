@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.30 2007/01/21 05:59:11 fang Exp $
+	$Id: instance_alias.tcc,v 1.31 2007/04/15 05:52:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -398,7 +398,7 @@ INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_INFO_CLASS::operator = (const this_type& r) {
+INSTANCE_ALIAS_INFO_CLASS::operator = (const this_type&) {
 	ICE_NEVER_CALL(cerr);
 	return *this;
 }

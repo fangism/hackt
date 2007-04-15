@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.11 2007/01/21 05:58:41 fang Exp $
+	$Id: user_def_datatype.h,v 1.12 2007/04/15 05:52:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -90,7 +90,7 @@ public:
 	get_port_formals_manager(void) const;
 
 	good_bool
-	require_signature_match(const never_ptr<const definition_base> d) const
+	require_signature_match(const never_ptr<const definition_base>) const
 		{ return good_bool(false); }	// temporary
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;

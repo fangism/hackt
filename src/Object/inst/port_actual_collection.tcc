@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.6 2006/12/01 23:28:51 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.7 2007/04/15 05:52:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -263,9 +263,9 @@ PORT_ACTUAL_COLLECTION_CLASS::get_placeholder_base(void) const {
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::instantiate_indices(
-		const const_range_list& ranges, 
-		const instance_relaxed_actuals_type& actuals, 
-		const unroll_context& c) {
+		const const_range_list& /* ranges */, 
+		const instance_relaxed_actuals_type& /* actuals */, 
+		const unroll_context&) {
 #if 0
 	INVARIANT(!this->value_array.size());
 	const key_type k(ranges.resolve_sizes());
@@ -329,8 +329,8 @@ PORT_ACTUAL_COLLECTION_CLASS::lookup_instance(
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 bool
 PORT_ACTUAL_COLLECTION_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l,
-		const const_range_list& r) const {
+		typename default_list<instance_alias_info_ptr_type>::type& /* l */,
+		const const_range_list& /* r */) const {
 	STACKTRACE_VERBOSE;
 #if 0
 	INVARIANT(!r.empty());

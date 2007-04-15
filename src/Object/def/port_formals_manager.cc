@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.14 2006/12/01 23:28:39 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.15 2007/04/15 05:52:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -262,7 +262,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
  */
 void
 port_formals_manager::collect_transient_info_base(
-		persistent_object_manager& m) const {
+		persistent_object_manager&) const {
 	// no need to visit port formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
 }

@@ -1,7 +1,7 @@
 /**
 	\file "sparse_collection_test.cc"
 	NOTE: this tests a structure in the HAC library, not in util.  
-	$Id: sparse_collection_test.cc,v 1.2 2006/10/24 07:27:50 fang Exp $
+	$Id: sparse_collection_test.cc,v 1.3 2007/04/15 05:52:37 fang Exp $
  */
 
 // always debug with asserts
@@ -44,7 +44,7 @@ template class sparse_collection<string, mystring>;
 typedef	sparse_collection<string, mystring>	collection_type;
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	collection_type c;
 {
 	cout << "adding first key-value pair." << endl;

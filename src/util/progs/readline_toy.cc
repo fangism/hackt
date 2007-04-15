@@ -1,7 +1,7 @@
 /**
 	\file "util/progs/readline_toy.cc"
 	Just a testing tool for readline behavior.  
-	$Id: readline_toy.cc,v 1.2 2006/01/22 06:53:45 fang Exp $
+	$Id: readline_toy.cc,v 1.3 2007/04/15 05:52:33 fang Exp $
  */
 
 #include <iostream>
@@ -13,7 +13,7 @@ using util::readline_wrapper;
 using util::strings::eat_whitespace;
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	// command-line parsing:
 	static const char prompt[] = "> ";
 	readline_wrapper rl(prompt);

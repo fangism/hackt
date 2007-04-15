@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.7 2006/04/08 18:53:50 fang Exp $
+	$Id: version.cc,v 1.8 2007/04/15 05:52:28 fang Exp $
  */
 
 #include <iostream>
@@ -58,7 +58,7 @@ version::version() { }
 	TODO: optional packages, like readline, etc...
  */
 int
-version::main(const int argc, char* argv[], const global_options&) {
+version::main(const int argc, char*[], const global_options&) {
 	if (argc > 1) {
 		usage();
 		// don't bother returning

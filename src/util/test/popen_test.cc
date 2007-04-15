@@ -1,6 +1,6 @@
 /**
 	\file "util/test/popen_test.cc"
-	$Id: popen_test.cc,v 1.1 2006/11/15 00:09:18 fang Exp $
+	$Id: popen_test.cc,v 1.2 2007/04/15 05:52:37 fang Exp $
 	Ripped from: info2html.sourceforge.net (info.libc.gz)
 	Here is an example showing how to use `popen' and `pclose' to filter
 	output through another program, in this case the paging program `more'.
@@ -22,7 +22,7 @@ write_data (FILE * stream) {
 }
 
 int
-main (int argc, char* argv[]) {
+main (int, char*[]) {
 	FILE *output;
 	output = popen ("more", "w");
 	if (!output) {

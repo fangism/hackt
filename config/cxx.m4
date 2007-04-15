@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.9 2006/08/12 00:36:24 fang Exp $
+dnl	$Id: cxx.m4,v 1.10 2007/04/15 05:52:08 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -69,7 +69,7 @@ dnl icc diagnostic 561: nonstandard proprocessing directive (trouble w/ ccache)
 if test "$hackt_cxx_compiler_intel" = yes ; then
 	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror -wd561 -wd1419"
 elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
-	ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wall -Werror"
+	ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wextra -Wall -Werror"
 else
 	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror"
 fi
@@ -208,7 +208,7 @@ dnl 1419: external declaration in primary source file (WTF?)
 	TRY_NOWARN_CFLAGS="-Wno-missing-prototypes"
 	TRY_NOWARN_CXXFLAGS=""
 elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
-	TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
+	TRY_WARN_FLAGS="-W -Wextra -Wall -Wundef -Wshadow -Wno-unused-parameter"
 	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual"
 	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wcast-align -Wconversion -Werror"
 	TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"

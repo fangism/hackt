@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.25 2006/11/07 06:35:05 fang Exp $
+ 	$Id: value_collection.tcc,v 1.26 2007/04/15 05:52:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -640,7 +640,7 @@ VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 const_index_list
-VALUE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
+VALUE_SCALAR_CLASS::resolve_indices(const const_index_list&) const {
 	ICE_NEVER_CALL(cerr);
 	return const_index_list();
 }
@@ -676,17 +676,20 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i) const {
+VALUE_SCALAR_CLASS::lookup_value(value_type&, 
+		const multikey_index_type&) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The upper/lower bound arguments are unused.  
+ */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 bad_bool
-VALUE_SCALAR_CLASS::unroll_lvalue_references(const multikey_index_type& l, 
-		const multikey_index_type& u,
+VALUE_SCALAR_CLASS::unroll_lvalue_references(const multikey_index_type&, 
+		const multikey_index_type&,
 		value_reference_collection_type& a) const {
 	typedef	typename value_reference_collection_type::value_type
 							value_ref_ptr_type;

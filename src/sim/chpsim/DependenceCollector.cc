@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.4 2007/02/26 22:00:58 fang Exp $
+	$Id: DependenceCollector.cc,v 1.5 2007/04/15 05:52:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -123,7 +123,7 @@ DependenceSetCollector::clear(void) {
  */
 #define	DEFINE_TRIVIAL_VISIT(type)					\
 void									\
-DependenceSetCollector::visit(const type& t) {				\
+DependenceSetCollector::visit(const type&) {				\
 	STACKTRACE_VERBOSE;						\
 }
 
@@ -134,7 +134,7 @@ DependenceSetCollector::visit(const type& t) {				\
  */
 #define	DEFINE_NEVER_VISIT(type)					\
 void									\
-DependenceSetCollector::visit(const type& t) {				\
+DependenceSetCollector::visit(const type&) {				\
 	ICE_NEVER_CALL(cerr);						\
 }
 
@@ -219,7 +219,7 @@ DependenceSetCollector::visit(const reference<Tag>& r) {		\
 #else
 #define	DEFINE_SINGLE_META_REFERENCE_VISIT(reference, Tag)		\
 void									\
-DependenceSetCollector::visit(const reference<Tag>& r) {		\
+DependenceSetCollector::visit(const reference<Tag>&) {			\
 	FINISH_ME(Fang);						\
 }
 #endif
@@ -263,7 +263,7 @@ if (r.lookup_globally_allocated_indices(*sm, *topfp, indices).good) {	\
 #define	DEFINE_AGGREGATE_META_REFERENCE_VISIT(Tag)			\
 void									\
 DependenceSetCollector::visit(						\
-		const aggregate_meta_instance_reference<Tag>& r) {	\
+		const aggregate_meta_instance_reference<Tag>&) {	\
 	FINISH_ME(Fang);						\
 }
 #endif

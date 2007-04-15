@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.45 2007/01/21 22:05:48 fang Exp $
+	$Id: instance_collection.tcc,v 1.46 2007/04/15 05:52:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -1099,8 +1099,8 @@ INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
-		const port_collection_context& pcc) const {
+INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame&, 
+		const port_collection_context&) const {
 	// only called and managed by the footprint's pools
 	ICE_NEVER_CALL(cerr);
 }
@@ -1346,7 +1346,7 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 multikey_index_type
-INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type& a) const {
+INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type&) const {
 	return multikey_index_type();
 }
 
@@ -1356,7 +1356,7 @@ INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_info_type& a) const {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 multikey_index_type
-INSTANCE_SCALAR_CLASS::lookup_key(const size_t i) const {
+INSTANCE_SCALAR_CLASS::lookup_key(const size_t) const {
 	return multikey_index_type();
 }
 
@@ -1499,7 +1499,7 @@ if (this->the_instance.valid()) {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 const_index_list
-INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
+INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list&) const {
 	cerr << "WARNING: instance_array<Tag,0>::resolve_indices(const_index_list) "
 		"always returns an empty list!" << endl;
 	return const_index_list();
@@ -1512,7 +1512,7 @@ INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 typename INSTANCE_SCALAR_CLASS::instance_alias_info_ptr_type
-INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
+INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type&) const {
 	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_info_ptr_type
 						ptr_return_type;
 	if (!this->the_instance.valid()) {
@@ -1535,7 +1535,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		typename default_list<instance_alias_info_ptr_type>::type& l,
+		typename default_list<instance_alias_info_ptr_type>::type&,
 		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;
@@ -1554,12 +1554,13 @@ INSTANCE_SCALAR_CLASS::get_all_aliases(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Upper and lower bound arguments unused.  
 	\return true on error, false on success.
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bad_bool
-INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l, 
-		const multikey_index_type& u, alias_collection_type& a) const {
+INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type&, 
+		const multikey_index_type&, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
 	if (this->the_instance.valid()) {
 		*(a.begin()) = instance_alias_info_ptr_type(
@@ -1652,7 +1653,7 @@ if (this->the_instance.valid()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 typename INSTANCE_SCALAR_CLASS::instance_alias_info_type&
-INSTANCE_SCALAR_CLASS::load_reference(istream& i) {
+INSTANCE_SCALAR_CLASS::load_reference(istream&) {
 	STACKTRACE_PERSISTENT("instance_scalar::load_reference()");
 	// no key to read!
 	return this->the_instance;

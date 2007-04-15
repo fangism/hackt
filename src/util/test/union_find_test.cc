@@ -1,6 +1,6 @@
 /**
 	\file "union_find_test.cc"
-	$Id: union_find_test.cc,v 1.2 2006/03/15 04:38:27 fang Exp $
+	$Id: union_find_test.cc,v 1.3 2007/04/15 05:52:38 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -46,7 +46,7 @@ dump_union_find(ostream& o, const test_type& t) {
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	size_t N = 0;
 	separator(cout, N);
 {	// test #0

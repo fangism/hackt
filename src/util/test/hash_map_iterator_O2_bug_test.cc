@@ -44,7 +44,7 @@ foo::bar(void) {
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	foo f;
 	f.bar();
 	return 0;

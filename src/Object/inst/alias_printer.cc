@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.6 2007/03/11 16:34:19 fang Exp $
+	$Id: alias_printer.cc,v 1.7 2007/04/15 05:52:17 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -80,7 +80,7 @@ struct alias_printer_recursion_policy<true> {
 	template <class Tag>
 	static
 	void
-	accept(alias_printer& c, const global_entry<Tag>& e, const size_t gi) {
+	accept(alias_printer& c, const global_entry<Tag>& e, const size_t) {
 		STACKTRACE_VERBOSE;
 	STACKTRACE_VERBOSE;
 	// saves away current footprint frame on stack, and restores on return

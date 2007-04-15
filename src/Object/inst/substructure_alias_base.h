@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.21 2006/12/01 23:28:52 fang Exp $
+	$Id: substructure_alias_base.h,v 1.22 2007/04/15 05:52:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -207,7 +207,7 @@ protected:
 
 	// has no substructure
 	good_bool
-	connect_port_aliases_recursive(this_type& r) {
+	connect_port_aliases_recursive(this_type&) {
 		return good_bool(true);
 	}
 

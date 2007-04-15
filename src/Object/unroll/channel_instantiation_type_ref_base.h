@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: channel_instantiation_type_ref_base.h,v 1.2 2007/01/21 06:00:00 fang Exp $
+	$Id: channel_instantiation_type_ref_base.h,v 1.3 2007/04/15 05:52:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CHANNEL_INSTANTIATION_TYPE_REF_H__
@@ -118,7 +118,7 @@ protected:
 	good_bool
 	commit_type_first_time(instance_collection_generic_type& v, 
 			const instance_collection_parameter_type& t, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		v.establish_collection_type(t);
 		return good_bool(true);
 	}
@@ -133,7 +133,7 @@ protected:
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,
 			const instance_collection_parameter_type& t, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// note: automatic conversion from bad_bool to good_bool :)
 		return v.check_established_type(t);
 	}

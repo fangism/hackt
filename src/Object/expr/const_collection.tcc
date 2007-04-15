@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.21 2007/02/28 21:22:07 fang Exp $
+ 	$Id: const_collection.tcc,v 1.22 2007/04/15 05:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -340,8 +340,8 @@ CONST_COLLECTION_CLASS::unroll_resolve_value(
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const typename CONST_COLLECTION_CLASS::expr_base_type>
 CONST_COLLECTION_CLASS::substitute_default_positional_parameters(
-		const template_formals_manager& f, 
-		const dynamic_param_expr_list& e,
+		const template_formals_manager&, 
+		const dynamic_param_expr_list&,
 		const count_ptr<const expr_base_type>& p) const {
 	INVARIANT(p == this);
 	return p;
@@ -411,9 +411,10 @@ CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const typename CONST_COLLECTION_CLASS::const_expr_type>
-CONST_COLLECTION_CLASS::__unroll_resolve_rvalue(const unroll_context& c, 
+CONST_COLLECTION_CLASS::__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const expr_base_type>& p) const {
 	typedef	count_ptr<const const_expr_type>	return_type;
+	INVARIANT(p == this);
 	if (values.dimensions()) {
 		cerr << "Error: got non-scalar " <<
 			util::what<this_type>::name() <<
@@ -430,7 +431,7 @@ CONST_COLLECTION_CLASS::__unroll_resolve_rvalue(const unroll_context& c,
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
-CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c, 
+CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const expr_base_type>& p) const {
 	INVARIANT(p == this);
 	return p.template is_a<const this_type>();
@@ -443,7 +444,7 @@ CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c,
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const typename CONST_COLLECTION_CLASS::expr_base_type>
-CONST_COLLECTION_CLASS::unroll_resolve_copy(const unroll_context& c, 
+CONST_COLLECTION_CLASS::unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>& p) const {
 	INVARIANT(p == this);
 	return p.template is_a<const this_type>();
@@ -564,7 +565,7 @@ CONST_COLLECTION_CLASS::collect_transient_info(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 void
-CONST_COLLECTION_CLASS::write_object(const persistent_object_manager& m, 
+CONST_COLLECTION_CLASS::write_object(const persistent_object_manager&, 
 		ostream& f) const {
 	values.write(f);
 }
@@ -572,7 +573,7 @@ CONST_COLLECTION_CLASS::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 void
-CONST_COLLECTION_CLASS::load_object(const persistent_object_manager& m, 
+CONST_COLLECTION_CLASS::load_object(const persistent_object_manager&, 
 		istream& f) {
 	values.read(f);
 }

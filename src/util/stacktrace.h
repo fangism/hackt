@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.17 2007/02/27 05:37:42 fang Exp $
+	$Id: stacktrace.h,v 1.18 2007/04/15 05:52:32 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -58,7 +58,7 @@ struct null_stacktrace_stream_type {
 		an iomanip function, such as flush, endl, ends.  
 	 */
 	const this_type&
-	operator << (std::ostream& (*__pf)(std::ostream&)) const {
+	operator << (std::ostream& (*)(std::ostream&)) const {
 		return *this;
 	}
 

@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt.cc"
 	Implementation of core hackt program, contains main().
-	$Id: hackt.cc,v 1.4 2005/12/13 04:15:47 fang Exp $
+	$Id: hackt.cc,v 1.5 2007/04/15 05:52:26 fang Exp $
  */
 
 #include <iostream>
@@ -74,7 +74,7 @@ hackt::main(const int argc, char* argv[], const options&) {
 		POSIXLY correct termination at the first non-option argument.  
  */
 int
-hackt::parse_command_options(const int argc, char* argv[], options& opt) {
+hackt::parse_command_options(const int argc, char* argv[], options&) {
 	// none yet
 	static const char optstring[] = "+";
 	int c;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_visitor.cc"
-	$Id: CHP_visitor.cc,v 1.2 2007/03/11 16:34:23 fang Exp $
+	$Id: CHP_visitor.cc,v 1.3 2007/04/15 05:52:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -17,7 +17,7 @@ namespace CHP {
 	No-op.
  */
 void
-chp_visitor::visit(const entity::state_manager& f) {
+chp_visitor::visit(const entity::state_manager&) {
 	// should be overridden
 }
 
@@ -26,7 +26,7 @@ chp_visitor::visit(const entity::state_manager& f) {
 	No-op.
  */
 void
-chp_visitor::visit(const entity::PRS::footprint& f) { }
+chp_visitor::visit(const entity::PRS::footprint&) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

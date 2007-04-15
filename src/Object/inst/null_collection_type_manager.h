@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.11 2006/10/18 20:58:03 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.12 2007/04/15 05:52:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -76,7 +76,7 @@ public:
 
 	good_bool
 	complete_type_definition_footprint(
-			const count_ptr<const const_param_expr_list>& r) const {
+			const count_ptr<const const_param_expr_list>&) const {
 		return good_bool(true);
 	}
 
@@ -90,8 +90,8 @@ public:
 	static
 	good_bool
 	create_definition_footprint(
-			const instance_collection_parameter_type& t, 
-			const footprint& top) {
+			const instance_collection_parameter_type&, 
+			const footprint& /* top */) {
 		return good_bool(true);
 	}
 
@@ -111,7 +111,7 @@ protected:
 	 */
 	good_bool
 	commit_type_first_time(
-		const instance_collection_parameter_type& t) const {
+		const instance_collection_parameter_type&) const {
 		return good_bool(true);
 	}
 

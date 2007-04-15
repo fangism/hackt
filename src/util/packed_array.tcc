@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.19 2006/10/24 07:27:44 fang Exp $
+	$Id: packed_array.tcc,v 1.20 2007/04/15 05:52:32 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -50,7 +50,7 @@ template <typename S>
 struct __lookup_index_policy<S,bool> {
 	template <class A>
 	S
-	operator () (const A& a, typename A::const_reference m) const {
+	operator () (const A&, typename A::const_reference) const {
 		DIE;
 		return 0;
 	}

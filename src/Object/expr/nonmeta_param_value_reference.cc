@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.12 2007/01/21 05:58:56 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.13 2007/04/15 05:52:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -97,8 +97,8 @@ struct data_type_resolver<pint_tag> {
 		from "Object/traits/class_traits_type.cc".
 	 */
 	canonical_generic_datatype
-	operator () (const data_value_reference_type& d, 
-			const unroll_context& c) const {
+	operator () (const data_value_reference_type&, 
+			const unroll_context&) const {
 		return data_type_reference::make_canonical_int_type_ref(0);
 	}
 

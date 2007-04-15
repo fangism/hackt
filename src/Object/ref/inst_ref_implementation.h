@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.20 2007/01/21 05:59:25 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.21 2007/04/15 05:52:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -208,8 +208,8 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
-			collection_interface_type<Tag>::type& inst, 
-		index_list_ptr_arg_type ind,
+			collection_interface_type<Tag>::type&, 
+		index_list_ptr_arg_type,
 		const unroll_context&) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
@@ -240,7 +240,7 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type&, 
 		index_list_ptr_arg_type,
-		const state_manager&, const footprint& top) {
+		const state_manager&, const footprint& /* top */) {
 	// ICE?
 	return NULL;
 }

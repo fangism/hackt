@@ -1,7 +1,7 @@
 /**
 	\file "collection_pool_test.cc"
 	NOTE: this tests a structure in the HAC library, not in util.  
-	$Id: collection_pool_test.cc,v 1.2 2006/11/07 06:35:46 fang Exp $
+	$Id: collection_pool_test.cc,v 1.3 2007/04/15 05:52:34 fang Exp $
  */
 
 // always debug with asserts
@@ -48,7 +48,7 @@ dump_nested_iterator(ostream& o, const Iter& i) {
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	collection_type c;
 	std::ostream_iterator<string> osi(cout, ", ");
 {

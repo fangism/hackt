@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.11 2007/03/14 04:06:21 fang Exp $
+	$Id: global_entry.cc,v 1.12 2007/04/15 05:52:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -65,7 +65,7 @@ footprint_frame_map<Tag>::__init_top_level(void) {
  */
 template <class Tag>
 void
-footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& fp, 
+footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& /* fp */, 
 		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	footprint_frame_map_type::iterator	iterator;

@@ -4,7 +4,7 @@
 	Possibly factor out implementations into another file?
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.13 2006/10/18 20:58:31 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.14 2007/04/15 05:52:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -64,18 +64,18 @@ protected:
 
 	static
 	good_bool
-	commit_type_check(const value_collection_generic_type& v, 
+	commit_type_check(const value_collection_generic_type&, 
 			const instance_collection_parameter_type&, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// no need to type-check
 		return good_bool(true);
 	}
 
 	static
 	good_bool
-	commit_type_first_time(value_collection_generic_type& v, 
+	commit_type_first_time(value_collection_generic_type&, 
 			const instance_collection_parameter_type&, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// no-op
 		return good_bool(true);
 	}
@@ -145,18 +145,18 @@ protected:
 
 	static
 	good_bool
-	commit_type_check(const value_collection_generic_type& v, 
+	commit_type_check(const value_collection_generic_type&, 
 			const instance_collection_parameter_type&, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// no need to type-check
 		return good_bool(true);
 	}
 
 	static
 	good_bool
-	commit_type_first_time(value_collection_generic_type& v, 
+	commit_type_first_time(value_collection_generic_type&, 
 			const instance_collection_parameter_type&, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// no-op
 		return good_bool(true);
 	}
@@ -225,9 +225,9 @@ protected:
 
 	static
 	good_bool
-	commit_type_check(const value_collection_generic_type& v, 
+	commit_type_check(const value_collection_generic_type&, 
 			const instance_collection_parameter_type&, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -236,7 +236,7 @@ protected:
 	good_bool
 	commit_type_first_time(value_collection_generic_type&, 
 			const instance_collection_parameter_type&, 
-			const footprint& top) {
+			const footprint& /* top */) {
 		// no-op
 		return good_bool(true);
 	}

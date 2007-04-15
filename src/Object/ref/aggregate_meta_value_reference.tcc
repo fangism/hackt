@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.13 2007/01/21 05:59:24 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.14 2007/04/15 05:52:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -255,7 +255,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
-		const unroll_context& c, value_type& i) const {
+		const unroll_context&, value_type&) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
@@ -266,7 +266,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
+AGGREGATE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type&) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
@@ -301,8 +301,8 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const typename AGGREGATE_META_VALUE_REFERENCE_CLASS::const_expr_type>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::__unroll_resolve_rvalue(
-		const unroll_context& c, 
-		const count_ptr<const expr_base_type>& p) const {
+		const unroll_context&, 
+		const count_ptr<const expr_base_type>&) const {
 	cerr << "Error: got " << util::what<this_type>::name() << 
 		" where scalar value was expected." << endl;
 	return count_ptr<const const_expr_type>(NULL);
