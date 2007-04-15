@@ -1,27 +1,38 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.10 2007/04/14 23:05:50 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.11 2007/04/15 21:53:58 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
 
 (define-module (hackt chpsim)
-#:autoload (ice-9 streams) (stream-map)
+#:autoload (ice-9 streams) (stream-map stream-for-each)
 #:autoload (hackt streams) (stream-filter enumerate-interval-stream)
 #:autoload (hackt rb-tree) (make-rb-tree rb-tree/insert!)
 )
 
-; (use-modules (hackt hackt-primitives))	; for tag-constants
-(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-primitives))	; defined in C++
 ; (use-modules (hackt streams))		; now autoloaded
 ; (use-modules (ice-9 streams))		; now autoloaded
+
+; constant: number of allocated events in static event graph
+(define-public chpsim-num-events (hac:chpsim-num-events))
+
+#!
+"Stream of integers from 0 to (num-static-events -1)"
+!#
+(define-public chpsim-static-event-index-stream
+  (enumerate-interval-stream 0 (1- chpsim-num-events))
+)
 
 (define (static-event-stream)
   "Represents the set of all statically allocated events as a stream."
   (stream-map (lambda (i) (hac:chpsim-get-event i))
-    (enumerate-interval-stream 0 (1- (hac:chpsim-num-events))))
+    chpsim-static-event-index-stream)
 ) ; end define
 
-; global stream variable, lazy evaluated
+#!
+"global stream variable, lazy evaluated"
+!#
 (define-public all-static-events-stream (static-event-stream))
 
 ; this is only defined for chpsim modules, not hackt in general
@@ -98,19 +109,67 @@ Argument is a stream of static events."
 (define-public (chpsim-assoc-event-successors static-event-stream)
 "Given a static event stream, produces a set of event-successor pairs 
 (which look like lists).  The resulting list can be viewed as an associative 
-list, with the key being the first element and the value being the rest (cdr)."
+list, with the key being the first element and the value being the rest (cdr).
+NOTE: the successes are NOT sorted by index, thus retaining their positional
+meaning from even graph construction."
   (stream-map (lambda (e)
     (cons (static-event-node-index e)
       (hac:chpsim-event-successors (static-event-raw-entry e))))
     static-event-stream)
 )
 
+#!
+"Memoized map of predecessors, constructed from successors map 
+use access this, use the (force), Luke."
+!#
+(define-public static-event-successors-map-delayed
+  (delay (chpsim-assoc-event-successors all-static-events-stream))
+) ; end define
+
+
+(define successor-map-key car) ; in-source documentation!
+(define successor-map-value-list cdr) ; in-source documentation!
+#!
+"Memoized map of predecessors, events whose edges are incident upon this event.
+Implemented as a tree-of-trees (map-of-maps) for efficient set membership tests
+and set operations.  Use the (force) to evaluate this."
+!#
+(define-public static-event-predecessors-map-delayed
+  (delay
+    (let ((preds (make-rb-tree = <)))
+      ; construct empty assoc trees for each event slot
+      (stream-for-each
+        (lambda (e) (rb-tree/insert! preds e (make-rb-tree = <)))
+        chpsim-static-event-index-stream
+      ) ; end stream-for-each
+      (stream-for-each
+        (lambda (x)
+          (for-each
+            (lambda (y)
+              (rb-tree/lookup-mutate! preds y
+                (lambda (z)
+                  (rb-tree/insert! z (successor-map-key x) '())
+                z)
+                #f)
+            ) ; end lambda
+            (successor-map-value-list x)
+          ) ; end for-each
+        ) ; end lambda
+        (force static-event-successors-map-delayed) ; memoized!
+      ) ; end stream-for-each
+      preds
+    ) ; end let
+  ) ; end delay
+) ; end define
+
 (define-public (chpsim-assoc-event-pred-from-succ succ-assoc-strm)
 "Construct predecessor associations given a stream of associated 
 successor lists.  Each input stream element is an associated list of a 
 static event index paired with its list of successors.  
 May result in multiple associations among predecessors in returned list.  
-Relies on fact that branch-successors must succeed only a single branch event."
+Relies on fact that branch-successors must succeed only a single branch event.
+This may become deprecated in favor of sorted, associative storage 
+in a red-black tree."
   (stream-map
     (lambda (a)
 ; don't make rb-tree yet, just leave as stream of lists
@@ -141,4 +200,30 @@ Implementation: map-of-maps, using rb-tree."
 ) ; end let
 ) ; end define
 
+#!
+"Sorted set of all events that have multiple entry points (disjunctive), 
+which includes loop-heads and branch-joins.
+Delayed object is accessed using (force) and is memoized."
+!#
+(define-public static-events-with-multiple-entries-delayed
+(delay
+  (let ((ret-map (make-rb-tree = <))
+        (preds (force static-event-predecessors-map-delayed)))
+    (stream-for-each
+      (lambda (e) (rb-tree/insert! ret-map (static-event-node-index e) '()))
+      (stream-filter
+        (lambda (x)
+          (let ((i (static-event-node-index x))
+                (e (static-event-raw-entry x)))
+            (> (rb-tree/size (rb-tree/lookup preds i #f))
+              (hac:chpsim-event-num-predecessors e))
+          ) ; end let
+        ) ; end lambda
+        all-static-events-stream
+      ) ; end stream-filter
+    ) ; end stream-for-each
+    ret-map
+  ) ; end let
+) ; end delay
+) ; end define
 

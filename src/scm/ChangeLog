@@ -1,5 +1,22 @@
 "scm/ChangeLog"
 
+2007-04-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-33:
+	  hackt/chpsim.scm: added new constant variables (oxymoron?)
+		chpsim-num-events (hac:chpsim-num-events)
+		chpsim-static-event-index-stream (0 to N-1)
+		New delayed/memoized computed static vent sets:
+			static-event-successors-map-delayed
+			static-event-predecessors-map-delayed
+			static-events-with-multiple-entries-delayed
+		Dependencies are automatically satisfied through
+			delay-force evaluation.  
+		Added some new test cases for these.  
+	  hackt/rb-tree.scm: rb-tree->stream (of pairs)
+		other source comments added.
+
+
 2007-04-14	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-32:

@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
-;; "bool-split-select-a-02.hacchpsimscm"
-;;	$Id: bool-split-select-a-06.hacchpsimscm,v 1.1.2.1 2007/04/14 23:05:53 fang Exp $
+;; "bool-split-select-a-06.hacchpsimscm"
+;;	$Id: bool-split-select-a-06.hacchpsimscm,v 1.1.2.2 2007/04/15 21:54:01 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -22,7 +22,8 @@
 M
 
 "successor lists: (unsorted)"
-(define succs (chpsim-assoc-event-successors all-static-events-stream))
+; (define succs (chpsim-assoc-event-successors all-static-events-stream))
+(define succs (force static-event-successors-map-delayed))
 (stream-for-each-display-newline succs)
 
 "detect branch-joins: (prereq: predecessor map)"
@@ -48,19 +49,4 @@ M
 )
 "predecessor map populated:"
 (rb-tree/for-each-display-newline preds)
-
-(exit)
-"TODO: find branch-joins"
-
-"do DFS on tree, marking branch nest levels:"
-(define (DFS index lvl)
-  (if (rb-tree/lookup M #f)
-    ...
-  )
-)
-
-"TODO: find loop-entries and loop-back events"
-
-(DFS 0) ; starting with the first event, of course
-
 

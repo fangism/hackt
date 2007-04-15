@@ -3,10 +3,8 @@
 ;; "select-nested-loop-a-03.hacchpsimscm"
 ;; copy-modified from "select-nested-loop-a-02.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: select-nested-loop-a-05.hacchpsimscm,v 1.1.2.1 2007/04/14 23:05:55 fang Exp $
+;;	$Id: select-nested-loop-a-05.hacchpsimscm,v 1.1.2.2 2007/04/15 21:54:04 fang Exp $
 ;; @haco@ select-nested-loop-a.haco-a
-
-;; Testing histogram construction, using defined functions
 
 ; (use-modules (hackt chpsim-primitives))
 (use-modules (hackt chpsim-trace))
@@ -16,10 +14,6 @@
 (use-modules (hackt streams))
 (use-modules (ice-9 streams))
 ; (use-modules (srfi srfi-1))	; for alist (associative lists)
-
-; "all static events:"
-; (define all-static-events-stream (static-event-stream))
-; (stream-for-each-display-newline all-static-events-stream)
 
 (define select-events
   (chpsim-filter-static-events-select all-static-events-stream))
@@ -42,5 +36,14 @@
 )
 "should be empty:"
 (stream-for-each-display-newline do-whiles)
+
+
+(define joins
+  (stream-filter
+    (lambda (e) (hac:chpsim-event-join? (static-event-raw-entry e)))
+    all-static-events-stream)
+)
+"concurrent joins:"
+(stream-for-each-display-newline joins)
 
 

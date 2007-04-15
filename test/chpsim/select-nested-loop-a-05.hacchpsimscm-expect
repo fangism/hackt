@@ -6,3 +6,10 @@
 (17 . #<raw-chpsim-event-node: select: , pid: 0, #pred: 1, succ: 9 16 
 >)
 "should be empty:"
+"concurrent joins:"
+(1 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 17 
+>)
+(4 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 3 
+>)
+(11 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 10 
+>)

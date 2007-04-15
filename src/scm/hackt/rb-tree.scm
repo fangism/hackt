@@ -2,7 +2,7 @@
 "hackt/rb-tree.scm"
 Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-$Id: rb-tree.scm,v 1.1.2.4 2007/04/14 23:05:51 fang Exp $
+$Id: rb-tree.scm,v 1.1.2.5 2007/04/15 21:53:59 fang Exp $
 
 Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -35,7 +35,10 @@ this program; if not, write to the Free Software Foundation, Inc.,
 ;;; These algorithms additionally assume:
 ;;; 5. The root of a tree is black.
 
-(define-module (hackt rb-tree))
+(define-module (hackt rb-tree)
+  #:autoload (ice-9 streams) (list->stream stream->list)
+)
+
 (use-modules (oop goops))
 
 (define-class <rb-tree> ()
@@ -190,7 +193,7 @@ replacing old one."
 		      (rotate-! tree (node-up u) d)))))))))
   (black! (tree-root tree)))
 
-(define (alist->rb-tree alist key=? key<?)
+(define-public (alist->rb-tree alist key=? key<?)
 "Important an assoc-list into a sorted map (red-black tree)."
   ;; Is there a more efficient way to do this?
   (let ((tree (make-rb-tree key=? key<?)))
@@ -198,6 +201,13 @@ replacing old one."
 	((null? alist))
       (rb-tree/insert! tree (caar alist) (cdar alist)))
     tree))
+
+(define-public (rb-tree->stream tree)
+"Converts a rb-tree to a stream, through alist.  "
+  (list->stream (rb-tree->alist tree))
+) ; end define
+
+; TODO: stream->rb-tree
 
 ; disable interrupts to prevent structure corruption
 (define without-interrupts call-with-blocked-asyncs
@@ -210,7 +220,7 @@ replacing old one."
 ) ; end define
 
 (define-public (rb-tree/delete! tree key)
-"Disassociates key-value pair associated with @var{key}."
+"Dissociates key-value pair associated with @var{key}."
   (guarantee-rb-tree tree 'RB-TREE/DELETE!)
   (let ((key=? (tree-key=? tree))
 	(key<? (tree-key<? tree)))
@@ -316,6 +326,7 @@ replacing old one."
 )
 
 (define (copy-subtree node up)
+"This recursive copy preserves precise tree structure, is O(n)."
   (and node
     (let ((node* (make-node (node-key node) (node-value node))))
       (set-node-color! node* (node-color node))
@@ -348,6 +359,11 @@ replacing old one."
     result)
 ) ; end define
 
+#!
+"TODO: a filtered copy-if, whereby a predicate on the key-value pair is passed
+Would like to reuse internal automatic tree-balancing without using insert!
+Would remove! suffice?"
+!#
 
 (define (reduce-nodes node proc-2 default)
 "Reduction visit of all nodes in the tree, O(n)."

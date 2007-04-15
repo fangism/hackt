@@ -1,0 +1,44 @@
+#!hacchpsimguile -b
+!#
+;; "bool-split-select-a-07.hacchpsimscm"
+;;	$Id: bool-split-select-a-07.hacchpsimscm,v 1.1.2.1 2007/04/15 21:54:02 fang Exp $
+;; vi: ft=scheme
+;; @haco@ bool-split-select-a.haco-a
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+; (use-modules (ice-9 streams))
+(use-modules (hackt streams))
+(use-modules (hackt rb-tree))
+
+
+"all static events: "
+(stream-for-each-display-newline all-static-events-stream)
+
+"detect multi-entries: (prereq: predecessor map)"
+(define preds (force static-event-predecessors-map-delayed))
+"predecessor map populated:"
+(rb-tree/for-each-display-newline preds)
+
+"successor map populated:"
+(define succs (force static-event-successors-map-delayed))
+(stream-for-each-display-newline succs)
+
+"events with multiple entries (branch-joins and loop-heads):"
+#!
+(define multi-entries
+  (stream-filter
+    (lambda (x)
+      (let ((i (static-event-node-index x))
+            (e (static-event-raw-entry x)))
+        (> (rb-tree/size (rb-tree/lookup preds i #f))
+          (hac:chpsim-event-num-predecessors e))
+      ) ; end let
+    ) ; end lambda
+    all-static-events-stream
+  ) ; end stream-filter
+) ; end define
+(stream-for-each-display-newline multi-entries)
+!#
+(force static-events-with-multiple-entries-delayed)
+
