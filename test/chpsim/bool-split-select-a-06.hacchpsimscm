@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-06.hacchpsimscm"
-;;	$Id: bool-split-select-a-06.hacchpsimscm,v 1.1.2.2 2007/04/15 21:54:01 fang Exp $
+;;	$Id: bool-split-select-a-06.hacchpsimscm,v 1.1.2.3 2007/04/17 05:57:45 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -24,7 +24,7 @@ M
 "successor lists: (unsorted)"
 ; (define succs (chpsim-assoc-event-successors all-static-events-stream))
 (define succs (force static-event-successors-map-delayed))
-(stream-for-each-display-newline succs)
+(rb-tree/for-each-display-newline succs)
 
 "detect branch-joins: (prereq: predecessor map)"
 (define preds (make-rb-tree = <))
@@ -32,7 +32,7 @@ M
   (lambda (e) (rb-tree/insert! preds e (make-rb-tree = <)))
   E)
 (rb-tree/for-each-display-newline preds)
-(stream-for-each
+(rb-tree/for-each
   (lambda (x)
     (for-each
       (lambda (y)

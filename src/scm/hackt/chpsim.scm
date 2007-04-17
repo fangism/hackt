@@ -1,11 +1,12 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.11 2007/04/15 21:53:58 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.12 2007/04/17 05:57:43 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
 
 (define-module (hackt chpsim)
 #:autoload (ice-9 streams) (stream-map stream-for-each)
+#:autoload (ice-9 q) (make-q q-push! q-pop! q-empty?)
 #:autoload (hackt streams) (stream-filter enumerate-interval-stream)
 #:autoload (hackt rb-tree) (make-rb-tree rb-tree/insert!)
 )
@@ -13,6 +14,8 @@
 (use-modules (hackt chpsim-primitives))	; defined in C++
 ; (use-modules (hackt streams))		; now autoloaded
 ; (use-modules (ice-9 streams))		; now autoloaded
+
+(define root-event-id 0)
 
 ; constant: number of allocated events in static event graph
 (define-public chpsim-num-events (hac:chpsim-num-events))
@@ -100,7 +103,8 @@ Primitive implementations *should* adhere to this ordering."
 ; filters all selection events, deterministic and nondeterministic
 (define-public (chpsim-filter-static-events-select static-events-stream)
 "Select only selection events out of static event stream.  
-Argument is a stream of static events."
+Argument is a stream of static events.
+NOTE: this should really be a map, not a stream."
   (stream-filter (lambda (e)
       (hac:chpsim-event-select? (static-event-raw-entry e)))
     static-events-stream)
@@ -118,19 +122,31 @@ meaning from even graph construction."
     static-event-stream)
 )
 
+(define successor-map-key car) ; in-source documentation!
+(define successor-map-value-list cdr) ; in-source documentation!
+
 #!
 "Memoized map of predecessors, constructed from successors map 
 use access this, use the (force), Luke."
 !#
 (define-public static-event-successors-map-delayed
-  (delay (chpsim-assoc-event-successors all-static-events-stream))
+  (delay
+    (let ((succs-map (make-rb-tree = <)))
+      (stream-for-each
+        (lambda (e) (rb-tree/insert! succs-map
+          (successor-map-key e) (successor-map-value-list e)
+        )) ; end lambda
+        (chpsim-assoc-event-successors all-static-events-stream)
+      ) ; end stream-for-each
+      succs-map
+    ) ; end let
+  ) ; end delay
 ) ; end define
 
 
-(define successor-map-key car) ; in-source documentation!
-(define successor-map-value-list cdr) ; in-source documentation!
 #!
 "Memoized map of predecessors, events whose edges are incident upon this event.
+Predecessor map is constructed as a transpose of the successors map.  
 Implemented as a tree-of-trees (map-of-maps) for efficient set membership tests
 and set operations.  Use the (force) to evaluate this."
 !#
@@ -142,8 +158,8 @@ and set operations.  Use the (force) to evaluate this."
         (lambda (e) (rb-tree/insert! preds e (make-rb-tree = <)))
         chpsim-static-event-index-stream
       ) ; end stream-for-each
-      (stream-for-each
-        (lambda (x)
+      (rb-tree/for-each
+        (lambda (x) ; x is a key-value pair
           (for-each
             (lambda (y)
               (rb-tree/lookup-mutate! preds y
@@ -226,4 +242,181 @@ Delayed object is accessed using (force) and is memoized."
   ) ; end let
 ) ; end delay
 ) ; end define
+
+(define-public (static-events-depth-first-walk-predicated thunk pred)
+"Predicated depth-first walk over static event nodes reachable from the root.
+Predicate is tested on the current node to recurse conditionally."
+  (let ((visited (make-rb-tree = <))
+        (succs-map (force static-event-successors-map-delayed)))
+    (let loop ((n root-event-id))	; start with first top-level node
+      (if (not (rb-tree/lookup-key visited n #f))
+        (begin
+          (rb-tree/insert! visited n '()) ; mark
+          (thunk n) ; apply
+          (if (pred n)
+            (for-each (lambda (s) (loop s)) (rb-tree/lookup succs-map n #f))
+          ) ; end if
+        ) ; end begin
+        ; else do nothing
+      ) ; end if
+    ) ; end let
+  ) ; end let
+) ; end define
+
+#!
+"Depth-first walk, visits every reachable event node from the root once."
+!#
+(define-public (static-events-depth-first-walk thunk)
+  (static-events-depth-first-walk-predicated thunk (lambda (x) #t))
+) ; end define
+
+(define (static-events-depth-first-walk-with-trace thunk)
+"Similar to walk, but also retains a stack-set of node, like Ariadne's thread.
+The procedure thunk should expect a node-index argument and the a recursive
+loop procedure that expects a node-index argument."
+  (let ((visited (make-rb-tree = <)) ; ever visited
+        (visit-stack (make-rb-tree = <)) ; visit stack (balanced)
+       )
+    (let loop ((n root-event-id))
+      (if (not (rb-tree/lookup-key visited n #f))
+        (begin
+          (rb-tree/insert! visited n '()) ; mark
+          (rb-tree/insert! visit-stack n '()) ; mark
+          (thunk n loop visited visit-stack)
+          (rb-tree/delete! visit-stack n) ; undo trail
+        ) ; end begin
+      ) ; end if
+    ) ; end let
+  ) ; end let
+) ; end define
+
+#!
+"Find set of loopback events with DFS.
+Doesn't need to visit all nodes, only one path per branch/fork because
+they reconverge.  For do-while, only the else clause is followed.
+The result is a pair of maps, matching loop head-to-tail and vice versa."
+!#
+(define static-loop-bound-events-delayed
+(delay
+  (let ((succs-map (force static-event-successors-map-delayed))
+        (loop-backs (make-rb-tree = <))
+        (loop-heads (make-rb-tree = <))
+       )
+     (static-events-depth-first-walk-with-trace
+       (lambda (n loop visited visit-stack)
+         (let ((e (static-event-raw-entry (hac:chpsim-get-event n)))
+              (this-succs (rb-tree/lookup succs-map n #f))
+              (classify (lambda (s)
+                (if (rb-tree/lookup-key visit-stack s #f)
+                   (begin
+                     (rb-tree/insert! loop-backs n s)
+                     (rb-tree/insert! loop-heads s n)
+                   )
+                   (if (not (rb-tree/lookup-key visited s #f)) (loop s))
+                ) ; end if
+              ))
+             )
+          (if (hac:chpsim-event-do-while? e)
+            (classify (car (reverse this-succs)))
+            (for-each classify this-succs)
+          )
+        ) ; end let
+      ) ; end lambda
+    ) ; end walk
+    (cons loop-heads loop-backs)
+  ) ; end let
+#!
+  (let ((visited (make-rb-tree = <)) ; ever visited
+        (visit-stack (make-rb-tree = <)) ; visit stack (balanced)
+        (succs-map (force static-event-successors-map-delayed))
+        (loop-backs (make-rb-tree = <))
+        (loop-heads (make-rb-tree = <))
+       )
+    (let loop ((n root-event-id))
+      (if (not (rb-tree/lookup-key visited n #f))
+        (let ((e (static-event-raw-entry (hac:chpsim-get-event n)))
+              (this-succs (rb-tree/lookup succs-map n #f))
+              (classify (lambda (s)
+                (if (rb-tree/lookup-key visit-stack s #f)
+                   (begin
+; INVARIANT: loop heads and tails have one-to-one mapping! assert check here?
+                     (rb-tree/insert! loop-backs n s)
+                     (rb-tree/insert! loop-heads s n)
+                   )
+                   (if (not (rb-tree/lookup-key visited s #f)) (loop s))
+                ) ; end if
+              ))
+             )
+          (rb-tree/insert! visited n '()) ; mark
+          (rb-tree/insert! visit-stack n '()) ; mark
+          (if (hac:chpsim-event-do-while? e)
+            (classify (car (reverse this-succs)))
+            (for-each classify this-succs)
+          )
+          (rb-tree/delete! visit-stack n) ; undo trail
+        ) ; end let
+      ) ; end if
+    ) ; end let
+    (cons loop-heads loop-backs)
+  ) ; end let
+!#
+) ; delay
+) ; end define
+
+#!
+"Events that are the start of forever loops, set is a red-black tree."
+!#
+(define-public static-loop-head-events-delayed
+  (delay (car (force static-loop-bound-events-delayed))))
+
+#!
+"Events that jump to heads of forever loops, set is a red-black tree."
+!#
+(define-public static-loop-tail-events-delayed
+  (delay (cdr (force static-loop-bound-events-delayed))))
+
+
+
+(define static-branch-bound-events-delayed
+(delay
+  (let ((succs-map (force static-event-successors-map-delayed))
+        (preds-map (force static-event-predecessors-map-delayed))
+        (branch-stack (make-q))
+        (branch-heads (make-rb-tree = <))
+        (branch-tails (make-rb-tree = <)) ; reverse-map
+       )
+    (static-events-depth-first-walk
+      (lambda (n)
+        (let ((e (static-event-raw-entry (hac:chpsim-get-event n))))
+          (cond ((hac:chpsim-event-branch? e) (q-push! branch-stack n))
+            ((and (> (rb-tree/size (rb-tree/lookup preds-map n #f)) 1)
+                (= (hac:chpsim-event-num-predecessors e) 1)
+                (not (q-empty? branch-stack)) ; not loop-head, basically
+                (not (hac:chpsim-event-do-while? e)))
+              (let ((bh (q-pop! branch-stack)))
+                (rb-tree/insert! branch-heads bh n)
+                (rb-tree/insert! branch-tails n bh)
+              )) ; end let, end case
+            ; else noop
+          ) ; end cond
+        ) ; end let
+      ) ; end lambda
+    ) ; end walk
+    (cons branch-heads branch-tails)
+  ) ; end let
+) ; end delay
+) ; end define
+
+
+#!
+"Events that are branches, mapped to their respective branch-ends."
+!#
+(define-public static-branch-head-tail-map-delayed
+  (delay (car (force static-branch-bound-events-delayed))))
+
+#!
+"Events that are branch-ends mapped to their respective branch-heads."
+!#
+(define-public static-branch-tail-head-map-delayed
+  (delay (cdr (force static-branch-bound-events-delayed))))
 

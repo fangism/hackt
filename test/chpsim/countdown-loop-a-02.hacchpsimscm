@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
-;; "select-nested-loop-a-03.hacchpsimscm"
+;; "select-nested-loop-a-02.hacchpsimscm"
 ;; copy-modified from "select-nested-loop-a-02.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: countdown-loop-a-02.hacchpsimscm,v 1.1.2.1 2007/04/15 21:54:04 fang Exp $
+;;	$Id: countdown-loop-a-02.hacchpsimscm,v 1.1.2.2 2007/04/17 05:57:48 fang Exp $
 ;; @haco@ countdown-loop-a.haco-a
 
 ; (use-modules (hackt chpsim-primitives))

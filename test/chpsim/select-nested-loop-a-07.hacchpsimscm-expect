@@ -1,0 +1,36 @@
+"events with multiple entries (branch-joins and loop-heads):"
+"events 2, 3, 10 are branch-joins."
+"event 17 is a loop-head."
+((2) (3) (10) (17))
+"testing a depth-first traversal from root node:"
+0
+20
+18
+1
+17
+9
+7
+5
+4
+3
+2
+6
+8
+16
+14
+12
+11
+10
+13
+15
+19
+"showing loop-head-tail map:"
+((17 . 2))
+"showing loop-tail-head map:"
+((2 . 17))
+"there is only one loop"
+"showing branch-head-tail pairs:"
+((9 . 3) (16 . 10) (17 . 2))
+"showing branch-tail-head pairs:"
+((2 . 17) (3 . 9) (10 . 16))
+"expect 3 pairs of branches, 2 of which are nested inside the third."

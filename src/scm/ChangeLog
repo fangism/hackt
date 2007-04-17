@@ -1,5 +1,23 @@
 "scm/ChangeLog"
 
+2007-04-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-34:
+	  hackt/chpsim.scm: autolaod (ice-9 q) for queue/stack structures
+		static-event-successors-map-delayed is now defined
+			as a delayed map (red-black-tree) of [index,succ-list]
+			Dependent algorithms and analyses updated accordingly.
+		defined handy DFS traversals of static event graph, used for
+			computing memoized subsets of static events:
+			static-loop-bound-events-delayed -- bi-maps
+				between loop-head and tail (1:1)
+			static-branch-bound-events-delayed -- bi-maps
+				between branch head and tails (1:1)
+		All new subset maps are delayed objects, and thus
+			automatically computed on demand and memoized.
+		Added some basic test cases, but could really use more...
+
+
 2007-04-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-33:

@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-split-select-a-07.hacchpsimscm"
-;;	$Id: bool-split-select-a-07.hacchpsimscm,v 1.1.2.1 2007/04/15 21:54:02 fang Exp $
+;;	$Id: bool-split-select-a-07.hacchpsimscm,v 1.1.2.2 2007/04/17 05:57:46 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-split-select-a.haco-a
 
@@ -22,7 +22,7 @@
 
 "successor map populated:"
 (define succs (force static-event-successors-map-delayed))
-(stream-for-each-display-newline succs)
+(rb-tree/for-each-display-newline succs)
 
 "events with multiple entries (branch-joins and loop-heads):"
 #!

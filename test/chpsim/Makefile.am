@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.18 2007/04/15 21:54:00 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.19 2007/04/17 05:57:44 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -160,7 +160,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bool-split-select-a-01 bool-split-select-a-02 \
 	bool-split-select-a-03 bool-split-select-a-04 \
 	bool-split-select-a-05 bool-split-select-a-06 \
-	bool-split-select-a-07 \
+	bool-split-select-a-07 bool-split-select-a-08 \
 	channel-sync-desync-a-14 channel-sync-desync-a-15 \
 	channel-sync-desync-a-16 channel-sync-desync-a-17 \
 	channel-sync-desync-a-18 channel-sync-desync-a-19 \
@@ -175,7 +175,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03 select-nested-loop-a-04 \
 	select-nested-loop-a-05 select-nested-loop-a-06 \
-	countdown-loop-a-01 countdown-loop-a-02
+	select-nested-loop-a-07 \
+	countdown-loop-a-01 countdown-loop-a-02 \
+	countdown-loop-a-03
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
