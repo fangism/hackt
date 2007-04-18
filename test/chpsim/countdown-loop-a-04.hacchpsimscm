@@ -1,0 +1,39 @@
+#!hacchpsimguile -b
+!#
+;; "countdown-loop-a-04.hacchpsimscm"
+;; copy-modified from "countdown-loop-a-03.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: countdown-loop-a-04.hacchpsimscm,v 1.1.2.1 2007/04/18 04:23:31 fang Exp $
+;; @haco@ countdown-loop-a.haco-a
+;; @chpsimtrace@ countdown-loop-a-02.chpsimtrace
+
+;; Testing histogram construction for branch statistics
+
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for find-assoc-ref
+; (use-modules (hackt streams))
+; (use-modules (ice-9 streams))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+(use-modules (hackt rb-tree))
+
+(define trace-name "countdown-loop-a-02.chpsimtrace")
+
+; "trace:"
+(define whole-trace (open-chpsim-trace-stream trace-name))
+; (stream-for-each-display-newline whole-trace)
+
+(define branch-histo (make-select-branch-histogram whole-trace))
+"branch-event-node (successor . count) ..."
+; (for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
+(rb-tree/for-each-display-newline branch-histo)
+
+
+(define loop-histo (make-loop-histogram whole-trace))
+"loop counter (loop-head . count) ..."
+; (for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
+(rb-tree/for-each-display-newline loop-histo)
+
+

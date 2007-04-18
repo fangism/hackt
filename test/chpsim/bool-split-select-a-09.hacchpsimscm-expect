@@ -1,0 +1,12 @@
+"branch-event-node (successor . count) ..."
+(12 . ((8 . 3) (9 . 2) (10 . 2) (11 . 2)))
+"loop counter (loop-head . count) ..."
+(1 . 10)
+(2 . 3)
+(6 . 3)
+(16 . 10)
+(17 . 2)
+(18 . 2)
+(19 . 2)
+"process 1, event 1 is constant input source."
+"process 3, loop-head 16, is the splitter."

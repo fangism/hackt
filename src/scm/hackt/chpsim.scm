@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.12 2007/04/17 05:57:43 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.13 2007/04/18 04:23:23 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -34,7 +34,7 @@
 ) ; end define
 
 #!
-"global stream variable, lazy evaluated"
+"global stream variable, lazy evaluated stream, but this is not a delayed obj."
 !#
 (define-public all-static-events-stream (static-event-stream))
 
@@ -110,24 +110,30 @@ NOTE: this should really be a map, not a stream."
     static-events-stream)
 ) ; end define
 
+#!
+"Memoized stream of all select events (branches, do-while)."
+!#
+(define-public static-events-selects-stream-delayed
+  (delay (chpsim-filter-static-events-select all-static-events-stream)))
+
 (define-public (chpsim-assoc-event-successors static-event-stream)
 "Given a static event stream, produces a set of event-successor pairs 
 (which look like lists).  The resulting list can be viewed as an associative 
 list, with the key being the first element and the value being the rest (cdr).
-NOTE: the successes are NOT sorted by index, thus retaining their positional
+NOTE: the successors are NOT sorted by index, thus retaining their positional
 meaning from even graph construction."
   (stream-map (lambda (e)
     (cons (static-event-node-index e)
       (hac:chpsim-event-successors (static-event-raw-entry e))))
     static-event-stream)
-)
+) ; end define
 
 (define successor-map-key car) ; in-source documentation!
 (define successor-map-value-list cdr) ; in-source documentation!
 
 #!
 "Memoized map of predecessors, constructed from successors map 
-use access this, use the (force), Luke."
+to access this, use the (force), Luke."
 !#
 (define-public static-event-successors-map-delayed
   (delay
@@ -211,7 +217,8 @@ Implementation: map-of-maps, using rb-tree."
         ) ; end let
       ) ; end cons
     ) ; end lambda
-  succ-list) ; end map, resulting in an alist
+    succ-list
+  ) ; end map, resulting in an alist
   ret-histo
 ) ; end let
 ) ; end define
@@ -325,41 +332,6 @@ The result is a pair of maps, matching loop head-to-tail and vice versa."
     ) ; end walk
     (cons loop-heads loop-backs)
   ) ; end let
-#!
-  (let ((visited (make-rb-tree = <)) ; ever visited
-        (visit-stack (make-rb-tree = <)) ; visit stack (balanced)
-        (succs-map (force static-event-successors-map-delayed))
-        (loop-backs (make-rb-tree = <))
-        (loop-heads (make-rb-tree = <))
-       )
-    (let loop ((n root-event-id))
-      (if (not (rb-tree/lookup-key visited n #f))
-        (let ((e (static-event-raw-entry (hac:chpsim-get-event n)))
-              (this-succs (rb-tree/lookup succs-map n #f))
-              (classify (lambda (s)
-                (if (rb-tree/lookup-key visit-stack s #f)
-                   (begin
-; INVARIANT: loop heads and tails have one-to-one mapping! assert check here?
-                     (rb-tree/insert! loop-backs n s)
-                     (rb-tree/insert! loop-heads s n)
-                   )
-                   (if (not (rb-tree/lookup-key visited s #f)) (loop s))
-                ) ; end if
-              ))
-             )
-          (rb-tree/insert! visited n '()) ; mark
-          (rb-tree/insert! visit-stack n '()) ; mark
-          (if (hac:chpsim-event-do-while? e)
-            (classify (car (reverse this-succs)))
-            (for-each classify this-succs)
-          )
-          (rb-tree/delete! visit-stack n) ; undo trail
-        ) ; end let
-      ) ; end if
-    ) ; end let
-    (cons loop-heads loop-backs)
-  ) ; end let
-!#
 ) ; delay
 ) ; end define
 
@@ -376,6 +348,15 @@ The result is a pair of maps, matching loop head-to-tail and vice versa."
   (delay (cdr (force static-loop-bound-events-delayed))))
 
 
+(define-public (chpsim-event-loop-head? id)
+"Is event id @var{id} a loop-head?"
+  (rb-tree/lookup (force static-loop-head-events-delayed) id #f)
+)
+
+(define-public (chpsim-event-loop-tail? id)
+"Is event id @var{id} a loop-tail? (successor is loop-head)"
+  (rb-tree/lookup (force static-loop-tail-events-delayed) id #f)
+)
 
 (define static-branch-bound-events-delayed
 (delay
@@ -419,4 +400,14 @@ The result is a pair of maps, matching loop head-to-tail and vice versa."
 !#
 (define-public static-branch-tail-head-map-delayed
   (delay (cdr (force static-branch-bound-events-delayed))))
+
+(define-public (chpsim-event-branch-head? id)
+"Is event id @var{id} a branch(-head)? (like hac:chpsim-event-branch?)"
+  (rb-tree/lookup (force static-branch-head-tail-map-delayed) id #f)
+)
+
+(define-public (chpsim-event-branch-tail? id)
+"Is event id @var{id} a branch-tail? (end-of-branch join)"
+  (rb-tree/lookup (force static-branch-tail-head-map-delayed) id #f)
+)
 

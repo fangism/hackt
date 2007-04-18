@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.19 2007/04/17 05:57:44 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.20 2007/04/18 04:23:25 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -92,6 +92,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	do-while-countdown-07-break \
 	countdown-successor-01 \
 	countdown-loop-a-01 countdown-loop-b-01 \
+	countdown-loop-a-02-trace \
 	countdown-sequence-a-01 \
 	countdown-nested-a-01 countdown-nested-a-02 \
 	countdown-nested-b-01 countdown-nested-b-02 \
@@ -121,6 +122,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	select-block-a-01 select-block-a-02 \
 	bool-split-a-01 \
 	bool-split-select-a-01 \
+	bool-split-select-a-02-trace \
 	bool-lookup-a-01 \
 	channel-sync-desync-a-01 channel-sync-desync-a-02 \
 	channel-sync-desync-a-03-trace \
@@ -161,6 +163,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bool-split-select-a-03 bool-split-select-a-04 \
 	bool-split-select-a-05 bool-split-select-a-06 \
 	bool-split-select-a-07 bool-split-select-a-08 \
+	bool-split-select-a-09 \
 	channel-sync-desync-a-14 channel-sync-desync-a-15 \
 	channel-sync-desync-a-16 channel-sync-desync-a-17 \
 	channel-sync-desync-a-18 channel-sync-desync-a-19 \
@@ -175,9 +178,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03 select-nested-loop-a-04 \
 	select-nested-loop-a-05 select-nested-loop-a-06 \
-	select-nested-loop-a-07 \
+	select-nested-loop-a-07 select-nested-loop-a-08 \
 	countdown-loop-a-01 countdown-loop-a-02 \
-	countdown-loop-a-03
+	countdown-loop-a-03 countdown-loop-a-04
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -188,7 +191,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 KEEP_CHPSIM_TRACE_FILES = \
 	select-nested-loop-a-03.chpsimtrace \
 	channel-sync-desync-a-04.chpsimtrace \
-	channel-sync-desync-a-05.chpsimtrace
+	channel-sync-desync-a-05.chpsimtrace \
+	bool-split-select-a-02.chpsimtrace \
+	countdown-loop-a-02.chpsimtrace
 
 # Additional dependencies from known-side effects
 channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
@@ -198,6 +203,12 @@ channel-sync-desync-a-05.chpsimtrace: channel-sync-desync-a-05-trace.chpsimrc-ou
 	@test -f $@
 
 select-nested-loop-a-03.chpsimtrace: select-nested-loop-a-03-trace.chpsimrc-out
+	@test -f $@
+
+bool-split-select-a-02.chpsimtrace: bool-split-select-a-02-trace.chpsimrc-out
+	@test -f $@
+
+countdown-loop-a-02.chpsimtrace: countdown-loop-a-02-trace.chpsimrc-out
 	@test -f $@
 
 # this should be redundant with chpsimrc-out dependence...

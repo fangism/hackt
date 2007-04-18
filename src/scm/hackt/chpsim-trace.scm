@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.1.2.11 2007/04/14 23:05:49 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.1.2.12 2007/04/18 04:23:22 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -21,7 +21,7 @@
 
 (define-module (hackt chpsim-trace)
 #:autoload (srfi srfi-1) (any)
-#:autoload (hackt algorithm) (find-assoc-ref)
+#:autoload (hackt algorithm) (find-assoc-ref accumulate)
 #:autoload (hackt rb-tree)
   (make-rb-tree rb-tree/insert! rb-tree/lookup rb-tree/lookup-mutate!)
 ;;	#:export (make-chpsim-trace-stream
@@ -255,14 +255,15 @@ trace-file name @var{tr-name}.  Starts at the last event in trace by default."
 ;;;;;;;;;;; BRANCH FREQUENCY ANALYSIS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-public (make-select-branch-histogram trace-stream)
-"Constructs a histogram of taken branches/selections from event trace stream."
-(let ((select-succ-lists (chpsim-assoc-event-successors (
-    chpsim-filter-static-events-select all-static-events-stream))
-  )) ; end select-succ-lists
-  (let ((ll-histo (chpsim-successor-lists->histogram
-          (stream->list select-succ-lists)))
-        (sorted-assoc-pred 
-          (let ((pred-map (make-rb-tree = <)))
+"Constructs a histogram of taken branches/selections from event trace stream.
+This covers branches and do-whiles, but no forever-loops.
+TODO: use memoized structures."
+(let* ((select-succ-lists (chpsim-assoc-event-successors
+         (force static-events-selects-stream-delayed)))
+       (ll-histo (chpsim-successor-lists->histogram
+         (stream->list select-succ-lists)))
+       (sorted-assoc-pred 
+         (let ((pred-map (make-rb-tree = <)))
 	; stuff the pairs into a sorted map
             (stream-for-each
               (lambda (s) (rb-tree/insert! pred-map (car s) (cdr s)))
@@ -297,7 +298,58 @@ trace-file name @var{tr-name}.  Starts at the last event in trace by default."
     (lambda (e) (count-selects (chpsim-trace-entry-event e)))
     trace-stream) ; end stream-for-each
   ll-histo ; return this
-  ) ; end let
 ) ; end let
+) ; end define
+
+;;;;;;;;;;; LOOP REPETTION COUNTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(define-public (make-loop-histogram trace-stream)
+"Constructs a histogram of do-forever loop counts for each loop-head event.
+Result is a map of number of times each loop entered (first event executed).
+NOTE: loop-head events that are selections are not automatically recoreded
+because selection events don't execute in the normal sense, they choose
+a successor to execute.  Thus, we depend on the branch histogram, which
+correctly back-propagates counts to branches.  "
+  (let ((loop-heads (force static-loop-head-events-delayed))
+        (loop-histo (make-rb-tree = <))
+        (branch-histo (make-select-branch-histogram trace-stream))
+		; can this be memoized?
+       )
+       ; copy over keys into new histo, initialize counts to 0
+    (rb-tree/for-each (lambda (p) (rb-tree/insert! loop-histo (car p) 0))
+      loop-heads)
+    (stream-for-each
+      (lambda (e)
+         (let ((eid (chpsim-trace-entry-event e)))
+           (if (chpsim-event-loop-head? eid)
+             (rb-tree/lookup-mutate! loop-histo eid
+               (lambda (x) (1+ x))
+               #f)
+             ; else ignore
+           )
+         ) ; end let
+      ) ; end lambda
+      trace-stream
+    ) ; end stream-for-each
+    ; back-propagating branch counts
+    (rb-tree/for-each
+      (lambda (p)
+        (let ((eid (car p)))
+          (if (chpsim-event-branch-head? eid)
+            (begin
+            (rb-tree/lookup-mutate! loop-histo eid
+              (lambda (x)
+                (accumulate (lambda (j k) (+ (cdr j) k)) 0
+                  (rb-tree->alist (rb-tree/lookup branch-histo eid #f)))
+              ) ; end lambda
+              #f
+            )
+            ) ; end begin
+          ) ; end if
+        ) ; end let
+      ) ; end lambda
+      loop-histo
+    ) ; end for-each
+    loop-histo
+  ) ; end let
 ) ; end define
 

@@ -1,5 +1,16 @@
 "scm/ChangeLog"
 
+2007-04-17	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-35:
+	  hackt/chpsim-trace.scm: make-loop-histogram done, basically tested, 
+		unforunately requires branch-count histogram in the event
+		that loops begin with branch-selections  :/
+	  hackt/chpsim.scm: added loop?/branch? head/tail? predicates
+		based on statically-computed sets.
+	  Another handful of test cases.
+
+
 2007-04-16	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-34:

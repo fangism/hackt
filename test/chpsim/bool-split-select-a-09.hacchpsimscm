@@ -1,0 +1,41 @@
+#!hacchpsimguile -b
+!#
+;; "bool-split-select-a-04.hacchpsimscm"
+;; copy-modified from "bool-split-select-a-03.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: bool-split-select-a-09.hacchpsimscm,v 1.1.2.1 2007/04/18 04:23:29 fang Exp $
+;; @haco@ bool-split-select-a.haco-a
+;; @chpsimtrace@ bool-split-select-a-02.chpsimtrace
+
+;; Testing histogram construction for branch statistics
+
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for find-assoc-ref
+; (use-modules (hackt streams))
+; (use-modules (ice-9 streams))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+(use-modules (hackt rb-tree))
+
+(define trace-name "bool-split-select-a-02.chpsimtrace")
+
+(define whole-trace (open-chpsim-trace-stream trace-name))
+; (stream-for-each-display-newline whole-trace)
+
+(define branch-histo (make-select-branch-histogram whole-trace))
+"branch-event-node (successor . count) ..."
+; (for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
+(rb-tree/for-each-display-newline branch-histo)
+
+
+(define loop-histo (make-loop-histogram whole-trace))
+"loop counter (loop-head . count) ..."
+; (for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
+(rb-tree/for-each-display-newline loop-histo)
+"process 1, event 1 is constant input source."
+"process 3, loop-head 16, is the splitter."
+
+
+
