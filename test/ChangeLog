@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2007-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-18:
+	  Make.test-prsim: updated prsimrc-fail filter (simplified)
+	  Make.test-cflat: added missing lvs{prs,fail}diffs summaries
+
+
 2007-03-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15:

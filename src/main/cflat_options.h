@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.10 2006/07/30 05:49:41 fang Exp $
+	$Id: cflat_options.h,v 1.11 2007/04/19 03:13:40 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -66,6 +66,9 @@ public:
 		CONNECT_STYLE_WIRE
 	}				connect_style_enum;
 public:
+	/**
+		Use the primary_tool_enum values.  
+	 */
 	unsigned char			primary_tool;
 	/**
 		Bitfields for special modes of tools.  

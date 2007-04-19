@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2006/11/12 05:59:22 fang Exp $
+#	$Id: Makefile.am,v 1.17 2007/04/19 03:13:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -9,13 +9,15 @@ HACKT_PRSIMRC_TEST_SUBJECTS = celem inv oscillator half-celem deep tree \
 	celem-share after-celem-def after-celem after-celem-more \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
-	logic-defs and nand or nor array
+	logic-defs and nand or nor array \
+	expr-limit-a expr-limit-b
 
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-01 celem-02 celem-03 celem-04 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 \
 	and-01 nand-01 nand-02 or-01 nor-01 \
+	expr-limit-a-01 \
 	unstable-01 unstable-02 unstable-03 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
 	oscil-random-01 oscil-what-01 \
@@ -33,8 +35,11 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05
 
+# NOTE: expr-limit-a-01 should fail before limit was increased beyond 255
+
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	inv-06 inv-10 \
+	expr-limit-b-01 \
 	cycle-source-a cycle-source-b \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \

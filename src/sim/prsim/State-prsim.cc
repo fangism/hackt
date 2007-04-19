@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.2 2007/04/05 17:14:36 fang Exp $
+	$Id: State-prsim.cc,v 1.3 2007/04/19 03:13:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -30,6 +30,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/traits/proc_traits.h"	// for diagnostic
 #include "Object/global_entry.h"
 #include "sim/ISE.h"
 #include "common/TODO.h"
@@ -155,6 +156,7 @@ State::pull_to_value[3][3] = {
 	TODO: do this work in module?
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
+	\throw exception if there is an error
  */
 State::State(const entity::module& m, const ExprAllocFlags& f) : 
 		state_base(m, "prsim> "), 
@@ -212,7 +214,16 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 
 
 	// this may throw an exception!
+try {
 	sm.accept(v);
+} catch (const entity::cflat_visitor::process_exception& e) {
+	const global_entry_pool<process_tag>&
+		proc_entry_pool(sm.get_pool<process_tag>());
+	cerr << "Error with process instance: ";
+	proc_entry_pool[e.pid].dump_canonical_name(cerr, 
+		mod.get_footprint(), sm) << endl;
+	THROW_EXIT;
+}
 	// top-level prs in the module
 	mod.get_footprint().get_prs_footprint().accept(v);
 }	// end State::State(const module&)

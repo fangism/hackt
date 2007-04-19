@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-18:
+	  Virantha wins the lottery!  He is the first person to 
+		exceed the 255 term limit of prs expressions in prsim,
+		i.e. immediate children of PRS_AND/OR limit.
+		Prior to this patch, result would be assert failure.
+	  sim/prsim/Expr.h: now define HUGE_MAX_EXPR_COUNT to use
+		unsigned short to increase range, at the cost of memory bloat.
+	  sim/prsim/ExprAlloc.cc, State-prsim.cc:
+		better diagnostics in the rare event of an exception.
+	  Added expect-fail test case for graceful failure.
+	  Wish: future re-instate the 255 limit again.  
+
+
 2007-04-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-17:

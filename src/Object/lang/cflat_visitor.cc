@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.6 2006/05/06 04:18:40 fang Exp $
+	$Id: cflat_visitor.cc,v 1.7 2007/04/19 03:13:39 fang Exp $
  */
 
 #include <algorithm>
@@ -20,23 +20,23 @@ using std::for_each;
 //=============================================================================
 // struct cflat_visitor class definition
 
-/**
-	Possibly move class definition into header, leaving methods
-	in this file.  
- */
-class cflat_visitor::expr_pool_setter {
-private:
-	cflat_visitor&                          cfv;
-public:
-	expr_pool_setter(cflat_visitor& _cfv, const footprint& _fp) :
-			cfv(_cfv) {
-		cfv.expr_pool = &_fp.get_expr_pool();
-	}
+cflat_visitor::expr_pool_setter::expr_pool_setter(
+		cflat_visitor& _cfv, const footprint& _fp) :
+		cfv(_cfv) {
+	cfv.expr_pool = &_fp.get_expr_pool();
+}
 
-	~expr_pool_setter() {
-		cfv.expr_pool = NULL;
-	}
-};      // end struct expr_pool_setter
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+cflat_visitor::expr_pool_setter::expr_pool_setter(
+		cflat_visitor& _cfv, const cflat_visitor& _s) :
+		cfv(_cfv) {
+	cfv.expr_pool = _s.expr_pool;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+cflat_visitor::expr_pool_setter::~expr_pool_setter() {
+	cfv.expr_pool = NULL;
+}
 
 //=============================================================================
 /**
@@ -50,10 +50,21 @@ cflat_visitor::visit(const state_manager& sm) {
 		proc_entry_pool(sm.get_pool<process_tag>());
 	// Could re-write in terms of begin() and end() iterators.  
 	const size_t plim = proc_entry_pool.size();
+try {
 	for ( ; pid < plim; ++pid) {
 		entity::production_rule_substructure::accept(
 			proc_entry_pool[pid], *this);
 	}
+} catch (...) {
+	cerr << "FATAL: error during processing of process id " << pid
+		<< "." << endl;
+#if 0
+	cerr << "\tinstance: ";
+	proc_entry_pool[pid].dump_canonical_name(cerr, topfp, sm) << endl;
+#endif
+	// topfp footprint is not available here, pass pid in exception
+	throw process_exception(pid);
+}
 }
 
 //=============================================================================

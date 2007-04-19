@@ -1,0 +1,7 @@
+# "expr-limit-b-01.prsimrc"
+#	$Id: expr-limit-b-01.prsimrc,v 1.1 2007/04/19 03:13:48 fang Exp $
+# @haco@ expr-limit-b.haco-a
+# testing for state allocation only
+
+# do nothing
+

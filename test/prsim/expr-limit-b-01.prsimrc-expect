@@ -1,0 +1,5 @@
+FATAL: size of prsim expression exceeded limit: 66666 > 65535
+FATAL: error during prs rule allocation.
+FATAL: error during processing of process id 1.
+Error with process instance: fb
+Caught exception during construction of simulator state.

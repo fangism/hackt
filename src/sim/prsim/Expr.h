@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.7 2006/08/12 00:36:34 fang Exp $
+	$Id: Expr.h,v 1.8 2007/04/19 03:13:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -14,11 +14,19 @@
 #include "sim/common.h"
 #include "util/macros.h"
 #include "util/utypes.h"
+#include "util/attributes.h"
 
 /**
 	Define to 1 to use PULL_WEAK == 1.
  */
 #define	USE_BETTER_PULL_ENCODING		0
+
+/**
+	Define to 1 to use short for count type instead of char.
+	I can't believe *someone* actually wrote prs with more than
+	255 terms in a monolithic AND...
+ */
+#define	HUGE_MAX_EXPR_COUNT			1
 
 namespace HAC {
 namespace SIM {
@@ -28,6 +36,15 @@ using std::istream;
 // using std::valarray;
 using std::vector;
 using std::pair;
+#if HUGE_MAX_EXPR_COUNT
+typedef	ushort				expr_count_type;
+#else
+typedef	uchar				expr_count_type;
+#endif
+
+// keep this macro local
+#undef	HUGE_MAX_EXPR_COUNT
+
 //=============================================================================
 /**
 	Based on ye old struct prs_expr (PrsExpr).
@@ -37,7 +54,7 @@ using std::pair;
 	TODO: split up into structural and stateful information.  
  */
 struct Expr {
-	typedef	uchar			count_type;
+	typedef	expr_count_type		count_type;
 	/**
 		There is no NODE expr, just use AND/OR of size 1.  
 		There is no NOT expr, just use and NAND/NOR of size 1.  
@@ -71,6 +88,7 @@ struct Expr {
 	 */
 //	const
 	uchar			type;
+//	uchar			__unused_padding;
 	/**
 		The number of children.
 		const b/c it should be set once for the duration 
@@ -326,7 +344,7 @@ public:
 	ostream&
 	dump_checkpoint_state(ostream&, istream&);
 
-};	// end struct ExprState
+} __ATTRIBUTE_ALIGNED__ ;	// end struct ExprState
 
 //=============================================================================
 /**
@@ -345,7 +363,7 @@ public:
  */
 struct ExprGraphNode {
 	typedef	size_t			index_type;
-	typedef	uchar			count_type;
+	typedef	expr_count_type		count_type;
 	/**
 		The second value can be interpreted as an index
 		to an expression or bool node.  
