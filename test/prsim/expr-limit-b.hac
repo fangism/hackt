@@ -1,0 +1,15 @@
+// "expr-limit-b.hac"
+// copy-modified from "expr-limit-a.hac"
+// expected to fail because exceeds limit of expression size
+
+defproc e1of2 (bool d[2]; bool t, f, e,v) { }
+template <pint N>
+defproc foobar (e1of2 r[N]) {
+bool re;
+prs {
+	(&:i:N: r[i].e) -> re+
+	(&:i:N: ~r[i].e) -> re-
+}
+}
+foobar<66666> fb;	// death, > 255
+

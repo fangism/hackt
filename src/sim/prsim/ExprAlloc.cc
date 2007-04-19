@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.17 2007/02/27 02:28:06 fang Exp $
+	$Id: ExprAlloc.cc,v 1.17.6.1 2007/04/19 05:17:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -10,6 +10,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
+#include <limits>
 // #include <iterator>
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Expr.h"
@@ -25,6 +26,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/SPEC_common.h"
 #include "Object/lang/SPEC_registry.tcc"
 #include "Object/lang/SPEC_footprint.h"
+#if 0
+#include "Object/lang/cflat_printer.h"		// for diagnostics
+#include "main/cflat_options.h"			// for diagnostics
+#endif
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/traits/classification_tags.h"
@@ -327,6 +332,7 @@ ExprAlloc::compact_expr_pools(void) {
 void
 ExprAlloc::visit(const footprint_rule& r) {
 	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
+try {
 {
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
@@ -358,6 +364,21 @@ ExprAlloc::visit(const footprint_rule& r) {
 	for ( ; i!=e; ++i) {
 		ExprAlloc_attribute_registry[i->key].main(*this, *i->values);
 	}
+}
+} catch (...) {
+	cerr << "FATAL: error during prs rule allocation." << endl;
+#if 0
+	// botched attempt to print error message
+	typedef	entity::PRS::cflat_prs_printer	cflat_prs_printer;
+	cflat_options cfo;
+	cfo.primary_tool = cflat_options::TOOL_PRSIM;
+	entity::PRS::cflat_prs_printer pp(cerr, cfo);
+	const cflat_prs_printer::module_setter mtmp(pp, *this);
+	const cflat_prs_printer::footprint_frame_setter ftmp(pp, *this);
+	const cflat_prs_printer::expr_pool_setter etmp(pp, *this);
+	r.accept(pp);	// do we guarantee that cflat doesn't throw?
+#endif
+	throw;
 }
 }	// end method visit(const footprint_rule&)
 
@@ -447,7 +468,14 @@ ExprAlloc::link_child_expr(const expr_index_type parent,
 expr_index_type
 ExprAlloc::allocate_new_Nary_expr(const char type, const size_t sz) {
 	STACKTRACE_VERBOSE;
+	static const size_t lim = std::numeric_limits<expr_count_type>::max();
 	INVARIANT(sz);
+	if (sz > lim) {
+		// assert(sz < lim);
+		cerr << "FATAL: size of prsim expression exceeded limit: " <<
+			sz << " > " << lim << endl;
+		THROW_EXIT;
+	}
 	const expr_type temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
 		expr_type::EXPR_AND : expr_type::EXPR_OR), sz);
 if (expr_free_list.size()) {

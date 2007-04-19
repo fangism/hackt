@@ -1,5 +1,6 @@
 SPEC directive 'order' takes no grouped arguments.
 	got: 3 nodes in argument position 1
 Error with spec directive.
+FATAL: error during processing of process id 1.
 Caught exception during cflat PRS.
 Error during cflat.

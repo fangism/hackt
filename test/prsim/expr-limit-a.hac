@@ -1,0 +1,16 @@
+// "expr-limit-a.hac"
+// reduced by delta and Fang from a ginormous case contributed by Virantha
+// symptom: assertion failed in prsim state construction
+// cause: overflow expression size (> 255) without trap
+
+defproc e1of2 (bool d[2]; bool t, f, e,v) { }
+template <pint N>
+defproc foobar (e1of2 r[N]) {
+bool re;
+prs {
+	(&:i:N: r[i].e) -> re+
+	(&:i:N: ~r[i].e) -> re-
+}
+}
+foobar<292> fb;	// death, > 255
+

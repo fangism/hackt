@@ -1,12 +1,13 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.5 2006/05/06 04:18:41 fang Exp $
+	$Id: cflat_visitor.h,v 1.5.52.1 2007/04/19 05:17:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
 #define	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
 
 #include "util/NULL.h"
+#include "util/size_t.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 
 namespace HAC {
@@ -37,8 +38,29 @@ protected:
 	 */
 	const PRS_footprint_expr_pool_type*		expr_pool;
 
-	/// helper class for maintaining expr_pool
-	class expr_pool_setter;
+	/**
+		helper class for maintaining expr_pool.
+		We only made this public so other non-cflat functions could
+		print better diagnostic messages cflat-style.  
+		TODO: just use member_saver?
+	 */
+	class expr_pool_setter {
+	private:
+		cflat_visitor&                          cfv;
+	public:
+		expr_pool_setter(cflat_visitor&, const footprint&);
+		expr_pool_setter(cflat_visitor&, const cflat_visitor&);
+		~expr_pool_setter();
+	};      // end struct expr_pool_setter
+public:
+	struct process_exception {
+		/**
+			Identifies which top-level process id caused exception.
+		 */
+		size_t				pid;
+		explicit
+		process_exception(const size_t p) : pid(p) { }
+	};
 public:
 	cflat_visitor() : expr_pool(NULL) { }
 virtual	~cflat_visitor() { }

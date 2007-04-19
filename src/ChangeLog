@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-05-backport-main-00-81-18:
+	  Backtport of delta HACKT-00-01-04-main-00-81-17 to -00-81-18 patch.
+	  sim/prsim/Expr.h: now define HUGE_MAX_EXPR_COUNT to use short to 
+		increase range, and some improved diagnostics.  
+
+
 2007-04-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-16-PRS-07-04:
