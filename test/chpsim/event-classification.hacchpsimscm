@@ -1,0 +1,54 @@
+#!hacchpsimguile -b
+!#
+;; "event-classification.hacchpsimscm"
+;; traceless static analyses
+;; vi: ft=scheme
+;;	$Id: event-classification.hacchpsimscm,v 1.1.2.1 2007/04/19 23:36:30 fang Exp $
+
+;; don't call this script directly, but load me from another
+
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for list-flatten
+(use-modules (hackt rb-tree))
+; (use-modules (ice-9 streams))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+
+(display "\"event successors map:\"\n")
+(define succs (force static-event-successors-map-delayed))
+(rb-tree/for-each-display-newline succs)
+
+(display "\"event predecessors map:\"\n")
+(define preds (force static-event-predecessors-map-delayed))
+(rb-tree/for-each-display-newline preds)
+
+(display "\"loop-heads:\"\n")
+(define loop-heads (force static-loop-head-events-delayed))
+(rb-tree/for-each-display-newline loop-heads)
+
+(display "\"loop-tails:\"\n")
+(define loop-tails (force static-loop-tail-events-delayed))
+(rb-tree/for-each-display-newline loop-tails)
+
+(display "\"branch-heads:\"\n")
+(define branch-heads (force static-branch-head-tail-map-delayed))
+(rb-tree/for-each-display-newline branch-heads)
+
+(display "\"branch-tails:\"\n")
+(define branch-tails (force static-branch-tail-head-map-delayed))
+(rb-tree/for-each-display-newline branch-tails)
+
+(display "\"do-whiles:\"\n")
+(define do-whiles (force static-do-while-events-delayed))
+(rb-tree/for-each-display-newline do-whiles)
+
+(display "\"fork-join map:\"\n")
+(define forks (force static-fork-join-map-delayed))
+(rb-tree/for-each-display-newline forks)
+
+(display "\"join-fork map:\"\n")
+(define joins (force static-join-fork-map-delayed))
+(rb-tree/for-each-display-newline joins)
+

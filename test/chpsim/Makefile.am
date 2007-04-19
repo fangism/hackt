@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.20 2007/04/18 04:23:25 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.21 2007/04/19 23:36:16 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -95,9 +95,13 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	countdown-loop-a-02-trace \
 	countdown-sequence-a-01 \
 	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-a-03-trace \
 	countdown-nested-b-01 countdown-nested-b-02 \
+	countdown-nested-b-03-trace \
 	countdown-nested-c-01 countdown-nested-c-02 \
+	countdown-nested-c-03-trace \
 	countdown-nested-d-01 countdown-nested-d-02 \
+	countdown-nested-d-03-trace \
 	countdown-domino-a-01 \
 	countdown-domino-b-01 \
 	countdown-domino-b-02-cause countdown-domino-b-03-cause \
@@ -180,7 +184,11 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-a-05 select-nested-loop-a-06 \
 	select-nested-loop-a-07 select-nested-loop-a-08 \
 	countdown-loop-a-01 countdown-loop-a-02 \
-	countdown-loop-a-03 countdown-loop-a-04
+	countdown-loop-a-03 countdown-loop-a-04 \
+	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-b-01 countdown-nested-b-02 \
+	countdown-nested-c-01 countdown-nested-c-02 \
+	countdown-nested-d-01 countdown-nested-d-02
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -211,8 +219,24 @@ bool-split-select-a-02.chpsimtrace: bool-split-select-a-02-trace.chpsimrc-out
 countdown-loop-a-02.chpsimtrace: countdown-loop-a-02-trace.chpsimrc-out
 	@test -f $@
 
+countdown-nested-a-03.chpsimtrace: countdown-nested-a-03-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-b-03.chpsimtrace: countdown-nested-b-03-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-c-03.chpsimtrace: countdown-nested-c-03-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-d-03.chpsimtrace: countdown-nested-d-03-trace.chpsimrc-out
+	@test -f $@
+
 # this should be redundant with chpsimrc-out dependence...
 $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
+
+srcdir_EXTRA_DIST += \
+	event-classification.hacchpsimscm \
+	basic-trace-analysis.hacchpsimscm
 
 include $(top_srcdir)/test/Make.test-tail
 

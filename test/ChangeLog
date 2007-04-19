@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2007-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-36:
+	  Make.test-guile: added $(srcdir) to GUILE_LOAD_PATH for testing
+		This allows is to load and call other scripts.  
+
+
 2007-03-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-12:

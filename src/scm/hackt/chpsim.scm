@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.1.2.13 2007/04/18 04:23:23 fang Exp $
+;;	$Id: chpsim.scm,v 1.1.2.14 2007/04/19 23:36:12 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -360,8 +360,8 @@ The result is a pair of maps, matching loop head-to-tail and vice versa."
 
 (define static-branch-bound-events-delayed
 (delay
-  (let ((succs-map (force static-event-successors-map-delayed))
-        (preds-map (force static-event-predecessors-map-delayed))
+  (let ((preds-map (force static-event-predecessors-map-delayed))
+;       (succs-map (force static-event-successors-map-delayed))
         (branch-stack (make-q))
         (branch-heads (make-rb-tree = <))
         (branch-tails (make-rb-tree = <)) ; reverse-map
@@ -410,4 +410,65 @@ The result is a pair of maps, matching loop head-to-tail and vice versa."
 "Is event id @var{id} a branch-tail? (end-of-branch join)"
   (rb-tree/lookup (force static-branch-tail-head-map-delayed) id #f)
 )
+
+#!
+"Evaluates fork-join pairs maps."
+!#
+(define static-fork-join-events-delayed
+(delay
+  (let ((preds-map (force static-event-predecessors-map-delayed))
+        (fork-stack (make-q))
+        (fork-heads (make-rb-tree = <))
+        (fork-joins (make-rb-tree = <)) ; reverse-map
+       )
+    (static-events-depth-first-walk
+      (lambda (n)
+        (let ((e (static-event-raw-entry (hac:chpsim-get-event n))))
+          (cond ((hac:chpsim-event-fork? e) (q-push! fork-stack n))
+            ((hac:chpsim-event-join? e)
+              (let ((jh (q-pop! fork-stack)))
+                (rb-tree/insert! fork-heads jh n)
+                (rb-tree/insert! fork-joins n jh)
+              )) ; end let, end case
+            ; else noop
+          ) ; end cond
+        ) ; end let
+      ) ; end lambda
+    ) ; end walk
+    (cons fork-heads fork-joins)
+  ) ; end let
+) ; end delay
+) ; end define
+
+(define-public static-fork-join-map-delayed
+  (delay (car (force static-fork-join-events-delayed))))
+
+(define-public static-join-fork-map-delayed
+  (delay (cdr (force static-fork-join-events-delayed))))
+
+
+#!
+"Sorted set of do-while loop events."
+!#
+(define-public static-do-while-events-delayed
+(delay
+  (let ((do-whiles (make-rb-tree = <)))
+    (stream-for-each
+      (lambda (n)
+        (let (
+               (e (static-event-raw-entry n))
+               ; (re (hac:chpsim-get-event n))
+              )
+          (if (hac:chpsim-event-do-while? e)
+            (rb-tree/insert! do-whiles (static-event-node-index n) '())
+            ; else ignore
+          ) ; end if
+        ) ; end let
+      ) ; end lambda
+      all-static-events-stream
+    ) ; end stream-for-each
+    do-whiles
+  ) ; end let
+) ; end delau
+) ; end define
 

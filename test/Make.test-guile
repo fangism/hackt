@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.4.2.3 2007/03/25 22:54:14 fang Exp $
+#	$Id: Make.test-guile,v 1.4.2.4 2007/04/19 23:36:15 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -10,7 +10,7 @@ HACSCM_OUTPUT_FILTER = \
 	$(SED) '/module created/s/: [^ ]*[ ]/: \#\#FILE\#\# /g'
 
 HACSCM_TEST_ENVIRONMENT = \
-	GUILE_LOAD_PATH=$(top_srcdir)/src/scm
+	GUILE_LOAD_PATH=$(top_srcdir)/src/scm:$(srcdir)
 
 HACKT_GUILE_ENV_EXE = \
 	$(HACSCM_TEST_ENVIRONMENT) $(HACKT_GUILE_EXE)
@@ -165,7 +165,7 @@ AUTO_DEPENDS += hacscmfailtest.autodepend
 # Thus we must apply environment variables manually.
 # Point the GUILE_LOAD_PATH to the home of scheme modules in the source tree.
 HACCHPSIMSCM_TEST_ENVIRONMENT = \
-	GUILE_LOAD_PATH=$(top_srcdir)/src/scm
+	GUILE_LOAD_PATH=$(top_srcdir)/src/scm:$(srcdir)
 
 HACKT_CHPSIM_GUILE_ENV_EXE = \
 	$(HACCHPSIMSCM_TEST_ENVIRONMENT) $(HACKT_CHPSIM_GUILE_EXE)

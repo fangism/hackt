@@ -1,5 +1,15 @@
 "scm/ChangeLog"
 
+2007-04-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-36:
+	  hackt/chpsim.scm: added fork-join pair maps, and a do-while set.  
+	  Bunch more nested-loop/do-while test cases added.
+	  Added re-usable scripts to test/chpsim:
+		event-classification.hacchpsimscm (static)
+		basic-trace-analysis.hacchpsimscm (dynamic, trace)
+
+
 2007-04-17	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-35:
