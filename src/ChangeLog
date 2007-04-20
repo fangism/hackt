@@ -5,6 +5,16 @@
 
 2007-04-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-15-scm-01-37:
+	  No source revision.
+	  We unfortunately have to merge this branch earlier than expected.
+		chpsim's channel model needs to be redone, becuse I discovered
+		that the occupancy-bit model of channels introduces slack 1
+		on every channel and half-decouples send/receive pairs.
+	  *SIGH* Fix and re-verification will occur on new branch, following
+		this merge.  
+
+
 	* HACKT-00-01-04-main-00-81-15-scm-01-36:
 	  Scheme-only revision: see scm/ChangeLog: 
 		fork-join static maps and do-while set, more test cases...

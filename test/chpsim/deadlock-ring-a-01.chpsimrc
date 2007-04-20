@@ -1,0 +1,12 @@
+# "deadlock-ring-a-01.chpsimrc"
+#	$Id: deadlock-ring-a-01.chpsimrc,v 1.1.2.1 2007/04/20 04:07:25 fang Exp $
+# @haco@ deadlock-ring-a.haco-a
+
+timing per-event
+# trace-flush-interval 40
+trace deadlock-ring-a-01.chpsimtrace
+step 150
+trace-close
+trace-dump deadlock-ring-a-01.chpsimtrace
+# !rm deadlock-ring-a-01.chpsimtrace
+

@@ -1,0 +1,7 @@
+// "token-ring-a.hac"
+
+import "testlib/bool-buf.hac";
+
+one_token_ring<8> R;
+
+
