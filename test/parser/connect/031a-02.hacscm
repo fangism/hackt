@@ -1,7 +1,7 @@
 #!hacguile -b
 !#
 ;; "031a-02.hacscm"
-;;	$Id: 031a-02.hacscm,v 1.2 2007/03/16 01:17:35 fang Exp $
+;;	$Id: 031a-02.hacscm,v 1.3 2007/04/20 18:27:50 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 031a.haco-a
 
@@ -10,9 +10,9 @@
 ;; (for-each print-canonical-newline
 ;;   (collect-reference-subinstances (parse-raw-reference "load"))
 ;; )
-(collect-reference-subinstances (parse-raw-reference "load"))
+(hac:collect-reference-subinstances (hac:parse-raw-reference "load"))
 
-(map canonical-reference->string
-   (collect-reference-subinstances (parse-raw-reference "load"))
+(map hac:canonical-reference->string
+   (hac:collect-reference-subinstances (hac:parse-raw-reference "load"))
 )
 

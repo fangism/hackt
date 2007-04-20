@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.7 2007/03/18 00:25:03 fang Exp $
+	$Id: State.cc,v 1.8 2007/04/20 18:26:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -191,7 +191,7 @@ struct State::event_enqueuer {
 		time_type new_delay;
 	switch (state.timing_mode) {
 	case TIMING_UNIFORM:
-		new_delay = (e.is_trivial() ?
+		new_delay = (e.has_trivial_delay() ?
 			state.get_null_event_delay() :
 			state.get_uniform_delay());
 		break;

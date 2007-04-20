@@ -1,0 +1,8 @@
+// "bubble-ring-a.hac"
+// copy-modified from "token-ring-a.hac"
+
+import "testlib/bool-buf.hac";
+
+one_hole_ring<8> R;
+
+

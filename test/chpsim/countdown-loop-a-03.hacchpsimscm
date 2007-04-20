@@ -1,0 +1,42 @@
+#!hacchpsimguile -b
+!#
+;; "select-nested-loop-a-03.hacchpsimscm"
+;; copy-modified from "select-nested-loop-a-02.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: countdown-loop-a-03.hacchpsimscm,v 1.2 2007/04/20 18:27:14 fang Exp $
+;; @haco@ countdown-loop-a.haco-a
+
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for find-assoc-ref
+; (use-modules (hackt streams))
+; (use-modules (ice-9 streams))
+
+"events with multiple entries (branch-joins and loop-heads):"
+(define multi-entries (force static-events-with-multiple-entries-delayed))
+multi-entries
+
+"testing a depth-first traversal from root node:"
+(static-events-depth-first-walk (lambda (x) (display x) (newline)))
+
+"showing loop-head-tail map:"
+(define loop-heads (force static-loop-head-events-delayed))
+loop-heads
+
+"showing loop-tail-head map:"
+(define loop-tails (force static-loop-tail-events-delayed))
+loop-tails
+"only one loop"
+
+"showing branch-head-tail pairs:"
+(define branch-heads (force static-branch-head-tail-map-delayed))
+branch-heads
+
+"showing branch-tail-head pairs:"
+(define branch-tails (force static-branch-tail-head-map-delayed))
+branch-tails
+
+"no branch-head-tail pairs, only a do-while loop"
+

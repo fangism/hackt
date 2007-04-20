@@ -1,10 +1,10 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-01.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-01.hacchpsimscm,v 1.1 2007/03/20 02:24:21 fang Exp $
+;;	$Id: channel-sync-desync-a-01.hacchpsimscm,v 1.2 2007/04/20 18:26:31 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
 
-(dump-trace "channel-sync-desync-a-04.chpsimtrace")
+(hac:dump-trace "channel-sync-desync-a-04.chpsimtrace")
 

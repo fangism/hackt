@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.3 2007/03/15 06:11:12 fang Exp $
+	$Id: libguile.h,v 1.4 2007/04/20 18:26:18 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -16,12 +16,25 @@
 #include <libguile.h>
 // really only need <libguile/tags.h> for the SCM type
 
+//=============================================================================
+
 namespace util {
 namespace guile {
 /**
 	Function pointer type for procedure casting.  Ewww...
  */
 typedef	SCM (*scm_gsubr_type)();
+
+//-----------------------------------------------------------------------------
+/// fused call to define_gsubr followed by export
+SCM
+scm_c_define_gsubr_exported(const char*, const int, const int, const int, 
+	scm_gsubr_type);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// defines a symbol value instead of a procedure
+SCM
+scm_c_define_exported(const char*, const SCM&);
 
 //-----------------------------------------------------------------------------
 /// wrapper for scm_pair_p, provided by guile 1.8

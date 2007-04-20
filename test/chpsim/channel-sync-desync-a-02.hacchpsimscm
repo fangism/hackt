@@ -1,0 +1,18 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-02.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-02.hacchpsimscm,v 1.2 2007/04/20 18:26:31 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+
+;; Testing failure to open trace file.
+
+(define x (hac:open-chpsim-trace "bogus"))
+x
+
+(hac:chpsim-trace-valid? x)
+;; expect #f
+
+(hac:current-trace-entry x)
+;; expect error diagnostic
+

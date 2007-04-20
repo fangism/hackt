@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.5 2007/03/11 16:34:38 fang Exp $
+	$Id: Event.cc,v 1.6 2007/04/20 18:26:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -312,6 +312,7 @@ EventNode::dump_struct(ostream& o) const {
 	case EVENT_RECEIVE: o << "receive"; break;
 	case EVENT_CONCURRENT_FORK: o << "fork"; break;
 	case EVENT_SELECTION_BEGIN: o << "select"; break;
+	case EVENT_CONDITION_WAIT: o << "wait"; break;
 	default:
 		ISE(cerr, cerr << "Invalid event type enum: "
 			<< event_type << endl;)
@@ -355,6 +356,7 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	case EVENT_RECEIVE: o << "invhouse"; break;
 	case EVENT_CONCURRENT_FORK: o << "hexagon"; break;
 	case EVENT_SELECTION_BEGIN: o << "trapezium"; break;
+	case EVENT_CONDITION_WAIT: o << "ellipse"; break;
 		// TODO: flag for non-deterministic? extra periphery?
 	default:
 		ISE(cerr, cerr << "Invalid event type enum: "

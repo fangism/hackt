@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.10 2007/04/15 05:52:08 fang Exp $
+dnl	$Id: cxx.m4,v 1.11 2007/04/20 18:25:42 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -69,7 +69,8 @@ dnl icc diagnostic 561: nonstandard proprocessing directive (trouble w/ ccache)
 if test "$hackt_cxx_compiler_intel" = yes ; then
 	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror -wd561 -wd1419"
 elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
-	ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wextra -Wall -Werror"
+	ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wall -Werror"
+	dnl try -Wextra later, below...
 else
 	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror"
 fi

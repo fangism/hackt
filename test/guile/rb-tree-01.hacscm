@@ -1,0 +1,28 @@
+#!hacguile -b
+!#
+;; "rb-tree-01.hacscm"
+;; vi: ft=scheme
+;;	$Id: rb-tree-01.hacscm,v 1.2 2007/04/20 18:27:42 fang Exp $
+;; @haco@ empty.haco-a
+
+(use-modules (hackt rb-tree))
+
+(define int-string-map (make-rb-tree = <))
+; int-string-map
+
+(rb-tree->alist int-string-map)
+(rb-tree/insert! int-string-map 1 "one")
+(rb-tree->alist int-string-map)
+(rb-tree/insert! int-string-map 1 "uno")
+int-string-map ; same as print
+(rb-tree/insert! int-string-map 2 "two")
+(rb-tree->alist int-string-map)
+(rb-tree/insert! int-string-map 2 "zwei")
+int-string-map ; same as print
+(rb-tree/delete! int-string-map 1)
+(rb-tree->alist int-string-map)
+(rb-tree/delete! int-string-map 1)
+(rb-tree->alist int-string-map)
+(rb-tree/delete! int-string-map 2)
+(rb-tree->alist int-string-map)
+

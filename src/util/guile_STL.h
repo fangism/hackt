@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.3 2007/03/15 06:11:09 fang Exp $
+	$Id: guile_STL.h,v 1.4 2007/04/20 18:26:17 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -23,6 +23,7 @@
 // #include <tr1/tuple>
 #include <list>
 #include <vector>
+#include <valarray>
 // maybe even include "gmpxx.h"
 #include <iterator>
 #include "util/boolean_types.h"
@@ -42,6 +43,7 @@ using std::string;
 using std::pair;
 using std::unary_function;
 using std::list;
+using std::valarray;
 
 // TODO:
 // goals of library: orthogonal design
@@ -127,23 +129,52 @@ struct scm_extractor<SCM> {
 //=============================================================================
 // scm_builder specializations for fundamental types
 
+// const char*
+template <>
+struct scm_builder<const char*> : public unary_function<const char*, SCM> {
+	SCM
+	operator () (const argument_type& s) {
+		STACKTRACE_VERBOSE;
+#if FORCE_GUILE_API_1_8
+		return scm_from_locale_string(s);
+#else
+		return scm_makfrom0str(s);
+#endif
+	}
+};	// end struct scm_builder<string>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ 	Explicitly decay-array-to-pointer. 
+ */
+inline
+SCM
+make_scm(const char s[]) {
+	return scm_builder<const char*>()(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // strings
 template <>
 struct scm_builder<string> : public unary_function<string, SCM> {
 	SCM
 	operator () (const argument_type& s) {
 		STACKTRACE_VERBOSE;
-#if FORCE_GUILE_API_1_8
-		return scm_from_locale_string(s.c_str());
-#else
-		return scm_makfrom0str(s.c_str());
-#endif
+		return make_scm(s.c_str());
 	}
 };	// end struct scm_builder<string>
 
 // TODO: finish me
 template <>
-struct scm_extractor<string>;
+struct scm_extractor<string> {
+	good_bool
+	operator () (const SCM& s, string& i) {
+#if FORCE_GUILE_API_1_8
+		i = scm_to_locale_string(s);	// got error handling?
+		return good_bool(true);
+#endif
+	}
+};	// end struct scm_extractor<string>
 
 //-----------------------------------------------------------------------------
 // numerical types
@@ -371,6 +402,56 @@ struct scm_extractor<unsigned long long> {
 };
 #endif	// SIZEOF_LONG_LONG
 
+//-----------------------------------------------------------------------------
+#ifdef	SIZEOF_FLOAT
+template <>
+struct scm_builder<float> :
+		public unary_function<float, SCM> {
+	SCM
+	operator () (const argument_type& s) {
+#if FORCE_GUILE_API_1_8
+		return scm_from_double(s);	// convert up to double
+#endif
+	}
+};	// end struct scm_builder<unsigned long>
+
+template <>
+struct scm_extractor<float> {
+	good_bool
+	operator () (const SCM& s, float& i) {
+#if FORCE_GUILE_API_1_8
+		i = scm_to_double(s);	// got error handling?
+		return good_bool(true);
+#endif
+	}
+};
+#endif	// SIZEOF_FLOAT
+
+//-----------------------------------------------------------------------------
+#ifdef	SIZEOF_DOUBLE
+template <>
+struct scm_builder<double> :
+		public unary_function<double, SCM> {
+	SCM
+	operator () (const argument_type& s) {
+#if FORCE_GUILE_API_1_8
+		return scm_from_double(s);	// convert up to double
+#endif
+	}
+};	// end struct scm_builder<unsigned long>
+
+template <>
+struct scm_extractor<double> {
+	good_bool
+	operator () (const SCM& s, double& i) {
+#if FORCE_GUILE_API_1_8
+		i = scm_to_double(s);	// got error handling?
+		return good_bool(true);
+#endif
+	}
+};
+#endif	// SIZEOF_DOUBLE
+
 //=============================================================================
 // scm_builder specializations for STL containers
 
@@ -400,6 +481,12 @@ struct scm_list_insert_iterator :
 		This is over-written with each assignment.
 	 */
 	SCM					list;
+
+	/**
+		Default to constructing an empty list. 
+		Warning: Ignore old-cast expanded from SCM_PACK(x)
+	 */
+	scm_list_insert_iterator() : list(SCM_LIST0) { }
 
 	explicit
 	scm_list_insert_iterator(const SCM& _l) : list(_l) { }
@@ -445,6 +532,67 @@ scm_list_inserter(const SCM& l) {
 	return scm_list_insert_iterator(l);
 }
 
+/// overload that defaults to initializing with empty list
+inline
+scm_list_insert_iterator
+scm_list_inserter(void) {
+	return scm_list_insert_iterator();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	List construct from any container with a begin/end interface, 
+	such as vector.  
+ */
+template <class L>
+struct scm_list_builder : public unary_function<L, SCM> {
+	typedef	scm_list_builder<L>		this_type;
+	/**
+		Start with empty list and accumulate.
+		Construct backwards to preserve order.  
+	 */
+	SCM
+	operator () (const typename this_type::argument_type& l) {
+		STACKTRACE_VERBOSE;
+		return (*copy(l.rbegin(), l.rend(),
+			scm_list_inserter())).list;
+	}
+};	// end struct scm_list_builder
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor that constructs an SCM list.
+	Specialization for valarray, damn pseudo-container...
+ */
+template <class V>
+struct scm_list_builder<valarray<V> > :
+		public unary_function<valarray<V>, SCM> {
+	typedef	scm_list_builder<valarray<V> >		this_type;
+	/**
+		Same as container, but using indexing for begin/end.  
+	 */
+	SCM
+	operator () (const typename this_type::argument_type& l) {
+		STACKTRACE_VERBOSE;
+		return (*std::reverse_copy(&l[0], &l[l.size()], 
+			scm_list_inserter())).list;
+	}
+};	// end struct scm_list_builder<valarray>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// helper functions
+
+/**
+	Helper function to dispatch scm_list_builder functor, 
+	using template argument deduction on type. 
+ */
+template <class L>
+inline
+SCM
+make_scm_list(const L& l) {
+	return scm_list_builder<L>()(l);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	std::list specialization, for the love of STL.  
@@ -452,20 +600,9 @@ scm_list_inserter(const SCM& l) {
 	Should work now, with extra allocator template parameter.  
  */
 template <class T, class A>
-struct scm_builder<list<T, A> > : public unary_function<list<T, A>, SCM> {
-	typedef	scm_builder<list<T, A> >		this_type;
-	/**
-		Construct backwards to preserve order.  
-	 */
-	SCM
-	operator () (const typename this_type::argument_type& l) {
-	//	typedef	typename list<T>::const_iterator	const_iterator;
-		STACKTRACE_VERBOSE;
-		// start with empty list and accumulate
-		return (*copy(l.rbegin(), l.rend(),
-			scm_list_inserter(SCM_LIST0))).list;
-		// ignore old-cast expanded from SCM_PACK(x)
-	}
+struct scm_builder<list<T, A> > : public scm_list_builder<list<T, A> > {
+	typedef	scm_list_builder<list<T, A> >	parent_type;
+	using parent_type::operator();
 };	// end struct scm_builder<list>
 
 //-----------------------------------------------------------------------------
@@ -474,8 +611,14 @@ struct scm_builder<list<T, A> > : public unary_function<list<T, A>, SCM> {
 //-----------------------------------------------------------------------------
 // vector, array, valarray
 
+// scm_vector_builder
+// make_scm_vector
+
 //-----------------------------------------------------------------------------
 // queues, stacks
+
+//-----------------------------------------------------------------------------
+// streams (ice-9 streams)
 
 //-----------------------------------------------------------------------------
 // maps (associative)

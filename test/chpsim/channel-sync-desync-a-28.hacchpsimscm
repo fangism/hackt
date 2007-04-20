@@ -1,0 +1,31 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-28.hacchpsimscm"
+;; copy-modified from "channel-sync-desync-a-03.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: channel-sync-desync-a-28.hacchpsimscm,v 1.2 2007/04/20 18:27:06 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(define x (hac:open-chpsim-state-trace "channel-sync-desync-a-04.chpsimtrace"))
+x
+
+(hac:chpsim-state-trace-valid? x)
+;; expect #f
+
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+(hac:current-state-trace-entry x)
+
+(hac:current-state-trace-entry x)
+;; last one should error-out
+

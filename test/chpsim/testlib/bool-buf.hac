@@ -1,0 +1,57 @@
+// "bool-buf.hac"
+//	$Id: bool-buf.hac,v 1.2 2007/04/20 18:27:39 fang Exp $
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+defproc bool_buf (chan?(bool) L; chan!(bool) R) {
+bool x;
+chp { *[L?(x); R!(x)] }
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pbool B>
+defproc bool_buf_init (chan?(bool) L; chan!(bool) R) {
+bool x;
+// chp { R!(B); *[L?(x); R!(x)] }
+// chp { R!(B); *[R!(x); L?(x)] }	// creates congestion, but seems wrong
+chp { x:=B; *[R!(x); L?(x)] }
+// chp { R!(B); *[R!(x); L?(x)] }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Single token in token ring.
+ */
+template <pint N>
+defproc one_token_ring() {
+  chan(bool) M[N];
+  bool_buf_init<true> bi(M[N-1], M[0]);
+  bool_buf b[N-1];
+  (;i:N-1: b[i](M[i], M[i+1]); )
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Single hole in token ring.
+ */
+template <pint N>
+defproc one_hole_ring() {
+  chan(bool) M[N];
+  bool_buf bi(M[N-1], M[0]);
+  bool_buf_init<true> b[N-1];
+  (;i:N-1: b[i](M[i], M[i+1]); )
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	No hole in token ring.  Should deadlock.
+ */
+template <pint N>
+defproc no_hole_ring() {
+  chan(bool) M[N];
+  bool_buf_init<true> b[N];
+  (;i:N: b[i](M[i], M[(i+1)%N]); )
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

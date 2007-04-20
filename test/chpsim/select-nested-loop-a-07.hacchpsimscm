@@ -1,0 +1,44 @@
+#!hacchpsimguile -b
+!#
+;; "select-nested-loop-a-03.hacchpsimscm"
+;; copy-modified from "select-nested-loop-a-02.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: select-nested-loop-a-07.hacchpsimscm,v 1.2 2007/04/20 18:27:34 fang Exp $
+;; @haco@ select-nested-loop-a.haco-a
+
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for find-assoc-ref
+; (use-modules (hackt streams))
+; (use-modules (ice-9 streams))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+
+"events with multiple entries (branch-joins and loop-heads):"
+(define multi-entries (force static-events-with-multiple-entries-delayed))
+"events 2, 3, 10 are branch-joins."
+"event 17 is a loop-head."
+multi-entries
+
+"testing a depth-first traversal from root node:"
+(static-events-depth-first-walk (lambda (x) (display x) (newline)))
+
+"showing loop-head-tail map:"
+(define loop-heads (force static-loop-head-events-delayed))
+loop-heads
+
+"showing loop-tail-head map:"
+(define loop-tails (force static-loop-tail-events-delayed))
+loop-tails
+"there is only one loop"
+
+"showing branch-head-tail pairs:"
+(define branch-heads (force static-branch-head-tail-map-delayed))
+branch-heads
+
+"showing branch-tail-head pairs:"
+(define branch-tails (force static-branch-tail-head-map-delayed))
+branch-tails
+"expect 3 pairs of branches, 2 of which are nested inside the third."
+

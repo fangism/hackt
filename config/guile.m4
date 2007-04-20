@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.7 2007/03/18 23:13:02 fang Exp $
+dnl	$Id: guile.m4,v 1.8 2007/04/20 18:25:42 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -22,8 +22,27 @@ AS_HELP_STRING(
 	[guile_config=$with_guile_config],
 	[guile_config="guile-config"]
 )
+
+AC_ARG_WITH(guile-snarf,
+AS_HELP_STRING(
+	[--with-guile-snarf]
+	[guile's automatic function processing (default=guile-snarf)]),
+	[guile_snarf=$with_guile_snarf],
+	[guile_snarf="guile-snarf"]
+)
+
+AC_ARG_WITH(guile-tools,
+AS_HELP_STRING(
+	[--with-guile-tools]
+	[guile's tool set (default=guile-tools)]),
+	[guile_tools=$with_guile_tools],
+	[guile_tools="guile-tools"]
+)
+
 dnl check path for the guile-config specified by the user
 AC_PATH_PROG(GUILE_CONFIG, $guile_config)
+AC_PATH_PROG(GUILE_SNARF, $guile_snarf)
+AC_PATH_PROG(GUILE_TOOLS, $guile_tools)
 dnl lilypond's stepmake/aclocal.m4 has example of how to check
 dnl for cross-compiled with target/host
 dnl AC_MSG_CHECKING([for guile-config])
@@ -82,6 +101,8 @@ AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
 test "$ac_cv_func_scm_is_pair" = "yes" ||
 	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
 AC_SUBST(GUILE_CONFIG)
+AC_SUBST(GUILE_SNARF)
+AC_SUBST(GUILE_TOOLS)
 AC_SUBST(GUILE_CPPFLAGS)
 AC_SUBST(GUILE_LDFLAGS)
 dnl TODO: extract guile version information

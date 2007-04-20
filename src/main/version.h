@@ -1,7 +1,7 @@
 /**
 	\file "main/version.h"
 	Interface header for version module.  
-	$Id: version.h,v 1.6 2006/04/08 18:53:52 fang Exp $
+	$Id: version.h,v 1.7 2007/04/20 18:26:01 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_VERSION_H__
@@ -46,42 +46,6 @@ private:
 	static
 	const size_t
 	program_id;
-public:
-	static
-	ostream&
-	package(ostream&);
-
-	static
-	ostream&
-	cvs(ostream&);
-
-	static
-	ostream&
-	cxx(ostream&);
-
-	static
-	ostream&
-	lex(ostream&);
-
-	static
-	ostream&
-	yacc(ostream&);
-
-	static
-	ostream&
-	builddate(ostream&);
-
-	static
-	ostream&
-	buildhost(ostream&);
-
-	static
-	ostream&
-	cxxflags(ostream&);
-
-	static
-	ostream&
-	config(ostream&);
 
 };	// end class version
 

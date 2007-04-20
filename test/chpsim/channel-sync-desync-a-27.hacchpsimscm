@@ -1,0 +1,33 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-27.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-27.hacchpsimscm,v 1.2 2007/04/20 18:27:05 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+
+;; Testing trace entry random accesses
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define N (hac:chpsim-trace-num-entries "channel-sync-desync-a-05.chpsimtrace"))
+(define T (hac:open-chpsim-trace-accessor "channel-sync-desync-a-05.chpsimtrace"))
+T
+
+(hac:lookup-trace-entry T 0)
+(hac:lookup-trace-entry T (1- N))
+
+(define F (stream-map (lambda (x) (hac:lookup-trace-entry T x))
+  (enumerate-interval-stream 0 (1- N))))
+
+(for-each (lambda (x) (display x) (newline)) (stream->list F))
+; expect forward sequence
+
+(define R (stream-map (lambda (x) (hac:lookup-trace-entry T x))
+  (enumerate-interval-reverse-stream 0 (1- N))))
+
+(for-each (lambda (x) (display x) (newline)) (stream->list R))
+; expect reverse list
+

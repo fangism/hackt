@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.13 2007/04/15 05:53:25 fang Exp $
+	$Id: BRANCHES,v 1.14 2007/04/20 18:25:38 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -8,10 +8,14 @@ When a branch is merged for the last time, delete the entry from this file.
 
 
 Open branches:
-	HACKT-00-01-04-main-00-80-15-scm-01
-		guile/scheme work for chpsim trace analysis framework
-		for dissertation
-
 	HACKT-00-01-04-main-00-81-16-PRS-07
 		parser accommodations requested by Clint
+
+Coming soon:
+	HACKT-00-01-04-main-00-81-??-chpsim-??
+		re-implementing channels in chpsim
+
+	HACKT-00-01-04-main-00-81-??-scm-02
+		guile/scheme work for chpsim trace analysis framework
+		for dissertation
 

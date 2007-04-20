@@ -11,9 +11,9 @@ Writing simulation trace to "channel-sync-desync-a-04.chpsimtrace".
 	30	5	3		[by:7]
 	40	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)	[by:5]
 Trace file contents: 1 epochs.
-		start	file	chunk
-	epoch	time	offset	size
-	0	0	0	339
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	0	339
 Epoch 0:
 	event		event	cause
 	index	time	node	index

@@ -1,0 +1,21 @@
+#!hacguile -b
+!#
+;; "031a-03.hacscm"
+;;	$Id: 031a-04.hacscm,v 1.2 2007/04/20 18:27:51 fang Exp $
+;; vi: ft=scheme
+;; @haco@ 031a.haco-a
+
+(use-modules (hackt hackt))
+(use-modules (hackt algorithm))
+
+(define refs
+  (hac:collect-reference-subinstances (hac:parse-raw-reference "load")))
+
+; expect two lists of references: processes and non-processes
+(define pl (filter-split (lambda (r) (eq? 'process (reference-type r))) refs))
+pl
+; select the first list
+(car pl)
+; select the second list
+(cdr pl)
+

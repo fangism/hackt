@@ -1,0 +1,23 @@
+"src/guile/README"
+
+This directory is for guile-wrappers to hackt's internal functions.
+Files that start with scm_ are primarily used to introduce user-defined
+SMOB types to register with the guile interpreter.  
+
+
+-------------------------------------------------------------------------------
+Function snarfing:
+
+From guile documentation:
+
+<QUOTE>
+Because it's easier to maintain documentation, code, and other metainfo
+in one source file than in many files, there have evolved many methods
+for grepping source to lift and separate these kinds of info, in the
+process generating docs or fragments of source or what have you.  This
+is known generally as "snarfing", which comes from the verb "to snarf",
+here meaning "to unceremoniously extract information from a somewhat
+unwilling source."
+</QUOTE>
+
+

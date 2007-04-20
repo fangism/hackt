@@ -46,9 +46,9 @@ event queue:
 X : chan(bool<>) X = (0) [empty]
 time: 120
 Trace file contents: 1 epochs.
-		start	file	chunk
-	epoch	time	offset	size
-	0	0	0	324
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	0	324
 Epoch 0:
 	event		event	cause
 	index	time	node	index

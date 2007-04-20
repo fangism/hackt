@@ -1,0 +1,21 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-07.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-07.hacchpsimscm,v 1.2 2007/04/20 18:26:51 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-accumulate (over indices)
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define y (open-chpsim-trace-stream "channel-sync-desync-a-04.chpsimtrace"))
+
+(define zz (stream-accumulate
+	(lambda (a b) (+ (chpsim-trace-entry-index a) b))
+	0 y))
+zz
+; expect sum(0..9) = 45
+

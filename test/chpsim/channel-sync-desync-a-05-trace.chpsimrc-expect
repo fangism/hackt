@@ -5,11 +5,11 @@ trace manager: flushing out another epoch of trace.
 trace manager: flushing out another epoch of trace.
 trace manager: trace file complete.
 Trace file contents: 3 epochs.
-		start	file	chunk
-	epoch	time	offset	size
-	0	0	0	662
-	1	80	662	663
-	2	140	1325	331
+		start	start	file	chunk
+	epoch	index	time	offset	size
+	0	0	0	0	662
+	1	20	80	662	663
+	2	40	140	1325	331
 Epoch 0:
 	event		event	cause
 	index	time	node	index
@@ -70,87 +70,87 @@ Epoch 1:
 	21	80	9	16
 	22	80	14	16
 	23	80	4	19
-	24	90	3	3
-	25	90	8	3
-	26	100	12	4
-	27	100	6	5
-	28	100	7	5
-	29	110	10	6
-	30	110	11	6
-	31	110	1	7
-	32	110	2	8
-	33	110	5	8
-	34	120	13	9
-	35	120	9	10
-	36	120	14	10
-	37	120	4	13
-	38	130	3	17
-	39	130	8	17
+	24	90	3	23
+	25	90	8	23
+	26	100	12	24
+	27	100	6	25
+	28	100	7	25
+	29	110	10	26
+	30	110	11	26
+	31	110	1	27
+	32	110	2	28
+	33	110	5	28
+	34	120	13	29
+	35	120	9	30
+	36	120	14	30
+	37	120	4	33
+	38	130	3	37
+	39	130	8	37
 bool state trace:
 	event	global	raw
 	index	index	value
-	0	3	1
-	4	2	1
-	7	1	1
-	14	3	1
-	18	2	1
+	20	3	1
+	24	2	1
+	27	1	1
+	34	3	1
+	38	2	1
 int state trace:
 	event	global	raw
 	index	index	value
-	2	3	17
-	4	2	17
-	8	1	17
-	16	3	17
-	18	2	17
+	22	3	17
+	24	2	17
+	28	1	17
+	36	3	17
+	38	2	17
 enum state trace:
 channel state trace:
 	event	global	raw
 	index	index	value
-	0	4	[ack]
-	2	5	[ack]
-	3	3	1, 17, 
-	4	3	[ack]
-	7	1	[ack]
-	8	2	[ack]
-	9	4	1, 
-	10	5	17, 
-	11	1	1, 
-	12	2	17, 
-	14	4	[ack]
-	16	5	[ack]
-	17	3	1, 17, 
-	18	3	[ack]
+	20	4	[ack]
+	22	5	[ack]
+	23	3	1, 17, 
+	24	3	[ack]
+	27	1	[ack]
+	28	2	[ack]
+	29	4	1, 
+	30	5	17, 
+	31	1	1, 
+	32	2	17, 
+	34	4	[ack]
+	36	5	[ack]
+	37	3	1, 17, 
+	38	3	[ack]
 Epoch 2:
 	event		event	cause
 	index	time	node	index
-	40	140	12	18
-	41	140	6	19
-	42	140	7	19
-	43	150	10	0
-	44	150	11	0
-	45	150	1	1
-	46	150	2	2
-	47	150	5	2
-	48	160	13	3
-	49	160	9	4
+	40	140	12	38
+	41	140	6	39
+	42	140	7	39
+	43	150	10	40
+	44	150	11	40
+	45	150	1	41
+	46	150	2	42
+	47	150	5	42
+	48	160	13	43
+	49	160	9	44
 bool state trace:
 	event	global	raw
 	index	index	value
-	1	1	1
-	8	3	1
+	41	1	1
+	48	3	1
 int state trace:
 	event	global	raw
 	index	index	value
-	2	1	17
+	42	1	17
 enum state trace:
 channel state trace:
 	event	global	raw
 	index	index	value
-	1	1	[ack]
-	2	2	[ack]
-	3	4	1, 
-	4	5	17, 
-	5	1	1, 
-	6	2	17, 
-	8	4	[ack]
+	41	1	[ack]
+	42	2	[ack]
+	43	4	1, 
+	44	5	17, 
+	45	1	1, 
+	46	2	17, 
+	48	4	[ack]
 and we're done 

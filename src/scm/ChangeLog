@@ -1,0 +1,213 @@
+"scm/ChangeLog"
+
+2007-04-20	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-merged-scm-01-37:
+	  First branch merge.
+
+
+2007-04-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-36:
+	  hackt/chpsim.scm: added fork-join pair maps, and a do-while set.  
+	  Bunch more nested-loop/do-while test cases added.
+	  Added re-usable scripts to test/chpsim:
+		event-classification.hacchpsimscm (static)
+		basic-trace-analysis.hacchpsimscm (dynamic, trace)
+
+
+2007-04-17	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-35:
+	  hackt/chpsim-trace.scm: make-loop-histogram done, basically tested, 
+		unforunately requires branch-count histogram in the event
+		that loops begin with branch-selections  :/
+	  hackt/chpsim.scm: added loop?/branch? head/tail? predicates
+		based on statically-computed sets.
+	  Another handful of test cases.
+
+
+2007-04-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-34:
+	  hackt/chpsim.scm: autolaod (ice-9 q) for queue/stack structures
+		static-event-successors-map-delayed is now defined
+			as a delayed map (red-black-tree) of [index,succ-list]
+			Dependent algorithms and analyses updated accordingly.
+		defined handy DFS traversals of static event graph, used for
+			computing memoized subsets of static events:
+			static-loop-bound-events-delayed -- bi-maps
+				between loop-head and tail (1:1)
+			static-branch-bound-events-delayed -- bi-maps
+				between branch head and tails (1:1)
+		All new subset maps are delayed objects, and thus
+			automatically computed on demand and memoized.
+		Added some basic test cases, but could really use more...
+
+
+2007-04-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-33:
+	  hackt/chpsim.scm: added new constant variables (oxymoron?)
+		chpsim-num-events (hac:chpsim-num-events)
+		chpsim-static-event-index-stream (0 to N-1)
+		New delayed/memoized computed static vent sets:
+			static-event-successors-map-delayed
+			static-event-predecessors-map-delayed
+			static-events-with-multiple-entries-delayed
+		Dependencies are automatically satisfied through
+			delay-force evaluation.  
+		Added some new test cases for these.  
+	  hackt/rb-tree.scm: rb-tree->stream (of pairs)
+		other source comments added.
+
+
+2007-04-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-32:
+	  hackt/chpsim.scm: use named car/cdr for clarity
+	  hackt/chpsim-trace.scm: Likewise
+	  hackt/rb-tree.scm: more lookup functions, copy-subtree, 
+		tree traversals, merge and intersect.  
+
+
+2007-04-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-31:
+	  Re-wrote chpsim histogram analyses to use rb-trees, replacing
+		linear-search associative lists.
+	  Test cases updated with only formatting differences.  
+	  FYI: we favor rb-trees because of linear time set operations
+		on sorted sets.
+	  TODO: rb-tree merge operations, set-intersection/union/difference...
+
+
+2007-04-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-30:
+	  hackt/rb-tree.scm: re-wrote repetitive procedures using higher
+		levels of abstraction for clarity and brevity.
+		And because I feel like flexing scheme skillz...
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-29:
+	  Added hackt/rb-tree.scm, implementation of red-black tree
+		borrowed from MIT-scheme library, and adapted to guile.
+	  Also added a few test cases to test/guile.  
+	  TODO: use rb-tree in place of assoc-lists in analysis library.
+
+
+2007-04-10	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-28:
+	  hackt/algorithm.scm: implemented list-flatten, list-flatten-reverse.
+		re-defined filter-split in terms of srfi-1::partition.
+		list-contains is removed, just use srfi-1::any.
+		implemented find-assoc-ref, using srfi-1::find (on car of elem).
+	  hackt/chpsim-trace.scm: use srfi-1::any, 
+		and hackt::algorithm::find-assoc-ref.
+		NEW: completed branch-selection histogram accumulation:
+			'make-select-branch-histogram'
+	  hackt/chpsim.scm: autoload stream modules now
+		implemented: chpsim-assoc-event-successors, 
+			chpsim-assoc-event-pred-from-succ, 
+			chpsim-successor-lists->histogram
+	  hackt/streams.scm: added
+		nth-stream (a.k.a. stream-ref)
+		stream-of-lists->stream
+
+
+2007-04-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-27:
+	  hackt/chpsim-trace.scm: added critical path functions
+		chpsim-trace-critical-path[-from] to report
+		precise critical path.  Single test added to test suite.
+	  hackt/hackt.scm -> hackt/chpsim.scm: moved type-tag->offset
+		because the mapping only pertains to chpsim-related tools.
+		Rewrote some dispatchers using type-tag->offset for consistency.
+
+
+2007-04-07	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-26:
+	  hackt/algorithm.scm: added list-contains? predicate
+	  hackt/hackt.scm: added type-tag->offset for consistency
+	  hackt/chpsim-trace.scm: added tons of stuff:
+		chpsim-state-trace-entry-subset (based on type-tag)
+		chpsim-state-trace-filter-reference to zoom in on
+			events that affect a particular reference.
+		chpsim-state-strace-focus-reference to prune-away 
+			state changes not referenced.
+	  Added test cases to test suite for new functions.  
+	  Analyses are just over the horizon.  
+
+
+2007-04-04	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-23:
+	  hackt/chpsim.scm: replaced bool-tag with 'bool, likewise for
+		other constants-to-symbols.
+
+
+2007-04-03	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-22:
+	  hackt/chpsim-trace.scm: Added support for state-change streams.
+
+
+2007-03-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-21:
+	  hackt/streams.scm: added enumerate-interval-reverse-stream.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-20:
+	  Added reverse-stream procedures building on respective primitives.
+
+
+2007-03-27	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-17:
+	  Added documentation strings to nearly all functions, which can
+		be read interactively using 'help-hackt' which is just
+		an alias for 'procedure-documentation'.
+	  Added "hackt/docs.scm" and "hackt/doc-lib.scm" which are works
+		in progress ripped from LilyPond -- for documentation 
+		generation.  
+
+
+2007-03-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  hackt/chpsim.scm: chpsim-event-may-block-deps to add type-tags
+		to the list-of-list structure returned by the primitive
+		chpsim-event-may-block-deps-internal.
+
+
+2007-03-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-10:
+	  hackt/streams.scm: tested and fixed stream-stop, 
+		added stream-crop, which combines stream-start and stream-stop.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-09:
+	  Ooops, forgot about this ChangeLog.
+	  hackt/streams.scm:
+		deifned stream-start and stream-stop which truncate
+		streams at the head or tail based on a predicate.
+	  Added hackt/chpsim.scm: for functions that pertain to chpsim, 
+		but do not involve trace file reading.  
+
+
+2007-03-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-01:
+	  Birth of this directory, home of scheme macros and interfaces
+		other handy routines for working with hackt.  
+	  Added TODO, Makefile.am, README.
+	  Added hackt/streams.scm, which includes some functions missing
+		from ice-9/streams.  
+	  TODO: handle GUILE_LOAD_PATH during testing and post-install.
+

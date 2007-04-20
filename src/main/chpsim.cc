@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.6 2007/03/18 00:25:00 fang Exp $
+	$Id: chpsim.cc,v 1.7 2007/04/20 18:26:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -118,7 +118,10 @@ try {
 		// return error if necessary
 		const int ret = CommandRegistry::interpret(sim_state, 
 			opt.interactive);
-		if (ret)	return ret;
+		if (ret) {
+			// return value only has meaning to the interpreter
+			return 1;	// ret
+		}
 	}
 } catch (...) {
 	cerr << "Caught exception during construction of simulator state."

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2007/03/20 02:24:21 fang Exp $
+#	$Id: Makefile.am,v 1.9 2007/04/20 18:26:21 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -92,11 +92,16 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	do-while-countdown-07-break \
 	countdown-successor-01 \
 	countdown-loop-a-01 countdown-loop-b-01 \
+	countdown-loop-a-02-trace \
 	countdown-sequence-a-01 \
 	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-a-03-trace \
 	countdown-nested-b-01 countdown-nested-b-02 \
+	countdown-nested-b-03-trace \
 	countdown-nested-c-01 countdown-nested-c-02 \
+	countdown-nested-c-03-trace \
 	countdown-nested-d-01 countdown-nested-d-02 \
+	countdown-nested-d-03-trace \
 	countdown-domino-a-01 \
 	countdown-domino-b-01 \
 	countdown-domino-b-02-cause countdown-domino-b-03-cause \
@@ -116,10 +121,12 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	arbitrate-skip-b-01 \
 	arbitrate-loop-a-01 arbitrate-loop-a-02 arbitrate-loop-a-03 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
+	select-nested-loop-a-03-trace \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
 	select-block-a-01 select-block-a-02 \
 	bool-split-a-01 \
 	bool-split-select-a-01 \
+	bool-split-select-a-02-trace \
 	bool-lookup-a-01 \
 	channel-sync-desync-a-01 channel-sync-desync-a-02 \
 	channel-sync-desync-a-03-trace \
@@ -137,6 +144,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	delayed-source-a-01 delayed-source-a-02-trace \
 	delayed-sink-a-01 delayed-sink-a-02-trace
 
+# TODO: token-ring, bubble-ring, deadlock-ring, deadlock-buf
+
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \
 	bool-split-b-01 \
@@ -149,14 +158,87 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
-	channel-sync-desync-a-01
+	channel-sync-desync-a-01 channel-sync-desync-a-02 \
+	channel-sync-desync-a-03 channel-sync-desync-a-04 \
+	channel-sync-desync-a-05 channel-sync-desync-a-06 \
+	channel-sync-desync-a-07 channel-sync-desync-a-08 \
+	channel-sync-desync-a-09 channel-sync-desync-a-10 \
+	channel-sync-desync-a-11 channel-sync-desync-a-12 \
+	channel-sync-desync-a-13 \
+	bool-split-select-a-01 bool-split-select-a-02 \
+	bool-split-select-a-03 bool-split-select-a-04 \
+	bool-split-select-a-05 bool-split-select-a-06 \
+	bool-split-select-a-07 bool-split-select-a-08 \
+	bool-split-select-a-09 \
+	channel-sync-desync-a-14 channel-sync-desync-a-15 \
+	channel-sync-desync-a-16 channel-sync-desync-a-17 \
+	channel-sync-desync-a-18 channel-sync-desync-a-19 \
+	channel-sync-desync-a-20 channel-sync-desync-a-21 \
+	channel-sync-desync-a-22 channel-sync-desync-a-23 \
+	channel-sync-desync-a-24 channel-sync-desync-a-25 \
+	channel-sync-desync-a-26 channel-sync-desync-a-27 \
+	channel-sync-desync-a-28 channel-sync-desync-a-29 \
+	channel-sync-desync-a-30 channel-sync-desync-a-31 \
+	channel-sync-desync-a-32 channel-sync-desync-a-33 \
+	channel-sync-desync-a-34 channel-sync-desync-a-35 \
+	select-nested-loop-a-01 select-nested-loop-a-02 \
+	select-nested-loop-a-03 select-nested-loop-a-04 \
+	select-nested-loop-a-05 select-nested-loop-a-06 \
+	select-nested-loop-a-07 select-nested-loop-a-08 \
+	countdown-loop-a-01 countdown-loop-a-02 \
+	countdown-loop-a-03 countdown-loop-a-04 \
+	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-b-01 countdown-nested-b-02 \
+	countdown-nested-c-01 countdown-nested-c-02 \
+	countdown-nested-d-01 countdown-nested-d-02
+
+
+HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
 
+KEEP_CHPSIM_TRACE_FILES = \
+	select-nested-loop-a-03.chpsimtrace \
+	channel-sync-desync-a-04.chpsimtrace \
+	channel-sync-desync-a-05.chpsimtrace \
+	bool-split-select-a-02.chpsimtrace \
+	countdown-loop-a-02.chpsimtrace
+
 # Additional dependencies from known-side effects
 channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
-	@:
+	@test -f $@
+
+channel-sync-desync-a-05.chpsimtrace: channel-sync-desync-a-05-trace.chpsimrc-out
+	@test -f $@
+
+select-nested-loop-a-03.chpsimtrace: select-nested-loop-a-03-trace.chpsimrc-out
+	@test -f $@
+
+bool-split-select-a-02.chpsimtrace: bool-split-select-a-02-trace.chpsimrc-out
+	@test -f $@
+
+countdown-loop-a-02.chpsimtrace: countdown-loop-a-02-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-a-03.chpsimtrace: countdown-nested-a-03-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-b-03.chpsimtrace: countdown-nested-b-03-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-c-03.chpsimtrace: countdown-nested-c-03-trace.chpsimrc-out
+	@test -f $@
+
+countdown-nested-d-03.chpsimtrace: countdown-nested-d-03-trace.chpsimrc-out
+	@test -f $@
+
+# this should be redundant with chpsimrc-out dependence...
+$(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
+
+srcdir_EXTRA_DIST += \
+	event-classification.hacchpsimscm \
+	basic-trace-analysis.hacchpsimscm
 
 include $(top_srcdir)/test/Make.test-tail
 

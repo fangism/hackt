@@ -1,0 +1,33 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-13.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-13.hacchpsimscm,v 1.2 2007/04/20 18:26:55 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+;; testing stream-start, stream-stop, and stream-crop
+
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define (stream-for-each-print-newline x) 
+  (stream-for-each (lambda (e) (display e) (newline)) x)
+) ; end define
+
+(define x (open-chpsim-trace-stream "channel-sync-desync-a-05.chpsimtrace"))
+
+(define y (stream-start (lambda (e) (>= (chpsim-trace-entry-time e) 45)) x))
+(define z (stream-stop (lambda (e) (>= (chpsim-trace-entry-time e) 125)) x))
+
+(define w (stream-crop
+  (lambda (e) (>= (chpsim-trace-entry-time e) 65))
+  (lambda (e) (>= (chpsim-trace-entry-time e) 115))
+    x))
+
+(stream-for-each-print-newline y)
+(newline)
+(stream-for-each-print-newline z)
+(newline)
+(stream-for-each-print-newline w)
+

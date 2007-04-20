@@ -1,9 +1,9 @@
 #!hacguile -b
 !#
 ;; "006-02.hacscm"
-;;	$Id: 006-02.hacscm,v 1.1 2007/03/14 04:06:31 fang Exp $
+;;	$Id: 006-02.hacscm,v 1.2 2007/04/20 18:27:46 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 006.haco-a
 
-(parse-reference "bad-parse")
+(hac:parse-reference "bad-parse")
 

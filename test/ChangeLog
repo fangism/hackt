@@ -1,10 +1,51 @@
 # "test/ChangeLog"
 
+2007-04-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-merged-scm-01-37:
+	  Branch merge.
+
+
+2007-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-36:
+	  Make.test-guile: added $(srcdir) to GUILE_LOAD_PATH for testing
+		This allows is to load and call other scripts.  
+
+
 2007-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-18:
 	  Make.test-prsim: updated prsimrc-fail filter (simplified)
 	  Make.test-cflat: added missing lvs{prs,fail}diffs summaries
+
+
+2007-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-12:
+	  Make.test-*: changed dependencies on HACKT_EXE to specific
+		subprograms, which avoids unnecessary retesting of 
+		front/middle end objects when only back-end tools change.
+		Hooray for shorter testing cycles.  
+
+
+2007-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-08:
+	  Added GUILE_LOAD_PATH to .hacscm tests (suffix rule).
+
+
+2007-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-04:
+	  Make.test-tail: removed references to .libs, should not need because
+		libtool already does the magic.  
+
+
+2007-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-03:
+	  Added GUILE_LOAD_PATH environment to hacchpsimscm tests.  
 
 
 2007-03-19	David Fang		<fangism@users.sourceforge.net>

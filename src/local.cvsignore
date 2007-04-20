@@ -18,6 +18,7 @@ core.*
 *.swp
 *.hchk
 *.tccchk
+*.gesnarfed
 dummy.cc
 stamp-h*
 

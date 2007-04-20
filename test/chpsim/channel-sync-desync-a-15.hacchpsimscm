@@ -1,0 +1,27 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-15"
+;;	$Id: channel-sync-desync-a-15.hacchpsimscm,v 1.2 2007/04/20 18:26:57 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing an open stream in reverse mode
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+
+(define x (hac:open-chpsim-trace-reverse "channel-sync-desync-a-04.chpsimtrace"))
+(define y (make-chpsim-trace-reverse-stream x))
+
+(stream-car y)
+;; expect first entry
+
+(stream-car (stream-cdr y))
+;; expect second entry
+
+(stream-car (stream-cdr y))
+;; expect second entry!
+
+(stream->list y)
+;; expand list of all entries
+

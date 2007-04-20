@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.6 2007/02/05 06:40:01 fang Exp $
+#	$Id: Make.test-compile,v 1.7 2007/04/20 18:26:19 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -280,16 +280,16 @@ TESTS += $(HACKT_PARSE_TEST_PASSES:=.hacktcmpltest) \
 	$(HACKT_PARSE_TEST_FAILURES:=.hacktcmplfailtest) \
 	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest)
 
-HAC_OBJECT_TARGETS += $(HACKT_PARSE_TEST_SUBJECTS:=.haco) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.haco-u) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.haco-c) \
-	$(HACKT_PARSE_TEST_SUBJECTS:=.haco-a)
+HAC_COMPILE_OBJECT_TARGETS += $(HACKT_PARSE_TEST_SUBJECTS:=.haco)
+HAC_UNROLL_OBJECT_TARGETS += $(HACKT_PARSE_TEST_SUBJECTS:=.haco-u)
+HAC_CREATE_OBJECT_TARGETS += $(HACKT_PARSE_TEST_SUBJECTS:=.haco-c)
+HAC_ALLOC_OBJECT_TARGETS += $(HACKT_PARSE_TEST_SUBJECTS:=.haco-a)
 
 HACKT_PARSE_FAIL_DUMPS = $(HACKT_PARSE_TEST_FAILURES:=.compiledump)
-$(HACKT_PARSE_FAIL_DUMPS): $(HACKT_EXE)
+$(HACKT_PARSE_FAIL_DUMPS): $(HACKT_COMPILE_EXE)
 
 HACKT_COMPILE_OBJ_DUMPS = $(HACKT_OBJ_TEST_SUBJECTS:=.outdump)
-$(HACKT_COMPILE_OBJ_DUMPS): $(HACKT_EXE)
+$(HACKT_COMPILE_OBJ_DUMPS): $(HACKT_COMPILE_EXE)
 
 build-check-local: \
 	$(HACKT_PARSE_TEST_PASSES:=.haco) \

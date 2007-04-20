@@ -7,7 +7,7 @@ bool[4]: "e"
 Event graph: 
 event[0]: fork: null, pid: 0, #pred: 0, succ: 29 
 event[1]: null: , pid: 0, #pred: 2, succ: 
-event[2]: null: [~e], pid: 0, #pred: 1, succ: 17 
+event[2]: wait: [~e], pid: 0, #pred: 1, succ: 17 
 bool deps: 4 
 event[3]: null: null, pid: 0, #pred: 1, succ: 2 
 event[4]: assign: b := true, pid: 0, #pred: 1, succ: 3 
@@ -24,7 +24,7 @@ event[14]: null: , pid: 0, #pred: 2, succ: 13
 event[15]: assign: a := false, pid: 0, #pred: 1, succ: 14 
 event[16]: assign: b := false, pid: 0, #pred: 1, succ: 14 
 event[17]: fork: , pid: 0, #pred: 1, succ: 15 16 
-event[18]: null: [e], pid: 0, #pred: 1, succ: 24 
+event[18]: wait: [e], pid: 0, #pred: 1, succ: 24 
 bool deps: 4 
 event[19]: assign: e := false, pid: 0, #pred: 1, succ: 18 
 event[20]: assign: c := ~c, pid: 0, #pred: 1, succ: 19 

@@ -1,0 +1,28 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-06.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-06.hacchpsimscm,v 1.2 2007/04/20 18:26:50 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-filter and selectors
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define y (open-chpsim-trace-stream "channel-sync-desync-a-04.chpsimtrace"))
+
+; only look at event 2 (using predicate)
+(define (event-two? e) (= 2 (chpsim-trace-entry-event e)))
+(define (event-three? e) (= 3 (chpsim-trace-entry-event e)))
+
+(define zz (stream-filter event-two? y))
+zz
+(stream->list zz)
+; (stream->list (stream-filter event-two? y))
+
+(define ww (stream-filter event-three? zz))
+ww
+(stream->list ww)
+

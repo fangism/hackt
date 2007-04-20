@@ -1,5 +1,27 @@
 "ChangeLog"
 
+2007-04-20	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-19-merged-scm-01-37:
+	  scm-01 branch merge.
+
+
+2007-03-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-14:
+	  Now install bin/init_hackt.[c]sh scripts, subst'd by configure.
+		Setup scripts establish some environment variables for user.
+	  config/guile.m4: override-able --with-guile-snarf AR_ARG_WITH
+		for systems that install guile under some name-transformation.
+		Same with --with-guile-tools.
+
+
+2007-03-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  Added hackt-config.in as an installed configure flag script.
+
+
 2007-03-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-14:

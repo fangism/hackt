@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.128 2007/04/19 03:13:37 fang Exp $
+#	$Id: configure.ac,v 1.129 2007/04/20 18:25:39 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070418, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070420, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -421,6 +421,7 @@ AC_CONFIG_FILES([src/Makefile],
 AC_CONFIG_FILES([
 	scripts/Makefile
 	src/util/test/Makefile
+	src/scm/Makefile
 	test/Makefile
 	test/lexer/Makefile
 	test/parser/Makefile
@@ -458,6 +459,8 @@ AC_CONFIG_FILES([
 	lib/Makefile
 	hackt.doxygen.config
 ])
+AC_CONFIG_FILES([hackt-config],
+	[chmod +x hackt-config])
 AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/test-expect.sh],
@@ -525,6 +528,10 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy])
 AC_CONFIG_FILES([src/parser/instref-parse.yy])
 AC_CONFIG_FILES([src/parser/type-parse.yy])
 AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy])
+AC_CONFIG_FILES([src/scripts/init_hackt.sh],
+	[chmod +x src/scripts/init_hackt.sh])
+AC_CONFIG_FILES([src/scripts/init_hackt.csh],
+	[chmod +x src/scripts/init_hackt.csh])
 
 dnl initialize and reset header check dependencies
 dnl also depend on Makefile?

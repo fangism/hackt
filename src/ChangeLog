@@ -3,6 +3,35 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-merged-scm-01-37:
+	  Branch merge of chpsim/guile/scheme dissertation work, building
+		a framework for versatile trace profiling.  
+	  Summary: primitives in C++/guile, scheme code, basic static
+		and trace analyses, and more scheme code.
+		Provide sequential and random access to tracefiles as stream.
+	  Fixes: chpsim's trace_manager wasn't updating previous_events.
+	  TODO: automatic documentation assembly (texinfo)
+
+
+2007-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-37:
+	  No source revision.
+	  We unfortunately have to merge this branch earlier than expected.
+		chpsim's channel model needs to be redone, becuse I discovered
+		that the occupancy-bit model of channels introduces slack 1
+		on every channel and half-decouples send/receive pairs.
+	  *SIGH* Fix and re-verification will occur on new branch, following
+		this merge.  
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-36:
+	  Scheme-only revision: see scm/ChangeLog: 
+		fork-join static maps and do-while set, more test cases...
+
+
 2007-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-18:
@@ -18,6 +47,33 @@
 	  Wish: future re-instate the 255 limit again.  
 
 
+2007-04-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-35:
+	  Scheme-only revision: see scm/ChangeLog: 
+		Loop count analysis and loop/branch predicates.
+
+
+2007-04-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-34:
+	  Scheme-only revision: see scm/ChangeLog: 
+		memoized sets of loop-head-tails and branch-head-tails
+
+
+2007-04-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-33:
+	  Scheme-only revision: see scm/ChangeLog: memoized event sets
+
+
+2007-04-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-32:
+	  Added some more chpsim-event primitive predicates.
+	  More in scm/ChangeLog.
+
+
 2007-04-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-17:
@@ -26,12 +82,309 @@
 		and added some source comments.  
 
 
+2007-04-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-31:
+	  Scheme-only revision: see scm/ChangeLog: rb-tree replaces alist.
+
+
+2007-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-30:
+	  Scheme-only revision: see scm/ChangeLog: rb-tree enhancements.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-29:
+	  Scheme-only revision: see scm/ChangeLog: new rb-tree implementation.
+
+
+2007-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-28:
+	  No compiled-source revision, only scheme additions, see scm/ChangeLog.
+		Summary: branch-selection histogram construction, and
+		other general utility procedures.  
+
+
+2007-04-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-27:
+	  guile/scm_chpsim_trace_streamer.cc: chpsim-trace-num-entries:
+		allow argument to be string naming trace, or an
+		already opened reverse-trace handle.
+	  Critical path routines added to scm/hackt/chpsim-trace.scm.
+
+
 2007-04-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-16:
 	  Minor bug fix: lacking diagnostic when redeclaring an instance
 		with different meta-type.  Fixed by catching a std::bad_cast.
 		Added test-case basic/024.
+
+
+2007-04-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-26:
+	  guile/chpsim-wrap.cc: use reverse! in value-list construction
+		to avoid unnecessary gc_allocation/deallocation.
+	  See scm/ChangeLog for scheme additions for state-change stream
+		operations.
+
+
+2007-04-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-25:
+	  Quick clean-up only:
+		Perm'd SCM_USE_SYMBOLIC_TYPE_TAGS and TRACE_ENTRY_START_INDEX.
+		Purged unused code in sim/chpsim/TraceIterators.h.
+	  scm/TODO: update: removed completed entries
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-24:
+	  guile/chpsim-wrap.cc: Finished implementing state-change-stream 
+		interface to chpsim trace files.
+		Now should perm. the use of SCM_USE_SYMBOLIC_TYPE_TAGS.
+	  sim/chpsim/Trace.cc: fixed state_change_streamer::advance()
+	  Added test cases for state-change-stream features.
+
+
+2007-04-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-23:
+	  Added guile/devel_switches.h for switches:
+		using flag SCM_USE_SYMBOLIC_TYPE_TAGS to replace
+		scm-constants with quoted symbols, such as 'bool.
+	  guile/libhackt-wrap.{h,cc}: added scm_type_symbols array
+		of unique-symbols 'bool, 'int, etc...
+		which initializes the array (and reverse-map) at 
+		procedure-load time.  
+	  Test cases updated accordingly.
+
+
+2007-04-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-22:
+	  Added sim/chpsim/TraceIterators.h for handy state-change
+		trace iterator classes (defined as nested).  
+	  Implemented most of state-change trace stream interface.
+	  Next: consider replacing hac:bool-tag constants with
+		SCM symbols like 'hac:bool-tag.  
+	  TODO: finish state-change to SCM constructor.
+		utility scm functions to operate on state-change stream.
+
+
+2007-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-21:
+	  Implemented trace-file random-access interface, indexed by
+		event entry number.  Added to file 
+		"guile/scm_chpsim_trace_stream.{h,cc}" though is not stream.
+		new primitives: hac:lookup-trace-entry, 
+			hac:chpsim-trace-num-entries, 
+			hac:open-chpsim-trace-accessor
+	  Added added new test cases to go along with.
+	  sim/chpsim/Trace.cc: entry_reverse_streamer now caches the
+		total number of entries in tracefile upon init.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-20:
+	  Implemented and tested initial reverse trace stream interface.
+		sim/chpsim/Trace.cc: implemented it.
+	  Exported functions are named with 'trace-reverse'.
+	  Copy-modified most of existing test cases to operate on 
+		reverse streams.
+
+
+2007-03-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-19:
+	  sim/chpsim/Trace.h: added start_index field to contents entry
+		to make it easier to do random access and reverse streaming.
+		Few test cases updated trivially.  
+	  In progress: reverse-entry-stream.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-18:
+	  Fixed some smob print strings to adhere to convention.
+	  Relocated some raw-reference smob functions from 
+		"guile/libhackt-wrap.cc" to "guile/scm_reference.cc"
+		and provided a load-function interface.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-17:
+	  Added common/config.{h,cc}: where most of old main/version.{h,cc}
+		functionality was relocated, so other extensions may use it.
+		Also exposed most config-strings as public const char[].
+	  Added guile/hackt-config.{h,cc} to export guile-wrapped configure
+		information as scheme functions.  
+	  Added smob-to-raw-reference wrapper func in guile/scm_reference.
+
+
+2007-03-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-16:
+	  Re-named all guile-primitives with "hac:" prefix, while 
+		non-primitives remain unchanged.  We may re-export
+		some of these functions without the prefix later...
+		Scheme sources and test cases updated accordingly.  
+	  Next: documentation strings for (procedure-documentation)
+		for all non-primitives, and maybe define a (help-hackt).
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-15:
+	  Re-defined all guile-primtive functions using HAC_GUILE_DEFINE
+		registration macro.  
+	  TODO: rename functions with "hac:" prefix.
+	  TODO: generate texinfo, follow the way of the LilyPond!
+
+
+2007-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-14:
+	  Added scripts/init_hackt.[c]sh environment setup scripts, 
+		generated by configure from respective .in's.
+		append_path, prepend_path ripped from fink's startup scripts.
+	  Begun experimental manual snarfing of primitive procedures, 
+		ripped largely from LilyPond source!  Thank you, Lily!
+	  Next: continue to convert all guile procedure registrations using 
+		new HAC_GUILE_DEFINE* macros, following the example set by
+		guile/libhackt-wrap.cc:`parse-reference' in this patch.  
+	  TODO: rename all HACKT extension procedures (primitive and scheme)
+		with 'hac:' prefix.  Will aid in mixing future modules, 
+		and interactive tab-completion.  
+	  Goal: run a hacguile scheme function to generate 
+		comprehensive texinfo docs -- first covers primitives.
+		Then we'll worry about .scm documentation.  
+
+
+2007-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  Added installed-script: hackt-config (configured from .in)
+	  guile/scm_chpsim_event_node.cc: added primitive functions for
+		event successor-lists and may-block-dependencies.  
+		Added minimal test cases for new procedures.  
+	  See also util/ChangeLog, scm/ChangeLog.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-12:
+	  No source revision, test/Make.test-* tuning only.  
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-11:
+	  guile/chpsim-wrap.cc: Updated chpsim-event-trivial? with is_trivial()
+		which now includes forks as trivial events.
+		Added chpsim-event-wait? -select-det? select-nondet?
+			primtive predicates.
+	  sim/chpsim/Event.{h,cc}: split out condition-wait into its own
+		code EVENT_CONDITION_WAIT, updated switch-cases.
+		Added has_trivial_delay() to work as before.
+		Renamed is_indispensible -> is_movable.  
+		Added get_chp_action pointer accessor.
+		sim/chpsim/State.cc, StateConstructor.cc updated accordingly.
+	  Test suites were updated trivially to account for new revisions.  
+
+
+2007-03-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-10:
+	  guile/scm_chpsim_event_node.cc: 
+		Added new field accessor functions to get the process-index, 
+		delay, num-predecessors of (static) events.
+	  Added test cases for these.
+	  Minor additions/fix in scm/ChangeLog.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-09:
+	  Relocated chpsim-trace functions from guile/chpsim-wrap.cc
+		to guile/scm_chpsim_trace_streamer.cc (cleaner boundary).
+	  guile/scm_chpsim_event_node.cc:
+		Added bunch of (untested) event-node type predicates.  
+	  guile/chpsim-wrap.cc: split into two modules, one for general
+		chpsim primitives, another for trace-related primitives.
+	  See also scm/ChangeLog.
+
+
+2007-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-08:
+	  Added scm: hackt/hackt.scm (API built on top of hackt-primitives),
+		hackt/algorithm.scm typical cookbook algorithm for
+			higher-order functions
+		hackt/streams.scm: added stream-filter-split to save away
+			the stream that fails a predicate, returning pair
+			of streams.  
+		Added new test cases for these modifications.  
+	  guile/libhackt-wrap.cc: added define constants for type-tag-enums.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-07:
+	  Added chpsim event node pointer SMOB.  We can use a pointer because
+		for the lifetime of the interpreter, the event pool is
+		statically allocated.  
+	  Added simple print-all events scm test case.  
+	  Next: event accessor functions (more notes in scm/TODO)
+
+
+2007-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-06:
+	  Bug fixed: chpsim trace_manager wasn't updating previous_events
+		counter per flush, resulting in badly offset cause event IDs.
+	  Minor: return value of prsim and chpsim clamped to 0 and 1, 
+		was letting interpreter's return value code escape to exit.
+	  More scm test cases added, and growing...
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-05:
+	  scm/hackt/streams.scm: fixed definition of stream-filter and tested, 
+		added and used cons-stream, slightly different definition
+		than from SICP based on the use in ice-9/streams.  
+	  scm/hackt/chpsim-trace.scm: added entry accessors, which can
+		be replaced in the future.  
+	  Going to be a series of little revisions while we shake out bugs
+		one at a time.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-04:
+	  guile/libhackt-wrap.cc: now defines primitives in module
+		"hackt hackt-primitives", autoloaded as such on startup.
+	  guile::main() and guile/chpsim-wrap.cc now use these.
+	  No tests were affected.  
+
+
+2007-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-03:
+	  Glory!  Successfully demonstrated working C/Scheme module.
+	  current-trace-entry: now returns EOL instead of throwing error
+		upon end of stream.  
+	  guile/chpsim-wrap.{h,cc}: can now load module-exported symbols
+		through scm_init_hackt_chpsim_trace_primitives_module().
+	  main/chpsim-guile.cc: now import chpsim symbols into a module
+		and open that module (hackt chpsim-trace-primitives).
+	  Added scm/hackt/chpsim-trace.scm, building on primitives.
+	  Next: move libhackt-wrap symbols into a hackt-primitives module.
+
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-02:
+	  New chpsim-scm primitives:
+		open-chpsim-trace-stream -- creates a trace stream SMOB
+		chpsim-trace-valid? -- validity of trace stream SMOB
+		current-trace-entry -- reads current entry and advances one
+	  sim/chpsim/Trace.cc: bug fix -- forgot to read alignment marker
+		TraceStreamer.h: added index running counter
+
+
+2007-03-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-01:
+	  This branch is for development of the chpsim-trace manipulation
+		API for guile/scheme.  
+	  Implemented chpsim-trace-reader that should provide stream
+		interface to trace entries (by event), untested.  
+	  Added scm/ subdir for scheme routines.  
 
 
 2007-03-19	David Fang		<fangism@users.sourceforge.net>

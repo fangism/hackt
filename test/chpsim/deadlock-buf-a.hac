@@ -1,0 +1,9 @@
+// "deadlock-buf-a.hac"
+// copy-modified from "deadlock-ring-a.hac"
+
+import "testlib/bool-buf.hac";
+
+chan(bool) M;
+bool_buf_init<true> X(M, M);
+
+

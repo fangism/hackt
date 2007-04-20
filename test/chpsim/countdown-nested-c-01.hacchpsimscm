@@ -1,0 +1,9 @@
+#!hacchpsimguile -b
+!#
+;; "countdown-nested-c-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: countdown-nested-c-01.hacchpsimscm,v 1.2 2007/04/20 18:27:21 fang Exp $
+;; @haco@ countdown-nested-c.haco-a
+
+(load-from-path "event-classification.hacchpsimscm")
+

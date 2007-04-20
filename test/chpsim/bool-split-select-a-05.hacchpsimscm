@@ -1,0 +1,30 @@
+#!hacchpsimguile -b
+!#
+;; "bool-split-select-a-05.hacchpsimscm"
+;;	$Id: bool-split-select-a-05.hacchpsimscm,v 1.2 2007/04/20 18:26:27 fang Exp $
+;; vi: ft=scheme
+;; @haco@ bool-split-select-a.haco-a
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define x all-static-events-stream)
+
+; don't forget cdr, because each event is a paired with its index
+"untagged dependence sets of all events"
+(define y
+  (stream-map (lambda (e)
+    (cons (car e) (hac:chpsim-event-may-block-deps-internal (cdr e))))
+  x)
+)
+; (stream->list y)
+(stream-for-each-display-newline y)
+
+"type-tagged dependence sets of all events"
+(define y (stream-map (lambda (e)
+  (cons (car e) (chpsim-event-may-block-deps (cdr e)))) x)
+)
+(stream-for-each-display-newline y)
+

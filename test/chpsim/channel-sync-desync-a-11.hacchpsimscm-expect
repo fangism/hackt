@@ -1,0 +1,44 @@
+15
+(1 . #<raw-chpsim-event-node: send: bool_source_constant::S!(true), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+>)
+(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 2 8 3 13 14 
+>)
+(1 . #<raw-chpsim-event-node: send: bool_source_constant::S!(true), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+>)
+(2 . #<raw-chpsim-event-node: send: int_source_constant::S!(17), pid: 2, #pred: 1, succ: 2 
+channel deps: 2 
+>)
+(3 . #<raw-chpsim-event-node: receive: channel_desync_bool_int::O?(channel_desync_bool_int::x1,channel_desync_bool_int::x2), pid: 4, #pred: 1, succ: 12 
+channel deps: 3 
+>)
+(4 . #<raw-chpsim-event-node: send: channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2), pid: 3, #pred: 1, succ: 8 
+channel deps: 3 
+>)
+(5 . #<raw-chpsim-event-node: null: , pid: 3, #pred: 2, succ: 4 
+>)
+(6 . #<raw-chpsim-event-node: receive: channel_sync_bool_int::B?(channel_sync_bool_int::x1), pid: 3, #pred: 1, succ: 5 
+channel deps: 1 
+>)
+(7 . #<raw-chpsim-event-node: receive: channel_sync_bool_int::I?(channel_sync_bool_int::x2), pid: 3, #pred: 1, succ: 5 
+channel deps: 2 
+>)
+(8 . #<raw-chpsim-event-node: fork: , pid: 3, #pred: 1, succ: 6 7 
+>)
+(9 . #<raw-chpsim-event-node: null: , pid: 4, #pred: 2, succ: 3 
+>)
+(10 . #<raw-chpsim-event-node: send: channel_desync_bool_int::B!(channel_desync_bool_int::x1), pid: 4, #pred: 1, succ: 9 
+channel deps: 4 
+>)
+(11 . #<raw-chpsim-event-node: send: channel_desync_bool_int::I!(channel_desync_bool_int::x2), pid: 4, #pred: 1, succ: 9 
+channel deps: 5 
+>)
+(12 . #<raw-chpsim-event-node: fork: , pid: 4, #pred: 1, succ: 10 11 
+>)
+(13 . #<raw-chpsim-event-node: receive: bool_sink::B?(bool_sink::b), pid: 5, #pred: 1, succ: 13 
+channel deps: 4 
+>)
+(14 . #<raw-chpsim-event-node: receive: int_sink::B?(int_sink::b), pid: 6, #pred: 1, succ: 14 
+channel deps: 5 
+>)

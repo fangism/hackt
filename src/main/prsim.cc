@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.11 2007/03/16 07:07:24 fang Exp $
+	$Id: prsim.cc,v 1.12 2007/04/20 18:26:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -162,7 +162,10 @@ try {
 		// until later, when we give a source file, or redirect in
 		const int ret = CommandRegistry::interpret(sim_state,
 			opt.interactive);
-		if (ret)	return ret;
+		if (ret) {
+			// return value only has meaning to the interpreter
+			return 1;	// ret;
+		}
 	}
 } catch (...) {
 	cerr << "Caught exception during construction of simulator state."

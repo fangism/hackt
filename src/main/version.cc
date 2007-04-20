@@ -2,32 +2,19 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.8 2007/04/15 05:52:28 fang Exp $
+	$Id: version.cc,v 1.9 2007/04/20 18:26:01 fang Exp $
  */
 
 #include <iostream>
 #include "main/program_registry.h"
 #include "main/version.h"
 #include "main/main_funcs.h"
-#include "config.h"
-
-// various configure-generated and make-generated headers
-#include "cvstag.h"
-#include "builddate.h"
-#include "cxx_version.h"
-#include "cxxflags.h"
-#include "am_cxxflags.h"
-#include "lexer/lex_version.h"
-#include "parser/yacc_version.h"
-#include "buildhost.h"
-#include "config_params.h"
-#include "util/readline_wrap.h"
+#include "common/config.h"
 
 // #include "util/getopt_portable.h"
 
 namespace HAC {
 #include "util/using_ostream.h"
-using util::readline_wrapper;
 
 //=============================================================================
 
@@ -64,89 +51,18 @@ version::main(const int argc, char*[], const global_options&) {
 		// don't bother returning
 	}
 	ostream& o(cout);
-	package(o) << endl;
-	cvs(o) << endl;
-	config(o) << endl;
-	buildhost(o) << endl;
-	cxx(o) << endl;
-	cxxflags(o) << endl;
-	lex(o) << endl;
-	yacc(o) << endl;
-	readline_wrapper::version_string(o << "readline: ") << endl;
-	builddate(o) << endl;
+	config::package(o) << endl;
+	config::cvs(o) << endl;
+	config::configure_params(o) << endl;
+	config::buildhost(o) << endl;
+	config::cxx(o) << endl;
+	config::cxxflags(o) << endl;
+	config::lex(o) << endl;
+	config::yacc(o) << endl;
+	config::readline(o) << endl;
+	config::builddate(o) << endl;
 	// influential environment variables
 	return 0;
-}
-
-//-----------------------------------------------------------------------------
-ostream&
-version::package(ostream& o) {
-	return o << "Version: " PACKAGE_STRING;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-version::cvs(ostream& o) {
-	return o << "CVS Tag: " CVSTAG;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-version::cxx(ostream& o) {
-	return o << "c++: " CXX_VERSION;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Now prints more than just CXXFLAGS, other related configuration
-	flags used in the build.
- */
-ostream&
-version::cxxflags(ostream& o) {
-		o << "AM_CPPFLAGS: " AM_CPPFLAGS;
-	o << endl << "AM_CXXFLAGS: " AM_CXXFLAGS;
-	o << endl << "AM_LDFLAGS: " AM_LDFLAGS;
-	o << endl << "config-CXXFLAGS: " CONFIG_CXXFLAGS;
-	o << endl << "config-CPPFLAGS: " CONFIG_CPPFLAGS;
-	o << endl << "config-LDFLAGS: " CONFIG_LDFLAGS;
-	o << endl << "config-LIBS: " CONFIG_LIBS;
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-version::config(ostream& o) {
-	return o << "Configured with: " CONFIG_PARAMS;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-version::lex(ostream& o) {
-	return o << "lex: " LEX_VERSION;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-version::yacc(ostream& o) {
-	return o << "yacc: " YACC_VERSION;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-version::builddate(ostream& o) {
-	return o << "build-date: " BUILDDATE;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Prints the host triplet only if it's different from the build triplet.
- */
-ostream&
-version::buildhost(ostream& o) {
-	o << "build-triplet: " CONFIG_BUILD;
-	if (strcmp(CONFIG_HOST, CONFIG_BUILD))
-		o << endl << "host-triplet: " CONFIG_HOST;
-	return o;
 }
 
 //-----------------------------------------------------------------------------

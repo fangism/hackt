@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.16 2007/03/11 16:34:22 fang Exp $
+	$Id: CHP.h,v 1.17 2007/04/20 18:25:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -605,6 +605,7 @@ public:
 //=============================================================================
 /**
 	do-while loop: repeat while at least one guard is true.  
+	NOTE: this is classified as a selection statement, but not a branch.
  */
 class do_while_loop : public action, public selection_list_type {
 	typedef	action					parent_type;

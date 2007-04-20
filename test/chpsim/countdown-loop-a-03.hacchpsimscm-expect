@@ -1,0 +1,17 @@
+"events with multiple entries (branch-joins and loop-heads):"
+((1) (2))
+"testing a depth-first traversal from root node:"
+0
+1
+2
+3
+"showing loop-head-tail map:"
+((1 . 2))
+"showing loop-tail-head map:"
+((2 . 1))
+"only one loop"
+"showing branch-head-tail pairs:"
+()
+"showing branch-tail-head pairs:"
+()
+"no branch-head-tail pairs, only a do-while loop"

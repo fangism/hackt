@@ -1,0 +1,23 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-19.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-19.hacchpsimscm,v 1.2 2007/04/20 18:26:59 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-concat on reverse stream and mixing
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define y (open-chpsim-trace-reverse-stream "channel-sync-desync-a-04.chpsimtrace"))
+
+(define zz (stream-concat y y))
+zz
+(stream->list zz)
+; expect to see same trace sequence twice
+
+(define w (open-chpsim-trace-stream "channel-sync-desync-a-04.chpsimtrace"))
+(stream->list (stream-concat w y))
+

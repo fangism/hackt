@@ -1,0 +1,12 @@
+# "bubble-ring-a-01.chpsimrc"
+#	$Id: bubble-ring-a-01.chpsimrc,v 1.2 2007/04/20 18:26:30 fang Exp $
+# @haco@ bubble-ring-a.haco-a
+
+timing per-event
+# trace-flush-interval 40
+trace bubble-ring-a-01.chpsimtrace
+step 150
+trace-close
+trace-dump bubble-ring-a-01.chpsimtrace
+# !rm bubble-ring-a-01.chpsimtrace
+

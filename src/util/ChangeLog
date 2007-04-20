@@ -1,5 +1,53 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.75 2007/03/17 19:58:18 fang Exp $
+#	$Id: ChangeLog,v 1.76 2007/04/20 18:26:15 fang Exp $
+
+2007-04-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-24:
+	  util/guile_STL.h: scm_list_insert_iterator default constructor
+		now starts with an empty list.  
+
+
+2007-04-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-23:
+	  util/guile_STL.h: defined scm_extract<string> specialization.
+
+
+2007-03-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-17:
+	  util/guile_STL.h: added explicit pointer decay for string
+		for make_scm inline overload.  
+
+
+2007-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-14:
+	  util/for_all.h: lazy man's std::for_each.
+	  util/caller.h: functor that *calls* the argument, e.g. function-ptr.
+	  util/guile_STL.h: added const char* specialization to scm_builder.
+
+
+2007-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-13:
+	  util/guile_STL.h: added scm_list_builder class functor for re-use, 
+		and make_scm_list() helper function (argument deduction).
+
+
+2007-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-08:
+	  util/libguile.{h,cc}: added combined define-and-export functions
+		for convenience.
+
+
+2007-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-15-scm-01-02:
+	  util/guile_STL.h: added conversion wrappers for float and double.  
+
 
 2007-03-17	David Fang		<fangism@users.sourceforge.net>
 

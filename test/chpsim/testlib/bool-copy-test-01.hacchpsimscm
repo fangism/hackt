@@ -1,9 +1,11 @@
 #!hacchpsimguile -b
 !#
 ;; "bool-copy-test-01.hacchpsimscm"
-;;	$Id: bool-copy-test-01.hacchpsimscm,v 1.1 2007/03/20 02:24:23 fang Exp $
+;;	$Id: bool-copy-test-01.hacchpsimscm,v 1.2 2007/04/20 18:27:39 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ bool-copy-test.haco-a
 
-(dump-chpsim-struct)
+(use-modules (hackt chpsim-primitives))
+
+(hac:dump-chpsim-struct)
 

@@ -1,0 +1,29 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-16.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-16.hacchpsimscm,v 1.2 2007/04/20 18:26:57 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-map and selectors on reverse stream
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+(define x (hac:open-chpsim-trace-reverse "channel-sync-desync-a-04.chpsimtrace"))
+(define y (make-chpsim-trace-reverse-stream x))
+
+(define yind (stream-map chpsim-trace-entry-index y))
+(stream->list yind)
+; expect (0 ... 9)
+
+(define ytime (stream-map chpsim-trace-entry-time y))
+(stream->list ytime)
+
+(define ytype (stream-map chpsim-trace-entry-event y))
+(stream->list ytype)
+
+(define ycrit-rev (stream-map chpsim-trace-entry-critical y))
+(stream->reversed-list ycrit-rev)
+

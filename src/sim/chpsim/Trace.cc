@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.cc"
-	$Id: Trace.cc,v 1.3 2007/02/08 20:34:25 fang Exp $
+	$Id: Trace.cc,v 1.4 2007/04/20 18:26:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@
 #define	CHPSIM_TRACE_ALIGNMENT_MARKERS		1
 
 #include "sim/chpsim/Trace.h"
+#include "sim/chpsim/TraceStreamer.h"
 #include <iostream>
 #include <sstream>
 #include <iterator>
@@ -149,7 +150,6 @@ if (i) {
  */
 ostream&
 event_trace_window::dump(ostream& o, const size_t offset) const {
-	typedef	event_array_type::const_iterator const_iterator;
 	o << "\tevent\t\tevent\tcause" << endl;
 	o << "\tindex\ttime\tnode\tindex" << endl;
 #if 0
@@ -289,6 +289,36 @@ if (data_array.size()) {
 }
 
 //=============================================================================
+// struct state_trace_window_base::__pseudo_const_iterator_range method definitions
+
+/**
+	Find the range over which the referenced variables were
+	modified by event `ti'.  
+	Iterator pair basically inch-worms forward.
+	Boundary conditions OK? (end)
+ */
+template <class Tag>
+void
+state_trace_window_base<Tag>::__pseudo_const_iterator_range::advance(
+		const trace_index_type ti, 
+		const state_trace_window_base<Tag>& w) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("trace-entry-index = " << ti << endl);
+#if 0
+	p = std::equal_range(p.second, w.data_array.end(), ti, 
+		state_trace_point_base::event_index_less_than());
+#else
+	// more efficient
+	p.first = p.second;
+	p.second = std::upper_bound(p.second, w.data_array.end(), ti, 
+		state_trace_point_base::event_index_less_than());
+	STACKTRACE_INDENT_PRINT("new distance = " <<
+		std::distance(p.first, p.second) << endl);
+#endif
+}
+
+
+//=============================================================================
 // class state_trace_time_window method definitions
 
 void
@@ -326,6 +356,19 @@ state_trace_time_window::dump(ostream& o) const {
 	o << "channel state trace:" << endl;
 	state_trace_window_base<channel_tag>::dump(o);
 	return o;
+}
+
+//=============================================================================
+// struct state_trace_time_window::pseudo_const_iterator_range method definitions
+
+void
+state_trace_time_window::pseudo_const_iterator_range::advance(
+		const trace_index_type ti, 
+		const state_trace_time_window& w) {
+	bool_pseudo_const_iterator_range::advance(ti, w);
+	int_pseudo_const_iterator_range::advance(ti, w);
+	enum_pseudo_const_iterator_range::advance(ti, w);
+	channel_pseudo_const_iterator_range::advance(ti, w);
 }
 
 //=============================================================================
@@ -389,16 +432,19 @@ trace_file_contents::entry::dump(ostream& o) const {
 		"\tchunk size: " << chunk_size << endl;
 	return o;
 #else
-	return o << '\t' << start_time <<
+	o << '\t' << start_index <<
+		'\t' << start_time <<
 		'\t' << file_offset <<
 		'\t'<< chunk_size << endl;
 #endif
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 trace_file_contents::entry::write(ostream& o) const {
 	STACKTRACE_VERBOSE;
+	write_value(o, start_index);
 	write_value(o, start_time);
 	write_value(o, file_offset);
 	write_value(o, chunk_size);
@@ -409,6 +455,7 @@ trace_file_contents::entry::write(ostream& o) const {
 void
 trace_file_contents::entry::read(istream& i) {
 	STACKTRACE_VERBOSE;
+	read_value(i, start_index);
 	read_value(i, start_time);
 	read_value(i, file_offset);
 	read_value(i, chunk_size);
@@ -430,8 +477,8 @@ ostream&
 trace_file_contents::dump(ostream& o) const {
 	o << "Trace file contents: " << entry_array.size() <<
 		" epochs." << endl;
-	o << "\t\tstart\tfile\tchunk\n"
-		"\tepoch\ttime\toffset\tsize" << endl;
+	o << "\t\tstart\tstart\tfile\tchunk\n"
+		"\tepoch\tindex\ttime\toffset\tsize" << endl;
 #if 0
 	for_each(entry_array.begin(), entry_array.end(),
 		bind2nd_argval(mem_fun_ref(&entry::dump), o)
@@ -586,13 +633,15 @@ if (current_chunk.event_count()) {
 	}
 	const trace_time_type start_time = current_chunk.start_time();
 	const streampos old_size = trace_ostream->tellp();
+	const size_t prev = previous_events;
+	previous_events += current_chunk.event_count();
 	current_chunk.write(*trace_ostream);
 	trace_ostream->flush();
 	trace_payload_size = trace_ostream->tellp();
 	STACKTRACE_INDENT_PRINT("chunk written to offsets [" << old_size <<
 		':' << trace_payload_size << "]." << endl);
 	// append entry to contents
-	contents.push_back(trace_file_contents::entry(
+	contents.push_back(trace_file_contents::entry(prev, 
 		start_time, old_size, trace_payload_size -old_size));
 	// restart chunk, recycling memory (placement dtor and ctor)
 	current_chunk.~trace_chunk();
@@ -729,6 +778,333 @@ if (i) {
 } else {
 	cerr << "Error encountered in reading trace header!" << endl;
 }
+}
+
+//=============================================================================
+// class TraceManager::event_streamer method definitions
+
+TraceManager::entry_streamer::entry_streamer(const string& fn) :
+		fin(fn.c_str(), ios_base::binary),
+		tracefile(),
+		epoch_iter(),
+		event_iter(), 
+		_index(0) {
+	init();	// establishes iterators
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial constructor, leaving iterators uninitialized.  
+ */
+TraceManager::entry_streamer::entry_streamer(
+		const string& fn, partial_init_tag) :
+		fin(fn.c_str(), ios_base::binary),
+		tracefile(),
+		epoch_iter(),
+		event_iter(), 
+		_index(0) {
+	// do nothing
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// default dtor manager everything
+TraceManager::entry_streamer::~entry_streamer() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This partial initialization only reads the header, 
+	and not any of the payload, thus leaving the epoch
+	iterator and trace entry interators uninitialized.  
+	Direct use is really reserved for derivative classes.  
+ */
+good_bool
+TraceManager::entry_streamer::partial_init(void) {
+if (fin) {
+	tracefile.contents.read(fin);
+	if (fin) {
+#if CHPSIM_TRACE_ALIGNMENT_MARKERS
+{
+	size_t check;
+	read_value(fin, check);
+	INVARIANT(check == 0xFFFFFFFF);
+}
+#endif
+		return good_bool(true);
+	}
+}
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initializes trace-stream state's nested iterator.
+	Reads the table of contents and the first chunk.  
+ */
+good_bool
+TraceManager::entry_streamer::init(void) {
+	if (partial_init().good) {
+		// continue initializing iterators
+		epoch_iter = tracefile.contents.begin();
+		if (epoch_iter != tracefile.contents.end()) {
+			tracefile.current_chunk.read(fin);
+			event_iter = tracefile.current_chunk.begin();
+			// make sure iterator is valid
+			return good_bool(
+				event_iter != tracefile.current_chunk.end());
+		}
+	}
+	// catch-all
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the status of the stream, true if good.  
+ */
+bool
+TraceManager::entry_streamer::good(void) const {
+	STACKTRACE_VERBOSE;
+	return fin &&
+		(epoch_iter != tracefile.contents.end()) &&
+		(event_iter != tracefile.current_chunk.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre all 
+ */
+const event_trace_point&
+TraceManager::entry_streamer::current_event_record(void) const {
+	INVARIANT(good());
+	return *event_iter;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Advances to next entry, iterator-like.
+	\return bad if there are no more events, we've reached end of stream, 
+		and the current_event_record() is thus invalid.  
+	This return value is useless...
+ */
+good_bool
+TraceManager::entry_streamer::advance(void) {
+	STACKTRACE_VERBOSE;
+	++event_iter;
+	++_index;
+	if (event_iter == tracefile.current_chunk.end()) {
+		STACKTRACE_INDENT_PRINT("at end of epoch\n");
+		// load next epoch
+		// safety guard, in case user tries to abuse
+		if (epoch_iter != tracefile.contents.end()) {
+			STACKTRACE_INDENT_PRINT("loading next epoch\n");
+			++epoch_iter;
+			if (epoch_iter != tracefile.contents.end()) {
+				tracefile.current_chunk.read(fin);
+				event_iter = tracefile.current_chunk.begin();
+				return good_bool(event_iter !=
+					tracefile.current_chunk.end());
+			}
+		}
+	}
+	// catch-all
+	return good_bool(false);
+}
+
+//=============================================================================
+// class TraceManager::entry_reverse_streamer method definitions
+
+TraceManager::entry_reverse_streamer::entry_reverse_streamer(
+		const string& s) : 
+		parent_type(s, partial_init_tag()),
+		start_of_epochs(0), _total_entries(0) {
+	STACKTRACE_VERBOSE;
+	init();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const event_trace_point&
+TraceManager::entry_reverse_streamer::current_event_record(void) const {
+	INVARIANT(good());
+	return event_iter[-1];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+TraceManager::entry_reverse_streamer::good(void) const {
+	return fin &&
+		((epoch_iter != tracefile.contents.begin()) ||
+		(event_iter != tracefile.current_chunk.begin()));
+	// could just look at index...
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+TraceManager::entry_reverse_streamer::init(void) {
+	STACKTRACE_VERBOSE;
+	if (partial_init().good) {
+		// remember the position to adjust seek pointers
+		start_of_epochs = fin.tellg();
+		INVARIANT(!tracefile.contents.empty());
+		epoch_iter = --tracefile.contents.end();
+		const size_t start_of_end = epoch_iter->start_index;
+		// seek to last epoch, and read its whole chunk
+		fin.seekg(epoch_iter->file_offset + start_of_epochs);
+		tracefile.current_chunk.read(fin);
+		INVARIANT(!tracefile.current_chunk.empty());
+		// point to one-past-the-end
+		event_iter = tracefile.current_chunk.end();
+		_index = start_of_end +tracefile.current_chunk.event_count() -1;
+		_total_entries = epoch_iter->start_index
+			+tracefile.current_chunk.event_count();
+	}
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+TraceManager::entry_reverse_streamer::retreat(void) {
+	STACKTRACE_VERBOSE;
+	if (_index) {
+		// pre-decrement
+		--event_iter;
+	} else {
+		if (event_iter != tracefile.current_chunk.begin()) {
+			--event_iter;		// to terminate
+		}
+		return good_bool(false);
+	}
+	if (event_iter == tracefile.current_chunk.begin()) {
+		INVARIANT(epoch_iter != tracefile.contents.begin());
+		--epoch_iter;
+		fin.seekg(epoch_iter->file_offset + start_of_epochs);
+		tracefile.current_chunk.read(fin);
+		event_iter = tracefile.current_chunk.end();
+		INVARIANT(_index == 
+			(epoch_iter->start_index +
+			tracefile.current_chunk.event_count()));
+	}
+	--_index;
+	return good_bool(true);
+}
+
+//=============================================================================
+// class TraceManager::random_accessor method definitions
+
+/**
+	Initialize to last epoch to get _total_entries count.
+ */
+TraceManager::random_accessor::random_accessor(const string& fn) :
+		parent_type(fn) {
+	// parent's constructor will initialize to the last epoch
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if trace file handle is in valid state. 
+	Doesn't use the epoch-local event iterator.
+ */
+bool
+TraceManager::random_accessor::good(void) const {
+	return fin &&
+		(epoch_iter != tracefile.contents.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param ei event_index, MUST be valid, not checked here.
+	\return a reference to the indexed entry.
+	The caller should NOT store the reference long, it is at best
+		short-lived, and thus should be copied.
+ */
+const event_trace_point&
+TraceManager::random_accessor::operator [] (const size_t ei) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("ei = " << ei << endl);
+	INVARIANT(ei < _total_entries);
+	const size_t si = epoch_iter->start_index;
+	if ((ei >= si) && (ei < si +tracefile.current_chunk.event_count())) {
+		// hit in same epoch
+		const size_t offset = ei - si;
+		return tracefile.current_chunk.get_event(offset);
+	} else {
+		// lookup by epoch
+		trace_file_contents::const_iterator
+			e_iter(std::upper_bound(tracefile.contents.begin(),
+				tracefile.contents.end(), ei,
+				trace_file_contents::entry::event_index_less_than()));
+		INVARIANT(e_iter != tracefile.contents.begin());
+		--e_iter;
+		STACKTRACE_INDENT_PRINT("epoch: " <<
+			distance(tracefile.contents.begin(), e_iter) << endl);
+		INVARIANT(e_iter != epoch_iter);	// else we would've hit
+		epoch_iter = e_iter;
+		fin.seekg(start_of_epochs + epoch_iter->file_offset);
+		tracefile.current_chunk.read(fin);
+		const size_t offset = ei - epoch_iter->start_index;
+		return tracefile.current_chunk.get_event(offset);
+	}
+}
+
+//=============================================================================
+// class TraceManager::state_change_streamer method definitions
+
+/**
+	Do full initialization of parent class, opening stream for forward
+	reading, one epoch at a time.  
+ */
+TraceManager::state_change_streamer::state_change_streamer(const string& fn) :
+		parent_type(fn), state_iter() {
+	if (good()) {
+		begin();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the state-change iterator to the beginning of the chunk.  
+	(Not the same as parent_type::init()
+ */
+void
+TraceManager::state_change_streamer::begin(void) {
+	STACKTRACE_VERBOSE;
+	// this could be combined into a single set operation, who cares...
+	state_iter.begin(tracefile.current_chunk);
+	state_iter.advance(_index, tracefile.current_chunk);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\post if stream is valid, state_iter 'points' to a valid
+		set of modifications.  
+ */
+good_bool
+TraceManager::state_change_streamer::advance(void) {
+	STACKTRACE_VERBOSE;
+	const trace_file_contents::const_iterator last_epoch(epoch_iter);
+	parent_type::advance();
+	const good_bool ret(parent_type::good());
+	if (ret.good) {
+		// reference is still good
+		// _index should have incremented
+		if (last_epoch != epoch_iter) {
+			STACKTRACE_INDENT_PRINT("new epoch\n");
+			// if epoch changed, re-establish the state-iterator
+			begin();
+		} else {
+			STACKTRACE_INDENT_PRINT("same epoch\n");
+			state_iter.advance(_index, tracefile.current_chunk);
+		}
+	} else {
+		STACKTRACE_INDENT_PRINT("fin: " << size_t(bool(fin)) << endl);
+		STACKTRACE_INDENT_PRINT("!end-epoch: " <<
+			size_t(epoch_iter != tracefile.contents.end()) << endl);
+		STACKTRACE_INDENT_PRINT("!end-entry: " <<
+			size_t(event_iter != tracefile.current_chunk.end())
+			<< endl);
+		STACKTRACE_INDENT_PRINT("good? " << size_t(ret.good) << endl);
+	}
+	return ret;
 }
 
 //=============================================================================

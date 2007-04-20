@@ -1,9 +1,9 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.168 2007/03/19 02:03:44 fang Exp $
+#	$Id: Makefile.am,v 1.169 2007/04/20 18:25:46 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .ii .test .i .hii. .hhii .tccii
+SUFFIXES = .yy .ll .ii .test .i .hii. .hhii .tccii .gesnarfed
 
 # standard definitions and macro initializers
 # appends to SUFFIXES
@@ -14,7 +14,7 @@ AUTOMAKE_OPTIONS += subdir-objects
 
 # for recursive make only, all other subdirectories (not listed)
 # are managed by this Makefile (flat)
-SUBDIRS = util/test .
+SUBDIRS = util/test . scm
 
 # cumulative targets
 BUILT_SOURCES =
@@ -56,7 +56,14 @@ bin_PROGRAMS += hacunroll
 endif
 # no need to name EXTRA_PROGRAMS = hacguile hacchpsimguile
 
-CLEANFILES += $(bin_SCRIPTS)
+bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh
+DISTCLEANFILES += $(bin_SCRIPTS)
+
+scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
+	$(RECONFIGURE)
+
+scripts/init_hackt.csh: scripts/init_hackt.csh.in $(top_builddir)/config.status
+	$(RECONFIGURE)
 
 # dirgen is completely bogus, workaround to coerce directory generation
 noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
@@ -170,13 +177,19 @@ hacguile_LDADD = libhacktguile.la libhacktlib.la
 
 LIBHACKTGUILE_H_FILES = \
 	guile/libhackt-wrap.h \
+	guile/hackt-config.h \
+	guile/hackt-documentation.h \
 	guile/scm_reference.h \
+	guile/scm_chpsim_trace_streamer.h \
+	guile/scm_chpsim_event_node.h \
 	guile/chpsim-wrap.h
 
 hacchpsimguile_SOURCES = \
 	main/chpsim-guile.cc \
 	main/chpsim.cc \
 	guile/chpsim-wrap.cc \
+	guile/scm_chpsim_trace_streamer.cc \
+	guile/scm_chpsim_event_node.cc \
 	$(LIBHACKTGUILE_H_FILES)
 hacchpsimguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DNO_REGISTER
 hacchpsimguile_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
@@ -209,13 +222,25 @@ libhacktast_la_LIBADD = \
 libhacktguile_la_SOURCES = \
 	guile/libhackt-wrap.cc \
 	guile/libhackt-wrap.h \
+	guile/hackt-config.cc \
+	guile/hackt-config.h \
+	guile/hackt-documentation.cc \
+	guile/hackt-documentation.h \
 	guile/scm_reference.cc \
-	guile/scm_reference.h
+	guile/scm_reference.h \
+	guile/devel_switches.h
 libhacktguile_la_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
 libhacktguile_la_CXXFLAGS = $(AM_CXXFLAGS) $(GUILE_WARN_FLAGS) \
 	-Wno-old-style-cast -Werror
 libhacktguile_la_LIBADD = libguileutil.la
 # libhacktguile_la_LDFLAGS = -rpath '$(pkglibdir)'
+
+# EXPERIMENTAL: self-snarf deps
+# probably not going to use guile's default snarfer in favor of our own macros.
+# guile/libhacktguile_la-libhackt-wrap.lo \
+# guile/libhacktguile_la-libhackt-wrap.o: \
+#	guile/libhackt-wrap.gesnarfed
+	
 
 # want to break, but have cyclic dependency through qualified_id_slice...
 # libhackt_la_LIBADD = libhacktinstref.la libhacktcommon.la \
@@ -520,6 +545,7 @@ OBJECT_COMMON_CC_FILES = \
 	Object/common/object_base.cc \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
+	common/config.cc \
 	common/ICE.cc \
 	common/TODO.cc
 
@@ -857,7 +883,9 @@ SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	sim/prsim/ExprAllocFlags.h \
 	sim/chpsim/StateConstructorFlags.h \
 	sim/chpsim/devel_switches.h \
-	sim/chpsim/graph_options.h
+	sim/chpsim/graph_options.h \
+	sim/chpsim/TraceIterators.h \
+	sim/chpsim/TraceStreamer.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -894,7 +922,19 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/guile.h \
 	main/chpsim-guile.h
 
+guile/libhackt-wrap.hchk: guile/libhackt-wrap.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+
+guile/hackt-documentation.hchk: guile/hackt-documentation.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+
 guile/scm_reference.hchk: guile/scm_reference.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+
+guile/scm_chpsim_trace_streamer.hchk: guile/scm_chpsim_trace_streamer.h
+	@$(LIBGUILE_HCHK_TEST_SCRIPT)
+
+guile/scm_chpsim_event_node.hchk: guile/scm_chpsim_event_node.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
 COMMON_H_FILES = \
@@ -947,7 +987,7 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
 common/ICE.lo common/ICE.o: cvstag.h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
-main/version.lo main/version.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
+common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
 	parser/yacc_version.h lexer/lex_version.h
 lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.o: \
@@ -1027,11 +1067,14 @@ INSTREF_YACC_PREFIX = instref_
 TYPE_YACC_PREFIX = type_
 
 # regenerate the parser input file using config.status
-parser/$(HACKT_PARSE_ROOT).yy: parser/$(HACKT_PARSE_ROOT).yy.in
+parser/$(HACKT_PARSE_ROOT).yy: \
+		parser/$(HACKT_PARSE_ROOT).yy.in $(top_builddir)/config.status
 	$(RECONFIGURE)
-parser/$(INSTREF_PARSE_ROOT).yy: parser/$(INSTREF_PARSE_ROOT).yy.in
+parser/$(INSTREF_PARSE_ROOT).yy: \
+		parser/$(INSTREF_PARSE_ROOT).yy.in $(top_builddir)/config.status
 	$(RECONFIGURE)
-parser/$(TYPE_PARSE_ROOT).yy: parser/$(TYPE_PARSE_ROOT).yy.in
+parser/$(TYPE_PARSE_ROOT).yy: \
+		parser/$(TYPE_PARSE_ROOT).yy.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
 # these should be distcleaned, because they are configure-generated
@@ -1406,6 +1449,15 @@ AM_LFLAGS =
 .tcc.tccii:
 	$(CXXPREPROCESS) $< > $@
 
+GUILE_SNARF_CPPFLAGS = -DHAVE_CONFIG_H -I. \
+	$(AM_CPPFLAGS) $(GUILE_CPPFLAGS) $(CPPFLAGS)
+.cc.gesnarfed:
+if HAVE_LIBGUILE
+	$(GUILE_SNARF) -o $@ $(GUILE_SNARF_CPPFLAGS) $<
+else
+	@$(ECHO) "No guile-snarf found in path, try configuring --with-guile-snarf=..." ; exit 1
+endif
+
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
@@ -1503,6 +1555,8 @@ EXTRA_DIST += local.cvsignore \
 	common/README \
 	scripts/filter_namespaces.sed \
 	scripts/deps_to_dot.awk.in \
+	scripts/init_hackt.sh.in \
+	scripts/init_hackt.csh.in \
 	AST/README \
 	Object/README \
 	Object/common/README \
@@ -1514,6 +1568,7 @@ EXTRA_DIST += local.cvsignore \
 	Object/type/README \
 	Object/ref/README \
 	Object/unroll/README \
+	guile/README \
 	ChangeLog \
 	README \
 	NOTES \
@@ -1545,7 +1600,7 @@ installcheck-local:
 		else : ; \
 		fi; \
 	done
-	@list='$(bin_SCRIPTS)' ; \
+	@list='$(installcheck_SCRIPTS)' ; \
 	for p1 in $$list ; do \
 		f=`echo "$$p1" | $(SED) 's|^.*/||;$(transform)'`; \
 		run=$(bindir)/$$f ; \
@@ -1703,6 +1758,8 @@ $(srcdir)/sim/prsim/.cvsignore: $(srcdir)/.cvsignore
 	$(CP) $< $@
 $(srcdir)/sim/chpsim/.cvsignore: $(srcdir)/.cvsignore
 	$(CP) $< $@
+$(srcdir)/guile/.cvsignore: $(srcdir)/.cvsignore
+	$(CP) $< $@
 $(srcdir)/test/.cvsignore: $(srcdir)/.cvsignore test/local.cvsignore
 	@$(CAT) $(srcdir)/.cvsignore $(srcdir)/test/local.cvsignore > $@
 
@@ -1727,6 +1784,7 @@ SUBDIR_CVSIGNORE += \
 	$(srcdir)/sim/.cvsignore \
 	$(srcdir)/sim/prsim/.cvsignore \
 	$(srcdir)/sim/chpsim/.cvsignore \
+	$(srcdir)/guile/.cvsignore \
 	$(srcdir)/test/.cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)

@@ -1,0 +1,16 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-21.hacchpsimscm"
+;;	$Id: channel-sync-desync-a-21.hacchpsimscm,v 1.2 2007/04/20 18:27:01 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+;; Testing on multi-epoch reverse stream.
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+
+(define y (open-chpsim-trace-reverse-stream "channel-sync-desync-a-05.chpsimtrace"))
+
+(stream-for-each (lambda (e) (display e) (newline)) y)
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.3 2007/02/05 06:39:44 fang Exp $
+	$Id: nonmeta_variable.h,v 1.4 2007/04/20 18:25:47 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -232,7 +232,7 @@ protected:
 /**
 	The raw data contained in the channel, whose interpretation
 	will be determined by the corresponding global channel entry.
-	If memory cost is not an isue, copy the fundamental channel 
+	If memory cost is not an issue, copy the fundamental channel 
 	footprint pointer here.  
 	To play with: different ways of data packing and unpacking
 		trading off between memory and performance.  

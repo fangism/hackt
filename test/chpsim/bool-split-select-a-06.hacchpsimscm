@@ -1,0 +1,52 @@
+#!hacchpsimguile -b
+!#
+;; "bool-split-select-a-06.hacchpsimscm"
+;;	$Id: bool-split-select-a-06.hacchpsimscm,v 1.2 2007/04/20 18:26:27 fang Exp $
+;; vi: ft=scheme
+;; @haco@ bool-split-select-a.haco-a
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+(use-modules (hackt rb-tree))
+
+(define x all-static-events-stream)
+(stream-for-each-display-newline x)
+
+(define E  (enumerate-interval-stream 0 (1- (hac:chpsim-num-events))))
+(define M (make-rb-tree = <))
+(stream-for-each
+  (lambda (e) (rb-tree/insert! M e #f))
+  E)
+M
+
+"successor lists: (unsorted)"
+; (define succs (chpsim-assoc-event-successors all-static-events-stream))
+(define succs (force static-event-successors-map-delayed))
+(rb-tree/for-each-display-newline succs)
+
+"detect branch-joins: (prereq: predecessor map)"
+(define preds (make-rb-tree = <))
+(stream-for-each
+  (lambda (e) (rb-tree/insert! preds e (make-rb-tree = <)))
+  E)
+(rb-tree/for-each-display-newline preds)
+(rb-tree/for-each
+  (lambda (x)
+    (for-each
+      (lambda (y)
+        (rb-tree/lookup-mutate! preds y
+          (lambda (z)
+            (rb-tree/insert! z (car x) '())
+          z)
+          #f)
+      ) ; end lambda
+      (cdr x)
+    ) ; end for-each
+  ) ; end lambda
+  succs
+)
+"predecessor map populated:"
+(rb-tree/for-each-display-newline preds)
+

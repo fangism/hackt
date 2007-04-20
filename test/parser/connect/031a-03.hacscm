@@ -1,0 +1,20 @@
+#!hacguile -b
+!#
+;; "031a-03.hacscm"
+;;	$Id: 031a-03.hacscm,v 1.2 2007/04/20 18:27:51 fang Exp $
+;; vi: ft=scheme
+;; @haco@ 031a.haco-a
+
+(use-modules (hackt hackt))
+
+(define refs
+  (hac:collect-reference-subinstances (hac:parse-raw-reference "load")))
+
+; splitting out by type and index
+(map reference-type refs)
+(map reference-index refs)
+
+(filter (lambda (r) (eq? 'process (reference-type r))) refs)
+(filter (lambda (r) (eq? 'int (reference-type r))) refs)
+(filter (lambda (r) (eq? 'bool (reference-type r))) refs)
+

@@ -1,4 +1,5 @@
 // "select-parallel-a.hac"
+//	$Id: select-parallel-a.hac,v 1.3 2007/04/20 18:27:36 fang Exp $
 
 bool a, b, c, d;
 

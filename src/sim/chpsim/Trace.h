@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.2 2007/02/05 06:39:54 fang Exp $
+	$Id: Trace.h,v 1.3 2007/04/20 18:26:12 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -128,6 +128,23 @@ protected:
 	dump(ostream&, const size_t offset = 0) const;
 
 public:
+	typedef	event_array_type::const_iterator	const_iterator;
+
+	bool
+	empty(void) const { return event_array.empty(); }
+
+	const_iterator
+	begin(void) const { return event_array.begin(); }
+
+	const_iterator
+	end(void) const { return event_array.end(); }
+
+	/// unchecked local event index, use sparingly
+	const event_trace_point&
+	get_event(const size_t ei) const {
+		return event_array[ei];
+	}
+
 	size_t
 	event_count(void) const {
 		return event_array.size();
@@ -174,6 +191,24 @@ struct state_trace_point_base {
 	ostream&
 	dump(ostream&) const;
 
+	/**
+		Ordering comparator.  
+		Since data_array is appended in increasing order of
+		event_indices.  
+	 */
+	struct event_index_less_than {
+		bool
+		operator () (const state_trace_point_base& l, 
+			const trace_index_type r) const {
+			return l.event_index < r;
+		}
+
+		bool
+		operator () (const trace_index_type l,
+			const state_trace_point_base& r) {
+			return l < r.event_index;
+		}
+	};	// end struct event_index_less_than
 };	// end struct state_trace_point_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -220,6 +255,17 @@ protected:
 	typedef	typename extractor_policy::value_type	value_type;
 	typedef	state_trace_point<Tag>		data_type;
 	typedef	std::vector<data_type>		data_array_type;
+	/**
+		Iterator that only conditionally increments.  
+		Useful for emulating a stream of state changes.  
+	 */
+	struct __pseudo_const_iterator;
+	struct __pseudo_const_iterator_range;
+public:
+	typedef	typename data_array_type::const_iterator	iter_type;
+	typedef	std::pair<iter_type, iter_type>	__pseudo_const_iterator_pair;
+
+protected:
 	data_array_type				data_array;
 
 //	state_trace_window_base();
@@ -255,10 +301,31 @@ protected:
 		for subsequent time windows.  So don't delete this yet!
  */
 class state_trace_time_window : 
-		public state_trace_window_base<bool_tag>,
-		public state_trace_window_base<int_tag>,
-		public state_trace_window_base<enum_tag>,
-		public state_trace_window_base<channel_tag> {
+		protected state_trace_window_base<bool_tag>,
+		protected state_trace_window_base<int_tag>,
+		protected state_trace_window_base<enum_tag>,
+		protected state_trace_window_base<channel_tag> {
+protected:
+	typedef state_trace_window_base<bool_tag>::__pseudo_const_iterator
+				bool_pseudo_const_iterator;
+	typedef state_trace_window_base<int_tag>::__pseudo_const_iterator
+				int_pseudo_const_iterator;
+	typedef state_trace_window_base<enum_tag>::__pseudo_const_iterator
+				enum_pseudo_const_iterator;
+	typedef state_trace_window_base<channel_tag>::__pseudo_const_iterator
+				channel_pseudo_const_iterator;
+
+	typedef state_trace_window_base<bool_tag>::__pseudo_const_iterator_range
+				bool_pseudo_const_iterator_range;
+	typedef state_trace_window_base<int_tag>::__pseudo_const_iterator_range
+				int_pseudo_const_iterator_range;
+	typedef state_trace_window_base<enum_tag>::__pseudo_const_iterator_range
+				enum_pseudo_const_iterator_range;
+	typedef state_trace_window_base<channel_tag>::__pseudo_const_iterator_range
+				channel_pseudo_const_iterator_range;
+public:
+	struct pseudo_const_iterator;
+	struct pseudo_const_iterator_range;
 public:
 	/**
 		Template forwarding function.  
@@ -270,6 +337,14 @@ public:
 		state_trace_window_base<Tag>::__push_back(v, t, g);
 	}
 
+protected:
+	template <class Tag>
+	typename state_trace_window_base<Tag>::pseudo_const_iterator
+	end(void) const {
+		return state_trace_window_base<Tag>::data_array.end();
+	}
+
+public:
 	void
 	write(ostream&) const;
 
@@ -297,6 +372,7 @@ struct trace_chunk :
 	~trace_chunk();
 
 	using event_trace_window::push_back_event;
+	using event_trace_window::end;
 
 	size_t
 	event_count(void) const {
@@ -324,8 +400,13 @@ class trace_file_contents {
 public:
 	/**
 		Entries are stored in an array.  
+		Each entry represents an epoch (chunk).  
 	 */
 	struct entry {
+		/**
+			The index of the first event in an epoch.  
+		 */
+		size_t				start_index;
 		/**
 			Start time of chunk.  
 		 */
@@ -345,7 +426,10 @@ public:
 		size_t				chunk_size;
 
 		entry() { }	// undefined values
-		entry(const trace_time_type t, const size_t o, const size_t s) :
+		entry(const size_t i, 
+			const trace_time_type t, const size_t o, 
+			const size_t s) :
+			start_index(i), 
 			start_time(t), file_offset(o), chunk_size(s) { }
 
 		// human readable
@@ -357,6 +441,22 @@ public:
 
 		void
 		read(istream&);
+
+		/**
+			Index comparator functor, for binary search.
+			See std::lower_bound for use context.
+		 */
+		struct event_index_less_than {
+			bool
+			operator () (const entry& e, const size_t i) const {
+				return e.start_index < i;
+			}
+
+			bool
+			operator () (const size_t i, const entry& e) const {
+				return i < e.start_index;
+			}
+		};	// end struct event_index_less_than
 	};	// end struct entry
 private:
 	typedef	vector<entry>			entry_array_type;
@@ -375,6 +475,9 @@ public:
 	push_back(const entry& e) {
 		entry_array.push_back(e);
 	}
+
+	bool
+	empty(void) const { return entry_array.empty(); }
 
 	const_iterator
 	begin(void) const { return entry_array.begin(); }
@@ -476,6 +579,13 @@ public:
 	void
 	flush(void);
 
+#if 0
+	size_t
+	get_previous_events(void) const {
+		return previous_events;
+	}
+#endif
+
 	/// \return number of events accumulated in since last flush
 	size_t
 	current_event_count(void) const {
@@ -497,7 +607,13 @@ public:
 	bool
 	text_dump(const string&, ostream&);
 
-};	// end class Trace
+	// defined in "sim/chpsim/TraceStreamer.h"
+	class entry_streamer;
+	class entry_reverse_streamer;
+	class random_accessor;
+	class state_change_streamer;
+
+};	// end class TraceManager
 
 //=============================================================================
 }	// end namespace CHPSIM

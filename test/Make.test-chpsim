@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.4 2007/03/20 02:24:19 fang Exp $
+#	$Id: Make.test-chpsim,v 1.5 2007/04/20 18:26:19 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -325,11 +325,15 @@ TESTS += \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimfailtest) \
 	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpttest)
 
-HAC_OBJECT_TARGETS += \
-	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco) \
+HAC_COMPILE_OBJECT_TARGETS += \
+	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco)
+
+HAC_CREATE_OBJECT_TARGETS += \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-c) \
+	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-c)
+
+HAC_ALLOC_OBJECT_TARGETS += \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco-a) \
-	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-c) \
 	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.haco-a)
 
 build-check-local: \
@@ -352,7 +356,7 @@ build-check-local: \
 ALL_CHPSIM_DOT = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-dot)
 ALL_CHPSIM_PS = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-ps)
 
-$(ALL_CHPSIM_DOT): $(HACKT_EXE)
+$(ALL_CHPSIM_DOT): $(HACKT_CHPSIM_EXE)
 
 all-chpsim-dot: $(ALL_CHPSIM_DOT)
 

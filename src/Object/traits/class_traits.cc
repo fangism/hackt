@@ -2,23 +2,18 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.9 2007/01/21 05:59:39 fang Exp $
+	$Id: class_traits.cc,v 1.10 2007/04/20 18:25:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
 #define	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
 
-#include "Object/traits/chan_traits.h"
+#include "Object/traits/instance_traits.h"
 #include "Object/traits/data_traits.h"
-#include "Object/traits/proc_traits.h"
 #include "Object/traits/param_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/preal_traits.h"
-#include "Object/traits/int_traits.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/enum_traits.h"
-#include "Object/traits/struct_traits.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 

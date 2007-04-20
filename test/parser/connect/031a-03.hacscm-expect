@@ -1,0 +1,5 @@
+(process process process process process process process int int int int)
+(7 6 5 4 3 2 1 4 3 2 1)
+((process . 7) (process . 6) (process . 5) (process . 4) (process . 3) (process . 2) (process . 1))
+((int . 4) (int . 3) (int . 2) (int . 1))
+()

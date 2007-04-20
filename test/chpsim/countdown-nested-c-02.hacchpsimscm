@@ -1,0 +1,12 @@
+#!hacchpsimguile -b
+!#
+;; "countdown-nested-c-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: countdown-nested-c-02.hacchpsimscm,v 1.2 2007/04/20 18:27:22 fang Exp $
+;; @haco@ countdown-nested-c.haco-a
+;; @chpsimtrace countdown-nested-c-03.chpsimtrace
+
+(define trace-name "countdown-nested-c-03.chpsimtrace")
+
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+

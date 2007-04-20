@@ -1,0 +1,11 @@
+# "countdown-nested-c-03-trace.chpsimrc"
+#	$Id: countdown-nested-c-03-trace.chpsimrc,v 1.2 2007/04/20 18:27:23 fang Exp $
+# @haco@ countdown-nested-c.haco-a
+
+null-event-delay 0
+trace countdown-nested-c-03.chpsimtrace
+run
+trace-close
+trace-dump countdown-nested-c-03.chpsimtrace
+# !rm countdown-nested-c-03.chpsimtrace
+

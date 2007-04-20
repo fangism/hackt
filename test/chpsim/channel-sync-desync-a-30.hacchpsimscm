@@ -1,0 +1,30 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-30.hacchpsimscm"
+;; copy-modified from "channel-sync-desync-a-06.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: channel-sync-desync-a-30.hacchpsimscm,v 1.2 2007/04/20 18:27:07 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
+;; testing stream-filter and selectors
+
+(use-modules (hackt chpsim-trace))
+(use-modules (ice-9 streams))
+(use-modules (hackt streams))
+
+; open trace and stream it in one operation
+(define y (open-chpsim-state-trace-stream "channel-sync-desync-a-04.chpsimtrace"))
+
+(define (channel-changes x) (list-ref x 4))
+(channel-changes (stream-car y))
+
+; only look at event 2 (using predicate)
+(define (channel-changed? e) (not (null? (channel-changes e))))
+
+; show all events where any channel changed status
+(define zz (stream-filter channel-changed? y))
+zz
+
+(for-each (lambda (x) (display x) (newline)) (stream->list zz))
+; (stream->list (stream-filter event-two? y))
+
