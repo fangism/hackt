@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5 2007/03/11 16:34:43 fang Exp $
+	$Id: State.h,v 1.5.6.1 2007/04/21 04:34:01 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -63,6 +63,13 @@ public:
 	struct event_placeholder_type : public EventPlaceholder<time_type> {
 		typedef	event_placeholder_type		this_type;
 		typedef	EventPlaceholder<time_type>	parent_type;
+#if CHPSIM_COUPLED_CHANNELS
+		/**
+			Optional: for tightly synchronized events such as
+			send/receive pairs, schedule them together.  
+		 */
+		event_index_type			second_event_index;
+#endif
 		/**
 			This is the index corresponding to the
 			statically allocated event.  
@@ -78,6 +85,9 @@ public:
 			going to be overwritten immedately thereafter.  
 		 */
 		event_placeholder_type() : parent_type(0, 0), 
+#if CHPSIM_COUPLED_CHANNELS
+			second_event_index(0), 
+#endif
 			cause_event_id(0), cause_trace_id(0) { }
 
 		event_placeholder_type(const time_type& t, 

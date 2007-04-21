@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5 2007/03/11 16:34:44 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.1 2007/04/21 04:34:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -51,6 +51,20 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Define to 1 to implement channels using tight coupling, 
+		i.e. truly blocking send-receive atomic pairs.  
+	Rationale: channels should have slack 0
+		without this, channels inherently have slack 1 because
+		the occupancy bit does not block a channel.  
+	Goal: 1
+	Priority: top
+	Status: in development, paused until we take care of changing
+		the execution model first.  
+ */
+#define	CHPSIM_COUPLED_CHANNELS			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Checkpointing should provide assistance to playback in trace analyses.  
 	Should be an option to the tracing framework.
  */
@@ -79,7 +93,7 @@
 	Cost: execution slower due to double virtual dispatch
 	Benefit: acyclic library dependence
 	Goal: 1?
-	Status: in progress
+	Status: done, stably tested
 	Priority: high -- for shared library arrangements
  */
 #define	CHPSIM_VISIT_EXECUTE			1

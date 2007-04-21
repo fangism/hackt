@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2 2007/03/11 16:34:39 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.1 2007/04/21 04:34:00 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -641,15 +641,21 @@ EventExecutor::visit(const channel_send& cs) {
 	}
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
+#if CHPSIM_COUPLED_CHANNELS
+	// we already wrote data to channel during check
+#else
 	// evaluate rvalues of channel send statement (may throw!)
 	// write to the ChannelState using canonical_fundamental_type
 	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
 		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
+#endif
 	// track the updated-reference (channel)
 	// expressions are only read, no lvalue data modified
 	global_refs.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
+#if !CHPSIM_COUPLED_CHANNELS
 	NEVER_NULL(nc.can_send());	// else run-time exception
+#endif
 	nc.send();
 	recheck_all_successor_events(context);
 }
@@ -666,9 +672,31 @@ EventRechecker::visit(const channel_send& cs) {
 	const channel_send::chan_ptr_type& chan(cs.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-	const ChannelState&
+#if !CHPSIM_COUPLED_CHANNELS
+	const 
+#endif
+	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
+#if CHPSIM_COUPLED_CHANNELS
+	if (nc.can_send()) {
+		// receiver arrived first and was waiting
+		ret = RECHECK_UNBLOCKED_THIS;
+	} else if (nc.inactive()) {
+		nc.block_sender();
+		ret = RECHECK_BLOCKED_THIS;
+	} else {
+		cerr << "ERROR: detected attempt to send on channel that is "
+			"already blocked waiting to send!" << endl;
+		// TODO: who?
+		THROW_EXIT;
+	}
+	// we actually write the data during a recheck
+	// this occurs without regard to the current channel state
+	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
+		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
+#else
 	ret = nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
+#endif	// CHPSIM_COUPLED_CHANNELS
 }
 
 //=============================================================================
@@ -697,7 +725,9 @@ EventExecutor::visit(const channel_receive& cr) {
 	// track the updated-reference (channel)
 	global_refs.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
+#if !CHPSIM_COUPLED_CHANNELS
 	INVARIANT(nc.can_receive());	// else run-time exception
+#endif
 	nc.receive();
 	recheck_all_successor_events(context);
 }
@@ -714,9 +744,26 @@ EventRechecker::visit(const channel_receive& cr) {
 	const channel_receive::chan_ptr_type& chan(cr.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-	const ChannelState&
+#if !CHPSIM_COUPLED_CHANNELS
+	const
+#endif
+	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
+#if CHPSIM_COUPLED_CHANNELS
+	if (nc.can_receive()) {
+		ret = RECHECK_UNBLOCKED_THIS;
+	} else if (nc.inactive()) {
+		nc.block_receiver();
+		ret = RECHECK_BLOCKED_THIS;
+	} else {
+		cerr << "ERROR: detected attempt to receive on channel that is "
+			"already blocked waiting to receive!" << endl;
+		// TODO: who?
+		THROW_EXIT;
+	}
+#else
 	ret = nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
+#endif	// CHPSIM_COUPLED_CHANNELS
 }
 #undef	ASSERT_CHAN_INDEX
 
