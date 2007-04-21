@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5.6.2 2007/04/21 20:10:28 fang Exp $
+	$Id: State.h,v 1.5.6.3 2007/04/21 20:28:06 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -10,9 +10,7 @@
 #include <iosfwd>
 #include <vector>
 #include "sim/chpsim/devel_switches.h"
-#if CHPSIM_MULTISET_EVENT_QUEUE
-#include <set>
-#endif
+#include <set>		// for std::multiset
 #include "sim/time.h"
 #include "sim/event.h"
 #include "sim/state_base.h"
@@ -101,14 +99,10 @@ public:
 			cause_event_id(c), cause_trace_id(i)
 			{ }
 
-#if CHPSIM_MULTISET_EVENT_QUEUE
 		bool
 		operator < (const this_type& t) const {
 			return time < t.time;
 		}
-#else
-		using parent_type::operator<;
-#endif
 
 	};	// end struct event_placeholder_type
 	/**
@@ -120,11 +114,7 @@ private:
 		TODO: for multiset event queue type, pool-allocate
 		entries please for damn-fast alloc/deallocation.  
 	 */
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	typedef	std::multiset<event_placeholder_type>
-#else
-	typedef	EventQueue<event_placeholder_type>
-#endif
 						event_queue_type;
 	typedef	vector<event_type>		event_pool_type;
 	typedef	vector<event_queue_type::value_type>

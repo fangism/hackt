@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.1 2007/04/21 20:10:27 fang Exp $
+	$Id: State.cc,v 1.8.2.2 2007/04/21 20:28:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -214,17 +214,9 @@ struct State::event_enqueuer {
 			state.dump_event(cout << "enqueue: ", ei, new_time);
 		}
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-#if CHPSIM_MULTISET_EVENT_QUEUE
 		state.check_event_queue.insert(new_event);
 #else
-		state.check_event_queue.push(new_event);
-#endif
-#else
-#if CHPSIM_MULTISET_EVENT_QUEUE
 		state.event_queue.insert(new_event);
-#else
-		state.event_queue.push(new_event);
-#endif
 #endif
 	}
 
@@ -330,17 +322,9 @@ State::initialize(void) {
 	// seed events that are ready to go, like active initializations
 	//	note: we use event[0] as the launching event (concurrent)
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	check_event_queue.insert(event_placeholder_type(current_time, 0));
 #else
-	check_event_queue.push(event_placeholder_type(current_time, 0));
-#endif
-#else
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	event_queue.insert(event_placeholder_type(current_time, 0));
-#else
-	event_queue.push(event_placeholder_type(current_time, 0));
-#endif
 #endif
 	__updated_list.clear();
 	__enqueue_list.clear();
@@ -382,22 +366,13 @@ State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	const event_placeholder_type ret(*check_event_queue.begin());
 	check_event_queue.erase(check_event_queue.begin());
-	return ret;
 #else
-	return event_queue.pop();
-#endif
-#else
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	const event_placeholder_type ret(*event_queue.begin());
 	event_queue.erase(event_queue.begin());
+#endif
 	return ret;
-#else
-	return event_queue.pop();
-#endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -409,17 +384,9 @@ State::time_type
 State::next_event_time(void) const {
 	INVARIANT(!event_queue.empty());
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	return check_event_queue.begin()->time;
 #else
-	return check_event_queue.top().time;
-#endif
-#else
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	return event_queue.begin()->time;
-#else
-	return event_queue.top().time;
-#endif
 #endif
 }
 
@@ -1062,23 +1029,12 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	get_event(ei).dump_subscribed_status(o << "status: ", instances, ei)
 		<< endl;
 {
-#if CHPSIM_MULTISET_EVENT_QUEUE
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// NOTE: this means that an event is scheduled to be CHECKED not
 	// necessarily executed.  
 	const event_queue_type& temp(check_event_queue);	// just alias
 #else
 	const event_queue_type& temp(event_queue);	// just alias
-#endif
-#else
-	// search wouldn't be necessary if event was flagged in member field
-	// copy wouldn't be necessary if queue was a map...
-	temp_queue_type temp;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	check_event_queue.copy_to(temp);
-#else
-	event_queue.copy_to(temp);
-#endif
 #endif
 	o << "in queue: ";
 	if (find_if(temp.begin(), temp.end(), 
@@ -1099,24 +1055,11 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
  */
 ostream&
 State::dump_event_queue(ostream& o) const {
-#if CHPSIM_MULTISET_EVENT_QUEUE
 	typedef	event_queue_type::const_iterator	const_iterator;
-#else
-	typedef	temp_queue_type::const_iterator	const_iterator;
-#endif
-#if CHPSIM_MULTISET_EVENT_QUEUE
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_queue_type& temp(check_event_queue);	// just alias
 #else
 	const event_queue_type& temp(event_queue);	// just alias
-#endif
-#else
-	temp_queue_type temp;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	check_event_queue.copy_to(temp);
-#else
-	event_queue.copy_to(temp);
-#endif
 #endif
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
@@ -1394,19 +1337,10 @@ State::save_checkpoint(ostream& o) const {
 	for_each(tmp.begin(), tmp.end(), value_writer<size_t>(o));
 }{
 	// save the event queue
-#if CHPSIM_MULTISET_EVENT_QUEUE
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_queue_type& temp(check_event_queue);	// just alias
 #else
 	const event_queue_type& temp(event_queue);	// just alias
-#endif
-#else
-	temp_queue_type temp;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	check_event_queue.copy_to(temp);
-#else
-	event_queue.copy_to(temp);
-#endif
 #endif
 	size_t s = temp.size();
 	write_value(o, s);
@@ -1474,17 +1408,9 @@ State::load_checkpoint(istream& i) {
 		event_placeholder_type ep;
 		read(ep);
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-#if CHPSIM_MULTISET_EVENT_QUEUE
 		check_event_queue.insert(ep);
 #else
-		check_event_queue.push(ep);
-#endif
-#else
-#if CHPSIM_MULTISET_EVENT_QUEUE
 		event_queue.insert(ep);
-#else
-		event_queue.push(ep);
-#endif
 #endif
 	}
 }

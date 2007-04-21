@@ -5,6 +5,10 @@
 
 2007-04-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-03:
+	  Perm'd CHPSIM_MULTISET_EVENT_QUEUE, and there was much rejoicing...
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-02:
 	  Started to mark initial cuts for CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		but far from completion (disabled with this revision).  
