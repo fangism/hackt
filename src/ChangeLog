@@ -5,6 +5,15 @@
 
 2007-04-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-02:
+	  Started to mark initial cuts for CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		but far from completion (disabled with this revision).  
+		We push that onto the task stack so we can first
+		perm CHPSIM_MULTISET_EVENT_QUEUE, which has been stable
+		for a while, and is getting to be a nuisance to read.  
+		Then we'll return to regularly scheduled hacking.
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-01:
 	  ChangeLog abuse: 
 	  The goal: slack zero channels and atomic paired send/receives.

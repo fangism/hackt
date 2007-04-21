@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5.6.1 2007/04/21 04:34:01 fang Exp $
+	$Id: State.h,v 1.5.6.2 2007/04/21 20:10:28 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -60,6 +60,9 @@ public:
 	 */
 	typedef	event_type::time_type		time_type;
 	typedef	signal_handler<this_type>	signal_handler;
+	/**
+		Basic tuple for event scheduling.  
+	 */
 	struct event_placeholder_type : public EventPlaceholder<time_type> {
 		typedef	event_placeholder_type		this_type;
 		typedef	EventPlaceholder<time_type>	parent_type;
@@ -113,6 +116,10 @@ public:
 	 */
 	typedef	bool				step_return_type;
 private:
+	/**
+		TODO: for multiset event queue type, pool-allocate
+		entries please for damn-fast alloc/deallocation.  
+	 */
 #if CHPSIM_MULTISET_EVENT_QUEUE
 	typedef	std::multiset<event_placeholder_type>
 #else
@@ -213,8 +220,22 @@ private:
 	// event pools: for each type of event?
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	/**
+		This is where successors are scheduled to be checked for the
+		first time.  Successors are scheduled using the event delay
+		so the delay is spent up-front (a la prefix).  
+		When events 'can-fire' they simply execute immediately.  
+		The only motivation for renaming is to clearly mark the
+		impact of this change everywhere, a forced inconvenience
+		for the sake of documentation.  
+		Aside from that renaming is unnecessary.  
+	 */
+	event_queue_type			check_event_queue;
+#else
 	// event queue: unified priority queue of event_placeholders
 	event_queue_type			event_queue;
+#endif
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separately)
@@ -315,11 +336,20 @@ public:
 	void
 	reset(void);
 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	/**
+		Show pending events to check (not guaranteed to execute, 
+		as they may block!)
+	 */
+	bool
+	pending_check_events(void) const { return !check_event_queue.empty(); }
+#else
 	/**
 		\return true if event_queue is not empty.
 	 */
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
+#endif
 
 	const time_type&
 	time(void) const { return current_time; }
@@ -358,6 +388,10 @@ public:
 private:
 	event_placeholder_type
 	dequeue_event(void);
+
+	step_return_type
+	__step(const event_index_type, const event_index_type, const size_t);
+		// THROWS_STEP_EXCEPTION
 
 public:
 	step_return_type
@@ -437,6 +471,7 @@ public:
 	ostream&
 	dump_break_values(ostream&) const;
 
+// CHPSIM_DELAYED_SUCCESSOR_CHECKS (rename?)
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
 
@@ -524,8 +559,13 @@ public:
 	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;
 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	ostream&
+	dump_check_event_queue(ostream&) const;
+#else
 	ostream&
 	dump_event_queue(ostream&) const;
+#endif
 
 	ostream&
 	print_instance_name_value(ostream&, 

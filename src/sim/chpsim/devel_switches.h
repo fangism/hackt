@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.1 2007/04/21 04:34:01 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.2 2007/04/21 20:10:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -27,6 +27,7 @@
 	Nice result is that cause_event_id in traces is now guaranteed
 		to be monotonic, since the queue is now FCFS w.r.t.
 		equal time-stamped events.  
+	TODO: perm me ASAP! this is getting to be an eye-sore.
  */
 #define	CHPSIM_MULTISET_EVENT_QUEUE		1
 
@@ -60,8 +61,36 @@
 	Priority: top
 	Status: in development, paused until we take care of changing
 		the execution model first.  
+	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS
  */
 #define	CHPSIM_COUPLED_CHANNELS			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to support up to two atomic events per step.  
+	Places affected: event_placeholder_type, ...
+	Rationale: perfect synchronization that doesn't split up the event
+		pair in FIFO scheduling.
+	Goal: 1
+	Priority: high
+	Status: not begun
+	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS (?)
+ */
+#define CHPSIM_EVENT_PAIRS			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to apply prefix delays *before* events are first checked.
+	Rationale: to faciliate send/receive atomicity/simultaneity.
+	Goal: 1
+	Priority: top
+	Status: starting
+	Prerequisite: none
+	Plan: instate a first_recheck_queue, where successors first arrive.
+		step() will now recheck events in order until one (or two)
+		*actually* executes.  
+ */
+#define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
