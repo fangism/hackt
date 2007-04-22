@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.3 2007/04/22 06:26:23 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.4 2007/04/22 19:35:10 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -44,6 +44,10 @@
 #define	STACKTRACE_CHPSIM_VERBOSE	STACKTRACE_VERBOSE
 #else
 #define	STACKTRACE_CHPSIM_VERBOSE
+#endif
+
+#if CHPSIM_CONTEXT_CARRIES_REFERENCES
+#define	global_refs	context.updates
 #endif
 
 namespace HAC {

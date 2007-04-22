@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.3 2007/04/21 20:28:07 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.4 2007/04/22 19:35:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -74,6 +74,12 @@
 		*actually* executes.  
  */
 #define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Silly little patchlet test.
+ */
+#define	CHPSIM_CONTEXT_CARRIES_REFERENCES	1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

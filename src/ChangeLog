@@ -5,6 +5,13 @@
 
 2007-04-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-06:
+	  Partial redo: packed a global_references_set reference member
+		to chpsim's nonmeta_context, passing fewer arguments around.
+	  sim/chpsim/State.cc: pulled out execute call from __step(), 
+		leaving __step to do mostly post-processing.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-05:
 	  Reverted last patch, caused major test failures.  
 	  Need to re-do it more systematically.  

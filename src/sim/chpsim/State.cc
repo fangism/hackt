@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.4 2007/04/22 06:26:24 fang Exp $
+	$Id: State.cc,v 1.8.2.5 2007/04/22 19:35:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -431,28 +431,34 @@ State::step(void) {
 	__enqueue_list.clear();
 	__updated_list.clear();
 	__rechecks.clear();
+	event_type& ev(event_pool[ei]);
+	// TODO: re-use this nonmeta-context in the recheck_transformer
+	const nonmeta_context
+		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
+try {
+	ev.execute(c
+#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
+		, __updated_list
+#endif
+		);
+} catch (...) {
+	cerr << "Run-time error executing event " << ei << "." << endl;
+	throw;		// rethrow
+}
 	return __step(ei, cause_event_id, cause_trace_id);
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Internal step method, factored out for re-usability.  
+	This processes a step after its execution.  
  */
 State::step_return_type
-State::__step(const event_index_type ei, const event_index_type cause_event_id,
+State::__step(const event_index_type ei, 
+		const event_index_type cause_event_id,
 		const size_t cause_trace_id) {
 	typedef	step_return_type	return_type;
 	return_type event_trig = false;
-	event_type& ev(event_pool[ei]);
-	// TODO: re-use this nonmeta-context in the recheck_transformer
-	const nonmeta_context
-		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
-try {
-	ev.execute(c, __updated_list);
-} catch (...) {
-	cerr << "Run-time error executing event " << ei << "." << endl;
-	throw;		// rethrow
-}
 	// event tracing
 	size_t ti = 0;	// because we'll want to reference it later...
 	if (is_tracing()) {

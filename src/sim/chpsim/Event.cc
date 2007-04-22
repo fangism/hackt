@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.6.2.2 2007/04/22 06:26:22 fang Exp $
+	$Id: Event.cc,v 1.6.2.3 2007/04/22 19:35:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -219,8 +219,11 @@ if (countdown) {
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(const nonmeta_context& c, 
-		entity::global_references_set& updates) {
+EventNode::execute(const nonmeta_context& c
+#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
+		, entity::global_references_set& updates
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();
@@ -230,10 +233,18 @@ EventNode::execute(const nonmeta_context& c,
 		// execute is responsible for scheduling successors for recheck
 		// and decrement the predecessor-arrival countdown
 #if CHPSIM_VISIT_EXECUTE
-		EventExecutor x(c, updates);
+		EventExecutor x(c
+#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
+			, updates
+#endif
+			);
 		action_ptr->accept(x);
 #else
-		action_ptr->execute(c, updates);
+		action_ptr->execute(c
+#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
+			, updates
+#endif
+			);
 #endif
 	} else {	// event is NULL or action_ptr is NULL
 		STACKTRACE_INDENT_PRINT("no action" << endl);
