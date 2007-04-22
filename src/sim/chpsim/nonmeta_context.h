@@ -1,16 +1,14 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.3.10.3 2007/04/22 19:35:12 fang Exp $
+	$Id: nonmeta_context.h,v 1.3.10.4 2007/04/22 20:06:24 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 
 #include "Object/nonmeta_context.h"
 #include "Object/nonmeta_variable.h"	// for event_subscribers_type
-#if CHPSIM_CONTEXT_CARRIES_REFERENCES
 #include "Object/ref/reference_set.h"
-#endif
 #include "util/STL/vector_fwd.h"
 #include "sim/common.h"
 #include "util/member_saver.h"
@@ -62,9 +60,10 @@ public:
 		can move from pending (blocked) to execute.  
 	 */
 	event_subscribers_type&			rechecks;
-#if CHPSIM_CONTEXT_CARRIES_REFERENCES
+	/**
+		List of references modified by the visiting event.
+	 */
 	entity::global_references_set&		updates;
-#endif
 	/**
 		Global pool of events.  
 	 */

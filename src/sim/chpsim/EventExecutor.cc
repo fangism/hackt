@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.4 2007/04/22 19:35:10 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.5 2007/04/22 20:06:22 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -44,10 +44,6 @@
 #define	STACKTRACE_CHPSIM_VERBOSE	STACKTRACE_VERBOSE
 #else
 #define	STACKTRACE_CHPSIM_VERBOSE
-#endif
-
-#if CHPSIM_CONTEXT_CARRIES_REFERENCES
-#define	global_refs	context.updates
 #endif
 
 namespace HAC {
@@ -551,7 +547,7 @@ void
 EventExecutor::visit(const assignment& a) {
 	typedef	EventNode		event_type;
 	STACKTRACE_CHPSIM_VERBOSE;
-	a.get_lval()->nonmeta_assign(a.get_rval(), context, global_refs);
+	a.get_lval()->nonmeta_assign(a.get_rval(), context, context.updates);
 		// also tracks updated reference
 	recheck_all_successor_events(context);
 }
@@ -655,7 +651,7 @@ EventExecutor::visit(const channel_send& cs) {
 #endif
 	// track the updated-reference (channel)
 	// expressions are only read, no lvalue data modified
-	global_refs.push_back(std::make_pair(
+	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 #if !CHPSIM_COUPLED_CHANNELS
 	NEVER_NULL(nc.can_send());	// else run-time exception
@@ -725,9 +721,9 @@ EventExecutor::visit(const channel_receive& cr) {
 	// read from the ChannelState using canonical_fundamental_type
 	for_each(cr.get_insts().begin(), cr.get_insts().end(), 
 		entity::nonmeta_reference_lookup_channel_reader(
-			context, nc, global_refs));
+			context, nc, context.updates));
 	// track the updated-reference (channel)
-	global_refs.push_back(std::make_pair(
+	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 #if !CHPSIM_COUPLED_CHANNELS
 	INVARIANT(nc.can_receive());	// else run-time exception

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.3.10.3 2007/04/22 19:35:11 fang Exp $
+	$Id: nonmeta_context.cc,v 1.3.10.4 2007/04/22 20:06:24 fang Exp $
  */
 
 #include <vector>
@@ -36,9 +36,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		event(&e), 
 		enqueue_list(r.__enqueue_list), 
 		rechecks(r.__rechecks), 
-#if CHPSIM_CONTEXT_CARRIES_REFERENCES
 		updates(r.__updated_list),
-#endif
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
 		{
@@ -56,9 +54,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		event(NULL), 
 		enqueue_list(r.__enqueue_list), 
 		rechecks(r.__rechecks), 
-#if CHPSIM_CONTEXT_CARRIES_REFERENCES
 		updates(r.__updated_list),
-#endif
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
 		{

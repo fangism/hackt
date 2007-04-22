@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.5 2007/04/22 19:35:11 fang Exp $
+	$Id: State.cc,v 1.8.2.6 2007/04/22 20:06:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -436,11 +436,7 @@ State::step(void) {
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
 try {
-	ev.execute(c
-#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
-		, __updated_list
-#endif
-		);
+	ev.execute(c);
 } catch (...) {
 	cerr << "Run-time error executing event " << ei << "." << endl;
 	throw;		// rethrow

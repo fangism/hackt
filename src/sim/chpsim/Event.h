@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.6.2.3 2007/04/22 19:35:09 fang Exp $
+	$Id: Event.h,v 1.6.2.4 2007/04/22 20:06:22 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -16,9 +16,6 @@
 #include "sim/time.h"
 #include "sim/chpsim/Dependence.h"
 #include "sim/chpsim/devel_switches.h"
-#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
-#include "Object/ref/reference_set.h"
-#endif
 #include "util/macros.h"
 
 namespace HAC {
@@ -37,9 +34,6 @@ using std::string;
 using std::vector;
 using std::valarray;
 using entity::CHP::action;
-#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
-using entity::global_indexed_reference;
-#endif
 using entity::nonmeta_state_manager;
 
 //=============================================================================
@@ -316,11 +310,7 @@ public:
 	reset_countdown(void) { countdown = predecessors; }
 
 	void
-	execute(const nonmeta_context&
-#if !CHPSIM_CONTEXT_CARRIES_REFERENCES
-		, entity::global_references_set&
-#endif
-		);
+	execute(const nonmeta_context&);
 
 	void
 	recheck(const nonmeta_context&, const event_index_type) const;

@@ -5,6 +5,10 @@
 
 2007-04-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-07:
+	  Perm and clean up last patch: CHPSIM_CONTEXT_CARRIES_REFERENCES.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-06:
 	  Partial redo: packed a global_references_set reference member
 		to chpsim's nonmeta_context, passing fewer arguments around.
