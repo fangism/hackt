@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.2 2007/04/21 20:28:05 fang Exp $
+	$Id: State.cc,v 1.8.2.3 2007/04/22 01:36:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -259,6 +259,9 @@ State::State(const module& m) :
 		__updated_list(), 
 		__enqueue_list(), 
 		__rechecks(), 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		immediate_event_fifo(),
+#endif
 		event_watches(), 
 		event_breaks(),
 		value_watches(), 
@@ -401,19 +404,26 @@ State::next_event_time(void) const {
 State::step_return_type
 State::step(void) {
 	STACKTRACE_VERBOSE;
-	// pseudocode:
+	// could promote this to a class member...
+	nonmeta_context
+		c(mod.get_state_manager(), mod.get_footprint(), *this);
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// TODO: grab and check events until one is ready to execute
+	// and execute the first one that is ready.
+	// first: did an event execute?
+	// second: do we stop on breakpoint?
+	std::pair<bool, bool> status(false, false);
+do {
+#endif
 	// 1) grab event off of pending event queue, dequeue it
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	if (check_event_queue.empty()) {
+	if (check_event_queue.empty())
+#else
+	if (event_queue.empty())
+#endif
+	{
 		return false;
 	}
-	// TODO: grab and check events until one is ready to execute
-	// and execute it.
-#else // CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	if (event_queue.empty()) {
-		return false;
-	}
-#endif // CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
@@ -431,7 +441,33 @@ State::step(void) {
 	__enqueue_list.clear();
 	__updated_list.clear();
 	__rechecks.clear();
-	return __step(ei, cause_event_id, cause_trace_id);
+
+	event_type& ev(event_pool[ei]);
+	const nonmeta_context::event_setter _tmp(c, &ev);
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// check-and-execute
+	// for now try to use old code
+	// TODO: unify call to check and execute "chexecute"
+	if (ev.recheck(c, ei)) {
+		status.first = true;
+#endif
+		try {
+			ev.execute(c, __updated_list);
+		} catch (...) {
+			cerr << "Run-time error executing event "
+				<< ei << "." << endl;
+			throw;		// rethrow
+		}
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		status.second = __step(c, ei, cause_event_id, cause_trace_id);
+#else
+	return __step(c, ei, cause_event_id, cause_trace_id);
+#endif
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	}	// end if recheck
+} while (!status.first);	// end do-while
+	return status.second;
+#endif // CHPSIM_DELAYED_SUCCESSOR_CHECKS
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -439,20 +475,12 @@ State::step(void) {
 	Internal step method, factored out for re-usability.  
  */
 State::step_return_type
-State::__step(const event_index_type ei, const event_index_type cause_event_id,
+State::__step(const nonmeta_context& c, 
+		const event_index_type ei, 
+		const event_index_type cause_event_id,
 		const size_t cause_trace_id) {
 	typedef	step_return_type	return_type;
 	return_type event_trig = false;
-	event_type& ev(event_pool[ei]);
-	// TODO: re-use this nonmeta-context in the recheck_transformer
-	const nonmeta_context
-		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
-try {
-	ev.execute(c, __updated_list);
-} catch (...) {
-	cerr << "Run-time error executing event " << ei << "." << endl;
-	throw;		// rethrow
-}
 	// event tracing
 	size_t ti = 0;	// because we'll want to reference it later...
 	if (is_tracing()) {

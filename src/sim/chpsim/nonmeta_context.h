@@ -1,13 +1,14 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.3 2007/02/05 06:39:55 fang Exp $
+	$Id: nonmeta_context.h,v 1.3.10.1 2007/04/22 01:36:56 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 
 #include "Object/nonmeta_context.h"
 #include "Object/nonmeta_variable.h"	// for event_subscribers_type
+#include "Object/ref/reference_set.h"
 #include "util/STL/vector_fwd.h"
 #include "sim/common.h"
 #include "util/member_saver.h"
@@ -34,7 +35,9 @@ class TraceManager;
  */
 class nonmeta_context : public nonmeta_context_base {
 	typedef	nonmeta_context			this_type;
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 friend class EventNode;
+#endif
 	// these types must correspond to those used in CHPSIM::State!
 	// but I'm too lazy to include its header here...
 	typedef	EventNode			event_type;
@@ -47,18 +50,30 @@ private:
 		Zero-value means top-level.
 	 */
 	event_type*				event;
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	/**
 		may need that enqueue_list again...
 		deterministic selections may need to enqueue 
 		successor events directly.  
 	 */
 	enqueue_queue_type&			enqueue_list;
+#endif
 public:
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	/**
+		Successor of a just-executed event to check 
+		for the first time, after their respective delays.  
+		NOTE: this is a local structure now, not a reference!
+	 */
+	event_subscribers_type			first_checks;
+#else
 	/**
 		Set of events to re-evaluate, so see if they 
 		can move from pending (blocked) to execute.  
 	 */
 	event_subscribers_type&			rechecks;
+#endif
+	entity::global_references_set&		updates;
 	/**
 		Global pool of events.  
 	 */
@@ -94,11 +109,12 @@ public:
 	void
 	subscribe_this_event(void) const;
 
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 private:
 	// for EventNode only
 	void
 	enqueue(const event_index_type) const;
-
+#endif
 };	// end class nonmeta_context
 
 //=============================================================================

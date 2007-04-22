@@ -5,6 +5,14 @@
 
 2007-04-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-04:
+	  No new changes enabled yet.
+	  More CHPSIM_DELAYED_SUCCESSOR_CHECKS mark-ups, particularly
+		in the step() method.  
+	  Re-organizing pieces of chpsim code to make clean transition
+		to new execution model.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-03:
 	  Perm'd CHPSIM_MULTISET_EVENT_QUEUE, and there was much rejoicing...
 

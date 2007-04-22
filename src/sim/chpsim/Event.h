@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.6 2007/04/20 18:26:11 fang Exp $
+	$Id: Event.h,v 1.6.2.1 2007/04/22 01:36:53 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -314,7 +314,8 @@ public:
 	void
 	execute(const nonmeta_context&, entity::global_references_set&);
 
-	void
+	/// \return true if enqueued.
+	bool
 	recheck(const nonmeta_context&, const event_index_type) const;
 
 	void
