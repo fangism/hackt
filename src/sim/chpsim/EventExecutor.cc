@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.2 2007/04/22 01:36:54 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.3 2007/04/22 06:26:23 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -173,13 +173,7 @@ recheck_all_successor_events(const nonmeta_context& c) {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const event_type::successor_list_type&
 		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		set_inserter(c.first_checks)
-#else
-		set_inserter(c.rechecks)
-#endif
-		);
+	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
 	for_each(std::begin(succ), std::end(succ), 
 		event_type::countdown_decrementer(c.event_pool));
 }
@@ -434,11 +428,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	}
 	case 1: {
 		const size_t ei = t.successor_events[G.ready.front()];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		context.first_checks.insert(ei);
-#else
 		context.rechecks.insert(ei);
-#endif
 		EventNode::countdown_decrementer(context.event_pool)(ei);
 		break;
 	}
@@ -447,11 +437,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		static rand48<unsigned long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = t.successor_events[G.ready[r%m]];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		context.first_checks.insert(ei);
-#else
 		context.rechecks.insert(ei);
-#endif
 		EventNode::countdown_decrementer(context.event_pool)(ei);
 	}
 	}	// end switch
@@ -835,11 +821,7 @@ EventExecutor::visit(const do_while_loop& dw) {
 		THROW_EXIT;
 	}	// end switch
 	const size_t ei = context.get_event().successor_events[si];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	context.first_checks.insert(ei);
-#else
 	context.rechecks.insert(ei);
-#endif
 	EventNode::countdown_decrementer(context.event_pool)(ei);
 }
 

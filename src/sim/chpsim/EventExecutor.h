@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.2.6.1 2007/04/22 01:36:54 fang Exp $
+	$Id: EventExecutor.h,v 1.2.6.2 2007/04/22 06:26:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -50,12 +50,9 @@ protected:
 	const nonmeta_context&			context;
 	execute_arg_type&			global_refs;
 public:
-	EventExecutor(const nonmeta_context& c
-		, execute_arg_type& e
-		) :
-		context(c)
-		, global_refs(e) 
-		{ }
+	EventExecutor(const nonmeta_context& c, 
+		execute_arg_type& e) :
+		context(c), global_refs(e) { }
 
 	void
 	visit(const action_sequence&);
