@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.6.2.5 2007/04/23 03:21:01 fang Exp $
+	$Id: Event.cc,v 1.6.2.6 2007/04/23 19:00:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -165,15 +165,14 @@ EventNode::reset(void) {
 	\param enqueue return list of event(s) to enqueue for execution.
 	\return true if *this* event should be enqueued.  
 		This avoids having to pass the index of this event down.  
-	\return true if check resulted in enqueuing an event.
+	\return event
 	Is there a problem with guarded selection statements?
 	TODO: Need to examine how they are constructed...
  */
-bool
+void
 EventNode::recheck(const nonmeta_context& c, const event_index_type ei) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
-	bool ret = false;
 if (countdown) {
 	// then awaiting more predecessors to arrive
 	// NOTE: caller should NOT subscribe deps in this case
@@ -191,10 +190,7 @@ if (countdown) {
 #endif
 		if (r & __RECHECK_ENQUEUE_THIS) {
 			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 			c.enqueue(ei);
-#endif	// else let caller handle it
-			ret = true;
 		} else {
 			STACKTRACE_INDENT_PRINT("blocked." << endl);
 		}
@@ -208,13 +204,9 @@ if (countdown) {
 	} else {
 		// RECHECK_NEVER_BLOCKED
 		STACKTRACE_INDENT_PRINT("null fire." << endl);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		c.enqueue(ei);
-#endif	// else let caller handle it
-		ret = true;
 	}
 }
-	return ret;
 }	// end method recheck
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -250,12 +242,7 @@ EventNode::execute(const nonmeta_context& c) {
 		// whatever is done here should be consistent with that!
 		// remember: decrement successors' predecessor-arrival countdown
 		copy(begin(successor_events), end(successor_events), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-			set_inserter(c.first_checks)
-#else
-			set_inserter(c.rechecks)
-#endif
-		);
+			set_inserter(c.rechecks));
 		for_each(begin(successor_events), end(successor_events), 
 			countdown_decrementer(c.event_pool));
 	}

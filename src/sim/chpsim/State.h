@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5.6.6 2007/04/23 03:21:03 fang Exp $
+	$Id: State.h,v 1.5.6.7 2007/04/23 19:00:52 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -265,26 +265,8 @@ private:
 	enqueue_list_type			__enqueue_list;
 	/**
 		Set of events to recheck for unblocking.  
-		NOTE: this is not to be used for checking successors
-		of events that have just executed, those will use
-		a local first-time check-queue which applies the prefix delay.
-		This set is now reserved for events that are woken-up 
-		for rechecking.  
 	 */
 	event_subscribers_type			__rechecks;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	typedef	std::deque<event_index_type>	immediate_event_queue_type;
-	/**
-		Events that are unblocked by wake up (recheck) should
-		be executed immediately, since their delays were already 
-		applied in advance.  
-		Since multiple events may wake up at the same time, 
-		we need a queue to handle them one at a time.  
-		Q: should this queue take precedence over dequeued events?
-		Should dequeued check_events go through this fifo?
-	 */
-	immediate_event_queue_type		immediate_event_fifo;
-#endif
 	/**
 		Events to print when they are executed.  
 		Not preserved by checkpointing.  

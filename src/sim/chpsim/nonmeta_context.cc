@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.3.10.5 2007/04/23 03:21:03 fang Exp $
+	$Id: nonmeta_context.cc,v 1.3.10.6 2007/04/23 19:00:53 fang Exp $
  */
 
 #include <vector>
@@ -34,12 +34,8 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				: NULL),
 			r.instances),
 		event(&e), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		first_checks(), 
-#else
 		enqueue_list(r.__enqueue_list), 
 		rechecks(r.__rechecks), 
-#endif
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
@@ -56,12 +52,8 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		State& r) :
 		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		first_checks(), 
-#else
 		enqueue_list(r.__enqueue_list), 
 		rechecks(r.__rechecks), 
-#endif
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
@@ -93,7 +85,6 @@ nonmeta_context::subscribe_this_event(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
 	\pre ei is NOT already in queue
 	\post no duplicat entries in enqueue
@@ -102,7 +93,6 @@ void
 nonmeta_context::enqueue(const event_index_type ei) const {
 	enqueue_list.push_back(ei);
 }
-#endif
 
 //=============================================================================
 }	// end namespace CHPSIM
