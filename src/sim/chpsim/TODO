@@ -1,16 +1,25 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.4 2007/02/26 22:01:02 fang Exp $
+#	$Id: TODO,v 1.4.8.1 2007/04/23 03:21:03 fang Exp $
 
 ===============================================================================
 chpsim:
 
+top-priority: NOW
+	re-writing execution model, so delays are applied *before*
+		event is checked for the first time, prefix delay.
+		Currently, delay is appled between checking and execution, 
+			like an infix delay.
+	issues: trace data:
+		causality tracking: initially cause will be from predecessor, 
+			but if blocked, then the unblocker will overwrite
+			as the last-arriving causer.  
+	implementation: event-queue will now be used for first-time checking
+		of events rather than for execution of events.  
+
 high-priority:
 	execution trace recording for offline data-mining (thesis work)
 		[STATUS: trace recording complete]
-	primitive trace querying functions
-	guile/scheme wrapper interface to trace primitives
-	data structures for results of queries
-		guile-scm interface using 'smobs' small-objects
+	primitive trace querying functions [much done]
 
 medium-priority:
 	trace replay mechanism, seeking to specific state/time.
@@ -30,6 +39,10 @@ medium-priority:
 			BUT we may have two flavors of attributes:
 			compile-time (same as construction time)
 			and run-time (upon event execution).  
+		value-peeks can take place of value probes, 
+			by reading values with acknowledging
+			also be able to receive values into optional variables,
+			e.g. X? or X?(,,)
 	timing: interface to edit event delays, load back-annotation file?
 		possibly more elaborate code to customize delays systematically
 	checkpointing: [STATUS: basics done]

@@ -5,6 +5,17 @@
 
 2007-04-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-08:
+	  More arrangements for CHPSIM_DELAYED_SUCCESSOR_CHECKS (disabled).
+		Provisions include an immediate_event_fifo (execute-NOW)
+		and re-writing step as a do-loop that dequeues events to 
+		check until one actually executes.  
+	  Notes added to sim/chpsim/TODO.
+	  Be careful to distinguish uses of first_checks vs. rechecks
+		in chpsim's nonmeta_context.  
+	  No regressions this time.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-07:
 	  Perm and clean up last patch: CHPSIM_CONTEXT_CARRIES_REFERENCES.  
 
