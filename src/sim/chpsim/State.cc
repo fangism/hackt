@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.10 2007/04/23 20:47:10 fang Exp $
+	$Id: State.cc,v 1.8.2.11 2007/04/23 23:14:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -267,7 +267,9 @@ State::State(const module& m) :
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		__enqueue_list(), 
+#endif
 		__rechecks(), 
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		immediate_event_fifo(),
@@ -282,7 +284,9 @@ State::State(const module& m) :
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	__enqueue_list.reserve(16);	// optional pre-allocation
+#endif
 {
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
@@ -340,7 +344,9 @@ State::initialize(void) {
 	event_queue.insert(event_placeholder_type(current_time, 0));
 #endif
 	__updated_list.clear();
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	__enqueue_list.clear();
+#endif
 	__rechecks.clear();
 	for_each(event_pool.begin(), event_pool.end(),
 		mem_fun_ref(&event_type::reset)
@@ -423,7 +429,10 @@ do {
 	// TODO: check immediate event FIFO first
 	// or check and load into FIFO first?
 #endif
+	event_placeholder_type ep;
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	bool immediate = false;
+	if (immediate_event_fifo.empty()) {
 	// TODO: grab and check events until one is ready to execute
 	// and execute it.
 	if (check_event_queue.empty())
@@ -433,7 +442,15 @@ do {
 	{
 		return false;
 	}
-	const event_placeholder_type ep(dequeue_event());
+	ep = dequeue_event();
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	} else {
+		ep = immediate_event_fifo.front();
+		immediate_event_fifo.pop_front();
+		immediate = true;
+	}	// end if immediate_event_fifo empty
+#endif
+
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type ei(ep.event_index);
@@ -447,7 +464,9 @@ do {
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	__enqueue_list.clear();
+#endif
 	__updated_list.clear();
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
@@ -455,7 +474,8 @@ do {
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	if (ev.recheck(c, ei)) {
+	if (immediate || ev.recheck(c, ei)) {
+		// don't recheck if event is immediate
 		status.first = true;
 #endif
 		try {
@@ -469,6 +489,10 @@ do {
 		// TODO: context c contains list of successor events
 		// of the event that just executed
 		status.second = __step(ei, cause_event_id, cause_trace_id);
+		// enqueue these events for first-checking (after delay)
+		for_each(c.first_checks.begin(), c.first_checks.end(),
+			event_enqueuer(*this, ei, cause_trace_id));
+		// c.first_checks.clear();	// not needed, loop will exit
 #else
 	return __step(ei, cause_event_id, cause_trace_id);
 #endif
@@ -641,14 +665,18 @@ try {
 	//	NOTE: check the guard expressions of events before enqueuing
 	// temporarily disabled for regression testing
 #if DEBUG_STEP
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// debug: print list of event to enqueue
 	dump_enqueue_events(cout);
 #endif
+#endif
 	// transfer events from staging queue to event queue, 
 	// and schedule them with some delay
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	for_each(__enqueue_list.begin(), __enqueue_list.end(),
 		event_enqueuer(*this, ei, ti)
 	);
+#endif
 	// check for flush period
 	// TODO: count events in State, shouldn't depend on TraceManager for it.
 	if (is_tracing() && 
@@ -1223,6 +1251,7 @@ State::dump_recheck_events(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 ostream&
 State::dump_enqueue_events(ostream& o) const {
 	o << "to be enqueued: ";
@@ -1230,6 +1259,7 @@ State::dump_enqueue_events(ostream& o) const {
 	copy(__enqueue_list.begin(), __enqueue_list.end(), osi);
 	return o << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

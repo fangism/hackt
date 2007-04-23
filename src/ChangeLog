@@ -5,6 +5,15 @@
 
 2007-04-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-12:
+	  More mark-ups for CHPSIM_DELAYED_SUCCESSOR_CHECKS (disabled).
+		Phasing out State::__enqueue_list, distinguishing between
+		uses of immediate event fifo and recheck and first_check.  
+		first_check is short-lived, now a part of the nonmeta_context.
+		immediate_event_fifo now contains event_placeholder_types.  
+		step should grab from the immediate_event_fifo first.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-11:
 	  Re-applied remainder of -08 patch with ONE frickin' line change:
 		step() calls set_event instead of using event_setter.

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5.6.8 2007/04/23 19:30:19 fang Exp $
+	$Id: State.h,v 1.5.6.9 2007/04/23 23:14:31 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -256,6 +256,7 @@ private:
 		Why not a set, to guarantee uniqueness?
 	 */
 	typedef	vector<event_index_type>	enqueue_list_type;
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	/**
 		List of events to enqueue for certain, accumulated
 		in step() method.  
@@ -263,6 +264,7 @@ private:
 		to avoid repeated initial allocations.  
 	 */
 	enqueue_list_type			__enqueue_list;
+#endif
 	/**
 		Set of events to recheck for unblocking.  
 		NOTE: this is not to be used for checking successors
@@ -273,7 +275,8 @@ private:
 	 */
 	event_subscribers_type			__rechecks;
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	typedef	std::deque<event_index_type>	immediate_event_queue_type;
+	typedef	std::deque<event_placeholder_type>
+						immediate_event_queue_type;
 	/**
 		Events that are unblocked by wake up (recheck) should
 		be executed immediately, since their delays were already 
@@ -609,8 +612,10 @@ private:
 	ostream&
 	dump_recheck_events(ostream&) const;
 
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	ostream&
 	dump_enqueue_events(ostream&) const;
+#endif
 
 };	// end class State
 
