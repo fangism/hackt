@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.9 2007/04/23 19:30:18 fang Exp $
+	$Id: State.cc,v 1.8.2.10 2007/04/23 20:47:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -416,17 +416,23 @@ State::step(void) {
 	STACKTRACE_VERBOSE;
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
+	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	if (check_event_queue.empty()) {
-		return false;
-	}
+	std::pair<bool, bool>	status(false, false);
+do {
+	// TODO: check immediate event FIFO first
+	// or check and load into FIFO first?
+#endif
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// TODO: grab and check events until one is ready to execute
 	// and execute it.
-#else // CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	if (event_queue.empty()) {
+	if (check_event_queue.empty())
+#else
+	if (event_queue.empty())
+#endif
+	{
 		return false;
 	}
-#endif // CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
@@ -445,16 +451,37 @@ State::step(void) {
 	__updated_list.clear();
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
+	c.set_event(ev);	// not nonmeta_context::event_setter!!!
 	// TODO: re-use this nonmeta-context in the recheck_transformer
-	const nonmeta_context
-		c(mod.get_state_manager(), mod.get_footprint(), ev, *this);
-try {
-	ev.execute(c);
-} catch (...) {
-	cerr << "Run-time error executing event " << ei << "." << endl;
-	throw;		// rethrow
-}
+	// TODO: unify check and execute into "chexecute"
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	if (ev.recheck(c, ei)) {
+		status.first = true;
+#endif
+		try {
+			ev.execute(c);
+		} catch (...) {
+			cerr << "Run-time error executing event "
+				<< ei << "." << endl;
+			throw;		// rethrow
+		}
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		// TODO: context c contains list of successor events
+		// of the event that just executed
+		status.second = __step(ei, cause_event_id, cause_trace_id);
+#else
 	return __step(ei, cause_event_id, cause_trace_id);
+#endif
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	} else {	// end if recheck
+		// initial check failed predicate, block waiting, 
+		// subscribe to variables
+		STACKTRACE_INDENT_PRINT("event blocked waiting." << endl);
+		// this is already done in Event::recheck
+	}
+} while (!status.first);
+	return status.second;
+#endif
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

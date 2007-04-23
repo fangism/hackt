@@ -5,6 +5,12 @@
 
 2007-04-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-11:
+	  Re-applied remainder of -08 patch with ONE frickin' line change:
+		step() calls set_event instead of using event_setter.
+		*curses in perl*
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-10:
 	  Re-applied most of rev -08 patch except for the suspicious
 		portion of State::step(), which we'll re-do next in isolation.

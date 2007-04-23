@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.3.10.7 2007/04/23 19:30:23 fang Exp $
+	$Id: nonmeta_context.h,v 1.3.10.8 2007/04/23 20:47:11 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -88,12 +88,14 @@ public:
 
 	typedef	util::member_saver<this_type, event_type*, &this_type::event>
 						event_setter_base;
+	/**
+		To be used by only EventExecutor please!
+	 */
 	struct event_setter : public util::member_saver<this_type, 
 			event_type*, &this_type::event> {
 		event_setter(const this_type& t, event_type* e) :
 			event_setter_base(const_cast<this_type&>(t), e) { }
 	};
-
 public:
 	nonmeta_context(const state_manager&, const footprint&, 
 		event_type&, State&);
