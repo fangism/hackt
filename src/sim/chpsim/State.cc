@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.8 2007/04/23 19:00:52 fang Exp $
+	$Id: State.cc,v 1.8.2.9 2007/04/23 19:30:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -161,7 +161,17 @@ struct State::recheck_transformer {
 		STACKTRACE_INDENT_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		// Now, the only events that should call this are ones
+		// that have been woken up by an update, not first-time.
+		// now that delays have been paid up-front, events that
+		// pass recheck can be scheduled into the immediate event fifo
+		if (e.recheck(context, ei)) {
+			s.immediate_event_fifo.push_back(ei);
+		}
+#else
 		e.recheck(context, ei);
+#endif
 	}
 
 };	// end class recheck_transformer
@@ -259,6 +269,9 @@ State::State(const module& m) :
 		__updated_list(), 
 		__enqueue_list(), 
 		__rechecks(), 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		immediate_event_fifo(),
+#endif
 		event_watches(), 
 		event_breaks(),
 		value_watches(), 
@@ -526,6 +539,11 @@ State::__step(const event_index_type ei,
 #if DEBUG_STEP
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
+#endif
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+// NOTE: since delays have been paid for up front, rechecked events that
+// now pass are immediately ready for execution, and hence should be placed
+// in the immediate_event_fifo.  Change happens in recheck_transformer.
 #endif
 try {
 	for_each(__rechecks.begin(), __rechecks.end(), 

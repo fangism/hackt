@@ -5,6 +5,11 @@
 
 2007-04-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-10:
+	  Re-applied most of rev -08 patch except for the suspicious
+		portion of State::step(), which we'll re-do next in isolation.
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-09:
 	  Damn it -- last patch was horked AGAIN.  Reverting...
 	  Going to redo it piecewise...
