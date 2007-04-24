@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-14:
+	  Enabled CHPSIM_DELAYED_SUCCESSOR_CHECKS, numerous tests fail.
+	  Fixed assertion failure: forgot to reset immediate_event_fifo.
+		No fatal errors remain, just possibly logical ones.  
+	  pending_events() now checks immediate_event_fifo too.  
+	  TODO: checkpoint immediate_event_fifo.
+	  cause_trace_index is missing from trace, need critical path!
+	  Some tests show unexpected deadlocks.  
+
+
 2007-04-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-13:

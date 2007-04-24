@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.12 2007/04/24 04:52:56 fang Exp $
+	$Id: State.cc,v 1.8.2.13 2007/04/24 19:01:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -350,6 +350,7 @@ State::initialize(void) {
 	instances.reset();
 	// empty the event_queue
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	immediate_event_fifo.clear();
 	check_event_queue.clear();
 #else
 	event_queue.clear();
@@ -1161,7 +1162,7 @@ State::dump_event_queue(ostream& o) const {
 {
 	typedef	immediate_event_queue_type::const_iterator	const_iterator;
 	const_iterator i(immediate_event_fifo.begin()),
-		e(immediate_event_fifo.begin());
+		e(immediate_event_fifo.end());
 	if (i!=e) {
 		empty = false;
 		o << event_table_header;
@@ -1189,10 +1190,10 @@ State::dump_event_queue(ostream& o) const {
 		if (empty) {
 			o << event_table_header;
 			empty = false;
+			if (showing_cause())
+				o << "\tcause";
+			o << endl;
 		}
-		if (showing_cause())
-			o << "\tcause";
-		o << endl;
 		for ( ; i!=e; ++i) {
 			dump_event(o, i->event_index, i->time);
 			if (showing_cause() && i->cause_event_id) {

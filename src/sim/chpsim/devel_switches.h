@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.6 2007/04/24 04:52:57 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.7 2007/04/24 19:01:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -73,7 +73,7 @@
 		step() will now recheck events in order until one (or two)
 		*actually* executes.  
  */
-#define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		0
+#define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
