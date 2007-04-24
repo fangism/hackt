@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.6.2.7 2007/04/23 19:30:15 fang Exp $
+	$Id: Event.h,v 1.6.2.8 2007/04/24 04:52:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -310,7 +310,11 @@ public:
 	reset_countdown(void) { countdown = predecessors; }
 
 	void
-	execute(const nonmeta_context&);
+	execute(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context&);
 
 	/// \return true if enqueued.
 	bool

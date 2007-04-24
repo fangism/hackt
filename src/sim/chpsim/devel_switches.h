@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.5 2007/04/22 20:06:24 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.6 2007/04/24 04:52:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -66,8 +66,8 @@
 	Define to 1 to apply prefix delays *before* events are first checked.
 	Rationale: to faciliate send/receive atomicity/simultaneity.
 	Goal: 1
-	Priority: top
-	Status: starting
+	Priority: TOP
+	Status: drafted, in early testing
 	Prerequisite: none
 	Plan: instate a first_recheck_queue, where successors first arrive.
 		step() will now recheck events in order until one (or two)

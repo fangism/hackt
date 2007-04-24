@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.8 2007/04/23 19:30:17 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.9 2007/04/24 04:52:56 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -167,7 +167,11 @@ using entity::preal_const;
 static
 inline
 void
-recheck_all_successor_events(const nonmeta_context& c) {
+recheck_all_successor_events(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context& c) {
 	typedef	EventNode	event_type;
 	typedef	size_t		event_index_type;
 	STACKTRACE_CHPSIM_VERBOSE;

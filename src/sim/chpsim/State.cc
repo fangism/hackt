@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.11 2007/04/23 23:14:30 fang Exp $
+	$Id: State.cc,v 1.8.2.12 2007/04/24 04:52:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -139,13 +139,25 @@ struct State::recheck_transformer {
 	this_type&		state;
 	// other option is to pass in a pre-made nonmeta_context
 	nonmeta_context		context;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	const event_index_type	cause_event_id;
+	const size_t		cause_trace_id;
+#endif
 
 	explicit
-	recheck_transformer(this_type& s) : 
+	recheck_transformer(this_type& s
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		, const event_index_type cei, const size_t cti
+#endif
+		) : 
 		state(s), 
 		context(state.mod.get_state_manager(), 
 			state.mod.get_footprint(),
-			state) { }
+			state)
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+			, cause_event_id(cei), cause_trace_id(cti)
+#endif
+		{ }
 
 	/**
 		This should be the ONLY interface for
@@ -167,7 +179,13 @@ struct State::recheck_transformer {
 		// now that delays have been paid up-front, events that
 		// pass recheck can be scheduled into the immediate event fifo
 		if (e.recheck(context, ei)) {
-			s.immediate_event_fifo.push_back(ei);
+			// note: time is irrelevant to immediate-event-fifo
+			// it's just a NOW fifo
+			state.immediate_event_fifo.push_back(
+				event_placeholder_type(state.current_time, ei, 
+					cause_event_id, cause_trace_id));
+			// this is an unfortunate overloaded re-use
+			// of event_placeholder_type.
 		}
 #else
 		e.recheck(context, ei);
@@ -401,10 +419,11 @@ State::dequeue_event(void) {
  */
 State::time_type
 State::next_event_time(void) const {
-	INVARIANT(!event_queue.empty());
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	INVARIANT(!check_event_queue.empty());
 	return check_event_queue.begin()->time;
 #else
+	INVARIANT(!event_queue.empty());
 	return event_queue.begin()->time;
 #endif
 }
@@ -598,7 +617,12 @@ State::__step(const event_index_type ei,
 #endif
 try {
 	for_each(__rechecks.begin(), __rechecks.end(), 
-		recheck_transformer(*this));
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		recheck_transformer(*this, cause_event_id, cause_trace_id)
+#else
+		recheck_transformer(*this)
+#endif
+	);
 } catch (...) {
 	cerr << "Run-time error while rechecking events." << endl;
 	cerr << "event[" << ei << "]:";
@@ -1130,15 +1154,16 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
  */
 ostream&
 State::dump_event_queue(ostream& o) const {
-	typedef	event_queue_type::const_iterator	const_iterator;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	const event_queue_type& temp(check_event_queue);	// just alias
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-#endif
-	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
+	bool empty = true;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+// print the check-event-queue separately
+{
+	typedef	immediate_event_queue_type::const_iterator	const_iterator;
+	const_iterator i(immediate_event_fifo.begin()),
+		e(immediate_event_fifo.begin());
 	if (i!=e) {
+		empty = false;
 		o << event_table_header;
 		if (showing_cause())
 			o << "\tcause";
@@ -1150,12 +1175,51 @@ State::dump_event_queue(ostream& o) const {
 			}
 			o << endl;
 		}
-	} else {
+	}
+}
+	o << "check queue:" << endl;
+	const event_queue_type& temp(check_event_queue);	// just alias
+#else
+	const event_queue_type& temp(event_queue);	// just alias
+#endif
+{
+	typedef	event_queue_type::const_iterator	const_iterator;
+	const_iterator i(temp.begin()), e(temp.end());
+	if (i!=e) {
+		if (empty) {
+			o << event_table_header;
+			empty = false;
+		}
+		if (showing_cause())
+			o << "\tcause";
+		o << endl;
+		for ( ; i!=e; ++i) {
+			dump_event(o, i->event_index, i->time);
+			if (showing_cause() && i->cause_event_id) {
+				o << "\t[by:" << i->cause_event_id << ']';
+			}
+			o << endl;
+		}
+	}
+}
+	if (empty) {
 		// deadlocked!
 		o << "\t(empty)" << endl;
 	}
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+/**
+	Synonym to original definition, because too lazy to
+	rename with new check-event changes.  
+ */
+ostream&
+State::dump_check_event_queue(ostream& o) const {
+	return dump_event_queue(o);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

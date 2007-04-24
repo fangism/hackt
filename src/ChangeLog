@@ -5,6 +5,17 @@
 
 2007-04-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-13:
+	  Tested CHPSIM_DELAYED_SUCCESSOR_CHECKS enabled briefly, 
+		but left disabled until further testing.  
+	  Test suite shows one fatal assert-fail, other anticipated 
+		logical differences due to invasive change of execution model.  
+	  Not looking forward to re-verifying every friggin' test by hand...
+	  Major annoyance: event-queue dumps now partitioned into 
+		immediate events and to-check events.  
+	  Next: fix use of pending_events, w.r.t. immediate_event_fifo.
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-12:
 	  More mark-ups for CHPSIM_DELAYED_SUCCESSOR_CHECKS (disabled).
 		Phasing out State::__enqueue_list, distinguishing between

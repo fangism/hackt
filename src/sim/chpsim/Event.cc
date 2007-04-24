@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.6.2.7 2007/04/23 19:30:14 fang Exp $
+	$Id: Event.cc,v 1.6.2.8 2007/04/24 04:52:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -227,7 +227,11 @@ if (countdown) {
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(const nonmeta_context& c) {
+EventNode::execute(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();

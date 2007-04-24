@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5.6.9 2007/04/23 23:14:31 fang Exp $
+	$Id: State.h,v 1.5.6.10 2007/04/24 04:52:57 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -354,13 +354,18 @@ public:
 	 */
 	bool
 	pending_check_events(void) const { return !check_event_queue.empty(); }
-#else
+#endif
 	/**
 		\return true if event_queue is not empty.
 	 */
 	bool
-	pending_events(void) const { return !event_queue.empty(); }
+	pending_events(void) const {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		return pending_check_events();
+#else
+		return !event_queue.empty();
 #endif
+	}
 
 	const time_type&
 	time(void) const { return current_time; }
@@ -573,10 +578,10 @@ public:
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	ostream&
 	dump_check_event_queue(ostream&) const;
-#else
+#endif
+
 	ostream&
 	dump_event_queue(ostream&) const;
-#endif
 
 	ostream&
 	print_instance_name_value(ostream&, 

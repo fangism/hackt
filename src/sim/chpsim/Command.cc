@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.8 2007/03/11 16:34:37 fang Exp $
+	$Id: Command.cc,v 1.8.6.1 2007/04/24 04:52:53 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -214,7 +214,13 @@ if (a.size() > 2) {
 	// time_type time = s.time();	// unused
 	// could check s.pending_events()
 try {
-	while (s.pending_events() && !s.stopped() && i) {
+	while (
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		s.pending_check_events()
+#else
+		s.pending_events()
+#endif
+		&& !s.stopped() && i) {
 		const State::step_return_type brk = s.step();
 		// time = s.time();	// unused
 		if (brk) {
@@ -263,7 +269,13 @@ if (a.size() != 2) {
 	const time_type stop_time = s.time() +add;
 	s.resume();
 	try {
-	while (s.pending_events() && !s.stopped() &&
+	while (
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		s.pending_check_events()
+#else
+		s.pending_events()
+#endif
+		&& !s.stopped() &&
 			(s.next_event_time() < stop_time)) {
 		const State::step_return_type brk = s.step();
 		if (brk) {
@@ -326,7 +338,13 @@ if (a.size() != 2) {
 	const time_type stop_time = add;
 	s.resume();
 	try {
-	while (s.pending_events() && !s.stopped() &&
+	while (
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		s.pending_check_events()
+#else
+		s.pending_events()
+#endif
+		&& !s.stopped() &&
 			(s.next_event_time() <= stop_time)) {
 		const State::step_return_type brk = s.step();
 		if (brk) {
@@ -382,7 +400,13 @@ if (a.size() != 1) {
 //	time_type time = s.time();		// unused
 	s.resume();	// clear STOP flag
 	try {
-	while (s.pending_events() && !s.stopped()) {
+	while (
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		s.pending_check_events()
+#else
+		s.pending_events()
+#endif
+		&& !s.stopped()) {
 		const State::step_return_type brk = s.step();
 		// time = s.time();		// unused
 		if (brk) {
