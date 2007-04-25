@@ -1,15 +1,19 @@
 b : bool b = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 b : bool b = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	10	1	0	b := true
 b : bool b = 1
 event queue:
+check queue:
 	(empty)
 b : bool b = 1
 event queue:
+check queue:
 	(empty)
 time: 10

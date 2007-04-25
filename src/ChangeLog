@@ -5,6 +5,11 @@
 
 2007-04-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-16:
+	  No source revision, small batch of easy and stable (?) 
+		regression test updates in test/chpsim.
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-15:
 	  FIx: Don't decrement predecessor countdown *until* it is checked
 		for the first time (first_check), which is now a 
