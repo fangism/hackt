@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.6.2.8 2007/04/24 04:52:54 fang Exp $
+	$Id: Event.cc,v 1.6.2.9 2007/04/25 00:46:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -218,6 +218,26 @@ if (countdown) {
 }	// end method recheck
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+/**
+	Predecessor barrier count is now done when an event is actually
+	checked for its first time, because it can now appear multiply
+	in the first-check-queue as a result of delaying successor checks
+	at join events.  
+ */
+bool
+EventNode::first_check(const nonmeta_context& c, const event_index_type ei) {
+	// same as countdown_decrementer
+	if (predecessors) {	// event 0 has no predecessors!
+		// TODO: give it an artificial one, to avoid this check
+		INVARIANT(countdown);
+		--countdown;
+	}
+	return recheck(c, ei);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this really should just be inlined
 	\param c context containing the list of successor events to 
@@ -260,8 +280,10 @@ EventNode::execute(
 			set_inserter(c.rechecks)
 #endif
 		);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		for_each(begin(successor_events), end(successor_events), 
 			countdown_decrementer(c.event_pool));
+#endif
 	}
 }	// end method execute
 

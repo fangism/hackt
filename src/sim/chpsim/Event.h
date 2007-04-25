@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.6.2.8 2007/04/24 04:52:55 fang Exp $
+	$Id: Event.h,v 1.6.2.9 2007/04/25 00:46:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -320,6 +320,11 @@ public:
 	bool
 	recheck(const nonmeta_context&, const event_index_type) const;
 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	bool
+	first_check(const nonmeta_context&, const event_index_type);
+#endif
+
 	void
 	subscribe_deps(const nonmeta_context&, const event_index_type) const;
 
@@ -355,6 +360,7 @@ public:
 		return block_deps.dump_subscribed_status(o, s, ei);
 	}
 
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 public:
 	// helper classes
 	class countdown_decrementer {
@@ -371,6 +377,7 @@ public:
 			--pool[ei].countdown;
 		}
 	};	// end struct count_decrementer
+#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 
 };	// end class EventNode
 

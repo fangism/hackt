@@ -5,6 +5,13 @@
 
 2007-04-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-15:
+	  FIx: Don't decrement predecessor countdown *until* it is checked
+		for the first time (first_check), which is now a 
+		wrapper function around EventNode::recheck.
+	  TODO: cause_trace_index is missing (all 0s)
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-14:
 	  Enabled CHPSIM_DELAYED_SUCCESSOR_CHECKS, numerous tests fail.
 	  Fixed assertion failure: forgot to reset immediate_event_fifo.

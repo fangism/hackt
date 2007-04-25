@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.13 2007/04/24 19:01:41 fang Exp $
+	$Id: State.cc,v 1.8.2.14 2007/04/25 00:46:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -494,7 +494,8 @@ do {
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	if (immediate || ev.recheck(c, ei)) {
+	// this is where events are checked for their first time as successor
+	if (immediate || ev.first_check(c, ei)) {
 		// don't recheck if event is immediate
 		status.first = true;
 #endif

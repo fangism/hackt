@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.9 2007/04/24 04:52:56 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.10 2007/04/25 00:46:38 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -184,8 +184,10 @@ recheck_all_successor_events(
 		set_inserter(c.rechecks)
 #endif
 		);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	for_each(std::begin(succ), std::end(succ), 
 		event_type::countdown_decrementer(c.event_pool));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -369,7 +371,9 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
 		t.reset_countdown();
 		// act like this event (its predecessor) executed
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 		// recheck it on the spot
 		EventNode& suc(context.event_pool[ei]);
 		const nonmeta_context::event_setter x(context, &suc);
@@ -442,8 +446,8 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		context.first_checks.insert(ei);
 #else
 		context.rechecks.insert(ei);
-#endif
 		EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 		break;
 	}
 	default: {
@@ -455,8 +459,8 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		context.first_checks.insert(ei);
 #else
 		context.rechecks.insert(ei);
-#endif
 		EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 	}
 	}	// end switch
 }	// end visit(const nondeterministic_selection&)
@@ -843,8 +847,8 @@ EventExecutor::visit(const do_while_loop& dw) {
 	context.first_checks.insert(ei);
 #else
 	context.rechecks.insert(ei);
-#endif
 	EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,34 +1,40 @@
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	10	1	0	a := true
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	20	18	0	
 a : bool a = 1
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	30	7	0	a := false
 a : bool a = 1
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	40	6	0	
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	50	4	0	b := true
 	50	5	0	c := true
