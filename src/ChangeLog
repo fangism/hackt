@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-17:
+	  No source revision, just test case update notes (test/chpsim):
+		channel-self-parallel-a-{01,02}: timestamps shortened because
+			send-receive pairs pay their delay up-front, so now
+			their prefix delays overlap.  However, this is still
+			not tight synchronization.  
+		countdown-domin-b-01: wait events now appear on check queue,
+			in this case, they block upon first check, 
+			wake-up results in instant execution because delay
+			was already paid up-front.  
+	  This first round only covers obvious (?) test case updates
+		that require no thinking.  
+	  Next: test cases that require a little more scrutiny...
+
+
 2007-04-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-16:

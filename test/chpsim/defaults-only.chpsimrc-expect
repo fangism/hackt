@@ -1,8 +1,10 @@
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 null-event-delay = 10
 uniform-delay = 10
 event-queue should be empty 
 event queue:
+check queue:
 	(empty)

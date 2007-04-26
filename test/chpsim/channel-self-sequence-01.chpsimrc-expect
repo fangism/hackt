@@ -1,40 +1,48 @@
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	10	6	0	X!(true)
 b : bool b = 0
 X : chan(bool<>) X = (1) [full]
 event queue:
+check queue:
 	time	eid	pid	event
 	20	5	0	X?(b)
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	30	4	0	X!(false)
 b : bool b = 1
 X : chan(bool<>) X = (0) [full]
 event queue:
+check queue:
 	time	eid	pid	event
 	40	3	0	X?(b)
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	50	2	0	X!(true)
 b : bool b = 0
 X : chan(bool<>) X = (1) [full]
 event queue:
+check queue:
 	time	eid	pid	event
 	60	1	0	X?(b)
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
+check queue:
 	(empty)
 expect empty queue, sequence ended 

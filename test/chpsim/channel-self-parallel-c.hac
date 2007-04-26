@@ -1,0 +1,17 @@
+// "channel-self-parallel-c.hac"
+// copy-modified from "channel-self-parallel-a.hac"
+//	$Id: channel-self-parallel-c.hac,v 1.1.2.1 2007/04/26 00:09:16 fang Exp $
+// channel sends to itself in sequence of parallel sends
+// just swapped position of send/receives
+
+chan(bool) X;
+bool b;
+
+chp {
+	X?(b), X!(true);
+	X?(b), X!(false);
+	X?(b), X!(true)
+}
+// should work, because channel is initially ready to send
+// should still occur sequentially, with no real concurrency
+

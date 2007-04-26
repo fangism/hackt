@@ -1,17 +1,21 @@
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	10	17	0	
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
+	20	5	0	[a!=0]
 	20	10	0	b := 0
 	20	14	0	c := 0
 	20	16	0	a := 0
@@ -19,153 +23,189 @@ a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	20	14	0	c := 0
 	20	16	0	a := 0
+	30	9	0	[b!=0]
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	20	16	0	a := 0
+	30	9	0	[b!=0]
+	30	13	0	[c!=0]
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
+	30	9	0	[b!=0]
+	30	13	0	[c!=0]
 	30	15	0	a := 1
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
 	time	eid	pid	event
-	40	5	0	[a!=0]
+	30	5	0	[a!=0]
+check queue:
+	40	1	0	
 a : int a = 1
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	50	3	0	
+	40	1	0	
+	40	3	0	
 a : int a = 1
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	60	4	0	a := a-1
+	50	4	0	a := a-1
 a : int a = 1
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	70	3	0	
+	60	3	0	
+a : int a = 0
+b : int b = 0
+c : int c = 0
+event queue:
+check queue:
+	time	eid	pid	event
+	70	2	0	b := 2
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
 	time	eid	pid	event
-	80	2	0	b := 2
-a : int a = 0
-b : int b = 0
-c : int c = 0
-event queue:
-	time	eid	pid	event
-	90	9	0	[b!=0]
+	70	9	0	[b!=0]
+check queue:
+	80	1	0	
 a : int a = 0
 b : int b = 2
 c : int c = 0
 event queue:
+check queue:
+	time	eid	pid	event
+	80	1	0	
+	80	7	0	
+a : int a = 0
+b : int b = 2
+c : int c = 0
+event queue:
+check queue:
+	time	eid	pid	event
+	90	8	0	b := b-1
+a : int a = 0
+b : int b = 2
+c : int c = 0
+event queue:
+check queue:
 	time	eid	pid	event
 	100	7	0	
 a : int a = 0
-b : int b = 2
+b : int b = 1
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	110	8	0	b := b-1
 a : int a = 0
-b : int b = 2
+b : int b = 1
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	120	7	0	
 a : int a = 0
-b : int b = 1
+b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	130	8	0	b := b-1
-a : int a = 0
-b : int b = 1
-c : int c = 0
-event queue:
-	time	eid	pid	event
-	140	7	0	
+	130	6	0	c := 3
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
 	time	eid	pid	event
-	150	6	0	c := 3
-a : int a = 0
-b : int b = 0
-c : int c = 0
-event queue:
-	time	eid	pid	event
-	160	13	0	[c!=0]
+	130	13	0	[c!=0]
+check queue:
+	140	1	0	
 a : int a = 0
 b : int b = 0
 c : int c = 3
 event queue:
+check queue:
 	time	eid	pid	event
-	170	11	0	
+	140	1	0	
+	140	11	0	
 a : int a = 0
 b : int b = 0
 c : int c = 3
 event queue:
+check queue:
 	time	eid	pid	event
-	180	12	0	c := c-1
+	150	12	0	c := c-1
 a : int a = 0
 b : int b = 0
 c : int c = 3
 event queue:
+check queue:
 	time	eid	pid	event
-	190	11	0	
+	160	11	0	
 a : int a = 0
 b : int b = 0
 c : int c = 2
 event queue:
+check queue:
 	time	eid	pid	event
-	200	12	0	c := c-1
+	170	12	0	c := c-1
 a : int a = 0
 b : int b = 0
 c : int c = 2
 event queue:
+check queue:
 	time	eid	pid	event
-	210	11	0	
+	180	11	0	
 a : int a = 0
 b : int b = 0
 c : int c = 1
 event queue:
+check queue:
 	time	eid	pid	event
-	220	12	0	c := c-1
+	190	12	0	c := c-1
 a : int a = 0
 b : int b = 0
 c : int c = 1
 event queue:
+check queue:
 	time	eid	pid	event
-	230	11	0	
+	200	11	0	
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	240	1	0	
+	210	1	0	
 a : int a = 0
 b : int b = 0
 c : int c = 0
 event queue:
+check queue:
 	(empty)
 a : int a = 0
 b : int b = 0
 c : int c = 0
-time: 240
+time: 210

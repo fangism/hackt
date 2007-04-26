@@ -1,5 +1,6 @@
 	0	0	0	null
 expect empty queue, deadlock 
 event queue:
+check queue:
 	(empty)
-time: 0
+time: 10
