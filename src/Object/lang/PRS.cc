@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.23 2006/11/07 06:35:09 fang Exp $
+	$Id: PRS.cc,v 1.23.24.1 2007/04/26 22:44:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -21,8 +21,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
-// #include "Object/inst/alias_empty.h"
-// #include "Object/inst/instance_alias_info.h"
 
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
@@ -56,6 +54,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_up, "PRS-up")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_dn, "PRS-dn")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::nested_rules, "PRS-nested")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_loop, "PRS-loop")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_conditional, "PRS-cond")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::and_expr, "PRS-and")
@@ -71,6 +70,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::pull_dn, PRS_PULLDN_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::PRS::nested_rules, PRS_NESTED_RULES_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::rule_conditional, PRS_RULE_COND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -865,6 +866,88 @@ rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
 	meta_conditional_base::load_object_base(m, i);
 	if_rules.load_object_base(m, i);
 	else_rules.load_object_base(m, i);
+}
+
+//=============================================================================
+// class nested_rules method definitions
+
+nested_rules::nested_rules() : rule(), rules() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nested_rules::~nested_rules() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nested_rules)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+nested_rules::dump(ostream& o, const rule_dump_context& c) const {
+#if 0
+	o << "(:" << ind_var->get_name() << ':';
+	range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
+	{
+		INDENT_SECTION(o);
+#endif
+	return rules.dump(o, c);
+#if 0
+	}
+	return o << auto_indent << ')';
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nested_rules::check(void) const {
+	for_each(rules.begin(), rules.end(), rule::checker());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+nested_rules::expand_complement(void) {
+	rules.expand_complements();
+	return excl_ptr<rule>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nested_rules::push_back(excl_ptr<rule>& r) {
+	NEVER_NULL(r);
+	rules.push_back(value_type());
+	rules.back() = r;
+	MUST_BE_NULL(r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a set of loop-dependent production rules.  
+ */
+good_bool
+nested_rules::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	return rules.unroll(c, np, pfp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nested_rules::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	rules.collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nested_rules::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	rules.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nested_rules::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	rules.load_object_base(m, i);
 }
 
 //=============================================================================

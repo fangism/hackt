@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.5.44.1 2007/04/11 20:50:07 fang Exp $
+	$Id: PRS.h,v 1.5.44.2 2007/04/26 22:44:22 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -285,8 +285,9 @@ public:
 //=============================================================================
 /**
 	Collection of production rules.  
+	Now is also a body_item because of nested bodies.  
  */
-class body : public language_body {
+class body : public language_body, public body_item {
 	typedef	default_vector<body_item::return_type>::type
 				checked_rules_type;
 protected:
@@ -308,6 +309,7 @@ public:
 	// needs the return-type of language-body
 	ROOT_CHECK_PROTO;
 #endif
+	PRS_ITEM_CHECK_PROTO;
 };	// end class body
 
 //=============================================================================

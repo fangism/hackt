@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.24.4.2 2007/04/11 20:50:06 fang Exp $
+	$Id: PRS.cc,v 1.24.4.3 2007/04/26 22:44:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -595,6 +595,49 @@ if (rules) {
 }
 	// else empty, no PRS to add
 	return never_ptr<const object>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Treat nested body of rules as a continuation of the list of rules.  
+	TODO: factor out common checking loop with check_build, above.  
+ */
+body_item::return_type
+body::check_rule(context& c) const {
+if (rules) {
+	const count_ptr<entity::PRS::nested_rules>
+		ret(new entity::PRS::nested_rules());
+	NEVER_NULL(ret);
+	// copied from body::check_rule
+	// const never_ptr<definition_base> d(c.get_current_open_definition());
+	checked_rules_type checked_rules;
+	rules->check_list(checked_rules, &body_item::check_rule, c);
+	const checked_rules_type::const_iterator
+		null_iter(find(checked_rules.begin(), checked_rules.end(), 
+			body_item::return_type()));
+	if (null_iter == checked_rules.end()) {
+		// no errors found, add them too the process definition
+		checked_rules_type::iterator i(checked_rules.begin());
+		const checked_rules_type::iterator e(checked_rules.end());
+		for ( ; i!=e; ++i) {
+			excl_ptr<entity::PRS::rule>
+				xfer(i->exclusive_release());
+//			xfer->check();		// paranoia
+			ret->push_back(xfer);
+			MUST_BE_NULL(xfer);
+		}
+		return ret;
+	} else {
+		cerr << "ERROR: at least one error in PRS rule-nest.  "
+			<< where(*rules) << endl;
+		// THROW_EXIT;
+		return body_item::return_type();
+	}
+} else {
+	// is this ok? is am empty body acceptable?
+	// grammar requires a non-empty body, by construction
+	return return_type(NULL);
+}
 }
 
 //=============================================================================

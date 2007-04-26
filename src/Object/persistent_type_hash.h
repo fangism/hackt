@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.18 2007/02/26 22:00:44 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.18.6.1 2007/04/26 22:44:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -243,6 +243,7 @@
 #define	PRS_PULLUP_TYPE_KEY					"PRSpulup"
 #define	PRS_PULLDN_TYPE_KEY					"PRSpuldn"
 #define	PRS_RULE_LOOP_TYPE_KEY					"PRSrloop"
+#define	PRS_NESTED_RULES_TYPE_KEY				"PRSrnest"
 #define	PRS_RULE_COND_TYPE_KEY					"PRSrcond"
 #define	PRS_AND_TYPE_KEY					"PRSand"
 #define	PRS_OR_TYPE_KEY						"PRSor"

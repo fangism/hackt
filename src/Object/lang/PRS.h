@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.18 2006/10/18 20:58:09 fang Exp $
+	$Id: PRS.h,v 1.18.28.1 2007/04/26 22:44:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -328,7 +328,50 @@ public:
 
 //=============================================================================
 /**
+	Just a set of rules that were wrapped in a nested scope.
+	For all practical purposes, these should just be treated as a 
+	continuation list of rules, nothing special about them.  
+ */
+class nested_rules : public rule {
+	typedef	nested_rules			this_type;
+	typedef	rule_set::value_type		value_type;
+private:
+	rule_set				rules;
+public:
+	nested_rules();
+	~nested_rules();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context&) const;
+
+	PRS_UNROLL_RULE_PROTO;
+
+	void
+	check(void) const;
+
+	excl_ptr<rule>
+	expand_complement(void);
+
+	void
+	push_back(excl_ptr<rule>&);
+
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+};	// end class nested_rules
+
+//=============================================================================
+/**
 	A set of rules to be repeatedly unrolled in a loop.  
+	Could derive privately from nested_rules...
  */
 class rule_loop : public rule, private meta_loop_base {
 	typedef	rule_loop			this_type;
