@@ -8,6 +8,9 @@
 	* HACKT-00-01-04-main-00-81-20:
 	  minor C++ conformance header fix: sim/chpsim/TraceIterators.h
 		guile/hackt-documentation.h
+	  Added unstab support to prsim structures and attributes, 
+		but not actually used yet.  (Patch for cflat is elsewhere 
+		on branch, hope to merge soon.)
 
 
 2007-04-20	David Fang		<fangism@users.sourceforge.net>
