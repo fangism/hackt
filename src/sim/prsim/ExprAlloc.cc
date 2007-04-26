@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.18 2007/04/19 03:13:42 fang Exp $
+	$Id: ExprAlloc.cc,v 1.19 2007/04/26 05:46:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -829,6 +829,7 @@ DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 
 /**
 	Sets or clears weak flag on a rule.  
+	Value is 1 (true) or 0.
  */
 void
 Weak::main(visitor_type& v, const values_type& a) {
@@ -838,6 +839,23 @@ Weak::main(visitor_type& v, const values_type& a) {
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_weak();
 	else	r.clear_weak();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Unstab, "unstab")
+
+/**
+	Sets or clears unstab flag on a rule.  
+	Value is 1 (true) or 0.
+ */
+void
+Unstab::main(visitor_type& v, const values_type& a) {
+	typedef	visitor_type::rule_type	rule_type;
+	rule_type& r(v.st_rule_map[v.last_expr_index()]);
+	const values_type::value_type& w(a.front());
+	if (w.is_a<const pint_const>()->static_constant_value())
+		r.set_unstable();
+	else	r.clear_unstable();
 }
 
 #undef	DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.3 2006/05/06 04:18:55 fang Exp $
+	$Id: Rule.h,v 1.4 2007/04/26 05:46:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -47,6 +47,15 @@ public:
 
 	void
 	clear_weak(void) { this->rule_flags &= ~RULE_WEAK; }
+
+	bool
+	is_unstable(void) const { return this->rule_flags & RULE_UNSTAB; }
+
+	void
+	set_unstable(void) { this->rule_flags |= RULE_UNSTAB; }
+
+	void
+	clear_unstable(void) { this->rule_flags &= ~RULE_UNSTAB; }
 
 	void
 	set_delay(const time_type t) { this->after = t; }

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.2 2006/04/23 07:37:20 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.3 2007/04/26 05:46:36 fang Exp $
  */
 
 #include <iostream>
@@ -45,6 +45,19 @@ After::__check_vals(const char* name, const values_type& v) {
  */
 good_bool
 Weak::__check_vals(const char* name, const values_type& v) {
+	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
+		cerr << "The \'" << name << "\' attribute requires exactly "
+			"one pint (integer) expression argument." << endl;
+		return good_bool(false);
+	} else  return good_bool(true);
+}
+
+//=============================================================================
+/**
+	Takes a single integer value.  1 or 0.  
+ */
+good_bool
+Unstab::__check_vals(const char* name, const values_type& v) {
 	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one pint (integer) expression argument." << endl;

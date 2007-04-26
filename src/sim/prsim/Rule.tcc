@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.tcc"
-	$Id: Rule.tcc,v 1.2 2006/04/23 07:37:27 fang Exp $
+	$Id: Rule.tcc,v 1.3 2007/04/26 05:46:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_TCC__
@@ -22,6 +22,9 @@ Rule<Time>::dump(ostream& o) const {
 	o << "after " << this->after;
 	if (this->is_weak()) {
 		o << ", weak";
+	}
+	if (this->is_unstable()) {
+		o << ", unstable";
 	}
 	return o;
 }
