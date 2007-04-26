@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.4.8.3 2007/04/23 19:30:20 fang Exp $
+#	$Id: TODO,v 1.4.8.4 2007/04/26 05:40:14 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -80,6 +80,9 @@ low-priority:
 	int<W>: using integer width to mask values
 		and perform range-checking?
 	integer value formatting preference for dumping?
+	variable (variable-dependent) delays
+	support for user-defined functions, possibly with dynamic linking
+		for plug-in or module support
 
 ===============================================================================
 BUGS:

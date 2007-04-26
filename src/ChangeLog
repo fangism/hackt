@@ -5,6 +5,15 @@
 
 2007-04-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-18:
+	  No source revision, test case updates only.
+	  This batch required a little scrutiny to match up re-ordered
+		send-receive action pairs.  
+	  Observation: mostly selection test cases, which show something
+		is screwed up (I think I know why).
+	  Still TODO: re-propagate cause_trace_id, to fix trace cases
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-17:
 	  No source revision, just test case update notes (test/chpsim):
 		channel-self-parallel-a-{01,02}: timestamps shortened because

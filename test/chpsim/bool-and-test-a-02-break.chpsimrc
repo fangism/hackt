@@ -1,5 +1,5 @@
 # "bool-and-test-a-02-break.chpsimrc"
-#	$Id: bool-and-test-a-02-break.chpsimrc,v 1.2 2007/02/26 22:01:09 fang Exp $
+#	$Id: bool-and-test-a-02-break.chpsimrc,v 1.2.8.1 2007/04/26 05:40:17 fang Exp $
 # @haco@ bool-and-test-a.haco-a
 
 print-event-header
@@ -32,23 +32,23 @@ echo resetting...
 reset
 echo breaking on channel In[2]
 break-value In[2]
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
-step 10
+step 12
 time
 
 echo resetting...

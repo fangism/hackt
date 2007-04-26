@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9.2.1 2007/04/26 00:09:11 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.2 2007/04/26 05:40:15 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -147,6 +147,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	delayed-sink-a-01 delayed-sink-a-02-trace
 
 # TODO: token-ring, bubble-ring, deadlock-ring, deadlock-buf
+# TODO: profile delayed-sink/source test cases
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \

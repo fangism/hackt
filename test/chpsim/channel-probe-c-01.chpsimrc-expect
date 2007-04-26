@@ -3,39 +3,39 @@
 	10	12	1	bool_source::S!(true)
 	10	14	2	bool_source::S!(true)
 	20	2	0	X?(x)
+	20	15	2	bool_source::S!(false)
 	30	3	0	Y!(x)
-	30	15	2	bool_source::S!(false)
-	40	4	0	[#A&&#Y]
+	30	4	0	[#A&&#Y]
 	40	2	0	X?(x)
-	50	10	0	
-	50	14	2	bool_source::S!(true)
-	60	7	0	A?(a)
-	60	9	0	Y?(z)
-	70	6	0	B!(a)
-	70	13	1	bool_source::S!(false)
-	70	3	0	Y!(x)
-	70	8	0	Z!(z)
-	80	16	3	bool_sink::B?(bool_sink::b)
-	80	2	0	X?(x)
-	80	5	0	
-	80	17	4	bool_sink::B?(bool_sink::b)
-	90	15	2	bool_source::S!(false)
-	90	4	0	[#A&&#Y]
-	100	10	0	
-	110	7	0	A?(a)
-	110	9	0	Y?(z)
-	120	6	0	B!(a)
-	120	12	1	bool_source::S!(true)
-	120	3	0	Y!(x)
-	120	8	0	Z!(z)
-	130	16	3	bool_sink::B?(bool_sink::b)
-	130	2	0	X?(x)
-	130	5	0	
-	130	17	4	bool_sink::B?(bool_sink::b)
-	140	14	2	bool_source::S!(true)
-	140	4	0	[#A&&#Y]
-	150	10	0	
-	160	7	0	A?(a)
-	160	9	0	Y?(z)
-	170	6	0	B!(a)
-time: 170
+	40	14	2	bool_source::S!(true)
+	40	10	0	
+	50	7	0	A?(a)
+	50	13	1	bool_source::S!(false)
+	50	9	0	Y?(z)
+	50	3	0	Y!(x)
+	60	6	0	B!(a)
+	60	16	3	bool_sink::B?(bool_sink::b)
+	60	8	0	Z!(z)
+	60	17	4	bool_sink::B?(bool_sink::b)
+	60	2	0	X?(x)
+	60	15	2	bool_source::S!(false)
+	70	5	0	
+	80	4	0	[#A&&#Y]
+	90	10	0	
+	100	7	0	A?(a)
+	100	12	1	bool_source::S!(true)
+	100	9	0	Y?(z)
+	100	3	0	Y!(x)
+	110	6	0	B!(a)
+	110	16	3	bool_sink::B?(bool_sink::b)
+	110	8	0	Z!(z)
+	110	17	4	bool_sink::B?(bool_sink::b)
+	110	2	0	X?(x)
+	110	14	2	bool_source::S!(true)
+	120	5	0	
+	130	4	0	[#A&&#Y]
+	140	10	0	
+	150	7	0	A?(a)
+	150	13	1	bool_source::S!(false)
+	150	9	0	Y?(z)
+time: 150

@@ -6,7 +6,7 @@ bool A.a[1] = 0
 updated bool(s): 
 bool A.a[1] = 1
 watch:	20	5	1	bool_and::A[1]?(bool_and::a[1])
-	*** break, 13 steps left.
+	*** break, 12 steps left.
 time: 20
 updated bool(s): 
 bool A.a[1] = 1
@@ -38,18 +38,18 @@ breaking on channel In[2]
 updated channel(s): 
 chan(bool<>) In[2] = (1) [full]
 watch:	10	12	4	bool_source::S!(true)
-	*** break, 6 steps left.
+	*** break, 8 steps left.
 time: 10
 updated channel(s): 
 chan(bool<>) In[2] = (1) [empty]
 watch:	20	6	1	bool_and::A[2]?(bool_and::a[2])
-	*** break, 7 steps left.
+	*** break, 8 steps left.
 time: 20
 updated channel(s): 
 chan(bool<>) In[2] = (0) [full]
-watch:	30	15	4	bool_source::S!(false)
-	*** break, 7 steps left.
-time: 30
+watch:	20	15	4	bool_source::S!(false)
+	*** break, 10 steps left.
+time: 20
 updated channel(s): 
 chan(bool<>) In[2] = (0) [empty]
 watch:	60	6	1	bool_and::A[2]?(bool_and::a[2])
@@ -57,29 +57,29 @@ watch:	60	6	1	bool_and::A[2]?(bool_and::a[2])
 time: 60
 updated channel(s): 
 chan(bool<>) In[2] = (1) [full]
-watch:	70	14	4	bool_source::S!(true)
-	*** break, 7 steps left.
-time: 70
+watch:	60	14	4	bool_source::S!(true)
+	*** break, 12 steps left.
+time: 60
 updated channel(s): 
 chan(bool<>) In[2] = (1) [empty]
 watch:	100	6	1	bool_and::A[2]?(bool_and::a[2])
-	*** break, 3 steps left.
+	*** break, 2 steps left.
 time: 100
 updated channel(s): 
 chan(bool<>) In[2] = (1) [full]
-watch:	110	13	4	bool_source::S!(true)
-	*** break, 7 steps left.
-time: 110
+watch:	100	13	4	bool_source::S!(true)
+	*** break, 12 steps left.
+time: 100
 updated channel(s): 
 chan(bool<>) In[2] = (1) [empty]
 watch:	140	6	1	bool_and::A[2]?(bool_and::a[2])
-	*** break, 3 steps left.
+	*** break, 2 steps left.
 time: 140
 updated channel(s): 
 chan(bool<>) In[2] = (1) [full]
-watch:	150	12	4	bool_source::S!(true)
-	*** break, 7 steps left.
-time: 150
+watch:	140	12	4	bool_source::S!(true)
+	*** break, 12 steps left.
+time: 140
 resetting... 
 just watching channel In[1] 
 updated channel(s): 
@@ -90,36 +90,39 @@ chan(bool<>) In[1] = (1) [empty]
 watch:	20	5	1	bool_and::A[1]?(bool_and::a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [full]
-watch:	30	11	3	bool_source::S!(true)
+watch:	20	11	3	bool_source::S!(true)
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
 watch:	60	5	1	bool_and::A[1]?(bool_and::a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (0) [full]
-watch:	70	10	3	bool_source::S!(false)
+watch:	60	10	3	bool_source::S!(false)
 updated channel(s): 
 chan(bool<>) In[1] = (0) [empty]
 watch:	100	5	1	bool_and::A[1]?(bool_and::a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [full]
-watch:	110	9	3	bool_source::S!(true)
+watch:	100	9	3	bool_source::S!(true)
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
 watch:	140	5	1	bool_and::A[1]?(bool_and::a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [full]
-watch:	150	11	3	bool_source::S!(true)
-time: 150
+watch:	140	11	3	bool_source::S!(true)
+time: 140
 continuing after unbreakall-values (keeps watches) 
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
 watch:	180	5	1	bool_and::A[1]?(bool_and::a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (0) [full]
-watch:	190	10	3	bool_source::S!(false)
+watch:	180	10	3	bool_source::S!(false)
 updated channel(s): 
 chan(bool<>) In[1] = (0) [empty]
 watch:	220	5	1	bool_and::A[1]?(bool_and::a[1])
+updated channel(s): 
+chan(bool<>) In[1] = (1) [full]
+watch:	220	9	3	bool_source::S!(true)
 time: 220
 continuing after unwatchall-values, should be silent 
 time: 290
