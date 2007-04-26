@@ -1,13 +1,13 @@
 /**
 	\file "util/for_all.h"
 	Shorthand for for_each(foo.begin(), foo.end(), ...);
-	$Id: for_all.h,v 1.2 2007/04/20 18:26:17 fang Exp $
+	$Id: for_all.h,v 1.3 2007/04/26 00:22:45 fang Exp $
  */
 
 #ifndef	__UTIL_FOR_ALL_H__
 #define	__UTIL_FOR_ALL_H__
 
-#include <functional>
+#include <algorithm>
 
 namespace util {
 //=============================================================================

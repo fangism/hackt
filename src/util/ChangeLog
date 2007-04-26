@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.76 2007/04/20 18:26:15 fang Exp $
+#	$Id: ChangeLog,v 1.77 2007/04/26 00:22:43 fang Exp $
+
+2007-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-20:
+	  util/for_all.h: use <algorithm>, not <functional>, duh.
+
 
 2007-04-05	David Fang		<fangism@users.sourceforge.net>
 
