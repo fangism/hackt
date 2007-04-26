@@ -2,7 +2,7 @@
 	\file "guile/hackt-documentation.h"
 	Snarfing and documentation macros, specific to this project.
 	Inspired by lilypond's "lily/include/lily-guile-macros.hh"!
-	$Id: hackt-documentation.h,v 1.2 2007/04/20 18:25:56 fang Exp $
+	$Id: hackt-documentation.h,v 1.3 2007/04/26 01:48:06 fang Exp $
  */
 
 #ifndef	__HAC_GUILE_HACKT_DOCUMENTATION_H__
@@ -68,7 +68,7 @@ static const size_t UNIQUIFY(func_receipt) =			\
 		PRIMNAME, #ARGLIST, DOCSTRING);				\
     scm_c_export (PRIMNAME, NULL);					\
   }									\
-  ADD_SCM_INIT_FUNC(INITPREFIX ## _init, REGISTRY);			\
+  ADD_SCM_INIT_FUNC(INITPREFIX ## _init, REGISTRY)			\
   SCM									\
   FNAME ARGLIST
 

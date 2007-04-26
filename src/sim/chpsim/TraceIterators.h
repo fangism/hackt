@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/TraceIterators.h"
-	$Id: TraceIterators.h,v 1.3 2007/04/26 00:22:42 fang Exp $
+	$Id: TraceIterators.h,v 1.4 2007/04/26 01:48:07 fang Exp $
 	Nested iterator class definitions
  */
 
@@ -43,8 +43,8 @@ public:
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 class state_trace_window_base<Tag>::__pseudo_const_iterator_range {
-	__pseudo_const_iterator_pair		p;
 protected:
+	__pseudo_const_iterator_pair		p;
 	void
 	begin(const state_trace_window_base& w) {
 		p.second = p.first = w.data_array.begin();
