@@ -2,7 +2,7 @@
 	\file "common/config.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: config.cc,v 1.2 2007/04/20 18:25:50 fang Exp $
+	$Id: config.cc,v 1.3 2007/04/26 06:51:47 fang Exp $
  */
 
 #include <iostream>
@@ -128,7 +128,7 @@ config::buildhost(ostream& o) {
  */
 ostream&
 config::readline(ostream& o) {
-	readline_wrapper::version_string(o << "readline: ") << endl;
+	readline_wrapper::version_string(o << "readline: ");
 	return o;
 }
 
