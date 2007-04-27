@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.15 2007/04/27 01:16:19 fang Exp $
+	$Id: State.cc,v 1.8.2.16 2007/04/27 05:43:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -479,8 +479,10 @@ do {
 	// no need to deallocate event, they are all statically pre-allocated
 	const event_index_type cause_event_id = ep.cause_event_id;
 	DEBUG_STEP_PRINT("caused by = " << cause_event_id << endl);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const size_t cause_trace_id = ep.cause_trace_id;
 	DEBUG_STEP_PRINT("at event # = " << cause_trace_id << endl);
+#endif
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
@@ -507,14 +509,13 @@ do {
 			throw;		// rethrow
 		}
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		// TODO: context c contains list of successor events
-		// of the event that just executed
-		status.second = __step(ei, cause_event_id, cause_trace_id);
+		const size_t cti = (is_tracing() ?
+			trace_manager->last_event_trace_id() : 0);
+		DEBUG_STEP_PRINT("this trace index = " << cti << endl);
+		status.second = __step(ei, cause_event_id, cti);
 		// enqueue these events for first-checking (after delay)
 		for_each(c.first_checks.begin(), c.first_checks.end(),
-			event_enqueuer(*this, ei, 
-			(is_tracing() ?
-				trace_manager->last_event_trace_id() : 0)));
+			event_enqueuer(*this, ei, cti));
 		// c.first_checks.clear();	// not needed, loop will exit
 #else
 	return __step(ei, cause_event_id, cause_trace_id);
@@ -622,7 +623,7 @@ State::__step(const event_index_type ei,
 try {
 	for_each(__rechecks.begin(), __rechecks.end(), 
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		recheck_transformer(*this, cause_event_id, cause_trace_id)
+		recheck_transformer(*this, ei, cause_trace_id)
 #else
 		recheck_transformer(*this)
 #endif

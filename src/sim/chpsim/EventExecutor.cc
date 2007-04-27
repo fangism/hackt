@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.10 2007/04/25 00:46:38 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.11 2007/04/27 05:43:36 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -185,6 +185,7 @@ recheck_all_successor_events(
 #endif
 		);
 #if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// deferred to State::step()
 	for_each(std::begin(succ), std::end(succ), 
 		event_type::countdown_decrementer(c.event_pool));
 #endif

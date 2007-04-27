@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.3.10.1 2007/04/21 04:33:57 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.3.10.2 2007/04/27 05:43:35 fang Exp $
  */
 
 #include <iostream>
@@ -268,7 +268,7 @@ ChannelData::raw_dump(ostream& o) const {
 channel_state_base::channel_state_base() :
 		ChannelData(), 
 #if CHPSIM_COUPLED_CHANNELS
-		aux_enqueue(0), 
+//		aux_enqueue(0), 
 		status(CHANNEL_INACTIVE)
 #else
 		full(false)
@@ -286,7 +286,7 @@ void
 channel_state_base::reset(void) {
 	ChannelData::reset();
 #if CHPSIM_COUPLED_CHANNELS
-	aux_enqueue = 0;
+//	aux_enqueue = 0;
 	status = CHANNEL_INACTIVE;
 #else
 	full = false;
@@ -304,10 +304,12 @@ void
 channel_state_base::write(ostream& o) const {
 #if CHPSIM_COUPLED_CHANNELS
 	write_value(o, status);
+#if 0
 	if (status == CHANNEL_SENDER_BLOCKED ||
 			status == CHANNEL_RECEIVER_BLOCKED) {
 		write_value(o, aux_enqueue);
 	}
+#endif
 	if (status == CHANNEL_SENDER_BLOCKED) {
 		ChannelData::write(o);
 	}
@@ -324,10 +326,12 @@ void
 channel_state_base::read(istream& i) {
 #if CHPSIM_COUPLED_CHANNELS
 	read_value(i, status);
+#if 0
 	if (status == CHANNEL_SENDER_BLOCKED ||
 			status == CHANNEL_RECEIVER_BLOCKED) {
 		read_value(i, aux_enqueue);
 	}
+#endif
 	if (status == CHANNEL_SENDER_BLOCKED) {
 		ChannelData::read(i);
 	}
@@ -347,12 +351,15 @@ channel_state_base::read(istream& i) {
 ostream&
 channel_state_base::dump(ostream& o, 
 		const canonical_fundamental_chan_type_base& t) const {
+	// print data regardless of state
 	ChannelData::dump(o << '(', t) << ')';
 #if CHPSIM_COUPLED_CHANNELS
 	switch (status) {
 	case CHANNEL_INACTIVE: o << " [empty]"; break;
 	case CHANNEL_RECEIVER_BLOCKED: o << " [wait]"; break;
 	case CHANNEL_SENDER_BLOCKED: o << " [full]"; break;
+	case CHANNEL_RECEIVED: o << " [recvd]"; break;
+	case CHANNEL_SENT: o << " [sent]"; break;
 	default: break;
 	}
 	return o;
@@ -365,12 +372,14 @@ channel_state_base::dump(ostream& o,
 ostream&
 channel_state_base::raw_dump(ostream& o) const {
 #if CHPSIM_COUPLED_CHANNELS
-	if (status == CHANNEL_SENDER_BLOCKED) {
-		ChannelData::raw_dump(o);
-	} else if (status == INACTIVE) {
-		o << "[ack]";
-	} else {
-		o << "[wait]";
+	switch (status) {
+	case CHANNEL_SENDER_BLOCKED: ChannelData::raw_dump(o); break;
+		// implies full
+	case CHANNEL_INACTIVE: o << "[ack]"; break;	// empty
+	case CHANNEL_RECEIVER_BLOCKED: o << "[wait]"; break;
+	case CHANNEL_RECEIVED: o << "[recvd]"; break;
+	case CHANNEL_SENT: o << "[sent]"; break;
+	default: break;
 	}
 #else
 	if (full) {

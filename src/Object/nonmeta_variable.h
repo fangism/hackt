@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.4.2.1 2007/04/21 04:33:58 fang Exp $
+	$Id: nonmeta_variable.h,v 1.4.2.2 2007/04/27 05:43:36 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -289,6 +289,7 @@ public:
 class channel_state_base : public ChannelData {
 protected:
 #if CHPSIM_COUPLED_CHANNELS
+#if 0
 	/**
 		Extra data member, used to signal that another event
 		should be enqueued (e.g. the other end of a send-receive
@@ -299,6 +300,7 @@ protected:
 		Whoever releases this event should reset this field.  
 	 */
 	size_t				aux_enqueue;
+#endif
 	/**
 		INVARIANT: channel exclusivity (non-shared access)
 		if sender is already blocked, it is an error for
@@ -311,7 +313,11 @@ protected:
 		/// a receiver has arrived and waits for sender
 		CHANNEL_RECEIVER_BLOCKED = 1,
 		/// a sender has arrived and waits for receiver
-		CHANNEL_SENDER_BLOCKED = 2
+		CHANNEL_SENDER_BLOCKED = 2,
+		/// receiver unblocked, sender can reset (execute)
+		CHANNEL_RECEIVED = 3,
+		/// sender unblocked, receiver can reset (execute)
+		CHANNEL_SENT = 4
 #if 0
 		/// transient state resetting, before inactive
 		CHANNEL_RESETTING = 3
@@ -335,51 +341,94 @@ public:
 
 #if CHPSIM_COUPLED_CHANNELS
 	bool
-	can_receive(void) const { return status == CHANNEL_SENDER_BLOCKED; }
+	can_receive(void) const {
+		return status == CHANNEL_SENDER_BLOCKED
+			|| status == CHANNEL_SENT;
+	}
 
 	bool
-	can_send(void) const { return status == CHANNEL_RECEIVER_BLOCKED; }
+	can_send(void) const {
+		return status == CHANNEL_RECEIVER_BLOCKED
+			|| status == CHANNEL_RECEIVED;
+	}
 
 	bool
 	inactive(void) const { return status == CHANNEL_INACTIVE; }
 
 	void
-	block_sender(void) { status = CHANNEL_SENDER_BLOCKED; }
+	block_sender(void) {
+		status = CHANNEL_SENDER_BLOCKED;
+#if 0
+		aux_enqueue = ei;
+#endif
+	}
 
 	void
-	block_receiver(void) { status = CHANNEL_RECEIVER_BLOCKED; }
+	block_receiver(void) {
+		status = CHANNEL_RECEIVER_BLOCKED;
+#if 0
+		aux_enqueue = ei;
+#endif
+	}
 
-#if 1
+#if 0
 protected:
 	/**
 		pair-wise state transition, one from sender, one from receiver
 		This ALWAYS happens in pairs after matching send/receive
 		actions execute.  
+		Or should only the receiver be responsible for doing this?
 	 */
 	void
 	inactivate(void) {
+#if 0
 		status = (status == CHANNEL_RESETTING) ? CHANNEL_INACTIVE
 			: CHANNEL_RESETTING;
+#else
+		status = CHANNEL_INACTIVE;
+#if 0
+		aux_enqueue = 0;
+#endif
+#endif
 	}
 #endif
 public:
 	void
-	send(void) { inactivate(); }
+	send(void) {
+#if 0
+		inactivate();
+#else
+		if (status == CHANNEL_RECEIVER_BLOCKED)
+			status = CHANNEL_SENT;
+		else	// status == CHANNEL_RECEIVED
+			status = CHANNEL_INACTIVE;
+#endif
+	}
 
 	void
-	receive(void) { inactivate(); }
+	receive(void) {
+#if 0
+		inactivate();
+#else
+		if (status == CHANNEL_SENDER_BLOCKED)
+			status = CHANNEL_RECEIVED;
+		else	// status == CHANNEL_SENT
+			status = CHANNEL_INACTIVE;
+#endif
+	}
 
+#if 0
 	void
 	set_enqueue(const size_t ei) {
 		aux_enqueue = ei;
 	}
 
 	void
-	clean_enqueue(void) {
+	clear_enqueue(void) {
 		// this assumes that 0 is an invalid event index
 		aux_enqueue = 0;
 	}
-
+#endif
 #else	// CHPSIM_COUPLED_CHANNELS
 	bool
 	can_receive(void) const { return full; }

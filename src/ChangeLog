@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-20:
+	  Edited and enabled CHPSIM_COUPLED_CHANNELS, satisfactory results.
+	  channel_state_base: removed aux_enqueue member, not using
+		until we try to process event-pair atoms.  
+		Added enum states: CHANNEL_RECEIVED and CHANNEL_SENT
+		to represent state after unblocked by sender or receiver, 
+		in transition to the INACTIVE state.  
+		Updated can_send/recv, send/recv definitions.  
+	  chpsim/State.cc: step(): corrected incorrect use of 
+		cause_trace_id, using trace_manager's event count.
+	  Updated a handful test cases, now many initial sends block
+		properly, now effectively slack 0!
+	  Next: keep updating tests.  
+
+
 2007-04-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-19:

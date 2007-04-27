@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.7 2007/04/24 19:01:42 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.8 2007/04/27 05:43:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -44,9 +44,9 @@
 	Priority: top
 	Status: in development, paused until we take care of changing
 		the execution model first.  
-	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	Co-dependent: CHPSIM_DELAYED_SUCCESSOR_CHECKS
  */
-#define	CHPSIM_COUPLED_CHANNELS			0
+#define	CHPSIM_COUPLED_CHANNELS			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -56,8 +56,10 @@
 		pair in FIFO scheduling.
 	Goal: 1
 	Priority: high
-	Status: not begun
+	Status: not begun, will wait until 
 	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS (?)
+	May not use this if we accept atomic events being split
+	in the immediate event fifo (pseudo atomic).
  */
 #define CHPSIM_EVENT_PAIRS			0
 
@@ -72,6 +74,7 @@
 	Plan: instate a first_recheck_queue, where successors first arrive.
 		step() will now recheck events in order until one (or two)
 		*actually* executes.  
+	Co-dependent: CHPSIM_COUPLED_CHANNELS
  */
 #define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
 

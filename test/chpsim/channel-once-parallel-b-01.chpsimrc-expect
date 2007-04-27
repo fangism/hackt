@@ -22,7 +22,7 @@ event queue:
 	20	2	0	X?(z)
 check queue:
 	30	1	0	
-X : chan(int<32>) X = (11) [full]
+X : chan(int<32>) X = (11) [sent]
 z : int z = 0
 expect only null join event in queue 
 event queue:
