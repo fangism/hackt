@@ -5,6 +5,17 @@
 
 2007-04-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-21:
+	  Object/nonmeta_variable.cc: Updated raw_dump printing policy 
+		for channel_state_base, trace should record one channel
+		value per cycle (synchronized).  
+	  Fixed cause_trace_id progagation again.  
+	  Updated another batch of test cases.  
+	  Need to investigate channel-probe breakage and select failures.
+
+
+2007-04-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-20:
 	  Edited and enabled CHPSIM_COUPLED_CHANNELS, satisfactory results.
 	  channel_state_base: removed aux_enqueue member, not using

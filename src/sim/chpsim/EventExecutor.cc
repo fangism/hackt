@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.11 2007/04/27 05:43:36 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.12 2007/04/27 20:38:05 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -705,6 +705,9 @@ EventRechecker::visit(const channel_send& cs) {
 		// receiver arrived first and was waiting
 		ret = RECHECK_UNBLOCKED_THIS;
 	} else if (nc.inactive()) {
+		// NOTE: blocking changes the simulation state of the channel
+		// but not in a way that wakes up another event.
+		// The `blocked' state is still noted in checkpoint.
 		nc.block_sender();
 		ret = RECHECK_BLOCKED_THIS;
 	} else {
@@ -776,6 +779,9 @@ EventRechecker::visit(const channel_receive& cr) {
 	if (nc.can_receive()) {
 		ret = RECHECK_UNBLOCKED_THIS;
 	} else if (nc.inactive()) {
+		// NOTE: blocking changes the simulation state of the channel
+		// but not in a way that wakes up another event.
+		// The `blocked' state is still noted in checkpoint.
 		nc.block_receiver();
 		ret = RECHECK_BLOCKED_THIS;
 	} else {

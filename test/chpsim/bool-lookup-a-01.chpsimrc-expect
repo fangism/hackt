@@ -1,78 +1,78 @@
 	0	0	0	null
 	10	3	2	int_source::S!(0)
-	20	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	30	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	10	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+	20	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	20	11	3	bool_sink::B?(bool_sink::b)
+	30	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 1
 	30	10	2	int_source::S!(1)
+	40	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	40	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 1
-	40	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	50	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	50	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 0
 	50	9	2	int_source::S!(2)
+	60	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	60	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 0
-	60	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	70	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	70	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 1
 	70	8	2	int_source::S!(3)
+	80	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	80	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 1
-	80	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	90	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	90	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 0
 	90	7	2	int_source::S!(4)
+	100	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	100	11	3	bool_sink::B?(bool_sink::b)
+	110	1	1	bool_lookup_table::A?(bool_lookup_table::a)
 bsnk.b : bool bsnk.b = 0
-	100	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	110	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	110	6	2	int_source::S!(5)
+	120	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	120	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 0
-	120	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	130	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	130	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 1
 	130	5	2	int_source::S!(6)
+	140	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	140	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 1
-	140	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	150	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	150	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 0
 	150	4	2	int_source::S!(7)
+	160	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	160	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 0
-	160	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	170	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	170	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 1
 	170	3	2	int_source::S!(0)
+	180	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	180	11	3	bool_sink::B?(bool_sink::b)
+	190	1	1	bool_lookup_table::A?(bool_lookup_table::a)
 bsnk.b : bool bsnk.b = 1
-	180	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	190	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	190	10	2	int_source::S!(1)
+	200	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	200	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 1
-	200	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	210	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	210	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 0
 	210	9	2	int_source::S!(2)
+	220	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	220	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 0
-	220	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	230	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	230	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 1
 	230	8	2	int_source::S!(3)
+	240	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	240	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 1
-	240	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	250	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	250	1	1	bool_lookup_table::A?(bool_lookup_table::a)
+bsnk.b : bool bsnk.b = 0
 	250	7	2	int_source::S!(4)
+	260	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	260	11	3	bool_sink::B?(bool_sink::b)
+	270	1	1	bool_lookup_table::A?(bool_lookup_table::a)
 bsnk.b : bool bsnk.b = 0
-	260	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	270	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	270	6	2	int_source::S!(5)
+	280	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
 	280	11	3	bool_sink::B?(bool_sink::b)
-bsnk.b : bool bsnk.b = 0
-	280	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	290	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
-	290	5	2	int_source::S!(6)
-	300	11	3	bool_sink::B?(bool_sink::b)
+	290	1	1	bool_lookup_table::A?(bool_lookup_table::a)
 bsnk.b : bool bsnk.b = 1
-	300	1	1	bool_lookup_table::A?(bool_lookup_table::a)
-	310	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
-	310	4	2	int_source::S!(7)
-	320	11	3	bool_sink::B?(bool_sink::b)
+	290	5	2	int_source::S!(6)
+	300	2	1	bool_lookup_table::D!(bool_lookup_table::V[bool_lookup_table::a])
+	300	11	3	bool_sink::B?(bool_sink::b)
+	310	1	1	bool_lookup_table::A?(bool_lookup_table::a)
 bsnk.b : bool bsnk.b = 0
-time: 320
+time: 310

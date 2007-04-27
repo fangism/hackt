@@ -1,5 +1,5 @@
 // "channel-self-sequence.hac"
-//	$Id: channel-self-sequence.hac,v 1.2 2007/01/21 06:02:34 fang Exp $
+//	$Id: channel-self-sequence.hac,v 1.2.14.1 2007/04/27 20:38:11 fang Exp $
 // chp body where a channel sends to itself in sequence
 
 chan(bool) X;
@@ -7,8 +7,8 @@ bool b;
 
 chp {
 	X!(true); X?(b);
+	// NOW DEADLOCKS because channels have slack 0!
 	X!(false); X?(b);
 	X!(true); X?(b)
 }
-// should work, because channel is initially ready to send
 

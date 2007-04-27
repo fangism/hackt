@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.3.10.2 2007/04/27 05:43:35 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.3.10.3 2007/04/27 20:38:04 fang Exp $
  */
 
 #include <iostream>
@@ -304,13 +304,10 @@ void
 channel_state_base::write(ostream& o) const {
 #if CHPSIM_COUPLED_CHANNELS
 	write_value(o, status);
-#if 0
-	if (status == CHANNEL_SENDER_BLOCKED ||
-			status == CHANNEL_RECEIVER_BLOCKED) {
-		write_value(o, aux_enqueue);
-	}
-#endif
-	if (status == CHANNEL_SENDER_BLOCKED) {
+	if (status == CHANNEL_SENDER_BLOCKED || status == CHANNEL_SENT
+			|| status == CHANNEL_RECEIVED) {
+	// RATIONALE: in channel cycle, either channel blocks sender once, 
+	// or if receiver blocked, it will see SENT before it executes
 		ChannelData::write(o);
 	}
 #else
@@ -326,13 +323,8 @@ void
 channel_state_base::read(istream& i) {
 #if CHPSIM_COUPLED_CHANNELS
 	read_value(i, status);
-#if 0
-	if (status == CHANNEL_SENDER_BLOCKED ||
-			status == CHANNEL_RECEIVER_BLOCKED) {
-		read_value(i, aux_enqueue);
-	}
-#endif
-	if (status == CHANNEL_SENDER_BLOCKED) {
+	if (status == CHANNEL_SENDER_BLOCKED || status == CHANNEL_SENT
+			|| status == CHANNEL_RECEIVED) {
 		ChannelData::read(i);
 	}
 #else
@@ -369,16 +361,20 @@ channel_state_base::dump(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Use this for printing the contents of trace.  
+	This should reflect ::write() and ::read(), above.  
+ */
 ostream&
 channel_state_base::raw_dump(ostream& o) const {
 #if CHPSIM_COUPLED_CHANNELS
 	switch (status) {
+	case CHANNEL_INACTIVE: o << "[empty]"; break;	// empty?
+	case CHANNEL_RECEIVER_BLOCKED: o << "[wait]"; break;
 	case CHANNEL_SENDER_BLOCKED: ChannelData::raw_dump(o); break;
 		// implies full
-	case CHANNEL_INACTIVE: o << "[ack]"; break;	// empty
-	case CHANNEL_RECEIVER_BLOCKED: o << "[wait]"; break;
-	case CHANNEL_RECEIVED: o << "[recvd]"; break;
-	case CHANNEL_SENT: o << "[sent]"; break;
+	case CHANNEL_RECEIVED: ChannelData::raw_dump(o) << "[recvd]"; break;
+	case CHANNEL_SENT: ChannelData::raw_dump(o) << " [sent]"; break;
 	default: break;
 	}
 #else

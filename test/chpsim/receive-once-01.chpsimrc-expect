@@ -13,5 +13,5 @@ queue should be empty (deadlock!)
 event queue:
 check queue:
 	(empty)
-X : chan(int<32>) X = (0) [empty]
+X : chan(int<32>) X = (0) [wait]
 time: 10
