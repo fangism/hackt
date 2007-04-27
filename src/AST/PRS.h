@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.5.44.2 2007/04/26 22:44:22 fang Exp $
+	$Id: PRS.h,v 1.5.44.3 2007/04/27 17:51:11 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -310,6 +310,11 @@ public:
 	ROOT_CHECK_PROTO;
 #endif
 	PRS_ITEM_CHECK_PROTO;
+
+protected:
+	bool
+	__check_rules(context&, checked_rules_type&) const;
+
 };	// end class body
 
 //=============================================================================

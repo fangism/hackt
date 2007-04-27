@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-07:
+	  Clean-up of previous patch, along with some code refactoring
+		to reduce duplication.  
+
+
 2007-04-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-16-PRS-07-06:

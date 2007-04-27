@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.18.28.1 2007/04/26 22:44:25 fang Exp $
+	$Id: PRS.h,v 1.18.28.2 2007/04/27 17:51:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -358,9 +358,16 @@ public:
 	void
 	push_back(excl_ptr<rule>&);
 
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+private:
 	void
 	collect_transient_info(persistent_object_manager&) const;
 
+protected:
+	// these are also used by rule_loop
 	void
 	write_object(const persistent_object_manager&, ostream&) const;
 
@@ -373,7 +380,7 @@ public:
 	A set of rules to be repeatedly unrolled in a loop.  
 	Could derive privately from nested_rules...
  */
-class rule_loop : public rule, private meta_loop_base {
+class rule_loop : public nested_rules, private meta_loop_base {
 	typedef	rule_loop			this_type;
 	typedef	rule_set::value_type		value_type;
 private:
@@ -391,14 +398,9 @@ public:
 
 	PRS_UNROLL_RULE_PROTO;
 
-	void
-	check(void) const;
-
-	excl_ptr<rule>
-	expand_complement(void);
-
-	void
-	push_back(excl_ptr<rule>&);
+	using nested_rules::check;
+	using nested_rules::expand_complement;
+	using nested_rules::push_back;
 
 	void
 	collect_transient_info(persistent_object_manager&) const;

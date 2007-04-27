@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.24.4.3 2007/04/26 22:44:21 fang Exp $
+	$Id: PRS.cc,v 1.24.4.4 2007/04/27 17:51:10 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -539,6 +539,21 @@ body::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return false on error.
+ */
+bool
+body::__check_rules(context& c, checked_rules_type& checked_rules) const {
+	NEVER_NULL(rules);
+	rules->check_list_omit_null(checked_rules, &body_item::check_rule, c);
+		// optional: now allow NULLs from ignored language extensions
+	const checked_rules_type::const_iterator
+		null_iter(find(checked_rules.begin(), checked_rules.end(), 
+			body_item::return_type()));
+	return null_iter == checked_rules.end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	NOTE: remember to update return type with ROOT_CHECK_PROTO.
 	Currently, exits upon error.  
  */
@@ -551,12 +566,7 @@ if (rules) {
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	// if !pd, then prs is in a top-level scope (outside definition)
 	checked_rules_type checked_rules;
-	rules->check_list_omit_null(checked_rules, &body_item::check_rule, c);
-		// optional: now allow NULLs from ignored language extensions
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	if (null_iter == checked_rules.end()) {
+	if (__check_rules(c, checked_rules)) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
@@ -611,11 +621,7 @@ if (rules) {
 	// copied from body::check_rule
 	// const never_ptr<definition_base> d(c.get_current_open_definition());
 	checked_rules_type checked_rules;
-	rules->check_list(checked_rules, &body_item::check_rule, c);
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	if (null_iter == checked_rules.end()) {
+	if (__check_rules(c, checked_rules)) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
