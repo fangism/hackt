@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Trace.h"
-	$Id: Trace.h,v 1.3 2007/04/20 18:26:12 fang Exp $
+	$Id: Trace.h,v 1.3.2.1 2007/04/27 01:16:20 fang Exp $
 	Simulation execution trace structures.  
 	To reconstruct a full trace with details, the object file used
 	to simulate must be loaded.  
@@ -575,6 +575,13 @@ public:
 	push_back_event(const event_trace_point& p) {
 		return current_chunk.push_back_event(p) +previous_events;
 	}
+
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	trace_index_type
+	last_event_trace_id(void) const {
+		return current_chunk.event_count() +previous_events -1;
+	}
+#endif
 
 	void
 	flush(void);

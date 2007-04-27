@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.14 2007/04/25 00:46:39 fang Exp $
+	$Id: State.cc,v 1.8.2.15 2007/04/27 01:16:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -512,7 +512,9 @@ do {
 		status.second = __step(ei, cause_event_id, cause_trace_id);
 		// enqueue these events for first-checking (after delay)
 		for_each(c.first_checks.begin(), c.first_checks.end(),
-			event_enqueuer(*this, ei, cause_trace_id));
+			event_enqueuer(*this, ei, 
+			(is_tracing() ?
+				trace_manager->last_event_trace_id() : 0)));
 		// c.first_checks.clear();	// not needed, loop will exit
 #else
 	return __step(ei, cause_event_id, cause_trace_id);
