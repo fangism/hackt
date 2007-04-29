@@ -1,0 +1,91 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	357
+	23	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	359
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    bogus = process-definition (defined) bogus(
+        bool<> x
+        bool<> y
+        bool<> z
+      )
+      In definition "bogus", we have: {
+      Instances:
+        x = bool<> bogus::x
+        y = bool<> bogus::y
+        z = bool<> bogus::z
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        bool<> z
+      prs:
+        x -> y-
+                ~y -> z+
+
+      footprint: {
+        x = bool^0 = bogus::x (1) 
+        y = bool^0 = bogus::y (2) 
+        z = bool^0 = bogus::z (3) 
+        Created state:
+        bool instance pool:
+        1	bogus::x
+        2	bogus::y
+        3	bogus::z
+        resolved prs:
+        x -> y-
+        ~y -> z+
+      }
+      }
+
+  Instances:
+    Z = bogus<> Z
+}
+
+footprint: {
+  Z = process bogus<>^0 = Z (1) (
+    x = bool^0 = Z.x (1) 
+    y = bool^0 = Z.y (2) 
+    z = bool^0 = Z.z (3) 
+  )
+  Created state:
+  process instance pool:
+  1	Z
+  bool instance pool:
+  1	Z.x
+  2	Z.y
+  3	Z.z
+}

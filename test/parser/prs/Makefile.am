@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.30.18.2 2007/04/11 20:50:10 fang Exp $
+#	$Id: Makefile.am,v 1.30.18.3 2007/04/29 20:56:14 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,7 +15,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	spec_min_sep-02 spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
 	loop-05 loop-07 \
 	cond-01 \
-	top-level-02 top-level-03
+	top-level-02 top-level-03 \
+	precharge-01
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -41,9 +42,10 @@ HACKT_PARSE_TEST_PASSES = \
 	top-level-01\
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
-	tree-00 tree-01 \
-	subckt-00 \
-	internal-node-00
+	tree-00 tree-01 tree-02 tree-03 \
+	subckt-00 subckt-01 \
+	internal-node-00 \
+	precharge-00
 
 # coincidentally:
 HACKT_UNROLL_TEST_PASSES = $(HACKT_OBJ_TEST_SUBJECTS)
@@ -71,7 +73,11 @@ HACKT_CREATE_TEST_PASSES = \
 	bug-001 \
 	top-level-01 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
-	lvs-xcpl-inv-01
+	lvs-xcpl-inv-01 \
+	tree-02 tree-03 \
+	subckt-01
+
+# TODO: precharge-00 etc. to middle and back-end tests
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
@@ -103,7 +109,9 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	size-01 size-03 size-04 size-05 \
 	weak-01 weak-02 \
 	bug-001 \
-	top-level-01
+	top-level-01 \
+	tree-02 tree-03 \
+	subckt-01
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 \
@@ -141,7 +149,8 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
 	cond-01 \
 	loop-05 loop-07 \
-	top-level-03
+	top-level-03 \
+	precharge-01
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac

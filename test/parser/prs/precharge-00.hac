@@ -1,0 +1,43 @@
+// "precharge-00.hac"
+// testing precharge annotations
+// should pass (though syntax is just ignored)
+
+/**
+  a &{+expr} b
+for a precharge to Vdd (indicated by +), and
+
+  a &{-expr} b
+for a precharge to GND (indicated by -). Also, the type of the
+expression indicates which transistor type gets used. So, for instance
+**/
+
+defproc pchg_test(bool a, b, c, en) {
+prs {
+
+  a &{+en} b -> c-
+
+/**
+specifies a precharge to Vdd with n-type transistors (since en is
+uninverted). 
+**/
+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+defproc pchg_test2(bool a, b, c, _en) {
+prs {
+/**
+The same precharge with p-type transistors would be
+written
+**/
+
+  a &{+~_en} b -> c-
+
+/**
+(assuming _en was the complement of en.)
+**/
+
+} // end prs
+} // end defproc
+

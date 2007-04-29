@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.24.6.5 2007/04/26 22:44:26 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.24.6.6 2007/04/29 20:56:11 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2078,6 +2078,7 @@ prs_not
 	| prs_unary_expr { $$ = $1; }
 	;
 
+/* only allow precharge notation on & operator -- Clint */
 prs_and
 	: prs_and '&' prs_operator_attribute_optional prs_not
 		{ $$ = new logical_expr($1, $2, $4); }
@@ -2085,8 +2086,8 @@ prs_and
 	;
 
 prs_or
-	: prs_or '|' prs_operator_attribute_optional prs_and
-		{ $$ = new logical_expr($1, $2, $4); }
+	: prs_or '|' prs_and
+		{ $$ = new logical_expr($1, $2, $3); }
 	| prs_and { $$ = $1; }
 	;
 

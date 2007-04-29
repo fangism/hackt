@@ -1,0 +1,12 @@
+// "precharge-01.hac"
+// testing precharge annotations
+// should fail (precharge only applies to &, not |)
+
+defproc pchg_fail(bool a, b, c, en) {
+prs {
+
+  a |{+en} b -> c-
+
+}
+}
+
