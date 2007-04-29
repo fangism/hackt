@@ -16,7 +16,7 @@ c : bool c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	20	18	0	
+	20	18	0	[ a -> ... : b -> ... : c -> ... ]
 a : bool a = 1
 b : bool b = 0
 c : bool c = 0

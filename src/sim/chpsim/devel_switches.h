@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.8 2007/04/27 05:43:39 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.9 2007/04/29 05:56:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -110,6 +110,8 @@
 	Goal: 1?
 	Status: done, stably tested
 	Priority: high -- for shared library arrangements
+	TODO: perm this after merge to mainline because we cannot
+		support previous versions with CHPSIM_DELAYED_SUCCESSOR_CHECKS.
  */
 #define	CHPSIM_VISIT_EXECUTE			1
 

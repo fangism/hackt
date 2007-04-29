@@ -34,7 +34,7 @@ b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	40	3	0	
+	40	3	0	[ a -> ... : ~a -> ... ]
 a : bool a = 0
 b : bool b = 0
 event queue:

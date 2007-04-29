@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.4.2.2 2007/04/27 05:43:36 fang Exp $
+	$Id: nonmeta_variable.h,v 1.4.2.3 2007/04/29 05:56:26 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -341,6 +341,11 @@ public:
 
 #if CHPSIM_COUPLED_CHANNELS
 	bool
+	probe(void) const {
+		return status == CHANNEL_SENDER_BLOCKED;
+	}
+
+	bool
 	can_receive(void) const {
 		return status == CHANNEL_SENDER_BLOCKED
 			|| status == CHANNEL_SENT;
@@ -432,6 +437,11 @@ public:
 #else	// CHPSIM_COUPLED_CHANNELS
 	bool
 	can_receive(void) const { return full; }
+
+	bool
+	probe(void) const {
+		return can_receive();
+	}
 
 	bool
 	can_send(void) const { return !full; }

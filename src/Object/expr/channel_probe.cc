@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/channel_probe.cc"
-	$Id: channel_probe.cc,v 1.2 2007/02/26 22:00:44 fang Exp $
+	$Id: channel_probe.cc,v 1.2.8.1 2007/04/29 05:56:27 fang Exp $
  */
 
 #include <iostream>
@@ -118,7 +118,7 @@ channel_probe::__nonmeta_resolve_rvalue(const nonmeta_context_base& c,
 	} else {
 		const ChannelState&
 			nc(c.values.get_pool<channel_tag>()[chan_index]);
-		return return_type(new pbool_const(nc.can_receive()));
+		return return_type(new pbool_const(nc.probe()));
 	}
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.17 2007/04/27 20:38:06 fang Exp $
+	$Id: State.cc,v 1.8.2.18 2007/04/29 05:56:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -416,13 +416,17 @@ State::dequeue_event(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Peek at the time of the next event.  
-	\pre event queue must not be empty
+	\pre event queue must not be empty (either immedate or checking)
  */
 State::time_type
 State::next_event_time(void) const {
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	INVARIANT(!check_event_queue.empty());
-	return check_event_queue.begin()->time;
+	if (!immediate_event_fifo.empty()) {
+		return immediate_event_fifo.begin()->time;
+	} else {
+		INVARIANT(!check_event_queue.empty());
+		return check_event_queue.begin()->time;
+	}
 #else
 	INVARIANT(!event_queue.empty());
 	return event_queue.begin()->time;
@@ -1133,12 +1137,22 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 {
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// NOTE: this means that an event is scheduled to be CHECKED not
-	// necessarily executed.  
+	// necessarily executed.  Only events in immediate_event_fifo are
+	// are guaranteed to execute.
+	o << "in queue: ";
+	if (find_if(immediate_event_fifo.begin(), immediate_event_fifo.end(), 
+			event_placeholder_type::index_finder(ei))
+			== immediate_event_fifo.end()) {
+		o << "no";
+	} else {
+		o << "yes";
+	}
 	const event_queue_type& temp(check_event_queue);	// just alias
+	o << "\nin check queue: ";
 #else
 	const event_queue_type& temp(event_queue);	// just alias
-#endif
 	o << "in queue: ";
+#endif
 	if (find_if(temp.begin(), temp.end(), 
 			event_placeholder_type::index_finder(ei))
 			== temp.end()) {
@@ -1482,6 +1496,11 @@ State::save_checkpoint(ostream& o) const {
 }{
 	// save the event queue
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	size_t s = immediate_event_fifo.size();
+	write_value(o, s);
+	for_each(immediate_event_fifo.begin(), immediate_event_fifo.end(), 
+		value_writer<event_placeholder_type>(o));
+}{
 	const event_queue_type& temp(check_event_queue);	// just alias
 #else
 	const event_queue_type& temp(event_queue);	// just alias
@@ -1519,12 +1538,13 @@ State::load_checkpoint(istream& i) {
 	}
 	// restore event subscription state
 {
+	size_t j = 0;
 	size_t s;
 	read_value(i, s);
-	size_t j = 0;
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), *this);
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	immediate_event_fifo.clear();
 	check_event_queue.clear();
 #else
 	event_queue.clear();
@@ -1542,7 +1562,22 @@ State::load_checkpoint(istream& i) {
 		}
 		event_pool[ei].subscribe_deps(c, ei);
 	}
-}{
+}
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+{
+	// restore the immediate event queue
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	value_reader<event_placeholder_type> read(i);
+	for ( ; j<s; ++j) {
+		event_placeholder_type ep;
+		read(ep);
+		immediate_event_fifo.push_back(ep);
+	}
+}
+#endif
+{
 	// restore the event queue
 	size_t s;
 	read_value(i, s);

@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-22:
+	  Selection-events are now 'executed', no longer using
+		DEFER_TO_SUCCESSOR-style execution.  
+		More motivation to fuse check-and-execute!
+	  selection-events are now printed briefly: [G -> ... ]
+		chpsimallocdump tests have been updated accordingly.  
+	  Checkpoint diffs fixed by saving and restoring immediate_event_fifo.
+	  Large chunk of test updates, still more to go.
+	  Issue with probes: needs to wake-up when sender is blocked, 
+		but sender blocking (from first-check) doesn't
+		cause a wake-up with change of event status!
+	  Fixed: probe() true only when CHANNEL_SENDER_BLOCKED. 
+	  Reminder: process new TODO tests in test/chpsim.
+
+
 2007-04-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-21:

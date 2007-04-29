@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.12 2007/04/27 20:38:05 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.13 2007/04/29 05:56:30 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -324,13 +324,26 @@ EventRechecker::visit(const guarded_action&) {
 	so this does nothing other than evaluate guards, via recheck().  
 	Q: this is checked twice: pre-enqueue, and during execution.
 		What if guard is unstable?  and conditions change?
+	TODO: unify first-check and execute (CHPSIM_DELAYED_SUCCESSOR_CHECKS),
+		to avoid stupid double-evaluation.  
  */
 void
-EventExecutor::visit(const deterministic_selection&) {
+EventExecutor::visit(const deterministic_selection& ds) {
 	STACKTRACE_CHPSIM_VERBOSE;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// really stupid to re-evaluate, fix later...
+	guarded_action::selection_evaluator G(context);	// needs reference wrap
+	for_each(ds.begin(), ds.end(),
+		guarded_action::selection_evaluator_ref(G));
+	INVARIANT(G.ready.size() == 1);
+	EventNode& t(context.get_event());	// this event
+	const size_t ei = t.successor_events[G.ready.front()];
+	context.first_checks.insert(ei);
+#else
 	// never enqueues itself, only successors
 	// see recheck() below
 	ICE_NEVER_CALL(cerr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -367,20 +380,22 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		break;
 	}
 	case 1: {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		ret = RECHECK_UNBLOCKED_THIS;
+#else
 		EventNode& t(context.get_event());	// this event
 		const size_t ei = t.successor_events[G.ready.front()];
 		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
 		t.reset_countdown();
 		// act like this event (its predecessor) executed
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
 		// recheck it on the spot
 		EventNode& suc(context.event_pool[ei]);
 		const nonmeta_context::event_setter x(context, &suc);
 		// temporary, too lazy to copy, will restore upon destruction
 		suc.recheck(context, ei);
 		ret = RECHECK_DEFERRED_TO_SUCCESSOR;
+#endif
 		break;
 	}
 	default:
