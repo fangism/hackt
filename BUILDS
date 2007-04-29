@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.74 2007/04/29 22:02:08 fang Exp $
+	$Id: BUILDS,v 1.75 2007/04/29 22:08:47 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -391,5 +391,4 @@ config-CXXFLAGS: -g0 -O2 -Wno-cast-align
 config-LIBS:   -ltermcap 
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
-
 
