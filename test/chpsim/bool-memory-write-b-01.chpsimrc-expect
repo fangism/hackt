@@ -1,53 +1,56 @@
 expect failure on bad write-access out-of-bounds 
 	0	0	0	null
 	10	6	1	
-	10	11	3	int_source::S!(0)
-	10	16	5	bool_source_constant::S!(true)
-	10	17	6	bool_source_constant::S!(true)
-	20	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
 	20	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	30	14	3	int_source::S!(1)
+	20	17	6	bool_source_constant::S!(true)
+	20	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	20	11	3	int_source::S!(0)
 	30	3	1	
-	30	17	6	bool_source_constant::S!(true)
 	40	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	50	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	40	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
 	50	6	1	
-	60	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
+	50	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
 	60	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	60	17	6	bool_source_constant::S!(true)
 	60	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	70	7	2	null
-	70	16	5	bool_source_constant::S!(true)
-	70	17	6	bool_source_constant::S!(true)
+	60	14	3	int_source::S!(1)
+	60	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
+	60	16	5	bool_source_constant::S!(true)
 	70	3	1	
-	70	13	3	int_source::S!(2)
+	70	7	2	null
+	80	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
 	80	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	90	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	90	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
 	90	6	1	
 	100	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
+	100	16	5	bool_source_constant::S!(true)
 	100	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	100	17	6	bool_source_constant::S!(true)
 	100	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
+	100	13	3	int_source::S!(2)
 	110	7	2	null
-	110	16	5	bool_source_constant::S!(true)
-	110	17	6	bool_source_constant::S!(true)
 	110	3	1	
-	110	12	3	int_source::S!(6)
 	120	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	130	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	120	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
 	130	6	1	
-	140	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
+	130	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
 	140	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
+	140	17	6	bool_source_constant::S!(true)
 	140	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	150	7	2	null
-	150	16	5	bool_source_constant::S!(true)
-	150	17	6	bool_source_constant::S!(true)
+	140	12	3	int_source::S!(6)
+	140	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
+	140	16	5	bool_source_constant::S!(true)
 	150	3	1	
-	150	11	3	int_source::S!(0)
+	150	7	2	null
+	160	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
 	160	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	170	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	170	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
 	170	6	1	
 FATAL: reference to uninstantiated bool index [6]
 ERROR: unrolling aliases.
 Error resolving a single instance alias.
 Run-time error resolving nonmeta lvalue reference.
 Run-time error executing event 8.
+Run-time error while checking event.
+event[8]:	180	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])	[by:10]
 Caught run-time exception during execution.  Halting.

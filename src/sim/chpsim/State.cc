@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.18 2007/04/29 05:56:31 fang Exp $
+	$Id: State.cc,v 1.8.2.19 2007/04/30 20:28:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -498,6 +498,7 @@ do {
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	try {
 	// this is where events are checked for their first time as successor
 	if (immediate || ev.first_check(c, ei)) {
 		// don't recheck if event is immediate
@@ -528,6 +529,17 @@ do {
 		// subscribe to variables
 		STACKTRACE_INDENT_PRINT("event blocked waiting." << endl);
 		// this is already done in Event::recheck
+	}
+	} catch (...) {
+		// exception can now occur on first check, just like recheck
+		cerr << "Run-time error while checking event." << endl;
+		cerr << "event[" << ei << "]:";
+		dump_event(cerr, ei, current_time);
+		if (cause_event_id) {
+			cerr << "\t[by:" << cause_event_id << ']';
+		}
+		cerr << endl;
+		throw;
 	}
 } while (!status.first);
 	return status.second;

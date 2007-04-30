@@ -5,6 +5,14 @@
 
 2007-04-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-25:
+	  sim/chpsim/State.cc: first_check is now wrapped in exception
+		handler to give meaningful diagnostic messages.
+	  Updated all expect-fail chpsim tests.  
+	  Only two remaining chpsim tests fail on probe blocking, 
+		which we will fix next.
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-24:
 	  No source revision.
 	  Another batch of chpsim tests re-verified, mostly involving

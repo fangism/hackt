@@ -1,7 +1,9 @@
 # "select-fail-a-01.chpsimrc"
-#	$Id: select-fail-a-01.chpsimrc,v 1.2 2007/01/21 06:03:29 fang Exp $
+#	$Id: select-fail-a-01.chpsimrc,v 1.2.14.1 2007/04/30 20:28:20 fang Exp $
 # @haco@ select-fail-a.haco-a
 
+queue
+step
 queue
 step
 echo dies before this is reached
