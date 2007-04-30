@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-24:
+	  No source revision.
+	  Another batch of chpsim tests re-verified, mostly involving
+		deterministic selections, now in good shape again.
+	  Remaining to fix: probe breakage (need reference-update-on-block)
+		Some expect-fail tests haven't been addressed yet.
+
+
 2007-04-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-23:

@@ -32,18 +32,8 @@ check queue:
 	10	1	0	
 a : bool a = 0
 b : bool b = 0
-event queue:
-check queue:
-	time	eid	pid	event
-	20	17	0	[ a -> ... [] else -> ... ]
-a : bool a = 0
-b : bool b = 0
-event queue:
-check queue:
-	time	eid	pid	event
-	30	16	0	[ b -> ... [] else -> ... ]
-a : bool a = 0
-b : bool b = 0
+executing selection 
+executing selection 
 event queue:
 check queue:
 	time	eid	pid	event
@@ -62,18 +52,8 @@ check queue:
 	40	2	0	null
 a : bool a = 0
 b : bool b = 1
-event queue:
-check queue:
-	time	eid	pid	event
-	50	17	0	[ a -> ... [] else -> ... ]
-a : bool a = 0
-b : bool b = 1
-event queue:
-check queue:
-	time	eid	pid	event
-	60	16	0	[ b -> ... [] else -> ... ]
-a : bool a = 0
-b : bool b = 1
+executing selection 
+executing selection 
 event queue:
 check queue:
 	time	eid	pid	event
@@ -113,18 +93,8 @@ check queue:
 	70	2	0	null
 a : bool a = 1
 b : bool b = 0
-event queue:
-check queue:
-	time	eid	pid	event
-	80	17	0	[ a -> ... [] else -> ... ]
-a : bool a = 1
-b : bool b = 0
-event queue:
-check queue:
-	time	eid	pid	event
-	90	9	0	[ b -> ... [] else -> ... ]
-a : bool a = 1
-b : bool b = 0
+executing selection 
+executing selection 
 event queue:
 check queue:
 	time	eid	pid	event
@@ -143,18 +113,8 @@ check queue:
 	100	2	0	null
 a : bool a = 1
 b : bool b = 1
-event queue:
-check queue:
-	time	eid	pid	event
-	110	17	0	[ a -> ... [] else -> ... ]
-a : bool a = 1
-b : bool b = 1
-event queue:
-check queue:
-	time	eid	pid	event
-	120	9	0	[ b -> ... [] else -> ... ]
-a : bool a = 1
-b : bool b = 1
+executing selection 
+executing selection 
 event queue:
 check queue:
 	time	eid	pid	event
@@ -194,18 +154,8 @@ check queue:
 	130	2	0	null
 a : bool a = 0
 b : bool b = 0
-event queue:
-check queue:
-	time	eid	pid	event
-	140	17	0	[ a -> ... [] else -> ... ]
-a : bool a = 0
-b : bool b = 0
-event queue:
-check queue:
-	time	eid	pid	event
-	150	16	0	[ b -> ... [] else -> ... ]
-a : bool a = 0
-b : bool b = 0
+executing selection 
+executing selection 
 event queue:
 check queue:
 	time	eid	pid	event
@@ -224,10 +174,87 @@ check queue:
 	160	2	0	null
 a : bool a = 0
 b : bool b = 1
+executing selection 
+executing selection 
 event queue:
 check queue:
 	time	eid	pid	event
-	170	17	0	[ a -> ... [] else -> ... ]
+	180	14	0	
 a : bool a = 0
 b : bool b = 1
-time: 160
+event queue:
+check queue:
+	time	eid	pid	event
+	190	12	0	a := true
+	190	13	0	b := false
+a : bool a = 0
+b : bool b = 1
+event queue:
+check queue:
+	time	eid	pid	event
+	190	13	0	b := false
+	190	11	0	
+a : bool a = 1
+b : bool b = 1
+event queue:
+check queue:
+	time	eid	pid	event
+	190	11	0	
+	190	11	0	
+a : bool a = 1
+b : bool b = 0
+event queue:
+check queue:
+	time	eid	pid	event
+	190	10	0	null
+a : bool a = 1
+b : bool b = 0
+event queue:
+check queue:
+	time	eid	pid	event
+	190	2	0	null
+a : bool a = 1
+b : bool b = 0
+executing selection 
+executing selection 
+event queue:
+check queue:
+	time	eid	pid	event
+	220	8	0	b := true
+a : bool a = 1
+b : bool b = 0
+event queue:
+check queue:
+	time	eid	pid	event
+	220	3	0	null
+a : bool a = 1
+b : bool b = 1
+event queue:
+check queue:
+	time	eid	pid	event
+	220	2	0	null
+a : bool a = 1
+b : bool b = 1
+executing selection 
+executing selection 
+event queue:
+check queue:
+	time	eid	pid	event
+	240	7	0	
+a : bool a = 1
+b : bool b = 1
+event queue:
+check queue:
+	time	eid	pid	event
+	250	5	0	a := false
+	250	6	0	b := false
+a : bool a = 1
+b : bool b = 1
+event queue:
+check queue:
+	time	eid	pid	event
+	250	6	0	b := false
+	250	4	0	
+a : bool a = 0
+b : bool b = 1
+time: 250

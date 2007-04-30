@@ -1,16 +1,19 @@
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	10	14	0	
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	20	11	0	a := false
 	20	12	0	b := false
@@ -19,63 +22,80 @@ a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	20	12	0	b := false
 	20	13	0	c := false
-a : bool a = 0
-b : bool b = 0
-c : bool c = 0
-event queue:
-	time	eid	pid	event
-	20	13	0	c := false
-a : bool a = 0
-b : bool b = 0
-c : bool c = 0
-event queue:
-	time	eid	pid	event
 	30	10	0	
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
+	time	eid	pid	event
+	20	13	0	c := false
+	30	10	0	
+	30	10	0	
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event
+	30	10	0	
+	30	10	0	
+	30	10	0	
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
 	time	eid	pid	event
 	40	9	0	a := true
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
+executing selection 
 event queue:
+check queue:
 	time	eid	pid	event
-	50	6	0	b := true
+	60	6	0	b := true
 a : bool a = 1
 b : bool b = 0
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	60	5	0	c := false
+	70	5	0	c := false
 a : bool a = 1
 b : bool b = 1
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	70	4	0	null
+	80	4	0	null
+a : bool a = 1
+b : bool b = 1
+c : bool c = 0
+executing selection 
+event queue:
+check queue:
+	time	eid	pid	event
+	100	2	0	c := true
 a : bool a = 1
 b : bool b = 1
 c : bool c = 0
 event queue:
+check queue:
 	time	eid	pid	event
-	80	2	0	c := true
-a : bool a = 1
-b : bool b = 1
-c : bool c = 0
-event queue:
-	time	eid	pid	event
-	90	1	0	null
+	110	1	0	null
 a : bool a = 1
 b : bool b = 1
 c : bool c = 1
 event queue:
+check queue:
 	(empty)
 a : bool a = 1
 b : bool b = 1
 c : bool c = 1
-time: 90
+time: 110

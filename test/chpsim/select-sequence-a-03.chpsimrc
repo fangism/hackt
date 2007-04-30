@@ -1,5 +1,5 @@
 # "select-sequence-a-01.chpsimrc"
-#	$Id: select-sequence-a-01.chpsimrc,v 1.2.14.1 2007/04/30 18:33:30 fang Exp $
+#	$Id: select-sequence-a-03.chpsimrc,v 1.1.2.1 2007/04/30 18:33:32 fang Exp $
 # @haco@ select-sequence-a.haco-a
 
 queue
@@ -37,8 +37,6 @@ get a
 get b
 get c
 step
-echo executing selection
-step
 queue
 get a
 get b
@@ -54,7 +52,15 @@ get a
 get b
 get c
 step
-echo executing selection
+queue
+get a
+get b
+get c
+step
+queue
+get a
+get b
+get c
 step
 queue
 get a

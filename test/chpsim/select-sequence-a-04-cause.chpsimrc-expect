@@ -55,7 +55,13 @@ check queue:
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
-executing selection 
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	50	8	0	[ a -> ... [] ~a -> ... ]	[by:9]
+a : bool a = 1
+b : bool b = 0
+c : bool c = 0
 event queue:
 check queue:
 	time	eid	pid	event	cause
@@ -77,7 +83,13 @@ check queue:
 a : bool a = 1
 b : bool b = 1
 c : bool c = 0
-executing selection 
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	90	3	0	[ ~b -> ... [] else -> ... ]	[by:4]
+a : bool a = 1
+b : bool b = 1
+c : bool c = 0
 event queue:
 check queue:
 	time	eid	pid	event	cause

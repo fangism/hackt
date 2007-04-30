@@ -1,6 +1,7 @@
 	0	0	0	null
 	10	5	1	source::b := true
 	20	1	1	source::R!(source::b)
+	20	6	2	buf::l?(buf::b)
 time: 50
 time: 50
 time: 60
