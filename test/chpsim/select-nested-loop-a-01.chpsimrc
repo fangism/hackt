@@ -1,5 +1,5 @@
 # "select-nested-loop-a-01.chpsimrc"
-#	$Id: select-nested-loop-a-01.chpsimrc,v 1.2 2007/01/21 06:03:35 fang Exp $
+#	$Id: select-nested-loop-a-01.chpsimrc,v 1.2.14.1 2007/04/30 03:55:43 fang Exp $
 # @haco@ select-nested-loop-a.haco-a
 
 queue
@@ -22,9 +22,25 @@ queue
 get a
 get b
 step
+echo executing selection
+step
+echo executing selection
+step
 queue
 get a
 get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+echo executing selection
+step
+echo executing selection
 step
 queue
 get a
@@ -50,9 +66,25 @@ queue
 get a
 get b
 step
+echo executing selection
+step
+echo executing selection
+step
 queue
 get a
 get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+echo executing selection
+step
+echo executing selection
 step
 queue
 get a
@@ -78,9 +110,25 @@ queue
 get a
 get b
 step
+echo executing selection
+step
+echo executing selection
+step
 queue
 get a
 get b
+step
+queue
+get a
+get b
+step
+queue
+get a
+get b
+step
+echo executing selection
+step
+echo executing selection
 step
 queue
 get a
@@ -106,9 +154,9 @@ queue
 get a
 get b
 step
-queue
-get a
-get b
+echo executing selection
+step
+echo executing selection
 step
 queue
 get a
@@ -122,21 +170,9 @@ queue
 get a
 get b
 step
-queue
-get a
-get b
+echo executing selection
 step
-queue
-get a
-get b
-step
-queue
-get a
-get b
-step
-queue
-get a
-get b
+echo executing selection
 step
 queue
 get a

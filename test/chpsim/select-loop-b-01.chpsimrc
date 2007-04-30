@@ -1,5 +1,5 @@
 # "select-loop-b-01.chpsimrc"
-#	$Id: select-loop-b-01.chpsimrc,v 1.2 2007/01/21 06:03:33 fang Exp $
+#	$Id: select-loop-b-01.chpsimrc,v 1.2.14.1 2007/04/30 03:55:42 fang Exp $
 # @haco@ select-loop-b.haco-a
 
 queue
@@ -10,9 +10,17 @@ queue
 get a
 get b
 step
+echo executing selection
+step
 queue
 get a
 get b
+step
+queue
+get a
+get b
+step
+echo executing selection
 step
 queue
 get a
@@ -26,9 +34,7 @@ queue
 get a
 get b
 step
-queue
-get a
-get b
+echo executing selection
 step
 queue
 get a
