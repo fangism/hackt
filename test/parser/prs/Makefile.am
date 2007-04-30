@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.30.18.3 2007/04/29 20:56:14 fang Exp $
+#	$Id: Makefile.am,v 1.30.18.4 2007/04/30 21:33:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -45,7 +45,8 @@ HACKT_PARSE_TEST_PASSES = \
 	tree-00 tree-01 tree-02 tree-03 \
 	subckt-00 subckt-01 \
 	internal-node-00 \
-	precharge-00
+	precharge-00 \
+	unstab-01
 
 # coincidentally:
 HACKT_UNROLL_TEST_PASSES = $(HACKT_OBJ_TEST_SUBJECTS)
@@ -75,7 +76,8 @@ HACKT_CREATE_TEST_PASSES = \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 \
-	subckt-01
+	subckt-01 \
+	unstab-01
 
 # TODO: precharge-00 etc. to middle and back-end tests
 
@@ -111,7 +113,8 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	bug-001 \
 	top-level-01 \
 	tree-02 tree-03 \
-	subckt-01
+	subckt-01 \
+	unstab-01
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 \

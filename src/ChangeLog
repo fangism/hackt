@@ -5,10 +5,14 @@
 
 
 2007-04-30	Virantha Ekanayake	<viran@csl.cornell.edu>
+
 	* HACKT-00-01-04-main-00-81-16-PRS-07-10:
 	  Added unstab attribute to production rules
+	  Also added a minimalist test-case in parser/prs (Fang).
+
 
 2007-04-29	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-16-PRS-07-09:
 	  As per request by Virantha:
 		defchan is now treated like a process, where the 
