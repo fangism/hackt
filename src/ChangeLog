@@ -5,6 +5,21 @@
 
 2007-04-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-16-PRS-07-09:
+	  As per request by Virantha:
+		defchan is now treated like a process, where the 
+			:> built-chan-type is ignored, and the 
+			send/recv CHP bodies are ignored.  
+		Only change was done in the parser, leaving middle-end
+			type-checking unchanged, merely piggy-backing
+			off of the process infrastructure.
+		I repeat: defchan == defproc
+		User-defined channels will never connect to fundamental
+			channel types this way, so it shall remain broken.
+		Small handful of parser expect-fail tests updated for bison.
+	  Added defchan test case from Virantha, works as expected.  
+
+
 	* HACKT-00-01-04-main-00-81-16-PRS-07-08:
 	  User-defined channels now accept SPEC directives in body.
 	  parser/hackt-parse.yy.in: only allow expression attributes

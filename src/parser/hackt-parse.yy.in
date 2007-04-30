@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.24.6.6 2007/04/29 20:56:11 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.24.6.7 2007/04/30 01:27:40 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -30,6 +30,7 @@
 #include "lexer/hackt-lex-options.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
+#include "Object/devel_switches.h"	// for DEFCHAN_LIKE_PROCESS
 
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
@@ -546,7 +547,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
 %type	<_user_data_type_prototype>	declare_datatype_proto
-%type	<_user_chan_type_prototype>	declare_chan_proto
+/* for DEFCHAN_LIKE_PROCESS */
+%type	<_process_prototype>	declare_chan_proto
+/* %type	<_user_chan_type_prototype>	declare_chan_proto */
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
 %type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
 %type	<_template_formal_decl_list>	template_formal_decl_nodefault_list_in_angles template_formal_decl_nodefault_list
@@ -574,7 +577,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_enum_def>		defenum
 %type	<_enum_member_list>	enum_member_list
 %type	<_user_data_type_def>	defdatatype
-%type	<_user_chan_type_def>	defchan
+/* for DEFCHAN_LIKE_PROCESS */
+%type	<_process_def>	defchan
+/* %type	<_user_chan_type_def>	defchan	*/
 %type	<_chp_body>	set_body get_body send_body recv_body
 %type	<_data_param_decl_list>	data_param_decl_list
 %type	<_data_param_decl_list>	data_param_decl_list_in_parens
@@ -1206,17 +1211,37 @@ enum_member_list
 
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-	  data_param_decl_list_in_parens ';'
-		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
-		  DELETE_TOKEN($7); }
+	/* for DEFCHAN_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens ';'
+/*	  data_param_decl_list_in_parens ';'	*/
+		{
+#if DEFCHAN_LIKE_PROCESS
+		$$ = new process_prototype($1, $2, $3, $6);
+		  DELETE_TOKEN($4); DELETE_TOKEN($5); DELETE_TOKEN($7);
+#else
+		$$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7);
+#endif
+		}
 	;
 	
 defchan
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-          data_param_decl_list_in_parens
+	/* for DEFCHAN_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens
+/*	  data_param_decl_list_in_parens	*/
 	  '{' optional_definition_body send_body recv_body '}'
-		{ $$ = new user_chan_type_def(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11); }
+		{
+#if DEFCHAN_LIKE_PROCESS
+		WRAP_LIST($7, $8, $11);
+		$$ = new process_def($1, $2, $3, $6, $8);
+		DELETE_TOKEN($4); DELETE_TOKEN($5);
+		DELETE_TOKEN($9); DELETE_TOKEN($10);
+#else
+		$$ = new user_chan_type_def(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+#endif
+		}
 	;
 
 send_body

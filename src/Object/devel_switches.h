@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.40 2007/03/11 16:34:16 fang Exp $
+	$Id: devel_switches.h,v 1.40.4.1 2007/04/30 01:27:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -178,6 +178,27 @@
 	Priority: low (not needed before graduation)
  */
 #define	CHP_GENERAL_ATTRIBUTES			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to treat user-defined channels like processes, 
+	in that they have subinstances, can be instantiated with their
+	members, and are processed through cflat.  
+	Type-checking? instances? built-in channel types?
+	Connection between built-in channel types and user-defined
+	will NOT work yet.
+	THIS COULD BE HIGHLY INVASIVE.
+	Rationale: so that certain unnamed parties can use defchans
+		like processes in the f'd up shadow toolchain...
+	Goal: ?
+	Priority: damn it
+	Resolution: try to hack the parser -- success!
+		Parser treats defchan decls like process, rest of middle-end
+		and type-checking is unchanged.  
+	Status: done, tested minimally
+	Afterthought: this feels really really dirty...
+ */
+#define	DEFCHAN_LIKE_PROCESS			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later
