@@ -5,6 +5,18 @@
 
 2007-05-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-28:
+	  Object/nonmeta_variable.h: has_trace_value() for channels, 
+		is true when channel has just received or sent.
+		This allows trace reader to see <value>/'ack in
+		strict alternation regardless of whether send or receive
+		was more critical.  The latter of the atomic pair will
+		always reset channel back to inactive.  
+	  guile/chpsim-wrap.cc: tracing channel values now calls
+		has_trace_value (new) to extract channel state.  
+	  This batch of updated test cases uses this.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-27:
 	  No source revision.
 	  Updated marge batch of chpsim-guile test cases, mostly trivial

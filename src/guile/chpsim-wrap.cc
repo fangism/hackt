@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.3 2007/04/20 18:25:54 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.3.2.1 2007/05/01 21:37:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -237,7 +237,12 @@ struct changed_state_extractor<channel_tag> :
 		static const SCM scm_ack = scm_permanent_object(
 			scm_from_locale_symbol("ack"));	// 'ack symbol
 		SCM scm_dat = scm_ack;
-		if (i.raw_data.can_receive()) {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		if (i.raw_data.has_trace_value())
+#else
+		if (i.raw_data.can_receive())
+#endif
+		{
 			const canonical_fundamental_chan_type_base::datatype_list_type&
 				cdl(sm.get_pool<channel_tag>()[i.global_index]
 					.channel_type->get_datatype_list());

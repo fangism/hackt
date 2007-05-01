@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.3.10.3 2007/04/27 20:38:04 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.3.10.4 2007/05/01 21:37:02 fang Exp $
  */
 
 #include <iostream>
@@ -268,7 +268,6 @@ ChannelData::raw_dump(ostream& o) const {
 channel_state_base::channel_state_base() :
 		ChannelData(), 
 #if CHPSIM_COUPLED_CHANNELS
-//		aux_enqueue(0), 
 		status(CHANNEL_INACTIVE)
 #else
 		full(false)
@@ -286,7 +285,6 @@ void
 channel_state_base::reset(void) {
 	ChannelData::reset();
 #if CHPSIM_COUPLED_CHANNELS
-//	aux_enqueue = 0;
 	status = CHANNEL_INACTIVE;
 #else
 	full = false;

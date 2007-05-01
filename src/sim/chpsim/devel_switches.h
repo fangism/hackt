@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5.6.9 2007/04/29 05:56:32 fang Exp $
+	$Id: devel_switches.h,v 1.5.6.10 2007/05/01 21:37:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -42,8 +42,7 @@
 		the occupancy bit does not block a channel.  
 	Goal: 1
 	Priority: top
-	Status: in development, paused until we take care of changing
-		the execution model first.  
+	Status: done, tested.
 	Co-dependent: CHPSIM_DELAYED_SUCCESSOR_CHECKS
  */
 #define	CHPSIM_COUPLED_CHANNELS			1
@@ -54,12 +53,17 @@
 	Places affected: event_placeholder_type, ...
 	Rationale: perfect synchronization that doesn't split up the event
 		pair in FIFO scheduling.
-	Goal: 1
-	Priority: high
+	Goal: ?
+	Priority: ?
 	Status: not begun, will wait until 
-	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS (?)
+	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	May not use this if we accept atomic events being split
 	in the immediate event fifo (pseudo atomic).
+	Resolution: not intending to work, current scheme with pseudo-atomic
+		send-receive pairs in the immediate_event_fifo is good enough, 
+		and keeps things simple without introducing yet another 
+		corner case.
+	TODO: smite this flag
  */
 #define CHPSIM_EVENT_PAIRS			0
 
@@ -69,12 +73,11 @@
 	Rationale: to faciliate send/receive atomicity/simultaneity.
 	Goal: 1
 	Priority: TOP
-	Status: drafted, in early testing
-	Prerequisite: none
+	Status: done, tested
+	Co-dependent: CHPSIM_COUPLED_CHANNELS
 	Plan: instate a first_recheck_queue, where successors first arrive.
 		step() will now recheck events in order until one (or two)
 		*actually* executes.  
-	Co-dependent: CHPSIM_COUPLED_CHANNELS
  */
 #define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
 
