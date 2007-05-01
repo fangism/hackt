@@ -19,7 +19,7 @@ channel deps: 5
 (11 . #<raw-chpsim-event-node: send: bool_split_select::O[3]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
 channel deps: 6 
 >)
-(12 . #<raw-chpsim-event-node: select: , pid: 3, #pred: 1, succ: 8 9 10 11 
+(12 . #<raw-chpsim-event-node: select: [ bool_split_select::c==0 -> ... [] bool_split_select::c==1 -> ... [] bool_split_select::c==2 -> ... [] bool_split_select::c==3 -> ... ], pid: 3, #pred: 1, succ: 8 9 10 11 
 int deps: 1 
 >)
 (13 . #<raw-chpsim-event-node: null: , pid: 3, #pred: 2, succ: 12 
