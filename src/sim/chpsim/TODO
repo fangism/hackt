@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.4.8.5 2007/04/30 18:33:22 fang Exp $
+#	$Id: TODO,v 1.4.8.6 2007/05/01 03:07:39 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -48,6 +48,9 @@ medium-priority:
 	checkpointing: [STATUS: basics done]
 		need to remember invocation options in state, 
 		and compare when loading checkpoint for consistency.  
+		Rigorous testing: take checkpoint at EVERY step to 
+			maximize coverage.  Can be expensive, so do this with 
+			select representative test cases.  
 	'nobreakall' or 'breaks-off' and 'breaks-on'
 	'nowatchall' is done, maybe alias to 'watches-on' and 'watches-off'
 		purpose: to be able to quickly turn off and restore

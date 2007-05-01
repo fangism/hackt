@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5.6.12 2007/04/27 05:43:39 fang Exp $
+	$Id: State.h,v 1.5.6.13 2007/05/01 03:07:39 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -401,6 +401,23 @@ private:
 	step_return_type
 	__step(const event_index_type, const event_index_type, const size_t);
 		// THROWS_STEP_EXCEPTION
+
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	template <class Tag>
+	void
+	__notify_updates_for_recheck_no_trace(const size_t);
+#endif
+
+	void
+	__notify_updates_for_recheck(const size_t);
+
+	void
+	__perform_rechecks(const event_index_type, 
+		const event_index_type
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		, const size_t
+#endif
+		);
 
 public:
 	step_return_type

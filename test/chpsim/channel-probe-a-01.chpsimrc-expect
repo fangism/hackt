@@ -1,21 +1,21 @@
 	0	0	0	null
-	10	4	1	bool_source::S!(true)
 	10	1	0	[#A]
 	20	3	0	A?(a)
-	20	5	1	bool_source::S!(false)
+	20	4	1	bool_source::S!(true)
 	30	2	0	B!(a)
 	30	6	2	bool_sink::B?(bool_sink::b)
 	40	1	0	[#A]
 	50	3	0	A?(a)
-	50	4	1	bool_source::S!(true)
+	50	5	1	bool_source::S!(false)
 	60	2	0	B!(a)
 	60	6	2	bool_sink::B?(bool_sink::b)
 	70	1	0	[#A]
 	80	3	0	A?(a)
-	80	5	1	bool_source::S!(false)
+	80	4	1	bool_source::S!(true)
 	90	2	0	B!(a)
 	90	6	2	bool_sink::B?(bool_sink::b)
 	100	1	0	[#A]
 	110	3	0	A?(a)
-	110	4	1	bool_source::S!(true)
-time: 110
+	110	5	1	bool_source::S!(false)
+	120	2	0	B!(a)
+time: 120

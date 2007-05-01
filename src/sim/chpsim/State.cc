@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.8.2.19 2007/04/30 20:28:15 fang Exp $
+	$Id: State.cc,v 1.8.2.20 2007/05/01 03:07:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -174,6 +174,9 @@ struct State::recheck_transformer {
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		// To accomodate blocking-sends that wake-up probes
+		// we must prevent self-wake up in this corner case.
+		if (cause_event_id != ei) {
 		// Now, the only events that should call this are ones
 		// that have been woken up by an update, not first-time.
 		// now that delays have been paid up-front, events that
@@ -186,10 +189,11 @@ struct State::recheck_transformer {
 					cause_event_id, cause_trace_id));
 			// this is an unfortunate overloaded re-use
 			// of event_placeholder_type.
-		}
-#else
+		} // end if recheck
+		} // end if self-wake-up
+#else	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		e.recheck(context, ei);
-#endif
+#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	}
 
 };	// end class recheck_transformer
@@ -525,10 +529,26 @@ do {
 #endif
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	} else {	// end if recheck
+		// TODO: is this on critical path?
 		// initial check failed predicate, block waiting, 
 		// subscribe to variables
 		STACKTRACE_INDENT_PRINT("event blocked waiting." << endl);
 		// this is already done in Event::recheck
+		// NOTE: a blocked channel send alters channel state
+		// so we need to recheck waiting probes
+		// CAUTION: self-modifying blocked events will effectively
+		// wake themselves up! taken care of in recheck_transformer.
+	if (!__updated_list.empty()) {
+		// INVARIANT: only channels can appear in this list!
+		__notify_updates_for_recheck_no_trace<channel_tag>(cause_trace_id);
+		// newly unblocked events will appear in immedate_event_fifo.
+		__perform_rechecks(ei, cause_event_id, cause_trace_id);
+	}
+		// DILEMMA: cause_trace_index is not exactly applicable
+		// because the blocking send hasn't actually executed yet,
+		// it is coupled with the receive, in the future!
+		// The best we can do is associate the last arriving cause
+		// with the cause of event being considered.  :-/
 	}
 	} catch (...) {
 		// exception can now occur on first check, just like recheck
@@ -545,6 +565,107 @@ do {
 	return status.second;
 #endif
 }	// end method step()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper routine for converting the updated reference list to
+	a set of events to recheck.
+	This also records in the trace file the state of modified variables
+		(when tracing is on, of course).
+	\param ti is the current event's trace index.  
+ */
+void
+State::__notify_updates_for_recheck(const size_t ti) {
+	typedef	update_reference_array_type::ref_bin_type::const_iterator
+							const_iterator;
+	// TODO: hello: template method, anybody?
+#define	CASE_META_TYPE_TAG(Tag)						\
+	{								\
+	const update_reference_array_type::ref_bin_type&		\
+		ub(__updated_list.ref_bin				\
+			[class_traits<Tag>::type_tag_enum_value]);	\
+	const_iterator ui(ub.begin()), ue(ub.end());			\
+	for ( ; ui!=ue; ++ui) {						\
+		const variable_type<Tag>::type&				\
+			v(instances.get_pool<Tag>()[*ui]);		\
+		if (is_tracing()) {					\
+			trace_manager->current_chunk			\
+				.push_back<Tag>(v, ti, *ui);		\
+		}							\
+		const event_subscribers_type& es(v.get_subscribers());	\
+		copy(es.begin(), es.end(), set_inserter(__rechecks));	\
+	}								\
+	}
+	CASE_META_TYPE_TAG(bool_tag)
+	CASE_META_TYPE_TAG(int_tag)
+	CASE_META_TYPE_TAG(enum_tag)
+	CASE_META_TYPE_TAG(channel_tag)
+#undef	CASE_META_TYPE_TAG
+}	// end __notify_updates_for_recheck()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+/**
+	This variation only processes updates and rechecks without
+	saving the state of modified variables to trace.  
+	Checkpoints, however, will still correctly pick up the current
+	value of any variable at any trace point.  
+ */
+template <class Tag>
+void
+State::__notify_updates_for_recheck_no_trace(const size_t ti) {
+	typedef	update_reference_array_type::ref_bin_type::const_iterator
+							const_iterator;
+	const update_reference_array_type::ref_bin_type&
+		ub(__updated_list.ref_bin
+			[class_traits<Tag>::type_tag_enum_value]);
+	const_iterator ui(ub.begin()), ue(ub.end());
+	for ( ; ui!=ue; ++ui) {
+		const typename variable_type<Tag>::type&
+			v(instances.template get_pool<Tag>()[*ui]);
+		const event_subscribers_type& es(v.get_subscribers());
+		copy(es.begin(), es.end(), set_inserter(__rechecks));
+	}
+}	// end __notify_updates_for_recheck()
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper routine to recheck all events accumulated in the 
+	__rechecks list member.  
+	\throw exception on fatal errors.  
+ */
+void
+State::__perform_rechecks(const event_index_type ei, 
+		const event_index_type cause_event_id
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		, const size_t ti
+#endif
+		) {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+// NOTE: since delays have been paid for up front, rechecked events that
+// now pass are immediately ready for execution, and hence should be placed
+// in the immediate_event_fifo.  Change happens in recheck_transformer.
+#endif
+try {
+	for_each(__rechecks.begin(), __rechecks.end(), 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		recheck_transformer(*this, ei, ti)
+#else
+		recheck_transformer(*this)
+#endif
+	);
+} catch (...) {
+	cerr << "Run-time error while rechecking events." << endl;
+	cerr << "event[" << ei << "]:";
+	dump_event(cerr, ei, current_time);
+	if (cause_event_id) {
+		cerr << "\t[by:" << cause_event_id << ']';
+	}
+	cerr << endl;
+	throw;
+}
+}	// end __perform_rechecks()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -595,32 +716,7 @@ State::__step(const event_index_type ei,
 	//		and subscribe them to the variables they depend on, 
 	//		a form of chaining.  
 	// Q: what are successor events blocked on? only guard expressions
-{
-	typedef	update_reference_array_type::ref_bin_type::const_iterator
-							const_iterator;
-#define	CASE_META_TYPE_TAG(Tag)						\
-	{								\
-	const update_reference_array_type::ref_bin_type&		\
-		ub(__updated_list.ref_bin				\
-			[class_traits<Tag>::type_tag_enum_value]);	\
-	const_iterator ui(ub.begin()), ue(ub.end());			\
-	for ( ; ui!=ue; ++ui) {						\
-		const variable_type<Tag>::type&				\
-			v(instances.get_pool<Tag>()[*ui]);		\
-		if (is_tracing()) {					\
-			trace_manager->current_chunk			\
-				.push_back<Tag>(v, ti, *ui);		\
-		}							\
-		const event_subscribers_type& es(v.get_subscribers());	\
-		copy(es.begin(), es.end(), set_inserter(__rechecks));	\
-	}								\
-	}
-	CASE_META_TYPE_TAG(bool_tag)
-	CASE_META_TYPE_TAG(int_tag)
-	CASE_META_TYPE_TAG(enum_tag)
-	CASE_META_TYPE_TAG(channel_tag)
-#undef	CASE_META_TYPE_TAG
-}
+	__notify_updates_for_recheck(ti);
 	// 4) immediately include this event's successors in list
 	//	to evaluate if ready to enqueue.
 	// selection of successors will depend on event_type, of course
@@ -629,29 +725,12 @@ State::__step(const event_index_type ei,
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
 #endif
+	__perform_rechecks(ei, cause_event_id
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-// NOTE: since delays have been paid for up front, rechecked events that
-// now pass are immediately ready for execution, and hence should be placed
-// in the immediate_event_fifo.  Change happens in recheck_transformer.
-#endif
-try {
-	for_each(__rechecks.begin(), __rechecks.end(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		recheck_transformer(*this, ei, ti)
-#else
-		recheck_transformer(*this)
+		, ti
 #endif
 	);
-} catch (...) {
-	cerr << "Run-time error while rechecking events." << endl;
-	cerr << "event[" << ei << "]:";
-	dump_event(cerr, ei, current_time);
-	if (cause_event_id) {
-		cerr << "\t[by:" << cause_event_id << ']';
-	}
-	cerr << endl;
-	throw;
-}
+	// TODO: factor out watch/break into subroutine
 	bool value_trig = false;
 	bool value_break = false;
 {

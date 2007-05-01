@@ -5,6 +5,22 @@
 
 2007-04-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-26:
+	  FIXED remaining regressions on channel probes!
+	  sim/chpsim/EventExecutor.cc: EventRechecker(channel_send) now
+		adds the referenced channel to the list of updates to 
+		propagate.  This is the only self-modify-checking
+		corner case, needed to support probes.  
+	  sim/chpsim/State.cc: Since blocking-sends "wake themselves up"
+		we must filter out unintentional self-checks, which is covered
+		in recheck_transformer.  
+		In ::step(), in the event where a recheck blocks, 
+			we now check for the blocked-send-to-probe wake-up.
+		code factoring: __notify_updates_for_recheck(), 
+			and __perform_rechecks().
+	  Next: hacchpsimguile test updates.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-25:
 	  sim/chpsim/State.cc: first_check is now wrapped in exception
 		handler to give meaningful diagnostic messages.

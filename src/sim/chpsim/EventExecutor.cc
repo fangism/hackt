@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2.6.13 2007/04/29 05:56:30 fang Exp $
+	$Id: EventExecutor.cc,v 1.2.6.14 2007/05/01 03:07:37 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -724,6 +724,10 @@ EventRechecker::visit(const channel_send& cs) {
 		// but not in a way that wakes up another event.
 		// The `blocked' state is still noted in checkpoint.
 		nc.block_sender();
+		// blocking alters the channel status, so in this case
+		// we need to notify any pending probes on this channel
+		context.updates.push_back(std::make_pair(
+			size_t(entity::META_TYPE_CHANNEL), chan_index));
 		ret = RECHECK_BLOCKED_THIS;
 	} else {
 		cerr << "ERROR: detected attempt to send on channel that is "
