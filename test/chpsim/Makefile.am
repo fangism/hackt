@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9.2.3 2007/04/30 18:33:23 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.4 2007/05/02 05:11:44 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -30,7 +30,9 @@ HACKT_PARSE_TEST_PASSES = \
 	bool-and-test-a \
 	bool-or-test-a \
 	bool-xor-test-a \
-	channel-probe-a channel-probe-b channel-probe-c
+	channel-probe-a channel-probe-b channel-probe-c \
+	send-fail-a \
+	receive-fail-a
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -156,7 +158,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-split-select-b-01 \
 	bool-lookup-b-01 \
 	bool-memory-read-b-01 \
-	bool-memory-write-b-01
+	bool-memory-write-b-01 \
+	send-fail-a-01 \
+	receive-fail-a-01
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
@@ -185,6 +189,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	channel-sync-desync-a-30 channel-sync-desync-a-31 \
 	channel-sync-desync-a-32 channel-sync-desync-a-33 \
 	channel-sync-desync-a-34 channel-sync-desync-a-35 \
+	channel-sync-desync-a-36 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03 select-nested-loop-a-04 \
 	select-nested-loop-a-05 select-nested-loop-a-06 \

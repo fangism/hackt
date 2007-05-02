@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.2.2.2 2007/05/02 01:38:27 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.2.2.3 2007/05/02 05:11:42 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -215,6 +215,14 @@ with their repective values."
 (chpsim-state-trace-focus-reference
   (chpsim-state-trace-filter-reference s rpair)
   rpair)
+) ; end define
+
+(define-public (chpsim-state-trace-single-reference-values s rpair)
+"Similar to chpsim-state-trace-single-reference, but this restructures the 
+data to just the pair<event-trace-id, value>, omitting the reference pair."
+  (stream-map (lambda (e) (cons (car e) (cddr e)))
+    (chpsim-state-trace-single-reference s rpair)
+  ) ; end stream-map
 ) ; end define
 
 ; not exported (yet), but can be

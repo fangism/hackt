@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-30:
+	  scm-only revision, see scm/ChangeLog.
+	  Added some expect-fail test cases for multi-access channels.
+	  Next: token-rings, fibonacci generator...
+
+
 2007-05-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-29:

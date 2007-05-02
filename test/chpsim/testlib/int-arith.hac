@@ -1,0 +1,22 @@
+/**
+	\file "int-arith.hac"
+	Some handy arithmetic unit building blocks.  
+	$Id: int-arith.hac,v 1.1.2.1 2007/05/02 05:12:01 fang Exp $
+ */
+
+template <pint N>
+define adder(chan?(int<N>) A, B; chan!(int<N>) S) {
+int<N> a, b;
+chp {
+*[ A?(a), B?(b); S!(a+b) ]
+}
+}
+
+template <pint N>
+define subtractor(chan?(int<N>) A, B; chan!(int<N>) S) {
+int<N> a, b;
+chp {
+*[ A?(a), B?(b); S!(a-b) ]
+}
+}
+

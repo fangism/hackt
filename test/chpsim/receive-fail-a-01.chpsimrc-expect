@@ -1,0 +1,18 @@
+event queue:
+check queue:
+	time	eid	pid	event
+	0	0	0	null
+event queue:
+check queue:
+	time	eid	pid	event
+	10	5	0	
+event queue:
+check queue:
+	time	eid	pid	event
+	20	2	0	X?(x)
+	20	3	0	X?(y)
+	20	4	0	[after=20] X!(true)
+ERROR: detected attempt to receive on channel that is already blocked waiting to receive!
+Run-time error while checking event.
+event[3]:	20	3	0	X?(y)	[by:5]
+Caught run-time exception during execution.  Halting.

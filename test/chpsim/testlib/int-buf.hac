@@ -1,0 +1,18 @@
+// "int-buf.hac"
+//	$Id: int-buf.hac,v 1.1.2.1 2007/05/02 05:12:02 fang Exp $
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+defproc int_buf (chan?(int) L; chan!(int) R) {
+int x;
+chp { *[L?(x); R!(x)] }
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint B>
+defproc int_buf_init (chan?(int) L; chan!(int) R) {
+int x;
+chp { x:=B; *[R!(x); L?(x)] }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

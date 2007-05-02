@@ -1,0 +1,34 @@
+// "int-copy.hac"
+//	$Id: int-copy.hac,v 1.1.2.1 2007/05/02 05:12:02 fang Exp $
+// copy processes
+
+// fanout-of-N copy, M-bit integer
+template <pint N,M>
+defproc int_copy (chan?(int<M>) A; chan!(int<M>) O[N]) {
+int<M> a;
+chp {
+*[ A?(a); {,i:N: O[i]!(a) } ]
+}
+}
+
+/***
+template <pint M>
+defproc int_copy_2 (chan?(int) A; chan!(int) O[2]) {
+int<M> a;
+chp {
+*[ A?(a); O[0]!(a), O[1]!(a) ]
+}
+}
+***/
+
+// yes, typedef templates
+
+template <pint W>
+typedef	int_copy<2,W>		int_copy_2;
+
+template <pint W>
+typedef	int_copy<3,W>		int_copy_3;
+
+template <pint W>
+typedef	int_copy<4,W>		int_copy_4;
+

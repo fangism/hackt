@@ -1,0 +1,11 @@
+// "receive-fail-a.hac"
+// expect fail: shared receivers
+
+chan(bool) X;
+bool x, y;
+chp {
+*[ X?(x) ];
+*[ X?(y) ];
+*[ $(after=20) X!(true) ]	// to slow it down
+}
+
