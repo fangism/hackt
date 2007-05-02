@@ -1,0 +1,54 @@
+Variables: 
+bool[1]: "R.bi.x" 
+bool[2]: "R.b[0].x" 
+bool[3]: "R.b[1].x" 
+bool[4]: "R.b[2].x" 
+bool[5]: "R.b[3].x" 
+bool[6]: "R.b[4].x" 
+bool[7]: "R.b[5].x" 
+bool[8]: "R.b[6].x" 
+chan[1]: "R.M[7]" 
+chan[2]: "R.M[0]" 
+chan[3]: "R.M[1]" 
+chan[4]: "R.M[2]" 
+chan[5]: "R.M[3]" 
+chan[6]: "R.M[4]" 
+chan[7]: "R.M[5]" 
+chan[8]: "R.M[6]" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 3 4 6 8 10 12 14 16 
+event[1]: send: bool_buf_init::R!(bool_buf_init::x), pid: 2, #pred: 1, succ: 2 
+channel deps: 2 
+event[2]: receive: bool_buf_init::L?(bool_buf_init::x), pid: 2, #pred: 1, succ: 1 
+channel deps: 1 
+event[3]: assign: bool_buf_init::x := true, pid: 2, #pred: 1, succ: 1 
+event[4]: receive: bool_buf::L?(bool_buf::x), pid: 3, #pred: 1, succ: 5 
+channel deps: 2 
+event[5]: send: bool_buf::R!(bool_buf::x), pid: 3, #pred: 1, succ: 4 
+channel deps: 3 
+event[6]: receive: bool_buf::L?(bool_buf::x), pid: 4, #pred: 1, succ: 7 
+channel deps: 3 
+event[7]: send: bool_buf::R!(bool_buf::x), pid: 4, #pred: 1, succ: 6 
+channel deps: 4 
+event[8]: receive: bool_buf::L?(bool_buf::x), pid: 5, #pred: 1, succ: 9 
+channel deps: 4 
+event[9]: send: bool_buf::R!(bool_buf::x), pid: 5, #pred: 1, succ: 8 
+channel deps: 5 
+event[10]: receive: bool_buf::L?(bool_buf::x), pid: 6, #pred: 1, succ: 11 
+channel deps: 5 
+event[11]: send: bool_buf::R!(bool_buf::x), pid: 6, #pred: 1, succ: 10 
+channel deps: 6 
+event[12]: receive: bool_buf::L?(bool_buf::x), pid: 7, #pred: 1, succ: 13 
+channel deps: 6 
+event[13]: send: bool_buf::R!(bool_buf::x), pid: 7, #pred: 1, succ: 12 
+channel deps: 7 
+event[14]: receive: bool_buf::L?(bool_buf::x), pid: 8, #pred: 1, succ: 15 
+channel deps: 7 
+event[15]: send: bool_buf::R!(bool_buf::x), pid: 8, #pred: 1, succ: 14 
+channel deps: 8 
+event[16]: receive: bool_buf::L?(bool_buf::x), pid: 9, #pred: 1, succ: 17 
+channel deps: 8 
+event[17]: send: bool_buf::R!(bool_buf::x), pid: 9, #pred: 1, succ: 16 
+channel deps: 1 
+

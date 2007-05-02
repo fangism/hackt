@@ -1,12 +1,34 @@
 # "deadlock-ring-a-01.chpsimrc"
-#	$Id: deadlock-ring-a-01.chpsimrc,v 1.2 2007/04/20 18:27:27 fang Exp $
+#	$Id: deadlock-ring-a-01.chpsimrc,v 1.2.2.1 2007/05/02 22:44:27 fang Exp $
 # @haco@ deadlock-ring-a.haco-a
 
 timing per-event
 # trace-flush-interval 40
-trace deadlock-ring-a-01.chpsimtrace
-step 150
-trace-close
-trace-dump deadlock-ring-a-01.chpsimtrace
+# trace deadlock-ring-a-01.chpsimtrace
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+echo queue is full of sends to check...
+step
+queue
+echo ... but all will block, causing deadlock!
+# trace-close
+# trace-dump deadlock-ring-a-01.chpsimtrace
 # !rm deadlock-ring-a-01.chpsimtrace
 

@@ -5,6 +5,12 @@
 
 2007-05-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-31:
+	  No source revision: added long-awaited token-hole test and 
+		expected deadlock chpsim tests.
+	  Next chpsim profiling and slack-matching tests...
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-30:
 	  scm-only revision, see scm/ChangeLog.
 	  Added some expect-fail test cases for multi-access channels.

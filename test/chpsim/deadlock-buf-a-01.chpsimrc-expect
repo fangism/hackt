@@ -1,0 +1,14 @@
+event queue:
+check queue:
+	time	eid	pid	event
+	10	3	1	bool_buf_init::x := true
+event queue:
+check queue:
+	time	eid	pid	event
+	12	1	1	bool_buf_init::R!(bool_buf_init::x)
+M! is in check queue, but will block 
+event queue:
+check queue:
+	(empty)
+time: 12
+queue should be empty, we have deadlock 

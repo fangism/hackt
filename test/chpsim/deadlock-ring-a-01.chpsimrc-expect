@@ -1,0 +1,108 @@
+event queue:
+check queue:
+	time	eid	pid	event
+	0	0	0	null
+event queue:
+check queue:
+	time	eid	pid	event
+	10	3	2	bool_buf_init::x := true
+	10	6	3	bool_buf_init::x := true
+	10	9	4	bool_buf_init::x := true
+	10	12	5	bool_buf_init::x := true
+	10	15	6	bool_buf_init::x := true
+	10	18	7	bool_buf_init::x := true
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+event queue:
+check queue:
+	time	eid	pid	event
+	10	6	3	bool_buf_init::x := true
+	10	9	4	bool_buf_init::x := true
+	10	12	5	bool_buf_init::x := true
+	10	15	6	bool_buf_init::x := true
+	10	18	7	bool_buf_init::x := true
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	9	4	bool_buf_init::x := true
+	10	12	5	bool_buf_init::x := true
+	10	15	6	bool_buf_init::x := true
+	10	18	7	bool_buf_init::x := true
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	12	5	bool_buf_init::x := true
+	10	15	6	bool_buf_init::x := true
+	10	18	7	bool_buf_init::x := true
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	15	6	bool_buf_init::x := true
+	10	18	7	bool_buf_init::x := true
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+	12	10	5	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	18	7	bool_buf_init::x := true
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+	12	10	5	bool_buf_init::R!(bool_buf_init::x)
+	12	13	6	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	21	8	bool_buf_init::x := true
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+	12	10	5	bool_buf_init::R!(bool_buf_init::x)
+	12	13	6	bool_buf_init::R!(bool_buf_init::x)
+	12	16	7	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	24	9	bool_buf_init::x := true
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+	12	10	5	bool_buf_init::R!(bool_buf_init::x)
+	12	13	6	bool_buf_init::R!(bool_buf_init::x)
+	12	16	7	bool_buf_init::R!(bool_buf_init::x)
+	12	19	8	bool_buf_init::R!(bool_buf_init::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+	12	10	5	bool_buf_init::R!(bool_buf_init::x)
+	12	13	6	bool_buf_init::R!(bool_buf_init::x)
+	12	16	7	bool_buf_init::R!(bool_buf_init::x)
+	12	19	8	bool_buf_init::R!(bool_buf_init::x)
+	12	22	9	bool_buf_init::R!(bool_buf_init::x)
+queue is full of sends to check... 
+event queue:
+check queue:
+	(empty)
+... but all will block, causing deadlock! 

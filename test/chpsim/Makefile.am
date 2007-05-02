@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9.2.4 2007/05/02 05:11:44 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.5 2007/05/02 22:44:18 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -32,7 +32,11 @@ HACKT_PARSE_TEST_PASSES = \
 	bool-xor-test-a \
 	channel-probe-a channel-probe-b channel-probe-c \
 	send-fail-a \
-	receive-fail-a
+	receive-fail-a \
+	token-ring-a \
+	bubble-ring-a \
+	deadlock-buf-a \
+	deadlock-ring-a
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -147,10 +151,14 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	buffer-advance-to \
 	channel-probe-a-01 channel-probe-b-01 channel-probe-c-01 \
 	delayed-source-a-01 delayed-source-a-02-trace \
-	delayed-sink-a-01 delayed-sink-a-02-trace
+	delayed-sink-a-01 delayed-sink-a-02-trace \
+	token-ring-a-01 \
+	bubble-ring-a-01 \
+	deadlock-buf-a-01 \
+	deadlock-ring-a-01
 
-# TODO: token-ring, bubble-ring, deadlock-ring, deadlock-buf
 # TODO: profile delayed-sink/source test cases
+# TODO: slack matching buffers with varying forward/backward latencies
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \
@@ -240,6 +248,12 @@ countdown-nested-c-03.chpsimtrace: countdown-nested-c-03-trace.chpsimrc-out
 	@test -f $@
 
 countdown-nested-d-03.chpsimtrace: countdown-nested-d-03-trace.chpsimrc-out
+	@test -f $@
+
+token-ring-a-01.chpsimtrace: token-ring-a-01.chpsimrc-out
+	@test -f $@
+
+bubble-ring-a-01.chpsimtrace: bubble-ring-a-01.chpsimrc-out
 	@test -f $@
 
 # this should be redundant with chpsimrc-out dependence...
