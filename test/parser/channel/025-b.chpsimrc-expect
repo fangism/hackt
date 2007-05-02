@@ -1,36 +1,51 @@
 expect to see only one event in queue at a time, b/c blocking 
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 	0	0	0	null
 event queue:
+check queue:
 	time	eid	pid	event
 	10	5	0	
 	10	5	0	
 event queue:
+check queue:
 	time	eid	pid	event
+	20	2	0	B?(x)
 	20	4	0	x := true
 	20	4	0	x := true
 event queue:
+check queue:
 	time	eid	pid	event
 	30	3	0	B!(~x)
 	30	3	0	B!(~x)
 event queue:
 	time	eid	pid	event
+	30	2	0	B?(x)
+check queue:
+	40	3	0	B!(~x)
+	30	2	0	B?(x)
+event queue:
+check queue:
+	time	eid	pid	event
+	40	3	0	B!(~x)
 	40	2	0	B?(x)
 	40	2	0	B?(x)
 event queue:
 	time	eid	pid	event
+	40	3	0	B!(~x)
+check queue:
+	50	2	0	B?(x)
+	40	3	0	B!(~x)
+event queue:
+check queue:
+	time	eid	pid	event
+	50	2	0	B?(x)
 	50	3	0	B!(~x)
 	50	3	0	B!(~x)
 event queue:
 	time	eid	pid	event
-	60	2	0	B?(x)
-	60	2	0	B?(x)
-event queue:
-	time	eid	pid	event
-	70	3	0	B!(~x)
-	70	3	0	B!(~x)
-event queue:
-	time	eid	pid	event
-	80	2	0	B?(x)
+	50	2	0	B?(x)
+check queue:
+	60	3	0	B!(~x)

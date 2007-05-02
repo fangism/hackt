@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.2.2.1 2007/05/02 00:44:54 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.2.2.2 2007/05/02 01:38:27 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -308,14 +308,12 @@ TODO: use memoized structures."
 ;;;;;;;;;;; LOOP REPETTION COUNTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-public (make-loop-histogram trace-stream)
 "Constructs a histogram of do-forever loop counts for each loop-head event.
-Result is a map of number of times each loop entered (first event executed).
-NOTE: loop-head events that are selections are not automatically recoreded
-because selection events don't execute in the normal sense, they choose
-a successor to execute.  Thus, we depend on the branch histogram, which
-correctly back-propagates counts to branches.  "
+Result is a map of number of times each loop entered (first event executed)."
   (let ((loop-heads (force static-loop-head-events-delayed))
         (loop-histo (make-rb-tree = <))
+#!
         (branch-histo (make-select-branch-histogram trace-stream))
+!#
 		; can this be memoized?
        )
        ; copy over keys into new histo, initialize counts to 0
@@ -334,6 +332,7 @@ correctly back-propagates counts to branches.  "
       ) ; end lambda
       trace-stream
     ) ; end stream-for-each
+#!
     ; back-propagating branch counts
     (rb-tree/for-each
       (lambda (p)
@@ -353,6 +352,7 @@ correctly back-propagates counts to branches.  "
       ) ; end lambda
       loop-histo
     ) ; end for-each
+!#
     loop-histo
   ) ; end let
 ) ; end define
