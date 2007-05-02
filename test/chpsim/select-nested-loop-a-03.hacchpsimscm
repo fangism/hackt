@@ -3,7 +3,7 @@
 ;; "select-nested-loop-a-03.hacchpsimscm"
 ;; copy-modified from "select-nested-loop-a-02.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: select-nested-loop-a-03.hacchpsimscm,v 1.2 2007/04/20 18:27:31 fang Exp $
+;;	$Id: select-nested-loop-a-03.hacchpsimscm,v 1.2.2.1 2007/05/02 00:44:58 fang Exp $
 ;; @haco@ select-nested-loop-a.haco-a
 ;; @chpsimtrace@ select-nested-loop-a-03.chpsimtrace
 
@@ -80,6 +80,8 @@ ll-histo
       (rb-tree/lookup-mutate! y x
         (lambda (z)
 ;         (display "++") (display z) (newline)
+#!
+; this hack is no longer needed since we started executing selections, nice!
           (let ((p (stream-ref f all-static-events-stream)))
 ;            (display "p: ") (display p) (newline)
             (if (hac:chpsim-event-select? (cdr p))
@@ -87,6 +89,7 @@ ll-histo
               (count-selects (car p))
             ) ; end if
           ) ; end let
+!#
           (1+ z)
         ) ; end lambda
         #f

@@ -1,5 +1,12 @@
 "scm/ChangeLog"
 
+2007-05-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-29:
+	  hackt/chpsim-trace.scm: count-selects no longer needs branch-count
+		progagation hack because branches are now executed normally.  
+
+
 2007-04-20	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-merged-scm-01-37:

@@ -5,6 +5,14 @@
 
 2007-05-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-29:
+	  Woo hoo!  No more regressions left to process!
+	  No source revision, only minor un-hack to scm/hackt/chpsim-trace.scm,
+		see scm/ChangeLog.
+	  Last remaining regression test cases updated.  
+	  Now we can make some forward progress once again.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-28:
 	  Object/nonmeta_variable.h: has_trace_value() for channels, 
 		is true when channel has just received or sent.

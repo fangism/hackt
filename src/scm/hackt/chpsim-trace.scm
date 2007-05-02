@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.2 2007/04/20 18:26:05 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.2.2.1 2007/05/02 00:44:54 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -280,6 +280,9 @@ TODO: use memoized structures."
       (rb-tree/lookup-mutate! y x
         (lambda (z) 
 ;         (display "++") (display z) (newline)
+#!
+          "This hack is not needed anymore since we now execute branches 
+           like any other event."
           (let ((p (hac:chpsim-get-event f)))
 ;            (display "p: ") (display p) (newline)
             (if (hac:chpsim-event-select? (static-event-raw-entry p))
@@ -287,6 +290,7 @@ TODO: use memoized structures."
               (count-selects f)
             ) ; end if
           ) ; end let
+!#
           (1+ z)
         ) ; end lambda
         #f
