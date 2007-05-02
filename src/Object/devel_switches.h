@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.40.4.1 2007/04/30 01:27:38 fang Exp $
+	$Id: devel_switches.h,v 1.40.4.2 2007/05/02 23:42:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -199,6 +199,12 @@
 	Afterthought: this feels really really dirty...
  */
 #define	DEFCHAN_LIKE_PROCESS			1
+
+/**
+	Same idea as above.  
+	This still feels dirty, but that's the way some like it.
+ */
+#define	DEFTYPE_LIKE_PROCESS			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

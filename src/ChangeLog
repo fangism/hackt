@@ -4,6 +4,19 @@
 # This version tag is used in building "cvstag.h" for version identification.
 
 
+2007-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-11:
+	  deftype (for datatypes) is also now 'snarfed' as a process definition
+		analogous to defchan.  set and get bodies are dropped.  
+		Consequence: user-defined datatypes will not work as intended.
+	  More tests updated than expected: expect-fails (rejecting process
+		instantiations inside deftype) are now accepted.
+		deftype createdumps updated accordingly.  
+		Other parser-related test cases updated, including for bison.
+	  Added minimialist test case for deftype (fake) support.  
+
+
 2007-04-30	Virantha Ekanayake	<viran@csl.cornell.edu>
 
 	* HACKT-00-01-04-main-00-81-16-PRS-07-10:

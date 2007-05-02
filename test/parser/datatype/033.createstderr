@@ -4,31 +4,28 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	datadefn	0	#HEAD#	#TAIL#	128
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
-	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -38,13 +35,11 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    my_data = user-defined-datatype (defined) my_data
-      int<4>
-      (
+    my_data = process-definition (defined) my_data(
         int<8> x
         bool<> y
       )
-      In datatype definition "my_data", we have: {
+      In definition "my_data", we have: {
       Instances:
         fee = bool<> my_data::fee
         fi = bool<> my_data::fi

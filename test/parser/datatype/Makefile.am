@@ -1,20 +1,21 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/01/21 06:06:27 fang Exp $
+#	$Id: Makefile.am,v 1.16.12.1 2007/05/02 23:42:48 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	    003 004 005 009 \
 	010 011 012 014 015 017 018 019 \
-	020 024 025 \
-	034 035
+	020 024 025
+# NOTE: 034 035 were moved to expect pass, since deftypes are now 'processes'
 
 HACKT_PARSE_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
 	021 022 023 026 027 028 029 \
-	030 031 033 037
+	030 031 033 034 035 037 038
 
+if USE_UNROLL_PHASE
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
@@ -23,12 +24,13 @@ HACKT_UNROLL_TEST_PASSES = \
 
 HACKT_UNROLL_TEST_FAILURES = \
 	037
+endif
 
 # omitted tests are uninteresting
 HACKT_CREATE_TEST_PASSES = \
 	001 002 006 007 008 \
 	023 026 029 \
-	030 031 033
+	030 031 033 038
 
 # REGRESSION (parse, unroll, create): 032 036 
 # (instantiations of 031 033, respectively)
@@ -45,6 +47,9 @@ HACKT_CREATE_TEST_FAILURES = $(HACKT_UNROLL_TEST_FAILURES)
 endif
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
+
+HACKT_CFLAT_TEST_SUBJECTS = \
+	038
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 015 017 018 019 020

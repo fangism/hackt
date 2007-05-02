@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.24.6.7 2007/04/30 01:27:40 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.24.6.8 2007/05/02 23:42:34 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -546,7 +546,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_keyword_position>	def_or_proc
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
-%type	<_user_data_type_prototype>	declare_datatype_proto
+/* for DEFTYPE_LIKE_PROCESS */
+%type	<_process_prototype>	declare_datatype_proto
+/* %type	<_user_data_type_prototype>	declare_datatype_proto */
 /* for DEFCHAN_LIKE_PROCESS */
 %type	<_process_prototype>	declare_chan_proto
 /* %type	<_user_chan_type_prototype>	declare_chan_proto */
@@ -576,7 +578,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_enum_prototype>	declare_enum
 %type	<_enum_def>		defenum
 %type	<_enum_member_list>	enum_member_list
-%type	<_user_data_type_def>	defdatatype
+/* for DEFTYPE_LIKE_PROCESS */
+%type	<_process_def>	defdatatype
+/* %type	<_user_data_type_def>	defdatatype */
 /* for DEFCHAN_LIKE_PROCESS */
 %type	<_process_def>	defchan
 /* %type	<_user_chan_type_def>	defchan	*/
@@ -1160,19 +1164,39 @@ declare_datatype_proto
 	: optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
-          data_param_decl_list_in_parens ';'
-		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
-		  DELETE_TOKEN($7); }
+	/* DEFTYPE_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens ';'
+/*	  data_param_decl_list_in_parens ';'	*/
+		{
+#if DEFTYPE_LIKE_PROCESS
+		$$ = new process_prototype($1, $2, $3, $6);
+		  DELETE_TOKEN($4); DELETE_TOKEN($5); DELETE_TOKEN($7);
+#else
+		$$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7);
+#endif
+		}
 	;
 
 defdatatype
 	: optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
-          data_param_decl_list_in_parens
+	/* DEFTYPE_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens
+/*	  data_param_decl_list_in_parens */
 	  '{' optional_definition_body set_body get_body '}'
-		{ $$ = new user_data_type_def(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11); }
+		{
+#if DEFTYPE_LIKE_PROCESS
+		WRAP_LIST($7, $8, $11);
+		$$ = new process_def($1, $2, $3, $6, $8);
+		DELETE_TOKEN($4); DELETE_TOKEN($5);
+		DELETE_TOKEN($9); DELETE_TOKEN($10);
+#else
+		$$ = new user_data_type_def(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+#endif
+		}
 	;
 
 set_body
