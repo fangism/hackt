@@ -1,0 +1,10 @@
+# "timed-bubble-ring-b-01.chpsimrc"
+#	$Id: timed-bubble-ring-b-01.chpsimrc,v 1.1.2.1 2007/05/03 20:29:52 fang Exp $
+# @haco@ timed-bubble-ring-b.haco-a
+
+timing per-event
+trace timed-bubble-ring-b-01.chpsimtrace
+step 100
+trace-close
+trace-dump timed-bubble-ring-b-01.chpsimtrace
+

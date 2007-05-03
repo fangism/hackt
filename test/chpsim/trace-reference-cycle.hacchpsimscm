@@ -1,0 +1,46 @@
+#!hacchpsimguile -b
+!#
+;; "trace-reference-cycle.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: trace-reference-cycle.hacchpsimscm,v 1.1.2.1 2007/05/03 20:30:10 fang Exp $
+
+;; Load this script to analyze a trace of a single variable, with timestamps
+;; input variables:
+;;	trace-name : name of trace file
+
+(use-modules (ice-9 streams))
+(use-modules (hackt hackt-primitives))
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+
+; example:
+; (define cycle-reference '(channel . 1))
+(display "tracing reference for cycle time: ")
+(display cycle-reference)
+(newline)
+(display "canonical name: ")
+(display (hac:canonical-reference->string cycle-reference))
+(newline)
+
+(define state-stream (open-chpsim-state-trace-stream trace-name))
+(define reference-trace
+  (chpsim-state-trace-single-reference-values state-stream cycle-reference))
+
+; (stream-for-each-display-newline reference-trace)
+(define rand-acc (hac:open-chpsim-trace-accessor trace-name))
+
+(define cycle-trace-stream
+(stream-map
+  (lambda (e)
+    (list 
+      (car e)
+      (chpsim-trace-entry-time (hac:lookup-trace-entry rand-acc (car e)))
+      (cdr e)
+    )
+  )
+  reference-trace
+) ; end stream-map
+) ; end define
+
+(stream-for-each-display-newline cycle-trace-stream)
+

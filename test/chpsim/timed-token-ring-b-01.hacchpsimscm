@@ -1,0 +1,23 @@
+#!hacchpsimguile -b
+!#
+;; "timed-token-ring-b-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: timed-token-ring-b-01.hacchpsimscm,v 1.1.2.1 2007/05/03 20:30:04 fang Exp $
+;; @haco@ timed-token-ring-b.haco-a
+;; @chpsimtrace@ timed-token-ring-b-01.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(use-modules (ice-9 streams))
+(use-modules (hackt chpsim-primitives))
+
+(define trace-name "timed-token-ring-b-01.chpsimtrace")
+
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+"expect cycle time 12 (6 * 2.0), forward-latency is limiting factor."
+
+(define cycle-reference '(channel . 1))
+
+(load-from-path "trace-reference-cycle.hacchpsimscm")
+

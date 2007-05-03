@@ -5,6 +5,14 @@
 
 2007-05-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-33:
+	  No source revision.
+	  Added slack-matching and latency-sensitive critical paths test cases
+		to test suite, named test/chpsim/timed-{token,bubble}-ring-*.
+		Everything works beautifully, as planned.  :D
+	  Few more rounds of test cases before merge-to-trunk.  
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-32:
 	  No source revision:
 		Added wave of tests for various FIFO scenarios with 

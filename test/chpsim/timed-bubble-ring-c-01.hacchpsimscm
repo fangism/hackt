@@ -1,0 +1,23 @@
+#!hacchpsimguile -b
+!#
+;; "timed-bubble-ring-c-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: timed-bubble-ring-c-01.hacchpsimscm,v 1.1.2.1 2007/05/03 20:29:58 fang Exp $
+;; @haco@ timed-bubble-ring-c.haco-a
+;; @chpsimtrace@ timed-bubble-ring-c-01.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(use-modules (ice-9 streams))
+(use-modules (hackt chpsim-primitives))
+
+(define trace-name "timed-bubble-ring-c-01.chpsimtrace")
+
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+"expect cycle time 24 (6 * 4.0), backward-latency is limiting factor."
+
+(define cycle-reference '(channel . 1))
+
+(load-from-path "trace-reference-cycle.hacchpsimscm")
+

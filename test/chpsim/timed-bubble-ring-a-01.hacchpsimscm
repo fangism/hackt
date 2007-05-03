@@ -1,0 +1,24 @@
+#!hacchpsimguile -b
+!#
+;; "timed-bubble-ring-a-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: timed-bubble-ring-a-01.hacchpsimscm,v 1.1.2.1 2007/05/03 20:29:49 fang Exp $
+;; @haco@ timed-bubble-ring-a.haco-a
+;; @chpsimtrace@ timed-bubble-ring-a-01.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(use-modules (ice-9 streams))
+(use-modules (hackt hackt-primitives))
+(use-modules (hackt chpsim-primitives))
+
+(define trace-name "timed-bubble-ring-a-01.chpsimtrace")
+
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+"expect cycle time 8 (7 +1), self-throughput is limiting factor."
+
+(define cycle-reference '(channel . 1))
+
+(load-from-path "trace-reference-cycle.hacchpsimscm")
+

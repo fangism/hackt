@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9.2.6 2007/05/03 04:52:02 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.7 2007/05/03 20:29:45 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -72,7 +72,9 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bubble-ring-a \
 	deadlock-buf-a \
 	deadlock-ring-a \
-	timed-fifo-a timed-fifo-b timed-fifo-c timed-fifo-d timed-fifo-e
+	timed-fifo-a timed-fifo-b timed-fifo-c timed-fifo-d timed-fifo-e \
+	timed-token-ring-a timed-token-ring-b timed-token-ring-c \
+	timed-bubble-ring-a timed-bubble-ring-b timed-bubble-ring-c
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -158,7 +160,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	deadlock-buf-a-01 \
 	deadlock-ring-a-01 \
 	timed-fifo-a-01 timed-fifo-b-01 timed-fifo-c-01 \
-	timed-fifo-d-01 timed-fifo-e-01
+	timed-fifo-d-01 timed-fifo-e-01 \
+	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
+	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01
 
 # TODO: profile delayed-sink/source test cases
 # TODO: slack matching buffers with varying forward/backward latencies
@@ -212,7 +216,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	countdown-nested-c-01 countdown-nested-c-02 \
 	countdown-nested-d-01 countdown-nested-d-02 \
 	timed-fifo-a-01 timed-fifo-b-01 timed-fifo-c-01 \
-	timed-fifo-d-01 timed-fifo-e-01
+	timed-fifo-d-01 timed-fifo-e-01 \
+	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
+	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -236,7 +242,13 @@ KEEP_CHPSIM_TRACE_FILES = \
 	timed-fifo-b-01.chpsimtrace \
 	timed-fifo-c-01.chpsimtrace \
 	timed-fifo-d-01.chpsimtrace \
-	timed-fifo-e-01.chpsimtrace
+	timed-fifo-e-01.chpsimtrace \
+	timed-token-ring-a-01.chpsimtrace \
+	timed-token-ring-b-01.chpsimtrace \
+	timed-token-ring-c-01.chpsimtrace \
+	timed-bubble-ring-a-01.chpsimtrace \
+	timed-bubble-ring-b-01.chpsimtrace \
+	timed-bubble-ring-c-01.chpsimtrace
 
 # Additional dependencies from known-side effects
 channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
@@ -287,12 +299,31 @@ timed-fifo-d-01.chpsimtrace: timed-fifo-d-01.chpsimrc-out
 timed-fifo-e-01.chpsimtrace: timed-fifo-e-01.chpsimrc-out
 	@test -f $@
 
+timed-token-ring-a-01.chpsimtrace: timed-token-ring-a-01.chpsimrc-out
+	@test -f $@
+
+timed-token-ring-b-01.chpsimtrace: timed-token-ring-b-01.chpsimrc-out
+	@test -f $@
+
+timed-token-ring-c-01.chpsimtrace: timed-token-ring-c-01.chpsimrc-out
+	@test -f $@
+
+timed-bubble-ring-a-01.chpsimtrace: timed-bubble-ring-a-01.chpsimrc-out
+	@test -f $@
+
+timed-bubble-ring-b-01.chpsimtrace: timed-bubble-ring-b-01.chpsimrc-out
+	@test -f $@
+
+timed-bubble-ring-c-01.chpsimtrace: timed-bubble-ring-c-01.chpsimrc-out
+	@test -f $@
+
 # this should be redundant with chpsimrc-out dependence...
 $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
 
 srcdir_EXTRA_DIST += \
 	event-classification.hacchpsimscm \
-	basic-trace-analysis.hacchpsimscm
+	basic-trace-analysis.hacchpsimscm \
+	trace-reference-cycle.hacchpsimscm
 
 include $(top_srcdir)/test/Make.test-tail
 
