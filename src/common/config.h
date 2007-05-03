@@ -1,7 +1,7 @@
 /**
 	\file "common/config.h"
 	Interface header for version module.  
-	$Id: config.h,v 1.2 2007/04/20 18:25:52 fang Exp $
+	$Id: config.h,v 1.3 2007/05/03 06:38:50 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_CONFIG_H__
@@ -30,6 +30,7 @@ struct config {
 	static const char		config_params[];
 	static const char		lex_version[];
 	static const char		yacc_version[];
+	static const char		guile_version[];
 	static const char		builddate_string[];
 	static const char		config_build[];
 	static const char		config_host[];
@@ -73,6 +74,10 @@ struct config {
 	static
 	ostream&
 	readline(ostream&);
+
+	static
+	ostream&
+	guile(ostream&);
 
 };	// end class config
 

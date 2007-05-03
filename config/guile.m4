@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.8 2007/04/20 18:25:42 fang Exp $
+dnl	$Id: guile.m4,v 1.9 2007/05/03 06:38:43 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -56,8 +56,13 @@ dnl    break
 dnl  fi
 dnl done
 
+GUILE_CONFIG_VERSION="none"
+
 if test -n "$GUILE_CONFIG" ; then
 if test -x "$GUILE_CONFIG" ; then
+  AC_MSG_CHECKING([guile-config version])
+  GUILE_CONFIG_VERSION="`$GUILE_CONFIG --version 2>&1`"
+  AC_MSG_RESULT($GUILE_CONFIG_VERSION)
   AC_MSG_CHECKING([guile compile flags])
   GUILE_CPPFLAGS="`$GUILE_CONFIG compile`"
   AC_MSG_RESULT($GUILE_CPPFLAGS)
@@ -95,12 +100,16 @@ CPPFLAGS="$save_CPPFLAGS"
 AC_LANG_POP(C++)
 else
 	AC_MSG_WARN([[guile-config missing, disabling building with guile!]])
+	GUILE_CONFIG_VERSION="none"
 fi
 fi
 AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
-test "$ac_cv_func_scm_is_pair" = "yes" ||
+if test "$ac_cv_func_scm_is_pair" != "yes" ; then
 	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
+	GUILE_CONFIG_VERSION="none"
+fi
 AC_SUBST(GUILE_CONFIG)
+AC_SUBST(GUILE_CONFIG_VERSION)
 AC_SUBST(GUILE_SNARF)
 AC_SUBST(GUILE_TOOLS)
 AC_SUBST(GUILE_CPPFLAGS)

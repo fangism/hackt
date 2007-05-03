@@ -2,7 +2,7 @@
 	\file "common/config.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: config.cc,v 1.3 2007/04/26 06:51:47 fang Exp $
+	$Id: config.cc,v 1.4 2007/05/03 06:38:50 fang Exp $
  */
 
 #include <iostream>
@@ -20,6 +20,7 @@
 #include "parser/yacc_version.h"
 #include "buildhost.h"
 #include "config_params.h"
+#include "guile/config_version.h"
 #include "util/readline_wrap.h"
 
 // #include "util/getopt_portable.h"
@@ -47,6 +48,7 @@ const char config::config_libs[] = CONFIG_LIBS;
 const char config::config_params[] = CONFIG_PARAMS;
 const char config::lex_version[] = LEX_VERSION;
 const char config::yacc_version[] = YACC_VERSION;
+const char config::guile_version[] = GUILE_CONFIG_VERSION;
 const char config::builddate_string[] = BUILDDATE;
 const char config::config_build[] = CONFIG_BUILD;
 const char config::config_host[] = CONFIG_HOST;
@@ -130,6 +132,12 @@ ostream&
 config::readline(ostream& o) {
 	readline_wrapper::version_string(o << "readline: ");
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+config::guile(ostream& o) {
+	return o << "guile: " << guile_version;
 }
 
 //=============================================================================

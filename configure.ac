@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.130 2007/04/26 05:46:35 fang Exp $
+#	$Id: configure.ac,v 1.131 2007/05/03 06:38:43 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070425, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070503, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -527,6 +527,7 @@ AC_CONFIG_FILES([src/lexer/lex_version.h src/parser/yacc_version.h])
 AC_CONFIG_FILES([src/parser/hackt-parse.yy])
 AC_CONFIG_FILES([src/parser/instref-parse.yy])
 AC_CONFIG_FILES([src/parser/type-parse.yy])
+AC_CONFIG_FILES([src/guile/config_version.h])
 AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy])
 AC_CONFIG_FILES([src/scripts/init_hackt.sh],
 	[chmod +x src/scripts/init_hackt.sh])

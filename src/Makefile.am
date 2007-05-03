@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.169 2007/04/20 18:25:46 fang Exp $
+#	$Id: Makefile.am,v 1.170 2007/05/03 06:38:48 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -302,6 +302,8 @@ lexer/lex_version.h: $(top_builddir)/config.status
 parser/yacc_version.h: $(top_builddir)/config.status
 	$(RECONFIGURE)
 
+guile/config_version.h: $(top_builddir)/config.status
+	$(RECONFIGURE)
 
 # should include make-generated headers only, no configure-generated headers
 AUTOHEADERS = cvstag.h builddate.h am_cxxflags.h config_params.h
@@ -310,7 +312,7 @@ AUTOHEADERS = cvstag.h builddate.h am_cxxflags.h config_params.h
 # cxx_version.h
 
 # these headers are generated at configure time by config.status
-VERSIONHEADERS = buildhost.h cxxflags.h cxx_version.h
+VERSIONHEADERS = buildhost.h cxxflags.h cxx_version.h guile/config_version.h
 
 # these headers are additional dependencies for configure-dependent parser files
 CONFIGHEADERS = config.h __config__.h
