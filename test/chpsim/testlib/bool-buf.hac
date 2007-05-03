@@ -1,5 +1,5 @@
 // "bool-buf.hac"
-//	$Id: bool-buf.hac,v 1.2.2.1 2007/04/21 04:34:04 fang Exp $
+//	$Id: bool-buf.hac,v 1.2.2.2 2007/05/03 04:52:25 fang Exp $
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 defproc bool_buf (chan?(bool) L; chan!(bool) R) {
@@ -7,12 +7,47 @@ bool x;
 chp { *[L?(x); R!(x)] }
 }
 
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <pbool B>
 defproc bool_buf_init (chan?(bool) L; chan!(bool) R) {
 bool x;
 chp { x:=B; *[R!(x); L?(x)] }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Latency controllable buffer.
+	\param F forward latency
+	\param B backward latency
+ */
+template <preal F, B>
+defproc timed_bool_buf (chan?(bool) L; chan!(bool) R) {
+bool x;
+chp { *[$(after=B) L?(x); $(after=F) R!(x)] }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Latency controllable buffer.
+	\param F forward latency
+	\param B backward latency
+ */
+template <pbool I; preal F,B>
+defproc timed_bool_buf_init (chan?(bool) L; chan!(bool) R) {
+bool x;
+chp { x:=I; *[ $(after=F) R!(x); $(after=B) L?(x)] }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Standard boolean fifo.  
+ */
+template <pint N>
+defproc bool_fifo(chan?(bool) L; chan!(bool) R) {
+  chan(bool) M[N+1];
+  M[0] = L; M[N] = R;
+  bool_buf b[N];
+  (;i:N: b[i](M[i], M[i+1]); )
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -51,4 +86,41 @@ defproc no_hole_ring() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Standard boolean fifo, timed version.  
+ */
+template <pint N; preal F, B>
+defproc timed_bool_fifo(chan?(bool) L; chan!(bool) R) {
+  chan(bool) M[N+1];
+  M[0] = L; M[N] = R;
+  timed_bool_buf<F, B> b[N];
+  (;i:N: b[i](M[i], M[i+1]); )
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Timed version.
+	Single token in token ring.
+ */
+template <pint N; preal F, B>
+defproc timed_one_token_ring() {
+  chan(bool) M[N];
+  timed_bool_buf_init<true, F, B> bi(M[N-1], M[0]);
+  timed_bool_buf<F, B> b[N-1];
+  (;i:N-1: b[i](M[i], M[i+1]); )
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Timed version.
+	Single hole in token ring.
+ */
+template <pint N; preal F, B>
+defproc timed_one_hole_ring() {
+  chan(bool) M[N];
+  timed_bool_buf<F, B> bi(M[N-1], M[0]);
+  timed_bool_buf_init<true, F, B> b[N-1];
+  (;i:N-1: b[i](M[i], M[i+1]); )
+}
+
 

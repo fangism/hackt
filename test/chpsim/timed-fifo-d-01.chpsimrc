@@ -1,0 +1,10 @@
+# "timed-fifo-d-01.chpsimrc"
+#	$Id: timed-fifo-d-01.chpsimrc,v 1.1.2.1 2007/05/03 04:52:19 fang Exp $
+# @haco@ timed-fifo-d.haco-a
+
+timing per-event
+trace timed-fifo-d-01.chpsimtrace
+step 100
+trace-close
+trace-dump timed-fifo-d-01.chpsimtrace
+

@@ -1,0 +1,15 @@
+// "timed-fifo-b.hac"
+// copy-modified from "timed-fifo-a.hac"
+//	$Id: timed-fifo-b.hac,v 1.1.2.1 2007/05/03 04:52:17 fang Exp $
+// specifying explicit latencies in buffers
+// don't forget to use timing per-event to overide uniform
+
+import "testlib/bool-sink.hac";
+import "testlib/bool-source.hac";
+import "testlib/bool-buf.hac";
+
+chan(bool) L, R;
+bool_source_delay<2,{true,false},5.0> src(L);
+bool_sink_delay<5.0> snk(R);
+timed_bool_fifo<2, 4.0, 4.0> fifo(L, R);	// balanced latency
+
