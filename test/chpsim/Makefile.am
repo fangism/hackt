@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9.2.7 2007/05/03 20:29:45 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.8 2007/05/04 02:12:19 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -74,7 +74,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	deadlock-ring-a \
 	timed-fifo-a timed-fifo-b timed-fifo-c timed-fifo-d timed-fifo-e \
 	timed-token-ring-a timed-token-ring-b timed-token-ring-c \
-	timed-bubble-ring-a timed-bubble-ring-b timed-bubble-ring-c
+	timed-bubble-ring-a timed-bubble-ring-b timed-bubble-ring-c \
+	fib-test-a fib-test-b fib-test-c
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -162,7 +163,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	timed-fifo-a-01 timed-fifo-b-01 timed-fifo-c-01 \
 	timed-fifo-d-01 timed-fifo-e-01 \
 	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
-	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01
+	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01 \
+	fib-test-a-01 fib-test-b-01 fib-test-c-01
 
 # TODO: profile delayed-sink/source test cases
 # TODO: slack matching buffers with varying forward/backward latencies
@@ -218,7 +220,8 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	timed-fifo-a-01 timed-fifo-b-01 timed-fifo-c-01 \
 	timed-fifo-d-01 timed-fifo-e-01 \
 	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
-	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01
+	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01 \
+	fib-test-a-01 fib-test-b-01 fib-test-c-01
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -249,6 +252,9 @@ KEEP_CHPSIM_TRACE_FILES = \
 	timed-bubble-ring-a-01.chpsimtrace \
 	timed-bubble-ring-b-01.chpsimtrace \
 	timed-bubble-ring-c-01.chpsimtrace
+	fib-test-a-01.chpsimtrace \
+	fib-test-b-01.chpsimtrace \
+	fib-test-c-01.chpsimtrace
 
 # Additional dependencies from known-side effects
 channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
@@ -315,6 +321,15 @@ timed-bubble-ring-b-01.chpsimtrace: timed-bubble-ring-b-01.chpsimrc-out
 	@test -f $@
 
 timed-bubble-ring-c-01.chpsimtrace: timed-bubble-ring-c-01.chpsimrc-out
+	@test -f $@
+
+fib-test-a-01.chpsimtrace: fib-test-a-01.chpsimrc-out
+	@test -f $@
+
+fib-test-b-01.chpsimtrace: fib-test-b-01.chpsimrc-out
+	@test -f $@
+
+fib-test-c-01.chpsimtrace: fib-test-c-01.chpsimrc-out
 	@test -f $@
 
 # this should be redundant with chpsimrc-out dependence...

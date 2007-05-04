@@ -5,6 +5,12 @@
 
 2007-05-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-34:
+	  No source revision.
+	  Added slack-matching fibonacci tests, works very nicely.  
+	  End of branch, distcheck and merge to trunk.
+
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-33:
 	  No source revision.
 	  Added slack-matching and latency-sensitive critical paths test cases

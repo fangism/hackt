@@ -1,7 +1,8 @@
 /**
 	\file "int-arith.hac"
 	Some handy arithmetic unit building blocks.  
-	$Id: int-arith.hac,v 1.1.2.1 2007/05/02 05:12:01 fang Exp $
+	$Id: int-arith.hac,v 1.1.2.2 2007/05/04 02:12:38 fang Exp $
+	NOTE: toming may change once we introduce non-atomix expr. eval.
  */
 
 template <pint N>
@@ -19,4 +20,6 @@ chp {
 *[ A?(a), B?(b); S!(a-b) ]
 }
 }
+
+// TODO: incrementer, decrementer
 

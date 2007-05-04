@@ -1,5 +1,5 @@
 // "int-copy.hac"
-//	$Id: int-copy.hac,v 1.1.2.1 2007/05/02 05:12:02 fang Exp $
+//	$Id: int-copy.hac,v 1.1.2.2 2007/05/04 02:12:39 fang Exp $
 // copy processes
 
 // fanout-of-N copy, M-bit integer
@@ -8,6 +8,16 @@ defproc int_copy (chan?(int<M>) A; chan!(int<M>) O[N]) {
 int<M> a;
 chp {
 *[ A?(a); {,i:N: O[i]!(a) } ]
+}
+}
+
+template <pint N,M; preal F, B>
+defproc timed_int_copy (chan?(int<M>) A; chan!(int<M>) O[N]) {
+int<M> a;
+chp {
+*[ $(after=B) A?(a);
+   $(after=0.0) {,i:N: $(after=F) O[i]!(a) }
+ ]
 }
 }
 
@@ -31,4 +41,13 @@ typedef	int_copy<3,W>		int_copy_3;
 
 template <pint W>
 typedef	int_copy<4,W>		int_copy_4;
+
+template <pint W; preal F, B>
+typedef	timed_int_copy<2, W, F, B>	timed_int_copy_2;
+
+template <pint W; preal F, B>
+typedef	timed_int_copy<3, W, F, B>	timed_int_copy_3;
+
+template <pint W; preal F, B>
+typedef	timed_int_copy<4, W, F, B>	timed_int_copy_4;
 

@@ -1,0 +1,9 @@
+// "fib-test-b.hac"
+//	$Id: fib-test-b.hac,v 1.1.2.1 2007/05/04 02:12:30 fang Exp $
+// testing fibonacci generator, some slack
+// see also -a,-b,-c.hac
+
+import "testlib/fibonacci.hac";
+
+fibonacci_slacker<1,1> fibber;
+

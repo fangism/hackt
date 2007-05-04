@@ -1,18 +1,34 @@
 // "int-buf.hac"
-//	$Id: int-buf.hac,v 1.1.2.1 2007/05/02 05:12:02 fang Exp $
+//	$Id: int-buf.hac,v 1.1.2.2 2007/05/04 02:12:39 fang Exp $
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-defproc int_buf (chan?(int) L; chan!(int) R) {
-int x;
+template <pint W>
+defproc int_buf (chan?(int<W>) L; chan!(int<W>) R) {
+int<W> x;
 chp { *[L?(x); R!(x)] }
 }
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <pint B>
-defproc int_buf_init (chan?(int) L; chan!(int) R) {
-int x;
-chp { x:=B; *[R!(x); L?(x)] }
+template <pint W, I>
+defproc int_buf_init (chan?(int<W>) L; chan!(int<W>) R) {
+int<W> x;
+chp { x:=I; *[R!(x); L?(x)] }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint W; preal F, B>
+defproc timed_int_buf (chan?(int<W>) L; chan!(int<W>) R) {
+int<W> x;
+chp { *[ $(after=B) L?(x); $(after=F) R!(x)] }
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint W, I; preal F, B>
+defproc timed_int_buf_init (chan?(int<W>) L; chan!(int<W>) R) {
+int<W> x;
+chp { x:=I; *[ $(after=F) R!(x); $(after=B) L?(x)] }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

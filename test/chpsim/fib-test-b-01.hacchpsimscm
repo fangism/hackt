@@ -1,0 +1,22 @@
+#!hacchpsimguile -b
+!#
+;; "fib-test-b-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: fib-test-b-01.hacchpsimscm,v 1.1.2.1 2007/05/04 02:12:29 fang Exp $
+;; @haco@ fib-test-b.haco-a
+;; @chpsimtrace@ fib-test-b-01.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(use-modules (hackt hackt-primitives))
+
+(define trace-name "fib-test-b-01.chpsimtrace")
+
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+(define cycle-reference (hac:parse-reference "fibber.S"))
+
+(load-from-path "trace-reference-cycle.hacchpsimscm")
+
+"cycle-time: 8-10"
+

@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
 	3	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	48
 	4	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
@@ -73,18 +73,92 @@ Persistent Object Manager text dump:
 	65	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	68	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	69	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
+	69	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	70	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	71	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	73	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	75	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	77	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	78	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	80	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	88	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	91	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	94	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	95	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	100	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	101	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	102	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	103	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	104	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	106	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	107	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	108	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	111	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	70
+	113	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	115	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	116	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	117	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	118	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	119	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	120	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	121	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	122	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	70
+	123	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	124	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	125	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	126	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	128	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	129	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	130	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	131	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	132	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	70
+	133	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	134	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	135	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	136	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	137	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	138	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	139	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	140	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	141	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	143	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	144	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
+	145	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
   1 instantiation-collections
   0 sub-namespaces
-  1 definitions
-  3 typedefs
+  2 definitions
+  6 typedefs
   Definitions:
     bool_copy = process-definition (defined) bool_copy<
       pint<> N
@@ -145,6 +219,40 @@ In namespace "", we have: {
       }
       }
 
+    timed_bool_copy = process-definition (defined) timed_bool_copy<
+      pint<> N
+      preal<> F
+      preal<> B
+      >(
+        chan?(bool<>) A
+        chan!(bool<>) O[0..N-1]
+      )
+      In definition "timed_bool_copy", we have: {
+      Parameters:
+        B = preal<> timed_bool_copy::B
+        F = preal<> timed_bool_copy::F
+        N = pint<> timed_bool_copy::N
+      Instances:
+        A = chan?(bool<>) timed_bool_copy::A
+        O = chan!(bool<>) timed_bool_copy::O^1
+        a = bool<> timed_bool_copy::a
+      unroll sequence: 
+        chan?(bool<>) A
+        chan!(bool<>) O[0..N-1]
+        bool<> a
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              [after=B] A?(a)
+              [after=0] concurrent i:[0..N-1]: {
+                [after=F] O[$i]!(a)
+              }
+            }
+          ]
+        }
+      }
+
   Typedefs:
     bool_copy_2 = process-definition-alias: bool_copy_2
       = bool_copy<2>
@@ -152,6 +260,21 @@ In namespace "", we have: {
       = bool_copy<3>
     bool_copy_4 = process-definition-alias: bool_copy_4
       = bool_copy<4>
+    timed_bool_copy_2 = process-definition-alias: timed_bool_copy_2<
+      preal<> F
+      preal<> B
+      >
+      = timed_bool_copy<2, timed_bool_copy_2::F, timed_bool_copy_2::B>
+    timed_bool_copy_3 = process-definition-alias: timed_bool_copy_3<
+      preal<> F
+      preal<> B
+      >
+      = timed_bool_copy<3, timed_bool_copy_3::F, timed_bool_copy_3::B>
+    timed_bool_copy_4 = process-definition-alias: timed_bool_copy_4<
+      preal<> F
+      preal<> B
+      >
+      = timed_bool_copy<4, timed_bool_copy_4::F, timed_bool_copy_4::B>
   Instances:
     HAHA = bool_copy_2<> HAHA
 }
