@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.10 2007/03/11 16:34:23 fang Exp $
+	$Id: CHP_base.h,v 1.11 2007/05/04 18:16:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -11,23 +11,9 @@
 #include "util/memory/count_ptr.h"
 // #include "util/STL/vector_fwd.h"
 #include "Object/devel_switches.h"
-#include "sim/chpsim/devel_switches.h"
 
-#if !CHPSIM_VISIT_EXECUTE
-#include "Object/ref/reference_set.h"
-#endif
 
 namespace HAC {
-#if !CHPSIM_VISIT_EXECUTE
-namespace SIM {
-namespace CHPSIM {
-	// we need some sort of CHP_visitor refinement!
-//	class StateConstructor;
-	class nonmeta_context;
-	class EventNode;
-}	// end namespace CHPSIM
-}	// end namespace SIM
-#endif
 namespace entity {
 struct expr_dump_context;
 class unroll_context;
@@ -38,10 +24,6 @@ class preal_expr;
 namespace CHP {
 using std::ostream;
 using std::istream;
-#if !CHPSIM_VISIT_EXECUTE
-// using SIM::CHPSIM::StateConstructor;
-using SIM::CHPSIM::nonmeta_context;
-#endif
 using util::persistent;
 using util::persistent_object_manager;
 class action;
@@ -57,9 +39,6 @@ typedef	count_ptr<const  preal_expr>		delay_ptr_type;
 class action : public persistent {
 public:
 	typedef	action_ptr_type			unroll_return_type;
-#if !CHPSIM_VISIT_EXECUTE
-	typedef	entity::global_references_set	execute_arg_type;
-#endif
 	/**
 		TODO: Eventually generalize this to attribute list.  
 	 */
@@ -98,15 +77,6 @@ virtual	CHP_DUMP_EVENT_PROTO = 0;
 	ostream&
 	dump_event_with_attributes(ostream&, const expr_dump_context&) const;
 
-#if !CHPSIM_VISIT_EXECUTE
-#define	CHP_DUMP_SUCCESSORS_PROTO					\
-	ostream&							\
-	dump_successor_edges(ostream&, const SIM::CHPSIM::EventNode&,	\
-		const size_t, const expr_dump_context&) const
-
-virtual	CHP_DUMP_SUCCESSORS_PROTO;
-#endif
-
 	/**
 		unroll_context-binding functor.  
 	 */
@@ -132,23 +102,6 @@ virtual	CHP_UNROLL_ACTION_PROTO = 0;
 	accept(chp_visitor&) const
 
 virtual	CHP_ACTION_ACCEPT_PROTO = 0;
-
-#if !CHPSIM_VISIT_EXECUTE
-#define	CHP_EXECUTE_PROTO						\
-	void								\
-	execute(const nonmeta_context&, execute_arg_type&) const
-
-virtual	CHP_EXECUTE_PROTO = 0;
-
-/**
-	\return true if the invoking event should be enqueued.
- */
-#define	CHP_RECHECK_PROTO						\
-	char								\
-	recheck(const nonmeta_context&) const
-
-virtual	CHP_RECHECK_PROTO = 0;
-#endif
 
 // these were added just for the delay member pointer
 	void

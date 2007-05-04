@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.18 2007/05/04 03:37:20 fang Exp $
+	$Id: CHP.h,v 1.19 2007/05/04 18:16:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -89,10 +89,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	// helper methods needed for process_definition
 	void
@@ -149,10 +145,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	good_bool
 	unroll(const unroll_context&, entity::footprint&) const;
@@ -179,9 +171,6 @@ public:
 	typedef	count_ptr<const bool_expr>	guard_ptr_type;
 	typedef	count_ptr<const action>		stmt_ptr_type;
 	typedef	count_ptr<const guarded_action>	unroll_return_type;
-#if !CHPSIM_VISIT_EXECUTE
-	typedef	action::execute_arg_type	execute_arg_type;
-#endif
 	/// Functor for evaluating guards
 	struct selection_evaluator;
 	struct selection_evaluator_ref;
@@ -225,10 +214,6 @@ public:
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	struct unroll_resolver {
 		const unroll_context&			_context;
@@ -269,15 +254,8 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_DUMP_SUCCESSORS_PROTO;
-#endif
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
@@ -302,15 +280,8 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_DUMP_SUCCESSORS_PROTO;
-#endif
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
@@ -355,10 +326,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_selection
@@ -401,10 +368,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_statement
@@ -446,10 +409,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
@@ -489,10 +448,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -538,10 +493,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	template <class L>
 	good_bool
@@ -592,10 +543,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	template <class L>
 	good_bool
@@ -625,15 +572,8 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	CHP_DUMP_EVENT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_DUMP_SUCCESSORS_PROTO;
-#endif
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
@@ -668,10 +608,6 @@ public:
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
-#if !CHPSIM_VISIT_EXECUTE
-	CHP_EXECUTE_PROTO;
-	CHP_RECHECK_PROTO;
-#endif
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

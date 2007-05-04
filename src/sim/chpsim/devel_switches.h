@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.6 2007/05/04 03:37:28 fang Exp $
+	$Id: devel_switches.h,v 1.7 2007/05/04 18:16:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -47,27 +47,6 @@
  */
 #define	CHPSIM_COUPLED_CHANNELS			1
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to support up to two atomic events per step.  
-	Places affected: event_placeholder_type, ...
-	Rationale: perfect synchronization that doesn't split up the event
-		pair in FIFO scheduling.
-	Goal: ?
-	Priority: ?
-	Status: not begun, will wait until 
-	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	May not use this if we accept atomic events being split
-	in the immediate event fifo (pseudo atomic).
-	Resolution: not intending to work, current scheme with pseudo-atomic
-		send-receive pairs in the immediate_event_fifo is good enough, 
-		and keeps things simple without introducing yet another 
-		corner case.
-	TODO: smite this flag
- */
-#define CHPSIM_EVENT_PAIRS			0
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to apply prefix delays *before* events are first checked.
 	Rationale: to faciliate send/receive atomicity/simultaneity.
@@ -103,20 +82,6 @@
 	Priority: ?
  */
 #define	CHPSIM_TRACE_WITH_CHECKPOINT		0
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to implement CHP event execution and rechecking
-	as a visitor instead of a direct virtual method.  
-	Cost: execution slower due to double virtual dispatch
-	Benefit: acyclic library dependence
-	Goal: 1?
-	Status: done, stably tested
-	Priority: high -- for shared library arrangements
-	TODO: perm this after merge to mainline because we cannot
-		support previous versions with CHPSIM_DELAYED_SUCCESSOR_CHECKS.
- */
-#define	CHPSIM_VISIT_EXECUTE			1
 
 //=============================================================================
 

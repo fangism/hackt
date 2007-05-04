@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.23 2007/05/04 03:37:19 fang Exp $
+	$Id: CHP.cc,v 1.24 2007/05/04 18:16:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,9 +18,6 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
-#if !CHPSIM_VISIT_EXECUTE
-#include "Object/expr/pbool_const.h"
-#endif
 #include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -46,12 +43,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/preal_const.h"
 #include "Object/def/template_formals_manager.h"
-#if !CHPSIM_VISIT_EXECUTE
-#include "Object/nonmeta_context.h"
-#include "Object/state_manager.h"
-#include "Object/global_channel_entry.h"
-#include "Object/nonmeta_channel_manipulator.h"
-#endif
+#include "sim/chpsim/devel_switches.h"	// CHPSIM_DELAYED_SUCCESSOR_EVENTS
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -61,12 +53,6 @@
 #include "util/visitor_functor.h"
 #include "util/indent.h"
 #include "util/IO_utils.tcc"
-#if !CHPSIM_VISIT_EXECUTE
-#include "util/STL/valarray_iterator.h"
-#include "util/reference_wrapper.h"
-#include "util/iterator_more.h"		// for set_inserter
-#include "util/numeric/random.h"	// for rand48
-#endif
 
 #if ENABLE_STACKTRACE_CHPSIM
 #define	STACKTRACE_CHPSIM_VERBOSE	STACKTRACE_VERBOSE
@@ -139,18 +125,11 @@ using std::find;
 using std::transform;
 using std::back_inserter;
 using std::for_each;
-#if !CHPSIM_VISIT_EXECUTE
-using util::set_inserter;
-#endif
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
-#if !CHPSIM_VISIT_EXECUTE
-using util::reference_wrapper;
-using util::numeric::rand48;
-#endif
 using entity::preal_const;
 
 //=============================================================================
@@ -164,70 +143,6 @@ static
 good_bool
 set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&, 
 	const unroll_context&, const bool);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	For all non-selection events that execute, schedule all successor
-	events for recheck.
-	Also decrement those events' countdown upon execution of this event.  
-	Don't forget to decrement the selected event's counter for selections!
-	This should be kept consistent with CHPSIM::EventNode::execute().
- */
-static
-inline
-void
-recheck_all_successor_events(const nonmeta_context& c) {
-	typedef	EventNode	event_type;
-	typedef	size_t		event_index_type;
-	STACKTRACE_CHPSIM_VERBOSE;
-	const event_type::successor_list_type&
-		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
-	for_each(std::begin(succ), std::end(succ), 
-		event_type::countdown_decrementer(c.event_pool));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Print outgoing edges adorned with guard expressions as labels. 
- */
-static
-ostream&
-dump_selection_successor_edges(const selection_list_type& l, ostream& o, 
-		const EventNode& e, const size_t i, 
-		const expr_dump_context& c) {
-	typedef	selection_list_type::const_iterator const_iterator;
-	const EventNode::successor_list_type& succ(e.successor_events);
-	const size_t* si = std::begin(succ);
-	const size_t* se = std::end(succ);
-	const_iterator li(l.begin()), le(l.end());
-	for ( ; li!=le; ++li, ++si) {
-		const guarded_action::guard_ptr_type&
-			g((*li)->get_guard());
-		o << EventNode::node_prefix << i << " -> " <<
-			EventNode::node_prefix << *si << "\t[label=\"";
-		if (g) {
-			g->dump(o, c);
-		} else {
-			o << "else";
-		}
-		o << "\"];" << endl;
-	}
-	// guard list may have ONE less than successor list
-	// if there is an implicit else-clause
-	if (si != se) {
-		o << EventNode::node_prefix << i << " -> " <<
-			EventNode::node_prefix << *si <<
-			"\t[label=\"else\"];" << endl;
-		++si;
-		INVARIANT(si == se);
-		
-	}
-	// check for else clause
-	return o;
-}
-#endif
 
 //=============================================================================
 // class action method definitions
@@ -279,18 +194,6 @@ action::dump_event_with_attributes(ostream& o,
 	dump_attributes(o, d);
 	return this->dump_event(o, d);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	By default print all successor edge, unadorned.  
- */
-ostream&
-action::dump_successor_edges(ostream& o, const EventNode& e, 
-		const size_t i, const expr_dump_context&) const {
-	return e.dump_successor_edges_default(o, i);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -429,31 +332,6 @@ void
 action_sequence::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Sequences should never be used as leaf events, 
-	so this does nothing.  
- */
-void
-action_sequence::execute(const nonmeta_context&, execute_arg_type&) const {
-	// no-op
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Sequences should never be used as leaf events, 
-	so this does nothing.  
- */
-char
-action_sequence::recheck(const nonmeta_context&) const {
-	// no-op
-	ICE_NEVER_CALL(cerr);
-	return RECHECK_UNBLOCKED_THIS;	// don't care
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -624,34 +502,6 @@ void
 concurrent_actions::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Action groups should never be used as leaf events, 
-	so this does nothing.  
-	Conditionally enqueue all successors, blocking on ones that are not
-	ready to execute.  
- */
-void
-concurrent_actions::execute(const nonmeta_context& c, execute_arg_type&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	recheck_all_successor_events(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Action groups should never be used as leaf events, 
-	so this does nothing.  
-	This event also never blocks, although its successors may block.
- */
-char
-concurrent_actions::recheck(const nonmeta_context&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	// no-op
-	return RECHECK_NEVER_BLOCKED;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -848,92 +698,6 @@ unroll_resolve_selection_list(const selection_list_type& s,
 }
 
 //=============================================================================
-#if !CHPSIM_VISIT_EXECUTE
-// class guarded_action::selection_evaluator definition
-
-/**
-	Functor for evaluating guarded statements.  
-	This class can be given hidden visibility (local to module).  
- */
-struct guarded_action::selection_evaluator {
-	// operator on selection_list_type::const_reference
-	typedef	const count_ptr<const guarded_action>&	argument_type;
-	const nonmeta_context_base& 		context;
-	/// successor index (induction variable)
-	size_t					index;
-	/// list of successors whose guards evaluated true (accumulate)
-	vector<size_t>				ready;
-
-	explicit
-	selection_evaluator(const nonmeta_context_base& c) :
-			context(c), index(0), ready() {
-		ready.reserve(2);
-	}
-
-	void
-	operator () (argument_type g) {
-		STACKTRACE_CHPSIM_VERBOSE;
-		NEVER_NULL(g);
-		STACKTRACE_INDENT_PRINT("evaluating guard " << index << endl);
-	if (g->guard) {
-		const count_ptr<const pbool_const>
-			b(g->guard->__nonmeta_resolve_rvalue(
-				context, g->guard));
-		// error handling
-		if (!b) {
-			cerr << "Run-time error evaluating guard expression."
-				<< endl;
-			THROW_EXIT;
-		}
-		if (b->static_constant_value()) {
-			STACKTRACE_INDENT_PRINT("true guard" << endl);
-			ready.push_back(index);
-		} else {
-			STACKTRACE_INDENT_PRINT("false guard" << endl);
-		}
-	} else {
-		// NULL guard is an else clause (in last position)
-		STACKTRACE_INDENT_PRINT("else guard" << endl);
-		if (ready.empty()) {
-			ready.push_back(index);
-		}
-	}
-		++index;
-	}	// end operator ()
-
-private:
-	typedef	selection_evaluator		this_type;
-
-	/// no-copy or assign
-	explicit
-	selection_evaluator(const this_type&);
-
-};	// end class selection_evaluator
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Functor reference wrapper.
- */
-class guarded_action::selection_evaluator_ref :
-		public reference_wrapper<guarded_action::selection_evaluator> {
-	typedef	reference_wrapper<guarded_action::selection_evaluator>
-				parent_type;
-	typedef	parent_type::type::argument_type	argument_type;
-public:
-	selection_evaluator_ref(reference r) : parent_type(r) { }
-
-	/**
-		Forwarding operator to underlying reference.  
-	 */
-	void
-	operator () (argument_type a) {
-		get()(a);
-	}
-
-};	// end class selection_evaluator_ref
-#endif
-
-//=============================================================================
 // class deterministic_selection method definitions
 
 deterministic_selection::deterministic_selection() :
@@ -1006,86 +770,6 @@ void
 deterministic_selection::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Action groups should never be used as leaf events, 
-	so this does nothing other than evaluate guards, via recheck().  
-	Q: this is checked twice: pre-enqueue, and during execution.
-		What if guard is unstable?  and conditions change?
- */
-void
-deterministic_selection::execute(const nonmeta_context& c, 
-		execute_arg_type&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	// never enqueues itself, only successors
-	// see recheck() below
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Selections act like a proxy event that dispatches one of its
-	successors, but never executes "itself" when unblocked.  
-	Action groups should never be used as leaf events, 
-	so this does nothing.
-	When a successor is ready to enqueue, unsubscribe this event from
-	its dependencies.  
-	\return false signaling that this event is never enqueued, 
-		(only successors are enqueued).
-	Q: this is checked twice? A: no, doesn't follow conventional execution
-	TODO: test nested selections!
- */
-char
-deterministic_selection::recheck(const nonmeta_context& c) const {
-	// 1) evaluate all clauses, which contain guard expressions
-	//	Use functional pass.
-	// 2) if exactly one is true, return reference to it as the successor
-	//	event to enqueue (not execute right away)
-	//	a) if more than one true, signal a run-time error
-	//	b) if none are true, and there is an else clause, use it
-	//	c) if none are true, without else clause, 'block',
-	//		subscribing this event to its set of dependents.  
-	STACKTRACE_CHPSIM_VERBOSE;
-	guarded_action::selection_evaluator G(c);	// needs reference wrap
-	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
-	switch (G.ready.size()) {
-	case 0: {
-		return RECHECK_BLOCKED_THIS;	// no successor to enqueue
-		// caller will subscribe this event's dependencies
-	}
-	case 1: {
-		EventNode& t(c.get_event());	// this event
-		const size_t ei = t.successor_events[G.ready.front()];
-		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
-		t.reset_countdown();
-		// act like this event (its predecessor) executed
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-		return RECHECK_DEFERRED_TO_SUCCESSOR;
-	}
-	default:
-		cerr << "Run-time error: multiple exclusive guards of "
-			"deterministic selection evaluated TRUE!" << endl;
-		THROW_EXIT;
-		return RECHECK_BLOCKED_THIS;		// unreachable
-	}	// end switch
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-ostream&
-deterministic_selection::dump_successor_edges(ostream& o, const EventNode& e, 
-		const size_t i, const expr_dump_context& c) const {
-	return dump_selection_successor_edges(*this, o, e, i, c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1187,182 +871,6 @@ void
 nondeterministic_selection::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	TODO: we may want this to behave differently than determinstic sel.
-	We may want to introduce a delay window from recheck to enqueue
-	so multiple input guards may become true to require arbitration, 
-	not just the arrival of the first true guard.
-	In this case, we want recheck behavior upon execution.  
-	Recheck will be slightly different.  
-	Note that the window of delay also allows for the possibility
-	of unstable guards upon re-evaluation!
-	Deterministic selection does not have this problem, 
-	as branch selection occurs immediately.  
-
-	Action groups should never be used as leaf events, 
-	so this does nothing other than evaluate guards, via recheck().  
-	Q: this is checked twice: pre-enqueue, and during execution.
-		What if guard is unstable?  and conditions change?
- */
-void
-nondeterministic_selection::execute(const nonmeta_context& c, 
-		execute_arg_type&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-#if 0
-	ICE_NEVER_CALL(cerr);
-#else
-	// 1) evaluate all clauses, which contain guard expressions
-	//	Use functional pass.
-	// 2) if exactly one is true, return reference to it as the successor
-	//	event to enqueue (not execute right away)
-	//	a) if more than one true, signal a run-time error
-	//	b) if none are true, and there is an else clause, use it
-	//	c) if none are true, without else clause, 'block',
-	//		subscribing this event to its set of dependents.  
-	STACKTRACE_CHPSIM_VERBOSE;
-	guarded_action::selection_evaluator G(c);	// needs reference wrap
-	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
-	const size_t m = G.ready.size();
-	EventNode& t(c.get_event());
-	switch (m) {
-	case 0: {
-		// this can happen because guards may be unstable, 
-		// and can thus become invalidated between enqueue and execute
-		c.subscribe_this_event();	// deduce own event index
-		break;
-	}
-	case 1: {
-		const size_t ei = t.successor_events[G.ready.front()];
-#if 0
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-#else
-		c.rechecks.insert(ei);
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-#endif
-		break;
-	}
-	default: {
-		// pick one at random
-		static rand48<unsigned long> rgen;
-		const size_t r = rgen();	// random-generate
-		const size_t ei = t.successor_events[G.ready[r%m]];
-#if 0
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-#else
-		c.rechecks.insert(ei);
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-#endif
-	}
-	}	// end switch
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: implement this differently, see comment in execute().
-	Action groups should never be used as leaf events, 
-	so this does nothing.
-	When a successor is ready to enqueue, unsubscribe this event from
-	its dependencies.  
-	\pre selection has no else clause.  
-	\return false signaling that this event is never enqueued, 
-		(only successors are enqueued).
-	Q: this is checked twice?
- */
-char
-nondeterministic_selection::recheck(const nonmeta_context& c) const {
-	// 1) evaluate all clauses, which contain guard expressions
-	//	Use functional pass.
-	// 2) if exactly one is true, return reference to it as the successor
-	//	event to enqueue (not execute right away)
-	//	a) if more than one true, signal a run-time error
-	//	b) if none are true, and there is an else clause, use it
-	//	c) if none are true, without else clause, 'block',
-	//		subscribing this event to its set of dependents.  
-	STACKTRACE_CHPSIM_VERBOSE;
-	guarded_action::selection_evaluator G(c);	// needs reference wrap
-	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
-#if 0
-	const size_t m = G.ready.size();
-	EventNode& t(c.get_event());
-	switch (m) {
-	case 0: {
-		// TODO: see determinstic selection
-		return RECHECK_BLOCKED_THIS;	// no successor to enqueue
-	}
-	case 1: {
-		const size_t ei = t.successor_events[G.ready.front()];
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-#if 0
-		c.rechecks.insert(ei);
-		return true;
-#else
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-		return RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
-	}
-	default: {
-		// pick one at random
-		static rand48<long> rgen;
-		const size_t r = rgen();	// random-generate
-		const size_t ei = t.successor_events[G.ready[r%m]];
-		t.reset_countdown();
-		EventNode::countdown_decrementer(c.event_pool)(ei);
-#if 0
-		c.rechecks.insert(ei);
-		return true;
-#else
-		// recheck it on the spot
-		EventNode& suc(c.event_pool[ei]);
-		const nonmeta_context::event_setter x(c, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(c, ei);
-		return RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
-	}
-	}	// end switch
-	return RECHECK_BLOCKED_THIS;
-#else
-	if (G.ready.size()) {
-		// defer actual selection until the execution phase, 
-		// with some delay
-		return RECHECK_UNBLOCKED_THIS;
-	} else {
-		return RECHECK_BLOCKED_THIS;
-	}
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-ostream&
-nondeterministic_selection::dump_successor_edges(
-		ostream& o, const EventNode& e, 
-		const size_t i, const expr_dump_context& c) const {
-	return dump_selection_successor_edges(*this, o, e, i, c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1500,27 +1008,6 @@ void
 metaloop_selection::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Never called, always expanded.  
- */
-void
-metaloop_selection::execute(const nonmeta_context&, execute_arg_type&) const {
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Never called, always expanded.  
- */
-char
-metaloop_selection::recheck(const nonmeta_context&) const {
-	ICE_NEVER_CALL(cerr);
-	return RECHECK_BLOCKED_THIS;	// don't care
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1664,27 +1151,6 @@ metaloop_statement::accept(chp_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Never called, always expanded.  
- */
-void
-metaloop_statement::execute(const nonmeta_context&, execute_arg_type&) const {
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Never called, always expanded.  
- */
-char
-metaloop_statement::recheck(const nonmeta_context&) const {
-	ICE_NEVER_CALL(cerr);
-	return RECHECK_BLOCKED_THIS;	// don't care
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 metaloop_statement::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1789,33 +1255,6 @@ assignment::accept(chp_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	lvalue must be bool, int, or enum reference.  
-	\param u collection of references updated by the assignment execution,
-		namely, the lvalues.
- */
-void
-assignment::execute(const nonmeta_context& c, execute_arg_type& u) const {
-	typedef	EventNode		event_type;
-	STACKTRACE_CHPSIM_VERBOSE;
-	lval->nonmeta_assign(rval, c, u);	// also tracks updated reference
-	recheck_all_successor_events(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assignments are non-blocking, and thus need no re-evaluation.
- */
-char
-assignment::recheck(const nonmeta_context&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	// no-op
-	return RECHECK_NEVER_BLOCKED;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 assignment::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1902,54 +1341,6 @@ void
 condition_wait::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Does nothing, is a NULL event.  
-	NOTE: it is possible that guard is no longer true, 
-		as it may be invalidated since the time it was enqueued.
-		We do not check for guard stability... yet.  
- */
-void
-condition_wait::execute(const nonmeta_context& c, execute_arg_type&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	recheck_all_successor_events(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: (Q?) condition-wait is currently non-atomic, see execute() note.
-	If we wanted true atomicity, then we would have the recheck()
-	enqueue the *succcessor* events, rather than itself, just like
-	deterministic_selection::recheck().  
-
-	The 'guarded' action is a NULL event, which can always occur.  
-	The guard expression is already checked by the caller
-	as a part of event processing.  
- */
-char
-condition_wait::recheck(const nonmeta_context& c) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	if (cond) {
-		// TODO: decide error handling via exceptions?
-		const count_ptr<const pbool_const>
-			g(cond->__nonmeta_resolve_rvalue(c, cond));
-		if (!g) {
-			cerr << "Failure resolving run-time value of "
-				"boolean expression: ";
-			cond->dump(cerr,
-				expr_dump_context::default_value) << endl;
-			// temporary
-			THROW_EXIT;
-		}
-		return g->static_constant_value() ?
-			RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-	} else {
-		return RECHECK_UNBLOCKED_THIS;
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2130,56 +1521,6 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Assigns the 'fields' of the channel and flips the (lock) state bit.  
-	Only the channel is 'modified' by a send, so we register it
-	with the update set.  
-	\throws an exception if anything goes wrong with expression
-		evaluation.  
- */
-void
-channel_send::execute(const nonmeta_context& c, execute_arg_type& u) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
-#define	ASSERT_CHAN_INDEX						\
-	if (!chan_index) {						\
-		chan->dump(cerr << "at: ",				\
-			expr_dump_context::default_value) << endl;	\
-		THROW_EXIT;						\
-	}
-	ASSERT_CHAN_INDEX
-	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-	// evaluate rvalues of channel send statement (may throw!)
-	// write to the ChannelState using canonical_fundamental_type
-	for_each(exprs.begin(), exprs.end(), 
-		nonmeta_expr_evaluator_channel_writer(c, nc));
-	// track the updated-reference (channel)
-	// expressions are only read, no lvalue data modified
-	u.push_back(std::make_pair(
-		size_t(entity::META_TYPE_CHANNEL), chan_index));
-	NEVER_NULL(nc.can_send());	// else run-time exception
-	nc.send();
-	recheck_all_successor_events(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Enqueue event if it is ready to execute.  
-	\return true if this event can be unblocked and enqueued for execution.
- */
-char
-channel_send::recheck(const nonmeta_context& c) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	// see if referenced channel is ready to send
-	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
-	ASSERT_CHAN_INDEX
-	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-	return nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_send::accept(chp_visitor& v) const {
 	v.visit(*this);
@@ -2306,49 +1647,6 @@ channel_receive::accept(chp_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Assigns the 'fields' of the channel and flips the (lock) state bit.  
-	Both the channel and lvalues are 'modified' by a receive, 
-	so we register them all with the update set.  
- */
-void
-channel_receive::execute(const nonmeta_context& c, execute_arg_type& u) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
-	ASSERT_CHAN_INDEX
-	ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-	// evaluate lvalues of channel receive statement (may throw!)
-	// read from the ChannelState using canonical_fundamental_type
-	for_each(insts.begin(), insts.end(), 
-		nonmeta_reference_lookup_channel_reader(c, nc, u));
-	// track the updated-reference (channel)
-	u.push_back(std::make_pair(
-		size_t(entity::META_TYPE_CHANNEL), chan_index));
-	INVARIANT(nc.can_receive());	// else run-time exception
-	nc.receive();
-	recheck_all_successor_events(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Enqueue event if it is ready to execute.  
-	\return true if this event can be unblocked and enqueued for execution.
- */
-char
-channel_receive::recheck(const nonmeta_context& c) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	// see if referenced channel is ready to receive
-	const size_t chan_index = chan->lookup_nonmeta_global_index(c);
-	ASSERT_CHAN_INDEX
-	const ChannelState& nc(c.values.get_pool<channel_tag>()[chan_index]);
-	return nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-}
-
-#undef	ASSERT_CHAN_INDEX
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_receive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -2447,25 +1745,6 @@ do_forever_loop::accept(chp_visitor& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	No-op, this should never be called from simulator, as loop
-	body events are expanded.  
- */
-void
-do_forever_loop::execute(const nonmeta_context&, execute_arg_type&) const {
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-char
-do_forever_loop::recheck(const nonmeta_context&) const {
-	ICE_NEVER_CALL(cerr);
-	return RECHECK_BLOCKED_THIS;	// don't care
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -2554,65 +1833,6 @@ void
 do_while_loop::accept(chp_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-/**
-	Evaluate the guards immediately.
-	If evaluation is true, execute the body branch, else take the
-	else-clause (exit) successor, enumerated as the last branch.
-	NOTE: there's no else clause.
-	\return true, as this node is never blocking.  
- */
-void
-do_while_loop::execute(const nonmeta_context& c, execute_arg_type&) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	guarded_action::selection_evaluator G(c);	// needs reference wrap
-	for_each(begin(), end(), guarded_action::selection_evaluator_ref(G));
-	size_t si = 0;
-	switch (G.ready.size()) {
-	case 0:	si = size();
-		// this case should never be reached because the else-clause
-		// has been expanded and is always evaluated true
-		STACKTRACE_INDENT_PRINT("no guards true, fall-through " << si << endl);
-		break;
-	case 1:	si = G.ready.front();
-		STACKTRACE_INDENT_PRINT("guard true, taking successor " << si << endl);
-		break;
-	default:
-		cerr << "Run-time error: multiple exclusive guards of "
-			"do-while-loop evaluated TRUE!" << endl;
-		THROW_EXIT;
-	}	// end switch
-	const size_t ei = c.get_event().successor_events[si];
-	c.rechecks.insert(ei);
-	EventNode::countdown_decrementer(c.event_pool)(ei);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This event never blocks and thus never needs to be rechecked for 
-	unblocking because the loop-condition comes with an implicit
-	else-clause which is taken if the evaluated condition is false.  
-	\return true because this event never rechecks itself (never blocks), 
-		only selects a succcessor.  
- */
-char
-do_while_loop::recheck(const nonmeta_context& c) const {
-	STACKTRACE_CHPSIM_VERBOSE;
-	return RECHECK_NEVER_BLOCKED;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_VISIT_EXECUTE
-ostream&
-do_while_loop::dump_successor_edges(
-		ostream& o, const EventNode& e, 
-		const size_t i, const expr_dump_context& c) const {
-	return dump_selection_successor_edges(*this, o, e, i, c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

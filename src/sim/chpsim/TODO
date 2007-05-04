@@ -1,24 +1,10 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.5 2007/05/04 03:37:27 fang Exp $
+#	$Id: TODO,v 1.6 2007/05/04 18:16:49 fang Exp $
 
 ===============================================================================
 chpsim:
 
-top-priority: NOW
-	re-writing execution model, so delays are applied *before*
-		event is checked for the first time, prefix delay.
-		Currently, delay is appled between checking and execution, 
-			like an infix delay.
-	issues: trace data:
-		causality tracking: initially cause will be from predecessor, 
-			but if blocked, then the unblocker will overwrite
-			as the last-arriving causer.  
-	implementation: event-queue will now be used for first-time checking
-		of events rather than for execution of events.  
-
 high-priority:
-	execution trace recording for offline data-mining (thesis work)
-		[STATUS: trace recording complete]
 	primitive trace querying functions [much done]
 
 medium-priority:
@@ -97,5 +83,8 @@ completed work (for the record):
 	channel probes: [STATUS: DONE]
 	checkpointing: [STATUS: basics done]
 	trace recording: [STATUS: basics done]
+	re-writing execution model: prefix delays [STATUS: DONE]
+		implementation: event-queue will now be used for first-time 
+		checking of events rather than for execution of events.  
 
 ===============================================================================
