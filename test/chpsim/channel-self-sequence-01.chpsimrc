@@ -1,5 +1,5 @@
 # "channel-self-sequence-01.chpsimrc"
-#	$Id: channel-self-sequence-01.chpsimrc,v 1.2 2007/01/21 06:02:32 fang Exp $
+#	$Id: channel-self-sequence-01.chpsimrc,v 1.3 2007/05/04 03:37:54 fang Exp $
 # @haco@ channel-self-sequence.haco-a
 
 get b
@@ -13,26 +13,26 @@ step
 get b
 get X
 queue
-step
-get b
-get X
-queue
-step
-get b
-get X
-queue
-step
-get b
-get X
-queue
-step
-get b
-get X
-queue
-step
-get b
-get X
-queue
+# step
+# get b
+# get X
+# queue
+# step
+# get b
+# get X
+# queue
+# step
+# get b
+# get X
+# queue
+# step
+# get b
+# get X
+# queue
+# step
+# get b
+# get X
+# queue
 echo expect empty queue, sequence ended
 
 

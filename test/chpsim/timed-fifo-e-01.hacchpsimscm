@@ -1,0 +1,16 @@
+#!hacchpsimguile -b
+!#
+;; "timed-fifo-e-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: timed-fifo-e-01.hacchpsimscm,v 1.2 2007/05/04 03:39:01 fang Exp $
+;; @haco@ timed-fifo-e.haco-a
+;; @chpsimtrace@ timed-fifo-e-01.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(define trace-name "timed-fifo-e-01.chpsimtrace")
+
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+"expect cycle time 10, sink is limiting factor."
+

@@ -1,5 +1,6 @@
 testing new commands 
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 All event subscriptions:
@@ -27,19 +28,21 @@ All event subscriptions:
 All event subscriptions:
 	70	13	0	
 All event subscriptions:
-bool[3]: "c" : 12 
-bool[4]: "d" : 12 
-	80	3	0	c := true
+	80	4	0	[ a -> ... [] else -> ... ]
+All event subscriptions:
+	80	7	0	[ b -> ... [] else -> ... ]
+All event subscriptions:
+	90	3	0	c := true
 All event subscriptions:
 bool[3]: "c" : 12 
 bool[4]: "d" : 12 
-	80	6	0	d := true
-All event subscriptions:
-	90	2	0	null
-All event subscriptions:
-	90	5	0	null
+	90	6	0	d := true
 All event subscriptions:
 	90	12	0	[c&&d]
+All event subscriptions:
+	100	2	0	null
+All event subscriptions:
+	100	5	0	null
 All event subscriptions:
 	100	11	0	
 All event subscriptions:
@@ -52,5 +55,6 @@ All event subscriptions:
 	130	1	0	
 All event subscriptions:
 event queue:
+check queue:
 	(empty)
 time: 130

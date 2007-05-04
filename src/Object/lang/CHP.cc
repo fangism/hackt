@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.22 2007/04/15 05:52:20 fang Exp $
+	$Id: CHP.cc,v 1.23 2007/05/04 03:37:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -740,6 +740,18 @@ guarded_action::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Only print: G -> ...
+ */
+ostream&
+guarded_action::dump_brief(ostream& o, const expr_dump_context& c) const {
+	if (guard)
+		guard->dump(o, c);
+	else 	o << "else";
+	return o << " -> ...";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Unroll-resolves the data-expression and action.  
  */
 guarded_action::unroll_return_type
@@ -952,8 +964,20 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
  */
 ostream&
 deterministic_selection::dump_event(ostream& o, 
-		const expr_dump_context&) const {
+		const expr_dump_context& c) const {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// want to print some shorthand for selection event...
+	// [G1 -> ... [] G2 -> ... ]
+	const_iterator i(begin());
+	const const_iterator e(end());
+	INVARIANT(i!=e);
+	(*i)->dump_brief(o << "[ ", c);
+	for (++i; i!=e; ++i)
+		(*i)->dump_brief(o << " [] ", c);
+	return o << " ]";
+#else
 	return o;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1121,8 +1145,20 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
  */
 ostream&
 nondeterministic_selection::dump_event(ostream& o, 
-		const expr_dump_context&) const {
+		const expr_dump_context& c) const {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// want to print some shorthand for selection event...
+	// [G1 -> ... : G2 -> ... ]
+	const_iterator i(begin());
+	const const_iterator e(end());
+	INVARIANT(i!=e);
+	(*i)->dump_brief(o << "[ ", c);
+	for (++i; i!=e; ++i)
+		(*i)->dump_brief(o << " : ", c);
+	return o << " ]";
+#else
 	return o;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

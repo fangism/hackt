@@ -1,0 +1,9 @@
+// "timed-token-ring-a.hac"
+//	$Id: timed-token-ring-a.hac,v 1.2 2007/05/04 03:39:08 fang Exp $
+// specifying explicit latencies in buffers
+// don't forget to use timing per-event to overide uniform
+
+import "testlib/bool-buf.hac";
+
+timed_one_token_ring<6, 1.0, 7.0> ring;
+

@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.2 2007/04/20 18:26:04 fang Exp $
+	$Id: TODO,v 1.3 2007/05/04 03:37:23 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -36,6 +36,13 @@ Currently, all primitive functions are prefixed with 'hac:'
 and scheme functions built on top of them don't have any prefix.
 We CAN re-export the 'hac:' primitive functions without their prefix
 in the scheme modules (define-public hac:func func).
+
+===============================================================================
+BUGS:
+	branch count is off by 1 for branches that are loop-heads and
+		also happen to be an exit branch of do-while loop
+		because first entry to do-while gets counted as a 
+		loop-back branch.  Severity: minor.
 
 ===============================================================================
 DOCUMENTATION

@@ -1,5 +1,5 @@
 # "select-parallel-a-01.chpsimrc"
-#	$Id: select-parallel-a-01.chpsimrc,v 1.2 2007/01/21 06:03:41 fang Exp $
+#	$Id: select-parallel-a-01.chpsimrc,v 1.3 2007/05/04 03:38:33 fang Exp $
 # @haco@ select-parallel-a.haco-a
 
 queue
@@ -73,6 +73,10 @@ get a
 get b
 get c
 get d
+step
+echo executing selection
+step
+echo executing selection
 step
 queue
 get a

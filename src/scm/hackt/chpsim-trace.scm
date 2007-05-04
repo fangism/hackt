@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.2 2007/04/20 18:26:05 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.3 2007/05/04 03:37:23 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -217,6 +217,14 @@ with their repective values."
   rpair)
 ) ; end define
 
+(define-public (chpsim-state-trace-single-reference-values s rpair)
+"Similar to chpsim-state-trace-single-reference, but this restructures the 
+data to just the pair<event-trace-id, value>, omitting the reference pair."
+  (stream-map (lambda (e) (cons (car e) (cddr e)))
+    (chpsim-state-trace-single-reference s rpair)
+  ) ; end stream-map
+) ; end define
+
 ; not exported (yet), but can be
 (define (chpsim-trace-critical-path-iterator rand-trace entry)
 "Returns the index of the next critical event in the trace."
@@ -280,6 +288,9 @@ TODO: use memoized structures."
       (rb-tree/lookup-mutate! y x
         (lambda (z) 
 ;         (display "++") (display z) (newline)
+#!
+          "This hack is not needed anymore since we now execute branches 
+           like any other event."
           (let ((p (hac:chpsim-get-event f)))
 ;            (display "p: ") (display p) (newline)
             (if (hac:chpsim-event-select? (static-event-raw-entry p))
@@ -287,6 +298,7 @@ TODO: use memoized structures."
               (count-selects f)
             ) ; end if
           ) ; end let
+!#
           (1+ z)
         ) ; end lambda
         #f
@@ -304,14 +316,12 @@ TODO: use memoized structures."
 ;;;;;;;;;;; LOOP REPETTION COUNTS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define-public (make-loop-histogram trace-stream)
 "Constructs a histogram of do-forever loop counts for each loop-head event.
-Result is a map of number of times each loop entered (first event executed).
-NOTE: loop-head events that are selections are not automatically recoreded
-because selection events don't execute in the normal sense, they choose
-a successor to execute.  Thus, we depend on the branch histogram, which
-correctly back-propagates counts to branches.  "
+Result is a map of number of times each loop entered (first event executed)."
   (let ((loop-heads (force static-loop-head-events-delayed))
         (loop-histo (make-rb-tree = <))
+#!
         (branch-histo (make-select-branch-histogram trace-stream))
+!#
 		; can this be memoized?
        )
        ; copy over keys into new histo, initialize counts to 0
@@ -330,6 +340,7 @@ correctly back-propagates counts to branches.  "
       ) ; end lambda
       trace-stream
     ) ; end stream-for-each
+#!
     ; back-propagating branch counts
     (rb-tree/for-each
       (lambda (p)
@@ -349,6 +360,7 @@ correctly back-propagates counts to branches.  "
       ) ; end lambda
       loop-histo
     ) ; end for-each
+!#
     loop-histo
   ) ; end let
 ) ; end define

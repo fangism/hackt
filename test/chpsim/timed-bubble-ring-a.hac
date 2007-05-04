@@ -1,0 +1,9 @@
+// "timed-bubble-ring-a.hac"
+//	$Id: timed-bubble-ring-a.hac,v 1.2 2007/05/04 03:38:45 fang Exp $
+// specifying explicit latencies in buffers
+// don't forget to use timing per-event to overide uniform
+
+import "testlib/bool-buf.hac";
+
+timed_one_hole_ring<6, 7.0, 1.0> ring;	// should be self-cycle (8) limited
+

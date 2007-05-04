@@ -1,5 +1,6 @@
 // "deadlock-buf-a.hac"
 // copy-modified from "deadlock-ring-a.hac"
+// should deadlock itself
 
 import "testlib/bool-buf.hac";
 

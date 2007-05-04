@@ -2,6 +2,12 @@
 
 2007-05-03	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-22-merged-chpsim-04-34:
+	  chpsim-04 branch merge.
+
+
+2007-05-03	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-21:
 	  config/guile.m4: eval and AC_SUBST(GUILE_CONFIG_VERSION)
 		now report this in build reports.  

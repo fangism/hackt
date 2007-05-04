@@ -1,0 +1,13 @@
+# "receive-fail-a-01.chpsimrc"
+#	$Id: receive-fail-a-01.chpsimrc,v 1.2 2007/05/04 03:38:22 fang Exp $
+# @haco@ receive-fail-a.haco-a
+
+queue
+step
+queue
+step
+queue
+step
+echo expect to die before this is reached
+
+

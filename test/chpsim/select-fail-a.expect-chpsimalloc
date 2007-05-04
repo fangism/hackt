@@ -3,5 +3,5 @@ Variables:
 Event graph: 
 event[0]: fork: null, pid: 0, #pred: 0, succ: 2 
 event[1]: null: null, pid: 0, #pred: 1, succ: 
-event[2]: select: , pid: 0, #pred: 1, succ: 1 1 
+event[2]: select: [ true -> ... [] true -> ... ], pid: 0, #pred: 1, succ: 1 1 
 

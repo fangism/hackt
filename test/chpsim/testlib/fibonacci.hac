@@ -1,0 +1,58 @@
+/**
+	\file "fibonacci.hac"
+	$Id: fibonacci.hac,v 1.2 2007/05/04 03:39:19 fang Exp $
+ */
+
+import "int-arith.hac";
+import "int-copy.hac";
+import "int-buf.hac";
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Minimum slack 32-b Fibonacci machine.
+	Watch channel S for sequence.  
+	\param F1, F2 fibonacci seeds.  
+ */
+template <pint F1, F2>
+defproc fibonacci () {
+chan(int<32>) A[2];
+chan(int<32>) B, S, S2;
+int_buf_init<32, F2> b0(S, S2);
+int_buf_init<32, F1> b1(A[0], B);
+adder<32> a(B, A[1], S);
+int_copy_2<32> c(S2, A);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adding more slack on two-token loop as an experiment.
+ */
+template <pint F1, F2>
+defproc fibonacci_slacker () {
+chan(int<32>) A[2];
+chan(int<32>) B, BB, S, S2;
+int_buf_init<32, F2> b0(S, S2);
+int_buf_init<32, F1> b1(A[0], BB);
+int_buf<32> b2(BB, B);
+adder<32> a(B, A[1], S);
+int_copy_2<32> c(S2, A);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adding even more slack on two-token loop as an experiment.
+ */
+template <pint F1, F2>
+defproc fibonacci_slackerer () {
+chan(int<32>) A[2];
+chan(int<32>) B, BB, BBB, S, S2;
+int_buf_init<32, F2> b0(S, S2);
+int_buf_init<32, F1> b1(A[0], BBB);
+int_buf<32> b2(BBB, BB);
+int_buf<32> b3(BB, B);
+adder<32> a(B, A[1], S);
+int_copy_2<32> c(S2, A);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

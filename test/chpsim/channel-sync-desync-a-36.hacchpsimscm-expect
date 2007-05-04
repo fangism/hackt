@@ -1,0 +1,18 @@
+"reference: "
+(channel . 3)
+"unstripped reference value stream:"
+(7 (channel . 3) 1 17)
+(8 (channel . 3) . ack)
+(21 (channel . 3) 1 17)
+(22 (channel . 3) . ack)
+(35 (channel . 3) 1 17)
+(36 (channel . 3) . ack)
+(49 (channel . 3) 1 17)
+"stripped out references:"
+(7 1 17)
+(8 . ack)
+(21 1 17)
+(22 . ack)
+(35 1 17)
+(36 . ack)
+(49 1 17)

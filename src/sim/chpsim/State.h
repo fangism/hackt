@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.5 2007/03/11 16:34:43 fang Exp $
+	$Id: State.h,v 1.6 2007/05/04 03:37:27 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -10,9 +10,7 @@
 #include <iosfwd>
 #include <vector>
 #include "sim/chpsim/devel_switches.h"
-#if CHPSIM_MULTISET_EVENT_QUEUE
-#include <set>
-#endif
+#include <set>		// for std::multiset
 #include "sim/time.h"
 #include "sim/event.h"
 #include "sim/state_base.h"
@@ -60,9 +58,19 @@ public:
 	 */
 	typedef	event_type::time_type		time_type;
 	typedef	signal_handler<this_type>	signal_handler;
+	/**
+		Basic tuple for event scheduling.  
+	 */
 	struct event_placeholder_type : public EventPlaceholder<time_type> {
 		typedef	event_placeholder_type		this_type;
 		typedef	EventPlaceholder<time_type>	parent_type;
+#if CHPSIM_EVENT_PAIRS
+		/**
+			Optional: for tightly synchronized events such as
+			send/receive pairs, schedule them together.  
+		 */
+		event_index_type			second_event_index;
+#endif
 		/**
 			This is the index corresponding to the
 			statically allocated event.  
@@ -78,6 +86,9 @@ public:
 			going to be overwritten immedately thereafter.  
 		 */
 		event_placeholder_type() : parent_type(0, 0), 
+#if CHPSIM_EVENT_PAIRS
+			second_event_index(0), 
+#endif
 			cause_event_id(0), cause_trace_id(0) { }
 
 		event_placeholder_type(const time_type& t, 
@@ -88,14 +99,10 @@ public:
 			cause_event_id(c), cause_trace_id(i)
 			{ }
 
-#if CHPSIM_MULTISET_EVENT_QUEUE
 		bool
 		operator < (const this_type& t) const {
 			return time < t.time;
 		}
-#else
-		using parent_type::operator<;
-#endif
 
 	};	// end struct event_placeholder_type
 	/**
@@ -103,11 +110,11 @@ public:
 	 */
 	typedef	bool				step_return_type;
 private:
-#if CHPSIM_MULTISET_EVENT_QUEUE
+	/**
+		TODO: for multiset event queue type, pool-allocate
+		entries please for damn-fast alloc/deallocation.  
+	 */
 	typedef	std::multiset<event_placeholder_type>
-#else
-	typedef	EventQueue<event_placeholder_type>
-#endif
 						event_queue_type;
 	typedef	vector<event_type>		event_pool_type;
 	typedef	vector<event_queue_type::value_type>
@@ -203,8 +210,22 @@ private:
 	// event pools: for each type of event?
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	/**
+		This is where successors are scheduled to be checked for the
+		first time.  Successors are scheduled using the event delay
+		so the delay is spent up-front (a la prefix).  
+		When events 'can-fire' they simply execute immediately.  
+		The only motivation for renaming is to clearly mark the
+		impact of this change everywhere, a forced inconvenience
+		for the sake of documentation.  
+		Aside from that renaming is unnecessary.  
+	 */
+	event_queue_type			check_event_queue;
+#else
 	// event queue: unified priority queue of event_placeholders
 	event_queue_type			event_queue;
+#endif
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separately)
@@ -235,6 +256,7 @@ private:
 		Why not a set, to guarantee uniqueness?
 	 */
 	typedef	vector<event_index_type>	enqueue_list_type;
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	/**
 		List of events to enqueue for certain, accumulated
 		in step() method.  
@@ -242,10 +264,30 @@ private:
 		to avoid repeated initial allocations.  
 	 */
 	enqueue_list_type			__enqueue_list;
+#endif
 	/**
 		Set of events to recheck for unblocking.  
+		NOTE: this is not to be used for checking successors
+		of events that have just executed, those will use
+		a local first-time check-queue which applies the prefix delay.
+		This set is now reserved for events that are woken-up 
+		for rechecking.  
 	 */
 	event_subscribers_type			__rechecks;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	typedef	std::deque<event_placeholder_type>
+						immediate_event_queue_type;
+	/**
+		Events that are unblocked by wake up (recheck) should
+		be executed immediately, since their delays were already 
+		applied in advance.  
+		Since multiple events may wake up at the same time, 
+		we need a queue to handle them one at a time.  
+		Q: should this queue take precedence over dequeued events?
+		Should dequeued check_events go through this fifo?
+	 */
+	immediate_event_queue_type		immediate_event_fifo;
+#endif
 	/**
 		Events to print when they are executed.  
 		Not preserved by checkpointing.  
@@ -309,7 +351,14 @@ public:
 		\return true if event_queue is not empty.
 	 */
 	bool
-	pending_events(void) const { return !event_queue.empty(); }
+	pending_events(void) const {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		return !immediate_event_fifo.empty() ||
+			!check_event_queue.empty();
+#else
+		return !event_queue.empty();
+#endif
+	}
 
 	const time_type&
 	time(void) const { return current_time; }
@@ -348,6 +397,27 @@ public:
 private:
 	event_placeholder_type
 	dequeue_event(void);
+
+	step_return_type
+	__step(const event_index_type, const event_index_type, const size_t);
+		// THROWS_STEP_EXCEPTION
+
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	template <class Tag>
+	void
+	__notify_updates_for_recheck_no_trace(const size_t);
+#endif
+
+	void
+	__notify_updates_for_recheck(const size_t);
+
+	void
+	__perform_rechecks(const event_index_type, 
+		const event_index_type
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		, const size_t
+#endif
+		);
 
 public:
 	step_return_type
@@ -427,6 +497,7 @@ public:
 	ostream&
 	dump_break_values(ostream&) const;
 
+// CHPSIM_DELAYED_SUCCESSOR_CHECKS (rename?)
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
 
@@ -514,6 +585,11 @@ public:
 	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;
 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	ostream&
+	dump_check_event_queue(ostream&) const;
+#endif
+
 	ostream&
 	dump_event_queue(ostream&) const;
 
@@ -551,8 +627,10 @@ private:
 	ostream&
 	dump_recheck_events(ostream&) const;
 
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	ostream&
 	dump_enqueue_events(ostream&) const;
+#endif
 
 };	// end class State
 

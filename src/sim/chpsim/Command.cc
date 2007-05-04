@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.8 2007/03/11 16:34:37 fang Exp $
+	$Id: Command.cc,v 1.9 2007/05/04 03:37:24 fang Exp $
  */
 
 #include "util/static_trace.h"

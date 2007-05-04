@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.4 2007/04/20 18:25:47 fang Exp $
+	$Id: nonmeta_variable.h,v 1.5 2007/05/04 03:37:16 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include <valarray>
 #include <set>
+#include "sim/chpsim/devel_switches.h"	// for CHPSIM_COUPLED_CHANNELS
 
 namespace HAC {
 namespace entity {
@@ -287,17 +288,108 @@ public:
  */
 class channel_state_base : public ChannelData {
 protected:
+#if CHPSIM_COUPLED_CHANNELS
+	/**
+		INVARIANT: channel exclusivity (non-shared access)
+		if sender is already blocked, it is an error for
+		another sender to try to access it (throw exception?)
+		Likewise for receivers.  
+	 */
+	enum {
+		/// neither sender/receiver have tried to access it
+		CHANNEL_INACTIVE = 0,
+		/// a receiver has arrived and waits for sender
+		CHANNEL_RECEIVER_BLOCKED = 1,
+		/// a sender has arrived and waits for receiver
+		CHANNEL_SENDER_BLOCKED = 2,
+		/// receiver unblocked, sender can reset (execute)
+		CHANNEL_RECEIVED = 3,
+		/// sender unblocked, receiver can reset (execute)
+		CHANNEL_SENT = 4
+	};
+	/**
+		Tri-state channel status, using above enumeration:
+		inactive, received-blocked, sender-blocked.
+	 */
+	char				status;
+#else
 	/**
 		State bit.  
 		If this is true, channel is ready to be received, 
 		else it is ready to be sent.  
 	 */
 	bool				full;
+#endif	// CHPSIM_COUPLED_CHANNELS
 public:
 	channel_state_base();
 
+#if CHPSIM_COUPLED_CHANNELS
+	bool
+	probe(void) const {
+		return status == CHANNEL_SENDER_BLOCKED;
+	}
+
+	bool
+	can_receive(void) const {
+		return status == CHANNEL_SENDER_BLOCKED
+			|| status == CHANNEL_SENT;
+	}
+
+	bool
+	can_send(void) const {
+		return status == CHANNEL_RECEIVER_BLOCKED
+			|| status == CHANNEL_RECEIVED;
+	}
+
+	/**
+		One of these happens once per channel cycle.  
+		Whichever send/receive happens first will show the value
+		in the trace, while the other will complete the reset
+		to the inactive state.  
+	 */
+	bool
+	has_trace_value(void) const {
+		return status == CHANNEL_SENT || status == CHANNEL_RECEIVED;
+	}
+
+	bool
+	inactive(void) const { return status == CHANNEL_INACTIVE; }
+
+	void
+	block_sender(void) {
+		status = CHANNEL_SENDER_BLOCKED;
+	}
+
+	void
+	block_receiver(void) {
+		status = CHANNEL_RECEIVER_BLOCKED;
+	}
+
+public:
+	void
+	send(void) {
+		if (status == CHANNEL_RECEIVER_BLOCKED)
+			status = CHANNEL_SENT;
+		else	// status == CHANNEL_RECEIVED
+			status = CHANNEL_INACTIVE;
+	}
+
+	void
+	receive(void) {
+		if (status == CHANNEL_SENDER_BLOCKED)
+			status = CHANNEL_RECEIVED;
+		else	// status == CHANNEL_SENT
+			status = CHANNEL_INACTIVE;
+	}
+
+#else	// CHPSIM_COUPLED_CHANNELS
 	bool
 	can_receive(void) const { return full; }
+
+	bool
+	probe(void) const {
+		return can_receive();
+	}
 
 	bool
 	can_send(void) const { return !full; }
@@ -307,6 +399,7 @@ public:
 
 	void
 	receive(void) { full = false; }
+#endif	// CHPSIM_COUPLED_CHANNELS
 
 	void
 	reset(void);

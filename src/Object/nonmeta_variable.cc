@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.cc"
-	$Id: nonmeta_variable.cc,v 1.3 2007/02/05 06:39:44 fang Exp $
+	$Id: nonmeta_variable.cc,v 1.4 2007/05/04 03:37:15 fang Exp $
  */
 
 #include <iostream>
@@ -266,7 +266,13 @@ ChannelData::raw_dump(ostream& o) const {
 	All channels should be initialized empty, ready to send.  
  */
 channel_state_base::channel_state_base() :
-		ChannelData(), full(false) {
+		ChannelData(), 
+#if CHPSIM_COUPLED_CHANNELS
+		status(CHANNEL_INACTIVE)
+#else
+		full(false)
+#endif
+{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -278,7 +284,11 @@ channel_state_base::channel_state_base() :
 void
 channel_state_base::reset(void) {
 	ChannelData::reset();
+#if CHPSIM_COUPLED_CHANNELS
+	status = CHANNEL_INACTIVE;
+#else
 	full = false;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,19 +300,37 @@ channel_state_base::reset(void) {
  */
 void
 channel_state_base::write(ostream& o) const {
+#if CHPSIM_COUPLED_CHANNELS
+	write_value(o, status);
+	if (status == CHANNEL_SENDER_BLOCKED || status == CHANNEL_SENT
+			|| status == CHANNEL_RECEIVED) {
+	// RATIONALE: in channel cycle, either channel blocks sender once, 
+	// or if receiver blocked, it will see SENT before it executes
+		ChannelData::write(o);
+	}
+#else
 	write_value(o, full);	// takes 1 byte
 	if (full) {
 		ChannelData::write(o);
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_state_base::read(istream& i) {
+#if CHPSIM_COUPLED_CHANNELS
+	read_value(i, status);
+	if (status == CHANNEL_SENDER_BLOCKED || status == CHANNEL_SENT
+			|| status == CHANNEL_RECEIVED) {
+		ChannelData::read(i);
+	}
+#else
 	read_value(i, full);	// takes 1 byte
 	if (full) {
 		ChannelData::read(i);
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -313,18 +341,47 @@ channel_state_base::read(istream& i) {
 ostream&
 channel_state_base::dump(ostream& o, 
 		const canonical_fundamental_chan_type_base& t) const {
+	// print data regardless of state
 	ChannelData::dump(o << '(', t) << ')';
+#if CHPSIM_COUPLED_CHANNELS
+	switch (status) {
+	case CHANNEL_INACTIVE: o << " [empty]"; break;
+	case CHANNEL_RECEIVER_BLOCKED: o << " [wait]"; break;
+	case CHANNEL_SENDER_BLOCKED: o << " [full]"; break;
+	case CHANNEL_RECEIVED: o << " [recvd]"; break;
+	case CHANNEL_SENT: o << " [sent]"; break;
+	default: break;
+	}
+	return o;
+#else
 	return o << (full ? " [full]" : " [empty]");
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Use this for printing the contents of trace.  
+	This should reflect ::write() and ::read(), above.  
+ */
 ostream&
 channel_state_base::raw_dump(ostream& o) const {
+#if CHPSIM_COUPLED_CHANNELS
+	switch (status) {
+	case CHANNEL_INACTIVE: o << "[empty]"; break;	// empty?
+	case CHANNEL_RECEIVER_BLOCKED: o << "[wait]"; break;
+	case CHANNEL_SENDER_BLOCKED: ChannelData::raw_dump(o); break;
+		// implies full
+	case CHANNEL_RECEIVED: ChannelData::raw_dump(o) << "[recvd]"; break;
+	case CHANNEL_SENT: ChannelData::raw_dump(o) << " [sent]"; break;
+	default: break;
+	}
+#else
 	if (full) {
 		ChannelData::raw_dump(o);
 	} else {
 		o << "[ack]";
 	}
+#endif
 	return o;
 }
 

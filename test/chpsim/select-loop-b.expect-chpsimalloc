@@ -8,5 +8,5 @@ event[1]: assign: a := false, pid: 0, #pred: 1, succ: 5
 event[2]: assign: a := true, pid: 0, #pred: 1, succ: 5 
 event[3]: null: null, pid: 0, #pred: 1, succ: 2 
 event[4]: assign: b := true, pid: 0, #pred: 1, succ: 3 
-event[5]: select: , pid: 0, #pred: 1, succ: 4 3 
+event[5]: select: [ a -> ... [] else -> ... ], pid: 0, #pred: 1, succ: 4 3 
 

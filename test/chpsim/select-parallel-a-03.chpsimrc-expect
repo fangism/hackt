@@ -1,5 +1,6 @@
 null-event-delay = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 run until end 
@@ -15,15 +16,17 @@ run until end
 	20	16	0	a := true
 	20	14	0	
 	20	13	0	
-	30	3	0	c := true
-	30	6	0	d := true
-	30	2	0	null
-	30	5	0	null
-	30	12	0	[c&&d]
-	30	11	0	
-	40	9	0	c := false
-	40	10	0	d := false
-	40	8	0	
-	40	1	0	
+	30	4	0	[ a -> ... [] else -> ... ]
+	30	7	0	[ b -> ... [] else -> ... ]
+	40	3	0	c := true
+	40	6	0	d := true
+	40	12	0	[c&&d]
+	40	2	0	null
+	40	5	0	null
+	40	11	0	
+	50	9	0	c := false
+	50	10	0	d := false
+	50	8	0	
+	50	1	0	
 THAT was fast! 
-time: 40
+time: 50

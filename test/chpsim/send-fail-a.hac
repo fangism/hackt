@@ -1,0 +1,11 @@
+// "send-fail-a.hac"
+// expect fail: shared senders
+
+chan(bool) X;
+bool x;
+chp {
+*[ X!(true) ];
+*[ X!(false) ];
+*[ $(after=20) X?(x) ]	// to slow it down
+}
+

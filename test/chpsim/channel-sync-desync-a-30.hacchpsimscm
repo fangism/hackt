@@ -3,19 +3,20 @@
 ;; "channel-sync-desync-a-30.hacchpsimscm"
 ;; copy-modified from "channel-sync-desync-a-06.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: channel-sync-desync-a-30.hacchpsimscm,v 1.2 2007/04/20 18:27:07 fang Exp $
+;;	$Id: channel-sync-desync-a-30.hacchpsimscm,v 1.3 2007/05/04 03:38:01 fang Exp $
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
 ;; testing stream-filter and selectors
 
 (use-modules (hackt chpsim-trace))
+(use-modules (hackt chpsim))	; for type-tag->offset
 (use-modules (ice-9 streams))
 (use-modules (hackt streams))
 
 ; open trace and stream it in one operation
 (define y (open-chpsim-state-trace-stream "channel-sync-desync-a-04.chpsimtrace"))
 
-(define (channel-changes x) (list-ref x 4))
+(define (channel-changes x) (list-ref x (1+ (type-tag->offset 'channel))))
 (channel-changes (stream-car y))
 
 ; only look at event 2 (using predicate)

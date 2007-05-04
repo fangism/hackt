@@ -1,16 +1,25 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.4 2007/02/26 22:01:02 fang Exp $
+#	$Id: TODO,v 1.5 2007/05/04 03:37:27 fang Exp $
 
 ===============================================================================
 chpsim:
 
+top-priority: NOW
+	re-writing execution model, so delays are applied *before*
+		event is checked for the first time, prefix delay.
+		Currently, delay is appled between checking and execution, 
+			like an infix delay.
+	issues: trace data:
+		causality tracking: initially cause will be from predecessor, 
+			but if blocked, then the unblocker will overwrite
+			as the last-arriving causer.  
+	implementation: event-queue will now be used for first-time checking
+		of events rather than for execution of events.  
+
 high-priority:
 	execution trace recording for offline data-mining (thesis work)
 		[STATUS: trace recording complete]
-	primitive trace querying functions
-	guile/scheme wrapper interface to trace primitives
-	data structures for results of queries
-		guile-scm interface using 'smobs' small-objects
+	primitive trace querying functions [much done]
 
 medium-priority:
 	trace replay mechanism, seeking to specific state/time.
@@ -30,11 +39,18 @@ medium-priority:
 			BUT we may have two flavors of attributes:
 			compile-time (same as construction time)
 			and run-time (upon event execution).  
+		value-peeks can take place of value probes, 
+			by reading values with acknowledging
+			also be able to receive values into optional variables,
+			e.g. X? or X?(,,)
 	timing: interface to edit event delays, load back-annotation file?
 		possibly more elaborate code to customize delays systematically
 	checkpointing: [STATUS: basics done]
 		need to remember invocation options in state, 
 		and compare when loading checkpoint for consistency.  
+		Rigorous testing: take checkpoint at EVERY step to 
+			maximize coverage.  Can be expensive, so do this with 
+			select representative test cases.  
 	'nobreakall' or 'breaks-off' and 'breaks-on'
 	'nowatchall' is done, maybe alias to 'watches-on' and 'watches-off'
 		purpose: to be able to quickly turn off and restore
@@ -50,6 +66,7 @@ low-priority:
 			time of execution?)
 		for guard expressions
 		variables referenced (and their values)
+	backtrace: like prsim: recent last-arrival event chain, up to a cycle
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
 	visualization: 
@@ -67,6 +84,9 @@ low-priority:
 	int<W>: using integer width to mask values
 		and perform range-checking?
 	integer value formatting preference for dumping?
+	variable (variable-dependent) delays
+	support for user-defined functions, possibly with dynamic linking
+		for plug-in or module support
 
 ===============================================================================
 BUGS:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.5 2007/03/11 16:34:44 fang Exp $
+	$Id: devel_switches.h,v 1.6 2007/05/04 03:37:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -15,22 +15,6 @@
 #endif
 
 //=============================================================================
-/**
-	Define to 1 to use std::multiset implementation of event queue
-		instead of a heap-based priority_queue.
-	Rationale: the sorting in the priority queue is not stable for
-		ranges of equal priority elements.  
-	Goal: 1
-	Priority: medium-high for checkpoint consistency verification.  
-	Status: complete, tested, test cases updated accordingly.  
-		Can perm this, after it is better documented. 
-	Nice result is that cause_event_id in traces is now guaranteed
-		to be monotonic, since the queue is now FCFS w.r.t.
-		equal time-stamped events.  
- */
-#define	CHPSIM_MULTISET_EVENT_QUEUE		1
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Define to 1 to always evaluate read-dependencies 
 	and anti-dependencies upon graph construction.  
@@ -48,6 +32,54 @@
 		as BlockDependenceCollector (should rename).  
  */
 #define	CHPSIM_READ_WRITE_DEPENDENCIES		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to implement channels using tight coupling, 
+		i.e. truly blocking send-receive atomic pairs.  
+	Rationale: channels should have slack 0
+		without this, channels inherently have slack 1 because
+		the occupancy bit does not block a channel.  
+	Goal: 1
+	Priority: top
+	Status: done, tested.
+	Co-dependent: CHPSIM_DELAYED_SUCCESSOR_CHECKS
+ */
+#define	CHPSIM_COUPLED_CHANNELS			1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to support up to two atomic events per step.  
+	Places affected: event_placeholder_type, ...
+	Rationale: perfect synchronization that doesn't split up the event
+		pair in FIFO scheduling.
+	Goal: ?
+	Priority: ?
+	Status: not begun, will wait until 
+	Prerequisite: CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	May not use this if we accept atomic events being split
+	in the immediate event fifo (pseudo atomic).
+	Resolution: not intending to work, current scheme with pseudo-atomic
+		send-receive pairs in the immediate_event_fifo is good enough, 
+		and keeps things simple without introducing yet another 
+		corner case.
+	TODO: smite this flag
+ */
+#define CHPSIM_EVENT_PAIRS			0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to apply prefix delays *before* events are first checked.
+	Rationale: to faciliate send/receive atomicity/simultaneity.
+	Goal: 1
+	Priority: TOP
+	Status: done, tested
+	Co-dependent: CHPSIM_COUPLED_CHANNELS
+	Plan: instate a first_recheck_queue, where successors first arrive.
+		step() will now recheck events in order until one (or two)
+		*actually* executes.  
+ */
+#define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -79,8 +111,10 @@
 	Cost: execution slower due to double virtual dispatch
 	Benefit: acyclic library dependence
 	Goal: 1?
-	Status: in progress
+	Status: done, stably tested
 	Priority: high -- for shared library arrangements
+	TODO: perm this after merge to mainline because we cannot
+		support previous versions with CHPSIM_DELAYED_SUCCESSOR_CHECKS.
  */
 #define	CHPSIM_VISIT_EXECUTE			1
 

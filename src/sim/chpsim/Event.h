@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.6 2007/04/20 18:26:11 fang Exp $
+	$Id: Event.h,v 1.7 2007/05/04 03:37:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -16,7 +16,6 @@
 #include "sim/time.h"
 #include "sim/chpsim/Dependence.h"
 #include "sim/chpsim/devel_switches.h"
-#include "Object/ref/reference_set.h"
 #include "util/macros.h"
 
 namespace HAC {
@@ -35,7 +34,6 @@ using std::string;
 using std::vector;
 using std::valarray;
 using entity::CHP::action;
-using entity::global_indexed_reference;
 using entity::nonmeta_state_manager;
 
 //=============================================================================
@@ -312,10 +310,20 @@ public:
 	reset_countdown(void) { countdown = predecessors; }
 
 	void
-	execute(const nonmeta_context&, entity::global_references_set&);
+	execute(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context&);
 
-	void
+	/// \return true if enqueued.
+	bool
 	recheck(const nonmeta_context&, const event_index_type) const;
+
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	bool
+	first_check(const nonmeta_context&, const event_index_type);
+#endif
 
 	void
 	subscribe_deps(const nonmeta_context&, const event_index_type) const;
@@ -352,6 +360,7 @@ public:
 		return block_deps.dump_subscribed_status(o, s, ei);
 	}
 
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 public:
 	// helper classes
 	class countdown_decrementer {
@@ -368,6 +377,7 @@ public:
 			--pool[ei].countdown;
 		}
 	};	// end struct count_decrementer
+#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 
 };	// end class EventNode
 

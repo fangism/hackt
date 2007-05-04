@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.6 2007/04/20 18:26:11 fang Exp $
+	$Id: Event.cc,v 1.7 2007/05/04 03:37:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -165,14 +165,15 @@ EventNode::reset(void) {
 	\param enqueue return list of event(s) to enqueue for execution.
 	\return true if *this* event should be enqueued.  
 		This avoids having to pass the index of this event down.  
-	\return event
+	\return true if check resulted in enqueuing an event.
 	Is there a problem with guarded selection statements?
 	TODO: Need to examine how they are constructed...
  */
-void
+bool
 EventNode::recheck(const nonmeta_context& c, const event_index_type ei) const {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("examining event " << ei << endl);
+	bool ret = false;
 if (countdown) {
 	// then awaiting more predecessors to arrive
 	// NOTE: caller should NOT subscribe deps in this case
@@ -190,7 +191,10 @@ if (countdown) {
 #endif
 		if (r & __RECHECK_ENQUEUE_THIS) {
 			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 			c.enqueue(ei);
+#endif	// else let caller handle it
+			ret = true;
 		} else {
 			STACKTRACE_INDENT_PRINT("blocked." << endl);
 		}
@@ -204,10 +208,34 @@ if (countdown) {
 	} else {
 		// RECHECK_NEVER_BLOCKED
 		STACKTRACE_INDENT_PRINT("null fire." << endl);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		c.enqueue(ei);
+#endif	// else let caller handle it
+		ret = true;
 	}
 }
+	return ret;
 }	// end method recheck
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+/**
+	Predecessor barrier count is now done when an event is actually
+	checked for its first time, because it can now appear multiply
+	in the first-check-queue as a result of delaying successor checks
+	at join events.  
+ */
+bool
+EventNode::first_check(const nonmeta_context& c, const event_index_type ei) {
+	// same as countdown_decrementer
+	if (predecessors) {	// event 0 has no predecessors!
+		// TODO: give it an artificial one, to avoid this check
+		INVARIANT(countdown);
+		--countdown;
+	}
+	return recheck(c, ei);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -219,8 +247,11 @@ if (countdown) {
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(const nonmeta_context& c, 
-		entity::global_references_set& updates) {
+EventNode::execute(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();
@@ -230,10 +261,10 @@ EventNode::execute(const nonmeta_context& c,
 		// execute is responsible for scheduling successors for recheck
 		// and decrement the predecessor-arrival countdown
 #if CHPSIM_VISIT_EXECUTE
-		EventExecutor x(c, updates);
+		EventExecutor x(c);
 		action_ptr->accept(x);
 #else
-		action_ptr->execute(c, updates);
+		action_ptr->execute(c);
 #endif
 	} else {	// event is NULL or action_ptr is NULL
 		STACKTRACE_INDENT_PRINT("no action" << endl);
@@ -243,9 +274,16 @@ EventNode::execute(const nonmeta_context& c,
 		// whatever is done here should be consistent with that!
 		// remember: decrement successors' predecessor-arrival countdown
 		copy(begin(successor_events), end(successor_events), 
-			set_inserter(c.rechecks));
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+			set_inserter(c.first_checks)
+#else
+			set_inserter(c.rechecks)
+#endif
+		);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		for_each(begin(successor_events), end(successor_events), 
 			countdown_decrementer(c.event_pool));
+#endif
 	}
 }	// end method execute
 

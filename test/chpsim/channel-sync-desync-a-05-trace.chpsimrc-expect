@@ -7,150 +7,153 @@ trace manager: trace file complete.
 Trace file contents: 3 epochs.
 		start	start	file	chunk
 	epoch	index	time	offset	size
-	0	0	0	0	662
-	1	20	80	662	663
-	2	40	140	1325	331
+	0	0	0	0	654
+	1	20	70	654	655
+	2	40	140	1309	368
 Epoch 0:
 	event		event	cause
 	index	time	node	index
 	0	0	0	0
-	1	10	1	0
-	2	10	2	0
-	3	10	8	0
-	4	20	6	3
-	5	20	7	3
-	6	30	1	4
-	7	30	2	5
-	8	30	5	5
-	9	40	4	8
-	10	50	3	9
-	11	50	8	9
-	12	60	12	10
-	13	60	6	11
-	14	60	7	11
-	15	70	10	12
-	16	70	11	12
-	17	70	1	13
-	18	70	2	14
-	19	70	5	14
+	1	10	8	0
+	2	20	6	1
+	3	20	1	2
+	4	20	7	1
+	5	20	2	4
+	6	30	5	4
+	7	40	4	6
+	8	40	3	7
+	9	50	8	7
+	10	50	12	8
+	11	60	6	9
+	12	60	1	11
+	13	60	7	9
+	14	60	2	13
+	15	60	10	10
+	16	60	13	15
+	17	60	11	10
+	18	60	14	17
+	19	70	5	13
 bool state trace:
 	event	global	raw
 	index	index	value
-	4	1	1
-	10	2	1
-	13	1	1
+	2	1	1
+	8	2	1
+	11	1	1
+	16	3	1
 int state trace:
 	event	global	raw
 	index	index	value
-	5	1	17
-	10	2	17
-	14	1	17
+	4	1	17
+	8	2	17
+	13	1	17
+	18	3	17
 enum state trace:
 channel state trace:
 	event	global	raw
 	index	index	value
-	1	1	1, 
-	2	2	17, 
-	4	1	[ack]
-	5	2	[ack]
-	6	1	1, 
-	7	2	17, 
-	9	3	1, 17, 
-	10	3	[ack]
-	13	1	[ack]
-	14	2	[ack]
-	15	4	1, 
-	16	5	17, 
-	17	1	1, 
-	18	2	17, 
+	2	1	1, [recvd]
+	3	1	[empty]
+	4	2	17, [recvd]
+	5	2	[empty]
+	7	3	1, 17,  [sent]
+	8	3	[empty]
+	11	1	1, [recvd]
+	12	1	[empty]
+	13	2	17, [recvd]
+	14	2	[empty]
+	15	4	1,  [sent]
+	16	4	[empty]
+	17	5	17,  [sent]
+	18	5	[empty]
 Epoch 1:
 	event		event	cause
 	index	time	node	index
-	20	80	13	15
-	21	80	9	16
-	22	80	14	16
-	23	80	4	19
-	24	90	3	23
-	25	90	8	23
-	26	100	12	24
-	27	100	6	25
-	28	100	7	25
-	29	110	10	26
-	30	110	11	26
-	31	110	1	27
-	32	110	2	28
-	33	110	5	28
-	34	120	13	29
-	35	120	9	30
-	36	120	14	30
-	37	120	4	33
-	38	130	3	37
-	39	130	8	37
+	20	70	9	17
+	21	80	3	20
+	22	80	4	21
+	23	90	12	21
+	24	90	8	22
+	25	100	10	23
+	26	100	13	25
+	27	100	11	23
+	28	100	14	27
+	29	100	6	24
+	30	100	1	29
+	31	100	7	24
+	32	100	2	31
+	33	110	9	27
+	34	110	5	31
+	35	120	4	34
+	36	120	3	35
+	37	130	8	35
+	38	130	12	36
+	39	140	6	37
 bool state trace:
 	event	global	raw
 	index	index	value
-	20	3	1
-	24	2	1
-	27	1	1
-	34	3	1
-	38	2	1
+	21	2	1
+	26	3	1
+	29	1	1
+	36	2	1
+	39	1	1
 int state trace:
 	event	global	raw
 	index	index	value
-	22	3	17
-	24	2	17
-	28	1	17
-	36	3	17
-	38	2	17
+	21	2	17
+	28	3	17
+	31	1	17
+	36	2	17
 enum state trace:
 channel state trace:
 	event	global	raw
 	index	index	value
-	20	4	[ack]
-	22	5	[ack]
-	23	3	1, 17, 
-	24	3	[ack]
-	27	1	[ack]
-	28	2	[ack]
-	29	4	1, 
-	30	5	17, 
-	31	1	1, 
-	32	2	17, 
-	34	4	[ack]
-	36	5	[ack]
-	37	3	1, 17, 
-	38	3	[ack]
+	21	3	1, 17, [recvd]
+	22	3	[empty]
+	25	4	1,  [sent]
+	26	4	[empty]
+	27	5	17,  [sent]
+	28	5	[empty]
+	29	1	1, [recvd]
+	30	1	[empty]
+	31	2	17, [recvd]
+	32	2	[empty]
+	35	3	1, 17,  [sent]
+	36	3	[empty]
+	39	1	1, [recvd]
 Epoch 2:
 	event		event	cause
 	index	time	node	index
-	40	140	12	38
-	41	140	6	39
-	42	140	7	39
-	43	150	10	40
-	44	150	11	40
-	45	150	1	41
-	46	150	2	42
-	47	150	5	42
-	48	160	13	43
-	49	160	9	44
+	40	140	1	39
+	41	140	7	37
+	42	140	2	41
+	43	140	10	38
+	44	140	13	43
+	45	140	11	38
+	46	140	14	45
+	47	150	5	41
+	48	150	9	45
+	49	160	3	48
 bool state trace:
 	event	global	raw
 	index	index	value
-	41	1	1
-	48	3	1
+	44	3	1
+	49	2	1
 int state trace:
 	event	global	raw
 	index	index	value
-	42	1	17
+	41	1	17
+	46	3	17
+	49	2	17
 enum state trace:
 channel state trace:
 	event	global	raw
 	index	index	value
-	41	1	[ack]
-	42	2	[ack]
-	43	4	1, 
-	44	5	17, 
-	45	1	1, 
-	46	2	17, 
-	48	4	[ack]
+	40	1	[empty]
+	41	2	17, [recvd]
+	42	2	[empty]
+	43	4	1,  [sent]
+	44	4	[empty]
+	45	5	17,  [sent]
+	46	5	[empty]
+	49	3	1, 17, [recvd]
 and we're done 

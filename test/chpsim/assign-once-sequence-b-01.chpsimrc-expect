@@ -1,18 +1,21 @@
 b : bool b = 0
 i : int i = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 launch initial null event 
 b : bool b = 0
 i : int i = 0
 event queue:
+check queue:
 	time	eid	pid	event
 	10	2	0	i := 13
 first event 
 b : bool b = 0
 i : int i = 13
 event queue:
+check queue:
 	time	eid	pid	event
 	20	1	0	b := true
 second event 
@@ -20,5 +23,6 @@ b : bool b = 1
 time: 20
 now queue should be empty 
 event queue:
+check queue:
 	(empty)
 time: 20

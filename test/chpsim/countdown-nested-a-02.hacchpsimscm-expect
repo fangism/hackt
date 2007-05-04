@@ -33,5 +33,8 @@ critical-path:
 (0 0.0 0 . 0)
 branch/select histogram:
 (1 . ((2 . 1) (8 . 3)))
-(3 . ((1 . 8) (4 . 6)))
+(3 . ((1 . 4) (4 . 6)))
 loop histogram:
+"NOTE: branch histogram entry 3->1 is one too high because the initial arrival
+at the do-while loop-head event is counted as a branch taken when it shouldn't 
+be.  This is a consequence of multiple entry events."

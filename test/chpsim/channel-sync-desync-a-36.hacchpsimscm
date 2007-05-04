@@ -1,0 +1,30 @@
+#!hacchpsimguile -b
+!#
+;; "channel-sync-desync-a-36.hacchpsimscm"
+;; copy-modified from "channel-sync-desync-a-33.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: channel-sync-desync-a-36.hacchpsimscm,v 1.2 2007/05/04 03:38:02 fang Exp $
+;; @haco@ channel-sync-desync-a.haco-a
+;; @chpsimtrace@ channel-sync-desync-a-05.chpsimtrace
+
+;; Developing more general query functions...
+
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(define x (open-chpsim-state-trace-stream "channel-sync-desync-a-05.chpsimtrace"))
+
+(define ref '(channel . 3))
+"reference: "
+ref
+
+"unstripped reference value stream:"
+; an equivalent construction
+(define y (chpsim-state-trace-single-reference x ref))
+(stream-for-each-display-newline y)
+
+"stripped out references:"
+(define z (chpsim-state-trace-single-reference-values x ref))
+(stream-for-each-display-newline z)
+

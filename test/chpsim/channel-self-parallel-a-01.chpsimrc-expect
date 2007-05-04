@@ -1,71 +1,94 @@
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	10	12	0	
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
 	20	10	0	X!(true)
+	20	11	0	X?(b)
+b : bool b = 1
+X : chan(bool<>) X = (1) [recvd]
+event queue:
+	time	eid	pid	event
+	20	10	0	X!(true)
+check queue:
+	30	9	0	
+b : bool b = 1
+X : chan(bool<>) X = (1) [empty]
+event queue:
+check queue:
+	time	eid	pid	event
+	30	9	0	
+	30	9	0	
+b : bool b = 1
+X : chan(bool<>) X = (1) [empty]
+event queue:
+check queue:
+	time	eid	pid	event
+	40	8	0	
+b : bool b = 1
+X : chan(bool<>) X = (1) [empty]
+event queue:
+check queue:
+	time	eid	pid	event
+	50	6	0	X!(false)
+	50	7	0	X?(b)
 b : bool b = 0
-X : chan(bool<>) X = (1) [full]
+X : chan(bool<>) X = (0) [recvd]
 event queue:
 	time	eid	pid	event
-	30	11	0	X?(b)
-b : bool b = 1
-X : chan(bool<>) X = (1) [empty]
-event queue:
-	time	eid	pid	event
-	40	9	0	
-b : bool b = 1
-X : chan(bool<>) X = (1) [empty]
-event queue:
-	time	eid	pid	event
-	50	8	0	
-b : bool b = 1
-X : chan(bool<>) X = (1) [empty]
-event queue:
-	time	eid	pid	event
-	60	6	0	X!(false)
-b : bool b = 1
-X : chan(bool<>) X = (0) [full]
-event queue:
-	time	eid	pid	event
-	70	7	0	X?(b)
+	50	6	0	X!(false)
+check queue:
+	60	5	0	
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
-	80	5	0	
+	60	5	0	
+	60	5	0	
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
-	90	4	0	
+	70	4	0	
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
-	100	2	0	X!(true)
-b : bool b = 0
-X : chan(bool<>) X = (1) [full]
+	80	2	0	X!(true)
+	80	3	0	X?(b)
+b : bool b = 1
+X : chan(bool<>) X = (1) [recvd]
 event queue:
 	time	eid	pid	event
-	110	3	0	X?(b)
+	80	2	0	X!(true)
+check queue:
+	90	1	0	
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
+check queue:
 	time	eid	pid	event
-	120	1	0	
+	90	1	0	
+	90	1	0	
 b : bool b = 1
 X : chan(bool<>) X = (1) [empty]
 event queue:
+check queue:
 	(empty)
 expect empty queue, sequence ended 
-time: 120
+time: 90

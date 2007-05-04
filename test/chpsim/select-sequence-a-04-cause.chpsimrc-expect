@@ -1,0 +1,113 @@
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	0	0	0	null
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	10	14	0	
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	20	11	0	a := false	[by:14]
+	20	12	0	b := false	[by:14]
+	20	13	0	c := false	[by:14]
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	20	12	0	b := false	[by:14]
+	20	13	0	c := false	[by:14]
+	30	10	0		[by:11]
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	20	13	0	c := false	[by:14]
+	30	10	0		[by:11]
+	30	10	0		[by:12]
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	30	10	0		[by:11]
+	30	10	0		[by:12]
+	30	10	0		[by:13]
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	40	9	0	a := true	[by:10]
+a : bool a = 0
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	50	8	0	[ a -> ... [] ~a -> ... ]	[by:9]
+a : bool a = 1
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	60	6	0	b := true	[by:8]
+a : bool a = 1
+b : bool b = 0
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	70	5	0	c := false	[by:6]
+a : bool a = 1
+b : bool b = 1
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	80	4	0	null	[by:5]
+a : bool a = 1
+b : bool b = 1
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	90	3	0	[ ~b -> ... [] else -> ... ]	[by:4]
+a : bool a = 1
+b : bool b = 1
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	100	2	0	c := true	[by:3]
+a : bool a = 1
+b : bool b = 1
+c : bool c = 0
+event queue:
+check queue:
+	time	eid	pid	event	cause
+	110	1	0	null	[by:2]
+a : bool a = 1
+b : bool b = 1
+c : bool c = 1
+event queue:
+check queue:
+	(empty)
+a : bool a = 1
+b : bool b = 1
+c : bool c = 1
+time: 110

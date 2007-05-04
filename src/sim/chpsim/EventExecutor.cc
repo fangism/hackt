@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.2 2007/03/11 16:34:39 fang Exp $
+	$Id: EventExecutor.cc,v 1.3 2007/05/04 03:37:26 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -167,15 +167,28 @@ using entity::preal_const;
 static
 inline
 void
-recheck_all_successor_events(const nonmeta_context& c) {
+recheck_all_successor_events(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context& c) {
 	typedef	EventNode	event_type;
 	typedef	size_t		event_index_type;
 	STACKTRACE_CHPSIM_VERBOSE;
 	const event_type::successor_list_type&
 		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), set_inserter(c.rechecks));
+	copy(std::begin(succ), std::end(succ), 
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		set_inserter(c.first_checks)
+#else
+		set_inserter(c.rechecks)
+#endif
+		);
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// deferred to State::step()
 	for_each(std::begin(succ), std::end(succ), 
 		event_type::countdown_decrementer(c.event_pool));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -311,13 +324,26 @@ EventRechecker::visit(const guarded_action&) {
 	so this does nothing other than evaluate guards, via recheck().  
 	Q: this is checked twice: pre-enqueue, and during execution.
 		What if guard is unstable?  and conditions change?
+	TODO: unify first-check and execute (CHPSIM_DELAYED_SUCCESSOR_CHECKS),
+		to avoid stupid double-evaluation.  
  */
 void
-EventExecutor::visit(const deterministic_selection&) {
+EventExecutor::visit(const deterministic_selection& ds) {
 	STACKTRACE_CHPSIM_VERBOSE;
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	// really stupid to re-evaluate, fix later...
+	guarded_action::selection_evaluator G(context);	// needs reference wrap
+	for_each(ds.begin(), ds.end(),
+		guarded_action::selection_evaluator_ref(G));
+	INVARIANT(G.ready.size() == 1);
+	EventNode& t(context.get_event());	// this event
+	const size_t ei = t.successor_events[G.ready.front()];
+	context.first_checks.insert(ei);
+#else
 	// never enqueues itself, only successors
 	// see recheck() below
 	ICE_NEVER_CALL(cerr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,6 +380,9 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		break;
 	}
 	case 1: {
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		ret = RECHECK_UNBLOCKED_THIS;
+#else
 		EventNode& t(context.get_event());	// this event
 		const size_t ei = t.successor_events[G.ready.front()];
 		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
@@ -366,6 +395,7 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		// temporary, too lazy to copy, will restore upon destruction
 		suc.recheck(context, ei);
 		ret = RECHECK_DEFERRED_TO_SUCCESSOR;
+#endif
 		break;
 	}
 	default:
@@ -428,8 +458,12 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	}
 	case 1: {
 		const size_t ei = t.successor_events[G.ready.front()];
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		context.first_checks.insert(ei);
+#else
 		context.rechecks.insert(ei);
 		EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 		break;
 	}
 	default: {
@@ -437,8 +471,12 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		static rand48<unsigned long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = t.successor_events[G.ready[r%m]];
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		context.first_checks.insert(ei);
+#else
 		context.rechecks.insert(ei);
 		EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 	}
 	}	// end switch
 }	// end visit(const nondeterministic_selection&)
@@ -547,7 +585,7 @@ void
 EventExecutor::visit(const assignment& a) {
 	typedef	EventNode		event_type;
 	STACKTRACE_CHPSIM_VERBOSE;
-	a.get_lval()->nonmeta_assign(a.get_rval(), context, global_refs);
+	a.get_lval()->nonmeta_assign(a.get_rval(), context, context.updates);
 		// also tracks updated reference
 	recheck_all_successor_events(context);
 }
@@ -641,15 +679,21 @@ EventExecutor::visit(const channel_send& cs) {
 	}
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
+#if CHPSIM_COUPLED_CHANNELS
+	// we already wrote data to channel during check
+#else
 	// evaluate rvalues of channel send statement (may throw!)
 	// write to the ChannelState using canonical_fundamental_type
 	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
 		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
+#endif
 	// track the updated-reference (channel)
 	// expressions are only read, no lvalue data modified
-	global_refs.push_back(std::make_pair(
+	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
+#if !CHPSIM_COUPLED_CHANNELS
 	NEVER_NULL(nc.can_send());	// else run-time exception
+#endif
 	nc.send();
 	recheck_all_successor_events(context);
 }
@@ -666,9 +710,38 @@ EventRechecker::visit(const channel_send& cs) {
 	const channel_send::chan_ptr_type& chan(cs.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-	const ChannelState&
+#if !CHPSIM_COUPLED_CHANNELS
+	const 
+#endif
+	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
+#if CHPSIM_COUPLED_CHANNELS
+	if (nc.can_send()) {
+		// receiver arrived first and was waiting
+		ret = RECHECK_UNBLOCKED_THIS;
+	} else if (nc.inactive()) {
+		// NOTE: blocking changes the simulation state of the channel
+		// but not in a way that wakes up another event.
+		// The `blocked' state is still noted in checkpoint.
+		nc.block_sender();
+		// blocking alters the channel status, so in this case
+		// we need to notify any pending probes on this channel
+		context.updates.push_back(std::make_pair(
+			size_t(entity::META_TYPE_CHANNEL), chan_index));
+		ret = RECHECK_BLOCKED_THIS;
+	} else {
+		cerr << "ERROR: detected attempt to send on channel that is "
+			"already blocked waiting to send!" << endl;
+		// TODO: who?
+		THROW_EXIT;
+	}
+	// we actually write the data during a recheck
+	// this occurs without regard to the current channel state
+	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
+		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
+#else
 	ret = nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
+#endif	// CHPSIM_COUPLED_CHANNELS
 }
 
 //=============================================================================
@@ -693,11 +766,13 @@ EventExecutor::visit(const channel_receive& cr) {
 	// read from the ChannelState using canonical_fundamental_type
 	for_each(cr.get_insts().begin(), cr.get_insts().end(), 
 		entity::nonmeta_reference_lookup_channel_reader(
-			context, nc, global_refs));
+			context, nc, context.updates));
 	// track the updated-reference (channel)
-	global_refs.push_back(std::make_pair(
+	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
+#if !CHPSIM_COUPLED_CHANNELS
 	INVARIANT(nc.can_receive());	// else run-time exception
+#endif
 	nc.receive();
 	recheck_all_successor_events(context);
 }
@@ -714,9 +789,29 @@ EventRechecker::visit(const channel_receive& cr) {
 	const channel_receive::chan_ptr_type& chan(cr.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-	const ChannelState&
+#if !CHPSIM_COUPLED_CHANNELS
+	const
+#endif
+	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
+#if CHPSIM_COUPLED_CHANNELS
+	if (nc.can_receive()) {
+		ret = RECHECK_UNBLOCKED_THIS;
+	} else if (nc.inactive()) {
+		// NOTE: blocking changes the simulation state of the channel
+		// but not in a way that wakes up another event.
+		// The `blocked' state is still noted in checkpoint.
+		nc.block_receiver();
+		ret = RECHECK_BLOCKED_THIS;
+	} else {
+		cerr << "ERROR: detected attempt to receive on channel that is "
+			"already blocked waiting to receive!" << endl;
+		// TODO: who?
+		THROW_EXIT;
+	}
+#else
 	ret = nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
+#endif	// CHPSIM_COUPLED_CHANNELS
 }
 #undef	ASSERT_CHAN_INDEX
 
@@ -774,8 +869,12 @@ EventExecutor::visit(const do_while_loop& dw) {
 		THROW_EXIT;
 	}	// end switch
 	const size_t ei = context.get_event().successor_events[si];
+#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	context.first_checks.insert(ei);
+#else
 	context.rechecks.insert(ei);
 	EventNode::countdown_decrementer(context.event_pool)(ei);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

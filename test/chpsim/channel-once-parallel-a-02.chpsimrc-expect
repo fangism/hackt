@@ -1,33 +1,41 @@
 event queue:
+check queue:
 	time	eid	pid	event
 	0	0	0	null
 X : chan(int<32>) X = (0) [empty]
 All event subscriptions:
 event queue:
+check queue:
 	time	eid	pid	event
 	10	4	0	
 X : chan(int<32>) X = (0) [empty]
 All event subscriptions:
 event queue:
+check queue:
 	time	eid	pid	event
 	20	2	0	X!(11)
+	20	3	0	X?(z)
 X : chan(int<32>) X = (0) [empty]
 All event subscriptions:
-channel[1]: "X" : 3 
 event queue:
 	time	eid	pid	event
-	30	3	0	X?(z)
-X : chan(int<32>) X = (11) [full]
+	20	2	0	X!(11)
+check queue:
+	30	1	0	
+X : chan(int<32>) X = (11) [recvd]
 All event subscriptions:
 expect only null join event in queue 
 event queue:
+check queue:
 	time	eid	pid	event
-	40	1	0	
+	30	1	0	
+	30	1	0	
 X : chan(int<32>) X = (11) [empty]
 All event subscriptions:
 expect empty queue 
 event queue:
+check queue:
 	(empty)
 X : chan(int<32>) X = (11) [empty]
 All event subscriptions:
-time: 40
+time: 30

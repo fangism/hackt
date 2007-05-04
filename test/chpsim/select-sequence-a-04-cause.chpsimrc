@@ -1,0 +1,7 @@
+# "select-sequence-a-04.chpsimrc"
+#	$Id: select-sequence-a-04-cause.chpsimrc,v 1.2 2007/05/04 03:38:35 fang Exp $
+# @haco@ select-sequence-a.haco-a
+
+cause
+source select-sequence-a-03.chpsimrc
+

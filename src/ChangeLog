@@ -5,8 +5,225 @@
 
 2007-05-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-22-merged-chpsim-04-34:
+	  Branch merge.  Summary:
+	  chpsim's execution model for channels re-done, now as a slack-0
+		channel where corresponding send-receives action pairs are
+		tightly coupled, executed pseudo-atomically, i.e. guaranteed
+		to have the same time-stamp, and always in pairs.  
+	  Delays of events are now PREFIX-delays, where the delays are applied
+		before a successor event is checked for the first time.  
+		Previously they were infix-delays delay applied between
+		checking and enqueuing.  This simplified several aspects, 
+		with little complicationin the rest of chpsim.  
+	  Channel states now represented using enumerated states, not just
+		full-empty boolean anymore.  
+	  New channel model correctly simulates slack-matching properties
+		based on buffer forward and backward latencies.  
+	  Minor updates: few new SCM subroutines, some old ones simplified, 
+		tons of old chpsim test cases updated with new behavior.  
+	  Many new test cases added to cover new functionality.  
+
+
+2007-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-34:
+	  No source revision.
+	  Added slack-matching fibonacci tests, works very nicely.  
+	  End of branch, distcheck and merge to trunk.
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-33:
+	  No source revision.
+	  Added slack-matching and latency-sensitive critical paths test cases
+		to test suite, named test/chpsim/timed-{token,bubble}-ring-*.
+		Everything works beautifully, as planned.  :D
+	  Few more rounds of test cases before merge-to-trunk.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-32:
+	  No source revision:
+		Added wave of tests for various FIFO scenarios with 
+		different bottlenecks, as confirmed by basic trace analysis.
+
+
+2007-05-03	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-21:
 	  common/config.{h,cc}: report guile version, if applicable.  
+
+
+2007-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-31:
+	  No source revision: added long-awaited token-hole test and 
+		expected deadlock chpsim tests.
+	  Next chpsim profiling and slack-matching tests...
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-30:
+	  scm-only revision, see scm/ChangeLog.
+	  Added some expect-fail test cases for multi-access channels.
+	  Next: token-rings, fibonacci generator...
+
+
+2007-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-29:
+	  Woo hoo!  No more regressions left to process!
+	  No source revision, only minor un-hack to scm/hackt/chpsim-trace.scm,
+		see scm/ChangeLog.
+	  Last remaining regression test cases updated.  
+	  Now we can make some forward progress once again.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-28:
+	  Object/nonmeta_variable.h: has_trace_value() for channels, 
+		is true when channel has just received or sent.
+		This allows trace reader to see <value>/'ack in
+		strict alternation regardless of whether send or receive
+		was more critical.  The latter of the atomic pair will
+		always reset channel back to inactive.  
+	  guile/chpsim-wrap.cc: tracing channel values now calls
+		has_trace_value (new) to extract channel state.  
+	  This batch of updated test cases uses this.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-27:
+	  No source revision.
+	  Updated marge batch of chpsim-guile test cases, mostly trivial
+		differences arising from changes in execution trace due to
+		tight channel synchronization.
+	  Issues to resolve: channel-states and trace values (used to be 'ack),
+		and branch selection execution counts (no longer need extra
+		work to back-track because branches are executed normally now)
+	  After those are resolved, add the long-promised slack demonstration
+		test cases.  
+
+
+2007-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-26:
+	  FIXED remaining regressions on channel probes!
+	  sim/chpsim/EventExecutor.cc: EventRechecker(channel_send) now
+		adds the referenced channel to the list of updates to 
+		propagate.  This is the only self-modify-checking
+		corner case, needed to support probes.  
+	  sim/chpsim/State.cc: Since blocking-sends "wake themselves up"
+		we must filter out unintentional self-checks, which is covered
+		in recheck_transformer.  
+		In ::step(), in the event where a recheck blocks, 
+			we now check for the blocked-send-to-probe wake-up.
+		code factoring: __notify_updates_for_recheck(), 
+			and __perform_rechecks().
+	  Next: hacchpsimguile test updates.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-25:
+	  sim/chpsim/State.cc: first_check is now wrapped in exception
+		handler to give meaningful diagnostic messages.
+	  Updated all expect-fail chpsim tests.  
+	  Only two remaining chpsim tests fail on probe blocking, 
+		which we will fix next.
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-24:
+	  No source revision.
+	  Another batch of chpsim tests re-verified, mostly involving
+		deterministic selections, now in good shape again.
+	  Remaining to fix: probe breakage (need reference-update-on-block)
+		Some expect-fail tests haven't been addressed yet.
+
+
+2007-04-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-23:
+	  No source revision.
+	  Another batch of chpsim tests re-verified by hand.
+		A few adjustments to test script inputs helped reduce
+		expected differences and headache.  
+
+
+2007-04-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-22:
+	  Selection-events are now 'executed', no longer using
+		DEFER_TO_SUCCESSOR-style execution.  
+		More motivation to fuse check-and-execute!
+	  selection-events are now printed briefly: [G -> ... ]
+		chpsimallocdump tests have been updated accordingly.  
+	  Checkpoint diffs fixed by saving and restoring immediate_event_fifo.
+	  Large chunk of test updates, still more to go.
+	  Issue with probes: needs to wake-up when sender is blocked, 
+		but sender blocking (from first-check) doesn't
+		cause a wake-up with change of event status!
+	  Fixed: probe() true only when CHANNEL_SENDER_BLOCKED. 
+	  Reminder: process new TODO tests in test/chpsim.
+
+
+2007-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-21:
+	  Object/nonmeta_variable.cc: Updated raw_dump printing policy 
+		for channel_state_base, trace should record one channel
+		value per cycle (synchronized).  
+	  Fixed cause_trace_id progagation again.  
+	  Updated another batch of test cases.  
+	  Need to investigate channel-probe breakage and select failures.
+
+
+2007-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-20:
+	  Edited and enabled CHPSIM_COUPLED_CHANNELS, satisfactory results.
+	  channel_state_base: removed aux_enqueue member, not using
+		until we try to process event-pair atoms.  
+		Added enum states: CHANNEL_RECEIVED and CHANNEL_SENT
+		to represent state after unblocked by sender or receiver, 
+		in transition to the INACTIVE state.  
+		Updated can_send/recv, send/recv definitions.  
+	  chpsim/State.cc: step(): corrected incorrect use of 
+		cause_trace_id, using trace_manager's event count.
+	  Updated a handful test cases, now many initial sends block
+		properly, now effectively slack 0!
+	  Next: keep updating tests.  
+
+
+2007-04-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-19:
+	  Tiny patch to propagate cause_trace_id, but not sure if correct.
+	  Discovered that delayed successor rechecking with decoupled channels
+		result is completely broken result, with tokens being lost
+		because of improper blocking.  First priority now is to
+		tightly synchronize sends and receives.  
+	  Still need to check correctness of selections, suspected wrong now.  
+
+
+2007-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-18:
+	  No source revision, test case updates only.
+	  This batch required a little scrutiny to match up re-ordered
+		send-receive action pairs.  
+	  Observation: mostly selection test cases, which show something
+		is screwed up (I think I know why).
+	  Still TODO: re-propagate cause_trace_id, to fix trace cases
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-17:
+	  No source revision, just test case update notes (test/chpsim):
+		channel-self-parallel-a-{01,02}: timestamps shortened because
+			send-receive pairs pay their delay up-front, so now
+			their prefix delays overlap.  However, this is still
+			not tight synchronization.  
+		countdown-domin-b-01: wait events now appear on check queue,
+			in this case, they block upon first check, 
+			wake-up results in instant execution because delay
+			was already paid up-front.  
+	  This first round only covers obvious (?) test case updates
+		that require no thinking.  
+	  Next: test cases that require a little more scrutiny...
 
 
 2007-04-25	David Fang		<fangism@users.sourceforge.net>
@@ -17,6 +234,135 @@
 	  Added unstab support to prsim structures and attributes, 
 		but not actually used yet.  (Patch for cflat is elsewhere 
 		on branch, hope to merge soon.)
+
+
+2007-04-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-16:
+	  No source revision, small batch of easy and stable (?) 
+		regression test updates in test/chpsim.
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-15:
+	  FIx: Don't decrement predecessor countdown *until* it is checked
+		for the first time (first_check), which is now a 
+		wrapper function around EventNode::recheck.
+	  TODO: cause_trace_index is missing (all 0s)
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-14:
+	  Enabled CHPSIM_DELAYED_SUCCESSOR_CHECKS, numerous tests fail.
+	  Fixed assertion failure: forgot to reset immediate_event_fifo.
+		No fatal errors remain, just possibly logical ones.  
+	  pending_events() now checks immediate_event_fifo too.  
+	  TODO: checkpoint immediate_event_fifo.
+	  cause_trace_index is missing from trace, need critical path!
+	  Some tests show unexpected deadlocks.  
+
+
+2007-04-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-13:
+	  Tested CHPSIM_DELAYED_SUCCESSOR_CHECKS enabled briefly, 
+		but left disabled until further testing.  
+	  Test suite shows one fatal assert-fail, other anticipated 
+		logical differences due to invasive change of execution model.  
+	  Not looking forward to re-verifying every friggin' test by hand...
+	  Major annoyance: event-queue dumps now partitioned into 
+		immediate events and to-check events.  
+	  Next: fix use of pending_events, w.r.t. immediate_event_fifo.
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-12:
+	  More mark-ups for CHPSIM_DELAYED_SUCCESSOR_CHECKS (disabled).
+		Phasing out State::__enqueue_list, distinguishing between
+		uses of immediate event fifo and recheck and first_check.  
+		first_check is short-lived, now a part of the nonmeta_context.
+		immediate_event_fifo now contains event_placeholder_types.  
+		step should grab from the immediate_event_fifo first.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-11:
+	  Re-applied remainder of -08 patch with ONE frickin' line change:
+		step() calls set_event instead of using event_setter.
+		*curses in perl*
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-10:
+	  Re-applied most of rev -08 patch except for the suspicious
+		portion of State::step(), which we'll re-do next in isolation.
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-09:
+	  Damn it -- last patch was horked AGAIN.  Reverting...
+	  Going to redo it piecewise...
+
+
+2007-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-08:
+	  More arrangements for CHPSIM_DELAYED_SUCCESSOR_CHECKS (disabled).
+		Provisions include an immediate_event_fifo (execute-NOW)
+		and re-writing step as a do-loop that dequeues events to 
+		check until one actually executes.  
+	  Notes added to sim/chpsim/TODO.
+	  Be careful to distinguish uses of first_checks vs. rechecks
+		in chpsim's nonmeta_context.  
+	  No regressions this time.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-07:
+	  Perm and clean up last patch: CHPSIM_CONTEXT_CARRIES_REFERENCES.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-06:
+	  Partial redo: packed a global_references_set reference member
+		to chpsim's nonmeta_context, passing fewer arguments around.
+	  sim/chpsim/State.cc: pulled out execute call from __step(), 
+		leaving __step to do mostly post-processing.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-05:
+	  Reverted last patch, caused major test failures.  
+	  Need to re-do it more systematically.  
+
+
+2007-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-04:
+	  No new changes enabled yet.
+	  More CHPSIM_DELAYED_SUCCESSOR_CHECKS mark-ups, particularly
+		in the step() method.  
+	  Re-organizing pieces of chpsim code to make clean transition
+		to new execution model.  
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-03:
+	  Perm'd CHPSIM_MULTISET_EVENT_QUEUE, and there was much rejoicing...
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-02:
+	  Started to mark initial cuts for CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		but far from completion (disabled with this revision).  
+		We push that onto the task stack so we can first
+		perm CHPSIM_MULTISET_EVENT_QUEUE, which has been stable
+		for a while, and is getting to be a nuisance to read.  
+		Then we'll return to regularly scheduled hacking.
+
+
+	* HACKT-00-01-04-main-00-81-19-chpsim-04-01:
+	  ChangeLog abuse: 
+	  The goal: slack zero channels and atomic paired send/receives.
+	  The plan: Change the current execution model:
+		now: execute, recheck, enqueue-with-delay, execute.
+		next: recheck, execute-now, first-check-after-delay, recheck
+		rationale: pay prefix delay up-front before first check
+	  In this revision: CHPSIM_COUPLED_CHANNEL (disabled)
+		preliminary markup of support for paired-atomic event 
+		execution, intended for send/receives.
+		Markup not complete though, interrupted so next revision
+		can markup the work necessary for execution model change.
+	  Following that, we'll turn on tight coupling of channels.  
 
 
 2007-04-20	David Fang		<fangism@users.sourceforge.net>
