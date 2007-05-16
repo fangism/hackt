@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.6 2007/03/06 05:28:44 fang Exp $
+#	$Id: scantexdepend.awk,v 1.7 2007/05/16 21:50:52 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
@@ -17,6 +17,18 @@ function valid_file(str) {
 	return !system("test -f " str " && test -r " str);
 }
 
+# file is passes pattern filters
+function matched_file(f) {
+	return (match(f, "[A-Za-z0-9_-]$") &&
+		!match(f, "\\.aux$") &&
+		!match(f, "\\.bbl$") &&
+		!match(f, "\\.ind$") &&
+		!match(f, "\\.lo.$") &&
+		!match(f, "\\.out$") &&
+		!match(f, "\\.toc$"));
+		# or whatever formatting is convenient
+}
+
 # /\([/\.]/
 {
 	# print "GOT: " $0;
@@ -32,8 +44,10 @@ function valid_file(str) {
 			try_file = substr(hold, a, len);
 			# print "try: " try_file;
 			# careful, valid_file clobbers $0
-			if (valid_file(try_file) == 1) {
-				printf("%s", " \\\n\t" try_file);
+			if (valid_file(try_file)) {
+				if (matched_file(try_file)) {
+					printf("%s", " \\\n\t" try_file);
+				}
 				# possibly eat up part of $0
 				break;
 			}
@@ -55,22 +69,14 @@ function valid_file(str) {
 		# File name must end with a 'normal' character.
 		# Suppress auxiliary dependencies, because they are cleaned
 		# and we do not write suffix rules for them (yet).
-		if (match(dep, "[A-Za-z0-9_-]$") &&
-			!match(dep, "\\.aux$") &&
-			!match(dep, "\\.bbl$") &&
-			!match(dep, "\\.ind$") &&
-			!match(dep, "\\.lo.$") &&
-			!match(dep, "\\.out$") &&
-			!match(dep, "\\.toc$")) {
-			# or whatever formatting is convenient
-			# verify validity of file
-			if (valid_file(dep) == 1) {
-				printf("%s", " \\\n\t" dep);
-			} else {
-				# uh oh, filename was snipped!
-				# printf("%s_NOT_FOUND", " \\\n\t" dep);
-				hold = dep;
-			}
+
+		# verify validity of file
+		if (matched_file(dep) && valid_file(dep)) {
+			printf("%s", " \\\n\t" dep);
+		} else {
+			# uh oh, filename was snipped!
+			# printf("%s_NOT_FOUND", " \\\n\t" dep);
+			hold = dep;
 		}
 		# print "\n# LEFT: " $0;
 	}
