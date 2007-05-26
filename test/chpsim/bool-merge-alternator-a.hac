@@ -1,0 +1,14 @@
+// "bool-merge-alternator-a.hac"
+
+import "testlib/bool-alternator.hac";
+import "testlib/bool-source.hac";
+import "testlib/bool-sink.hac";
+
+pint M = 3;
+chan(bool) I[M], O;
+
+bool_source<1, {true}> src[M];
+bool_merge_alternator<M> spltr(I, O);
+bool_sink snk(O);
+(;i:M: src[i](I[i]); )
+

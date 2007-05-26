@@ -1,0 +1,43 @@
+/**
+	\file "testlib/bool-alternator.hac"
+	$Id: bool-alternator.hac,v 1.1 2007/05/26 05:34:32 fang Exp $
+	TODO: timed versions
+ */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Round-robin dispatcher, starting wth 0th output channel.
+ */
+template <pint N>
+defproc bool_split_alternator(chan?(bool) I; chan!(bool) O[N]) {
+bool v[N];	// only one value is needed
+	// but we keep them around separately for internal diagnostics
+chp {
+	*[ {;i:N: I?(v[i]); O[i]!(v[i]) } ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Round-robin merger, starting wth 0th input channel.
+ */
+template <pint N>
+defproc bool_merge_alternator(chan?(bool) I[N]; chan!(bool) O) {
+bool v[N];	// only one value is needed
+	// but we keep them around separately for internal diagnostics
+chp {
+	*[ {;i:N: I[i]?(v[i]); O!(v[i]) } ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Flat parallel FIFO, made from alternators.  
+ */
+template <pint N>
+defproc bool_parallel_fifo(chan?(bool) I; chan!(bool) O) {
+chan(bool) M[N];
+bool_split_alternator<N> s(I, M);
+bool_merge_alternator<N> m(M, O);
+}
+

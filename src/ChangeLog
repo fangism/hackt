@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-24:
+	  No source revision.
+	  Updated scm/TODO based on dissertation requirements.
+	  Added new chpsim-guile test cases for alternators.  
+	  Really need to automate event-graph animation and visualization ...
+	  TODO: fix new bug case template/090.
+
+
 2007-05-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-23:

@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.3 2007/05/04 03:37:23 fang Exp $
+	$Id: TODO,v 1.4 2007/05/26 05:34:20 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -16,9 +16,13 @@ other stream interfaces:
 slack-time annotation?
 	requires reconstructing precise causality graph of all events?
 		could be major memory hog...
+	starting point might be list of necessary predecessor
+	execution path reconstruction from branch-tracing
+	also assumes constant delay per-event for backwards inference
 
 scm structures for variable sets
 	plain list of references (type-index pairs)
+	somewhat exists with reference-value lists per trace event
 
 stream merge algorithms (like set_intersection, set_union, set_difference)
 	precondition: streams already sorted/ordered
@@ -26,8 +30,60 @@ stream merge algorithms (like set_intersection, set_union, set_difference)
 histogram of event frequency, by counting immediate successors of selections
 	use either a vector or sparse representation
 
+canonical-type interfacing to SCM
+
+FIFO-identification for automatic slack-matching
+	would be a static analysis for a FIFO event pattern, 
+		following producer/consumer chains, and send/receive 
+		tight loops.
+	idea: look at the may-block set of send/receive events
+		and follow unique reference chains of channels.  
+	construct a map (rb-tree) using head of fifo as canonical key.
+	with two ends of FIFO, can measure average FIFO occupancy
+		over time, based on entry and exits!
+
 testing:
 	have scripts exit-upon-first-error, to simplify debugging
+
+source-referencing: be able to refer events back to source?
+	complete trace-back from event to definition in source.
+	[priority: low]
+
+===============================================================================
+ANALYSIS ROUTINES: mostly for thesis work
+
+channel action pairs: send or receive critical? how often?
+	sift by event or by channel?  
+	there's a difference when channels are non-meta indexed.
+	can start by analyzing ALL channels this way.
+
+value-based time profiling:
+	define event intervals based on value/state predicates, 
+		or transitions.  
+	similar to stream crop, with general set of predicates.
+	construct chronologically sorted interval sets
+		define interval set operations
+	aside: translate event intervals to time intervals, re-usable.  
+
+Dynamic dataflow:
+	trace the impact of a particular variable, like poison trace
+	requires: dynamic read-tracing
+
+temporal logic: `when?' queries
+	in general, formulate from interval sets
+
+phase detection: examples where behavior characteristic is temporally local,
+	detecting transitions, etc...
+
+basic:
+	Q: what is value of variable X at time T?
+	A: find stamp of last value changed, which requires a trace 
+		reverse seek.  
+	Or can just take entire history of variable and step back, 
+		which is faster for re-usable queries, but not one-time query.  
+
+replay:
+	can checkpoints be 'inferred' in reasonable time from trace alone?
 
 ===============================================================================
 NAMING CONVENTION:

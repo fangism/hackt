@@ -1,0 +1,11 @@
+# "bool-split-alternator-a-01.chpsimrc"
+#	$Id: bool-split-alternator-a-01.chpsimrc,v 1.1 2007/05/26 05:34:27 fang Exp $
+# @haco@ bool-split-alternator-a.haco-a
+
+# watchall-events
+timing per-event
+trace bool-split-alternator-a-01.chpsimtrace
+step 100
+trace-close
+trace-dump bool-split-alternator-a-01.chpsimtrace
+
