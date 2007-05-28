@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.9 2007/05/04 03:37:27 fang Exp $
+	$Id: State.cc,v 1.10 2007/05/28 22:12:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -620,9 +620,12 @@ State::__notify_updates_for_recheck_no_trace(const size_t ti) {
 		ub(__updated_list.ref_bin
 			[class_traits<Tag>::type_tag_enum_value]);
 	const_iterator ui(ub.begin()), ue(ub.end());
+	// g++-3.4 parse-bug workaround
+	const typename entity::nonmeta_state_base<Tag>::pool_type&
+		_pool(instances.template get_pool<Tag>());
 	for ( ; ui!=ue; ++ui) {
-		const typename variable_type<Tag>::type&
-			v(instances.template get_pool<Tag>()[*ui]);
+		const typename variable_type<Tag>::type& v(_pool[*ui]);
+		//	v(instances.template get_pool<Tag>()[*ui]);
 		const event_subscribers_type& es(v.get_subscribers());
 		copy(es.begin(), es.end(), set_inserter(__rechecks));
 	}
