@@ -2,7 +2,9 @@
 # "bootstrap" 
 # Maintainer script for regenerating Makefiles and configure scripts.
 # (also known as autogen.sh in some conventions)
-#	$Id: bootstrap,v 1.5 2006/11/04 03:21:41 fang Exp $
+#	$Id: bootstrap,v 1.6 2007/06/03 18:05:06 fang Exp $
+# picks up AUTOCONF, AUTOMAKE, etc. from environment, which is used
+# to override the default program names.
 
 # this regenerates some critical files
 # run this after "make maintainer-clean" or "make distclean"
@@ -11,15 +13,30 @@ PROJECT=hackt
 TEST_TYPE=-f
 FILE=INSTALL
 
+# defaults
+test "$AUTOCONF" || AUTOCONF=autoconf
+test "$AUTOHEADER" || AUTOHEADER=autoheader
+test "$AUTOMAKE" || AUTOMAKE=automake
+test "$ACLOCAL" || ACLOCAL=aclocal
+test "$LIBTOOLIZE" || LIBTOOLIZE=libtoolize
+ACLOCAL_FLAGS="-I config $ACLOCAL_FLAGS"
+
+echo "using:"
+echo "AUTOCONF = $AUTOCONF"
+echo "AUTOHEADER = $AUTOHEADER"
+echo "AUTOMAKE = $AUTOMAKE"
+echo "ACLOCAL = $ACLOCAL"
+echo "LIBTOOLIZE = $LIBTOOLIZE"
+echo "ACLOCAL_FLAGS = $ACLOCAL_FLAGS"
+
 # May need this to break chicken-before-the-egg
 touch src/headers_deps.make
 
 DIE=0
-ACLOCAL_FLAGS="-I config"
 
 # TODO: version compare
 
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
+($AUTOCONF --version) < /dev/null > /dev/null 2>&1 || {
         echo
         echo "You must have autoconf installed to bootstrap $PROJECT from CVS."
         echo "Download the appropriate package for your distribution,"
@@ -28,7 +45,7 @@ ACLOCAL_FLAGS="-I config"
         DIE=1
 }
 
-(libtoolize --version) < /dev/null > /dev/null 2>&1 || {
+($LIBTOOLIZE --version) < /dev/null > /dev/null 2>&1 || {
         echo
         echo "You must have libtool installed to bootstrap $PROJECT from CVS."
 	echo "Get ftp://ftp.gnu.org/gnu/libtool/libtool-1.5.22.tar.gz"
@@ -36,7 +53,7 @@ ACLOCAL_FLAGS="-I config"
         DIE=1
 }
 
-(automake --version) < /dev/null > /dev/null 2>&1 || {
+($AUTOMAKE --version) < /dev/null > /dev/null 2>&1 || {
         echo
         echo "You must have automake installed to bootstrap $PROJECT from CVS."
         echo "Get http://ftp.gnu.org/gnu/automake/automake-1.9.6.tar.gz"
@@ -54,12 +71,12 @@ test $TEST_TYPE $FILE || {
 }
 
 
-libtoolize --copy --force
-aclocal $ACLOCAL_FLAGS
+$LIBTOOLIZE --copy --force
+$ACLOCAL $ACLOCAL_FLAGS
 # optionally feature autoheader
-(autoheader --version)  < /dev/null > /dev/null 2>&1 && autoheader $ACLOCAL_FLAGS
-automake --copy --add-missing --verbose --gnu $am_opt
-autoconf $ACLOCAL_FLAGS
+($AUTOHEADER --version)  < /dev/null > /dev/null 2>&1 && $AUTOHEADER $ACLOCAL_FLAGS
+$AUTOMAKE --copy --add-missing --verbose --gnu $am_opt
+$AUTOCONF $ACLOCAL_FLAGS
 # really, 'autoreconf' with flags should suffice
 
 # may not want verbose for autoconf, aclocal, and autoheader
