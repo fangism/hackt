@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.9 2007/05/03 06:38:43 fang Exp $
+dnl	$Id: guile.m4,v 1.10 2007/06/04 18:09:40 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -61,7 +61,7 @@ GUILE_CONFIG_VERSION="none"
 if test -n "$GUILE_CONFIG" ; then
 if test -x "$GUILE_CONFIG" ; then
   AC_MSG_CHECKING([guile-config version])
-  GUILE_CONFIG_VERSION="`$GUILE_CONFIG --version 2>&1`"
+  GUILE_CONFIG_VERSION="`$GUILE_CONFIG --version 2>&1 | grep version`"
   AC_MSG_RESULT($GUILE_CONFIG_VERSION)
   AC_MSG_CHECKING([guile compile flags])
   GUILE_CPPFLAGS="`$GUILE_CONFIG compile`"
