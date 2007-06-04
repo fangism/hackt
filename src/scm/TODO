@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.4 2007/05/26 05:34:20 fang Exp $
+	$Id: TODO,v 1.5 2007/06/04 22:44:34 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -11,7 +11,8 @@ accessor functions to event-node-ptr SMOB
 	may-read/write dependencies
 
 other stream interfaces:
-	stream of read (accessed) state/variables? may be difficult
+	stream of *read* (accessed) state/variables? may be difficult
+	[priority: low]
 
 slack-time annotation?
 	requires reconstructing precise causality graph of all events?
@@ -47,10 +48,18 @@ testing:
 
 source-referencing: be able to refer events back to source?
 	complete trace-back from event to definition in source.
-	[priority: low]
+	[priority: HIGH -- dissertation]
+	e.g. tree-walk of CHP tree to refer to node, 
+		nth body, mth loop, kth select, 2nd clause
+	In program memory, need to keep track of which statements (nodes)
+		produced which events in the event-graph
 
 ===============================================================================
 ANALYSIS ROUTINES: mostly for thesis work
+
+usability:
+	outputs of analysis should reference names, not numbers, 
+		so do the reverse-lookup
 
 channel action pairs: send or receive critical? how often?
 	sift by event or by channel?  

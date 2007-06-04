@@ -1,6 +1,6 @@
 # "dox/Makefile.am"
 # root Makefile for dox directory
-#	$Id: Makefile.am,v 1.10 2007/01/24 04:14:43 fang Exp $
+#	$Id: Makefile.am,v 1.11 2007/06/04 22:44:23 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -9,7 +9,10 @@ SUBDIRS = mk lang util objfmt man tutorial cast2hac prsim chpsim
 # NOTE: mk must be built first to copy maketexdepend.tex to the builddir first.
 
 EXTRA_DIST += README TODO ChangeLog local.cvsignore \
-	common/README common/hacdef.tex common/hac.bib
+	common/README \
+	common/hacdef.tex \
+	common/figtex.tex \
+	common/hac.bib
 
 .NOTPARALLEL: pdf ps
 

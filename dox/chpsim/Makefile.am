@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2007/02/06 21:36:25 fang Exp $
+#	$Id: Makefile.am,v 1.3 2007/06/04 22:44:24 fang Exp $
 
 PDFS = chpsim.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -13,21 +13,37 @@ EXTRA_DIST += \
 	execution.tex \
 	figs/build_path.in
 
-DIST_FIGS =
-DIST_DOTS = figs/chpsim_event_cycle.dot
-BUILT_FIGS = $(DIST_DOTS:.dot=.fig)
+SOURCE_FIGS =
+SOURCE_DOTS = figs/chpsim_event_cycle.dot
+BUILT_FIGS = $(SOURCE_DOTS:.dot=.fig)
+XFIG_FIGURES = $(SOURCE_FIGS) $(BUILT_FIGS)
+XFIG_TEX = $(XFIG_FIGURES:.fig=.figtex)
+XFIG_PSTEX = $(XFIG_FIGURES:.fig=.ps)
+XFIG_PSTEX_T = $(XFIG_FIGURES:.fig=.pstex_t)
+XFIG_PDFTEX = $(XFIG_FIGURES:.fig=.pdf)
+XFIG_PDFTEX_T = $(XFIG_FIGURES:.fig=.pdftex_t)
+
 
 figs: $(BUILT_FIGS)
 
-EXTRA_DIST += $(DIST_FIGS) $(DIST_DOTS)
+EXTRA_DIST += $(SOURCE_FIGS) $(SOURCE_DOTS)
 
 AUTO_IGNORE += figs/build_path \
 	chpsim_event_cycle.fig
 
-FIG_EPSS = $(BUILT_FIGS:.fig=.eps)
-FIG_PDFS = $(BUILT_FIGS:.fig=.pdf)
+CLEANFILES += figs/build_path $(BUILT_FIGS)
 
-CLEANFILES += figs/build_path $(BUILT_FIGS) $(FIG_EPSS) $(FIG_PDFS)
+clean-local: clean-figs
+
+clean-figs: force
+	$(RM) figs/*.figtex
+	$(RM) figs/*.eps
+	$(RM) figs/*.ps
+	$(RM) figs/*.pdf
+	$(RM) figs/*.pstex
+	$(RM) figs/*.pdftex
+	$(RM) figs/*.pstex_t
+	$(RM) figs/*.pdftex_t
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
@@ -37,10 +53,10 @@ CLEANFILES += figs/build_path $(BUILT_FIGS) $(FIG_EPSS) $(FIG_PDFS)
 -include chpsim.dvidepend
 AUTO_DEPENDS += chpsim.pdfdepend chpsim.dvidepend
 
-chpsim.pdf chpsim.dvi: $(srcdir)/../common/hac.bib
+COMMON_DEPS = $(srcdir)/../common/hac.bib $(XFIG_TEX)
 
-chpsim.pdf: $(FIG_PDFS)
-chpsim.dvi: $(FIG_EPSS)
+chpsim.pdf: $(COMMON_DEPS) $(XFIG_PDFTEX) $(XFIG_PDFTEX_T)
+chpsim.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
 
 $(srcdir)/figs/.cvsignore: $(srcdir)/.cvsignore
 	$(CP) $< $@

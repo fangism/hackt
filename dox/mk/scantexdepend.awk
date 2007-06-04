@@ -1,13 +1,21 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.7 2007/05/16 21:50:52 fang Exp $
+#	$Id: scantexdepend.awk,v 1.8 2007/06/04 22:44:30 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
+# options: -v ignore_extensions="aux bbl ind lof lot out toc"
 
 BEGIN {
 	# optional: space-delimited targets
 	if (length(targets)) {
 		printf("%s:", targets);
+	}
+	# set of extensions to ignore
+	if (length(ignore_extensions)) {
+		ntoks = split(ignore_extensions, toks);
+		for (i=1; i<=ntoks; ++i) {
+			ignore_ext[toks[i]] = 1;
+		}
 	}
 	hold = "";
 }
@@ -17,16 +25,20 @@ function valid_file(str) {
 	return !system("test -f " str " && test -r " str);
 }
 
+# the file extension string (excluding '.')
+function extract_extension(str) {
+	if (match(str, "\\.[^./]*$")) {
+		return substr(str, RSTART+1, RLENGTH-1);
+	} else {
+		return "";
+	}
+}
+
 # file is passes pattern filters
 function matched_file(f) {
-	return (match(f, "[A-Za-z0-9_-]$") &&
-		!match(f, "\\.aux$") &&
-		!match(f, "\\.bbl$") &&
-		!match(f, "\\.ind$") &&
-		!match(f, "\\.lo.$") &&
-		!match(f, "\\.out$") &&
-		!match(f, "\\.toc$"));
-		# or whatever formatting is convenient
+	# print "\nEXT: " extract_extension(f);
+	return match(f, "[A-Za-z0-9_-]$") &&
+		!ignore_ext[extract_extension(f)];
 }
 
 # /\([/\.]/

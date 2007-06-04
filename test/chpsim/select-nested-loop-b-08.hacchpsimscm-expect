@@ -1,0 +1,6 @@
+"branch-event-node (successor . count) ..."
+(6 . ((4 . 4) (5 . 3)))
+(10 . ((8 . 4) (9 . 4)))
+(11 . ((6 . 7) (10 . 8)))
+"loop counter (loop-head . count) ..."
+(11 . 15)

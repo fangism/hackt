@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2007/05/26 05:34:21 fang Exp $
+#	$Id: Makefile.am,v 1.12 2007/06/04 22:44:34 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -138,6 +138,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03-trace \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
+	select-nested-loop-b-03-trace \
 	select-block-a-01 select-block-a-02 \
 	bool-split-a-01 \
 	bool-split-select-a-01 \
@@ -216,6 +217,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-a-03 select-nested-loop-a-04 \
 	select-nested-loop-a-05 select-nested-loop-a-06 \
 	select-nested-loop-a-07 select-nested-loop-a-08 \
+	select-nested-loop-b-08 \
 	countdown-loop-a-01 countdown-loop-a-02 \
 	countdown-loop-a-03 countdown-loop-a-04 \
 	countdown-nested-a-01 countdown-nested-a-02 \
@@ -241,6 +243,7 @@ KEEP_CHPSIM_TRACE_FILES = \
 	channel-sync-desync-a-04.chpsimtrace \
 	channel-sync-desync-a-05.chpsimtrace \
 	select-nested-loop-a-03.chpsimtrace \
+	select-nested-loop-b-03.chpsimtrace \
 	bool-split-select-a-02.chpsimtrace \
 	countdown-loop-a-02.chpsimtrace \
 	countdown-nested-a-03.chpsimtrace \
@@ -275,6 +278,9 @@ channel-sync-desync-a-05.chpsimtrace: channel-sync-desync-a-05-trace.chpsimrc-ou
 	@test -f $@
 
 select-nested-loop-a-03.chpsimtrace: select-nested-loop-a-03-trace.chpsimrc-out
+	@test -f $@
+
+select-nested-loop-b-03.chpsimtrace: select-nested-loop-b-03-trace.chpsimrc-out
 	@test -f $@
 
 bool-split-select-a-02.chpsimtrace: bool-split-select-a-02-trace.chpsimrc-out

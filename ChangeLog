@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-06-04	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25:
+	  configure.ac: date bump, added summary at end
+	  pkg/*.info: updates of fink packages
+
+
 2007-05-03	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-22-merged-chpsim-04-34:

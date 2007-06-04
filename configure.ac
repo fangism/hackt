@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.132 2007/05/04 03:37:13 fang Exp $
+#	$Id: configure.ac,v 1.133 2007/06/04 22:44:23 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070504, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070604, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -410,6 +410,34 @@ dnl ])
 
 CONFIGDATE=`$DATE`
 AC_SUBST(CONFIGDATE)
+
+cat <<ACEOF
+configuration summary:
+	CXX:			$CXX_VERSION
+	CPPFLAGS:		$CPPFLAGS
+	CXXFLAGS:		$CXXFLAGS
+	LDFLAGS:		$LDFLAGS
+	LEX:			$LEX_VERSION
+	YACC:			$YACC_VERSION
+	readline include:	$RL_INCLUDE
+	readline LDFLAGS:	$RL_LDPATH
+	readline libs:		$RL_LIB
+	editline include:	$EL_INCLUDE
+	editline LDFLAGS:	$EL_LDPATH
+	editline libs:		$EL_LIB
+	ncurses include:	$NCURSES_INCLUDE
+	ncurses LDFLAGS:	$NCURSES_LDPATH
+	ncurses libs:		$NCURSES_LDPATH
+	GMP include:		$GMP_INCLUDE
+	GMP LDFLAGS:		$GMP_LDPATH
+	GMP libs:		$GMP_LIB
+	X11 include:		$X11_INCLUDE
+	X11 LDFLAGS:		$X11_LDPATH
+	guile config:	 	$GUILE_CONFIG_VERSION
+	guile CPPFLAGS: 	$GUILE_CPPFLAGS
+	guile LDFLAGS: 		$GUILE_LDFLAGS
+ACEOF
+
 
 # additional patch to Makefile to work around automake shortcoming
 # recursive rm may fail if too many files in particular subdir.

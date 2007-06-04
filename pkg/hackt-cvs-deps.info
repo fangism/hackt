@@ -10,16 +10,24 @@ BuildDepends: <<
   automake1.9,
   autoconf	(>= 2.59-1),
   libtool14	(>= 1.5.6-1),
-  hackt-dist-deps
+  readline5	(>= 5.0-1),
+  bison		(>= 1.875-1),
+  guile18-dev	(>= 1.8.1-1),
+  graphviz	(>= 1.12-1),
+  transfig,
+  tetex		(>= 3.0-1)
 <<
 
 Homepage: http://www.csl.cornell.edu/~fang/hackt/
 DescDetail: <<
 Installing this bundle will install all prerequisites for building HACKT
 from a CVS checkout.  
+Dependencies are a strict super-set of hackt-dist-deps.
 <<
 
 DescPackaging: <<
 Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-14.  
+Maintainence: since build-deps are not recursive, keep this synchronized
+with the hackt-dist-deps.
 <<
 

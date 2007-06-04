@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.41 2007/04/20 18:25:39 fang Exp $
+#	$Id: Makefile.am,v 1.42 2007/06/04 22:44:22 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -75,6 +75,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	config/am__remove_distdir.diff \
 	DevelopmentPlan.dot \
 	pkg/README \
+	pkg/hackt.info \
 	pkg/hackt-cvs-deps.info \
 	pkg/hackt-dist-deps.info
 

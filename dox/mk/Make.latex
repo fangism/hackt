@@ -4,7 +4,7 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.15 2007/03/17 00:35:46 fang Exp $
+#	$Id: Make.latex,v 1.16 2007/06/04 22:44:30 fang Exp $
 
 SUFFIXES += .ps .dvi .tex .pdf .ind .idx .bbl .aux \
 	.dvidepend .pdfdepend
@@ -33,9 +33,11 @@ AUTOBIBINPUTS = $(COMMONINPUTS)"$$BIBINPUTS"$(PATH_SEPARATOR)
 #		$(ECHO) "Created $@." ; \
 #	fi
 
-SCANTEXDEPEND_FILTER = $(AWK) -f $(top_srcdir)/dox/mk/scantexdepend.awk
-SCANTEXDEPEND_SCRIPT = $(ECHO) -n "$@:" > $$depfile ; \
-	$(CAT) $*.log | $(SCANTEXDEPEND_FILTER) >> $$depfile
+IGNORE_TEXDEPEND_EXTENSIONS = aux bbl ind lot lof out toc
+# can += this variable to add more
+SCANTEXDEPEND_FILTER = $(AWK) -f $(top_srcdir)/dox/mk/scantexdepend.awk -v ignore_extensions="$(IGNORE_TEXDEPEND_EXTENSIONS)"
+SCANTEXDEPEND_SCRIPT = { $(ECHO) -n "$@:" ; \
+	$(SCANTEXDEPEND_FILTER) $*.log ;} > $$depfile
 
 # create dummy dependencies first, overwrite later
 # .pdf.pdfdepend:

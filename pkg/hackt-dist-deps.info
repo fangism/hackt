@@ -9,10 +9,10 @@ BuildDependsOnly: true
 BuildDepends: <<
   readline5	(>= 5.0-1),
   bison		(>= 1.875-1),
-  guile18	(>= 1.8.1-1),
+  guile18-dev	(>= 1.8.1-1),
   graphviz	(>= 1.12-1),
   transfig,
-  tetex-base	(>= 3.0-1)
+  tetex		(>= 3.0-1)
 <<
 
 Homepage: http://www.csl.cornell.edu/~fang/hackt/
@@ -33,5 +33,7 @@ readline5 is optional, but we list it here anyways (4.3 works too).
 DescPackaging: <<
 Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-14.  
 Could make a no-guile version too, I suppose.  
+Maintainence: since build-deps are not recursive, keep this synchronized
+with the hackt-cvs-deps.
 <<
 

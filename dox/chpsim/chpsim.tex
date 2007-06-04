@@ -1,5 +1,5 @@
 % "chpsim.tex"
-%	$Id: chpsim.tex,v 1.2 2007/02/06 21:36:25 fang Exp $
+%	$Id: chpsim.tex,v 1.3 2007/06/04 22:44:25 fang Exp $
 
 \documentclass[12pt]{article}
 
@@ -7,7 +7,13 @@
 \usepackage{verbatim}
 \usepackage{makeidx}
 \usepackage[left=1.5in,right=1in,vmargin=1in,twoside,letterpaper]{geometry}
-\usepackage{graphicx}
+\ifpdf
+  \usepackage[pdftex]{graphicx, color}
+\else
+  \usepackage{graphicx}
+  \usepackage{color}
+\fi
+\usepackage{epsfig}
 
 % COMPILE OPTIONS
 %\ifpdf
@@ -36,6 +42,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input hacdef		% from $(srcdir)/../common/hacdef.tex
+\input figtex		% for xfig use
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % end of preamble

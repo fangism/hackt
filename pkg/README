@@ -18,8 +18,10 @@ These are dummy packages that may be removed at any time.
 They use the BuildDepends mechanism to temporarily install the required
 packages.  
 
-TODO: fink packages for hackt itself.  Those should have true dependencies
-on the necessary shlibs.  
+TODO: 
+	fink packages for hackt itself.  Those should have true dependencies
+		on the necessary shlibs.  
+	devel-deps: dependencies recommended for developers
 
 reminder:
 ConfigureParams:

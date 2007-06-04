@@ -1,0 +1,39 @@
+#!hacchpsimguile -b
+!#
+;; "select-nested-loop-b-03.hacchpsimscm"
+;; copy-modified from "select-nested-loop-a-08.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: select-nested-loop-b-08.hacchpsimscm,v 1.1 2007/06/04 22:44:39 fang Exp $
+;; @haco@ select-nested-loop-b.haco-a
+;; @chpsimtrace select-nested-loop-b-03.chpsimtrace
+
+; (use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim-trace))
+; (use-modules (hackt chpsim-primitives))
+; (use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for find-assoc-ref
+; (use-modules (hackt streams))
+; (use-modules (ice-9 streams))
+(use-modules (hackt rb-tree))
+; (use-modules (srfi srfi-1))	; for alist (associative lists)
+
+
+(define trace-name "select-nested-loop-b-03.chpsimtrace")
+
+; "trace:"
+(define whole-trace (open-chpsim-trace-stream trace-name))
+; (stream-for-each-display-newline whole-trace)
+
+(define branch-histo (make-select-branch-histogram whole-trace))
+"branch-event-node (successor . count) ..."
+; (for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
+(rb-tree/for-each-display-newline branch-histo)
+
+
+(define loop-histo (make-loop-histogram whole-trace))
+"loop counter (loop-head . count) ..."
+; (for-each (lambda (x) (display x) (newline)) (rb-tree->alist ll-histo))
+(rb-tree/for-each-display-newline loop-histo)
+
+
+

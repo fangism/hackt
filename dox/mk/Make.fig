@@ -1,9 +1,10 @@
 # "mk/Make.fig"
-#	$Id: Make.fig,v 1.1 2007/02/06 21:36:30 fang Exp $
+#	$Id: Make.fig,v 1.2 2007/06/04 22:44:30 fang Exp $
 #	vi: ft=automake
 # This makefile includes rules for converting to and from xfig figures.
 
-SUFFIXES += .dot .fig .ps .eps .pdf .pstex .pstex_t .pdftex .pdftex_t .png
+SUFFIXES += .dot .fig .figtex .ps .eps .pdf \
+	.pstex .pstex_t .pdftex .pdftex_t .png
 
 # other option is to skip fig and go directly to pdf or ps
 
@@ -16,11 +17,18 @@ if HAVE_DOT
 else
 	@$(ECHO_NO_DOT)
 endif
+
 # TODO: make a placeholder dummy box for missing figures.  
+# don't use .tex extension, else make will chain suffix, using wrong rules
+.fig.figtex:
+	$(ECHO) "Generating $@ from $<"
+	@pdf=`$(ECHO) $@ | $(SED) 's|figtex$$|pdftex_t|'` ; \
+	ps=`$(ECHO) $@ | $(SED) 's|figtex$$|pstex_t|'` ; \
+	$(ECHO) "\ifpdf\input{$$pdf}\else\input{$$ps}\fi" > $@
 
 .fig.pdf:
 if HAVE_FIG2DEV
-	$(FIG2DEV) -Lpdf $< $@
+	$(FIG2DEV) -Lpdftex $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
 endif
@@ -34,14 +42,19 @@ endif
 
 .fig.pdftex_t:
 if HAVE_FIG2DEV
-	$(FIG2DEV) -Lpdftex_t $< $@
+	$(ECHO) "$(FIG2DEV) -Lpdftex_t $< > $@ ..."
+	@pdf=`$(ECHO) $@ | $(SED) 's|\.pdftex_t$$||'` ; \
+	{ $(ECHO) "\begin{picture}(0,0)%" ; \
+	$(ECHO) "\includegraphics{$$pdf}%" ; \
+	$(ECHO) "\end{picture}%" ; \
+	$(FIG2DEV) -Lpdftex_t $< ;} > $@
 else
 	@$(ECHO_NO_FIG2DEV)
 endif
 
 .fig.ps:
 if HAVE_FIG2DEV
-	$(FIG2DEV) -Lps $< $@
+	$(FIG2DEV) -Lpstex $< $@
 else
 	@$(ECHO_NO_FIG2DEV)
 endif
@@ -62,7 +75,12 @@ endif
 
 .fig.pstex_t:
 if HAVE_FIG2DEV
-	$(FIG2DEV) -Lpstex_t $< $@
+	$(ECHO) "$(FIG2DEV) -Lpstex_t $< > $@ ..."
+	@ps=`$(ECHO) $@ | $(SED) 's|\.pstex_t$$||'` ; \
+	{ $(ECHO) "\begin{picture}(0,0)%" ; \
+	$(ECHO) "\includegraphics{$$ps}%" ; \
+	$(ECHO) "\end{picture}%" ; \
+	$(FIG2DEV) -Lpstex_t $< ;} > $@
 else
 	@$(ECHO_NO_FIG2DEV)
 endif

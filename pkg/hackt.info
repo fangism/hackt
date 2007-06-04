@@ -1,0 +1,52 @@
+Package: hackt
+Version: 0.1.4-devel-20070604
+Source: http://www.csl.cornell.edu/~fang/sw/%n-%v.tar.bz2
+Source-MD5: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Revision: 1
+License: Restrictive/Distributable
+Description: Hierarchical Asynchronous Circuit Kompiler Toolkit
+Maintainer: David Fang <fangism@users.sourceforge.net>
+Homepage: http://www.csl.cornell.edu/~fang/hackt/
+BuildDepends: <<
+  readline5	(>= 5.0-1),
+  bison		(>= 1.875-1),
+  guile18-dev	(>= 1.8.1-1),
+  graphviz	(>= 1.12-1),
+  transfig,
+  tetex		(>= 3.0-1)
+<<
+Depends: <<
+  readline5-shlibs,
+  guile18-shlibs
+<<
+ConfigureParams: --prefix=%p --with-readline=%p --with-guile-config=guile-1.8-config -C
+CompileScript: <<
+mkdir build
+# VPATH building...
+cd build
+../configure %c
+make
+# make check.log
+<<
+InstallScript: <<
+make DESTDIR=%d install
+<<
+DocFiles:
+DescDetail: <<
+Describe me in detail.
+<<
+DescPackaging: <<
+Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-25.  
+Maintainence: since build-deps are not recursive, keep this synchronized
+with the hackt-{dist,cvs}-deps.
+The MD5 sum should be edited by hand.  
+TODO: relocate environment setup scripts (init_hackt) to %p/etc/profile.d,
+decide how to install documentation files (soft-link?).  
+SplitOffs of -shlibs, -dev.
+Build and check are parallel-safe, recommend parallelizing using MAKEFLAGS
+set to as many processors as you got (accounting for memory).  
+<<
+DescPort: <<
+No additional effort was necessary to port.
+<<
+
