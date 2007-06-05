@@ -1,12 +1,12 @@
 Package: hackt
 Version: 0.1.4-devel-20070604
+Revision: 1
+Maintainer: David Fang <fangism@users.sourceforge.net>
 Source: http://www.csl.cornell.edu/~fang/sw/%n-%v.tar.bz2
 Source-MD5: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Revision: 1
-License: Restrictive/Distributable
-Description: Hierarchical Asynchronous Circuit Kompiler Toolkit
-Maintainer: David Fang <fangism@users.sourceforge.net>
 Homepage: http://www.csl.cornell.edu/~fang/hackt/
+License: Restrictive/Distributable
+Description: Asynchronous Circuit Compiler
 BuildDepends: <<
   readline5	(>= 5.0-1),
   bison		(>= 1.875-1),
@@ -21,14 +21,16 @@ Depends: <<
 <<
 ConfigureParams: --prefix=%p --with-readline=%p --with-guile-config=guile-1.8-config -C
 CompileScript: <<
-mkdir build
-# VPATH building...
-cd build
+#!/bin/sh -ev
+mkdir darwin-build
+cd darwin-build
 ../configure %c
 make
-# make check.log
+make check.log
 <<
 InstallScript: <<
+#!/bin/sh -ev
+cd darwin-build
 make DESTDIR=%d install
 <<
 DocFiles:
