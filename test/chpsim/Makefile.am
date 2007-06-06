@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2007/06/04 22:44:34 fang Exp $
+#	$Id: Makefile.am,v 1.13 2007/06/06 19:39:12 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -263,7 +263,7 @@ KEEP_CHPSIM_TRACE_FILES = \
 	timed-token-ring-c-01.chpsimtrace \
 	timed-bubble-ring-a-01.chpsimtrace \
 	timed-bubble-ring-b-01.chpsimtrace \
-	timed-bubble-ring-c-01.chpsimtrace
+	timed-bubble-ring-c-01.chpsimtrace \
 	fib-test-a-01.chpsimtrace \
 	fib-test-b-01.chpsimtrace \
 	fib-test-c-01.chpsimtrace \
