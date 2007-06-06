@@ -1,5 +1,14 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.11 2007/02/06 21:36:23 fang Exp $
+#	$Id: ChangeLog,v 1.11.12.1 2007/06/06 05:02:10 fang Exp $
+
+2007-06-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-01:
+	  Added fig -> tex support, including updatefig.awk.
+		Figure generation done by fig2dev, 
+		splitting out specially formatted LaTeX text.  
+	  chpsim: updated execution description, with new figure.
+
 
 2007-02-06	David Fang		<fangism@users.sourceforge.net>
 

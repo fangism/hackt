@@ -1,5 +1,5 @@
 # "mk/Make.fig"
-#	$Id: Make.fig,v 1.2 2007/06/04 22:44:30 fang Exp $
+#	$Id: Make.fig,v 1.2.2.1 2007/06/06 05:02:18 fang Exp $
 #	vi: ft=automake
 # This makefile includes rules for converting to and from xfig figures.
 
@@ -11,9 +11,21 @@ SUFFIXES += .dot .fig .figtex .ps .eps .pdf \
 ECHO_NO_DOT = $(ECHO) "Sorry, no dot found in path during configure." ; exit 1
 ECHO_NO_FIG2DEV = $(ECHO) "Sorry, no fig2dev found in path during configure." ; exit 1
 
+# for xfig stream editing
+include $(top_srcdir)/dox/mk/updatefig.mk
+
+# includes closed shapes
+# filter to prevent filled shapes from smothering text at same depth
+POLYLINES_TO_DEPTH_100 = $(UPDATEFIG) $(MATCH_POLYLINE) -v update_depth=100 | \
+	$(UPDATEFIG) $(MATCH_ELLIPSE) -v update_depth=100
+
+DOTFIG_FILTER = $(POLYLINES_TO_DEPTH_100)
+
 .dot.fig:
 if HAVE_DOT
-	$(DOT) -Tfig $< -o $@
+#	$(DOT) -Tfig $< | $(DOTFIG_FILTER) > $@
+	$(DOT) -Tfig $< -o $@.orig && \
+	$(CAT) $@.orig | $(DOTFIG_FILTER) > $@
 else
 	@$(ECHO_NO_DOT)
 endif
@@ -21,8 +33,8 @@ endif
 # TODO: make a placeholder dummy box for missing figures.  
 # don't use .tex extension, else make will chain suffix, using wrong rules
 .fig.figtex:
-	$(ECHO) "Generating $@ from $<"
-	@pdf=`$(ECHO) $@ | $(SED) 's|figtex$$|pdftex_t|'` ; \
+	@$(ECHO) "Generating $@ from $<" ; \
+	pdf=`$(ECHO) $@ | $(SED) 's|figtex$$|pdftex_t|'` ; \
 	ps=`$(ECHO) $@ | $(SED) 's|figtex$$|pstex_t|'` ; \
 	$(ECHO) "\ifpdf\input{$$pdf}\else\input{$$ps}\fi" > $@
 
@@ -42,8 +54,8 @@ endif
 
 .fig.pdftex_t:
 if HAVE_FIG2DEV
-	$(ECHO) "$(FIG2DEV) -Lpdftex_t $< > $@ ..."
-	@pdf=`$(ECHO) $@ | $(SED) 's|\.pdftex_t$$||'` ; \
+	@$(ECHO) "$(FIG2DEV) -Lpdftex_t $< > $@ ..." ; \
+	pdf=`$(ECHO) $@ | $(SED) 's|\.pdftex_t$$||'` ; \
 	{ $(ECHO) "\begin{picture}(0,0)%" ; \
 	$(ECHO) "\includegraphics{$$pdf}%" ; \
 	$(ECHO) "\end{picture}%" ; \
@@ -75,8 +87,8 @@ endif
 
 .fig.pstex_t:
 if HAVE_FIG2DEV
-	$(ECHO) "$(FIG2DEV) -Lpstex_t $< > $@ ..."
-	@ps=`$(ECHO) $@ | $(SED) 's|\.pstex_t$$||'` ; \
+	@$(ECHO) "$(FIG2DEV) -Lpstex_t $< > $@ ..." ; \
+	ps=`$(ECHO) $@ | $(SED) 's|\.pstex_t$$||'` ; \
 	{ $(ECHO) "\begin{picture}(0,0)%" ; \
 	$(ECHO) "\includegraphics{$$ps}%" ; \
 	$(ECHO) "\end{picture}%" ; \
@@ -91,4 +103,5 @@ if HAVE_FIG2DEV
 else
 	@$(ECHO_NO_FIG2DEV)
 endif
+
 

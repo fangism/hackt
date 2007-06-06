@@ -1,8 +1,9 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.6 2007/05/04 18:16:49 fang Exp $
+#	$Id: TODO,v 1.6.2.1 2007/06/06 05:02:25 fang Exp $
 
 ===============================================================================
 chpsim:
+(Maybe these should be ordered in some dependency graph...)
 
 high-priority:
 	primitive trace querying functions [much done]
@@ -47,6 +48,12 @@ low-priority:
 	expr_dump_context: enhance with optional prefix string for
 		the enclosing process, useful for printing events with
 		more reasonable process names (instead of just pid number)
+		RELATED: use static analysis (post event-graph construction)
+		to label channel edges between sends and receives, tagging 
+		with canonical channel names (using static analysis)!
+		Can use the block-set of channels to deduce.  
+		Event boxes can retain their local, non-canonical names.  
+		NOTE: large graphs could get ugly...
 	stability checking mode:
 		(Does something change between time of enqueue to 
 			time of execution?)
@@ -60,12 +67,21 @@ low-priority:
 		print allocated instances and dependency edges to them
 			prereq: static data-dependencies and anti-dependencies
 	footprint-ize: processes' CHP event subgraphs, easier because
-		they are not shared.  
+		they are not shared.  This way, process events can be 
+		allocated in chunks and clustered together.  
+		Compute subgraph (templatized) once per process type.  
+		These footprints *could* just use local 
+		instance IDs plus a footprint frame lookup.  
 	enhancement: Maybe flag references that are meta to avoid re-checking
 		as nonmeta references at run-time.  
 		Possibly cache-it as a redundant pointer in CHP expressions.
 		Better yet, cache the resolved index as a
 			global_indexed_reference.  
+		This may take considerable reworking of nonmeta-references.  
+		May need some sort of resolved reference record for each 
+		CHP-sim event to speed up accesses.  Record would be similar
+		in function to nonmeta_channel_manipulator: a statement would
+		simply read-and-advance resolved references.  
 	channels: add support for sized types, e.g. bool[4]
 	int<W>: using integer width to mask values
 		and perform range-checking?
@@ -73,6 +89,7 @@ low-priority:
 	variable (variable-dependent) delays
 	support for user-defined functions, possibly with dynamic linking
 		for plug-in or module support
+	additional traces: event blocking trace
 
 ===============================================================================
 BUGS:
