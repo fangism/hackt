@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.10.2.2 2007/06/07 03:57:22 fang Exp $
+	$Id: State.cc,v 1.10.2.3 2007/06/07 22:25:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1446,6 +1446,74 @@ if (g.process_event_clusters) {
 		o << "}" << endl;
 	}
 }	// end if process_event_clusters
+if (g.show_channels) {
+	static const char channel_prefix[] = "CHANNEL_";
+	// TODO: can this re-used as a guile-routine?
+	o << "# Channels:" << endl;
+	typedef std::set<size_t>	event_id_set_type;
+	const global_entry_pool<channel_tag>&
+		cpool(sm.get_pool<channel_tag>());
+	vector<event_id_set_type>
+		send_map(cpool.size()), recv_map(cpool.size());
+	i = 0;		// FIRST_VALID_EVENT
+	// collect communicating channels over all events
+	for ( ; i<es; ++i) {
+		const event_type& e(event_pool[i]);
+		const DependenceSet& bdeps(e.get_block_dependencies());
+		const instance_set_type&
+			bchans(bdeps.get_instance_set<channel_tag>());
+		// Deduce channel send/receives from the
+		// respective block-dependencies.  
+		// Reminder: these sets are conservative.
+		size_t j = 0;
+		switch (e.get_event_type()) {
+		case EVENT_SEND:
+			for ( ; j<bchans.size(); ++j)
+				send_map[bchans[j]].insert(i);
+			break;
+		case EVENT_RECEIVE:
+			for ( ; j<bchans.size(); ++j)
+				recv_map[bchans[j]].insert(i);
+			break;
+		default: break;
+		}
+	}
+	o << "node [shape=plaintext];" << endl;	// change node style
+	o << "edge [style=dashed];" << endl;
+	// keep arrowheads? constraint=false?
+	i = 1;	// FIRST_VALID_NODE
+	for ( ; i<cpool.size(); ++i) {
+		const event_id_set_type& ss(send_map[i]), rs(recv_map[i]);
+		event_id_set_type::const_iterator
+			si(ss.begin()), se(ss.end()),
+			ri(rs.begin()), re(rs.end());
+		// get channel name
+		std::ostringstream oss;
+		cpool[i].dump_canonical_name(oss, topfp, sm);
+		// emit a node if there are multiple senders or receivers
+		// also if sender/receiver set is empty
+		if (ss.size() != 1 || rs.size() != 1) {
+			// node (labeled)
+			o << channel_prefix << i << "\t[label=\"" << oss.str()
+				<< "\"];" << endl;
+			// edges (unlabeled)
+			for ( ; si!=se; ++si) {
+				o << event_type::node_prefix << *si << " -> " <<
+					channel_prefix << i << ';' << endl;
+			}
+			for ( ; ri!=re; ++ri) {
+				o << channel_prefix << i << " -> " <<
+					event_type::node_prefix << *ri << ';'
+					<< endl;
+			}
+		} else {
+			// just collapse into a single labeled edge
+			o << event_type::node_prefix << *si << " -> " <<
+				event_type::node_prefix << *ri <<
+				"\t[label=\"" << oss.str() << "\"];" << endl;
+		}
+	}	// end for all channels
+}	// end if show_channels
 }
 	o << "}" << endl;
 	return o;
@@ -1861,7 +1929,8 @@ graph_options::graph_options() :
 		with_antidependencies(false),
 #endif
 		process_event_clusters(false), 
-		show_delays(false) {
+		show_delays(false),
+		show_channels(false) {
 }
 
 //=============================================================================

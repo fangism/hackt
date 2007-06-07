@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/graph_options.h"
-	$Id: graph_options.h,v 1.3.12.1 2007/06/07 03:57:23 fang Exp $
+	$Id: graph_options.h,v 1.3.12.2 2007/06/07 22:25:09 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -54,6 +54,11 @@ struct graph_options {
 		Default: false
 	 */
 	bool				show_delays;
+	/**
+		Set to true to draw channel edges in dot graph.
+		Default: false
+	 */
+	bool				show_channels;
 
 
 	graph_options();
