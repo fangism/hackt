@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.10.2.1 2007/06/07 01:47:33 fang Exp $
+	$Id: State.cc,v 1.10.2.2 2007/06/07 03:57:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -10,6 +10,7 @@
 #include <iostream>
 #include <iterator>
 #include <functional>
+#include <sstream>
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
@@ -26,6 +27,7 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/traits/proc_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 
 #include "common/TODO.h"
@@ -36,6 +38,7 @@
 #include "util/copy_if.h"
 #include "util/IO_utils.h"
 #include "util/binders.h"
+#include "util/discrete_interval_set.tcc"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -127,6 +130,7 @@ using util::write_value;
 using util::read_value;
 using util::value_writer;
 using util::value_reader;
+using util::discrete_interval_set;
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -1401,9 +1405,47 @@ if (g.show_instances) {
 #endif
 		// includes outgoing edges
 	}
-	// TODO: event clusters by process
+if (g.process_event_clusters) {
 	// since event-node ranges are not necessarily contiguous,
 	// we may need to collect them in discrete_set_intervals
+	// TODO: once subgraphs are copy-allocated from footprints, 
+	// we can do-away with this sparse-gathering
+	o << "# Process clusters: " << endl;
+	// Forunately, dot lets you declare node clusterings after nodes
+	// have been declared and defined.  
+	typedef discrete_interval_set<size_t>	event_id_set_type;
+	const global_entry_pool<process_tag>&
+		ppool(sm.get_pool<process_tag>());
+	vector<event_id_set_type> pmap(ppool.size());
+	// gather event-ids by process id
+	i = 0;		// FIRST_VALID_EVENT
+	for ( ; i<es; ++i) {
+		const size_t pid = event_pool[i].get_process_index();
+		const bool b = pmap[pid].add_range(i, i);
+		INVARIANT(!b);	// no overlap
+	}
+	vector<event_id_set_type>::const_iterator
+		pi(pmap.begin()), pe(pmap.end());
+	INVARIANT(pi != pe);
+	size_t c = 1;	// skip process 0, which represents the top-level
+	for (++pi; pi!=pe; ++pi, ++c) {
+		o << "subgraph cluster" << c << " {" << endl;
+		std::ostringstream oss;
+		ppool[c].dump_canonical_name(oss, topfp, sm);
+		o << "label=\"pid=" << c << ": " << oss.str() << "\";" << endl;
+		// interval_set is a map of [start,length] pairs
+		event_id_set_type::const_iterator
+			ii(pi->begin()), ie(pi->end());
+		for ( ; ii!=ie; ++ii) {
+			size_t j = ii->first;
+			for ( ; j <= ii->second; ++j) {
+				o << event_type::node_prefix << j
+					<< ';' << endl;
+			}
+		}
+		o << "}" << endl;
+	}
+}	// end if process_event_clusters
 }
 	o << "}" << endl;
 	return o;

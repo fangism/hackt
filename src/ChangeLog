@@ -5,6 +5,12 @@
 
 2007-06-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-03:
+	  chpsim dot graph generation now supports process-clustering of events.
+	  Test suite Makefile rule enables -fcluster-processes by default.
+	  No test cases needed to be touched.  
+
+
 	* HACKT-00-01-04-main-00-81-25-chpsim-05-02:
 	  Changed printing of names in CHP dumps from definition-local
 		to parent-process subinstances (aliases).

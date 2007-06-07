@@ -1,4 +1,12 @@
 # "test/ChangeLog"
+#	$Id: ChangeLog,v 1.60.2.1 2007/06/07 03:57:25 fang Exp $
+
+2007-06-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-03:
+	  Make.test-chpsim: .chpsim-event-dot rule now defaults with
+		-fcluster-processes for dot graph generation.  
+
 
 2007-05-03	David Fang		<fangism@users.sourceforge.net>
 

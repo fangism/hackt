@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.8.2.1 2007/06/07 01:47:31 fang Exp $
+	$Id: Event.cc,v 1.8.2.2 2007/06/07 03:57:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -429,7 +429,10 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	if (g.show_delays) {
 		o << '@' << delay << ' ';
 	}
-	o << "pid=" << process_index;
+	if (!g.process_event_clusters || !process_index) {
+		// always show pid 0 because top-level is not clustered
+		o << "pid=" << process_index;
+	}
 	// seems a waste to do this multiple times for same process...
 	// can't change until we-reorganize events into contiguous ranges.
 #if CHPSIM_DUMP_PARENT_CONTEXT

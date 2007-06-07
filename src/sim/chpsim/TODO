@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.6.2.1 2007/06/06 05:02:25 fang Exp $
+#	$Id: TODO,v 1.6.2.2 2007/06/07 03:57:23 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -48,6 +48,7 @@ low-priority:
 	expr_dump_context: enhance with optional prefix string for
 		the enclosing process, useful for printing events with
 		more reasonable process names (instead of just pid number)
+		[done. using non-canonical names]
 		RELATED: use static analysis (post event-graph construction)
 		to label channel edges between sends and receives, tagging 
 		with canonical channel names (using static analysis)!
@@ -63,7 +64,7 @@ low-priority:
 	minor enhancement:
 		coalesce common subtrees of forks and joins [low priority]
 	visualization: 
-		print process-subgraphs as clusters
+		print process-subgraphs as clusters [done]
 		print allocated instances and dependency edges to them
 			prereq: static data-dependencies and anti-dependencies
 	footprint-ize: processes' CHP event subgraphs, easier because
