@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-02:
+	  Changed printing of names in CHP dumps from definition-local
+		to parent-process subinstances (aliases).
+		e.g. 'definition::x' is now 'instance.x'.
+		Added parent_instance to expr_dump_context, 
+			checked in [non]meta_{instance,value}_reference classes
+		sim/chpsim/devel_switches.h: CHPSIM_DUMP_PARENT_CONTEXT
+		Much more readable now... but names not necessarily canonical.
+		chpsimalloc and hacchpsimscm tests updated accordingly.
+
+
 2007-06-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-25-chpsim-05-01:

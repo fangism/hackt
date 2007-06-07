@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.8 2007/05/04 18:16:46 fang Exp $
+	$Id: Event.cc,v 1.8.2.1 2007/06/07 01:47:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,6 +13,12 @@
 #include "sim/ISE.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
+#if CHPSIM_DUMP_PARENT_CONTEXT
+#include <sstream>
+#include "Object/state_manager.h"
+#include "Object/global_entry.h"
+#include "Object/traits/proc_traits.h"
+#endif
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/graph_options.h"
 #include "sim/chpsim/EventExecutor.h"
@@ -32,6 +38,7 @@ using std::back_inserter;
 using std::for_each;
 using util::set_inserter;
 using entity::expr_dump_context;
+using entity::process_tag;
 
 //=============================================================================
 // class EventNode method definitions
@@ -332,7 +339,12 @@ EventNode::dump_pending(ostream& o) const {
 	TODO: delays?
  */
 ostream&
-EventNode::dump_struct(ostream& o) const {
+EventNode::dump_struct(ostream& o
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		, const entity::state_manager& sm 
+		, const entity::footprint& topfp
+#endif
+		) const {
 	switch (event_type) {
 	case EVENT_NULL: o << "null"; break;
 	case EVENT_ASSIGN: o << "assign"; break;
@@ -346,12 +358,27 @@ EventNode::dump_struct(ostream& o) const {
 			<< event_type << endl;)
 	}
 	o << ": ";
+{
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	std::ostringstream canonical_name;
+	if (process_index) {
+		sm.get_pool<process_tag>()[process_index]
+			.dump_canonical_name(canonical_name, topfp, sm);
+	}
+#endif
+	const expr_dump_context
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		edc(process_index ? canonical_name.str().c_str() : NULL);
+#else
+		& edc(expr_dump_context::default_value);
+#endif
 	if (action_ptr) {
 		// not the normal dump, but one used for event graphs
-		action_ptr->dump_event(o, expr_dump_context::default_value);
+		action_ptr->dump_event(o, edc);
 	} else {
 		o << "null";
 	}
+}
 	// flags?
 	o << ", pid: " << process_index;
 	o << ", #pred: " << predecessors;
@@ -372,7 +399,12 @@ EventNode::dump_struct(ostream& o) const {
  */
 ostream&
 EventNode::dump_dot_node(ostream& o, const event_index_type i, 
-		const graph_options& g) const {
+		const graph_options& g 
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		, const entity::state_manager& sm 
+		, const entity::footprint& topfp
+#endif
+		) const {
 	o << node_prefix << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
@@ -398,17 +430,30 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 		o << '@' << delay << ' ';
 	}
 	o << "pid=" << process_index;
+	// seems a waste to do this multiple times for same process...
+	// can't change until we-reorganize events into contiguous ranges.
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	std::ostringstream canonical_name;
+	if (process_index) {
+		sm.get_pool<process_tag>()[process_index]
+			.dump_canonical_name(canonical_name, topfp, sm);
+	}
+#endif
+	const expr_dump_context
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		edc(process_index ? canonical_name.str().c_str() : NULL);
+#else
+		& edc(expr_dump_context::default_value);
+#endif
 	if (action_ptr) {
 		// TODO: pass context scope to suppress scope qualifier
-		action_ptr->dump_event(o << "\\n",
-			expr_dump_context::default_value);
+		action_ptr->dump_event(o << "\\n", edc);
 	}
 	// no edges
 	// no deps
 	o << "\"];" << endl;
 	if (action_ptr) {
-		EventSuccessorDumper d(o, *this, i,
-			expr_dump_context::default_value);
+		EventSuccessorDumper d(o, *this, i, edc);
 		action_ptr->accept(d);
 	} else {
 		dump_successor_edges_default(o, i);

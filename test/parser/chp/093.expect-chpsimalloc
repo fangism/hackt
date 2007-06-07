@@ -10,14 +10,14 @@ chan[6]: "bar.out[1]"
 
 Event graph: 
 event[0]: fork: null, pid: 0, #pred: 0, succ: 1 3 
-event[1]: receive: send_indexed::index?(send_indexed::y), pid: 1, #pred: 1, succ: 2 
+event[1]: receive: foo.index?(foo.y), pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
-event[2]: send: send_indexed::out[send_indexed::x[send_indexed::y]]!(0), pid: 1, #pred: 1, succ: 1 
+event[2]: send: foo.out[foo.x[foo.y]]!(0), pid: 1, #pred: 1, succ: 1 
 int deps: 1 
 channel deps: 2 3 
-event[3]: receive: send_indexed::index?(send_indexed::y), pid: 2, #pred: 1, succ: 4 
+event[3]: receive: bar.index?(bar.y), pid: 2, #pred: 1, succ: 4 
 channel deps: 4 
-event[4]: send: send_indexed::out[send_indexed::x[send_indexed::y]]!(1), pid: 2, #pred: 1, succ: 3 
+event[4]: send: bar.out[bar.x[bar.y]]!(1), pid: 2, #pred: 1, succ: 3 
 int deps: 2 
 channel deps: 5 6 
 

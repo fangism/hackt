@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.31 2007/02/28 21:22:08 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.31.10.1 2007/06/07 01:47:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -42,6 +42,7 @@
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_scalar.h"
 #include "Object/expr/dynamic_param_expr_list.h"
+#include "sim/chpsim/devel_switches.h"	// for CHPSIM_DUMP_PARENT_PROCESS
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -131,6 +132,16 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
+#if CHPSIM_DUMP_PARENT_CONTEXT
+#if 0
+	// No, because we may refer to global out-of-scope values
+	if (c.parent_instance_name) {
+		o << c.parent_instance_name << ".";
+		this->inst_collection_ref->dump_qualified_name(o,
+			dump_flags::no_definition_owner);
+	}
+#endif
+#endif
 	if (c.enclosing_scope) {
 		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);

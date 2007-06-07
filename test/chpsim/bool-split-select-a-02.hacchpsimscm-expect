@@ -19,56 +19,56 @@
 "all assign-events:"
 
 "all send-events:"
-(1 . #<raw-chpsim-event-node: send: bool_source_constant::S!(true), pid: 1, #pred: 1, succ: 1 
+(1 . #<raw-chpsim-event-node: send: src.S!(true), pid: 1, #pred: 1, succ: 1 
 channel deps: 1 
 >)
-(2 . #<raw-chpsim-event-node: send: int_source::S!(0), pid: 2, #pred: 1, succ: 5 
+(2 . #<raw-chpsim-event-node: send: c.S!(0), pid: 2, #pred: 1, succ: 5 
 channel deps: 2 
 >)
-(3 . #<raw-chpsim-event-node: send: int_source::S!(3), pid: 2, #pred: 1, succ: 2 
+(3 . #<raw-chpsim-event-node: send: c.S!(3), pid: 2, #pred: 1, succ: 2 
 channel deps: 2 
 >)
-(4 . #<raw-chpsim-event-node: send: int_source::S!(2), pid: 2, #pred: 1, succ: 3 
+(4 . #<raw-chpsim-event-node: send: c.S!(2), pid: 2, #pred: 1, succ: 3 
 channel deps: 2 
 >)
-(5 . #<raw-chpsim-event-node: send: int_source::S!(1), pid: 2, #pred: 1, succ: 4 
+(5 . #<raw-chpsim-event-node: send: c.S!(1), pid: 2, #pred: 1, succ: 4 
 channel deps: 2 
 >)
-(8 . #<raw-chpsim-event-node: send: bool_split_select::O[0]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+(8 . #<raw-chpsim-event-node: send: split.O[0]!(split.x), pid: 3, #pred: 1, succ: 7 
 channel deps: 3 
 >)
-(9 . #<raw-chpsim-event-node: send: bool_split_select::O[1]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+(9 . #<raw-chpsim-event-node: send: split.O[1]!(split.x), pid: 3, #pred: 1, succ: 7 
 channel deps: 4 
 >)
-(10 . #<raw-chpsim-event-node: send: bool_split_select::O[2]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+(10 . #<raw-chpsim-event-node: send: split.O[2]!(split.x), pid: 3, #pred: 1, succ: 7 
 channel deps: 5 
 >)
-(11 . #<raw-chpsim-event-node: send: bool_split_select::O[3]!(bool_split_select::x), pid: 3, #pred: 1, succ: 7 
+(11 . #<raw-chpsim-event-node: send: split.O[3]!(split.x), pid: 3, #pred: 1, succ: 7 
 channel deps: 6 
 >)
 
 "all receive-events:"
-(6 . #<raw-chpsim-event-node: receive: bool_sink::B?(bool_sink::b), pid: 4, #pred: 1, succ: 6 
+(6 . #<raw-chpsim-event-node: receive: snk[0].B?(snk[0].b), pid: 4, #pred: 1, succ: 6 
 channel deps: 3 
 >)
-(14 . #<raw-chpsim-event-node: receive: bool_split_select::C?(bool_split_select::c), pid: 3, #pred: 1, succ: 13 
+(14 . #<raw-chpsim-event-node: receive: split.C?(split.c), pid: 3, #pred: 1, succ: 13 
 channel deps: 2 
 >)
-(15 . #<raw-chpsim-event-node: receive: bool_split_select::I?(bool_split_select::x), pid: 3, #pred: 1, succ: 13 
+(15 . #<raw-chpsim-event-node: receive: split.I?(split.x), pid: 3, #pred: 1, succ: 13 
 channel deps: 1 
 >)
-(17 . #<raw-chpsim-event-node: receive: bool_sink::B?(bool_sink::b), pid: 5, #pred: 1, succ: 17 
+(17 . #<raw-chpsim-event-node: receive: snk[1].B?(snk[1].b), pid: 5, #pred: 1, succ: 17 
 channel deps: 4 
 >)
-(18 . #<raw-chpsim-event-node: receive: bool_sink::B?(bool_sink::b), pid: 6, #pred: 1, succ: 18 
+(18 . #<raw-chpsim-event-node: receive: snk[2].B?(snk[2].b), pid: 6, #pred: 1, succ: 18 
 channel deps: 5 
 >)
-(19 . #<raw-chpsim-event-node: receive: bool_sink::B?(bool_sink::b), pid: 7, #pred: 1, succ: 19 
+(19 . #<raw-chpsim-event-node: receive: snk[3].B?(snk[3].b), pid: 7, #pred: 1, succ: 19 
 channel deps: 6 
 >)
 
 "all select-events:"
-(12 . #<raw-chpsim-event-node: select: [ bool_split_select::c==0 -> ... [] bool_split_select::c==1 -> ... [] bool_split_select::c==2 -> ... [] bool_split_select::c==3 -> ... ], pid: 3, #pred: 1, succ: 8 9 10 11 
+(12 . #<raw-chpsim-event-node: select: [ split.c==0 -> ... [] split.c==1 -> ... [] split.c==2 -> ... [] split.c==3 -> ... ], pid: 3, #pred: 1, succ: 8 9 10 11 
 int deps: 1 
 >)
 

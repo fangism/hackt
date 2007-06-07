@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.7 2007/05/04 18:16:49 fang Exp $
+	$Id: devel_switches.h,v 1.7.2.1 2007/06/07 01:47:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -71,6 +71,17 @@
 	Q: what do we do about tracing with random timing?
 	At least issue a warning that analysis will be nonsense?
  */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to print hierarchical alias instead of definition-local
+	names in chp dumps.  
+	Goal: 1
+	Rationale: feedback readability
+	Priority: medium
+	Status: begun, under testing
+ */
+#define	CHPSIM_DUMP_PARENT_CONTEXT		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

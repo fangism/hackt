@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.7 2007/05/04 03:37:25 fang Exp $
+	$Id: Event.h,v 1.7.2.1 2007/06/07 01:47:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -20,6 +20,10 @@
 
 namespace HAC {
 namespace entity {
+#if CHPSIM_DUMP_PARENT_CONTEXT
+class state_manager;
+class footprint;
+#endif
 namespace CHP {
 	class action;
 }
@@ -344,11 +348,21 @@ public:
 	dump_pending(ostream&) const;
 
 	ostream&
-	dump_struct(ostream&) const;
+	dump_struct(ostream&
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		, const entity::state_manager&
+		, const entity::footprint&
+#endif
+		) const;
 
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 
-		const graph_options&) const;
+		const graph_options&
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		, const entity::state_manager&
+		, const entity::footprint&
+#endif
+		) const;
 
 	ostream&
 	dump_successor_edges_default(ostream&, const event_index_type) const;

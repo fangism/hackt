@@ -6,10 +6,10 @@ chan[2]: "B"
 
 Event graph: 
 event[0]: fork: null, pid: 0, #pred: 0, succ: 3 
-event[1]: send: adjacent_diff::R!(adjacent_diff::x-adjacent_diff::z), pid: 1, #pred: 1, succ: 
+event[1]: send: differ.R!(differ.x-differ.z), pid: 1, #pred: 1, succ: 
 channel deps: 2 
-event[2]: receive: adjacent_diff::L?(adjacent_diff::z), pid: 1, #pred: 1, succ: 1 
+event[2]: receive: differ.L?(differ.z), pid: 1, #pred: 1, succ: 1 
 channel deps: 1 
-event[3]: receive: adjacent_diff::L?(adjacent_diff::x), pid: 1, #pred: 1, succ: 2 
+event[3]: receive: differ.L?(differ.x), pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
 

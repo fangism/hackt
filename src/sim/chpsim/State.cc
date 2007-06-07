@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.10 2007/05/28 22:12:33 fang Exp $
+	$Id: State.cc,v 1.10.2.1 2007/06/07 01:47:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1212,7 +1212,12 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	INVARIANT(ei < event_pool.size());
 	o << "event[" << ei << "]: ";
 	const event_type& e(event_pool[ei]);
-	e.dump_struct(o);	// << endl;
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	e.dump_struct(o, mod.get_state_manager(), mod.get_footprint());
+#else
+	e.dump_struct(o);
+#endif
+	// o << endl;
 	e.dump_source(o << "source: ") << endl;
 	return o;
 }
@@ -1339,10 +1344,10 @@ State::dump_check_event_queue(ostream& o) const {
  */
 ostream&
 State::dump_struct(ostream& o) const {
-{
-	o << "Variables: " << endl;
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
+{
+	o << "Variables: " << endl;
 	instances.dump_struct(o, sm, topfp);
 }
 	o << endl;
@@ -1354,7 +1359,11 @@ State::dump_struct(ostream& o) const {
 	// we use the 0th event to launch initial batch of events
 	for ( ; i<es; ++i) {
 		o << "event[" << i << "]: ";
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		event_pool[i].dump_struct(o, sm, topfp);	// << endl;
+#else
 		event_pool[i].dump_struct(o);	// << endl;
+#endif
 	}
 }
 	return o;
@@ -1371,21 +1380,30 @@ State::dump_struct(ostream& o) const {
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	o << "digraph G {" << endl;
+	// consider using global_entry_context_base instead...
+	const state_manager& sm(mod.get_state_manager());
+	const footprint& topfp(mod.get_footprint());
 {
 if (g.show_instances) {
 	o << "# Instances: " << endl;
-	mod.get_state_manager().dump_dot_instances(o, mod.get_footprint());
+	sm.dump_dot_instances(o, topfp);
 }
-
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
 	event_index_type i = 0;		// FIRST_VALID_EVENT;
 	// we use the 0th event to launch initial batch of events
 	for ( ; i<es; ++i) {
 		const event_type& e(event_pool[i]);
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		e.dump_dot_node(o, i, g, sm, topfp) << endl;
+#else
 		e.dump_dot_node(o, i, g) << endl;
+#endif
 		// includes outgoing edges
 	}
+	// TODO: event clusters by process
+	// since event-node ranges are not necessarily contiguous,
+	// we may need to collect them in discrete_set_intervals
 }
 	o << "}" << endl;
 	return o;
