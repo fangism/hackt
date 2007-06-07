@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/09/17 06:48:43 fang Exp $
+#	$Id: Makefile.am,v 1.14 2007/06/07 18:34:10 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -13,6 +13,8 @@ hacktlibdir = $(pkgdatadir)/lib
 # this is NOT the architecture-dependent pkglibdir
 # nothing should be architecture-dependent, not even precompiled headers
 makedir = $(pkgdatadir)/mk
+
+vimdir = $(pkgdatadir)/vim
 
 # library writers: add stuff here that you want to be installed standard
 # TODO: organize a standard structure for library includes
@@ -34,9 +36,17 @@ dist_make_DATA = \
 	mk/hackt-suffixes.am \
 	mk/hackt-rules.am
 
+vim_DATA = support/hac.vim \
+	hac.vimrc
+
 EXTRA_DIST += README \
 	ChangeLog \
 	TODO
+
+hac.vimrc:
+	{ $(ECHO) "\" source this from $$HOME/.vimrc to autoload hac syntax." ; \
+	$(ECHO) "au BufRead,BufNewFile *.hac set filetype=hac" ; \
+	$(ECHO) "au! Syntax hac source $(vimdir)/hac.vim" ;} > $@
 
 local.cvsignore:
 	$(TOUCH) $@

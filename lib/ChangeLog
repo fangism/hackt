@@ -1,5 +1,14 @@
 "lib/ChangeLog"
 
+2006-06-07	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-26:
+	  Added vim syntax highlighter, courtesy of Carlos Tadeo Ortega Otero.
+		Mucho gracias!
+	  Installs hac.vimrc (to be sourced by ~/.vimrc) and hac.vim
+		in $(pkgdatadir)/vim/
+
+
 2006-10-17	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-28:
