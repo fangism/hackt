@@ -1,0 +1,12 @@
+// "wrong-source.hac"
+// channels used in wrong direction
+// should fail
+// (similar cases: 095.hac, 096.hac)
+
+template <pbool B>
+defproc wrong_source (chan?(bool) S) {
+chp {
+	*[ S!(B) ]
+}
+}
+

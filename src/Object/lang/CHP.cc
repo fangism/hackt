@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.24 2007/05/04 18:16:44 fang Exp $
+	$Id: CHP.cc,v 1.24.2.1 2007/06/08 21:39:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1558,10 +1558,11 @@ channel_send::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class channel_receive method definitions
 
-channel_receive::channel_receive() : parent_type(), chan(), insts() { }
+channel_receive::channel_receive() : parent_type(), chan(), insts(), 
+	peek(false) { }
 
-channel_receive::channel_receive(const chan_ptr_type& c) :
-		parent_type(), chan(c), insts() {
+channel_receive::channel_receive(const chan_ptr_type& c, const bool p) :
+		parent_type(), chan(c), insts(), peek(p) {
 	NEVER_NULL(chan);
 	// what about else?
 }
@@ -1576,15 +1577,19 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
 	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
-	chan->dump(o, c) << "?(";
-	INVARIANT(!insts.empty());
+	chan->dump(o, c);
+	o << (peek ? '#' : '?');
+if (!insts.empty()) {
+	o << '(';
 	const_iterator i(insts.begin());
 	const const_iterator e(insts.end());
 	(*i)->dump(o, c);
-	for (i++; i!=e; i++) {
+	for (++i; i!=e; ++i) {
 		(*i)->dump(o << ',', c);
 	}
-	return o << ')';
+	o << ')';
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1632,7 +1637,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		// resolved members match exactly, return copy
 		return p;
 	} else {
-		count_ptr<this_type> ret(new this_type(cc));
+		count_ptr<this_type> ret(new this_type(cc, peek));
 		NEVER_NULL(ret);
 		ret->insts.swap(refs);	// faster than copying/assigning
 		ret->set_delay(atts);
@@ -1664,6 +1669,7 @@ channel_receive::write_object(const persistent_object_manager& m,
 	parent_type::write_object_base(m, o);
 	m.write_pointer(o, chan);
 	m.write_pointer_list(o, insts);
+	write_value(o, peek);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1673,6 +1679,7 @@ channel_receive::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, insts);
+	read_value(i, peek);
 }
 
 //=============================================================================

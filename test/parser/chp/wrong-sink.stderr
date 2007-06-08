@@ -1,0 +1,3 @@
+ERROR: cannot receive/peek on a send-only channel, at [9:5]
+ERROR in one of the actions in [9:2..11]
+ERROR: at least one error in CHP body.

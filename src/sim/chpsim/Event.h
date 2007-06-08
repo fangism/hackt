@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.7.2.1 2007/06/07 01:47:32 fang Exp $
+	$Id: Event.h,v 1.7.2.2 2007/06/08 21:39:56 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -50,15 +50,16 @@ enum {
 	EVENT_ASSIGN = 1,
 	EVENT_SEND = 2,
 	EVENT_RECEIVE = 3,
-	EVENT_CONCURRENT_FORK = 4,	///< divergence of concurrent events
+	EVENT_PEEK = 4,		///< read values from channel w/o acknowledge
+	EVENT_CONCURRENT_FORK = 5,	///< divergence of concurrent events
 	EVENT_CONCURRENT_JOIN = EVENT_NULL,	///< convergence event (no-op)
 	/**
 		the start of any selection: 
 		deterministic, non-deterministic, and do-while loops
 	 */
-	EVENT_SELECTION_BEGIN = 5,
+	EVENT_SELECTION_BEGIN = 6,
 	EVENT_SELECTION_END = EVENT_NULL,	///< end of any selection (no-op)
-	EVENT_CONDITION_WAIT = 6
+	EVENT_CONDITION_WAIT = 7
 };
 
 /**

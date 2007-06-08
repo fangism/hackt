@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.7 2007/02/26 22:00:42 fang Exp $
+	$Id: CHP.h,v 1.7.10.1 2007/06/08 21:39:48 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -349,6 +349,9 @@ virtual	~communication();
 	checked_channel_type
 	check_channel(const inst_ref_expr&, context&);
 
+virtual	line_position
+	rightmost(void) const;
+
 protected:
 	static
 	char
@@ -377,13 +380,25 @@ public:
 };	// end class send
 
 //-----------------------------------------------------------------------------
-/// CHP receive action
+/**
+	CHP receive action.
+
+	also used as CHP peek action.
+	Peek reads values from a channel without acknowledging, is non-blocking.
+	Useful for split transaction communications.
+	Recommend blocking on probe before reading channel.  
+ */
 class receive : public communication {
 protected:
 	const excl_ptr<const inst_ref_expr_list>	lvalues;
+	/**
+		True if this is to be interpreted as a peek.  
+	 */
+	const bool					peek;
 public:
 	receive(const inst_ref_expr* c, 
-		const char_punctuation_type* d, const inst_ref_expr_list* l);
+		const char_punctuation_type* d, const inst_ref_expr_list* l, 
+		const bool p = false);
 
 	~receive();
 

@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-05:
+	  First stab at adding value-peek to CHP.
+		Channel peeks block like receives, but when executed
+		perform value assignment without completing acknowledge.
+		Implementation: AST and object classes added peek flag
+		and select semantics accordingly.  
+		Receive objects increase in binary size by 1 char, 
+		create test cases updated accordingly.  
+	  For direction/connection checking purposes, peek acts like receive
+		but should not register as a consumer (TODO).
+	  Also supported lvalue-less receives, e.g. 'A?'
+		useful for acknowledging without sinking lvalues.  
+	  TODO: many test cases
+
+
 2007-06-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-25-chpsim-05-04:

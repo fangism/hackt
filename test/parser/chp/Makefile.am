@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2007/02/26 22:02:12 fang Exp $
+#	$Id: Makefile.am,v 1.18.10.1 2007/06/08 21:40:42 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,7 +12,9 @@ HACKT_PARSE_TEST_FAILURES = \
 	050 051 055 056 059 \
 	061b 062 067 068 \
 	071 072 073 076 \
-	095 096
+	095 096 \
+	wrong-source \
+	wrong-sink wrong-sink-02
 
 HACKT_PARSE_TEST_PASSES = \
 	000 002 005 \
@@ -27,8 +29,9 @@ HACKT_PARSE_TEST_PASSES = \
 	090 091 092 093 094 097 098 099 \
 	100 102 104 105 \
 	top-level-01 top-level-02 top-level-03 \
-	bool-source bool-sink \
+	bool-source bool-sink bool-sink-alt \
 	source-sink-01 \
+	source-sink-02 \
 	bool-source-delay \
 	source-sink-delay-01
 
@@ -48,6 +51,7 @@ HACKT_CREATE_TEST_PASSES = \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
 	source-sink-01 \
+	source-sink-02 \
 	bool-source-delay \
 	source-sink-delay-01
 

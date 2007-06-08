@@ -47,10 +47,10 @@ Persistent Object Manager text dump:
 	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
