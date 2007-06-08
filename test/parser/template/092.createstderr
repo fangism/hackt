@@ -1,0 +1,60 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	270
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    N = pint<> N
+  Definitions:
+    bool_source = process-definition (defined) bool_source<
+      pint<> N
+      >(
+      )
+      In definition "bool_source", we have: {
+      Parameters:
+        N = pint<> bool_source::N
+      unroll sequence: 
+      footprint collection: {
+        <1> {
+          N = pint^0 value: 1
+          Created state:
+        }
+      }
+      }
+
+  Instances:
+    src = bool_source<1> src
+}
+
+footprint: {
+  N = pint^0 value: 3
+  src = process bool_source<1>^0 = src (1) 
+  Created state:
+  process instance pool:
+  1	src
+}

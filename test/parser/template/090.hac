@@ -1,0 +1,13 @@
+// "090.hac"
+// reduced from chpsim test case
+
+// unexpected name collision: change N -> M fixes! WTF...
+// probably erroneous injection
+
+template <pint N; pbool B[N]>
+defproc bool_source() { }
+
+pint N = 3;
+
+bool_source<1, {true}> src;
+

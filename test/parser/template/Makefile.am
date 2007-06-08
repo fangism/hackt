@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2006/12/01 23:30:36 fang Exp $
+#	$Id: Makefile.am,v 1.25 2007/06/08 03:21:40 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,7 +24,8 @@ HACKT_PARSE_TEST_PASSES = \
 	055 056 057 058 059 \
 	061 062 063 064 064a 067 067a 068 \
 	070 071 072 073 073a 074 075 076 077 078 079 \
-	080 081 082 083 084 086 087 088 089
+	080 081 082 083 084 086 087 088 089 \
+	090 091 092 093
 
 # KNOWN BUGS:
 # should fail at unroll-time:
@@ -68,7 +69,8 @@ HACKT_CREATE_TEST_PASSES = \
 	049 \
 	068 \
 	070 073 074 075 076 077 079 \
-	081 086 088
+	081 086 088 \
+	090 091 092 093
 
 # KNOWN BUGS:
 # HACKT_CREATE_TEST_FAILURES:
@@ -94,7 +96,8 @@ HACKT_ALLOC_TEST_PASSES = \
 	049 \
 	068 \
 	070 073 074 075 076 077 079 \
-	081 086
+	081 086 \
+	090 091 092 093
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	074 075 079

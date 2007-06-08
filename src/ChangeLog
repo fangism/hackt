@@ -5,6 +5,15 @@
 
 2007-06-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-27:
+	  BUG FIX (latent): middle-end instantiation checking mistakenly
+		looked-up outside of the current context's target footprint, 
+		when detecting conflicts (instantiation_statement::unroll).
+	  New test cases added: parser/template/09{0,1,2,3}.hac
+
+
+2007-06-07	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-26:
 	  No source revision.  Added vim syntax highlight support.  
 	  see lib/ChangeLog.

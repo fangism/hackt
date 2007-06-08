@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.17 2007/01/21 06:00:04 fang Exp $
+	$Id: unroll_context.h,v 1.18 2007/06/08 03:21:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -151,6 +151,14 @@ public:
 	/// overloaded name call-forwarding for the lazy...
 	never_ptr<param_value_collection>
 	lookup_collection(const param_value_placeholder& p) const;
+
+	/// overloaded name call-forwarding for the lazy...
+	never_ptr<physical_instance_collection>
+	lookup_target_collection(const physical_instance_placeholder& p) const;
+
+	/// overloaded name call-forwarding for the lazy...
+	never_ptr<param_value_collection>
+	lookup_target_collection(const param_value_placeholder& p) const;
 
 #if 0
 	count_ptr<const const_param>

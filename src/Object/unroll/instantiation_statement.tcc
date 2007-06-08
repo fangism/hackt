@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.25 2007/01/21 06:00:02 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.26 2007/06/08 03:21:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -201,8 +201,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	NEVER_NULL(this->inst_base);
 
+	// only lookup target footprint in context!
 	never_ptr<collection_type>
-		inst_ptr(c.lookup_collection(*this->inst_base)
+		inst_ptr(c.lookup_target_collection(*this->inst_base)
 			.template is_a<collection_type>());
 	if (!inst_ptr) {
 		// we pass the whole footprint because only the caller

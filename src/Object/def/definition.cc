@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.36 2007/01/21 05:58:38 fang Exp $
+ 	$Id: definition.cc,v 1.37 2007/06/08 03:21:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -144,7 +144,7 @@ definition_base::~definition_base() {
 ostream&
 definition_base::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
-	const string key = get_key();
+	const string key(get_key());
 	what(o) << ((defined) ? " (defined) " : " (declared) ") << key;
 	return template_formals.dump(o);
 }
@@ -3173,6 +3173,7 @@ process_definition::__unroll_complete_type(
 		const footprint& top) const {
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("key = " << key << endl);
 	if (!f.is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals

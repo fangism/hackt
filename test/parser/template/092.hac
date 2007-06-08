@@ -1,0 +1,13 @@
+// "092.hac"
+// copy-modified from "090.hac"
+
+// unexpected name collision: change N -> M fixes! WTF...
+// probably erroneous injection
+
+template <pint N>
+defproc bool_source() { }
+
+bool_source<1> src;
+
+pint N = 3;
+

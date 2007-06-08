@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.25 2007/01/21 06:00:04 fang Exp $
+	$Id: unroll_context.cc,v 1.26 2007/06/08 03:21:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -314,6 +314,23 @@ unroll_context::lookup_collection(
 		const param_value_placeholder& p) const {
 	// defaults to using rvalue lookup, is this "the right thing"?
 	return lookup_rvalue_collection(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<physical_instance_collection>
+unroll_context::lookup_target_collection(
+		const physical_instance_placeholder& p) const {
+	return lookup_instance_collection(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Lookup for the purposes of checking if already instantiated.
+ */
+never_ptr<param_value_collection>
+unroll_context::lookup_target_collection(
+		const param_value_placeholder& p) const {
+	return lookup_lvalue_collection(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
