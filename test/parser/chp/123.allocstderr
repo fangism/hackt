@@ -1,0 +1,12 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	BQ	bar<>
+	process: 2
+	channel: 1
+	bool: 1
+2	process	1	1	BQ.F	foo<>
+	channel: 1
+[global channel entries]
+1	process	1	1	BQ.X	chan(bool<>)
+[global bool entries]
+1	process	1	1	BQ.b	

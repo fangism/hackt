@@ -5,6 +5,12 @@
 
 2007-06-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-07:
+	  For connection-checking purposes, peeks do not count as consumers.
+		updated: Object/lang/CHP.cc: set_channel_alias_directions()
+		Added relevant test cases.
+
+
 	* HACKT-00-01-04-main-00-81-25-chpsim-05-06:
 	  sim/chpsim/Event.cc: added switch cases for peek.
 	  First batch of test cases added (parser/chp), mostly front-end.

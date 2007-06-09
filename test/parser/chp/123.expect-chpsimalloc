@@ -1,0 +1,11 @@
+Variables: 
+bool[1]: "BQ.b" 
+chan[1]: "BQ.X" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 
+event[1]: peek: BQ.X#(BQ.b), pid: 1, #pred: 1, succ: 
+channel deps: 1 
+event[2]: receive: BQ.F.B?, pid: 2, #pred: 1, succ: 
+channel deps: 1 
+

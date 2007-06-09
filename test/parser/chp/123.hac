@@ -1,0 +1,23 @@
+// "123.hac"
+// copy-modified from "122.hac"
+// port connection checking is conservative
+// should we allow multiple channel peeking? (sharing)
+// should peeking count as consuming?  no.
+
+defproc foo(chan?(bool) B) { 
+chp {
+	B?
+}
+}
+
+defproc bar() {
+chan(bool) X;
+foo F(X);
+bool b;
+chp {
+	X#(b)		// accept
+}
+}
+
+bar BQ;
+
