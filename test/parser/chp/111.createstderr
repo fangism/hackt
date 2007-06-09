@@ -1,0 +1,71 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    buffer = process-definition (defined) buffer(
+        chan?(bool<>) S
+        chan!(bool<>) T
+      )
+      In definition "buffer", we have: {
+      Instances:
+        S = chan?(bool<>) buffer::S
+        T = chan!(bool<>) buffer::T
+        b = bool<> buffer::b
+      unroll sequence: 
+        chan?(bool<>) S
+        chan!(bool<>) T
+        bool<> b
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              S#(b)
+              concurrent: {
+                T!(b)
+                S?
+              }
+            }
+          ]
+        }
+      }
+
+}
+
+footprint: {
+}

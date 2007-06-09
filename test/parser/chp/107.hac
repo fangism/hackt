@@ -1,0 +1,9 @@
+// "107.hac"
+// expect parse fail: value peek requires lvalue
+
+defproc bar(chan?(bool) B) {
+chp {
+	*[ B# ]
+}
+}
+

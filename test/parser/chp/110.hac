@@ -1,0 +1,15 @@
+// "110.hac" -- should pass
+// copy-modified from "040.hac"
+
+defproc sink(chan(bool) S) {
+chp {
+	*[ S? ]
+}
+}
+
+defproc source(chan(bool) S) {
+chp {
+	*[ S!(false) ]
+}
+}
+

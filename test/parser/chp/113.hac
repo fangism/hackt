@@ -1,0 +1,16 @@
+// "113.hac" testing deterministic guard selection, should pass
+// copy-modified from "053.hac"
+
+defproc split_bool_soup(chan?(bool) A, B, G; chan!(bool) Z) {
+bool g, x;
+chp {
+	*[ G#(g);
+	   G?,
+		{
+		[g -> A?(x) [] ~g -> B?(x) ];
+		Z!(x)
+		}
+	]
+}
+}
+

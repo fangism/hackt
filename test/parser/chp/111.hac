@@ -1,0 +1,10 @@
+// "111.hac" -- basic buffer, should pass
+// copy-modified from "043.hac"
+
+defproc buffer(chan?(bool) S; chan!(bool) T) {
+bool b;
+chp {
+	*[ S#(b); T!(b), S? ]	// concurrence binds tighter
+}
+}
+

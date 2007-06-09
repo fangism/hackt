@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.8.2.2 2007/06/07 03:57:21 fang Exp $
+	$Id: Event.cc,v 1.8.2.3 2007/06/09 15:11:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -350,6 +350,7 @@ EventNode::dump_struct(ostream& o
 	case EVENT_ASSIGN: o << "assign"; break;
 	case EVENT_SEND: o << "send"; break;
 	case EVENT_RECEIVE: o << "receive"; break;
+	case EVENT_PEEK: o << "peek"; break;
 	case EVENT_CONCURRENT_FORK: o << "fork"; break;
 	case EVENT_SELECTION_BEGIN: o << "select"; break;
 	case EVENT_CONDITION_WAIT: o << "wait"; break;
@@ -414,6 +415,7 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	case EVENT_ASSIGN: o << "box"; break;
 	case EVENT_SEND: o << "house"; break;
 	case EVENT_RECEIVE: o << "invhouse"; break;
+	case EVENT_PEEK: o << "invhouse"; break;	// or ASSIGN shape?
 	case EVENT_CONCURRENT_FORK: o << "hexagon"; break;
 	case EVENT_SELECTION_BEGIN: o << "trapezium"; break;
 	case EVENT_CONDITION_WAIT: o << "ellipse"; break;

@@ -1,0 +1,13 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	Z	split_bool_soup<>
+	channel: 1,2,3,4
+	bool: 1,2
+[global channel entries]
+1	(top)	-	1	Z.A	chan(bool<>)
+2	(top)	-	2	Z.B	chan(bool<>)
+3	(top)	-	3	Z.G	chan(bool<>)
+4	(top)	-	4	Z.Z	chan(bool<>)
+[global bool entries]
+1	process	1	1	Z.g	
+2	process	1	2	Z.x	

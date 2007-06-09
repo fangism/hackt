@@ -1,0 +1,6 @@
+// "116.hac"
+
+import "115.hac";
+
+metalooptest M;
+
