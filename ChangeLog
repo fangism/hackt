@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-06-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-28:
+	  Added lib/mk/Makefile.am, installed makefile templates, 
+		now generated to reduce maintainence replication.
+
+
 2007-06-04	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-25:

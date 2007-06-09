@@ -1,44 +1,35 @@
-# "mk/hackt-rules.am"
+# "mk/hackt-rules.mk"
 #	vi: ft=automake
-#	$Id: hackt-rules.am,v 1.9 2006/10/04 23:18:21 fang Exp $
+#	$Id: hackt-rules.mk,v 1.1 2007/06/09 01:56:30 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
-# NOTE: $(RM) needs to be pre-defined.
 
-# point these to hackt
-# top_srcdir = ../..
-# top_builddir = ../..
-# srcdir = .
-
-# note: this example points to the builddir's binary for hackt
-# but may be altered to point to any installed binary in path
-HACKT_EXE = $(top_builddir)/src/hackt
-
-PARSE_TEST_EXE = $(HACKT_EXE) parse_test
-HACKT_COMPILE_EXE = $(HACKT_EXE) compile
-HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
-HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
-HACKT_CREATE_EXE = $(HACKT_EXE) create
-HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
-HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
-HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
-HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
-HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
+# NOTE: prerequisite variable definitions:
+#	RM, MV, SED
+# optional variables:
+#	HACO_FLAGS
+# VPATH-builds will need "-I$(srcdir)"
 
 # with dependency tracking enabled by default
+.hac.depend:
+	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@ $< 
+
 .hac.haco:
 	depbase=`echo $@ | $(SED) 's/\.haco$$//g'` ; \
 	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ ; \
 	then $(MV) "$$depbase.tmpd" "$$depbase.depend" ; \
 	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
 	fi
-#	$(HACKT_COMPILE_EXE) -I$(srcdir) $< $@
+#	$(HACKT_COMPILE_EXE) -I$(srcdir) $(HACO_FLAGS) $< $@
 
-.haco.haco-u:
-	$(HACKT_UNROLL_EXE) $< $@
+# .haco.haco-u:
+#	$(HACKT_UNROLL_EXE) $< $@
 
-.haco-u.haco-c:
+# .haco-u.haco-c:
+#	$(HACKT_CREATE_EXE) $< $@
+
+.haco.haco-c:
 	$(HACKT_CREATE_EXE) $< $@
 
 .haco-c.haco-a:
@@ -116,21 +107,4 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 .prs-fdp-fig.prs-fdp-pdf:
 	fig2dev -Lpdf $< $@
-
-all:
-
-clean: clean-local
-
-clean-local:
-	-$(RM) *.haco
-	-$(RM) *.haco-u *.unrolldump
-	-$(RM) *.haco-c *.createdump
-	-$(RM) *.haco-a *.allocdump
-	-$(RM) *.prs
-	-$(RM) *.lvssprs
-	-$(RM) *.lvsprs
-	-$(RM) *.prsimexpr*
-	-$(RM) *.prs-dot* *.prs-*-ps
-	-$(RM) *.prs-dot-fig *.prs-dot-pdf
-	-$(RM) *.sprs
 

@@ -1,10 +1,12 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/06/08 05:30:36 fang Exp $
+#	$Id: Makefile.am,v 1.17 2007/06/09 01:56:29 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
 
 include $(top_srcdir)/Make.stddef
+
+SUBDIRS = mk
 
 # TODO: split off subdirectories into versions, like gcc?
 # automake provides pkgdatadir = $(datadir)/hackt
@@ -12,7 +14,6 @@ include $(top_srcdir)/Make.stddef
 hacktlibdir = $(pkgdatadir)/lib
 # this is NOT the architecture-dependent pkglibdir
 # nothing should be architecture-dependent, not even precompiled headers
-makedir = $(pkgdatadir)/mk
 
 vimdir = $(pkgdatadir)/vim
 
@@ -29,12 +30,6 @@ dist_hacktlib_DATA = \
 	alternator.hac \
 	split.hac \
 	merge.hac
-
-# Makefile and automake templates
-dist_make_DATA = \
-	mk/hackt.mk \
-	mk/hackt-suffixes.am \
-	mk/hackt-rules.am
 
 dist_vim_DATA = support/hac.vim
 vim_DATA = hac.vimrc
