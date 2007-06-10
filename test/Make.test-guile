@@ -1,13 +1,20 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.6 2007/04/20 18:26:20 fang Exp $
+#	$Id: Make.test-guile,v 1.7 2007/06/10 19:05:28 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
 
+# second filter added to account for guile-1.6 error differences
 HACSCM_OUTPUT_FILTER = \
-	$(SED) '/module created/s/: [^ ]*[ ]/: \#\#FILE\#\# /g'
+	$(SED) -e '/module created/s/: [^ ]*[ ]/: \#\#FILE\#\# /g' \
+		-e '/^Type "(backtrace)" to get more information/d'
+
+# different versions of guile have slightly different error formats
+# This is only used as a backup plan, see rule for .hacscmfail-diff.
+HACSCM_EXPECT_FILTER = \
+	$(SED) -e '/^In standard input:/,/^$$/d' -e '/^Backtrace:/d'
 
 HACSCM_TEST_ENVIRONMENT = \
 	GUILE_LOAD_PATH=$(top_srcdir)/src/scm:$(srcdir)
@@ -34,8 +41,10 @@ HACSCM_FAIL_TEST_SCRIPT = $(HACSCM_TEST_SCRIPT)
 	-@$(HACSCM_FAIL_TEST_SCRIPT)
 
 
+HACSCM_DIFF = $(DIFF) -Bbu
+HACSCM_DIFF_COMMAND = $(HACSCM_DIFF) $$expect $<
 if VERBOSE_CHECK
-ECHO_HACSCM_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+ECHO_HACSCM_DIFF_COMMAND = $(ECHO) "$(HACSCM_DIFF_COMMAND)"
 else
 ECHO_HACSCM_DIFF_COMMAND = :
 endif
@@ -49,7 +58,7 @@ if HAVE_LIBGUILE
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_HACSCM_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(HACSCM_DIFF_COMMAND) > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
 	  fi ; \
@@ -63,9 +72,16 @@ if HAVE_LIBGUILE
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_HACSCM_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(HACSCM_DIFF_COMMAND) > $@ 2>&1 ; \
 	  if test -s $@ ; then \
-	    $(ECHO) "$@ is non-empty!" ; \
+	    $(ECHO) "$@ is non-empty!  Trying harder..." ; \
+	    $(HACSCM_EXPECT_FILTER) "$$expect" > "$$stderr"-filter ; \
+	    $(MV) $@ $@-orig ; \
+	    $(HACSCM_DIFF) "$$stderr"-filter $< > $@ 2>&1 ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "$@ is still non-empty!" ; \
+	    else $(ECHO) "Differences resolved." ; \
+	    fi ; \
 	  fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \
@@ -400,6 +416,7 @@ echo-hacchpsimscm-failures: force
 clean-hacscmtests:
 	-$(RM_PATTERN) "*.hacscm-out"
 	-$(RM_PATTERN) "*.hacscm-diff"
+	-$(RM_PATTERN) "*.hacscm-diff-orig"
 	-$(RM_PATTERN) "*.hacscmtest"
 	-$(RM_PATTERN) "*.hacscmfail-out"
 	-$(RM_PATTERN) "*.hacscmfail-diff"

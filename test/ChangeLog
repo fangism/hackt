@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2007-06-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-29:
+	  Make.test-guile: added hooks to account for expect fail message 
+		differences when using guile-1.6 as opposed to 1.8.
+	  Rectifies 2 cases in parser/connect --
+		now regression-free w.r.t guile-1.6!
+	
+
 2007-05-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-22-merged-chpsim-04-34:
