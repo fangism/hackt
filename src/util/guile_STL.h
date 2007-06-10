@@ -2,7 +2,7 @@
 	\file "util/guile_STL.h"
 	Interfaces for translating back-and-forth between
 	certain containers and scheme SCM types.  
-	$Id: guile_STL.h,v 1.5 2007/06/10 02:58:09 fang Exp $
+	$Id: guile_STL.h,v 1.6 2007/06/10 03:50:12 fang Exp $
  */
 
 #ifndef	__UTIL_GUILE_STL_H__
@@ -474,7 +474,7 @@ struct scm_extractor<unsigned long> {
 };	// end struct scm_extractor<unsigned long>
 
 //-----------------------------------------------------------------------------
-#if	SIZEOF_LONG_LONG
+#if	defined(SIZEOF_LONG_LONG) && SIZEOF_LONG_LONG
 template <>
 struct scm_builder<long long> :
 		public unary_function<long long, SCM> {
