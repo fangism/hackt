@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.4 2007/04/20 18:26:18 fang Exp $
+	$Id: libguile.h,v 1.5 2007/06/10 02:58:09 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -9,10 +9,17 @@
 #define	__UTIL_LIBGUILE_H__
 
 #include "config.h"
+
 #ifdef	HAVE_LIBGUILE_H
 #ifdef	SIZEOF_LONG_LONG
 #undef	SIZEOF_LONG_LONG
 #endif	// b/c redefined by <libguile/__scm.h>
+
+// guile-1.6 header defect (-Wunused)
+#ifndef	HAVE_SYS_STDTYPES_H
+#define	HAVE_SYS_STDTYPES_H		0
+#endif
+
 #include <libguile.h>
 // really only need <libguile/tags.h> for the SCM type
 
@@ -38,11 +45,21 @@ scm_c_define_exported(const char*, const SCM&);
 
 //-----------------------------------------------------------------------------
 /// wrapper for scm_pair_p, provided by guile 1.8
+#ifndef	HAVE_SCM_IS_BOOL
+inline
+bool
+scm_is_bool(const SCM& s) {
+	return SCM_BOOLP(s);
+}
+#endif
+
+//-----------------------------------------------------------------------------
+/// wrapper for scm_pair_p, provided by guile 1.8
 #ifndef	HAVE_SCM_IS_PAIR
 inline
 bool
 scm_is_pair(const SCM& s) {
-	return SCM_NFALSEP(scm_pair_p(s));
+	return SCM_NFALSEP(scm_pair_p(s));	// assume must have
 //	return SCM_EQ_P(scm_pair_p(s), SCM_BOOL_T);
 }
 #endif
@@ -53,8 +70,11 @@ scm_is_pair(const SCM& s) {
 inline
 bool
 scm_is_string(const SCM& s) {
-	return SCM_NFALSEP(scm_string_p(s));
+	return SCM_NFALSEP(scm_string_p(s));	// assume must have
 }
+#define	USING_SCM_IS_STRING	using util::guile::scm_is_string;
+#else
+#define	USING_SCM_IS_STRING
 #endif
 
 //-----------------------------------------------------------------------------
@@ -63,6 +83,25 @@ scm_assert_string(const SCM&, const char* fn, const int pos);
 
 void
 scm_assert_pair(const SCM&, const char* fn, const int pos);
+
+//-----------------------------------------------------------------------------
+#ifndef	HAVE_SCM_FROM_LOCALE_SYMBOL
+SCM
+scm_from_locale_symbol(const char*);
+#define	USING_SCM_FROM_LOCALE_SYMBOL	using util::guile::scm_from_locale_symbol;
+#else
+#define	USING_SCM_FROM_LOCALE_SYMBOL
+#endif
+
+//-----------------------------------------------------------------------------
+#ifndef	HAVE_SCM_ASSERT_SMOB_TYPE
+void
+scm_assert_smob_type(scm_t_bits tag, SCM val);
+
+#define	USING_SCM_ASSERT_SMOB_TYPE	using util::guile::scm_assert_smob_type;
+#else
+#define	USING_SCM_ASSERT_SMOB_TYPE
+#endif
 
 //-----------------------------------------------------------------------------
 }	// end namespace guile

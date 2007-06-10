@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.cc"
-	$Id: libguile.cc,v 1.2 2007/04/20 18:26:17 fang Exp $
+	$Id: libguile.cc,v 1.3 2007/06/10 02:58:09 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -63,6 +63,30 @@ scm_assert_pair(const SCM& p, const char* fn, const int pos) {
 		scm_wrong_type_arg(fn, pos, p);
 	}
 }
+
+//-----------------------------------------------------------------------------
+#ifndef	HAVE_SCM_FROM_LOCALE_SYMBOL
+SCM
+scm_from_locale_symbol(const char* s) {
+#if HAVE_SCM_STR2SYMBOL
+	return scm_str2symbol(s);
+#else
+#error	"Missing const char* to SCM symbol constructor."
+#endif
+}
+#endif
+
+//-----------------------------------------------------------------------------
+#ifndef	HAVE_SCM_ASSERT_SMOB_TYPE
+/**
+	Example taken from guile-1.6: type-checking.
+	TODO: enable optional passing of argument context information.  
+ */
+void
+scm_assert_smob_type(scm_t_bits tag, SCM val) {
+	SCM_ASSERT(SCM_SMOB_PREDICATE(tag, val), val, 0, "unknown caller");
+}
+#endif
 
 //-----------------------------------------------------------------------------
 }	// end namespace guile
