@@ -1,11 +1,12 @@
 #!hacguile -b
 !#
 ;; "031a-03.hacscm"
-;;	$Id: 031a-03.hacscm,v 1.2 2007/04/20 18:27:51 fang Exp $
+;;	$Id: 031a-03.hacscm,v 1.3 2007/06/10 02:58:31 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ 031a.haco-a
 
 (use-modules (hackt hackt))
+(use-modules (srfi srfi-1))	; for filter (guile-1.6)
 
 (define refs
   (hac:collect-reference-subinstances (hac:parse-raw-reference "load")))
