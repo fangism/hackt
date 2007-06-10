@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.2 2007/04/20 18:25:57 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.3 2007/06/10 02:57:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -35,6 +35,7 @@ using util::guile::make_scm;
 using util::guile::make_scm_list;
 using util::guile::scm_gsubr_type;
 using util::guile::scm_c_define_gsubr_exported;
+USING_SCM_ASSERT_SMOB_TYPE
 
 //=============================================================================
 /**

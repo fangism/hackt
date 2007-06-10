@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.4 2007/04/20 18:25:56 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.5 2007/06/10 02:57:05 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -66,6 +66,7 @@ using util::guile::scm_is_string;
 #endif
 using util::guile::scm_assert_pair;
 using util::guile::scm_assert_string;
+USING_SCM_FROM_LOCALE_SYMBOL
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // static global initialization
@@ -148,7 +149,8 @@ HAC_GUILE_DEFINE(wrap_parse_global_reference, FUNC_NAME, 1, 0, 0,
 "type-checks it, and returns a (type . index) pair.") {
 	STACKTRACE_VERBOSE;
 	scm_assert_string(sref, FUNC_NAME, 1);	// redundant
-	const char* peek = scm_to_locale_string(sref);	// 1.8
+	const char* peek = NULL;
+	extract_scm(sref, peek);
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
 	const global_indexed_reference

@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_reference.cc"
-	$Id: scm_reference.cc,v 1.2 2007/04/20 18:25:59 fang Exp $
+	$Id: scm_reference.cc,v 1.3 2007/06/10 02:57:05 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -40,6 +40,8 @@ using entity::process_tag;
 using entity::global_references_set;
 using entity::entry_collection;
 using util::guile::make_scm;
+using util::guile::extract_scm;
+USING_SCM_ASSERT_SMOB_TYPE
 
 /**
 	Tag identifier initialized by raw_reference_smob_init().
@@ -219,7 +221,8 @@ global_references_set_export_scm_refs(const global_references_set& s) {
 HAC_GUILE_DEFINE(wrap_parse_raw_reference, FUNC_NAME, 1, 0, 0, (SCM sref),
 "Parses a reference string @var{sref} as it might appear in HAC source, and "
 "returns an internal representation (smob:raw-reference) of the reference.") {
-	const char* peek = scm_to_locale_string(sref);	// 1.8
+	const char* peek = NULL;
+	extract_scm(sref, peek);	// 1.8
 	// alternately string_to_locale_stringbuf
 	const module& mod(*obj_module);
 	// alert: heap-allocating though naked pointer, copy-constructing

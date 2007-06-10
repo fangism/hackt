@@ -1,6 +1,6 @@
 /**
 	\file "guile/chpsim-wrap.cc"
-	$Id: chpsim-wrap.cc,v 1.4 2007/05/04 03:37:21 fang Exp $
+	$Id: chpsim-wrap.cc,v 1.5 2007/06/10 02:57:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -56,6 +56,8 @@ using util::guile::scm_assert_string;
 using util::guile::make_scm;
 using util::guile::extract_scm;
 using util::guile::scm_c_define_gsubr_exported;
+USING_SCM_ASSERT_SMOB_TYPE
+USING_SCM_FROM_LOCALE_SYMBOL
 
 //=============================================================================
 /**
@@ -175,6 +177,34 @@ struct changed_state_extractor : protected changed_state_extractor_base {
 };	// end struct changed_state_extractor
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#ifndef	HAVE_SCM_FROM_CHAR
+/**
+	Convert a state_trace_point into SCM.  
+	Workaround specialization for bool data fields to avoid 
+	SCM-char conversion (making output unreadable) (guile-1.6)
+ */
+template <>
+struct changed_state_extractor<bool_tag> : protected changed_state_extractor_base {
+	/**
+		\param s the state_manager is unused and not needed.
+	 */
+	explicit
+	changed_state_extractor(const state_manager& s) :
+		changed_state_extractor_base(s) { }
+
+	SCM
+	operator () (const state_trace_window_base<bool_tag>::iter_type::value_type& i) const {
+		return scm_cons(scm_cons(
+			scm_type_symbols[
+				class_traits<bool_tag>::type_tag_enum_value],
+			make_scm(i.global_index)),
+			make_scm<int>(i.raw_data));
+			// specialize bool for #t and #f? too lazy...
+	}
+};	// end struct changed_state_extractor<bool_tag>
+#endif	// HAVE_SCM_FROM_CHAR
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Functor to conver packed data into list of SCMs.  
  */
@@ -198,7 +228,14 @@ struct channel_data_scm_extractor {
 			bd(b.is_a<const built_in_datatype_def>());
 		if (bd) {
 			if (bd == &class_traits<bool_tag>::built_in_definition) {
-				return make_scm(*reader.iter_ref<bool_tag>()++);
+#ifdef	HAVE_SCM_FROM_CHAR
+				return make_scm
+#else
+			// for now, force construction through int type
+			// in guile-1.6, going through char makes it unreadable
+				return make_scm<int>
+#endif
+					(*reader.iter_ref<bool_tag>()++);
 			} else if (bd == &class_traits<int_tag>::built_in_definition) {
 				return make_scm(*reader.iter_ref<int_tag>()++);
 			} else {
