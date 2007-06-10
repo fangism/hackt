@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.3 2007/05/04 03:37:23 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.4 2007/06/10 02:57:50 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -287,18 +287,16 @@ TODO: use memoized structures."
 ;      (display (car f)) (display ": ") (display (cdr y))
       (rb-tree/lookup-mutate! y x
         (lambda (z) 
-;         (display "++") (display z) (newline)
-#!
-          "This hack is not needed anymore since we now execute branches 
-           like any other event."
-          (let ((p (hac:chpsim-get-event f)))
-;            (display "p: ") (display p) (newline)
-            (if (hac:chpsim-event-select? (static-event-raw-entry p))
-              ; recurse to predecessor because selections are not 'executed'
-              (count-selects f)
-            ) ; end if
-          ) ; end let
-!#
+;;         (display "++") (display z) (newline)
+;          "This hack is not needed anymore since we now execute branches 
+;           like any other event."
+;          (let ((p (hac:chpsim-get-event f)))
+;;            (display "p: ") (display p) (newline)
+;            (if (hac:chpsim-event-select? (static-event-raw-entry p))
+;              ; recurse to predecessor because selections are not 'executed'
+;              (count-selects f)
+;            ) ; end if
+;          ) ; end let
           (1+ z)
         ) ; end lambda
         #f
@@ -319,9 +317,7 @@ TODO: use memoized structures."
 Result is a map of number of times each loop entered (first event executed)."
   (let ((loop-heads (force static-loop-head-events-delayed))
         (loop-histo (make-rb-tree = <))
-#!
-        (branch-histo (make-select-branch-histogram trace-stream))
-!#
+;        (branch-histo (make-select-branch-histogram trace-stream))
 		; can this be memoized?
        )
        ; copy over keys into new histo, initialize counts to 0
@@ -340,27 +336,25 @@ Result is a map of number of times each loop entered (first event executed)."
       ) ; end lambda
       trace-stream
     ) ; end stream-for-each
-#!
-    ; back-propagating branch counts
-    (rb-tree/for-each
-      (lambda (p)
-        (let ((eid (car p)))
-          (if (chpsim-event-branch-head? eid)
-            (begin
-            (rb-tree/lookup-mutate! loop-histo eid
-              (lambda (x)
-                (accumulate (lambda (j k) (+ (cdr j) k)) 0
-                  (rb-tree->alist (rb-tree/lookup branch-histo eid #f)))
-              ) ; end lambda
-              #f
-            )
-            ) ; end begin
-          ) ; end if
-        ) ; end let
-      ) ; end lambda
-      loop-histo
-    ) ; end for-each
-!#
+;    ; back-propagating branch counts (no longer necessary)
+;    (rb-tree/for-each
+;      (lambda (p)
+;        (let ((eid (car p)))
+;          (if (chpsim-event-branch-head? eid)
+;            (begin
+;            (rb-tree/lookup-mutate! loop-histo eid
+;              (lambda (x)
+;                (accumulate (lambda (j k) (+ (cdr j) k)) 0
+;                  (rb-tree->alist (rb-tree/lookup branch-histo eid #f)))
+;              ) ; end lambda
+;              #f
+;            )
+;            ) ; end begin
+;          ) ; end if
+;        ) ; end let
+;      ) ; end lambda
+;      loop-histo
+;    ) ; end for-each
     loop-histo
   ) ; end let
 ) ; end define

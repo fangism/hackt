@@ -1,5 +1,17 @@
 "scm/ChangeLog"
 
+2007-06-09	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-29:
+	  Added support for guile-1.6!
+		Inline-block comments didn't work in 1.6, so we're falling back
+		to ;-end-of-line comments inside of () bodies.
+		Block comments still work in the top-level of interpreter.
+	  NOTE: 1.6: `filter' function was only present in srfi-1
+	  TODO: a few test suite differences remain, such as error message
+		format from guile-1.6 (trivial and low priority)
+
+
 2007-05-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-30:

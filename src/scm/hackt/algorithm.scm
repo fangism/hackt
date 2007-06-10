@@ -1,5 +1,5 @@
 ;; "hackt/algorithm.scm"
-;;	$Id: algorithm.scm,v 1.2 2007/04/20 18:26:04 fang Exp $
+;;	$Id: algorithm.scm,v 1.3 2007/06/10 02:57:50 fang Exp $
 ;; Additional handy algorithms not fund in guile scheme libs.
 
 (define-module (hackt algorithm)
@@ -51,17 +51,15 @@ predicate, the second of which failed the predicate."
     (partition pred lst)
     (cons sat unsat)
   )
-#!
-  (if (null? lst) (cons '() '() ) ; return pair of empty lists (true, false)
-  (let ((head (car lst))
-      (rem (filter-split pred (cdr lst)))) ; yuck, not tail-recursive...
-    (if (pred head)
-      (cons (cons head (car rem)) (cdr rem))
-      (cons (car rem) (cons head (cdr rem)))
-    ) ; end if
-  ) ; end let
-  ) ; end if
-!#
+;  (if (null? lst) (cons '() '() ) ; return pair of empty lists (true, false)
+;  (let ((head (car lst))
+;      (rem (filter-split pred (cdr lst)))) ; yuck, not tail-recursive...
+;    (if (pred head)
+;      (cons (cons head (car rem)) (cdr rem))
+;      (cons (car rem) (cons head (cdr rem)))
+;    ) ; end if
+;  ) ; end let
+;  ) ; end if
 ) ; end define
 
 ;; more 'STL' algorithms
@@ -116,11 +114,9 @@ the predicate.  Implemented as short-circuit: return as soon as true."
 "Finds the key-value *pair* in an associative list using equal?, given a key.  
 In contrast, assoc-ref returns only the value."
   (find (lambda (x) (equal? (car x) key)) alst)
-#!
-  (if (null? alst) #f
-    (if (equal? (caar alst) key) (car alst) (assoc-ref-pair (cdr alst) key))
-  )
-!#
+;  (if (null? alst) #f
+;    (if (equal? (caar alst) key) (car alst) (assoc-ref-pair (cdr alst) key))
+;  )
 )
 
 ; list-find-first: use srfi-1::find

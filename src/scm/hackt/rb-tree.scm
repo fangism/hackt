@@ -1,24 +1,23 @@
-#!
-"hackt/rb-tree.scm"
-Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
+; "hackt/rb-tree.scm"
+; Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-$Id: rb-tree.scm,v 1.2 2007/04/20 18:26:07 fang Exp $
+; $Id: rb-tree.scm,v 1.3 2007/06/10 02:57:50 fang Exp $
 
-Copyright (c) 1993-2000 Massachusetts Institute of Technology
+; Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
-This program is free software; you can redistribute it and/or modify it under 
-the terms of the GNU General Public License as published by the Free Software 
-Foundation; either version 2 of the License, or (at your option) any later 
-version.
+; This program is free software; you can redistribute it and/or modify it under 
+; the terms of the GNU General Public License as published by the Free Software 
+; Foundation; either version 2 of the License, or (at your option) any later 
+; version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT 
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+; This program is distributed in the hope that it will be useful, but WITHOUT 
+; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+; FOR A PARTICULAR PURPOSE.  
+; See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
-this program; if not, write to the Free Software Foundation, Inc., 
-675 Mass Ave, Cambridge, MA 02139, USA.
-!#
+; You should have received a copy of the GNU General Public License along with 
+; this program; if not, write to the Free Software Foundation, Inc., 
+; 675 Mass Ave, Cambridge, MA 02139, USA.
 
 ;;;; Red-Black Trees
 ;;; package: (runtime rb-tree)
@@ -49,17 +48,15 @@ this program; if not, write to the Free Software Foundation, Inc.,
 
 (define-public (make-rb-tree key=? key<?)
   (make <rb-tree> #:eq-comp key=? #:order-comp key<?)
-#!
-  ;; Optimizations to work around compiler that codes known calls to
-  ;; these primitives much more efficiently than unknown calls.
-  (make-tree (cond ((eq? key=? eq?) (lambda (x y) (eq? x y)))
-		   ((eq? key=? fix:=) (lambda (x y) (fix:= x y)))
-		   ((eq? key=? flo:=) (lambda (x y) (flo:= x y)))
-		   (else key=?))
-	     (cond ((eq? key<? fix:<) (lambda (x y) (fix:< x y)))
-		   ((eq? key<? flo:<) (lambda (x y) (flo:< x y)))
-		   (else key<?)))
-!#
+;; Optimizations to work around compiler that codes known calls to
+;; these primitives much more efficiently than unknown calls.
+;  (make-tree (cond ((eq? key=? eq?) (lambda (x y) (eq? x y)))
+;		   ((eq? key=? fix:=) (lambda (x y) (fix:= x y)))
+;		   ((eq? key=? flo:=) (lambda (x y) (flo:= x y)))
+;		   (else key=?))
+;	     (cond ((eq? key<? fix:<) (lambda (x y) (fix:< x y)))
+;		   ((eq? key<? flo:<) (lambda (x y) (flo:< x y)))
+;		   (else key<?)))
 ) ; end define
 
 (define-public (rb-tree? t) (is-a? t <rb-tree>))
@@ -210,14 +207,15 @@ replacing old one."
 ; TODO: stream->rb-tree
 
 ; disable interrupts to prevent structure corruption
-(define without-interrupts call-with-blocked-asyncs
-#!
-  ; deprecated
+(if (defined? 'call-with-blocked-asyncs)
+(define without-interrupts call-with-blocked-asyncs)
+; else try older deprecated API
+(define (without-interrupts thunk)
   (mask-signals)
   (thunk)
   (unmask-signals)
-!#
 ) ; end define
+) ; end if
 
 (define-public (rb-tree/delete! tree key)
 "Dissociates key-value pair associated with @var{key}."
@@ -344,17 +342,15 @@ replacing old one."
     (set-tree-root!
      result
      (copy-subtree (tree-root tree) #f)
-#!
-     (let loop ((node (tree-root tree)) (up #f))
-       (and node
-	    (let ((node* (make-node (node-key node) (node-value node))))
-	      (set-node-color! node* (node-color node))
-	      (set-node-up! node* up)
-	      (set-node-left! node* (loop (node-left node) node*))
-	      (set-node-right! node* (loop (node-right node) node*))
-	      node*))
-     ) ; end let
-!#
+;     (let loop ((node (tree-root tree)) (up #f))
+;       (and node
+;	    (let ((node* (make-node (node-key node) (node-value node))))
+;	      (set-node-color! node* (node-color node))
+;	      (set-node-up! node* up)
+;	      (set-node-left! node* (loop (node-left node) node*))
+;	      (set-node-right! node* (loop (node-right node) node*))
+;	      node*))
+;     ) ; end let
     ) ; end let
     result)
 ) ; end define
@@ -376,12 +372,10 @@ Would remove! suffice?"
 (define (reduce-visit tree proc-2 default)
 "Reduction visit of all nodes in the tree, O(n)."
   (reduce-nodes (tree-root tree) proc-2 default)
-#!
-  (let loop ((node (tree-root tree)))
-    (if node
-	(proc-2 (loop (node-left node)) (loop (node-right node)))
-	default))
-!#
+;  (let loop ((node (tree-root tree)))
+;    (if node
+;	(proc-2 (loop (node-left node)) (loop (node-right node)))
+;	default))
 )
 
 (define-public (rb-tree/height tree)
