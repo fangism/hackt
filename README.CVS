@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.7 2007/03/19 02:37:18 fang Exp $
+	$Id: README.CVS,v 1.8 2007/06/10 02:56:25 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -42,13 +42,15 @@ scripts/maintainerclobber
 which is the equivalent of a cvs-clean.  
 
 Mac OS X Fink users:
-May wish to look at pkg/README and pkg/*.info for convenient fake packages 
+May wish to look at pkg/README and pkg/*.info for convenient packages
 with hackt's build-dependencies.  
+
+FreeBSD ports users:
+If your GNU autotools are installed under non-default program names, 
+try "./scripts/bootstrap.freebsd" to bootstrap.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Other tools needed:
-
-(used to require swig, Simplified Wrapper Interface Generator, but not anymore.)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

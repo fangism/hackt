@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.10 2007/06/04 18:09:40 fang Exp $
+dnl	$Id: guile.m4,v 1.11 2007/06/10 02:56:30 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -89,25 +89,58 @@ dnl what does the following test for?
 AC_CHECK_FUNCS(scm_boot_guile, , libguile_b=no)
 dnl AC_CHECK_FUNCS(scm_from_ulong)
 AC_CHECK_FUNCS(scm_num2ulong)
-AC_CHECK_FUNCS(gh_scm2ulong)
+AC_CHECK_FUNCS(gh_scm2ulong) dnl from 1.6 API
 dnl the following are in guile-1.8, but not earlier
+AC_CHECK_FUNCS(scm_is_bool)
+AC_CHECK_FUNCS(scm_to_bool)
 AC_CHECK_FUNCS(scm_is_pair)
 AC_CHECK_FUNCS(scm_is_string)
+AC_CHECK_FUNCS(scm_from_locale_symbol)
+AC_CHECK_FUNCS(scm_str2symbol)	dnl from 1.6 API
+AC_CHECK_FUNCS(scm_from_char)
+AC_CHECK_FUNCS(scm_to_char)
+AC_CHECK_FUNCS(scm_from_short)
+AC_CHECK_FUNCS(scm_to_short)
+AC_CHECK_FUNCS(scm_num2short) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_short2num) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_from_int)
+AC_CHECK_FUNCS(scm_to_int)
+AC_CHECK_FUNCS(scm_num2int) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_int2num) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_from_long)
+AC_CHECK_FUNCS(scm_to_long)
+AC_CHECK_FUNCS(scm_num2long) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_long2num) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_from_double)
+AC_CHECK_FUNCS(scm_to_double)
+AC_CHECK_FUNCS(scm_num2float) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_float2num) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_num2double) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_double2num) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_from_long_long)
+AC_CHECK_FUNCS(scm_to_long_long)
+AC_CHECK_FUNCS(scm_num2long_long) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_long_long2num) dnl from 1.6 API
+AC_CHECK_FUNCS(scm_from_locale_string)
+AC_CHECK_FUNCS(scm_to_locale_string)
+AC_CHECK_FUNCS(scm_makfrom0str)	dnl from 1.6 API
+AC_CHECK_FUNCS(scm_assert_smob_type)
 dnl test "$libguile_b" = "no" ... warn...
 dnl pop flags
 LDFLAGS="$save_LDFLAGS"
 CPPFLAGS="$save_CPPFLAGS"
 AC_LANG_POP(C++)
 else
-	AC_MSG_WARN([[guile-config missing, disabling building with guile!]])
+	AC_MSG_WARN([[guile-config missing, disabling guile! (try passing GUILE_CONFIG)]])
 	GUILE_CONFIG_VERSION="none"
 fi
 fi
-AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
-if test "$ac_cv_func_scm_is_pair" != "yes" ; then
-	AC_MSG_WARN([[guile-1.8 API missing, disabling building with guile!]])
-	GUILE_CONFIG_VERSION="none"
-fi
+AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_boot_guile" = "yes")
+dnl AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
+dnl if test "$ac_cv_func_scm_is_pair" != "yes" ; then
+dnl	AC_MSG_WARN([[guile-1.8 API missing, disabling guile!]])
+dnl	GUILE_CONFIG_VERSION="none"
+dnl fi
 AC_SUBST(GUILE_CONFIG)
 AC_SUBST(GUILE_CONFIG_VERSION)
 AC_SUBST(GUILE_SNARF)

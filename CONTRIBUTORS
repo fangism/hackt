@@ -1,5 +1,5 @@
 "CONTRIBUTORS"
-	$Id: CONTRIBUTORS,v 1.1 2006/08/05 06:44:05 fang Exp $
+	$Id: CONTRIBUTORS,v 1.2 2007/06/10 02:56:24 fang Exp $
 
 This file is an acknowledgement to those who have contributed to the 
 development of HACKT.  This list far from complete.  
@@ -9,6 +9,9 @@ LIBRARY CONTRIBUTORS:
 
 BUG REPORTERS:
 	Clint Kelly -- "Clint, you're killing me"
+
+SUPPORT HACKERS:
+	Carlos Tadeo "Chewbacca" Ortega Otero -- vim syntax highlighting hacker
 
 DOCUMENTATION POLICE:
 	Nathan Smith

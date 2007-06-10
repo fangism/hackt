@@ -1,5 +1,5 @@
 # "scripts/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2006/07/04 07:25:35 fang Exp $
+#	$Id: Makefile.am,v 1.6 2007/06/10 02:56:35 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -24,6 +24,7 @@ EXTRA_DIST += $(PRECONFIGURED_TESTSCRIPTS) \
 	exhaust_check.sh \
 	rm_pattern.sh \
 	tally_tests.awk \
+	bootstrap.freebsd \
 	maintainerclobber
 
 include $(top_srcdir)/Make.global

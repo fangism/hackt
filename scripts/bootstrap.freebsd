@@ -1,0 +1,13 @@
+#!/bin/sh
+# FreeBSD 6.2 ports install autotools under non-standard names...
+# run this script from the $(top_srcdir) only
+#	$Id: bootstrap.freebsd,v 1.1 2007/06/10 02:56:36 fang Exp $
+
+AUTOCONF=autoconf259 \
+AUTOHEADER=autoheader259 \
+AUTOMAKE=automake19 \
+ACLOCAL=aclocal19 \
+ACLOCAL_FLAGS="-I /usr/local/share/aclocal" \
+./bootstrap
+
+

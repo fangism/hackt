@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2007-06-09	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-29:
+	  Added support for guile-1.6's API!
+	  config/guile.m4: a ton more API function checks.
+	  README: downgraded guile version requirement
+	  Added scripts/bootstrap.freebsd.
+
+
 2007-06-08	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-28:
