@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.7.2.2 2007/06/08 21:39:56 fang Exp $
+	$Id: Event.h,v 1.7.2.3 2007/06/11 20:22:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -344,6 +344,17 @@ public:
 
 	ostream&
 	dump_source(ostream&) const;
+
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	ostream&
+	dump_brief(ostream&, const entity::state_manager&,
+		const entity::footprint&) const;
+
+	// overloaded, I know...
+	ostream&
+	dump_source(ostream&, const entity::state_manager&,
+		const entity::footprint&) const;
+#endif
 
 	ostream&
 	dump_pending(ostream&) const;

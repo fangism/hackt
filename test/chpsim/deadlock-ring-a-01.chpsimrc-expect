@@ -5,102 +5,102 @@ check queue:
 event queue:
 check queue:
 	time	eid	pid	event
-	10	3	2	bool_buf_init::x := true
-	10	6	3	bool_buf_init::x := true
-	10	9	4	bool_buf_init::x := true
-	10	12	5	bool_buf_init::x := true
-	10	15	6	bool_buf_init::x := true
-	10	18	7	bool_buf_init::x := true
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
+	10	3	2	R.b[0].x := true
+	10	6	3	R.b[1].x := true
+	10	9	4	R.b[2].x := true
+	10	12	5	R.b[3].x := true
+	10	15	6	R.b[4].x := true
+	10	18	7	R.b[5].x := true
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
 event queue:
 check queue:
 	time	eid	pid	event
-	10	6	3	bool_buf_init::x := true
-	10	9	4	bool_buf_init::x := true
-	10	12	5	bool_buf_init::x := true
-	10	15	6	bool_buf_init::x := true
-	10	18	7	bool_buf_init::x := true
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
+	10	6	3	R.b[1].x := true
+	10	9	4	R.b[2].x := true
+	10	12	5	R.b[3].x := true
+	10	15	6	R.b[4].x := true
+	10	18	7	R.b[5].x := true
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	10	9	4	bool_buf_init::x := true
-	10	12	5	bool_buf_init::x := true
-	10	15	6	bool_buf_init::x := true
-	10	18	7	bool_buf_init::x := true
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
+	10	9	4	R.b[2].x := true
+	10	12	5	R.b[3].x := true
+	10	15	6	R.b[4].x := true
+	10	18	7	R.b[5].x := true
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	10	12	5	bool_buf_init::x := true
-	10	15	6	bool_buf_init::x := true
-	10	18	7	bool_buf_init::x := true
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
-	12	7	4	bool_buf_init::R!(bool_buf_init::x)
+	10	12	5	R.b[3].x := true
+	10	15	6	R.b[4].x := true
+	10	18	7	R.b[5].x := true
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
+	12	7	4	R.b[2].R!(R.b[2].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	10	15	6	bool_buf_init::x := true
-	10	18	7	bool_buf_init::x := true
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
-	12	7	4	bool_buf_init::R!(bool_buf_init::x)
-	12	10	5	bool_buf_init::R!(bool_buf_init::x)
+	10	15	6	R.b[4].x := true
+	10	18	7	R.b[5].x := true
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
+	12	7	4	R.b[2].R!(R.b[2].x)
+	12	10	5	R.b[3].R!(R.b[3].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	10	18	7	bool_buf_init::x := true
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
-	12	7	4	bool_buf_init::R!(bool_buf_init::x)
-	12	10	5	bool_buf_init::R!(bool_buf_init::x)
-	12	13	6	bool_buf_init::R!(bool_buf_init::x)
+	10	18	7	R.b[5].x := true
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
+	12	7	4	R.b[2].R!(R.b[2].x)
+	12	10	5	R.b[3].R!(R.b[3].x)
+	12	13	6	R.b[4].R!(R.b[4].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	10	21	8	bool_buf_init::x := true
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
-	12	7	4	bool_buf_init::R!(bool_buf_init::x)
-	12	10	5	bool_buf_init::R!(bool_buf_init::x)
-	12	13	6	bool_buf_init::R!(bool_buf_init::x)
-	12	16	7	bool_buf_init::R!(bool_buf_init::x)
+	10	21	8	R.b[6].x := true
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
+	12	7	4	R.b[2].R!(R.b[2].x)
+	12	10	5	R.b[3].R!(R.b[3].x)
+	12	13	6	R.b[4].R!(R.b[4].x)
+	12	16	7	R.b[5].R!(R.b[5].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	10	24	9	bool_buf_init::x := true
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
-	12	7	4	bool_buf_init::R!(bool_buf_init::x)
-	12	10	5	bool_buf_init::R!(bool_buf_init::x)
-	12	13	6	bool_buf_init::R!(bool_buf_init::x)
-	12	16	7	bool_buf_init::R!(bool_buf_init::x)
-	12	19	8	bool_buf_init::R!(bool_buf_init::x)
+	10	24	9	R.b[7].x := true
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
+	12	7	4	R.b[2].R!(R.b[2].x)
+	12	10	5	R.b[3].R!(R.b[3].x)
+	12	13	6	R.b[4].R!(R.b[4].x)
+	12	16	7	R.b[5].R!(R.b[5].x)
+	12	19	8	R.b[6].R!(R.b[6].x)
 event queue:
 check queue:
 	time	eid	pid	event
-	12	1	2	bool_buf_init::R!(bool_buf_init::x)
-	12	4	3	bool_buf_init::R!(bool_buf_init::x)
-	12	7	4	bool_buf_init::R!(bool_buf_init::x)
-	12	10	5	bool_buf_init::R!(bool_buf_init::x)
-	12	13	6	bool_buf_init::R!(bool_buf_init::x)
-	12	16	7	bool_buf_init::R!(bool_buf_init::x)
-	12	19	8	bool_buf_init::R!(bool_buf_init::x)
-	12	22	9	bool_buf_init::R!(bool_buf_init::x)
+	12	1	2	R.b[0].R!(R.b[0].x)
+	12	4	3	R.b[1].R!(R.b[1].x)
+	12	7	4	R.b[2].R!(R.b[2].x)
+	12	10	5	R.b[3].R!(R.b[3].x)
+	12	13	6	R.b[4].R!(R.b[4].x)
+	12	16	7	R.b[5].R!(R.b[5].x)
+	12	19	8	R.b[6].R!(R.b[6].x)
+	12	22	9	R.b[7].R!(R.b[7].x)
 queue is full of sends to check... 
 event queue:
 check queue:

@@ -1,41 +1,41 @@
 	0	0	0	null
 	10	11	0	
 	20	2	0	X?(x)
-	20	14	2	bool_source::S!(true)
+	20	14	2	xs.S!(true)
 	30	4	0	[#A&&#Y]
 	40	10	0	
 	50	7	0	A?(a)
-	50	12	1	bool_source::S!(true)
+	50	12	1	bs.S!(true)
 	50	9	0	Y?(z)
 	50	3	0	Y!(x)
 	60	6	0	B!(a)
-	60	16	3	bool_sink::B?(bool_sink::b)
+	60	16	3	snk0.B?(snk0.b)
 	60	8	0	Z!(z)
-	60	17	4	bool_sink::B?(bool_sink::b)
+	60	17	4	sink1.B?(sink1.b)
 	60	2	0	X?(x)
-	60	15	2	bool_source::S!(false)
+	60	15	2	xs.S!(false)
 	70	5	0	
 	80	4	0	[#A&&#Y]
 	90	10	0	
 	100	7	0	A?(a)
-	100	13	1	bool_source::S!(false)
+	100	13	1	bs.S!(false)
 	100	9	0	Y?(z)
 	100	3	0	Y!(x)
 	110	6	0	B!(a)
-	110	16	3	bool_sink::B?(bool_sink::b)
+	110	16	3	snk0.B?(snk0.b)
 	110	8	0	Z!(z)
-	110	17	4	bool_sink::B?(bool_sink::b)
+	110	17	4	sink1.B?(sink1.b)
 	110	2	0	X?(x)
-	110	14	2	bool_source::S!(true)
+	110	14	2	xs.S!(true)
 	120	5	0	
 	130	4	0	[#A&&#Y]
 	140	10	0	
 	150	7	0	A?(a)
-	150	12	1	bool_source::S!(true)
+	150	12	1	bs.S!(true)
 	150	9	0	Y?(z)
 	150	3	0	Y!(x)
 	160	6	0	B!(a)
-	160	16	3	bool_sink::B?(bool_sink::b)
+	160	16	3	snk0.B?(snk0.b)
 	160	8	0	Z!(z)
-	160	17	4	bool_sink::B?(bool_sink::b)
+	160	17	4	sink1.B?(sink1.b)
 time: 160

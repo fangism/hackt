@@ -5,27 +5,27 @@ bool(s):
 bool A.a[1] = 0
 updated bool(s): 
 bool A.a[1] = 1
-watch:	20	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	20	5	1	A.A[1]?(A.a[1])
 	*** break, 16 steps left.
 time: 20
 updated bool(s): 
 bool A.a[1] = 1
-watch:	60	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	60	5	1	A.A[1]?(A.a[1])
 	*** break, 9 steps left.
 time: 60
 updated bool(s): 
 bool A.a[1] = 0
-watch:	100	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	100	5	1	A.A[1]?(A.a[1])
 	*** break, 9 steps left.
 time: 100
 updated bool(s): 
 bool A.a[1] = 1
-watch:	140	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	140	5	1	A.A[1]?(A.a[1])
 	*** break, 9 steps left.
 time: 140
 updated bool(s): 
 bool A.a[1] = 1
-watch:	180	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	180	5	1	A.A[1]?(A.a[1])
 	*** break, 9 steps left.
 time: 180
 resetting... 
@@ -37,89 +37,89 @@ resetting...
 breaking on channel In[2] 
 updated channel(s): 
 chan(bool<>) In[2] = (1) [recvd]
-watch:	20	6	1	bool_and::A[2]?(bool_and::a[2])
+watch:	20	6	1	A.A[2]?(A.a[2])
 	*** break, 6 steps left.
 time: 20
 updated channel(s): 
 chan(bool<>) In[2] = (1) [empty]
-watch:	20	12	4	bool_source::S!(true)
+watch:	20	12	4	S2.S!(true)
 	*** break, 12 steps left.
 time: 20
 updated channel(s): 
 chan(bool<>) In[2] = (0) [recvd]
-watch:	60	6	1	bool_and::A[2]?(bool_and::a[2])
+watch:	60	6	1	A.A[2]?(A.a[2])
 	*** break, 2 steps left.
 time: 60
 updated channel(s): 
 chan(bool<>) In[2] = (0) [empty]
-watch:	60	15	4	bool_source::S!(false)
+watch:	60	15	4	S2.S!(false)
 	*** break, 12 steps left.
 time: 60
 updated channel(s): 
 chan(bool<>) In[2] = (1) [recvd]
-watch:	100	6	1	bool_and::A[2]?(bool_and::a[2])
+watch:	100	6	1	A.A[2]?(A.a[2])
 	*** break, 2 steps left.
 time: 100
 updated channel(s): 
 chan(bool<>) In[2] = (1) [empty]
-watch:	100	14	4	bool_source::S!(true)
+watch:	100	14	4	S2.S!(true)
 	*** break, 12 steps left.
 time: 100
 updated channel(s): 
 chan(bool<>) In[2] = (1) [recvd]
-watch:	140	6	1	bool_and::A[2]?(bool_and::a[2])
+watch:	140	6	1	A.A[2]?(A.a[2])
 	*** break, 2 steps left.
 time: 140
 updated channel(s): 
 chan(bool<>) In[2] = (1) [empty]
-watch:	140	13	4	bool_source::S!(true)
+watch:	140	13	4	S2.S!(true)
 	*** break, 12 steps left.
 time: 140
 updated channel(s): 
 chan(bool<>) In[2] = (1) [recvd]
-watch:	180	6	1	bool_and::A[2]?(bool_and::a[2])
+watch:	180	6	1	A.A[2]?(A.a[2])
 	*** break, 2 steps left.
 time: 180
 resetting... 
 just watching channel In[1] 
 updated channel(s): 
 chan(bool<>) In[1] = (1) [recvd]
-watch:	20	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	20	5	1	A.A[1]?(A.a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
-watch:	20	9	3	bool_source::S!(true)
+watch:	20	9	3	S1.S!(true)
 updated channel(s): 
 chan(bool<>) In[1] = (1) [recvd]
-watch:	60	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	60	5	1	A.A[1]?(A.a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
-watch:	60	11	3	bool_source::S!(true)
+watch:	60	11	3	S1.S!(true)
 updated channel(s): 
 chan(bool<>) In[1] = (0) [recvd]
-watch:	100	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	100	5	1	A.A[1]?(A.a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (0) [empty]
-watch:	100	10	3	bool_source::S!(false)
+watch:	100	10	3	S1.S!(false)
 updated channel(s): 
 chan(bool<>) In[1] = (1) [recvd]
-watch:	140	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	140	5	1	A.A[1]?(A.a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
-watch:	140	9	3	bool_source::S!(true)
+watch:	140	9	3	S1.S!(true)
 time: 170
 continuing after unbreakall-values (keeps watches) 
 updated channel(s): 
 chan(bool<>) In[1] = (1) [recvd]
-watch:	180	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	180	5	1	A.A[1]?(A.a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (1) [empty]
-watch:	180	11	3	bool_source::S!(true)
+watch:	180	11	3	S1.S!(true)
 updated channel(s): 
 chan(bool<>) In[1] = (0) [recvd]
-watch:	220	5	1	bool_and::A[1]?(bool_and::a[1])
+watch:	220	5	1	A.A[1]?(A.a[1])
 updated channel(s): 
 chan(bool<>) In[1] = (0) [empty]
-watch:	220	10	3	bool_source::S!(false)
+watch:	220	10	3	S1.S!(false)
 time: 220
 continuing after unwatchall-values, should be silent 
 time: 300

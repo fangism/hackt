@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.7.2.1 2007/06/07 01:47:34 fang Exp $
+	$Id: devel_switches.h,v 1.7.2.2 2007/06/11 20:22:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -42,7 +42,7 @@
 		the occupancy bit does not block a channel.  
 	Goal: 1
 	Priority: top
-	Status: done, tested.
+	Status: done, tested, ready to perm.
 	Co-dependent: CHPSIM_DELAYED_SUCCESSOR_CHECKS
  */
 #define	CHPSIM_COUPLED_CHANNELS			1
@@ -52,7 +52,7 @@
 	Rationale: to faciliate send/receive atomicity/simultaneity.
 	Goal: 1
 	Priority: TOP
-	Status: done, tested
+	Status: done, tested, ready to perm.
 	Co-dependent: CHPSIM_COUPLED_CHANNELS
 	Plan: instate a first_recheck_queue, where successors first arrive.
 		step() will now recheck events in order until one (or two)
@@ -74,12 +74,24 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Define to 1 to construct one canonical process event subgraph per
+	complete type (with CHP) to make allocation easier, and faster.
+	Also makes events per process contiguous in allocation, making
+	reverse-mapping much easier.  
+	Goal: 1
+	Status: not begun
+	Priority: low-medium
+ */
+#define	CHPSIM_FOOTPRINTIZE_EVENTS		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Define to 1 to print hierarchical alias instead of definition-local
 	names in chp dumps.  
 	Goal: 1
 	Rationale: feedback readability
 	Priority: medium
-	Status: begun, under testing
+	Status: done, tested, ready to perm.
  */
 #define	CHPSIM_DUMP_PARENT_CONTEXT		1
 
@@ -93,6 +105,19 @@
 	Priority: ?
  */
 #define	CHPSIM_TRACE_WITH_CHECKPOINT		0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to support nonmeta-reference supplementing using
+		statically prebound instance indices.  
+	Rationale: [optimization] elide looking up statically resolved 
+		references, a suspected performance bottleneck.
+	Strategy: ?
+	Goal: 1
+	Status: not begun
+	Priority: low-medium
+ */
+#define	CHPSIM_CACHE_META_REFERENCES		0
 
 //=============================================================================
 

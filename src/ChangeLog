@@ -5,6 +5,15 @@
 
 2007-06-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-10:
+	  chpsim's (interactive) event feedback now reports events using 
+		instance-hierarchical names, rather than definition-scope.
+		Same as revision -02 of this branch.  
+		Again, more comprehensible.
+	  Test dumps (chpsim) updated accordingly.
+	  Branch done.  
+
+
 	* HACKT-00-01-04-main-00-81-25-chpsim-05-09:
 	  No source revision, just test cases: filtering channel-peek events.
 

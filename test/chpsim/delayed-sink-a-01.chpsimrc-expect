@@ -2,63 +2,63 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	2	1	1	bool_source::S!(true)
-	25	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	2	1	1	src.S!(true)
+	25	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (0) [empty]
-	25	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	25	3	2	[after=25] snk.B?(snk.b)
 event queue:
 	time	eid	pid	event
-	25	1	1	bool_source::S!(true)
+	25	1	1	src.S!(true)
 check queue:
-	50	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	50	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (1) [recvd]
-	25	1	1	bool_source::S!(true)
+	25	1	1	src.S!(true)
 event queue:
 check queue:
 	time	eid	pid	event
-	27	2	1	bool_source::S!(false)
-	50	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	27	2	1	src.S!(false)
+	50	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (1) [empty]
-	50	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	50	3	2	[after=25] snk.B?(snk.b)
 event queue:
 	time	eid	pid	event
-	50	2	1	bool_source::S!(false)
+	50	2	1	src.S!(false)
 check queue:
-	75	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	75	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (0) [recvd]
-	50	2	1	bool_source::S!(false)
+	50	2	1	src.S!(false)
 event queue:
 check queue:
 	time	eid	pid	event
-	52	1	1	bool_source::S!(true)
-	75	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	52	1	1	src.S!(true)
+	75	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (0) [empty]
-	75	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	75	3	2	[after=25] snk.B?(snk.b)
 event queue:
 	time	eid	pid	event
-	75	1	1	bool_source::S!(true)
+	75	1	1	src.S!(true)
 check queue:
-	100	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	100	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (1) [recvd]
-	75	1	1	bool_source::S!(true)
+	75	1	1	src.S!(true)
 event queue:
 check queue:
 	time	eid	pid	event
-	77	2	1	bool_source::S!(false)
-	100	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	77	2	1	src.S!(false)
+	100	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (1) [empty]
-	100	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	100	3	2	[after=25] snk.B?(snk.b)
 event queue:
 	time	eid	pid	event
-	100	2	1	bool_source::S!(false)
+	100	2	1	src.S!(false)
 check queue:
-	125	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	125	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (0) [recvd]
-	100	2	1	bool_source::S!(false)
+	100	2	1	src.S!(false)
 event queue:
 check queue:
 	time	eid	pid	event
-	102	1	1	bool_source::S!(true)
-	125	3	2	[after=25] bool_sink_delay::B?(bool_sink_delay::b)
+	102	1	1	src.S!(true)
+	125	3	2	[after=25] snk.B?(snk.b)
 X : chan(bool<>) X = (0) [empty]
 time: 100

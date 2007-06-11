@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.10.2.3 2007/06/07 22:25:07 fang Exp $
+	$Id: State.cc,v 1.10.2.4 2007/06/11 20:22:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1204,7 +1204,12 @@ State::dump_event(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 	o << '\t' << t << '\t';
 	o << ei << '\t';
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	o << ev.get_process_index() << '\t';
+	return ev.dump_brief(o, mod.get_state_manager(), mod.get_footprint());
+#else
 	return ev.dump_brief(o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

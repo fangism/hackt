@@ -4,84 +4,84 @@ bram.data[2] : bool bram.data[2] = 0
 bram.data[3] : bool bram.data[3] = 0
 	0	0	0	null
 	10	6	1	
-	20	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	20	17	6	bool_source_constant::S!(true)
-	20	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	20	11	3	int_source::S!(0)
+	20	4	1	reqsync.B?(reqsync.x1)
+	20	17	6	rsrc.S!(true)
+	20	5	1	reqsync.I?(reqsync.x2)
+	20	11	3	adsrc.S!(0)
 	30	3	1	
-	40	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	40	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	40	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
+	40	1	2	bram.Req?(bram.w,bram.a)
 	50	6	1	
-	50	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
-	60	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	60	17	6	bool_source_constant::S!(true)
-	60	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	60	14	3	int_source::S!(1)
-	60	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
-	60	16	5	bool_source_constant::S!(true)
+	50	10	2	[ bram.w -> ... [] else -> ... ]
+	60	4	1	reqsync.B?(reqsync.x1)
+	60	17	6	rsrc.S!(true)
+	60	5	1	reqsync.I?(reqsync.x2)
+	60	14	3	adsrc.S!(1)
+	60	8	2	bram.Write?(bram.data[bram.a])
+	60	16	5	bsrc.S!(true)
 	70	3	1	
 	70	7	2	null
-	80	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
-	80	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	90	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
+	80	1	2	bram.Req?(bram.w,bram.a)
+	80	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
+	90	10	2	[ bram.w -> ... [] else -> ... ]
 	90	6	1	
-	100	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
-	100	16	5	bool_source_constant::S!(true)
-	100	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	100	17	6	bool_source_constant::S!(true)
-	100	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	100	13	3	int_source::S!(2)
+	100	8	2	bram.Write?(bram.data[bram.a])
+	100	16	5	bsrc.S!(true)
+	100	4	1	reqsync.B?(reqsync.x1)
+	100	17	6	rsrc.S!(true)
+	100	5	1	reqsync.I?(reqsync.x2)
+	100	13	3	adsrc.S!(2)
 	110	7	2	null
 	110	3	1	
-	120	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	120	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	120	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
+	120	1	2	bram.Req?(bram.w,bram.a)
 	130	6	1	
-	130	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
-	140	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	140	17	6	bool_source_constant::S!(true)
-	140	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	140	12	3	int_source::S!(3)
-	140	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
-	140	16	5	bool_source_constant::S!(true)
+	130	10	2	[ bram.w -> ... [] else -> ... ]
+	140	4	1	reqsync.B?(reqsync.x1)
+	140	17	6	rsrc.S!(true)
+	140	5	1	reqsync.I?(reqsync.x2)
+	140	12	3	adsrc.S!(3)
+	140	8	2	bram.Write?(bram.data[bram.a])
+	140	16	5	bsrc.S!(true)
 	150	3	1	
 	150	7	2	null
-	160	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
-	160	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	170	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
+	160	1	2	bram.Req?(bram.w,bram.a)
+	160	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
+	170	10	2	[ bram.w -> ... [] else -> ... ]
 	170	6	1	
-	180	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
-	180	16	5	bool_source_constant::S!(true)
-	180	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	180	17	6	bool_source_constant::S!(true)
-	180	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	180	11	3	int_source::S!(0)
+	180	8	2	bram.Write?(bram.data[bram.a])
+	180	16	5	bsrc.S!(true)
+	180	4	1	reqsync.B?(reqsync.x1)
+	180	17	6	rsrc.S!(true)
+	180	5	1	reqsync.I?(reqsync.x2)
+	180	11	3	adsrc.S!(0)
 	190	7	2	null
 	190	3	1	
-	200	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	200	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
+	200	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
+	200	1	2	bram.Req?(bram.w,bram.a)
 	210	6	1	
-	210	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
-	220	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	220	17	6	bool_source_constant::S!(true)
-	220	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	220	14	3	int_source::S!(1)
-	220	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
-	220	16	5	bool_source_constant::S!(true)
+	210	10	2	[ bram.w -> ... [] else -> ... ]
+	220	4	1	reqsync.B?(reqsync.x1)
+	220	17	6	rsrc.S!(true)
+	220	5	1	reqsync.I?(reqsync.x2)
+	220	14	3	adsrc.S!(1)
+	220	8	2	bram.Write?(bram.data[bram.a])
+	220	16	5	bsrc.S!(true)
 	230	3	1	
 	230	7	2	null
-	240	1	2	bool_memory_array::Req?(bool_memory_array::w,bool_memory_array::a)
-	240	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
-	250	10	2	[ bool_memory_array::w -> ... [] else -> ... ]
+	240	1	2	bram.Req?(bram.w,bram.a)
+	240	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
+	250	10	2	[ bram.w -> ... [] else -> ... ]
 	250	6	1	
-	260	8	2	bool_memory_array::Write?(bool_memory_array::data[bool_memory_array::a])
-	260	16	5	bool_source_constant::S!(true)
-	260	4	1	channel_sync_bool_int::B?(channel_sync_bool_int::x1)
-	260	17	6	bool_source_constant::S!(true)
-	260	5	1	channel_sync_bool_int::I?(channel_sync_bool_int::x2)
-	260	13	3	int_source::S!(2)
+	260	8	2	bram.Write?(bram.data[bram.a])
+	260	16	5	bsrc.S!(true)
+	260	4	1	reqsync.B?(reqsync.x1)
+	260	17	6	rsrc.S!(true)
+	260	5	1	reqsync.I?(reqsync.x2)
+	260	13	3	adsrc.S!(2)
 	270	7	2	null
 	270	3	1	
-	280	2	1	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)
+	280	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
 bram.data[0] : bool bram.data[0] = 1
 bram.data[1] : bool bram.data[1] = 1
 bram.data[2] : bool bram.data[2] = 1
