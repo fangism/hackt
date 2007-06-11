@@ -1,5 +1,5 @@
 # "test/chpsim/testlib/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2007/05/26 05:34:31 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.1 2007/06/11 00:34:06 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,10 +7,12 @@ include $(top_srcdir)/test/Make.test-head
 HACKT_PARSE_TEST_PASSES = \
 	bool-and bool-or bool-xor \
 	bool-copy bool-source bool-sink \
+	bool-sink-alt \
 	bool-split bool-merge \
 	bool-copy-test \
 	bool-table bool-memory \
 	bool-buf \
+	bool-peekbuf \
 	bool-alternator \
 	int-source int-sink \
 	int-table \
@@ -20,7 +22,9 @@ HACKT_PARSE_TEST_PASSES = \
 	fibonacci
 
 HACKT_CREATE_TEST_PASSES = \
-	bool-copy-test
+	bool-copy-test \
+	bool-peekbuf-test \
+	bool-sink-alt-test
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 

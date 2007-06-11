@@ -1,0 +1,20 @@
+/**
+	\file "bool-peekbuf.hac"
+	$Id: bool-peekbuf.hac,v 1.1.2.1 2007/06/11 00:34:13 fang Exp $
+	CHP buffers that use value-peek.
+ */
+
+defproc bool_peekbuf(chan?(bool) L; chan!(bool) R) {
+bool x;
+chp {
+*[ L#(x); L?; R!(x) ]
+}
+}
+
+defproc bool_peekbuf_fast(chan?(bool) L; chan!(bool) R) {
+bool x;
+chp {
+*[ L#(x); L?, R!(x) ]
+}
+}
+

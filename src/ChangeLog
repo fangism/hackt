@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-06-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-08:
+	  guile/scm_chpsim_event_node.cc: added is peek? predicate
+	  Added batch of chpsim and guile test cases for peek and 
+		valueless receive statements.  
+
+
 2007-06-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-25-chpsim-05-07:

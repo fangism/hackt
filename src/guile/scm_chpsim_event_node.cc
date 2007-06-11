@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.2.4.1 2007/06/07 01:47:29 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.2.4.2 2007/06/11 00:33:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -218,6 +218,22 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_receive_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
 		HAC::SIM::CHPSIM::EVENT_RECEIVE);
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is a peek.
+ */
+#define	FUNC_NAME "chpsim-event-peek?"
+HAC_GUILE_DEFINE(wrap_chpsim_event_peek_p, FUNC_NAME, 1, 0, 0, (SCM obj),
+"Is the event @var{obj} a channel peek?") {
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_PEEK);
 }
 #undef	FUNC_NAME
 

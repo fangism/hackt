@@ -1,0 +1,11 @@
+// "source-sink-peekbuf-a.hac"
+
+import "testlib/bool-source.hac";
+import "testlib/bool-peekbuf.hac";
+import "testlib/bool-sink-alt.hac";
+
+chan(bool) L, R;
+bool_source<3,{false,true,true}> S(L);
+bool_peekbuf B(L, R);
+bool_sink_alt Z(R);
+

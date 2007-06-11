@@ -1,0 +1,25 @@
+Variables: 
+bool[1]: "A.x" 
+bool[2]: "B.x" 
+chan[1]: "A.L" 
+chan[2]: "A.R" 
+chan[3]: "B.L" 
+chan[4]: "B.R" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 4 
+event[1]: peek: A.L#(A.x), pid: 1, #pred: 1, succ: 3 
+channel deps: 1 
+event[2]: send: A.R!(A.x), pid: 1, #pred: 1, succ: 1 
+channel deps: 2 
+event[3]: receive: A.L?, pid: 1, #pred: 1, succ: 2 
+channel deps: 1 
+event[4]: peek: B.L#(B.x), pid: 2, #pred: 1, succ: 8 
+channel deps: 3 
+event[5]: null: , pid: 2, #pred: 2, succ: 4 
+event[6]: receive: B.L?, pid: 2, #pred: 1, succ: 5 
+channel deps: 3 
+event[7]: send: B.R!(B.x), pid: 2, #pred: 1, succ: 5 
+channel deps: 4 
+event[8]: fork: , pid: 2, #pred: 1, succ: 6 7 
+

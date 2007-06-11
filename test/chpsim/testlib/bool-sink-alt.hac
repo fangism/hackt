@@ -1,0 +1,38 @@
+// "bool-sink-alt.hac"
+//	$Id: bool-sink-alt.hac,v 1.1.2.1 2007/06/11 00:34:16 fang Exp $
+// bool buckets, using lvalue-less channel receive
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain infinite sink.  
+ */
+defproc bool_sink_alt(chan?(bool) B) {
+chp {
+*[ B? ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain infinite sink, with configurable delay.  
+ */
+template <preal D>
+defproc bool_sink_alt_delay(chan?(bool) B) {
+chp {
+*[ $(after=D) B? ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	sinks a limited number of times
+ */
+template <pint N>
+defproc bool_sink_alt_once(chan?(bool) B) {
+chp {
+{;i:N: B? }
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

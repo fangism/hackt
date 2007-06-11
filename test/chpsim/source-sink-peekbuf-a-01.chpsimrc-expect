@@ -1,0 +1,180 @@
+	0	0	0	null
+event queue:
+check queue:
+	time	eid	pid	event
+	2	1	1	bool_source::S!(false)
+	3	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	5	7	3	bool_sink_alt::B?
+time: 0
+	3	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	5	7	3	bool_sink_alt::B?
+	8	6	2	bool_peekbuf::L?
+time: 3
+event 1 should have blocked 
+event[1]: send: S.S!(false), pid: 1, #pred: 1, succ: 3 
+channel deps: 1 
+source: bool_source::S!(false)
+status: (blocked and subscribed to its dependencies)
+in queue: no
+in check queue: no
+then event 4 should have executed first 
+	8	6	2	bool_peekbuf::L?
+event queue:
+	time	eid	pid	event
+	8	1	1	bool_source::S!(false)
+check queue:
+	10	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+time: 8
+receive event 6, paired with event 1 
+	8	1	1	bool_source::S!(false)
+event queue:
+check queue:
+	time	eid	pid	event
+	10	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+	10	3	1	bool_source::S!(true)
+time: 8
+channel R should fire events 5 and 7 
+	10	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+event queue:
+	time	eid	pid	event
+	10	7	3	bool_sink_alt::B?
+check queue:
+	10	3	1	bool_source::S!(true)
+	13	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+time: 10
+	10	7	3	bool_sink_alt::B?
+event queue:
+check queue:
+	time	eid	pid	event
+	10	3	1	bool_source::S!(true)
+	13	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	15	7	3	bool_sink_alt::B?
+time: 10
+All event subscriptions:
+event 3 should block next, and 4 will execute 
+	13	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	15	7	3	bool_sink_alt::B?
+	18	6	2	bool_peekbuf::L?
+time: 13
+All event subscriptions:
+channel[1]: "L" : 3 
+event 7 should block next, and 6 and 3 will execute in a pair 
+	18	6	2	bool_peekbuf::L?
+event queue:
+	time	eid	pid	event
+	18	3	1	bool_source::S!(true)
+check queue:
+	20	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+time: 18
+All event subscriptions:
+channel[2]: "R" : 7 
+	18	3	1	bool_source::S!(true)
+event queue:
+check queue:
+	time	eid	pid	event
+	20	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+	20	2	1	bool_source::S!(true)
+time: 18
+channel R should fire events 5 and 7 
+	20	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+event queue:
+	time	eid	pid	event
+	20	7	3	bool_sink_alt::B?
+check queue:
+	20	2	1	bool_source::S!(true)
+	23	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+time: 20
+	20	7	3	bool_sink_alt::B?
+event queue:
+check queue:
+	time	eid	pid	event
+	20	2	1	bool_source::S!(true)
+	23	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	25	7	3	bool_sink_alt::B?
+time: 20
+event 2 should block next, and 4 will execute 
+	23	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+event queue:
+check queue:
+	time	eid	pid	event
+	25	7	3	bool_sink_alt::B?
+	28	6	2	bool_peekbuf::L?
+time: 23
+All event subscriptions:
+channel[1]: "L" : 2 
+event 7 should block next, and 6 and 3 will execute in a pair 
+	28	6	2	bool_peekbuf::L?
+event queue:
+	time	eid	pid	event
+	28	2	1	bool_source::S!(true)
+check queue:
+	30	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+time: 28
+All event subscriptions:
+channel[2]: "R" : 7 
+	28	2	1	bool_source::S!(true)
+event queue:
+check queue:
+	time	eid	pid	event
+	30	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+	30	1	1	bool_source::S!(false)
+time: 28
+channel R should fire events 5 and 7 
+	30	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+event queue:
+	time	eid	pid	event
+	30	7	3	bool_sink_alt::B?
+check queue:
+	30	1	1	bool_source::S!(false)
+	33	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+time: 30
+	30	7	3	bool_sink_alt::B?
+event queue:
+check queue:
+	time	eid	pid	event
+	30	1	1	bool_source::S!(false)
+	33	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	35	7	3	bool_sink_alt::B?
+time: 30
+	33	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	38	6	2	bool_peekbuf::L?
+	38	1	1	bool_source::S!(false)
+	40	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+	40	7	3	bool_sink_alt::B?
+event queue:
+check queue:
+	time	eid	pid	event
+	40	3	1	bool_source::S!(true)
+	43	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	45	7	3	bool_sink_alt::B?
+time: 40
+	43	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	48	6	2	bool_peekbuf::L?
+	48	3	1	bool_source::S!(true)
+	50	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+	50	7	3	bool_sink_alt::B?
+event queue:
+check queue:
+	time	eid	pid	event
+	50	2	1	bool_source::S!(true)
+	53	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	55	7	3	bool_sink_alt::B?
+time: 50
+	53	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	58	6	2	bool_peekbuf::L?
+	58	2	1	bool_source::S!(true)
+	60	5	2	bool_peekbuf::R!(bool_peekbuf::x)
+	60	7	3	bool_sink_alt::B?
+event queue:
+check queue:
+	time	eid	pid	event
+	60	1	1	bool_source::S!(false)
+	63	4	2	bool_peekbuf::L#(bool_peekbuf::x)
+	65	7	3	bool_sink_alt::B?
+time: 60

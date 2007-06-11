@@ -1,0 +1,202 @@
+WARNING: channel A.B lacks connection to a producer.
+WARNING: channel B.B lacks connection to a producer.
+WARNING: channel C.B lacks connection to a producer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	115
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	25	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	32
+	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	29	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
+	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	38	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	prealplh	0	#HEAD#	#TAIL#	29
+	40	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	292
+	50	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	52	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	425
+	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    bool_sink_alt = process-definition (defined) bool_sink_alt(
+        chan?(bool<>) B
+      )
+      In definition "bool_sink_alt", we have: {
+      Instances:
+        B = chan?(bool<>) bool_sink_alt::B
+      unroll sequence: 
+        chan?(bool<>) B
+      chp:
+        concurrent: {
+          *[
+            B?
+          ]
+        }
+      footprint: {
+        B = channel chan?(bool<>)^0 = bool_sink_alt::B (1) 
+        Created state:
+        channel instance pool:
+        1	bool_sink_alt::B
+        resolved concurrent actions:
+          *[
+            B?
+          ]
+      }
+      }
+
+    bool_sink_alt_delay = process-definition (defined) bool_sink_alt_delay<
+      preal<> D
+      >(
+        chan?(bool<>) B
+      )
+      In definition "bool_sink_alt_delay", we have: {
+      Parameters:
+        D = preal<> bool_sink_alt_delay::D
+      Instances:
+        B = chan?(bool<>) bool_sink_alt_delay::B
+      unroll sequence: 
+        chan?(bool<>) B
+      chp:
+        concurrent: {
+          *[
+            [after=D] B?
+          ]
+        }
+      footprint collection: {
+        <5> {
+          B = channel chan?(bool<>)^0 = bool_sink_alt_delay::B (1) 
+          D = preal^0 value: 5
+          Created state:
+          channel instance pool:
+          1	bool_sink_alt_delay::B
+          resolved concurrent actions:
+            *[
+              [after=5] B?
+            ]
+        }
+      }
+      }
+
+    bool_sink_alt_once = process-definition (defined) bool_sink_alt_once<
+      pint<> N
+      >(
+        chan?(bool<>) B
+      )
+      In definition "bool_sink_alt_once", we have: {
+      Parameters:
+        N = pint<> bool_sink_alt_once::N
+      Instances:
+        B = chan?(bool<>) bool_sink_alt_once::B
+      unroll sequence: 
+        chan?(bool<>) B
+      chp:
+        concurrent: {
+          concurrent i:[0..N-1]: {
+            B?
+          }
+        }
+      footprint collection: {
+        <4> {
+          B = channel chan?(bool<>)^0 = bool_sink_alt_once::B (1) 
+          N = pint^0 value: 4
+          Created state:
+          channel instance pool:
+          1	bool_sink_alt_once::B
+          resolved concurrent actions:
+            sequential: {
+              B?
+              B?
+              B?
+              B?
+            }
+        }
+      }
+      }
+
+  Instances:
+    A = bool_sink_alt<> A
+    B = bool_sink_alt_delay<5> B
+    C = bool_sink_alt_once<4> C
+}
+
+footprint: {
+  A = process bool_sink_alt<>^0 = A (1) (
+    B = channel chan?(bool<>)^0 = A.B (1) 
+  )
+  B = process bool_sink_alt_delay<5>^0 = B (2) (
+    B = channel chan?(bool<>)^0 = B.B (2) 
+  )
+  C = process bool_sink_alt_once<4>^0 = C (3) (
+    B = channel chan?(bool<>)^0 = C.B (3) 
+  )
+  Created state:
+  process instance pool:
+  1	A
+  2	B
+  3	C
+  channel instance pool:
+  1	A.B
+  2	B.B
+  3	C.B
+}
