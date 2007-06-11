@@ -1,5 +1,5 @@
 # "test/chpsim/testlib/Makefile.am"
-#	$Id: Makefile.am,v 1.8.2.1 2007/06/11 00:34:06 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.2 2007/06/11 05:26:00 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -14,6 +14,8 @@ HACKT_PARSE_TEST_PASSES = \
 	bool-buf \
 	bool-peekbuf \
 	bool-alternator \
+	bool-peekbuf-test \
+	bool-sink-alt-test \
 	int-source int-sink \
 	int-table \
 	int-buf int-copy \
