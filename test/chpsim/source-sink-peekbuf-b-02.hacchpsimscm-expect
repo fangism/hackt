@@ -1,0 +1,47 @@
+all trivial-events:
+(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 4 9 
+>)
+(5 . #<raw-chpsim-event-node: null: , pid: 2, #pred: 2, succ: 4 
+>)
+(8 . #<raw-chpsim-event-node: fork: , pid: 2, #pred: 1, succ: 6 7 
+>)
+
+all fork-events:
+(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 4 9 
+>)
+(8 . #<raw-chpsim-event-node: fork: , pid: 2, #pred: 1, succ: 6 7 
+>)
+
+all wait-events:
+
+all assign-events:
+
+all send-events:
+(1 . #<raw-chpsim-event-node: send: S.S!(false), pid: 1, #pred: 1, succ: 3 
+channel deps: 1 
+>)
+(2 . #<raw-chpsim-event-node: send: S.S!(true), pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+>)
+(3 . #<raw-chpsim-event-node: send: S.S!(true), pid: 1, #pred: 1, succ: 2 
+channel deps: 1 
+>)
+(7 . #<raw-chpsim-event-node: send: B.R!(B.x), pid: 2, #pred: 1, succ: 5 
+channel deps: 2 
+>)
+
+all receive-events:
+(6 . #<raw-chpsim-event-node: receive: B.L?, pid: 2, #pred: 1, succ: 5 
+channel deps: 1 
+>)
+(9 . #<raw-chpsim-event-node: receive: Z.B?, pid: 3, #pred: 1, succ: 9 
+channel deps: 2 
+>)
+
+all peek-events:
+(4 . #<raw-chpsim-event-node: peek: B.L#(B.x), pid: 2, #pred: 1, succ: 8 
+channel deps: 1 
+>)
+
+all select-events:
+

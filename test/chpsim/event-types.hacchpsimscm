@@ -1,0 +1,60 @@
+#!hacchpsimguile -b
+!#
+;; "event-types.hacchpsimscm"
+;;	$Id: event-types.hacchpsimscm,v 1.1.2.1 2007/06/11 18:29:34 fang Exp $
+;; vi: ft=scheme
+;; Displays most primitive event types sorted by type.
+;; NOTE: this clobbers x and y
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+(use-modules (hackt streams))
+
+(define x all-static-events-stream)
+
+; don't forget cdr, because each event is a paired with its index
+; show only trivial events (include forks)
+(define y (stream-filter (lambda (e) (hac:chpsim-event-trivial? (cdr e))) x))
+(display "all trivial-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-fork? (cdr e))) x))
+(display "all fork-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-wait? (cdr e))) x))
+(display "all wait-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-assign? (cdr e))) x))
+(display "all assign-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-send? (cdr e))) x))
+(display "all send-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-receive? (cdr e))) x))
+(display "all receive-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-peek? (cdr e))) x))
+(display "all peek-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+(define y (stream-filter (lambda (e) (hac:chpsim-event-select? (cdr e))) x))
+(display "all select-events:\n")
+(stream-for-each-display-newline y)
+(newline)
+
+; deprecated in favor of environment-undefine
+; (undefine y)
+; (undefine x)
+

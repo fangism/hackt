@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.12.2.2 2007/06/11 00:33:50 fang Exp $
+#	$Id: Makefile.am,v 1.12.2.3 2007/06/11 18:29:32 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -235,8 +235,8 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	fib-test-a-01 fib-test-b-01 fib-test-c-01 \
 	bool-split-alternator-a-01 \
 	bool-merge-alternator-a-01 \
-	source-sink-peekbuf-a-01 \
-	source-sink-peekbuf-b-01
+	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
+	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -377,6 +377,7 @@ $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
 
 srcdir_EXTRA_DIST += \
 	event-classification.hacchpsimscm \
+	event-types.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
 
