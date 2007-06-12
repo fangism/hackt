@@ -1,6 +1,6 @@
 # "mk/hackt-rules.mk"
 #	vi: ft=automake
-#	$Id: hackt-rules.mk,v 1.2 2007/06/12 20:59:28 fang Exp $
+#	$Id: hackt-rules.mk,v 1.3 2007/06/12 22:29:53 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -109,8 +109,8 @@
 	$(FIG2DEV) -Lpdf $< $@
 
 .haco-a.chpsim-event-dot:
-	@echo "$(CHPSIM_GRAPH_DOT) $< > $@" ; \
-	if $(CHPSIM_GRAPH_DOT) $< > $@.tmp ; then $(MV) $@.tmp $@ ; \
+	@echo "$(CHPSIM_GRAPH_DOT_COMMAND) $< > $@" ; \
+	if $(CHPSIM_GRAPH_DOT_COMMAND) $< > $@.tmp ; then $(MV) $@.tmp $@ ; \
 	else $(RM) $@.tmp ; exit 1 ; \
 	fi
 
