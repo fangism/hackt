@@ -1,0 +1,15 @@
+#!hacchpsimguile -b
+!#
+;; "source-sink-peekbuf-a-02.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: source-sink-peekbuf-a-02.hacchpsimscm,v 1.2 2007/06/12 05:13:57 fang Exp $
+;; @haco@ source-sink-peekbuf-a.haco-a
+
+;; Testing failure to open trace file.
+
+; (use-modules (ice-9 streams))
+; (use-modules (hackt hackt-primitives))
+; (use-modules (hackt chpsim-primitives))
+
+(load-from-path "event-types.hacchpsimscm")
+

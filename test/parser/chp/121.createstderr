@@ -1,0 +1,6 @@
+Error: cannot alias two non-sharing consumers of type channel.
+	got: bar::F.B
+	and: bar::G.B
+Instantiated from: bar<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

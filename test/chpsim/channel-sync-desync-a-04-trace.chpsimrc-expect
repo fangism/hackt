@@ -2,13 +2,13 @@ testing trace with one epoch before first auto-flush
 Writing simulation trace to "channel-sync-desync-a-04.chpsimtrace".
 	0	0	0	null
 	10	8	3	
-	20	6	3	channel_sync_bool_int::B?(channel_sync_bool_int::x1)	[by:8]
-	20	1	1	bool_source_constant::S!(true)	[by:6]
-	20	7	3	channel_sync_bool_int::I?(channel_sync_bool_int::x2)	[by:8]
-	20	2	2	int_source_constant::S!(17)	[by:7]
+	20	6	3	join.B?(join.x1)	[by:8]
+	20	1	1	bsrc.S!(true)	[by:6]
+	20	7	3	join.I?(join.x2)	[by:8]
+	20	2	2	isrc.S!(17)	[by:7]
 	30	5	3		[by:7]
-	40	4	3	channel_sync_bool_int::O!(channel_sync_bool_int::x1,channel_sync_bool_int::x2)	[by:5]
-	40	3	4	channel_desync_bool_int::O?(channel_desync_bool_int::x1,channel_desync_bool_int::x2)	[by:4]
+	40	4	3	join.O!(join.x1,join.x2)	[by:5]
+	40	3	4	fork.O?(fork.x1,fork.x2)	[by:4]
 	50	8	3		[by:4]
 Trace file contents: 1 epochs.
 		start	start	file	chunk

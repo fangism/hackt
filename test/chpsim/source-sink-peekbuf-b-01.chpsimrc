@@ -1,0 +1,116 @@
+# "source-sink-peekbuf-b-01.chpsimrc"
+#	$Id: source-sink-peekbuf-b-01.chpsimrc,v 1.2 2007/06/12 05:14:00 fang Exp $
+# @haco@ source-sink-peekbuf-b.haco-a
+
+timing per-event
+watchall-events
+step
+queue
+time
+step
+queue
+time
+echo event 1 should have blocked
+dump-event 1
+echo then event 4 should have executed first
+
+step
+queue
+time
+echo channel R should fire events 7 and 9
+step
+queue
+time
+step
+queue
+time
+
+echo event 5 will block
+echo receive event 6, paired with event 1
+step
+queue
+time
+step
+queue
+time
+
+echo event 5 will go
+step
+queue
+time
+subscribers-all
+echo events 3 and 9 should block next, event 4 executes
+step
+queue
+time
+subscribers-all
+step
+queue
+time
+
+echo events 7 and 9 will execute in a pair
+step
+queue
+time
+subscribers-all
+step
+queue
+time
+subscribers-all
+echo only event 3 left blocked
+
+echo event 5 will block
+echo channel L should fire events 3 and 6
+step
+queue
+time
+step
+queue
+time
+subscribers-all
+
+echo event 5 next
+step
+queue
+time
+echo events 2 and 9 should block next, and 4 will execute
+step
+queue
+time
+subscribers-all
+step
+queue
+time
+
+echo event-pair 7 and 9 execute
+step
+queue
+time
+subscribers-all
+step
+queue
+time
+subscribers-all
+echo only event 2 blocked left
+
+echo event 5 will block
+echo channel L should fire events 2 and 6
+step
+queue
+time
+step
+queue
+time
+subscribers-all
+
+step 7
+queue
+time
+step 7
+queue
+time
+step 7
+queue
+time
+assert-queue
+

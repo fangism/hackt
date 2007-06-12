@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.10 2007/05/28 22:12:33 fang Exp $
+	$Id: State.cc,v 1.11 2007/06/12 05:13:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -10,6 +10,7 @@
 #include <iostream>
 #include <iterator>
 #include <functional>
+#include <sstream>
 
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/StateConstructor.h"
@@ -26,6 +27,7 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/chan_traits.h"
+#include "Object/traits/proc_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 
 #include "common/TODO.h"
@@ -36,6 +38,7 @@
 #include "util/copy_if.h"
 #include "util/IO_utils.h"
 #include "util/binders.h"
+#include "util/discrete_interval_set.tcc"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -127,6 +130,7 @@ using util::write_value;
 using util::read_value;
 using util::value_writer;
 using util::value_reader;
+using util::discrete_interval_set;
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -1200,7 +1204,12 @@ State::dump_event(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 	o << '\t' << t << '\t';
 	o << ei << '\t';
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	o << ev.get_process_index() << '\t';
+	return ev.dump_brief(o, mod.get_state_manager(), mod.get_footprint());
+#else
 	return ev.dump_brief(o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1212,7 +1221,12 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	INVARIANT(ei < event_pool.size());
 	o << "event[" << ei << "]: ";
 	const event_type& e(event_pool[ei]);
-	e.dump_struct(o);	// << endl;
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	e.dump_struct(o, mod.get_state_manager(), mod.get_footprint());
+#else
+	e.dump_struct(o);
+#endif
+	// o << endl;
 	e.dump_source(o << "source: ") << endl;
 	return o;
 }
@@ -1339,10 +1353,10 @@ State::dump_check_event_queue(ostream& o) const {
  */
 ostream&
 State::dump_struct(ostream& o) const {
-{
-	o << "Variables: " << endl;
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
+{
+	o << "Variables: " << endl;
 	instances.dump_struct(o, sm, topfp);
 }
 	o << endl;
@@ -1354,7 +1368,11 @@ State::dump_struct(ostream& o) const {
 	// we use the 0th event to launch initial batch of events
 	for ( ; i<es; ++i) {
 		o << "event[" << i << "]: ";
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		event_pool[i].dump_struct(o, sm, topfp);	// << endl;
+#else
 		event_pool[i].dump_struct(o);	// << endl;
+#endif
 	}
 }
 	return o;
@@ -1371,21 +1389,136 @@ State::dump_struct(ostream& o) const {
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
 	o << "digraph G {" << endl;
+	// consider using global_entry_context_base instead...
+	const state_manager& sm(mod.get_state_manager());
+	const footprint& topfp(mod.get_footprint());
 {
 if (g.show_instances) {
 	o << "# Instances: " << endl;
-	mod.get_state_manager().dump_dot_instances(o, mod.get_footprint());
+	sm.dump_dot_instances(o, topfp);
 }
-
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
 	event_index_type i = 0;		// FIRST_VALID_EVENT;
 	// we use the 0th event to launch initial batch of events
 	for ( ; i<es; ++i) {
 		const event_type& e(event_pool[i]);
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		e.dump_dot_node(o, i, g, sm, topfp) << endl;
+#else
 		e.dump_dot_node(o, i, g) << endl;
+#endif
 		// includes outgoing edges
 	}
+if (g.process_event_clusters) {
+	// since event-node ranges are not necessarily contiguous,
+	// we may need to collect them in discrete_set_intervals
+	// TODO: once subgraphs are copy-allocated from footprints, 
+	// we can do-away with this sparse-gathering
+	o << "# Process clusters: " << endl;
+	// Forunately, dot lets you declare node clusterings after nodes
+	// have been declared and defined.  
+	typedef discrete_interval_set<size_t>	event_id_set_type;
+	const global_entry_pool<process_tag>&
+		ppool(sm.get_pool<process_tag>());
+	vector<event_id_set_type> pmap(ppool.size());
+	// gather event-ids by process id
+	i = 0;		// FIRST_VALID_EVENT
+	for ( ; i<es; ++i) {
+		const size_t pid = event_pool[i].get_process_index();
+		const bool b = pmap[pid].add_range(i, i);
+		INVARIANT(!b);	// no overlap
+	}
+	vector<event_id_set_type>::const_iterator
+		pi(pmap.begin()), pe(pmap.end());
+	INVARIANT(pi != pe);
+	size_t c = 1;	// skip process 0, which represents the top-level
+	for (++pi; pi!=pe; ++pi, ++c) {
+		o << "subgraph cluster" << c << " {" << endl;
+		std::ostringstream oss;
+		ppool[c].dump_canonical_name(oss, topfp, sm);
+		o << "label=\"pid=" << c << ": " << oss.str() << "\";" << endl;
+		// interval_set is a map of [start,length] pairs
+		event_id_set_type::const_iterator
+			ii(pi->begin()), ie(pi->end());
+		for ( ; ii!=ie; ++ii) {
+			size_t j = ii->first;
+			for ( ; j <= ii->second; ++j) {
+				o << event_type::node_prefix << j
+					<< ';' << endl;
+			}
+		}
+		o << "}" << endl;
+	}
+}	// end if process_event_clusters
+if (g.show_channels) {
+	static const char channel_prefix[] = "CHANNEL_";
+	// TODO: can this re-used as a guile-routine?
+	o << "# Channels:" << endl;
+	typedef std::set<size_t>	event_id_set_type;
+	const global_entry_pool<channel_tag>&
+		cpool(sm.get_pool<channel_tag>());
+	vector<event_id_set_type>
+		send_map(cpool.size()), recv_map(cpool.size());
+	i = 0;		// FIRST_VALID_EVENT
+	// collect communicating channels over all events
+	for ( ; i<es; ++i) {
+		const event_type& e(event_pool[i]);
+		const DependenceSet& bdeps(e.get_block_dependencies());
+		const instance_set_type&
+			bchans(bdeps.get_instance_set<channel_tag>());
+		// Deduce channel send/receives from the
+		// respective block-dependencies.  
+		// Reminder: these sets are conservative.
+		size_t j = 0;
+		switch (e.get_event_type()) {
+		case EVENT_SEND:
+			for ( ; j<bchans.size(); ++j)
+				send_map[bchans[j]].insert(i);
+			break;
+		case EVENT_RECEIVE:
+			for ( ; j<bchans.size(); ++j)
+				recv_map[bchans[j]].insert(i);
+			break;
+		default: break;
+		}
+	}
+	o << "node [shape=plaintext];" << endl;	// change node style
+	o << "edge [style=dashed];" << endl;
+	// keep arrowheads? constraint=false?
+	i = 1;	// FIRST_VALID_NODE
+	for ( ; i<cpool.size(); ++i) {
+		const event_id_set_type& ss(send_map[i]), rs(recv_map[i]);
+		event_id_set_type::const_iterator
+			si(ss.begin()), se(ss.end()),
+			ri(rs.begin()), re(rs.end());
+		// get channel name
+		std::ostringstream oss;
+		cpool[i].dump_canonical_name(oss, topfp, sm);
+		// emit a node if there are multiple senders or receivers
+		// also if sender/receiver set is empty
+		if (ss.size() != 1 || rs.size() != 1) {
+			// node (labeled)
+			o << channel_prefix << i << "\t[label=\"" << oss.str()
+				<< "\"];" << endl;
+			// edges (unlabeled)
+			for ( ; si!=se; ++si) {
+				o << event_type::node_prefix << *si << " -> " <<
+					channel_prefix << i << ';' << endl;
+			}
+			for ( ; ri!=re; ++ri) {
+				o << channel_prefix << i << " -> " <<
+					event_type::node_prefix << *ri << ';'
+					<< endl;
+			}
+		} else {
+			// just collapse into a single labeled edge
+			o << event_type::node_prefix << *si << " -> " <<
+				event_type::node_prefix << *ri <<
+				"\t[label=\"" << oss.str() << "\"];" << endl;
+		}
+	}	// end for all channels
+}	// end if show_channels
 }
 	o << "}" << endl;
 	return o;
@@ -1801,7 +1934,8 @@ graph_options::graph_options() :
 		with_antidependencies(false),
 #endif
 		process_event_clusters(false), 
-		show_delays(false) {
+		show_delays(false),
+		show_channels(false) {
 }
 
 //=============================================================================

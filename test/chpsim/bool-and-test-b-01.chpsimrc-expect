@@ -2,146 +2,146 @@
 Out : chan(bool<>) Out = (0) [empty]
 	1	8	1	
 Out : chan(bool<>) Out = (0) [empty]
-	6	4	1	bool_and::A[0]?(bool_and::a[0])
+	6	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (0) [wait]
-	6	1	2	bool_source::S!(true)
+	6	1	2	S0.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	6	5	1	bool_and::A[1]?(bool_and::a[1])
+	6	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (0) [wait]
-	6	9	3	bool_source::S!(true)
+	6	9	3	S1.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	6	6	1	bool_and::A[2]?(bool_and::a[2])
+	6	6	1	A.A[2]?(A.a[2])
 Out : chan(bool<>) Out = (0) [wait]
-	6	12	4	bool_source::S!(true)
+	6	12	4	S2.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	20	16	5	[after=20] bool_source_delay::S!(true)
+	20	16	5	[after=20] S3.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	20	7	1	bool_and::A[3]?(bool_and::a[3])
+	20	7	1	A.A[3]?(A.a[3])
 Out : chan(bool<>) Out = (0) [wait]
 	20	3	1	
 Out : chan(bool<>) Out = (0) [wait]
-	22	2	1	bool_and::O!(bool_and::a[0]&&bool_and::a[1]&&bool_and::a[2]&&bool_and::a[3])
+	22	2	1	A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
 Out : chan(bool<>) Out = (1) [sent]
-	22	17	6	bool_sink::B?(bool_sink::b)
+	22	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (1) [empty]
 	23	8	1	
 Out : chan(bool<>) Out = (1) [empty]
-	28	4	1	bool_and::A[0]?(bool_and::a[0])
+	28	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (1) [wait]
-	28	1	2	bool_source::S!(true)
+	28	1	2	S0.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	28	5	1	bool_and::A[1]?(bool_and::a[1])
+	28	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (1) [wait]
-	28	11	3	bool_source::S!(true)
+	28	11	3	S1.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	28	6	1	bool_and::A[2]?(bool_and::a[2])
+	28	6	1	A.A[2]?(A.a[2])
 Out : chan(bool<>) Out = (1) [wait]
-	28	15	4	bool_source::S!(false)
+	28	15	4	S2.S!(false)
 Out : chan(bool<>) Out = (1) [wait]
-	40	16	5	[after=20] bool_source_delay::S!(true)
+	40	16	5	[after=20] S3.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	40	7	1	bool_and::A[3]?(bool_and::a[3])
+	40	7	1	A.A[3]?(A.a[3])
 Out : chan(bool<>) Out = (1) [wait]
 	40	3	1	
 Out : chan(bool<>) Out = (1) [wait]
-	42	2	1	bool_and::O!(bool_and::a[0]&&bool_and::a[1]&&bool_and::a[2]&&bool_and::a[3])
+	42	2	1	A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
 Out : chan(bool<>) Out = (0) [sent]
-	42	17	6	bool_sink::B?(bool_sink::b)
+	42	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (0) [empty]
 	43	8	1	
 Out : chan(bool<>) Out = (0) [empty]
-	48	4	1	bool_and::A[0]?(bool_and::a[0])
+	48	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (0) [wait]
-	48	1	2	bool_source::S!(true)
+	48	1	2	S0.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	48	5	1	bool_and::A[1]?(bool_and::a[1])
+	48	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (0) [wait]
-	48	10	3	bool_source::S!(false)
+	48	10	3	S1.S!(false)
 Out : chan(bool<>) Out = (0) [wait]
-	48	6	1	bool_and::A[2]?(bool_and::a[2])
+	48	6	1	A.A[2]?(A.a[2])
 Out : chan(bool<>) Out = (0) [wait]
-	48	14	4	bool_source::S!(true)
+	48	14	4	S2.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	60	16	5	[after=20] bool_source_delay::S!(true)
+	60	16	5	[after=20] S3.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	60	7	1	bool_and::A[3]?(bool_and::a[3])
+	60	7	1	A.A[3]?(A.a[3])
 Out : chan(bool<>) Out = (0) [wait]
 	60	3	1	
 Out : chan(bool<>) Out = (0) [wait]
-	62	2	1	bool_and::O!(bool_and::a[0]&&bool_and::a[1]&&bool_and::a[2]&&bool_and::a[3])
+	62	2	1	A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
 Out : chan(bool<>) Out = (0) [sent]
-	62	17	6	bool_sink::B?(bool_sink::b)
+	62	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (0) [empty]
 	63	8	1	
 Out : chan(bool<>) Out = (0) [empty]
-	68	4	1	bool_and::A[0]?(bool_and::a[0])
+	68	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (0) [wait]
-	68	1	2	bool_source::S!(true)
+	68	1	2	S0.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	68	5	1	bool_and::A[1]?(bool_and::a[1])
+	68	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (0) [wait]
-	68	9	3	bool_source::S!(true)
+	68	9	3	S1.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	68	6	1	bool_and::A[2]?(bool_and::a[2])
+	68	6	1	A.A[2]?(A.a[2])
 Out : chan(bool<>) Out = (0) [wait]
-	68	13	4	bool_source::S!(true)
+	68	13	4	S2.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	80	16	5	[after=20] bool_source_delay::S!(true)
+	80	16	5	[after=20] S3.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
-	80	7	1	bool_and::A[3]?(bool_and::a[3])
+	80	7	1	A.A[3]?(A.a[3])
 Out : chan(bool<>) Out = (0) [wait]
 	80	3	1	
 Out : chan(bool<>) Out = (0) [wait]
-	82	2	1	bool_and::O!(bool_and::a[0]&&bool_and::a[1]&&bool_and::a[2]&&bool_and::a[3])
+	82	2	1	A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
 Out : chan(bool<>) Out = (1) [sent]
-	82	17	6	bool_sink::B?(bool_sink::b)
+	82	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (1) [empty]
 	83	8	1	
 Out : chan(bool<>) Out = (1) [empty]
-	88	4	1	bool_and::A[0]?(bool_and::a[0])
+	88	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (1) [wait]
-	88	1	2	bool_source::S!(true)
+	88	1	2	S0.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	88	5	1	bool_and::A[1]?(bool_and::a[1])
+	88	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (1) [wait]
-	88	11	3	bool_source::S!(true)
+	88	11	3	S1.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	88	6	1	bool_and::A[2]?(bool_and::a[2])
+	88	6	1	A.A[2]?(A.a[2])
 Out : chan(bool<>) Out = (1) [wait]
-	88	12	4	bool_source::S!(true)
+	88	12	4	S2.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	100	16	5	[after=20] bool_source_delay::S!(true)
+	100	16	5	[after=20] S3.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	100	7	1	bool_and::A[3]?(bool_and::a[3])
+	100	7	1	A.A[3]?(A.a[3])
 Out : chan(bool<>) Out = (1) [wait]
 	100	3	1	
 Out : chan(bool<>) Out = (1) [wait]
-	102	2	1	bool_and::O!(bool_and::a[0]&&bool_and::a[1]&&bool_and::a[2]&&bool_and::a[3])
+	102	2	1	A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
 Out : chan(bool<>) Out = (1) [sent]
-	102	17	6	bool_sink::B?(bool_sink::b)
+	102	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (1) [empty]
 	103	8	1	
 Out : chan(bool<>) Out = (1) [empty]
-	108	4	1	bool_and::A[0]?(bool_and::a[0])
+	108	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (1) [wait]
-	108	1	2	bool_source::S!(true)
+	108	1	2	S0.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	108	5	1	bool_and::A[1]?(bool_and::a[1])
+	108	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (1) [wait]
-	108	10	3	bool_source::S!(false)
+	108	10	3	S1.S!(false)
 Out : chan(bool<>) Out = (1) [wait]
-	108	6	1	bool_and::A[2]?(bool_and::a[2])
+	108	6	1	A.A[2]?(A.a[2])
 Out : chan(bool<>) Out = (1) [wait]
-	108	15	4	bool_source::S!(false)
+	108	15	4	S2.S!(false)
 Out : chan(bool<>) Out = (1) [wait]
-	120	16	5	[after=20] bool_source_delay::S!(true)
+	120	16	5	[after=20] S3.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
-	120	7	1	bool_and::A[3]?(bool_and::a[3])
+	120	7	1	A.A[3]?(A.a[3])
 Out : chan(bool<>) Out = (1) [wait]
 	120	3	1	
 Out : chan(bool<>) Out = (1) [wait]
-	122	2	1	bool_and::O!(bool_and::a[0]&&bool_and::a[1]&&bool_and::a[2]&&bool_and::a[3])
+	122	2	1	A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
 Out : chan(bool<>) Out = (0) [sent]
-	122	17	6	bool_sink::B?(bool_sink::b)
+	122	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (0) [empty]
 time: 122

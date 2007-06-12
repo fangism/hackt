@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2007/02/26 22:02:12 fang Exp $
+#	$Id: Makefile.am,v 1.19 2007/06/12 05:15:11 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,7 +12,12 @@ HACKT_PARSE_TEST_FAILURES = \
 	050 051 055 056 059 \
 	061b 062 067 068 \
 	071 072 073 076 \
-	095 096
+	095 096 \
+	107 \
+	119 \
+	120 \
+	wrong-source \
+	wrong-sink wrong-sink-02
 
 HACKT_PARSE_TEST_PASSES = \
 	000 002 005 \
@@ -25,10 +30,13 @@ HACKT_PARSE_TEST_PASSES = \
 	070 074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
 	090 091 092 093 094 097 098 099 \
-	100 102 104 105 \
+	100 102 104 105 106 108 109 \
+	110 111 112 113 114 115 116 117 118 \
+	121 122 123 \
 	top-level-01 top-level-02 top-level-03 \
-	bool-source bool-sink \
+	bool-source bool-sink bool-sink-alt \
 	source-sink-01 \
+	source-sink-02 \
 	bool-source-delay \
 	source-sink-delay-01
 
@@ -44,10 +52,13 @@ HACKT_CREATE_TEST_PASSES = \
 	074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
 	090 091 092 093 094 097 098 099 \
-	100 101 102 103 104 105 \
+	100 101 102 103 104 105 106 108 109 \
+	110 111 112 113 114 115 116 117 118 \
+	123 \
 	top-level-01 top-level-02 top-level-03 \
 	bool-source bool-sink \
 	source-sink-01 \
+	source-sink-02 \
 	bool-source-delay \
 	source-sink-delay-01
 
@@ -55,7 +66,8 @@ HACKT_CREATE_TEST_PASSES = \
 # 091 094: diagnostic improvement -- 
 # print template arguments for definition qualifiers
 
-HACKT_CREATE_TEST_FAILURES =
+HACKT_CREATE_TEST_FAILURES = \
+	121 122
 
 # TODO: alloc phase
 # several tests are not ready because we haven't defined
@@ -68,7 +80,7 @@ HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 019b \
-	035 055 056 059 062
+	035 055 056 059 062 107
 
 srcdir_EXTRA_DIST +=
 

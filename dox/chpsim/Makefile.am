@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2007/06/04 22:44:24 fang Exp $
+#	$Id: Makefile.am,v 1.4 2007/06/12 05:12:23 fang Exp $
 
 PDFS = chpsim.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -14,7 +14,9 @@ EXTRA_DIST += \
 	figs/build_path.in
 
 SOURCE_FIGS =
-SOURCE_DOTS = figs/chpsim_event_cycle.dot
+SOURCE_DOTS = \
+	figs/chpsim_event_cycle.dot \
+	figs/chpsim_event_algo.dot
 BUILT_FIGS = $(SOURCE_DOTS:.dot=.fig)
 XFIG_FIGURES = $(SOURCE_FIGS) $(BUILT_FIGS)
 XFIG_TEX = $(XFIG_FIGURES:.fig=.figtex)
@@ -29,13 +31,15 @@ figs: $(BUILT_FIGS)
 EXTRA_DIST += $(SOURCE_FIGS) $(SOURCE_DOTS)
 
 AUTO_IGNORE += figs/build_path \
-	chpsim_event_cycle.fig
+	chpsim_event_cycle.fig \
+	chpsim_event_algo.fig
 
 CLEANFILES += figs/build_path $(BUILT_FIGS)
 
 clean-local: clean-figs
 
 clean-figs: force
+	$(RM) figs/*.fig.orig
 	$(RM) figs/*.figtex
 	$(RM) figs/*.eps
 	$(RM) figs/*.ps

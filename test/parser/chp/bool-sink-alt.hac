@@ -1,0 +1,9 @@
+// "bool-sink-alt.hac"
+// copy-modified from "bool-sink.hac"
+
+defproc chp_bool_sink_alt(chan?(bool) S) {
+chp {
+	*[ S? ]
+}
+}
+

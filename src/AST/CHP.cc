@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.16 2007/03/11 16:34:13 fang Exp $
+	$Id: CHP.cc,v 1.17 2007/06/12 05:12:37 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -871,6 +871,11 @@ communication::leftmost(void) const {
 	return chan->leftmost();
 }
 
+line_position
+communication::rightmost(void) const {
+	return dir->rightmost();
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks the referenced channel expression (nonmeta).  
@@ -984,9 +989,11 @@ send::__check_action(context& c) const {
 
 CONSTRUCTOR_INLINE
 receive::receive(const inst_ref_expr* c, const char_punctuation_type* d, 
-		const inst_ref_expr_list* l) :
-		communication(c, d), lvalues(l) {
-	NEVER_NULL(lvalues);
+		const inst_ref_expr_list* l, const bool p) :
+		communication(c, d), lvalues(l), peek(p) {
+	if (peek)
+		NEVER_NULL(lvalues);
+	// now allow NULL lvalue: receive, but don't write anywhere
 }
 
 DESTRUCTOR_INLINE
@@ -996,7 +1003,9 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(receive)
 
 line_position
 receive::rightmost(void) const {
-	return lvalues->rightmost();
+	if (lvalues)
+		return lvalues->rightmost();
+	else	return communication::rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1005,15 +1014,22 @@ receive::__check_action(context& c) const {
 	const communication::checked_channel_type
 		receiver(check_channel(*chan, c));
 	typedef	data_nonmeta_instance_reference			lref_type;
+//	typedef	statement::return_type				return_type;
 	if (!receiver) {
-		return statement::return_type(NULL);
+		return return_type(NULL);
 	}
 	if (get_channel_direction(*receiver) == '!') {
-		cerr << "ERROR: cannot receive on a send-only channel, at " <<
+		cerr << "ERROR: cannot receive/peek on a send-only channel, at " <<
 			where(*chan) << endl;
-		return statement::return_type(NULL);
+		return return_type(NULL);
 	}
-	// check expression list...
+	typedef	count_ptr<entity::CHP::channel_receive>	local_return_type;
+	const local_return_type
+		ret(new entity::CHP::channel_receive(receiver, peek));
+	NEVER_NULL(ret);
+if (lvalues) {
+	// check lvalue expresion list...
+	// TODO: can we make these optional so values may be dropped?
 	typedef	inst_ref_expr_list::checked_nonmeta_data_refs_type::
 		value_type::element_type		checked_element_type;
 
@@ -1029,11 +1045,10 @@ receive::__check_action(context& c) const {
 	if (ni != e) {
 		cerr << "At least one error in inst-ref-list at " <<
 			where(*lvalues) << endl;
-		return statement::return_type(NULL);
+		return return_type(NULL);
 	}
 	// need to dynamic cast the list into simple_nonmeta_datatype_value_refs
-	typedef vector<count_ptr<lref_type> >
-						val_refs_type;
+	typedef vector<count_ptr<lref_type> >	val_refs_type;
 	val_refs_type val_refs;
 	transform(i, e, back_inserter(val_refs), 
 		mem_fun_ref(&count_ptr<checked_element_type>::is_a<lref_type>)
@@ -1041,22 +1056,21 @@ receive::__check_action(context& c) const {
 	if (find(val_refs.begin(), val_refs.end(), val_refs_type::value_type())
 			!= val_refs.end()) {
 		cerr << "Houston, we have a problem." << endl;
-		return statement::return_type(NULL);
+		return return_type(NULL);
 	}
-
-	typedef	count_ptr<entity::CHP::channel_receive>	local_return_type;
-	const local_return_type ret(new entity::CHP::channel_receive(receiver));
 	// need to check that number of arguments match...
-	NEVER_NULL(ret);
 	const good_bool g(ret->add_references(val_refs));
 	if (!g.good) {
 		cerr << "At least one type error in expr-list in " <<
 			where(*lvalues) << endl;
-		return statement::return_type(NULL);
+		return return_type(NULL);
 	} else {
 		return ret;
 	}
+} else {
+	return ret;
 }
+}	// end receive::__check_action
 
 //=============================================================================
 // abstract class selection method definitions

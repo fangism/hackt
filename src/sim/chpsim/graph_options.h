@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/graph_options.h"
-	$Id: graph_options.h,v 1.3 2007/02/05 06:39:54 fang Exp $
+	$Id: graph_options.h,v 1.4 2007/06/12 05:13:20 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -16,8 +16,7 @@ namespace CHPSIM {
 //=============================================================================
 /**
 	Finer control over dumping options.
-	NOTE: definition for this class resides in
-		"sim/chp
+	NOTE: definition for this class resides in "sim/chpsim/State.cc"
  */
 struct graph_options {
 	/**
@@ -55,6 +54,11 @@ struct graph_options {
 		Default: false
 	 */
 	bool				show_delays;
+	/**
+		Set to true to draw channel edges in dot graph.
+		Default: false
+	 */
+	bool				show_channels;
 
 
 	graph_options();

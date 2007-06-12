@@ -3,6 +3,59 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-06-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-30-merged-chpsim-05-10:
+	  Branch merge.
+	  Summary: added value-peek support (read channel without ack), 
+		and lvalue-less receives, e.g. 'CHAN?'.
+		chpsim dump and feedback names are MUCh more readable now, 
+			since replacing definition-scope prefixes with
+			parent process prefixes.  Names may not be canonical, 
+			but they are at least equivalent.  
+		chpsim dot graph generation: (same names improvement),
+			added options to support process clustering, 
+			and channel edges (very nice, I like)
+	  And the usual batch of test cases that come with new features, 
+		while old tests were updated.  
+
+
+2007-06-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-10:
+	  chpsim's (interactive) event feedback now reports events using 
+		instance-hierarchical names, rather than definition-scope.
+		Same as revision -02 of this branch.  
+		Again, more comprehensible.
+	  Test dumps (chpsim) updated accordingly.
+	  Branch done.  
+
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-09:
+	  No source revision, just test cases: filtering channel-peek events.
+
+
+2007-06-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-08:
+	  guile/scm_chpsim_event_node.cc: added is peek? predicate
+	  Added batch of chpsim and guile test cases for peek and 
+		valueless receive statements.  
+
+
+2007-06-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-07:
+	  For connection-checking purposes, peeks do not count as consumers.
+		updated: Object/lang/CHP.cc: set_channel_alias_directions()
+		Added relevant test cases.
+
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-06:
+	  sim/chpsim/Event.cc: added switch cases for peek.
+	  First batch of test cases added (parser/chp), mostly front-end.
+
+
 2007-06-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-29:
@@ -25,6 +78,34 @@
 	  No source revision.  lib/mk/ maintainence only.
 
 
+2007-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-05:
+	  First stab at adding value-peek to CHP.
+		Channel peeks block like receives, but when executed
+		perform value assignment without completing acknowledge.
+		Implementation: AST and object classes added peek flag
+		and select semantics accordingly.  
+		Receive objects increase in binary size by 1 char, 
+		create test cases updated accordingly.  
+	  For direction/connection checking purposes, peek acts like receive
+		but should not register as a consumer (TODO).
+	  Also supported lvalue-less receives, e.g. 'A?'
+		useful for acknowledging without sinking lvalues.  
+	  TODO: many test cases
+
+
+2007-06-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-04:
+	  chpsim dot graph generation now supports displaying of channels.
+		one-to-one send-receive pairs emit only a labled edge, 
+		whereas many-one emit edges through an auxiliary labeled 
+		channel node -- reasonably reduces clutter.
+	  Test suite Makefile rule enables -fshow-channels by default.
+	  No test cases needed to be touched.  
+
+
 2007-06-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-27:
@@ -39,6 +120,36 @@
 	* HACKT-00-01-04-main-00-81-26:
 	  No source revision.  Added vim syntax highlight support.  
 	  see lib/ChangeLog.
+
+
+2007-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-03:
+	  chpsim dot graph generation now supports process-clustering of events.
+	  Test suite Makefile rule enables -fcluster-processes by default.
+	  No test cases needed to be touched.  
+
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-02:
+	  Changed printing of names in CHP dumps from definition-local
+		to parent-process subinstances (aliases).
+		e.g. 'definition::x' is now 'instance.x'.
+		Added parent_instance to expr_dump_context, 
+			checked in [non]meta_{instance,value}_reference classes
+		sim/chpsim/devel_switches.h: CHPSIM_DUMP_PARENT_CONTEXT
+		Much more readable now... but names not necessarily canonical.
+		chpsimalloc and hacchpsimscm tests updated accordingly.
+
+
+2007-06-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-01:
+	  Branch for new chpsim developments.
+	  No source revision, only documentation.
+	  Initial plans (no particular order):
+		support value-peeks,
+		instance-hierarchical names in feedback (event graphs),
+		event-graph process clustering
 
 
 2007-06-04	David Fang		<fangism@users.sourceforge.net>

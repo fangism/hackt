@@ -1,0 +1,26 @@
+// "117.hac"
+// copy-modified from "083.hac"
+// should pass : mixing nonmeta and meta indices
+// create: will issue warnings about dangling channels
+
+template <pint I>
+defproc send_indexed (chan?(int) index; chan!(int) out) {
+pint x[2][2];
+// x = { { 1, 2}, {3, 4} };
+x[0][0] = 1;
+x[0][1] = 2;
+x[1][0] = 3;
+x[1][1] = 4;
+int y;
+chp {
+	*[
+		index#(y);
+		index?,
+		out!(x[I][y])	// mixed meta/non-meta
+	]
+}
+}
+
+send_indexed<0> foo;
+send_indexed<1> bar;
+

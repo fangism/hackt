@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.3 2007/06/10 02:57:05 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.4 2007/06/12 05:12:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,10 @@
 #include "Object/lang/CHP.h"	// for dynamic_cast on actions
 #include "Object/traits/classification_tags_fwd.h"
 #include "guile/scm_chpsim_event_node.h"
+#if CHPSIM_DUMP_PARENT_CONTEXT
+#include "guile/libhackt-wrap.h"
+#include "Object/module.h"
+#endif
 #include "guile/hackt-documentation.h"
 // #include <iostream>		// temporary
 #include <sstream>
@@ -92,7 +96,14 @@ print_raw_chpsim_event_node_ptr(SCM obj, SCM port, scm_print_state* p) {
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	NEVER_NULL(ptr);
 	ostringstream oss;
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	NEVER_NULL(obj_module);
+	const module& m(*obj_module);
+	ptr->dump_struct(oss, m.get_state_manager(), m.get_footprint());
+	// too verbose?
+#else
 	ptr->dump_struct(oss);			// too verbose?
+#endif
 	scm_puts(oss.str().c_str(), port);
 	scm_puts(">", port);
 	return 1;
@@ -208,6 +219,22 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_receive_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
 		HAC::SIM::CHPSIM::EVENT_RECEIVE);
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Predicate.
+	\param SMOB of the scm chpsim-event.
+	\return #t if event is a peek.
+ */
+#define	FUNC_NAME "chpsim-event-peek?"
+HAC_GUILE_DEFINE(wrap_chpsim_event_peek_p, FUNC_NAME, 1, 0, 0, (SCM obj),
+"Is the event @var{obj} a channel peek?") {
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	return make_scm<bool>(ptr->get_event_type() ==
+		HAC::SIM::CHPSIM::EVENT_PEEK);
 }
 #undef	FUNC_NAME
 

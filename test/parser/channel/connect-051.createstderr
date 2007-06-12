@@ -31,10 +31,10 @@ Persistent Object Manager text dump:
 	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	30	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16

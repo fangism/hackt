@@ -1,0 +1,39 @@
+# "figs/chpsim_event_algo.dot"
+#	$Id: chpsim_event_algo.dot,v 1.2 2007/06/12 05:12:25 fang Exp $
+# Graph of the event processing algorithm.
+# This is the new algorithm that replaced the one shown in
+# "chpsim_event_cycle.dot"
+
+digraph G {
+# fontsize=24;
+# defaults
+node [shape=ellipse, style=filled, fillcolor=white];
+
+IMMEDIATE	[label="Are there pending immediate events?", shape=diamond];
+CHECKING_QUEUE	[label="Dequeue next event in checking queue (if any)"];
+FIRST_CHECK	[label="Is event ready to execute?", shape=diamond];
+BLOCK		[label="Block event and\nsubscribe to dependencies"];
+EXECUTE		[label="Executed event,\nchanging the state of some variables."];
+
+# RECHECK_PRED_NO		[label="Ignore event."];
+# SUCC_CHECK_BLOCK	[label="Is event ready\nto execute?", shape=diamond];
+SUCC_QUEUE	[label="For all successors:\nschedule in checking queue with delay"];
+UPDATE		[label="All events subscribed to changed\nvariables are added to the recheck list."];
+RECHECK	[label="For all events in recheck list:\nIs event ready to execute?", shape=diamond];
+UNBLOCK		[label="Unsubscribe event from\nits block dependencies,\nschedule in immediate event queue."];
+RECHECK_NO	[label="Ignore event\n(is still subscribed)."];
+# SCHEDULE	[label="Schedule event\nwith some delay."];
+
+IMMEDIATE -> CHECKING_QUEUE	[label="no"];
+IMMEDIATE -> EXECUTE		[label="yes"];
+CHECKING_QUEUE -> FIRST_CHECK;
+FIRST_CHECK -> BLOCK		[label="no"];
+FIRST_CHECK -> EXECUTE		[label="yes"];
+BLOCK -> CHECKING_QUEUE;
+EXECUTE -> UPDATE;
+EXECUTE -> SUCC_QUEUE;
+UPDATE -> RECHECK;
+RECHECK -> UNBLOCK		[label="yes"];
+RECHECK -> RECHECK_NO		[label="no"];
+}
+

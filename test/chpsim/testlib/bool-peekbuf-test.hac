@@ -1,0 +1,9 @@
+// "bool-peekbuf-test.hac"
+// just instantiate
+
+import "bool-peekbuf.hac";
+
+bool_peekbuf A;
+bool_peekbuf_fast B;
+
+

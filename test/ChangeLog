@@ -1,4 +1,23 @@
 # "test/ChangeLog"
+#	$Id: ChangeLog,v 1.62 2007/06/12 05:13:21 fang Exp $
+
+2007-06-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-30-merged-chpsim-05-10:
+	  Branch merged to trunk.
+
+
+2007-06-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-04:
+	  Make.test-chpsim: .chpsim-event-dot rule now defaults with
+		-fshow-channels for dot graph generation.  
+
+
+	* HACKT-00-01-04-main-00-81-25-chpsim-05-03:
+	  Make.test-chpsim: .chpsim-event-dot rule now defaults with
+		-fcluster-processes for dot graph generation.  
+
 
 2007-06-09	David Fang		<fangism@users.sourceforge.net>
 

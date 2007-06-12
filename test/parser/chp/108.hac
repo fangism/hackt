@@ -1,0 +1,12 @@
+// "108.hac" -- should pass
+// copy-modified from "033.hac"
+
+defproc adjacent_diff(chan?(int, int) L; chan!(int) R) {
+int x, z;
+chp {
+	L#(x, z);
+	L?;
+	R!(x - z)
+}
+}
+

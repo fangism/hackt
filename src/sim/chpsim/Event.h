@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.7 2007/05/04 03:37:25 fang Exp $
+	$Id: Event.h,v 1.8 2007/06/12 05:13:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -20,6 +20,10 @@
 
 namespace HAC {
 namespace entity {
+#if CHPSIM_DUMP_PARENT_CONTEXT
+class state_manager;
+class footprint;
+#endif
 namespace CHP {
 	class action;
 }
@@ -46,15 +50,16 @@ enum {
 	EVENT_ASSIGN = 1,
 	EVENT_SEND = 2,
 	EVENT_RECEIVE = 3,
-	EVENT_CONCURRENT_FORK = 4,	///< divergence of concurrent events
+	EVENT_PEEK = 4,		///< read values from channel w/o acknowledge
+	EVENT_CONCURRENT_FORK = 5,	///< divergence of concurrent events
 	EVENT_CONCURRENT_JOIN = EVENT_NULL,	///< convergence event (no-op)
 	/**
 		the start of any selection: 
 		deterministic, non-deterministic, and do-while loops
 	 */
-	EVENT_SELECTION_BEGIN = 5,
+	EVENT_SELECTION_BEGIN = 6,
 	EVENT_SELECTION_END = EVENT_NULL,	///< end of any selection (no-op)
-	EVENT_CONDITION_WAIT = 6
+	EVENT_CONDITION_WAIT = 7
 };
 
 /**
@@ -340,15 +345,36 @@ public:
 	ostream&
 	dump_source(ostream&) const;
 
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	ostream&
+	dump_brief(ostream&, const entity::state_manager&,
+		const entity::footprint&) const;
+
+	// overloaded, I know...
+	ostream&
+	dump_source(ostream&, const entity::state_manager&,
+		const entity::footprint&) const;
+#endif
+
 	ostream&
 	dump_pending(ostream&) const;
 
 	ostream&
-	dump_struct(ostream&) const;
+	dump_struct(ostream&
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		, const entity::state_manager&
+		, const entity::footprint&
+#endif
+		) const;
 
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 
-		const graph_options&) const;
+		const graph_options&
+#if CHPSIM_DUMP_PARENT_CONTEXT
+		, const entity::state_manager&
+		, const entity::footprint&
+#endif
+		) const;
 
 	ostream&
 	dump_successor_edges_default(ostream&, const event_index_type) const;

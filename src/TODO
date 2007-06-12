@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.53 2007/05/04 18:16:43 fang Exp $
+#	$Id: TODO,v 1.54 2007/06/12 05:12:35 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -155,6 +155,7 @@ footprint pointer persistence may be complicated in footprint_frame.
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 	can be classified as known bug.  
+	[priority bump: medium -- being used/requested]
 
 ===============================================================================
 Lookup semantics: (clarifications)

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.7 2007/04/20 18:26:00 fang Exp $
+	$Id: chpsim.cc,v 1.8 2007/06/12 05:13:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -244,6 +244,10 @@ static void __chpsim_process_clusters(chpsim_options& o)
 	{ o.graph_opts.process_event_clusters = true; }
 static void __chpsim_no_process_clusters(chpsim_options& o)
 	{ o.graph_opts.process_event_clusters = false; }
+static void __chpsim_show_channels(chpsim_options& o)
+	{ o.graph_opts.show_channels = true; }
+static void __chpsim_no_show_channels(chpsim_options& o)
+	{ o.graph_opts.show_channels = false; }
 static void __chpsim_show_delays(chpsim_options& o)
 	{ o.graph_opts.show_delays = true; }
 static void __chpsim_no_show_delays(chpsim_options& o)
@@ -303,6 +307,12 @@ const chpsim::register_options_modifier
 	chpsim::_no_process_clusters(
 		"no-cluster-processes", &__chpsim_no_process_clusters,
 		"for dot-graphs: un-clustered process subgraphs"),
+	chpsim::_show_channels(
+		"show-channels", &__chpsim_show_channels,
+		"for dot-graphs: display channel communication event edges"), 
+	chpsim::_no_show_channels(
+		"no-show-channels", &__chpsim_no_show_channels,
+		"for dot-graphs: suppress channel-event edges"),
 	chpsim::_show_delays(
 		"show-delays", &__chpsim_show_delays,
 		"for dot-graphs: wrap process subgraphs into clusters"), 

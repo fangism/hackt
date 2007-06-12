@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
@@ -64,10 +64,10 @@ Persistent Object Manager text dump:
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	61	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	64	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16

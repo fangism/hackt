@@ -1,0 +1,118 @@
+WARNING: channel bar::X lacks connection to a producer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
+	13	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+      )
+      In definition "bar", we have: {
+      Instances:
+        F = foo<> bar::F
+        X = chan(bool<>) bar::X
+        b = bool<> bar::b
+      unroll sequence: 
+        chan(bool<>) X
+        foo<> F
+        F (X);
+        bool<> b
+      chp:
+        concurrent: {
+          X#(b)
+        }
+      footprint: {
+        F = process foo<>^0 = bar::F (1) (
+          B = channel chan?(bool<>)^0 = bar::X (1) 
+        )
+        X = channel chan(bool<>)^0 = bar::X (1) 
+        b = bool^0 = bar::b (1) 
+        Created state:
+        process instance pool:
+        1	bar::F
+        channel instance pool:
+        1	bar::X
+        bool instance pool:
+        1	bar::b
+        resolved concurrent actions:
+          X#(b)
+      }
+      }
+
+    foo = process-definition (defined) foo(
+        chan?(bool<>) B
+      )
+      In definition "foo", we have: {
+      Instances:
+        B = chan?(bool<>) foo::B
+      unroll sequence: 
+        chan?(bool<>) B
+      chp:
+        concurrent: {
+          B?
+        }
+      footprint: {
+        B = channel chan?(bool<>)^0 = foo::B (1) 
+        Created state:
+        channel instance pool:
+        1	foo::B
+        resolved concurrent actions:
+          B?
+      }
+      }
+
+  Instances:
+    BQ = bar<> BQ
+}
+
+footprint: {
+  BQ = process bar<>^0 = BQ (1) 
+  Created state:
+  process instance pool:
+  1	BQ
+}

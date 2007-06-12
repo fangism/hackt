@@ -1,39 +1,39 @@
 	0	0	0	null
 	10	16	3	
-	20	14	3	bool_split_select::C?(bool_split_select::c)
-	20	2	2	int_source::S!(0)
-	20	15	3	bool_split_select::I?(bool_split_select::x)
-	20	1	1	bool_source_constant::S!(true)
+	20	14	3	split.C?(split.c)
+	20	2	2	c.S!(0)
+	20	15	3	split.I?(split.x)
+	20	1	1	src.S!(true)
 	30	13	3	
-	40	12	3	[ bool_split_select::c==0 -> ... [] bool_split_select::c==1 -> ... [] bool_split_select::c==2 -> ... [] bool_split_select::c==3 -> ... ]
-	50	8	3	bool_split_select::O[0]!(bool_split_select::x)
-	50	6	4	bool_sink::B?(bool_sink::b)
+	40	12	3	[ split.c==0 -> ... [] split.c==1 -> ... [] split.c==2 -> ... [] split.c==3 -> ... ]
+	50	8	3	split.O[0]!(split.x)
+	50	6	4	snk[0].B?(snk[0].b)
 	60	7	3	null
 	70	16	3	
-	80	14	3	bool_split_select::C?(bool_split_select::c)
-	80	5	2	int_source::S!(1)
-	80	15	3	bool_split_select::I?(bool_split_select::x)
-	80	1	1	bool_source_constant::S!(true)
+	80	14	3	split.C?(split.c)
+	80	5	2	c.S!(1)
+	80	15	3	split.I?(split.x)
+	80	1	1	src.S!(true)
 	90	13	3	
-	100	12	3	[ bool_split_select::c==0 -> ... [] bool_split_select::c==1 -> ... [] bool_split_select::c==2 -> ... [] bool_split_select::c==3 -> ... ]
-	110	9	3	bool_split_select::O[1]!(bool_split_select::x)
-	110	17	5	bool_sink::B?(bool_sink::b)
+	100	12	3	[ split.c==0 -> ... [] split.c==1 -> ... [] split.c==2 -> ... [] split.c==3 -> ... ]
+	110	9	3	split.O[1]!(split.x)
+	110	17	5	snk[1].B?(snk[1].b)
 	120	7	3	null
 	130	16	3	
-	140	14	3	bool_split_select::C?(bool_split_select::c)
-	140	4	2	int_source::S!(2)
-	140	15	3	bool_split_select::I?(bool_split_select::x)
-	140	1	1	bool_source_constant::S!(true)
+	140	14	3	split.C?(split.c)
+	140	4	2	c.S!(2)
+	140	15	3	split.I?(split.x)
+	140	1	1	src.S!(true)
 	150	13	3	
-	160	12	3	[ bool_split_select::c==0 -> ... [] bool_split_select::c==1 -> ... [] bool_split_select::c==2 -> ... [] bool_split_select::c==3 -> ... ]
-	170	10	3	bool_split_select::O[2]!(bool_split_select::x)
-	170	18	6	bool_sink::B?(bool_sink::b)
+	160	12	3	[ split.c==0 -> ... [] split.c==1 -> ... [] split.c==2 -> ... [] split.c==3 -> ... ]
+	170	10	3	split.O[2]!(split.x)
+	170	18	6	snk[2].B?(snk[2].b)
 	180	7	3	null
 	190	16	3	
-	200	14	3	bool_split_select::C?(bool_split_select::c)
-	200	3	2	int_source::S!(4)
-	200	15	3	bool_split_select::I?(bool_split_select::x)
-	200	1	1	bool_source_constant::S!(true)
+	200	14	3	split.C?(split.c)
+	200	3	2	c.S!(4)
+	200	15	3	split.I?(split.x)
+	200	1	1	src.S!(true)
 	210	13	3	
 event queue:
 check queue:

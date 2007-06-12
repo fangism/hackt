@@ -6,6 +6,6 @@ Event graph:
 event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 
 event[1]: send: Q!(false), pid: 0, #pred: 1, succ: 1 
 channel deps: 1 
-event[2]: receive: boring::B?(boring::x), pid: 1, #pred: 1, succ: 2 
+event[2]: receive: lecture.B?(lecture.x), pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
 

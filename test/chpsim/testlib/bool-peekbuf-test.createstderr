@@ -1,0 +1,195 @@
+WARNING: channel A.L lacks connection to a producer.
+WARNING: channel A.R lacks connection to a consumer.
+WARNING: channel B.L lacks connection to a producer.
+WARNING: channel B.R lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	18	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	27	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	32	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	46	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bool_peekbuf = process-definition (defined) bool_peekbuf(
+        chan?(bool<>) L
+        chan!(bool<>) R
+      )
+      In definition "bool_peekbuf", we have: {
+      Instances:
+        L = chan?(bool<>) bool_peekbuf::L
+        R = chan!(bool<>) bool_peekbuf::R
+        x = bool<> bool_peekbuf::x
+      unroll sequence: 
+        chan?(bool<>) L
+        chan!(bool<>) R
+        bool<> x
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              L#(x)
+              L?
+              R!(x)
+            }
+          ]
+        }
+      footprint: {
+        L = channel chan?(bool<>)^0 = bool_peekbuf::L (1) 
+        R = channel chan!(bool<>)^0 = bool_peekbuf::R (2) 
+        x = bool^0 = bool_peekbuf::x (1) 
+        Created state:
+        channel instance pool:
+        1	bool_peekbuf::L
+        2	bool_peekbuf::R
+        bool instance pool:
+        1	bool_peekbuf::x
+        resolved concurrent actions:
+          *[
+            sequential: {
+              L#(x)
+              L?
+              R!(x)
+            }
+          ]
+      }
+      }
+
+    bool_peekbuf_fast = process-definition (defined) bool_peekbuf_fast(
+        chan?(bool<>) L
+        chan!(bool<>) R
+      )
+      In definition "bool_peekbuf_fast", we have: {
+      Instances:
+        L = chan?(bool<>) bool_peekbuf_fast::L
+        R = chan!(bool<>) bool_peekbuf_fast::R
+        x = bool<> bool_peekbuf_fast::x
+      unroll sequence: 
+        chan?(bool<>) L
+        chan!(bool<>) R
+        bool<> x
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              L#(x)
+              concurrent: {
+                L?
+                R!(x)
+              }
+            }
+          ]
+        }
+      footprint: {
+        L = channel chan?(bool<>)^0 = bool_peekbuf_fast::L (1) 
+        R = channel chan!(bool<>)^0 = bool_peekbuf_fast::R (2) 
+        x = bool^0 = bool_peekbuf_fast::x (1) 
+        Created state:
+        channel instance pool:
+        1	bool_peekbuf_fast::L
+        2	bool_peekbuf_fast::R
+        bool instance pool:
+        1	bool_peekbuf_fast::x
+        resolved concurrent actions:
+          *[
+            sequential: {
+              L#(x)
+              concurrent: {
+                L?
+                R!(x)
+              }
+            }
+          ]
+      }
+      }
+
+  Instances:
+    A = bool_peekbuf<> A
+    B = bool_peekbuf_fast<> B
+}
+
+footprint: {
+  A = process bool_peekbuf<>^0 = A (1) (
+    L = channel chan?(bool<>)^0 = A.L (1) 
+    R = channel chan!(bool<>)^0 = A.R (2) 
+  )
+  B = process bool_peekbuf_fast<>^0 = B (2) (
+    L = channel chan?(bool<>)^0 = B.L (3) 
+    R = channel chan!(bool<>)^0 = B.R (4) 
+  )
+  Created state:
+  process instance pool:
+  1	A
+  2	B
+  channel instance pool:
+  1	A.L
+  2	A.R
+  3	B.L
+  4	B.R
+}

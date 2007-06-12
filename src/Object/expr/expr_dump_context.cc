@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/exp_dump_context.cc"
-	$Id: expr_dump_context.cc,v 1.5 2006/02/21 04:48:23 fang Exp $
+	$Id: expr_dump_context.cc,v 1.6 2007/06/12 05:12:41 fang Exp $
  */
 
 #include "Object/expr/expr_dump_context.h"
@@ -22,14 +22,27 @@ expr_dump_context::error_mode(OP_PREC_DEFAULT, NULL, true);
 
 //-----------------------------------------------------------------------------
 expr_dump_context::expr_dump_context() : caller_stamp(OP_PREC_DEFAULT),
-		enclosing_scope(), include_type_info(false),
+		enclosing_scope(), parent_instance_name(NULL),
+		include_type_info(false),
 		parent_associativity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr_dump_context::expr_dump_context(const scopespace* s) :
 		caller_stamp(OP_PREC_DEFAULT),
-		enclosing_scope(s), include_type_info(false),
+		enclosing_scope(s), parent_instance_name(NULL),
+		include_type_info(false),
+		parent_associativity(false) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Initialize with a parent process name.  
+ */
+expr_dump_context::expr_dump_context(const char* s) :
+		caller_stamp(OP_PREC_DEFAULT),
+		enclosing_scope(NULL), parent_instance_name(s),
+		include_type_info(false),
 		parent_associativity(false) {
 }
 
@@ -37,12 +50,14 @@ expr_dump_context::expr_dump_context(const scopespace* s) :
 expr_dump_context::expr_dump_context(const char cs,
 		const scopespace* s, const bool t) :
 		caller_stamp(cs), enclosing_scope(s), 
+		parent_instance_name(NULL),
 		include_type_info(t), parent_associativity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr_dump_context::expr_dump_context(const PRS::expr_dump_context& c) :
 		caller_stamp(OP_PREC_DEFAULT), enclosing_scope(c.parent_scope), 
+		parent_instance_name(NULL),
 		include_type_info(false), parent_associativity(false) {
 }
 

@@ -108,6 +108,7 @@ core.*
 *-dump
 *-diff
 *-diff-orig
+*faildiff-orig
 *.nowarn
 *.tmpd
 *.depend

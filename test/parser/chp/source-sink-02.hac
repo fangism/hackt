@@ -1,0 +1,13 @@
+// "source-sink-02.hac"
+// copy-modified from "source-sink-01.hac"
+// top-level instantiating source and sink and connecting them.
+// this should pass all the way to allocation, and can be simulated.  
+
+import "bool-source.hac";
+import "bool-sink-alt.hac";
+
+chan(bool) B;
+
+chp_bool_source<true> s(B);
+chp_bool_sink_alt b(B);
+

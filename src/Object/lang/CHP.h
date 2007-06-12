@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.19 2007/05/04 18:16:44 fang Exp $
+	$Id: CHP.h,v 1.20 2007/06/12 05:12:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -505,6 +505,8 @@ public:
 //=============================================================================
 /**
 	Receive values from channel. 
+	Now also overloaded to be used as peek actions
+	(non-blocking read assignment)
  */
 class channel_receive : public action {
 	typedef	action					parent_type;
@@ -522,11 +524,18 @@ public:
 private:
 	chan_ptr_type					chan;
 	inst_ref_list_type				insts;
+	/**
+		true if this is interpreted as a peek action.
+	 */
+	bool						peek;
 private:
 	channel_receive();
 public:
-	channel_receive(const chan_ptr_type&);
+	channel_receive(const chan_ptr_type&, const bool);
 	~channel_receive();
+
+	bool
+	is_peek(void) const { return peek; }
 
 	const chan_ptr_type&
 	get_chan(void) const { return chan; }

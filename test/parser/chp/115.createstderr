@@ -1,0 +1,93 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	117
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPlopsl	0	#HEAD#	#TAIL#	25
+	34	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	35	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	38	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    metalooptest = process-definition (defined) metalooptest(
+        chan?(int<4>) L
+        chan!(bool<>) R
+      )
+      In definition "metalooptest", we have: {
+      Instances:
+        L = chan?(int<4>) metalooptest::L
+        R = chan!(bool<>) metalooptest::R
+        b = bool<> metalooptest::b^1
+        l = int<4> metalooptest::l
+      unroll sequence: 
+        chan?(int<4>) L
+        chan!(bool<>) R
+        int<4> l
+        bool<> b[0..15]
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              L#(l)
+              concurrent: {
+                L?
+                deterministic i:[0..15]: {
+                  l==$i -> R!(b[$i])
+                }
+              }
+            }
+          ]
+        }
+      }
+
+}
+
+footprint: {
+}

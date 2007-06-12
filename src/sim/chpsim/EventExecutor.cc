@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.3 2007/05/04 03:37:26 fang Exp $
+	$Id: EventExecutor.cc,v 1.4 2007/06/12 05:13:19 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -754,6 +754,7 @@ DEFAULT_EVENT_SUCCESSOR_DUMPER(channel_receive)
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
 	so we register them all with the update set.  
+	NOTE: now receive is overloaded to be used as 'peek' as well.
  */
 void
 EventExecutor::visit(const channel_receive& cr) {
@@ -764,22 +765,26 @@ EventExecutor::visit(const channel_receive& cr) {
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
 	// evaluate lvalues of channel receive statement (may throw!)
 	// read from the ChannelState using canonical_fundamental_type
+	// if there are references to receive, that is...
 	for_each(cr.get_insts().begin(), cr.get_insts().end(), 
 		entity::nonmeta_reference_lookup_channel_reader(
 			context, nc, context.updates));
 	// track the updated-reference (channel)
+if (!cr.is_peek()) {
 	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 #if !CHPSIM_COUPLED_CHANNELS
 	INVARIANT(nc.can_receive());	// else run-time exception
 #endif
 	nc.receive();
+}
 	recheck_all_successor_events(context);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Enqueue event if it is ready to execute.  
+	Rechecking semantics are identical for receives and peeks.  
 	\return true if this event can be unblocked and enqueued for execution.
  */
 void

@@ -1,0 +1,20 @@
+Variables: 
+chan[1]: "A.B" 
+chan[2]: "B.B" 
+chan[3]: "C.B" 
+
+Event graph: 
+event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 6 
+event[1]: receive: A.B?, pid: 1, #pred: 1, succ: 1 
+channel deps: 1 
+event[2]: receive: [after=5] B.B?, pid: 2, #pred: 1, succ: 2 
+channel deps: 2 
+event[3]: receive: C.B?, pid: 3, #pred: 1, succ: 
+channel deps: 3 
+event[4]: receive: C.B?, pid: 3, #pred: 1, succ: 3 
+channel deps: 3 
+event[5]: receive: C.B?, pid: 3, #pred: 1, succ: 4 
+channel deps: 3 
+event[6]: receive: C.B?, pid: 3, #pred: 1, succ: 5 
+channel deps: 3 
+

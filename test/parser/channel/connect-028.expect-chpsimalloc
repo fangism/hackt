@@ -8,8 +8,8 @@ event[1]: send: x!(false), pid: 0, #pred: 1, succ:
 channel deps: 1 
 event[2]: send: x!(true), pid: 0, #pred: 1, succ: 1 
 channel deps: 1 
-event[3]: receive: inner::a?(inner::z), pid: 2, #pred: 1, succ: 
+event[3]: receive: a.y.a?(a.y.z), pid: 2, #pred: 1, succ: 
 channel deps: 1 
-event[4]: receive: inner::a?(inner::z), pid: 2, #pred: 1, succ: 3 
+event[4]: receive: a.y.a?(a.y.z), pid: 2, #pred: 1, succ: 3 
 channel deps: 1 
 

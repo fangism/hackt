@@ -1,0 +1,16 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	A	bool_peekbuf<>
+	channel: 1,2
+	bool: 1
+2	(top)	-	2	B	bool_peekbuf_fast<>
+	channel: 3,4
+	bool: 2
+[global channel entries]
+1	(top)	-	1	A.L	chan(bool<>)
+2	(top)	-	2	A.R	chan(bool<>)
+3	(top)	-	3	B.L	chan(bool<>)
+4	(top)	-	4	B.R	chan(bool<>)
+[global bool entries]
+1	process	1	1	A.x	
+2	process	2	1	B.x	

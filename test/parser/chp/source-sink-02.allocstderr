@@ -1,0 +1,8 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	s	chp_bool_source<true>
+	channel: 1
+2	(top)	-	2	b	chp_bool_sink_alt<>
+	channel: 1
+[global channel entries]
+1	(top)	-	1	B	chan(bool<>)

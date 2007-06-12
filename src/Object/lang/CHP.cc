@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.24 2007/05/04 18:16:44 fang Exp $
+	$Id: CHP.cc,v 1.25 2007/06/12 05:12:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -142,7 +142,7 @@ unroll_resolve_selection_list(const selection_list_type&,
 static
 good_bool
 set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&, 
-	const unroll_context&, const bool);
+	const unroll_context&, const bool, const bool);
 
 //=============================================================================
 // class action method definitions
@@ -1373,17 +1373,19 @@ condition_wait::load_object(const persistent_object_manager& m,
 	\param ncr the nonmeta channel reference to resolve.
 	\param c the unroll context.
 	\param d true for send, false for receive.
+	\param p true if receive is actually a peek.
  */
 good_bool
 set_channel_alias_directions(
 		const simple_channel_nonmeta_instance_reference& ncr, 
-		const unroll_context& c, const bool d) {
+		const unroll_context& c, const bool d, const bool p) {
 	// flag that a channel(s) is connected to producers
 	// recall that nonmeta references MUST be scalar..
 	const never_ptr<const nonmeta_index_list> ind(ncr.get_indices());
 	const count_ptr<dynamic_meta_index_list>
 		mil(ind ? ind->make_meta_index_list() :
 			count_ptr<dynamic_meta_index_list>(NULL));
+	typedef	directional_connect_policy<true>	connect_policy;
 	if (ind && !mil) {
 		// there was at least one non-meta index
 		// we flag all members of the array as nonmeta-accessed
@@ -1395,10 +1397,9 @@ set_channel_alias_directions(
 		NEVER_NULL(cic);
 		// remember to use canonical aliases!
 		if (!cic->set_alias_connection_flags(
-			d ? directional_connect_policy<true>::
-				CONNECTED_TO_CHP_NONMETA_PRODUCER
-			: directional_connect_policy<true>::
-				CONNECTED_TO_CHP_NONMETA_CONSUMER
+			d ? connect_policy::CONNECTED_TO_CHP_NONMETA_PRODUCER
+			: p ? connect_policy::DEFAULT_CONNECT_FLAGS
+			: connect_policy::CONNECTED_TO_CHP_NONMETA_CONSUMER
 			).good) {
 			ncr.dump(cerr << "Error referencing ", 
 				expr_dump_context::default_value)
@@ -1420,12 +1421,12 @@ set_channel_alias_directions(
 		}
 		// remember to use canonical alias!
 		// can this result in an error? yes!
+		// no such thing as meta language peek
 		if (!ca->find()->set_connection_flags(
-				d ? directional_connect_policy<true>::
-					CONNECTED_TO_CHP_META_PRODUCER
-				: directional_connect_policy<true>::
-					CONNECTED_TO_CHP_META_CONSUMER
-					).good) {
+			d ? connect_policy::CONNECTED_TO_CHP_META_PRODUCER
+			: p ? connect_policy::DEFAULT_CONNECT_FLAGS
+			: connect_policy::CONNECTED_TO_CHP_META_CONSUMER
+			).good) {
 			ncr.dump(cerr << "Error referencing ", 
 				expr_dump_context::default_value)
 				<< "." << endl;
@@ -1492,7 +1493,7 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 	}
 #if 1
 	// pass true to indicate send
-	if (!set_channel_alias_directions(*cc, c, true).good) {
+	if (!set_channel_alias_directions(*cc, c, true, false).good) {
 		// diagnostic?
 		return action_ptr_type(NULL);
 	}
@@ -1558,10 +1559,11 @@ channel_send::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class channel_receive method definitions
 
-channel_receive::channel_receive() : parent_type(), chan(), insts() { }
+channel_receive::channel_receive() : parent_type(), chan(), insts(), 
+	peek(false) { }
 
-channel_receive::channel_receive(const chan_ptr_type& c) :
-		parent_type(), chan(c), insts() {
+channel_receive::channel_receive(const chan_ptr_type& c, const bool p) :
+		parent_type(), chan(c), insts(), peek(p) {
 	NEVER_NULL(chan);
 	// what about else?
 }
@@ -1576,15 +1578,19 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
 	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
-	chan->dump(o, c) << "?(";
-	INVARIANT(!insts.empty());
+	chan->dump(o, c);
+	o << (peek ? '#' : '?');
+if (!insts.empty()) {
+	o << '(';
 	const_iterator i(insts.begin());
 	const const_iterator e(insts.end());
 	(*i)->dump(o, c);
-	for (i++; i!=e; i++) {
+	for (++i; i!=e; ++i) {
 		(*i)->dump(o << ',', c);
 	}
-	return o << ')';
+	o << ')';
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1611,8 +1617,9 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 #if 1
-	// pass false to indicate receive
-	if (!set_channel_alias_directions(*cc, c, false).good) {
+	// pass false to indicate receive (3rd arg)
+	// NOTE: peek does not count as connecting to a consumer!
+	if (!set_channel_alias_directions(*cc, c, false, peek).good) {
 		// diagnostic?
 		return action_ptr_type(NULL);
 	}
@@ -1632,7 +1639,7 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		// resolved members match exactly, return copy
 		return p;
 	} else {
-		count_ptr<this_type> ret(new this_type(cc));
+		count_ptr<this_type> ret(new this_type(cc, peek));
 		NEVER_NULL(ret);
 		ret->insts.swap(refs);	// faster than copying/assigning
 		ret->set_delay(atts);
@@ -1664,6 +1671,7 @@ channel_receive::write_object(const persistent_object_manager& m,
 	parent_type::write_object_base(m, o);
 	m.write_pointer(o, chan);
 	m.write_pointer_list(o, insts);
+	write_value(o, peek);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1673,6 +1681,7 @@ channel_receive::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, insts);
+	read_value(i, peek);
 }
 
 //=============================================================================

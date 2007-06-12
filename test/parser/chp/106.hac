@@ -1,0 +1,13 @@
+// "106.hac" -- should pass
+// copy-modified from "032.hac"
+// using peek semantics
+
+defproc adjacent_diff(chan?(int) L; chan!(int) R) {
+int x, z;
+chp {
+	L#(x);L?;
+	L#(z);L?;
+	R!(x - z)
+}
+}
+

@@ -1,0 +1,22 @@
+#!hacchpsimguile -b
+!#
+;; "source-sink-peekbuf-a-01.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: source-sink-peekbuf-a-01.hacchpsimscm,v 1.2 2007/06/12 05:13:56 fang Exp $
+;; @haco@ source-sink-peekbuf-a.haco-a
+;; @chpsimtrace@ source-sink-peekbuf-a-02.chpsimtrace
+
+;; Testing failure to open trace file.
+
+(use-modules (ice-9 streams))
+(use-modules (hackt hackt-primitives))
+(use-modules (hackt chpsim-primitives))
+
+(define trace-name "source-sink-peekbuf-a-02.chpsimtrace")
+(load-from-path "basic-trace-analysis.hacchpsimscm")
+
+"expect cycle time 10, limiting by buffer."
+
+(define cycle-reference '(channel . 1))
+(load-from-path "trace-reference-cycle.hacchpsimscm")
+

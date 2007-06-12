@@ -1,0 +1,12 @@
+// "wrong-sink.hac"
+// using channel in wrong direction
+// should fail
+// (similar cases: 095.hac, 096.hac)
+
+defproc chp_bool_sink(chan!(bool) S) {
+bool x;
+chp {
+	*[ S?(x) ]
+}
+}
+

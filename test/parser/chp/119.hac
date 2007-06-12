@@ -1,0 +1,12 @@
+// "119.hac"
+// copy-modified from "095.hac"
+// should fail: trying to receive on send-only channel
+
+defproc buf(chan!(bool) B) {
+chp {
+	*[ B? ]
+}
+}
+
+buf x;
+

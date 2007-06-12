@@ -1,0 +1,17 @@
+// "121.hac"
+// port connection checking is conservative
+// doesn't catch shared receive port
+
+defproc foo(chan?(bool) B) { 
+chp {
+	B?
+}
+}
+
+defproc bar() {
+chan(bool) X;
+foo F(X), G(X);
+}
+
+bar BQ;
+

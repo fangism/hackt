@@ -1,0 +1,6 @@
+// "118.hac"
+
+import "117.hac";
+
+send_indexed<3> S;
+

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.4 2007/04/20 18:26:12 fang Exp $
+	$Id: StateConstructor.cc,v 1.5 2007/06/12 05:13:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -475,21 +475,26 @@ StateConstructor::visit(const channel_receive& cr) {
 	STACKTRACE_VERBOSE;
 	// atomic event
 	// construct event graph
+	const bool peek = cr.is_peek();
 	const size_t new_index = allocate_event(
-		EventNode(&cr, SIM::CHPSIM::EVENT_RECEIVE, 
+		EventNode(&cr, 
+			peek ? SIM::CHPSIM::EVENT_PEEK
+				: SIM::CHPSIM::EVENT_RECEIVE, 
 			current_process_index, 
 			// assert dynamic_cast
 			cr.get_delay() ?
 				cr.get_delay().is_a<const preal_const>()
 				->static_constant_value() :
-			5));
+			peek ? 3 : 5)
+		);
 	// default to small delay
 	// this delay would be more meaningful in a handshaking expansion
 	STACKTRACE_INDENT_PRINT("receive index: " << new_index << endl);
 	EventNode& new_event(get_event(new_index));
 
 {
-	// can block on channel, so we add dependencies
+	// receive can block on channel, so we add dependencies
+	// channel peeks can also block
 	SIM::CHPSIM::DependenceSetCollector deps(*this);
 	cr.get_chan()->accept(deps);
 	new_event.import_block_dependencies(deps);

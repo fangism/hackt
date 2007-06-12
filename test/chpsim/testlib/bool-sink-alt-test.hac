@@ -1,0 +1,12 @@
+// "bool-sink-alt-test.hac"
+//	$Id: bool-sink-alt-test.hac,v 1.2 2007/06/12 05:14:14 fang Exp $
+// testing instantiations
+
+import "bool-sink-alt.hac";
+
+bool_sink_alt A;
+
+bool_sink_alt_delay<5.0> B;
+
+bool_sink_alt_once<4> C;
+

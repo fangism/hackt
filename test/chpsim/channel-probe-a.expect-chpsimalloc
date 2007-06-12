@@ -12,10 +12,10 @@ event[2]: send: B!(a), pid: 0, #pred: 1, succ: 1
 channel deps: 2 
 event[3]: receive: A?(a), pid: 0, #pred: 1, succ: 2 
 channel deps: 1 
-event[4]: send: bool_source::S!(true), pid: 1, #pred: 1, succ: 5 
+event[4]: send: bs.S!(true), pid: 1, #pred: 1, succ: 5 
 channel deps: 1 
-event[5]: send: bool_source::S!(false), pid: 1, #pred: 1, succ: 4 
+event[5]: send: bs.S!(false), pid: 1, #pred: 1, succ: 4 
 channel deps: 1 
-event[6]: receive: bool_sink::B?(bool_sink::b), pid: 2, #pred: 1, succ: 6 
+event[6]: receive: snk.B?(snk.b), pid: 2, #pred: 1, succ: 6 
 channel deps: 2 
 

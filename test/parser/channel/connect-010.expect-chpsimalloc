@@ -6,6 +6,6 @@ Event graph:
 event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 
 event[1]: send: x!(true), pid: 0, #pred: 1, succ: 
 channel deps: 1 
-event[2]: receive: inner::a?(inner::z), pid: 2, #pred: 1, succ: 
+event[2]: receive: a.y.a?(a.y.z), pid: 2, #pred: 1, succ: 
 channel deps: 1 
 

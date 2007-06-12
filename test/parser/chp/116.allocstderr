@@ -1,0 +1,28 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	M	metalooptest<>
+	channel: 1,2
+	int: 1
+	bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16
+[global channel entries]
+1	(top)	-	1	M.L	chan(int<4>)
+2	(top)	-	2	M.R	chan(bool<>)
+[global int entries]
+1	process	1	1	M.l	
+[global bool entries]
+1	process	1	1	M.b[0]	
+2	process	1	2	M.b[1]	
+3	process	1	3	M.b[2]	
+4	process	1	4	M.b[3]	
+5	process	1	5	M.b[4]	
+6	process	1	6	M.b[5]	
+7	process	1	7	M.b[6]	
+8	process	1	8	M.b[7]	
+9	process	1	9	M.b[8]	
+10	process	1	10	M.b[9]	
+11	process	1	11	M.b[10]	
+12	process	1	12	M.b[11]	
+13	process	1	13	M.b[12]	
+14	process	1	14	M.b[13]	
+15	process	1	15	M.b[14]	
+16	process	1	16	M.b[15]	

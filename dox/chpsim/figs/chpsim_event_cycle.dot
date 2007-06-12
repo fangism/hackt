@@ -1,5 +1,8 @@
 # "figs/chpsim_event_cycle.dot"
-#	$Id: chpsim_event_cycle.dot,v 1.2 2007/02/07 19:12:11 fang Exp $
+#	$Id: chpsim_event_cycle.dot,v 1.3 2007/06/12 05:12:27 fang Exp $
+# DEPRECATED:
+# NOTE: this figure is outdated and corresponds to an old algorithm of 
+# processing events in chpsim.  We retain it for historical evidence. 
 
 digraph G {
 # fontsize=24;
