@@ -1,6 +1,6 @@
 # "mk/hackt-rules.mk"
 #	vi: ft=automake
-#	$Id: hackt-rules.mk,v 1.1 2007/06/09 01:56:30 fang Exp $
+#	$Id: hackt-rules.mk,v 1.2 2007/06/12 20:59:28 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -64,47 +64,64 @@
 # assumes dot and friends are found in path
 # uses optimized expression netlist by default
 .prs-dot-O1.prs-dot-ps:
-	dot -Tps $< -o $@
+	$(DOT) -Tps $< -o $@
 
 .prs-dot-O1.prs-dot-fig:
-	dot -Tfig $< -o $@
+	$(DOT) -Tfig $< -o $@
 
 .prs-dot-O1.prs-neato-ps:
-	neato -Tps $< -o $@
+	$(NEATO) -Tps $< -o $@
 
 .prs-dot-O1.prs-neato-fig:
-	neato -Tfig $< -o $@
+	$(NEATO) -Tfig $< -o $@
 
 .prs-dot-O1.prs-circo-ps:
-	circo -Tps $< -o $@
+	$(CIRCO) -Tps $< -o $@
 
 .prs-dot-O1.prs-circo-fig:
-	circo -Tfig $< -o $@
+	$(CIRCO) -Tfig $< -o $@
 
 .prs-dot-O1.prs-twopi-ps:
-	twopi -Tps $< -o $@
+	$(TWOPI) -Tps $< -o $@
 
 .prs-dot-O1.prs-twopi-fig:
-	twopi -Tfig $< -o $@
+	$(TWOPI) -Tfig $< -o $@
 
 .prs-dot-O1.prs-fdp-ps:
-	fdp -Tps $< -o $@
+	$(FDP) -Tps $< -o $@
 
 .prs-dot-O1.prs-fdp-fig:
-	fdp -Tfig $< -o $@
+	$(FDP) -Tfig $< -o $@
 
 .prs-dot-fig.prs-dot-pdf:
-	fig2dev -Lpdf $< $@
+	$(FIG2DEV) -Lpdf $< $@
 
 .prs-neato-fig.prs-neato-pdf:
-	fig2dev -Lpdf $< $@
+	$(FIG2DEV) -Lpdf $< $@
 
 .prs-circo-fig.prs-circo-pdf:
-	fig2dev -Lpdf $< $@
+	$(FIG2DEV) -Lpdf $< $@
 
 .prs-twopi-fig.prs-twopi-pdf:
-	fig2dev -Lpdf $< $@
+	$(FIG2DEV) -Lpdf $< $@
 
 .prs-fdp-fig.prs-fdp-pdf:
-	fig2dev -Lpdf $< $@
+	$(FIG2DEV) -Lpdf $< $@
+
+.haco-a.chpsim-event-dot:
+	@echo "$(CHPSIM_GRAPH_DOT) $< > $@" ; \
+	if $(CHPSIM_GRAPH_DOT) $< > $@.tmp ; then $(MV) $@.tmp $@ ; \
+	else $(RM) $@.tmp ; exit 1 ; \
+	fi
+
+.chpsim-event-dot.chpsim-event-fig:
+	$(DOT) -Tfig $< -o $@
+
+.chpsim-event-fig.chpsim-event-pdf:
+	$(FIG2DEV) -Lpdf $< $@
+
+.chpsim-event-dot.chpsim-event-ps:
+	$(DOT) -Tps $< -o $@
+
+
 

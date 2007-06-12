@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.31 2007/03/20 02:24:20 fang Exp $
+#	$Id: Make.test-head,v 1.32 2007/06/12 20:59:36 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -58,7 +58,8 @@ SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
 	.chpsimrc \
 	.chpsimtest .chpsimrc-out .chpsimrc-out-filter .chpsimrc-diff \
 	.chpsimalloctest .chpsimallocdump .chpsimallocdiff \
-	.chpsim-event-dot .chpsim-event-ps .chpsimdottest \
+	.chpsim-event-dot .chpsim-event-fig \
+	.chpsim-event-ps .chpsim-event-pdf .chpsimdottest \
 	.chpsimfailtest .chpsimrcfail-out .chpsimrcfail-diff \
 	.chpsimckpt .chpsimckpt-outdump .chpsimckpt-indump \
 	.chpsimckpt-dupe .chpsimckpt-dupe-dump \

@@ -1,5 +1,11 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.62 2007/06/12 05:13:21 fang Exp $
+#	$Id: ChangeLog,v 1.63 2007/06/12 20:59:32 fang Exp $
+
+2007-06-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-31:
+	  Updated Makefile rules for chpsim event graph generation.
+
 
 2007-06-11	David Fang		<fangism@users.sourceforge.net>
 
