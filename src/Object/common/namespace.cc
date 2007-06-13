@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.26 2007/06/13 20:34:06 fang Exp $
+ 	$Id: namespace.cc,v 1.27 2007/06/13 21:28:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -586,9 +586,9 @@ scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 				m_p(m_obj.is_a<const persistent>());
 			if (m_p) {
 #if SORT_SCOPESPACE_PERSISTENT_COLLECTION
-				m_p->collect_transient_info(m);
-#else
 				tmp[m_iter->first] = m_p;
+#else
+				m_p->collect_transient_info(m);
 #endif
 			}
 			// else skip non-persistent objects, 
