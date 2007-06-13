@@ -4,16 +4,16 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	10	##ADDR##	cnstpic_	2	#HEAD#	#TAIL#	44
-	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
-	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	cnstpic_	2	#HEAD#	#TAIL#	44
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	13	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	15	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21

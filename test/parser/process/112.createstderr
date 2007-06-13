@@ -5,25 +5,25 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
 	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16

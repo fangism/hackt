@@ -5,28 +5,28 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
-	5	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
-	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
+	18	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
-	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	281
+	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16

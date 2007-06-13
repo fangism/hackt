@@ -4,30 +4,30 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
+	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	35
 	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
-	6	##ADDR##	namespc_	0	#HEAD#	#TAIL#	45
-	7	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	8	##ADDR##	namespc_	0	#HEAD#	#TAIL#	43
-	9	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	10	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	11	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	13	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	14	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	16	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	namespc_	0	#HEAD#	#TAIL#	29
-	18	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	19	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	20	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
-	22	##ADDR##	namespc_	0	#HEAD#	#TAIL#	35
-	23	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	24	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	25	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
-	26	##ADDR##	namespc_	0	#HEAD#	#TAIL#	23
+	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	namespc_	0	#HEAD#	#TAIL#	23
+	8	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
+	9	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	10	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	12	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
+	13	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	15	##ADDR##	namespc_	0	#HEAD#	#TAIL#	45
+	16	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	19	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	20	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	21	##ADDR##	namespc_	0	#HEAD#	#TAIL#	43
+	22	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	23	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	24	##ADDR##	namespc_	0	#HEAD#	#TAIL#	29
+	25	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
+	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
