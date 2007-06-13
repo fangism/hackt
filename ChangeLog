@@ -2,6 +2,11 @@
 
 2007-06-13	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-33:
+	  configure.ac: AC_CHECK_SIZEOF tests all wrapped in AC_LANG C++ now, 
+		so CXXFLAGS need not be copied to CFLAGS for correctness.
+
+
 	* HACKT-00-01-04-main-00-81-32:
 	  configure.ac: Added AM_CONDITIONAL ABI_ILP32
 

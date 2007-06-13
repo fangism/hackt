@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.25 2007/04/09 01:25:36 fang Exp $
+ 	$Id: namespace.cc,v 1.26 2007/06/13 20:34:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -59,6 +59,19 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
+
+//=============================================================================
+// flags
+/**
+	Define to 1 to force scopespace to visit namespace members
+	in sorted order by key.  
+	Goal: 1
+	Rationale: enforce consistency of object ordering between ILP32 and
+		non-LP32 platforms, which result in different hash-table
+		orderings.  
+	Status:
+ */
+#define	SORT_SCOPESPACE_PERSISTENT_COLLECTION		1
 
 //=============================================================================
 namespace util {
@@ -557,21 +570,41 @@ inline
 void
 scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("scopespace::collect_used_id_map_pointers()");
+#if SORT_SCOPESPACE_PERSISTENT_COLLECTION
+	typedef	std::map<string, never_ptr<const persistent> >	sorted_map_type;
+	sorted_map_type tmp;
+#endif
+{
 	used_id_map_type::const_iterator m_iter(used_id_map.begin());
 	const used_id_map_type::const_iterator m_end(used_id_map.end());
-	for ( ; m_iter!=m_end; m_iter++) {
+	for ( ; m_iter!=m_end; ++m_iter) {
 		const never_ptr<const object> m_obj(m_iter->second);
 		NEVER_NULL(m_obj);		// no NULLs in hash_map
 		// checks for excluded objects, virtual call
 		if (!exclude_object(*m_iter)) {
 			const never_ptr<const persistent>
 				m_p(m_obj.is_a<const persistent>());
-			if (m_p)
+			if (m_p) {
+#if SORT_SCOPESPACE_PERSISTENT_COLLECTION
 				m_p->collect_transient_info(m);
+#else
+				tmp[m_iter->first] = m_p;
+#endif
+			}
 			// else skip non-persistent objects, 
 			// such as namespace aliases
 		}
 	}
+}
+#if SORT_SCOPESPACE_PERSISTENT_COLLECTION
+{
+	sorted_map_type::const_iterator m_iter(tmp.begin());
+	const sorted_map_type::const_iterator m_end(tmp.end());
+	for ( ; m_iter!=m_end; ++m_iter) {
+		m_iter->second->collect_transient_info(m);
+	}
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

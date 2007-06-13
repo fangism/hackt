@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.136 2007/06/13 17:45:40 fang Exp $
+#	$Id: configure.ac,v 1.137 2007/06/13 20:34:01 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -309,6 +309,8 @@ CFLAGS="$CONFTEST_CFLAGS"
 CXXFLAGS="$CONFTEST_CXXFLAGS"
 
 # sizeof checks, useful for checking ILP model
+AC_LANG_PUSH(C++)
+dnl testing in C++ mode coerces test to use CXXFLAGS
 AC_CHECK_SIZEOF(char)
 AC_CHECK_SIZEOF(uchar)
 AC_CHECK_SIZEOF(u_char)
@@ -348,6 +350,7 @@ AC_CHECK_SIZEOF(uint64_t)
 AC_CHECK_SIZEOF(u_int64_t)
 FANG_TYPE_QUAD_T_ARITHMETIC
 FANG_TYPE_U_QUAD_T_ARITHMETIC
+AC_LANG_POP(C++)
 
 dnl test whether or not we're expecting 32b binari interface
 dnl this is used to expect binary differences on non-LP32 platforms.
