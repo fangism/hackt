@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.6 2007/01/21 06:01:33 fang Exp $
+#	$Id: Make.test-create,v 1.7 2007/06/13 17:45:45 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -40,6 +40,22 @@ else
 ECHO_CREATEDUMP_DIFF_COMMAND = :
 endif
 
+# forgive size differences only for non-ILP32 platforms
+if ABI_ILP32
+CREATE_HEADER_DIFF_SCRIPT_PART2 = :
+else
+CREATE_HEADER_DIFF_SCRIPT_PART2 = \
+	filtered2=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr-nosize/g'` ; \
+	diffout2=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.creatediff-nosize/g'` ; \
+	$(CAT) "$$filtered" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
+	$(CAT) $<-noindex | $(POM_SIZE_FILTER) > $<-nosize ; \
+	$(DIFF) -buw "$$filtered2" $<-nosize > "$$diffout2" 2>&1 ; \
+	$(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout2"
+endif
+#	$(CAT) "$$expect" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
+#	$(CAT) $< | $(POM_SIZE_FILTER) > $<-nosize ; \
+#	$(CP) "$$diffout2" $@
+
 .createdump-filter.creatediff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr/g'` ; \
 	expect=$(srcdir)/$$stderr ; \
@@ -59,6 +75,7 @@ endif
 	      $(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout" ; \
 	    fi ; \
 	    $(RM) $@-anal ; \
+	    $(CREATE_HEADER_DIFF_SCRIPT_PART2) ; \
 	  fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \
@@ -224,7 +241,7 @@ BOGUS_TESTS += .hacktcreatefromhacotest
 endif
 BOGUS_TARGETS += .createstderr .createfaildiff .createfaildump
 
-CHECK_SUMMARIES += creatediffs createfaildiffs creatediffs.noindex
+CHECK_SUMMARIES += creatediffs createfaildiffs creatediffs.noindex creatediffs.nosize
 if USE_UNROLL_PHASE
 CHECK_SUMMARIES += createfromhacodiffs
 endif
@@ -243,6 +260,9 @@ endif
 
 creatediffs.noindex: force
 	-$(CAT) *.creatediff-noindex > $@
+
+creatediffs.nosize: force
+	-$(CAT) *.creatediff-nosize > $@
 
 
 HACKT_CREATE_TEST_SUBJECTS = \
@@ -302,9 +322,12 @@ clean-createtests:
 	-$(RM_PATTERN) "*.haco-c-dump"
 	-$(RM_PATTERN) "*.createdump-filter"
 	-$(RM_PATTERN) "*.createdump-filter-noindex"
+	-$(RM_PATTERN) "*.createdump-filter-nosize"
 	-$(RM_PATTERN) "*.createdump.filter"
 	-$(RM_PATTERN) "*.createstderr-noindex"
 	-$(RM_PATTERN) "*.creatediff-noindex"
+	-$(RM_PATTERN) "*.createstderr-nosize"
+	-$(RM_PATTERN) "*.creatediff-nosize"
 	-$(RM_PATTERN) "*.create-from*"
 	-$(RM_PATTERN) "*.haco-c-from*"
 

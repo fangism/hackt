@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.42 2007/03/20 02:24:21 fang Exp $
+#	$Id: Makefile.am,v 1.43 2007/06/13 17:45:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -63,6 +63,7 @@ dist_noinst_SCRIPTS = \
 	alloc_filter.sed \
 	POM-header-filter.awk.in \
 	POM-index-filter.awk \
+	POM-size-filter.awk \
 	vpath_file_filter.awk \
 	hackt-parse-expect-filter.awk \
 	hackt-flatten-expect-filter.awk \

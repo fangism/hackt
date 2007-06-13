@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.76 2007/04/20 18:26:21 fang Exp $
+#	$Id: Make.test-tail,v 1.77 2007/06/13 17:45:46 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -41,6 +41,7 @@ TEST_BUILDDIR = $(top_builddir)/test
 # SPACES_TO_NEWLINE defined as inline awk command in Make.stddef
 POM_HEADER_FILTER = $(AWK) -f $(TEST_BUILDDIR)/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
+POM_SIZE_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-size-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk

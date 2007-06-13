@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-06-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-32:
+	  configure.ac: Added AM_CONDITIONAL ABI_ILP32
+
+
 2007-06-09	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-29:

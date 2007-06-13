@@ -41,6 +41,7 @@ core.*
 *.allocdump
 *.allocdiff
 *.noindex
+*.nosize
 *.castprs
 *.prs
 *.prsdiff
