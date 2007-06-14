@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.8 2007/06/12 05:13:28 fang Exp $
+#	$Id: Make.test-guile,v 1.8.2.1 2007/06/14 07:15:18 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -207,10 +207,31 @@ HACCHPSIMSCM_FAIL_TEST_SCRIPT = $(HACCHPSIMSCM_TEST_SCRIPT)
 	-@$(HACCHPSIMSCM_FAIL_TEST_SCRIPT)
 
 
+HACCHPSIMSCM_TEST_DIFF = $(DIFF) -bu
 if VERBOSE_CHECK
-ECHO_HACCHPSIMSCM_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+ECHO_HACCHPSIMSCM_DIFF_COMMAND = $(ECHO) "$(HACCHPSIMSCM_TEST_DIFF) -bu $$expect $<"
 else
 ECHO_HACCHPSIMSCM_DIFF_COMMAND = :
+endif
+
+# additional heuristic checking for trivial differences
+if ABI_ILP32
+CHPSIM_GUILE_TRACE_DUMP_FILTER_SCRIPT = :
+else
+CHPSIM_GUILE_TRACE_DUMP_FILTER_SCRIPT = \
+	$(ECHO) "Filtering out binary trace differences in $@ ..." ; \
+	filtered=`$(ECHO) $@ | $(SED) 's/\.hacchpsimscm-diff$$/.hacchpsimscm-expect-nosize/g'` ; \
+	diffout=`$(ECHO) $@ | $(SED) 's/\.hacchpsimscm-diff$$/.hacchpsimscm-diff-nosize/g'` ; \
+	$(CAT) "$$expect" | $(CHPSIM_TRACE_BINARY_FILTER) > "$$filtered" ; \
+	$(CAT) $< | $(CHPSIM_TRACE_BINARY_FILTER) > $<-nosize ; \
+	$(HACCHPSIMSCM_TEST_DIFF) "$$filtered" $<-nosize > "$$diffout" 2>&1 ; \
+	if test -s "$$diffout" ; then \
+	  $(ECHO) "Non-trace differences remain!" ; \
+	else \
+	  $(ECHO) "Binary trace differences resolved." ; \
+	  $(MV) $@ $@-orig ; \
+	  $(CP) "$$diffout" $@ ; \
+	fi
 endif
 
 
@@ -222,9 +243,10 @@ if HAVE_LIBGUILE
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_HACCHPSIMSCM_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(HACCHPSIMSCM_TEST_DIFF) "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
+	    $(CHPSIM_GUILE_TRACE_DUMP_FILTER_SCRIPT) ; \
 	  fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \
@@ -236,7 +258,7 @@ if HAVE_LIBGUILE
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_HACCHPSIMSCM_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(HACCHPSIMSCM_TEST_DIFF) "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
 	  fi ; \
@@ -424,6 +446,9 @@ clean-hacscmtests:
 	-$(RM_PATTERN) "*.hacscmfailtest"
 	-$(RM_PATTERN) "*.hacchpsimscm-out"
 	-$(RM_PATTERN) "*.hacchpsimscm-diff"
+	-$(RM_PATTERN) "*.hacchpsimscm-diff-nosize"
+	-$(RM_PATTERN) "*.hacchpsimscm-diff-orig"
+	-$(RM_PATTERN) "*.hacchpsimscm-expect-nosize"
 	-$(RM_PATTERN) "*.hacchpsimscmtest"
 	-$(RM_PATTERN) "*.hacchpsimscmfail-out"
 	-$(RM_PATTERN) "*.hacchpsimscmfail-diff"

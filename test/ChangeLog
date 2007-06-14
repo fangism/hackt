@@ -1,5 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.64.2.1 2007/06/14 02:28:31 fang Exp $
+#	$Id: ChangeLog,v 1.64.2.2 2007/06/14 07:15:15 fang Exp $
+
+2007-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-32-LPxx-03:
+	  Make.test-chpsim, Make.test-guile: added LP64 support for test suite
+		differences in trace binary dumps (sizes).
+		Now no regressions remain in 64b testing!
+
 
 2007-06-13	David Fang		<fangism@users.sourceforge.net>
 

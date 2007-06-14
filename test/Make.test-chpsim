@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.8 2007/06/12 20:59:33 fang Exp $
+#	$Id: Make.test-chpsim,v 1.8.2.1 2007/06/14 07:15:17 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -93,17 +93,40 @@ CHPSIMRC_FAIL_TEST_SCRIPT = \
 .chpsimrc.chpsimrcfail-out:
 	-@$(CHPSIMRC_FAIL_TEST_SCRIPT)
 
+HACKT_CHPSIMRC_TEST_DIFF = $(DIFF) -bu
+
 if VERBOSE_CHECK
-ECHO_CHPSIMRC_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$expect $<"
+ECHO_CHPSIMRC_DIFF_COMMAND = $(ECHO) "$(HACKT_CHPSIMRC_TEST_DIFF) $$expect $<"
 else
 ECHO_CHPSIMRC_DIFF_COMMAND = :
 endif
 
+# one option: always apply $(CHPSIM_TRACE_BINARY_FILTER)
 CHPSIMRC_TEST_FILTER_SCRIPT = \
 	$(SED) -e '/DELETE FROM HERE/d' -e '/DELETE TO HERE/,$$d' $< > $@
 
 .chpsimrc-out.chpsimrc-out-filter:
 	@$(CHPSIMRC_TEST_FILTER_SCRIPT)
+
+# additional heuristic checking for trivial differences
+if ABI_ILP32
+CHPSIM_TRACE_DUMP_FILTER_SCRIPT = :
+else
+CHPSIM_TRACE_DUMP_FILTER_SCRIPT = \
+	$(ECHO) "Filtering out binary trace differences in $@ ..." ; \
+	filtered=`$(ECHO) $@ | $(SED) 's/\.chpsimrc-diff$$/.chpsimrc-expect-nosize/g'` ; \
+	diffout=`$(ECHO) $@ | $(SED) 's/\.chpsimrc-diff$$/.chpsimrc-diff-nosize/g'` ; \
+	$(CAT) "$$expect" | $(CHPSIM_TRACE_BINARY_FILTER) > "$$filtered" ; \
+	$(CAT) $< | $(CHPSIM_TRACE_BINARY_FILTER) > $<-nosize ; \
+	$(HACKT_CHPSIMRC_TEST_DIFF) "$$filtered" $<-nosize > "$$diffout" 2>&1 ; \
+	if test -s "$$diffout" ; then \
+	  $(ECHO) "Non-trace differences remain!" ; \
+	else \
+	  $(ECHO) "Binary trace differences resolved." ; \
+	  $(MV) $@ $@-orig ; \
+	  $(CP) "$$diffout" $@ ; \
+	fi
+endif
 
 # TODO: introduce filtering scripts and differences
 .chpsimrc-out-filter.chpsimrc-diff:
@@ -115,6 +138,7 @@ CHPSIMRC_TEST_FILTER_SCRIPT = \
 	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
+	    $(CHPSIM_TRACE_DUMP_FILTER_SCRIPT) ; \
 	  fi ; \
 	else $(ECHO) "Missing $$expect." | $(TEE) $@ ; \
 	fi ; \
@@ -281,14 +305,17 @@ AUTO_DEPENDS += chpsimckpttest.autodepend
 BOGUS_TESTS += .chpsimalloctest .chpsimtest .chpsimdottest \
 	.chpsimfailtest .chpsimckpttest
 
-CHECK_SUMMARIES += chpsimallocdiffs chpsimrcdiffs chpsimrcfaildiffs \
-	chpsimckptdiffs
+CHECK_SUMMARIES += chpsimallocdiffs chpsimrcdiffs chpsimrcdiffs.nosize \
+	chpsimrcfaildiffs chpsimckptdiffs
 
 chpsimallocdiffs: force
 	-$(CAT) *.chpsimallocdiff > $@
 
 chpsimrcdiffs: force
 	-$(CAT) *.chpsimrc-diff > $@
+
+chpsimrcdiffs.nosize: force
+	-$(CAT) *.chpsimrc-diff-nosize > $@
 
 chpsimrcfaildiffs: force
 	-$(CAT) *.chpsimrcfail-diff > $@
@@ -392,6 +419,9 @@ clean-chpsimtests:
 	-$(RM_PATTERN) "*.chpsimrc-out"
 	-$(RM_PATTERN) "*.chpsimrc-out-filter"
 	-$(RM_PATTERN) "*.chpsimrc-diff"
+	-$(RM_PATTERN) "*.chpsimrc-diff-orig"
+	-$(RM_PATTERN) "*.chpsimrc-diff-nosize"
+	-$(RM_PATTERN) "*.chpsimrc-expect-nosize"
 	-$(RM_PATTERN) "*.chpsimtest"
 	-$(RM_PATTERN) "*.chpsimrcfail-out"
 	-$(RM_PATTERN) "*.chpsimrcfail-diff"
