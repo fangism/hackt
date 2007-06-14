@@ -5,6 +5,11 @@
 
 2007-06-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-32-LPxx-02:
+	  Niiiice!!! all create tests now pass on LP64!
+	  No source revision, only test/ChangeLog.
+
+
 	* HACKT-00-01-04-main-00-81-32-LPxx-01:
 	  Mini-branch for test support on LP32/64 platforms.
 	  Enabled scopespace sorting, resulting in a ton of create test
