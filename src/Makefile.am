@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.170 2007/05/03 06:38:48 fang Exp $
+#	$Id: Makefile.am,v 1.171 2007/06/15 20:28:44 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1087,7 +1087,8 @@ CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy \
 # because I can't figure out how to produce a literal '&' in awk subst regex.  
 SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
 # because yacc has no mechanism for overriding the yyparse prototype
-SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g'
+SED_YACC_YYPARSE = $(SED) '/^yyparse(.*)/s/(.*)/(void*, YYSTYPE\& yylval, FILE* infile)/g'
+# Note: .* was added to match () and (void) in different skeletons
 
 # some old yacc skeletons assign string literals to char*, which is deprecated
 # e.g apple ships yacc skeleton 1.14

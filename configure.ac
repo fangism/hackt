@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.138 2007/06/15 06:01:40 fang Exp $
+#	$Id: configure.ac,v 1.139 2007/06/15 20:28:40 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -213,10 +213,10 @@ FANG_CXX_STD_OFSTREAM_DEV_STDERR
 FANG_CXX_STL_BITSET_EXTENSIONS
 dnl check for compiler's built-in functions
 FANG_C_BUILTIN_EXPECT
+
 AC_LANG_PUSH(C++)
 FANG_FUNC_BUILTIN_BITOPS
 AC_LANG_POP(C++)
-
 AC_CACHE_SAVE
 
 # additional header checks
@@ -323,6 +323,11 @@ AC_CHECK_SIZEOF(u_int)
 AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(ulong)
 AC_CHECK_SIZEOF(u_long)
+dnl NOTE: o some systems, system headers protect long long, which causes
+dnl the following test to *unexpectedly* pass even with -pedantic-errors
+dnl This inconsistency between configure and use is quite annoying and 
+dnl motivates us to automatically apply -Wno-long-long.
+dnl Below, we call FANG_CXX_AUTO_NO_LONG_LONG after CXXFLAGS is restored.
 AC_CHECK_SIZEOF(long long)
 AC_CHECK_SIZEOF(ulonglong)
 AC_CHECK_SIZEOF(float)
@@ -358,6 +363,9 @@ AM_CONDITIONAL(ABI_ILP32, test "$ac_cv_sizeof_size_t" = "4")
 
 CFLAGS="$top_saved_CFLAGS"
 CXXFLAGS="$top_saved_CXXFLAGS"
+
+dnl detect dialect/test inconsistency and workaround
+FANG_CXXFLAGS_AUTO_NO_LONG_LONG
 
 AC_CACHE_SAVE
 

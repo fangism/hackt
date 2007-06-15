@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.6 2007/01/23 07:21:19 fang Exp $
+#	$Id: purify_flex.awk,v 1.7 2007/06/15 20:28:49 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -249,13 +249,13 @@ function append_call_args(str, arg) {
 	if (match($0, "static int yy_get_next_buffer(.*)")) {
 		# need to rewrite prototype of this function
 		$0 = replace_proto_params($0, state_decl);
-	} else if (match($0, "yy_get_next_buffer()")) {
+	} else if (match($0, "yy_get_next_buffer\\(\\)")) {
 		# rewrite this function call
 		gsub("buffer\\(.*\\)[^)]", "buffer(" name ")", $0);
 	} else if (match($0, "static yy_state_type yy_get_previous_state(.*)")) {
 		# need to rewrite prototype of this function
 		$0 = replace_proto_params($0, state_decl);
-	} else if (match($0, "yy_get_previous_state()")) {
+	} else if (match($0, "yy_get_previous_state\\(\\)")) {
 		# rewrite this function call
 		$0 = replace_call_args($0, name);
 	} else if (match($0, "static yy_state_type yy_try_NUL_trans(.*)")) {
@@ -315,15 +315,20 @@ function append_call_args(str, arg) {
 	} else if (match($0, "YY_BUFFER_STATE yy_scan_bytes(.*)")) {
 		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_scan_bytes(.*)") && !match($0, "ERROR")) {
+		# This is why we need real parsing and syntax tree rewriting.
 		# match function call
 		if (match($0, "strlen")) {
 			# beware of embedded strlen in flex 2.5.31
-			regex = "strlen.*\\)[ ]*)";
-			ind = match($0, regex);
+			regex = "strlen\\([^()]+\\)";
+			# goddamn mawk rejects: lvalue = match(...);
+			# forcing us to use RSTART
+			match($0, regex);
 			# print "ind = " ind ", RL = " RLENGTH;
-			swapout = substr($0, ind, RLENGTH -1);
+			# swapout = substr($0, ind, RLENGTH -1);
+			swapout = substr ($0, RSTART, RLENGTH);
 			# flex 2.5.31 only
-			sub(regex, "XXX )", $0);
+			# sub(regex, "XXX )", $0);
+			sub(regex, "XXX", $0);
 			$0 = append_call_args($0, name);
 			sub("XXX", swapout, $0);
 		} else {

@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.78 2007/06/10 02:58:08 fang Exp $
+#	$Id: ChangeLog,v 1.79 2007/06/15 20:28:51 fang Exp $
+
+2007-06-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-35:
+	  numeric/sign_traits.h: fix to allow non-strict use of long long
+	  	and avoid collision with [u]int64 types.  
+
 
 2007-06-09	David Fang		<fangism@users.sourceforge.net>
 

@@ -2,6 +2,16 @@
 
 2007-06-15	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-35:
+	  README: noted known versions of yacc skeletons,
+	  	known bad version of mawk.
+	  configure.ac, config/cxx.m4: detect inconsistency between long long
+	  	configure test and strict dialect conformance.
+		Automatically add -Wno-long-long when appropriate.
+
+
+2007-06-15	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-34-merged-LPxx-04:
 	  Branch merge.  Support for testing on non LP32 platforms.
 

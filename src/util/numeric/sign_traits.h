@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/sign_traits.h"
 	Template metafunctions for signedness of integer types.  
-	$Id: sign_traits.h,v 1.3 2006/09/12 23:14:02 fang Exp $
+	$Id: sign_traits.h,v 1.4 2007/06/15 20:28:55 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_SIGN_TRAITS_H__
@@ -104,7 +104,8 @@ struct unsigned_type<ulonglong> {	typedef	ulonglong	type; };
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if defined(HAVE_INT64_TYPE) && defined(HAVE_UINT64_TYPE) && (SIZEOF_LONG != 8)
+#if defined(HAVE_INT64_TYPE) && defined(HAVE_UINT64_TYPE)
+#if (SIZEOF_LONG != 8) && (SIZEOF_LONG_LONG != 8)
 template <>
 struct signed_type<int64> {	typedef	int64		type; };
 
@@ -116,6 +117,7 @@ struct unsigned_type<int64> {	typedef	uint64		type; };
 
 template <>
 struct unsigned_type<uint64> {	typedef	uint64		type; };
+#endif
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.11 2007/04/20 18:25:42 fang Exp $
+dnl	$Id: cxx.m4,v 1.12 2007/06/15 20:28:41 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -95,6 +95,34 @@ CXXFLAGS="$saved_CXXFLAGS"
 AC_LANG_POP(C++)
 dnl rm -f conftest.c conftest.cc
 AC_MSG_RESULT([yes])
+])dnl
+
+dnl
+dnl @synopsis FANG_CXXFLAGS_AUTO_NO_LONG_LONG
+dnl
+dnl Kludge: some autoconf tests for long long will unexpectedly pass
+dnl even with strict ISO flags -ansi -pedantic-errors because some 
+dnl system headers protect the use of long long.
+dnl This macro detects the inconsistency and determines when 
+dnl -Wno-long-long should be gratuitously appended to CFLAGS
+dnl caveat: this flag is only known to be applicable for GNU gcc.
+dnl
+dnl Requires: already checked sizeof long long
+dnl
+AC_DEFUN([FANG_CXXFLAGS_AUTO_NO_LONG_LONG],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CHECK_SIZEOF(long long)dnl may be already cached
+if test x"$enable_strict_dialect" != xno ; then
+	AC_MSG_CHECKING([whether long long is consistent with strict dialect])
+if test "$ac_cv_sizeof_long_long" != 0 ; then
+	AC_MSG_RESULT(no)
+	AC_MSG_WARN([sizeof(long long) conflicts with strict C++ dialect!])
+	AC_MSG_WARN([Gratuitously appending -Wno-long-long to CXXFLAGS...])
+	CXXFLAGS="$CXXFLAGS -Wno-long-long"
+else
+	AC_MSG_RESULT(yes)
+fi
+fi
 ])dnl
 
 dnl @synopsis FANG_STD_HEADERS_ANALLY_STRICT

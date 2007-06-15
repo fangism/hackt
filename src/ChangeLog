@@ -5,6 +5,16 @@
 
 2007-06-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-35:
+	  Only long long portability touch ups.  See util/ChangeLog.
+	  lexer/purifly_flex.awk: attempted to work around brokenness of
+	  	mawk implementation, but gave up.  
+	  Makefile.am: SED_YACC_YYPARSE now matches (void) prototype to
+	  	support an even older byacc skeleton.
+
+
+2007-06-15	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-34-merged-LPxx-04:
 	  Branch merge.
 	  Summary: test suite is now blessed on LP64 platforms, now that 

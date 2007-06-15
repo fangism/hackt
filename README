@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.22 2007/06/10 02:56:25 fang Exp $
+	$Id: README,v 1.23 2007/06/15 20:28:40 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -50,6 +50,11 @@ build success and consistency.
 Currently, there are no other known platforms which fail to build and
 run the project, but that means they have yet to be discovered.  
 
+AWK.  Any posix conforming version of awk should suffice.  
+Known to work: awk (traditional), nawk, gawk.
+Trouble with: mawk (some basic syntax rejected!?)
+When testing, it is recommended to set the POSIXLY_CORRECT environment variable.
+
 To build the source, one need at least bison-1.35 (that's not asking too much),
 or some POSIX-compliant implementation of yacc.  
 For example, bison-1.28 is known to fail, and is not actively supported(*1).  
@@ -66,6 +71,7 @@ LEX configure variable.
 
 Supported versions of bison: 1.35, 1.875, 2.0, 2.1, 2.3
 Supported versions of flex: 2.5.4, 2.5.31
+Supported revisions of Berkeley yacc skeletons: 1.14, 1.37
 
 Unsupported versions of bison:
 	1.28 -- see comment *1
@@ -81,7 +87,7 @@ latex,pdflatex (part of tetex package)
 	needed for building documentation.
 guile-1.6+
 	Guile is a scheme environment for extensible languages.  
-	known to work API: 1.8
+	known to work API: 1.8 (preferred)
 
 The following guile (scheme) modules are used and required by HACKT:
 	ice-9 streams
