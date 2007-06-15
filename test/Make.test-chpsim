@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.8.2.1 2007/06/14 07:15:17 fang Exp $
+#	$Id: Make.test-chpsim,v 1.8.2.2 2007/06/15 03:53:29 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -418,6 +418,7 @@ clean-chpsimtests:
 	-$(RM_PATTERN) "*.chpsimdottest"
 	-$(RM_PATTERN) "*.chpsimrc-out"
 	-$(RM_PATTERN) "*.chpsimrc-out-filter"
+	-$(RM_PATTERN) "*.chpsimrc-out-filter-nosize"
 	-$(RM_PATTERN) "*.chpsimrc-diff"
 	-$(RM_PATTERN) "*.chpsimrc-diff-orig"
 	-$(RM_PATTERN) "*.chpsimrc-diff-nosize"
