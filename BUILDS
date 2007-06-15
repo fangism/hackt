@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.78 2007/06/15 21:24:17 fang Exp $
+	$Id: BUILDS,v 1.79 2007/06/15 21:24:54 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -344,7 +344,7 @@ amd64-unknown-freebsd
 
 (Fang)
 Version: hackt 0.1.4-devel-20070611
-CVS Tag: HACKT-00-01-04-main-00-81-34-merged-LPxx-04
+CVS Tag: HACKT-00-01-04-main-00-81-35
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '--enable-fun' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: amd64-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
