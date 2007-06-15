@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.8.2.2 2007/06/15 03:53:30 fang Exp $
+#	$Id: Make.test-guile,v 1.8.2.3 2007/06/15 04:28:38 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -437,15 +437,16 @@ echo-hacchpsimscm-failures: force
 
 clean-hacscmtests:
 	-$(RM_PATTERN) "*.hacscm-out"
+	-$(RM_PATTERN) "*.hacscm-out-nosize"
 	-$(RM_PATTERN) "*.hacscm-diff"
 	-$(RM_PATTERN) "*.hacscm-expect-filter"
 	-$(RM_PATTERN) "*.hacscmtest"
 	-$(RM_PATTERN) "*.hacscmfail-out"
-	-$(RM_PATTERN) "*.hacscmfail-out-nosize"
 	-$(RM_PATTERN) "*.hacscmfail-diff"
 	-$(RM_PATTERN) "*.hacscmfail-diff-orig"
 	-$(RM_PATTERN) "*.hacscmfailtest"
 	-$(RM_PATTERN) "*.hacchpsimscm-out"
+	-$(RM_PATTERN) "*.hacchpsimscm-out-nosize"
 	-$(RM_PATTERN) "*.hacchpsimscm-diff"
 	-$(RM_PATTERN) "*.hacchpsimscm-diff-nosize"
 	-$(RM_PATTERN) "*.hacchpsimscm-diff-orig"
