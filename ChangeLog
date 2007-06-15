@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-06-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-34:
+	  configure.ac: removed src/util/test/test-expect.sh[.in]
+
+
 2007-06-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-33:

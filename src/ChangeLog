@@ -5,6 +5,15 @@
 
 2007-06-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-32-LPxx-04:
+	  No source revision.
+	  util/test/Makefile.am: upgraded test scheme to use suffix rules
+		for tests and removed the test-expect.sh[.in].
+		Added support for non-LP32 binary differences in test suite:
+		only affecting test static_count_ptr_test.
+	  Branch end.
+
+
 	* HACKT-00-01-04-main-00-81-32-LPxx-03:
 	  No source revision, see test/ChangeLog.
 	  No regressions (false-positives) occur in 64b build/tests now!
@@ -48,7 +57,7 @@
 	  Branch merge.
 	  Summary: added value-peek support (read channel without ack), 
 		and lvalue-less receives, e.g. 'CHAN?'.
-		chpsim dump and feedback names are MUCh more readable now, 
+		chpsim dump and feedback names are MUCH more readable now, 
 			since replacing definition-scope prefixes with
 			parent process prefixes.  Names may not be canonical, 
 			but they are at least equivalent.  
