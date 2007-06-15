@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.76 2007/05/03 06:38:42 fang Exp $
+	$Id: BUILDS,v 1.77 2007/06/15 06:01:39 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -339,22 +339,19 @@ readline: BSD EditLine (histedit interface) ver. 2.10
 amd64-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070226
-CVS Tag: HACKT-00-01-04-main-00-80-88
-Configured with: '--prefix=/usr/local/cad' '--with-readline' '--disable-docs' 'CXXFLAGS=-g0 -O2' '-C'
-build-triplet: x86_64-unknown-freebsd6.2
+Version: hackt 0.1.4-devel-20070611
+CVS Tag: HACKT-00-01-04-main-00-81-34-merged-LPxx-04
+Configured with: '--prefix=/usr/local/cad' '--with-readline' '--enable-fun' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
+build-triplet: amd64-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
-config-CXXFLAGS: -g0 -O2
+config-CXXFLAGS: -g -O2
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
 yacc: /usr/bin/byacc
 readline: GNU readline 5.0
+guile: guile-config - Guile version 1.6.8
 
-NOTE: -g0 was necessary because of disk space limitation.
-	byacc is virtually the same as traditional yacc.
-	Again, test failures were only due to 64b-ness of object binaries;
-	everything is fully functional, just not binary interoperable with 32b.
-	
+NOTE: this is the first blessed version that supports 64b testing.
 
 ===============================================================================
 i386-unknown-freebsd

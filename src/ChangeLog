@@ -3,6 +3,47 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-06-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-34-merged-LPxx-04:
+	  Branch merge.
+	  Summary: test suite is now blessed on LP64 platforms, now that 
+		test suite has taken appropriate measures to filter out
+		trivial binary-size differences.
+	  Tested on amd64-freebsd6.2: distcheck is in good shape!
+
+
+2007-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-32-LPxx-04:
+	  No source revision.
+	  util/test/Makefile.am: upgraded test scheme to use suffix rules
+		for tests and removed the test-expect.sh[.in].
+		Added support for non-LP32 binary differences in test suite:
+		only affecting test static_count_ptr_test.
+	  Branch end.
+
+
+	* HACKT-00-01-04-main-00-81-32-LPxx-03:
+	  No source revision, see test/ChangeLog.
+	  No regressions (false-positives) occur in 64b build/tests now!
+	  However one annoying util/test regression remains to be fixed, 
+		in the sizeof(ptr) dump of static_count_ptr_test.
+
+
+2007-06-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-32-LPxx-02:
+	  Niiiice!!! all create tests now pass on LP64!
+	  No source revision, only test/ChangeLog.
+
+
+	* HACKT-00-01-04-main-00-81-32-LPxx-01:
+	  Mini-branch for test support on LP32/64 platforms.
+	  Enabled scopespace sorting, resulting in a ton of create test
+		updates due to object re-ordering.
+
+
 2007-06-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-33:
@@ -32,7 +73,7 @@
 	  Branch merge.
 	  Summary: added value-peek support (read channel without ack), 
 		and lvalue-less receives, e.g. 'CHAN?'.
-		chpsim dump and feedback names are MUCh more readable now, 
+		chpsim dump and feedback names are MUCH more readable now, 
 			since replacing definition-scope prefixes with
 			parent process prefixes.  Names may not be canonical, 
 			but they are at least equivalent.  

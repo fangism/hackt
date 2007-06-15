@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.7 2007/06/13 17:45:45 fang Exp $
+#	$Id: Make.test-create,v 1.8 2007/06/15 06:01:55 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -34,11 +34,14 @@ CREATE_OBJDUMP_SCRIPT = \
 	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) > $@ ; \
 	$(ECHO_FILTERED)
 
+HACKT_CREATE_TEST_DIFF = $(DIFF) -buw
+
 if VERBOSE_CHECK
-ECHO_CREATEDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
+ECHO_CREATEDUMP_DIFF_COMMAND = $(ECHO) "$(HACKT_CREATE_TEST_DIFF) $$""(srcdir)/$$stderr $<"
 else
 ECHO_CREATEDUMP_DIFF_COMMAND = :
 endif
+
 
 # forgive size differences only for non-ILP32 platforms
 if ABI_ILP32
@@ -47,14 +50,15 @@ else
 CREATE_HEADER_DIFF_SCRIPT_PART2 = \
 	filtered2=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr-nosize/g'` ; \
 	diffout2=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.creatediff-nosize/g'` ; \
-	$(CAT) "$$filtered" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
-	$(CAT) $<-noindex | $(POM_SIZE_FILTER) > $<-nosize ; \
-	$(DIFF) -buw "$$filtered2" $<-nosize > "$$diffout2" 2>&1 ; \
-	$(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout2"
+	$(CAT) "$$expect" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
+	$(CAT) $< | $(POM_SIZE_FILTER) > $<-nosize ; \
+	$(HACKT_CREATE_TEST_DIFF) "$$filtered2" $<-nosize > "$$diffout2" 2>&1 ; \
+	$(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout2" ; \
+	$(MV) $@ $@-orig ; \
+	$(CP) "$$diffout2" $@
 endif
-#	$(CAT) "$$expect" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
-#	$(CAT) $< | $(POM_SIZE_FILTER) > $<-nosize ; \
-#	$(CP) "$$diffout2" $@
+#	$(CAT) "$$filtered" | $(POM_SIZE_FILTER) > "$$filtered2" ; \
+#	$(CAT) $<-noindex | $(POM_SIZE_FILTER) > $<-nosize ;
 
 .createdump-filter.creatediff:
 	@stderr=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.createstderr/g'` ; \
@@ -62,7 +66,7 @@ endif
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_CREATEDUMP_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(HACKT_CREATE_TEST_DIFF) "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
 	    $(ANALYZE_DIFF_AWK) -v quiet=2 $@ > $@-anal ; \
@@ -71,7 +75,7 @@ endif
 	      diffout=`$(ECHO) $@ | $(SED) 's/\.creatediff$$/.creatediff-noindex/g'` ; \
 	      $(CAT) "$$expect" | $(POM_INDEX_FILTER) > $$filtered ; \
 	      $(CAT) $< | $(POM_INDEX_FILTER) > $<-noindex ; \
-	      $(DIFF) -buw "$$filtered" $<-noindex > "$$diffout" 2>&1 ; \
+	      $(HACKT_CREATE_TEST_DIFF) "$$filtered" $<-noindex > "$$diffout" 2>&1 ; \
 	      $(ANALYZE_DIFF_AWK) -v quiet=0 "$$diffout" ; \
 	    fi ; \
 	    $(RM) $@-anal ; \
@@ -118,7 +122,7 @@ endif
 	$(RM) $@ ; \
 	if test -f "$$expect" ; then \
 	  $(ECHO_CREATEFAIL_DIFF_COMMAND) ; \
-	  $(DIFF) -bu "$$expect" $< > $@ 2>&1 ; \
+	  $(HACKT_CREATE_TEST_DIFF) "$$expect" $< > $@ 2>&1 ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
 	  fi ; \
@@ -317,6 +321,7 @@ clean-createtests:
 	-$(RM_PATTERN) "*.haco-c-err"
 	-$(RM_PATTERN) "*.createdump"
 	-$(RM_PATTERN) "*.creatediff"
+	-$(RM_PATTERN) "*.creatediff-orig"
 	-$(RM_PATTERN) "*.createfaildump"
 	-$(RM_PATTERN) "*.createfaildiff"
 	-$(RM_PATTERN) "*.haco-c-dump"

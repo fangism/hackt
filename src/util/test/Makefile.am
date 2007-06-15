@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.55 2007/03/12 07:38:17 fang Exp $
+#	$Id: Makefile.am,v 1.56 2007/06/15 06:01:45 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -10,19 +10,74 @@ include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects
 
-SUFFIXES = .test .ii .i .hii .hhii .tccii
-TEST_EXPECT_SH = test-expect.sh
+SUFFIXES = .test .ii .i .hii .hhii .tccii \
+	.out .out-filter .stderr .stderr-filter .diff
+# TEST_EXPECT_SH = test-expect.sh
+ADDRESS_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
 
-all-local: $(TEST_EXPECT_SH)
+# all-local: $(TEST_EXPECT_SH)
 
-check_SCRIPTS = $(TEST_EXPECT_SH)
+# check_SCRIPTS = $(TEST_EXPECT_SH)
 
 # auto-generated test scripts
-.cc.test:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) ./$(TEST_EXPECT_SH) ./$* $(srcdir) >> $@
-	@$(CHMOD) +x $@
+# .cc.test:
+#	@{ $(ECHO) "#!$(SHELL)" ; \
+#	$(ECHO) "# \"$@\"" ; \
+#	$(ECHO) ./$(TEST_EXPECT_SH) ./$* $(srcdir) ;} > $@ ; \
+#	$(CHMOD) +x $@
+
+DEFAULT_DIFF_TEST_SCRIPT = \
+	$(ECHO) "Summarizing $@ ..." ; \
+	{ $(ECHO) $(SHELL_INTERPRETER) ; \
+	$(ECHO) "\# \"$@\"" ; \
+	if test -s $< ; then \
+	  $(ECHO) "$(ECHO) $< is non-empty!" ; \
+	  $(ECHO) "exit 1" ; \
+	fi ;} > $@ ; \
+	$(CHMOD) +x $@
+
+.diff.test:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+.out.out-filter:
+	@$(ADDRESS_FILTER) $< > $@
+
+.stderr.stderr-filter:
+	@$(ADDRESS_FILTER) $< > $@
+
+TEST_DIFF = $(DIFF) -u
+
+.stderr-filter.diff:
+	@out=`$(ECHO) $@ | $(SED) 's/\.diff$$/.out-filter/g'` ; \
+	expect=`$(ECHO) $@ | $(SED) 's/\.diff$$/.stderr-filter/g'` ; \
+	morefilter=$(srcdir)/`$(ECHO) $@ | $(SED) 's/\.diff$$/.morefilter.sh/g'` ; \
+	if test -f $$morefilter ; then \
+	  $(MV) $$out $$out-orig ; \
+	  $(MV) $$expect $$expect-orig ; \
+	  $$morefilter $$out-orig $$out ; \
+	  $$morefilter $$expect-orig $$expect ; \
+	  $(TEST_DIFF) $$expect-orig $$out-orig > $@-orig ; \
+	  if test -s $@-orig ; then \
+	    $(ECHO) "$@-orig is actually non-empty.  (OK)" ; \
+	  fi ; \
+	fi
+	-$(TEST_DIFF) $^ > $@
+	@if test -s $@ ; then \
+	  $(ECHO) "Differences found in $@!" ; \
+	fi
+
+AUTO_DEPENDS += diff.autodepend
+diff.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	list='$(noinst_PROGRAMS)' ; \
+	test -z "$$list" || \
+	for e in $$list ; do \
+	  $(ECHO) "$$e.diff: $$e.out-filter" ; \
+	  $(ECHO) "" ; \
+	done > $@ ; \
+	$(TOUCH) $@
+
+-include diff.autodepend
 
 # these are all test programs, not to be installed
 noinst_PROGRAMS = \
@@ -69,6 +124,20 @@ noinst_PROGRAMS = \
 	sparse_collection_test \
 	collection_pool_test
 
+AUTO_DEPENDS += exec.autodepend
+# rules for creating .out from executables
+exec.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	list='$(noinst_PROGRAMS)' ; \
+	test -z "$$list" || \
+	for e in $$list ; do \
+	  $(ECHO) "$$e.out: $$e" ; \
+	  $(ECHO) "	-"$$"< > "$$"@ 2>&1" ; \
+	  $(ECHO) "" ; \
+	done > $@ ; \
+	$(TOUCH) $@
+
+-include exec.autodepend
 
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
@@ -215,14 +284,24 @@ count_ptr_variant_test.stderr:
 hash_map_iterator_O2_bug_test.stderr:
 	$(TOUCH) $@
 
+# special case: for static_count_ptr_test
+if ABI_ILP32
+# use default suffix rule
+else
+# override suffix rule, mimic ILP32 result
+static_count_ptr_test.out-filter: static_count_ptr_test.out
+	$(CAT) $< | $(SED) '/chunk/s/16\*[0-9]/16*4/g' | $(ADDRESS_FILTER) > $@
+endif
+
+
 # some tests require more than the default filtering
 MOREFILTER_TESTS = \
 	local_static_store_test \
 	multi_pool_module_test
 
 PREFILTER_FILES = \
-	$(MOREFILTER_TESTS:=.stderr.prefilter) \
-	$(MOREFILTER_TESTS:=.out.prefilter)
+	$(MOREFILTER_TESTS:=.stderr-orig) \
+	$(MOREFILTER_TESTS:=.out-orig)
 
 multikey_set_derived_test.stderr: multikey_set_test.stderr
 	$(CP) $? $@
@@ -255,20 +334,11 @@ MORE_CXXFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FL
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
-EXTRA_DIST += README test-expect.sh.in local.cvsignore \
+EXTRA_DIST += README local.cvsignore \
 	$(noinst_PROGRAMS:=.stderr) \
 	$(MOREFILTER_TESTS:=.morefilter.sh)
 
-# test-expect.sh: $(top_builddir)/config.status test-expect.sh.in
-#	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
-
 CLEANFILES += \
-	$(noinst_PROGRAMS:=.test) \
-	$(noinst_PROGRAMS:=.diff) \
-	$(noinst_PROGRAMS:=.filter) \
-	$(noinst_PROGRAMS:=.stderr.filter) \
-	$(noinst_PROGRAMS:=.out) \
-	$(noinst_PROGRAMS:=.out.filter) \
 	$(PREFILTER_FILES) \
 	$(EMPTY_STDERR_FILES)
 
@@ -279,12 +349,15 @@ TESTS += $(noinst_PROGRAMS:=.test)
 AUTO_IGNORE += test-expect.sh $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 	$(BUILT_SOURCES) $(PREFILTER_FILES) $(TESTS)
 
-all-local: $(TESTS)
+# all-local: $(TESTS)
+
+build-check-local: $(TESTS)
 
 clean-local:
 	-$(RM) $(BUILT_SOURCES)
 	-$(RM) *.core core.*
-	-$(RM) *.diff *.test *.out *.filter
+	-$(RM) *.diff *.test *.out
+	-$(RM) *.filter *-filter *-orig
 
 include $(top_srcdir)/Make.global
 

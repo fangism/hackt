@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.137 2007/06/13 20:34:01 fang Exp $
+#	$Id: configure.ac,v 1.138 2007/06/15 06:01:40 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -499,8 +499,8 @@ AC_CONFIG_FILES([hackt-config],
 	[chmod +x hackt-config])
 AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
-AC_CONFIG_FILES([src/util/test/test-expect.sh],
-	[chmod +x src/util/test/test-expect.sh])
+dnl AC_CONFIG_FILES([src/util/test/test-expect.sh],
+dnl	[chmod +x src/util/test/test-expect.sh])
 AC_CONFIG_FILES([src/util/test/hash_map_iterator_O2_bug_test.test],
 	[chmod +x src/util/test/hash_map_iterator_O2_bug_test.test])
 AC_CONFIG_FILES([src/scripts/deps_to_dot.awk],

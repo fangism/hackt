@@ -35,13 +35,16 @@ core.*
 *.hacktobjcreate
 *.createdump
 *.creatediff
+*.creatediff-orig
 *.createfaildump
 *.createfaildiff
 *.hacktobjalloc
 *.allocdump
 *.allocdiff
 *.noindex
+*-noindex
 *.nosize
+*-nosize
 *.castprs
 *.prs
 *.prsdiff

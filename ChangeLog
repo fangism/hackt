@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2007-06-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-34-merged-LPxx-04:
+	  Branch merge.  Support for testing on non LP32 platforms.
+
+
+2007-06-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-32-LPxx-04:
+	  configure.ac: removed src/util/test/test-expect.sh[.in]
+
+
 2007-06-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-33:
