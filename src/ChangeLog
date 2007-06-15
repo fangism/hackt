@@ -5,6 +5,13 @@
 
 2007-06-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-33:
+	  No source revision.
+	  Top-level configure.ac only, see ../ChangeLog.
+
+
+2007-06-13	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-32:
 	  Preliminary work for making test suite cooperate in LP64 mode.
 	  Object/common/scopespace.cc: added flag to sort persistently
