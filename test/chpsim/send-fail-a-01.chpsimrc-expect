@@ -13,6 +13,7 @@ check queue:
 	20	3	0	X!(false)
 	20	4	0	[after=20] X?(x)
 ERROR: detected attempt to send on channel that is already blocked waiting to send!
+	on channel[1] (X)
 Run-time error while checking event.
 event[3]:	20	3	0	X!(false)	[by:5]
 Caught run-time exception during execution.  Halting.

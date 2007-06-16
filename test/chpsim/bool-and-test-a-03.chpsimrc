@@ -1,0 +1,6 @@
+# "bool-and-test-a-03.chpsimrc"
+#	$Id: bool-and-test-a-03.chpsimrc,v 1.1 2007/06/16 23:05:19 fang Exp $
+# @haco@ bool-and-test-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

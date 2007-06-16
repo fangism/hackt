@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.8 2007/06/12 05:13:19 fang Exp $
+	$Id: Event.h,v 1.9 2007/06/16 23:05:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -73,6 +73,11 @@ enum recheck_result {
 	// flag to unsubscribe this event from deps (exclusive with subscribe)
 	__RECHECK_UNSUBSCRIBE_THIS = 0x04,
 
+	/**
+		Represents no change in status, e.g. still blocked.  
+		Don't enqueue, and no need to re-subscribe.
+	 */
+	RECHECK_NO_OP = 0x00,
 	/**
 		The invoking event should be blocked, 
 		and its dependencies subscribed.  

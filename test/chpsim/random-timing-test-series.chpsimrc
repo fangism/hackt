@@ -1,0 +1,44 @@
+# "random-timing-test-series.chpsimrc"
+#	$Id: random-timing-test-series.chpsimrc,v 1.1 2007/06/16 23:05:32 fang Exp $
+# source this script to run a batch of random timing tests
+# output should ideally be silent.
+
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+source random-timing-test-short.chpsimrc
+
+source random-timing-test-medium.chpsimrc
+source random-timing-test-medium.chpsimrc
+source random-timing-test-medium.chpsimrc
+source random-timing-test-medium.chpsimrc
+source random-timing-test-medium.chpsimrc
+

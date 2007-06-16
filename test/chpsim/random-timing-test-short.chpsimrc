@@ -1,0 +1,9 @@
+# "random-timing-test-short.chpsimrc"
+#	$Id: random-timing-test-short.chpsimrc,v 1.1 2007/06/16 23:05:34 fang Exp $
+# common test script for stability testing, short version
+
+initialize
+timing random
+step 10000
+assert-queue
+

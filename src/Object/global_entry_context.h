@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.4 2007/01/21 05:58:24 fang Exp $
+	$Id: global_entry_context.h,v 1.5 2007/06/16 23:05:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -113,7 +113,7 @@ public:
 	global_entry_context() : global_entry_context_base(), fpf(NULL) { }
 
 	global_entry_context(const state_manager& s, const footprint& _fp, 
-		const footprint_frame* const ff) : 
+		const footprint_frame* const ff = NULL) : 
 		global_entry_context_base(s, _fp), fpf(ff) { }
 
 	const footprint_frame*

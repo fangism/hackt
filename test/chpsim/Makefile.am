@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2007/06/12 05:13:30 fang Exp $
+#	$Id: Makefile.am,v 1.15 2007/06/16 23:05:16 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -78,7 +78,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	fib-test-a fib-test-b fib-test-c \
 	bool-split-alternator-a \
 	bool-merge-alternator-a \
-	source-sink-peekbuf-a source-sink-peekbuf-b
+	source-sink-peekbuf-a source-sink-peekbuf-b \
+	mux-test-flat
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -141,39 +142,54 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
 	select-nested-loop-b-03-trace \
 	select-block-a-01 select-block-a-02 \
-	bool-split-a-01 \
+	bool-split-a-01 bool-split-a-02 \
 	bool-split-select-a-01 \
 	bool-split-select-a-02-trace \
-	bool-lookup-a-01 \
+	bool-split-select-a-03 \
+	bool-lookup-a-01 bool-lookup-a-02 \
 	channel-sync-desync-a-01 channel-sync-desync-a-02 \
 	channel-sync-desync-a-03-trace \
 	channel-sync-desync-a-04-trace \
 	channel-sync-desync-a-05-trace \
-	bool-memory-read-a-01 \
-	bool-memory-write-a-01 \
+	channel-sync-desync-a-06 \
+	bool-memory-read-a-01 bool-memory-read-a-02 \
+	bool-memory-write-a-01 bool-memory-write-a-02 \
 	bool-and-test-a-01 \
 	bool-and-test-a-02-break \
+	bool-and-test-a-03 \
 	bool-and-test-b-01 bool-and-test-b-02-trace \
 	bool-or-test-a-01 \
 	bool-xor-test-a-01 \
 	buffer-advance-to \
-	channel-probe-a-01 channel-probe-b-01 channel-probe-c-01 \
+	channel-probe-a-01 channel-probe-a-02 \
+	channel-probe-b-01 \
+	channel-probe-c-01 channel-probe-c-02 \
 	delayed-source-a-01 delayed-source-a-02-trace \
 	delayed-sink-a-01 delayed-sink-a-02-trace \
-	token-ring-a-01 \
-	bubble-ring-a-01 \
+	token-ring-a-01 token-ring-a-02 \
+	bubble-ring-a-01 bubble-ring-a-02 \
 	deadlock-buf-a-01 \
 	deadlock-ring-a-01 \
 	timed-fifo-a-01 timed-fifo-b-01 timed-fifo-c-01 \
 	timed-fifo-d-01 timed-fifo-e-01 \
 	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
 	timed-token-ring-a-02 \
+	timed-token-ring-a-03 \
 	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01 \
+	timed-bubble-ring-a-02 \
 	fib-test-a-01 fib-test-b-01 fib-test-c-01 \
-	bool-split-alternator-a-01 \
-	bool-merge-alternator-a-01 \
+	fib-test-a-02 fib-test-b-02 fib-test-c-02 \
+	bool-split-alternator-a-01 bool-split-alternator-a-02 \
+	bool-merge-alternator-a-01 bool-merge-alternator-a-02 \
 	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
-	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02
+	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
+	mux-test-flat-01
+
+# TODO: random timing test fails with:
+EXTRA_DIST += \
+	source-sink-peekbuf-a-03.chpsimrc \
+	source-sink-peekbuf-b-03.chpsimrc
+# TODO: parallel-fifo test cases
 
 # TODO: profile delayed-sink/source test cases
 # TODO: slack matching buffers with varying forward/backward latencies
@@ -376,6 +392,10 @@ source-sink-peekbuf-b-02.chpsimtrace: source-sink-peekbuf-b-02.chpsimrc-out
 $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
 
 srcdir_EXTRA_DIST += \
+	random-timing-test-short.chpsimrc \
+	random-timing-test-medium.chpsimrc \
+	random-timing-test-long.chpsimrc \
+	random-timing-test-series.chpsimrc \
 	event-classification.hacchpsimscm \
 	event-types.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \

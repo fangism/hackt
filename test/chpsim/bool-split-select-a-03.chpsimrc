@@ -1,0 +1,6 @@
+# "bool-split-select-a-03.chpsimrc"
+#	$Id: bool-split-select-a-03.chpsimrc,v 1.1 2007/06/16 23:05:25 fang Exp $
+# @haco@ bool-split-select-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

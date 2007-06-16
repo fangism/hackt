@@ -1,11 +1,12 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.11 2007/06/12 05:13:19 fang Exp $
+	$Id: State.cc,v 1.12 2007/06/16 23:05:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_QUEUE			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <iterator>
@@ -46,6 +47,14 @@
 #else
 #define	DEBUG_STEP_PRINT(x)
 #define	STACKTRACE_VERBOSE_STEP
+#endif
+
+#if	DEBUG_QUEUE
+#define	DEBUG_QUEUE_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_QUEUE	STACKTRACE_VERBOSE
+#else
+#define	DEBUG_QUEUE_PRINT(x)
+#define	STACKTRACE_VERBOSE_QUEUE
 #endif
 
 // functor specializations
@@ -174,7 +183,7 @@ struct State::recheck_transformer {
 	 */
 	void
 	operator () (const event_index_type ei) {
-		STACKTRACE_INDENT_PRINT("rechecking event " << ei << endl);
+		DEBUG_QUEUE_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
@@ -186,6 +195,7 @@ struct State::recheck_transformer {
 		// now that delays have been paid up-front, events that
 		// pass recheck can be scheduled into the immediate event fifo
 		if (e.recheck(context, ei)) {
+			DEBUG_QUEUE_PRINT("enqueue to immediate fifo" << endl);
 			// note: time is irrelevant to immediate-event-fifo
 			// it's just a NOW fifo
 			state.immediate_event_fifo.push_back(
@@ -193,7 +203,11 @@ struct State::recheck_transformer {
 					cause_event_id, cause_trace_id));
 			// this is an unfortunate overloaded re-use
 			// of event_placeholder_type.
+		} else {
+			DEBUG_QUEUE_PRINT("still blocked" << endl);
 		} // end if recheck
+		} else {
+			DEBUG_QUEUE_PRINT("ignored cause_event_id == ei" << endl);
 		} // end if self-wake-up
 #else	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		e.recheck(context, ei);
@@ -225,6 +239,7 @@ struct State::event_enqueuer {
 	operator () (const event_index_type ei) {
 		const event_type& e(state.event_pool[ei]);
 		time_type new_delay;
+		STACKTRACE_VERBOSE_QUEUE;
 	switch (state.timing_mode) {
 	case TIMING_UNIFORM:
 		new_delay = (e.has_trivial_delay() ?
@@ -247,7 +262,8 @@ struct State::event_enqueuer {
 		if (state.watching_event_queue()) {
 			// is this a performance hit, rechecking inside loop?
 			// if so, factor this into two versioned loops.
-			state.dump_event(cout << "enqueue: ", ei, new_time);
+			state.dump_event(cout << "enqueue: ", ei, new_time)
+				<< endl;
 		}
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		state.check_event_queue.insert(new_event);
@@ -509,6 +525,7 @@ do {
 	try {
 	// this is where events are checked for their first time as successor
 	if (immediate || ev.first_check(c, ei)) {
+		DEBUG_STEP_PRINT("executing..." << endl);
 		// don't recheck if event is immediate
 		status.first = true;
 #endif
@@ -536,7 +553,7 @@ do {
 		// TODO: is this on critical path?
 		// initial check failed predicate, block waiting, 
 		// subscribe to variables
-		STACKTRACE_INDENT_PRINT("event blocked waiting." << endl);
+		DEBUG_STEP_PRINT("event blocked waiting." << endl);
 		// this is already done in Event::recheck
 		// NOTE: a blocked channel send alters channel state
 		// so we need to recheck waiting probes
@@ -582,7 +599,8 @@ void
 State::__notify_updates_for_recheck(const size_t ti) {
 	typedef	update_reference_array_type::ref_bin_type::const_iterator
 							const_iterator;
-	// TODO: hello: template method, anybody?
+	STACKTRACE_VERBOSE_QUEUE;
+	// TODO: hello: private template method, anybody?
 #define	CASE_META_TYPE_TAG(Tag)						\
 	{								\
 	const update_reference_array_type::ref_bin_type&		\
@@ -649,6 +667,7 @@ State::__perform_rechecks(const event_index_type ei,
 		, const size_t ti
 #endif
 		) {
+	STACKTRACE_VERBOSE_QUEUE;
 #if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 // NOTE: since delays have been paid for up front, rechecked events that
 // now pass are immediately ready for execution, and hence should be placed

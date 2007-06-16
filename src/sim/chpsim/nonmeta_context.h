@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.4 2007/05/04 03:37:31 fang Exp $
+	$Id: nonmeta_context.h,v 1.5 2007/06/16 23:05:12 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -46,8 +46,7 @@ friend class EventNode;
 	typedef	std::default_vector<event_type>::type	event_pool_type;
 private:
 	/**
-		Global process index, for looking up footprint frames.  
-		Zero-value means top-level.
+		Reference to the event in question.
 	 */
 	event_type*				event;
 #if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
@@ -110,6 +109,12 @@ public:
 
 	event_type&
 	get_event(void) const { return *event; }
+
+	/**
+		The distance from the start of the pool is the index.
+	 */
+	size_t
+	get_event_index(void) const;
 
 	void
 	subscribe_this_event(void) const;

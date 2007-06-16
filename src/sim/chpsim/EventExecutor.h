@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.3 2007/05/04 03:37:27 fang Exp $
+	$Id: EventExecutor.h,v 1.4 2007/06/16 23:05:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -54,8 +54,7 @@ public:
 #if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		const
 #endif
-		nonmeta_context& c) :
-		context(c) { }
+		nonmeta_context& c);
 
 	void
 	visit(const action_sequence&);
@@ -118,7 +117,7 @@ public:
 	char					ret;
 public:
 	explicit
-	EventRechecker(const nonmeta_context& c) : context(c) { }
+	EventRechecker(const nonmeta_context& c);
 
 	void
 	visit(const action_sequence&);

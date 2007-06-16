@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.3 2006/08/02 21:10:37 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.4 2007/06/16 23:05:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
@@ -26,6 +26,10 @@ using PRS::cflat_visitor;
 class cflat_context_visitor : public cflat_visitor, public cflat_context {
 public:
 	cflat_context_visitor() : cflat_visitor(), cflat_context() { }
+
+	cflat_context_visitor(const state_manager& _sm, 
+		const footprint& _topfp) :
+		cflat_visitor(), cflat_context(_sm, _topfp) { }
 
 	~cflat_context_visitor() { }
 

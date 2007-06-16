@@ -1,0 +1,6 @@
+# "fib-test-a-02.chpsimrc"
+#	$Id: fib-test-a-02.chpsimrc,v 1.1 2007/06/16 23:05:29 fang Exp $
+# @haco@ fib-test-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

@@ -1,0 +1,6 @@
+# "bool-memory-write-a-02.chpsimrc"
+#	$Id: bool-memory-write-a-02.chpsimrc,v 1.1 2007/06/16 23:05:21 fang Exp $
+# @haco@ bool-memory-write-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

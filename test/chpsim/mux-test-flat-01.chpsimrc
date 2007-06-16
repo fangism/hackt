@@ -1,0 +1,6 @@
+# "mux-test-flat-01.chpsimrc"
+#	$Id: mux-test-flat-01.chpsimrc,v 1.1 2007/06/16 23:05:30 fang Exp $
+# @haco@ mux-test-flat.haco-a
+
+source random-timing-test-series.chpsimrc
+

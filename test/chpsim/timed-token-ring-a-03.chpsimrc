@@ -1,0 +1,6 @@
+# "timed-token-ring-a-03.chpsimrc"
+#	$Id: timed-token-ring-a-03.chpsimrc,v 1.1 2007/06/16 23:05:36 fang Exp $
+# @haco@ timed-token-ring-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

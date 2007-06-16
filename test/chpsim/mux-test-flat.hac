@@ -1,0 +1,59 @@
+/**
+	\file "mux-test-flat.hac"
+	Test case contributed by Tadeo, further reduced by Fang.
+	Trigged a bug in conflict-detection checking, 
+	now fixed as of HACKT-00-01-04-main-00-81-36.
+	$Id: mux-test-flat.hac,v 1.1 2007/06/16 23:05:30 fang Exp $
+ */
+
+import "int-source.hac";
+import "int-sink.hac";
+
+
+template< pint rows, cols>
+defproc matrixMultiplexer (chan?(int) chMatrix[rows][cols], chRow, chCol;
+		chan!(int) outputData     ) {
+	int row, col, matrixData;
+	chp {
+		*[
+			chCol?(col), chRow?(row);
+			chMatrix[row][col]?(matrixData);
+			outputData!(matrixData)
+		]
+	}
+}
+  
+defproc matrixMerger (chan?(int) dataChan, chRow, chCol;
+		chan!(int)  outputChanMatrix[4][4] ) {
+	int row, col, matrixData;
+	chp {
+		*[
+			chCol?(col), chRow?(row), dataChan?(matrixData);
+			outputChanMatrix[row][col]!(matrixData)
+		]
+	}
+}
+
+template<pint W, inputRows, inputCols, inputData[inputRows][inputCols] >
+defproc int_source_matrix ( chan!(int) inputChannel[inputRows][inputCols] ) {
+	chp {
+		*[
+		{,i:inputRows:       
+			{,j:inputCols: 
+				inputChannel[i][j]!(inputData[i][j])
+			}
+		}
+		]
+	}
+}
+
+chan(int) chanMatrix[1][2];
+chan(int) chanSelRow;
+chan(int) chanSelCol;
+chan(int) out;
+
+int_source_matrix<   32, 1, 2, { {1,2} } >  source ( chanMatrix );
+int_source < 32, 1, { 0} > sourceRow ( chanSelRow );
+int_source < 32, 2, {  0,1 }  > sourceCol ( chanSelCol );
+matrixMultiplexer<1,2> mux (  chanMatrix, chanSelRow, chanSelCol, out );
+int_sink <   32  > sinkOutput(   out   );

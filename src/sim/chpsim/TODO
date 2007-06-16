@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.7 2007/06/12 05:13:20 fang Exp $
+#	$Id: TODO,v 1.8 2007/06/16 23:05:12 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -43,6 +43,10 @@ medium-priority:
 		purpose: to be able to quickly turn off and restore
 			previous watch/breakpoint configuration, 
 			same as prsim
+	graphical (dot-style) animation, perhaps trace replay back-end!
+		just emit style directives to color nodes/edges of the graph.
+		prerequisite: tracing when events are blocked/unblocked.
+		benefits: visual debugging.
 
 low-priority:
 	stability checking mode:

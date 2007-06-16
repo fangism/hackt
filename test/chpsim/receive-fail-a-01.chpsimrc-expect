@@ -13,6 +13,7 @@ check queue:
 	20	3	0	X?(y)
 	20	4	0	[after=20] X!(true)
 ERROR: detected attempt to receive on channel that is already blocked waiting to receive!
+	on channel[1] (X)
 Run-time error while checking event.
 event[3]:	20	3	0	X?(y)	[by:5]
 Caught run-time exception during execution.  Halting.

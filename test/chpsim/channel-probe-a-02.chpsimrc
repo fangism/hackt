@@ -1,0 +1,6 @@
+# "channel-probe-a-02.chpsimrc"
+#	$Id: channel-probe-a-02.chpsimrc,v 1.1 2007/06/16 23:05:26 fang Exp $
+# @haco@ channel-probe-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

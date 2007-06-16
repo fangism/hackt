@@ -1,0 +1,6 @@
+# "channel-sync-desync-a-06.chpsimrc"
+#	$Id: channel-sync-desync-a-06.chpsimrc,v 1.1 2007/06/16 23:05:28 fang Exp $
+# @haco@ channel-sync-desync-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

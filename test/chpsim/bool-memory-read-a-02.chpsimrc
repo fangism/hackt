@@ -1,0 +1,6 @@
+# "bool-memory-read-a-02.chpsimrc"
+#	$Id: bool-memory-read-a-02.chpsimrc,v 1.1 2007/06/16 23:05:20 fang Exp $
+# @haco@ bool-memory-read-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

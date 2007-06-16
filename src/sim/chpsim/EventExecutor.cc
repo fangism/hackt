@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.4 2007/06/12 05:13:19 fang Exp $
+	$Id: EventExecutor.cc,v 1.5 2007/06/16 23:05:11 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 
 #include "sim/chpsim/EventExecutor.h"
 #include "Object/lang/CHP.h"
@@ -50,6 +51,7 @@ namespace HAC {
 namespace entity {
 namespace CHP {
 #include "util/using_ostream.h"
+
 //=============================================================================
 // class guarded_action::selection_evaluator definition
 
@@ -143,6 +145,7 @@ namespace SIM {
 namespace CHPSIM {
 using std::copy;
 using std::for_each;
+using std::ostringstream;
 using entity::expr_dump_context;
 using entity::ChannelState;
 using entity::CHP::selection_list_type;
@@ -230,6 +233,24 @@ dump_selection_successor_edges(const selection_list_type& l,
 	// check for else clause
 	return o;
 }
+
+//=============================================================================
+/**
+	I realize now that EventRechecker is slightly redundant:
+	it has two equivalent references to the state_manager and top_footprint.
+ */
+EventExecutor::EventExecutor(
+#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const
+#endif
+		nonmeta_context& c) : 
+	chp_visitor(*c.get_state_manager(), *c.get_top_footprint_ptr()), 
+	context(c) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+EventRechecker::EventRechecker(const nonmeta_context& c) : 
+	chp_visitor(*c.get_state_manager(), *c.get_top_footprint_ptr()), 
+	context(c) { }
 
 //=============================================================================
 // class action method definitions
@@ -729,10 +750,20 @@ EventRechecker::visit(const channel_send& cs) {
 		context.updates.push_back(std::make_pair(
 			size_t(entity::META_TYPE_CHANNEL), chan_index));
 		ret = RECHECK_BLOCKED_THIS;
+	} else if (nc.contains_subscriber(context.get_event_index())) {
+		// is already subscribed, no further action
+		ret = RECHECK_NO_OP;	// still blocked, no change
 	} else {
+		// if another sender is already blocked, then error
+		// else if receiver is blocked, then just remain blocked!
 		cerr << "ERROR: detected attempt to send on channel that is "
 			"already blocked waiting to send!" << endl;
-		// TODO: who?
+		// TODO: factor out reusable code
+		ostringstream oss;
+		sm->get_pool<channel_tag>()[chan_index].
+			dump_canonical_name(oss, *topfp, *sm);
+		cerr << "\ton channel[" << chan_index << "] (" << oss.str()
+			<< ")" << endl;
 		THROW_EXIT;
 	}
 	// we actually write the data during a recheck
@@ -808,10 +839,18 @@ EventRechecker::visit(const channel_receive& cr) {
 		// The `blocked' state is still noted in checkpoint.
 		nc.block_receiver();
 		ret = RECHECK_BLOCKED_THIS;
+	} else if (nc.contains_subscriber(context.get_event_index())) {
+		// is already subscribed, no further action
+		ret = RECHECK_NO_OP;	// still blocked, no change
 	} else {
 		cerr << "ERROR: detected attempt to receive on channel that is "
 			"already blocked waiting to receive!" << endl;
-		// TODO: who?
+		// TODO: factor out reusable code
+		ostringstream oss;
+		sm->get_pool<channel_tag>()[chan_index].
+			dump_canonical_name(oss, *topfp, *sm);
+		cerr << "\ton channel[" << chan_index << "] (" << oss.str()
+			<< ")" << endl;
 		THROW_EXIT;
 	}
 #else

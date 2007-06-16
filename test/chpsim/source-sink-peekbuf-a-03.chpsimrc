@@ -1,0 +1,6 @@
+# "source-sink-peekbuf-a-03.chpsimrc"
+#	$Id: source-sink-peekbuf-a-03.chpsimrc,v 1.1 2007/06/16 23:05:35 fang Exp $
+# @haco@ source-sink-peekbuf-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-06-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-36:
+	  chpsim bug fix: false positive on checking for channel conflicts
+		is fixed, by detecting rechecking (polling) on same channel.
+		Source affected: EventExecutor.cc: EventRechecker (send/recv)
+	  sim/chpsim/State.cc: more debug hooks
+	  Ton of random-timing chpsim test cases added to test suite.
+
+
 2007-06-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-35:

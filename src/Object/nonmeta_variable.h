@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.5 2007/05/04 03:37:16 fang Exp $
+	$Id: nonmeta_variable.h,v 1.6 2007/06/16 23:05:02 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -102,6 +102,11 @@ public:
 
 	bool
 	has_subscribers(void) const { return !event_subscribers.empty(); }
+
+	bool
+	contains_subscriber(const size_t e) {
+		return event_subscribers.find(e) != event_subscribers.end();
+	}
 
 };	// end class nonmeta_variable_base
 
@@ -363,6 +368,16 @@ public:
 	void
 	block_receiver(void) {
 		status = CHANNEL_RECEIVER_BLOCKED;
+	}
+
+	bool
+	sender_blocked(void) const {
+		return status == CHANNEL_SENDER_BLOCKED;
+	}
+
+	bool
+	receiver_blocked(void) const {
+		return status == CHANNEL_RECEIVER_BLOCKED;
 	}
 
 public:

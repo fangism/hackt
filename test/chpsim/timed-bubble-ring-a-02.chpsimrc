@@ -1,0 +1,6 @@
+# "timed-bubble-ring-a-02.chpsimrc"
+#	$Id: timed-bubble-ring-a-02.chpsimrc,v 1.1 2007/06/16 23:05:35 fang Exp $
+# @haco@ timed-bubble-ring-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_visitor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: CHP_visitor.h,v 1.2 2007/03/11 16:34:23 fang Exp $
+	$Id: CHP_visitor.h,v 1.3 2007/06/16 23:05:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_VISITOR_H__
@@ -46,6 +46,11 @@ class do_forever_loop;
  */
 class chp_visitor : public cflat_context_visitor {
 public:
+	chp_visitor() : cflat_context_visitor() { }
+
+	chp_visitor(const state_manager& _sm, const entity::footprint& _topfp) :
+		cflat_context_visitor(_sm, _topfp) { }
+
 #if 0
 // no catch-all necessary
 virtual	void

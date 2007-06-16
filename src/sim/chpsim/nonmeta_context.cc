@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.4 2007/05/04 03:37:30 fang Exp $
+	$Id: nonmeta_context.cc,v 1.5 2007/06/16 23:05:12 fang Exp $
  */
 
 #include <vector>
@@ -90,6 +90,13 @@ nonmeta_context::subscribe_this_event(void) const {
 	const event_index_type d = std::distance(&event_pool[0], event);
 	INVARIANT(d < event_pool.size());
 	event->subscribe_deps(*this, d);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+nonmeta_context::get_event_index(void) const {
+	INVARIANT(event);
+	return std::distance(&event_pool[0], event);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
