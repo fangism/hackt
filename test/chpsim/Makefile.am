@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2007/06/16 23:05:16 fang Exp $
+#	$Id: Makefile.am,v 1.16 2007/06/17 02:56:39 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -78,6 +78,7 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	fib-test-a fib-test-b fib-test-c \
 	bool-split-alternator-a \
 	bool-merge-alternator-a \
+	bool-parallel-fifo-a \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat
 
@@ -181,18 +182,14 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	fib-test-a-02 fib-test-b-02 fib-test-c-02 \
 	bool-split-alternator-a-01 bool-split-alternator-a-02 \
 	bool-merge-alternator-a-01 bool-merge-alternator-a-02 \
+	bool-parallel-fifo-a-01 \
 	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
+	source-sink-peekbuf-a-03 \
 	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
+	source-sink-peekbuf-b-03 \
 	mux-test-flat-01
 
-# TODO: random timing test fails with:
-EXTRA_DIST += \
-	source-sink-peekbuf-a-03.chpsimrc \
-	source-sink-peekbuf-b-03.chpsimrc
 # TODO: parallel-fifo test cases
-
-# TODO: profile delayed-sink/source test cases
-# TODO: slack matching buffers with varying forward/backward latencies
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	select-fail-a-01 \

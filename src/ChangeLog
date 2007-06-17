@@ -5,6 +5,18 @@
 
 2007-06-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-37:
+	  chpsim bug fix: value-peeks statements should not mark the state
+		of the channel as receiver-blocked, so when sender arrives
+		it still thinks it arrived before its receive counterpart.
+		One line fix in sim/chpsim/EventExecuter.cc:
+			EventRechecker(channel_receive)
+		This fixes two new test cases that use value peeks
+			with random timing.
+	  Added new test case with parallel FIFO.  
+	  Back to "no known chpsim bugs".
+
+
 	* HACKT-00-01-04-main-00-81-36:
 	  chpsim bug fix: false positive on checking for channel conflicts
 		is fixed, by detecting rechecking (polling) on same channel.

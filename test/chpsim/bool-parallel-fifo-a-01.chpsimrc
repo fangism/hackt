@@ -1,0 +1,6 @@
+# "bool-parallel-fifo-a-01.chpsimrc"
+#	$Id: bool-parallel-fifo-a-01.chpsimrc,v 1.1 2007/06/17 02:56:40 fang Exp $
+# @haco@ bool-parallel-fifo-a.haco-a
+
+source random-timing-test-series.chpsimrc
+

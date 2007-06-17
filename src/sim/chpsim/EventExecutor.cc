@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.5 2007/06/16 23:05:11 fang Exp $
+	$Id: EventExecutor.cc,v 1.6 2007/06/17 02:56:39 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -738,9 +738,11 @@ EventRechecker::visit(const channel_send& cs) {
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
 #if CHPSIM_COUPLED_CHANNELS
 	if (nc.can_send()) {
+		STACKTRACE_INDENT_PRINT("channel was ready to send\n");
 		// receiver arrived first and was waiting
 		ret = RECHECK_UNBLOCKED_THIS;
 	} else if (nc.inactive()) {
+		STACKTRACE_INDENT_PRINT("channel was inactive\n");
 		// NOTE: blocking changes the simulation state of the channel
 		// but not in a way that wakes up another event.
 		// The `blocked' state is still noted in checkpoint.
@@ -751,6 +753,7 @@ EventRechecker::visit(const channel_send& cs) {
 			size_t(entity::META_TYPE_CHANNEL), chan_index));
 		ret = RECHECK_BLOCKED_THIS;
 	} else if (nc.contains_subscriber(context.get_event_index())) {
+		STACKTRACE_INDENT_PRINT("channel status unchanged\n");
 		// is already subscribed, no further action
 		ret = RECHECK_NO_OP;	// still blocked, no change
 	} else {
@@ -832,14 +835,19 @@ EventRechecker::visit(const channel_receive& cr) {
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
 #if CHPSIM_COUPLED_CHANNELS
 	if (nc.can_receive()) {
+		STACKTRACE_INDENT_PRINT("channel was ready to receive\n");
 		ret = RECHECK_UNBLOCKED_THIS;
 	} else if (nc.inactive()) {
+		STACKTRACE_INDENT_PRINT("channel was inactive\n");
 		// NOTE: blocking changes the simulation state of the channel
 		// but not in a way that wakes up another event.
 		// The `blocked' state is still noted in checkpoint.
-		nc.block_receiver();
+		if (!cr.is_peek())
+			nc.block_receiver();
+		// else peeks do not need to toggle the channel state!
 		ret = RECHECK_BLOCKED_THIS;
 	} else if (nc.contains_subscriber(context.get_event_index())) {
+		STACKTRACE_INDENT_PRINT("channel status unchanged\n");
 		// is already subscribed, no further action
 		ret = RECHECK_NO_OP;	// still blocked, no change
 	} else {

@@ -1,0 +1,13 @@
+// "bool-parallel-fifo-a.hac"
+//	$Id: bool-parallel-fifo-a.hac,v 1.1 2007/06/17 02:56:41 fang Exp $
+
+import "testlib/bool-alternator.hac";
+import "testlib/bool-source.hac";
+import "testlib/bool-sink.hac";
+
+chan(bool) X, Y;
+bool_source<2, {true,false}> S(X);
+bool_sink Z(Y);
+bool_parallel_fifo<4> F(X, Y);
+
+
