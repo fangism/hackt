@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.82 2007/06/18 06:50:59 fang Exp $
+	$Id: BUILDS,v 1.81 2007/06/18 07:30:33 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -364,22 +364,19 @@ NOTE: this is the first blessed version that supports 64b testing.
 i386-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070615
-CVS Tag: HACKT-00-01-04-main-00-81-37
-Configured with: '--prefix=/usr/local/compiler' '--with-readline' 'CXXFLAGS=-g -O2 -Wno-undef' 'CFLAGS=-g -O2 -Wno-undef' 'YACC=yacc' '--without-guile-config' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
+CVS Tag: HACKT-00-01-04-main-00-80-87-merged-chpsim-03-10
+Configured with: '--disable-docs' '--prefix=/usr/local/compiler' '--with-readline' 'CFLAGS=-g0 -O2 -Wno-undef' 'CXXFLAGS=-g0 -O2 -Wno-undef' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0' '-C'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
-config-CXXFLAGS: -g -O2 -Wno-undef
+config-CXXFLAGS: -g0 -O2 -Wno-undef
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
-yacc: /usr/bin/yacc
+yacc: bison (GNU Bison) 1.875
 readline: GNU readline 5.0
-guile: 
 
 NOTE: -g0 was required because of space limitations, and -Wno-undef worked 
 	around a false-error in configure (autoconf-2.60) dying on an
 	undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
-NOTE: guile disabled because version (1.4) is too old and unsupported
 
 ===============================================================================
 sparc-sun-solaris2.9
