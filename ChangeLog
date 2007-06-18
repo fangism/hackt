@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-06-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-38:
+	  config/documentation.m4: support older fig2dev
+	  config/guile.m4: strip out guile-snarf, guile-tools (unused)
+
+
 2007-06-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-35:

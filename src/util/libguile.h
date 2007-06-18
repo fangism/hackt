@@ -1,6 +1,6 @@
 /**
 	\file "util/libguile.h"
-	$Id: libguile.h,v 1.5 2007/06/10 02:58:09 fang Exp $
+	$Id: libguile.h,v 1.6 2007/06/18 18:24:34 fang Exp $
 	Include wrapper for guile headers.  
 	Also provide some convenient wrappers of our own.  
  */
@@ -31,6 +31,14 @@ namespace guile {
 	Function pointer type for procedure casting.  Ewww...
  */
 typedef	SCM (*scm_gsubr_type)();
+
+#ifndef	HAVE_SCM_T_BITS
+#ifdef	HAVE_SCM_BITS_T
+typedef	scm_bits_t		scm_t_bits;
+#else
+#error	"No equivalent type for scm_t_bits found."
+#endif
+#endif
 
 //-----------------------------------------------------------------------------
 /// fused call to define_gsubr followed by export

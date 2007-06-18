@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.6 2006/07/28 21:30:00 fang Exp $
+dnl	$Id: documentation.m4,v 1.7 2007/06/18 18:24:29 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -148,6 +148,34 @@ AC_DEFUN([FANG_CHECK_PROGS_XFIG],
 AC_CHECK_PROG([TRANSFIG], transfig, transfig)
 AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
 AM_CONDITIONAL(HAVE_FIG2DEV, test -n "$FIG2DEV" )
+
+if test -n "$FIG2DEV" ; then
+AC_CACHE_CHECK([whether fig2dev accepts -Lpdftex],
+[ac_cv_fig2dev_pdftex], [
+cat > conftest.fig <<ACEOF
+#FIG 3.2
+Portrait
+Center
+Metric
+A4
+100.00
+Single
+-2
+1200 2
+ACEOF
+
+"$FIG2DEV" -Lpdftex < conftest.fig conftest.pdf 2> conftest.err
+if test $? = 0 ; then
+  ac_cv_fig2dev_pdftex=yes
+else
+  ac_cv_fig2dev_pdftex=no
+fi
+rm -f conftest.fig conftest.pdf
+])
+fi
+if test -f conftest.err ; then cat conftest.err ; fi
+rm -f conftest.err
+AM_CONDITIONAL(FIG2DEV_PDFTEX, test "x$ac_cv_fig2dev_pdftex" = "xyes")
 ])
 
 dnl @synopsis DOC_CHECK_PROG_DVIPS

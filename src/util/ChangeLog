@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.79 2007/06/15 20:28:51 fang Exp $
+#	$Id: ChangeLog,v 1.80 2007/06/18 18:24:33 fang Exp $
+
+2007-06-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-38:
+	  libguile.h: attempt to support even older guile-1.4 API,
+		not likely to be serious effort.
+
 
 2007-06-15	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.12 2007/06/12 05:12:23 fang Exp $
+#	$Id: ChangeLog,v 1.13 2007/06/18 18:24:29 fang Exp $
+
+2007-06-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-38:
+	  mk/Make.fig: support older fig2dev
+
 
 2007-06-05	David Fang		<fangism@users.sourceforge.net>
 
