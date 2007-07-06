@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.9 2007/06/15 20:28:41 fang Exp $
+dnl	$Id: hackt.m4,v 1.10 2007/07/06 18:28:20 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -26,6 +26,21 @@ if test x"$enable_libtool_verbose" != "xyes" ; then
 	dnl default --silent
 	LIBTOOL="$LIBTOOL --silent"
 fi
+])
+
+dnl @synopsis HACKT_LIBTOOL_FLAGS
+dnl
+dnl Appends $(LIBTOOL_FLAGS) variable, to control verbosity.
+dnl
+dnl @category ConfigureOptions
+dnl @version 2007-07-06
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_VAR_LIBTOOL_FLAGS],
+[AC_REQUIRE([AC_PROG_LIBTOOL])
+AC_ARG_VAR(LIBTOOL_FLAGS, [Additional ./libtool flags, e.g. --silent])
+LIBTOOL="$LIBTOOL "'$'"(LIBTOOL_FLAGS)"
 ])
 
 dnl @synopsis HACKT_AUTO_CVSIGNORE

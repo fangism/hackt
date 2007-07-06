@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.141 2007/07/06 15:13:22 fang Exp $
+#	$Id: configure.ac,v 1.142 2007/07/06 18:28:19 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070616, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070706, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -124,9 +124,11 @@ dnl AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
 AC_PROG_LIBTOOL
-HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
+dnl now, always use verbose libtool script, instead of --silent
+dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
+HACKT_ARG_VAR_LIBTOOL_FLAGS
 AC_SUBST(LIBTOOL_DEPS)
 
 dnl defined in config.hackt.m4

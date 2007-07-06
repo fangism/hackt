@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-07-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39:
+	  configure.ac, config/hackt.m4: libtool script now invoked
+		non-silently by default, in anticipation of ltdl use.
+
+
 2007-06-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-38:
