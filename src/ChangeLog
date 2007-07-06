@@ -5,6 +5,20 @@
 
 2007-07-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-01:
+	  Branch to get relaxed template parameters working again.
+	  Removed mutable qualifier on relaxed actuals member in
+		Object/inst/alias_actuals.{h,cc}, and de-const'd
+		the attach_actuals() method.
+	  TODO: possibly delay unroll_port_instances until types
+		are complete.  
+	  Goal: allow statements like "foo<5> bar<4>;",
+		and be able to pass relaxed parameters down through
+		connections and ports.  
+
+
+2007-07-06	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-39:
 	  No source revision.
 	  libtool script invocation now verbose by default because we may soon

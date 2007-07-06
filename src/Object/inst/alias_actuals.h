@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.11 2006/11/21 22:38:46 fang Exp $
+	$Id: alias_actuals.h,v 1.11.28.1 2007/07/06 20:07:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -45,7 +45,7 @@ protected:
 	/**
 		Making this mutable for convenience.  
 	 */
-	mutable alias_actuals_type			actuals;
+	alias_actuals_type			actuals;
 
 protected:
 	instance_alias_info_actuals() : actuals() { }
@@ -56,10 +56,10 @@ protected:
 	 */
 #if DEBUG_ALIAS_ACTUALS
 	bool
-	attach_actuals(const alias_actuals_type& a) const;
+	attach_actuals(const alias_actuals_type& a);
 #else
 	bool
-	attach_actuals(const alias_actuals_type& a) const {
+	attach_actuals(const alias_actuals_type& a) {
 		if (actuals)
 			return false;
 		else {
