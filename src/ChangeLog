@@ -5,6 +5,14 @@
 
 2007-07-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-03:
+	  No source revision, only test updates:
+		the few 'regressions' have been updated from create-fail
+		to create-pass and alloc-fail cases.  No regressions remain.
+	  Next: continue implementation of template_type_completion
+		and add test cases.  
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-02:
 	  Added Object/unroll/template_type_completion.{h,tcc}
 		instance-management class, for relaxed template param binding.

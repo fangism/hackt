@@ -1,6 +1,49 @@
-Error: could not instantiate incomplete type (missing relaxed actuals)
-	with: foo<5>
-Error instantiating process footprint: 
-From canonical type: foo<5>
-Error encountered during module::unroll.
-ERROR in creating.  Aborting.
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	6	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	560
+	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> Q (default = 5)
+      ><
+      pint<> R
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        Q = pint<> foo::Q (default = 5)
+        R = pint<> foo::R
+      }
+
+  Instances:
+    bar = foo<5> bar
+}
+
+footprint: {
+  bar = process foo<5>^0 = bar (1) 
+  Created state:
+  process instance pool:
+  1	bar
+}

@@ -23,7 +23,17 @@ done
 
 for i
 do
-	cp -f $i.allocdump-filter $srcdir/$i.allocstderr
-	echo "Updated $srcdir/$i.allocstderr"
+	if test -f $i.allocdump-filter
+	then
+		cp -f $i.allocdump-filter $srcdir/$i.allocstderr
+		echo "Updated $srcdir/$i.allocstderr"
+	elif test -f $i.allocfaildump
+	then
+		cp -f $i.allocfaildump $srcdir/$i.allocstderr
+		echo "Updated $srcdir/$i.allocstderr"
+	else
+		echo "$i.allocdump-filter or $i.allocfaildump required but missing."
+	fi
 done
+
 
