@@ -3,13 +3,14 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.13 2006/11/07 06:35:34 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.13.32.1 2007/07/07 21:12:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 #define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 
 #include <iostream>
+#include "Object/devel_switches.h"
 #include "Object/traits/class_traits.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -45,7 +46,11 @@ public:
 					instance_collection_generic_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	// TODO: use typedef
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+// relaxed template parameters are now managed by
+// "Object/unroll/template_type_completion.h"
+#endif
+	// TODO: use typedef outside of class for consistency
 	typedef	count_ptr<const dynamic_param_expr_list>
 						const_relaxed_args_type;
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
@@ -58,6 +63,7 @@ protected:
 	 */
 	type_ref_ptr_type				type;
 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	/**
 		General user-defined types may have 
 		relaxed template actuals.  
@@ -71,6 +77,7 @@ protected:
 			but NEVER BOTH.
 	 */
 	const_relaxed_args_type				relaxed_args;
+#endif
 
 protected:
 	instantiation_statement_type_ref_default() : type(NULL) { }
@@ -78,11 +85,21 @@ protected:
 	explicit
 	instantiation_statement_type_ref_default(
 		const type_ref_ptr_type& t) :
-		type(t), relaxed_args(NULL) { }
+		type(t)
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, relaxed_args(NULL)
+#endif
+		{ }
 
+// shouldn't need this definition at all in sibling policies, 
+// after moving relaxed template paramters to template_type_completion class.
 	instantiation_statement_type_ref_default(
 		const type_ref_ptr_type& t, const const_relaxed_args_type& a) :
-		type(t), relaxed_args(a) { }
+		type(t)
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, relaxed_args(a)
+#endif
+		{ }
 
 	// default destructor
 	~instantiation_statement_type_ref_default() { }
@@ -103,7 +120,11 @@ protected:
 
 	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		return const_relaxed_args_type(NULL);
+#else
 		return relaxed_args;
+#endif
 	}
 
 	/**
@@ -173,22 +194,28 @@ protected:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const {
 		type->collect_transient_info(m);
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		if (relaxed_args)
 			relaxed_args->collect_transient_info(m);
+#endif
 	}
 
 	void
 	write_object_base(const persistent_object_manager& m,
 			ostream& o) const {
 		m.write_pointer(o, type);
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		m.write_pointer(o, relaxed_args);
+#endif
 	}
 
 	void
 	load_object_base(const persistent_object_manager& m,
 			istream& i) {
 		m.read_pointer(i, type);
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		m.read_pointer(i, relaxed_args);
+#endif
 	}
 
 };      // end class instantiation_statement_type_ref_base

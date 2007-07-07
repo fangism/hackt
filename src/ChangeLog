@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-02:
+	  Added Object/unroll/template_type_completion.{h,tcc}
+		instance-management class, for relaxed template param binding.
+		Currently only applicable to process meta-type.  
+		TODO: implement the unroll() method, attaching parameters
+			and expanding complete types recursively, 
+			and processing internal alias connections.  
+	  Object/devel_switches.h: ENABLE_RELAXED_TEMPLATE_PARAMETERS (on)
+	  Began to relax create-time checking of type-completeness in the
+		case of relaxed types, which postpones instantiation failure
+		until allocation time.  
+	  AST/instance.{h,cc}: initial support for type_completion_statement.
+	  parser/hackt-parse.yy.in: TODO: promote member_index_expr
+		in type_completion_statements.  
+	  new regressions (temporary): 3 in template, 1 in connect, 
+		all related to expect-fail upon create.
+
+
 2007-07-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-01:

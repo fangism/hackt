@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.16 2006/10/18 20:57:35 fang Exp $
+ 	$Id: parse_context.cc,v 1.16.36.1 2007/07/07 21:12:16 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -523,6 +523,14 @@ good_bool
 context::alias_definition(const never_ptr<const definition_base> d,
 		const token_identifier& a) {
 	return get_current_named_scope()->add_definition_alias(d, a);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::add_instance_management(
+		const count_ptr<const instance_management_base>& c) {
+	get_current_sequential_scope()->append_instance_management(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

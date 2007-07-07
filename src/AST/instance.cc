@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21 2007/03/11 16:34:16 fang Exp $
+	$Id: instance.cc,v 1.21.12.1 2007/07/07 21:12:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -43,6 +43,11 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+#include "Object/unroll/template_type_completion.h"
+#include "Object/traits/proc_traits.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
+#endif
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_reference_union.h"
 
@@ -125,6 +130,10 @@ using entity::conditional_scope;
 using entity::pint_scalar;
 using entity::pbool_expr;
 using entity::pbool_const;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+using entity::process_tag;
+using entity::template_type_completion;
+#endif
 
 //=============================================================================
 // class instance_management method definitions
@@ -474,6 +483,9 @@ instance_base::rightmost(void) const {
 	Eventually don't return top_namespace, 
 	but a pointer to the created instance_base
 	so that it may be used by instance_alias.  
+	NOTE: for a relaxed-template construct like "foo<5> x<4>", 
+	automatically expand as: "foo<5> x; x<4>;"
+	likewise: "foo<5> x<4>[3];" becomes "foo<5> x[3]; x<4>[0..2];"
  */
 never_ptr<const object>
 instance_base::check_build(context& c) const {
@@ -493,9 +505,9 @@ instance_base::check_build(context& c) const {
 				" in this instance declaration.  " << endl;
 			return never_ptr<const object>(NULL);
 		}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		// TODO: not done yet... need to alter c.add_instance
 		// copied from template_argument_list_pair::check_template_args
-#if 1
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
 		// by syntactic construction, all expressions are non NULL
@@ -527,6 +539,20 @@ instance_base::check_build(context& c) const {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		return never_ptr<const object>(NULL);
 	}
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	if (relaxed_args) {
+		// add an auxiliary type_completion statement
+		const inst_ref_expr::meta_return_type
+			ref(id->check_meta_reference(c));
+		NEVER_NULL(ref);	// we just created it!
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		c.add_instance_management(
+			type_completion_statement::create_type_completion(
+				ref, temp));
+		// error handling?
+	}
+#endif
 	// need current_instance?  no, not using as reference.
 	// return inst;
 	return c.top_namespace();
@@ -1143,6 +1169,26 @@ type_completion_statement::check_build(context& c) const {
 	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	\return a template_type_completion statement for unrolling.
+ */
+count_ptr<const instance_management_base>
+type_completion_statement::create_type_completion(
+		const inst_ref_expr::meta_return_type& r, 
+		const expr_list::checked_meta_exprs_type& a) {
+	typedef	template_type_completion<process_tag>	return_type;
+	count_ptr<dynamic_param_expr_list> p(new dynamic_param_expr_list);
+	copy(a.begin(), a.end(), back_inserter(*p));
+	count_ptr<const entity::process_meta_instance_reference_base>
+		pr(r.inst_ref().is_a<const entity::process_meta_instance_reference_base>());
+	const count_ptr<const return_type> ret(new return_type(pr, p));
+	return ret;
+}
+#endif
 
 //=============================================================================
 // class type_completion_connection_statement method definitions

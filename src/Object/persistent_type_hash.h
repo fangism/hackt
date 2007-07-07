@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.18 2007/02/26 22:00:44 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.18.14.1 2007/07/07 21:12:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -216,6 +216,8 @@
 #define	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY			"pboolins"
 #define	PINT_INSTANTIATION_STATEMENT_TYPE_KEY			"pintinst"
 #define	PREAL_INSTANTIATION_STATEMENT_TYPE_KEY			"prealins"
+
+#define	PROCESS_TEMPLATE_TYPE_COMPLETION_TYPE_KEY		"proctpcp"
 
 #define	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY				"pbassign"
 #define	PINT_EXPR_ASSIGNMENT_TYPE_KEY				"piassign"

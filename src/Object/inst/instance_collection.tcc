@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46 2007/04/15 05:52:18 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.1 2007/07/07 21:12:27 fang Exp $
 	TODO: trim includes
  */
 
@@ -32,7 +32,8 @@
 #include "Object/inst/instance_array.h"
 #include "Object/inst/instance_scalar.h"
 #include "Object/inst/instance_placeholder.h"
-#include "Object/inst/alias_actuals.tcc"
+// #include "Object/inst/alias_actuals.tcc"
+#include "Object/inst/alias_actuals.h"
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"
@@ -878,6 +879,13 @@ if (i == e) {
 }
 if (this->has_relaxed_type()) {
 	for ( ; i!=e; i++) {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		if (!i->get_relaxed_actuals()) {
+		// then postpone until relaxed template parameters are bound
+			continue;
+		}
+		// can this be taken out of loop?
+#endif
 		if (!element_type::create_dependent_types(*i, top).good)
 			return good_bool(false);
 		element_type& ii(const_cast<element_type&>(
@@ -1604,10 +1612,15 @@ if (!this->the_instance.valid()) {
 	return good_bool(true);
 }
 if (this->has_relaxed_type()) {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	// then postpone until relaxed template parameters are bound
+	return good_bool(true);
+#else
 	if (!instance_type::create_dependent_types(
 			this->the_instance, top).good) {
 		return good_bool(false);
 	}
+#endif
 } else {
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::__get_raw_type());

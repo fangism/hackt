@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.8 2006/10/24 07:26:55 fang Exp $
+	$Id: instance.h,v 1.8.34.1 2007/07/07 21:12:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -21,6 +21,7 @@ namespace entity {
 	class aliases_connection_base;
 	class port_connection_base;
 	class meta_instance_reference_base;
+	class instance_management_base;
 }
 namespace parser {
 using util::good_bool;
@@ -123,6 +124,8 @@ protected:
 //=============================================================================
 /**
 	Basic instance identifier, no trimmings, just contains an identifier.  
+	May contain optional relaxed template parameters.  
+	This base class is NOT abstract (is this base used polymorphically?).
  */
 class instance_base : public instance_management {
 protected:
@@ -408,6 +411,11 @@ virtual	line_position
 	rightmost(void) const;
 
 virtual	ROOT_CHECK_PROTO;
+
+	static
+	count_ptr<const entity::instance_management_base>
+	create_type_completion(const inst_ref_expr::meta_return_type&, 
+		const expr_list::checked_meta_exprs_type&);
 
 };	// end class type_completion_statement
 

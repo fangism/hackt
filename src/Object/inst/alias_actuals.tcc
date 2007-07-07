@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.15 2006/11/07 06:34:33 fang Exp $
+	$Id: alias_actuals.tcc,v 1.15.32.1 2007/07/07 21:12:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -153,7 +153,17 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.complete_type_actuals(*_alias.container));
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	// now possible because relaxed template types may be bound
+	// later, not necessarily upon first instantiation.  
+	if (!_type) {
+		// print error message
+		_alias.dump_hierarchical_name(cerr << "\tinstance: ") << endl;
+		return good_bool(false);
+	}
+#else
 	INVARIANT(_type);
+#endif
 	return canonical_type_footprint_frame_policy<canonical_definition_type>
 		::initialize_and_assign(_type, ff, sm, pmc, ind);
 }

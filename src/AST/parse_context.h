@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.13 2006/10/18 20:57:36 fang Exp $
+	$Id: parse_context.h,v 1.13.36.1 2007/07/07 21:12:16 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -327,6 +327,10 @@ public:
 	good_bool
 	alias_definition(const never_ptr<const definition_base> d, 
 		const token_identifier& id);
+
+	void
+	add_instance_management(
+		const count_ptr<const instance_management_base>&);
 
 	void
 	add_connection(

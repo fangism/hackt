@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.25 2007/06/12 05:13:07 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.25.4.1 2007/07/07 21:12:38 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1378,6 +1378,7 @@ connection_statement
 	;
 
 /* completing the relaxed template arguments of an instance */
+/* TODO: allow member_index_expr */
 instance_type_completion_statement
 	: index_expr expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement($1, $2);
@@ -1385,7 +1386,9 @@ instance_type_completion_statement
 	;
 
 instance_type_completion_connection_statement
-	: index_expr expr_optional_list_in_angles 
+/* TODO: allow member_index_expr */
+/*	: member_index_expr expr_list_in_angles */
+	: index_expr expr_optional_list_in_angles
 		connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement($1, $2, $3);
 		  DELETE_TOKEN($4); }

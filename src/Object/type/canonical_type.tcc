@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.13 2006/12/01 23:28:56 fang Exp $
+	$Id: canonical_type.tcc,v 1.13.26.1 2007/07/07 21:12:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -244,6 +244,17 @@ good_bool
 CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	if (this->is_strict()) {
+		canonical_definition_ptr->register_complete_type(
+			param_list_ptr);
+		return canonical_definition_ptr->create_complete_type(
+			param_list_ptr, top);
+	}
+	else return good_bool(true);
+	// delay the type-completion of relaxed types until
+	// relaxed template parameters are given.  
+#else
 	if (!this->is_strict()) {
 		cerr << "Error: could not instantiate incomplete type "
 			"(missing relaxed actuals)" << endl;
@@ -253,6 +264,7 @@ CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
 	return canonical_definition_ptr->create_complete_type(
 		param_list_ptr, top);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
