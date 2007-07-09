@@ -1,0 +1,18 @@
+// "094.hac" should pass, ok to put relaxed actuals after identifier
+// copy-modified from "059.hac"
+// should also fail creation (connection)
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5> bar<4>;
+foo<5><4> car;	// should have the same effect for scalars
+
+// connectibly type-equivalent?  
+// for now, reject because parent collection's types are different
+// cannot mix relaxed and strict collection... yet
+bar = car;
+
+// for now only allow connections between relaxed-relaxed collections
+// fix later...
+

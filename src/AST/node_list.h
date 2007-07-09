@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.h"
 	Base set of classes for the HAC parser.  
-	$Id: node_list.h,v 1.4 2006/02/10 21:50:35 fang Exp $
+	$Id: node_list.h,v 1.4.84.1 2007/07/09 02:40:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -75,6 +75,9 @@ public:
 	explicit
 	node_list(const T*);
 
+	explicit
+	node_list(const count_ptr<const T>&);
+
 	~node_list();
 
 	const list_type&
@@ -120,6 +123,12 @@ public:
 
 	void
 	push_front(const T* p) { nodes.push_front(value_type(p)); }
+
+	void
+	push_back(const_reference p) { nodes.push_back(p); }
+
+	void
+	push_front(const_reference p) { nodes.push_front(p); }
 
 	void
 	pop_back(void) { nodes.pop_back(); }

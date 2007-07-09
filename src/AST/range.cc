@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.9 2007/03/11 16:34:16 fang Exp $
+	$Id: range.cc,v 1.9.12.1 2007/07/09 02:40:16 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.9 2007/03/11 16:34:16 fang Exp $
+	$Id: range.cc,v 1.9.12.1 2007/07/09 02:40:16 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -15,11 +15,14 @@
 #include <exception>
 #include <iostream>
 #include <iterator>
+#include <functional>		// for ptr_fun
 #include <vector>
 
 #include "AST/range_list.h"
 #include "AST/token_char.h"
+#include "AST/token.h"		// for token_int
 #include "AST/node_list.tcc"
+#include "AST/expr.h"		// for arith_expr
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_range.h"
@@ -59,11 +62,12 @@ template class count_ptr<const range>;
 
 //=============================================================================
 namespace HAC {
-using namespace entity;
-using std::back_inserter;
-
 namespace parser {
 #include "util/using_ostream.h"
+using namespace entity;
+using std::back_inserter;
+using std::ptr_fun;
+
 
 //=============================================================================
 // class range method definitions
@@ -75,6 +79,12 @@ range::range(const expr* l) : lower(l), upper(NULL) {
 
 CONSTRUCTOR_INLINE
 range::range(const expr* l, const expr* u) : lower(l), upper(u) {
+	NEVER_NULL(lower); NEVER_NULL(upper);
+}
+
+range::range(const count_ptr<const expr>& l,
+		const count_ptr<const expr>& u) : 
+		lower(l), upper(u) {
 	NEVER_NULL(lower); NEVER_NULL(upper);
 }
 
@@ -92,6 +102,23 @@ line_position
 range::rightmost(void) const {
         if (upper)      return upper->rightmost();
         else            return lower->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const range>
+range::make_explicit_range(const count_ptr<const range>& r) {
+	static const count_ptr<const expr> zero(new token_int(0));
+	static const count_ptr<const expr> one(new token_int(1));
+	static const lexer::token_position dummy(1,0,1);	// 1,0,1
+	NEVER_NULL(r);
+	if (r->upper)
+		return r;	// is already a range
+	else return count_ptr<const range>(new range(
+		zero, 
+		count_ptr<const arith_expr>(new arith_expr(
+			r->lower,
+			new char_punctuation_type("-", dummy), 
+			one))));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -229,10 +256,25 @@ range::check_nonmeta_index(const context& c) const {
 //=============================================================================
 // class range_list method definitions
 
-range_list::range_list(const range* r) : parent_type(r) {
-}
+range_list::range_list() : parent_type() { }
+
+range_list::range_list(const range* r) : parent_type(r) { }
 
 range_list::~range_list() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Converts each dimension's range from [n] -> [0..n-1].
+ */
+range_list*
+range_list::make_explicit_ranges(void) const {
+	// copy-first
+	std::auto_ptr<range_list> ret(new range_list);
+	// substitute expansions
+	transform(begin(), end(), back_inserter(*ret), 
+		ptr_fun(range::make_explicit_range));
+	return ret.release();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

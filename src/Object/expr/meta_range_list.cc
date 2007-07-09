@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.19 2007/01/21 05:58:55 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.19.20.1 2007/07/09 02:40:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -21,6 +21,8 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
+#include <algorithm>
+
 #include "Object/common/multikey_index.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
@@ -28,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_range.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_index_list.h"
+#include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/persistent_type_hash.h"
@@ -63,6 +66,8 @@ using std::istream;
 #include "util/using_ostream.h"
 using std::_Select1st;
 using std::_Select2nd;
+using std::transform;
+using std::ptr_fun;
 using util::write_value;
 using util::read_value;
 
@@ -695,6 +700,22 @@ dynamic_meta_range_list::must_be_formal_size_equivalent(
 	}
 	// else no errors found
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Converts a size-range to explicit ranges (equivalent).
+	e.g. [3][1..4] -> [0..2][1..4].
+ */
+count_ptr<const dynamic_meta_range_list>
+dynamic_meta_range_list::make_explicit_range_list(
+		const count_ptr<const dynamic_meta_index_list>& mil) {
+	NEVER_NULL(mil);
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+	transform(mil->begin(), mil->end(), back_inserter(*ret), 
+		ptr_fun(&meta_range_expr::make_explicit_pint_range));
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

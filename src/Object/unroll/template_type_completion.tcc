@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.1 2007/07/07 21:12:37 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.2 2007/07/09 02:40:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -9,6 +9,9 @@
 #include <iostream>
 #include "Object/unroll/template_type_completion.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/instance_collection.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
 
@@ -16,9 +19,11 @@
 #include "util/persistent_object_manager.h"
 #include "util/stacktrace.h"
 #include "util/what.tcc"
+#include "util/packed_array.h"
 
 namespace HAC {
 namespace entity {
+#include "util/using_ostream.h"
 using util::persistent_traits;
 
 //=============================================================================
@@ -63,11 +68,63 @@ template_type_completion<Tag>::dump(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolve referenced aliases and bind relaxed template
+	parameters to complete its type.  
+	This should work similarly to commit_type_first_time.  
+	Q: can port hierarchy depend on relaxed parameters? 
+		not in type/size/dimensions, but in internal aliasing shape.
+ */
 template <class Tag>
 good_bool
 template_type_completion<Tag>::unroll(const unroll_context& c) const {
-	FINISH_ME(Fang);
-	return good_bool(false);
+	typedef	typename reference_type::alias_collection_type
+			alias_collection_type;
+	alias_collection_type aliases;
+	if (ref->unroll_references_packed(c, aliases).bad) {
+		// Error message?
+		return good_bool(false);
+	}
+	const count_ptr<const const_param_expr_list>
+		resolved(relaxed_args->unroll_resolve_rvalues(c, relaxed_args));
+	if (!resolved) {
+		// Error message?
+		return good_bool(false);
+	}
+	typedef	typename alias_collection_type::const_iterator	const_iterator;
+	const_iterator i(aliases.begin()), e(aliases.end());
+	for ( ; i!=e; ++i) {
+		instance_alias_info<Tag>& a(**i);	// named
+		instance_alias_info<Tag>& ca(*a.find());	// canonical
+		if (!a.container->get_canonical_collection()
+				.has_relaxed_type()) {
+			cerr << "Error: collection `";
+			a.container->dump_hierarchical_name(cerr);
+			cerr <<  "\' already has strict type, "
+				"cannot bind member to relaxed parameters."
+				<< endl;
+			return good_bool(false);
+		}
+		if (!ca.container->get_canonical_collection()
+				.has_relaxed_type()) {
+			cerr << "Error: canonical collection `";
+			ca.container->dump_hierarchical_name(cerr);
+			cerr <<  "\' already has strict type, "
+				"cannot bind member to relaxed parameters."
+				<< endl;
+			return good_bool(false);
+		}
+		if (ca.attach_actuals(resolved) && a.attach_actuals(resolved)) {
+			// error, canonical reference already has actuals
+			cerr << "Error: canonical alias of `";
+			a.dump_hierarchical_name(cerr);
+			cerr << "\' (";
+			ca.dump_hierarchical_name(cerr);
+			cerr << ") is already bound to relaxed parameters."
+				<< endl;
+		}
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

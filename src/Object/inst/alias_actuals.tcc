@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.15.32.1 2007/07/07 21:12:19 fang Exp $
+	$Id: alias_actuals.tcc,v 1.15.32.2 2007/07/09 02:40:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -73,7 +73,7 @@ instance_alias_info_actuals::complete_type_actuals(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Completes tyoe and creates the dependent type.  
+	Completes type and creates the dependent type.  
  */
 template <class AliasType>
 good_bool

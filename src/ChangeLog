@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-04:
+	  Object/unroll/template_type_completion.tcc:
+		implemented unroll (first draft)
+	  AST/instance.cc: support template_type_completion of array decls.
+	  AST/{expr,range,instance,node_list}.{h,cc}: 
+		added support for new constructors,
+		upgraded some excl_ptr members to count_ptr 
+		for copy-convenience
+	  Object/expr/dynamic_meta_range_list.h: const pint_range pointers
+	  Next: re-examine old test cases in template/06*.hac
+		generally needs much more rigorous testing
+
+
 2007-07-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-03:

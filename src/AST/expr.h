@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.9 2007/02/08 02:10:59 fang Exp $
+	$Id: expr.h,v 1.9.16.1 2007/07/09 02:40:14 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -11,6 +11,7 @@
 
 #include "AST/expr_list.h"	// for array_concatenation
 #include "AST/identifier.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace parser {
@@ -64,15 +65,22 @@ public:
 };	// end class prefix_expr
 
 //=============================================================================
-/// base class for general binary expressions
+/**
+	base class for general binary expressions
+	operands are ref-counted for copy-convenience
+ */
 class binary_expr : public expr {
 protected:
-	const excl_ptr<const expr> 	l;	///< left-hand side
+	const count_ptr<const expr> 	l;	///< left-hand side
 	const excl_ptr<const char_punctuation_type>	op;	///< operator
-	const excl_ptr<const expr>	r;	///< right-hand side
+	const count_ptr<const expr>	r;	///< right-hand side
 public:
 	binary_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right);
+
+	binary_expr(const count_ptr<const expr>&, 
+		const char_punctuation_type* o, 
+		const count_ptr<const expr>&);
 
 virtual	~binary_expr();
 
@@ -96,6 +104,10 @@ class arith_expr : public binary_expr {
 public:
 	arith_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right);
+
+	arith_expr(const count_ptr<const expr>&, 
+		const char_punctuation_type* o, 
+		const count_ptr<const expr>&);
 
 	~arith_expr();
 

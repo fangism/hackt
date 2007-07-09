@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.25 2007/03/11 16:34:15 fang Exp $
+	$Id: expr.cc,v 1.25.12.1 2007/07/09 02:40:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -752,6 +752,10 @@ qualified_id::qualified_id(const token_identifier* n) :
 		parent_type(n), absolute(NULL) {
 }
 
+qualified_id::qualified_id(const count_ptr<const token_identifier>& n) : 
+		parent_type(n), absolute(NULL) {
+}
+
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const qualified_id& i) :
@@ -915,7 +919,17 @@ qualified_id_slice::~qualified_id_slice() {
 // class id_expr method definitions
 
 id_expr::id_expr(qualified_id* i) : parent_type(), qid(i) {
-	assert(qid);
+	NEVER_NULL(qid);
+}
+
+id_expr::id_expr(const token_identifier& i) : parent_type(), 
+		qid(new qualified_id(new token_identifier(i))) {
+	NEVER_NULL(qid);
+}
+
+id_expr::id_expr(const count_ptr<const token_identifier>& i) : parent_type(), 
+		qid(new qualified_id(i)) {
+	NEVER_NULL(qid);
 }
 
 id_expr::id_expr(const id_expr& i) :
@@ -1618,6 +1632,13 @@ binary_expr::binary_expr(const expr* left, const char_punctuation_type* o,
 	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
 }
 
+binary_expr::binary_expr(const count_ptr<const expr>& left, 
+		const char_punctuation_type* o, 
+		const count_ptr<const expr>& right) :
+		expr(), l(left), op(o), r(right) {
+	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
+}
+
 DESTRUCTOR_INLINE
 binary_expr::~binary_expr() {
 }
@@ -1639,6 +1660,13 @@ CONSTRUCTOR_INLINE
 arith_expr::arith_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
+}
+
+arith_expr::arith_expr(const count_ptr<const expr>& left, 
+		const char_punctuation_type* o, 
+		const count_ptr<const expr>& right) :
+		binary_expr(left, o, right) {
+	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
 }
 
 DESTRUCTOR_INLINE

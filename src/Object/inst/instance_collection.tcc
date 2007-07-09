@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46.8.1 2007/07/07 21:12:27 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.2 2007/07/09 02:40:33 fang Exp $
 	TODO: trim includes
  */
 
@@ -878,13 +878,19 @@ if (i == e) {
 	return good_bool(true);
 }
 if (this->has_relaxed_type()) {
-	for ( ; i!=e; i++) {
+	STACKTRACE_INDENT_PRINT("collection has relaxed type" << endl);
+	for ( ; i!=e; ++i) {
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		if (!i->get_relaxed_actuals()) {
-		// then postpone until relaxed template parameters are bound
-			continue;
-		}
-		// can this be taken out of loop?
+	// not canonical alias
+	if (i->get_relaxed_actuals()) {
+	// then postpone until relaxed template parameters are bound
+	// can this be taken out of loop?
+		STACKTRACE_INDENT_PRINT("have relaxed actuals: ");
+#if ENABLE_STACKTRACE
+		i->get_relaxed_actuals()->dump(cerr,
+			expr_dump_context::default_value);
+		cerr << endl;
+#endif
 #endif
 		if (!element_type::create_dependent_types(*i, top).good)
 			return good_bool(false);
@@ -894,8 +900,12 @@ if (this->has_relaxed_type()) {
 		if (!internal_alias_policy::connect(ii).good) {
 			return good_bool(false);
 		}
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	}
+#endif
 	}
 } else {
+	STACKTRACE_INDENT_PRINT("collection has strict type" << endl);
 	// type of container is already strict, 
 	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
@@ -903,7 +913,7 @@ if (this->has_relaxed_type()) {
 	if (!create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
 		if (!internal_alias_policy::connect(ii, t).good) {

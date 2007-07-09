@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.37 2007/06/08 03:21:26 fang Exp $
+ 	$Id: definition.cc,v 1.37.4.1 2007/07/09 02:40:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3306,7 +3306,7 @@ if (defined) {
 #endif
 	return __create_complete_type(p, *f, top);
 } else {
-	cerr << "ERROR: cannot create incomplete process type " <<
+	cerr << "ERROR: cannot create undefined process " <<
 			get_qualified_name() << endl;
 	// parent should print: "instantiated from here"
 	return good_bool(false);

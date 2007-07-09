@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.8.34.1 2007/07/07 21:12:15 fang Exp $
+	$Id: instance.h,v 1.8.34.2 2007/07/09 02:40:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -14,6 +14,7 @@
 #include "AST/definition_item.h"
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
@@ -133,7 +134,7 @@ protected:
 		In pure instantiation context (not in declaration),
 		id should only be a token_identifier.
 	 */
-	const excl_ptr<const token_identifier>		id;
+	const count_ptr<const token_identifier>		id;
 	/**
 		Optional relaxed template arguments may follow the 
 		declarator identifier.  

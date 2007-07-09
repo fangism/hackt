@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21.12.1 2007/07/07 21:12:15 fang Exp $
+	$Id: instance.cc,v 1.21.12.2 2007/07/09 02:40:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -611,7 +611,7 @@ if (ranges) {
 		}
 		// TODO: not done yet... need to alter c.add_instance
 		// copied from template_argument_list_pair::check_template_args
-#if 1
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
 		// by syntactic construction, all expressions are non NULL
@@ -644,11 +644,29 @@ if (ranges) {
 	const never_ptr<const instance_placeholder_base>
 		t(c.add_instance(*id, checked_relaxed_actuals, d));
 	// if there was error, would've THROW_EXIT'd (temporary)
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	if (relaxed_args) {
+		// add an auxiliary type_completion statement
+		// create an index_expr -> reference
+		const index_expr
+			ie(new id_expr(id),
+				ranges->make_explicit_ranges());
+		const inst_ref_expr::meta_return_type
+			ref(ie.check_meta_reference(c));
+		NEVER_NULL(ref);	// we just created it!
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		c.add_instance_management(
+			type_completion_statement::create_type_completion(
+				ref, temp));
+		// error handling?
+	}
+#endif
 	return t;
 } else {
 	return instance_base::check_build(c);
 }
-}
+}	// end method instance_array::check_build
 
 //=============================================================================
 // class instance_declaration method definitions

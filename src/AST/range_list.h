@@ -1,9 +1,9 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range_list.h,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: range_list.h,v 1.3.98.1 2007/07/09 02:40:17 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range_list.h,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: range_list.h,v 1.3.98.1 2007/07/09 02:40:17 fang Exp $
  */
 
 #ifndef __HAC_AST_RANGE_LIST_H__
@@ -48,6 +48,8 @@ protected:
 	typedef	range_list_base				parent_type;
 	// no additional members
 public:
+	range_list();
+
 	explicit
 	range_list(const range* r);
 
@@ -64,6 +66,9 @@ public:
 
 	checked_nonmeta_ranges_type
 	check_nonmeta_ranges(const context& c) const;
+
+	range_list*
+	make_explicit_ranges(void) const;
 
 private:
 	typedef	default_vector<range::meta_return_type>::type

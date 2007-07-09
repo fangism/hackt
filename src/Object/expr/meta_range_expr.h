@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_expr.h,v 1.11 2007/01/21 05:58:55 fang Exp $
+	$Id: meta_range_expr.h,v 1.11.20.1 2007/07/09 02:40:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_EXPR_H__
@@ -19,6 +19,7 @@ namespace entity {
 class const_range;
 class const_index;
 class unroll_context;
+class pint_range;
 using util::good_bool;
 using util::bad_bool;
 
@@ -85,6 +86,10 @@ virtual	bool
 	static
 	count_ptr<const this_type>
 	make_explicit_range(const count_ptr<const parent_type>&);
+
+	static
+	count_ptr<const pint_range>
+	make_explicit_pint_range(const count_ptr<const parent_type>&);
 
 virtual	void
 	accept(nonmeta_expr_visitor&) const = 0;

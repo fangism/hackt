@@ -1,7 +1,7 @@
 /**
 	\file "AST/reference.h"
 	Reference-related parser classes for HAC.
-	$Id: reference.h,v 1.1 2006/07/30 05:49:15 fang Exp $
+	$Id: reference.h,v 1.1.52.1 2007/07/09 02:40:17 fang Exp $
  */
 
 #ifndef __HAC_AST_REFERENCE_H__
@@ -39,7 +39,13 @@ public:
 	explicit
 	id_expr(qualified_id* i);
 
-	id_expr(const id_expr& i);
+	explicit
+	id_expr(const token_identifier&);
+
+	explicit
+	id_expr(const count_ptr<const token_identifier>&);
+
+	id_expr(const id_expr&);
 
 	~id_expr();
 

@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.1 2007/07/07 22:43:22 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.2 2007/07/09 02:40:59 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -25,7 +25,7 @@ HACKT_PARSE_TEST_PASSES = \
 	061 062 063 064 064a 067 067a 068 \
 	070 071 072 073 073a 074 075 076 077 078 079 \
 	080 081 082 083 084 086 087 088 089 \
-	090 091 092 093
+	090 091 092 093 094 095 096
 
 # KNOWN BUGS:
 # should fail at unroll-time:
@@ -66,10 +66,11 @@ HACKT_CREATE_TEST_PASSES = \
 	029 \
 	038 \
 	045 046 049 \
-	064 068 \
+	059 \
+	064a 068 \
 	070 073 074 075 076 077 079 \
 	081 086 088 \
-	090 091 092 093
+	090 091 092 093 095 096
 
 # KNOWN BUGS:
 # HACKT_CREATE_TEST_FAILURES:
@@ -79,7 +80,9 @@ HACKT_CREATE_TEST_PASSES = \
 # regression, wrong diagnostic: 067 067a -- should be a re-instantiation
 
 HACKT_CREATE_TEST_FAILURES = \
-	087
+	064 \
+	087 \
+	094
 
 if USE_UNROLL_PHASE
 else
@@ -95,11 +98,11 @@ HACKT_ALLOC_TEST_PASSES = \
 	068 \
 	070 073 074 075 076 077 079 \
 	081 086 \
-	090 091 092 093
+	090 091 092 093 095 096
 
 HACKT_ALLOC_TEST_FAILURES = \
 	045 046 \
-	064
+	064a
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	074 075 079
