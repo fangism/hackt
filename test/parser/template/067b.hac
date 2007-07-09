@@ -1,0 +1,13 @@
+// "067b.hac" should pass create, fail alloc
+// copy-modified from "067a.hac"
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5> bar[3];
+bar[1]<4>;
+// assigning relaxed actuals to a range of already instantiated objects
+
+// fails because [0] and [2] are not type-bound
+
+

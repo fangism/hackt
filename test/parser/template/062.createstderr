@@ -1,5 +1,109 @@
-ERROR: complete type required for instantiation
-	have: foo<5>
-Failed to instantiate dar[0]
-Error during create_unique.
-ERROR in creating.  Aborting.
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	72
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	188
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	570
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	40
+	19	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	20	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	32
+	22	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	32
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	29	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	40
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	40
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1016
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> Q
+      ><
+      pint<> R
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        Q = pint<> foo::Q
+        R = pint<> foo::R
+      unroll sequence: 
+      footprint collection: {
+        <5, 4> {
+          Q = pint^0 value: 5
+          R = pint^0 value: 4
+          Created state:
+        }
+      }
+      }
+
+  Instances:
+    bar = foo<5> bar^1
+    car = foo<5><4> car^1
+    dar = foo<5> dar^1
+}
+
+footprint: {
+  bar = process foo<5>^1
+    {
+      [0]<4> = bar[0] (1) 
+      [1]<4> = bar[1] (2) 
+      [2]<4> = bar[2] (3) 
+    }
+  car = process foo<5><4>^1
+    {
+      [0] = car[0] (4) 
+      [1] = car[1] (5) 
+      [2] = car[2] (6) 
+    }
+  dar = process foo<5>^1
+    {
+      [0] = dar[0] (7) 
+      [1] = dar[1] (8) 
+      [2] = dar[2] (9) 
+    }
+  Created state:
+  process instance pool:
+  1	bar[0]<4>
+  2	bar[1]<4>
+  3	bar[2]<4>
+  4	car[0]
+  5	car[1]
+  6	car[2]
+  7	dar[0]
+  8	dar[1]
+  9	dar[2]
+}

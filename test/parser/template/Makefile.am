@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.2 2007/07/09 02:40:59 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.3 2007/07/09 19:03:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -22,7 +22,7 @@ HACKT_PARSE_TEST_PASSES = \
 	030 031 032 033 033a 034 035 036 037 038 038a 039 \
 	040 041 043 044 045 046 049 \
 	055 056 057 058 059 \
-	061 062 063 064 064a 067 067a 068 \
+	061 062 063 064 064a 067 067a 067b 067c 067d 068 \
 	070 071 072 073 073a 074 075 076 077 078 079 \
 	080 081 082 083 084 086 087 088 089 \
 	090 091 092 093 094 095 096
@@ -48,16 +48,9 @@ HACKT_UNROLL_TEST_FAILURES = \
 	008a \
 	033a 034 037 038a 039 \
 	041 \
+	067 067a \
 	071 072 073a 078 \
 	080 082 083 084
-# BUG (wrong diagnostic): 067 067a -- see note below
-
-# KNOWN BUGS:
-# HACKT_CREATE_TEST_PASSES:
-# 2006-11-28 regression: 059 063 should pass creating
-# TODO: fix instantiation-statement sequential management for relaxed types
-#	suggest passing on incomplete type during unroll
-#	impose ordering on relaxed type completion and instantiation
 
 # omitted tests are just uninteresting
 HACKT_CREATE_TEST_PASSES = \
@@ -67,9 +60,9 @@ HACKT_CREATE_TEST_PASSES = \
 	038 \
 	045 046 049 \
 	059 \
-	064a 068 \
+	061 062 063 064a 067b 067c 067d 068 \
 	070 073 074 075 076 077 079 \
-	081 086 088 \
+	081 086 088 089 \
 	090 091 092 093 095 096
 
 # KNOWN BUGS:
@@ -80,7 +73,7 @@ HACKT_CREATE_TEST_PASSES = \
 # regression, wrong diagnostic: 067 067a -- should be a re-instantiation
 
 HACKT_CREATE_TEST_FAILURES = \
-	064 \
+	064 067 067a \
 	087 \
 	094
 
@@ -95,23 +88,18 @@ HACKT_ALLOC_TEST_PASSES = \
 	029 \
 	038 \
 	049 \
-	068 \
+	063 067d 068 \
 	070 073 074 075 076 077 079 \
 	081 086 \
 	090 091 092 093 095 096
 
 HACKT_ALLOC_TEST_FAILURES = \
 	045 046 \
-	064a
+	061 062 064a 067b 067c \
+	089
 
 HACKT_CFLAT_TEST_SUBJECTS = \
 	074 075 079
-
-# expected to fail create (OK):
-# 045 046 061 062 064
-
-# CRASH BUGS:
-# alloc: 059 063 persistence! (discovered 20060129)
 
 include $(top_srcdir)/test/Make.test-tail
 

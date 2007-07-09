@@ -9,6 +9,4 @@ foo<5> bar<4>[3];
 foo<5> bar<4>[7..9];
 foo<5> bar<3>[4..6];
 
-// BUG to fix: relaxed template parameters are not registered persistently
-
 

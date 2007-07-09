@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21.12.2 2007/07/09 02:40:15 fang Exp $
+	$Id: instance.cc,v 1.21.12.3 2007/07/09 19:03:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1182,12 +1182,32 @@ type_completion_statement::rightmost(void) const {
 	return args->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: Reference may be aggregate.
+ */
 never_ptr<const object>
 type_completion_statement::check_build(context& c) const {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	// add an auxiliary type_completion statement
+	const inst_ref_expr::meta_return_type
+		ref(inst_ref->check_meta_reference(c));
+	if (!ref) {
+		cerr << "Error checking reference at " << where(*inst_ref)
+			<< endl;
+		THROW_EXIT;
+	}
+	expr_list::checked_meta_exprs_type temp;
+	args->postorder_check_meta_exprs(temp, c);
+	// should throw on error
+	c.add_instance_management(create_type_completion(ref, temp));
+	// additional error handling?
+	return c.top_namespace();
+#else
 	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
+#endif
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
@@ -1232,6 +1252,13 @@ type_completion_connection_statement::rightmost(void) const {
 	return actuals_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Punting this.
+	Combined statement: bind relaxed template parameter
+		and make connection.
+	Note: reference must be scalar.  
+ */
 never_ptr<const object>
 type_completion_connection_statement::check_build(context& c) const {
 	FINISH_ME(Fang);

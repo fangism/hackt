@@ -1,0 +1,5 @@
+ERROR: complete type required for instantiation
+	have: foo<5>
+	instance: dar[0]
+Error alloc_assign_subinstance_footprint_frame.
+ERROR in allocating.  Aborting.

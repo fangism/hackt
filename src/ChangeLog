@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-05:
+	  AST/instance.cc: implemented type_completion_statement::check_build()
+	  Re-instated a bunch of old-regressed test cases, having re-enabled
+		relaxed template parameter binding.  
+		Added some new test cases that alloc-fail.  
+	  Next: work on footprint creation and hierarchical relaxed
+		template parameter propagation (akin to local aliases)
+
+
 2007-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-04:
