@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-07:
+	  Parser updated to support simple type-completion statements
+		of the form "ID <args>;" which is already disambiguated
+		from generic type references (whew!).  
+		Minor: factored out generic_id : relative_id | absolute_id
+	  NOTES: concluded that ports types must be bound by the local
+		definition (footprint) to be well-formed, i.e. cannot
+		be delayed and set by higher level of instance hierarchy.  
+		Thus no longer needing member-refs in type completions.
+	  Upgraded type-completion's reference to generic inst_ref_expr.
+
+
 2007-07-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-06:

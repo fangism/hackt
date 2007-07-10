@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.28.8.2 2007/07/10 03:11:17 fang Exp $
+#	$Id: Makefile.am,v 1.28.8.3 2007/07/10 21:24:37 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -87,7 +87,6 @@ HACKT_CREATE_TEST_PASSES = \
 HACKT_CREATE_TEST_FAILURES = \
 	096 097 098 \
 	115 117
-# 092 now fails at alloc time
 
 if USE_UNROLL_PHASE
 else

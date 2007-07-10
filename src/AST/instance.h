@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.8.34.2 2007/07/09 02:40:15 fang Exp $
+	$Id: instance.h,v 1.8.34.3 2007/07/10 21:24:25 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -396,10 +396,10 @@ public:
  */
 class type_completion_statement : virtual public instance_management {
 protected:
-	const excl_ptr<const index_expr>	inst_ref;
+	const excl_ptr<const inst_ref_expr>	inst_ref;
 	const excl_ptr<const expr_list>		args;
 public:
-	type_completion_statement(const index_expr*, const expr_list*);
+	type_completion_statement(const inst_ref_expr*, const expr_list*);
 virtual	~type_completion_statement();
 
 virtual	ostream&
@@ -429,7 +429,7 @@ virtual	ROOT_CHECK_PROTO;
 class type_completion_connection_statement :
 		public type_completion_statement, public actuals_base {
 public:
-	type_completion_connection_statement(const index_expr*,
+	type_completion_connection_statement(const inst_ref_expr*,
 		const expr_list*, const expr_list*);
 	~type_completion_connection_statement();
 

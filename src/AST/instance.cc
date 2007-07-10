@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21.12.3 2007/07/09 19:03:11 fang Exp $
+	$Id: instance.cc,v 1.21.12.4 2007/07/10 21:24:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1162,7 +1162,7 @@ conditional_instantiation::check_build(context& c) const {
 //=============================================================================
 // class type_completion_statement method definitions
 
-type_completion_statement::type_completion_statement(const index_expr* ir, 
+type_completion_statement::type_completion_statement(const inst_ref_expr* ir, 
 		const expr_list* ta) : inst_ref(ir), args(ta) {
 	NEVER_NULL(inst_ref);
 	NEVER_NULL(args);
@@ -1232,7 +1232,8 @@ type_completion_statement::create_type_completion(
 // class type_completion_connection_statement method definitions
 
 type_completion_connection_statement::type_completion_connection_statement(
-		const index_expr* ir, const expr_list* ta, const expr_list* p) :
+		const inst_ref_expr* ir, const expr_list* ta, 
+		const expr_list* p) :
 		type_completion_statement(ir, ta), 
 		actuals_base(p) {
 }

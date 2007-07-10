@@ -12,8 +12,10 @@ state	value
 #STATE#	(qualified-id) [8:1..11]
 #STATE#	} [9:1]
 in state #STATE#, possible rules are:
-	generic_type_ref : relative_id . strict_relaxed_template_arguments optional_chan_dir  (#RULE#)
-	id_expr : relative_id .  (#RULE#)
+	generic_type_ref : generic_id . strict_relaxed_template_arguments optional_chan_dir  (#RULE#)
+	instance_type_completion_statement : generic_id . expr_optional_list_in_angles ';'  (#RULE#)
+	instance_type_completion_connection_statement : generic_id . expr_optional_list_in_angles connection_actuals_list ';'  (#RULE#)
+	id_expr : generic_id .  (#RULE#)
 	strict_relaxed_template_arguments : .  (#RULE#)
 acceptable tokens are: 
 	'!' (reduce)

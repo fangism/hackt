@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.25.4.1 2007/07/07 21:12:38 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.25.4.2 2007/07/10 21:24:27 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -671,7 +671,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	paren_expr expr
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
-%type	<_qualified_id>	qualified_id absolute_id relative_id
+%type	<_qualified_id>	qualified_id absolute_id relative_id generic_id
 %type	<_inst_ref_expr_list>	member_index_expr_list
 %type	<_inst_ref_expr_list>	member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	member_index_expr_list_in_parens_optional
@@ -685,6 +685,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_inst_ref_expr>	relative_member_index_expr
 %type	<_inst_ref_expr>	grouped_reference
+/* %type	<_inst_ref_expr>	type_completion_reference */
 %type	<_prs_literal>	prs_literal
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
@@ -1052,12 +1053,16 @@ port_formal_id
 	;
 
 generic_type_ref
-	: relative_id strict_relaxed_template_arguments optional_chan_dir
-		/* for userdef or chan type, and templating */
+	: generic_id strict_relaxed_template_arguments optional_chan_dir
 		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
-	| absolute_id strict_relaxed_template_arguments optional_chan_dir
 		/* for userdef or chan type, and templating */
-		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
+/*
+	: generic_id expr_optional_list_in_angles
+		optional_template_arguments_in_angles optional_chan_dir
+		{ $$ = new generic_type_ref(new type_id($1), 
+			new template_argument_list_pair($2, $3),
+			$4); }
+*/
 	;
 
 optional_chan_dir
@@ -1378,21 +1383,34 @@ connection_statement
 	;
 
 /* completing the relaxed template arguments of an instance */
-/* TODO: allow member_index_expr */
 instance_type_completion_statement
 	: index_expr expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement($1, $2);
 		  DELETE_TOKEN($3); }
+	| generic_id expr_optional_list_in_angles ';'
+		{ $$ = new type_completion_statement(new id_expr($1), $2);
+		  DELETE_TOKEN($3); }
 	;
 
+/* want to use type_completion_reference, but conflicts */
 instance_type_completion_connection_statement
-/* TODO: allow member_index_expr */
-/*	: member_index_expr expr_list_in_angles */
 	: index_expr expr_optional_list_in_angles
 		connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement($1, $2, $3);
 		  DELETE_TOKEN($4); }
+	| generic_id expr_optional_list_in_angles
+		connection_actuals_list ';'
+		{ $$ = new type_completion_connection_statement(
+			new id_expr($1), $2, $3);
+			DELETE_TOKEN($4); }
 	;
+
+/**
+type_completion_reference
+	: index_expr
+	| generic_id { $$ = new id_expr($1); }
+	;
+**/
 
 /* minimum of LHS and RHS */
 nonempty_alias_list
@@ -2155,11 +2173,13 @@ literal
 
 id_expr
 		/* for identfiers that need to be searched upwards */
-	: relative_id
-		{ $$ = new id_expr($1); }
+	: generic_id { $$ = new id_expr($1); }
 		/* for specifying unambiguous type from global scope */
+	;
+
+generic_id
+	: relative_id
 	| absolute_id
-		{ $$ = new id_expr($1); }
 	;
 
 absolute_id
