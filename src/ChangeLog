@@ -5,6 +5,19 @@
 
 2007-07-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-06:
+	  Object/inst/alias_actuals.cc: implemented synchronize_actuals()
+	  Object/inst/instance_alias.tcc: impl. instantiate_actuals_only(),
+		alias connection diagnostics now report names of violating
+			aliases in bad connections.  
+	  Object/unroll/template_type_completion.tcc:
+		each parameter-bound alias now invokes create_dependent_types
+		and instantiate_actuals_only (recursive ports)
+	  Another batch of old regression tests re-instated, 
+		several others with updated error messages.  
+		Only old cases (hierarchical) remain: connect/120,121.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-05:
 	  AST/instance.cc: implemented type_completion_statement::check_build()
 	  Re-instated a bunch of old-regressed test cases, having re-enabled

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.1 2007/07/07 21:12:22 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.2 2007/07/10 03:10:36 fang Exp $
 	TODO: trim includes
  */
 
@@ -146,11 +146,42 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	This variant asserts that the parent container of this alias
+	has already been established, and that this is only ever called
+	when binding relaxed template parameters.  
+	\pre If container has relaxed type, then this alias has already
+		been bound to relaxed template parameters.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
+		const unroll_context& c) {
+//	STACKTRACE_VERBOSE;
+	NEVER_NULL(this->container);
+	if (!substructure_parent_type::unroll_port_instances(
+			*this->container, c).good) {
+		// already have error message
+		THROW_EXIT;
+	}
+#if 0
+	// did we forget this accidentally?
+	actuals_parent_type::copy_actuals(f);
+#endif
+	direction_connection_policy::initialize_direction(*this->container);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively expands the public ports of the instance hierarchy.  
 	The initial state is defined by the meta-type.  
 	\param p the parent actual collection
 	\param c the unroll context for recursive instantiation
+	NOTE: instantiation can now also occur at the time when
+		relaxed template parameters are bound to an instance.  
+		See Object/unroll/template_type_completion.{h,tcc}.
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -162,6 +193,10 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	STACKTRACE_INDENT_PRINT("this->container (old) = " <<
 		&*this->container << endl);
 	this->container = p;
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	instantiate_actuals_only(c);
+#else
 	// do we ever want to instantiate more than the ports? no
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, c).good) {
@@ -171,6 +206,7 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 
 	// initialize directions, if applicable
 	direction_connection_policy::initialize_direction(*this->container);
+#endif
 	// we do this here for now merely for convenience/coverage:
 	// it is certainly correct.  
 	// future optimization: loop-transformation to eliminate
@@ -425,12 +461,16 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
 	// TODO: check relaxed actuals, and propagate
 	if (!l.must_match_type(r)) {
 		// already have error message
+		l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
+		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
 		return good_bool(false);
 	}
 	// TODO: policy-based check of directions, (channels-only)
+	// wasn't this already done for channels?
 	return good_bool(l.unite(r).good &&
 		l.connect_port_aliases_recursive(r).good);
 }
@@ -452,12 +492,16 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
 	// TODO: check relaxed actuals, and propagate
 	if (!l.must_match_type(r)) {
 		// already have error message
+		l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
+		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
 		return good_bool(false);
 	}
 	// TODO: policy-based check of directions, (channels-only)
+	// wasn't this already done for channels?
 	return good_bool(l.unite(r).good &&
 		l.connect_port_aliases_recursive(r).good);
 }
@@ -611,8 +655,17 @@ INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 	this_type* const rc = &*r.find();
 	lc->next = rc;
 	// synchronize direction_connection_flags
-	return direction_connection_policy::synchronize_flags(*lc, *rc);
 		// commutative
+	if (!direction_connection_policy::synchronize_flags(*lc, *rc).good)
+		return good_bool(false);
+		// symmetric
+	const good_bool ret(actuals_parent_type::synchronize_actuals(*lc, *rc));
+	if (!ret.good) {
+		this->dump_hierarchical_name(cerr << "\tfrom: ") << endl;
+		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
+	}
+	return ret;
+	// will already have error message
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

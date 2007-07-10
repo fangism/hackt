@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.40.12.1 2007/07/07 21:12:17 fang Exp $
+	$Id: devel_switches.h,v 1.40.12.2 2007/07/10 03:10:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -37,7 +37,7 @@
 	in a second phase through connections.  
 	Goal: 1
 	Priority: medium
-	Status: just beginning
+	Status: partially complete, need to test connection semantics
 	Notes: will need mechanism similar to port-summaries to 
 		pass pre-determined port parameters up the instance hierarchy.
  */

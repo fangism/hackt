@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.11.28.1 2007/07/06 20:07:45 fang Exp $
+	$Id: alias_actuals.h,v 1.11.28.2 2007/07/10 03:10:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -88,6 +88,10 @@ protected:
 	good_bool
 	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
 		state_manager&, const port_member_context&, const size_t);
+
+	static
+	good_bool
+	synchronize_actuals(this_type&, this_type&);
 
 public:
 	static

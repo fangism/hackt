@@ -1,7 +1,7 @@
 ERROR: attempted to connect instances with conflicting relaxed parameters!
-	got: 5
+	got: 1
 	and: 2
-	from: q.a
-	and:  p.a
+	from: ick
+	and:  poo
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

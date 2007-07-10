@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.22 2007/01/21 05:59:11 fang Exp $
+	$Id: instance_alias_info.h,v 1.22.20.1 2007/07/10 03:10:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -228,6 +228,11 @@ public:
 		FYI: This is only called by instance_array<0> (scalar)
 			in instantiate_indices().
 	 */
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	void
+	instantiate_actuals_only(const unroll_context&);
+#endif
+
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 

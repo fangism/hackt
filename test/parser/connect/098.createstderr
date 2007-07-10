@@ -1,6 +1,6 @@
-ERROR: types mismatch!
-	got: foo<6>
-	and: foo<7>
+ERROR: attempted to connect instances with conflicting relaxed parameters!
+	got: 1
+	and: 2
 	from: bar
 	and:  poo
 Error encountered during module::unroll.

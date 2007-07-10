@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.12 2006/11/21 22:38:49 fang Exp $
+	$Id: alias_empty.h,v 1.12.28.1 2007/07/10 03:10:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -107,6 +107,12 @@ protected:
 		return good_bool(true);
 	}
 #endif
+
+	static
+	good_bool
+	synchronize_actuals(this_type&, this_type&) {
+		return good_bool(true);
+	}
 
 public:
 	static

@@ -1,6 +1,155 @@
-ERROR: complete type required for instantiation
-	have: foo<3>
-Failed to instantiate ::q.a
-ERROR creating placeholder state for super-instance of ::p.a
-Error during create_unique.
-ERROR in creating.  Aborting.
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	88
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	212
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	13	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	570
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	570
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	646
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	33	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	37	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	43	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	50	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	48
+	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	53	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	48
+	54	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	56	##ADDR##	prcalias	0	#HEAD#	#TAIL#	40
+	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	918
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> Z
+      >(
+        foo<bar::Z> a
+        foo<bar::Z> b
+      )
+      In definition "bar", we have: {
+      Parameters:
+        Z = pint<> bar::Z
+      Instances:
+        a = foo<bar::Z> bar::a
+        b = foo<bar::Z> bar::b
+      unroll sequence: 
+        foo<bar::Z> a
+        foo<bar::Z> b
+      footprint collection: {
+        <3> {
+          Z = pint^0 value: 3
+          a = process foo<3>^0 = bar::a (1) 
+          b = process foo<3>^0 = bar::b (2) 
+          Created state:
+          process instance pool:
+          1	bar::a
+          2	bar::b
+        }
+      }
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> X
+      ><
+      pint<> Y
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        X = pint<> foo::X
+        Y = pint<> foo::Y
+      unroll sequence: 
+      footprint collection: {
+        <3, 2> {
+          X = pint^0 value: 3
+          Y = pint^0 value: 2
+          Created state:
+        }
+        <3, 5> {
+          X = pint^0 value: 3
+          Y = pint^0 value: 5
+          Created state:
+        }
+      }
+      }
+
+  Instances:
+    p = bar<3> p
+    q = bar<3> q
+    x = foo<3> x
+    y = foo<3> y
+}
+
+footprint: {
+  p = process bar<3>^0 = p (3) (
+    a = process foo<3>^0<2> = x (1) 
+    b = process foo<3>^0<5> = y (2) 
+  )
+  q = process bar<3>^0 = p (3) (
+    a = process foo<3>^0<2> = x (1) 
+    b = process foo<3>^0<5> = y (2) 
+  )
+  x = process foo<3>^0<2> = x (1) 
+  y = process foo<3>^0<5> = y (2) 
+  Created state:
+  process instance pool:
+  1	x<2>
+  2	y<5>
+  3	p
+}

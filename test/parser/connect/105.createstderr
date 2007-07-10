@@ -1,5 +1,7 @@
 ERROR: types mismatch!
 	got: foo<2>
 	and: foo<1>
+	from: p
+	and:  w.a
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

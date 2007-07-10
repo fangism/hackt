@@ -4,5 +4,7 @@ ERROR: types mismatch!
 ERROR: types mismatch!
 	got: chan(int<12>)
 	and: chan(int<11>)
+	from: foobar
+	and:  barfoo
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

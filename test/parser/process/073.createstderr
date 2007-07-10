@@ -1,4 +1,6 @@
 ERROR: integer widths do not match!  have: 8 vs. 7
+	from: foo::a
+	and:  foo::b
 Instantiated from: foo<8>
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

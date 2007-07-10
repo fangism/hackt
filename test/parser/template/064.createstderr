@@ -1,4 +1,4 @@
 ERROR: cannot create undefined process foo
 Instantiated by: bar[0]
-Error during create_unique.
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

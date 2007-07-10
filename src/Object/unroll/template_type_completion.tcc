@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.2 2007/07/09 02:40:38 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.3 2007/07/10 03:10:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -10,10 +10,11 @@
 #include "Object/unroll/template_type_completion.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_actuals.tcc"	// for create_dependent_types
 #include "Object/inst/instance_collection.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/unroll/unroll_context.h"
 
 #include "common/TODO.h"
 #include "util/persistent_object_manager.h"
@@ -91,6 +92,7 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		// Error message?
 		return good_bool(false);
 	}
+	const footprint& topfp(*c.get_top_footprint());
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	const_iterator i(aliases.begin()), e(aliases.end());
 	for ( ; i!=e; ++i) {
@@ -123,6 +125,20 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 			cerr << ") is already bound to relaxed parameters."
 				<< endl;
 		}
+		// create footprint of complete type:
+		// only need to do once, because all aliases referenced
+		// should have the same complete type, use the first.
+		// rather wasteful to place this inside loop...
+		if (!instance_alias_info<Tag>::create_dependent_types(
+				a, topfp).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		// instantiate/unroll public ports hierarchy recursively
+		// similar to instance_alias_info::instantiate(), 
+		// but parent collection already established, 
+		a.instantiate_actuals_only(c);
+		// throws exception on error
 	}
 	return good_bool(true);
 }
