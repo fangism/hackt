@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.8 2007/06/12 05:12:39 fang Exp $
+	$Id: CHP.h,v 1.8.6.1 2007/07/11 21:43:58 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -672,6 +672,34 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class log
+
+//=============================================================================
+/**
+	Function call to C or C++ library.  
+ */
+class function_call_expr : public chp_expr, public statement {
+protected:
+	const excl_ptr<const id_expr>			fname;
+	const excl_ptr<const expr_list>			args;
+public:
+	function_call_expr(const id_expr*, const expr_list*);
+	~function_call_expr();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHP_CHECK_STMT_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
+	CHECK_PRS_EXPR_PROTO;
+
+};	// end class function_call_expr
 
 //=============================================================================
 }	// end namespace CHP

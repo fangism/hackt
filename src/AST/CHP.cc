@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.17 2007/06/12 05:12:37 fang Exp $
+	$Id: CHP.cc,v 1.17.6.1 2007/07/11 21:43:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -21,6 +21,7 @@
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 #include "AST/range.h"
+#include "AST/reference.h"		// for id_expr
 
 #include "Object/lang/CHP.tcc"
 #include "Object/type/data_type_reference.h"
@@ -73,6 +74,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_statement, "(chp-metaloop-stmt)"
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::function_call_expr, "(chp-func-call)")
 
 namespace memory {
 // explicit template instantiations
@@ -1468,8 +1470,59 @@ log::rightmost(void) const {
 
 statement::return_type
 log::__check_action(context& c) const {
-	cerr << "Fang, finish CHP::log::check_action()!" << endl;
+	FINISH_ME(Fang);
 	return statement::return_type(NULL);
+}
+
+//=============================================================================
+// class function_call_expr method definitions
+
+function_call_expr::function_call_expr(const id_expr* i, const expr_list* a) :
+		fname(i), args(a) {
+	NEVER_NULL(fname);
+	NEVER_NULL(args);
+}
+
+function_call_expr::~function_call_expr() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(function_call_expr)
+
+line_position
+function_call_expr::leftmost(void) const {
+	return fname->leftmost();
+}
+
+line_position
+function_call_expr::rightmost(void) const {
+	return args->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+statement::return_type
+function_call_expr::__check_action(context& c) const {
+	FINISH_ME(Fang);
+	return statement::return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+function_call_expr::check_meta_expr(const context& c) const {
+	FINISH_ME(Fang);
+	return expr::meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+function_call_expr::check_prs_expr(context& c) const {
+	FINISH_ME(Fang);
+	return prs_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+function_call_expr::check_nonmeta_expr(const context& c) const {
+	FINISH_ME(Fang);
+	return nonmeta_expr_return_type(NULL);
 }
 
 //=============================================================================

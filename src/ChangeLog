@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-01:
+	  Grammar extended to support function-calls expressions and 
+		statements in CHP, but no further checking yet in front-end, 
+		just placeholder code.  Intend to attempt dlopen-ing
+		of shared libraries for external function calls.  
+
+
 2007-07-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39:
