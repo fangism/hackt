@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.7 2007/04/15 05:52:19 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.7.8.1 2007/07/11 20:43:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -149,9 +149,7 @@ PORT_ACTUAL_COLLECTION_CLASS::lookup_index(
 	STACKTRACE_VERBOSE;
 	const size_t offset = distance(this->begin(), &a);
 	INVARIANT(offset < this->value_array.size());
-#if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("return " << offset +1);
-#endif
 	return offset +1;
 }
 
@@ -439,6 +437,10 @@ PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursive creation of dependent types through public ports
+	of instance hierarchy.
+ */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::create_dependent_types(const footprint& top) {

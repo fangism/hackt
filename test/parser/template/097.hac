@@ -1,0 +1,10 @@
+// "097.hac" should pass, ok to put relaxed actuals after identifier
+// copy-modified from "096.hac"
+// should pass
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5> bar;
+bar<4>;	// type-completion statement
+

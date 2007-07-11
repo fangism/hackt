@@ -1,0 +1,17 @@
+// "106.hac" -- testing creation connections, involving relaxed params
+// copy-modified from "102.hac"
+// should pass
+
+template <><pint X, Y>
+defproc foo() { }
+
+// forwarding relaxed parameters
+template <pint Z><pint X, Y>
+defproc bar(foo a) {
+a<X,Y>;
+}
+
+bar<2><3,4> BQ;
+
+// should pass, as long as relaxed types are passed up hierarchy
+

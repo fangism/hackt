@@ -1,0 +1,16 @@
+// "104.hac" -- testing creation connections, involving relaxed params
+// copy-modified from "102.hac"
+
+template <pint X><pint Y>
+defproc foo() { }
+
+// all relaxed parameters
+template <><pint Z, X>
+defproc bar() {
+// dies because port formal strict parameter depends on relaxed parameter
+// which is ill-formed -- rejected!
+foo<Z> a<X>;
+}
+
+// bar<><2,3,4> BQ;
+

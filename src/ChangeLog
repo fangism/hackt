@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-08:
+	  Bug fix: canonical_type_base::combine_relaxed_actuals
+		bad conditional for appending parameters.
+	  Enabled a bunch of new test cases in parser/template.
+	  Next: more complex test cases, prs library updates using relaxed
+		template parameter binding (sources in particular).
+
+
 2007-07-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-07:

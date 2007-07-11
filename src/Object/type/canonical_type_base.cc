@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.7 2006/10/18 08:52:03 fang Exp $
+	$Id: canonical_type_base.cc,v 1.7.36.1 2007/07/11 20:43:40 fang Exp $
  */
 
 #include <algorithm>
@@ -111,7 +111,7 @@ canonical_type_base::combine_relaxed_actuals(
 if (p) {
 	if (!param_list_ptr) {
 		param_list_ptr = p;
-	} else if (param_list_ptr->size()) {
+	} else {
 		// need to make a deep copy: copy-on-write
 		param_list_ptr_type pp(new param_list_type(*param_list_ptr));
 		std::copy(p->begin(), p->end(), std::back_inserter(*pp));

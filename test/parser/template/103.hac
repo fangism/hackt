@@ -1,0 +1,14 @@
+// "103.hac"
+// copy-modified from "099.hac"
+// should parse-fail, relaxed template binding not supported syntactically
+
+template <pint X><pint Y>
+defproc foo() { }
+
+template <pint Z>
+defproc bar(foo<Z> a<2>) { }
+
+bar<2> BQ;
+
+// should pass, as long as relaxed types are passed up hierarchy
+

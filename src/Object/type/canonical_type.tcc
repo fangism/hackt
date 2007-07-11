@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.13.26.1 2007/07/07 21:12:35 fang Exp $
+	$Id: canonical_type.tcc,v 1.13.26.2 2007/07/11 20:43:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -168,7 +168,7 @@ CANONICAL_TYPE_CLASS::get_template_params(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Whetier or not this type reference is strict or relaxed.  
+	Whether or not this type reference is strict or relaxed.  
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 bool
@@ -186,7 +186,6 @@ CANONICAL_TYPE_CLASS::is_strict(void) const {
 		return !expects;
 	}
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -250,8 +249,7 @@ CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 			param_list_ptr);
 		return canonical_definition_ptr->create_complete_type(
 			param_list_ptr, top);
-	}
-	else return good_bool(true);
+	} else return good_bool(true);
 	// delay the type-completion of relaxed types until
 	// relaxed template parameters are given.  
 #else

@@ -1,0 +1,11 @@
+// "107.hac" -- testing creation connections, involving relaxed params
+// copy-reduced from "106.hac" during bug-hunt
+// should pass
+// compare against "097.hac"
+
+template <><pint R>
+defproc foo() { }
+
+foo bar;
+bar<4>;
+
