@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.25 2007/01/21 05:58:54 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.25.20.1 2007/07/12 00:00:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -861,7 +861,7 @@ if (a_size != f_size) {
 /**
 	Checks template actuals against formals.  
 	Does not automatically use default values.  
-	\pre Actuals must be present in every position.  
+	\pre Actuals must be present in every position (we check here now).  
  */
 good_bool
 dynamic_param_expr_list::certify_template_arguments_without_defaults(
@@ -885,7 +885,14 @@ if (a_size != f_size) {
 		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
-		NEVER_NULL(pex);
+		if (!pex) {
+			// really only pertains to relaxed parameter
+			cerr << "Error: template parameter is required but "
+				"missing at position " <<
+				distance(tfl.begin(), f_iter)+1
+				<< ". " << endl;
+			return good_bool(false);
+		}
 		// type-check assignment, conservative w.r.t. arrays
 		if (!pinst->may_type_check_actual_param_expr(*pex).good) {
 			cerr << "ERROR: template formal and actual "

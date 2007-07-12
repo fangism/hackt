@@ -1,0 +1,9 @@
+// "env_source-01.hac"
+// should pass instantiation
+
+import "env_source.hac";
+
+source_e<2> X<2, {0,1}>;
+// cmos_source_e<3><2, {0,1,0}> Y;
+
+

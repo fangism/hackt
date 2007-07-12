@@ -5,6 +5,17 @@
 
 2007-07-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-09:
+	  Minor old bug fix: relaxed template parameters didn't accept
+		complex/aggregate expressions -- fixed.
+		Grammar massaged, and now required parameters are checked
+		post-parsing, in dynamic_param_expr_list::
+			certify_template_arguments_without_defaults()
+		since rule is relaxed now.  
+	  Updated 4 compile-fail test cases, added a few new ones
+		in parser/template, more to come.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-08:
 	  Bug fix: canonical_type_base::combine_relaxed_actuals
 		bad conditional for appending parameters.

@@ -1,5 +1,5 @@
-// "104.hac" -- testing creation connections, involving relaxed params
-// copy-modified from "102.hac"
+// "105.hac" -- testing creation connections, involving relaxed params
+// copy-modified from "104.hac"
 
 template <pint X><pint Y>
 defproc foo() { }

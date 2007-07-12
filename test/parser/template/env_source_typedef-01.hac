@@ -1,0 +1,15 @@
+/**
+	\file "env_source_typedef-01.hac"
+	$Id: env_source_typedef-01.hac,v 1.1.2.1 2007/07/12 00:00:36 fang Exp $
+ */
+
+import "env_source.hac";
+
+template <pint N, d[N]>
+typedef source_e<1><N, d> source_e1of1;
+
+template <pint N, d[N]>
+typedef cmos_source_e<1><N, d> cmos_source_e1of1;
+
+// should pass, valid typedefs
+

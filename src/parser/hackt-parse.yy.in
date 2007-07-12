@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.25.4.2 2007/07/10 21:24:27 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.25.4.3 2007/07/12 00:00:20 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -679,7 +679,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	grouped_reference_list
 %type	<_inst_ref_expr_list>	grouped_reference_list_in_parens
-%type	<_expr_list>	expr_optional_list expr_optional_list_in_angles
+/* %type	<_expr_list>	complex_expr_list complex_expr_list_in_angles */
+%type	<_expr_list>	complex_expr_optional_list complex_expr_optional_list_in_angles
 %type	<_expr_list>	expr_list_in_angles
 %type	<_expr_list>	expr_list_in_angles_optional
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
@@ -1057,7 +1058,7 @@ generic_type_ref
 		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
 		/* for userdef or chan type, and templating */
 /*
-	: generic_id expr_optional_list_in_angles
+	: generic_id complex_expr_optional_list_in_angles
 		optional_template_arguments_in_angles optional_chan_dir
 		{ $$ = new generic_type_ref(new type_id($1), 
 			new template_argument_list_pair($2, $3),
@@ -1384,21 +1385,21 @@ connection_statement
 
 /* completing the relaxed template arguments of an instance */
 instance_type_completion_statement
-	: index_expr expr_optional_list_in_angles ';'
+	: index_expr complex_expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement($1, $2);
 		  DELETE_TOKEN($3); }
-	| generic_id expr_optional_list_in_angles ';'
+	| generic_id complex_expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement(new id_expr($1), $2);
 		  DELETE_TOKEN($3); }
 	;
 
 /* want to use type_completion_reference, but conflicts */
 instance_type_completion_connection_statement
-	: index_expr expr_optional_list_in_angles
+	: index_expr complex_expr_optional_list_in_angles
 		connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement($1, $2, $3);
 		  DELETE_TOKEN($4); }
-	| generic_id expr_optional_list_in_angles
+	| generic_id complex_expr_optional_list_in_angles
 		connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement(
 			new id_expr($1), $2, $3);
@@ -2483,17 +2484,21 @@ optional_expr_in_braces
 **/
 
 strict_relaxed_template_arguments
-	: expr_optional_list_in_angles
+	: complex_expr_optional_list_in_angles
 	  optional_template_arguments_in_angles
 		{ $$ = new template_argument_list_pair($1, $2); }
 	|	{ $$ = NULL; }
 	;
 
+/**
+ * list elements should not be optional b/c they are relaxed parameters,
+ * but we may have to be more liberal and check post-parsing to simplify
+ * grammar and avoid conflicts.  
+ */
 optional_template_arguments_in_angles
-/*	: member_index_expr_list_in_angles	*/
-/*	replaced with expr_optional_list to eliminate S/R on '>' */
-/*	: expr_optional_list_in_angles	*/
-	: expr_list_in_angles
+/*	replaced with complex_expr_optional_list to eliminate S/R on '>' */
+/*	: complex_expr_list_in_angles	*/
+	: complex_expr_optional_list_in_angles
 /*
 	if angles are given, then expressions are required because
 	relaxed template formals are forbidden from having default values.  
@@ -2508,22 +2513,36 @@ expr_list_in_angles_optional
 	| { $$ = NULL; }
 	;
 
+/* now only used in PRS, SPEC, and PRS-macros */
 expr_list_in_angles
 	/* : '<' shift_expr_list '>' */
 	: '<' expr_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-expr_optional_list_in_angles
-	: '<' expr_optional_list '>'
+complex_expr_optional_list_in_angles
+	: '<' complex_expr_optional_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-expr_optional_list
-	: expr_optional_list ',' optional_complex_expr 
+complex_expr_optional_list
+	: complex_expr_optional_list ',' optional_complex_expr 
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| optional_complex_expr { $$ = new expr_list($1); }
 	;
+
+/**
+complex_expr_list_in_angles
+	: '<' complex_expr_list '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+complex_expr_list
+	: complex_expr_list ',' array_concatenation
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| array_concatenation { $$ = new expr_list($1); }
+	;
+**/
 
 /* now we allow aggregate expressions */
 optional_complex_expr
