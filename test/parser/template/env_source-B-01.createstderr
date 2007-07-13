@@ -1,0 +1,78 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	64
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	165
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	133
+	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	185
+	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	560
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    e1of = process-definition (defined) e1of<
+      pint<> R
+      >(
+        bool<> e
+      )
+      In definition "e1of", we have: {
+      Parameters:
+        R = pint<> e1of::R
+      Instances:
+        e = bool<> e1of::e
+      unroll sequence: 
+        bool<> e
+      }
+
+    source_e = process-definition (defined) source_e<
+      pint<> M
+      ><
+      pint<> N
+      >(
+        bool<> b
+      )
+      In definition "source_e", we have: {
+      Parameters:
+        M = pint<> source_e::M
+        N = pint<> source_e::N
+      Instances:
+        b = bool<> source_e::b
+      unroll sequence: 
+        bool<> b
+      }
+
+  Instances:
+    X = source_e<2> X
+}
+
+footprint: {
+  X = process source_e<2>^0 = X (1) 
+  Created state:
+  process instance pool:
+  1	X
+}

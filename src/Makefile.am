@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171.2.1 2007/07/07 21:12:11 fang Exp $
+#	$Id: Makefile.am,v 1.171.2.2 2007/07/13 22:56:34 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1562,6 +1562,7 @@ EXTRA_DIST += local.cvsignore \
 	scripts/deps_to_dot.awk.in \
 	scripts/init_hackt.sh.in \
 	scripts/init_hackt.csh.in \
+	scripts/toggle_stacktrace.sh \
 	AST/README \
 	Object/README \
 	Object/common/README \

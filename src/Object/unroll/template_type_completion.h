@@ -3,7 +3,7 @@
 	For relaxed template instantiations, attach the appropriate
 	relaxed template formals.  
 	Also recursively instantiate ports upon completion.  
-	$Id: template_type_completion.h,v 1.1.2.1 2007/07/07 21:12:37 fang Exp $
+	$Id: template_type_completion.h,v 1.1.2.2 2007/07/13 22:56:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include "Object/unroll/instance_management_base.h"
 #include "Object/ref/references_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
@@ -32,6 +33,7 @@ template <class Tag>
 class template_type_completion : public instance_management_base {
 	typedef	template_type_completion<Tag>		this_type;
 public:
+	typedef	class_traits<Tag>			traits_type;
 	/**
 		Should aggregate references be allowed? member references?
 		Member references are useful for completing the types of

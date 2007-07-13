@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.26.4.1 2007/07/13 18:49:08 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.26.4.2 2007/07/13 22:56:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -265,8 +265,10 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		return good_bool(false);
 	}
 	// note: commit_type_check also unrolls the complete type
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// TODO: decide what do to about relaxed type parameters
 	// 2005-07-07: answer is above under "HACK"
+#endif
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			_inst, final_type_ref, *c.get_top_footprint()));

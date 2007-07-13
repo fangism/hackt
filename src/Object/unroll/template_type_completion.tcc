@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.4 2007/07/13 01:08:06 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.5 2007/07/13 22:56:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Object/unroll/template_type_completion.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/simple_meta_instance_reference.h"	// for dynamic casting
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_actuals.tcc"	// for create_dependent_types
 #include "Object/inst/instance_collection.h"
@@ -82,8 +83,19 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	typedef	typename reference_type::alias_collection_type
 			alias_collection_type;
+	typedef	simple_meta_instance_reference<Tag>	index_ref_type;
 	alias_collection_type aliases;
-	if (ref->unroll_references_packed(c, aliases).bad) {
+	const count_ptr<const index_ref_type>
+		index_ref(ref.template is_a<const index_ref_type>());
+	if (!index_ref) {
+		FINISH_ME(Fang);
+		cerr << "Add support for non-simple_meta_index_reference."
+			<< endl;
+		// could include member references and aggregate references?
+		return good_bool(false);
+	}
+	// instead of using ref
+	if (index_ref->unroll_references_packed(c, aliases).bad) {
 		// Error message?
 		return good_bool(false);
 	}
@@ -93,9 +105,29 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		// Error message?
 		return good_bool(false);
 	}
+
 	const footprint& topfp(*c.get_top_footprint());
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	const_iterator i(aliases.begin()), e(aliases.end());
+	INVARIANT(i!=e);
+	// for index_expr, all aliases belong to the same collection
+	typedef	typename traits_type::instance_collection_generic_type
+					instance_collection_type;
+	typedef	typename instance_collection_type::resolved_type_ref_type
+					canonical_type_type;
+	// expand the type once is all that is necessary
+	// since alias are at least collectibly type-equivalent
+	const instance_collection_type&
+		coll((*i)->container->get_canonical_collection());
+	canonical_type_type ct(coll.get_resolved_canonical_type());
+	ct.combine_relaxed_actuals(resolved);
+	INVARIANT(ct.is_strict());
+	if (!ct.create_definition_footprint(topfp).good) {
+		// already have error message?
+		cerr << "Instantiated by: ";
+		(*i)->dump_hierarchical_name(cerr) << endl;
+		return good_bool(false);
+	}
 	for ( ; i!=e; ++i) {
 		instance_alias_info<Tag>& a(**i);	// named
 		instance_alias_info<Tag>& ca(*a.find());	// canonical
@@ -128,19 +160,11 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 			cerr << ") is already bound to relaxed parameters."
 				<< endl;
 		}
-		// create footprint of complete type:
-		// only need to do once, because all aliases referenced
-		// should have the same complete type, use the first.
-		// rather wasteful to place this inside loop...
-		if (!instance_alias_info<Tag>::create_dependent_types(
-				a, topfp).good) {
-			// already have error message
-			return good_bool(false);
-		}
 		// instantiate/unroll public ports hierarchy recursively
 		// similar to instance_alias_info::instantiate(), 
 		// but parent collection already established.  
 		// see also instance_array::instantiate_indices()'s do-loop.
+		// FIXME.  ICEs deep in unroll_port
 		a.instantiate_actuals_only(c);
 		// throws exception on error
 	}
