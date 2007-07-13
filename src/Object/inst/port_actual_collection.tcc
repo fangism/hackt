@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.7.8.1 2007/07/11 20:43:38 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.7.8.2 2007/07/13 18:49:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -262,7 +262,9 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::instantiate_indices(
 		const const_range_list& /* ranges */, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type& /* actuals */, 
+#endif
 		const unroll_context&) {
 #if 0
 	INVARIANT(!this->value_array.size());

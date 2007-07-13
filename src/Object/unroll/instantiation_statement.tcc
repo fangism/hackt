@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.26 2007/06/08 03:21:27 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.26.4.1 2007/07/13 18:49:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -99,6 +99,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 		const type_ref_ptr_type& t, 
@@ -106,6 +107,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 		const const_relaxed_args_type& a) :
 		parent_type(i), type_ref_parent_type(t, a), inst_base(NULL) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
@@ -167,11 +169,13 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref_subtype(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 instantiation_statement_base::const_relaxed_args_type
 INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 	return type_ref_parent_type::get_relaxed_actuals();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -278,11 +282,12 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		count_ptr<const const_param_expr_list>
+			relaxed_const_actuals;
 		// passing in relaxed arguments from final_type_ref!
 		const count_ptr<const dynamic_param_expr_list>
 			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
-		count_ptr<const const_param_expr_list>
-			relaxed_const_actuals;
 		if (relaxed_actuals) {
 			relaxed_const_actuals =
 				relaxed_actuals->unroll_resolve_rvalues(c, 
@@ -295,12 +300,18 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 				return good_bool(false);
 			}
 		}
+#endif
 		// actuals are allowed to be NULL, and in some cases,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		STACKTRACE_INDENT_PRINT("&_inst = " << &_inst << endl);
+		// doesn't actually carry actuals any more
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				_inst, crl, c, relaxed_const_actuals);
+				_inst, crl, c
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				, relaxed_const_actuals
+#endif
+				);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
@@ -358,11 +369,12 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 			<< endl;
 		return good_bool(false);
 	}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	// passing in relaxed arguments from final_type_ref!
-	const count_ptr<const dynamic_param_expr_list>
-		relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 	count_ptr<const const_param_expr_list>
 		relaxed_const_actuals;	// initially NULL
+	const count_ptr<const dynamic_param_expr_list>
+		relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 	if (relaxed_actuals) {
 		relaxed_const_actuals =
 			relaxed_actuals->unroll_resolve_rvalues(c, 
@@ -375,11 +387,16 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 			return good_bool(false);
 		}
 	}
+#endif
 	// actuals are allowed to be NULL, and in some cases,
 	// will be required to be NULL, e.g. for types that never
 	// have relaxed actuals.  
 	return type_ref_parent_type::instantiate_indices_with_actuals(
-			coll, crl, c, relaxed_const_actuals);
+			coll, crl, c
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, relaxed_const_actuals
+#endif
+			);
 }	// end method instantiate_port
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

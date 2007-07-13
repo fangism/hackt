@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.13 2007/01/21 05:59:51 fang Exp $
+ 	$Id: data_type_reference.h,v 1.13.20.1 2007/07/13 18:49:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -122,7 +122,9 @@ public:
 	bool
 	may_be_binop_type_equivalent(const this_type&) const;
 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	MERGE_RELAXED_ACTUALS_PROTO;
+#endif
 
 	static
 	void

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.8 2007/01/21 05:59:14 fang Exp $
+	$Id: port_formal_array.tcc,v 1.8.20.1 2007/07/13 18:49:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -288,16 +288,20 @@ PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 	This should only ever be called once per port formal.
 	This is a result of not being able to (conveniently)
 	initialize the entire collection in this constructor... yet.
+	NOTE: relaxed actuals are now attached separately.  
  */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type& actuals, 
+#endif
 		const unroll_context& c) {
 	INVARIANT(!this->value_array.dimensions());
 	const key_type k(ranges.resolve_sizes());
 	this->value_array.resize(k);
 	iterator i(this->begin()), e(this->end());
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (actuals) {
 	try {
 		// if ports are ever allowed to depend on relaxed parameters,
@@ -312,10 +316,13 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		return good_bool(false);
 	}
 	} else {
+#endif
 		for ( ; i!=e; ++i) {
 			i->instantiate(never_ptr<this_type>(this), c);
 		}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	}
+#endif
 	return good_bool(true);
 }
 

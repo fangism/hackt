@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.13.32.1 2007/07/07 21:12:36 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.13.32.2 2007/07/13 18:49:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -49,13 +49,13 @@ public:
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 // relaxed template parameters are now managed by
 // "Object/unroll/template_type_completion.h"
-#endif
 	// TODO: use typedef outside of class for consistency
 	typedef	count_ptr<const dynamic_param_expr_list>
 						const_relaxed_args_type;
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
 					instance_relaxed_actuals_type;
+#endif
 protected:
 	/**
 		Note: this may be a partial or relaxed type, 
@@ -118,14 +118,12 @@ protected:
 		return t->make_canonical_type();
 	}
 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
-#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
-		return const_relaxed_args_type(NULL);
-#else
 		return relaxed_args;
-#endif
 	}
+#endif
 
 	/**
 		2005-07-09: changed mind, NOT FUSING
@@ -186,9 +184,16 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
 			const const_range_list& crl, 
-			const unroll_context& c, 
-			const instance_relaxed_actuals_type& a) {
+			const unroll_context& c
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, const instance_relaxed_actuals_type& a
+#endif
+			) {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		return v.instantiate_indices(crl, c);
+#else
 		return v.instantiate_indices(crl, a, c);
+#endif
 	}
 
 	void

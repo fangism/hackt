@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.16.36.1 2007/07/07 21:12:36 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.16.36.2 2007/07/13 18:49:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -158,10 +158,12 @@ instantiation_statement_base::dump(ostream& o,
 	NEVER_NULL(type_base);
 	type_base->dump(o);
 	// is this ok: reference to automatic object?
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	const const_relaxed_args_type& ra(get_relaxed_actuals());
 	if (ra) {
 		ra->dump(o << '<', dc) << '>';
 	}
+#endif
 	o << " ";
 	const never_ptr<const instance_placeholder_base>
 		inst_base(get_inst_base());

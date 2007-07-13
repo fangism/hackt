@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21.12.4 2007/07/10 21:24:23 fang Exp $
+	$Id: instance.cc,v 1.21.12.5 2007/07/13 18:48:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -534,7 +534,11 @@ instance_base::check_build(context& c) const {
 #endif
 	// otherwise do nothing different from before.  
 	const context::placeholder_ptr_type
-		inst(c.add_instance(*id, checked_relaxed_actuals));
+		inst(c.add_instance(*id
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, checked_relaxed_actuals
+#endif
+			));
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		return never_ptr<const object>(NULL);
@@ -598,7 +602,9 @@ if (ranges) {
 						relaxed_args_ptr_type;
 	const count_ptr<const fundamental_type_reference>
 		type(c.get_current_fundamental_type());
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	relaxed_args_ptr_type checked_relaxed_actuals;
+#endif
 	INVARIANT(type);
 	if (relaxed_args) {
 		if (type->is_strict()) {
@@ -642,7 +648,11 @@ if (ranges) {
 		}
 	}
 	const never_ptr<const instance_placeholder_base>
-		t(c.add_instance(*id, checked_relaxed_actuals, d));
+		t(c.add_instance(*id, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			checked_relaxed_actuals, 
+#endif
+			d));
 	// if there was error, would've THROW_EXIT'd (temporary)
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (relaxed_args) {

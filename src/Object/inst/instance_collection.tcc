@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46.8.3 2007/07/13 01:08:02 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.4 2007/07/13 18:48:56 fang Exp $
 	TODO: trim includes
  */
 
@@ -542,7 +542,9 @@ INSTANCE_COLLECTION_CLASS::key_dumper::operator () (
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type& actuals, 
+#endif
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
@@ -553,7 +555,13 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 	}
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
-			complete_type_definition_footprint(actuals).good) {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			complete_type_definition_footprint(
+				instance_relaxed_actuals_type(NULL)).good
+#else
+			complete_type_definition_footprint(actuals).good
+#endif
+			) {
 		return good_bool(false);
 	}
 	// now iterate through, unrolling one at a time...
@@ -582,6 +590,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			} catch (...) {
 				err = true;
 			}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 			// then insertion of new value was successful
 			// set its relaxed actuals!!! (if appropriate)
 			if (actuals) {
@@ -593,6 +602,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 				err = true;
 			}
 			}
+#endif
 		} else {
 			// found one that already exists!
 			// more detailed message, please!
@@ -1458,7 +1468,9 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const const_range_list& r, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type& actuals, 
+#endif
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
@@ -1477,9 +1489,16 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	}
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
-			complete_type_definition_footprint(actuals).good) {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			complete_type_definition_footprint(
+				instance_relaxed_actuals_type(NULL)).good
+#else
+			complete_type_definition_footprint(actuals).good
+#endif
+			) {
 		return good_bool(false);
 	}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	const bool attached(actuals ?
 		this->the_instance.attach_actuals(actuals) : true);
 	if (!attached) {
@@ -1489,6 +1508,9 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 			<< endl;
 	}
 	return good_bool(attached);
+#else
+	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

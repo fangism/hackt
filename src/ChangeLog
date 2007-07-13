@@ -3,7 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-12:
+	  More of the same code cuts, pulling out dead code 
+		pre-ENABLE_RELAXED_TEMPLATE_PARAMETERS, 
+		and still hunting the relaxed instantiation
+		ICE bug cases in parser/template/env_source-*.  
+
+
 2007-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-11:
+	  Continued to cut out code that binds relaxed actuals to instantiation
+		statements in front/middle-end, because 
+		template_type_completion supercedes it.  
+
 
 	* HACKT-00-01-04-main-00-81-39-template-02-10:
 	  instance_alias_info::instantiate_actuals_only(): (bug fix)

@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.13 2006/11/07 06:34:41 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.13.32.1 2007/07/13 18:48:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -11,6 +11,7 @@
 #include "Object/type/canonical_type_fwd.h"		// for conditional
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/data_traits.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -67,7 +68,9 @@ virtual ostream&
 
 virtual good_bool
 	instantiate_indices(const const_range_list& i, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type&, 
+#endif
 		const unroll_context&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>

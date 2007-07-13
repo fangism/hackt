@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.10 2006/11/07 06:35:31 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.10.32.1 2007/07/13 18:49:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -15,6 +15,7 @@
 #include "Object/type/type_reference_base.h"
 #include "Object/common/util_types.h"
 #include "Object/type/template_actuals.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace parser {
@@ -122,6 +123,7 @@ virtual	bool
 virtual bool
 	is_accepted_in_channel(void) const = 0;
 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #define	MERGE_RELAXED_ACTUALS_PROTO					\
 	count_ptr<const this_type>					\
 	merge_relaxed_actuals(const const_template_args_ptr_type&) const
@@ -130,8 +132,9 @@ virtual bool
 	instantiation_statement_ptr_type
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d, 
+		const index_collection_item_ptr_type& d,
 		const const_template_args_ptr_type&);
+#endif
 
 	static	
 	instantiation_statement_ptr_type
@@ -140,12 +143,20 @@ virtual bool
 		const index_collection_item_ptr_type& d);
 
 private:
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+#define	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO			\
+	instantiation_statement_ptr_type				\
+	make_instantiation_statement_private(				\
+		const count_ptr<const fundamental_type_reference>& t, 	\
+		const index_collection_item_ptr_type& d) const
+#else
 #define	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO			\
 	instantiation_statement_ptr_type				\
 	make_instantiation_statement_private(				\
 		const count_ptr<const fundamental_type_reference>& t, 	\
 		const index_collection_item_ptr_type& d, 		\
 		const const_template_args_ptr_type&) const
+#endif
 
 virtual	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO = 0;
 

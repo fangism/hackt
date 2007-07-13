@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.10 2006/10/18 21:38:50 fang Exp $
+ 	$Id: process_type_reference.h,v 1.10.36.1 2007/07/13 18:49:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -80,7 +80,9 @@ public:
 	good_bool
 	must_be_valid(void) const;
 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	MERGE_RELAXED_ACTUALS_PROTO;
+#endif
 	UNROLL_PORT_INSTANCES_PROTO;
 
 private:
