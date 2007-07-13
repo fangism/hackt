@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.26 2007/06/08 03:21:28 fang Exp $
+	$Id: unroll_context.cc,v 1.26.4.1 2007/07/13 01:08:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -194,7 +194,7 @@ unroll_context::make_member_context(void) const {
 never_ptr<physical_instance_collection>
 unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
-	typedef	count_ptr<physical_instance_collection>	return_type;
+	typedef	never_ptr<physical_instance_collection>	return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(const_target_footprint);
 	return (*const_target_footprint)[p.get_footprint_key()]
@@ -212,7 +212,7 @@ unroll_context::lookup_instance_collection(
 never_ptr<const physical_instance_collection>
 unroll_context::lookup_port_collection(
 		const physical_instance_placeholder& p) const {
-	typedef	count_ptr<physical_instance_collection>	return_type;
+	typedef	never_ptr<const physical_instance_collection>	return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(lookup_footprint);
 	return (*lookup_footprint)[p.get_footprint_key()]

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.2 2007/07/10 03:10:36 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.3 2007/07/13 01:08:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -19,6 +19,8 @@
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE		0
 #endif
+
+#define	STACKTRACE_FIND			(0 && ENABLE_STACKTRACE)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #include <exception>
@@ -160,11 +162,15 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
 		const unroll_context& c) {
 //	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
+// only if type is complete, expand ports
+if (!this->container->get_canonical_collection().has_relaxed_type()
+		|| this->get_relaxed_actuals()) {
 	if (!substructure_parent_type::unroll_port_instances(
 			*this->container, c).good) {
 		// already have error message
 		THROW_EXIT;
 	}
+}
 #if 0
 	// did we forget this accidentally?
 	actuals_parent_type::copy_actuals(f);
@@ -676,8 +682,10 @@ INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) {
+#if STACKTRACE_FIND
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 	NEVER_NULL(this->next);
 	if (this->next != this->next->next) {
 		this->next = &*this->next->find();
@@ -693,8 +701,10 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) const {
+#if STACKTRACE_FIND
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
 	const this_type* tmp = this;
 	while (tmp != tmp->next) {
 		tmp = tmp->next;

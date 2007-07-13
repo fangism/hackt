@@ -1,0 +1,9 @@
+// "env_source-A-03.hac"
+// copy-modified from "env_source-A-01.hac", during bug-hunt
+// should pass creation, but fail allocation
+
+import "env_source-A.hac";
+
+source_e<2> X;	// fixed
+X<2>;		// dies...
+

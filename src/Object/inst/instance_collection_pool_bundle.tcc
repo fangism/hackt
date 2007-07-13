@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.tcc,v 1.3 2006/12/01 23:28:51 fang Exp $
+	$Id: instance_collection_pool_bundle.tcc,v 1.3.26.1 2007/07/13 01:08:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_TCC__
@@ -29,6 +29,9 @@
 #else
 #define	STACKTRACE_THIS
 #endif
+
+// additional debug switches
+#define	STACKTRACE_LOOKUP		(0 && ENABLE_STACKTRACE)
 
 namespace HAC {
 namespace entity {
@@ -221,8 +224,10 @@ instance_collection_pool_bundle<Tag>::lookup_collection(
 		const unsigned char t,
 		const collection_index_entry::index_type i) const {
 	typedef	never_ptr<collection_interface_type>	return_type;
+#if STACKTRACE_LOOKUP
 	STACKTRACE_VERBOSE;
 	STACKTRACE_THIS
+#endif
 	switch (t) {
 #define	COLLECTION_TYPE_LOOKUP_CASE(v)					\
 	case v: return return_type(&instance_collection_pool_wrapper<	\

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46.8.2 2007/07/09 02:40:33 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.3 2007/07/13 01:08:02 fang Exp $
 	TODO: trim includes
  */
 
@@ -574,15 +574,16 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// ALERT: shouldn't relaxed actuals be attached
 			// before calling recursive instantiate?
 			// only so if ports ever depend on relaxed parameters.  
-			// then insertion of new value was successful
+			// We've established that they do not, see NOTES.  
 			try {
 			new_elem->instantiate(
 				never_ptr<const this_type>(this), c);
-			// set its relaxed actuals!!! (if appropriate)
 			// can throw!
 			} catch (...) {
 				err = true;
 			}
+			// then insertion of new value was successful
+			// set its relaxed actuals!!! (if appropriate)
 			if (actuals) {
 			const bool attached(new_elem->attach_actuals(actuals));
 			if (!attached) {

@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.3 2007/07/10 03:10:38 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.4 2007/07/13 01:08:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -79,6 +79,7 @@ template_type_completion<Tag>::dump(ostream& o,
 template <class Tag>
 good_bool
 template_type_completion<Tag>::unroll(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	typedef	typename reference_type::alias_collection_type
 			alias_collection_type;
 	alias_collection_type aliases;
@@ -107,6 +108,8 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 				<< endl;
 			return good_bool(false);
 		}
+		// canonical check is rather redundant because we forbid
+		// aliasing between strict/relaxed container members.
 		if (!ca.container->get_canonical_collection()
 				.has_relaxed_type()) {
 			cerr << "Error: canonical collection `";
@@ -136,7 +139,8 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		}
 		// instantiate/unroll public ports hierarchy recursively
 		// similar to instance_alias_info::instantiate(), 
-		// but parent collection already established, 
+		// but parent collection already established.  
+		// see also instance_array::instantiate_indices()'s do-loop.
 		a.instantiate_actuals_only(c);
 		// throws exception on error
 	}

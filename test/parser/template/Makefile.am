@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.6 2007/07/12 00:38:41 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.7 2007/07/13 01:08:10 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -11,7 +11,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	050 051 052 053 054 \
 	060 065 066 069 \
 	085 \
-	103 104 105
+	103 104 105 \
+	env_source_typedef-03
 
 # No longer statically checking dimensions, so the following tests pass parsing:
 # 067
@@ -28,9 +29,17 @@ HACKT_PARSE_TEST_PASSES = \
 	080 081 082 083 084 086 087 088 089 \
 	090 091 092 093 094 095 096 097 098 099 \
 	100 101 102 106 107 \
-	env_source env_source_recursive \
-	env_source-01 \
-	env_source_typedef-01
+	env_source \
+	env_source-01 env_source-01a env_source-01b \
+	env_source-02 \
+	env_source-01 env_source-01a env_source-01b \
+	env_source-A env_source-A-01 env_source-A-02 \
+	env_source-A-03 \
+	env_source-B env_source-B-01 env_source-B-02 \
+	env_source-B-03 env_source-B-04 env_source-B-05 \
+	env_source_recursive \
+	env_source_typedef-01 env_source_typedef-02 \
+	env_source_typedef-04 env_source_typedef-05
 
 # KNOWN BUGS:
 # should fail at unroll-time:
@@ -70,14 +79,10 @@ HACKT_CREATE_TEST_PASSES = \
 	070 073 074 075 076 077 079 \
 	081 086 088 089 \
 	090 091 092 093 095 096 097 099 \
-	100 101 102 106 107
-
-# KNOWN BUGS:
-# HACKT_CREATE_TEST_FAILURES:
-# 2006-11-28: wrong diagnosis: 061 062 064a 089
-#	should not fail unrolling, should fail during create phase
-#	need a final pass
-# regression, wrong diagnostic: 067 067a -- should be a re-instantiation
+	100 101 102 106 107 \
+	env_source-02
+# in progress:
+#	env_source-01
 
 HACKT_CREATE_TEST_FAILURES = \
 	064 067 067a \
@@ -99,7 +104,10 @@ HACKT_ALLOC_TEST_PASSES = \
 	070 073 074 075 076 077 079 \
 	081 086 \
 	090 091 092 093 095 096 097 099 \
-	100 101 102 106 107
+	100 101 102 106 107 \
+	env_source-02
+# in progress:
+#	env_source-01
 
 HACKT_ALLOC_TEST_FAILURES = \
 	045 046 \

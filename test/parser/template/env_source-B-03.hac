@@ -1,0 +1,9 @@
+// "env_source-B-03.hac"
+// copy-modified from "env_source-B-01.hac", during bug-hunt
+// should pass
+
+import "env_source-B.hac";
+
+source_e<2> X;	// died, but fixed
+X<3>;
+

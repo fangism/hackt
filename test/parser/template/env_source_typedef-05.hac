@@ -1,0 +1,14 @@
+/**
+	\file "env_source_typedef-05.hac"
+	copy-modified from "env_source_typedef-01.hac"
+	$Id: env_source_typedef-05.hac,v 1.1.2.1 2007/07/13 01:08:29 fang Exp $
+ */
+
+import "env_source.hac";
+
+// typedef passing a relaxed parameter to relaxed parameter is OK
+template <pint M><pint N, d[N]>
+typedef source_e<M><N, d> source_e1of;
+
+// should pass, valid typedefs and parameter forwarding
+
