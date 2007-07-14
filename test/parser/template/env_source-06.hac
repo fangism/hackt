@@ -1,0 +1,14 @@
+// "env_source-06.hac"
+// copy-modified from "env_source-05.hac"
+// should pass instantiation
+
+import "env_source.hac";
+
+source_e<2> X[3];
+X<2, {0,1}>;
+// this binds parameter to the whole collection!
+
+// adding a sparse instance
+source_e<2> X[3..3];
+X[3..3]<3, {1,1,0}>;	// bind type of last instance in collection
+

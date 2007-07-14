@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.6 2007/07/14 03:09:03 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.7 2007/07/14 18:22:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -131,6 +131,8 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 	for ( ; i!=e; ++i) {
 		instance_alias_info<Tag>& a(**i);	// named
 		instance_alias_info<Tag>& ca(*a.find());	// canonical
+		// a may alias ca!
+		const bool alias = (&a == &ca);
 		if (!a.container->get_canonical_collection()
 				.has_relaxed_type()) {
 			cerr << "Error: collection `";
@@ -142,7 +144,7 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		}
 		// canonical check is rather redundant because we forbid
 		// aliasing between strict/relaxed container members.
-		if (!ca.container->get_canonical_collection()
+		if (!alias && !ca.container->get_canonical_collection()
 				.has_relaxed_type()) {
 			cerr << "Error: canonical collection `";
 			ca.container->dump_hierarchical_name(cerr);
@@ -151,7 +153,8 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 				<< endl;
 			return good_bool(false);
 		}
-		if (ca.attach_actuals(resolved) && a.attach_actuals(resolved)) {
+		if (!ca.attach_actuals(resolved) ||
+				(!alias && !a.attach_actuals(resolved))) {
 			// error, canonical reference already has actuals
 			cerr << "Error: canonical alias of `";
 			a.dump_hierarchical_name(cerr);
@@ -159,13 +162,19 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 			ca.dump_hierarchical_name(cerr);
 			cerr << ") is already bound to relaxed parameters."
 				<< endl;
+			return good_bool(false);
 		}
 		// instantiate/unroll public ports hierarchy recursively
 		// similar to instance_alias_info::instantiate(), 
 		// but parent collection already established.  
 		// see also instance_array::instantiate_indices()'s do-loop.
-		a.instantiate_actuals_only(c);
-		// throws exception on error
+		try {
+			a.instantiate_actuals_only(c);
+		} catch (...) {
+			cerr << "Error instantiating `";
+			a.dump_hierarchical_name(cerr) << "\'" << endl;
+			return good_bool(false);
+		}
 	}
 	return good_bool(true);
 }

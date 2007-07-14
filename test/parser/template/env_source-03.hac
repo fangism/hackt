@@ -1,0 +1,10 @@
+// "env_source-03.hac"
+// copy-modified from "env_source-01a.hac"
+// should pass instantiation
+
+import "env_source.hac";
+
+source_e<2> X[3];
+X<2, {0,1}>;
+// this binds parameter to the whole collection!
+

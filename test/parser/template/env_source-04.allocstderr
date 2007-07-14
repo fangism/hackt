@@ -1,0 +1,5 @@
+ERROR: complete type required for instantiation
+	have: source_e<2>
+	instance: X[3]
+Error alloc_assign_subinstance_footprint_frame.
+ERROR in allocating.  Aborting.
