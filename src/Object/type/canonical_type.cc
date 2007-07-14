@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.16 2007/01/21 05:59:50 fang Exp $
+	$Id: canonical_type.cc,v 1.16.20.1 2007/07/14 03:09:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -120,6 +120,8 @@ struct unroll_port_instances_policy<process_definition> {
 	because relaxed actuals are missing but required.
 	Solution: since read-only footprint is only needed for
 		the purpose of unrolling ports.  
+	Q: After implementing relaxed-template parameters, do we guarantee
+	that this is only called on strict types?
 ***/
 	if (p.is_strict()) {
 		STACKTRACE_INDENT_PRINT("have strict type." << endl);

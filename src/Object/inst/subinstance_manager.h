@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.19 2007/01/21 05:59:17 fang Exp $
+	$Id: subinstance_manager.h,v 1.19.20.1 2007/07/14 03:09:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -32,6 +32,9 @@ class state_manager;
 class footprint_frame;
 template <class> class collection_interface;
 struct dump_flags;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+class const_param_expr_list;
+#endif
 using std::ostream;
 using std::istream;
 using std::string;
@@ -71,6 +74,9 @@ public:
 	typedef	vector<value_type>			array_type;
 	typedef	vector<count_ptr<const meta_instance_reference_base> >
 						connection_references_type;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	typedef	count_ptr<const const_param_expr_list>	relaxed_actuals_type;
+#endif
 protected:
 	typedef	array_type::const_iterator		const_iterator;
 	typedef	array_type::iterator			iterator;
@@ -116,6 +122,9 @@ public:
 	good_bool
 	unroll_port_instances(
 		const collection_interface<Tag>&, 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		const relaxed_actuals_type&,
+#endif
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
 

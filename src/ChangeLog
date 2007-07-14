@@ -5,6 +5,14 @@
 
 2007-07-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-14:
+	  Bug fixed! ICE on port unrolling fixed by simply attaching 
+		per-instance relaxed actuals to each recursive port unrolling,
+		also took care of parameter forwarding from formal to actuals.
+	  Added bunch more test cases for this bug only.
+	  Next: back to former test case agenda, working up to library.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-13:
 	  template_type_completion::unroll(): for now restrict reference
 		subtype to be simply-indexed (dynamic_cast).

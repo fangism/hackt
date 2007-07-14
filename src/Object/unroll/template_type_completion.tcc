@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.5 2007/07/13 22:56:39 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.6 2007/07/14 03:09:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -164,7 +164,6 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		// similar to instance_alias_info::instantiate(), 
 		// but parent collection already established.  
 		// see also instance_array::instantiate_indices()'s do-loop.
-		// FIXME.  ICEs deep in unroll_port
 		a.instantiate_actuals_only(c);
 		// throws exception on error
 	}

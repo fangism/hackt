@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.10 2006/12/01 23:28:52 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.10.26.1 2007/07/14 03:09:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
@@ -30,6 +30,9 @@ template <class Tag>
 good_bool
 subinstance_manager::unroll_port_instances(
 		const collection_interface<Tag>& inst, 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		const relaxed_actuals_type& a,
+#endif
 		const unroll_context& c) {
 	typedef	collection_interface<Tag>	collection_type;
 	typedef	instance_collection<Tag>	canonical_collection_type;
@@ -45,16 +48,21 @@ subinstance_manager::unroll_port_instances(
 						type_ref_pointee_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->empty());
-	const resolved_type_ref_type
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	const
+#endif
+	resolved_type_ref_type
 		resolved_super_type(inst.get_canonical_collection()
 			.get_resolved_canonical_type());
-		// TODO: this needs to print error message on failure?
 	if (!resolved_super_type) {
 		cerr << "Error resolving type during "
 			"subinstance_manager::unroll_port_instances: <type>"
 				<< endl;
 		return good_bool(false);
 	}
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	resolved_super_type.combine_relaxed_actuals(a);
+#endif
 #if 0
 	unresolved_super_type->dump(cerr << "unresolved type: ") << endl;
 	resolved_super_type->dump(cerr << "resolved type:   ") << endl;

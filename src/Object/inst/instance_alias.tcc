@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.3 2007/07/13 01:08:01 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.4 2007/07/14 03:08:59 fang Exp $
 	TODO: trim includes
  */
 
@@ -166,7 +166,8 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
 if (!this->container->get_canonical_collection().has_relaxed_type()
 		|| this->get_relaxed_actuals()) {
 	if (!substructure_parent_type::unroll_port_instances(
-			*this->container, c).good) {
+			*this->container, 
+			this->get_relaxed_actuals(), c).good) {
 		// already have error message
 		THROW_EXIT;
 	}
@@ -247,7 +248,11 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate_actual_from_formal(
 	this->container = p;
 	// do we ever want to instantiate more than the ports? no
 	if (!substructure_parent_type::unroll_port_instances(
-			*this->container, c).good) {
+			*this->container, 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			f.get_relaxed_actuals(), 
+#endif
+			c).good) {
 		// already have error message
 		THROW_EXIT;
 	}
