@@ -35,7 +35,6 @@ Persistent Object Manager text dump:
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

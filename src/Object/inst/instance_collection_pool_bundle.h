@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.3 2006/11/27 08:29:09 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.3.28.1 2007/07/15 22:01:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -80,6 +80,11 @@ protected:
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	good_bool
+	finalize_substructure_aliases(const unroll_context&);
+#endif
+
 private:
 	// helper functors... "I want tr1/functional binders!!!"
 	struct dependent_creator;
@@ -89,6 +94,9 @@ private:
 	struct port_alias_collector;
 #endif
 	struct footprint_frame_assigner;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	struct substructure_finalizer;
+#endif
 
 // serialization helper routines
 protected:
@@ -209,6 +217,11 @@ struct instance_collection_pool_bundle :
 	void
 	collect_scope_and_port_aliases(
 		port_alias_tracker&, port_alias_tracker&) const;
+#endif
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	good_bool
+	finalize_substructure_aliases(const unroll_context&);
 #endif
 
 	void

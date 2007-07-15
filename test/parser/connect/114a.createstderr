@@ -105,7 +105,7 @@ footprint: {
   gnu = process foo<1>^0<1> = snu (2) 
   goo = process foo<1>^0<1> = bar (1) 
   ick = process foo<1>^0<1> = bar (1) 
-  poo = process foo<1>^0 = bar (1) 
+  poo = process foo<1>^0<1> = bar (1) 
   snu = process foo<1>^0<1> = snu (2) 
   Created state:
   process instance pool:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.8.20.2 2007/07/15 03:27:52 fang Exp $
+	$Id: port_formal_array.tcc,v 1.8.20.3 2007/07/15 22:01:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -628,6 +628,23 @@ PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 		i->assign_footprint_frame(ff, pcc, j);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::finalize_substructure_aliases(
+		const unroll_context& c) {
+	iterator i(this->begin());
+	const iterator e(this->end());
+	for ( ; i!=e; ++i) {
+		// should synchronize relaxed template parameters
+		// instantiate and re-connect ports recursively as needed
+		i->find(c);
+		// catch or rethrow exception?
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE

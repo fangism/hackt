@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.33 2007/01/21 05:58:38 fang Exp $
+	$Id: footprint.cc,v 1.33.20.1 2007/07/15 22:01:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -71,6 +71,9 @@
 #include "Object/persistent_type_hash.h"
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
+#endif
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+#include "Object/unroll/unroll_context.h"
 #endif
 #include "main/cflat_options.h"
 
@@ -494,9 +497,11 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 good_bool
 footprint::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
+#if 0
 	const instance_map_iterator
 		// b(instance_collection_map.begin()),
 		e(instance_collection_map.end());
+#endif
 {
 	const good_bool g(
 		get_instance_collection_pool_bundle<process_tag>()
@@ -521,6 +526,21 @@ footprint::create_dependent_types(const footprint& top) {
 	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
 		dump_flags::default_value, 
 		expr_dump_context::default_value) << endl;
+#endif
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	// final pass (backpatching) to instantiate processes
+	// with relaxed types, whose types were implicitly bound 
+	// *after* aliasing to a complete-typed alias.  
+	// this performs the appropriate recursive connections
+	const unroll_context c(this, &top);
+	// will instantiate into this footprint
+	// only processes have relaxed types and substructure
+	if (!get_instance_collection_pool_bundle<process_tag>()
+			.finalize_substructure_aliases(c).good) {
+		return good_bool(false);
+	}
+	// this call must precede collecting of scope aliases and
+	// shorten_canonical_aliases
 #endif
 {
 	const good_bool g(

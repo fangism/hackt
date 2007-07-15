@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46.8.5 2007/07/15 03:27:49 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.6 2007/07/15 22:01:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -1143,6 +1143,23 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame&,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::finalize_substructure_aliases(
+		const unroll_context& c) {
+	iterator i(this->collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; ++i) {
+		// should synchronize relaxed template parameters
+		// instantiate and re-connect ports recursively as needed
+		i->find(c);
+		// catch/rethrow exception?
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Applies direction flags to all aliases in collection, 
 	applicable only to channel types.  
@@ -1744,6 +1761,17 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 	INVARIANT(pcc.size() == 1);
 	this->the_instance.assign_footprint_frame(ff, pcc, 0);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::finalize_substructure_aliases(
+		const unroll_context& c) {
+	this->the_instance.find(c);
+	// catch/rethrow exception?
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
