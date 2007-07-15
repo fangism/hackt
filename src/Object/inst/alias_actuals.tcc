@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.15.32.3 2007/07/11 20:43:36 fang Exp $
+	$Id: alias_actuals.tcc,v 1.15.32.4 2007/07/15 03:27:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -125,6 +125,42 @@ instance_alias_info_actuals::dump_complete_type(const AliasType& _alias,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	When connecting two relaxed aliases, copy one over to the
+	other.  If they are both non-null, then they should be equivalent, 
+	else reject as a connection error.  
+	\param l canonical alias
+	\param r canonical alias
+	\pre to properly synchronize, parent collections of aliases must
+		either both be strict (null params), or both be relaxed.
+		We don't recheck this precondition here.
+ */
+template <class AliasType>
+good_bool
+instance_alias_info_actuals::synchronize_actuals(AliasType& l, AliasType& r, 
+		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
+	if (l.actuals) {
+		if (r.actuals) {
+			return compare_actuals(l.actuals, r.actuals);
+		} else {
+			r.actuals = l.actuals;
+			// r's type is complete, instantiate r recursively
+			r.instantiate_actuals_only(c);
+		}
+	} else {
+		if (r.actuals) {
+			l.actuals = r.actuals;
+			// l's type is complete, instantiate l recursively
+			l.instantiate_actuals_only(c);
+		}
+	}
+	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Evaluates the complete canonical type based on the
 	container's type and the relaxed actuals.  
@@ -161,6 +197,10 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 		_alias.dump_hierarchical_name(cerr << "\tinstance: ") << endl;
 		return good_bool(false);
 	}
+#if ENABLE_STACKTRACE
+	_alias.dump_hierarchical_name(STACKTRACE_INDENT_PRINT("instance: ")) << endl;
+	_type.dump(STACKTRACE_INDENT_PRINT("_type: ")) << endl;
+#endif
 #else
 	INVARIANT(_type);
 #endif

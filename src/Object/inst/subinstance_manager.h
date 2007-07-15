@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.19.20.1 2007/07/14 03:09:00 fang Exp $
+	$Id: subinstance_manager.h,v 1.19.20.2 2007/07/15 03:27:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -137,7 +137,11 @@ public:
 	connect_ports(const connection_references_type&, const unroll_context&);
 
 	good_bool
-	connect_port_aliases_recursive(this_type&);
+	connect_port_aliases_recursive(this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+		);
 
 	void
 	allocate(footprint&);

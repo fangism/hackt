@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.4 2007/07/14 03:08:59 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.5 2007/07/15 03:27:48 fang Exp $
 	TODO: trim includes
  */
 
@@ -160,7 +160,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate_actuals_only(
 		const unroll_context& c) {
-//	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
 // only if type is complete, expand ports
 if (!this->container->get_canonical_collection().has_relaxed_type()
@@ -396,6 +396,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 	if (this->instance_index)
 		return this->instance_index;
 	// compress path to canonical
+	// NOTE: doesn't auto-instantiate based on actuals synchronization
 	const pseudo_iterator i(this->find());
 	// i points to the canonical alias for this set
 	if (!i->instance_index) {
@@ -427,7 +428,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Compares collection types of the two instances and then
+	Compares *collection* types of the two instances and then
 	TODO: compares their relaxed actuals (if applicable).
 	NOTE: relaxed actuals are compared by synchronize/compare_actuals().  
  */
@@ -471,19 +472,42 @@ INSTANCE_ALIAS_INFO_CLASS::dump_key(ostream& o) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
-	// TODO: check relaxed actuals, and propagate
 	if (!l.must_match_type(r)) {
 		// already have error message
 		l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
 		return good_bool(false);
 	}
-	// TODO: policy-based check of directions, (channels-only)
-	// wasn't this already done for channels?
-	return good_bool(l.unite(r).good &&
-		l.connect_port_aliases_recursive(r).good);
+	// checking of directions and relaxed actuals is done in unite()
+	return good_bool(l.unite(r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, c
+#endif
+			).good &&
+		l.connect_port_aliases_recursive(r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, c
+#endif
+			).good);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper around checked_connect_port, shouldn't require a real
+	unroll_context because is only replaying internal alias.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::replay_connect_port(this_type& l, this_type& r) {
+	const footprint* const f = NULL;
+	const unroll_context bogus(f, f);
+	return checked_connect_port(l, r, bogus);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -502,19 +526,29 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
-	// TODO: check relaxed actuals, and propagate
 	if (!l.must_match_type(r)) {
 		// already have error message
 		l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
 		return good_bool(false);
 	}
-	// TODO: policy-based check of directions, (channels-only)
-	// wasn't this already done for channels?
-	return good_bool(l.unite(r).good &&
-		l.connect_port_aliases_recursive(r).good);
+	// checking of directions and relaxed actuals is done in unite()
+	return good_bool(l.unite(r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, c
+#endif
+			).good &&
+		l.connect_port_aliases_recursive(r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, c
+#endif
+			).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -656,21 +690,33 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need to check for pointer equality?  Same result either way.
-	TODO: return an error if applicable
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
+INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	const pseudo_iterator lc(this->find(c));
+	this_type* const rc = &*r.find(c);
+#else
 	const pseudo_iterator lc(this->find());
 	this_type* const rc = &*r.find();
+#endif
 	lc->next = rc;
 	// synchronize direction_connection_flags
 		// commutative
 	if (!direction_connection_policy::synchronize_flags(*lc, *rc).good)
 		return good_bool(false);
 		// symmetric
-	const good_bool ret(actuals_parent_type::synchronize_actuals(*lc, *rc));
+	const good_bool ret(actuals_parent_type::synchronize_actuals(*lc, *rc
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, c
+#endif
+		));
 	if (!ret.good) {
 		this->dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 		r.dump_hierarchical_name(cerr << "\tand:  ") << endl;
@@ -683,6 +729,9 @@ INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 /**
 	NOTE: recursive implementation.
 	Every call to find() compresses the path to the canonical node.  
+	Ref: union-find structure/algorithm.
+	TODO: should this copy-propagate relaxed actuals?
+	NOTE: this variant does NOT maintain relaxed actuals!
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
@@ -697,6 +746,46 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) {
 	}
 	return pseudo_iterator(this->next);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	This variant of find() automatically instantiates ports
+	as relaxed actuals are synchronized.  
+	\param c the unroll_context used to lookup.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
+INSTANCE_ALIAS_INFO_CLASS::find(const unroll_context& c) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+	NEVER_NULL(this->next);
+	if (this->next != this->next->next) {
+		this->next = &*this->next->find(c);
+	}
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT_PRINT("alias: "))
+		<< endl;
+#endif
+	if (this->copy_actuals(*this->next)) {
+		STACKTRACE_INDENT_PRINT("instantiating after copying actuals");
+		// may not want to initialize_direction in this call!
+		this->instantiate_actuals_only(c);
+		// will throw exception upon error
+		if (!this->connect_port_aliases_recursive(
+				*this->next, c).good) {
+			cerr << "Error connecting ports." << endl;
+			THROW_EXIT;
+		}
+	}
+#if ENABLE_STACKTRACE
+	else {
+		STACKTRACE_INDENT_PRINT("instantiating skipped") << endl;
+	}
+#endif
+	return pseudo_iterator(this->next);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

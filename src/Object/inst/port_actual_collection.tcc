@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.7.8.2 2007/07/13 18:49:01 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.7.8.3 2007/07/15 03:27:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -416,7 +416,11 @@ PORT_ACTUAL_COLLECTION_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p) {
+		physical_instance_collection& p
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -430,7 +434,11 @@ PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
 		element_type& jj(*j);
 		// possibly redundant port type checking is unnecessary
 		if (!instance_alias_info_type::checked_connect_port(
-				ii, jj).good) {
+				ii, jj
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				, c
+#endif
+				).good) {
 			// error message?
 			return good_bool(false);
 		}

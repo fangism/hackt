@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.6.28.2 2007/07/10 03:10:35 fang Exp $
+	$Id: alias_actuals.cc,v 1.6.28.3 2007/07/15 03:27:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -123,10 +123,13 @@ instance_alias_info_actuals::compare_actuals(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	When connecting two relaxed aliases, copy one over to the
 	other.  If they are both non-null, then they should be equivalent, 
 	else reject as a connection error.  
+	\param l canonical alias
+	\param r canonical alias
 	\pre to properly synchronize, parent collections of aliases must
 		either both be strict (null params), or both be relaxed.
 		We don't recheck this precondition here.
@@ -138,14 +141,17 @@ instance_alias_info_actuals::synchronize_actuals(this_type& l, this_type& r) {
 			return compare_actuals(l.actuals, r.actuals);
 		} else {
 			r.actuals = l.actuals;
+			// r's type is complete, instantiate r recursively
 		}
 	} else {
 		if (r.actuals) {
 			l.actuals = r.actuals;
+			// l's type is complete, instantiate l recursively
 		}
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

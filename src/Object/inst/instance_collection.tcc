@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46.8.4 2007/07/13 18:48:56 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.5 2007/07/15 03:27:49 fang Exp $
 	TODO: trim includes
  */
 
@@ -845,7 +845,11 @@ INSTANCE_ARRAY_CLASS::get_all_aliases(
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p) {
+		physical_instance_collection& p 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
@@ -860,7 +864,11 @@ INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
 		element_type& jj(const_cast<element_type&>(
 			AS_A(const element_type&, *j)));
 		// possibly redundant port type checking is unnecessary
-		if (!element_type::checked_connect_port(ii, jj).good) {
+		if (!element_type::checked_connect_port(ii, jj
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				, c
+#endif
+				).good) {
 			// error message?
 			return good_bool(false);
 		}
@@ -1625,11 +1633,19 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type&,
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p) {
+		physical_instance_collection& p
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	return instance_type::checked_connect_port(
-		this->the_instance, t.the_instance);
+		this->the_instance, t.the_instance
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, c
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.22.8.1 2007/07/14 03:09:00 fang Exp $
+	$Id: substructure_alias_base.h,v 1.22.8.2 2007/07/15 03:27:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -138,9 +138,17 @@ protected:
 		const footprint_frame&) const;
 
 	good_bool
-	connect_port_aliases_recursive(this_type& r) {
+	connect_port_aliases_recursive(this_type& r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, const unroll_context& c
+#endif
+			) {
 		return subinstances.connect_port_aliases_recursive(
-			r.subinstances);
+			r.subinstances
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, c
+#endif
+			);
 	}
 
 protected:
@@ -225,7 +233,11 @@ protected:
 
 	// has no substructure
 	good_bool
-	connect_port_aliases_recursive(this_type&) {
+	connect_port_aliases_recursive(this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, const unroll_context&
+#endif
+			) {
 		return good_bool(true);
 	}
 

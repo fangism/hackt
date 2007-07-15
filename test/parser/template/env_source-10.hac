@@ -1,0 +1,9 @@
+// "env_source-10.hac"
+// copy-modified from "env_source-09.hac"
+// should fail create
+
+import "env_source.hac";
+
+source_e<2> X[3];
+X[3]<2, {0,1}>;		// error uninstantiated reference
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.18 2007/01/21 05:59:13 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.18.20.1 2007/07/15 03:27:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -124,8 +124,9 @@ alias_reference_set<Tag>::replay_internal_aliases(substructure_alias& s) const {
 	for (i++; i!=e; i++) {
 		alias_type& _inst((*i)->trace_alias(s));
 		// symmetric connection
-		if (!alias_type::checked_connect_port(head, _inst).good)
+		if (!alias_type::replay_connect_port(head, _inst).good)
 			return good_bool(false);
+		// doesn't require unroll_context
 	}
 	return good_bool(true);
 }

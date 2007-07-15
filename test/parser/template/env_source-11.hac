@@ -1,0 +1,10 @@
+// "env_source-11.hac"
+// copy-modified from "env_source-03.hac"
+// should pass alloc
+
+import "env_source.hac";
+
+source_e<2> X[3];
+X[0..2]<2, {0,1}>;
+// this binds parameter whole collection using explicit range
+

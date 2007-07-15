@@ -5,6 +5,21 @@
 
 2007-07-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-16:
+	  Realized flaw in approach to late type binding w.r.t. aliases:
+		aliases between unbound types need to have their ports
+		recursively connected *after* their types are bound, 
+		which is made difficult by the acylic union-find of aliases.
+		Probably requires a finalization pass in footprint creation.
+		Take caution shen shortening aliases!
+		This needs to be completely thought out...
+	  instance_aliases: propagate unroll_context to facilitate late
+		instantiation with relaxed template argument bindings.  
+		Using #if switch makes a real mess out of this...
+	  More test cases again, with a bunch of known-to-fail/wrong
+		to be analyzed further next.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-15:
 	  Error handling fix and improved diagnostic messages.  
 		Cases: relaxed parameters already bound and

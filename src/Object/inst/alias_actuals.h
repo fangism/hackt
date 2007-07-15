@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.11.28.2 2007/07/10 03:10:35 fang Exp $
+	$Id: alias_actuals.h,v 1.11.28.3 2007/07/15 03:27:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -14,6 +14,7 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/devel_switches.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
@@ -25,6 +26,9 @@ class footprint_frame;
 class port_member_context;
 class state_manager;
 template <class> class instance_alias_info;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+class unroll_context;
+#endif
 using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
@@ -80,8 +84,16 @@ public:
 	dump_actuals(ostream& o) const;
 
 protected:
-	void
-	copy_actuals(const this_type& t) { actuals = t.actuals; }
+	/**
+		\return true if actuals are new.
+	 */
+	bool
+	copy_actuals(const this_type& t) { 
+		// INVARIANT(!actuals);		// ?
+		const bool ret = t.actuals && !actuals;
+		actuals = t.actuals;
+		return ret;
+	}
 
 	template <class AliasType>
 	static
@@ -89,9 +101,18 @@ protected:
 	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
 		state_manager&, const port_member_context&, const size_t);
 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	template <class AliasType>
+#endif
 	static
 	good_bool
-	synchronize_actuals(this_type&, this_type&);
+	synchronize_actuals(
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		AliasType&, AliasType&, const unroll_context&
+#else
+		this_type&, this_type&
+#endif
+		);
 
 public:
 	static

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.8.20.1 2007/07/13 18:49:02 fang Exp $
+	$Id: port_formal_array.tcc,v 1.8.20.2 2007/07/15 03:27:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -159,7 +159,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
 		const instance_alias_info_type& a) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	// internally uses 0-based indices, no correction needed.
 	const key_type k(this->value_array.index_to_key(
 		this->value_array.lookup_index(a)));
@@ -174,7 +174,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
 		const size_t i) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	// internally 0-based index, adjusted for 1-based parameter
 	const key_type k(this->value_array.index_to_key(i -1));
 	return o << k;
@@ -489,7 +489,11 @@ PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p) {
+		physical_instance_collection& p
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -503,7 +507,11 @@ PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
 		element_type& jj(*j);
 		// possibly redundant port type checking is unnecessary
 		if (!instance_alias_info_type::checked_connect_port(
-				ii, jj).good) {
+				ii, jj
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				, c
+#endif
+				).good) {
 			// error message?
 			return good_bool(false);
 		}

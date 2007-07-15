@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.17 2006/11/07 06:34:54 fang Exp $
+	$Id: physical_instance_collection.h,v 1.17.32.1 2007/07/15 03:27:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -11,6 +11,7 @@
 #include "Object/inst/instance_collection_base.h"
 #include "util/persistent_fwd.h"
 // #include "Object/inst/alias_visitee.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -81,9 +82,16 @@ virtual ostream&
 
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+#define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
+	good_bool							\
+	connect_port_aliases_recursive(physical_instance_collection&, 	\
+		const unroll_context&)
+#else
 #define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
 	good_bool							\
 	connect_port_aliases_recursive(physical_instance_collection&)
+#endif
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 

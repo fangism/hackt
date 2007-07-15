@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.22.20.1 2007/07/10 03:10:37 fang Exp $
+	$Id: instance_alias_info.h,v 1.22.20.2 2007/07/15 03:27:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -207,14 +207,25 @@ public:
 	peek(void) const { return this->next; }
 
 	good_bool
-	unite(this_type&);
+	unite(this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+	);
 
 	pseudo_const_iterator
 	find(void) const;
 
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	pseudo_iterator
+	find(const unroll_context&);
+#endif
+
 	pseudo_iterator
 	find(void);
 
+public:
 	size_t
 	get_index(void) const;
 
@@ -368,12 +379,24 @@ public:
 public:
 	static
 	good_bool
-	checked_connect_port(this_type&, this_type&);
+	replay_connect_port(this_type&, this_type&);
+
+	static
+	good_bool
+	checked_connect_port(this_type&, this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+	);
 
 	// punting relaxed actuals checking until after unroll phase
 	static
 	good_bool
-	checked_connect_alias(this_type&, this_type&);
+	checked_connect_alias(this_type&, this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+	);
 
 	/// counterpart to load_next_connection
 	void

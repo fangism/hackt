@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/template_type_completion.tcc"
-	$Id: template_type_completion.tcc,v 1.1.2.7 2007/07/14 18:22:02 fang Exp $
+	$Id: template_type_completion.tcc,v 1.1.2.8 2007/07/15 03:27:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_TEMPLATE_TYPE_COMPLETION_TCC__
@@ -130,7 +130,8 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 	}
 	for ( ; i!=e; ++i) {
 		instance_alias_info<Tag>& a(**i);	// named
-		instance_alias_info<Tag>& ca(*a.find());	// canonical
+		instance_alias_info<Tag>& ca(*a.find(c));	// canonical
+			// this find() performs path compression
 		// a may alias ca!
 		const bool alias = (&a == &ca);
 		if (!a.container->get_canonical_collection()
@@ -170,6 +171,14 @@ template_type_completion<Tag>::unroll(const unroll_context& c) const {
 		// see also instance_array::instantiate_indices()'s do-loop.
 		try {
 			a.instantiate_actuals_only(c);
+			if (!alias) {
+				ca.instantiate_actuals_only(c);
+			}
+			// HACK (2007-07-14):
+			// what about aliases between this one and 
+			// the canonical?
+			// too late! find() already path-compressed :(
+			// need to rely on backpatching during create phase...
 		} catch (...) {
 			cerr << "Error instantiating `";
 			a.dump_hierarchical_name(cerr) << "\'" << endl;
