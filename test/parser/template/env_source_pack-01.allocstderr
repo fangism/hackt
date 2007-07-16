@@ -1,0 +1,23 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	test_me	source_pack_test<>
+	process: 4,2,5,3
+	bool: 1,2,3,7,4,5,6
+2	(top)	-	2	test_me.s[0]	e1of<2>
+	bool: 3,1,2
+3	(top)	-	3	test_me.s[1]	e1of<2>
+	bool: 6,4,5
+4	process	1	1	test_me.Src[0]	source_e<2><1, {0}>
+	process: 2
+	bool: 1,2,3,7
+5	process	1	3	test_me.Src[1]	source_e<2><1, {1}>
+	process: 3
+	bool: 4,5,6,7
+[global bool entries]
+1	(top)	-	1	test_me.s[0].d[0]	
+2	(top)	-	2	test_me.s[0].d[1]	
+3	(top)	-	3	test_me.s[0].e	
+4	(top)	-	4	test_me.s[1].d[0]	
+5	(top)	-	5	test_me.s[1].d[1]	
+6	(top)	-	6	test_me.s[1].e	
+7	(top)	-	7	test_me._Reset	

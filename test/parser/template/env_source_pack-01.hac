@@ -1,0 +1,9 @@
+// "env_source_pack-01.hac"
+// testing instantiation of ports with relaxed types (propagate)
+
+import "env_source_pack.hac";
+
+// instantiate it
+source_pack_test test_me;
+
+

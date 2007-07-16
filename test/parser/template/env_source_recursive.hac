@@ -1,7 +1,7 @@
 /**
 	\file "env_source_recursive.hac"
 	copy-modified from "env_source.hac"
-	$Id: env_source_recursive.hac,v 1.1.2.1 2007/07/12 00:00:35 fang Exp $
+	$Id: env_source_recursive.hac,v 1.1.2.2 2007/07/16 17:57:18 fang Exp $
  */
 
 template <pint R>
@@ -11,9 +11,11 @@ defproc e1of(bool d[R], e) { }
 // relaxed template parameters, at last!
 template <pint M><pint N, d[N]>
 defproc source_e(e1of<M> rr; bool _Reset) {
-[ (N>0) ->
-source_e<M> S<N-1, d[0..N-1]>;
+[ (N>1) ->
+source_e<M> S<N-1, d[1..N-1]>;
 S(rr, _Reset);
+// yeah, technically, connection with 'rr' is not realistically correct...
+// do something with d[0]...
 ]
 }
 

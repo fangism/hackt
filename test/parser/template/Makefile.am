@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.13 2007/07/16 04:11:51 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.14 2007/07/16 17:56:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -40,7 +40,14 @@ HACKT_PARSE_TEST_PASSES = \
 	env_source-A-03 \
 	env_source-B env_source-B-01 env_source-B-02 \
 	env_source-B-03 env_source-B-04 env_source-B-05 \
-	env_source_recursive \
+	env_source_pack env_source_pack-01 \
+	env_source_pack-A env_source_pack-A-01 \
+	env_source_pack-B env_source_pack-B-01 \
+	env_source_ports env_source_ports-01 \
+	env_source_ports-A env_source_ports-A-01 \
+	env_source_recursive env_source_recursive-01 \
+	env_source_recursive-A env_source_recursive-A-01 \
+	env_source_ports_recursive env_source_ports_recursive-01 \
 	env_source_typedef-01 env_source_typedef-02 \
 	env_source_typedef-04 env_source_typedef-05
 
@@ -89,9 +96,16 @@ HACKT_CREATE_TEST_PASSES = \
 	env_source-11 env_source-12 \
 	env_source-13 env_source-13a env_source-14 env_source-14a \
 	env_source-15 env_source-15a env_source-16 env_source-16a \
+	env_source_pack-01 \
+	env_source_pack-A-01 \
+	env_source_ports-01 \
 	env_source-A-02 env_source-A-03 \
 	env_source-B-02 env_source-B-03 \
-	env_source-B-04 env_source-B-05
+	env_source-B-04 env_source-B-05 \
+	env_source_recursive-01 \
+	env_source_recursive-A-01 \
+	env_source_ports_recursive-01
+
 
 HACKT_CREATE_TEST_FAILURES = \
 	045 046 \
@@ -101,7 +115,9 @@ HACKT_CREATE_TEST_FAILURES = \
 	env_source-01b env_source-04 env_source-07 \
 	env_source-09 env_source-10 \
 	env_source-A-01 \
-	env_source-B-01
+	env_source-B-01 \
+	env_source_pack-B-01 \
+	env_source_ports-A-01
 
 if USE_UNROLL_PHASE
 else
@@ -126,7 +142,13 @@ HACKT_ALLOC_TEST_PASSES = \
 	env_source-13 env_source-13a env_source-14 env_source-14a \
 	env_source-15 env_source-15a env_source-16 env_source-16a \
 	env_source-A-02 env_source-A-03 \
-	env_source-B-02 env_source-B-03 env_source-B-04 env_source-B-05
+	env_source-B-02 env_source-B-03 env_source-B-04 env_source-B-05 \
+	env_source_pack-01 \
+	env_source_pack-A-01 \
+	env_source_ports-01 \
+	env_source_recursive-01 \
+	env_source_recursive-A-01 \
+	env_source_ports_recursive-01
 
 HACKT_ALLOC_TEST_FAILURES =
 

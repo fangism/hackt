@@ -1,0 +1,14 @@
+// "env_source_pack-A.hac"
+// copy-modified from "env_source_pack.hac"
+// testing port forwarding of relaxed template parameters
+
+import "env_source.hac";
+
+defproc source_pack_test(e1of<2> s[2]; bool _Reset) {
+source_e<2> Src[2];
+// testing loop ... sexy!
+(;i:2:
+Src[i]<1, {i}>(s[i], _Reset);
+)
+}
+

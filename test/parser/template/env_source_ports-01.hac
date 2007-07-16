@@ -1,0 +1,7 @@
+// "env_source_ports-01.hac"
+// testing instantiation, should pass
+
+import "env_source_ports.hac";
+
+source_pack_port_test Z;
+

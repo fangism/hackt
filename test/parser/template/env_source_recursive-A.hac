@@ -1,0 +1,18 @@
+/**
+	\file "env_source_recursive-A.hac"
+	copy-modified from "env_source_recursive.hac"
+	$Id: env_source_recursive-A.hac,v 1.1.2.1 2007/07/16 17:57:17 fang Exp $
+ */
+
+template <pint R>
+defproc e1of(bool d[R], e) { }
+
+//-----------------------------------------------------------------------------
+// relaxed template parameters, at last!
+template <pint M><pint N, d[N]>
+defproc source_e(e1of<M> rr; bool _Reset) {
+[ (N>1) ->
+source_e<M> S<N-1, d[1..N-1]>(rr, _Reset);	// testing this syntax
+]
+}
+

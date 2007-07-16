@@ -1,0 +1,16 @@
+// "env_source_ports_recursive.hac"
+// copy-modified from "env_source_ports.hac"
+// testing port forwarding of relaxed template parameters
+
+import "env_source.hac";
+
+// disgusting template abuse
+// each level binds the type of one member of the port
+template <pint M, N><pint d[N]>
+defproc source_pack_port_test(source_e<M> Src[N]) {
+Src[0]<1, {d[0]}>;	// base case
+[(N>1) ->
+source_pack_port_test<M, N-1> rec<d[1..N-1]>(Src[1..N-1]);
+]
+}
+

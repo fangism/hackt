@@ -1,0 +1,663 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	80
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	254
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	17	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	53
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	54
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	213
+	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	24	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	25	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
+	26	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	29	##ADDR##	datadefn	0	#HEAD#	#TAIL#	133
+	30	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	31	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	footprnt	0	#HEAD#	#TAIL#	650
+	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	44	##ADDR##	procdefn	0	#HEAD#	#TAIL#	345
+	45	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	46	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	47	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	48	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	49	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	54
+	50	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	51	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	52	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	53	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	56	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	procplch	0	#HEAD#	#TAIL#	50
+	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	63	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	64	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	67	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	812
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	71	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	72	##ADDR##	footprnt	0	#HEAD#	#TAIL#	812
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	77	##ADDR##	footprnt	0	#HEAD#	#TAIL#	812
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	procdefn	0	#HEAD#	#TAIL#	358
+	81	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	82	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	83	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	84	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	85	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	86	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	87	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	88	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	89	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	90	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	91	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	92	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	94	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	95	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	96	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	97	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	98	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	99	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	100	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	101	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	102	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	103	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	104	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	105	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	106	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	107	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	32
+	108	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	109	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	40
+	110	##ADDR##	apimvref	0	#HEAD#	#TAIL#	33
+	111	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	112	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	32
+	113	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	114	##ADDR##	condscop	0	#HEAD#	#TAIL#	56
+	115	##ADDR##	pireltex	0	#HEAD#	#TAIL#	41
+	116	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	117	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	118	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	119	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	120	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	40
+	121	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	122	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	123	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	124	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	125	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	126	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	127	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	128	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	129	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	32
+	130	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	131	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	132	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	133	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	134	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	135	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	40
+	136	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	137	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	138	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	32
+	139	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	140	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	141	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	142	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	143	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	144	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	145	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	146	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	147	##ADDR##	footprnt	0	#HEAD#	#TAIL#	896
+	148	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	149	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	150	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	151	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	152	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	64
+	153	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1469
+	154	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	155	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	156	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	157	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	158	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	159	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	160	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	72
+	161	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1969
+	162	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	163	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	164	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	165	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	166	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	167	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	168	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	40
+	169	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	170	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	171	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	172	##ADDR##	apimvref	0	#HEAD#	#TAIL#	49
+	173	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	174	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	175	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	176	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1293
+	177	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+	178	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    cmos_source_e = process-definition (defined) cmos_source_e<
+      pint<> M
+      ><
+      pint<> N
+      pint<> D[0..N-1]
+      >(
+        e1of<cmos_source_e::M> R
+        bool<> _Reset
+        bool<> Reset
+      )
+      In definition "cmos_source_e", we have: {
+      Parameters:
+        D = pint<> cmos_source_e::D^1
+        M = pint<> cmos_source_e::M
+        N = pint<> cmos_source_e::N
+      Instances:
+        R = e1of<cmos_source_e::M> cmos_source_e::R
+        Reset = bool<> cmos_source_e::Reset
+        _Reset = bool<> cmos_source_e::_Reset
+      unroll sequence: 
+        e1of<cmos_source_e::M> R
+        bool<> _Reset
+        bool<> Reset
+      }
+
+    e1of = process-definition (defined) e1of<
+      pint<> R
+      >(
+        bool<> d[0..R-1]
+        bool<> e
+      )
+      In definition "e1of", we have: {
+      Parameters:
+        R = pint<> e1of::R
+      Instances:
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
+      unroll sequence: 
+        bool<> d[0..R-1]
+        bool<> e
+      footprint collection: {
+        <3> {
+          R = pint^0 value: 3
+          d = bool^1
+            {
+              [0] = e1of::d[0] (2) 
+              [1] = e1of::d[1] (3) 
+              [2] = e1of::d[2] (4) 
+            }
+          e = bool^0 = e1of::e (1) 
+          Created state:
+          bool instance pool:
+          1	e1of::e
+          2	e1of::d[0]
+          3	e1of::d[1]
+          4	e1of::d[2]
+        }
+      }
+      }
+
+    source_e = process-definition (defined) source_e<
+      pint<> M
+      ><
+      pint<> N
+      pint<> d[0..N-1]
+      >(
+        e1of<source_e::M> rr
+        bool<> _Reset
+      )
+      In definition "source_e", we have: {
+      Parameters:
+        M = pint<> source_e::M
+        N = pint<> source_e::N
+        d = pint<> source_e::d^1
+      Instances:
+        _Reset = bool<> source_e::_Reset
+        rr = e1of<source_e::M> source_e::rr
+      unroll sequence: 
+        e1of<source_e::M> rr
+        bool<> _Reset
+      footprint collection: {
+        <3, 1, {0}> {
+          M = pint^0 value: 3
+          N = pint^0 value: 1
+          _Reset = bool^0 = source_e::_Reset (5) 
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 0
+            }
+          rr = process e1of<3>^0 = source_e::rr (1) (
+            d = bool^1
+              {
+                [0] = source_e::rr.d[0] (1) 
+                [1] = source_e::rr.d[1] (2) 
+                [2] = source_e::rr.d[2] (3) 
+              }
+            e = bool^0 = source_e::rr.e (4) 
+          )
+          Created state:
+          process instance pool:
+          1	source_e::rr
+          bool instance pool:
+          1	source_e::rr.d[0]
+          2	source_e::rr.d[1]
+          3	source_e::rr.d[2]
+          4	source_e::rr.e
+          5	source_e::_Reset
+        }
+        <3, 1, {1}> {
+          M = pint^0 value: 3
+          N = pint^0 value: 1
+          _Reset = bool^0 = source_e::_Reset (5) 
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 1
+            }
+          rr = process e1of<3>^0 = source_e::rr (1) (
+            d = bool^1
+              {
+                [0] = source_e::rr.d[0] (1) 
+                [1] = source_e::rr.d[1] (2) 
+                [2] = source_e::rr.d[2] (3) 
+              }
+            e = bool^0 = source_e::rr.e (4) 
+          )
+          Created state:
+          process instance pool:
+          1	source_e::rr
+          bool instance pool:
+          1	source_e::rr.d[0]
+          2	source_e::rr.d[1]
+          3	source_e::rr.d[2]
+          4	source_e::rr.e
+          5	source_e::_Reset
+        }
+        <3, 1, {2}> {
+          M = pint^0 value: 3
+          N = pint^0 value: 1
+          _Reset = bool^0 = source_e::_Reset (5) 
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 2
+            }
+          rr = process e1of<3>^0 = source_e::rr (1) (
+            d = bool^1
+              {
+                [0] = source_e::rr.d[0] (1) 
+                [1] = source_e::rr.d[1] (2) 
+                [2] = source_e::rr.d[2] (3) 
+              }
+            e = bool^0 = source_e::rr.e (4) 
+          )
+          Created state:
+          process instance pool:
+          1	source_e::rr
+          bool instance pool:
+          1	source_e::rr.d[0]
+          2	source_e::rr.d[1]
+          3	source_e::rr.d[2]
+          4	source_e::rr.e
+          5	source_e::_Reset
+        }
+      }
+      }
+
+    source_pack_port_test = process-definition (defined) source_pack_port_test<
+      pint<> M
+      pint<> N
+      ><
+      pint<> d[0..N-1]
+      >(
+        source_e<source_pack_port_test::M> Src[0..N-1]
+      )
+      In definition "source_pack_port_test", we have: {
+      Parameters:
+        M = pint<> source_pack_port_test::M
+        N = pint<> source_pack_port_test::N
+        d = pint<> source_pack_port_test::d^1
+      Instances:
+        Src = source_e<source_pack_port_test::M> source_pack_port_test::Src^1
+        rec = source_pack_port_test<source_pack_port_test::M, source_pack_port_test::N-1> source_pack_port_test::rec
+      unroll sequence: 
+        source_e<source_pack_port_test::M> Src[0..N-1]
+        Src[0]<1, { d[0] }>
+        [ N>1 ->
+          source_pack_port_test<source_pack_port_test::M, source_pack_port_test::N-1> rec
+          rec<d[1..N-1]>
+          rec (Src[1..N-1]);
+        ]
+      footprint collection: {
+        <3, 1, {2}> {
+          M = pint^0 value: 3
+          N = pint^0 value: 1
+          Src = process source_e<3>^1
+            {
+              [0]<1, {2}> = source_pack_port_test::Src[0] (1) (
+                rr = process e1of<3>^0 = source_pack_port_test::Src[0].rr (2) (
+                  d = bool^1
+                    {
+                      [0] = source_pack_port_test::Src[0].rr.d[0] (1) 
+                      [1] = source_pack_port_test::Src[0].rr.d[1] (2) 
+                      [2] = source_pack_port_test::Src[0].rr.d[2] (3) 
+                    }
+                  e = bool^0 = source_pack_port_test::Src[0].rr.e (4) 
+                )
+                _Reset = bool^0 = source_pack_port_test::Src[0]._Reset (5) 
+              )
+            }
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 2
+            }
+          Created state:
+          process instance pool:
+          1	source_pack_port_test::Src[0]<1, {2}>
+          2	source_pack_port_test::Src[0].rr
+          bool instance pool:
+          1	source_pack_port_test::Src[0].rr.d[0]
+          2	source_pack_port_test::Src[0].rr.d[1]
+          3	source_pack_port_test::Src[0].rr.d[2]
+          4	source_pack_port_test::Src[0].rr.e
+          5	source_pack_port_test::Src[0]._Reset
+        }
+        <3, 2, {1,2}> {
+          M = pint^0 value: 3
+          N = pint^0 value: 2
+          Src = process source_e<3>^1
+            {
+              [0]<1, {1}> = source_pack_port_test::Src[0] (4) (
+                rr = process e1of<3>^0 = source_pack_port_test::Src[0].rr (5) (
+                  d = bool^1
+                    {
+                      [0] = source_pack_port_test::Src[0].rr.d[0] (6) 
+                      [1] = source_pack_port_test::Src[0].rr.d[1] (7) 
+                      [2] = source_pack_port_test::Src[0].rr.d[2] (8) 
+                    }
+                  e = bool^0 = source_pack_port_test::Src[0].rr.e (9) 
+                )
+                _Reset = bool^0 = source_pack_port_test::Src[0]._Reset (10) 
+              )
+              [1]<1, {2}> = source_pack_port_test::Src[1] (2) (
+                rr = process e1of<3>^0 = source_pack_port_test::Src[1].rr (3) (
+                  d = bool^1
+                    {
+                      [0] = source_pack_port_test::Src[1].rr.d[0] (1) 
+                      [1] = source_pack_port_test::Src[1].rr.d[1] (2) 
+                      [2] = source_pack_port_test::Src[1].rr.d[2] (3) 
+                    }
+                  e = bool^0 = source_pack_port_test::Src[1].rr.e (4) 
+                )
+                _Reset = bool^0 = source_pack_port_test::Src[1]._Reset (5) 
+              )
+            }
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 1
+              1 = 2
+            }
+          rec = process source_pack_port_test<3, 1>^0<{2}> = source_pack_port_test::rec (1) (
+            Src = process source_e<3>^1
+              {
+                [0]<1, {2}> = source_pack_port_test::Src[1] (2) (
+                  rr = process e1of<3>^0 = source_pack_port_test::Src[1].rr (3) (
+                    d = bool^1
+                      {
+                        [0] = source_pack_port_test::Src[1].rr.d[0] (1) 
+                        [1] = source_pack_port_test::Src[1].rr.d[1] (2) 
+                        [2] = source_pack_port_test::Src[1].rr.d[2] (3) 
+                      }
+                    e = bool^0 = source_pack_port_test::Src[1].rr.e (4) 
+                  )
+                  _Reset = bool^0 = source_pack_port_test::Src[1]._Reset (5) 
+                )
+              }
+          )
+          Created state:
+          process instance pool:
+          1	source_pack_port_test::rec<{2}>
+          2	source_pack_port_test::Src[1]<1, {2}>
+          3	source_pack_port_test::Src[1].rr
+          4	source_pack_port_test::Src[0]<1, {1}>
+          5	source_pack_port_test::Src[0].rr
+          bool instance pool:
+          1	source_pack_port_test::Src[1].rr.d[0]
+          2	source_pack_port_test::Src[1].rr.d[1]
+          3	source_pack_port_test::Src[1].rr.d[2]
+          4	source_pack_port_test::Src[1].rr.e
+          5	source_pack_port_test::Src[1]._Reset
+          6	source_pack_port_test::Src[0].rr.d[0]
+          7	source_pack_port_test::Src[0].rr.d[1]
+          8	source_pack_port_test::Src[0].rr.d[2]
+          9	source_pack_port_test::Src[0].rr.e
+          10	source_pack_port_test::Src[0]._Reset
+        }
+        <3, 3, {0,1,2}> {
+          M = pint^0 value: 3
+          N = pint^0 value: 3
+          Src = process source_e<3>^1
+            {
+              [0]<1, {0}> = source_pack_port_test::Src[0] (6) (
+                rr = process e1of<3>^0 = source_pack_port_test::Src[0].rr (7) (
+                  d = bool^1
+                    {
+                      [0] = source_pack_port_test::Src[0].rr.d[0] (11) 
+                      [1] = source_pack_port_test::Src[0].rr.d[1] (12) 
+                      [2] = source_pack_port_test::Src[0].rr.d[2] (13) 
+                    }
+                  e = bool^0 = source_pack_port_test::Src[0].rr.e (14) 
+                )
+                _Reset = bool^0 = source_pack_port_test::Src[0]._Reset (15) 
+              )
+              [1]<1, {1}> = source_pack_port_test::Src[1] (2) (
+                rr = process e1of<3>^0 = source_pack_port_test::Src[1].rr (3) (
+                  d = bool^1
+                    {
+                      [0] = source_pack_port_test::Src[1].rr.d[0] (1) 
+                      [1] = source_pack_port_test::Src[1].rr.d[1] (2) 
+                      [2] = source_pack_port_test::Src[1].rr.d[2] (3) 
+                    }
+                  e = bool^0 = source_pack_port_test::Src[1].rr.e (4) 
+                )
+                _Reset = bool^0 = source_pack_port_test::Src[1]._Reset (5) 
+              )
+              [2]<1, {2}> = source_pack_port_test::Src[2] (4) (
+                rr = process e1of<3>^0 = source_pack_port_test::Src[2].rr (5) (
+                  d = bool^1
+                    {
+                      [0] = source_pack_port_test::Src[2].rr.d[0] (6) 
+                      [1] = source_pack_port_test::Src[2].rr.d[1] (7) 
+                      [2] = source_pack_port_test::Src[2].rr.d[2] (8) 
+                    }
+                  e = bool^0 = source_pack_port_test::Src[2].rr.e (9) 
+                )
+                _Reset = bool^0 = source_pack_port_test::Src[2]._Reset (10) 
+              )
+            }
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 0
+              1 = 1
+              2 = 2
+            }
+          rec = process source_pack_port_test<3, 2>^0<{1,2}> = source_pack_port_test::rec (1) (
+            Src = process source_e<3>^1
+              {
+                [0]<1, {1}> = source_pack_port_test::Src[1] (2) (
+                  rr = process e1of<3>^0 = source_pack_port_test::Src[1].rr (3) (
+                    d = bool^1
+                      {
+                        [0] = source_pack_port_test::Src[1].rr.d[0] (1) 
+                        [1] = source_pack_port_test::Src[1].rr.d[1] (2) 
+                        [2] = source_pack_port_test::Src[1].rr.d[2] (3) 
+                      }
+                    e = bool^0 = source_pack_port_test::Src[1].rr.e (4) 
+                  )
+                  _Reset = bool^0 = source_pack_port_test::Src[1]._Reset (5) 
+                )
+                [1]<1, {2}> = source_pack_port_test::Src[2] (4) (
+                  rr = process e1of<3>^0 = source_pack_port_test::Src[2].rr (5) (
+                    d = bool^1
+                      {
+                        [0] = source_pack_port_test::Src[2].rr.d[0] (6) 
+                        [1] = source_pack_port_test::Src[2].rr.d[1] (7) 
+                        [2] = source_pack_port_test::Src[2].rr.d[2] (8) 
+                      }
+                    e = bool^0 = source_pack_port_test::Src[2].rr.e (9) 
+                  )
+                  _Reset = bool^0 = source_pack_port_test::Src[2]._Reset (10) 
+                )
+              }
+          )
+          Created state:
+          process instance pool:
+          1	source_pack_port_test::rec<{1,2}>
+          2	source_pack_port_test::Src[1]<1, {1}>
+          3	source_pack_port_test::Src[1].rr
+          4	source_pack_port_test::Src[2]<1, {2}>
+          5	source_pack_port_test::Src[2].rr
+          6	source_pack_port_test::Src[0]<1, {0}>
+          7	source_pack_port_test::Src[0].rr
+          bool instance pool:
+          1	source_pack_port_test::Src[1].rr.d[0]
+          2	source_pack_port_test::Src[1].rr.d[1]
+          3	source_pack_port_test::Src[1].rr.d[2]
+          4	source_pack_port_test::Src[1].rr.e
+          5	source_pack_port_test::Src[1]._Reset
+          6	source_pack_port_test::Src[2].rr.d[0]
+          7	source_pack_port_test::Src[2].rr.d[1]
+          8	source_pack_port_test::Src[2].rr.d[2]
+          9	source_pack_port_test::Src[2].rr.e
+          10	source_pack_port_test::Src[2]._Reset
+          11	source_pack_port_test::Src[0].rr.d[0]
+          12	source_pack_port_test::Src[0].rr.d[1]
+          13	source_pack_port_test::Src[0].rr.d[2]
+          14	source_pack_port_test::Src[0].rr.e
+          15	source_pack_port_test::Src[0]._Reset
+        }
+      }
+      }
+
+  Instances:
+    Z = source_pack_port_test<3, 3> Z
+}
+
+footprint: {
+  Z = process source_pack_port_test<3, 3>^0<{0,1,2}> = Z (1) (
+    Src = process source_e<3>^1
+      {
+        [0]<1, {0}> = Z.Src[0] (2) (
+          rr = process e1of<3>^0 = Z.Src[0].rr (3) (
+            d = bool^1
+              {
+                [0] = Z.Src[0].rr.d[0] (1) 
+                [1] = Z.Src[0].rr.d[1] (2) 
+                [2] = Z.Src[0].rr.d[2] (3) 
+              }
+            e = bool^0 = Z.Src[0].rr.e (4) 
+          )
+          _Reset = bool^0 = Z.Src[0]._Reset (5) 
+        )
+        [1]<1, {1}> = Z.Src[1] (4) (
+          rr = process e1of<3>^0 = Z.Src[1].rr (5) (
+            d = bool^1
+              {
+                [0] = Z.Src[1].rr.d[0] (6) 
+                [1] = Z.Src[1].rr.d[1] (7) 
+                [2] = Z.Src[1].rr.d[2] (8) 
+              }
+            e = bool^0 = Z.Src[1].rr.e (9) 
+          )
+          _Reset = bool^0 = Z.Src[1]._Reset (10) 
+        )
+        [2]<1, {2}> = Z.Src[2] (6) (
+          rr = process e1of<3>^0 = Z.Src[2].rr (7) (
+            d = bool^1
+              {
+                [0] = Z.Src[2].rr.d[0] (11) 
+                [1] = Z.Src[2].rr.d[1] (12) 
+                [2] = Z.Src[2].rr.d[2] (13) 
+              }
+            e = bool^0 = Z.Src[2].rr.e (14) 
+          )
+          _Reset = bool^0 = Z.Src[2]._Reset (15) 
+        )
+      }
+  )
+  Created state:
+  process instance pool:
+  1	Z<{0,1,2}>
+  2	Z.Src[0]<1, {0}>
+  3	Z.Src[0].rr
+  4	Z.Src[1]<1, {1}>
+  5	Z.Src[1].rr
+  6	Z.Src[2]<1, {2}>
+  7	Z.Src[2].rr
+  bool instance pool:
+  1	Z.Src[0].rr.d[0]
+  2	Z.Src[0].rr.d[1]
+  3	Z.Src[0].rr.d[2]
+  4	Z.Src[0].rr.e
+  5	Z.Src[0]._Reset
+  6	Z.Src[1].rr.d[0]
+  7	Z.Src[1].rr.d[1]
+  8	Z.Src[1].rr.d[2]
+  9	Z.Src[1].rr.e
+  10	Z.Src[1]._Reset
+  11	Z.Src[2].rr.d[0]
+  12	Z.Src[2].rr.d[1]
+  13	Z.Src[2].rr.d[2]
+  14	Z.Src[2].rr.e
+  15	Z.Src[2]._Reset
+}
