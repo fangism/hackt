@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.5 2007/07/15 03:27:48 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.6 2007/07/16 00:03:26 fang Exp $
 	TODO: trim includes
  */
 
@@ -772,11 +772,18 @@ INSTANCE_ALIAS_INFO_CLASS::find(const unroll_context& c) {
 		// may not want to initialize_direction in this call!
 		this->instantiate_actuals_only(c);
 		// will throw exception upon error
-		if (!this->connect_port_aliases_recursive(
-				*this->next, c).good) {
-			cerr << "Error connecting ports." << endl;
-			THROW_EXIT;
-		}
+	}
+	// HACK:
+	// If this alias has acquired relaxed actuals, replay connections.
+	// This is heavy-handed and inefficient, but we resort to this
+	// to guarantee correctness with types being bound after aliases
+	// are formed.  see src/NOTES.
+	// COST: this may be called excessively from many places...
+	// FIXME: un-hacking this  will require a major overhaul of connections.
+	if ((this != this->next) && this->get_relaxed_actuals() && 
+		!this->connect_port_aliases_recursive(*this->next, c).good) {
+		cerr << "Error connecting ports." << endl;
+		THROW_EXIT;
 	}
 #if ENABLE_STACKTRACE
 	else {

@@ -5,6 +5,17 @@
 
 2007-07-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-18:
+	  instance_alias_info::find(...):
+		forcibly re-connect port aliases (to canonical) for all 
+			aliases that have their relaxed types bound.
+		highly inefficient, but needed for aliasing correctness
+			in the face of late-bound types (after aliases made).
+	  Some cleanup of port_aliases_tracker (dead source).
+	  Resolved and added last batch of pending test cases 
+		in parser/template.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-17:
 	  Egregious hack to fix flaw and with some nice benefits:
 		Added finalization pass to footprint::create_dependent_types

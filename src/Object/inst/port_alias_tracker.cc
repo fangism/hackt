@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.18.20.2 2007/07/15 22:01:35 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.18.20.3 2007/07/16 00:03:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -22,12 +22,6 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
-#if 0 && ENABLE_RELAXED_TEMPLATE_PARAMETERS
-#include "Object/def/process_definition.h"
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/general_collection_type_manager.h"
-#include "Object/type/canonical_type.h"
-#endif
 
 #include "util/persistent_object_manager.h"
 #include "util/copy_if.h"
@@ -217,50 +211,6 @@ alias_reference_set<Tag>::__import_port_aliases(const this_type& s) {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && ENABLE_RELAXED_TEMPLATE_PARAMETERS
-/**
-	HACK: A back-patching pass to late-instantiate substructures whose
-	complete types were bound *after* aliasing to complete types, 
-	and hence, were not instantiated timely.
- */
-template <class Tag>
-good_bool
-alias_reference_set<Tag>::__finalize_substructure_aliases(
-		const unroll_context& c) {
-	STACKTRACE_VERBOSE;
-	const_iterator i(alias_array.begin());
-	const const_iterator e(alias_array.end());
-if (i!=e) {
-	typedef	typename alias_type::pseudo_const_iterator	alias_iter;
-	const alias_iter	// don't path compress yet... use const method
-		canonical(AS_A(const alias_type&, **i).find());
-if (canonical->container->get_canonical_collection().has_relaxed_type()) {
-	typedef	typename class_traits<Tag>::resolved_type_ref_type
-						canonical_type_type;
-	const canonical_type_type
-		t(canonical->complete_type_actuals(*canonical->container));
-	if (t.is_relaxed()) {
-		cerr << "Error: canonical alias has incomplete type: ";
-		canonical->dump_hierarchical_name(cerr << "\talias: ") << endl;
-		t.dump(cerr << "\ttype: ") << endl;
-		return good_bool(false);
-	}
-	// instantiate and connect recursively as needed
-	for ( ; i!=e; ++i) {
-		if (&**i != &*canonical) {
-			(*i)->find(c);
-		}
-	}
-}
-	// else collections of aliases in this set all have strict type
-	// and hence, do not need this backpatching...
-	// (recall: relaxed and strict collections cannot connect to each other)
-}	// end if i!=e
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
 template <class Tag>
@@ -359,28 +309,6 @@ port_alias_tracker_base<Tag>::__replay_aliases(substructure_alias& s) const {
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && ENABLE_RELAXED_TEMPLATE_PARAMETERS
-/**
-	HACK: A back-patching pass to late-instantiate substructures whose
-	complete types were bound *after* aliasing to complete types, 
-	and hence, were not instantiated timely.
- */
-template <class Tag>
-good_bool
-port_alias_tracker_base<Tag>::__finalize_substructure_aliases(
-		const unroll_context& c) {
-	STACKTRACE_VERBOSE;
-	iterator i(_ids.begin());
-	const iterator e(_ids.end());
-	for ( ; i!=e; ++i) {
-		if (!i->second.__finalize_substructure_aliases(c).good)
-			return good_bool(false);
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -647,16 +575,6 @@ port_alias_tracker::import_port_aliases(const this_type& t) {
 		!port_alias_tracker_base<bool_tag>::_ids.empty();
 }
 #endif	// COPY_IF_PORT_ALIASES
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && ENABLE_RELAXED_TEMPLATE_PARAMETERS
-good_bool
-port_alias_tracker::finalize_substructure_aliases(const unroll_context& c) {
-	// for all meta-types with relaxed parameters and substructure:
-	return port_alias_tracker_base<process_tag>::
-		__finalize_substructure_aliases(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

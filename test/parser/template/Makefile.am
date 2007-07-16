@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.11 2007/07/15 03:27:57 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.12 2007/07/16 00:03:31 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -86,15 +86,12 @@ HACKT_CREATE_TEST_PASSES = \
 	env_source-01 env_source-01a env_source-01b \
 	env_source-02 env_source-03 env_source-04 \
 	env_source-05 env_source-06 env_source-08 \
-	env_source-09 env_source-11 \
+	env_source-09 env_source-11 env_source-12 \
+	env_source-13 env_source-13a env_source-14 env_source-14a \
+	env_source-15 env_source-15a env_source-16 env_source-16a \
 	env_source-A-01 env_source-A-02 env_source-A-03 \
 	env_source-B-01 env_source-B-02 env_source-B-03 \
 	env_source-B-04 env_source-B-05
-# unexpected fail:
-#	env_source-12
-# further scrutiny required:
-#	env_source-13 env_source-13a env_source-14 env_source-14a
-#	env_source-15 env_source-15a env_source-16 env_source-16a
 
 HACKT_CREATE_TEST_FAILURES = \
 	064 067 067a \
@@ -121,7 +118,9 @@ HACKT_ALLOC_TEST_PASSES = \
 	env_source-01 env_source-01a \
 	env_source-02 env_source-03 \
 	env_source-05 env_source-06 \
-	env_source-08 env_source-11 \
+	env_source-08 env_source-11 env_source-12 \
+	env_source-13 env_source-13a env_source-14 env_source-14a \
+	env_source-15 env_source-15a env_source-16 env_source-16a \
 	env_source-A-02 env_source-A-03 \
 	env_source-B-02 env_source-B-03 env_source-B-04 env_source-B-05
 
