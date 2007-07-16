@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.22 2007/01/21 05:58:39 fang Exp $
+	$Id: footprint.h,v 1.22.20.1 2007/07/16 20:49:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -200,7 +200,27 @@ private:
 		Privatized implementation.  
 	 */
 	excl_ptr<SPEC::footprint>		spec_footprint;
+	/**
+		Lock to detect recursion.  
+	 */
+	bool					lock_state;
+public:
+	// lock manager
+	class create_lock {
+		footprint&		fp;
+	public:
+		explicit
+		create_lock(footprint& f);
 
+		~create_lock() { fp.lock_state = false; }
+
+	private:
+		// non-copy-able
+		create_lock(const create_lock&);
+
+		create_lock&
+		operator = (const create_lock&);
+	};
 public:
 	footprint();
 	~footprint();

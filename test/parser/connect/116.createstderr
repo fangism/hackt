@@ -1,4 +1,5 @@
 Error: instance alias `bar::a' has incomplete type: foo<3>
+Error creating process type: bar<3>
 Error instantiating process footprint: 
 From canonical type: bar<3>
 Error encountered during module::unroll.

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.37.4.1 2007/07/09 02:40:17 fang Exp $
+ 	$Id: definition.cc,v 1.37.4.2 2007/07/16 20:49:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3174,6 +3174,8 @@ process_definition::__unroll_complete_type(
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("key = " << key << endl);
+try {
+	footprint::create_lock LOCK(f);		// will catch recursion error
 	if (!f.is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -3199,6 +3201,15 @@ process_definition::__unroll_complete_type(
 		}
 	}
 	return good_bool(true);
+} catch (...) {
+	cerr << "Error unrolling type: " << get_qualified_name();
+	if (p) {
+		p->dump(cerr << '<', expr_dump_context::default_value) << '>';
+	}
+	cerr << endl;
+	throw;	// re-throw
+	return good_bool(false);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3259,6 +3270,16 @@ process_definition::__create_complete_type(
 		// probably need to pass it in!
 		if (!f.create_dependent_types(top).good) {
 			// error message
+		if (parent) {
+			cerr << "Error creating process type: " <<
+				get_qualified_name();
+			if (p) {
+				p->dump(cerr << '<',
+					expr_dump_context::default_value)
+					<< '>';
+			}
+			cerr << endl;
+		} // suppress this message for the top-level module
 			return good_bool(false);
 		}
 		// after all aliases have been successfully assigned local IDs

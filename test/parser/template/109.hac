@@ -1,0 +1,20 @@
+// "109.hac"
+// copy-modified from "108.hac"
+// testing mutual recursion of template types
+
+template <pint N>
+defproc rec();
+
+template <pint M>
+defproc poo() {
+rec<(M*4)%3> P;
+}
+
+template <pint N>
+defproc rec() {
+poo<(N+2)%5> R;
+}
+
+poo<6> bad;
+// eventually encounters cyclic type
+

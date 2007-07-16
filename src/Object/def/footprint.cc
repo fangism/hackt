@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.33.20.2 2007/07/16 00:03:25 fang Exp $
+	$Id: footprint.cc,v 1.33.20.3 2007/07/16 20:49:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -286,6 +286,24 @@ footprint_base<Tag>::__expand_production_rules(const footprint_frame& ff,
 #endif
 
 //=============================================================================
+// class footprint::create_lock method definitions
+
+/**
+	Acquires lock for this footprint.
+	If already locked, then we've caught self-dependence.  
+ */
+footprint::create_lock::create_lock(footprint& f) : fp(f) {
+	if (fp.lock_state) {
+		// already locked!
+		cerr << "Error: detected self-dependence of complete type.  "
+			"Types cannot depend on themselves recursively." << endl;
+		THROW_EXIT;
+		// count on parent catching and printing error message
+	}
+	fp.lock_state = true;
+}
+
+//=============================================================================
 // class footprint method definitions
 
 footprint::footprint() :
@@ -308,7 +326,8 @@ footprint::footprint() :
 	port_aliases(),
 	prs_footprint(new PRS::footprint), 
 	chp_footprint(new chp_footprint_type), 
-	spec_footprint(new SPEC::footprint) {
+	spec_footprint(new SPEC::footprint), 
+	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -338,7 +357,8 @@ footprint::footprint(const footprint& t) :
 	port_aliases(),
 	prs_footprint(new PRS::footprint), 
 	chp_footprint(new chp_footprint_type), 
-	spec_footprint(new SPEC::footprint) {
+	spec_footprint(new SPEC::footprint), 
+	lock_state(false) {
 	NEVER_NULL(prs_footprint);
 	NEVER_NULL(chp_footprint);
 	NEVER_NULL(spec_footprint);
@@ -497,6 +517,8 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 good_bool
 footprint::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
+try {
+	create_lock LOCK(*this);	// will catch recursion errors
 {
 	const good_bool g(
 		get_instance_collection_pool_bundle<process_tag>()
@@ -561,6 +583,11 @@ footprint::create_dependent_types(const footprint& top) {
 	// should this be postponed until connection_diagnostics()?
 	mark_created();
 	return good_bool(true);
+} catch (...) {
+	// expect recursion errors to trigger this
+	cerr << "Error creating footprint of complete type." << endl;
+	return good_bool(false);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

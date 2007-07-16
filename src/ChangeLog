@@ -5,6 +5,13 @@
 
 2007-07-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-21:
+	  Catch cyclic type dependence errors in unrolling, produce 
+		meaningful error message.  Detected using footprint locking.
+	  Added a few test cases, updated expect error messages.
+	  This patch is really independent of the rest of this branch.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-20:
 	  No source revision, just another handful of (some crazy) 
 		relaxed template param. instantiation tests (parser/template).
