@@ -1,0 +1,13 @@
+// "120a.hac" -- testing creation connections, involving relaxed params
+// copy-reduced from "120.hac"
+
+template <pint X><pint Y>
+defproc foo() { }
+
+template <pint Z>
+defproc bar(foo<Z> a, b) { }
+
+defproc ick(bar<3> y) { }
+
+ick X;	// incomplete (unbound) type on ick::y.a
+

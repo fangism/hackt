@@ -1,4 +1,4 @@
-ERROR: types mismatch!
+ERROR: container types mismatch!
 	got: foo<2>
 	and: foo<4>
 	from: w.a

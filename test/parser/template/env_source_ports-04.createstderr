@@ -1,7 +1,7 @@
 ERROR: container types mismatch!
-	got: foo<5>
-	and: foo<5><4>
-	from: bar
-	and:  car
+	got: source_e<2>
+	and: source_e<2><1, {0}>
+	from: Z.Src[0]
+	and:  s
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

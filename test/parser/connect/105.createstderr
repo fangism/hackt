@@ -1,4 +1,4 @@
-ERROR: types mismatch!
+ERROR: container types mismatch!
 	got: foo<2>
 	and: foo<1>
 	from: p

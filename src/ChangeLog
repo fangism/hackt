@@ -5,6 +5,13 @@
 
 2007-07-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-22:
+	  Error message improvement in diagnosing container type mismatch, 
+		insignificant source revision.
+	  Added another load of test cases involving port aliases among
+		relaxed types.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-21:
 	  Catch cyclic type dependence errors in unrolling, produce 
 		meaningful error message.  Detected using footprint locking.

@@ -1,0 +1,12 @@
+// "env_source_ports-04.hac"
+// copy-modified from "env_source_ports-02.hac"
+// testing instantiation, should fail
+
+import "env_source_ports.hac";
+
+source_e<2><1,{0}> s;	// strict type
+source_pack_port_test Z;
+
+// strictness mismatches -- fail!
+Z.Src[0] = s;
+

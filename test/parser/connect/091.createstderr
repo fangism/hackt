@@ -1,4 +1,4 @@
-ERROR: types mismatch!
+ERROR: container types mismatch!
 	got: foo<6>
 	and: foo<7>
 	from: bar

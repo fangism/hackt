@@ -1,0 +1,11 @@
+// "env_source_ports-09.hac"
+// copy-modified from "env_source_ports-08.hac"
+// testing instantiation, should fail
+
+import "env_source_ports.hac";
+
+source_e<2> s<1,{0}>, t<1,{1}>;
+source_pack_port_test Z;
+
+Z({t,s});	// connect-fail: types mismatch
+

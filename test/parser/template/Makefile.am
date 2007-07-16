@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.15 2007/07/16 20:50:12 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.16 2007/07/16 22:08:31 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -44,7 +44,12 @@ HACKT_PARSE_TEST_PASSES = \
 	env_source_pack-A env_source_pack-A-01 \
 	env_source_pack-B env_source_pack-B-01 \
 	env_source_ports env_source_ports-01 \
+	env_source_ports-02 env_source_ports-03 \
+	env_source_ports-04 env_source_ports-05 \
+	env_source_ports-06 env_source_ports-07 \
+	env_source_ports-08 env_source_ports-09 \
 	env_source_ports-A env_source_ports-A-01 \
+	env_source_ports-B env_source_ports-B-01 \
 	env_source_recursive env_source_recursive-01 \
 	env_source_recursive-A env_source_recursive-A-01 \
 	env_source_ports_recursive env_source_ports_recursive-01 \
@@ -96,12 +101,15 @@ HACKT_CREATE_TEST_PASSES = \
 	env_source-11 env_source-12 \
 	env_source-13 env_source-13a env_source-14 env_source-14a \
 	env_source-15 env_source-15a env_source-16 env_source-16a \
-	env_source_pack-01 \
-	env_source_pack-A-01 \
-	env_source_ports-01 \
 	env_source-A-02 env_source-A-03 \
 	env_source-B-02 env_source-B-03 \
 	env_source-B-04 env_source-B-05 \
+	env_source_pack-01 \
+	env_source_pack-A-01 \
+	env_source_ports-01 env_source_ports-02 env_source_ports-05 \
+	env_source_ports-08 \
+	env_source_ports-B-01 \
+	env_source_ports-C-03 \
 	env_source_recursive-01 \
 	env_source_recursive-A-01 \
 	env_source_ports_recursive-01
@@ -118,7 +126,11 @@ HACKT_CREATE_TEST_FAILURES = \
 	env_source-A-01 \
 	env_source-B-01 \
 	env_source_pack-B-01 \
-	env_source_ports-A-01
+	env_source_ports-03 env_source_ports-04 \
+	env_source_ports-06 env_source_ports-07 \
+	env_source_ports-09 \
+	env_source_ports-A-01 \
+	env_source_ports-C-01 env_source_ports-C-02
 
 if USE_UNROLL_PHASE
 else
@@ -146,7 +158,9 @@ HACKT_ALLOC_TEST_PASSES = \
 	env_source-B-02 env_source-B-03 env_source-B-04 env_source-B-05 \
 	env_source_pack-01 \
 	env_source_pack-A-01 \
-	env_source_ports-01 \
+	env_source_ports-01 env_source_ports-02 env_source_ports-05 \
+	env_source_ports-08 \
+	env_source_ports-C-03 \
 	env_source_recursive-01 \
 	env_source_recursive-A-01 \
 	env_source_ports_recursive-01

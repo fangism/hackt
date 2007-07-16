@@ -1,4 +1,4 @@
-ERROR: types mismatch!
+ERROR: container types mismatch!
 	got: int<12>
 	and: int<11>
 ERROR: types mismatch!

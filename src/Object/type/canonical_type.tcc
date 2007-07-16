@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.13.26.2 2007/07/11 20:43:39 fang Exp $
+	$Id: canonical_type.tcc,v 1.13.26.3 2007/07/16 22:08:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -195,7 +195,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 ostream&
 CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o, 
 		const this_type& l, const this_type& r) {
-	o << "ERROR: types mismatch!" << endl;
+	o << "ERROR: container types mismatch!" << endl;
 	l.dump(o << "\tgot: ") << endl;
 	r.dump(o << "\tand: ") << endl;
 	return o;

@@ -1,0 +1,11 @@
+// "120b.hac" -- testing creation connections, involving relaxed params
+// copy-reduced from "120a.hac"
+
+template <pint X><pint Y>
+defproc foo() { }
+
+template <pint Z>
+defproc bar(foo<Z> a, b) { }
+
+bar<2> BQ; // incomplete (unbound) type on BQ.a
+

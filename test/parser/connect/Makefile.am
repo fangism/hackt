@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.28.8.4 2007/07/16 04:11:45 fang Exp $
+#	$Id: Makefile.am,v 1.28.8.5 2007/07/16 22:08:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -33,7 +33,7 @@ HACKT_PARSE_TEST_PASSES = \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 103a 104 105 106 107 108 109 \
 	110 111 112 113 114 114a 115 116 117 118 119 \
-	122 123 124 125 126 127 128 129 \
+	120 120a 120b 121 122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 135 136 137 139
 
 # TODO: matches CREATE_TEST_SUBJECTS
@@ -64,9 +64,6 @@ HACKT_UNROLL_TEST_FAILURES = \
 	110 \
 	135
 
-# the following tests are disabled until relaxed actuals are handled properly:
-# 120 121
-
 # adding tests one-by-one, should be subset of HACKT_UNROLL_TEST_SUBJECTS
 HACKT_CREATE_TEST_PASSES = \
 	001 006 006b 007 \
@@ -86,14 +83,13 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	092 096 097 098 \
-	114 115 116 117
+	114 115 116 117 \
+	120 120a 120b 121
 
 if USE_UNROLL_PHASE
 else
 HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
 endif
-
-# KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)
 
 HACKT_ALLOC_TEST_PASSES = \
 	001 006 006b 007 \
@@ -148,8 +144,7 @@ HACKT_GUILE_TEST_SCRIPTS_FAILURES = \
 BISON_OUTPUTS += 032 076 077
 
 # pending test cases
-srcdir_EXTRA_DIST += \
-	120.hac 121.hac
+srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 
