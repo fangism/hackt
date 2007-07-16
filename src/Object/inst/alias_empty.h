@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.12.28.2 2007/07/15 03:27:47 fang Exp $
+	$Id: alias_empty.h,v 1.12.28.3 2007/07/16 04:11:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -124,6 +124,19 @@ protected:
 			) {
 		return good_bool(true);
 	}
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	static
+	void
+	finalize_actuals_and_substructure_aliases(const this_type&, 
+			const unroll_context&) {
+		// do nothing
+	}
+
+	static
+	void
+	__finalize_find(const this_type&, const unroll_context&) { }
+#endif
 
 public:
 	static

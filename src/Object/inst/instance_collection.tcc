@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.46.8.6 2007/07/15 22:01:29 fang Exp $
+	$Id: instance_collection.tcc,v 1.46.8.7 2007/07/16 04:11:24 fang Exp $
 	TODO: trim includes
  */
 
@@ -1153,7 +1153,7 @@ INSTANCE_ARRAY_CLASS::finalize_substructure_aliases(
 	for ( ; i!=e; ++i) {
 		// should synchronize relaxed template parameters
 		// instantiate and re-connect ports recursively as needed
-		i->find(c);
+		i->finalize_find(c);
 		// catch/rethrow exception?
 	}
 }
@@ -1768,7 +1768,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::finalize_substructure_aliases(
 		const unroll_context& c) {
-	this->the_instance.find(c);
+	this->the_instance.finalize_find(c);
 	// catch/rethrow exception?
 }
 #endif

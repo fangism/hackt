@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.15.32.4 2007/07/15 03:27:46 fang Exp $
+	$Id: alias_actuals.tcc,v 1.15.32.5 2007/07/16 04:11:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -158,7 +158,52 @@ instance_alias_info_actuals::synchronize_actuals(AliasType& l, AliasType& r,
 	}
 	return good_bool(true);
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+instance_alias_info_actuals::finalize_actuals_and_substructure_aliases(
+		AliasType& _this, const unroll_context& c) {
+
+	if (_this.copy_actuals(*_this.next)) {
+		STACKTRACE_INDENT_PRINT("instantiating after copying actuals");
+		// may not want to initialize_direction in this call!
+		_this.instantiate_actuals_only(c);
+		// will throw exception upon error
+	}
+	// HACK:
+	// If this alias has acquired relaxed actuals, replay connections.
+	// This is heavy-handed and inefficient, but we resort to this
+	// to guarantee correctness with types being bound after aliases
+	// are formed.  see src/NOTES.
+	// COST: this may be called excessively from many places...
+	// FIXME: un-hacking this  will require a major overhaul of connections.
+	if ((&_this != _this.next) && _this.get_relaxed_actuals() && 
+		!_this.connect_port_aliases_recursive(*_this.next, c).good) {
+		cerr << "Error connecting ports." << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Throws exception upon error.
+ */
+template <class AliasType>
+void
+instance_alias_info_actuals::__finalize_find(
+		AliasType& _this, const unroll_context& c) {
+	typedef	typename AliasType::canonical_container_type	container_type;
+	const container_type& cont(_this.container->get_canonical_collection());
+	if (cont.has_relaxed_type() && !_this.get_relaxed_actuals()) {
+		cerr << "Error: instance alias `";
+		_this.dump_hierarchical_name(cerr) <<
+			"\' has incomplete type: ";
+		cont.get_resolved_canonical_type().dump(cerr) << endl;
+		THROW_EXIT;
+	}
+}
+#endif	// ENABLE_RELAXED_TEMPLATE_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

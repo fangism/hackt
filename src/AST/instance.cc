@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21.12.5 2007/07/13 18:48:47 fang Exp $
+	$Id: instance.cc,v 1.21.12.6 2007/07/16 04:11:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -891,6 +891,7 @@ connection_statement::make_port_connection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Compare this with instance_connection::check_build().
 	\return NULL always, rather useless.  
  */
 never_ptr<const object>
@@ -1265,15 +1266,42 @@ type_completion_connection_statement::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Punting this.
 	Combined statement: bind relaxed template parameter
 		and make connection.
 	Note: reference must be scalar.  
  */
 never_ptr<const object>
 type_completion_connection_statement::check_build(context& c) const {
-	FINISH_ME(Fang);
-	return never_ptr<const object>(NULL);
+	typedef never_ptr<const object> return_type;
+	// attach relaxed actuals before connecting
+	if (!type_completion_statement::check_build(c)) {
+		return return_type(NULL);
+	}
+	// kind of wasteful to check reference again, but whatever...
+	const inst_ref_expr::meta_return_type
+		ref(inst_ref->check_meta_reference(c));
+	const count_ptr<const connection_statement::inst_ref_arg_type>
+		iref(ref.inst_ref());
+
+	expr_list::checked_meta_refs_type temp;
+	if (actuals_base::check_actuals(temp, c).good) {
+
+	const count_ptr<const connection_statement::result_type>
+		port_con(connection_statement::make_port_connection(
+			temp, iref));
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where(*this) << endl;
+		THROW_EXIT;
+	} else {
+		c.add_connection(port_con);
+	}
+	} else {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		THROW_EXIT;
+	}
+	return c.top_namespace();
 }
 
 //=============================================================================

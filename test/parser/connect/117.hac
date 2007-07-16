@@ -1,6 +1,6 @@
 // "117.hac" -- testing creation connections, involving relaxed params
 // copy-modified from "116.hac"
-// should fail during creation when we discover the error:
+// now create-fails b/c bar's ports have incomplete type
 
 template <pint X><pint Y>
 defproc foo() { }

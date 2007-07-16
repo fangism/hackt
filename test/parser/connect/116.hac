@@ -1,5 +1,5 @@
 // "116.hac" -- testing creation connections, involving relaxed params
-// should pass
+// should fail just because bar<> ports have incomplete type
 
 template <pint X><pint Y>
 defproc foo() { }

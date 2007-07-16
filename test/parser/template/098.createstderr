@@ -1,5 +1,5 @@
-ERROR: complete type required for instantiation
-	have: foo<2>
-Failed to instantiate BQ.b
-Error during create_unique.
+Error: instance alias `bar::b' has incomplete type: foo<2>
+Error instantiating process footprint: 
+From canonical type: bar<2>
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

@@ -5,6 +5,19 @@
 
 2007-07-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-19:
+	  Finished type_completion_connection_statement (combined), 
+		test cases still pending.
+	  instance-alias, alias_actuals:
+		pushed find(...) to parent policy class
+	  instance_alias::finalize_find(): 
+		now called by footprint::create_complete
+		is an upgrade from find(...) that performs error-checking
+		that every alias in a well-formed footprint has complete type.
+		Consequently, tests that used to fail at alloc phase 
+		now fail at creation time with checking in final pass.  
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-18:
 	  instance_alias_info::find(...):
 		forcibly re-connect port aliases (to canonical) for all 

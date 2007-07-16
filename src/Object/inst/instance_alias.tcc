@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.6 2007/07/16 00:03:26 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.7 2007/07/16 04:11:23 fang Exp $
 	TODO: trim includes
  */
 
@@ -767,32 +767,26 @@ INSTANCE_ALIAS_INFO_CLASS::find(const unroll_context& c) {
 	this->dump_hierarchical_name(STACKTRACE_INDENT_PRINT("alias: "))
 		<< endl;
 #endif
-	if (this->copy_actuals(*this->next)) {
-		STACKTRACE_INDENT_PRINT("instantiating after copying actuals");
-		// may not want to initialize_direction in this call!
-		this->instantiate_actuals_only(c);
-		// will throw exception upon error
-	}
-	// HACK:
-	// If this alias has acquired relaxed actuals, replay connections.
-	// This is heavy-handed and inefficient, but we resort to this
-	// to guarantee correctness with types being bound after aliases
-	// are formed.  see src/NOTES.
-	// COST: this may be called excessively from many places...
-	// FIXME: un-hacking this  will require a major overhaul of connections.
-	if ((this != this->next) && this->get_relaxed_actuals() && 
-		!this->connect_port_aliases_recursive(*this->next, c).good) {
-		cerr << "Error connecting ports." << endl;
-		THROW_EXIT;
-	}
-#if ENABLE_STACKTRACE
-	else {
-		STACKTRACE_INDENT_PRINT("instantiating skipped") << endl;
-	}
-#endif
+	actuals_parent_type::finalize_actuals_and_substructure_aliases(
+		*this, c);
 	return pseudo_iterator(this->next);
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by footprint::...finalize_substructure_aliases.
+	TODO: template policy dispatch.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
+INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
+	// flatten, attach actuals, instantiate, and connect as necessary
+	const pseudo_iterator ret(this->find(c));
+	actuals_parent_type::__finalize_find(*this, c);
+	return ret;
+}
+
+#endif	// ENABLE_RELAXED_TEMPLATE_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

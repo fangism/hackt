@@ -1,5 +1,0 @@
-ERROR: complete type required for instantiation
-	have: foo<1>
-	instance: snu
-Error alloc_assign_subinstance_footprint_frame.
-ERROR in allocating.  Aborting.

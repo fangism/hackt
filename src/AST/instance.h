@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.8.34.3 2007/07/10 21:24:25 fang Exp $
+	$Id: instance.h,v 1.8.34.4 2007/07/16 04:11:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -394,7 +394,7 @@ public:
 	Statement that completes the type of an indexed range of instances
 	with relaxed template arguments.  
  */
-class type_completion_statement : virtual public instance_management {
+class type_completion_statement : public instance_management {
 protected:
 	const excl_ptr<const inst_ref_expr>	inst_ref;
 	const excl_ptr<const expr_list>		args;

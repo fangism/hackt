@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.8.20.3 2007/07/15 22:01:39 fang Exp $
+	$Id: port_formal_array.tcc,v 1.8.20.4 2007/07/16 04:11:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -640,7 +640,7 @@ PORT_FORMAL_ARRAY_CLASS::finalize_substructure_aliases(
 	for ( ; i!=e; ++i) {
 		// should synchronize relaxed template parameters
 		// instantiate and re-connect ports recursively as needed
-		i->find(c);
+		i->finalize_find(c);
 		// catch or rethrow exception?
 	}
 }

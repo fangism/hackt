@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.28.8.3 2007/07/10 21:24:37 fang Exp $
+#	$Id: Makefile.am,v 1.28.8.4 2007/07/16 04:11:45 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -78,15 +78,15 @@ HACKT_CREATE_TEST_PASSES = \
 	062 063 064 065 067 069 \
 	078 \
 	083 084 085 088 089 \
-	092 093 094 095 099 \
+	093 094 095 099 \
 	100 102 103 104 106 107 109 \
-	111 112 113 114 114a 116 118 119 \
+	111 112 113 114a 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139
 
 HACKT_CREATE_TEST_FAILURES = \
-	096 097 098 \
-	115 117
+	092 096 097 098 \
+	114 115 116 117
 
 if USE_UNROLL_PHASE
 else
@@ -106,13 +106,11 @@ HACKT_ALLOC_TEST_PASSES = \
 	078 \
 	083 084 085 \
 	093 094 095 \
-	111 112 113 114a 116 118 119 \
+	111 112 113 114a 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139
 
-HACKT_ALLOC_TEST_FAILURES = \
-	092 \
-	114
+HACKT_ALLOC_TEST_FAILURES =
 
 # add 031a,b later... too tired to hand-verify
 # add most CREATE tests to ALLOC tests later...
