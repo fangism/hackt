@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.16 2007/07/16 22:08:31 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.17 2007/07/16 23:53:16 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -50,6 +50,8 @@ HACKT_PARSE_TEST_PASSES = \
 	env_source_ports-08 env_source_ports-09 \
 	env_source_ports-A env_source_ports-A-01 \
 	env_source_ports-B env_source_ports-B-01 \
+	env_source_ports-C env_source_ports-C-01 \
+	env_source_ports-C-02 env_source_ports-C-03 \
 	env_source_recursive env_source_recursive-01 \
 	env_source_recursive-A env_source_recursive-A-01 \
 	env_source_ports_recursive env_source_ports_recursive-01 \
