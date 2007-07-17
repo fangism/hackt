@@ -1,0 +1,10 @@
+/**
+	\file "env_source_typedef-06.hac"
+	copy-modified from "env_source_typedef-05.hac"
+	$Id: env_source_typedef-06.hac,v 1.1.2.1 2007/07/17 18:54:26 fang Exp $
+ */
+
+import "env_source.hac";
+
+typedef source_e source_e1of;
+

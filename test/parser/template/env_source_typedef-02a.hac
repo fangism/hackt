@@ -1,0 +1,18 @@
+// "env_source_typedef-02a.hac";
+// testing instantiation
+
+import "env_source_typedef-02.hac";
+
+source_e1of1<2> foo;
+
+// compiles, but fails creation on incomplete type
+/***
+KNOWN BUG: this ICEs-on-invalid
+source_e1of1<2> == source_e<1><2,d[2]>
+... which means we've partially substituted parameters in the 
+canonical type's relaxed template parameters.
+However, relaxed parameters cannot be partially substituted
+(all or none), which then fails to find default values for ::d.
+Results in size assertion failure.  
+***/
+

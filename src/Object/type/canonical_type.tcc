@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.13.26.3 2007/07/16 22:08:17 fang Exp $
+	$Id: canonical_type.tcc,v 1.13.26.4 2007/07/17 18:53:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -267,7 +267,8 @@ CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	copy-modified from fundamental_type_reference::must_be_collectibly_type_equivalent
+	copy-modified from
+	fundamental_type_reference::must_be_collectibly_type_equivalent
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 bool
@@ -299,7 +300,8 @@ CANONICAL_TYPE_CLASS::must_be_collectibly_type_equivalent(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	copy-modified from fundamental_type_reference::must_be_connectibly_type_equivalent
+	copy-modified from
+	fundamental_type_reference::must_be_connectibly_type_equivalent
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 bool

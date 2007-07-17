@@ -1,0 +1,16 @@
+// "env_source_typedef-05b.hac"
+// copy-modified from "env_source_typedef-05a.hac"
+// testing instantiation
+
+import "env_source_typedef-05.hac";
+
+// precise forwarding of relaxed template parameters
+source_e1of<2> foo;
+foo<2, {1,0}>;
+
+/***
+KNOWN BUG:
+instead we get a different (related) error message about the 
+mismatch in template parameters...
+***/
+

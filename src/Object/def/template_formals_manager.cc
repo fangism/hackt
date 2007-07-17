@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.18 2006/10/18 21:38:39 fang Exp $
+	$Id: template_formals_manager.cc,v 1.18.36.1 2007/07/17 18:53:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -179,6 +179,7 @@ template_formals_manager::lookup_template_formal_position(
 good_bool
 template_formals_manager::partial_check_null_template_argument(
 		const template_formals_list_type& l) {
+	STACKTRACE_VERBOSE;
 	if (!l.empty()) {
 		// make sure each formal has a default parameter value
 		// starting with strict formal parameters
@@ -216,7 +217,7 @@ template_formals_manager::partial_check_null_template_argument(
  */
 good_bool
 template_formals_manager::check_null_template_argument(void) const {
-	STACKTRACE("template_formals_manager::check_null_template_argument()");
+	STACKTRACE_VERBOSE;
 #if 0
 	if (!partial_check_null_template_argument(
 			strict_template_formals_list).good) {
@@ -325,6 +326,7 @@ template_formals_manager::equivalent_template_formals(
 good_bool
 template_formals_manager::certify_template_arguments(
 		template_actuals& t) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals::const_arg_list_ptr_type&
 		spl(t.get_strict_args());
 	good_bool sg;
@@ -427,6 +429,7 @@ template_formals_manager::must_validate_actuals(
 template_actuals
 template_formals_manager::make_default_template_arguments(void) const {
 	typedef count_ptr<dynamic_param_expr_list>       return_type;
+	STACKTRACE_VERBOSE;
 	INVARIANT(check_null_template_argument().good);
 	if (strict_template_formals_list.empty())
 		return template_actuals();

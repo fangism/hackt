@@ -1,0 +1,12 @@
+// "env_source_typedef-06b.hac"
+// copy-modified from "env_source_typedef-06a.hac"
+// testing instantiation -- should pass alloc
+
+import "env_source_typedef-06.hac";
+
+// perfect forwarding of relaxed template parameters
+// essentially a name alias
+source_e1of<2> foo;
+foo<2, {1,0}>;
+
+

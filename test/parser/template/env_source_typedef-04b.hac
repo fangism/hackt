@@ -1,0 +1,14 @@
+// "env_source_typedef-04b.hac"
+// copy-modified from "env_source_typedef-04a.hac"
+// testing instantiation -- should pass alloc
+
+import "env_source_typedef-04.hac";
+
+// precise forwarding of relaxed template parameters
+source_e1of1 foo<1,{0}>;
+
+/***
+KNOWN BUG:
+just plain fails on parameter substitution...
+***/
+

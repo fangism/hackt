@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.4.60.1 2007/07/09 02:40:16 fang Exp $
+	$Id: node_list.tcc,v 1.4.60.2 2007/07/17 18:53:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -60,6 +60,9 @@ using std::transform;
 // using util::bind2nd_argval;
 using std::mem_fun;
 using std::mem_fun_ref;
+#if ENABLE_STACKTRACE
+using std::string;
+#endif
 
 //-----------------------------------------------------------------------------
 // default definitions for syntax

@@ -1,0 +1,9 @@
+// "env_source_typedef-01d.hac"
+// instantiation of "env_source_typedef-01b.hac"
+// should pass
+
+import "env_source_typedef-01.hac";
+
+// error: typedef's parameters are strict, not relaxed
+source_e1of1 foo<1, {0}>;
+

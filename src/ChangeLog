@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-23:
+	  Comments-only revision in source.
+	  Tried a handful of relaxed template typedef test cases in
+		parser template... interaction is complicated, 
+		do not bother trying to mix relaxed templates and typedefs,
+		it is completely borked.  
+		Both ICE-on-invalid and ICE-on-questionably-valid cases.
+		Cases added to test suite with notes.  
+	  BUGS: remarked about this known bug.
+
+
 2007-07-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-22:

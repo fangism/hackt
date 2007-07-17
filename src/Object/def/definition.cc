@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.37.4.2 2007/07/16 20:49:47 fang Exp $
+ 	$Id: definition.cc,v 1.37.4.3 2007/07/17 18:53:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -253,7 +253,7 @@ definition_base::lookup_nonparameter_member(const string& id) const {
  */
 good_bool
 definition_base::check_null_template_argument(void) const {
-	STACKTRACE("definition_base::check_null_template_argument()");
+	STACKTRACE_VERBOSE;
 	return template_formals.check_null_template_argument();
 }
 
