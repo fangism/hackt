@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.22.20.3 2007/07/16 04:11:24 fang Exp $
+	$Id: instance_alias_info.h,v 1.22.20.4 2007/07/17 21:05:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -221,7 +221,7 @@ public:
 	pseudo_iterator
 	find(const unroll_context&);
 
-	pseudo_iterator
+	void
 	finalize_find(const unroll_context&);
 #endif
 

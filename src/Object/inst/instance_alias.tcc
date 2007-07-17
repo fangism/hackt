@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.31.8.7 2007/07/16 04:11:23 fang Exp $
+	$Id: instance_alias.tcc,v 1.31.8.8 2007/07/17 21:05:16 fang Exp $
 	TODO: trim includes
  */
 
@@ -776,14 +776,14 @@ INSTANCE_ALIAS_INFO_CLASS::find(const unroll_context& c) {
 /**
 	Called by footprint::...finalize_substructure_aliases.
 	TODO: template policy dispatch.
+	\throw exception on instantiation error.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
+void
 INSTANCE_ALIAS_INFO_CLASS::finalize_find(const unroll_context& c) {
 	// flatten, attach actuals, instantiate, and connect as necessary
-	const pseudo_iterator ret(this->find(c));
+	this->find(c);
 	actuals_parent_type::__finalize_find(*this, c);
-	return ret;
 }
 
 #endif	// ENABLE_RELAXED_TEMPLATE_PARAMETERS

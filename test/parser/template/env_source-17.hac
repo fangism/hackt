@@ -1,0 +1,11 @@
+// "env_source-17.hac"
+// should fail
+
+import "env_source.hac";
+
+source_e<2> X, Y;
+Y._Reset = X._Reset;
+// member reference should fail because type is yet incomplete
+X<2, {0,1}>;
+Y<2, {1,0}>;
+

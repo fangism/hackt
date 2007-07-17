@@ -5,6 +5,15 @@
 
 2007-07-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-24:
+	  Bug fixed: when trying to reference a member, the parent instance
+		must be type-bound and instantiated.  This may require
+		an on-the-fly finalize_find() call to do just that due to
+		late type binding of relaxed templates.  
+	  Added test cases to verify this works.  
+	  Branch has nearly reached end -- missing documentation updates.  
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-23:
 	  Comments-only revision in source.
 	  Tried a handful of relaxed template typedef test cases in

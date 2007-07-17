@@ -1,0 +1,11 @@
+// "env_source-19.hac"
+// copy-modified from "env_source-17.hac"
+// should pass
+
+import "env_source.hac";
+
+source_e<2> X, Y;
+Y<2, {0,1}>;
+X = Y;		// binds type
+X._Reset = X._Reset;
+

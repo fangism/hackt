@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.22.8.2 2007/07/15 03:27:54 fang Exp $
+	$Id: substructure_alias_base.h,v 1.22.8.3 2007/07/17 21:05:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -150,6 +150,12 @@ protected:
 #endif
 			);
 	}
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+public:
+virtual	void
+	finalize_find(const unroll_context&) = 0;
+#endif
 
 protected:
 	// call forwarding
