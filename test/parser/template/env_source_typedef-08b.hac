@@ -1,0 +1,10 @@
+// "env_source_typedef-08b.hac"
+// copy-modified from "env_source_typedef-08a.hac"
+// testing instantiation
+
+import "env_source_typedef-08.hac";
+
+// precise forwarding of relaxed template parameters
+source_e1of2 foo;
+foo<2, {1,0}>;
+

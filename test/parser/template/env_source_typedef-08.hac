@@ -1,0 +1,15 @@
+/**
+	\file "env_source_typedef-08.hac"
+	copy-modified from "env_source_typedef-07.hac"
+	$Id: env_source_typedef-08.hac,v 1.1.2.1 2007/07/17 21:59:20 fang Exp $
+ */
+
+import "env_source.hac";
+
+// typedef passing a relaxed parameter to relaxed parameter is OK
+// trying different names
+template <><pint XXX, YYY[XXX]>
+typedef source_e<2> source_e1of2;
+
+// should pass, valid typedefs
+

@@ -1,0 +1,239 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	80
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	254
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	53
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	54
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	213
+	22	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	23	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
+	25	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	28	##ADDR##	datadefn	0	#HEAD#	#TAIL#	133
+	29	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	30	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	606
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	43	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	44	##ADDR##	procdefn	0	#HEAD#	#TAIL#	265
+	45	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	46	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	47	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	48	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	49	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	54
+	50	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	51	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	52	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	53	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	56	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	procplch	0	#HEAD#	#TAIL#	50
+	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	63	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	64	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	67	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	768
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	70	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	117
+	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	72	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	32
+	73	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	74	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	75	##ADDR##	pintplch	0	#HEAD#	#TAIL#	57
+	76	##ADDR##	pintinst	0	#HEAD#	#TAIL#	32
+	77	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	32
+	78	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	32
+	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	piarthex	0	#HEAD#	#TAIL#	33
+	81	##ADDR##	spimvref	0	#HEAD#	#TAIL#	32
+	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	83	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	84	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	85	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	32
+	86	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	87	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	40
+	88	##ADDR##	apimvref	0	#HEAD#	#TAIL#	33
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	24
+	90	##ADDR##	footprnt	0	#HEAD#	#TAIL#	716
+	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	32
+	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	40
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  1 typedefs
+  Definitions:
+    cmos_source_e = process-definition (defined) cmos_source_e<
+      pint<> M
+      ><
+      pint<> N
+      pint<> D[0..N-1]
+      >(
+        e1of<cmos_source_e::M> R
+        bool<> _Reset
+        bool<> Reset
+      )
+      In definition "cmos_source_e", we have: {
+      Parameters:
+        D = pint<> cmos_source_e::D^1
+        M = pint<> cmos_source_e::M
+        N = pint<> cmos_source_e::N
+      Instances:
+        R = e1of<cmos_source_e::M> cmos_source_e::R
+        Reset = bool<> cmos_source_e::Reset
+        _Reset = bool<> cmos_source_e::_Reset
+      unroll sequence: 
+        e1of<cmos_source_e::M> R
+        bool<> _Reset
+        bool<> Reset
+      }
+
+    e1of = process-definition (defined) e1of<
+      pint<> R
+      >(
+        bool<> d[0..R-1]
+        bool<> e
+      )
+      In definition "e1of", we have: {
+      Parameters:
+        R = pint<> e1of::R
+      Instances:
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
+      unroll sequence: 
+        bool<> d[0..R-1]
+        bool<> e
+      footprint collection: {
+        <1> {
+          R = pint^0 value: 1
+          d = bool^1
+            {
+              [0] = e1of::d[0] (2) 
+            }
+          e = bool^0 = e1of::e (1) 
+          Created state:
+          bool instance pool:
+          1	e1of::e
+          2	e1of::d[0]
+        }
+      }
+      }
+
+    source_e = process-definition (defined) source_e<
+      pint<> M
+      ><
+      pint<> N
+      pint<> d[0..N-1]
+      >(
+        e1of<source_e::M> rr
+        bool<> _Reset
+      )
+      In definition "source_e", we have: {
+      Parameters:
+        M = pint<> source_e::M
+        N = pint<> source_e::N
+        d = pint<> source_e::d^1
+      Instances:
+        _Reset = bool<> source_e::_Reset
+        rr = e1of<source_e::M> source_e::rr
+      unroll sequence: 
+        e1of<source_e::M> rr
+        bool<> _Reset
+      footprint collection: {
+        <1, 1, {0}> {
+          M = pint^0 value: 1
+          N = pint^0 value: 1
+          _Reset = bool^0 = source_e::_Reset (3) 
+          d = pint^1
+            unrolled index-value pairs: {
+              0 = 0
+            }
+          rr = process e1of<1>^0 = source_e::rr (1) (
+            d = bool^1
+              {
+                [0] = source_e::rr.d[0] (1) 
+              }
+            e = bool^0 = source_e::rr.e (2) 
+          )
+          Created state:
+          process instance pool:
+          1	source_e::rr
+          bool instance pool:
+          1	source_e::rr.d[0]
+          2	source_e::rr.e
+          3	source_e::_Reset
+        }
+      }
+      }
+
+  Typedefs:
+    source_e1of1 = process-definition-alias: source_e1of1<>
+<
+      pint<> N
+      pint<> d[0..N-1]
+      >
+      = source_e<1>
+  Instances:
+    foo = source_e1of1<> foo
+}
+
+footprint: {
+  foo = process source_e<1>^0<1, {0}> = foo (1) (
+    rr = process e1of<1>^0 = foo.rr (2) (
+      d = bool^1
+        {
+          [0] = foo.rr.d[0] (1) 
+        }
+      e = bool^0 = foo.rr.e (2) 
+    )
+    _Reset = bool^0 = foo._Reset (3) 
+  )
+  Created state:
+  process instance pool:
+  1	foo<1, {0}>
+  2	foo.rr
+  bool instance pool:
+  1	foo.rr.d[0]
+  2	foo.rr.e
+  3	foo._Reset
+}

@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.19 2007/07/17 21:05:26 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.20 2007/07/17 21:59:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -63,7 +63,9 @@ HACKT_PARSE_TEST_PASSES = \
 	env_source_typedef-02 env_source_typedef-02a \
 	env_source_typedef-04 env_source_typedef-04a env_source_typedef-04b \
 	env_source_typedef-05 env_source_typedef-05a env_source_typedef-05b \
-	env_source_typedef-06 env_source_typedef-06a env_source_typedef-06b
+	env_source_typedef-06 env_source_typedef-06a env_source_typedef-06b \
+	env_source_typedef-07 env_source_typedef-07a env_source_typedef-07b \
+	env_source_typedef-08 env_source_typedef-08a env_source_typedef-08b
 
 # KNOWN BUGS:
 # should fail at unroll-time:
@@ -125,7 +127,9 @@ HACKT_CREATE_TEST_PASSES = \
 	env_source_recursive-A-01 \
 	env_source_ports_recursive-01 \
 	env_source_typedef-01b env_source_typedef-01c \
-	env_source_typedef-06b
+	env_source_typedef-06b \
+	env_source_typedef-07b \
+	env_source_typedef-08b
 
 HACKT_CREATE_TEST_FAILURES = \
 	045 046 \
@@ -144,7 +148,9 @@ HACKT_CREATE_TEST_FAILURES = \
 	env_source_ports-09 \
 	env_source_ports-A-01 \
 	env_source_ports-C-01 env_source_ports-C-02 \
-	env_source_typedef-06a
+	env_source_typedef-06a \
+	env_source_typedef-07a \
+	env_source_typedef-08a
 # KNOWN BUGS: (ICE-on-invalid)
 #	env_source_typedef-02a
 #	env_source_typedef-04a env_source_typedef-04b
@@ -185,7 +191,9 @@ HACKT_ALLOC_TEST_PASSES = \
 	env_source_recursive-A-01 \
 	env_source_ports_recursive-01 \
 	env_source_typedef-01b env_source_typedef-01c \
-	env_source_typedef-06b
+	env_source_typedef-06b \
+	env_source_typedef-07b \
+	env_source_typedef-08b
 
 HACKT_ALLOC_TEST_FAILURES =
 
