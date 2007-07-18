@@ -8,7 +8,7 @@ e1of1 L, R[32];
 bool _Reset, Reset;
 wchb_alternator_split_2_tree_slow<5>
 	X(L, R, _Reset, Reset);
-source_e<1,1,{0}> s(L, _Reset);
+source_e1of<1> s<1,{0}>(L, _Reset);
 bitbucket_e1of<1> b[32];
 (;i:32:
 	b[i](R[i], _Reset);

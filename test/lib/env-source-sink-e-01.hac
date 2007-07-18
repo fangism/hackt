@@ -5,6 +5,6 @@ import "env.hac";
 
 bool _Reset, Reset;
 e1of2 X;
-source_e1of2<4,{0,0,1,1}> S(X, _Reset);
+source_e1of2 S<4,{0,0,1,1}>(X, _Reset);
 bitbucket_e1of2 B(X, _Reset);
 

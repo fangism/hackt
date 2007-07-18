@@ -1,5 +1,14 @@
 "lib/ChangeLog"
 
+2006-07-17	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-26:
+	  env.hac: sources rewritten with relaxed template parameters
+		NOTE: this may break compatibility with old uses
+		see examples and documentation for updating.  
+	  test/lib: test cases updated accordingly (and trivially).
+
+
 2006-06-12	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-81-31:

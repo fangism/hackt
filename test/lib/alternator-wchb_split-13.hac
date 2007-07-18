@@ -8,7 +8,7 @@ e1of2 L, R[32];
 bool _Reset, Reset;
 wchb_alternator_split_2_tree_e1of<2,5>
 	X(L, R, _Reset, Reset);
-cmos_source_e<3,2,{0,1,0}> s(L, _Reset, Reset);
+cmos_source_e1of<2> s<3,{0,1,0}>(L, _Reset, Reset);
 inactive_reset_bitbucket_e1of<2> b[32];
 (;i:32:
 	b[i](R[i], _Reset);

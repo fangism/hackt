@@ -7,7 +7,7 @@ e1of1 L[2];
 e1of1 R;
 bool _Reset, Reset;
 wchb_alternator_merge_2xe1of1_fast X(L, R, _Reset, Reset);
-source_e<1,1,{0}>
+source_e<1><1,{0}>
 	s0(L[0], _Reset),
 	s1(L[1], _Reset);
 inactive_reset_bitbucket_e1of<1>

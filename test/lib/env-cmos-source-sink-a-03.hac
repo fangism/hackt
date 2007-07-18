@@ -6,6 +6,6 @@ import "env.hac";
 bool _Reset, Reset;
 a1of4 X;
 // intentionally omitting rail[3]
-cmos_source_a1of4<9,{0,0,1,1,2,2,1,0,2}> S(X, _Reset, Reset);
+cmos_source_a1of4 S<9,{0,0,1,1,2,2,1,0,2}>(X, _Reset, Reset);
 bitbucket_a1of4 B(X, _Reset);
 

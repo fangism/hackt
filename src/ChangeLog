@@ -5,6 +5,14 @@
 
 2007-07-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-26:
+	  No source revision -- lib/ and test/lib updates only.
+	  We've FINALLY implemented relaxed template parameters enough
+		to revise the PRS library sources (env.hac) the way they
+		were intended originally.  
+	  See lib/ChangeLog.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-25:
 	  Now allow relaxed parameters to be used more liberally inside
 		definition bodies, but former restrictions on uses in

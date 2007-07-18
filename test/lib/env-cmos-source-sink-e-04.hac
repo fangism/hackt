@@ -5,6 +5,6 @@ import "env.hac";
 
 bool _Reset, Reset;
 e1of2 X;
-cmos_source_e1of2<1,{0}> S(X, _Reset, Reset);
+cmos_source_e1of2 S<1,{0}>(X, _Reset, Reset);
 bitbucket_e1of2 B(X, _Reset);
 

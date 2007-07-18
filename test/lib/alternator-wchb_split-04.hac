@@ -10,7 +10,7 @@ wchb_alternator_split_2_slow
 	X(L, M, _Reset, Reset),
 	Y(M[0], R[0..1], _Reset, Reset),
 	Z(M[1], R[2..3], _Reset, Reset);
-source_e<1,1,{0}> s(L, _Reset);
+source_e1of<1> s<1,{0}>(L, _Reset);
 bitbucket_e1of<1>
 	b0(R[0], _Reset), 
 	b1(R[1], _Reset),
