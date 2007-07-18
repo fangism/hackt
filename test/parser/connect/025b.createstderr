@@ -7,16 +7,16 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
 	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	27
 	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20

@@ -8,9 +8,9 @@ Persistent Object Manager text dump:
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
 	6	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
-	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-27:
+	  Latent critical BUG fix: util/IO_utils.cc (I can't count)
+	  process_definition (module): error message suppresses
+		qualified name (file-name) for module-level errors.
+	  Previous test cases on this branch were checked on LP64, 
+		so create-object dumps have been updated to LP32, 
+		still forgiving LP64 variants.  Affects all new
+		and updated create-tests in test suite on this branch.  
+
+
 2007-07-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-26:

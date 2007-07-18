@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	33	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24

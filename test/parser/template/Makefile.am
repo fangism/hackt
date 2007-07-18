@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.25.4.21 2007/07/18 01:37:43 fang Exp $
+#	$Id: Makefile.am,v 1.25.4.22 2007/07/18 18:53:22 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -72,8 +72,7 @@ HACKT_PARSE_TEST_PASSES = \
 # should fail at unroll-time:
 #	057 058 (not propagating relaxed formal dependence yet)
 
-BISON_OUTPUTS += 027 028 042 050
-# 103
+BISON_OUTPUTS += 027 028 042 050 103
 
 HACKT_UNROLL_TEST_PASSES = \
 	001 002 004 006 007 008 009 \

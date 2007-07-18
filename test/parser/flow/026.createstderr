@@ -8,16 +8,16 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25

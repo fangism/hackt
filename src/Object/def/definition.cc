@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.37.4.3 2007/07/17 18:53:50 fang Exp $
+ 	$Id: definition.cc,v 1.37.4.4 2007/07/18 18:49:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3202,11 +3202,14 @@ try {
 	}
 	return good_bool(true);
 } catch (...) {
+if (parent) {
 	cerr << "Error unrolling type: " << get_qualified_name();
 	if (p) {
 		p->dump(cerr << '<', expr_dump_context::default_value) << '>';
 	}
 	cerr << endl;
+}
+	// else don't print name for top-level module
 	throw;	// re-throw
 	return good_bool(false);
 }

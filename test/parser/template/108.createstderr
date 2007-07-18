@@ -6,6 +6,5 @@ Error unrolling type: rec<0>
 Error unrolling type: rec<4>
 Error unrolling type: rec<3>
 Error unrolling type: rec<7>
-Error unrolling type: ../../../../test/parser/template/108.hac
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

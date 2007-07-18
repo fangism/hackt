@@ -2,6 +2,5 @@ Error: detected self-dependence of complete type.  Types cannot depend on themse
 Error unrolling type: foobar<>
 Error unrolling type: recursive<>
 Error unrolling type: foobar<>
-Error unrolling type: ../../../../test/parser/process/124.hac
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

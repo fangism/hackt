@@ -26,11 +26,11 @@ Persistent Object Manager text dump:
 	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
 	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24

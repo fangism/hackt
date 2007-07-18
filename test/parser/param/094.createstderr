@@ -11,7 +11,7 @@ Persistent Object Manager text dump:
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	cnstpic_	2	#HEAD#	#TAIL#	44
 	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
-	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
