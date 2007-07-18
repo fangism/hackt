@@ -1,0 +1,15 @@
+// "110.hac"
+// now allowing relaxed template parameters anywhere inside definition body
+
+template <pint Z>
+defproc e1of(bool rr[Z], e) { }
+
+template <pint M><pint N, d[N]>
+defproc source_e(e1of<M> rr; bool _Reset)
+  {
+  e1of<M> r[N];
+  e1of<N> s[M];
+}
+
+source_e<3> Foo<2, {2,1}>;
+

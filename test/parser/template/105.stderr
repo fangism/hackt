@@ -1,2 +1,0 @@
-ERROR: expression at position 1 of param-expr-list depends on relaxed formal parameter.
-ERROR at [12:4..6]: strict template arguments may never depend on relaxed formal parameters.

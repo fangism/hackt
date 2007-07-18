@@ -7,10 +7,10 @@ defproc foo() { }
 // all relaxed parameters
 template <><pint Z, X>
 defproc bar() {
-// dies because port formal strict parameter depends on relaxed parameter
-// which is ill-formed -- rejected!
+// port actual strict parameter depends on relaxed parameter
+// which is now accepted
 foo<Z> a<X>;
 }
 
-// bar<><2,3,4> BQ;
+// bar<><2,3> BQ;
 

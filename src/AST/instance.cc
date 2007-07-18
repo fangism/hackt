@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21.12.6 2007/07/16 04:11:21 fang Exp $
+	$Id: instance.cc,v 1.21.12.7 2007/07/18 01:37:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -638,7 +638,12 @@ if (ranges) {
 		THROW_EXIT;
 	}
 	if (c.get_current_open_definition()) {
-		if (d->is_relaxed_formal_dependent()) {
+		if (
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			// is now OK outside of formal context
+			c.get_current_prototype() &&
+#endif
+				d->is_relaxed_formal_dependent()) {
 			cerr << "ERROR in instance-array declaration "
 				"at " << where(*ranges) <<
 				": array sizes are not allowed to "

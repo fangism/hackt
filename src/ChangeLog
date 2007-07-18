@@ -5,6 +5,14 @@
 
 2007-07-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-25:
+	  Now allow relaxed parameters to be used more liberally inside
+		definition bodies, but former restrictions on uses in
+		port-formals, template-formals, and typedefs still apply.
+	  Updated and added new test cases.
+	  Next: update lib/env.hac:sources and all uses thereof.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-24:
 	  Bug fixed: when trying to reference a member, the parent instance
 		must be type-bound and instantiated.  This may require

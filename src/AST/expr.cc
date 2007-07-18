@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.25.12.1 2007/07/09 02:40:13 fang Exp $
+	$Id: expr.cc,v 1.25.12.2 2007/07/18 01:37:26 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -705,7 +705,6 @@ template_argument_list_pair::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks template expressions.  
-	TODO: how to signal error?
 	TODO: upgrade expressions to generalized template arguments.  
 	TODO: make sure strict paramters do not depend on relaxed, 
 		relaxed parameters may depend on relaxed parameters.  
@@ -713,6 +712,7 @@ template_argument_list_pair::rightmost(void) const {
  */
 template_argument_list_pair::return_type
 template_argument_list_pair::check_template_args(const context& c) const {
+	STACKTRACE_VERBOSE;
 	const count_ptr<dynamic_param_expr_list>
 		strict(strict_args ?
 			new dynamic_param_expr_list(strict_args->size()) :
@@ -722,7 +722,12 @@ template_argument_list_pair::check_template_args(const context& c) const {
 		strict_args->postorder_check_meta_exprs(temp, c);
 		// NULL are allowed, where should we check?
 		copy(temp.begin(), temp.end(), back_inserter(*strict));
-		if (strict->is_relaxed_formal_dependent()) {
+		if (
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			// is now OK outside of formal context
+			c.get_current_prototype() &&
+#endif
+				strict->is_relaxed_formal_dependent()) {
 			cerr << "ERROR at " << where(*this) <<
 				": strict template arguments may never "
 				"depend on relaxed formal parameters." << endl;
