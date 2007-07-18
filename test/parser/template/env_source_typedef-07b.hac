@@ -1,0 +1,10 @@
+// "env_source_typedef-07b.hac"
+// copy-modified from "env_source_typedef-07a.hac"
+// testing instantiation, should pass
+
+import "env_source_typedef-07.hac";
+
+// precise forwarding of relaxed template parameters
+source_e1of1 foo;
+foo<1,{0}>;		// bind complete type
+

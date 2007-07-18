@@ -1,0 +1,18 @@
+/**
+	\file "env_source.hac"
+	Skeleton of PRS sources.  
+	Taken as a stripped-and-modified version of "lib/env.hac"
+	$Id: env_source.hac,v 1.2 2007/07/18 23:35:14 fang Exp $
+ */
+
+template <pint R>
+defproc e1of(bool d[R], e) { }
+
+//-----------------------------------------------------------------------------
+// relaxed template parameters, at last!
+template <pint M><pint N, d[N]>
+defproc source_e(e1of<M> rr; bool _Reset) { }
+
+template <pint M><pint N, D[N]>
+defproc cmos_source_e(e1of<M> R; bool _Reset, Reset) { }
+

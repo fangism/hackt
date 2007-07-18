@@ -9,10 +9,10 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	pblgcexp	0	#HEAD#	#TAIL#	22
 	14	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22

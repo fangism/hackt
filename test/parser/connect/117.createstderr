@@ -1,11 +1,6 @@
-ERROR: attempted to connect instances with conflicting relaxed parameters!
-	got: 2
-	and: 5
-	from: ::p.a
-	and : ::q.a
-Conflicting actuals in hierarchichal connections.
-between: ::p.a
-    and: ::q.a
-ERROR creating placeholder state for super-instance of ::p.a
-Error during create_unique.
+Error: instance alias `bar::a' has incomplete type: foo<3>
+Error creating process type: bar<3>
+Error instantiating process footprint: 
+From canonical type: bar<3>
+Error encountered during module::unroll.
 ERROR in creating.  Aborting.

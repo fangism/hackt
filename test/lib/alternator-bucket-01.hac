@@ -6,7 +6,7 @@ import "env.hac";
 bool _Reset, Reset;
 e1of1 L[2];
 alternator_bucket_passive_fast B(L, _Reset, Reset);
-cmos_source_e<1,1,{0}>
+cmos_source_e<1><1,{0}>
 	S0(L[0], _Reset, Reset),
 	S1(L[1], _Reset, Reset);
 

@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2007/04/20 18:27:52 fang Exp $
+#	$Id: Makefile.am,v 1.29 2007/07/18 23:32:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -30,10 +30,10 @@ HACKT_PARSE_TEST_PASSES = \
 	060 062 063 064 065 066 067 068 069 \
 	071 074 075 078 \
 	083 084 085 088 089 \
-	091 092 099 \
+	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 103a 104 105 106 107 108 109 \
-	110 111 112 113 118 119 \
-	122 123 124 125 126 127 128 129 \
+	110 111 112 113 114 114a 115 116 117 118 119 \
+	120 120a 120b 121 122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 135 136 137 139
 
 # TODO: matches CREATE_TEST_SUBJECTS
@@ -64,18 +64,6 @@ HACKT_UNROLL_TEST_FAILURES = \
 	110 \
 	135
 
-# the following tests are disabled until relaxed actuals are handled properly:
-# 093 094 095
-# 114 114a 115 116 117 
-# 120 121
-
-# 096, 097, 098, 115 -- should pass unroll, 
-# and fail create once relaxed actuals are checked
-
-# note: known unroll rejects (should be excluded from create test)
-# 091 096 097 098
-# 105 108 110 115
-
 # adding tests one-by-one, should be subset of HACKT_UNROLL_TEST_SUBJECTS
 HACKT_CREATE_TEST_PASSES = \
 	001 006 006b 007 \
@@ -87,24 +75,21 @@ HACKT_CREATE_TEST_PASSES = \
 	062 063 064 065 067 069 \
 	078 \
 	083 084 085 088 089 \
-	099 \
+	093 094 095 099 \
 	100 102 103 104 106 107 109 \
-	111 112 113 118 119 \
+	111 112 113 114a 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139
 
 HACKT_CREATE_TEST_FAILURES = \
-	092
+	092 096 097 098 \
+	114 115 116 117 \
+	120 120a 120b 121
 
 if USE_UNROLL_PHASE
+else
 HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
 endif
-
-# punted until unroll tests are restored: 114 114a
-# KNOWN BUG: 116 117: doesn't handle creation of bar
-#	because no relaxed actual is passed in as a formal parameter.
-# 117 passes unrolling, but fails during create's hierarchical type check, neat!
-# KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)
 
 HACKT_ALLOC_TEST_PASSES = \
 	001 006 006b 007 \
@@ -116,9 +101,12 @@ HACKT_ALLOC_TEST_PASSES = \
 	062 063 064 069 \
 	078 \
 	083 084 085 \
-	111 112 113 118 119 \
+	093 094 095 \
+	111 112 113 114a 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139
+
+HACKT_ALLOC_TEST_FAILURES =
 
 # add 031a,b later... too tired to hand-verify
 # add most CREATE tests to ALLOC tests later...
@@ -156,8 +144,7 @@ HACKT_GUILE_TEST_SCRIPTS_FAILURES = \
 BISON_OUTPUTS += 032 076 077
 
 # pending test cases
-srcdir_EXTRA_DIST += 093.hac 094.hac 095.hac 096.hac 097.hac 098.hac \
-	114.hac 114a.hac 115.hac 116.hac 117.hac 120.hac 121.hac
+srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -1,0 +1,7 @@
+ERROR: container types mismatch!
+	got: source_e<2>
+	and: source_e<2><1, {0}>
+	from: Z.Src[0]
+	and:  s
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

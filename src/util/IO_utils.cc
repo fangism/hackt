@@ -1,14 +1,17 @@
 /**
 	\file "util/IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.6 2006/09/17 06:48:48 fang Exp $
+	$Id: IO_utils.cc,v 1.7 2007/07/18 23:29:17 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <cassert>
 #include <iostream>
 #include <string>
+#include <valarray>
 #include "util/IO_utils.tcc"	// need to explicitly instantiate for char
-
+#include "util/stacktrace.h"
 
 //=============================================================================
 /**
@@ -77,12 +80,12 @@ read_value(istream& f, string& s) {
 }
 
 //=============================================================================
-
 /**
 	Write a string to an output file stream (binary).  
  */
 void
 write_string(ostream& f, const string& s) {
+	STACKTRACE_VERBOSE;
 	const string::size_type len = s.length();
 		// excludes null-termination
 	if (len >= STRING_LIMIT) {
@@ -94,8 +97,9 @@ write_string(ostream& f, const string& s) {
 	// careful: raw memory write
 	write_value(f, len);
 //	assert(len >= 0);		// unsigned, always true
-	if (len)
+	if (len) {
 		f.write(s.c_str(), len);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,14 +108,19 @@ write_string(ostream& f, const string& s) {
 	Reads a string from an input file stream (binary).  
 	Consider using a valarray<char>, or alloca.  
 	Is alloca dangerous?
+	Could use a static local vector that resizes...
  */
 void
 read_string(istream& f, string& s) {
-	static const size_t def_size = 64;
+	static const string::size_type def_size = 64;
+	STACKTRACE_VERBOSE;
 	string::size_type len;
 	// careful: raw memory read
 	read_value(f, len);
 //	assert(len >= 0);		// unsigned, always true
+#if ENABLE_STACKTRACE
+	cerr << "len == " << len << endl;
+#endif
 	if (len >= STRING_LIMIT) {
 		// sanity check, not a real limit
 		cerr << "FATAL: reading string length (" << len <<
@@ -119,27 +128,37 @@ read_string(istream& f, string& s) {
 		throw std::exception();
 	}
 if (len) {
-	if (len -1 > def_size) {
-		// TODO: use excl_array_ptr<>
+	if (len > def_size -1) {
 		// too big for default
-		char* const big_buf = new char [len+1];	// extra space for \0
-		assert(big_buf);
-		f.read(big_buf, len);		// load into buffer
+		// use excl_array_ptr<> or valarray<>
+		std::valarray<char> big_buf(len+1);
+		// extra space for \0
+		// NEVER_NULL(big_buf);
+		f.read(&big_buf[0], len);		// load into buffer
 		big_buf[len] = '\0';
-		s = big_buf;		// copy operation needs NULL-term string
-		delete [] big_buf;		// free buffer
+		// copy operation needs NULL-term string
+		s = &big_buf[0];
+		// delete [] big_buf;		// free buffer
 	} else {
 		char def_buf[def_size];
-		f.read(def_buf, len);		// load into buffer
+		f.read(def_buf, len);	// load into buffer
 		def_buf[len] = '\0';
 		s = def_buf;		// copy operation needs NULL-term string
 	}
-	assert(s.length() == len);	// sanity check
+#if ENABLE_STACKTRACE
+	if (s.length() != len) {
+		cerr << "s.length() == " << s.length() << endl;
+		cerr << "len == " << len << endl;
+		cerr << "s == \"" << s << '\"' << endl;
+	}
+#endif
+	INVARIANT(s.length() == len);	// sanity check
 } else {
 	s == "";
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace util
 
 //=============================================================================

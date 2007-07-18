@@ -1,7 +1,7 @@
 /**
 	\file "AST/identifier.h"
 	Base set of classes for the HAC parser.  
-	$Id: identifier.h,v 1.5 2006/10/18 20:57:35 fang Exp $
+	$Id: identifier.h,v 1.6 2007/07/18 23:28:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_identifier.h,v 1.7.12.1 2005/12/11 00:45:07 fang Exp
  */
@@ -58,6 +58,9 @@ protected:
 public:
 	explicit
 	qualified_id(const token_identifier* n);
+
+	explicit
+	qualified_id(const count_ptr<const token_identifier>&);
 
 	qualified_id(const qualified_id& i);
 

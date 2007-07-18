@@ -8,12 +8,12 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	condscop	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16

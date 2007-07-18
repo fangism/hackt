@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171 2007/06/15 20:28:44 fang Exp $
+#	$Id: Makefile.am,v 1.172 2007/07/18 23:28:12 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -643,6 +643,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
 	Object/unroll/instantiation_statement.tcc \
+	Object/unroll/template_type_completion.tcc \
 	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
 	Object/lang/PRS_macro_registry.tcc \
@@ -790,6 +791,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/port_connection.h \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
+	Object/unroll/template_type_completion.h \
 	Object/lang/PRS_fwd.h \
 	Object/lang/PRS_base.h \
 	Object/lang/PRS_literal_unroller.h \
@@ -1560,6 +1562,7 @@ EXTRA_DIST += local.cvsignore \
 	scripts/deps_to_dot.awk.in \
 	scripts/init_hackt.sh.in \
 	scripts/init_hackt.csh.in \
+	scripts/toggle_stacktrace.sh \
 	AST/README \
 	Object/README \
 	Object/common/README \

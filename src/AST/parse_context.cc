@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.16 2006/10/18 20:57:35 fang Exp $
+ 	$Id: parse_context.cc,v 1.17 2007/07/18 23:28:22 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -525,6 +525,14 @@ context::alias_definition(const never_ptr<const definition_base> d,
 	return get_current_named_scope()->add_definition_alias(d, a);
 }
 
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::add_instance_management(
+		const count_ptr<const instance_management_base>& c) {
+	get_current_sequential_scope()->append_instance_management(c);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds a (partially) type-checked connection or assignment 
@@ -689,11 +697,18 @@ context::get_current_named_scope(void) {
 	Make overloaded version with dimensions.  
  */
 context::placeholder_ptr_type
-context::add_instance(const token_identifier& id, 
-		const relaxed_args_ptr_type& a) {
+context::add_instance(const token_identifier& id 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const relaxed_args_ptr_type& a
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	// wrapper
-	return add_instance(id, a, index_collection_item_ptr_type(NULL));
+	return add_instance(id, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		a, 
+#endif
+		index_collection_item_ptr_type(NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -721,7 +736,9 @@ context::add_instance(const token_identifier& id,
  */
 context::placeholder_ptr_type
 context::add_instance(const token_identifier& id, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_args_ptr_type& a, 
+#endif
 		index_collection_item_ptr_type dim) {
 	typedef	placeholder_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
@@ -751,7 +768,11 @@ context::add_instance(const token_identifier& id,
 
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim, a));
+			current_fundamental_type, dim
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, a
+#endif
+			));
 	NEVER_NULL(inst_stmt);
 	const return_type
 		inst_base(current_named_scope->add_instance(inst_stmt, id, 
@@ -796,7 +817,11 @@ context::add_template_formal(const token_identifier& id,
 	const relaxed_args_ptr_type bogus(NULL);
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
-			ptype, dim, bogus));
+			ptype, dim
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, bogus
+#endif
+			));
 	// template formals cannot have relaxed types!
 	NEVER_NULL(inst_stmt);
 	// formal instance is constructed and added in add_instance

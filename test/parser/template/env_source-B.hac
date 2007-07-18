@@ -1,0 +1,13 @@
+/**
+	\file "env_source-B.hac"
+	copy-reduced from "env_source-A.hac" for bug-hunt
+	$Id: env_source-B.hac,v 1.2 2007/07/18 23:35:13 fang Exp $
+ */
+
+template <pint R>
+defproc e1of(bool e) { }
+
+// removing all parameter dependence in ports
+template <pint M><pint N>
+defproc source_e(bool b) { }
+

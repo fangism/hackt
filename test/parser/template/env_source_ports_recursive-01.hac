@@ -1,0 +1,8 @@
+// "env_source_ports_recursive-01.hac"
+// copy-modified from "env_source_ports-01.hac"
+// testing instantiation, should pass
+
+import "env_source_ports_recursive.hac";
+
+source_pack_port_test<3,3> Z<{0,1,2}>;
+

@@ -1,0 +1,9 @@
+// "env_source_recursive-01.hac"
+// instantiating a recursive source
+// should pass
+
+import "env_source_recursive.hac";
+
+source_e<4> S<4, {3,2,1,0}>;
+
+

@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.13 2006/10/18 20:57:36 fang Exp $
+	$Id: parse_context.h,v 1.14 2007/07/18 23:28:23 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -329,6 +329,10 @@ public:
 		const token_identifier& id);
 
 	void
+	add_instance_management(
+		const count_ptr<const instance_management_base>&);
+
+	void
 	add_connection(
 		const count_ptr<const meta_instance_reference_connection>&);
 
@@ -420,12 +424,17 @@ public:
 	lookup_instance(const qualified_id& id) const;
 
 	placeholder_ptr_type
-	add_instance(const token_identifier& id, 
-		const relaxed_args_ptr_type&);
+	add_instance(const token_identifier& id 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		const relaxed_args_ptr_type&
+#endif
+		);
 
 	placeholder_ptr_type
 	add_instance(const token_identifier& id, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_args_ptr_type&, 
+#endif
 		index_collection_item_ptr_type dim);
 
 	// should be param_value_placeholder

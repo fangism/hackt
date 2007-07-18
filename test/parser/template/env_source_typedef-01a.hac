@@ -1,0 +1,8 @@
+// "env_source_typedef-01a.hac"
+// instantiation of "env_source_typedef-01.hac"
+
+import "env_source_typedef-01.hac";
+
+// compile-fail because typedef parameters are strict now
+source_e1of1 foo;
+

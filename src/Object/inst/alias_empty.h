@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.12 2006/11/21 22:38:49 fang Exp $
+	$Id: alias_empty.h,v 1.13 2007/07/18 23:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -12,6 +12,7 @@
 #define	DEBUG_ALIAS_EMPTY		1
 
 #include <iosfwd>
+#include "Object/devel_switches.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
@@ -24,6 +25,9 @@ class footprint_frame;
 class state_manager;
 class port_member_context;
 template <class> class instance_alias_info;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+class unroll_context;
+#endif
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -79,9 +83,12 @@ public:
 	}
 
 protected:
-	// no actuals to forward!
-	void
-	copy_actuals(const this_type&) const { }
+	/**
+		no actuals to forward!
+		\return false to signal no change
+	 */
+	bool
+	copy_actuals(const this_type&) const { return false; }
 
 	/**
 		Thus far, no meta types without alias actuals can have 
@@ -106,6 +113,29 @@ protected:
 		// no-op.
 		return good_bool(true);
 	}
+#endif
+
+	static
+	good_bool
+	synchronize_actuals(this_type&, this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, const unroll_context&
+#endif
+			) {
+		return good_bool(true);
+	}
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	static
+	void
+	finalize_actuals_and_substructure_aliases(const this_type&, 
+			const unroll_context&) {
+		// do nothing
+	}
+
+	static
+	void
+	__finalize_find(const this_type&, const unroll_context&) { }
 #endif
 
 public:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/collection_pool.tcc"
-	$Id: collection_pool.tcc,v 1.2 2006/11/07 06:34:39 fang Exp $
+	$Id: collection_pool.tcc,v 1.3 2007/07/18 23:28:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_POOL_TCC__
@@ -15,6 +15,8 @@
 #include "Object/inst/collection_traits.h"
 #include "util/likely.h"
 #include "util/stacktrace.h"
+
+#define	STACKTRACE_FIND_ITERATOR	(0 && ENABLE_STACKTACE)
 
 namespace HAC {
 namespace entity {
@@ -95,12 +97,16 @@ COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::index_value_map_const_iterator
 COLLECTION_POOL_CLASS::__find_index_value_map_iterator(
 		const size_type i) const {
+#if STACKTRACE_FIND_ITERATOR
 	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("i = " << i << endl);
+#endif
 	if (UNLIKELY(i >= this->size())) {
+#if STACKTRACE_FIND_ITERATOR
 		STACKTRACE_INDENT_PRINT("i out-of-bounds" << endl);
 		STACKTRACE_INDENT_PRINT("this->size == " <<
 			this->size() << endl);
+#endif
 		return index_value_map.end();
 	}
 	index_value_map_const_iterator f(index_value_map.upper_bound(i));
@@ -118,8 +124,10 @@ COLLECTION_POOL_CLASS::__find_index_value_map_iterator(
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::value_type*
 COLLECTION_POOL_CLASS::__find(const size_type i) const {
+#if STACKTRACE_FIND_ITERATOR
 	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("i = " << i << endl);
+#endif
 	const index_value_map_const_iterator
 		f(this->__find_index_value_map_iterator(i));
 	if (f == index_value_map.end()) {
@@ -141,8 +149,10 @@ COLLECTION_POOL_CLASS::__find(const size_type i) const {
 COLLECTION_POOL_TEMPLATE_SIGNATURE
 typename COLLECTION_POOL_CLASS::value_type*
 COLLECTION_POOL_CLASS::__find(const size_type i) {
+#if STACKTRACE_FIND_ITERATOR
 	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("i = " << i << endl);
+#endif
 	const index_value_map_const_iterator
 		f(this->__find_index_value_map_iterator(i));
 	if (f == index_value_map.end()) {

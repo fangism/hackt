@@ -8,14 +8,14 @@ Persistent Object Manager text dump:
 	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	85
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	294
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.21 2007/03/11 16:34:16 fang Exp $
+	$Id: instance.cc,v 1.22 2007/07/18 23:28:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -43,6 +43,11 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+#include "Object/unroll/template_type_completion.h"
+#include "Object/traits/proc_traits.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
+#endif
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_reference_union.h"
 
@@ -125,6 +130,10 @@ using entity::conditional_scope;
 using entity::pint_scalar;
 using entity::pbool_expr;
 using entity::pbool_const;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+using entity::process_tag;
+using entity::template_type_completion;
+#endif
 
 //=============================================================================
 // class instance_management method definitions
@@ -474,6 +483,9 @@ instance_base::rightmost(void) const {
 	Eventually don't return top_namespace, 
 	but a pointer to the created instance_base
 	so that it may be used by instance_alias.  
+	NOTE: for a relaxed-template construct like "foo<5> x<4>", 
+	automatically expand as: "foo<5> x; x<4>;"
+	likewise: "foo<5> x<4>[3];" becomes "foo<5> x[3]; x<4>[0..2];"
  */
 never_ptr<const object>
 instance_base::check_build(context& c) const {
@@ -493,9 +505,9 @@ instance_base::check_build(context& c) const {
 				" in this instance declaration.  " << endl;
 			return never_ptr<const object>(NULL);
 		}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		// TODO: not done yet... need to alter c.add_instance
 		// copied from template_argument_list_pair::check_template_args
-#if 1
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
 		// by syntactic construction, all expressions are non NULL
@@ -522,11 +534,29 @@ instance_base::check_build(context& c) const {
 #endif
 	// otherwise do nothing different from before.  
 	const context::placeholder_ptr_type
-		inst(c.add_instance(*id, checked_relaxed_actuals));
+		inst(c.add_instance(*id
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, checked_relaxed_actuals
+#endif
+			));
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		return never_ptr<const object>(NULL);
 	}
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	if (relaxed_args) {
+		// add an auxiliary type_completion statement
+		const inst_ref_expr::meta_return_type
+			ref(id->check_meta_reference(c));
+		NEVER_NULL(ref);	// we just created it!
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		c.add_instance_management(
+			type_completion_statement::create_type_completion(
+				ref, temp));
+		// error handling?
+	}
+#endif
 	// need current_instance?  no, not using as reference.
 	// return inst;
 	return c.top_namespace();
@@ -572,7 +602,9 @@ if (ranges) {
 						relaxed_args_ptr_type;
 	const count_ptr<const fundamental_type_reference>
 		type(c.get_current_fundamental_type());
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	relaxed_args_ptr_type checked_relaxed_actuals;
+#endif
 	INVARIANT(type);
 	if (relaxed_args) {
 		if (type->is_strict()) {
@@ -585,7 +617,7 @@ if (ranges) {
 		}
 		// TODO: not done yet... need to alter c.add_instance
 		// copied from template_argument_list_pair::check_template_args
-#if 1
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
 		// by syntactic construction, all expressions are non NULL
@@ -606,7 +638,12 @@ if (ranges) {
 		THROW_EXIT;
 	}
 	if (c.get_current_open_definition()) {
-		if (d->is_relaxed_formal_dependent()) {
+		if (
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			// is now OK outside of formal context
+			c.get_current_prototype() &&
+#endif
+				d->is_relaxed_formal_dependent()) {
 			cerr << "ERROR in instance-array declaration "
 				"at " << where(*ranges) <<
 				": array sizes are not allowed to "
@@ -616,13 +653,35 @@ if (ranges) {
 		}
 	}
 	const never_ptr<const instance_placeholder_base>
-		t(c.add_instance(*id, checked_relaxed_actuals, d));
+		t(c.add_instance(*id, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			checked_relaxed_actuals, 
+#endif
+			d));
 	// if there was error, would've THROW_EXIT'd (temporary)
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	if (relaxed_args) {
+		// add an auxiliary type_completion statement
+		// create an index_expr -> reference
+		const index_expr
+			ie(new id_expr(id),
+				ranges->make_explicit_ranges());
+		const inst_ref_expr::meta_return_type
+			ref(ie.check_meta_reference(c));
+		NEVER_NULL(ref);	// we just created it!
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		c.add_instance_management(
+			type_completion_statement::create_type_completion(
+				ref, temp));
+		// error handling?
+	}
+#endif
 	return t;
 } else {
 	return instance_base::check_build(c);
 }
-}
+}	// end method instance_array::check_build
 
 //=============================================================================
 // class instance_declaration method definitions
@@ -837,6 +896,7 @@ connection_statement::make_port_connection(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Compare this with instance_connection::check_build().
 	\return NULL always, rather useless.  
  */
 never_ptr<const object>
@@ -1118,7 +1178,7 @@ conditional_instantiation::check_build(context& c) const {
 //=============================================================================
 // class type_completion_statement method definitions
 
-type_completion_statement::type_completion_statement(const index_expr* ir, 
+type_completion_statement::type_completion_statement(const inst_ref_expr* ir, 
 		const expr_list* ta) : inst_ref(ir), args(ta) {
 	NEVER_NULL(inst_ref);
 	NEVER_NULL(args);
@@ -1138,17 +1198,58 @@ type_completion_statement::rightmost(void) const {
 	return args->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: Reference may be aggregate.
+ */
 never_ptr<const object>
 type_completion_statement::check_build(context& c) const {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	// add an auxiliary type_completion statement
+	const inst_ref_expr::meta_return_type
+		ref(inst_ref->check_meta_reference(c));
+	if (!ref) {
+		cerr << "Error checking reference at " << where(*inst_ref)
+			<< endl;
+		THROW_EXIT;
+	}
+	expr_list::checked_meta_exprs_type temp;
+	args->postorder_check_meta_exprs(temp, c);
+	// should throw on error
+	c.add_instance_management(create_type_completion(ref, temp));
+	// additional error handling?
+	return c.top_namespace();
+#else
 	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	\return a template_type_completion statement for unrolling.
+ */
+count_ptr<const instance_management_base>
+type_completion_statement::create_type_completion(
+		const inst_ref_expr::meta_return_type& r, 
+		const expr_list::checked_meta_exprs_type& a) {
+	typedef	template_type_completion<process_tag>	return_type;
+	count_ptr<dynamic_param_expr_list> p(new dynamic_param_expr_list);
+	copy(a.begin(), a.end(), back_inserter(*p));
+	count_ptr<const entity::process_meta_instance_reference_base>
+		pr(r.inst_ref().is_a<const entity::process_meta_instance_reference_base>());
+	const count_ptr<const return_type> ret(new return_type(pr, p));
+	return ret;
+}
+#endif
 
 //=============================================================================
 // class type_completion_connection_statement method definitions
 
 type_completion_connection_statement::type_completion_connection_statement(
-		const index_expr* ir, const expr_list* ta, const expr_list* p) :
+		const inst_ref_expr* ir, const expr_list* ta, 
+		const expr_list* p) :
 		type_completion_statement(ir, ta), 
 		actuals_base(p) {
 }
@@ -1168,10 +1269,44 @@ type_completion_connection_statement::rightmost(void) const {
 	return actuals_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Combined statement: bind relaxed template parameter
+		and make connection.
+	Note: reference must be scalar.  
+ */
 never_ptr<const object>
 type_completion_connection_statement::check_build(context& c) const {
-	FINISH_ME(Fang);
-	return never_ptr<const object>(NULL);
+	typedef never_ptr<const object> return_type;
+	// attach relaxed actuals before connecting
+	if (!type_completion_statement::check_build(c)) {
+		return return_type(NULL);
+	}
+	// kind of wasteful to check reference again, but whatever...
+	const inst_ref_expr::meta_return_type
+		ref(inst_ref->check_meta_reference(c));
+	const count_ptr<const connection_statement::inst_ref_arg_type>
+		iref(ref.inst_ref());
+
+	expr_list::checked_meta_refs_type temp;
+	if (actuals_base::check_actuals(temp, c).good) {
+
+	const count_ptr<const connection_statement::result_type>
+		port_con(connection_statement::make_port_connection(
+			temp, iref));
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where(*this) << endl;
+		THROW_EXIT;
+	} else {
+		c.add_connection(port_con);
+	}
+	} else {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		THROW_EXIT;
+	}
+	return c.top_namespace();
 }
 
 //=============================================================================

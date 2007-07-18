@@ -8,11 +8,11 @@ Persistent Object Manager text dump:
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -24,28 +24,28 @@ Persistent Object Manager text dump:
 	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
 	38	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	39	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	40	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
 	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

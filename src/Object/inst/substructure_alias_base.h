@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.22 2007/04/15 05:52:19 fang Exp $
+	$Id: substructure_alias_base.h,v 1.23 2007/07/18 23:28:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -44,6 +44,10 @@ private:
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
 	typedef	physical_instance_placeholder	port_type;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	typedef	subinstance_manager::relaxed_actuals_type
+						relaxed_actuals_type;
+#endif
 protected:
 	/**
 		Container of sub-instances.  
@@ -71,8 +75,15 @@ virtual	~substructure_alias_base() { }
 	good_bool
 	unroll_port_instances(
 			const collection_interface<Tag>& p, 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			const relaxed_actuals_type& a,
+#endif
 			const unroll_context& c) {
-		if (subinstances.unroll_port_instances(p, c).good) {
+		if (subinstances.unroll_port_instances(p,
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				a,
+#endif
+				c).good) {
 			restore_parent_child_links();
 			return good_bool(true);
 		} else	return good_bool(false);
@@ -127,10 +138,24 @@ protected:
 		const footprint_frame&) const;
 
 	good_bool
-	connect_port_aliases_recursive(this_type& r) {
+	connect_port_aliases_recursive(this_type& r
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, const unroll_context& c
+#endif
+			) {
 		return subinstances.connect_port_aliases_recursive(
-			r.subinstances);
+			r.subinstances
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, c
+#endif
+			);
 	}
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+public:
+virtual	void
+	finalize_find(const unroll_context&) = 0;
+#endif
 
 protected:
 	// call forwarding
@@ -154,6 +179,10 @@ class substructure_alias_base<false> {
 	typedef	substructure_alias_base<false>		this_type;
 protected:
 	// has no sub-instances
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	typedef	subinstance_manager::relaxed_actuals_type
+						relaxed_actuals_type;
+#endif
 public:
 	size_t					instance_index;
 protected:
@@ -164,6 +193,9 @@ protected:
 	template <class Tag>
 	good_bool
 	unroll_port_instances(const collection_interface<Tag>&, 
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		const relaxed_actuals_type&,
+#endif
 		const unroll_context&) const { return good_bool(true); }
 
 	void
@@ -207,7 +239,11 @@ protected:
 
 	// has no substructure
 	good_bool
-	connect_port_aliases_recursive(this_type&) {
+	connect_port_aliases_recursive(this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, const unroll_context&
+#endif
+			) {
 		return good_bool(true);
 	}
 

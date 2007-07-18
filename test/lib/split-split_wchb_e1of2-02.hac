@@ -11,7 +11,7 @@ e1of4 C;
 c1of4 c;
 C.d = c.d;
 split_wchb_e1of<2,4> X(L, C, R, _Reset);
-cmos_source_e1of2<5, {0,0,1,1,1}> LS(L, _Reset, Reset);
+cmos_source_e1of2 LS<5, {0,0,1,1,1}>(L, _Reset, Reset);
 onehot_counter<4> CS(C.e, c, _Reset, Reset);
 inactive_reset_bitbucket_e1of2 B[4];
 (;i:4:

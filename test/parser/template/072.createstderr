@@ -1,4 +1,4 @@
-ERROR: types mismatch!
+ERROR: container types mismatch!
 	got: foo<5><4>
 	and: foo<4><4>
 ERROR: type-mismatch during process_instantiation_statement::unroll.

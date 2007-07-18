@@ -19,10 +19,10 @@ Persistent Object Manager text dump:
 	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
 	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16

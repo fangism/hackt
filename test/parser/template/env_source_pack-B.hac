@@ -1,0 +1,12 @@
+// "env_source_pack-B.hac"
+// copy-modified from "env_source_pack.hac"
+// should fail creation on incomplete member type
+
+import "env_source.hac";
+
+defproc source_pack_test(e1of<2> s[2]; bool _Reset) {
+source_e<2> Src[2];
+Src[0]<1, {0}>(s[0], _Reset);
+// Src[1]<1, {1}>(s[1], _Reset);
+}
+

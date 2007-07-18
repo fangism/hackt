@@ -1,0 +1,3 @@
+Error: instance alias `bar[2]' has incomplete type: foo<5>
+Error during create_unique.
+ERROR in creating.  Aborting.

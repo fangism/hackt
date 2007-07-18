@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2006/12/01 23:30:23 fang Exp $
+#	$Id: Makefile.am,v 1.19 2007/07/18 23:33:16 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,7 +24,7 @@ HACKT_PARSE_TEST_PASSES = \
 	094 095 096 097 098 099 \
 	100 101 102 103 104 105 106 107 108 109 \
 	110 111 112 113 114 115 116 117 118 \
-	121 122
+	121 122 123 124
 
 # 107,109: known bugs in progress
 # 089-093: known bugs, haven't decided when to reject
@@ -46,7 +46,8 @@ HACKT_UNROLL_TEST_PASSES = \
 
 HACKT_UNROLL_TEST_FAILURES = \
 	071 073 074 076 078 \
-	114 116
+	114 116 \
+	123 124
 
 # should be a subset of $(HACKT_UNROLL_TEST_SUBJECTS)
 # the omitted unroll tests either have no instances, 

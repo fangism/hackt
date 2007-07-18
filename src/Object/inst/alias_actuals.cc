@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.6 2006/11/21 22:38:45 fang Exp $
+	$Id: alias_actuals.cc,v 1.7 2007/07/18 23:28:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,7 +38,7 @@ instance_alias_info_empty::null;
 
 #if DEBUG_ALIAS_ACTUALS
 bool
-instance_alias_info_actuals::attach_actuals(const alias_actuals_type& a) const {
+instance_alias_info_actuals::attach_actuals(const alias_actuals_type& a) {
 	if (actuals) {
 		// already have!
 		return false;
@@ -121,6 +121,37 @@ instance_alias_info_actuals::compare_actuals(
 		return good_bool(true);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	When connecting two relaxed aliases, copy one over to the
+	other.  If they are both non-null, then they should be equivalent, 
+	else reject as a connection error.  
+	\param l canonical alias
+	\param r canonical alias
+	\pre to properly synchronize, parent collections of aliases must
+		either both be strict (null params), or both be relaxed.
+		We don't recheck this precondition here.
+ */
+good_bool
+instance_alias_info_actuals::synchronize_actuals(this_type& l, this_type& r) {
+	if (l.actuals) {
+		if (r.actuals) {
+			return compare_actuals(l.actuals, r.actuals);
+		} else {
+			r.actuals = l.actuals;
+			// r's type is complete, instantiate r recursively
+		}
+	} else {
+		if (r.actuals) {
+			l.actuals = r.actuals;
+			// l's type is complete, instantiate l recursively
+		}
+	}
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

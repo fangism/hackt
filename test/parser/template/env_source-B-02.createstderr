@@ -1,0 +1,92 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	footprnt	0	#HEAD#	#TAIL#	309
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    e1of = process-definition (defined) e1of<
+      pint<> R
+      >(
+        bool<> e
+      )
+      In definition "e1of", we have: {
+      Parameters:
+        R = pint<> e1of::R
+      Instances:
+        e = bool<> e1of::e
+      unroll sequence: 
+        bool<> e
+      footprint collection: {
+        <3> {
+          R = pint^0 value: 3
+          e = bool^0 = e1of::e (1) 
+          Created state:
+          bool instance pool:
+          1	e1of::e
+        }
+      }
+      }
+
+    source_e = process-definition (defined) source_e<
+      pint<> M
+      ><
+      pint<> N
+      >(
+        bool<> b
+      )
+      In definition "source_e", we have: {
+      Parameters:
+        M = pint<> source_e::M
+        N = pint<> source_e::N
+      Instances:
+        b = bool<> source_e::b
+      unroll sequence: 
+        bool<> b
+      }
+
+  Instances:
+    X = e1of<3> X
+}
+
+footprint: {
+  X = process e1of<3>^0 = X (1) (
+    e = bool^0 = X.e (1) 
+  )
+  Created state:
+  process instance pool:
+  1	X
+  bool instance pool:
+  1	X.e
+}

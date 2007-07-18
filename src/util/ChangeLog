@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.80 2007/06/18 18:24:33 fang Exp $
+#	$Id: ChangeLog,v 1.81 2007/07/18 23:29:15 fang Exp $
+
+2007-07-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-27:
+	  Latent critical bug fixed:
+		IO_utils.cc: buffer size off by one, not anymore
+
 
 2007-06-18	David Fang		<fangism@users.sourceforge.net>
 

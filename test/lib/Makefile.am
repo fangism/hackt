@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2006/11/12 05:58:22 fang Exp $
+#	$Id: Makefile.am,v 1.26 2007/07/18 23:29:41 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -49,7 +49,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
 	merge-merge_wchb_e1of2-01 merge-merge_wchb_e1of2-02 \
+	merge-merge_wchb_e1of2-03 \
 	merge-merge_wchb_a1of2-01 merge-merge_wchb_a1of2-02 \
+	merge-merge_wchb_a1of2-03 \
 	alternator-1of2-01 alternator-1of2-02 \
 	alternator-1of2-03 alternator-1of2-04 \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
@@ -108,7 +110,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
 	merge-merge_wchb_e1of2-01 merge-merge_wchb_e1of2-02 \
+	merge-merge_wchb_e1of2-03 \
 	merge-merge_wchb_a1of2-01 merge-merge_wchb_a1of2-02 \
+	merge-merge_wchb_a1of2-03 \
 	alternator-1of2-01 alternator-1of2-02 \
 	alternator-1of2-03 alternator-1of2-04 \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \

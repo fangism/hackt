@@ -3,7 +3,7 @@
 	Dynamic meta parameter range list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_range_list.h,v 1.10 2007/01/21 05:58:46 fang Exp $
+	$Id: dynamic_meta_range_list.h,v 1.11 2007/07/18 23:28:33 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_META_RANGE_LIST_H__
@@ -16,6 +16,7 @@
 namespace HAC {
 namespace entity {
 class pint_range;
+class dynamic_meta_index_list;
 using std::vector;
 using util::memory::count_ptr;
 
@@ -33,12 +34,12 @@ using util::memory::count_ptr;
 	also cache these results...?
  */
 class dynamic_meta_range_list : public meta_range_list,
-		public vector<count_ptr<pint_range> > {
+		public vector<count_ptr<const pint_range> > {
 	typedef	dynamic_meta_range_list			this_type;
 protected:
 	// list of pointers to pint_ranges?  or just copy construct?
 	// can't copy construct, is abstract
-	typedef	vector<count_ptr<pint_range> >		list_type;
+	typedef	vector<count_ptr<const pint_range> >	list_type;
 public:
 	typedef	list_type::value_type			value_type;
 	typedef	list_type::iterator			iterator;
@@ -77,6 +78,11 @@ public:
 
 	bool
 	must_be_formal_size_equivalent(const meta_range_list& ) const;
+
+	static
+	count_ptr<const this_type>
+	make_explicit_range_list(
+		const count_ptr<const dynamic_meta_index_list>&);
 
 	void
 	accept(nonmeta_expr_visitor&) const;

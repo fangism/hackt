@@ -7,7 +7,7 @@ e1of1 L[8];
 e1of1 R;
 bool _Reset, Reset;
 wchb_alternator_merge_2_tree_fast<3> X(L, R, _Reset, Reset);
-source_e<1,1,{0}> s[8];
+source_e<1><1,{0}> s[8];
 (;i:8:	s[i](L[i], _Reset);	)
 bitbucket_e1of<1>
 	b(R, _Reset);

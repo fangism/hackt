@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle_footprint.tcc"
 	This contains select methods to export to Object/def/footprint.cc
-	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.4 2006/11/27 10:36:40 fang Exp $
+	$Id: instance_collection_pool_bundle_footprint.tcc,v 1.5 2007/07/18 23:28:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_FOOTPRINT_TCC__
@@ -113,7 +113,6 @@ struct instance_collection_pool_wrapper<T>::footprint_frame_assigner {
 	footprint_frame&		ff;
 	const port_member_context&	pmc;
 
-	explicit
 	footprint_frame_assigner(footprint_frame& f, 
 		const port_member_context& p) : ff(f), pmc(p) { }
 
@@ -126,6 +125,23 @@ struct instance_collection_pool_wrapper<T>::footprint_frame_assigner {
 		}
 	}
 };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+template <class T>
+struct instance_collection_pool_wrapper<T>::substructure_finalizer {
+	const unroll_context&	context;
+
+	explicit
+	substructure_finalizer(const unroll_context& c) : context(c) { }
+
+	void
+	operator () (T& t) {
+		t.finalize_substructure_aliases(context);
+		// throws exception on error
+	}
+};
+#endif
 
 //=============================================================================
 // selected class instance_collection_pool_wrapper method definitions
@@ -179,6 +195,22 @@ instance_collection_pool_wrapper<T>::assign_footprint_frame(
 	const const_iterator b(this->pool.begin()), e(this->pool.end());
 	for_each(b, e, footprint_frame_assigner(ff, pmc));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+template <class T>
+good_bool
+instance_collection_pool_wrapper<T>::finalize_substructure_aliases(
+		const unroll_context& c) {
+	try {
+		const iterator b(this->pool.begin()), e(this->pool.end());
+		for_each(b, e, substructure_finalizer(c));
+	} catch (...) {
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+#endif
 
 //=============================================================================
 // selected class instance_collection_pool_bundle method definitions
@@ -304,6 +336,31 @@ instance_collection_pool_bundle<Tag>::collect_scope_and_port_aliases(
 #endif
 }
 #endif	// COPY_IF_PORT_ALIASES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+template <class Tag>
+good_bool
+instance_collection_pool_bundle<Tag>::finalize_substructure_aliases(
+		const unroll_context& c) {
+	return good_bool(
+	instance_collection_pool_wrapper<instance_array<Tag, 0> >
+		::finalize_substructure_aliases(c).good &&
+	instance_collection_pool_wrapper<instance_array<Tag, 1> >
+		::finalize_substructure_aliases(c).good &&
+	instance_collection_pool_wrapper<instance_array<Tag, 2> >
+		::finalize_substructure_aliases(c).good &&
+	instance_collection_pool_wrapper<instance_array<Tag, 3> >
+		::finalize_substructure_aliases(c).good &&
+	instance_collection_pool_wrapper<instance_array<Tag, 4> >
+		::finalize_substructure_aliases(c).good &&
+	instance_collection_pool_wrapper<port_formal_array<Tag> >
+		::finalize_substructure_aliases(c).good
+//	instance_collection_pool_wrapper<port_actual_collection<Tag> >
+//		::finalize_substructure_aliases(c);
+	);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

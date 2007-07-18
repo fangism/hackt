@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.11 2006/11/21 22:38:46 fang Exp $
+	$Id: alias_actuals.h,v 1.12 2007/07/18 23:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
@@ -14,6 +14,7 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/devel_switches.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
@@ -25,6 +26,9 @@ class footprint_frame;
 class port_member_context;
 class state_manager;
 template <class> class instance_alias_info;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+class unroll_context;
+#endif
 using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
@@ -45,7 +49,7 @@ protected:
 	/**
 		Making this mutable for convenience.  
 	 */
-	mutable alias_actuals_type			actuals;
+	alias_actuals_type			actuals;
 
 protected:
 	instance_alias_info_actuals() : actuals() { }
@@ -56,10 +60,10 @@ protected:
 	 */
 #if DEBUG_ALIAS_ACTUALS
 	bool
-	attach_actuals(const alias_actuals_type& a) const;
+	attach_actuals(const alias_actuals_type& a);
 #else
 	bool
-	attach_actuals(const alias_actuals_type& a) const {
+	attach_actuals(const alias_actuals_type& a) {
 		if (actuals)
 			return false;
 		else {
@@ -80,14 +84,48 @@ public:
 	dump_actuals(ostream& o) const;
 
 protected:
-	void
-	copy_actuals(const this_type& t) { actuals = t.actuals; }
+	/**
+		\return true if actuals are new.
+	 */
+	bool
+	copy_actuals(const this_type& t) { 
+		// INVARIANT(!actuals);		// ?
+		const bool ret = t.actuals && !actuals;
+		actuals = t.actuals;
+		return ret;
+	}
 
 	template <class AliasType>
 	static
 	good_bool
 	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
 		state_manager&, const port_member_context&, const size_t);
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	template <class AliasType>
+#endif
+	static
+	good_bool
+	synchronize_actuals(
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		AliasType&, AliasType&, const unroll_context&
+#else
+		this_type&, this_type&
+#endif
+		);
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	template <class AliasType>
+	static
+	void
+	finalize_actuals_and_substructure_aliases(AliasType&, 
+			const unroll_context&);
+
+	template <class AliasType>
+	static
+	void
+	__finalize_find(AliasType&, const unroll_context&);
+#endif
 
 public:
 	static

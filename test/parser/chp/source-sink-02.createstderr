@@ -38,13 +38,13 @@ Persistent Object Manager text dump:
 	34	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16

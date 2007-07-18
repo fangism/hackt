@@ -4,7 +4,7 @@
 // will die during create on incomplete type
 
 template <pint A><pint B>
-defproc foo();
+defproc foo() { }
 
 foo<1> bar, ick<1>, poo, goo, snu<1>, gnu, glu;
 

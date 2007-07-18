@@ -1,0 +1,140 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	16	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	19	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> Z
+      ><
+      pint<> X
+      pint<> Y
+      >(
+        foo<bar::Z> a
+        foo<bar::Z> b
+      )
+      In definition "bar", we have: {
+      Parameters:
+        X = pint<> bar::X
+        Y = pint<> bar::Y
+        Z = pint<> bar::Z
+      Instances:
+        a = foo<bar::Z> bar::a
+        b = foo<bar::Z> bar::b
+      unroll sequence: 
+        foo<bar::Z> a
+        foo<bar::Z> b
+        a<X>
+        b<Y>
+      footprint collection: {
+        <2, 3, 4> {
+          X = pint^0 value: 3
+          Y = pint^0 value: 4
+          Z = pint^0 value: 2
+          a = process foo<2>^0<3> = bar::a (1) 
+          b = process foo<2>^0<4> = bar::b (2) 
+          Created state:
+          process instance pool:
+          1	bar::a<3>
+          2	bar::b<4>
+        }
+      }
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> X
+      ><
+      pint<> Y
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        X = pint<> foo::X
+        Y = pint<> foo::Y
+      unroll sequence: 
+      footprint collection: {
+        <2, 3> {
+          X = pint^0 value: 2
+          Y = pint^0 value: 3
+          Created state:
+        }
+        <2, 4> {
+          X = pint^0 value: 2
+          Y = pint^0 value: 4
+          Created state:
+        }
+      }
+      }
+
+  Instances:
+    BQ = bar<2><3, 4> BQ
+}
+
+footprint: {
+  BQ = process bar<2><3, 4>^0 = BQ (1) (
+    a = process foo<2>^0<3> = BQ.a (2) 
+    b = process foo<2>^0<4> = BQ.b (3) 
+  )
+  Created state:
+  process instance pool:
+  1	BQ
+  2	BQ.a<3>
+  3	BQ.b<4>
+}

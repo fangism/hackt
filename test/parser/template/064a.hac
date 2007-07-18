@@ -1,5 +1,6 @@
 // "064a.hac" should pass, relaxed actuals differ in same relaxed collection
 // copy-modified from "064.hac"
+// expect to fail alloc due to incomplete type
 
 template <pint Q><pint R>
 defproc foo() { }

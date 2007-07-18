@@ -1,0 +1,3 @@
+Error: instance alias `X[3]' has incomplete type: source_e<2>
+Error during create_unique.
+ERROR in creating.  Aborting.

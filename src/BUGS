@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.10 2007/03/18 00:24:55 fang Exp $
+	$Id: BUGS,v 1.11 2007/07/18 23:28:10 fang Exp $
 
 guile: [CRITICAL]
 	This is an issue primarily with guile.
@@ -37,7 +37,11 @@ Global references from with definition-scopes:
 	TODO: make it at least catch such references and just error-out.  
 	Example case: param/049
 
+Relaxed actuals interaction with typedefs:
+	completely borked, see parser/template/env_source_typedef* test cases.
+
 Relaxed actuals:
+	This may no longer be relevant (2007-07-17):
 	Since strict parameters may not depend on relaxed parameters we 
 	must keep track of the *origin* of values, like a poison bit
 	per value.  This will prevent relaxed parameters from leaking

@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
 	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
@@ -24,7 +24,7 @@ Persistent Object Manager text dump:
 	20	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

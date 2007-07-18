@@ -20,12 +20,12 @@ Persistent Object Manager text dump:
 	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
 	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
 	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

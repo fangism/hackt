@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.31 2007/03/16 07:07:16 fang Exp $
+ 	$Id: module.cc,v 1.32 2007/07/18 23:28:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -216,13 +216,21 @@ module::is_unrolled(void) const {
  */
 good_bool
 module::unroll_module(void) {
+	static const char err[] =
+		"Error encountered during module::unroll.";
 	STACKTRACE("module::unroll_module()");
 	footprint& f(get_footprint());
+try {
 	if (!parent_type::__unroll_complete_type(
 			null_module_params, f, f).good) {
-		cerr << "Error encountered during module::unroll." << endl;
+		cerr << err << endl;
 		return good_bool(false);
 	}
+} catch (...) {
+	// crappy error handling...
+	cerr << err << endl;
+	return good_bool(false);
+}
 	return good_bool(true);
 }
 

@@ -1,0 +1,4 @@
+FATAL: reference to uninstantiated process source_e<2> index [3]
+ERROR: unrolling aliases.
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

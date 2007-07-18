@@ -1,0 +1,11 @@
+Error: detected self-dependence of complete type.  Types cannot depend on themselves recursively.
+Error unrolling type: rec<0>
+Error unrolling type: poo<3>
+Error unrolling type: rec<1>
+Error unrolling type: poo<4>
+Error unrolling type: rec<2>
+Error unrolling type: poo<2>
+Error unrolling type: rec<0>
+Error unrolling type: poo<6>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

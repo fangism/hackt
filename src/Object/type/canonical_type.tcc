@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.13 2006/12/01 23:28:56 fang Exp $
+	$Id: canonical_type.tcc,v 1.14 2007/07/18 23:28:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -168,7 +168,7 @@ CANONICAL_TYPE_CLASS::get_template_params(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Whetier or not this type reference is strict or relaxed.  
+	Whether or not this type reference is strict or relaxed.  
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 bool
@@ -187,7 +187,6 @@ CANONICAL_TYPE_CLASS::is_strict(void) const {
 	}
 }
 
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Standard error message for mismatched types.  
@@ -196,7 +195,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 ostream&
 CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o, 
 		const this_type& l, const this_type& r) {
-	o << "ERROR: types mismatch!" << endl;
+	o << "ERROR: container types mismatch!" << endl;
 	l.dump(o << "\tgot: ") << endl;
 	r.dump(o << "\tand: ") << endl;
 	return o;
@@ -244,6 +243,16 @@ good_bool
 CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	if (this->is_strict()) {
+		canonical_definition_ptr->register_complete_type(
+			param_list_ptr);
+		return canonical_definition_ptr->create_complete_type(
+			param_list_ptr, top);
+	} else return good_bool(true);
+	// delay the type-completion of relaxed types until
+	// relaxed template parameters are given.  
+#else
 	if (!this->is_strict()) {
 		cerr << "Error: could not instantiate incomplete type "
 			"(missing relaxed actuals)" << endl;
@@ -253,11 +262,13 @@ CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
 	return canonical_definition_ptr->create_complete_type(
 		param_list_ptr, top);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	copy-modified from fundamental_type_reference::must_be_collectibly_type_equivalent
+	copy-modified from
+	fundamental_type_reference::must_be_collectibly_type_equivalent
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 bool
@@ -289,7 +300,8 @@ CANONICAL_TYPE_CLASS::must_be_collectibly_type_equivalent(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	copy-modified from fundamental_type_reference::must_be_connectibly_type_equivalent
+	copy-modified from
+	fundamental_type_reference::must_be_connectibly_type_equivalent
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 bool

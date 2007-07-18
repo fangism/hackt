@@ -5,7 +5,7 @@ import "env.hac";
 
 bool _Reset, Reset;
 e1of3 L, R[3];
-cmos_source_e<3,3,{0,1,2}> S(L, _Reset, Reset);
+cmos_source_e1of<3><3,{0,1,2}> S(L, _Reset, Reset);
 wire_copy_e1of3<3> C(L, R);
 inactive_reset_bitbucket_e1of3 B[3];
 (;i:3:

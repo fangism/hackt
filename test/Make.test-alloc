@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.5 2007/01/21 06:01:30 fang Exp $
+#	$Id: Make.test-alloc,v 1.6 2007/07/18 23:29:18 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -287,6 +287,9 @@ ALLOC_BUILD_CHECK_LOCAL += \
 endif
 
 build-check-local: $(ALLOC_BUILD_CHECK_LOCAL)
+
+# echo-alloc-build-check-local:
+#	@$(ECHO) $(ALLOC_BUILD_CHECK_LOCAL)
 
 echo-alloc-passes: force
 	@$(ECHO) $(HACKT_ALLOC_TEST_PASSES)

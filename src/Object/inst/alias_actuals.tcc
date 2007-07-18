@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.15 2006/11/07 06:34:33 fang Exp $
+	$Id: alias_actuals.tcc,v 1.16 2007/07/18 23:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -73,7 +73,7 @@ instance_alias_info_actuals::complete_type_actuals(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Completes tyoe and creates the dependent type.  
+	Completes type and creates the dependent type.  
  */
 template <class AliasType>
 good_bool
@@ -91,7 +91,7 @@ instance_alias_info_actuals::create_dependent_types(const AliasType& _alias,
 			<< endl;
 		return good_bool(false);
 	}
-	else if (!container_type::collection_type_manager_parent_type
+	if (!container_type::collection_type_manager_parent_type
 			::create_definition_footprint(_type, top).good) {
 		// have error message already
 		_alias.dump_hierarchical_name(cerr << "Instantiated by: ")
@@ -125,6 +125,87 @@ instance_alias_info_actuals::dump_complete_type(const AliasType& _alias,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+/**
+	When connecting two relaxed aliases, copy one over to the
+	other.  If they are both non-null, then they should be equivalent, 
+	else reject as a connection error.  
+	\param l canonical alias
+	\param r canonical alias
+	\pre to properly synchronize, parent collections of aliases must
+		either both be strict (null params), or both be relaxed.
+		We don't recheck this precondition here.
+ */
+template <class AliasType>
+good_bool
+instance_alias_info_actuals::synchronize_actuals(AliasType& l, AliasType& r, 
+		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
+	if (l.actuals) {
+		if (r.actuals) {
+			return compare_actuals(l.actuals, r.actuals);
+		} else {
+			r.actuals = l.actuals;
+			// r's type is complete, instantiate r recursively
+			r.instantiate_actuals_only(c);
+		}
+	} else {
+		if (r.actuals) {
+			l.actuals = r.actuals;
+			// l's type is complete, instantiate l recursively
+			l.instantiate_actuals_only(c);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+instance_alias_info_actuals::finalize_actuals_and_substructure_aliases(
+		AliasType& _this, const unroll_context& c) {
+
+	if (_this.copy_actuals(*_this.next)) {
+		STACKTRACE_INDENT_PRINT("instantiating after copying actuals");
+		// may not want to initialize_direction in this call!
+		_this.instantiate_actuals_only(c);
+		// will throw exception upon error
+	}
+	// HACK:
+	// If this alias has acquired relaxed actuals, replay connections.
+	// This is heavy-handed and inefficient, but we resort to this
+	// to guarantee correctness with types being bound after aliases
+	// are formed.  see src/NOTES.
+	// COST: this may be called excessively from many places...
+	// FIXME: un-hacking this  will require a major overhaul of connections.
+	if ((&_this != _this.next) && _this.get_relaxed_actuals() && 
+		!_this.connect_port_aliases_recursive(*_this.next, c).good) {
+		cerr << "Error connecting ports." << endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Throws exception upon error.
+ */
+template <class AliasType>
+void
+instance_alias_info_actuals::__finalize_find(
+		AliasType& _this, const unroll_context& c) {
+	typedef	typename AliasType::canonical_container_type	container_type;
+	const container_type& cont(_this.container->get_canonical_collection());
+	if (cont.has_relaxed_type() && !_this.get_relaxed_actuals()) {
+		cerr << "Error: instance alias `";
+		_this.dump_hierarchical_name(cerr) <<
+			"\' has incomplete type: ";
+		cont.get_resolved_canonical_type().dump(cerr) << endl;
+		THROW_EXIT;
+	}
+}
+#endif	// ENABLE_RELAXED_TEMPLATE_PARAMETERS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Evaluates the complete canonical type based on the
 	container's type and the relaxed actuals.  
@@ -153,7 +234,21 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.complete_type_actuals(*_alias.container));
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	// now possible because relaxed template types may be bound
+	// later, not necessarily upon first instantiation.  
+	if (!_type) {
+		// print error message
+		_alias.dump_hierarchical_name(cerr << "\tinstance: ") << endl;
+		return good_bool(false);
+	}
+#if ENABLE_STACKTRACE
+	_alias.dump_hierarchical_name(STACKTRACE_INDENT_PRINT("instance: ")) << endl;
+	_type.dump(STACKTRACE_INDENT_PRINT("_type: ")) << endl;
+#endif
+#else
 	INVARIANT(_type);
+#endif
 	return canonical_type_footprint_frame_policy<canonical_definition_type>
 		::initialize_and_assign(_type, ff, sm, pmc, ind);
 }

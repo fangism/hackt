@@ -1,0 +1,124 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	116
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> Z
+      >(
+        foo<bar::Z> a
+        foo<bar::Z> b
+      )
+      In definition "bar", we have: {
+      Parameters:
+        Z = pint<> bar::Z
+      Instances:
+        a = foo<bar::Z> bar::a
+        b = foo<bar::Z> bar::b
+      unroll sequence: 
+        foo<bar::Z> a
+        foo<bar::Z> b
+        a<5>
+        b<6>
+      footprint collection: {
+        <2> {
+          Z = pint^0 value: 2
+          a = process foo<2>^0<5> = bar::a (1) 
+          b = process foo<2>^0<6> = bar::b (2) 
+          Created state:
+          process instance pool:
+          1	bar::a<5>
+          2	bar::b<6>
+        }
+      }
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> X
+      ><
+      pint<> Y
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        X = pint<> foo::X
+        Y = pint<> foo::Y
+      unroll sequence: 
+      footprint collection: {
+        <2, 5> {
+          X = pint^0 value: 2
+          Y = pint^0 value: 5
+          Created state:
+        }
+        <2, 6> {
+          X = pint^0 value: 2
+          Y = pint^0 value: 6
+          Created state:
+        }
+      }
+      }
+
+  Instances:
+    BQ = bar<2> BQ
+}
+
+footprint: {
+  BQ = process bar<2>^0 = BQ (1) (
+    a = process foo<2>^0<5> = BQ.a (2) 
+    b = process foo<2>^0<6> = BQ.b (3) 
+  )
+  Created state:
+  process instance pool:
+  1	BQ
+  2	BQ.a<5>
+  3	BQ.b<6>
+}

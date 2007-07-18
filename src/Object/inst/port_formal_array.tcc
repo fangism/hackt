@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.8 2007/01/21 05:59:14 fang Exp $
+	$Id: port_formal_array.tcc,v 1.9 2007/07/18 23:28:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
@@ -159,7 +159,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
 		const instance_alias_info_type& a) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	// internally uses 0-based indices, no correction needed.
 	const key_type k(this->value_array.index_to_key(
 		this->value_array.lookup_index(a)));
@@ -174,7 +174,7 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
 		const size_t i) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	// internally 0-based index, adjusted for 1-based parameter
 	const key_type k(this->value_array.index_to_key(i -1));
 	return o << k;
@@ -288,16 +288,20 @@ PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 	This should only ever be called once per port formal.
 	This is a result of not being able to (conveniently)
 	initialize the entire collection in this constructor... yet.
+	NOTE: relaxed actuals are now attached separately.  
  */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type& actuals, 
+#endif
 		const unroll_context& c) {
 	INVARIANT(!this->value_array.dimensions());
 	const key_type k(ranges.resolve_sizes());
 	this->value_array.resize(k);
 	iterator i(this->begin()), e(this->end());
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	if (actuals) {
 	try {
 		// if ports are ever allowed to depend on relaxed parameters,
@@ -312,10 +316,13 @@ PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		return good_bool(false);
 	}
 	} else {
+#endif
 		for ( ; i!=e; ++i) {
 			i->instantiate(never_ptr<this_type>(this), c);
 		}
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	}
+#endif
 	return good_bool(true);
 }
 
@@ -482,7 +489,11 @@ PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p) {
+		physical_instance_collection& p
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -496,7 +507,11 @@ PORT_FORMAL_ARRAY_CLASS::connect_port_aliases_recursive(
 		element_type& jj(*j);
 		// possibly redundant port type checking is unnecessary
 		if (!instance_alias_info_type::checked_connect_port(
-				ii, jj).good) {
+				ii, jj
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				, c
+#endif
+				).good) {
 			// error message?
 			return good_bool(false);
 		}
@@ -613,6 +628,23 @@ PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 		i->assign_footprint_frame(ff, pcc, j);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+void
+PORT_FORMAL_ARRAY_CLASS::finalize_substructure_aliases(
+		const unroll_context& c) {
+	iterator i(this->begin());
+	const iterator e(this->end());
+	for ( ; i!=e; ++i) {
+		// should synchronize relaxed template parameters
+		// instantiate and re-connect ports recursively as needed
+		i->finalize_find(c);
+		// catch or rethrow exception?
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE

@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.12 2006/10/18 20:58:30 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.13 2007/07/18 23:29:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -12,6 +12,7 @@
 #include "util/string_fwd.h"
 #include "Object/unroll/instance_management_base.h"
 #include "Object/common/util_types.h"
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -76,8 +77,10 @@ virtual	never_ptr<const instance_placeholder_base>
 	index_collection_item_ptr_type
 	get_indices(void) const;
 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 virtual	const_relaxed_args_type
 	get_relaxed_actuals(void) const = 0;
+#endif
 
 	good_bool
 	resolve_instantiation_range(const_range_list&, 

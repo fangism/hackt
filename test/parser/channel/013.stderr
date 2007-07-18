@@ -13,7 +13,7 @@ state	value
 #STATE#	list<(expr)>: (array-concatenation) ... [3:27..30]
 #STATE#	[ [3:31]
 in state #STATE#, possible rules are:
-	strict_relaxed_template_arguments : expr_optional_list_in_angles . optional_template_arguments_in_angles  (#RULE#)
+	strict_relaxed_template_arguments : complex_expr_optional_list_in_angles . optional_template_arguments_in_angles  (#RULE#)
 	optional_template_arguments_in_angles : .  (#RULE#)
 acceptable tokens are: 
 	'!' (reduce)

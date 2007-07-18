@@ -1,0 +1,8 @@
+// "env_source_typedef-01b.hac"
+// instantiation of "env_source_typedef-01a.hac"
+// should pass
+
+import "env_source_typedef-01.hac";
+
+source_e1of1<1, {0}> foo;
+

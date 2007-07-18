@@ -1,7 +1,7 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range.h,v 1.4 2006/11/02 22:01:48 fang Exp $
+	$Id: range.h,v 1.5 2007/07/18 23:28:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_range.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp
  */
@@ -11,6 +11,7 @@
 
 #include "AST/expr_base.h"
 #include "util/what_fwd.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
@@ -32,8 +33,9 @@ public:
 	typedef	count_ptr<entity::nonmeta_index_expr_base>
 							nonmeta_return_type;
 protected:
-	const excl_ptr<const expr>	lower;	///< inclusive lower bound
-	const excl_ptr<const expr>	upper;	///< inclusive upper bound
+	// using ref-count ptr for copy-convenience
+	const count_ptr<const expr>	lower;	///< inclusive lower bound
+	const count_ptr<const expr>	upper;	///< inclusive upper bound
 public:
 /// simple constructor for when range is just one integer expression
 	explicit
@@ -42,6 +44,9 @@ public:
 	Full range constructor with min and max.  
  */
 	range(const expr* l, const expr* u);
+
+	range(const count_ptr<const expr>& l,
+		const count_ptr<const expr>& u);
 
 	~range();
 
@@ -59,6 +64,11 @@ public:
 
 	range::nonmeta_return_type
 	check_nonmeta_index(const context& c) const;
+
+	static
+	count_ptr<const range>
+	make_explicit_range(const count_ptr<const range>&);
+
 };	// end class range
 
 //=============================================================================

@@ -7,18 +7,18 @@ Persistent Object Manager text dump:
 	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	30
 	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	30
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	dialias_	0	#HEAD#	#TAIL#	24

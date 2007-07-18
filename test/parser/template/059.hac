@@ -1,11 +1,16 @@
 // "059.hac" should pass, ok to put relaxed actuals after identifier
 // copy-modified from "045.hac"
+// should also pass allocation
 
 template <pint Q><pint R>
 defproc foo() { }
 
 foo<5> bar<4>;
+// equivalently:
+// foo<5> bar;
+// bar<4>;
 foo<5><4> car;	// should have the same effect for scalars
 
-// BUG to fix: relaxed template parameters are not registered persistently
+// effectively the same, connectibly type-equivalent
+// although bar is declared with relaxed types per-member
 

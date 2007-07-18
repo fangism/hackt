@@ -1,0 +1,12 @@
+// "env_source_ports-C.hac"
+// copy-modified from "env_source_ports.hac"
+// testing port forwarding of relaxed template parameters
+
+import "env_source_ports.hac";
+
+// switched the values relative to original definition
+defproc source_pack_port_test_alt(source_e<2> Src[2]) {
+Src[0]<1, {1}>;
+Src[1]<1, {0}>;
+}
+

@@ -1,0 +1,11 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	foo	source_e<1><1, {0}>
+	process: 2
+	bool: 1,2,3
+2	(top)	-	2	foo.rr	e1of<1>
+	bool: 2,1
+[global bool entries]
+1	(top)	-	1	foo.rr.d[0]	
+2	(top)	-	2	foo.rr.e	
+3	(top)	-	3	foo._Reset	

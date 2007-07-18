@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.16 2006/10/18 20:58:26 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.17 2007/07/18 23:28:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -48,6 +48,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/channel_instantiation_statement.h"
 #include "Object/unroll/process_instantiation_statement.h"
 #include "Object/unroll/instantiation_statement.tcc"
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+// #include "Object/traits/proc_traits.h"
+#include "Object/unroll/template_type_completion.tcc"
+#endif
 
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
@@ -62,6 +66,7 @@ namespace util {
 using HAC::entity::pbool_tag;
 using HAC::entity::pint_tag;
 using HAC::entity::preal_tag;
+using HAC::entity::process_tag;
 
 SPECIALIZE_UTIL_WHAT(HAC::entity::data_instantiation_statement,
 	"data_instantiation_statement")
@@ -75,6 +80,10 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::process_instantiation_statement,
 	"process_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instantiation_statement,
 	"channel_instantiation_statement")
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+SPECIALIZE_UTIL_WHAT(HAC::entity::template_type_completion<HAC::entity::process_tag>,
+	"process_template_type_completion")
+#endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_instantiation_statement, 
@@ -94,6 +103,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::data_instantiation_statement, 
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::template_type_completion<HAC::entity::process_tag>, 
+		PROCESS_TEMPLATE_TYPE_COMPLETION_TYPE_KEY, 0)
+#endif
 }	// end namespace util
 
 
@@ -144,10 +158,12 @@ instantiation_statement_base::dump(ostream& o,
 	NEVER_NULL(type_base);
 	type_base->dump(o);
 	// is this ok: reference to automatic object?
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	const const_relaxed_args_type& ra(get_relaxed_actuals());
 	if (ra) {
 		ra->dump(o << '<', dc) << '>';
 	}
+#endif
 	o << " ";
 	const never_ptr<const instance_placeholder_base>
 		inst_base(get_inst_base());
@@ -286,6 +302,9 @@ template class instantiation_statement<preal_tag>;
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+template class template_type_completion<process_tag>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

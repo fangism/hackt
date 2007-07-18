@@ -1,5 +1,3 @@
-ERROR: complete type required for instantiation
-	have: foo<5>
-Failed to instantiate dar
+Error: instance alias `dar' has incomplete type: foo<5>
 Error during create_unique.
 ERROR in creating.  Aborting.

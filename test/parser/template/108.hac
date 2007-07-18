@@ -1,0 +1,11 @@
+// "108.hac"
+// testing recursion of template types
+
+template <pint N>
+defproc rec() {
+rec<(N+1)%5> R;
+}
+
+rec<7> bad;
+// eventually encounters cyclic type
+

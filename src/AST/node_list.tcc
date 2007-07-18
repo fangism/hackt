@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.4 2006/05/06 04:18:36 fang Exp $
+	$Id: node_list.tcc,v 1.5 2007/07/18 23:28:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -60,6 +60,9 @@ using std::transform;
 // using util::bind2nd_argval;
 using std::mem_fun;
 using std::mem_fun_ref;
+#if ENABLE_STACKTRACE
+using std::string;
+#endif
 
 //-----------------------------------------------------------------------------
 // default definitions for syntax
@@ -86,6 +89,12 @@ node_list<T>::~node_list() { }
 NODE_LIST_TEMPLATE_SIGNATURE
 node_list<T>::node_list(const T* n) : nodes(), open(NULL), close(NULL) {
 	nodes.push_back(value_type(n));
+}
+
+NODE_LIST_TEMPLATE_SIGNATURE
+node_list<T>::node_list(const count_ptr<const T>& n) :
+		nodes(), open(NULL), close(NULL) {
+	nodes.push_back(n);
 }
 
 //-----------------------------------------------------------------------------

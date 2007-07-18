@@ -1,0 +1,8 @@
+// "env_source_ports-A-01.hac"
+// copy-modified from "env_source_ports-01.hac"
+// testing instantiation, should fail create
+
+import "env_source_ports-A.hac";	// includes bad definition
+
+source_pack_port_test Z;
+

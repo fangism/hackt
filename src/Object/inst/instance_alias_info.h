@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.22 2007/01/21 05:59:11 fang Exp $
+	$Id: instance_alias_info.h,v 1.23 2007/07/18 23:28:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -207,14 +207,28 @@ public:
 	peek(void) const { return this->next; }
 
 	good_bool
-	unite(this_type&);
+	unite(this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+	);
 
 	pseudo_const_iterator
 	find(void) const;
 
+
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	pseudo_iterator
+	find(const unroll_context&);
+
+	void
+	finalize_find(const unroll_context&);
+#endif
+
 	pseudo_iterator
 	find(void);
 
+public:
 	size_t
 	get_index(void) const;
 
@@ -228,6 +242,11 @@ public:
 		FYI: This is only called by instance_array<0> (scalar)
 			in instantiate_indices().
 	 */
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	void
+	instantiate_actuals_only(const unroll_context&);
+#endif
+
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
@@ -363,12 +382,24 @@ public:
 public:
 	static
 	good_bool
-	checked_connect_port(this_type&, this_type&);
+	replay_connect_port(this_type&, this_type&);
+
+	static
+	good_bool
+	checked_connect_port(this_type&, this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+	);
 
 	// punting relaxed actuals checking until after unroll phase
 	static
 	good_bool
-	checked_connect_alias(this_type&, this_type&);
+	checked_connect_alias(this_type&, this_type&
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context&
+#endif
+	);
 
 	/// counterpart to load_next_connection
 	void

@@ -1,0 +1,9 @@
+// "123.hac"
+// testing self-recursion
+
+defproc recursive() {
+recursive Arrrrr;
+}
+
+recursive Yikes;
+

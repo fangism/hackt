@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.8 2007/03/11 16:34:16 fang Exp $
+	$Id: type.cc,v 1.9 2007/07/18 23:28:24 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -108,7 +108,7 @@ type_id::rightmost(void) const {
  */
 type_base::return_type
 type_id::check_definition(const context& c) const {
-	STACKTRACE("type_id::check_build()");
+	STACKTRACE_VERBOSE;
 	const type_base::return_type
 		d(c.lookup_definition(*base));
 	return d;
@@ -250,7 +250,7 @@ generic_type_ref::return_type
 generic_type_ref::check_type(const context& c) const {
 	// note: this is non-const, whereas we're returning const
 	typedef	definition_base::type_ref_ptr_type	local_return_type;
-	STACKTRACE("generic_type_ref::check_type()");
+	STACKTRACE_VERBOSE;
 	// sets context's current definition
 	const never_ptr<const definition_base>
 		d(base->check_definition(c));

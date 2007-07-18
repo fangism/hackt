@@ -3,6 +3,326 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-40-merged-template-02-28:
+	  Major branch merge -- relaxed templates implemented.
+		Bunch of test case dumps updated, and a ton of new
+		ones (mostly template relaxed) added.  
+		Grammar updated, much of middle-end affected.  
+		Language documentation updated.
+		PRS library's env.hac: (sources) updated, including
+			their uses in the lib/ test suite.  
+		Status: significantly tested (I'm happy with it)
+	  Includes 1 critical latent bug fix in from util library.
+		Also a few less critical bug fixes, 
+		and diagnostic message improvements.  
+	  Only known bugs (NOT regression) are some incomplete type-checks 
+		on crazy relaxed template typedefs.  
+
+
+2007-07-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-28:
+	  No source revision, documentation only in dox/lang.
+	  End of branch, merge up.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-27:
+	  Latent critical BUG fix: util/IO_utils.cc (I can't count)
+	  process_definition (module): error message suppresses
+		qualified name (file-name) for module-level errors.
+	  Previous test cases on this branch were checked on LP64, 
+		so create-object dumps have been updated to LP32, 
+		still forgiving LP64 variants.  Affects all new
+		and updated create-tests in test suite on this branch.  
+
+
+2007-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-26:
+	  No source revision -- lib/ and test/lib updates only.
+	  We've FINALLY implemented relaxed template parameters enough
+		to revise the PRS library sources (env.hac) the way they
+		were intended originally.  
+	  See lib/ChangeLog.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-25:
+	  Now allow relaxed parameters to be used more liberally inside
+		definition bodies, but former restrictions on uses in
+		port-formals, template-formals, and typedefs still apply.
+	  Updated and added new test cases.
+	  Next: update lib/env.hac:sources and all uses thereof.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-24:
+	  Bug fixed: when trying to reference a member, the parent instance
+		must be type-bound and instantiated.  This may require
+		an on-the-fly finalize_find() call to do just that due to
+		late type binding of relaxed templates.  
+	  Added test cases to verify this works.  
+	  Branch has nearly reached end -- missing documentation updates.  
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-23:
+	  Comments-only revision in source.
+	  Tried a handful of relaxed template typedef test cases in
+		parser template... interaction is complicated, 
+		do not bother trying to mix relaxed templates and typedefs,
+		it is completely borked.  
+		Both ICE-on-invalid and ICE-on-questionably-valid cases.
+		Cases added to test suite with notes.  
+	  BUGS: remarked about this known bug.
+
+
+2007-07-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-22:
+	  Error message improvement in diagnosing container type mismatch, 
+		insignificant source revision.
+	  Added another load of test cases involving port aliases among
+		relaxed types.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-21:
+	  Catch cyclic type dependence errors in unrolling, produce 
+		meaningful error message.  Detected using footprint locking.
+	  Added a few test cases, updated expect error messages.
+	  This patch is really independent of the rest of this branch.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-20:
+	  No source revision, just another handful of (some crazy) 
+		relaxed template param. instantiation tests (parser/template).
+	  Next: test out member references to type-unbound instances,
+		catching self-recursion (w/ w/o template), 
+		finally real library definition updates.
+
+
+2007-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-19:
+	  Finished type_completion_connection_statement (combined), 
+		test cases still pending.
+	  instance-alias, alias_actuals:
+		pushed find(...) to parent policy class
+	  instance_alias::finalize_find(): 
+		now called by footprint::create_complete
+		is an upgrade from find(...) that performs error-checking
+		that every alias in a well-formed footprint has complete type.
+		Consequently, tests that used to fail at alloc phase 
+		now fail at creation time with checking in final pass.  
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-18:
+	  instance_alias_info::find(...):
+		forcibly re-connect port aliases (to canonical) for all 
+			aliases that have their relaxed types bound.
+		highly inefficient, but needed for aliasing correctness
+			in the face of late-bound types (after aliases made).
+	  Some cleanup of port_aliases_tracker (dead source).
+	  Resolved and added last batch of pending test cases 
+		in parser/template.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-17:
+	  Egregious hack to fix flaw and with some nice benefits:
+		Added finalization pass to footprint::create_dependent_types
+		that sweeps over process instances/aliases and propagates
+		complete types to aliases, automatically instantiating
+		and connecting ports recursively too.  
+		cost: extra traversal, possibly redundant connections
+	  A few test cases updated to reflect that every alias in footprint
+		should have complete type.  Also redundant copies of 
+		equivalent relaxed actuals are eliminated, nice.
+	  No new test cases added this time.
+
+
+2007-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-16:
+	  Realized flaw in approach to late type binding w.r.t. aliases:
+		aliases between unbound types need to have their ports
+		recursively connected *after* their types are bound, 
+		which is made difficult by the acylic union-find of aliases.
+		Probably requires a finalization pass in footprint creation.
+		Take caution shen shortening aliases!
+		This needs to be completely thought out...
+	  instance_aliases: propagate unroll_context to facilitate late
+		instantiation with relaxed template argument bindings.  
+		Using #if switch makes a real mess out of this...
+	  More test cases again, with a bunch of known-to-fail/wrong
+		to be analyzed further next.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-15:
+	  Error handling fix and improved diagnostic messages.  
+		Cases: relaxed parameters already bound and
+			instance ports unrolling exception handling.
+	  More test cases again.
+
+
+2007-07-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-14:
+	  Bug fixed! ICE on port unrolling fixed by simply attaching 
+		per-instance relaxed actuals to each recursive port unrolling,
+		also took care of parameter forwarding from formal to actuals.
+	  Added bunch more test cases for this bug only.
+	  Next: back to former test case agenda, working up to library.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-13:
+	  template_type_completion::unroll(): for now restrict reference
+		subtype to be simply-indexed (dynamic_cast).
+		Use first alias's container to extract and complete 
+		canonical type and create type's footprint.  
+	  Added scripts/toggle_stacktrace.sh for rapid stacktrace toggling.
+	  Added bunch more tests to separate what works from what fails
+		in the current bug hunt.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-12:
+	  More of the same code cuts, pulling out dead code 
+		pre-ENABLE_RELAXED_TEMPLATE_PARAMETERS, 
+		and still hunting the relaxed instantiation
+		ICE bug cases in parser/template/env_source-*.  
+
+
+2007-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-11:
+	  Continued to cut out code that binds relaxed actuals to instantiation
+		statements in front/middle-end, because 
+		template_type_completion supercedes it.  
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-10:
+	  instance_alias_info::instantiate_actuals_only(): (bug fix)
+		only unroll port instances if type is complete.
+	  Mostly debugging code added.
+	  Discovered a major (non-regression) bug in relaxed actual
+		instantiation, resolution in progress.  
+		Bug blocks work on relaxed typing of libraries.  
+
+
+2007-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-09:
+	  Minor old bug fix: relaxed template parameters didn't accept
+		complex/aggregate expressions -- fixed.
+		Grammar massaged, and now required parameters are checked
+		post-parsing, in dynamic_param_expr_list::
+			certify_template_arguments_without_defaults()
+		since rule is relaxed now.  
+	  Updated 4 compile-fail test cases, added a few new ones
+		in parser/template, more to come.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-08:
+	  Bug fix: canonical_type_base::combine_relaxed_actuals
+		bad conditional for appending parameters.
+	  Enabled a bunch of new test cases in parser/template.
+	  Next: more complex test cases, prs library updates using relaxed
+		template parameter binding (sources in particular).
+
+
+2007-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-07:
+	  Parser updated to support simple type-completion statements
+		of the form "ID <args>;" which is already disambiguated
+		from generic type references (whew!).  
+		Minor: factored out generic_id : relative_id | absolute_id
+	  NOTES: concluded that ports types must be bound by the local
+		definition (footprint) to be well-formed, i.e. cannot
+		be delayed and set by higher level of instance hierarchy.  
+		Thus no longer needing member-refs in type completions.
+	  Upgraded type-completion's reference to generic inst_ref_expr.
+
+
+2007-07-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-06:
+	  Object/inst/alias_actuals.cc: implemented synchronize_actuals()
+	  Object/inst/instance_alias.tcc: impl. instantiate_actuals_only(),
+		alias connection diagnostics now report names of violating
+			aliases in bad connections.  
+	  Object/unroll/template_type_completion.tcc:
+		each parameter-bound alias now invokes create_dependent_types
+		and instantiate_actuals_only (recursive ports)
+	  Another batch of old regression tests re-instated, 
+		several others with updated error messages.  
+		Only old cases (hierarchical) remain: connect/120,121.
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-05:
+	  AST/instance.cc: implemented type_completion_statement::check_build()
+	  Re-instated a bunch of old-regressed test cases, having re-enabled
+		relaxed template parameter binding.  
+		Added some new test cases that alloc-fail.  
+	  Next: work on footprint creation and hierarchical relaxed
+		template parameter propagation (akin to local aliases)
+
+
+2007-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-04:
+	  Object/unroll/template_type_completion.tcc:
+		implemented unroll (first draft)
+	  AST/instance.cc: support template_type_completion of array decls.
+	  AST/{expr,range,instance,node_list}.{h,cc}: 
+		added support for new constructors,
+		upgraded some excl_ptr members to count_ptr 
+		for copy-convenience
+	  Object/expr/dynamic_meta_range_list.h: const pint_range pointers
+	  Next: re-examine old test cases in template/06*.hac
+		generally needs much more rigorous testing
+
+
+2007-07-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-03:
+	  No source revision, only test updates:
+		the few 'regressions' have been updated from create-fail
+		to create-pass and alloc-fail cases.  No regressions remain.
+	  Next: continue implementation of template_type_completion
+		and add test cases.  
+
+
+	* HACKT-00-01-04-main-00-81-39-template-02-02:
+	  Added Object/unroll/template_type_completion.{h,tcc}
+		instance-management class, for relaxed template param binding.
+		Currently only applicable to process meta-type.  
+		TODO: implement the unroll() method, attaching parameters
+			and expanding complete types recursively, 
+			and processing internal alias connections.  
+	  Object/devel_switches.h: ENABLE_RELAXED_TEMPLATE_PARAMETERS (on)
+	  Began to relax create-time checking of type-completeness in the
+		case of relaxed types, which postpones instantiation failure
+		until allocation time.  
+	  AST/instance.{h,cc}: initial support for type_completion_statement.
+	  parser/hackt-parse.yy.in: TODO: promote member_index_expr
+		in type_completion_statements.  
+	  new regressions (temporary): 3 in template, 1 in connect, 
+		all related to expect-fail upon create.
+
+
+2007-07-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-template-02-01:
+	  Branch to get relaxed template parameters working again.
+	  Removed mutable qualifier on relaxed actuals member in
+		Object/inst/alias_actuals.{h,cc}, and de-const'd
+		the attach_actuals() method.
+	  TODO: possibly delay unroll_port_instances until types
+		are complete.  
+	  Goal: allow statements like "foo<5> bar<4>;",
+		and be able to pass relaxed parameters down through
+		connections and ports.  
+
+
 2007-07-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39:

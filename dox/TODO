@@ -1,5 +1,8 @@
 "TODO"
 
+Convert all documents to GNU texinfo sources.  
+Generate pdf, html, info from them.  
+
 General to-do list for documents.
 
 Standardize document formats and preambles, e.g.

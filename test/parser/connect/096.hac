@@ -2,7 +2,7 @@
 // copy-modified from "094.hac"
 
 template <pint A><pint B>
-defproc foo();
+defproc foo() { }
 
 foo<1> bar<1>, ick<2>, poo<2>;
 

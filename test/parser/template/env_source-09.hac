@@ -1,0 +1,11 @@
+// "env_source-09.hac"
+// copy-modified from "env_source-03.hac"
+// should fail create
+
+import "env_source.hac";
+
+source_e<2> X[3];
+X[1]<2, {0,1}>;
+// this binds parameter one instance
+// the other unbound instances will cause alloc fail
+

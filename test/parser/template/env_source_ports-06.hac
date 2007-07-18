@@ -1,0 +1,15 @@
+// "env_source_ports-06.hac"
+// copy-modified from "env_source_ports-05.hac"
+// testing instantiation, should fail
+
+import "env_source_ports.hac";
+
+source_e<2> s;
+source_pack_port_test Z;
+
+// type will bind by alias
+Z.Src[0] = s;
+
+// error: type is already bound
+s<1,{0}>;
+

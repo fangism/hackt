@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.7 2007/04/15 05:52:19 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.8 2007/07/18 23:28:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -149,9 +149,7 @@ PORT_ACTUAL_COLLECTION_CLASS::lookup_index(
 	STACKTRACE_VERBOSE;
 	const size_t offset = distance(this->begin(), &a);
 	INVARIANT(offset < this->value_array.size());
-#if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("return " << offset +1);
-#endif
 	return offset +1;
 }
 
@@ -264,7 +262,9 @@ PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::instantiate_indices(
 		const const_range_list& /* ranges */, 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const instance_relaxed_actuals_type& /* actuals */, 
+#endif
 		const unroll_context&) {
 #if 0
 	INVARIANT(!this->value_array.size());
@@ -416,7 +416,11 @@ PORT_ACTUAL_COLLECTION_CLASS::unroll_aliases(const multikey_index_type& l,
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
-		physical_instance_collection& p) {
+		physical_instance_collection& p
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const unroll_context& c
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->value_array.size() == t.value_array.size());
@@ -430,7 +434,11 @@ PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
 		element_type& jj(*j);
 		// possibly redundant port type checking is unnecessary
 		if (!instance_alias_info_type::checked_connect_port(
-				ii, jj).good) {
+				ii, jj
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+				, c
+#endif
+				).good) {
 			// error message?
 			return good_bool(false);
 		}
@@ -439,6 +447,10 @@ PORT_ACTUAL_COLLECTION_CLASS::connect_port_aliases_recursive(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursive creation of dependent types through public ports
+	of instance hierarchy.
+ */
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 PORT_ACTUAL_COLLECTION_CLASS::create_dependent_types(const footprint& top) {

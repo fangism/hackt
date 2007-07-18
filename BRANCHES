@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.19 2007/07/09 21:15:24 fang Exp $
+	$Id: BRANCHES,v 1.20 2007/07/18 23:28:00 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -8,9 +8,6 @@ When a branch is merged for the last time, delete the entry from this file.
 
 
 Open branches:
-
-	HACKT-00-01-04-main-00-81-39-template-02
-		adding support for relaxed template parameter bindings
 
 	HACKT-00-01-04-main-00-81-39-chpsim-06
 		adding support for external plugin/modules of user-defined

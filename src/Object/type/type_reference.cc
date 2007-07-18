@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.26 2007/04/09 01:25:37 fang Exp $
+ 	$Id: type_reference.cc,v 1.27 2007/07/18 23:28:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -187,6 +187,7 @@ fundamental_type_reference::is_resolved(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 // is static
 fundamental_type_reference::instantiation_statement_ptr_type
 fundamental_type_reference::make_instantiation_statement(
@@ -195,6 +196,7 @@ fundamental_type_reference::make_instantiation_statement(
 		const const_template_args_ptr_type& a) {
 	return t->make_instantiation_statement_private(t, d, a);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
@@ -203,7 +205,11 @@ fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) {
 	const const_template_args_ptr_type null;
-	return t->make_instantiation_statement_private(t, d, null);
+	return t->make_instantiation_statement_private(t, d
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, null
+#endif
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -459,6 +465,7 @@ data_type_reference::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	Combines relaxed template arguments to make a complete strict type.  
 	\param a non-NULL relaxed template actuals.
@@ -471,6 +478,7 @@ data_type_reference::merge_relaxed_actuals(
 	return count_ptr<const this_type>(new this_type(base_type_def, 
 			template_actuals(template_args, a)));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -479,11 +487,18 @@ data_type_reference::merge_relaxed_actuals(
 fundamental_type_reference::instantiation_statement_ptr_type
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d, 
-		const const_template_args_ptr_type& a) const {
+		const index_collection_item_ptr_type& d 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const const_template_args_ptr_type& a
+#endif
+		) const {
 	return instantiation_statement_ptr_type(
 		new data_instantiation_statement(
-			t.is_a<const data_type_reference>(), d, a));
+			t.is_a<const data_type_reference>(), d
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, a
+#endif
+			));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1215,12 +1230,19 @@ builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 fundamental_type_reference::instantiation_statement_ptr_type
 builtin_channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d, 
-		const const_template_args_ptr_type& a) const {
+		const index_collection_item_ptr_type& d 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const const_template_args_ptr_type& a
+#endif
+		) const {
 	// technically built-in channel types never have relaxed actuals...
 	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
-			t.is_a<const this_type>(), d, a));
+			t.is_a<const this_type>(), d
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, a
+#endif
+			));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1541,6 +1563,7 @@ channel_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	Combines relaxed template arguments to make a complete strict type.  
 	\param a non-NULL relaxed template actuals.
@@ -1553,6 +1576,7 @@ channel_type_reference::merge_relaxed_actuals(
 	return count_ptr<const this_type>(new this_type(base_chan_def, 
 			template_actuals(template_args, a)));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1561,8 +1585,11 @@ channel_type_reference::merge_relaxed_actuals(
 fundamental_type_reference::instantiation_statement_ptr_type
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d, 
-		const const_template_args_ptr_type& a) const {
+		const index_collection_item_ptr_type& d 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const const_template_args_ptr_type& a
+#endif
+		) const {
 #if BUILTIN_CHANNEL_FOOTPRINTS
 	FINISH_ME(Fang);
 	cerr << "Cannot instantiate user-defined channel types yet." << endl;
@@ -1570,7 +1597,11 @@ channel_type_reference::make_instantiation_statement_private(
 #else
 	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
-			t.is_a<const this_type>(), d, a));
+			t.is_a<const this_type>(), d
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, a
+#endif
+			));
 #endif
 }
 
@@ -1808,6 +1839,7 @@ process_type_reference::unroll_register_complete_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 /**
 	Combines relaxed template arguments to make a complete strict type.  
 	\param a non-NULL relaxed template actuals.
@@ -1820,6 +1852,7 @@ process_type_reference::merge_relaxed_actuals(
 	return count_ptr<const this_type>(new this_type(base_proc_def, 
 			template_actuals(template_args, a)));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1828,11 +1861,18 @@ process_type_reference::merge_relaxed_actuals(
 fundamental_type_reference::instantiation_statement_ptr_type
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d, 
-		const const_template_args_ptr_type& a) const {
+		const index_collection_item_ptr_type& d 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const const_template_args_ptr_type& a
+#endif
+		) const {
 	return instantiation_statement_ptr_type(
 		new process_instantiation_statement(
-			t.is_a<const process_type_reference>(), d, a));
+			t.is_a<const process_type_reference>(), d
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+			, a
+#endif
+			));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2036,8 +2076,11 @@ param_type_reference::is_accepted_in_channel(void) const {
 fundamental_type_reference::instantiation_statement_ptr_type
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d, 
-		const const_template_args_ptr_type& a) const {
+		const index_collection_item_ptr_type& d 
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
+		, const const_template_args_ptr_type& a
+#endif
+		) const {
 	typedef	instantiation_statement_ptr_type	return_type;
 	static const pbool_traits::type_ref_ptr_type&
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
@@ -2046,7 +2089,9 @@ param_type_reference::make_instantiation_statement_private(
 	static const pint_traits::type_ref_ptr_type&
 		preal_type_ptr(preal_traits::built_in_type_ptr);
 	INVARIANT(t == this);
+#if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	INVARIANT(!a);
+#endif
 	if (must_be_type_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
 			pbool_type_ptr, d));

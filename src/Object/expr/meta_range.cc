@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.17 2007/01/21 05:58:54 fang Exp $
+ 	$Id: meta_range.cc,v 1.18 2007/07/18 23:28:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -120,6 +120,20 @@ meta_range_expr::make_explicit_range(const count_ptr<const parent_type>& i) {
 		return count_ptr<const this_type>(new pint_range(ret));
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const pint_range>
+meta_range_expr::make_explicit_pint_range(
+		const count_ptr<const parent_type>& i) {
+	NEVER_NULL(i);
+{
+	const count_ptr<const pint_range> ret(i.is_a<const pint_range>());
+	if (ret) return ret;
+}
+	const count_ptr<const pint_expr> ret(i.is_a<const pint_expr>());
+	NEVER_NULL(ret);
+	return count_ptr<const pint_range>(new pint_range(ret));
 }
 
 //=============================================================================

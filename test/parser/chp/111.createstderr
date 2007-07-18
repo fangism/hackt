@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24

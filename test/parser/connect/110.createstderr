@@ -1,5 +1,7 @@
-ERROR: types mismatch!
+ERROR: container types mismatch!
 	got: foo<3>
 	and: foo<2>
+	from: z.a
+	and:  w.a
 Error encountered during module::unroll.
 ERROR in creating.  Aborting.

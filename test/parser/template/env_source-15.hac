@@ -1,0 +1,10 @@
+// "env_source-15.hac"
+// copy-modified from "env_source-13.hac"
+// should pass alloc
+
+import "env_source.hac";
+
+source_e<2> X, Y;
+X = Y;			// aliasing before binding relaxed type
+X<2, {0,1}>;
+

@@ -1,0 +1,10 @@
+// "env_source_pack-A-01.hac"
+// copy-modified from "env_source_pack-01.hac"
+// should pass all
+
+import "env_source_pack-A.hac";
+
+// instantiate it
+source_pack_test test_me;
+
+

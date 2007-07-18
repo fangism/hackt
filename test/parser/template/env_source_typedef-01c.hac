@@ -1,0 +1,12 @@
+// "env_source_typedef-01c.hac"
+// instantiation of "env_source_typedef-01b.hac" during bug hunt
+// should pass
+
+import "env_source.hac";
+// import "env_source_typedef-01.hac";
+
+template <pint d>
+typedef source_e<1><1, {d}> source_e1of1_alt;
+
+source_e1of1_alt<0> foo;
+

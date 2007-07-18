@@ -12,11 +12,11 @@ Persistent Object Manager text dump:
 	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	270
 	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16

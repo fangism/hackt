@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.6 2006/11/07 06:34:53 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.7 2007/07/18 23:28:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
@@ -63,8 +63,11 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 			definition_type;
 //	STACKTRACE_VERBOSE;
 	const never_ptr<const definition_type> def(_type.get_base_def());
+	typedef	typename CanonicalType::const_param_list_ptr_type
+			param_list_ptr_type;
+	const param_list_ptr_type& p(_type.get_raw_template_params());
 	const footprint&
-		fp(def->get_footprint(_type.get_raw_template_params()));
+		fp(def->get_footprint(p));
 	const port_alias_tracker& pt(fp.get_port_alias_tracker());
 	return pt.replay_internal_aliases(_alias);
 }

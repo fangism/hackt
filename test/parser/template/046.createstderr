@@ -1,6 +1,3 @@
-Error: could not instantiate incomplete type (missing relaxed actuals)
-	with: foo<13>
-Error instantiating process footprint: 
-From canonical type: foo<13>
-Error encountered during module::unroll.
+Error: instance alias `bar' has incomplete type: foo<13>
+Error during create_unique.
 ERROR in creating.  Aborting.

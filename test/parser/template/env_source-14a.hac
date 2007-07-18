@@ -1,0 +1,10 @@
+// "env_source-14b.hac"
+// copy-modified from "env_source-14.hac" during bug hunt
+// should pass alloc
+
+import "env_source.hac";
+
+source_e<2> X[1], Y[1];
+X[0]<2, {0,1}>;
+Y = X;			// aliasing should synchronize actuals
+

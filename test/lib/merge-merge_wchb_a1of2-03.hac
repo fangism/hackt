@@ -1,0 +1,25 @@
+// "merge-merge_wchb_a1of2-03.hac"
+// copy-modified from "merge-merge_wchb_a1of2-01.hac"
+// testing relaxed template parameters
+
+import "merge.hac";
+import "env.hac";
+import "alternator.hac";
+
+bool _Reset, Reset;
+a1of2 L[4], R;
+a1of4 C;
+c1of4 c;
+C.d = c.d;
+bool Ce;
+merge_wchb_a1of<2,4> X(L, C, R, _Reset);
+cmos_source_a1of2 LS[4];
+LS[0]<5, {0,0,1,1,1}>		(L[0], _Reset, Reset);
+LS[1]<4, {0,0,1,1}>		(L[1], _Reset, Reset);
+LS[2]<3, {0,1,1}> 		(L[2], _Reset, Reset);
+LS[3]<7, {0,0,1,0,1,1,1}>	(L[3], _Reset, Reset);
+std::logic::inv i(C.a, Ce);
+onehot_counter<4> CS(Ce, c, _Reset, Reset);
+// cmos_source_a1of4<4, {0,1,2,3}> CS(C, _Reset, Reset);
+bitbucket_a1of2 B(R, _Reset);
+

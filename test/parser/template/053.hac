@@ -1,4 +1,5 @@
-// "053.hac" should fail -- internal member sizes cannot depend on relaxed param
+// "053.hac" 
+// internal member sizes can now depend on relaxed param
 // copy-modified from "051.hac"
 
 template <><pint W>

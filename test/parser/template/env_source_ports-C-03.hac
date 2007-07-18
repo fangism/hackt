@@ -1,0 +1,12 @@
+// "env_source_ports-C-03.hac"
+// copy-modified from "env_source_ports-C-01.hac"
+// testing instantiation, should pass connections
+
+import "env_source_ports-C.hac";
+
+source_pack_port_test Z;
+source_pack_port_test_alt Y;
+
+// compatible connectible types
+Y.Src = {Z.Src[1], Z.Src[0]};
+

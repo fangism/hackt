@@ -1,0 +1,16 @@
+// "124.hac"
+// copy-modified from "123.hac"
+// testing mutual-recursion
+
+defproc foobar();
+
+defproc recursive() {
+foobar Arrrrr;
+}
+
+defproc foobar() {
+recursive Zoinks;
+}
+
+foobar Yikes;
+

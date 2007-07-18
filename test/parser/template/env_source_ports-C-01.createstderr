@@ -1,0 +1,7 @@
+ERROR: attempted to connect instances with conflicting relaxed parameters!
+	got: 1, {1}
+	and: 1, {0}
+	from: Y.Src[0]
+	and:  Z.Src[0]
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

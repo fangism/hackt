@@ -1,0 +1,9 @@
+// "env_source_typedef-08a.hac"
+// testing instantiation
+
+import "env_source_typedef-08.hac";
+
+// precise forwarding of relaxed template parameters
+source_e1of2 foo;
+// however should create fail on incomplete type
+

@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.14 2006/10/18 01:18:53 fang Exp $
+%	$Id: templates.tex,v 1.15 2007/07/18 23:28:04 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -144,7 +144,7 @@ The proposed syntax for distinguishing the two types of parameters is:
 Both parameter lists are syntactically identical.  
 When there are no relaxed parameters, the second set of angle-brackets
 may be omitted.  
-If there are only relaxed paramters, the first set of angle-brackets
+If there are only relaxed parameters, the first set of angle-brackets
 are still required but empty.  
 
 
@@ -179,17 +179,152 @@ parameters themselves, as is the case with defining
 cyclic source sequences for a channel.  
 \end{comment}
 
+\textbf{Definition}:
+a type is \tit{complete} is it is either a strict type, 
+or a relaxed type with its relaxed parameters bound.  
+Connectible-equivalence is the same as equivalence between complete types.  
+
 \textbf{DEBATE:} (Resolved, see above: NEW)
 Should the fourth criterion be required for type-equivalence, 
 or can we allow non-equivalent template parameters as long as the
 ports interface is equivalent?  
 
-Implementation issues:
-It is not always possible to deduce at compile-time whether
-two expressions are equal, thus a compiler may be conservative
-and allow non-equivalent types to pass.  
-However, at unroll-time, all parameters must be resolved
-and type-equivalence can be precisely determined.  
+Implementation requirement:
+type errors must be caught by the end of the create-phase of compilation.
+
+\textbf{Definition requirement}:
+For a template definition to be well-formed, 
+all instances (aliases) local to that definition, including ports, 
+must have complete type. 
+Note that a given definition template may instantiate a definition
+for each set of unique template parameters, some of which may
+be meet this requirement, others which may not.  
+[Quick examples of valid and invalid definition?]
+
+\textbf{Syntax and semantics}:
+The basic syntax for explicitly binding instance alias type parameters is:
+\begin{itemize}
+\item \tit{instance-reference} \ttt{<} \tit{relaxed-parameter-list} \ttt{>}
+\end{itemize}
+\noindent
+The instance-reference may reference a collection of aliases 
+(with ranged specification), in which case the same relaxed parameters are
+bound to each referenced alias.  
+(Technically, member references could be rejected in this context 
+because all ports are required to have complete type by construction.)
+
+\textbf{Application: Arrays}.
+The rationale for introducing relaxed types is to be able to 
+declare an array of elements whose members are not identical, 
+though their interfaces remain compatible.
+The following valid example shows how relax-typed arrays are
+declared:
+
+\begin{verbatim}
+template <pint X><pbool B>
+defproc foo(...) { ... }
+
+foo<2> bar[2];
+bar[0]<true>;  // bind relaxed parameter
+bar[1]<false>; // bind different relaxed parameter
+\end{verbatim}
+
+\noindent
+Had one of the parameter-binding statements been omitted, 
+compilation would eventually result in a error indicating
+that the unbound instance had incomplete type.  
+
+\textbf{Syntactic sugar.}
+
+\noindent
+\ttt{foo<1> bar<true>;}
+is equivalent to
+\ttt{foo<1> bar; bar<true>;}.
+
+\noindent
+\ttt{foo<1> bar<true>(...);}
+is equivalent to
+\ttt{foo<1> bar; bar<true>; bar(...)}.
+
+\noindent
+\ttt{foo<1> bar<true>[N];}
+is equivalent to
+\ttt{foo<1> bar[N]; bar[0..N-1]<true>;}.
+
+\textbf{Aliasing and collection strictness.}
+Consider the following declarations:
+\ttt{foo<1><true> bar;} and
+\ttt{foo<1> car<true>;}.
+\ttt{bar} cannot be aliased to \ttt{car} because the collections
+(even though they are scalar) have different strictness.  
+Strictly speaking, their respective array types are
+\ttt{foo<1><true>} and \ttt{foo<1>}, which are not equivalent.
+For a well-formed connection between two aliases, 
+the collections of the respective aliases must be equivalent, 
+\emph{match in strictness}, and the relaxed types
+bound to each alias must be equivalent or compatible.  
+In other words, members of strictly typed collections (arrays) cannot
+alias members of relaxed typed collections.  
+
+\textbf{Implicit type binding though connections.}
+When two aliases are connected to each other, 
+the connection is valid if, 
+in addition to their parent collections' types being equivalent, 
+one of the following holds:
+both aliases are bound to equivalent parameters
+or at least one alias has unbound parameters.
+When an alias is formed, the relaxed type parameters are
+automatically `synchronized,' which effectively binds the type
+of aliases through other aliases of bound type.  
+[Examples from test suite needed.]
+
+Implementation detail: 
+As soon as an instance alias is bound to a type, it is instantiated.  
+All (reachable) aliases thereof are also instantiated and recursively
+connected.  
+Attempts to reference members of type-unbound aliases \emph{can} be
+rejected as errors.  
+(Theoretically, since the public ports may not depend on relaxed
+parameters, such references may not be treated as errors in the future.
+It is possible to instantiate the ports before the type is bound, 
+however, internal aliases cannot be replayed until the type is bound, 
+either explicitly or implicitly.
+The current policy is just a conservative approximation of the eventual
+operational semantics.)
+
+\textbf{Type propagation through ports.}
+Since definition members and ports are required to have complete type, 
+the relaxed parameters must be propagated from the formal definition
+to each instantiating context.  Consider the example:
+\begin{verbatim}
+defproc wrap(foo<1> x) {
+x<false>;
+}
+wrap Z;
+\end{verbatim}
+\noindent
+upon instantiating \ttt{Z} in the top-level,
+\ttt{Z.x} has type \ttt{foo<1><false>}.  
+
+\textbf{Restrictions}.
+Where are relaxed parameters forbidden?
+In port specifications, types of ports and their array sizes
+may not depend on relaxed parameters, 
+i.e. they may only depend on strict template parameters.  
+This guarantees that the port interfaces remain the same among
+members of a relax-typed array.  
+In typedef templates, the canonical type's strict template arguments
+may not depend on relaxed parameters.  
+(Why not?  Allowing so would give a means of subverting 
+template parameter strictness.)
+Anywhere else in the body of a definition template, 
+relaxed parameters may be used freely, 
+within the constraints of the fundamental typing rules.  
+
+\medskip
+When should relaxed template parameters be used?
+General guideline: when the port interfaces do not depend on
+the said parameters.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Examples}
@@ -214,8 +349,8 @@ defproc ROMarray(...) {
 }
 
 ROMarray <2,3>
-    <{{false}#{true}#{false}}#
-    {{true}#{false}#{true}}>
+    <{{false,true,false},
+      {true,false,true}}>
   a;
 \end{verbatim}
 
@@ -232,8 +367,8 @@ defproc source_e1of (e1of<N> c) {...}
 e1of<4> C[10];
 source_e1of<4> CS[10];  // instances' types are incomplete
 CS[0] <1, {2}> (C[0]);  // can complete types and connect
-CS[1] <3, {2}#{0}#{1}> (C[1]);
-CS[2] <2, {1}#{0}> (C[2]);
+CS[1] <3, {2,0,1}> (C[1]);
+CS[2] <2, {1,0}> (C[2]);
 ...
 \end{verbatim}
 
@@ -243,10 +378,12 @@ as long as the strict template arguments match:
 source_e1of<4> <1, {2}> CS[0..0](C[0]);
   // this determines the entire collection's strict parameters
   // but sets the relaxed parameters for only the indexed range
-source_e1of<4> <3, {2}#{0}#{1}> CS[1..1](C[1]);
-source_e1of<4> <2, {1}#{0}> CS[2..2](C[2]);
+source_e1of<4> <3, {2,0,1}> CS[1..1](C[1]);
+source_e1of<4> <2, {1,0}> CS[2..2](C[2]);
 ...
 \end{verbatim}
+
+[TODO: write section on connection examples]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Type Parameters}
@@ -271,11 +408,14 @@ Some examples:
 \section{Template Template Parameters}
 \label{sec:templates:ttp}
 
-Punt, I mean it.
+Punt, I mean it.  
+(What do you think this is, C++?)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Template Specialization}
 \label{sec:templates:spec}
+
+MAJOR PUNT.
 
 Semantic contraint:
 The forward declaration of a general template must precede any declaration
@@ -444,6 +584,8 @@ finalizing footprints.
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Template Parameter References}
 \label{sec:templates:issues:param_ref}
+
+PUNTED.  (This is groundwork for template metaprogramming.)
 
 Given a templated definition, such as
 

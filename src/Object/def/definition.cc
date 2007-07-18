@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.37 2007/06/08 03:21:26 fang Exp $
+ 	$Id: definition.cc,v 1.38 2007/07/18 23:28:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -253,7 +253,7 @@ definition_base::lookup_nonparameter_member(const string& id) const {
  */
 good_bool
 definition_base::check_null_template_argument(void) const {
-	STACKTRACE("definition_base::check_null_template_argument()");
+	STACKTRACE_VERBOSE;
 	return template_formals.check_null_template_argument();
 }
 
@@ -3174,6 +3174,8 @@ process_definition::__unroll_complete_type(
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("key = " << key << endl);
+try {
+	footprint::create_lock LOCK(f);		// will catch recursion error
 	if (!f.is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -3199,6 +3201,18 @@ process_definition::__unroll_complete_type(
 		}
 	}
 	return good_bool(true);
+} catch (...) {
+if (parent) {
+	cerr << "Error unrolling type: " << get_qualified_name();
+	if (p) {
+		p->dump(cerr << '<', expr_dump_context::default_value) << '>';
+	}
+	cerr << endl;
+}
+	// else don't print name for top-level module
+	throw;	// re-throw
+	return good_bool(false);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3259,6 +3273,16 @@ process_definition::__create_complete_type(
 		// probably need to pass it in!
 		if (!f.create_dependent_types(top).good) {
 			// error message
+		if (parent) {
+			cerr << "Error creating process type: " <<
+				get_qualified_name();
+			if (p) {
+				p->dump(cerr << '<',
+					expr_dump_context::default_value)
+					<< '>';
+			}
+			cerr << endl;
+		} // suppress this message for the top-level module
 			return good_bool(false);
 		}
 		// after all aliases have been successfully assigned local IDs
@@ -3306,7 +3330,7 @@ if (defined) {
 #endif
 	return __create_complete_type(p, *f, top);
 } else {
-	cerr << "ERROR: cannot create incomplete process type " <<
+	cerr << "ERROR: cannot create undefined process " <<
 			get_qualified_name() << endl;
 	// parent should print: "instantiated from here"
 	return good_bool(false);

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.8 2006/10/24 07:26:55 fang Exp $
+	$Id: instance.h,v 1.9 2007/07/18 23:28:17 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -14,6 +14,7 @@
 #include "AST/definition_item.h"
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
@@ -21,6 +22,7 @@ namespace entity {
 	class aliases_connection_base;
 	class port_connection_base;
 	class meta_instance_reference_base;
+	class instance_management_base;
 }
 namespace parser {
 using util::good_bool;
@@ -123,6 +125,8 @@ protected:
 //=============================================================================
 /**
 	Basic instance identifier, no trimmings, just contains an identifier.  
+	May contain optional relaxed template parameters.  
+	This base class is NOT abstract (is this base used polymorphically?).
  */
 class instance_base : public instance_management {
 protected:
@@ -130,7 +134,7 @@ protected:
 		In pure instantiation context (not in declaration),
 		id should only be a token_identifier.
 	 */
-	const excl_ptr<const token_identifier>		id;
+	const count_ptr<const token_identifier>		id;
 	/**
 		Optional relaxed template arguments may follow the 
 		declarator identifier.  
@@ -390,12 +394,12 @@ public:
 	Statement that completes the type of an indexed range of instances
 	with relaxed template arguments.  
  */
-class type_completion_statement : virtual public instance_management {
+class type_completion_statement : public instance_management {
 protected:
-	const excl_ptr<const index_expr>	inst_ref;
+	const excl_ptr<const inst_ref_expr>	inst_ref;
 	const excl_ptr<const expr_list>		args;
 public:
-	type_completion_statement(const index_expr*, const expr_list*);
+	type_completion_statement(const inst_ref_expr*, const expr_list*);
 virtual	~type_completion_statement();
 
 virtual	ostream&
@@ -409,6 +413,11 @@ virtual	line_position
 
 virtual	ROOT_CHECK_PROTO;
 
+	static
+	count_ptr<const entity::instance_management_base>
+	create_type_completion(const inst_ref_expr::meta_return_type&, 
+		const expr_list::checked_meta_exprs_type&);
+
 };	// end class type_completion_statement
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -420,7 +429,7 @@ virtual	ROOT_CHECK_PROTO;
 class type_completion_connection_statement :
 		public type_completion_statement, public actuals_base {
 public:
-	type_completion_connection_statement(const index_expr*,
+	type_completion_connection_statement(const inst_ref_expr*,
 		const expr_list*, const expr_list*);
 	~type_completion_connection_statement();
 

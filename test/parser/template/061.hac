@@ -1,5 +1,5 @@
 // "061.hac" should pass, ok to put relaxed actuals after identifier
-// will die during creation because of incomplete type (at dar)
+// will die during alloc because of incomplete type (at dar)
 // copy-modified from "059.hac"
 
 template <pint Q><pint R>
