@@ -5,6 +5,11 @@
 
 2007-07-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-template-02-28:
+	  No source revision, documentation only in dox/lang.
+	  End of branch, merge up.
+
+
 	* HACKT-00-01-04-main-00-81-39-template-02-27:
 	  Latent critical BUG fix: util/IO_utils.cc (I can't count)
 	  process_definition (module): error message suppresses
