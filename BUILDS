@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.87 2007/07/19 03:58:01 fang Exp $
+	$Id: BUILDS,v 1.88 2007/07/19 18:06:24 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -344,6 +344,7 @@ readline: BSD EditLine (histedit interface) ver. 2.10
 
 ===============================================================================
 amd64-unknown-freebsd
+NOTE: this is an LP64 platform
 
 (Fang)
 Version: hackt 0.1.4-devel-20070718
@@ -358,12 +359,13 @@ yacc: /usr/bin/byacc
 readline: GNU readline 5.0
 guile: guile-config - Guile version 1.6.8
 
+
 ===============================================================================
 i386-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070615
-CVS Tag: HACKT-00-01-04-main-00-81-37
+Version: hackt 0.1.4-devel-20070718
+CVS Tag: HACKT-00-01-04-main-00-81-40-merged-template-02-28
 Configured with: '--prefix=/usr/local/compiler' '--with-readline' 'CXXFLAGS=-g -O2 -Wno-undef' 'CFLAGS=-g -O2 -Wno-undef' 'YACC=yacc' '--without-guile-config' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
@@ -374,9 +376,8 @@ yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 guile: 
 
-NOTE: -g0 was required because of space limitations, and -Wno-undef worked 
-	around a false-error in configure (autoconf-2.60) dying on an
-	undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
+NOTE: -Wno-undef worked around a false-error in configure (autoconf-2.60) 
+	dying on an undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
 NOTE: guile disabled because version (1.4) is too old and unsupported
 
 ===============================================================================
