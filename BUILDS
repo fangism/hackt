@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.85 2007/07/19 01:23:34 fang Exp $
+	$Id: BUILDS,v 1.86 2007/07/19 02:34:26 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -240,11 +240,11 @@ readline: GNU readline 5.0
 i686-*-linux-gnu
 
 (Fang)
-Version: hackt 0.1.4-devel-20070615
-CVS Tag: HACKT-00-01-04-main-00-81-37
+Version: hackt 0.1.4-devel-20070718
+CVS Tag: HACKT-00-01-04-main-00-81-40-merged-template-02-28
 Configured with: '--with-readline' '--prefix=/usr/local/cad' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: i686-pc-linux-gnu
-c++: g++ (GCC) 3.3.3 (SuSE Linux)
+c++: g++ (GCC) 3.3.4 (pre 3.3.5 20040809)
 config-CXXFLAGS: -g -O2
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
