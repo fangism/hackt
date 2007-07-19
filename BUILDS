@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.83 2007/07/06 15:13:22 fang Exp $
+	$Id: BUILDS,v 1.84 2007/07/19 01:20:52 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -346,8 +346,8 @@ readline: BSD EditLine (histedit interface) ver. 2.10
 amd64-unknown-freebsd
 
 (Fang)
-Version: hackt 0.1.4-devel-20070615
-CVS Tag: HACKT-00-01-04-main-00-81-36
+Version: hackt 0.1.4-devel-20070718
+CVS Tag: HACKT-00-01-04-main-00-81-40-merged-template-02-28
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '--enable-fun' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: amd64-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
