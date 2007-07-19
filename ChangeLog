@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-07-19	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-02:
+	  Added initial libtool's libltdl support.
+		configure.ac, and libltdl/ subdir.
+
+
 2007-07-06	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39:

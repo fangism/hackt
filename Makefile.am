@@ -2,14 +2,14 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42 2007/06/04 22:44:22 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.1 2007/07/19 23:23:28 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = scripts src lib test . dox
+SUBDIRS = scripts libltdl src lib test . dox
 # temporary, for debugging make distcheck in dox, 
 # so we don't have to wait for the entire src tree to build first
 # SUBDIRS = scripts dox src lib test .
@@ -74,6 +74,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	config/ylwrap \
 	config/am__remove_distdir.diff \
 	DevelopmentPlan.dot \
+	libltdl/README.CVS \
 	pkg/README \
 	pkg/hackt.info \
 	pkg/hackt-cvs-deps.info \

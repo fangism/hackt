@@ -1,0 +1,5 @@
+# "libltdl/README.CVS"
+
+All files are supplied by top-level bootstrap's libtoolize --ltdl, 
+so no sources need to be added CVS.  
+

@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.142 2007/07/06 18:28:19 fang Exp $
+#	$Id: configure.ac,v 1.142.4.1 2007/07/19 23:23:29 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -19,7 +19,7 @@ dnl AM_CONFIG_HEADER(config.h)	dnl obsolete macro
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 
 # don't need this yet
-# AC_CONFIG_SUBDIRS
+dnl AC_CONFIG_SUBDIRS()
 
 # Propagate the make warning flags recursively
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
@@ -123,7 +123,15 @@ dnl AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
 
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
+dnl libtool dlopen features
+AC_LIBLTDL_CONVENIENCE
+AC_SUBST(LTDLINCL)
+AC_SUBST(LIBLTDL)
+AC_LIB_LTDL
+AC_LIBTOOL_DLOPEN
+dnl to support dlopen plug-ins and module shared objects/libraries
 AC_PROG_LIBTOOL
+AC_CONFIG_SUBDIRS(libltdl)
 dnl now, always use verbose libtool script, instead of --silent
 dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Automatically update if libtool script is outdated.  
