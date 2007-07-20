@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.4 2007/02/14 04:57:24 fang Exp $
+	$Id: command_common.tcc,v 1.4.16.1 2007/07/20 21:07:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -18,6 +18,8 @@
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
 #include "parser/instref.h"
+#include "common/TODO.h"
+#include "common/ltdl-wrap.h"
 
 namespace HAC {
 namespace SIM {
@@ -596,6 +598,31 @@ void
 NoWatchQueue<State>::usage(ostream& o) {
 	o << "nowatch-queue" << endl;
 	o << "Silence events as they are inserted into the event queue."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLOpen, "dlopen", 
+	"load a module (dynamically shared library)")
+
+template <class State>
+int
+DLOpen<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	FINISH_ME(Fang);
+	// lookup ltdl map
+	return command_type::BADARG;
+}
+}
+
+template <class State>
+void
+DLOpen<State>::usage(ostream& o) {
+	o << name << " <library>" << endl;
+	o << "Loads an external library, file extension should be omitted."
 		<< endl;
 }
 

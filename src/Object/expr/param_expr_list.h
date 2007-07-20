@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.17 2007/01/21 05:58:59 fang Exp $
+	$Id: param_expr_list.h,v 1.17.22.1 2007/07/20 21:07:44 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -38,7 +38,7 @@ using util::persistent;
 
 //=============================================================================
 /**
-	A list of parameter expressions.  
+	A list of meta (compile-time) parameter expressions.  
 	Consider splitting into dynamic vs. const?
  */
 class param_expr_list : public persistent {

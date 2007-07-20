@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.5 2007/04/15 05:52:29 fang Exp $
+	$Id: DependenceCollector.cc,v 1.5.10.1 2007/07/20 21:07:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -24,6 +24,8 @@
 // #include "Object/expr/real_relational_expr.h"
 #include "Object/expr/channel_probe.h"
 #include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/nonmeta_expr_list.h"
+#include "Object/expr/nonmeta_func_call.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "Object/global_entry_context.h"
@@ -194,6 +196,11 @@ void
 DependenceSetCollector::visit(const channel_probe& t) {
 	STACKTRACE_VERBOSE;
 	t.get_channel()->accept(*this);
+}
+
+void
+DependenceSetCollector::visit(const nonmeta_func_call& f) {
+	f.get_func_args()->accept(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

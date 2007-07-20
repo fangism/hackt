@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171 2007/06/15 20:28:44 fang Exp $
+#	$Id: Makefile.am,v 1.171.4.1 2007/07/20 21:07:37 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -152,17 +152,19 @@ hflat_LDADD = libhacktlib.la
 hacprsim_SOURCES = main/prsim.cc
 hacprsim_CPPFLAGS = -DWITH_MAIN
 hacprsim_LDADD = libhacktsim.la
-# goal: reduce to libhacktsim.la
 
 # hacprsim: $(top_builddir)/config.status
 #	@{ $(ECHO) "#!$(SH_PATH)" ; \
 #	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" ;} > $@ ; \
 #	$(CHMOD) +x $@
 
+# enhanced with libtool/dlopen capability
 hacchpsim_SOURCES = main/chpsim.cc
 hacchpsim_CPPFLAGS = -DWITH_MAIN
 hacchpsim_LDADD = libhacktsim.la
-# goal: reduce to libhacktsim.la
+# -dlopen self
+hacchpsim_LDFLAGS = 
+# -export-dynamic (only if symbols in executable needed to resolve from modules)
 
 # hacchpsim: $(top_builddir)/config.status
 #	@{ $(ECHO) "#!$(SH_PATH)" ; \
@@ -211,7 +213,8 @@ libhacktlib_la_SOURCES = main/main_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
 
-libhacktsim_la_LIBADD = libhacktlib.la
+# libhacktsim_la_CPPFLAGS = $(LTDLINCL)
+libhacktsim_la_LIBADD = libhacktlib.la $(LIBLTDL)
 
 libhacktparsers_la_LIBADD = libhacktast.la
 
@@ -555,6 +558,7 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 	Object/common/alias_string_cache.h \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
+	common/ltdl-wrap.h \
 	common/devel_switches.h
 
 OBJECT_CC_FILES = \
@@ -563,6 +567,7 @@ OBJECT_CC_FILES = \
 	Object/expr/expr_dump_context.cc \
 	Object/expr/expr_visitor.cc \
 	Object/expr/channel_probe.cc \
+	Object/expr/nonmeta_func_call.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -728,6 +733,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/meta_index_list.h \
 	Object/expr/meta_range_expr.h \
 	Object/expr/meta_range_list.h \
+	Object/expr/nonmeta_expr_list.h \
 	Object/expr/nonmeta_index_expr_base.h \
 	Object/expr/nonmeta_index_list.h \
 	Object/expr/nonmeta_range_expr_base.h \

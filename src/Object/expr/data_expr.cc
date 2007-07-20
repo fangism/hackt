@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.16 2007/02/08 02:11:03 fang Exp $
+	$Id: data_expr.cc,v 1.16.18.1 2007/07/20 21:07:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/real_expr.h"
 #include "Object/expr/enum_expr.h"
 #include "Object/expr/struct_expr.h"
+#include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/int_range_list.h"
 #include "Object/expr/expr_dump_context.h"
@@ -57,6 +58,7 @@ using HAC::entity::bool_logical_expr;
 using HAC::entity::int_negation_expr;
 using HAC::entity::bool_negation_expr;
 using HAC::entity::nonmeta_index_list;
+using HAC::entity::nonmeta_expr_list;
 using HAC::entity::int_range_expr;
 using HAC::entity::int_arith_loop_expr;
 using HAC::entity::bool_logical_loop_expr;
@@ -67,6 +69,7 @@ using HAC::entity::bool_logical_loop_expr;
 	SPECIALIZE_UTIL_WHAT(int_negation_expr, "int-negation-expr")
 	SPECIALIZE_UTIL_WHAT(bool_negation_expr, "bool-negation-expr")
 	SPECIALIZE_UTIL_WHAT(nonmeta_index_list, "nonmeta-index-list")
+	SPECIALIZE_UTIL_WHAT(nonmeta_expr_list, "nonmeta-expr-list")
 	SPECIALIZE_UTIL_WHAT(int_range_expr, "int-range-expr")
 	SPECIALIZE_UTIL_WHAT(int_arith_loop_expr, "int-arith-loop-expr")
 	SPECIALIZE_UTIL_WHAT(bool_logical_loop_expr, "bool-logical-loop-expr")
@@ -83,6 +86,8 @@ using HAC::entity::bool_logical_loop_expr;
 		bool_negation_expr, NONMETA_BOOL_NEGATION_EXPR_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		nonmeta_index_list, NONMETA_INDEX_LIST_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		nonmeta_expr_list, NONMETA_EXPR_LIST_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_range_expr, NONMETA_RANGE_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -1524,6 +1529,99 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 //		if (ip) {
 		m.load_object_once(&const_cast<nonmeta_index_expr_base&>(*ip));
 //		}
+	}
+#endif
+}
+
+//=============================================================================
+// class nonmeta_expr_list method definitions
+
+nonmeta_expr_list::nonmeta_expr_list() : persistent(), list_type() { }
+
+nonmeta_expr_list::~nonmeta_expr_list() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nonmeta_expr_list)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+nonmeta_expr_list::dump(ostream& o, const expr_dump_context& c) const {
+	const_iterator i(begin());
+	const const_iterator e(end());
+if (i!=e) {
+	NEVER_NULL(*i);
+	(*i)->dump(o, c);
+	for (++i; i!=e; ++i) {
+		NEVER_NULL(*i);
+		(*i)->dump(o << ',', c);
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nonmeta_expr_list::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+ */
+void
+nonmeta_expr_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this,
+		persistent_traits<this_type>::type_key)) {
+#if PARANOID
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+	}
+#endif
+	m.collect_pointer_list(*this);
+}
+// else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serialize this object into an output stream, translating
+	pointers to indices as they are encountered.  
+ */
+void
+nonmeta_expr_list::write_object(const persistent_object_manager& m,
+		ostream& f) const {
+#if PARANOID
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+	}
+#endif
+	m.write_pointer_list(f, *this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Load the object from a serial input stream, translating
+	indices to pointers in the reconstruction.  
+ */
+void
+nonmeta_expr_list::load_object(const persistent_object_manager& m,
+		istream& f) {
+	m.read_pointer_list(f, *this);
+#if 1
+	// is this really necessary?
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		const count_ptr<const data_expr>& ip(*i);
+		NEVER_NULL(ip);
+		m.load_object_once(&const_cast<data_expr&>(*ip));
 	}
 #endif
 }

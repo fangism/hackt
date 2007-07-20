@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.8 2007/06/12 05:13:01 fang Exp $
+	$Id: chpsim.cc,v 1.8.6.1 2007/07/20 21:07:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,6 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/chpsim/graph_options.h"
 #include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
+#include "common/ltdl-wrap.h"
 
 namespace HAC {
 #include "util/using_ostream.h"
@@ -59,6 +60,7 @@ chpsim::chpsim() { }
  */
 int
 chpsim::main(int argc, char* argv[], const global_options&) {
+	const ltdl_token ltdl;	// dlinit/dlexit pair
 	options opt;
 	if (parse_command_options(argc, argv, opt)) {
 		cerr << "Error in command invocation." << endl;

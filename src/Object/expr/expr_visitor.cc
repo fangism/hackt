@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/expr_visitor.cc"
-	$Id: expr_visitor.cc,v 1.3 2007/02/26 22:00:47 fang Exp $
+	$Id: expr_visitor.cc,v 1.3.16.1 2007/07/20 21:07:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,12 +23,14 @@
 
 #include "Object/expr/nonmeta_index_list.h"
 // #include "Object/expr/nonmeta_range_list.h"
+#include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/dynamic_meta_index_list.h"
+#include "Object/expr/nonmeta_func_call.h"
 
 #include "common/ICE.h"
 #include "util/stacktrace.h"
@@ -93,6 +95,7 @@ nonmeta_expr_visitor::visit(const type& l) {				\
 
 DEFINE_LIST_PTR_VISITOR(nonmeta_index_list)
 // DEFINE_LIST_PTR_VISITOR(nonmeta_range_list)
+DEFINE_LIST_PTR_VISITOR(nonmeta_expr_list)
 DEFINE_LIST_PTR_VISITOR(const_param_expr_list)
 DEFINE_LIST_PTR_VISITOR(dynamic_param_expr_list)
 DEFINE_LIST_REF_VISITOR(const_range_list)
