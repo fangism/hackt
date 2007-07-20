@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42.8.1 2007/07/19 23:23:28 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.2 2007/07/20 02:28:55 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -74,12 +74,12 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	config/ylwrap \
 	config/am__remove_distdir.diff \
 	DevelopmentPlan.dot \
-	libltdl/README.CVS \
 	pkg/README \
 	pkg/hackt.info \
 	pkg/hackt-cvs-deps.info \
 	pkg/hackt-dist-deps.info
-
+# don't bother:
+#	libltdl/README.CVS
 
 if HAVE_DOT
 DevelopmentPlan.ps: DevelopmentPlan.dot
@@ -114,7 +114,7 @@ distcheck.log: force
 
 # don't include CVS directories in distribution
 dist-hook:
-	$(RM) -r `$(FIND) $(distdir) -name CVS`
+	$(RM) -r `$(FIND) $(distdir) -name CVS -type d`
 
 # for recursive make to not parallelize these
 .NOTPARALLEL: pdf ps
