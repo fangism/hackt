@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_expr_list.h"
-	$Id: nonmeta_expr_list.h,v 1.1.2.1 2007/07/20 21:07:44 fang Exp $
+	$Id: nonmeta_expr_list.h,v 1.1.2.2 2007/07/23 03:51:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_EXPR_LIST_H__
@@ -16,6 +16,9 @@ namespace entity {
 class data_expr;
 class expr_dump_context;
 class nonmeta_expr_visitor;
+class unroll_context;
+class nonmeta_context_base;
+class const_param_expr_list;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -46,6 +49,14 @@ public:
 
 	using list_type::begin;
 	using list_type::end;
+
+	count_ptr<const this_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const this_type>&) const;
+
+	count_ptr<const const_param_expr_list>
+	nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const this_type>&) const;
 
 	void
 	accept(nonmeta_expr_visitor&) const;

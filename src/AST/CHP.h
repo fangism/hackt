@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.8.6.1 2007/07/11 21:43:58 fang Exp $
+	$Id: CHP.h,v 1.8.6.2 2007/07/23 03:51:07 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -24,6 +24,7 @@ namespace entity {
 	template <class> class simple_nonmeta_instance_reference;
 	typedef	simple_nonmeta_instance_reference<channel_tag>
 		simple_channel_nonmeta_instance_reference;
+	class nonmeta_func_call;
 namespace CHP {
 	class action;
 	class guarded_action;
@@ -698,6 +699,10 @@ public:
 	CHECK_META_EXPR_PROTO;
 	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
+
+private:
+	count_ptr<entity::nonmeta_func_call>
+	__check_nonmeta_expr(const context&) const;
 
 };	// end class function_call_expr
 

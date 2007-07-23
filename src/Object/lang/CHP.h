@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.20 2007/06/12 05:12:45 fang Exp $
+	$Id: CHP.h,v 1.20.6.1 2007/07/23 03:51:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -642,6 +642,43 @@ public:
 		}
 	};	// end struct detector
 };	// end class do_forever_loop
+
+//=============================================================================
+/**
+	Call to external function, through dlopen, etc.  
+ */
+class function_call_stmt : public action {
+	typedef	function_call_stmt			this_type;
+	typedef	action					parent_type;
+private:
+	typedef	count_ptr<const nonmeta_func_call>	call_expr_ptr_type;
+	/**
+		Just plain function call expression, whose return value
+		we don't use.  
+	 */
+	call_expr_ptr_type				call_expr;
+private:
+	function_call_stmt();
+public:
+	explicit
+	function_call_stmt(const call_expr_ptr_type&);
+
+	~function_call_stmt();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_DUMP_EVENT_PROTO;
+	CHP_UNROLL_ACTION_PROTO;
+	CHP_ACTION_ACCEPT_PROTO;
+
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
+
+};	// end class function_call_stmt
 
 //=============================================================================
 /**

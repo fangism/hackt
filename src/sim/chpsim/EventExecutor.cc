@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.6 2007/06/17 02:56:39 fang Exp $
+	$Id: EventExecutor.cc,v 1.6.4.1 2007/07/23 03:51:25 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -949,8 +949,25 @@ EventSuccessorDumper::visit(const do_while_loop& dw) {
 	dump_selection_successor_edges(dw, os, event, index, dump_context);
 }
 
-#undef	DEFAULT_EVENT_SUCCESSOR_DUMPER
 //=============================================================================
+// class function_call_stmt method definitions
+
+void
+EventExecutor::visit(const function_call_stmt& fc) {
+	FINISH_ME(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+EventRechecker::visit(const function_call_stmt& fc) {
+	ret = RECHECK_NEVER_BLOCKED;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DEFAULT_EVENT_SUCCESSOR_DUMPER(function_call_stmt)
+
+//=============================================================================
+#undef	DEFAULT_EVENT_SUCCESSOR_DUMPER
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC

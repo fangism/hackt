@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.16.18.1 2007/07/20 21:07:42 fang Exp $
+	$Id: data_expr.cc,v 1.16.18.2 2007/07/23 03:51:08 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/real_expr.h"
 #include "Object/expr/enum_expr.h"
 #include "Object/expr/struct_expr.h"
+#include "Object/expr/nonmeta_expr_functor.h"
 #include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/int_range_list.h"
@@ -1563,6 +1564,44 @@ if (i!=e) {
 void
 nonmeta_expr_list::accept(nonmeta_expr_visitor& v) const {
 	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const nonmeta_expr_list>
+nonmeta_expr_list::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const this_type>& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<this_type> ret(new this_type);	// reserve size?
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	transform(i, e, back_inserter(*ret), data_expr::unroller(c));
+	if (equal(i, e, ret->begin())) {
+		return p;
+	} else {
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param_expr_list>
+nonmeta_expr_list::nonmeta_resolve_copy(const nonmeta_context_base& c, 
+		const count_ptr<const this_type>&) const {
+	typedef	count_ptr<const_param_expr_list>	return_type;
+	const return_type ret(new const_param_expr_list);
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+		const count_ptr<const const_param> 
+			v((*i)->nonmeta_resolve_copy(c, *i));
+		if (v)
+			ret->push_back(v);
+		else	return return_type(NULL);
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

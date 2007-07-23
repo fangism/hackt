@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.h"
-	$Id: nonmeta_func_call.h,v 1.1.2.1 2007/07/20 21:07:44 fang Exp $
+	$Id: nonmeta_func_call.h,v 1.1.2.2 2007/07/23 03:51:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_FUNC_CALL_H__
@@ -13,6 +13,7 @@
 namespace HAC {
 namespace entity {
 class nonmeta_expr_list;
+class const_param_expr_list;
 using std::string;
 using std::ostream;
 using std::istream;
@@ -26,6 +27,7 @@ class nonmeta_func_call : public data_expr {
 	typedef	nonmeta_func_call		this_type;
 public:
 	typedef	count_ptr<const nonmeta_expr_list>	fargs_ptr_type;
+	typedef	count_ptr<const_param> (*function_type) (const const_param_expr_list&);
 private:
 	/**
 		Name of function to call.
@@ -39,6 +41,7 @@ private:
 	// mutable function pointer to be bound at run-time
 public:
 	nonmeta_func_call();
+	nonmeta_func_call(const string&, const fargs_ptr_type&);
 	~nonmeta_func_call();
 
 	ostream&
@@ -58,6 +61,10 @@ public:
 #if USE_DATA_EXPR_EQUIVALENCE
 	DATA_EXPR_MAY_EQUIVALENCE_PROTO;
 #endif
+	count_ptr<const this_type>
+	__unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const this_type>&) const;
+
 	UNROLL_RESOLVE_COPY_DATA_PROTO;
 	NONMETA_RESOLVE_COPY_DATA_PROTO;
 	EVALUATE_WRITE_PROTO;

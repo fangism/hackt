@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-04:
+	  Continued front/middle end support for external functions in CHP, 
+		new persistent type (CHP action class) function_call_stmt.
+	  Implemented (untested) function call and nonmeta-expr-list 
+		resolution member functions.  
+	  Type-check phase now processes and creates CHP function calls.  
+	  updated CHPSIM event enumerations and affected switch stmts.  
+	  expression and CHP visitor classes extended for new types.  
+	  TODO: dlopen function manager, through restricted type-checked
+		function pointer interface.  
+
+
 2007-07-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-03:

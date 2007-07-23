@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.5 2007/06/12 05:13:20 fang Exp $
+	$Id: StateConstructor.cc,v 1.5.6.1 2007/07/23 03:51:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -390,6 +390,32 @@ StateConstructor::visit(const assignment& a) {
 	// updates successors' predecessor-counts
 	count_predecessors(new_event);
 }	// end visit(const assignment&)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has no block dependencies.
+ */
+void
+StateConstructor::visit(const function_call_stmt& fc) {
+	STACKTRACE_VERBOSE;
+	const size_t new_index = allocate_event(
+		EventNode(&fc, SIM::CHPSIM::EVENT_FUNCTION_CALL, 
+			current_process_index, 
+			// assert dynamic_cast
+			fc.get_delay() ?
+				fc.get_delay().is_a<const preal_const>()
+				->static_constant_value() :
+			5));
+	// we give an arbitrary delay to function call
+	STACKTRACE_INDENT_PRINT("new call: " << new_index << endl);
+	EventNode& new_event(get_event(new_index));
+#if CHPSIM_READ_WRITE_DEPENDENCIES
+	// collect rvalues, no lvalues
+#endif
+	connect_successor_events(new_event);
+	last_event_index = new_index;
+	count_predecessors(new_event);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,9 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.1.2.1 2007/07/20 21:07:44 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.1.2.2 2007/07/23 03:51:11 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE				0
 
 #include "Object/expr/nonmeta_func_call.h"
 #include "Object/expr/nonmeta_expr_list.h"
@@ -12,6 +14,7 @@
 #include "Object/persistent_type_hash.h"
 #include "common/ltdl-wrap.h"
 #include "common/TODO.h"
+#include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.tcc"
@@ -31,12 +34,21 @@ namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class nonmeta_func_call method definitions
 
 nonmeta_func_call::nonmeta_func_call() : data_expr(), fname(), fargs() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_func_call::nonmeta_func_call(const string& f, 
+		const fargs_ptr_type& a) : 
+		data_expr(), fname(f), fargs(a) {
+	NEVER_NULL(fargs);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_func_call::~nonmeta_func_call() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,11 +104,36 @@ nonmeta_func_call::may_be_type_equivalent(const data_expr&) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**	
+	\return deep or shallow copy of self, depending on result of unroll.
+ */
+count_ptr<const nonmeta_func_call>
+nonmeta_func_call::__unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const this_type>& p) const {
+	// resolve arguments, compare...
+	typedef	count_ptr<const nonmeta_func_call>		return_type;
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<const nonmeta_expr_list>
+		rf(fargs->unroll_resolve_copy(c, fargs));
+	if (!rf) {
+		cerr << "Error resolving function arguments." << endl;
+		return return_type(NULL);
+	}
+	if (rf == fargs) {
+		return p;
+	} else {
+		const count_ptr<const this_type>
+			ret(new this_type(fname, fargs));
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_expr>
 nonmeta_func_call::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const data_expr>& p) const {
-	FINISH_ME_EXIT(Fang);
-	return count_ptr<const data_expr>(NULL);
+	return __unroll_resolve_copy(c, p.is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

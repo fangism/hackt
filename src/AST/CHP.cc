@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.17.6.1 2007/07/11 21:43:57 fang Exp $
+	$Id: CHP.cc,v 1.17.6.2 2007/07/23 03:51:06 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <sstream>
 
 #include "AST/CHP.h"
 #include "AST/expr_list.h"
@@ -32,6 +33,8 @@
 #include "Object/expr/channel_probe.h"
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/convert_expr.h"
+#include "Object/expr/nonmeta_func_call.h"
+#include "Object/expr/nonmeta_expr_list.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -44,6 +47,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "common/TODO.h"
+#include "common/ICE.h"
 
 #include "util/wtf.h"
 #include "util/what.h"
@@ -104,6 +108,7 @@ using entity::CHP::action_sequence;
 using entity::CHP::concurrent_actions;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
+using entity::CHP::function_call_stmt;
 using entity::channel_type_reference_base;
 using entity::user_def_chan;
 using entity::user_def_datatype;
@@ -113,6 +118,8 @@ using entity::data_type_reference;
 using entity::pint_scalar;
 using entity::meta_loop_base;
 using entity::convert_pint_to_preal_expr;
+using entity::nonmeta_expr_list;
+using entity::nonmeta_func_call;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -1498,31 +1505,62 @@ function_call_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Call can also be a statement.  
+ */
 statement::return_type
 function_call_expr::__check_action(context& c) const {
-	FINISH_ME(Fang);
-	return statement::return_type(NULL);
+	const count_ptr<nonmeta_func_call>	
+		call(__check_nonmeta_expr(c));
+	// error handling, please?
+	return statement::return_type(new function_call_stmt(call));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ */
 expr::meta_return_type
 function_call_expr::check_meta_expr(const context& c) const {
-	FINISH_ME(Fang);
+	ICE_NEVER_CALL(cerr);
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_return_type
 function_call_expr::check_prs_expr(context& c) const {
-	FINISH_ME(Fang);
+	ICE_NEVER_CALL(cerr);
 	return prs_expr_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call.  
+ */
 nonmeta_expr_return_type
 function_call_expr::check_nonmeta_expr(const context& c) const {
-	FINISH_ME(Fang);
-	return nonmeta_expr_return_type(NULL);
+	return __check_nonmeta_expr(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs a run-time function call expression.  
+ */
+count_ptr<nonmeta_func_call>
+function_call_expr::__check_nonmeta_expr(const context& c) const {
+	expr_list::checked_nonmeta_exprs_type temp;
+	args->postorder_check_nonmeta_exprs(temp, c);
+	const count_ptr<nonmeta_expr_list>
+		fargs(new nonmeta_expr_list);
+	NEVER_NULL(fargs);
+	copy(temp.begin(), temp.end(), back_inserter(*fargs));
+	const qualified_id& id(*fname->get_id());
+	INVARIANT(!id.empty());
+	std::ostringstream fname_str;
+	fname_str << id;
+	const count_ptr<nonmeta_func_call>
+		ret(new nonmeta_func_call(fname_str.str(), fargs));
+	NEVER_NULL(ret);
+	return ret;
 }
 
 //=============================================================================

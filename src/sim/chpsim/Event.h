@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.9 2007/06/16 23:05:06 fang Exp $
+	$Id: Event.h,v 1.9.4.1 2007/07/23 03:51:22 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -59,7 +59,8 @@ enum {
 	 */
 	EVENT_SELECTION_BEGIN = 6,
 	EVENT_SELECTION_END = EVENT_NULL,	///< end of any selection (no-op)
-	EVENT_CONDITION_WAIT = 7
+	EVENT_CONDITION_WAIT = 7,	///< predicate wait
+	EVENT_FUNCTION_CALL = 8		///< external function call
 };
 
 /**
