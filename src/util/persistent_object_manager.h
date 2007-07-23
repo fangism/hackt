@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.25 2007/03/16 07:07:26 fang Exp $
+	$Id: persistent_object_manager.h,v 1.25.14.1 2007/07/23 22:17:51 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -12,6 +12,8 @@
 #include <list>
 #include <map>
 #include "util/persistent.h"
+
+#include "util/nullary_function_fwd.h"
 
 #include "util/STL/hash_map.h"
 #include "util/memory/count_ptr.h"
@@ -26,6 +28,23 @@ using std::ofstream;
 using std::ifstream;
 using memory::count_ptr;
 USING_UTIL_MEMORY_POINTER_TRAITS
+
+//=============================================================================
+// typedefs
+/**
+	Allocators for persistent object re-allocation are allowed to
+	have one integer argument, in the event that one wishes to 
+	use one allocator entry to allocate one of several sub-types.  
+	Hint: see notes on multidimensional subtypes.
+	In most cases, no argument is necesssary when each entry
+	maps to one concrete type.  
+	The role of such function is to just allocate, even if it leaves
+	object members in an incoherent state.  
+
+	Argument (if applicable) should be aux_alloc_arg_type.
+ */
+typedef	nullary_function_virtual<persistent*>	reconstruction_function_type;
+typedef	const reconstruction_function_type*	reconstruct_function_ptr_type;
 
 //=============================================================================
 /**

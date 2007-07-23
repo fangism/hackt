@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171.4.2 2007/07/23 03:51:02 fang Exp $
+#	$Id: Makefile.am,v 1.171.4.3 2007/07/23 22:17:39 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -21,6 +21,7 @@ BUILT_SOURCES =
 PHONYSOURCES =
 CLEANSUBDIRS =
 SUBDIR_CVSIGNORE =
+nobase_pkginclude_HEADERS =
 
 # for optional fun features
 include $(srcdir)/misc/Makefile.inc
@@ -163,8 +164,8 @@ hacchpsim_SOURCES = main/chpsim.cc
 hacchpsim_CPPFLAGS = -DWITH_MAIN
 hacchpsim_LDADD = libhacktsim.la
 # -dlopen self
-hacchpsim_LDFLAGS = 
-# -export-dynamic (only if symbols in executable needed to resolve from modules)
+hacchpsim_LDFLAGS = -export-dynamic 
+# (only if symbols in executable needed to resolve from modules)
 
 # hacchpsim: $(top_builddir)/config.status
 #	@{ $(ECHO) "#!$(SH_PATH)" ; \
@@ -213,8 +214,7 @@ libhacktlib_la_SOURCES = main/main_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
 
-# libhacktsim_la_CPPFLAGS = $(LTDLINCL)
-libhacktsim_la_LIBADD = libhacktlib.la $(LIBLTDL)
+libhacktsim_la_LIBADD = libhacktlib.la
 
 libhacktparsers_la_LIBADD = libhacktast.la
 
@@ -551,6 +551,7 @@ OBJECT_COMMON_CC_FILES = \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
 	common/config.cc \
+	common/ltdl-wrap.cc \
 	common/ICE.cc \
 	common/TODO.cc
 
@@ -558,7 +559,6 @@ OBJECT_COMMON_H_FILES = $(OBJECT_COMMON_CC_FILES:.cc=.h) \
 	Object/common/alias_string_cache.h \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
-	common/ltdl-wrap.h \
 	common/devel_switches.h
 
 OBJECT_CC_FILES = \
@@ -567,6 +567,7 @@ OBJECT_CC_FILES = \
 	Object/expr/expr_dump_context.cc \
 	Object/expr/expr_visitor.cc \
 	Object/expr/channel_probe.cc \
+	Object/expr/dlfunction.cc \
 	Object/expr/nonmeta_func_call.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
@@ -931,6 +932,12 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/guile.h \
 	main/chpsim-guile.h
 
+# installed development headers
+nobase_pkginclude_HEADERS += \
+	Object/expr/const_param.h \
+	Object/expr/param_expr.h \
+	Object/expr/types.h
+
 guile/libhackt-wrap.hchk: guile/libhackt-wrap.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)
 
@@ -967,6 +974,8 @@ libhacktcommon_la_SOURCES = \
 	$(OBJECT_COMMON_CC_FILES) \
 	$(OBJECT_COMMON_TCC_FILES) \
 	$(OBJECT_COMMON_H_FILES)
+# libhacktcommon_la_CPPFLAGS = $(LTDLINCL)
+libhacktcommon_la_LIBADD = $(LIBLTDL)
 
 # combined library of instances and references
 libhacktinstref_la_SOURCES = \

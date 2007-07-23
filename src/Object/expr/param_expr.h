@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.17 2007/01/21 05:58:58 fang Exp $
+	$Id: param_expr.h,v 1.17.22.1 2007/07/23 22:17:46 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -12,7 +12,6 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
-#include "util/memory/excl_ptr.h"
 
 //=============================================================================
 namespace HAC {
@@ -29,7 +28,6 @@ class nonmeta_expr_visitor;
 using util::persistent;
 using std::ostream;
 using util::memory::count_ptr;
-using util::memory::excl_ptr;
 
 //=============================================================================
 /**

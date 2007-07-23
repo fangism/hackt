@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.h"
-	$Id: nonmeta_func_call.h,v 1.1.2.2 2007/07/23 03:51:11 fang Exp $
+	$Id: nonmeta_func_call.h,v 1.1.2.3 2007/07/23 22:17:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_FUNC_CALL_H__
@@ -9,6 +9,7 @@
 #include <string>
 #include "Object/expr/data_expr.h"
 #include "util/memory/count_ptr.h"
+#include "Object/expr/dlfunction.h"	// for function typedef
 
 namespace HAC {
 namespace entity {
@@ -27,7 +28,11 @@ class nonmeta_func_call : public data_expr {
 	typedef	nonmeta_func_call		this_type;
 public:
 	typedef	count_ptr<const nonmeta_expr_list>	fargs_ptr_type;
-	typedef	count_ptr<const_param> (*function_type) (const const_param_expr_list&);
+#if 0
+	typedef	count_ptr<const_param> (*function_ptr_type) (const const_param_expr_list&);
+#else
+	typedef	chp_dlfunction_ptr_type		function_ptr_type;
+#endif
 private:
 	/**
 		Name of function to call.
@@ -38,7 +43,14 @@ private:
 		Argument expressions.
 	 */
 	fargs_ptr_type				fargs;
-	// mutable function pointer to be bound at run-time
+	/**
+		mutable function pointer to be bound at run-time.
+		This cannot be retained persistently, of course.  
+		The first time this function is encountered, it will 
+		try to be resolved against the registry of loaded
+		and bound functions (from dlopen, plug-ins, etc.).
+	 */
+	mutable function_ptr_type		fsym;
 public:
 	nonmeta_func_call();
 	nonmeta_func_call(const string&, const fargs_ptr_type&);

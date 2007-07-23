@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.1.2.2 2007/07/23 03:51:11 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.1.2.3 2007/07/23 22:17:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -12,7 +12,7 @@
 #include "Object/type/data_type_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/persistent_type_hash.h"
-#include "common/ltdl-wrap.h"
+// #include "Object/expr/dlfunction.h"
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -39,12 +39,13 @@ using util::read_value;
 //=============================================================================
 // class nonmeta_func_call method definitions
 
-nonmeta_func_call::nonmeta_func_call() : data_expr(), fname(), fargs() { }
+nonmeta_func_call::nonmeta_func_call() : 
+		data_expr(), fname(), fargs(), fsym(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_func_call::nonmeta_func_call(const string& f, 
 		const fargs_ptr_type& a) : 
-		data_expr(), fname(f), fargs(a) {
+		data_expr(), fname(f), fargs(a), fsym(NULL) {
 	NEVER_NULL(fargs);
 }
 
@@ -96,10 +97,13 @@ nonmeta_func_call::get_resolved_data_type_ref(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_DATA_EXPR_EQUIVALENCE
+/**
+	Type is not known a priori, conservatively return true.
+ */
 bool
 nonmeta_func_call::may_be_type_equivalent(const data_expr&) const {
-	FINISH_ME(Fang);
-	return false;
+//	FINISH_ME(Fang);
+	return true;
 }
 #endif
 
@@ -137,19 +141,49 @@ nonmeta_func_call::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really lazy linking: lookup function the first time it is called.
+ */
 count_ptr<const const_param>
 nonmeta_func_call::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const data_expr>& p) const {
-	FINISH_ME_EXIT(Fang);
-	return count_ptr<const const_param>(NULL);
+	typedef	count_ptr<const const_param>		return_type;
+	INVARIANT(p == this);
+	// resolve symbol if this is the first time
+	if (!fsym) {
+		const chp_dlfunction_ptr_type fp(lookup_chpsim_function(fname));
+		if (!fp) {
+			// already have error message
+			return return_type(NULL);
+		}
+		fsym = fp;
+	}
+	NEVER_NULL(fsym);
+	const count_ptr<const const_param_expr_list>
+		rargs(fargs->nonmeta_resolve_copy(c, fargs));
+	if (!rargs) {
+		// already have error message?
+		return return_type(NULL);
+	}
+	return (*fsym)(*rargs);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-nonmeta_func_call::evaluate_write(const nonmeta_context_base&, 
-		channel_data_writer&, 
+nonmeta_func_call::evaluate_write(const nonmeta_context_base& c, 
+		channel_data_writer& w, 
 		const count_ptr<const data_expr>& p) const {
-	FINISH_ME_EXIT(Fang);
+	INVARIANT(p == this);
+	const count_ptr<const const_param> rv(nonmeta_resolve_copy(c, p));
+	if (!rv) {
+		cerr << "Error evaluating function `" << fname << "\'." << endl;
+		THROW_EXIT;
+	}
+	// lazy and slow (dynamic cross-cast), but self-maintaining:
+	const count_ptr<const data_expr>
+		trv(rv.is_a<const data_expr>());
+	NEVER_NULL(trv);
+	trv->evaluate_write(c, w, trv);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

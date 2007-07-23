@@ -1,15 +1,16 @@
 /**
 	\file "util/persistent.cc"
 	Method definitions for persistent class interface.  
-	$Id: persistent.cc,v 1.7 2005/05/10 04:51:28 fang Exp $
+	$Id: persistent.cc,v 1.7.158.1 2007/07/23 22:17:48 fang Exp $
  */
 
-#include "util/macros.h"
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
 
+#include "util/macros.h"
 #include "util/persistent.h"
+#include "util/persistent_hash.h"
 
 namespace util {
 //=============================================================================

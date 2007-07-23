@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-05:
+	  Makefile.am: started listing a few pkginclude_HEADERS to be installed
+		for chpsim module building support.  
+		Moved LIBLTDL to libhacktcommon.la's LIBADD.
+	  New: Object/expr/dlfunction.{h,cc}: type-wrapped interface to
+		a run-time loaded map of functions.  
+	  Object/expr/nonmeta_func_call: added mutable function pointer member.
+	  common/ltdl-wrap.cc: implemented ltdl wrapped interface.
+	  Plan: each module loaded at run-time should come with a
+		load_chpsim_function interface to bind symbols to names.  
+		Alternative is to invoke demand-driven dlsym.
+
+
 2007-07-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-04:

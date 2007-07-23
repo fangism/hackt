@@ -1,23 +1,20 @@
 /**
 	"common/ltdl-wrap.h"
 	Wrapped interfaces for libltdl.  
-	$Id: ltdl-wrap.h,v 1.1.2.1 2007/07/20 21:07:45 fang Exp $
+	$Id: ltdl-wrap.h,v 1.1.2.2 2007/07/23 22:17:47 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_LTDL_WRAP_H__
 #define	__HAC_COMMON_LTDL_WRAP_H__
 
 // relative path given to avoid adding another CPPFLAG
-#include "../libltdl/ltdl.h"
+#include "../libltdl/ltdl.h"	// needed for the types
 // do we ever want to fallback to the system's installed ltdl?
 #include "util/attributes.h"
 #include "util/type_traits.h"
-#include "util/memory/excl_ptr.h"
-#include <map>
 #include <string>
 
 namespace HAC {
-using util::memory::never_ptr;
 //=============================================================================
 /**
 	Class whose sole responsibility is to balance dlinit with dlexit,
@@ -26,8 +23,8 @@ using util::memory::never_ptr;
  */
 class ltdl_token {
 public:
-	ltdl_token() { lt_dlinit(); }
-	~ltdl_token() { lt_dlexit(); }
+	ltdl_token();
+	~ltdl_token();
 
 private:
 	ltdl_token(const ltdl_token&);
@@ -39,9 +36,62 @@ private:
 } __ATTRIBUTE_UNUSED__ ;	// end class ltdl_token
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	util::remove_pointer<lt_dlhandle>::type		lt_dlref;
-typedef	never_ptr<const lt_dlref>			lt_dlrefptr;
-typedef	std::map<std::string, lt_dlrefptr>		ltdl_handle_map_type;
+// assert that lt_dlhandle is a pointer
+typedef	util::remove_pointer<lt_dlhandle>::type		lt_dlhandle_struct;
+// typedef	const lt_dlhandle_struct*		lt_dlhandle_const;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type-punning union because C++ forbids reinterpret_cast-ing
+	between function and non-function pointers.  
+	Reinterpret-cast-ing between function types is, however, allowed.  
+ */
+typedef	union {
+	lt_ptr				nonfunc_ptr;
+	void				(*func_ptr) (void);
+} lt_dlsym_union;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper policy to automatically dlclose modules 
+	as a destructor action.  
+	Pass this along with pointer class policies.  
+ */
+struct ltdl_module_policy {
+	void
+	operator () (const lt_dlhandle);
+};
+
+/***
+stupid question: does a module need to remain open to be able to 
+use its symbols?
+i.e. do we need to pass reference counted handles along with 
+resolved symbols?
+***/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This also retains a list of dlopened module handles to search through.  
+	The opened module handle is prepended to the global search list.  
+ */
+extern
+lt_dlhandle
+ltdl_open_prepend(const std::string&);
+
+/**
+	The opened module handle is appended (back) to the global search list.  
+ */
+extern
+lt_dlhandle
+ltdl_open_append(const std::string&);
+
+/**
+	Search through list of modules until symbol is found.  
+	Should we also return the module handle that owns the symbol?
+ */
+extern
+lt_dlsym_union
+ltdl_find_sym(const std::string&);
 
 //=============================================================================
 }	// end namespace HAC

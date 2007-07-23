@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.26 2006/05/06 22:08:38 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.26.62.1 2007/07/23 22:17:55 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -29,6 +29,7 @@
 #define	EXTERN_TEMPLATE_UTIL_WHAT
 #endif
 
+#include "util/persistent_hash.h"
 #include "util/new_functor.tcc"
 #include "util/IO_utils.tcc"
 #include "util/what.tcc"

@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.80 2007/06/18 18:24:33 fang Exp $
+#	$Id: ChangeLog,v 1.80.4.1 2007/07/23 22:17:47 fang Exp $
+
+2007-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-05:
+	  persistent.h: split-off persistent::hash_key definition into
+		persistent_hash.h to reduce unnecessary include material.
+	  Makefile.inc: started naming installed headers (pkginclude)
+		for external development support, 
+		initially intended for chpsim dl-linking.
+
 
 2007-06-18	David Fang		<fangism@users.sourceforge.net>
 
