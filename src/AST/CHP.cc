@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.17.6.2 2007/07/23 03:51:06 fang Exp $
+	$Id: CHP.cc,v 1.17.6.3 2007/07/24 20:48:27 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -936,7 +936,7 @@ CONSTRUCTOR_INLINE
 send::send(const inst_ref_expr* c, const char_punctuation_type* d, 
 		const expr_list* r) :
 		communication(c, d), rvalues(r) {
-	NEVER_NULL(rvalues);
+//	NEVER_NULL(rvalues);	// may be omitted for dataless sends
 }
 
 DESTRUCTOR_INLINE
@@ -946,7 +946,9 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(send)
 
 line_position
 send::rightmost(void) const {
-	return rvalues->rightmost();
+	if (rvalues)
+		return rvalues->rightmost();
+	else	return communication::rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -969,6 +971,7 @@ send::__check_action(context& c) const {
 	typedef	expr_list::checked_nonmeta_exprs_type::const_iterator
 							const_iterator;
 	expr_list::checked_nonmeta_exprs_type checked_exprs;
+if (rvalues) {
 	rvalues->postorder_check_nonmeta_exprs(checked_exprs, c);
 	const_iterator i(checked_exprs.begin());
 	const const_iterator e(checked_exprs.end());
@@ -978,15 +981,18 @@ send::__check_action(context& c) const {
 			where(*rvalues) << endl;
 		return statement::return_type(NULL);
 	}
-
+}
 	typedef	count_ptr<entity::CHP::channel_send>	local_return_type;
 	const local_return_type ret(new entity::CHP::channel_send(sender));
 	// need to check that number of arguments match...
 	NEVER_NULL(ret);
 	const good_bool g(ret->add_expressions(checked_exprs));
 	if (!g.good) {
-		cerr << "At least one type error in expr-list in " <<
-			where(*rvalues) << endl;
+		if (rvalues)
+			cerr << "At least one type error in expr-list in "
+				<< where(*rvalues);
+		else	cerr << "Type error in send at " << where(*this);
+		cerr << endl;
 		return statement::return_type(NULL);
 	} else {
 		return ret;
@@ -1487,6 +1493,23 @@ log::__check_action(context& c) const {
 function_call_expr::function_call_expr(const id_expr* i, const expr_list* a) :
 		fname(i), args(a) {
 	NEVER_NULL(fname);
+	NEVER_NULL(args);
+}
+
+/**
+	Parse-time type checking done here to simplify grammar.  
+	\throw exception if base reference is wrong type.  
+ */
+function_call_expr::function_call_expr(
+		const inst_ref_expr* i, const expr_list* a) :
+		fname(IS_A(const id_expr*, i)), args(a) {
+	NEVER_NULL(i);
+	if (!fname) {
+		cerr << "Parse error: base reference of function call "
+			"must be an id_expr, but got: ";
+		i->what(cerr) << " at " << where(*i) << endl;
+		THROW_EXIT;
+	}
 	NEVER_NULL(args);
 }
 

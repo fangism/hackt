@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.8.6.2 2007/07/23 03:51:07 fang Exp $
+	$Id: CHP.h,v 1.8.6.3 2007/07/24 20:48:28 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -684,6 +684,7 @@ protected:
 	const excl_ptr<const expr_list>			args;
 public:
 	function_call_expr(const id_expr*, const expr_list*);
+	function_call_expr(const inst_ref_expr*, const expr_list*);
 	~function_call_expr();
 
 	ostream&

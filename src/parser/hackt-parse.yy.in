@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.25.6.1 2007/07/11 21:43:59 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.25.6.2 2007/07/24 20:48:28 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -631,7 +631,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>		chp_guard_expr
 %type	<_expr>		chp_unary_bool_expr chp_simple_bool_expr chp_unary_expr
 %type	<_expr>		chp_probe_expr
-%type	<_chp_func_expr>		chp_function_call_expr
+%type	<_chp_func_expr>		function_call_expr
 %type	<_expr>		chp_mult_expr chp_add_expr chp_add_expr_only
 %type	<_expr>		chp_paren_add_expr chp_shift_expr chp_relational_expr
 %type	<_expr>		chp_logical_and_expr chp_logical_or_expr chp_not_expr
@@ -1546,7 +1546,7 @@ chp_statement
 		{ $$ = new CHP::log($1, $2); }
 	| chp_metaloop_selection { $$ = $1; }
 	| chp_metaloop_statement { $$ = $1; }
-	| chp_function_call_expr { $$ = $1; }
+	| function_call_expr { $$ = $1; }
 	;
 
 chp_loop
@@ -1650,12 +1650,7 @@ chp_unary_bool_expr
 	| '(' chp_logical_or_expr ')'
 		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
 	| chp_probe_expr
-	| chp_function_call_expr { $$ = $1; }
-	;
-
-chp_function_call_expr
-	: id_expr expr_list_in_parens
-		{ $$ = new CHP::function_call_expr($1, $2); }
+	| function_call_expr { $$ = $1; }
 	;
 
 chp_probe_expr
@@ -1814,9 +1809,13 @@ chp_concurrent_group
 	;
 
 chp_send
-	/* parens are now required */
-	: member_index_expr '!' expr_list_in_parens
+	/* parens are now required where there are arguments */
+/*	: member_index_expr '!' expr_list_in_parens	*/
+	: member_index_expr '!' connection_actuals_list
 		{ $$ = new CHP::send($1, $2, $3); }
+	/* for dataless communications only */
+	| member_index_expr '!'
+		{ $$ = new CHP::send($1, $2, NULL); }
 	;
 
 chp_recv
@@ -2272,6 +2271,7 @@ simple_expr
 
 unary_expr
 	: simple_expr { $$ = $1; }
+	| function_call_expr { $$ = $1; }	/* conflicts */
 	| paren_expr { $$ = $1; }
 	| loop_expr { $$ = $1; }
 	/* no prefix operations, moved to assignment */
@@ -2281,6 +2281,26 @@ unary_expr
 		{ $$ = new prefix_expr($1, $2); }
 	| '~' unary_expr
 		{ $$ = new prefix_expr($1, $2); }
+	;
+
+function_call_expr
+	/* prefix dismbiguator */
+/**
+	: '$' id_expr expr_list_in_parens
+		{ $$ = new CHP::function_call_expr($2, $3);
+			DELETE_TOKEN($1); }
+**/
+/**
+	: id_expr expr_list_in_parens
+		{ $$ = new CHP::function_call_expr($1, $2); }
+**/
+	/* function_call is grammatic subset of connection_statement
+	 * copied from connection_statement to disambiguate 
+	 * let type checking further restrict the member_index_expr to id_expr
+	 * This construction may throw.  
+	 */
+	: member_index_expr connection_actuals_list
+		{ $$ = new CHP::function_call_expr($1, $2); }
 	;
 
 multiplicative_expr
