@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-07-23	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-06:
+	  hackt-config.in: prepended cflags with -DINSTALLED_HACKT
+		so compiling against installed headers can be different.
+
+
 2007-07-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-02:

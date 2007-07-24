@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.25 2007/01/21 05:58:54 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.25.22.1 2007/07/24 03:35:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -138,7 +138,7 @@ const_param_expr_list::size(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
-const_param_expr_list::operator [] (const size_t i) const {
+const_param_expr_list::at(const size_t i) const {
 	INVARIANT(i < size());
 	return parent_type::operator[](i);
 }
@@ -587,7 +587,7 @@ dynamic_param_expr_list::make_const_param_expr_list(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
-dynamic_param_expr_list::operator [] (const size_t i) const {
+dynamic_param_expr_list::at(const size_t i) const {
 	INVARIANT(i < size());
 	return parent_type::operator[](i);
 }

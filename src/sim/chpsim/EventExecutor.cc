@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.6.4.1 2007/07/23 03:51:25 fang Exp $
+	$Id: EventExecutor.cc,v 1.6.4.2 2007/07/24 03:35:20 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -17,11 +17,12 @@
 #include "Object/lang/CHP.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
+#include "Object/expr/nonmeta_func_call.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/traits/chan_traits.h"
-#include "Object/expr/preal_const.h"
 #include "Object/nonmeta_context.h"
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
@@ -954,7 +955,9 @@ EventSuccessorDumper::visit(const do_while_loop& dw) {
 
 void
 EventExecutor::visit(const function_call_stmt& fc) {
-	FINISH_ME(Fang);
+	const count_ptr<const nonmeta_func_call>&
+		caller(fc.get_caller());
+	caller->nonmeta_resolve_copy(context, caller);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

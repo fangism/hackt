@@ -2,13 +2,13 @@
 	\file "util/memory/pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.9 2006/01/22 06:53:44 fang Exp $
+	$Id: pointer_traits.h,v 1.9.100.1 2007/07/24 03:35:38 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
 #define	__UTIL_MEMORY_POINTER_TRAITS_H__
 
-#include "util/size_t.h"
+// #include "util/size_t.h"
 
 #define	USING_UTIL_MEMORY_POINTER_TRAITS				\
 using util::memory::pointee;						\

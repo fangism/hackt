@@ -1,7 +1,16 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.80.4.1 2007/07/23 22:17:47 fang Exp $
+#	$Id: ChangeLog,v 1.80.4.2 2007/07/24 03:35:21 fang Exp $
 
 2007-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-06:
+	  Added more install-headers, and modified some headers to remove
+		install-time dependencies on "config.h"
+		affected: macros.h count_ptr.h pointer_traits.h
+		Expect 'built' compilations to pass -DBUILT_HACKT
+		and 'installed' compilations to pass -DINSTALLED_HACKT
+		as CPPFLAGS.
+
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-05:
 	  persistent.h: split-off persistent::hash_key definition into

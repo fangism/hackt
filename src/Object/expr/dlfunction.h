@@ -3,10 +3,10 @@
 	Header that defines API for linking chpsim to external,
 	dynamically loaded functions.  
 	This header should be installed.  
-	Since thes symbols are bound in the executable 
+	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.1.2.1 2007/07/23 22:17:45 fang Exp $
+	$Id: dlfunction.h,v 1.1.2.2 2007/07/24 03:35:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -16,7 +16,7 @@
 // installed development headers should ideally not require any "config.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "Object/expr/types.h"
-// #include "util/memory/count_ptr.h"
+// #include "util/attributes.h"		// bah!
 
 namespace HAC {
 namespace entity {
@@ -38,10 +38,30 @@ typedef	chp_dlfunction_type*		chp_dlfunction_ptr_type;
 	This binds names to function symbols from dlopened modules.  
 	Loaders should call this in their init() routines, 
 	after dependent modules have been loaded.
+	Recommend using the automatic registration class interface instead.
  */
 extern
 int
 register_chpsim_function(const std::string&, const chp_dlfunction_ptr_type);
+
+// Q: do we ever want to un-register functions?
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper class for automatically registering function
+	upon dlopening of a module.  
+ */
+class chp_function_registrar {
+public:
+	/**
+		\throw exception on failure.
+	 */
+	chp_function_registrar(const std::string&, 
+		const chp_dlfunction_ptr_type);
+
+	~chp_function_registrar();
+
+} /* __ATTRIBUTE_UNUSED__ */ ;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // wrappers to extract native type from dynamic HAC type
@@ -59,6 +79,35 @@ extract_bool(const const_param&);
 extern
 real_value_type
 extract_real(const const_param&);
+
+/**
+	intentionally does not use template argument deduction
+	Also only explicitly instantiated/specialized for select types.  
+ */
+template <typename V>
+V
+extract_chp_value(const const_param&);
+
+template <>
+inline
+int_value_type
+extract_chp_value<int_value_type>(const const_param& v) {
+	return extract_int(v);
+}
+
+template <>
+inline
+bool_value_type
+extract_chp_value<bool_value_type>(const const_param& v) {
+	return extract_bool(v);
+}
+
+template <>
+inline
+real_value_type
+extract_chp_value<real_value_type>(const const_param& v) {
+	return extract_real(v);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // these require count_ptr and const_param to be complete types...

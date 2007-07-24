@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: hackt-config.in,v 1.2 2007/04/20 18:25:40 fang Exp $
+#	$Id: hackt-config.in,v 1.2.10.1 2007/07/24 03:34:52 fang Exp $
 # vi: ft=sh
 # "hackt-config.in" -- configure-generated script to be installed
 # ripped off of other packages' config files
@@ -107,7 +107,7 @@ if test "$echo_exec_prefix" = "yes" ; then
 fi
 
 if test "$echo_cflags" = "yes" ; then
- echo "-I$pkgincludedir $cflags"
+ echo "-DINSTALLED_HACKT -I$pkgincludedir"
 fi
 
 if test "$echo_ldflags" = "yes" ; then

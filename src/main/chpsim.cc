@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.8.6.1 2007/07/20 21:07:45 fang Exp $
+	$Id: chpsim.cc,v 1.8.6.2 2007/07/24 03:35:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -139,7 +139,7 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bd:f:hiI:";
+	static const char optstring[] = "+bd:f:hiI:l:L:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -172,8 +172,15 @@ switch (c) {
 		break;
 	case 'i':
 		o.interactive = true;
+		break;
 	case 'I':
 		o.source_paths.push_back(optarg);
+		break;
+	case 'l':
+		HAC::ltdl_open_append(optarg);
+		break;
+	case 'L':
+		lt_dladdsearchdir(optarg);
 		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;
@@ -192,13 +199,16 @@ switch (c) {
 void
 chpsim::usage(void) {
 	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
-	cerr << "options:" << endl;
-	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
-	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
-	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
-	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
-	cerr << "\t-i : interactive (default)" << endl;
-	cerr << "\t-I <path> : include path for scripts (repeatable)" << endl;
+	cerr << "options:\n"
+"\t-b : batch-mode, non-interactive (promptless)\n"
+"\t-d <checkpoint>: textual dump of checkpoint only\n"
+"\t-f <flag> : general options modifiers (listed below)\n"
+"\t-h : print commands help and exit (objfile optional)\n"
+"\t-i : interactive (default)\n"
+"\t-I <path> : include path for scripts (repeatable)\n"
+"\t-L <path> : append load path for dlopening modules (repeatable)\n"
+"\t-l <lib> : library to dlopen (NO file extension) (repeatable)"
+	<< endl;
 //	cerr << "\t-O <0..1> : expression optimization level" << endl;
         const size_t flags = options_modifier_map.size();
 	if (flags) {

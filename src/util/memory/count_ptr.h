@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.11 2006/07/26 19:27:44 fang Exp $
+	$Id: count_ptr.h,v 1.11.54.1 2007/07/24 03:35:37 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
@@ -12,6 +12,11 @@
 #include "util/macros.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/pointer_manipulator.h"
+#if defined(BUILT_HACKT) || defined(INSTALLED_HACKT)
+#include <cstddef>
+#else
+#include "util/size_t.h"
+#endif
 
 //=============================================================================
 // debugging stuff
@@ -28,10 +33,13 @@
 /**
 	Whether or not to use a global reference count pool
 	for allocating size_t's (counts).  
-	Overrideable per translation unit.  
+	We suppress ref-count-pool dependencies for the installed version
+	of this header.  
  */
-#ifndef	USE_REF_COUNT_POOL
+#if !defined(BUILT_HACKT) && !defined(INSTALLED_HACKT)
 #define	USE_REF_COUNT_POOL				1
+#else
+#define	USE_REF_COUNT_POOL				0
 #endif
 
 /**

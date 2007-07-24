@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.20.6.1 2007/07/23 03:51:19 fang Exp $
+	$Id: CHP.h,v 1.20.6.2 2007/07/24 03:35:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -670,6 +670,9 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	const call_expr_ptr_type&
+	get_caller(void) const { return call_expr; }
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;

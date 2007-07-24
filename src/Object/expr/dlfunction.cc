@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.1.2.1 2007/07/23 22:17:45 fang Exp $
+	$Id: dlfunction.cc,v 1.1.2.2 2007/07/24 03:35:07 fang Exp $
  */
 
 #include <iostream>
@@ -33,9 +33,58 @@ chp_func_map_type			chp_function_map;
 
 //=============================================================================
 /**
+	\throw a bad_cast on type-check failure.
+ */
+int_value_type
+extract_int(const const_param& p) {
+	return IS_A(const pint_const&, p).static_constant_value();
+}
+
+bool_value_type
+extract_bool(const const_param& p) {
+	return IS_A(const pbool_const&, p).static_constant_value();
+}
+
+real_value_type
+extract_real(const const_param& p) {
+	return IS_A(const preal_const&, p).static_constant_value();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+chp_function_return_type
+make_chp_value(const int_value_type v) {
+	return chp_function_return_type(new pint_const(v));
+}
+
+chp_function_return_type
+make_chp_value(const bool_value_type v) {
+	return chp_function_return_type(new pbool_const(v));
+}
+
+chp_function_return_type
+make_chp_value(const real_value_type v) {
+	return chp_function_return_type(new preal_const(v));
+}
+
+//=============================================================================
+chp_function_registrar::chp_function_registrar(
+		const string& fn, const chp_dlfunction_ptr_type fp) {
+	if (register_chpsim_function(fn, fp)) {
+		THROW_EXIT;
+	}
+}
+
+chp_function_registrar::~chp_function_registrar() {
+// un-register?
+}
+
+//=============================================================================
+/**
 	Preloads map with function.  
 	Calling this isn't necessary, only requirement is that 
 	modules are loaded before searching for symbols.  
+	With this interface, functions can be mapped using names different
+	than their symbol name, which circumvents symbol name mangling.  
 	\return 0 for success, anything else for error.
  */
 int
@@ -56,6 +105,8 @@ register_chpsim_function(const string& fn, const chp_dlfunction_ptr_type fp) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Automatically looks up function and caches resolved symbol.  
+	The dlsym lookup is a last resort if it wasn't found in the
+	managed function map already.  
  */
 chp_dlfunction_ptr_type
 lookup_chpsim_function(const std::string& fn) {
@@ -64,7 +115,7 @@ lookup_chpsim_function(const std::string& fn) {
 	chp_mapped_func_ptr_type& mf(chp_function_map[fn]);
 	if (!mf) {
 		lt_dlsym_union sym(ltdl_find_sym(fn));
-		if (sym.func_ptr) {
+		if (!sym.func_ptr) {
 			cerr << "ERROR: symbol `" << fn << "\' not found "
 				"in presently loaded modules." << endl;
 			return NULL;

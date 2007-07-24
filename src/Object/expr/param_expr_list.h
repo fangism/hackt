@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.17.22.1 2007/07/20 21:07:44 fang Exp $
+	$Id: param_expr_list.h,v 1.17.22.2 2007/07/24 03:35:15 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -60,7 +60,7 @@ virtual	ostream&
 	dump(ostream& o, const expr_dump_context&) const = 0;
 
 virtual	count_ptr<const param_expr>
-	operator [] (const size_t) const = 0;
+	at(const size_t) const = 0;
 
 virtual	bool
 	may_be_equivalent(const param_expr_list& p) const = 0;

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.30.10.1 2007/07/23 22:17:48 fang Exp $
+#	$Id: Makefile.inc,v 1.30.10.2 2007/07/24 03:35:22 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -224,6 +224,9 @@ libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 # installed headers (keep to minimum)
 nobase_pkginclude_HEADERS += \
 	util/memory/pointer_classes_fwd.h \
+	util/memory/pointer_manipulator.h \
+	util/memory/pointer_traits.h \
+	util/memory/count_ptr.h \
 	util/new_functor_fwd.h \
 	util/persistent_fwd.h \
 	util/persistent.h

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.17 2007/01/21 05:58:44 fang Exp $
+	$Id: const_param_expr_list.h,v 1.17.22.1 2007/07/24 03:35:06 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -77,9 +77,10 @@ public:
 	using parent_type::back;
 
 	count_ptr<const param_expr>
-	operator [] (const size_t) const;
+	at(const size_t) const;
 
-	using parent_type::at;
+	using parent_type::operator[];
+
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::empty;

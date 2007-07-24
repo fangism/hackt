@@ -5,6 +5,20 @@
 
 2007-07-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-06:
+	  sim/chpsim/chpsim_dlfunction.h: new.  This is the primary
+		header to include when compiling a library of functions
+		to interface with chpsim.  Contains useful wrapper macros.
+		Need to provide some usage examples.  
+	  Object/expr/*param_expr_list: updated operator[], and at().
+	  Object/expr/dlfunction.cc: implemented type-check converters.  
+		Now provide class whose objects automatically register
+		named functions upon construction, for automatic function
+		binding upon dlopen.  
+	  main/chpsim.cc: added command-line options to add 
+		load-path and dlopen modules.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-05:
 	  Makefile.am: started listing a few pkginclude_HEADERS to be installed
 		for chpsim module building support.  
