@@ -1,0 +1,15 @@
+// "dataless-04.hac"
+// copy-modified from "dataless-03.hac"
+// testing dataless channel declaration, channel directions
+// expect create fail
+
+defproc boring (chan?() in; chan!() out) {
+chp {
+*[ in? ],
+*[ out! ]
+}
+}
+
+boring work, play;
+play.in = work.in;		// error: cannot share consumers
+

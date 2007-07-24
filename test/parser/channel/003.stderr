@@ -11,8 +11,10 @@ state	value
 #STATE#	( [3:23]
 #STATE#	paramtype: pbool [3:24..28]
 in state #STATE#, possible rules are:
-	data_type_ref_list_in_parens : '(' . data_type_ref_list ')'  (#RULE#)
+	data_type_ref_list_optional_in_parens : '(' . data_type_ref_list_optional ')'  (#RULE#)
+	data_type_ref_list_optional : .  (#RULE#)
 acceptable tokens are: 
+	')' (reduce)
 	ID (shift)
 	SCOPE (shift)
 	INT_TYPE (shift)

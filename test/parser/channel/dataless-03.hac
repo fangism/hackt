@@ -1,0 +1,8 @@
+// "dataless-03.hac"
+// copy-modified from "dataless-01.hac"
+// testing dataless channel declaration
+
+defproc boring (chan?() in; chan!() out; chan() peek) { }
+
+boring work;
+

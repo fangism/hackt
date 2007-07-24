@@ -1,0 +1,8 @@
+globID	super		localID	canonical	footprint-frame
+[global channel entries]
+1	(top)	-	1	dataless[0][0]	chan()
+2	(top)	-	2	dataless[0][1]	chan()
+3	(top)	-	3	dataless[0][2]	chan()
+4	(top)	-	4	dataless[1][0]	chan()
+5	(top)	-	5	dataless[1][1]	chan()
+6	(top)	-	6	dataless[1][2]	chan()

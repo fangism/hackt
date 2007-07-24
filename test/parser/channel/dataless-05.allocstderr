@@ -1,0 +1,9 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	work	boring<>
+	channel: 1,2
+2	(top)	-	2	play	boring<>
+	channel: 2,1
+[global channel entries]
+1	(top)	-	1	work.in	chan()
+2	(top)	-	2	work.out	chan()

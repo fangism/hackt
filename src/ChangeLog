@@ -5,6 +5,14 @@
 
 2007-07-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-08:
+	  Middle-end support for dataless channels, changing some invariants,
+		still remains untested in chpsim, however.  
+	  Added some test cases.  
+	  Need to update checking w.r.t. null lvalues (nonmeta).
+	  Eventually get back to func_call checking...
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-07:
 	  Grammar: chp_function_call_expr replaced with function_call_expr,
 		which is grammatically identical to connection_statement, 

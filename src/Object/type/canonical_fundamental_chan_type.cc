@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.2 2007/01/21 05:59:49 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.2.22.1 2007/07/24 23:16:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -156,13 +156,14 @@ canonical_fundamental_chan_type_base::dump(ostream& o, const char d) const {
 	o << "chan";
 	channel_type_reference_base::dump_direction(o, d);
 	o << '(';
-	INVARIANT(datatype_list.size());
 	const_iterator i(datatype_list.begin());
 	const const_iterator e(datatype_list.end());
+if (i!=e) {
 	i->dump(o);
 	for (i++; i!=e; i++) {
 		i->dump(o << ", ");
 	}
+}
 	return o << ')';
 }
 

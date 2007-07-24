@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.25.6.1 2007/07/23 03:51:12 fang Exp $
+	$Id: CHP.cc,v 1.25.6.2 2007/07/24 23:16:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1464,13 +1464,14 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
 	chan->dump(o, c) << "!(";
-	INVARIANT(!exprs.empty());
 	const_iterator i(exprs.begin());
 	const const_iterator e(exprs.end());
+if (i!=e) {
 	(*i)->dump(o, c);
 	for (i++; i!=e; i++) {
 		(*i)->dump(o << ',', c);
 	}
+}
 	return o << ')';
 }
 

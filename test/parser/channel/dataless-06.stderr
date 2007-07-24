@@ -1,0 +1,6 @@
+ERROR: types mismatch!
+	got: chan!
+	and: chan?(bool<>)
+Types do not match! got: chan!
+ERROR: type/size of instance reference 2 of alias list doesn't match the type/size of the first instance reference!  
+HALT: at least one error in connection list.  [14:1..18]

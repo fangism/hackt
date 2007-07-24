@@ -1,0 +1,5 @@
+// "dataless-01.hac"
+// testing dataless channel declaration
+
+chan() dataless;
+

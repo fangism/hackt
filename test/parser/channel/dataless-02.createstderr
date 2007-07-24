@@ -1,0 +1,56 @@
+WARNING: channel dataless[0][0] lacks connection to a producer.
+WARNING: channel dataless[0][0] lacks connection to a consumer.
+WARNING: channel dataless[0][1] lacks connection to a producer.
+WARNING: channel dataless[0][1] lacks connection to a consumer.
+WARNING: channel dataless[0][2] lacks connection to a producer.
+WARNING: channel dataless[0][2] lacks connection to a consumer.
+WARNING: channel dataless[1][0] lacks connection to a producer.
+WARNING: channel dataless[1][0] lacks connection to a consumer.
+WARNING: channel dataless[1][1] lacks connection to a producer.
+WARNING: channel dataless[1][1] lacks connection to a consumer.
+WARNING: channel dataless[1][2] lacks connection to a producer.
+WARNING: channel dataless[1][2] lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
+	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	56
+	4	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
+	5	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
+	6	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	56
+	7	##ADDR##	footprnt	0	#HEAD#	#TAIL#	771
+	8	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	24
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    dataless = chan() dataless^2
+}
+
+footprint: {
+  dataless = channel chan()^2
+    {
+      [0][0] = dataless[0][0] (1) 
+      [0][1] = dataless[0][1] (2) 
+      [0][2] = dataless[0][2] (3) 
+      [1][0] = dataless[1][0] (4) 
+      [1][1] = dataless[1][1] (5) 
+      [1][2] = dataless[1][2] (6) 
+    }
+  Created state:
+  channel instance pool:
+  1	dataless[0][0]
+  2	dataless[0][1]
+  3	dataless[0][2]
+  4	dataless[1][0]
+  5	dataless[1][1]
+  6	dataless[1][2]
+}

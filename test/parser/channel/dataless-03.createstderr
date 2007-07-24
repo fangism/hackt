@@ -1,0 +1,87 @@
+WARNING: channel boring::in lacks connection to a consumer.
+WARNING: channel boring::out lacks connection to a producer.
+WARNING: channel boring::peek lacks connection to a producer.
+WARNING: channel boring::peek lacks connection to a consumer.
+WARNING: channel work.in lacks connection to a producer.
+WARNING: channel work.in lacks connection to a consumer.
+WARNING: channel work.out lacks connection to a producer.
+WARNING: channel work.out lacks connection to a consumer.
+WARNING: channel work.peek lacks connection to a producer.
+WARNING: channel work.peek lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	215
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	50
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	51
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
+	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
+	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	605
+	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	52
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	48
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	665
+	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    boring = process-definition (defined) boring(
+        chan?() in
+        chan!() out
+        chan() peek
+      )
+      In definition "boring", we have: {
+      Instances:
+        in = chan?() boring::in
+        out = chan!() boring::out
+        peek = chan() boring::peek
+      unroll sequence: 
+        chan?() in
+        chan!() out
+        chan() peek
+      footprint: {
+        in = channel chan?()^0 = boring::in (1) 
+        out = channel chan!()^0 = boring::out (2) 
+        peek = channel chan()^0 = boring::peek (3) 
+        Created state:
+        channel instance pool:
+        1	boring::in
+        2	boring::out
+        3	boring::peek
+      }
+      }
+
+  Instances:
+    work = boring<> work
+}
+
+footprint: {
+  work = process boring<>^0 = work (1) (
+    in = channel chan?()^0 = work.in (1) 
+    out = channel chan!()^0 = work.out (2) 
+    peek = channel chan()^0 = work.peek (3) 
+  )
+  Created state:
+  process instance pool:
+  1	work
+  channel instance pool:
+  1	work.in
+  2	work.out
+  3	work.peek
+}

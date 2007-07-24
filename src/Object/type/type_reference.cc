@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.26 2007/04/09 01:25:37 fang Exp $
+ 	$Id: type_reference.cc,v 1.26.12.1 2007/07/24 23:16:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -971,13 +971,14 @@ builtin_channel_type_reference::dump(ostream& o) const {
 	o << "chan";
 	dump_direction(o, direction);
 	o << '(';
-	INVARIANT(datatype_list.size());
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
+if (i!=e) {
 	(*i)->dump(o);
 	for (i++; i!=e; i++) {
 		(*i)->dump(o << ", ");
 	}
+}
 	return o << ')';
 }
 
@@ -991,17 +992,18 @@ builtin_channel_type_reference::dump_long(ostream& o) const {
 //	STACKTRACE_VERBOSE;
 	o << "chan";
 	dump_direction(o, direction);
-	o << '(' << endl;
-	{
-	INDENT_SECTION(o); 
-	INVARIANT(datatype_list.size());
+	o << '(';
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
+if (i!=e) {
+	o << endl;
+	INDENT_SECTION(o); 
 	for ( ; i!=e; i++) {
 		(*i)->dump(o << auto_indent) << endl;
 	}
-	}
-	return o << auto_indent << ')';
+	o << auto_indent;
+}
+	return o << ')';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

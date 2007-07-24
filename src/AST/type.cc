@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.8 2007/03/11 16:34:16 fang Exp $
+	$Id: type.cc,v 1.8.14.1 2007/07/24 23:16:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -330,6 +330,8 @@ generic_type_ref::check_build(const context& c) const {
 
 //=============================================================================
 // class data_type_ref_list method definitions
+
+data_type_ref_list::data_type_ref_list() : parent_type() { }
 
 data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
 		parent_type(c) { }

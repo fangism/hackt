@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.25 2007/03/11 16:34:15 fang Exp $
+	$Id: expr.cc,v 1.25.14.1 2007/07/24 23:16:29 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -433,6 +433,7 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		temp.push_back((*i)->check_nonmeta_expr(c));
 	}
 }
@@ -511,7 +512,7 @@ expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex,
 //=============================================================================
 // class expr_list method definitions
 
-// inst_ref_expr_list::inst_ref_expr_list() : parent_type() { }
+inst_ref_expr_list::inst_ref_expr_list() : parent_type() { }
 
 inst_ref_expr_list::inst_ref_expr_list(const inst_ref_expr* e) :
 		parent_type(e) { }
@@ -555,6 +556,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 		typedef	checked_bool_groups_type::value_type	group_type;
 		temp.push_back(group_type());	// create empty
 		// then append in-place (beats creating and copying)
+		NEVER_NULL(*i);
 		if ((*i)->check_grouped_literals(temp.back(), c)) {
 			// TODO: more specific error message, use std::distance
 			cerr << "Error in bool group reference list in "
@@ -578,6 +580,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		if ((*i)->check_grouped_literals(temp, c)) {
 			// TODO: more specific error message, use std::distance
 			cerr << "Error in bool group reference list in "
@@ -597,11 +600,15 @@ inst_ref_expr_list::postorder_check_meta_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		temp.push_back((*i)->check_meta_reference(c));
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allow null lvalues.  
+ */
 void
 inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 		checked_nonmeta_data_refs_type& temp, const context& c) const {
@@ -610,6 +617,7 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		temp.push_back((*i)->check_nonmeta_data_reference(c));
 	}
 }

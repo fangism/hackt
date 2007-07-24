@@ -1,0 +1,16 @@
+// "dataless-05.hac"
+// copy-modified from "dataless-04.hac"
+// testing dataless channel declaration, channel directions
+// expect create pass
+
+defproc boring (chan?() in; chan!() out) {
+chp {
+*[ in? ],
+*[ out! ]
+}
+}
+
+boring work, play;
+play.out = work.in;
+play.in = work.out;
+
