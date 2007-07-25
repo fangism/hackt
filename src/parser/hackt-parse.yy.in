@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.25.6.3 2007/07/24 23:16:38 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.25.6.4 2007/07/25 18:25:59 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -1817,6 +1817,11 @@ chp_concurrent_group
 chp_send
 	/* parens are now required where there are arguments */
 /*	: member_index_expr '!' expr_list_in_parens	*/
+	/* simplify grammar by re-using connection_actuals_list for args
+	 * syntactically, arguments are optional, 
+	 * but we require them semantically -- type-checked
+	 * sending a null value is undefined
+	 */
 	: member_index_expr '!' connection_actuals_list
 		{ $$ = new CHP::send($1, $2, $3); }
 	/* for dataless communications only */
@@ -1826,12 +1831,14 @@ chp_send
 
 chp_recv
 	/* parens are now required */
+	/* arguments are scalar lvalues */
 	: member_index_expr '?' member_index_expr_list_in_parens_optional
 		{ $$ = new CHP::receive($1, $2, $3); }
 	;
 
 chp_peek
 	/* parens are now required */
+	/* the lvalue arguments could be optional too */
 	: member_index_expr '#' member_index_expr_list_in_parens
 		{ $$ = new CHP::receive($1, $2, $3, true); }
 	;

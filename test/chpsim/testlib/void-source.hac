@@ -1,0 +1,41 @@
+// "void-source.hac"
+//	$Id: void-source.hac,v 1.1.2.1 2007/07/25 18:26:09 fang Exp $
+// cyclic and non-cyclic sources of dataless tokens
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Sources finite number (N) tokens.  
+***/
+template <pint N>
+defproc void_source_once(chan!() S) {
+chp {
+{;i:N: S! }
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Infinite source of dataless tokens.  
+***/
+defproc void_source(chan!() S) {
+chp {
+*[ S! ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes an extra delay parameter, that overrides default send delay.  
+ */
+template <preal D>
+defproc void_source_delay(chan!() S) {
+chp {
+*[
+	$(after=D) S!
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

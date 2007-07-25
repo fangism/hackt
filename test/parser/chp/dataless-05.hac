@@ -1,0 +1,14 @@
+// "dataless-05.hac"
+// copy-modified from "dataless-02.hac"
+//	$Id: dataless-05.hac,v 1.1.2.1 2007/07/25 18:26:27 fang Exp $
+// should compile fail -- wrong number of arguments
+
+defproc void_sink(chan?() B) {
+bool x;
+chp {
+*[ B?(x) ]
+}
+}
+
+void_sink_delay X;
+

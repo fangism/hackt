@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/06/17 02:56:39 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.1 2007/07/25 18:26:00 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -80,7 +80,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bool-merge-alternator-a \
 	bool-parallel-fifo-a \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
-	mux-test-flat
+	mux-test-flat \
+	source-sink-void-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -187,7 +188,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-peekbuf-a-03 \
 	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
 	source-sink-peekbuf-b-03 \
-	mux-test-flat-01
+	mux-test-flat-01 \
+	source-sink-void-a-01 source-sink-void-a-02
 
 # TODO: parallel-fifo test cases
 

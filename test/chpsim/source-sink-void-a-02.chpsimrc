@@ -1,0 +1,11 @@
+# "source-sink-void-a-02.chpsimrc"
+#	$Id: source-sink-void-a-02.chpsimrc,v 1.1.2.1 2007/07/25 18:26:06 fang Exp $
+# @haco@ source-sink-void-a.haco-a
+
+trace source-sink-void-a-02.chpsimtrace
+step 80
+assert-queue
+trace-close
+trace-dump source-sink-void-a-02.chpsimtrace
+!rm source-sink-void-a-02.chpsimtrace
+

@@ -65,7 +65,7 @@ In namespace "", we have: {
               in?
             ]
             *[
-              out!()
+              out!
             ]
           }
         }
@@ -82,7 +82,7 @@ In namespace "", we have: {
               in?
             ]
             *[
-              out!()
+              out!
             ]
           }
       }

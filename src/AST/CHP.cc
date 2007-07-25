@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.17.6.3 2007/07/24 20:48:27 fang Exp $
+	$Id: CHP.cc,v 1.17.6.4 2007/07/25 18:25:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -1052,27 +1052,40 @@ if (lvalues) {
 							const_iterator;
 	// NOTE: these are generic instance references, may not even be data
 	inst_ref_expr_list::checked_nonmeta_data_refs_type checked_refs;
+try {
 	lvalues->postorder_check_nonmeta_data_refs(checked_refs, c);
+#if 0
 	const_iterator i(checked_refs.begin());
 	const const_iterator e(checked_refs.end());
 	const const_iterator
 		ni(find(i, e, inst_ref_expr::nonmeta_data_return_type(NULL)));
+#endif
+} catch (...) {
+#if 0
 	if (ni != e) {
+#endif
 		cerr << "At least one error in inst-ref-list at " <<
 			where(*lvalues) << endl;
 		return return_type(NULL);
+#if 0
 	}
+#endif
+}
+	const_iterator i(checked_refs.begin());
+	const const_iterator e(checked_refs.end());
 	// need to dynamic cast the list into simple_nonmeta_datatype_value_refs
 	typedef vector<count_ptr<lref_type> >	val_refs_type;
 	val_refs_type val_refs;
 	transform(i, e, back_inserter(val_refs), 
 		mem_fun_ref(&count_ptr<checked_element_type>::is_a<lref_type>)
 	);
+#if 0
 	if (find(val_refs.begin(), val_refs.end(), val_refs_type::value_type())
 			!= val_refs.end()) {
 		cerr << "Houston, we have a problem." << endl;
 		return return_type(NULL);
 	}
+#endif
 	// need to check that number of arguments match...
 	const good_bool g(ret->add_references(val_refs));
 	if (!g.good) {

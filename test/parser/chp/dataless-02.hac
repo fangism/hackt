@@ -1,0 +1,14 @@
+// "dataless-02.hac"
+//	$Id: dataless-02.hac,v 1.1.2.1 2007/07/25 18:26:21 fang Exp $
+// void buckets
+
+defproc void_sink(chan?() B) {
+chp {
+*[ B?() ]
+	// error: B?() passes one null argument, 
+	// user meant B? which passes no arguments
+}
+}
+
+void_sink_delay X;
+

@@ -1,0 +1,19 @@
+// "dataless-01.hac"
+// testing dataless CHP communications
+
+defproc click(chan!() X) {
+chp {
+X!
+}
+}
+
+defproc clack(chan?() Y) {
+chp {
+Y?
+}
+}
+
+chan() Z;
+click A(Z);
+clack B(Z);
+

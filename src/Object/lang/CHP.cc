@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.25.6.2 2007/07/24 23:16:31 fang Exp $
+	$Id: CHP.cc,v 1.25.6.3 2007/07/25 18:25:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -1463,16 +1463,17 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	expr_list_type::const_iterator	const_iterator;
 	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
-	chan->dump(o, c) << "!(";
+	chan->dump(o, c) << '!';
 	const_iterator i(exprs.begin());
 	const const_iterator e(exprs.end());
 if (i!=e) {
-	(*i)->dump(o, c);
+	(*i)->dump(o << '(', c);
 	for (i++; i!=e; i++) {
 		(*i)->dump(o << ',', c);
 	}
+	o << ')';
 }
-	return o << ')';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1588,10 +1589,9 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	chan->dump(o, c);
 	o << (peek ? '#' : '?');
 if (!insts.empty()) {
-	o << '(';
 	const_iterator i(insts.begin());
 	const const_iterator e(insts.end());
-	(*i)->dump(o, c);
+	(*i)->dump(o << '(', c);
 	for (++i; i!=e; ++i) {
 		(*i)->dump(o << ',', c);
 	}

@@ -1,0 +1,67 @@
+	0	0	0	null
+event queue:
+check queue:
+	time	eid	pid	event
+	2	1	1	A.S!
+	5	2	2	B.B?
+	5	2	2	B.B?
+event queue:
+	time	eid	pid	event
+	5	1	1	A.S!
+check queue:
+	10	2	2	B.B?
+	5	1	1	A.S!
+event queue:
+check queue:
+	time	eid	pid	event
+	7	1	1	A.S!
+	10	2	2	B.B?
+	10	2	2	B.B?
+event queue:
+	time	eid	pid	event
+	10	1	1	A.S!
+check queue:
+	15	2	2	B.B?
+	10	1	1	A.S!
+event queue:
+check queue:
+	time	eid	pid	event
+	12	1	1	A.S!
+	15	2	2	B.B?
+	15	2	2	B.B?
+event queue:
+	time	eid	pid	event
+	15	1	1	A.S!
+check queue:
+	20	2	2	B.B?
+	15	1	1	A.S!
+event queue:
+check queue:
+	time	eid	pid	event
+	17	1	1	A.S!
+	20	2	2	B.B?
+	20	2	2	B.B?
+event queue:
+	time	eid	pid	event
+	20	1	1	A.S!
+check queue:
+	25	2	2	B.B?
+	20	1	1	A.S!
+event queue:
+check queue:
+	time	eid	pid	event
+	22	1	1	A.S!
+	25	2	2	B.B?
+	25	2	2	B.B?
+event queue:
+	time	eid	pid	event
+	25	1	1	A.S!
+check queue:
+	30	2	2	B.B?
+	25	1	1	A.S!
+event queue:
+check queue:
+	time	eid	pid	event
+	27	1	1	A.S!
+	30	2	2	B.B?
+time: 25

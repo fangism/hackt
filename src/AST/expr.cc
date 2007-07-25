@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.25.14.1 2007/07/24 23:16:29 fang Exp $
+	$Id: expr.cc,v 1.25.14.2 2007/07/25 18:25:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -421,9 +421,11 @@ expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
 /**
 	TODO: consider templating these traversals?
 	Q: are these expressions allowed to be NULL?  (CHP context)
+	A: No.  Cannot send null value (undefined).  
 	Just collects the result of type-checking of items in list.
 	\param temp the type-checked result list.
 	\param c the context.
+	Caller should catch error by checking for NULL.  
  */
 void
 expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
@@ -433,8 +435,17 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		temp.push_back((*i)->check_nonmeta_expr(c));
+		if (*i) {
+			temp.push_back((*i)->check_nonmeta_expr(c));
+		} else {
+			typedef	checked_nonmeta_exprs_type::value_type
+							checked_value_type;
+			cerr << "Error: missing rvalue expression in "
+				"argument list at position " << 
+				distance(begin(), i) +1 << " at " <<
+				where(*this) << endl;
+			temp.push_back(checked_value_type(NULL));
+		}
 	}
 }
 
@@ -608,6 +619,7 @@ inst_ref_expr_list::postorder_check_meta_refs(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allow null lvalues.  
+	\throw an exception upon error, since values are allowed to be NULL.  
  */
 void
 inst_ref_expr_list::postorder_check_nonmeta_data_refs(
@@ -617,8 +629,19 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		temp.push_back((*i)->check_nonmeta_data_reference(c));
+		typedef	checked_nonmeta_data_refs_type::value_type
+						checked_value_type;
+		if (*i) {
+			const checked_value_type
+				r((*i)->check_nonmeta_data_reference(c));
+			if (!r) {
+				// already have error message
+				THROW_EXIT;
+			}
+			temp.push_back(r);
+		} else {
+			temp.push_back(checked_value_type(NULL));
+		}
 	}
 }
 
