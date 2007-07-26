@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.78 2007/06/15 06:01:58 fang Exp $
+#	$Id: Make.test-tail,v 1.78.4.1 2007/07/26 00:11:37 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -112,6 +112,10 @@ EXTRACT_HACO_PIPE = $(GREP) "@haco@" | $(HEAD) -n1 | \
 # This analogously extracts the name of a tracefile from source.
 EXTRACT_CHPSIMTRACE_PIPE = $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
 	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
+
+# General script for extracting additional dependencies from source files.
+EXTRACT_DEPS_PIPE = $(GREP) "@deps@" | $(SED) 's/^.*@deps@//g'
+
 
 # This mechanism could be generalized to produce extra dependencies
 # that do not need to be named as arguments to the invoking command.  

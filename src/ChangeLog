@@ -5,6 +5,20 @@
 
 2007-07-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-10:
+	  First sign of life from chpsim-dlopen!
+		Successfully test first case with dlopening function binding.
+	  main/chpsim.cc: option processing diagnostics
+	  sim/chpsim/chpsim_dlfunction.h: forgot dereferences
+	  Object/devel_switches.h: added USE_TOP_DATA_TYPE so that function
+		calls' return types are forgiven in the early phases of
+		type-checking.  
+		Object/def/definition.cc: static top_data_definition object.
+		Object/type/type_reference.cc: honor the TOP type.
+	  Object/expr/dlfunction.cc: print function binding confirmation.
+	  First dlfunction test cases added to test/chpsim.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-09:
 	  AST/{CHP,expr}.cc: updated type checking of send/receive arguments 
 		to accommodate null arguments and omitted arguments 

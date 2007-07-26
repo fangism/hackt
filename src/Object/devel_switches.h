@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.40 2007/03/11 16:34:16 fang Exp $
+	$Id: devel_switches.h,v 1.40.14.1 2007/07/26 00:11:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -178,6 +178,19 @@
 	Priority: low (not needed before graduation)
  */
 #define	CHP_GENERAL_ATTRIBUTES			0
+
+/**
+	Define to 1 to make use of a forgiving type.  
+	Rationale: With the advent of run-time bound functions, we can no longer
+	make static type guarantees about functions, so we need to 
+	accommdate late type bindings with the help of a forgiving
+	type lattice element, the match-all-data-type.  
+	For type checking purposes, this matches all.  
+	Goal: 1?
+	Status: in progress
+	Priority: high -- for chpsim function support
+ */
+#define	USE_TOP_DATA_TYPE			1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.1.2.2 2007/07/24 03:35:07 fang Exp $
+	$Id: dlfunction.cc,v 1.1.2.3 2007/07/26 00:11:25 fang Exp $
  */
 
 #include <iostream>
@@ -93,6 +93,10 @@ register_chpsim_function(const string& fn, const chp_dlfunction_ptr_type fp) {
 	NEVER_NULL(fp);
 	chp_mapped_func_ptr_type& mf(chp_function_map[fn]);
 	if (!mf) {
+#if 1
+		// confirmation:
+		cout << "loaded function: `" << fn << "'." << endl;
+#endif
 		mf = chp_mapped_func_ptr_type(fp);
 	} else {
 		cerr << "ERROR: CHP function symbol `" << fn <<

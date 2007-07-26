@@ -1,0 +1,25 @@
+// "missing_func-c.hac"
+// copy-modified from "missing_func-a.hac"
+// diagnostic message for unbound function
+
+import "testlib/int-source.hac";
+import "testlib/int-sink.hac";
+
+defproc my_gcd(chan?(int) A, B; chan!(int) G) {
+int a, b, g;
+chp {
+*[
+	// OK to use existing identifier
+	A?(a), B?(b); 
+	my_gcd(a, b);		// statement expression
+	G!(my_gcd(a, b))
+]
+}
+}
+
+chan(int) A, B, G;
+my_gcd X(A, B, G);
+int_source<32, 4, {12,15,17,30}> AS(A);
+int_source<32, 5, {9,13,22,27,34}> BS(B);
+int_sink GS(G);
+

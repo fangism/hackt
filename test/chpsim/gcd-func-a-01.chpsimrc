@@ -1,0 +1,13 @@
+# "gcd-func-a-01.chpsimrc"
+#	$Id: gcd-func-a-01.chpsimrc,v 1.1.2.1 2007/07/26 00:11:49 fang Exp $
+# Yes, use THIS object file
+# @haco@ missing_func-a.haco-a
+# @module@ -lgcd
+# @deps@ gcd.la
+
+watchall-events
+step 200
+time
+assert-queue
+
+

@@ -3,7 +3,7 @@
 	This is the primary header to include for linking chpsim
 	to dlopened libraries.  
 	Try not to include other headers explicitly.  
-	$Id: chpsim_dlfunction.h,v 1.1.2.1 2007/07/24 03:35:21 fang Exp $
+	$Id: chpsim_dlfunction.h,v 1.1.2.2 2007/07/26 00:11:33 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHPSIM_DLFUNCTION_H__
@@ -39,21 +39,21 @@ auto_wrap_chp_function(void (*f)(void), const const_param_expr_list&) {
 template <typename R, typename A0>
 chp_function_return_type
 auto_wrap_chp_function(R (*f)(A0), const const_param_expr_list& a) {
-	return make_chp_value((*f)(extract_chp_value<A0>(a[0])));
+	return make_chp_value((*f)(extract_chp_value<A0>(*a[0])));
 }
 
 template <typename A0>
 void
 auto_wrap_chp_function(void (*f)(A0), const const_param_expr_list& a) {
-	(*f)(extract_chp_value<A0>(a[0]));
+	(*f)(extract_chp_value<A0>(*a[0]));
 }
 
 template <typename R, typename A0, typename A1>
 chp_function_return_type
 auto_wrap_chp_function(R (*f)(A0, A1), const const_param_expr_list& a) {
 	return make_chp_value((*f)(
-		extract_chp_value<A0>(a[0]),
-		extract_chp_value<A1>(a[1])
+		extract_chp_value<A0>(*a[0]),
+		extract_chp_value<A1>(*a[1])
 	));
 }
 
@@ -61,8 +61,8 @@ template <typename A0, typename A1>
 void
 auto_wrap_chp_function(void (*f)(A0, A1), const const_param_expr_list& a) {
 	(*f)(
-		extract_chp_value<A0>(a[0]),
-		extract_chp_value<A1>(a[1])
+		extract_chp_value<A0>(*a[0]),
+		extract_chp_value<A1>(*a[1])
 	);
 }
 
@@ -70,9 +70,9 @@ template <typename R, typename A0, typename A1, typename A2>
 chp_function_return_type
 auto_wrap_chp_function(R (*f)(A0, A1, A2), const const_param_expr_list& a) {
 	return make_chp_value((*f)(
-		extract_chp_value<A0>(a[0]),
-		extract_chp_value<A1>(a[1]),
-		extract_chp_value<A2>(a[2])
+		extract_chp_value<A0>(*a[0]),
+		extract_chp_value<A1>(*a[1]),
+		extract_chp_value<A2>(*a[2])
 	));
 }
 
@@ -80,9 +80,9 @@ template <typename A0, typename A1, typename A2>
 void
 auto_wrap_chp_function(void (*f)(A0, A1, A2), const const_param_expr_list& a) {
 	(*f)(
-		extract_chp_value<A0>(a[0]),
-		extract_chp_value<A1>(a[1]),
-		extract_chp_value<A2>(a[2])
+		extract_chp_value<A0>(*a[0]),
+		extract_chp_value<A1>(*a[1]),
+		extract_chp_value<A2>(*a[2])
 	);
 }
 
@@ -90,10 +90,10 @@ template <typename R, typename A0, typename A1, typename A2, typename A3>
 chp_function_return_type
 auto_wrap_chp_function(R (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
 	return make_chp_value((*f)(
-		extract_chp_value<A0>(a[0]),
-		extract_chp_value<A1>(a[1]),
-		extract_chp_value<A2>(a[2]),
-		extract_chp_value<A3>(a[3])
+		extract_chp_value<A0>(*a[0]),
+		extract_chp_value<A1>(*a[1]),
+		extract_chp_value<A2>(*a[2]),
+		extract_chp_value<A3>(*a[3])
 	));
 }
 
@@ -101,10 +101,10 @@ template <typename A0, typename A1, typename A2, typename A3>
 void
 auto_wrap_chp_function(void (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
 	(*f)(
-		extract_chp_value<A0>(a[0]),
-		extract_chp_value<A1>(a[1]),
-		extract_chp_value<A2>(a[2]),
-		extract_chp_value<A3>(a[3])
+		extract_chp_value<A0>(*a[0]),
+		extract_chp_value<A1>(*a[1]),
+		extract_chp_value<A2>(*a[2]),
+		extract_chp_value<A3>(*a[3])
 	);
 }
 
@@ -115,6 +115,10 @@ auto_wrap_chp_function(void (*f)(A0, A1, A2, A3), const const_param_expr_list& a
 //=============================================================================
 #define	USING_CHPSIM_DLFUNCTION_PROLOGUE				\
 using HAC::entity::chp_function_return_type;				\
+using HAC::entity::chp_function_registrar;				\
+using HAC::entity::int_value_type;					\
+using HAC::entity::bool_value_type;					\
+using HAC::entity::real_value_type;					\
 using HAC::entity::const_param_expr_list;
 
 //=============================================================================

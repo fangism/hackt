@@ -1,0 +1,10 @@
+# "missing_func-b-01.chpsimrc"
+#	$Id: missing_func-b-01.chpsimrc,v 1.1.2.1 2007/07/26 00:11:58 fang Exp $
+# @haco@ missing_func-b.haco-a
+
+watchall-events
+step 200
+time
+assert-queue
+
+

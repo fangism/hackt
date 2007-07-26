@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.1 2007/07/25 18:26:00 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.2 2007/07/26 00:11:43 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -81,7 +81,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bool-parallel-fifo-a \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat \
-	source-sink-void-a
+	source-sink-void-a \
+	missing_func-a missing_func-b missing_func-c
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -189,7 +190,10 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
 	source-sink-peekbuf-b-03 \
 	mux-test-flat-01 \
-	source-sink-void-a-01 source-sink-void-a-02
+	source-sink-void-a-01 source-sink-void-a-02 \
+	gcd-func-a-01
+# in progress:
+#	gcd-func-b-01 gcd-func-c-01
 
 # TODO: parallel-fifo test cases
 
@@ -201,7 +205,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-memory-read-b-01 \
 	bool-memory-write-b-01 \
 	send-fail-a-01 \
-	receive-fail-a-01
+	receive-fail-a-01 \
+	missing_func-a-01 missing_func-b-01 missing_func-c-01
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
@@ -399,6 +404,24 @@ srcdir_EXTRA_DIST += \
 	event-types.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
+
+# bogus install directory
+pkglibtestdir = $(pkglibdir)/test
+AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT
+
+# libraries for chpsim run-time support
+# don't really want to install, but this forces building of shared lib
+# noinst_LTLIBRARIES =
+pkglibtest_LTLIBRARIES = \
+	gcd.la
+
+gcd_la_SOURCES = gcd.cc
+gcd_la_LDFLAGS = -module
+
+# remove unwanted test directory and bogus modules
+# install-exec-hook:
+install-data-hook:
+	$(RM) -r $(pkglibtestdir)
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.8.6.2 2007/07/24 03:35:18 fang Exp $
+	$Id: chpsim.cc,v 1.8.6.3 2007/07/26 00:11:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -62,9 +62,16 @@ int
 chpsim::main(int argc, char* argv[], const global_options&) {
 	const ltdl_token ltdl;	// dlinit/dlexit pair
 	options opt;
-	if (parse_command_options(argc, argv, opt)) {
+	switch (parse_command_options(argc, argv, opt)) {
+	case 0: break;
+	// syntax error in command line arguments
+	case 1:
 		cerr << "Error in command invocation." << endl;
 		usage();
+		return 1;
+	// some other error
+	default:
+		cerr << "Error in command invocation." << endl;
 		return 1;
 	}
 	if (opt.dump_checkpoint) {
@@ -177,7 +184,9 @@ switch (c) {
 		o.source_paths.push_back(optarg);
 		break;
 	case 'l':
-		HAC::ltdl_open_append(optarg);
+		if (!HAC::ltdl_open_append(optarg)) {
+			return 2;
+		}
 		break;
 	case 'L':
 		lt_dladdsearchdir(optarg);

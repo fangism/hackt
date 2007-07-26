@@ -1,6 +1,6 @@
 /**
 	\file "common/ltdl-wrap.cc"
-	$Id: ltdl-wrap.cc,v 1.1.2.1 2007/07/23 22:17:47 fang Exp $
+	$Id: ltdl-wrap.cc,v 1.1.2.2 2007/07/26 00:11:28 fang Exp $
  */
 
 #include "common/ltdl-wrap.h"
@@ -89,6 +89,7 @@ ltdl_open_prepend(const string& mname) {
 	NOTE: pointer returned is NOT managed, perhaps it should be?
 	Successfully opened module is added to end of search list.
 	\param mname module name should exclude file extension.
+	\return handle to successfully opened module or NULL.
  */
 lt_dlhandle
 ltdl_open_append(const string& mname) {

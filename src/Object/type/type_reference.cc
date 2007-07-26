@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.26.12.1 2007/07/24 23:16:34 fang Exp $
+ 	$Id: type_reference.cc,v 1.26.12.2 2007/07/26 00:11:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -573,7 +573,14 @@ data_type_reference::canonical_compare_result_type
 	ld->dump(STACKTRACE_INDENT << "ld = ") << endl;
 	rd->dump(STACKTRACE_INDENT << "rd = ") << endl;
 #endif
+#if USE_TOP_DATA_TYPE
+	// forgive if either argument has TOP type
+	equal = (ld == rd) ||
+		(ld == &top_data_definition) ||
+		(rd == &top_data_definition);
+#else
 	equal = (ld == rd);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -614,16 +621,25 @@ data_type_reference::may_be_connectibly_type_equivalent(
 /**
 	Used for checking statements of the form a:=b (CHP).  
 	Need to make an exception for int<W> := int<0>.  
+	Also an exception for the TOP data type.  
 	\return true if types of expression may be assignable.  
  */
 bool
 data_type_reference::may_be_assignably_type_equivalent(
-		const data_type_reference& ft) const {
+		const this_type& t) const {
 	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+//	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
 		return false;
+#if USE_TOP_DATA_TYPE
+	if ((base_type_def == &top_data_definition) ||
+		(t.base_type_def == &top_data_definition)) {
+		// forgive the TOP type
+		return true;
+	}
+	else
+#endif
 	if (base_type_def == &int_traits::built_in_definition) {
 		// allow rvalue's width to be zero as a special case
 		// to allow parameters ints as rvalues
@@ -645,9 +661,9 @@ data_type_reference::may_be_assignably_type_equivalent(
  */
 bool
 data_type_reference::may_be_binop_type_equivalent(
-		const data_type_reference& ft) const {
+		const this_type& t) const {
 	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+//	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
 		return false;

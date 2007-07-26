@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.1.2.3 2007/07/23 22:17:46 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.1.2.4 2007/07/26 00:11:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -13,6 +13,11 @@
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/persistent_type_hash.h"
 // #include "Object/expr/dlfunction.h"
+#include "Object/devel_switches.h"
+#if USE_TOP_DATA_TYPE
+#include "Object/def/built_in_datatype_def.h"
+#include "Object/def/user_def_datatype.h"		// why?
+#endif
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -76,18 +81,28 @@ nonmeta_func_call::dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Cannot perform compile-time type check, since function is unbound.
+	HACK: The caller should catch this case and allow it as an exception.
  */
 count_ptr<const data_type_reference>
 nonmeta_func_call::get_unresolved_data_type_ref(void) const {
+#if USE_TOP_DATA_TYPE
+	static const count_ptr<const data_type_reference>
+		dtop(new data_type_reference(
+			never_ptr<const datatype_definition_base>(
+				&top_data_definition)));
+	return dtop;
+#else
 	// really don't know what to do here...
 	FINISH_ME(Fang);
 	return count_ptr<const data_type_reference>(NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Cannot perform create-time type checking either, since function
 	is still unbound.  
+	HACK: The caller shouls catch this case and allow it as an exception.
  */
 canonical_generic_datatype
 nonmeta_func_call::get_resolved_data_type_ref(const unroll_context& c) const {
