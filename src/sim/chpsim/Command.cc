@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.9 2007/05/04 03:37:24 fang Exp $
+	$Id: Command.cc,v 1.9.8.1 2007/07/26 21:37:13 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -156,9 +156,24 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Source, CHPSIM::general)
 typedef	AddPath<State>				AddPath;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AddPath, CHPSIM::general)
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Paths<State>				Paths;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Paths, CHPSIM::general)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	DLAddPath<State>			DLAddPath;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAddPath, CHPSIM::general)
+
+typedef	DLPaths<State>				DLPaths;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLPaths, CHPSIM::general)
+
+typedef	DLOpen<State>				DLOpen;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLOpen, CHPSIM::general)
+
+typedef	DLCheckFunc<State>			DLCheckFunc;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLCheckFunc, CHPSIM::general)
+
+typedef	DLAssertFunc<State>			DLAssertFunc;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAssertFunc, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Initialize<State>			Initialize;

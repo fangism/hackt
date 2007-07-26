@@ -1,0 +1,16 @@
+# "gcd-func-a-08.chpsimrc"
+#	$Id: gcd-func-a-08.chpsimrc,v 1.1.2.1 2007/07/26 21:37:19 fang Exp $
+# Yes, use THIS object file
+# @haco@ missing_func-a.haco-a
+
+# opening module in script instead of on command-line
+
+dlopen gcd
+dlopen gcd
+# opening a module twice? -- just ignored
+# @deps@ gcd.la
+watchall-events
+step 40
+time
+assert-queue
+

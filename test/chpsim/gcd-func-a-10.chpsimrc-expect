@@ -1,0 +1,11 @@
+ERROR: symbol `my_gcd' not found in presently loaded modules.
+function `my_gcd': unbound.
+ERROR: symbol `not_a_gcd' not found in presently loaded modules.
+function `not_a_gcd': unbound.
+ERROR: symbol `bogus' not found in presently loaded modules.
+function `bogus': unbound.
+loaded function: `my_gcd'.
+function `my_gcd': bound.
+ERROR: symbol `bogus' not found in presently loaded modules.
+function `bogus': unbound.
+function `my_gcd': bound.

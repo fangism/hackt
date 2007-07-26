@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.4 2007/07/26 06:06:16 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.5 2007/07/26 21:37:14 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -192,7 +192,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	mux-test-flat-01 \
 	source-sink-void-a-01 source-sink-void-a-02 \
 	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
-	gcd-func-a-05
+	gcd-func-a-05 gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
+	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -208,7 +209,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	send-fail-a-01 \
 	receive-fail-a-01 \
 	missing_func-a-01 missing_func-b-01 missing_func-c-01 \
-	gcd-func-a-03 gcd-func-a-04
+	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
 

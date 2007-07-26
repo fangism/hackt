@@ -5,6 +5,15 @@
 
 2007-07-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-14:
+	  sim/command_common.{h,tcc}, sim/chpsim/Command.cc:
+		For those who forget to pass command-line options...
+		Added support for interactive commands to load modules and 
+		append the module search path, show the search path, 
+		probe or assert symbol-to-function boundedness.
+	  Added test cases to demonstrate.  
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-13:
 	  Makefile.am: install-exec-hook re-installs binaries after libraries
 		to suppress really silly post-install link warnings and errors.

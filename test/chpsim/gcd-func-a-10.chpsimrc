@@ -1,0 +1,14 @@
+# "gcd-func-a-10.chpsimrc"
+#	$Id: gcd-func-a-10.chpsimrc,v 1.1.2.1 2007/07/26 21:37:25 fang Exp $
+# Yes, use THIS object file
+# @haco@ missing_func-a.haco-a
+
+# opening module in script instead of on command-line
+
+dlcheckfunc my_gcd
+dlcheckfunc not_a_gcd bogus
+dlopen gcd
+dlcheckfunc my_gcd bogus
+dlassertfunc my_gcd
+# @deps@ gcd.la
+

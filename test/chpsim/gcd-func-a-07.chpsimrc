@@ -1,0 +1,15 @@
+# "gcd-func-a-07.chpsimrc"
+#	$Id: gcd-func-a-07.chpsimrc,v 1.1.2.1 2007/07/26 21:37:17 fang Exp $
+# Yes, use THIS object file
+# @haco@ missing_func-a.haco-a
+
+# opening module in script instead of on command-line
+
+dlopen nonexistentgcd
+echo should fail trying to open nonexistent library
+
+watchall-events
+step 40
+time
+assert-queue
+
