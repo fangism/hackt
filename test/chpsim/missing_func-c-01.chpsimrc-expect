@@ -6,6 +6,8 @@
 	20	11	3	BS.S!(9)
 	30	4	1	
 ERROR: symbol `my_gcd' not found in presently loaded modules.
-	40	3	1	my_gcd(X.a,X.b)
-time: 40
-assert failed: expecting non-empty event queue.
+Error resolving symbol of nonmeta function call.
+Run-time error executing event 3.
+Run-time error while checking event.
+event[3]:	40	3	1	my_gcd(X.a,X.b)	[by:4]
+Caught run-time exception during execution.  Halting.

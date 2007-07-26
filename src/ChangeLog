@@ -5,6 +5,19 @@
 
 2007-07-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-11:
+	  Minor nonmeta-function-call and assignment bug fixes (non-regress).
+		Added symbol diagnostic to nonmeta_function's resolve().
+	  Object/ref/simple_nonmeta_value_reference.tcc:nonmeta_assign():
+		evaluate expression first as a const_param, and then
+		dynamic cast -- allows for late type binding and checking 
+		through external functions.
+	  chpsim/EventExecutor:visit(function_call): 
+		forgot to recheck successors.
+	  Next: more test cases, more, more, more...
+		also need installcheck support!
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-10:
 	  First sign of life from chpsim-dlopen!
 		Successfully test first case with dlopening function binding.

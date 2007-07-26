@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.24 2007/06/12 05:12:54 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.24.6.1 2007/07/26 03:01:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -166,18 +166,23 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 static
 void
 nonmeta_assign(const reference_type& lref, 
-		const count_ptr<const data_expr_base_type>& rval, 
+//		const count_ptr<const data_expr_base_type>& rval, 
+		const count_ptr<const const_expr_type>& rv, 
 		const nonmeta_context_base& c, 
 		assign_update_arg_type& u) {
 	STACKTRACE_VERBOSE;
+#if 0
 	NEVER_NULL(rval);	// assert dynamic_cast
 	const count_ptr<const const_expr_type>
 		rv(rval->__nonmeta_resolve_rvalue(c, rval));
-	if (!rval) {
+	if (!rv) {
 		// TODO: more verbose message
 		cerr << "Run-time error resolving rvalue." << endl;
 		THROW_EXIT;
 	}
+#else
+	NEVER_NULL(rv);
+#endif
 	const size_t global_ind = lref.lookup_nonmeta_global_index(c);
 	if (!global_ind) {
 		cerr << "Run-time error resolving nonmeta lvalue reference."
@@ -196,6 +201,7 @@ nonmeta_assign(const reference_type& lref,
 /**
 	Assigns to lvalue referenced, using the channel_data_reader.  
 	TODO: support aggregate expression assignments
+	TODO: support NULL lvalues (drop field)
  */
 static
 void
@@ -446,7 +452,8 @@ nonmeta_resolve_rvalue(const reference_type& _this,
 static
 void
 nonmeta_assign(const reference_type&, 
-		const count_ptr<const data_expr_base_type>&, 
+//		const count_ptr<const data_expr_base_type>&, 
+		const count_ptr<const const_expr_type>&, 
 		const nonmeta_context_base&, 
 		const assign_update_arg_type&) {
 	ICE_NEVER_CALL(cerr);
@@ -722,15 +729,36 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_resolve_copy(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	rvalue resolution moved here to avoid wrongly asserting type
+	because dynamic function calls are late-type-bound.
+	Currently only supports scalar rvalues.  
+ */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::nonmeta_assign(
 		const count_ptr<const data_expr>& rval, 
 		const nonmeta_context_base& c,
 		assign_update_arg_type& u) const {
+	const count_ptr<const const_param>
+		rv(rval->nonmeta_resolve_copy(c, rval));
+	if (!rv) {
+		// TODO: more verbose message
+		cerr << "Run-time error resolving rvalue." << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<const const_expr_type>
+		crv(rv.template is_a<const const_expr_type>());
+	if (!crv) {
+		cerr << "Run-time error: rvalue and lvalue types mismatch!"
+			<< endl;
+		// TODO: more verbose message
+		THROW_EXIT;
+	}
 	nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>::
 		nonmeta_assign(*this, 
-			rval.template is_a<const data_expr_base_type>(),
+//			rval.template is_a<const data_expr_base_type>(),
+			crv, 
 			c, u);
 }
 

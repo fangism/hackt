@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.6.4.2 2007/07/24 03:35:20 fang Exp $
+	$Id: EventExecutor.cc,v 1.6.4.3 2007/07/26 03:01:58 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -955,14 +955,18 @@ EventSuccessorDumper::visit(const do_while_loop& dw) {
 
 void
 EventExecutor::visit(const function_call_stmt& fc) {
+	STACKTRACE_CHPSIM_VERBOSE;
 	const count_ptr<const nonmeta_func_call>&
 		caller(fc.get_caller());
+	NEVER_NULL(caller);
 	caller->nonmeta_resolve_copy(context, caller);
+	recheck_all_successor_events(context);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 EventRechecker::visit(const function_call_stmt& fc) {
+	STACKTRACE_CHPSIM_VERBOSE;
 	ret = RECHECK_NEVER_BLOCKED;
 }
 

@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-07-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-11:
+	  Makefile.am: install a copy of configured libtool as hackt-libtool
+
+
 2007-07-23	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-06:

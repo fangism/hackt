@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.1.2.4 2007/07/26 00:11:26 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.1.2.5 2007/07/26 03:01:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -158,6 +158,8 @@ nonmeta_func_call::unroll_resolve_copy(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Really lazy linking: lookup function the first time it is called.
+	NOTE: some functions may return void (statements only)
+	thus, we must throw an exception to halt execution (in simulation).
  */
 count_ptr<const const_param>
 nonmeta_func_call::nonmeta_resolve_copy(const nonmeta_context_base& c, 
@@ -169,6 +171,9 @@ nonmeta_func_call::nonmeta_resolve_copy(const nonmeta_context_base& c,
 		const chp_dlfunction_ptr_type fp(lookup_chpsim_function(fname));
 		if (!fp) {
 			// already have error message
+			cerr << "Error resolving symbol of "
+				"nonmeta function call." << endl;
+			THROW_EXIT;
 			return return_type(NULL);
 		}
 		fsym = fp;
@@ -178,6 +183,9 @@ nonmeta_func_call::nonmeta_resolve_copy(const nonmeta_context_base& c,
 		rargs(fargs->nonmeta_resolve_copy(c, fargs));
 	if (!rargs) {
 		// already have error message?
+		cerr << "Error resolving arguments of nonmeta function call."
+			<< endl;
+		THROW_EXIT;
 		return return_type(NULL);
 	}
 	return (*fsym)(*rargs);

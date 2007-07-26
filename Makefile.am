@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42.8.2 2007/07/20 02:28:55 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.3 2007/07/26 03:01:45 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -55,8 +55,15 @@ doc_DATA = \
 	README \
 	TODO
 
-bin_SCRIPTS = hackt-config
+bin_SCRIPTS = \
+	hackt-config \
+	hackt-libtool
+
 noinst_SCRIPTS = install_transform.sh
+
+# provide the pre-configured script for assisting in linking plug-in modules
+hackt-libtool: libtool
+	$(LN_S) $< $@
 
 # Many of these are already in DIST_COMMON
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \

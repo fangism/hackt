@@ -1,5 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.65 2007/06/15 06:01:51 fang Exp $
+#	$Id: ChangeLog,v 1.65.4.1 2007/07/26 03:01:58 fang Exp $
+
+2007-07-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-10:
+	  Added test support for extra dependencies from .chpsimrc, 
+		and dl-linking modules, with @modules@ tag for arguments.  
+
 
 2007-06-14	David Fang		<fangism@users.sourceforge.net>
 

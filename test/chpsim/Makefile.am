@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.2 2007/07/26 00:11:43 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.3 2007/07/26 03:02:01 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -191,9 +191,7 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-peekbuf-b-03 \
 	mux-test-flat-01 \
 	source-sink-void-a-01 source-sink-void-a-02 \
-	gcd-func-a-01
-# in progress:
-#	gcd-func-b-01 gcd-func-c-01
+	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01
 
 # TODO: parallel-fifo test cases
 
