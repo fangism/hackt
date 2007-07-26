@@ -6,7 +6,7 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.1.2.2 2007/07/24 03:35:07 fang Exp $
+	$Id: dlfunction.h,v 1.1.2.3 2007/07/26 06:06:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -26,6 +26,7 @@ class const_param;
 class const_param_expr_list;
 
 typedef	count_ptr<const_param>		chp_function_argument_type;
+typedef	count_ptr<const const_param>	chp_function_const_argument_type;
 typedef	count_ptr<const_param>		chp_function_return_type;
 
 typedef
@@ -83,31 +84,24 @@ extract_real(const const_param&);
 /**
 	intentionally does not use template argument deduction
 	Also only explicitly instantiated/specialized for select types.  
+	Primary template is undefined.
  */
 template <typename V>
 V
-extract_chp_value(const const_param&);
+extract_chp_value(const chp_function_const_argument_type&);
 
+// forward declare specializations
 template <>
-inline
 int_value_type
-extract_chp_value<int_value_type>(const const_param& v) {
-	return extract_int(v);
-}
+extract_chp_value<int_value_type>(const chp_function_const_argument_type&);
 
 template <>
-inline
 bool_value_type
-extract_chp_value<bool_value_type>(const const_param& v) {
-	return extract_bool(v);
-}
+extract_chp_value<bool_value_type>(const chp_function_const_argument_type&);
 
 template <>
-inline
 real_value_type
-extract_chp_value<real_value_type>(const const_param& v) {
-	return extract_real(v);
-}
+extract_chp_value<real_value_type>(const chp_function_const_argument_type&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // these require count_ptr and const_param to be complete types...

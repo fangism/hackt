@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.25.22.1 2007/07/24 03:35:12 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.25.22.2 2007/07/26 06:06:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -140,6 +140,23 @@ const_param_expr_list::size(void) const {
 count_ptr<const param_expr>
 const_param_expr_list::at(const size_t i) const {
 	INVARIANT(i < size());
+	return parent_type::operator[](i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We need to throw an exception instead of asserting because
+	this is called to catch run-time errors, e.g. mismatch in
+	number of parameters to nonmeta function calls.  
+ */
+const_param_expr_list::const_reference
+const_param_expr_list::operator [] (const size_t i) const {
+	if (UNLIKELY(i >= size())) {
+		cerr << "Error: out-of-bounds reference to index " << i <<
+			" out of " << size() << endl;
+		THROW_EXIT;
+		// or more suitable exception, std::runtime_error
+	}
 	return parent_type::operator[](i);
 }
 

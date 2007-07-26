@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-12:
+	  Object/expr/const_param_expr_list.h: operator[] replaced
+		with run-time bounds check for catching run-time errors
+		with passing wrong number of arguments to loaded functions.
+	  Object/expr/dlfunction.h: added run-time type checks on arguments, 
+		and also NULL checks on value extractors (now de-inlined).  
+		sim/chpsim/chpsim_dlfunction.h adjusted accordingly.
+	  Added small batch of expect-fail test cases involving errors
+		in dynamically loaded functions.  
+		FIXME: bad handling of type-mismatch in passing
+			channel field, as a result of unexpected return type.
+		NOTE: passing excessive arguments, just results in dropping
+			unused arguments, doesn't report as error.  
+	  TODO: more fail tests...
+
+
 2007-07-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-11:

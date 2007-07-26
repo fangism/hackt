@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.3 2007/07/26 03:02:01 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.4 2007/07/26 06:06:16 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -191,7 +191,10 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-peekbuf-b-03 \
 	mux-test-flat-01 \
 	source-sink-void-a-01 source-sink-void-a-02 \
-	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01
+	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
+	gcd-func-a-05
+# accept invalid? -- excess arguments dropped
+#	gcd-func-a-05
 
 # TODO: parallel-fifo test cases
 
@@ -204,7 +207,13 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-memory-write-b-01 \
 	send-fail-a-01 \
 	receive-fail-a-01 \
-	missing_func-a-01 missing_func-b-01 missing_func-c-01
+	missing_func-a-01 missing_func-b-01 missing_func-c-01 \
+	gcd-func-a-03 gcd-func-a-04
+# FIXME: ISEs on invalid, diagnostic needed
+#	gcd-func-a-02
+
+# quarantined test cases:
+srcdir_EXTRA_DIST += gcd-func-a-02.chpsimrc
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
@@ -403,23 +412,32 @@ srcdir_EXTRA_DIST += \
 	basic-trace-analysis.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
 
-# bogus install directory
-pkglibtestdir = $(pkglibdir)/test
 AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT
 
-# libraries for chpsim run-time support
-# don't really want to install, but this forces building of shared lib
-# noinst_LTLIBRARIES =
-pkglibtest_LTLIBRARIES = \
-	gcd.la
+noinst_LTLIBRARIES = \
+	gcd.la \
+	bad_gcd1.la bad_gcd2.la bad_gcd3.la bad_gcd4.la
+
+# force shared library building:
+noinst_MODULE_FLAGS = -module -rpath /nowhere
+# bogus -rpath flag causes shared convenience libraries to be created
+# Thanks to a tip from Ralf Wildenhues
 
 gcd_la_SOURCES = gcd.cc
-gcd_la_LDFLAGS = -module
+gcd_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
-# remove unwanted test directory and bogus modules
-# install-exec-hook:
-install-data-hook:
-	$(RM) -r $(pkglibtestdir)
+bad_gcd1_la_SOURCES = bad_gcd1.cc
+bad_gcd1_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+bad_gcd2_la_SOURCES = bad_gcd2.cc
+bad_gcd2_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+bad_gcd3_la_SOURCES = bad_gcd3.cc
+bad_gcd3_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+bad_gcd4_la_SOURCES = bad_gcd4.cc
+bad_gcd4_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
 
 include $(top_srcdir)/test/Make.test-tail
 

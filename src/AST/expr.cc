@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.25.14.2 2007/07/25 18:25:56 fang Exp $
+	$Id: expr.cc,v 1.25.14.3 2007/07/26 06:06:13 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -640,6 +640,11 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 			}
 			temp.push_back(r);
 		} else {
+			// TODO: don't support null lvalues until middle-end
+			// propagates expected type information into 
+			// run-time type casts for checking.
+			// Needed for nonmeta_assign to work correctly.
+			FINISH_ME_EXIT(Fang);
 			temp.push_back(checked_value_type(NULL));
 		}
 	}

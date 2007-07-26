@@ -1,10 +1,11 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.1.2.3 2007/07/26 00:11:25 fang Exp $
+	$Id: dlfunction.cc,v 1.1.2.4 2007/07/26 06:06:15 fang Exp $
  */
 
 #include <iostream>
 #include <map>
+#include <typeinfo>		// for std::bad_cast
 #include "Object/expr/dlfunction.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
@@ -37,17 +38,66 @@ chp_func_map_type			chp_function_map;
  */
 int_value_type
 extract_int(const const_param& p) {
+try {
 	return IS_A(const pint_const&, p).static_constant_value();
+} catch (std::bad_cast& e) {
+	p.what(cerr << "Run-time error: expecting int, but got ") << endl;
+	throw;		// re-throw
+}
 }
 
 bool_value_type
 extract_bool(const const_param& p) {
+try {
 	return IS_A(const pbool_const&, p).static_constant_value();
+} catch (std::bad_cast& e) {
+	p.what(cerr << "Run-time error: expecting bool, but got ") << endl;
+	throw;		// re-throw
+}
 }
 
 real_value_type
 extract_real(const const_param& p) {
+try {
 	return IS_A(const preal_const&, p).static_constant_value();
+} catch (std::bad_cast& e) {
+	p.what(cerr << "Run-time error: expecting real, but got ") << endl;
+	throw;		// re-throw
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+int_value_type
+extract_chp_value<int_value_type>(const chp_function_const_argument_type& v) {
+	if (v)
+		return extract_int(*v);
+	else {
+		cerr << "Error extracting int from NULL argument." << endl;
+		THROW_EXIT;
+	}
+}
+
+template <>
+bool_value_type
+extract_chp_value<bool_value_type>(const chp_function_const_argument_type& v) {
+	if (v)
+		return extract_bool(*v);
+	else {
+		cerr << "Error extracting bool from NULL argument." << endl;
+		THROW_EXIT;
+	}
+}
+
+template <>
+real_value_type
+extract_chp_value<real_value_type>(const chp_function_const_argument_type& v) {
+	if (v)
+		return extract_real(*v);
+	else {
+		cerr << "Error extracting real from NULL argument." << endl;
+		THROW_EXIT;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
