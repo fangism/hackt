@@ -2,6 +2,13 @@
 
 2007-07-27	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
+	  config/hackt.m4, configure.ac: added macros to conditionally
+		disable tests for faster testing turn-around.
+		For maintainer use only, please.  :)
+		All Makefile.am's updated using AM_CONDITIONALs.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
 	  Makefile.am: installcheck bin_SCRIPTS.
 	  configure.ac: produce test/chpsim/installtest/Makefile from .in

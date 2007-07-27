@@ -1,7 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.65.4.2 2007/07/27 05:33:05 fang Exp $
+#	$Id: ChangeLog,v 1.65.4.3 2007/07/27 19:58:31 fang Exp $
 
 2007-07-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
+	  chpsim/Makefile.am: export PATH to recursive installcheck-local
+		Fixed EXTRA_DIST of installtest subdir.
+	  chpsim/installtest/Makefile.in: fixed confirm-exec target, 
+		use configure's CXX to compile.
+
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
 	  Added installcheck support in chpsim[/installtest].

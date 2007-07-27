@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.9.4.1 2007/07/26 00:11:35 fang Exp $
+#	$Id: Make.test-chpsim,v 1.9.4.2 2007/07/27 19:58:35 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -351,12 +351,14 @@ HACKT_CHPSIM_DOT_TEST_SUBJECTS += $(HACKT_CREATE_TEST_PASSES)
 # updated to ALLOC_TEST_PASSES now?
 # HACKT_CHPSIM_DOT_TEST_SUBJECTS += $(HACKT_CHPSIMRC_TEST_PASSES)
 
+if CHECK_TESTS
 TESTS += \
 	$(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.chpsimalloctest) \
 	$(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsimdottest) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimtest) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimfailtest) \
 	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpttest)
+endif
 
 HAC_COMPILE_OBJECT_TARGETS += \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS:=.haco)

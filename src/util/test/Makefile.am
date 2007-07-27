@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.57 2007/06/15 17:35:33 fang Exp $
+#	$Id: Makefile.am,v 1.57.4.1 2007/07/27 19:58:28 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -344,7 +344,9 @@ CLEANFILES += \
 
 DISTCLEANFILES += $(TEST_EXPECT_SH) $(libfangutil_la_SOURCES)
 
+if CHECK_TESTS
 TESTS += $(noinst_PROGRAMS:=.test)
+endif
 
 AUTO_IGNORE += test-expect.sh $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 	$(BUILT_SOURCES) $(PREFILTER_FILES) $(TESTS)

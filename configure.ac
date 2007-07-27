@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.142.4.3 2007/07/27 05:32:47 fang Exp $
+#	$Id: configure.ac,v 1.142.4.4 2007/07/27 19:58:08 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -148,6 +148,9 @@ HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
 HACKT_ARG_ENABLE_GOD_MODE
 dnl defined in config/header_validation.m4
 FANG_ARG_ENABLE_HEADER_VALIDATION
+dnl test control
+HACKT_ARG_ENABLE_CHECK_TESTS
+HACKT_ARG_ENABLE_INSTALL_TESTS
 dnl from "config/rl_el.m4"
 FANG_ARG_WITH_READLINE_EDITLINE
 HACKT_ARG_WITH_GMP

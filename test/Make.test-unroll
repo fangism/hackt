@@ -1,6 +1,6 @@
 # "Make.test-unroll"
 #	vi: ft=automake
-#	$Id: Make.test-unroll,v 1.5 2007/01/21 06:01:35 fang Exp $
+#	$Id: Make.test-unroll,v 1.5.22.1 2007/07/27 19:58:40 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -150,8 +150,10 @@ srcdir_EXTRA_DIST += $(HACKT_UNROLL_TEST_SUBJECTS:=.unrollstderr)
 UNROLL_BUILD_CHECK_LOCAL =
 # unroll tests are now disabled since unroll/create were fused together
 if USE_UNROLL_PHASE
+if CHECK_TESTS
 TESTS += $(HACKT_UNROLL_TEST_PASSES:=.hacktunrolltest) \
 	$(HACKT_UNROLL_TEST_FAILURES:=.hacktunrollfailtest)
+endif
 
 UNROLL_BUILD_CHECK_LOCAL += \
 	$(HACKT_UNROLL_TEST_PASSES:=.haco-u) \

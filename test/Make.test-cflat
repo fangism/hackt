@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.8 2007/04/19 03:13:44 fang Exp $
+#	$Id: Make.test-cflat,v 1.8.10.1 2007/07/27 19:58:35 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -426,13 +426,14 @@ srcdir_EXTRA_DIST += \
 # this contains empty files to be removed, listed in EMPTY_CFLAT_PRS
 EXTRA_DIST += $(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs)
 
+if CHECK_TESTS
 TESTS += \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
 	$(HACKT_CFLAT_LVS_TEST_PASSES:=.hacktcflatlvstest) \
 	$(HACKT_CFLAT_LVS_TEST_FAILURES:=.hacktcflatlvsfailtest) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest)
-
+endif
 
 CFLAT_BUILD_CHECK_LOCAL = \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.haco-a) \

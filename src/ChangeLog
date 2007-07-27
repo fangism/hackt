@@ -5,6 +5,14 @@
 
 2007-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
+	  No source revision: just general maintainance fixups from last patch.
+	  Makefile.am: pkglib_LTLIBRARIES re-ordered because post-install
+		library linking needs to follow order of dependencies!  (arg.)
+		CLEANFILES lists EXTRA_LTLIBRARIES.
+	  Re-confirmed that installcheck-local works after these fixes.  
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
 	  Added installcheck.cc: verify that installed headers standalone
 		and can be compiled, using an example chpsim module.  

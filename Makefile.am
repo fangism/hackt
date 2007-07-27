@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42.8.4 2007/07/27 05:32:47 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.5 2007/07/27 19:58:07 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -24,6 +24,8 @@ libtool: $(LIBTOOL_DEPS)
 
 # don't need $(srcdir) because cd $(top_srcdir) is prior to exec. aclocal
 ACLOCAL_AMFLAGS = -I config
+# this is only need on systems with non-standard autotool installs
+ACLOCAL_AMFLAGS += -I /usr/local/share/aclocal
 
 # see configure.in for adding libtool flags
 
@@ -123,6 +125,7 @@ distcheck.log: force
 dist-hook:
 	$(RM) -r `$(FIND) $(distdir) -name CVS -type d`
 
+if INSTALL_TESTS
 installcheck-local:
 	@list='$(bin_SCRIPTS)' ; \
 	for p1 in $$list ; do \
@@ -136,6 +139,7 @@ installcheck-local:
 		$$run --help ; \
 	done ; \
 	$(ECHO) "======== end of installcheck-local =============="
+endif
 
 # for recursive make to not parallelize these
 .NOTPARALLEL: pdf ps

@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.10 2007/07/06 18:28:20 fang Exp $
+dnl	$Id: hackt.m4,v 1.10.4.1 2007/07/27 19:58:11 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -521,4 +521,37 @@ $SLEEP 3
 AC_MSG_RESULT([no]);
 dnl not enough sleep
 ])
+
+dnl @synopsis HACKT_ARG_ENABLE_CHECK_TESTS
+dnl
+dnl For maintainer use only: skip the entire test suite.
+dnl Occasionally useful for quick test cycles.  
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_CHECK_TESTS],
+[AC_ARG_ENABLE(check_tests,
+	AS_HELP_STRING([--disable-check-tests],
+		[Suppress make 'check', for the impatient. (default=enabled)])
+)
+if test x"$enable_check_tests" = "xno"
+then
+AC_MSG_WARN([Disabling build test suite, you better know what you're doing!])
+fi
+AM_CONDITIONAL(CHECK_TESTS, test x"$enable_check_tests" != "xno")
+])dnl
+
+dnl @synopsis HACKT_ARG_ENABLE_INSTALL_TESTS
+dnl
+dnl Disable installcheck tests
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_INSTALL_TESTS],
+[AC_ARG_ENABLE(install_tests,
+	AS_HELP_STRING([--disable-install-tests],
+		[Suppress make 'installcheck'. (default=enabled)])
+)
+if test x"$enable_install_tests" = "xno"
+then
+AC_MSG_WARN([Disabling install-checks, you better know what you're doing!])
+fi
+AM_CONDITIONAL(INSTALL_TESTS, test x"$enable_install_tests" != "xno")
+])dnl
 

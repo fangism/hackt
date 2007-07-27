@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171.4.7 2007/07/27 05:32:55 fang Exp $
+#	$Id: Makefile.am,v 1.171.4.8 2007/07/27 19:58:17 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -81,8 +81,14 @@ noinst_LTLIBRARIES = libhackt.la \
 EXTRA_LTLIBRARIES += \
 	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
-pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
-	libhacktparsers.la libhacktast.la
+# NOTE: the order matters for proper library installation!!!
+# should follow partial order of dependencies (independent first)
+# WIsh automake would automatically order these properly.
+pkglib_LTLIBRARIES = \
+	libhacktlib.la \
+	libhacktsim.la \
+	libhacktast.la \
+	libhacktparsers.la
 # lib_LTLIBRARIES = libhacktlib.la
 if HAVE_LIBGUILE
 pkglib_LTLIBRARIES += libhacktguile.la
@@ -1636,7 +1642,9 @@ EXTRA_DIST += local.cvsignore \
 	sim/chpsim/README \
 	sim/chpsim/TODO
 
+if CHECK_TESTS
 TESTS += hackt_persistent_table.sh test/getopt_test.test
+endif
 
 # to force libraries to be installed BEFORE executables to squelch link warnings
 install-exec-hook:
@@ -1652,6 +1660,7 @@ libinstallcheck_la_CPPFLAGS = -DINSTALLED_HACKT -I$(pkgincludedir)
 # (unquoted) override recursive make invocation by wiping out flags
 SUPPRESS_COMPILE_FLAGS = AM_CPPFLAGS="" DEFS="" DEFAULT_INCLUDES="" CPPFLAGS=""
 
+if INSTALL_TESTS
 installcheck-local:
 	$(MAKE) $(AM_MAKEFLAGS) $(SUPPRESS_COMPILE_FLAGS) libinstallcheck.la
 	@list='$(bin_PROGRAMS)' ; \
@@ -1665,6 +1674,8 @@ installcheck-local:
 			fi ; \
 			$(ECHO) "======== running: $$run ================" ; \
 			$$run || : ; \
+			$(ECHO) "======== running: $$run -h =============" ; \
+			$$run -h || : ; \
 			$(ECHO) "======== running: $$run version ========" ; \
 			$$run version || : ; \
 		else : ; \
@@ -1681,6 +1692,7 @@ installcheck-local:
 		$$run || : ; \
 	done ; \
 	$(ECHO) "======== end of installcheck-local ========"
+endif
 
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS) config.log
@@ -1868,7 +1880,9 @@ endif
 # all: cvsignore
 
 clean-libs:
-	-$(RM) $(LTLIBRARIES)
+	-$(RM) $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
+
+CLEANFILES += $(EXTRA_LTLIBRARIES)
 
 clean-scripts:
 	-$(RM) $(SCRIPTS)
@@ -1881,6 +1895,7 @@ distclean-local: clean-parser clean-lexer distclean-deps
 distclean-deps:
 	-$(RM) -r `$(FIND) . -name .deps -type d`
 
+# make sure some files don't escape to distribution
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
 		$(RM) $(distdir)/$$f ; \
@@ -1910,7 +1925,8 @@ help-local:
 	$(ECHO) "Local echo-* targets:" ; \
 	$(ECHO) "    libhacktexec-sources"
 
-.PHONY: distclean-deps distclean-local dist-hook
+.PHONY: distclean-deps distclean-local dist-hook \
+	clean-libs clean-scripts
 
 # standard targets
 include $(srcdir)/Make.hchk-tail.am

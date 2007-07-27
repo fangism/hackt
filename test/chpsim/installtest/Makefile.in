@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.1.2.1 2007/07/27 05:33:16 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.2 2007/07/27 19:58:58 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -26,10 +26,12 @@ include $(top_builddir)/installcheck.mk
 #############################################################################
 
 # include the *installed* makefile template
+# pkgdatadir is defined by installcheck.mk
 include $(pkgdatadir)/mk/hackt.mk
 
 # up to user to define the following, or let make pick defaults:
-# CXX =
+# CC = @CC@
+CXX = @CXX@
 
 # more suffixes for compiling
 .SUFFIXES: .lo .o .cc
@@ -48,6 +50,7 @@ CXXLD = $(CXX)
 # LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(CFLAGS) $(LDFLAGS) -o $@
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(CXXFLAGS) $(LDFLAGS) -o $@
 
+# libtool flags for creating shared, dlopen-able library
 CHPSIM_MODULE_FLAGS = -module -rpath /bogus/lib
 
 # not bothering with automatic dependency tracking here
@@ -69,12 +72,12 @@ all: confirm-exec hello-test.chpsimrc-out
 # non-essential, just for diagnostics only
 confirm-exec:
 	@$(ECHO) "PATH=$$PATH" ; \
-	which $(HACKT_CONFIG) ; \
-	which $(HACKT_LIBTOOL) ; \
-	which $(HACKT_EXE) ; \
-	which $(HACKT_COMPILE_EXE) ; \
-	which $(HACKT_CREATE_EXE) ; \
-	which $(HACKT_ALLOC_EXE) ; \
+	which $(HACKT_CONFIG) && \
+	which $(HACKT_LIBTOOL) && \
+	which $(HACKT_EXE) && \
+	which $(HACKT_COMPILE_EXE) && \
+	which $(HACKT_CREATE_EXE) && \
+	which $(HACKT_ALLOC_EXE) && \
 	which $(HACKT_CHPSIM_EXE)
 
 hello-test.chpsimrc-out: hello-test.chpsimrc hello-test.haco-a hello.la

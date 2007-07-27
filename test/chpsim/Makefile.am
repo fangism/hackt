@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.7 2007/07/27 05:33:07 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.8 2007/07/27 19:58:41 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -469,21 +469,28 @@ $(installcheckdir)/Makefile: \
 		$(installcheckdir)/Makefile.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
-INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
 # explicitly prepend path to force subshell to find installed executables first
+INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
+
+if INSTALL_TESTS
 installcheck-local: $(installcheckdir)/Makefile
-	PATH=$(INSTALL_PATH_OVERRIDE) \
+	PATH=$(INSTALL_PATH_OVERRIDE) ; \
+	export PATH ; \
 	$(ECHO) "installcheck-local" ; \
-	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) )
+	(cd $(installcheckdir) && \
+		$(MAKE) $(AM_MAKEFLAGS) && \
+		$(MAKE) $(AM_MAKEFLAGS) clean \
+	)
+endif
 
-clean-local: clean-installcheck
-
-clean-installcheck:
-	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) clean)
+# clean-local: clean-installcheck
+## won't work: dependent makefile is uninstalled before cleaning
+# clean-installcheck:
+#	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) clean)
 
 DISTCLEANFILES += $(installcheckdir)/Makefile
 
-srcdir_EXTRA_DIST += \
+EXTRA_DIST += \
 	$(installcheckdir)/hello.cc \
 	$(installcheckdir)/hello-test.hac \
 	$(installcheckdir)/hello-test.chpsimrc \
