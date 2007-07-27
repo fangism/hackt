@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.1.2.2 2007/07/27 19:58:58 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.3 2007/07/27 21:03:48 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -19,6 +19,7 @@
 srcdir = @srcdir@
 VPATH = @srcdir@
 top_builddir = @top_builddir@
+# for list of install paths from configure
 include $(top_builddir)/installcheck.mk
 
 #############################################################################
@@ -27,76 +28,49 @@ include $(top_builddir)/installcheck.mk
 
 # include the *installed* makefile template
 # pkgdatadir is defined by installcheck.mk
-include $(pkgdatadir)/mk/hackt.mk
+include $(pkgdatadir)/mk/hackt-lt.mk
+# This is the libtool-enable Makefile template
 
 # up to user to define the following, or let make pick defaults:
 # CC = @CC@
 CXX = @CXX@
 
-# more suffixes for compiling
-.SUFFIXES: .lo .o .cc
-
-# expect these in path: a pre-configure and installed libtool script
-LIBTOOL = $(HACKT_LIBTOOL)
-
-CPPFLAGS = `$(HACKT_CONFIG) --cflags`
-
-# COMPILE = $(CC) $(CPPFLAGS) $(CFLAGS)
-CXXCOMPILE = $(CXX) $(CPPFLAGS) $(CXXFLAGS)
-# LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(COMPILE)
-LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXXCOMPILE)
-# CCLD = $(CC)
-CXXLD = $(CXX)
-# LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(CFLAGS) $(LDFLAGS) -o $@
-CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(CXXFLAGS) $(LDFLAGS) -o $@
-
-# libtool flags for creating shared, dlopen-able library
-CHPSIM_MODULE_FLAGS = -module -rpath /bogus/lib
-
-# not bothering with automatic dependency tracking here
-.cc.lo:
-	$(LTCXXCOMPILE) $< -c -o $@
-
-.cc.o:
-	$(CXXCOMPILE) $< -c -o $@
-
-# .c.lo:
-# 	$(LTCOMPILE) $< -c -o $@
-
-# .c.o:
-#	$(COMPILE) $< -c -o $@
-
+# just echo results back out
 all: confirm-exec hello-test.chpsimrc-out
-	cat hello-test.chpsimrc-out
+	cat $^
 
 # non-essential, just for diagnostics only
 confirm-exec:
-	@$(ECHO) "PATH=$$PATH" ; \
+	@{ $(ECHO) "PATH=$$PATH" ; \
 	which $(HACKT_CONFIG) && \
 	which $(HACKT_LIBTOOL) && \
 	which $(HACKT_EXE) && \
 	which $(HACKT_COMPILE_EXE) && \
 	which $(HACKT_CREATE_EXE) && \
 	which $(HACKT_ALLOC_EXE) && \
-	which $(HACKT_CHPSIM_EXE)
+	which $(HACKT_CHPSIM_EXE) ; \
+	} > $@ 2>&1
 
+# run hacchpsim to and log results to file
 hello-test.chpsimrc-out: hello-test.chpsimrc hello-test.haco-a hello.la
-	$(HACKT_CHPSIM_EXE) -b -lhello hello-test.haco-a < $(srcdir)/hello-test.chpsimrc > $@
+	$(HACKT_CHPSIM_EXE) -b -lhello hello-test.haco-a < \
+		$(srcdir)/hello-test.chpsimrc > $@
 
 # hand-written library building rules, in the style of automake-libtool
 hello_la_LIBADD =
+# CHPSIM_MODULE_FLAGS is critical
 hello_la_LDFLAGS = $(CHPSIM_MODULE_FLAGS)
+# OBJECTS is normally inferred from SOURCES by automake
 hello_la_OBJECTS = hello.lo
 
+# the libtool library for the plug-in module
 hello.la: $(hello_la_OBJECTS)
 	$(CXXLINK) $(hello_la_LDFLAGS) $(hello_la_OBJECTS) $(hello_la_LIBADD)
 
-# should depend on $(OBJEXT)
+# local clean-up
 clean: clean-test
 
 clean-test:
-	$(RM) *.o *.lo *.a *.la
 	$(RM) *.depend
-	$(RM) -r .libs _libs
 	$(RM) *.chpsimrc-out
 

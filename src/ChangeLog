@@ -5,6 +5,11 @@
 
 2007-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-18:
+	  No source revision, just lib/mk Makefile template additions, 
+		test/chpsim/installtest/Makefile.in now uses new hackt-lt.mk.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
 	  No source revision: just general maintainance fixups from last patch.
 	  Makefile.am: pkglib_LTLIBRARIES re-ordered because post-install

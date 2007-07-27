@@ -1,5 +1,11 @@
 "lib/ChangeLog"
 
+2006-07-27	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-18:
+	  Added -lt versions of Makefile template for libtool build support.
+
+
 2006-06-12	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-81-31:
