@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.1.2.4 2007/07/26 06:06:15 fang Exp $
+	$Id: dlfunction.cc,v 1.1.2.5 2007/07/27 05:33:03 fang Exp $
  */
 
 #include <iostream>
@@ -180,6 +180,21 @@ lookup_chpsim_function(const std::string& fn) {
 			reinterpret_cast<chp_dlfunction_ptr_type>(sym.func_ptr));
 	}
 	return &*mf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print a list of all bound functions.  
+ */
+void
+list_chpsim_functions(std::ostream& o) {
+	typedef	chp_func_map_type::const_iterator	const_iterator;
+	const_iterator i(chp_function_map.begin()), e(chp_function_map.end());
+	o << "Functions bound to module symbols:" << endl;
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(i->second);
+		o << "\t" << i->first << endl;
+	}
 }
 
 //=============================================================================

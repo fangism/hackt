@@ -6,12 +6,13 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.1.2.3 2007/07/26 06:06:15 fang Exp $
+	$Id: dlfunction.h,v 1.1.2.4 2007/07/27 05:33:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
 #define	__HAC_OBJECT_EXPR_DLFUNCTION_H__
 
+#include <iosfwd>
 #include <string>
 // installed development headers should ideally not require any "config.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -126,6 +127,10 @@ make_chp_value(const real_value_type);
 extern
 chp_dlfunction_ptr_type
 lookup_chpsim_function(const std::string&);
+
+extern
+void
+list_chpsim_functions(std::ostream&);
 
 //=============================================================================
 }	// end namespace entity

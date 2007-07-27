@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2007-07-27	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
+	  Makefile.am: installcheck bin_SCRIPTS.
+	  configure.ac: produce test/chpsim/installtest/Makefile from .in
+	  hackt-config.in: @datarootdir@ -> @datadir@ for AM-1.9 compat.
+		added --help, --datadir, --pkgdatadir options.
+
+
 2007-07-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:

@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42.8.3 2007/07/26 03:01:45 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.4 2007/07/27 05:32:47 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -122,6 +122,20 @@ distcheck.log: force
 # don't include CVS directories in distribution
 dist-hook:
 	$(RM) -r `$(FIND) $(distdir) -name CVS -type d`
+
+installcheck-local:
+	@list='$(bin_SCRIPTS)' ; \
+	for p1 in $$list ; do \
+		f=`echo "$$p1" | $(SED) 's|^.*/||;$(transform)'`; \
+		run=$(bindir)/$$f ; \
+		if test ! -f $$run ; then \
+			$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
+		fi ; \
+		$(ECHO) "======== running: $$run ==============" ; \
+		$$run --version && \
+		$$run --help ; \
+	done ; \
+	$(ECHO) "======== end of installcheck-local =============="
 
 # for recursive make to not parallelize these
 .NOTPARALLEL: pdf ps

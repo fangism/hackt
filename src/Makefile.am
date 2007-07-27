@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171.4.6 2007/07/27 02:38:51 fang Exp $
+#	$Id: Makefile.am,v 1.171.4.7 2007/07/27 05:32:55 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -21,6 +21,7 @@ BUILT_SOURCES =
 PHONYSOURCES =
 CLEANSUBDIRS =
 SUBDIR_CVSIGNORE =
+EXTRA_LTLIBRARIES =
 nobase_pkginclude_HEADERS =
 
 # for optional fun features
@@ -74,7 +75,10 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 # want to install libhackt.la next... but causes undefined symbols...
 noinst_LTLIBRARIES = libhackt.la \
 	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
-	libhacktcommon.la $(FUNLIBS) \
+	libhacktcommon.la $(FUNLIBS)
+
+# don't actually want to build these, but have the rules for them
+EXTRA_LTLIBRARIES += \
 	libbogus.la libbogus2.la libbogus3.la libbogus4.la
 
 pkglib_LTLIBRARIES = libhacktlib.la libhacktsim.la \
@@ -1634,15 +1638,22 @@ EXTRA_DIST += local.cvsignore \
 
 TESTS += hackt_persistent_table.sh test/getopt_test.test
 
-# to force libraries to be installed BEFORE executables 
-#... automake rejects re-definition.
-# install-binPROGRAMS: install-pkglibLTLIBRARIES
-
+# to force libraries to be installed BEFORE executables to squelch link warnings
 install-exec-hook:
 	@$(ECHO) "Re-installing binaries after libraries..."
 	$(MAKE) $(AM_MAKEFLAGS) install-binPROGRAMS
 
+EXTRA_LTLIBRARIES += libinstallcheck.la
+
+libinstallcheck_la_SOURCES = installcheck.cc
+libinstallcheck_la_CPPFLAGS = -DINSTALLED_HACKT -I$(pkgincludedir)
+# or equivalently invoke `hackt-config --cflags`
+
+# (unquoted) override recursive make invocation by wiping out flags
+SUPPRESS_COMPILE_FLAGS = AM_CPPFLAGS="" DEFS="" DEFAULT_INCLUDES="" CPPFLAGS=""
+
 installcheck-local:
+	$(MAKE) $(AM_MAKEFLAGS) $(SUPPRESS_COMPILE_FLAGS) libinstallcheck.la
 	@list='$(bin_PROGRAMS)' ; \
 	for p in $$list ; do \
 		p1=`echo $$p|$(SED) 's/$(EXEEXT)$$//'`; \
@@ -1658,8 +1669,8 @@ installcheck-local:
 			$$run version || : ; \
 		else : ; \
 		fi; \
-	done
-	@list='$(installcheck_SCRIPTS)' ; \
+	done ; \
+	list='$(installcheck_SCRIPTS)' ; \
 	for p1 in $$list ; do \
 		f=`echo "$$p1" | $(SED) 's|^.*/||;$(transform)'`; \
 		run=$(bindir)/$$f ; \
@@ -1668,8 +1679,8 @@ installcheck-local:
 		fi ; \
 		$(ECHO) "======== running: $$run ==============" ; \
 		$$run || : ; \
-	done
-	@$(ECHO) "======== end of installcheck ========"
+	done ; \
+	$(ECHO) "======== end of installcheck-local ========"
 
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS) config.log

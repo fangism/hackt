@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
+	  Added installcheck.cc: verify that installed headers standalone
+		and can be compiled, using an example chpsim module.  
+	  Makefile.am: moved bogus parser libraries to EXTRA_LTLIBRARIES
+		so they won't be built by default, but their rules remain.
+		installcheck-local now builds installcheck.la, using
+		trick to replace default compile flags.
+	  sim/command_common.{h,tcc}, Object/expr/dlfunction.cc: 
+		added function to print list of all loaded and bound 
+		functions from dlopened modules.  Added test case.
+	  Next: lib/mk/ Makefile templates with libtool compilation snippets, 
+		and update tes/chpsim/installtest/Makefile.in accordingly.
+
+
 2007-07-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:

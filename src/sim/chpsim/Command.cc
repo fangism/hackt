@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.9.8.1 2007/07/26 21:37:13 fang Exp $
+	$Id: Command.cc,v 1.9.8.2 2007/07/27 05:33:05 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -174,6 +174,9 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLCheckFunc, CHPSIM::general)
 
 typedef	DLAssertFunc<State>			DLAssertFunc;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAssertFunc, CHPSIM::general)
+
+typedef	DLFuncs<State>				DLFuncs;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLFuncs, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Initialize<State>			Initialize;

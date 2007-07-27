@@ -1,0 +1,11 @@
+# "hello-test.chpsimrc"
+
+# NOTE: need to load "hello.la" either at command line:
+# -lhello
+# or in this script: 
+# dlopen hello
+
+watchall-events
+step 40
+assert-queue
+

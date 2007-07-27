@@ -4,7 +4,7 @@
 	in various simulators.  We define them as trivial templates
 	for ease of re-use.  
 	To use, just instantiate template.  
-	$Id: command_common.h,v 1.2.22.2 2007/07/26 21:37:13 fang Exp $
+	$Id: command_common.h,v 1.2.22.3 2007/07/27 05:33:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_H__
@@ -72,6 +72,7 @@ DECLARE_COMMON_COMMAND_CLASS(DLAddPath)
 // DECLARE_COMMON_COMMAND_CLASS(DLClose)
 DECLARE_COMMON_COMMAND_CLASS(DLCheckFunc)
 DECLARE_COMMON_COMMAND_CLASS(DLAssertFunc)
+DECLARE_COMMON_COMMAND_CLASS(DLFuncs)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

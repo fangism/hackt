@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.4.16.2 2007/07/26 21:37:13 fang Exp $
+	$Id: command_common.tcc,v 1.4.16.3 2007/07/27 05:33:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -756,6 +756,29 @@ DLAssertFunc<State>::usage(ostream& o) {
 "loaded dynamic shared library or module.  Errors out if any are unbound.\n"
 "See also `dlcheckfunc\'."
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLFuncs, "dlfuncs", 
+	"List names of all dynamically bound functions")
+
+template <class State>
+int
+DLFuncs<State>::main(state_type&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	entity::list_chpsim_functions(cout);
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+DLFuncs<State>::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
 }
 
 //=============================================================================

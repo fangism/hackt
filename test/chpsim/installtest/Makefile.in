@@ -1,0 +1,99 @@
+# "Makefile[.in]"
+#	$Id: Makefile.in,v 1.1.2.1 2007/07/27 05:33:16 fang Exp $
+#
+# This Makefile should not be invoked until AFTER hackt is installed!
+#
+# Minimalist Makefile to demontstrate chpsim with function modules
+# This is not run as part of the normal test suite, but rather, 
+# as a post-install test, suitable for installcheck-local.
+#
+# This is a non-configured Makefile, as an example that doesn't
+# require automake, autoconf, or libtool.  
+#
+# When invoking this Makefile, make sure the intended install $(bindir)
+# appears earliest in the path to guarantee that the intended executables
+# are being tested.  
+
+
+# minimal configuration paths
+srcdir = @srcdir@
+VPATH = @srcdir@
+top_builddir = @top_builddir@
+include $(top_builddir)/installcheck.mk
+
+#############################################################################
+################### the important Makefile example below ####################
+#############################################################################
+
+# include the *installed* makefile template
+include $(pkgdatadir)/mk/hackt.mk
+
+# up to user to define the following, or let make pick defaults:
+# CXX =
+
+# more suffixes for compiling
+.SUFFIXES: .lo .o .cc
+
+# expect these in path: a pre-configure and installed libtool script
+LIBTOOL = $(HACKT_LIBTOOL)
+
+CPPFLAGS = `$(HACKT_CONFIG) --cflags`
+
+# COMPILE = $(CC) $(CPPFLAGS) $(CFLAGS)
+CXXCOMPILE = $(CXX) $(CPPFLAGS) $(CXXFLAGS)
+# LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(COMPILE)
+LTCXXCOMPILE = $(LIBTOOL) --tag=CXX --mode=compile $(CXXCOMPILE)
+# CCLD = $(CC)
+CXXLD = $(CXX)
+# LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(CFLAGS) $(LDFLAGS) -o $@
+CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(CXXFLAGS) $(LDFLAGS) -o $@
+
+CHPSIM_MODULE_FLAGS = -module -rpath /bogus/lib
+
+# not bothering with automatic dependency tracking here
+.cc.lo:
+	$(LTCXXCOMPILE) $< -c -o $@
+
+.cc.o:
+	$(CXXCOMPILE) $< -c -o $@
+
+# .c.lo:
+# 	$(LTCOMPILE) $< -c -o $@
+
+# .c.o:
+#	$(COMPILE) $< -c -o $@
+
+all: confirm-exec hello-test.chpsimrc-out
+	cat hello-test.chpsimrc-out
+
+# non-essential, just for diagnostics only
+confirm-exec:
+	@$(ECHO) "PATH=$$PATH" ; \
+	which $(HACKT_CONFIG) ; \
+	which $(HACKT_LIBTOOL) ; \
+	which $(HACKT_EXE) ; \
+	which $(HACKT_COMPILE_EXE) ; \
+	which $(HACKT_CREATE_EXE) ; \
+	which $(HACKT_ALLOC_EXE) ; \
+	which $(HACKT_CHPSIM_EXE)
+
+hello-test.chpsimrc-out: hello-test.chpsimrc hello-test.haco-a hello.la
+	$(HACKT_CHPSIM_EXE) -b -lhello hello-test.haco-a < $(srcdir)/hello-test.chpsimrc > $@
+
+# hand-written library building rules, in the style of automake-libtool
+hello_la_LIBADD =
+hello_la_LDFLAGS = $(CHPSIM_MODULE_FLAGS)
+hello_la_OBJECTS = hello.lo
+
+hello.la: $(hello_la_OBJECTS)
+	$(CXXLINK) $(hello_la_LDFLAGS) $(hello_la_OBJECTS) $(hello_la_LIBADD)
+
+# should depend on $(OBJEXT)
+clean: clean-test
+
+clean-test:
+	$(RM) *.o *.lo *.a *.la
+	$(RM) *.depend
+	$(RM) -r .libs _libs
+	$(RM) *.chpsimrc-out
+

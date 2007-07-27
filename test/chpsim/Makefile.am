@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.6 2007/07/27 02:39:22 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.7 2007/07/27 05:33:07 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -195,7 +195,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
 	gcd-func-a-05 gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
 	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
-	greeting_func-a-01 greeting_func-a-02 greeting_func-a-03
+	greeting_func-a-01 greeting_func-a-02 \
+	greeting_func-a-03 greeting_func-a-04
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -458,6 +459,35 @@ gcdwrap_la_SOURCES = gcdwrap.cc
 gcdwrap_la_LIBADD = libgcdstatic.la
 gcdwrap_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
+# install checking
+# we don't want to list this as a SUBDIR because it includes only a 
+# minimalist Makefile without most standard automake targets.
+# We need to manage the subdirectory here.  
+installcheckdir = installtest
+
+$(installcheckdir)/Makefile: \
+		$(installcheckdir)/Makefile.in $(top_builddir)/config.status
+	$(RECONFIGURE)
+
+INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
+# explicitly prepend path to force subshell to find installed executables first
+installcheck-local: $(installcheckdir)/Makefile
+	PATH=$(INSTALL_PATH_OVERRIDE) \
+	$(ECHO) "installcheck-local" ; \
+	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) )
+
+clean-local: clean-installcheck
+
+clean-installcheck:
+	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) clean)
+
+DISTCLEANFILES += $(installcheckdir)/Makefile
+
+srcdir_EXTRA_DIST += \
+	$(installcheckdir)/hello.cc \
+	$(installcheckdir)/hello-test.hac \
+	$(installcheckdir)/hello-test.chpsimrc \
+	$(installcheckdir)/Makefile.in
 
 include $(top_srcdir)/test/Make.test-tail
 
