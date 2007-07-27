@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.1.2.3 2007/07/27 21:03:48 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.4 2007/07/27 22:01:15 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -73,4 +73,5 @@ clean: clean-test
 clean-test:
 	$(RM) *.depend
 	$(RM) *.chpsimrc-out
+	$(RM) confirm-exec
 
