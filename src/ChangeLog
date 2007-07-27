@@ -5,6 +5,13 @@
 
 2007-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-19:
+	  No source revision, portability testing and patches only.
+		Previous revisions on this branch were only tested on 
+		amd64-freebsd with gcc-3.4.6.
+	  Object/expr/dlfunction.cc: remove meaningless const qualifier.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-18:
 	  No source revision, just lib/mk Makefile template additions, 
 		test/chpsim/installtest/Makefile.in now uses new hackt-lt.mk.

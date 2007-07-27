@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.1.2.5 2007/07/27 05:33:03 fang Exp $
+	$Id: dlfunction.cc,v 1.1.2.6 2007/07/27 22:30:27 fang Exp $
  */
 
 #include <iostream>
@@ -23,7 +23,7 @@ using util::memory::never_ptr;
 using std::string;
 #include "util/using_ostream.h"
 
-typedef	never_ptr<const chp_dlfunction_type>
+typedef	never_ptr<chp_dlfunction_type>
 					chp_mapped_func_ptr_type;
 
 typedef	std::map<string, chp_mapped_func_ptr_type>	

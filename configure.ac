@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.142.4.4 2007/07/27 19:58:08 fang Exp $
+#	$Id: configure.ac,v 1.142.4.5 2007/07/27 22:30:24 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -142,6 +142,8 @@ AC_SUBST(LIBTOOL_DEPS)
 if test "$enable_shared" = "no" ; then
   AC_MSG_WARN([You requested disabling shared libraries, however some features of this package require shared libraries, so certain tests will fail!])
 fi
+
+AC_ARG_VAR(ACLOCAL_FLAGS, [Additional aclocal flags, for bootstrap only.])
 
 dnl defined in config.hackt.m4
 HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING

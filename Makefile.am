@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42.8.5 2007/07/27 19:58:07 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.6 2007/07/27 22:30:23 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -23,9 +23,7 @@ libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
 # don't need $(srcdir) because cd $(top_srcdir) is prior to exec. aclocal
-ACLOCAL_AMFLAGS = -I config
-# this is only need on systems with non-standard autotool installs
-ACLOCAL_AMFLAGS += -I /usr/local/share/aclocal
+ACLOCAL_AMFLAGS = -I config @ACLOCAL_FLAGS@
 
 # see configure.in for adding libtool flags
 

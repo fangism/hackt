@@ -1,4 +1,5 @@
 # "installcheck.mk[.in]
+#	$Id: installcheck.mk.in,v 1.1.2.2 2007/07/27 22:30:24 fang Exp $
 # install paths from configure
 
 bindir = @bindir@

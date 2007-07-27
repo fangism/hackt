@@ -2,6 +2,11 @@
 
 2007-07-27	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-19:
+	  Makefile.am: revert adding of ACLOCAL_AMFLAGS and add a configurable
+		AC_ARG_VAR for additional ACLOCAL_FLAGS to be appended.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
 	  config/hackt.m4, configure.ac: added macros to conditionally
 		disable tests for faster testing turn-around.
