@@ -1,6 +1,6 @@
 # "mk/hackt-progs.mk"
 #	vi: ft=make
-#	$Id: hackt-progs.mk,v 1.2 2007/06/12 20:59:28 fang Exp $
+#	$Id: hackt-progs.mk,v 1.2.6.1 2007/07/27 02:38:46 fang Exp $
 # program variables
 
 # NOTE: program names have not been transformed (TODO?)
@@ -25,6 +25,11 @@ HACKT_PRSIM_EXE = hacprsim
 HACKT_CHPSIM_EXE = hacchpsim
 HACKT_GUILE_EXE = hacguile
 HACKT_CHPSIM_GUILE_EXE = hacchpsimguile
+
+# for compile/link flags
+HACKT_CONFIG = hackt-config
+# pre-configure, installed libtool script
+HACKT_LIBTOOL = hackt-libtool
 
 CHPSIM_GRAPH_DOT = $(HACKT_CHPSIM_EXE) -fno-run -fdump-dot-struct
 # recommended:

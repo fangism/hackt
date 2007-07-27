@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.142.4.1 2007/07/19 23:23:29 fang Exp $
+#	$Id: configure.ac,v 1.142.4.2 2007/07/27 02:38:42 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -138,6 +138,10 @@ dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Adds corresponding dependencies to "Makefile.in".  
 HACKT_ARG_VAR_LIBTOOL_FLAGS
 AC_SUBST(LIBTOOL_DEPS)
+
+if test "$enable_shared" = "no" ; then
+  AC_MSG_WARN([You requested disabling shared libraries, however some features of this package require shared libraries, so certain tests will fail!])
+fi
 
 dnl defined in config.hackt.m4
 HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
@@ -512,6 +516,7 @@ AC_CONFIG_FILES([
 	lib/Makefile
 	lib/mk/Makefile
 	hackt.doxygen.config
+	installcheck.mk
 ])
 AC_CONFIG_FILES([hackt-config],
 	[chmod +x hackt-config])

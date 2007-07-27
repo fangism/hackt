@@ -3,7 +3,7 @@
 	This is the primary header to include for linking chpsim
 	to dlopened libraries.  
 	Try not to include other headers explicitly.  
-	$Id: chpsim_dlfunction.h,v 1.1.2.3 2007/07/26 06:06:16 fang Exp $
+	$Id: chpsim_dlfunction.h,v 1.1.2.4 2007/07/27 02:39:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHPSIM_DLFUNCTION_H__
@@ -31,9 +31,10 @@ auto_wrap_chp_function(R (*f)(void), const const_param_expr_list&) {
 	return make_chp_value((*f)());
 }
 
-void
+chp_function_return_type
 auto_wrap_chp_function(void (*f)(void), const const_param_expr_list&) {
 	(*f)();
+	return chp_function_return_type(NULL);
 }
 
 template <typename R, typename A0>
@@ -43,9 +44,10 @@ auto_wrap_chp_function(R (*f)(A0), const const_param_expr_list& a) {
 }
 
 template <typename A0>
-void
+chp_function_return_type
 auto_wrap_chp_function(void (*f)(A0), const const_param_expr_list& a) {
 	(*f)(extract_chp_value<A0>(a[0]));
+	return chp_function_return_type(NULL);
 }
 
 template <typename R, typename A0, typename A1>
@@ -58,12 +60,13 @@ auto_wrap_chp_function(R (*f)(A0, A1), const const_param_expr_list& a) {
 }
 
 template <typename A0, typename A1>
-void
+chp_function_return_type
 auto_wrap_chp_function(void (*f)(A0, A1), const const_param_expr_list& a) {
 	(*f)(
 		extract_chp_value<A0>(a[0]),
 		extract_chp_value<A1>(a[1])
 	);
+	return chp_function_return_type(NULL);
 }
 
 template <typename R, typename A0, typename A1, typename A2>
@@ -77,13 +80,14 @@ auto_wrap_chp_function(R (*f)(A0, A1, A2), const const_param_expr_list& a) {
 }
 
 template <typename A0, typename A1, typename A2>
-void
+chp_function_return_type
 auto_wrap_chp_function(void (*f)(A0, A1, A2), const const_param_expr_list& a) {
 	(*f)(
 		extract_chp_value<A0>(a[0]),
 		extract_chp_value<A1>(a[1]),
 		extract_chp_value<A2>(a[2])
 	);
+	return chp_function_return_type(NULL);
 }
 
 template <typename R, typename A0, typename A1, typename A2, typename A3>
@@ -98,7 +102,7 @@ auto_wrap_chp_function(R (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
 }
 
 template <typename A0, typename A1, typename A2, typename A3>
-void
+chp_function_return_type
 auto_wrap_chp_function(void (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
 	(*f)(
 		extract_chp_value<A0>(a[0]),
@@ -106,6 +110,7 @@ auto_wrap_chp_function(void (*f)(A0, A1, A2, A3), const const_param_expr_list& a
 		extract_chp_value<A2>(a[2]),
 		extract_chp_value<A3>(a[3])
 	);
+	return chp_function_return_type(NULL);
 }
 
 // extend trivially to more arguments as necessary
@@ -143,17 +148,19 @@ WRAP_DLFUNCTION_NAME(fname) (const const_param_expr_list& a) {		\
 }									\
 REGISTER_DLFUNCTION(key, fname)
 
+#if 0
 /**
 	and because I'm only a 3th degree black belt in C++ TMP, 
 	here's a variant of the macro for void return types.  
  */
 #define	CHP_DLFUNCTION_LOAD_VOID_DEFAULT(key, fname)			\
 static									\
-void									\
+chp_function_return_type						\
 WRAP_DLFUNCTION_NAME(fname) (const const_param_expr_list& a) {		\
-	auto_wrap_chp_function(fname, a);				\
+	return auto_wrap_chp_function(fname, a);			\
 }									\
 REGISTER_DLFUNCTION(key, fname)
+#endif
 
 //=============================================================================
 #if 0

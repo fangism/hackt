@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.19.6.2 2007/07/26 06:06:30 fang Exp $
+#	$Id: Makefile.am,v 1.19.6.3 2007/07/27 02:39:49 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -18,7 +18,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	120 \
 	wrong-source \
 	wrong-sink wrong-sink-02 \
-	dataless-02 dataless-03 dataless-04 dataless-05
+	dataless-02 dataless-04 dataless-05
 
 # TODO: add support for null lvalues in channel receive fields
 # affects: dataless-02
@@ -43,7 +43,7 @@ HACKT_PARSE_TEST_PASSES = \
 	source-sink-02 \
 	bool-source-delay \
 	source-sink-delay-01 \
-	dataless-01
+	dataless-01 dataless-03
 
 HACKT_PARSE_TEST_WARNINGS = \
 	101 103
@@ -66,7 +66,7 @@ HACKT_CREATE_TEST_PASSES = \
 	source-sink-02 \
 	bool-source-delay \
 	source-sink-delay-01 \
-	dataless-01
+	dataless-01 dataless-03
 
 # TODO:
 # 091 094: diagnostic improvement -- 

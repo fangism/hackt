@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.17.22.2 2007/07/26 06:06:14 fang Exp $
+	$Id: const_param_expr_list.h,v 1.17.22.3 2007/07/27 02:39:03 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -11,6 +11,7 @@
 
 #include <vector>
 #include "Object/expr/param_expr_list.h"
+#include "util/boolean_types.h"
 
 //=============================================================================
 namespace HAC {
@@ -18,6 +19,7 @@ namespace entity {
 class const_param;
 class dynamic_param_expr_list;
 using std::vector;
+using util::good_bool;
 using util::persistent_object_manager;
 
 //=============================================================================

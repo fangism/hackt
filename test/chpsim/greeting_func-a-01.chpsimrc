@@ -1,0 +1,13 @@
+# "greeting_func-a-01.chpsimrc"
+#	$Id: greeting_func-a-01.chpsimrc,v 1.1.2.1 2007/07/27 02:39:32 fang Exp $
+# load both function libraries from command-line
+# @haco@ greeting_func-a.haco-a
+# @module@ -lgreeting -lgcd
+# @deps@ greeting.la gcd.la
+
+watchall-events
+step 60
+time
+assert-queue
+
+

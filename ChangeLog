@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2007-07-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:
+	  configure.ac: warn if --disable-shared given, because now 
+		ltdl module opening features depend on shared libraries.  
+		Consequence: handful of test cases will fail in test/chpsim.
+	  Configure-generate an 'installcheck.mk' from .in, 
+		to be used in install-time tests.  
+
+
 2007-07-25	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-11:

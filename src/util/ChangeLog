@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.80.4.2 2007/07/24 03:35:21 fang Exp $
+#	$Id: ChangeLog,v 1.80.4.3 2007/07/27 02:39:10 fang Exp $
+
+2007-07-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:
+	  Makefile.inc: install boolean_types.h and macros.h
+
 
 2007-07-23	David Fang		<fangism@users.sourceforge.net>
 

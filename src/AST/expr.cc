@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.25.14.3 2007/07/26 06:06:13 fang Exp $
+	$Id: expr.cc,v 1.25.14.4 2007/07/27 02:39:01 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -434,6 +434,10 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
+	if ((size() == 1) && !*i) {
+	// exception: lone NULL argument is allowed for function calls (void)
+		return;
+	}
 	for ( ; i!=e; i++) {
 		if (*i) {
 			temp.push_back((*i)->check_nonmeta_expr(c));

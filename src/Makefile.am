@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171.4.5 2007/07/26 19:16:18 fang Exp $
+#	$Id: Makefile.am,v 1.171.4.6 2007/07/27 02:38:51 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -963,8 +963,12 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 # installed development headers
 nobase_pkginclude_HEADERS += \
 	Object/expr/const_param.h \
+	Object/expr/const_param_expr_list.h \
 	Object/expr/param_expr.h \
-	Object/expr/types.h
+	Object/expr/param_expr_list.h \
+	Object/expr/types.h \
+	Object/expr/dlfunction.h \
+	sim/chpsim/chpsim_dlfunction.h
 
 guile/libhackt-wrap.hchk: guile/libhackt-wrap.h
 	@$(LIBGUILE_HCHK_TEST_SCRIPT)

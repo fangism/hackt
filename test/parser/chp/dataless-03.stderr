@@ -1,4 +1,0 @@
-Error: missing rvalue expression in argument list at position 1 at [8:10..11]
-At least one error in expr-list at [8:10..11]
-Error in statement body: at [8:8..11]
-ERROR: at least one error in CHP body.

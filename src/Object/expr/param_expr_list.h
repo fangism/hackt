@@ -4,17 +4,19 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.17.22.2 2007/07/24 03:35:15 fang Exp $
+	$Id: param_expr_list.h,v 1.17.22.3 2007/07/27 02:39:05 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
 #define __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
 
 #include "util/persistent.h"
+#ifdef	INSTALLED_HACKT
+#include <vector>
+#else
 #include "util/STL/vector_fwd.h"
-#include "util/boolean_types.h"
+#endif
 #include "util/memory/pointer_classes_fwd.h"
-#include "util/memory/excl_ptr.h"
 
 //=============================================================================
 namespace HAC {
@@ -26,13 +28,12 @@ class unroll_context;
 class template_actuals;
 struct expr_dump_context;
 class nonmeta_expr_visitor;
-using util::good_bool;
-using util::bad_bool;
 using std::vector;
+#ifndef	INSTALLED_HACKT
 using std::default_vector;
+#endif
 using std::ostream;
 using util::memory::count_ptr;
-using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::persistent;
 
@@ -83,7 +84,11 @@ virtual	void
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
+#ifdef	INSTALLED_HACKT
+	typedef	vector<placeholder_ptr_type>
+#else
 	typedef	default_vector<placeholder_ptr_type>::type
+#endif
 					template_formals_list_type;
 
 };	// end class param_expr_list

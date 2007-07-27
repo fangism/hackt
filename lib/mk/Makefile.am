@@ -1,5 +1,5 @@
 # "lib/mk/Makefile.am"
-#	$Id: Makefile.am,v 1.1 2007/06/09 01:56:30 fang Exp $
+#	$Id: Makefile.am,v 1.1.6.1 2007/07/27 02:38:46 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -26,9 +26,9 @@ CLEANFILES += $(noinst_DATA) $(make_DATA)
 
 hackt-stddef.mk:
 	{ $(ECHO) "" ; \
-	$(ECHO) "$$""(SED) = $(SED)" ; \
-	$(ECHO) "$$""(RM) = $(RM)" ; \
-	$(ECHO) "$$""(MV) = $(MV)" ; \
+	$(ECHO) "SED = $(SED)" ; \
+	$(ECHO) "RM = $(RM)" ; \
+	$(ECHO) "MV = $(MV)" ; \
 	$(ECHO) "" ; \
 	} > $@
 

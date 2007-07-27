@@ -5,6 +5,18 @@
 
 2007-07-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:
+	  AST/expr.cc: allow exceptional case for lone null rvalue argument, 
+		to form a void function call, like hello().  
+	  sim/chpsim/chpsim_dlfunction.h: wrappers now all consistently
+		return same type, wrapped void functions return NULL.  
+	  Makefile.am: listed more necessary install headers for chpsim
+		dlfunction support and wrapping.  Also 'trimmed' some of these
+		headers to reduce the install/include dependencies.  
+	  Added some chpsim test cases involving multiple function modules.  
+	  Next: various install-time tests.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-14:
 	  sim/command_common.{h,tcc}, sim/chpsim/Command.cc:
 		For those who forget to pass command-line options...

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.5 2007/07/26 21:37:14 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.6 2007/07/27 02:39:22 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -82,7 +82,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat \
 	source-sink-void-a \
-	missing_func-a missing_func-b missing_func-c
+	missing_func-a missing_func-b missing_func-c \
+	greeting_func-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -193,7 +194,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-void-a-01 source-sink-void-a-02 \
 	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
 	gcd-func-a-05 gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
-	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13
+	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
+	greeting_func-a-01 greeting_func-a-02 greeting_func-a-03
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -413,11 +415,14 @@ srcdir_EXTRA_DIST += \
 	basic-trace-analysis.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
 
-AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT
+AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT -UHAVE_CONFIG_H
 
 noinst_LTLIBRARIES = \
 	gcd.la \
-	bad_gcd1.la bad_gcd2.la bad_gcd3.la bad_gcd4.la
+	bad_gcd1.la bad_gcd2.la bad_gcd3.la bad_gcd4.la \
+	libgcdstatic.la \
+	gcdwrap.la \
+	greeting.la
 
 # force shared library building:
 noinst_MODULE_FLAGS = -module -rpath /nowhere
@@ -427,6 +432,7 @@ noinst_MODULE_FLAGS = -module -rpath /nowhere
 gcd_la_SOURCES = gcd.cc
 gcd_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
+# various versions that should cause run-time failures
 bad_gcd1_la_SOURCES = bad_gcd1.cc
 bad_gcd1_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
@@ -438,6 +444,19 @@ bad_gcd3_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
 bad_gcd4_la_SOURCES = bad_gcd4.cc
 bad_gcd4_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+greeting_la_SOURCES = greeting.cc
+greeting_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+# static library only
+libgcdstatic_la_SOURCES = gcdstatic.cc gcdstatic.h
+# libgcdstatic_la_LDFLAGS = -static
+# -static flag is unnecessary, convenience library is static by default
+
+# the wrapper creates a dynamic library from a static library
+gcdwrap_la_SOURCES = gcdwrap.cc
+gcdwrap_la_LIBADD = libgcdstatic.la
+gcdwrap_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
 
 include $(top_srcdir)/test/Make.test-tail
