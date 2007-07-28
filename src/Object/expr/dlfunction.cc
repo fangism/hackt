@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.1.2.6 2007/07/27 22:30:27 fang Exp $
+	$Id: dlfunction.cc,v 1.1.2.7 2007/07/28 21:40:14 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,7 @@
 #include "common/ltdl-wrap.h"
 #include "util/macros.h"
 #include "util/memory/count_ptr.h"
+// #include "util/memory/count_ptr.tcc"
 #include "util/memory/excl_ptr.h"
 #include "util/stacktrace.h"
 

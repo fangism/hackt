@@ -5,6 +5,20 @@
 
 2007-07-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-21:
+	  Final testing on powerpc-apple-darwin7:
+		mach-o lazy linker caught undefined symbol at run-time, 
+		so we updated the following return type...
+	  Object/expr/dlfunction.h: chp_function_return_type qualified const.
+		so that existing explicit template instantiation
+		from expr/basic_param.cc could be re-used.  
+	  Build and test cycle confirmed on powerpc-apple-darwin7, with this
+		revision, previous revision was good on i686-linux-gnu, 
+		i686-apple-darwin8, and amd64-freebsd6.2.
+	  Next: minimal *documentation* for usage, 
+		pointing to existing examples where possible.
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-20:
 	  Trivial revisions to make error messages more consistent.
 	  Updated few new test cases for LP32 (i686-apple-darwin).

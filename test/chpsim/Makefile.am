@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.8 2007/07/27 19:58:41 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.9 2007/07/28 21:40:22 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -418,12 +418,23 @@ srcdir_EXTRA_DIST += \
 
 AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT -UHAVE_CONFIG_H
 
-noinst_LTLIBRARIES = \
+# noinst_LTLIBRARIES =
+# only build these when depended upon
+EXTRA_LTLIBRARIES = \
 	gcd.la \
 	bad_gcd1.la bad_gcd2.la bad_gcd3.la bad_gcd4.la \
 	libgcdstatic.la \
 	gcdwrap.la \
 	greeting.la
+
+libs: $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
+
+clean-libs:
+	$(RM) $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
+
+.PHONY: clean-libs libs
+
+clean-local: clean-libs
 
 # force shared library building:
 noinst_MODULE_FLAGS = -module -rpath /nowhere

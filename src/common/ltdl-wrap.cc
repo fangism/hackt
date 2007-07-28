@@ -1,6 +1,6 @@
 /**
 	\file "common/ltdl-wrap.cc"
-	$Id: ltdl-wrap.cc,v 1.1.2.3 2007/07/28 06:08:40 fang Exp $
+	$Id: ltdl-wrap.cc,v 1.1.2.4 2007/07/28 21:40:19 fang Exp $
  */
 
 #include "common/ltdl-wrap.h"
@@ -111,6 +111,8 @@ ltdl_open_append(const string& mname) {
 			// depending on the dlopen library functions, 
 			// so for sake of test cases, we craft our own message.
 #if 0
+			// don't permanently remove, this can come in handy for
+			// diagnosing unexpected prblems on various platforms.
 			cerr << lt_dlerror() << endl;
 #else
 			cerr << mname <<

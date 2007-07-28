@@ -6,7 +6,7 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.1.2.4 2007/07/27 05:33:03 fang Exp $
+	$Id: dlfunction.h,v 1.1.2.5 2007/07/28 21:40:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -28,7 +28,7 @@ class const_param_expr_list;
 
 typedef	count_ptr<const_param>		chp_function_argument_type;
 typedef	count_ptr<const const_param>	chp_function_const_argument_type;
-typedef	count_ptr<const_param>		chp_function_return_type;
+typedef	count_ptr<const const_param>	chp_function_return_type;
 
 typedef
 chp_function_return_type
