@@ -10,10 +10,9 @@ state	value
 #STATE#	{ [3:45]
 #STATE#	keyword: chp [4:1..3]
 #STATE#	{ [4:5]
-#STATE#	(id-expr): R [5:2]
-#STATE#	! [5:3]
+#STATE#	list<(chp-statement)>: list<(chp-statement)>: (chp-send) ... ... [5:2..3]
 #STATE#	bool: false [5:4..8]
 in state #STATE#, possible rules are:
-	chp_send: member_index_expr '!' . expr_list_in_parens  (#RULE#)
+	language_body: CHP_LANG '{' chp_body . '}'  (#RULE#)
 acceptable tokens are: 
-	'(' (shift)
+	'}' (shift)

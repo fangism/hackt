@@ -3,41 +3,41 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	64
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	199
-	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	50
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	51
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
-	10	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	48
-	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	32
-	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	41
-	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	32
-	14	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	32
-	15	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	40
-	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	32
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	580
-	18	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	52
-	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	52
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	48
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	48
-	24	##ADDR##	chnalias	0	#HEAD#	#TAIL#	40
-	25	##ADDR##	mchanref	0	#HEAD#	#TAIL#	40
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	27	##ADDR##	mchanref	0	#HEAD#	#TAIL#	40
-	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	29	##ADDR##	chnalias	0	#HEAD#	#TAIL#	40
-	30	##ADDR##	mchanref	0	#HEAD#	#TAIL#	40
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	32	##ADDR##	mchanref	0	#HEAD#	#TAIL#	40
-	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	754
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	103
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
+	18	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

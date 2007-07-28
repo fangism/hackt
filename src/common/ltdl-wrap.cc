@@ -1,6 +1,6 @@
 /**
 	\file "common/ltdl-wrap.cc"
-	$Id: ltdl-wrap.cc,v 1.1.2.2 2007/07/26 00:11:28 fang Exp $
+	$Id: ltdl-wrap.cc,v 1.1.2.3 2007/07/28 06:08:40 fang Exp $
  */
 
 #include "common/ltdl-wrap.h"
@@ -74,7 +74,16 @@ ltdl_open_prepend(const string& mname) {
 	if (!mh) {
 		mh = lt_dl_counted_handle(lt_dlopenext(mname.c_str()));
 		if (!mh) {
+			// The precise error message varies across platforms,
+			// depending on the dlopen library functions, 
+			// so for sake of test cases, we craft our own message.
+#if 0
 			cerr << lt_dlerror() << endl;
+#else
+			cerr << mname <<
+				".{la,so,dylib} not found in library paths."
+				<< endl;
+#endif
 			cerr << "Failed to dlopen `" << mname << "\'." << endl;
 			return NULL;
 		}
@@ -98,7 +107,16 @@ ltdl_open_append(const string& mname) {
 	if (!mh) {
 		mh = lt_dl_counted_handle(lt_dlopenext(mname.c_str()));
 		if (!mh) {
+			// The precise error message varies across platforms,
+			// depending on the dlopen library functions, 
+			// so for sake of test cases, we craft our own message.
+#if 0
 			cerr << lt_dlerror() << endl;
+#else
+			cerr << mname <<
+				".{la,so,dylib} not found in library paths."
+				<< endl;
+#endif
 			cerr << "Failed to dlopen `" << mname << "\'." << endl;
 			return NULL;
 		}

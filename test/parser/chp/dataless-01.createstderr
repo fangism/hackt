@@ -3,40 +3,40 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	80
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
-	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	49
-	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	49
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	174
-	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	49
-	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
-	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
-	10	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	41
-	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	32
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	547
-	13	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	174
-	15	##ADDR##	chanplch	0	#HEAD#	#TAIL#	49
-	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
-	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
-	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	40
-	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	32
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	547
-	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	40
-	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	41
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	48
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
-	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	40
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	27	##ADDR##	schnmref	0	#HEAD#	#TAIL#	32
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	48
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
-	30	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	40
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	32	##ADDR##	schnmref	0	#HEAD#	#TAIL#	32
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	717
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
+	13	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
+	15	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	389
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

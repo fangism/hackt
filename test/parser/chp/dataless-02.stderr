@@ -1,4 +1,4 @@
-Fang, finish writing void HAC::parser::inst_ref_expr_list::postorder_check_nonmeta_data_refs(std::vector<HAC::parser::data_ref_nonmeta_return_type, std::allocator<HAC::parser::data_ref_nonmeta_return_type> >&, const HAC::parser::context&) const at ../../src/AST/expr.cc:651
+Fang add support for NULL lvalues!
 At least one error in inst-ref-list at [7:6..7]
 ERROR in one of the actions in [7:1..9]
 ERROR: at least one error in CHP body.

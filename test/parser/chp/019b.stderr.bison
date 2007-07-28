@@ -16,11 +16,11 @@ state	value
 #STATE#	(id-expr): R [11:2]
 #STATE#	! [11:3]
 #STATE#	( [11:4]
-#STATE#	list<(expr)>: (id-expr): z ... [11:5]
+#STATE#	list<(expr)>: (array-concatenation) ... [11:5]
 #STATE#	< [11:7]
 in state #STATE#, possible rules are:
-	expr_list_in_parens: '(' expr_list . ')'  (#RULE#)
-	expr_list: expr_list . ',' expr  (#RULE#)
+	connection_actuals_list: '(' complex_aggregate_reference_list . ')'  (#RULE#)
+	complex_aggregate_reference_list: complex_aggregate_reference_list . ',' optional_complex_aggregate_reference  (#RULE#)
 acceptable tokens are: 
 	')' (shift)
 	',' (shift)

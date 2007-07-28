@@ -12,8 +12,6 @@ state	value
 #STATE#	list<(type-ref)>: (type-ref) ... [3:24..27]
 #STATE#	identifier: b [3:29]
 in state #STATE#, possible rules are:
-	data_type_ref_list_in_parens: '(' data_type_ref_list . ')'  (#RULE#)
-	data_type_ref_list: data_type_ref_list . ',' data_type_ref  (#RULE#)
+	data_type_ref_list_optional_in_parens: '(' data_type_ref_list_optional . ')'  (#RULE#)
 acceptable tokens are: 
 	')' (shift)
-	',' (shift)
