@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2007-07-29	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-22:
+	  README.CVS: now list texinfo as a bootstrapper requirement.
+	  README.maintainer: more backport tag conventions.
+	  configure.ac, config/documentation.m4: check for ps2epsi
+	  More documentation updates involving Texinfo in dox/ChangeLog.
+
+
 2007-07-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-21:

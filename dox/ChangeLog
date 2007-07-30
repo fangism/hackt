@@ -1,5 +1,23 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.13 2007/06/18 18:24:29 fang Exp $
+#	$Id: ChangeLog,v 1.13.4.1 2007/07/30 05:14:45 fang Exp $
+
+2007-07-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-22:
+	  Make.dox-head: PSNUP is now Makefile variable
+		Define htmldir, pdfdir, psdir.
+		doc_DATA split into pdf_DATA and ps_DATA.
+	  Make.dox-tail: clean-fig target relocated here from subdir Makefiles.
+	  mk/Make.latex: .dvi.ps rule is now provided by texinfos.am
+	  local.cvsignore: ignore texinfo generated extensions.
+	  chpsim/*: now use texinfo as primary documentation generator.
+		Moved chpsim.tex to chpsim-tex.tex, added chpsim.texi, 
+			intro.texi, execution.texi, test.texi.
+		Resorted to using an install-hook for html directory 
+		installation to workaround install script shortcoming.
+		NOTE: texi2pdf is not using fig2dev-fused .pdftex_t figures.
+	  TODO: continue documenting new (and old) chpsim features.
+
 
 2007-06-18	David Fang		<fangism@users.sourceforge.net>
 

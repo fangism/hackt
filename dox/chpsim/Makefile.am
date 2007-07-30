@@ -1,17 +1,42 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2007/06/12 05:12:23 fang Exp $
+#	$Id: Makefile.am,v 1.4.6.1 2007/07/30 05:14:51 fang Exp $
 
 PDFS = chpsim.pdf
+# old:
+noinst_DATA = chpsim-tex.pdf chpsim-tex.ps
 PSS = $(PDFS:.pdf=.ps)
 
 include $(top_srcdir)/dox/Make.dox-head
 
 # have to add these by hand? :S
 EXTRA_DIST += \
-	chpsim.tex \
+	chpsim-tex.tex \
 	intro.tex \
 	execution.tex \
 	figs/build_path.in
+
+info_TEXINFOS += chpsim.texi
+# install doesn't know how to handle generated html *directory* :(
+# html_DATA = chpsim.html
+# workaround: use install hooks
+install-data-hook:
+	$(CP) -r chpsim.html $(DESTDIR)$(htmldir)/
+
+uninstall-hook:
+	$(RM) -r $(DESTDIR)$(htmldir)/chpsim.html
+
+chpsim_INCLUDES = \
+	intro.texi \
+	execution.texi \
+	test.texi
+
+EXTRA_DIST += $(chpsim_INCLUDES)
+
+chpsim.dvi chpsim.pdf chpsim.html chpsim.info: $(chpsim_INCLUDES)
+
+# Q: do figures need to be installed?
+
+# AM_MAKEINFOFLAGS =
 
 SOURCE_FIGS =
 SOURCE_DOTS = \
@@ -24,6 +49,8 @@ XFIG_PSTEX = $(XFIG_FIGURES:.fig=.ps)
 XFIG_PSTEX_T = $(XFIG_FIGURES:.fig=.pstex_t)
 XFIG_PDFTEX = $(XFIG_FIGURES:.fig=.pdf)
 XFIG_PDFTEX_T = $(XFIG_FIGURES:.fig=.pdftex_t)
+XFIG_EPS = $(XFIG_FIGURES:.fig=.eps)
+XFIG_PNG = $(XFIG_FIGURES:.fig=.png)
 
 
 figs: $(BUILT_FIGS)
@@ -36,31 +63,27 @@ AUTO_IGNORE += figs/build_path \
 
 CLEANFILES += figs/build_path $(BUILT_FIGS)
 
-clean-local: clean-figs
-
-clean-figs: force
-	$(RM) figs/*.fig.orig
-	$(RM) figs/*.figtex
-	$(RM) figs/*.eps
-	$(RM) figs/*.ps
-	$(RM) figs/*.pdf
-	$(RM) figs/*.pstex
-	$(RM) figs/*.pdftex
-	$(RM) figs/*.pstex_t
-	$(RM) figs/*.pdftex_t
-
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
 # -include cast2hac.depend
 # AUTO_DEPENDS += cast2hac.depend
--include chpsim.pdfdepend
--include chpsim.dvidepend
-AUTO_DEPENDS += chpsim.pdfdepend chpsim.dvidepend
+-include chpsim-tex.pdfdepend
+-include chpsim-tex.dvidepend
+AUTO_DEPENDS += chpsim-tex.pdfdepend chpsim-tex.dvidepend
 
 COMMON_DEPS = $(srcdir)/../common/hac.bib $(XFIG_TEX)
 
-chpsim.pdf: $(COMMON_DEPS) $(XFIG_PDFTEX) $(XFIG_PDFTEX_T)
-chpsim.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
+chpsim-tex.pdf: $(COMMON_DEPS) $(XFIG_PDFTEX) $(XFIG_PDFTEX_T)
+chpsim-tex.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
+# all-figs named so automake doesn't think we're overriding the targets' rule
+# LIMITATION: choosing not to try to include the .pdftex_t for now
+built-figs chpsim.dvi: $(XFIG_EPS)
+built-figs chpsim.pdf chpsim.html: $(XFIG_PDFTEX)
+built-figs chpsim.html: $(XFIG_PNG)
+# still not sure why html looks for .eps figures...
+
+.PHONY: built-figs
+
 
 $(srcdir)/figs/.cvsignore: $(srcdir)/.cvsignore
 	$(CP) $< $@

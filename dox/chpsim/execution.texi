@@ -1,0 +1,72 @@
+@c "chpsim/execution.tex"
+@c $Id: execution.texi,v 1.1.2.1 2007/07/30 05:14:55 fang Exp $
+
+@node Event-driven Execution
+@chapter Event-driven Execution
+@cindex event-driven
+@cindex execution
+
+Describe event-driven execution algorithm.
+Do we really need to devote an entire chapter to this?
+(Mutters to self: really need to organize this document...)
+
+@menu
+* Event ordering:: Concurrency.
+* Timing:: Interpretation of delays.
+@end menu
+
+@c ****************************************************************************
+@node Event ordering
+@section Event ordering
+@cindex event ordering
+
+@c See Figure @ref{fig:event_algo}.
+
+@c for now, don't bother trying to fuse the .pdftex_t
+@float Figure, fig:event_exec
+@caption{Obsolete: CHP simulator event life cycle}
+@image{figs/chpsim_event_cycle, 5in}
+@end float
+
+@float Figure, fig:event_algo
+@image{figs/chpsim_event_algo, 5in}
+@caption{CHP simulator event algorithm}
+@end float
+
+The whole-program event graph is composed of concurrent event graphs
+representing each process.  
+The edges in the event graph represent the legal orderings between events, 
+including cycles.  
+Any process's execution trace is a projection of the entire program's
+execution trace (and all possible traces).  
+
+@c ****************************************************************************
+@node Timing
+@section Timing
+@cindex timing
+@cindex delay
+@cindex delay, prefix
+
+The delays associated with each event are @dfn{prefix} delays, 
+i.e. the delays are applied before the event is 
+@emph{checked for the first time}
+@footnote{One reason why a prefix-delay model was chosen was to facilitate
+the pseudo-atomic execution of send-receive event pairs.
+Pseudo-atomicity arises from the fact paired-events are still executed 
+individually, but guaranteed to share the exact same timestamp.
+Had we chosen to use suffix or infix delays, delays would be applied
+@emph{after} unblocking, resulting in potentially different timestamps.}.
+In other words, every successor of an event that just executed
+is scheduled for future checking using the delay of each successor.  
+When an event is checked for the first time, it is either blocked
+or executed immediately.  
+When an event is blocked, it is subscribed to its dependencies
+(or some conservative superset thereof).  
+When an event is unblocked, it is unsubscribed from its dependencies
+and placed into the @emph{immediate execution queue} because
+it has already paid its delay up front, 
+and thus should not be delayed further.  
+The immediate execution queue contains only unblocked events
+that take precedence over the checking queue.  
+
+

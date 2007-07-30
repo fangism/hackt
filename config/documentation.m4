@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.7 2007/06/18 18:24:29 fang Exp $
+dnl	$Id: documentation.m4,v 1.7.4.1 2007/07/30 05:14:43 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -181,9 +181,10 @@ AM_CONDITIONAL(FIG2DEV_PDFTEX, test "x$ac_cv_fig2dev_pdftex" = "xyes")
 dnl @synopsis DOC_CHECK_PROG_DVIPS
 dnl
 dnl Checks for dvips, a DVI to PS converter.  
+dnl texinfos.am already checks for this, but is it checked early enough?
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2007-05-08
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -233,6 +234,20 @@ dnl
 AC_DEFUN([DOC_CHECK_PROG_PS2PDF],
 [AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
 AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )]
+)dnl
+
+dnl @synopsis DOC_CHECK_PROG_PS2EPSI
+dnl
+dnl Defines PS2EPSI variable and HAVE_PS2EPSI for automake.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2007-07-29
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([DOC_CHECK_PROG_PS2EPSI],
+[AC_CHECK_PROG([PS2EPSI], ps2epsi, ps2epsi)
+AM_CONDITIONAL(HAVE_PS2EPSI, test -n "$PS2EPSI" )]
 )dnl
 
 dnl @synopsis DOC_ARG_ENABLE_DOCS

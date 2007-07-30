@@ -1,4 +1,5 @@
-"TODO"
+# "TODO"
+#	$Id: TODO,v 1.2.38.1 2007/07/30 05:14:50 fang Exp $
 
 General to-do list for documents.
 
@@ -6,6 +7,9 @@ Standardize document formats and preambles, e.g.
 lettersize and geometry, for the sake of consistency.
 
 Figures, figures, figures.  
+
+TEXINFO-ize all documents to easily generate online and printable documentation
+from single sources (PDF, HTML, info, etc.).  
 
 lib/ documentation directory
 send lib/*.hac sources through filter to make them look like C++ source, 

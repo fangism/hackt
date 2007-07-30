@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.142.4.5 2007/07/27 22:30:24 fang Exp $
+#	$Id: configure.ac,v 1.142.4.6 2007/07/30 05:14:42 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -79,8 +79,11 @@ AC_PATH_PROG([PERL_PATH], perl)
 DOC_CHECK_PROG_DOXYGEN
 DOC_CHECK_PROGS_GRAPHVIZ
 FANG_CHECK_PROGS_TETEX
-DOC_CHECK_PROG_DVIPS
+dnl already checked and defined by texinfos.am
+dnl DOC_CHECK_PROG_DVIPS
 DOC_CHECK_PROG_PS2PDF
+DOC_CHECK_PROG_PS2EPSI
+AC_CHECK_PROG([PSNUP], psnup, psnup)
 
 # figure related stuff
 FANG_CHECK_PROGS_XFIG
