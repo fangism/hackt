@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.4.6.1 2007/07/30 05:14:51 fang Exp $
+#	$Id: Makefile.am,v 1.4.6.2 2007/07/30 08:44:53 fang Exp $
 
 PDFS = chpsim.pdf
 # old:
@@ -18,9 +18,13 @@ EXTRA_DIST += \
 info_TEXINFOS += chpsim.texi
 # install doesn't know how to handle generated html *directory* :(
 # html_DATA = chpsim.html
+noinst_DATA += chpsim.html
 # workaround: use install hooks
-install-data-hook:
-	$(CP) -r chpsim.html $(DESTDIR)$(htmldir)/
+install-data-hook: chpsim.html
+	$(mkdir_p) $(DESTDIR)$(htmldir) ; \
+	for d in $^ ; do \
+	  $(CP) -r $$d $(DESTDIR)$(htmldir)/$$d ; \
+	done
 
 uninstall-hook:
 	$(RM) -r $(DESTDIR)$(htmldir)/chpsim.html
