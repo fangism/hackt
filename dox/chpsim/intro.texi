@@ -1,5 +1,5 @@
 @c "chpsim/intro.texi"
-@c $Id: intro.texi,v 1.1.2.1 2007/07/30 05:14:58 fang Exp $
+@c $Id: intro.texi,v 1.1.2.2 2007/07/30 22:50:00 fang Exp $
 
 @node Introduction
 @chapter Introduction
@@ -7,13 +7,16 @@
 @cindex CHP
 @cindex CSP
 @cindex Hoare, C. A
-@pindex chpsim
+@pindex hacchpsim
 
 @command{chpsim} is a simulator for the
 @acronym{CHP, Communicating Hardware Processes} language,
 which is based on Hoare's @acronym{CSP, Communicating Sequential Processes}
 @cite{C. A. R. Hoare.  Communicating sequential processes.  
 Communications of the ACM.  21(8):666--667, 1978.}.
+To distinguish this implementation from its predecessor, 
+we name this simulator @command{hacchpsim}. 
+However throughout this document, we use @command{chpsim} for brevity.  
 
 @menu
 * History:: Brief history of CHPSIM.

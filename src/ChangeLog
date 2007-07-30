@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
+	  Makefile.am: More install-paths added to install_paths.h.
+	  main/chpsim.cc: usage now prints paths to additional documentation.
+	  sim/chpsim/Commands.cc: `queue' relocated to `info' section.
+	  One more chapter of documentation before merge to trunk.
+
+
 2007-07-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-22:

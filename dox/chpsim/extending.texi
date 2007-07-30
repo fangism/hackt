@@ -1,0 +1,17 @@
+@c "extending.texi"
+@c $Id: extending.texi,v 1.1.2.1 2007/07/30 22:49:59 fang Exp $
+
+@node Extending simulation
+@chapter Extending the simulator
+@cindex extending simulation
+@cindex module
+@cindex plug-in
+@cindex dlopen
+@cindex functions, external
+
+This chapter describes the procedure for providing user-defined functions
+through an external shared library module or plug-in.
+
+@cindex hackt-libtool
+
+

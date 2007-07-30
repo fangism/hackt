@@ -1,5 +1,15 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.13.4.1 2007/07/30 05:14:45 fang Exp $
+#	$Id: ChangeLog,v 1.13.4.2 2007/07/30 22:49:51 fang Exp $
+
+2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
+	  Much work on chpsim texinfo documentation, 
+		mostly usage options and interpreter commands.  
+	  chpsim: Moved chpsim.texi to hacchpsim.tex to avoid potential
+		confusion with old chpsim (if documents exist?)
+	  Make.dox-head: definitions moved to Make.stddef.
+
 
 2007-07-29	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-07-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
+	  Make.stddef: define docdir, pdfdir, psdir, htmldir for installation.
+
+
 2007-07-29	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-22:

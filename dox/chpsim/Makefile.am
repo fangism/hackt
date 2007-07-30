@@ -1,8 +1,8 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.4.6.2 2007/07/30 08:44:53 fang Exp $
+#	$Id: Makefile.am,v 1.4.6.3 2007/07/30 22:49:54 fang Exp $
 
-PDFS = chpsim.pdf
-# old:
+PDFS = hacchpsim.pdf
+# deprecated:
 noinst_DATA = chpsim-tex.pdf chpsim-tex.ps
 PSS = $(PDFS:.pdf=.ps)
 
@@ -15,28 +15,35 @@ EXTRA_DIST += \
 	execution.tex \
 	figs/build_path.in
 
-info_TEXINFOS += chpsim.texi
+info_TEXINFOS += hacchpsim.texi
 # install doesn't know how to handle generated html *directory* :(
-# html_DATA = chpsim.html
-noinst_DATA += chpsim.html
+# html_DATA = hacchpsim.html
+HTML_HOOKS = hacchpsim.html
+noinst_DATA += $(HTML_HOOKS)
 # workaround: use install hooks
-install-data-hook: chpsim.html
+install-data-hook: $(HTML_HOOKS)
 	$(mkdir_p) $(DESTDIR)$(htmldir) ; \
 	for d in $^ ; do \
 	  $(CP) -r $$d $(DESTDIR)$(htmldir)/$$d ; \
 	done
 
 uninstall-hook:
-	$(RM) -r $(DESTDIR)$(htmldir)/chpsim.html
+	for d in $(HTML_HOOKS) ; do \
+	  $(RM) -r $(DESTDIR)$(htmldir)/$$d ; \
+	done
 
-chpsim_INCLUDES = \
+hacchpsim_INCLUDES = \
 	intro.texi \
+	usage.texi \
+	commands.texi \
+	extending.texi \
 	execution.texi \
 	test.texi
 
-EXTRA_DIST += $(chpsim_INCLUDES)
+EXTRA_DIST += $(hacchpsim_INCLUDES)
 
-chpsim.dvi chpsim.pdf chpsim.html chpsim.info: $(chpsim_INCLUDES)
+# not bothering with more sophisticated dependency tracking
+hacchpsim.dvi hacchpsim.pdf hacchpsim.html hacchpsim.info: $(hacchpsim_INCLUDES)
 
 # Q: do figures need to be installed?
 
@@ -69,8 +76,6 @@ CLEANFILES += figs/build_path $(BUILT_FIGS)
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
-# -include cast2hac.depend
-# AUTO_DEPENDS += cast2hac.depend
 -include chpsim-tex.pdfdepend
 -include chpsim-tex.dvidepend
 AUTO_DEPENDS += chpsim-tex.pdfdepend chpsim-tex.dvidepend
@@ -81,9 +86,9 @@ chpsim-tex.pdf: $(COMMON_DEPS) $(XFIG_PDFTEX) $(XFIG_PDFTEX_T)
 chpsim-tex.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
 # all-figs named so automake doesn't think we're overriding the targets' rule
 # LIMITATION: choosing not to try to include the .pdftex_t for now
-built-figs chpsim.dvi: $(XFIG_EPS)
-built-figs chpsim.pdf chpsim.html: $(XFIG_PDFTEX)
-built-figs chpsim.html: $(XFIG_PNG)
+built-figs hacchpsim.dvi: $(XFIG_EPS)
+built-figs hacchpsim.pdf hacchpsim.html: $(XFIG_PDFTEX)
+built-figs hacchpsim.html: $(XFIG_PNG)
 # still not sure why html looks for .eps figures...
 
 .PHONY: built-figs

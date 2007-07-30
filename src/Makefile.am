@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.171.4.8 2007/07/27 19:58:17 fang Exp $
+#	$Id: Makefile.am,v 1.171.4.9 2007/07/30 22:50:04 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -177,6 +177,8 @@ hacchpsim_LDADD = libhacktsim.la
 hacchpsim_LDFLAGS = -export-dynamic 
 # (only if symbols in executable needed to resolve from modules)
 
+main/chpsim.cc: install_paths.h
+
 # hacchpsim: $(top_builddir)/config.status
 #	@{ $(ECHO) "#!$(SH_PATH)" ; \
 #	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" ;} > $@ ; \
@@ -329,6 +331,10 @@ install_paths.h: Makefile
 	$(ECHO) "#define	PKGDATADIR	\"$(pkgdatadir)\"" ; \
 	$(ECHO) "#define	PKGINCLUDEDIR	\"$(pkgincludedir)\"" ; \
 	$(ECHO) "#define	PKGLIBDIR	\"$(pkglibdir)\"" ; \
+	$(ECHO) "#define	DOCDIR		\"$(docdir)\"" ; \
+	$(ECHO) "#define	PDFDIR		\"$(pdfdir)\"" ; \
+	$(ECHO) "#define	PSDIR		\"$(psdir)\"" ; \
+	$(ECHO) "#define	HTMLDIR		\"$(htmldir)\"" ; \
 	$(ECHO) "" ; \
 	$(ECHO) "#endif	// __HAC_INSTALL_PATHS_H__" ; \
 	} > $@

@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42.8.6 2007/07/27 22:30:23 fang Exp $
+#	$Id: Makefile.am,v 1.42.8.7 2007/07/30 22:49:51 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -13,8 +13,6 @@ SUBDIRS = scripts libltdl src lib test . dox
 # temporary, for debugging make distcheck in dox, 
 # so we don't have to wait for the entire src tree to build first
 # SUBDIRS = scripts dox src lib test .
-
-docdir = $(pkgdatadir)/doc
 
 DOXYGEN_CONFIG = hackt.doxygen.config
 

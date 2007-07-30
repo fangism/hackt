@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.9.8.2 2007/07/27 05:33:05 fang Exp $
+	$Id: Command.cc,v 1.9.8.3 2007/07/30 22:50:10 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -429,7 +429,7 @@ Run::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	Queue<State>				Queue;
-CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Queue, CHPSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Queue, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

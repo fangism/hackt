@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.8.6.3 2007/07/26 00:11:29 fang Exp $
+	$Id: chpsim.cc,v 1.8.6.4 2007/07/30 22:50:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
 #include "common/ltdl-wrap.h"
+#include "install_paths.h"
 
 namespace HAC {
 #include "util/using_ostream.h"
@@ -143,6 +144,8 @@ try {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: use getopt_mapped(), see cflat for example.
+	MAINTAINENCE: keep this consistent and documented in
+		$(top_srcdir)/dox/chpsim/usage.texi.
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
@@ -207,7 +210,7 @@ switch (c) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 chpsim::usage(void) {
-	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
+	cerr << "usage: " << name << " [options] <hackt-obj-file>" << endl;
 	cerr << "options:\n"
 "\t-b : batch-mode, non-interactive (promptless)\n"
 "\t-d <checkpoint>: textual dump of checkpoint only\n"
@@ -224,6 +227,12 @@ chpsim::usage(void) {
 		cerr << "flags (" << flags << " total):" << endl;
 		dump_options_briefs(cerr);
 	}
+	cerr << "To run a script, use shell redirection or pipes." << endl;
+	cerr << "Additional documentation is installed in:\n"
+	"\t`info chpsim' (finds " INFODIR "/hacchpsim.info)\n"
+	"\tPDF: " PDFDIR "/hacchpsim.pdf\n"
+	"\tPS: " PSDIR "/hacchpsim.ps\n"
+	"\tHTML: " HTMLDIR "/hacchpsim.html/index.html" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

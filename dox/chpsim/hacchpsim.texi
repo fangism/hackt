@@ -1,6 +1,6 @@
 \input texinfo	@c -*-texinfo-*-
 @c %**start of header
-@setfilename chpsim.info
+@setfilename hacchpsim.info
 @settitle HACKT CHPSIM Manual
 @c `on' is the default
 @setchapternewpage odd
@@ -8,8 +8,7 @@
 @c %**end of header
 
 @c "chpsim.texi"
-@c $Id: chpsim.texi,v 1.1.2.1 2007/07/30 05:14:53 fang Exp $
-
+@c $Id: hacchpsim.texi,v 1.1.2.1 2007/07/30 22:49:59 fang Exp $
 
 @copying
 This manual describes the usage and operation of HACKT's @command{chpsim} 
@@ -54,22 +53,33 @@ Permission is hereby granted to ...
 @c @copying is recommended here as well
 @menu
 * Introduction:: Introduction to CHPSIM.
-* Event-driven Execution:: Introduction to CHPSIM.
+* Usage:: Command-line summary.
+* Commands:: Interpreter commands.
+* Extending simulation:: User-defined function libraries.
+* Event-driven Execution:: How execution works.
 * Test Chapter:: Testing Texinfo features.
-* Variable Index:: Variables.
+* Command Index:: Interpreter commands.
+@c * Variable Index:: Variables.
 * Concept Index:: Concepts and terms.
 @end menu
 
 @c ****************************** chapter *************************************
 @include intro.texi
+@include usage.texi
+@include commands.texi
+@include extending.texi
 @include execution.texi
 @c eventually remove this test chapter
 @include test.texi
 
 @c ****************************** index ***************************************
-@node Variable Index
-@unnumbered Variable Index
-@printindex vr
+@node Command Index
+@unnumbered Command Index
+@printindex fn
+
+@c @node Variable Index
+@c @unnumbered Variable Index
+@c @printindex vr
 
 @node Concept Index
 @unnumbered Concept Index

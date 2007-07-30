@@ -1,0 +1,467 @@
+@c "commands.texi"
+@c $Id: commands.texi,v 1.1.2.1 2007/07/30 22:49:58 fang Exp $
+@c TODO: index commands
+
+@node Commands
+@chapter Commands
+@cindex commands
+
+This chapter describes all of the simulator's interactive commands.  
+Commands are organized into the following categories:
+
+@ifnotinfo
+@table @samp
+@item builtin
+Built-in interpreter commands
+@item general
+General-purpose commands
+@item info
+Information about the simulation state
+@item modes
+Simulator execution modes
+@item simulation
+Breakpoints and step control
+@item tracing
+Checkpointing and tracing
+@item view
+Simulation state monitoring and feedback
+@end table
+@end ifnotinfo
+
+@c is there a way to symchronize the above table as a menu?
+
+@menu
+* builtin:: built-in interpreter commands.
+* general:: general-purpose commands.
+* info:: simulation state information.
+* modes:: simulation execution modes.
+* simulation:: breakpoints and step control.
+* tracing:: checkpointing and tracing.
+* view:: state monitoring and feedback.
+@end menu
+
+
+@c ****************************************************************************
+@node builtin
+@section @t{builtin} commands
+@cindex built-in commands
+
+Built-in commands pertain to the interpreter, 
+and have no relation to simulation.
+
+@deffn Command help cmd
+Help on command or category @var{cmd}.
+@samp{help all} gives a list of all commands available in all categories.
+@samp{help help} tells you how to use @command{help}.
+@end deffn
+
+@deffn Command # ...
+@deffnx Command comment ...
+Whole line comment, ignored by interpreter.  
+@end deffn
+
+@deffn Command echo output
+Print @var{output} to stdout.  
+@b{Note:} multiple spaces in @var{output} are compacted into 
+single spaces by the interpreter's tokenizer.  
+@end deffn
+
+@deffn Command exit
+@deffnx Command quit
+Exit the simulator.
+@end deffn
+
+The following commands are related to command aliases.
+Every command line given to the interpreter recursively
+expands the first token if it has a known alias.  
+Aliases may reference to other aliases in the first token.  
+The interpreter is smart enough to catch cyclic aliases
+and report an error.  
+
+@deffn Command alias cmd args
+Defines an alias, whereby the interpreter expands @var{cmd} into
+@var{args} before interpreting the command.
+@var{args} may consist of multiple tokens.  
+This is useful for shortening common commands.  
+@end deffn
+
+@deffn Command aliases
+Print a list of all known aliases registered with the interpreter.
+@end deffn
+
+@deffn Command unalias cmd
+Undefines an existing alias @var{cmd}.
+@end deffn
+
+@deffn Command unaliasall
+Undefines @emph{all} aliases.  
+@end deffn
+
+
+@c ****************************************************************************
+@node general
+@section @t{general} commands
+@cindex general commands
+
+The following commands relate to sourcing script files.
+Scripts may source other scripts.  
+Cyclic scripts are detected and diagnosed as errors.  
+
+@deffn Command source script
+@anchor{command-source}
+Loads commands to the interpreter from the @var{script} file.
+File is searched through include paths given by
+the @ref{option-I,, @option{-I}} command-line option 
+or the @ref{command-addpath,, @command{addpath}} command.  
+@end deffn
+
+@deffn Command addpath path
+@anchor{command-addpath}
+Appends @var{path} to the search path for sourcing scripts.
+@end deffn
+
+@deffn Command paths
+Print the list of paths searched for source scripts.  
+@end deffn
+
+The following commands relate to extending the simulator with
+user-defined functions in dynamically loaded shared libraries.  
+More on shared modules can be found in @ref{Extending simulation}.
+
+@deffn Command dladdpath paths ...
+@anchor{command-dladdpath}
+Append @var{paths} to the list of paths to search for 
+opening shared library modules.  
+This is useful if you simply forget (or are too lazy) to 
+pass the corresponding paths on the command-line.  
+See also @ref{option-L,, the @option{-L} option}.
+@end deffn
+
+@deffn Command dlopen lib
+@anchor{command-dlopen}
+Open shared library @var{lib} for loading external user-defined functions.  
+Library is found by searching through user-specified load paths and 
+the conventional library path environment variables.  
+The command-line equivalent is the @ref{option-l,, @option{-l} option},
+following the same naming guidelines.
+@end deffn
+
+@deffn Command dlpaths
+Prints the list of paths used in searching for dlopen-ing modules.  
+@end deffn
+
+@deffn Command dlcheckfunc funcs ...
+@anchor{command-dlcheckfunc}
+For each function named in @var{funcs}, report whether or not
+it has been bound to a symbol in a dynamically loaded module.
+Never errors out.  
+@xref{command-dlassertfunc,, command @command{dlassertfunc}}.
+@end deffn
+
+@deffn Command dlassertfunc funcs ...
+@anchor{command-dlassertfunc}
+Error out if any function named in @var{funcs} is unbound 
+to a module symbol.
+Useful for making sure a set of symbols is resolved before 
+any execution begins.  
+@xref{command-dlcheckfunc,, command @command{dlcheckfunc}}.
+@end deffn
+
+@c ****************************************************************************
+@node info
+@section @t{info} commands
+@cindex info commands
+
+@deffn Command assert-queue
+Error out if the event queue is empty.
+Useful as a quick check for deadlock.
+@end deffn
+
+@deffn Command queue
+Print an ordered list of all events in the checking event queue and 
+execution event queue.  
+@end deffn
+
+@deffn Command dump-event event-id
+Print status information about event number @var{event-id}.
+@end deffn
+
+@deffn Command dump-state
+Print textual summary of entire state of simulation.  
+@end deffn
+
+@deffn Command get inst
+Print the state information about instance named @var{inst}.
+The name @var{inst} need not be canonical.  
+Information includes current run-time value, if applicable.  
+@end deffn
+
+@deffn Command print-event-header
+Prints a table header suitable for interpreting printed event records.
+@end deffn
+
+@deffn Command subscribers inst
+@cindex subscribers
+Print a list of all events currently subscribed to the value of 
+variable @var{inst}.  Such events are alerted for rechecking
+when value of @var{inst} changes.  
+@end deffn
+
+@deffn Command subscribers-all
+Print a list of all events currently subscribed to any variables.
+@end deffn
+
+@deffn Command time
+Print the current simulator time.
+@end deffn
+
+@deffn Command what inst
+Prints the type of the named instance @var{inst}, 
+along with its canonical name.  
+@end deffn
+
+@deffn Command who inst
+Print all equivalent aliases of the instance named @var{inst}.  
+@end deffn
+
+@c ****************************************************************************
+@node modes
+@section @t{modes} commands
+@cindex modes commands
+@cindex uniform delay
+@cindex random delay
+@cindex per-event delay
+
+@deffn Command null-event-delay [delay]
+Without the @var{delay} argument, prints the value of the delay used
+for ``trivial'' events.  
+With the @var{delay} argument, sets the said delay value.  
+@end deffn
+
+@deffn Command timing mode
+Select timing mode for event delays.  
+@var{mode} can be one of the following:
+@table @option
+@item uniform
+Use the same delay for all events, set by @command{uniform-delay}.  
+@item random
+Use a high-entropy random variable delay.
+@item per-event
+Use the delay specified by each individual event.
+@end table
+@end deffn
+
+@deffn Command uniform-delay [delay]
+The uniform delay value only takes effect in the @t{uniform} timing mode.
+Without the @var{delay} argument, prints the value of the delay.  
+With the @var{delay} argument, sets the said delay value.  
+@end deffn
+
+@c ****************************************************************************
+@node simulation
+@section @t{simulation} commands
+@cindex simulation commands
+
+@deffn Command initialize
+Resets the variable state of the simulation, while preserving
+other settings such as mode and breakpoints.  
+@end deffn
+
+@deffn Command reset
+Similar to @command{initialize}, but also resets all modes to their
+default values.  
+@end deffn
+
+The following commands run the simulation.
+Simulation is interrupted if a run-time error occurs, 
+or a breakpoint is tripped.  
+@kbd{Ctrl-c} or @samp{SIGINT} (from @samp{kill -INT})
+interrupts the simulation and returns control back to the interpreter
+in interactive mode.  
+
+@deffn Command advance delay
+Advances the simulation @var{delay} units of time.
+@end deffn
+
+@deffn Command advance-to t
+Advances the simulation @emph{until} time @var{t}.  
+@end deffn
+
+@deffn Command step n
+Advances the simulation by @var{n} steps.  
+@end deffn
+
+@deffn Command run
+Runs the simulation until the event queue is empty, if ever.  
+@end deffn
+
+The following commands pertain to breakpoints.  
+
+@deffn Command break-event event-id
+Stop the simulation when event @var{event-id} executes.  
+@end deffn
+
+@deffn Command break-value inst
+Stop the simulation when variable @var{inst} is written, 
+event when its value does not change.  
+@end deffn
+
+@deffn Command unbreak-event event-id
+Remove breakpoint on event @var{event-id}.
+@end deffn
+
+@deffn Command unbreak-value inst
+Remove breakpoint on variable @var{inst}.
+@end deffn
+
+@deffn Command show-event-breaks
+List all event breakpoints.
+@end deffn
+
+@deffn Command show-value-breaks
+List all variable breakpoints.
+@end deffn
+
+@deffn Command unbreakall-events
+Removes all event breakpoints.
+@end deffn
+
+@deffn Command unbreakall-values
+Removes all variable breakpoints.
+@end deffn
+
+@c ****************************************************************************
+@node tracing
+@section @t{tracing} commands
+@cindex tracing commands
+
+Checkpointing is useful for saving long simulations.
+Checkpoint files are only valid for simulations that load 
+@emph{the same object file} that was used to produce the checkpoint.  
+A few minimal consistency checks are performed to alert
+the user of a mistake.  
+
+The structure of the whole-program (after state allocation) 
+is not retained in the checkpoint;
+rather, it is regenerated from the object file.  
+@b{Note:} 
+Only the state of variables (their values) and events is written
+to the checkpoint.  
+Simulator modes, breakpoints, watchpoints, and dlopen-ed modules
+are @emph{not} preserved in checkpoints, 
+nor are they affected by loading checkpoints.  
+
+@strong{TODO:} periodic checkpointing, via @command{auto-save}.
+
+
+@deffn Command save ckpt
+Saves the current simulator state to a checkpoint file @var{ckpt}
+that can be restored later.  
+Overwrites @var{ckpt} if it already exists.  
+@end deffn
+
+@deffn Command load ckpt
+Restores the simulator state (variables and events) from a checkpoint
+file @var{ckpt}.  
+@end deffn
+
+Entire execution traces may be saved away for offline analysis.  
+Again the structure of the whole-program (after state allocation) 
+is not recorded in the trace; rather, it is assumed from the object file.  
+
+@strong{TODO:} Section on trace file details and internals?
+
+@deffn Command trace file
+Record events to tracefile @var{file}.  
+Overwrites @var{file} if it already exists.  
+@end deffn
+
+@deffn Command trace-file
+Print the name of the currently opened trace file.  
+@end deffn
+
+@deffn Command trace-close
+Finish writing the currently opened tracefile by flushing out the last epoch
+and concatenating the header with the stream body.  
+Trace is automatically closed when the simulator exits.  
+@end deffn
+
+@deffn Command trace-dump file
+Produce textual dump of trace file contents in @var{file}.
+@end deffn
+
+@deffn Command trace-flush-interval steps
+If @var{steps} is given, set the size of each epoch according to the
+number of events executed, otherwise report the current epoch size.  
+This regulates the granularity of saving traces in a space-time tradeoff.  
+@end deffn
+
+@deffn Command trace-flush-notify [0|1]
+Enable (1) or disable (0) notifications when trace epochs are flushed.  
+@end deffn
+
+@c ****************************************************************************
+@node view
+@section @t{view} commands
+@cindex view commands
+
+The @t{view} category commands controls what information is printed
+by the simulator as it executes events.  
+Watchpoints are similar to breakpoints in the feedback that is
+printed, but without interrupting simulation.  
+
+@deffn Command cause
+Show causes of events when events are printed.  
+@end deffn
+
+@deffn Command nocause
+Turn off @command{cause} in feedback.  
+@end deffn
+
+@deffn Command watch-queue
+Print events as they enter the event queue (either for checking or execution).
+This is generally recommended for debugging, 
+as it prints @emph{a lot} of information.  
+@end deffn
+
+@deffn Command nowatch-queue
+Disables @command{watch-queue}.
+@end deffn
+
+@deffn Command watch-event event-id
+Watchpoint.  
+Print event @var{event-id} each time it executes, without interrupting.  
+@end deffn
+
+@deffn Command unwatch-event event-id
+Remove watchpoint on event @var{event-id}.  
+@end deffn
+
+@deffn Command watch-value inst
+Print events that write to @var{inst} as they execute.  
+@end deffn
+
+@deffn Command unwatch-value inst
+Remove watchpoint on variable @var{inst}.  
+@end deffn
+
+@deffn Command show-event-watches
+Print list of all watched events.  
+@end deffn
+
+@deffn Command show-event-values
+Print list of all watched variables.  
+@end deffn
+
+@deffn Command watchall-events
+Print all events as they execute, @emph{regardless of whether or not they 
+are explicitly watched}.  
+@end deffn
+
+@deffn Command nowatchall-events
+Stop printing all events, but keep printing events that are explicitly
+listed watchpoints.  
+This is particularly useful for temporarily watching all events in detail, 
+and later restoring only explicitly watched events.  
+@end deffn
+
