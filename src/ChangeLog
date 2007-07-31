@@ -5,6 +5,10 @@
 
 2007-07-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-24:
+	  No source revision, documentation only.  (dox/ChangeLog)
+
+
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
 	  Makefile.am: More install-paths added to install_paths.h.
 	  main/chpsim.cc: usage now prints paths to additional documentation.

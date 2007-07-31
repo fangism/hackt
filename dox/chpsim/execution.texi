@@ -1,5 +1,5 @@
 @c "chpsim/execution.tex"
-@c $Id: execution.texi,v 1.1.2.1 2007/07/30 05:14:55 fang Exp $
+@c $Id: execution.texi,v 1.1.2.2 2007/07/31 02:05:32 fang Exp $
 
 @node Event-driven Execution
 @chapter Event-driven Execution
@@ -23,15 +23,19 @@ Do we really need to devote an entire chapter to this?
 @c See Figure @ref{fig:event_algo}.
 
 @c for now, don't bother trying to fuse the .pdftex_t
-@float Figure, fig:event_exec
-@caption{Obsolete: CHP simulator event life cycle}
-@image{figs/chpsim_event_cycle, 5in}
-@end float
+@c DAMN IT, texinfo 4.6 doesn't have float, nor caption
 
-@float Figure, fig:event_algo
+@c @float Figure, fig:event_exec
+@c @caption{Obsolete: CHP simulator event life cycle}
+Figure: Obsolete: CHP simulator event life cycle
+@image{figs/chpsim_event_cycle, 5in}
+@c @end float
+
+@c @float Figure, fig:event_algo
+Figure: CHP simulator event algorithm
 @image{figs/chpsim_event_algo, 5in}
-@caption{CHP simulator event algorithm}
-@end float
+@c @caption{CHP simulator event algorithm}
+@c @end float
 
 The whole-program event graph is composed of concurrent event graphs
 representing each process.  

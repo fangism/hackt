@@ -30,7 +30,10 @@ Your days are numbered.
 @end enumerate
 
 I used @command{makeinfo} to generate this manual from the TexInfo source.
-@TeX{} or @LaTeX{} typesets the printed manual into a PDF or PS.  
+@TeX{} 
+@c DAMN IT! texinfo 4.6 doesn't support @LaTeX{}, WTF?
+@c or @LaTeX{} 
+typesets the printed manual into a PDF or PS.  
 
 Here's an example of some random C++:
 

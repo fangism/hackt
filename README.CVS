@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.8.6.2 2007/07/30 05:14:41 fang Exp $
+	$Id: README.CVS,v 1.8.6.3 2007/07/31 02:05:29 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -53,8 +53,11 @@ try "./scripts/bootstrap.freebsd" to bootstrap.
 Other tools needed:
 
 GNU TexInfo is required for documentation generation.
-TexInfo 4.8 is known to work, but earlier versions have not been tested.
+TexInfo 4.8 is known to work.  
+TexInfo 4.6 is known to not support the following commands:
+	@float, @caption, @LaTeX{}
 LaTeX and pdfLaTeX are strongly recommended for building PostScripts and PDFs.
+Recommended version teTeX-3.0 distribution.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

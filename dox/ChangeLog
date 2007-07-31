@@ -1,7 +1,13 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.13.4.2 2007/07/30 22:49:51 fang Exp $
+#	$Id: ChangeLog,v 1.13.4.3 2007/07/31 02:05:32 fang Exp $
 
 2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-24:
+	  Stripped out use of @float, @caption because Texinfo 4.6 doesn't
+		support it.  WTF!?  (And I couldn't think of a workaround.)
+	  [curses in perl]
+
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
 	  Much work on chpsim texinfo documentation, 
