@@ -2,6 +2,7 @@ COPYING*
 Makefile*
 README
 acinclude.m4
+autom4te.cache
 aclocal.m4
 config-h.in
 config.*
