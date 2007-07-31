@@ -1,7 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.13.4.3 2007/07/31 02:05:32 fang Exp $
+#	$Id: ChangeLog,v 1.13.4.4 2007/07/31 05:22:45 fang Exp $
 
 2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
+	  chpsim/extending.texi: wrote most of chapter on dl-module usage.
+
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-24:
 	  Stripped out use of @float, @caption because Texinfo 4.6 doesn't

@@ -7,7 +7,8 @@
 # expect these in path: a pre-configure and installed libtool script
 LIBTOOL = $(HACKT_LIBTOOL)
 
-CPPFLAGS = `$(HACKT_CONFIG) --cflags`
+CHPSIM_OBJECT_CPPFLAGS = `$(HACKT_CONFIG) --cflags`
+CPPFLAGS = $(CHPSIM_OBJECT_CPPFLAGS)
 
 # COMPILE = $(CC) $(CPPFLAGS) $(CFLAGS)
 CXXCOMPILE = $(CXX) $(CPPFLAGS) $(CXXFLAGS)

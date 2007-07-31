@@ -1,5 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.65.4.3 2007/07/27 19:58:31 fang Exp $
+#	$Id: ChangeLog,v 1.65.4.4 2007/07/31 05:22:56 fang Exp $
+
+2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
+	  chpsim/Makefile.am: install the installtest/ subdirectory
+		as a runnable example in $(examplesdir).  
+		Added README to go along, back-referencing texinfo docs.
+
 
 2007-07-27	David Fang		<fangism@users.sourceforge.net>
 

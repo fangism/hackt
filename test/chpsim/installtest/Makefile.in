@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.1.2.4 2007/07/27 22:01:15 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.5 2007/07/31 05:22:58 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -18,9 +18,12 @@
 # minimal configuration paths
 srcdir = @srcdir@
 VPATH = @srcdir@
-top_builddir = @top_builddir@
+# top_builddir = @top_builddir@
+pkgdatadir = $(datadir)/@PACKAGE@
+# probably resembles: /usr/local/share/hackt/lib
+
 # for list of install paths from configure
-include $(top_builddir)/installcheck.mk
+# include $(top_builddir)/installcheck.mk
 
 #############################################################################
 ################### the important Makefile example below ####################

@@ -1,5 +1,11 @@
 "lib/ChangeLog"
 
+2006-07-30	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
+	  mk/hackt-lt-progs.mk: define CHPSIM_OBJECT_CPPFLAGS
+
+
 2006-07-27	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-18:

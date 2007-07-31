@@ -1,5 +1,5 @@
 @c "chpsim/execution.tex"
-@c $Id: execution.texi,v 1.1.2.2 2007/07/31 02:05:32 fang Exp $
+@c $Id: execution.texi,v 1.1.2.3 2007/07/31 05:22:46 fang Exp $
 
 @node Event-driven Execution
 @chapter Event-driven Execution
@@ -28,11 +28,13 @@ Do we really need to devote an entire chapter to this?
 @c @float Figure, fig:event_exec
 @c @caption{Obsolete: CHP simulator event life cycle}
 Figure: Obsolete: CHP simulator event life cycle
+
 @image{figs/chpsim_event_cycle, 5in}
 @c @end float
 
 @c @float Figure, fig:event_algo
 Figure: CHP simulator event algorithm
+
 @image{figs/chpsim_event_algo, 5in}
 @c @caption{CHP simulator event algorithm}
 @c @end float

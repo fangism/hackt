@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.22.22.1 2007/07/30 22:49:50 fang Exp $
+#	$Id: Make.stddef,v 1.22.22.2 2007/07/31 05:22:44 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -65,6 +65,7 @@ docdir = $(pkgdatadir)/doc
 htmldir = $(docdir)/html
 pdfdir = $(docdir)/pdf
 psdir = $(docdir)/ps
+examplesdir = $(docdir)/examples
 
 # standard automake targets to be initialized empty so subsequent uses
 # may simply accumulate using +=, without having to worry about initialization

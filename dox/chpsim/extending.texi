@@ -1,5 +1,5 @@
 @c "extending.texi"
-@c $Id: extending.texi,v 1.1.2.1 2007/07/30 22:49:59 fang Exp $
+@c $Id: extending.texi,v 1.1.2.2 2007/07/31 05:22:48 fang Exp $
 
 @node Extending simulation
 @chapter Extending the simulator
@@ -12,6 +12,285 @@
 This chapter describes the procedure for providing user-defined functions
 through an external shared library module or plug-in.
 
+@menu
+* Function Calls:: CHP source calls.
+* Module Creation:: Linking a loadable module.
+* Run-time Module Loading:: Loading libary modules.
+* Run-time Diagnostics:: When stuff goes wrong.
+* chpsim-function example:: an installed example.
+* Module Rationale:: design choices.
+@end menu
+
+@c ****************************************************************************
+@node Function Calls
+@section CHP Function Calls
+@cindex function calls
+@cindex CHP functions
+
+
+In @acronym{CHP}, function calls may appear in expressions or
+as standalone statements.  
+Function call syntax is similar to that of C, 
+and functions may take arbitrarily many arguments, or no arguments at all.  
+
+@example
+defproc func(chan?(int) A, B, chan!(int) C) @{
+  int a, b;
+  chp @{
+    *[ A?(a), B?(b);
+       alert_me();        @r{// alert_me is a yet undefined function}
+       C!(twiddle(a,b))   @r{// twiddle is a yet undefined function}
+     ]
+  @}
+@}
+@end example
+
+Definitions such as the above can be compiled (by @command{haco})
+all the way through creation (@command{haccreate}) 
+and state allocation (@command{hacalloc}) without errors.  
+All such nonmeta (run-time) functions are only bound at @emph{run-time}.  
+A consequence of such late binding is that the types and 
+number of parameters of function calls cannot be checked at compile time.  
+
+@c ****************************************************************************
+@node Module Creation
+@section Shared Module Creation
+
+
+@menu
+* Compiling module sources::
+* Linking module libraries::
+@end menu
+
+@node Compiling module sources
+@subsection Compiling module sources
+@cindex hackt-config
 @cindex hackt-libtool
 
+Now we're ready to supply our functions in C++.  
+A typical chpsim-module source file will have the following parts:
+
+@example
+@r{// include headers}
+#include <sim/chpsim/chpsim_dlfunction.h>
+
+@r{// using declarations}
+USING_CHPSIM_DLFUNCTION_PROLOGUE
+
+@r{// function definitions}
+static
+void
+my_alert(void) @{
+  @r{// your code here}
+@}
+
+@r{// a module export macro}
+CHP_DLFUNCTION_LOAD_DEFAULT("alert_me", my_alert)
+
+static
+int_value_type
+compute(const int_value_type a, const int_value_type b) @{
+  @r{// return some function of a and b}
+@}
+
+CHP_DLFUNCTION_LOAD_DEFAULT("twiddle", compute)
+@end example
+
+@cindex chpsim_dlfunction.h
+@cindex macros
+The header @file{sim/chpsim/chpsim_dlfunction.h} should have been installed
+in @file{$(prefix)/include/hackt/}.
+This header defines the macros and prototypes used in the rest of the source.
+
+@defmac USING_CHPSIM_DLFUNCTION_PROLOGUE
+This just imports certain type names from the header into the 
+current namespace with C++ using-directives.  
+The details are not important.  
+For compatibility, one should always use this macro and let the preprocessor
+expand its definition.  
+@end defmac
+
+@cindex dlopen
+@defmac CHP_DLFUNCTION_LOAD_DEFAULT name sym
+This is the macro that is responsible for binding the library symbol
+@var{sym} to a name of the user's choice @var{name}.  
+Name binding occurs automatically as soon as the module is loaded (by dlopen).
+(If you must know, this is achieved through static object initialization.)
+@end defmac
+
+@cindex return types
+@cindex argument types
+@cindex types.h
+You may have noticed that the @samp{compute} function references
+return types and argument type @code{int_value_type}.  
+A few such types are defined in the interface to @command{chpsim}'s run-time.
+These types are defined in the header @file{Object/expr/types.h}.  
+
+@cindex int_value_type
+@deftp {Data type} int_value_type
+The signed integer data type, corresponding to @samp{int<W>} in @acronym{CHP}, 
+typically defined to the machine's native integer type.  
+@end deftp
+
+@cindex bool_value_type
+@deftp {Data type} bool_value_type
+The boolean data type, corresponding to @samp{bool} in @acronym{CHP}, 
+typically defined to a C++ @code{bool}, or the smallest character type.  
+@end deftp
+
+@cindex real_value_type
+@cindex floating-point
+@deftp {Data type} real_value_type
+The floating-point data type, corresponding to @samp{real} in @acronym{CHP}, 
+typically defined to @code{float} or @code{double}.  
+@end deftp
+
+All functions that are registered with @samp{CHP_DLFUNCTION_LOAD_DEFAULT}
+are required to use only the above types in argument types
+and return types (and void).
+If your function uses different but convertible types, then
+write a call-wrapper that uses only the allowed types and forwards 
+the arguments and return values.  
+This is necessary when compiling and linking against symbols
+that belong to libraries beyond your control, 
+or when you simply don't want to alter an existing library.  
+When in doubt, it is always safe to use a such a wrapper.  
+It is possible to change these types (say, to increase precision)
+if the entire suite of HACKT tools is re-compiled.  
+
+@cindex position-independent code
+Compiling the source file for a shared library requires 
+some additional measures.  
+Fortunately, with the aid of conveniently installed template Makefiles, 
+the complexities are hidden@footnote{Such complexities include additional 
+compiler flags for shared-library objects, 
+such as @acronym{PIC, position-independent-code}.}.  
+We will spare you the details.  
+For now it suffices to use the following line in your Makefile:
+
+@cindex hackt-lt.mk
+@code{include @i{prefix}/share/hackt/mk/hackt-lt.mk}
+
+For every C++ source file (@file{.cc}) that is to be linked into the 
+chpsim module, its corresponding object file should be referenced with
+the @file{.lo} extension (for Libtool object).  
+The next section describes how to correctly link a chpsim module.  
+
+@node Linking module libraries
+@subsection Linking module libraries
+
+In your working Makefile, you will refer to target libraries
+with a @file{.la} extension (Libtool archive).  
+The @file{.la} extension replaces what would normally be @file{.so}, 
+@file{.dylib}, @file{.dll}, or the native shared-object extension.  
+Libtool provides a platform-independent abstraction of shared libraries, 
+so the user doesn't have to worry about these details.  
+The target library name need not be prefixed with @samp{lib}, 
+since it is being dlopened as a module.  
+Suppose the above source file was named @file{foo.cc}, 
+and our target library is @file{bar.la}, 
+one might write in the Makefile:
+
+@example
+# list of dependent libraries (-l...)
+bar_la_LIBADD =
+
+# required flags
+bar_la_LDFLAGS = $(CHPSIM_MODULE_FLAGS)
+
+# -L search paths to dependent libraries
+# bar_la_LDFLAGS +=
+
+# object file list
+bar_la_OBJECTS = foo.lo
+
+bar.la: $(bar_la_OBJECTS)
+        $(CXXLINK) $(bar_la_LDFLAGS) $(bar_la_OBJECTS) $(bar_la_LIBADD)
+@end example
+
+The @file{bar.la} to @samp{bar_la} name canonicalization is borrowed from
+Automake's variable naming convention.  
+We've referenced some variables in the Makefile:
+
+@defvr {Makefile variable} CHPSIM_MODULE_FLAGS
+Flags that tell Libtool to link the shared library to be suitable 
+for dlopening (dynamic loading).  
+Defined in @file{$(pkgdatadir)/mk/hackt-lt.mk}, and should remain unmodified.
+@end defvr
+
+@defvr {Makefile variable} CXXLINK
+The aggregate link command (without arguments).  
+
+@noindent
+Defined in @file{$(pkgdatadir)/mk/hackt-lt.mk}, and should remain unmodified.
+Invokes @command{hackt-libtool} as a link wrapper.  
+Depends on the @var{CXX} Makefile variable.  
+@end defvr
+
+@defvr {Makefile variable} CXX
+The user should define the C++ compiler, 
+which is also to be invoked as the linker.  
+Autoconf users may wish to set this automatically through
+a @command{configure} script, e.g. @code{CXX = @@CXX@@} in Makefile.in.  
+@end defvr
+
+Other relevant variables are also provided:
+
+@defvr {Makefile variable} HACKT_LIBTOOL
+@cindex hackt-libtool
+Defined to @command{hackt-libtool}, which is expected to be in the PATH.  
+@end defvr
+
+@defvr {Makefile variable} HACKT_CONFIG
+@cindex hackt-config
+Defined to @command{hackt-config}, which is expected to be in the PATH.  
+@end defvr
+
+@defvr {Makefile variable} CPPFLAGS
+@defvrx {Makefile variable} CHPSIM_OBJECT_CPPFLAGS
+Expands to flags needed to compile chpsim module source files.  
+Gratitously appled to all libtoolized compilations.  
+May be appended by the user.  
+@end defvr
+
+@defvr {Makefile variable} CXXFLAGS
+Intially empty, may be appended by the user.  
+@end defvr
+
+Summary: defining @var{CXX} suffices to successfully build
+chpsim module @file{bar.la} in the above example.  
+One word of caution: the @file{.la} file is merely a placeholder
+that tells libtool where to find the actual built archives, 
+which are found in the @file{.libs} subdirectory.  
+Don't expect to be able to move these files arbitrarily without breaking.  
+(There's still a good chance of it working because the libraries are not 
+built for use in an installed location.)
+
+@c ****************************************************************************
+@node Run-time Module Loading
+@section Run-time Module Loading
+
+Can load arbitrarily many libraries, as long as symbols don't conflict.  
+
+@c ****************************************************************************
+@node Run-time Diagnostics
+@section Run-time Diagnostics
+
+Run-time checking.
+Where can things go wrong?
+
+@c ****************************************************************************
+@node chpsim-function example
+@section An Example
+
+
+@c ****************************************************************************
+@node Module Rationale
+@section Module Rationale
+
+Goals?
+
+Why?
+
+@c ****************************************************************************
 

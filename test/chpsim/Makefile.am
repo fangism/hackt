@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16.4.9 2007/07/28 21:40:22 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.10 2007/07/31 05:22:57 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -499,13 +499,18 @@ endif
 # clean-installcheck:
 #	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) clean)
 
+chpsimfuncdir = $(examplesdir)/chpsim-function
 DISTCLEANFILES += $(installcheckdir)/Makefile
 
-EXTRA_DIST += \
+dist_chpsimfunc_DATA = \
+	$(installcheckdir)/README \
 	$(installcheckdir)/hello.cc \
 	$(installcheckdir)/hello-test.hac \
 	$(installcheckdir)/hello-test.chpsimrc \
 	$(installcheckdir)/Makefile.in
+
+# EXTRA_DIST += $(chpsimfunc_DATA)
+
 
 include $(top_srcdir)/test/Make.test-tail
 
