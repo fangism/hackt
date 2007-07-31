@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.18 2007/07/18 23:28:34 fang Exp $
+ 	$Id: meta_range.cc,v 1.19 2007/07/31 23:23:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -29,6 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
+#include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"

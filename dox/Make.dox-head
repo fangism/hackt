@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.8 2007/02/06 21:36:24 fang Exp $
+#	$Id: Make.dox-head,v 1.9 2007/07/31 23:22:29 fang Exp $
 #	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
@@ -12,7 +12,7 @@ include $(top_srcdir)/Make.stddef
 
 # commented definitions are set by configure
 # DVIPS = dvips
-PSNUP = psnup
+# PSNUP = psnup
 # LATEX = latex
 # PDFLATEX = pdflatex
 # BIBTEX = bibtex
@@ -24,15 +24,9 @@ PSNUP = psnup
 #	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
 
 SUFFIXES =
-# SUFFIXES = .ps .dvi .tex .pdf .ind .idx .bbl .aux \
-#	.dvidepend .pdfdepend
 
-# where various documents (pdf, ps) should be installed
-docdir = $(pkgdatadir)/doc
-
-# not necessary
-# all-local: pdf-local ps-local
-
+# define as empty and append, to force subdir's automakes to use texinfos.am
+info_TEXINFOS =
 AUTOPDFS = 
 AUTOPSS = 
 
@@ -53,5 +47,6 @@ ps-local: $(PSS)
 
 # The documents are only built by default if configure had docs enabled by
 # default and the right latex programs were found.  
-doc_DATA = $(AUTOPDFS) $(AUTOPSS)
+pdf_DATA = $(AUTOPDFS)
+ps_DATA = $(AUTOPSS)
 

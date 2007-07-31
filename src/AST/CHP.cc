@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.17 2007/06/12 05:12:37 fang Exp $
+	$Id: CHP.cc,v 1.18 2007/07/31 23:22:51 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <sstream>
 
 #include "AST/CHP.h"
 #include "AST/expr_list.h"
@@ -21,6 +22,7 @@
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 #include "AST/range.h"
+#include "AST/reference.h"		// for id_expr
 
 #include "Object/lang/CHP.tcc"
 #include "Object/type/data_type_reference.h"
@@ -31,6 +33,8 @@
 #include "Object/expr/channel_probe.h"
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/convert_expr.h"
+#include "Object/expr/nonmeta_func_call.h"
+#include "Object/expr/nonmeta_expr_list.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -43,6 +47,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "common/TODO.h"
+#include "common/ICE.h"
 
 #include "util/wtf.h"
 #include "util/what.h"
@@ -73,6 +78,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_statement, "(chp-metaloop-stmt)"
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::function_call_expr, "(chp-func-call)")
 
 namespace memory {
 // explicit template instantiations
@@ -102,6 +108,7 @@ using entity::CHP::action_sequence;
 using entity::CHP::concurrent_actions;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
+using entity::CHP::function_call_stmt;
 using entity::channel_type_reference_base;
 using entity::user_def_chan;
 using entity::user_def_datatype;
@@ -111,6 +118,8 @@ using entity::data_type_reference;
 using entity::pint_scalar;
 using entity::meta_loop_base;
 using entity::convert_pint_to_preal_expr;
+using entity::nonmeta_expr_list;
+using entity::nonmeta_func_call;
 
 //=============================================================================
 // class probe_expr method definitions
@@ -927,7 +936,7 @@ CONSTRUCTOR_INLINE
 send::send(const inst_ref_expr* c, const char_punctuation_type* d, 
 		const expr_list* r) :
 		communication(c, d), rvalues(r) {
-	NEVER_NULL(rvalues);
+//	NEVER_NULL(rvalues);	// may be omitted for dataless sends
 }
 
 DESTRUCTOR_INLINE
@@ -937,7 +946,9 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(send)
 
 line_position
 send::rightmost(void) const {
-	return rvalues->rightmost();
+	if (rvalues)
+		return rvalues->rightmost();
+	else	return communication::rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -960,6 +971,7 @@ send::__check_action(context& c) const {
 	typedef	expr_list::checked_nonmeta_exprs_type::const_iterator
 							const_iterator;
 	expr_list::checked_nonmeta_exprs_type checked_exprs;
+if (rvalues) {
 	rvalues->postorder_check_nonmeta_exprs(checked_exprs, c);
 	const_iterator i(checked_exprs.begin());
 	const const_iterator e(checked_exprs.end());
@@ -969,15 +981,18 @@ send::__check_action(context& c) const {
 			where(*rvalues) << endl;
 		return statement::return_type(NULL);
 	}
-
+}
 	typedef	count_ptr<entity::CHP::channel_send>	local_return_type;
 	const local_return_type ret(new entity::CHP::channel_send(sender));
 	// need to check that number of arguments match...
 	NEVER_NULL(ret);
 	const good_bool g(ret->add_expressions(checked_exprs));
 	if (!g.good) {
-		cerr << "At least one type error in expr-list in " <<
-			where(*rvalues) << endl;
+		if (rvalues)
+			cerr << "At least one type error in expr-list in "
+				<< where(*rvalues);
+		else	cerr << "Type error in send at " << where(*this);
+		cerr << endl;
 		return statement::return_type(NULL);
 	} else {
 		return ret;
@@ -1037,27 +1052,40 @@ if (lvalues) {
 							const_iterator;
 	// NOTE: these are generic instance references, may not even be data
 	inst_ref_expr_list::checked_nonmeta_data_refs_type checked_refs;
+try {
 	lvalues->postorder_check_nonmeta_data_refs(checked_refs, c);
+#if 0
 	const_iterator i(checked_refs.begin());
 	const const_iterator e(checked_refs.end());
 	const const_iterator
 		ni(find(i, e, inst_ref_expr::nonmeta_data_return_type(NULL)));
+#endif
+} catch (...) {
+#if 0
 	if (ni != e) {
+#endif
 		cerr << "At least one error in inst-ref-list at " <<
 			where(*lvalues) << endl;
 		return return_type(NULL);
+#if 0
 	}
+#endif
+}
+	const_iterator i(checked_refs.begin());
+	const const_iterator e(checked_refs.end());
 	// need to dynamic cast the list into simple_nonmeta_datatype_value_refs
 	typedef vector<count_ptr<lref_type> >	val_refs_type;
 	val_refs_type val_refs;
 	transform(i, e, back_inserter(val_refs), 
 		mem_fun_ref(&count_ptr<checked_element_type>::is_a<lref_type>)
 	);
+#if 0
 	if (find(val_refs.begin(), val_refs.end(), val_refs_type::value_type())
 			!= val_refs.end()) {
 		cerr << "Houston, we have a problem." << endl;
 		return return_type(NULL);
 	}
+#endif
 	// need to check that number of arguments match...
 	const good_bool g(ret->add_references(val_refs));
 	if (!g.good) {
@@ -1468,8 +1496,107 @@ log::rightmost(void) const {
 
 statement::return_type
 log::__check_action(context& c) const {
-	cerr << "Fang, finish CHP::log::check_action()!" << endl;
+	FINISH_ME(Fang);
 	return statement::return_type(NULL);
+}
+
+//=============================================================================
+// class function_call_expr method definitions
+
+function_call_expr::function_call_expr(const id_expr* i, const expr_list* a) :
+		fname(i), args(a) {
+	NEVER_NULL(fname);
+	NEVER_NULL(args);
+}
+
+/**
+	Parse-time type checking done here to simplify grammar.  
+	\throw exception if base reference is wrong type.  
+ */
+function_call_expr::function_call_expr(
+		const inst_ref_expr* i, const expr_list* a) :
+		fname(IS_A(const id_expr*, i)), args(a) {
+	NEVER_NULL(i);
+	if (!fname) {
+		cerr << "Parse error: base reference of function call "
+			"must be an id_expr, but got: ";
+		i->what(cerr) << " at " << where(*i) << endl;
+		THROW_EXIT;
+	}
+	NEVER_NULL(args);
+}
+
+function_call_expr::~function_call_expr() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(function_call_expr)
+
+line_position
+function_call_expr::leftmost(void) const {
+	return fname->leftmost();
+}
+
+line_position
+function_call_expr::rightmost(void) const {
+	return args->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Call can also be a statement.  
+ */
+statement::return_type
+function_call_expr::__check_action(context& c) const {
+	const count_ptr<nonmeta_func_call>	
+		call(__check_nonmeta_expr(c));
+	// error handling, please?
+	return statement::return_type(new function_call_stmt(call));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ */
+expr::meta_return_type
+function_call_expr::check_meta_expr(const context& c) const {
+	ICE_NEVER_CALL(cerr);
+	return expr::meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+function_call_expr::check_prs_expr(context& c) const {
+	ICE_NEVER_CALL(cerr);
+	return prs_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call.  
+ */
+nonmeta_expr_return_type
+function_call_expr::check_nonmeta_expr(const context& c) const {
+	return __check_nonmeta_expr(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs a run-time function call expression.  
+ */
+count_ptr<nonmeta_func_call>
+function_call_expr::__check_nonmeta_expr(const context& c) const {
+	expr_list::checked_nonmeta_exprs_type temp;
+	args->postorder_check_nonmeta_exprs(temp, c);
+	const count_ptr<nonmeta_expr_list>
+		fargs(new nonmeta_expr_list);
+	NEVER_NULL(fargs);
+	copy(temp.begin(), temp.end(), back_inserter(*fargs));
+	const qualified_id& id(*fname->get_id());
+	INVARIANT(!id.empty());
+	std::ostringstream fname_str;
+	fname_str << id;
+	const count_ptr<nonmeta_func_call>
+		ret(new nonmeta_func_call(fname_str.str(), fargs));
+	NEVER_NULL(ret);
+	return ret;
 }
 
 //=============================================================================

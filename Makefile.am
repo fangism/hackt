@@ -2,19 +2,17 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.42 2007/06/04 22:44:22 fang Exp $
+#	$Id: Makefile.am,v 1.43 2007/07/31 23:22:25 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = scripts src lib test . dox
+SUBDIRS = scripts libltdl src lib test . dox
 # temporary, for debugging make distcheck in dox, 
 # so we don't have to wait for the entire src tree to build first
 # SUBDIRS = scripts dox src lib test .
-
-docdir = $(pkgdatadir)/doc
 
 DOXYGEN_CONFIG = hackt.doxygen.config
 
@@ -23,7 +21,7 @@ libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
 
 # don't need $(srcdir) because cd $(top_srcdir) is prior to exec. aclocal
-ACLOCAL_AMFLAGS = -I config
+ACLOCAL_AMFLAGS = -I config @ACLOCAL_FLAGS@
 
 # see configure.in for adding libtool flags
 
@@ -55,8 +53,15 @@ doc_DATA = \
 	README \
 	TODO
 
-bin_SCRIPTS = hackt-config
+bin_SCRIPTS = \
+	hackt-config \
+	hackt-libtool
+
 noinst_SCRIPTS = install_transform.sh
+
+# provide the pre-configured script for assisting in linking plug-in modules
+hackt-libtool: libtool
+	$(LN_S) $< $@
 
 # Many of these are already in DIST_COMMON
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \
@@ -78,7 +83,8 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	pkg/hackt.info \
 	pkg/hackt-cvs-deps.info \
 	pkg/hackt-dist-deps.info
-
+# don't bother:
+#	libltdl/README.CVS
 
 if HAVE_DOT
 DevelopmentPlan.ps: DevelopmentPlan.dot
@@ -113,7 +119,23 @@ distcheck.log: force
 
 # don't include CVS directories in distribution
 dist-hook:
-	$(RM) -r `$(FIND) $(distdir) -name CVS`
+	$(RM) -r `$(FIND) $(distdir) -name CVS -type d`
+
+if INSTALL_TESTS
+installcheck-local:
+	@list='$(bin_SCRIPTS)' ; \
+	for p1 in $$list ; do \
+		f=`echo "$$p1" | $(SED) 's|^.*/||;$(transform)'`; \
+		run=$(bindir)/$$f ; \
+		if test ! -f $$run ; then \
+			$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
+		fi ; \
+		$(ECHO) "======== running: $$run ==============" ; \
+		$$run --version && \
+		$$run --help ; \
+	done ; \
+	$(ECHO) "======== end of installcheck-local =============="
+endif
 
 # for recursive make to not parallelize these
 .NOTPARALLEL: pdf ps

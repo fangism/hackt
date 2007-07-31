@@ -1,0 +1,16 @@
+# "gcd-func-a-02.chpsimrc"
+#	$Id: gcd-func-a-02.chpsimrc,v 1.2 2007/07/31 23:24:04 fang Exp $
+# Yes, use THIS object file
+# @haco@ missing_func-a.haco-a
+# @module@ -lbad_gcd1
+# @deps@ bad_gcd1.la
+
+# KNOWN BUG: ISEs on invalid function call
+# remedy: wrap call arguments with cast expressions, inferred from
+#	position in channel type-checking.
+
+watchall-events
+step 100
+time
+assert-queue
+

@@ -1,5 +1,38 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.81 2007/07/18 23:29:15 fang Exp $
+#	$Id: ChangeLog,v 1.82 2007/07/31 23:23:42 fang Exp $
+
+2007-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-41-merged-chpsim-06-26:
+	  Branch merge summary:
+		critical bug fix in IO_utils.cc
+		subset of headers are listed for installation
+
+
+2007-07-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:
+	  Makefile.inc: install boolean_types.h and macros.h
+
+
+2007-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-06:
+	  Added more install-headers, and modified some headers to remove
+		install-time dependencies on "config.h"
+		affected: macros.h count_ptr.h pointer_traits.h
+		Expect 'built' compilations to pass -DBUILT_HACKT
+		and 'installed' compilations to pass -DINSTALLED_HACKT
+		as CPPFLAGS.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-05:
+	  persistent.h: split-off persistent::hash_key definition into
+		persistent_hash.h to reduce unnecessary include material.
+	  Makefile.inc: started naming installed headers (pkginclude)
+		for external development support, 
+		initially intended for chpsim dl-linking.
+
 
 2007-07-18	David Fang		<fangism@users.sourceforge.net>
 

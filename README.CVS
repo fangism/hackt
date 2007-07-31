@@ -1,5 +1,5 @@
 "README.CVS"
-	$Id: README.CVS,v 1.8 2007/06/10 02:56:25 fang Exp $
+	$Id: README.CVS,v 1.9 2007/07/31 23:22:25 fang Exp $
 
 -------------------------------------------------------------------------------
 You've just checked out HACKT from CVS, what do you need to need to work?
@@ -18,7 +18,7 @@ installed on your system:
 GNUmake-3.79+ is recommended
 automake-1.9+ (OK: 1.10)
 autoconf-2.59+ (OK: 2.60)
-libtool-1.5+
+libtool-1.5.22+ (1.5.18 has known libltdl(ltdl.c) bug that affects dlopen)
 
 These may be obtained from gnu.org.  
 TODO: provide a download script for the truly lazy...
@@ -51,6 +51,13 @@ try "./scripts/bootstrap.freebsd" to bootstrap.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Other tools needed:
+
+GNU TexInfo is required for documentation generation.
+TexInfo 4.8 is known to work.  
+TexInfo 4.6 is known to not support the following commands:
+	@float, @caption, @LaTeX{}, @sansserif
+LaTeX and pdfLaTeX are strongly recommended for building PostScripts and PDFs.
+Recommended version teTeX-3.0 distribution.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

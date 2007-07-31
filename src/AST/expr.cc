@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.26 2007/07/18 23:28:13 fang Exp $
+	$Id: expr.cc,v 1.27 2007/07/31 23:22:58 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -421,9 +421,11 @@ expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
 /**
 	TODO: consider templating these traversals?
 	Q: are these expressions allowed to be NULL?  (CHP context)
+	A: No.  Cannot send null value (undefined).  
 	Just collects the result of type-checking of items in list.
 	\param temp the type-checked result list.
 	\param c the context.
+	Caller should catch error by checking for NULL.  
  */
 void
 expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
@@ -432,8 +434,22 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
+	if ((size() == 1) && !*i) {
+	// exception: lone NULL argument is allowed for function calls (void)
+		return;
+	}
 	for ( ; i!=e; i++) {
-		temp.push_back((*i)->check_nonmeta_expr(c));
+		if (*i) {
+			temp.push_back((*i)->check_nonmeta_expr(c));
+		} else {
+			typedef	checked_nonmeta_exprs_type::value_type
+							checked_value_type;
+			cerr << "Error: missing rvalue expression in "
+				"argument list at position " << 
+				distance(begin(), i) +1 << " at " <<
+				where(*this) << endl;
+			temp.push_back(checked_value_type(NULL));
+		}
 	}
 }
 
@@ -511,7 +527,7 @@ expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex,
 //=============================================================================
 // class expr_list method definitions
 
-// inst_ref_expr_list::inst_ref_expr_list() : parent_type() { }
+inst_ref_expr_list::inst_ref_expr_list() : parent_type() { }
 
 inst_ref_expr_list::inst_ref_expr_list(const inst_ref_expr* e) :
 		parent_type(e) { }
@@ -555,6 +571,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 		typedef	checked_bool_groups_type::value_type	group_type;
 		temp.push_back(group_type());	// create empty
 		// then append in-place (beats creating and copying)
+		NEVER_NULL(*i);
 		if ((*i)->check_grouped_literals(temp.back(), c)) {
 			// TODO: more specific error message, use std::distance
 			cerr << "Error in bool group reference list in "
@@ -578,6 +595,7 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		if ((*i)->check_grouped_literals(temp, c)) {
 			// TODO: more specific error message, use std::distance
 			cerr << "Error in bool group reference list in "
@@ -597,11 +615,16 @@ inst_ref_expr_list::postorder_check_meta_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		temp.push_back((*i)->check_meta_reference(c));
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allow null lvalues.  
+	\throw an exception upon error, since values are allowed to be NULL.  
+ */
 void
 inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 		checked_nonmeta_data_refs_type& temp, const context& c) const {
@@ -610,7 +633,29 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
-		temp.push_back((*i)->check_nonmeta_data_reference(c));
+		typedef	checked_nonmeta_data_refs_type::value_type
+						checked_value_type;
+		if (*i) {
+			const checked_value_type
+				r((*i)->check_nonmeta_data_reference(c));
+			if (!r) {
+				// already have error message
+				THROW_EXIT;
+			}
+			temp.push_back(r);
+		} else {
+			// TODO: don't support null lvalues until middle-end
+			// propagates expected type information into 
+			// run-time type casts for checking.
+			// Needed for nonmeta_assign to work correctly.
+#if 0
+			FINISH_ME_EXIT(Fang);
+#else
+			cerr << "Fang add support for NULL lvalues!" << endl;
+			THROW_EXIT;
+#endif
+			temp.push_back(checked_value_type(NULL));
+		}
 	}
 }
 

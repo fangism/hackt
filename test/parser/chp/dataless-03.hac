@@ -1,0 +1,15 @@
+// "dataless-03.hac"
+//	$Id: dataless-03.hac,v 1.2 2007/07/31 23:24:57 fang Exp $
+// should compile fail
+
+template <pint N>
+defproc void_source_once(chan!() S) {
+chp {
+{;i:N: S!() }
+	// error: S!() sends one null argument, when 0 are required
+	// correction: S!
+}
+}
+
+void_source_once<3> Z;
+

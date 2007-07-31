@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.9 2007/06/15 06:01:57 fang Exp $
+#	$Id: Make.test-guile,v 1.10 2007/07/31 23:23:54 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -393,11 +393,13 @@ srcdir_EXTRA_DIST += \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscm-expect)
 
 
+if CHECK_TESTS
 TESTS += \
 	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscmtest) \
 	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfailtest) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscmtest) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfailtest)
+endif
 
 HAC_COMPILE_OBJECT_TARGETS += \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco) \

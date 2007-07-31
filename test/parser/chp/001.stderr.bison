@@ -9,11 +9,9 @@ state	value
 #STATE#	( [3:14]
 #STATE#	(chan-type) [3:15..19]
 #STATE#	( [3:20]
+#STATE#	list<(type-ref)>: ... [0:0]
 #STATE#	keyword: chan [3:21..24]
 in state #STATE#, possible rules are:
-	data_type_ref_list_in_parens: '(' . data_type_ref_list ')'  (#RULE#)
+	data_type_ref_list_optional_in_parens: '(' data_type_ref_list_optional . ')'  (#RULE#)
 acceptable tokens are: 
-	ID (shift)
-	SCOPE (shift)
-	INT_TYPE (shift)
-	BOOL_TYPE (shift)
+	')' (shift)

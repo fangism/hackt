@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.8 2007/06/12 05:13:01 fang Exp $
+	$Id: chpsim.cc,v 1.9 2007/07/31 23:23:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,6 +23,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/chpsim/graph_options.h"
 #include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
+#include "common/ltdl-wrap.h"
+#include "install_paths.h"
 
 namespace HAC {
 #include "util/using_ostream.h"
@@ -59,10 +61,18 @@ chpsim::chpsim() { }
  */
 int
 chpsim::main(int argc, char* argv[], const global_options&) {
+	const ltdl_token ltdl;	// dlinit/dlexit pair
 	options opt;
-	if (parse_command_options(argc, argv, opt)) {
+	switch (parse_command_options(argc, argv, opt)) {
+	case 0: break;
+	// syntax error in command line arguments
+	case 1:
 		cerr << "Error in command invocation." << endl;
 		usage();
+		return 1;
+	// some other error
+	default:
+		cerr << "Error in command invocation." << endl;
 		return 1;
 	}
 	if (opt.dump_checkpoint) {
@@ -134,10 +144,12 @@ try {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: use getopt_mapped(), see cflat for example.
+	MAINTAINENCE: keep this consistent and documented in
+		$(top_srcdir)/dox/chpsim/usage.texi.
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bd:f:hiI:";
+	static const char optstring[] = "+bd:f:hiI:l:L:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -170,8 +182,17 @@ switch (c) {
 		break;
 	case 'i':
 		o.interactive = true;
+		break;
 	case 'I':
 		o.source_paths.push_back(optarg);
+		break;
+	case 'l':
+		if (!HAC::ltdl_open_append(optarg)) {
+			return 2;
+		}
+		break;
+	case 'L':
+		lt_dladdsearchdir(optarg);
 		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;
@@ -189,20 +210,29 @@ switch (c) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 chpsim::usage(void) {
-	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
-	cerr << "options:" << endl;
-	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
-	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
-	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
-	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
-	cerr << "\t-i : interactive (default)" << endl;
-	cerr << "\t-I <path> : include path for scripts (repeatable)" << endl;
+	cerr << "usage: " << name << " [options] <hackt-obj-file>" << endl;
+	cerr << "options:\n"
+"\t-b : batch-mode, non-interactive (promptless)\n"
+"\t-d <checkpoint>: textual dump of checkpoint only\n"
+"\t-f <flag> : general options modifiers (listed below)\n"
+"\t-h : print commands help and exit (objfile optional)\n"
+"\t-i : interactive (default)\n"
+"\t-I <path> : include path for scripts (repeatable)\n"
+"\t-L <path> : append load path for dlopening modules (repeatable)\n"
+"\t-l <lib> : library to dlopen (NO file extension) (repeatable)"
+	<< endl;
 //	cerr << "\t-O <0..1> : expression optimization level" << endl;
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;
 		dump_options_briefs(cerr);
 	}
+	cerr << "To run a script, use shell redirection or pipes." << endl;
+	cerr << "Additional documentation is installed in:\n"
+	"\t`info chpsim' (finds " INFODIR "/hacchpsim.info)\n"
+	"\tPDF: " PDFDIR "/hacchpsim.pdf\n"
+	"\tPS: " PSDIR "/hacchpsim.ps\n"
+	"\tHTML: " HTMLDIR "/hacchpsim.html/index.html" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

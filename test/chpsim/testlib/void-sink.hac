@@ -1,0 +1,38 @@
+// "void-sink.hac"
+//	$Id: void-sink.hac,v 1.2 2007/07/31 23:24:33 fang Exp $
+// void buckets
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain infinite sink.  
+ */
+defproc void_sink(chan?() B) {
+chp {
+*[ B? ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain infinite sink, with configurable delay.  
+ */
+template <preal D>
+defproc void_sink_delay(chan?() B) {
+chp {
+*[ $(after=D) B? ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	sinks a limited number of times
+ */
+template <pint N>
+defproc void_sink_once(chan?() B) {
+chp {
+{;i:N: B? }
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

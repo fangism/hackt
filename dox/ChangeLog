@@ -1,5 +1,50 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.13 2007/06/18 18:24:29 fang Exp $
+#	$Id: ChangeLog,v 1.14 2007/07/31 23:22:28 fang Exp $
+
+2007-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-26:
+	  Completed first draft of CHPSIM manual in Texinfo.
+	  End of branch, merge to trunk.
+
+
+2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
+	  chpsim/extending.texi: wrote most of chapter on dl-module usage.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-24:
+	  Stripped out use of @float, @caption because Texinfo 4.6 doesn't
+		support it.  WTF!?  (And I couldn't think of a workaround.)
+	  [curses in perl]
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
+	  Much work on chpsim texinfo documentation, 
+		mostly usage options and interpreter commands.  
+	  chpsim: Moved chpsim.texi to hacchpsim.tex to avoid potential
+		confusion with old chpsim (if documents exist?)
+	  Make.dox-head: definitions moved to Make.stddef.
+
+
+2007-07-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-22:
+	  Make.dox-head: PSNUP is now Makefile variable
+		Define htmldir, pdfdir, psdir.
+		doc_DATA split into pdf_DATA and ps_DATA.
+	  Make.dox-tail: clean-fig target relocated here from subdir Makefiles.
+	  mk/Make.latex: .dvi.ps rule is now provided by texinfos.am
+	  local.cvsignore: ignore texinfo generated extensions.
+	  chpsim/*: now use texinfo as primary documentation generator.
+		Moved chpsim.tex to chpsim-tex.tex, added chpsim.texi, 
+			intro.texi, execution.texi, test.texi.
+		Resorted to using an install-hook for html directory 
+		installation to workaround install script shortcoming.
+		NOTE: texi2pdf is not using fig2dev-fused .pdftex_t figures.
+	  TODO: continue documenting new (and old) chpsim features.
+
 
 2007-06-18	David Fang		<fangism@users.sourceforge.net>
 

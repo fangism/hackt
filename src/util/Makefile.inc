@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.30 2007/04/20 18:26:15 fang Exp $
+#	$Id: Makefile.inc,v 1.31 2007/07/31 23:23:42 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -163,6 +163,7 @@ UTIL_HEADER_FILES = \
 	util/packed_array_fwd.h \
 	util/persistent_fwd.h \
 	util/persistent.h \
+	util/persistent_hash.h \
 	util/pthread.h \
 	util/qmap_fwd.h \
 	util/readline.h \
@@ -219,6 +220,18 @@ UTIL_CC_FILES = \
 	util/numeric/random.cc
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
+
+# installed headers (keep to minimum)
+nobase_pkginclude_HEADERS += \
+	util/boolean_types.h \
+	util/macros.h \
+	util/memory/pointer_classes_fwd.h \
+	util/memory/pointer_manipulator.h \
+	util/memory/pointer_traits.h \
+	util/memory/count_ptr.h \
+	util/new_functor_fwd.h \
+	util/persistent_fwd.h \
+	util/persistent.h
 
 GUILE_UTIL_H_FILES = \
 	util/libguile.h \

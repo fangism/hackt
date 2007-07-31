@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.8 2007/06/12 05:12:39 fang Exp $
+	$Id: CHP.h,v 1.9 2007/07/31 23:22:55 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -24,6 +24,7 @@ namespace entity {
 	template <class> class simple_nonmeta_instance_reference;
 	typedef	simple_nonmeta_instance_reference<channel_tag>
 		simple_channel_nonmeta_instance_reference;
+	class nonmeta_func_call;
 namespace CHP {
 	class action;
 	class guarded_action;
@@ -672,6 +673,39 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class log
+
+//=============================================================================
+/**
+	Function call to C or C++ library.  
+ */
+class function_call_expr : public chp_expr, public statement {
+protected:
+	const excl_ptr<const id_expr>			fname;
+	const excl_ptr<const expr_list>			args;
+public:
+	function_call_expr(const id_expr*, const expr_list*);
+	function_call_expr(const inst_ref_expr*, const expr_list*);
+	~function_call_expr();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHP_CHECK_STMT_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
+	CHECK_PRS_EXPR_PROTO;
+
+private:
+	count_ptr<entity::nonmeta_func_call>
+	__check_nonmeta_expr(const context&) const;
+
+};	// end class function_call_expr
 
 //=============================================================================
 }	// end namespace CHP

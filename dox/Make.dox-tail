@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.9 2007/02/06 21:36:24 fang Exp $
+#	$Id: Make.dox-tail,v 1.10 2007/07/31 23:22:29 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -11,9 +11,26 @@ AUTO_IGNORE += local.cvsignore
 DISTCLEANFILES += local.cvsignore
 endif
 
+clean-local: clean-figs
+
+# be careful, PNGs might be listed as source images, not necessarily generated
+clean-figs: force
+	$(RM) figs/*.fig.orig
+	$(RM) figs/*.figtex
+	$(RM) figs/*.eps
+	$(RM) figs/*.ps
+	$(RM) figs/*.pdf
+	$(RM) figs/*.pstex
+	$(RM) figs/*.pdftex
+	$(RM) figs/*.pstex_t
+	$(RM) figs/*.pdftex_t
+	$(RM) figs/*.png
+
+
 .NOTPARALLEL: pdf ps
 
-.PHONY: help-dox
+.PHONY: help-dox clean-figs
+
 help-dox:
 	@$(ECHO) "Documentation make targets" ; \
 	$(ECHO) "    pdf: builds PDF documents" ; \

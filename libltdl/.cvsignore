@@ -1,0 +1,16 @@
+COPYING*
+Makefile*
+README
+acinclude.m4
+autom4te.cache
+aclocal.m4
+config-h.in
+config.*
+configure*
+install-sh
+ltdl.c
+ltdl.h
+ltmain.sh
+missing
+removed
+config

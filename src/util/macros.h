@@ -6,12 +6,24 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.11 2006/05/06 22:08:35 fang Exp $
+	$Id: macros.h,v 1.12 2007/07/31 23:23:43 fang Exp $
  */
 
 #ifndef	__UTIL_MACROS_H__
 #define	__UTIL_MACROS_H__
 
+#if defined(BUILT_HACKT) || defined(INSTALLED_HACKT)
+// so that installed headers do not depend on "config.h"
+#ifndef	NULL
+#define	NULL		0
+#endif
+#if defined(__cplusplus)
+#include <cassert>
+#else
+#include <assert.h>
+#endif
+
+#else	// !BUILT_HACKT && !INSTALLED_HACKT
 #include "config.h"
 #include "util/NULL.h"
 
@@ -22,6 +34,7 @@
 // standard C header
 #include <assert.h>
 #endif
+#endif	// !BUILT_HACKT && !INSTALLED_HACKT
 
 //=============================================================================
 /**

@@ -14,6 +14,13 @@ state	value
 #STATE#	! [5:3]
 #STATE#	bool: false [5:4..8]
 in state #STATE#, possible rules are:
-	chp_send : member_index_expr '!' . expr_list_in_parens  (#RULE#)
+	chp_send : member_index_expr '!' . connection_actuals_list  (#RULE#)
+	chp_send : member_index_expr '!' .  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
+	',' (reduce)
+	':' (reduce)
+	';' (reduce)
+	']' (reduce)
+	'}' (reduce)
+	THICKBAR (reduce)

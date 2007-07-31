@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.5 2006/04/12 08:53:12 fang Exp $
+	$Id: expr_list.h,v 1.6 2007/07/31 23:23:02 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -116,6 +116,8 @@ public:
 	typedef	default_vector<inst_ref_expr::checked_bool_group_type>::type
 					checked_bool_groups_type;
 public:
+	inst_ref_expr_list();
+
 	explicit
 	inst_ref_expr_list(const inst_ref_expr*);
 

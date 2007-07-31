@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.25 2007/06/12 05:12:43 fang Exp $
+	$Id: CHP.cc,v 1.26 2007/07/31 23:23:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,8 @@
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/nonmeta_index_list.h"
+// #include "Object/expr/nonmeta_expr_list.h"
+#include "Object/expr/nonmeta_func_call.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
@@ -87,6 +89,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::do_forever_loop,
 		"CHP-forever-loop")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::do_while_loop, 
 		"CHP-do-while")
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::function_call_stmt, 
+		"CHP-func-call")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::action_sequence, CHP_SEQUENCE_TYPE_KEY, 0)
@@ -114,6 +118,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::do_forever_loop, CHP_FOREVER_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::do_while_loop, CHP_DO_WHILE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::CHP::function_call_stmt, CHP_FUNCTION_CALL_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -1457,15 +1463,17 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	expr_list_type::const_iterator	const_iterator;
 	dump_attributes(o, c);
 	// const expr_dump_context& c(expr_dump_context::default_value);
-	chan->dump(o, c) << "!(";
-	INVARIANT(!exprs.empty());
+	chan->dump(o, c) << '!';
 	const_iterator i(exprs.begin());
 	const const_iterator e(exprs.end());
-	(*i)->dump(o, c);
+if (i!=e) {
+	(*i)->dump(o << '(', c);
 	for (i++; i!=e; i++) {
 		(*i)->dump(o << ',', c);
 	}
-	return o << ')';
+	o << ')';
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1581,10 +1589,9 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	chan->dump(o, c);
 	o << (peek ? '#' : '?');
 if (!insts.empty()) {
-	o << '(';
 	const_iterator i(insts.begin());
 	const const_iterator e(insts.end());
-	(*i)->dump(o, c);
+	(*i)->dump(o << '(', c);
 	for (++i; i!=e; ++i) {
 		(*i)->dump(o << ',', c);
 	}
@@ -1868,6 +1875,82 @@ do_while_loop::load_object(const persistent_object_manager& m,
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+}
+
+//=============================================================================
+// class function_call_stmt method definitions
+
+function_call_stmt::function_call_stmt() : parent_type(), call_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function_call_stmt::function_call_stmt(const call_expr_ptr_type& e) :
+		parent_type(), call_expr(e) {
+	NEVER_NULL(e);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+function_call_stmt::~function_call_stmt() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(function_call_stmt)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+function_call_stmt::dump(ostream& o, const expr_dump_context& c) const {
+	return call_expr->dump(o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+function_call_stmt::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump(o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+function_call_stmt::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	INVARIANT(p == this);
+	const call_expr_ptr_type
+		e(call_expr->__unroll_resolve_copy(c, call_expr));
+	if (!e) {
+		// got error message already?
+		return action_ptr_type(NULL);
+	}
+	if (call_expr == e) {
+		return p;
+	} else {
+		return action_ptr_type(new this_type(e));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+function_call_stmt::accept(chp_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+function_call_stmt::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	call_expr->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+function_call_stmt::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, call_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+function_call_stmt::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, call_expr);
 }
 
 //=============================================================================

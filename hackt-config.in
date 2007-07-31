@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: hackt-config.in,v 1.2 2007/04/20 18:25:40 fang Exp $
+#	$Id: hackt-config.in,v 1.3 2007/07/31 23:22:26 fang Exp $
 # vi: ft=sh
 # "hackt-config.in" -- configure-generated script to be installed
 # ripped off of other packages' config files
@@ -14,7 +14,8 @@ libdir=@libdir@
 pkglibdir=${libdir}/@PACKAGE@
 includedir=@includedir@
 pkgincludedir=${includedir}/@PACKAGE@
-datadir=@datarootdir@
+datadir=@datadir@
+# datadir=@datarootdir@
 pkgdatadir=${datadir}/@PACKAGE@
 # keep consistent with src/scm/Makefile.am
 scmdir=${pkgdatadir}/scm
@@ -24,6 +25,7 @@ usage()
   cat <<EOF
 Usage: hackt-config [OPTIONS] [LIBRARIES]
 Options:
+  --help		this message
   --prefix[=DIR]	base installation path of hackt
   --exec-prefix[=DIR]	architecture-dependent install path
   --version		version string
@@ -32,6 +34,8 @@ Options:
   --libs		hackt libraries (archives)
   --rlibs		modules and plug-ins
   --libtool		libtool libraries
+  --datadir		architecture-independent files and libraries
+  --pkgdatadir		hackt's data files
   --scmpath		Scheme modules path (for GUILE_LOAD_PATH)
 EOF
   exit $1
@@ -48,6 +52,9 @@ while test $# -gt 0 ; do
   esac
 
   case $1 in
+  --help)
+    usage 0
+    ;;
   --prefix=*)
     prefix=$optarg
     local_prefix=yes
@@ -82,6 +89,12 @@ while test $# -gt 0 ; do
   --libtool)
     echo_libtool=yes
     ;;
+  --datadir)
+    echo_datadir=yes
+    ;;
+  --pkgdatadir)
+    echo_pkgdatadir=yes
+    ;;
   --scmpath)
     echo_scmpath=yes
     ;;
@@ -107,7 +120,7 @@ if test "$echo_exec_prefix" = "yes" ; then
 fi
 
 if test "$echo_cflags" = "yes" ; then
- echo "-I$pkgincludedir $cflags"
+ echo "-DINSTALLED_HACKT -I$pkgincludedir"
 fi
 
 if test "$echo_ldflags" = "yes" ; then
@@ -124,6 +137,14 @@ fi
 
 if test "$echo_libtool" = "yes" ; then
  echo "$pkglibdir/libhacktlib.la"
+fi
+
+if test "$echo_datadir" = "yes" ; then
+ echo "$datadir"
+fi
+
+if test "$echo_pkgdatadir" = "yes" ; then
+ echo "$pkgdatadir"
 fi
 
 if test "$echo_scmpath" = "yes" ; then

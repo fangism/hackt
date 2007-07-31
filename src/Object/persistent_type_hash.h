@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.19 2007/07/18 23:28:27 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.20 2007/07/31 23:23:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -198,12 +198,14 @@
 #define	NONMETA_INT_NEGATION_EXPR_TYPE_KEY			"nnegatex"
 #define	NONMETA_BOOL_NEGATION_EXPR_TYPE_KEY			"nbnotex"
 #define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlist"
+#define	NONMETA_EXPR_LIST_TYPE_KEY				"nexplist"
 #define	NONMETA_RANGE_TYPE_KEY					"nmetarng"
 #define	NONMETA_RANGE_LIST_TYPE_KEY				"nrnglist"
 #define	NONMETA_INT_ARITH_LOOP_EXPR_TYPE_KEY			"niarlpex"
 #define	NONMETA_BOOL_LOGICAL_LOOP_EXPR_TYPE_KEY			"nlgclpex"
 #define	NONMETA_REAL_ARITH_LOOP_EXPR_TYPE_KEY			"nrarlpex"
 #define	NONMETA_CHANNEL_PROBE_EXPR_TYPE_KEY			"chanprob"
+#define	NONMETA_FUNCTION_CALL_EXPR_TYPE_KEY			"nfuncexp"
 
 // Sequential and control statements: (loops and conditionals)
 // including sequential instantiations, assignments and connections:
@@ -268,6 +270,7 @@
 #define	CHP_RECEIVE_TYPE_KEY					"CHPrecv"
 #define	CHP_FOREVER_LOOP_TYPE_KEY				"CHPloop"
 #define	CHP_DO_WHILE_TYPE_KEY					"CHPdowhl"
+#define	CHP_FUNCTION_CALL_TYPE_KEY				"CHPfcall"
 
 #define	SPEC_DIRECTIVE_TYPE_KEY					"SPCdrctv"
 	// more class constants here...

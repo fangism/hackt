@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.38 2007/07/18 23:28:29 fang Exp $
+ 	$Id: definition.cc,v 1.39 2007/07/31 23:23:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1258,6 +1258,18 @@ channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 			<< " back to channel typedef." << endl;
 	}
 }
+
+//=============================================================================
+// global static definition
+#if USE_TOP_DATA_TYPE
+/**
+	Magic definition placeholder that represents the TOP type for 
+	data types.  
+ */
+const
+built_in_datatype_def
+top_data_definition(never_ptr<const name_space>(NULL), "DATA_TOP");
+#endif
 
 //=============================================================================
 // class built_in_datatype_def method definitions

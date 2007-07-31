@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.143 2007/07/18 23:28:00 fang Exp $
+#	$Id: configure.ac,v 1.144 2007/07/31 23:22:25 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070718, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070731, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -19,7 +19,7 @@ dnl AM_CONFIG_HEADER(config.h)	dnl obsolete macro
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 
 # don't need this yet
-# AC_CONFIG_SUBDIRS
+dnl AC_CONFIG_SUBDIRS()
 
 # Propagate the make warning flags recursively
 AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
@@ -79,8 +79,11 @@ AC_PATH_PROG([PERL_PATH], perl)
 DOC_CHECK_PROG_DOXYGEN
 DOC_CHECK_PROGS_GRAPHVIZ
 FANG_CHECK_PROGS_TETEX
-DOC_CHECK_PROG_DVIPS
+dnl already checked and defined by texinfos.am
+dnl DOC_CHECK_PROG_DVIPS
 DOC_CHECK_PROG_PS2PDF
+DOC_CHECK_PROG_PS2EPSI
+AC_CHECK_PROG([PSNUP], psnup, psnup)
 
 # figure related stuff
 FANG_CHECK_PROGS_XFIG
@@ -123,7 +126,15 @@ dnl AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG" )
 
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
+dnl libtool dlopen features
+AC_LIBLTDL_CONVENIENCE
+AC_SUBST(LTDLINCL)
+AC_SUBST(LIBLTDL)
+AC_LIB_LTDL
+AC_LIBTOOL_DLOPEN
+dnl to support dlopen plug-ins and module shared objects/libraries
 AC_PROG_LIBTOOL
+AC_CONFIG_SUBDIRS(libltdl)
 dnl now, always use verbose libtool script, instead of --silent
 dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Automatically update if libtool script is outdated.  
@@ -131,11 +142,20 @@ dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 HACKT_ARG_VAR_LIBTOOL_FLAGS
 AC_SUBST(LIBTOOL_DEPS)
 
+if test "$enable_shared" = "no" ; then
+  AC_MSG_WARN([You requested disabling shared libraries, however some features of this package require shared libraries, so certain tests will fail!])
+fi
+
+AC_ARG_VAR(ACLOCAL_FLAGS, [Additional aclocal flags, for bootstrap only.])
+
 dnl defined in config.hackt.m4
 HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
 HACKT_ARG_ENABLE_GOD_MODE
 dnl defined in config/header_validation.m4
 FANG_ARG_ENABLE_HEADER_VALIDATION
+dnl test control
+HACKT_ARG_ENABLE_CHECK_TESTS
+HACKT_ARG_ENABLE_INSTALL_TESTS
 dnl from "config/rl_el.m4"
 FANG_ARG_WITH_READLINE_EDITLINE
 HACKT_ARG_WITH_GMP
@@ -486,6 +506,7 @@ AC_CONFIG_FILES([
 	test/prsim/Makefile
 	test/chpsim/Makefile
 	test/chpsim/testlib/Makefile
+	test/chpsim/installtest/Makefile
 	test/guile/Makefile
 	test/lib/Makefile
 	test/benchmarks/Makefile
@@ -504,6 +525,7 @@ AC_CONFIG_FILES([
 	lib/Makefile
 	lib/mk/Makefile
 	hackt.doxygen.config
+	installcheck.mk
 ])
 AC_CONFIG_FILES([hackt-config],
 	[chmod +x hackt-config])

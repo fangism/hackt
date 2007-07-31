@@ -4,7 +4,7 @@
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.16 2007/06/04 22:44:30 fang Exp $
+#	$Id: Make.latex,v 1.17 2007/07/31 23:22:32 fang Exp $
 
 SUFFIXES += .ps .dvi .tex .pdf .ind .idx .bbl .aux \
 	.dvidepend .pdfdepend
@@ -140,10 +140,11 @@ else
 	exit 1
 endif
 
-if HAVE_DVIPS
-.dvi.ps:
-	$(DVIPS) $< -o $@
-endif
+# This is now provided by texinfos.am (automake)
+# if HAVE_DVIPS
+# .dvi.ps:
+#	$(DVIPS) $< -o $@
+# endif
 
 # files that may conflict between latex and pdflatex
 # may add .lof, .lot, for list of ...

@@ -19,15 +19,11 @@ They use the BuildDepends mechanism to temporarily install the required
 packages.  
 
 TODO: 
-	fink packages for hackt itself.  Those should have true dependencies
-		on the necessary shlibs.  
 	devel-deps: dependencies recommended for developers
 
 reminder:
 ConfigureParams:
 	--with-guile-config=guile-1.8-config
-	--with-guile-snarf=guile-1.8-snarf
-	--with-guile-tools=guile-1.8-tools
 
 DISCLAIMER: these fake packages have not undergone any real validation.
 

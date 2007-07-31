@@ -21,4 +21,12 @@ core.*
 *.pstex_t
 *.pdftex
 *.pdftex_t
+*.info
+*.cp
+*.cps
+*.fn
+*.ky
+*.pg
+*.tp
+*.vr
 

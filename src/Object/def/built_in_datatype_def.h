@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.10 2007/01/21 05:58:37 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.11 2007/07/31 23:23:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -10,6 +10,7 @@
 
 #include "Object/def/datatype_definition_base.h"
 #include "Object/common/scopespace.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -97,6 +98,13 @@ private:
 	get_meta_type_enum(void) const;
 
 };	// end class built_in_datatype_def
+
+#if USE_TOP_DATA_TYPE
+extern
+const
+built_in_datatype_def
+top_data_definition;
+#endif
 
 //=============================================================================
 }	// end namespace entity

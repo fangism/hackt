@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.4 2007/02/14 04:57:24 fang Exp $
+	$Id: command_common.tcc,v 1.5 2007/07/31 23:23:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -12,20 +12,30 @@
 #include <fstream>
 #include <list>
 #include <string>
+#include <algorithm>
+#include <functional>
 
 #include "sim/command_common.h"
 #include "sim/command_base.h"
 #include "sim/command_category.h"
 #include "sim/command_registry.h"
 #include "parser/instref.h"
+#include "Object/expr/dlfunction.h"
+#include "common/TODO.h"
+#include "common/ltdl-wrap.h"
+#include "util/compose.h"
 
 namespace HAC {
 namespace SIM {
 using std::ios_base;
 using std::ofstream;
+using std::for_each;
+using std::ptr_fun;
+using std::mem_fun_ref;
 #include "util/using_ostream.h"
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
+USING_UTIL_COMPOSE
 
 //=============================================================================
 
@@ -597,6 +607,178 @@ NoWatchQueue<State>::usage(ostream& o) {
 	o << "nowatch-queue" << endl;
 	o << "Silence events as they are inserted into the event queue."
 		<< endl;
+}
+
+//-----------------------------------------------------------------------------
+INITIALIZE_COMMON_COMMAND_CLASS(DLAddPath, "dladdpath", 
+	"Append search paths for dlopening modules")
+
+template <class State>
+int
+DLAddPath<State>::main(state_type&, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	for_each(++a.begin(), a.end(), 
+		unary_compose(ptr_fun(&lt_dladdsearchdir),
+			mem_fun_ref(&string::c_str)));
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+DLAddPath<State>::usage(ostream& o) {
+	o << name << " <paths...>" << endl;
+	o << "Loads an external library, file extension should be omitted.\n"
+"Searches user-defined path (`dlpath\') before system paths.\n"
+"Module should automatically register functions during static initization."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLPaths, "dlpaths", 
+	"List search paths for dlopening modules")
+
+template <class State>
+int
+DLPaths<State>::main(state_type&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	const char* const p = lt_dlgetsearchpath();
+	cout << "dlopen search paths: ";
+	if (p)
+		cout << lt_dlgetsearchpath();
+	else	cout << "<empty>";
+	cout << endl;
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+DLPaths<State>::usage(ostream& o) {
+	o << name << endl;
+	o << "Prints current list of search paths used for dlopening." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLOpen, "dlopen", 
+	"load a module (dynamically shared library)")
+
+template <class State>
+int
+DLOpen<State>::main(state_type&, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (!ltdl_open_append(a.back())) {
+		return command_type::BADARG;
+	} else	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+DLOpen<State>::usage(ostream& o) {
+	o << name << " <library>" << endl;
+	o << "Loads an external library, file extension should be omitted.\n"
+"Searches user-defined path (`dlpath') before system paths.\n"
+"Module should automatically register functions during static initization."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLCheckFunc, "dlcheckfunc", 
+	"query whether a nonmeta function symbol is bound")
+
+template <class State>
+int
+DLCheckFunc<State>::main(state_type& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	// ignore assert's return value
+	DLAssertFunc<State>::main(s, a);
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+DLCheckFunc<State>::usage(ostream& o) {
+	o << name << " <funcs ...>" << endl;
+	o <<
+"Reports whether or not each function is already bound to a symbol from a \n"
+"loaded dynamic shared library or module.  Does not error out.\n"
+"See also `dlassertfunc\'."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLAssertFunc, "dlassertfunc", 
+	"assert-fail if a nonmeta function symbol is unbound")
+
+template <class State>
+int
+DLAssertFunc<State>::main(state_type&, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	bool good = true;
+	string_list::const_iterator i(++a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		cout << "function `" << *i << "\': ";
+		if (entity::lookup_chpsim_function(*i)) {
+			cout << "bound";
+		} else {
+			cout << "unbound";
+			good = false;
+		}
+		cout << "." << endl;
+	}
+	return good ? command_type::NORMAL : command_type::BADARG;
+}
+}
+
+template <class State>
+void
+DLAssertFunc<State>::usage(ostream& o) {
+	o << name << " <funcs ...>" << endl;
+	o <<
+"Reports whether or not each function is already bound to a symbol from a \n"
+"loaded dynamic shared library or module.  Errors out if any are unbound.\n"
+"See also `dlcheckfunc\'."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(DLFuncs, "dlfuncs", 
+	"List names of all dynamically bound functions")
+
+template <class State>
+int
+DLFuncs<State>::main(state_type&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	entity::list_chpsim_functions(cout);
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+DLFuncs<State>::usage(ostream& o) {
+	o << name << endl;
+	o << brief << endl;
 }
 
 //=============================================================================

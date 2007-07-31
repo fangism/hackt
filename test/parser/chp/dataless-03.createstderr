@@ -1,0 +1,91 @@
+WARNING: channel Z.S lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	113
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	12	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	295
+	21	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    void_source_once = process-definition (defined) void_source_once<
+      pint<> N
+      >(
+        chan!() S
+      )
+      In definition "void_source_once", we have: {
+      Parameters:
+        N = pint<> void_source_once::N
+      Instances:
+        S = chan!() void_source_once::S
+      unroll sequence: 
+        chan!() S
+      chp:
+        concurrent: {
+          concurrent i:[0..N-1]: {
+            S!
+          }
+        }
+      footprint collection: {
+        <3> {
+          N = pint^0 value: 3
+          S = channel chan!()^0 = void_source_once::S (1) 
+          Created state:
+          channel instance pool:
+          1	void_source_once::S
+          resolved concurrent actions:
+            sequential: {
+              S!
+              S!
+              S!
+            }
+        }
+      }
+      }
+
+  Instances:
+    Z = void_source_once<3> Z
+}
+
+footprint: {
+  Z = process void_source_once<3>^0 = Z (1) (
+    S = channel chan!()^0 = Z.S (1) 
+  )
+  Created state:
+  process instance pool:
+  1	Z
+  channel instance pool:
+  1	Z.S
+}

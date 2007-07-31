@@ -1,5 +1,5 @@
 "README.maintainer"
-	$Id: README.maintainer,v 1.3 2007/04/30 21:02:35 fang Exp $
+	$Id: README.maintainer,v 1.4 2007/07/31 23:22:25 fang Exp $
 
 This document provide some useful information for HACKT developers, 
 also useful to some of those who wish to contribute or modify the sources.  
@@ -119,15 +119,14 @@ BRANCH MERGES: (merging branch-to-trunk)
 		then retire the branch by deleting its entry from this file.
 
 
-TRUNK MERGES: (mergine trunk-to-branch)
-	(hasn't happened yet, write later...)
-
-BACKPORTS: (from trunk-to-branch)
+BACKPORTS (TRUNK MERGES): (from trunk-to-branch)
 	This usually applies when backporting a single patch to a branch, 
-	in which case, the tag should be labeled: -backport-##-##-##
+	in which case, the tag should be labeled: -backport-main-##-...
 		where the number corresponds to the tag-suffix on the trunk.
 	The patch for the tag is acquired by cvs diff -r <tag-1> -r <tag>.
 		where -1 means the previous tagged revision.  
+	For a cumulative trunk backport, use "-backport-upto-main-##".
+	For a selected revision range, use "-backport-from-...-to-..."
 
 RELEASE-CANDIDATES:
 	(Decide whether or not they belong on branch or trunk.)
@@ -149,7 +148,7 @@ RELEASE:
 		bump library version numbers, following standard
 			library versioning convention (GNU libtool).  
 	default AM_CFLAGS and AM_CXXFLAGS:
-		turn off paranoid and strict developer flags as the default 
+		turn OFF paranoid and strict developer flags as the default 
 		compile options because users may use untested compilers.
 		After release, remember to turn developer flags back on.
 	ChangeLog: announce release

@@ -1,0 +1,27 @@
+// "greeting_func-a.hac"
+
+import "testlib/int-source.hac";
+// import "testlib/int-sink.hac";
+
+// print message with each bucketed token
+defproc int_sink(chan?(int) A) {
+chp { *[ A? ; hello() ] }
+}
+
+defproc my_gcd(chan?(int) A, B; chan!(int) G) {
+int a, b;
+chp {
+*[
+	A?(a), B?(b);
+	// OK to use existing identifier
+	G!(my_gcd(a, b))	// the function
+]
+}
+}
+
+chan(int) A, B, G;
+my_gcd X(A, B, G);
+int_source<32, 3, {12,15,32}> AS(A);
+int_source<32, 4, {9,16,27,34}> BS(B);
+int_sink GS(G);
+

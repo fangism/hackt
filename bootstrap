@@ -2,7 +2,7 @@
 # "bootstrap" 
 # Maintainer script for regenerating Makefiles and configure scripts.
 # (also known as autogen.sh in some conventions)
-#	$Id: bootstrap,v 1.6 2007/06/03 18:05:06 fang Exp $
+#	$Id: bootstrap,v 1.7 2007/07/31 23:22:25 fang Exp $
 # picks up AUTOCONF, AUTOMAKE, etc. from environment, which is used
 # to override the default program names.
 
@@ -70,14 +70,29 @@ test $TEST_TYPE $FILE || {
         exit 1
 }
 
-
-$LIBTOOLIZE --copy --force
+# function, no arguments
+regen () 
+{
 $ACLOCAL $ACLOCAL_FLAGS
 # optionally feature autoheader
 ($AUTOHEADER --version)  < /dev/null > /dev/null 2>&1 && $AUTOHEADER $ACLOCAL_FLAGS
-$AUTOMAKE --copy --add-missing --verbose --gnu $am_opt
+$AUTOMAKE --copy --add-missing --gnu $am_opt
+# --verbose if needed
 $AUTOCONF $ACLOCAL_FLAGS
 # really, 'autoreconf' with flags should suffice
+}
+
+$LIBTOOLIZE --copy --force --ltdl
+# we forcibly remove some autotool files to force them to be regenerated
+# using the local versions of the autotools, in case of version mismatch.
+(cd libltdl && \
+	mkdir -p removed && \
+	mkdir -p config && \
+	mv -f Makefile.in configure aclocal.m4 removed && \
+	regen )
+
+regen
+
 
 # may not want verbose for autoconf, aclocal, and autoheader
 

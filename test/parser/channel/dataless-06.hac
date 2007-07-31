@@ -1,0 +1,16 @@
+// "dataless-06.hac"
+// copy-modified from "dataless-05.hac"
+// testing dataless channel connections
+// expect compile fail
+
+defproc boring (chan?(bool) in; chan!() out) {
+chp {
+*[ in? ],
+*[ out! ]
+}
+}
+
+boring work, play;
+play.out = work.in;		// should type mismatch
+play.in = work.out;
+

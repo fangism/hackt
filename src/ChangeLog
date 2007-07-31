@@ -3,6 +3,275 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-41-merged-chpsim-06-26:
+	  Branch merge: chpsim now supports dynamically loaded functions.
+		chpsim: new options and commands for dlopening modules.
+		Includes complete texinfo documentation for chpsim.  (RTFM!)
+		Stronger install-time checks for testing.  
+		Installed Makefiles provide easey module build support.
+	  At least one critical fix in util/ library (util/ChangeLog)
+
+
+2007-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-26:
+	  No source revision, documentation only.  (dox/ChangeLog)
+	  End of branch, ready to merge to trunk.
+
+
+2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
+	  No source revision, documentation only.  (dox/ChangeLog)
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-24:
+	  No source revision, documentation only.  (dox/ChangeLog)
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-23:
+	  Makefile.am: More install-paths added to install_paths.h.
+	  main/chpsim.cc: usage now prints paths to additional documentation.
+	  sim/chpsim/Commands.cc: `queue' relocated to `info' section.
+	  One more chapter of documentation before merge to trunk.
+
+
+2007-07-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-22:
+	  No source revision, documentation only, see dox/ChangeLog.
+
+
+2007-07-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-21:
+	  Final testing on powerpc-apple-darwin7:
+		mach-o lazy linker caught undefined symbol at run-time, 
+		so we updated the following return type...
+	  Object/expr/dlfunction.h: chp_function_return_type qualified const.
+		so that existing explicit template instantiation
+		from expr/basic_param.cc could be re-used.  
+	  Build and test cycle confirmed on powerpc-apple-darwin7, with this
+		revision, previous revision was good on i686-linux-gnu, 
+		i686-apple-darwin8, and amd64-freebsd6.2.
+	  Next: minimal *documentation* for usage, 
+		pointing to existing examples where possible.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-20:
+	  Trivial revisions to make error messages more consistent.
+	  Updated few new test cases for LP32 (i686-apple-darwin).
+
+
+2007-07-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-19:
+	  No source revision, portability testing and patches only.
+		Previous revisions on this branch were only tested on 
+		amd64-freebsd with gcc-3.4.6.
+	  Object/expr/dlfunction.cc: remove meaningless const qualifier.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-18:
+	  No source revision, just lib/mk Makefile template additions, 
+		test/chpsim/installtest/Makefile.in now uses new hackt-lt.mk.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
+	  No source revision: just general maintainance fixups from last patch.
+	  Makefile.am: pkglib_LTLIBRARIES re-ordered because post-install
+		library linking needs to follow order of dependencies!  (arg.)
+		CLEANFILES lists EXTRA_LTLIBRARIES.
+	  Re-confirmed that installcheck-local works after these fixes.  
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
+	  Added installcheck.cc: verify that installed headers standalone
+		and can be compiled, using an example chpsim module.  
+	  Makefile.am: moved bogus parser libraries to EXTRA_LTLIBRARIES
+		so they won't be built by default, but their rules remain.
+		installcheck-local now builds installcheck.la, using
+		trick to replace default compile flags.
+	  sim/command_common.{h,tcc}, Object/expr/dlfunction.cc: 
+		added function to print list of all loaded and bound 
+		functions from dlopened modules.  Added test case.
+	  Next: lib/mk/ Makefile templates with libtool compilation snippets, 
+		and update tes/chpsim/installtest/Makefile.in accordingly.
+
+
+2007-07-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-15:
+	  AST/expr.cc: allow exceptional case for lone null rvalue argument, 
+		to form a void function call, like hello().  
+	  sim/chpsim/chpsim_dlfunction.h: wrappers now all consistently
+		return same type, wrapped void functions return NULL.  
+	  Makefile.am: listed more necessary install headers for chpsim
+		dlfunction support and wrapping.  Also 'trimmed' some of these
+		headers to reduce the install/include dependencies.  
+	  Added some chpsim test cases involving multiple function modules.  
+	  Next: various install-time tests.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-14:
+	  sim/command_common.{h,tcc}, sim/chpsim/Command.cc:
+		For those who forget to pass command-line options...
+		Added support for interactive commands to load modules and 
+		append the module search path, show the search path, 
+		probe or assert symbol-to-function boundedness.
+	  Added test cases to demonstrate.  
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-13:
+	  Makefile.am: install-exec-hook re-installs binaries after libraries
+		to suppress really silly post-install link warnings and errors.
+		This patch can forward-port to trunk by itself, and really
+		seems like something to go upstream to GNU automake.
+	  Now generate "install_paths.h" from Makefile, for future 
+		path-dependent execution and default library searching.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-12:
+	  Object/expr/const_param_expr_list.h: operator[] replaced
+		with run-time bounds check for catching run-time errors
+		with passing wrong number of arguments to loaded functions.
+	  Object/expr/dlfunction.h: added run-time type checks on arguments, 
+		and also NULL checks on value extractors (now de-inlined).  
+		sim/chpsim/chpsim_dlfunction.h adjusted accordingly.
+	  Added small batch of expect-fail test cases involving errors
+		in dynamically loaded functions.  
+		FIXME: bad handling of type-mismatch in passing
+			channel field, as a result of unexpected return type.
+		NOTE: passing excessive arguments, just results in dropping
+			unused arguments, doesn't report as error.  
+	  TODO: more fail tests...
+
+
+2007-07-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-11:
+	  Minor nonmeta-function-call and assignment bug fixes (non-regress).
+		Added symbol diagnostic to nonmeta_function's resolve().
+	  Object/ref/simple_nonmeta_value_reference.tcc:nonmeta_assign():
+		evaluate expression first as a const_param, and then
+		dynamic cast -- allows for late type binding and checking 
+		through external functions.
+	  chpsim/EventExecutor:visit(function_call): 
+		forgot to recheck successors.
+	  Next: more test cases, more, more, more...
+		also need installcheck support!
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-10:
+	  First sign of life from chpsim-dlopen!
+		Successfully test first case with dlopening function binding.
+	  main/chpsim.cc: option processing diagnostics
+	  sim/chpsim/chpsim_dlfunction.h: forgot dereferences
+	  Object/devel_switches.h: added USE_TOP_DATA_TYPE so that function
+		calls' return types are forgiven in the early phases of
+		type-checking.  
+		Object/def/definition.cc: static top_data_definition object.
+		Object/type/type_reference.cc: honor the TOP type.
+	  Object/expr/dlfunction.cc: print function binding confirmation.
+	  First dlfunction test cases added to test/chpsim.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-09:
+	  AST/{CHP,expr}.cc: updated type checking of send/receive arguments 
+		to accommodate null arguments and omitted arguments 
+		where appropriate (e.g. dataless channels).
+	  Improved error messages on channel argument mismatches. 
+	  Added CHP, channel, chpsim test cases for dataless channels.  
+
+
+2007-07-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-08:
+	  Middle-end support for dataless channels, changing some invariants,
+		still remains untested in chpsim, however.  
+	  Added some test cases.  
+	  Need to update checking w.r.t. null lvalues (nonmeta).
+	  Eventually get back to func_call checking...
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-07:
+	  Grammar: chp_function_call_expr replaced with function_call_expr,
+		which is grammatically identical to connection_statement, 
+		but with additional restriction on base reference.
+		chp_send arguments are now optional for dataless sends, 
+			though still need to support such in middle-end.
+		One test case (compile-fail) updated.
+	  Type checking hit a snag with FINISH_ME in 
+		nonmeta_func_call::get_unresolved_data_type_ref(), 
+		need some hackish work around to delay type-checking.
+	  Need test cases for grammar, type-checking (pass/fail).
+
+
+2007-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-06:
+	  sim/chpsim/chpsim_dlfunction.h: new.  This is the primary
+		header to include when compiling a library of functions
+		to interface with chpsim.  Contains useful wrapper macros.
+		Need to provide some usage examples.  
+	  Object/expr/*param_expr_list: updated operator[], and at().
+	  Object/expr/dlfunction.cc: implemented type-check converters.  
+		Now provide class whose objects automatically register
+		named functions upon construction, for automatic function
+		binding upon dlopen.  
+	  main/chpsim.cc: added command-line options to add 
+		load-path and dlopen modules.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-05:
+	  Makefile.am: started listing a few pkginclude_HEADERS to be installed
+		for chpsim module building support.  
+		Moved LIBLTDL to libhacktcommon.la's LIBADD.
+	  New: Object/expr/dlfunction.{h,cc}: type-wrapped interface to
+		a run-time loaded map of functions.  
+	  Object/expr/nonmeta_func_call: added mutable function pointer member.
+	  common/ltdl-wrap.cc: implemented ltdl wrapped interface.
+	  Plan: each module loaded at run-time should come with a
+		load_chpsim_function interface to bind symbols to names.  
+		Alternative is to invoke demand-driven dlsym.
+
+
+2007-07-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-04:
+	  Continued front/middle end support for external functions in CHP, 
+		new persistent type (CHP action class) function_call_stmt.
+	  Implemented (untested) function call and nonmeta-expr-list 
+		resolution member functions.  
+	  Type-check phase now processes and creates CHP function calls.  
+	  updated CHPSIM event enumerations and affected switch stmts.  
+	  expression and CHP visitor classes extended for new types.  
+	  TODO: dlopen function manager, through restricted type-checked
+		function pointer interface.  
+
+
+2007-07-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-03:
+	  Added preliminary middle-end support for function call dispatching.
+		new: Object/expr/{nonmeta_expr_list,nonmeta_func_call}
+	  Added common/ltdl-wrap.h for libtool's dlopen facilities, 
+		and other handy utilities (function map coming soon).
+	  Makefile.am: LTDL flags added to libhacktsim
+	  TODO: finish front-end support for external functions,
+		and dlopen function map manager (for chpsim).
+
+
+2007-07-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-02:
+	  No source revision... yet.  Just top-level configury and 
+		addition of libltdl from libtool.  
+	  Next: try linking libltdl, pray for no conflict with guile-ltdl.
+
+
 2007-07-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-40-merged-template-02-28:
@@ -205,6 +474,15 @@
 	  Discovered a major (non-regression) bug in relaxed actual
 		instantiation, resolution in progress.  
 		Bug blocks work on relaxed typing of libraries.  
+
+
+2007-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-01:
+	  Grammar extended to support function-calls expressions and 
+		statements in CHP, but no further checking yet in front-end, 
+		just placeholder code.  Intend to attempt dlopen-ing
+		of shared libraries for external function calls.  
 
 
 2007-07-11	David Fang		<fangism@users.sourceforge.net>

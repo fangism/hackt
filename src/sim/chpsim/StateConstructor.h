@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.3 2007/03/11 16:34:43 fang Exp $
+	$Id: StateConstructor.h,v 1.4 2007/07/31 23:23:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -39,6 +39,7 @@ using entity::CHP::channel_send;
 using entity::CHP::channel_receive;
 using entity::CHP::do_while_loop;
 using entity::CHP::do_forever_loop;
+using entity::CHP::function_call_stmt;
 
 //=============================================================================
 /**
@@ -162,6 +163,9 @@ public:
 
 	void
 	visit(const do_forever_loop&);
+
+	void
+	visit(const function_call_stmt&);
 
 protected:
 	using chp_visitor::visit;

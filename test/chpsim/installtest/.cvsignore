@@ -1,0 +1,12 @@
+Makefile
+*.chpsimrc-out
+*.haco*
+*.o
+*.lo
+*.a
+*.la
+.libs
+.deps
+*.depend
+*dump
+

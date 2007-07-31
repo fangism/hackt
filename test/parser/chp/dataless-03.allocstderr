@@ -1,0 +1,6 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	Z	void_source_once<3>
+	channel: 1
+[global channel entries]
+1	(top)	-	1	Z.S	chan()

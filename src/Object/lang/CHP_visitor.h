@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_visitor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: CHP_visitor.h,v 1.3 2007/06/16 23:05:04 fang Exp $
+	$Id: CHP_visitor.h,v 1.4 2007/07/31 23:23:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_VISITOR_H__
@@ -37,6 +37,7 @@ class channel_send;
 class channel_receive;
 class do_while_loop;
 class do_forever_loop;
+class function_call_stmt;
 
 //=============================================================================
 /**
@@ -95,6 +96,9 @@ virtual	void
 
 virtual	void
 	visit(const do_forever_loop&) = 0;
+
+virtual	void
+	visit(const function_call_stmt&) = 0;
 
 protected:
 	using cflat_context_visitor::visit;

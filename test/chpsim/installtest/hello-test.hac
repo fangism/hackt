@@ -1,0 +1,24 @@
+// "hello-test.hac"
+
+template <pint Q>
+defproc int_source(chan!(int) S) {
+chp { *[ S!(Q) ] }
+}
+
+defproc int_sink(chan?(int) S) {
+chp {
+*[ S?; hello() ]
+}
+}
+
+defproc hello_test(chan?(int) A, B; chan!(int) C) {
+int x, y;
+chp { *[ A?(x), B?(y) ; C!(plus(x, y)) ] }
+}
+
+chan(int) A, B, C;
+int_source<2> X(A);
+int_source<3> Y(B);
+int_sink Z(C);
+hello_test H(A, B, C);
+

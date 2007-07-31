@@ -1,0 +1,13 @@
+	0	0	0	null
+	10	7	1	
+	20	5	1	X.A?(X.a)
+	20	1	2	AS.S!(12)
+	20	6	1	X.B?(X.b)
+	20	11	3	BS.S!(9)
+	30	4	1	
+ERROR: symbol `my_gcd' not found in presently loaded modules.
+Error resolving symbol of nonmeta function call.
+Run-time error executing event 3.
+Run-time error while checking event.
+event[3]:	40	3	1	X.g := my_gcd(X.a,X.b)	[by:4]
+Caught run-time exception during execution.  Halting.

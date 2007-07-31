@@ -1,0 +1,31 @@
+# "source-sink-void-a-01.chpsimrc"
+#	$Id: source-sink-void-a-01.chpsimrc,v 1.2 2007/07/31 23:24:28 fang Exp $
+# @haco@ source-sink-void-a.haco-a
+
+timing per-event
+watchall-events
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+step
+queue
+time
+assert-queue
+

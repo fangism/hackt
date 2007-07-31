@@ -15,6 +15,8 @@ BuildDepends: <<
   guile18-dev	(>= 1.8.1-1),
   graphviz	(>= 1.12-1),
   transfig,
+  texinfo,
+  texi2html,
   tetex		(>= 3.0-1)
 <<
 
@@ -26,7 +28,7 @@ Dependencies are a strict super-set of hackt-dist-deps.
 <<
 
 DescPackaging: <<
-Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-14.  
+Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-41.  
 Maintainence: since build-deps are not recursive, keep this synchronized
 with the hackt-dist-deps.
 <<

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.10 2006/10/18 20:58:08 fang Exp $
+	$Id: CHP.tcc,v 1.11 2007/07/31 23:23:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -53,8 +53,8 @@ channel_send::add_expressions(const L& l) {
 		const size_t l_size = l.size();
 		const size_t max = bctr->num_datatypes();
 		if (l_size != max) {
-			cerr << "You doofus, you passed the wrong number of "
-				"expressions to a channel-send that expects "
+			cerr << "You passed the wrong number of expressions ("
+				<< l_size << ") to a channel-send that expects "
 				<< max << " arguments." << endl;
 			// somewhere need to catch insufficient...
 			return good_bool(false);
@@ -136,8 +136,9 @@ channel_receive::add_references(const L& l) {
 		const size_t l_size = l.size();
 		const size_t max = bctr->num_datatypes();
 		if (l_size != max) {
-			cerr << "You doofus, you passed the wrong number of "
-				"referenecs to a channel-receive that expects "
+			cerr << "You passed the wrong number of referenecs ("
+				<< l_size <<
+				") to a channel-receive that expects "
 				<< max << " arguments." << endl;
 			// somewhere need to catch insufficient...
 			return good_bool(false);

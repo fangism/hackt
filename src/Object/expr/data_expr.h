@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.10 2007/01/21 05:58:45 fang Exp $
+	$Id: data_expr.h,v 1.11 2007/07/31 23:23:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -83,6 +83,7 @@ virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 
 virtual	UNROLL_RESOLVE_COPY_DATA_PROTO = 0;
 
+
 #define	NONMETA_RESOLVE_COPY_DATA_PROTO					\
 	count_ptr<const const_param>					\
 	nonmeta_resolve_copy(const nonmeta_context_base&,		\
@@ -102,6 +103,9 @@ virtual	EVALUATE_WRITE_PROTO = 0;
 	accept(nonmeta_expr_visitor&) const
 
 virtual	EXPR_ACCEPT_VISITOR_PROTO = 0;
+
+	struct unroller;
+	struct resolver;
 
 };	// end class data_expr
 

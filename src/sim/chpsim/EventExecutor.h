@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.4 2007/06/16 23:05:11 fang Exp $
+	$Id: EventExecutor.h,v 1.5 2007/07/31 23:23:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -32,6 +32,7 @@ using entity::CHP::channel_send;
 using entity::CHP::channel_receive;
 using entity::CHP::do_while_loop;
 using entity::CHP::do_forever_loop;
+using entity::CHP::function_call_stmt;
 using entity::expr_dump_context;
 class nonmeta_context;
 class EventExecutor;
@@ -95,6 +96,9 @@ public:
 	void
 	visit(const do_forever_loop&);
 
+	void
+	visit(const function_call_stmt&);
+
 private:
 	using chp_visitor::visit;
 
@@ -157,6 +161,9 @@ public:
 
 	void
 	visit(const do_forever_loop&);
+
+	void
+	visit(const function_call_stmt&);
 
 private:
 	using chp_visitor::visit;
@@ -225,6 +232,9 @@ public:
 
 	void
 	visit(const do_forever_loop&);
+
+	void
+	visit(const function_call_stmt&);
 
 private:
 	using chp_visitor::visit;

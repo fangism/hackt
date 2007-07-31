@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_visitor.h"
 	Expression visitor interface.  
-	$Id: expr_visitor.h,v 1.4 2007/02/26 22:00:47 fang Exp $
+	$Id: expr_visitor.h,v 1.5 2007/07/31 23:23:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_VISITOR_H__
@@ -92,6 +92,8 @@ virtual	VISIT_PROTO(channel_probe) = 0;
 
 virtual	VISIT_PROTO(nonmeta_index_list);	// defaulting list traversal
 // virtual	VISIT_PROTO(nonmeta_range_list); // defaulting list traversal
+virtual	VISIT_PROTO(nonmeta_expr_list);		// defaulting list traversal
+virtual	VISIT_PROTO(nonmeta_func_call) = 0;
 
 virtual	VISIT_PROTO(const_param_expr_list);	// defaulting list traversal
 virtual	VISIT_PROTO(dynamic_param_expr_list);	// defaulting list traversal

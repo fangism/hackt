@@ -1,6 +1,6 @@
 # "Make.test-flatten"
 #	vi: ft=automake
-#	$Id: Make.test-flatten,v 1.6 2007/04/20 18:26:19 fang Exp $
+#	$Id: Make.test-flatten,v 1.7 2007/07/31 23:23:54 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -127,8 +127,10 @@ HACKT_FLATTEN_TEST_SUBJECTS = \
 srcdir_EXTRA_DIST += $(HACKT_FLATTEN_TEST_SUBJECTS:=.hac) \
 	$(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf-expect)
 
+if CHECK_TESTS
 TESTS += $(HACKT_FLATTEN_TEST_PASSES:=.hacflattest) \
 	$(HACKT_FLATTEN_TEST_FAILURES:=.hacflatfailtest)
+endif
 
 # cover all possible cases, whether they pass or fail
 HACKT_FLATTEN_DUMPS = $(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf) \

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/06/17 02:56:39 fang Exp $
+#	$Id: Makefile.am,v 1.17 2007/07/31 23:23:56 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -80,7 +80,10 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bool-merge-alternator-a \
 	bool-parallel-fifo-a \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
-	mux-test-flat
+	mux-test-flat \
+	source-sink-void-a \
+	missing_func-a missing_func-b missing_func-c \
+	greeting_func-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -187,7 +190,15 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	source-sink-peekbuf-a-03 \
 	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
 	source-sink-peekbuf-b-03 \
-	mux-test-flat-01
+	mux-test-flat-01 \
+	source-sink-void-a-01 source-sink-void-a-02 \
+	gcd-func-a-01 gcd-func-b-01 gcd-func-c-01 \
+	gcd-func-a-05 gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
+	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
+	greeting_func-a-01 greeting_func-a-02 \
+	greeting_func-a-03 greeting_func-a-04
+# accept invalid? -- excess arguments dropped
+#	gcd-func-a-05
 
 # TODO: parallel-fifo test cases
 
@@ -199,7 +210,14 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-memory-read-b-01 \
 	bool-memory-write-b-01 \
 	send-fail-a-01 \
-	receive-fail-a-01
+	receive-fail-a-01 \
+	missing_func-a-01 missing_func-b-01 missing_func-c-01 \
+	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11
+# FIXME: ISEs on invalid, diagnostic needed
+#	gcd-func-a-02
+
+# quarantined test cases:
+srcdir_EXTRA_DIST += gcd-func-a-02.chpsimrc
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
@@ -397,6 +415,102 @@ srcdir_EXTRA_DIST += \
 	event-types.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
+
+AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT -UHAVE_CONFIG_H
+
+# noinst_LTLIBRARIES =
+# only build these when depended upon
+EXTRA_LTLIBRARIES = \
+	gcd.la \
+	bad_gcd1.la bad_gcd2.la bad_gcd3.la bad_gcd4.la \
+	libgcdstatic.la \
+	gcdwrap.la \
+	greeting.la
+
+libs: $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
+
+clean-libs:
+	$(RM) $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
+
+.PHONY: clean-libs libs
+
+clean-local: clean-libs
+
+# force shared library building:
+noinst_MODULE_FLAGS = -module -rpath /nowhere
+# bogus -rpath flag causes shared convenience libraries to be created
+# Thanks to a tip from Ralf Wildenhues
+
+gcd_la_SOURCES = gcd.cc
+gcd_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+# various versions that should cause run-time failures
+bad_gcd1_la_SOURCES = bad_gcd1.cc
+bad_gcd1_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+bad_gcd2_la_SOURCES = bad_gcd2.cc
+bad_gcd2_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+bad_gcd3_la_SOURCES = bad_gcd3.cc
+bad_gcd3_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+bad_gcd4_la_SOURCES = bad_gcd4.cc
+bad_gcd4_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+greeting_la_SOURCES = greeting.cc
+greeting_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+# static library only
+libgcdstatic_la_SOURCES = gcdstatic.cc gcdstatic.h
+# libgcdstatic_la_LDFLAGS = -static
+# -static flag is unnecessary, convenience library is static by default
+
+# the wrapper creates a dynamic library from a static library
+gcdwrap_la_SOURCES = gcdwrap.cc
+gcdwrap_la_LIBADD = libgcdstatic.la
+gcdwrap_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+# install checking
+# we don't want to list this as a SUBDIR because it includes only a 
+# minimalist Makefile without most standard automake targets.
+# We need to manage the subdirectory here.  
+installcheckdir = installtest
+
+$(installcheckdir)/Makefile: \
+		$(installcheckdir)/Makefile.in $(top_builddir)/config.status
+	$(RECONFIGURE)
+
+# explicitly prepend path to force subshell to find installed executables first
+INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
+
+if INSTALL_TESTS
+installcheck-local: $(installcheckdir)/Makefile
+	PATH=$(INSTALL_PATH_OVERRIDE) ; \
+	export PATH ; \
+	$(ECHO) "installcheck-local" ; \
+	(cd $(installcheckdir) && \
+		$(MAKE) $(AM_MAKEFLAGS) && \
+		$(MAKE) $(AM_MAKEFLAGS) clean \
+	)
+endif
+
+# clean-local: clean-installcheck
+## won't work: dependent makefile is uninstalled before cleaning
+# clean-installcheck:
+#	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) clean)
+
+chpsimfuncdir = $(examplesdir)/chpsim-function
+DISTCLEANFILES += $(installcheckdir)/Makefile
+
+dist_chpsimfunc_DATA = \
+	$(installcheckdir)/README \
+	$(installcheckdir)/hello.cc \
+	$(installcheckdir)/hello-test.hac \
+	$(installcheckdir)/hello-test.chpsimrc \
+	$(installcheckdir)/Makefile.in
+
+# EXTRA_DIST += $(chpsimfunc_DATA)
+
 
 include $(top_srcdir)/test/Make.test-tail
 

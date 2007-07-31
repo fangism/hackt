@@ -1,0 +1,50 @@
+loaded function: `hello'.
+loaded function: `my_gcd'.
+Functions bound to module symbols:
+	hello
+	my_gcd
+	0	0	0	null
+	10	6	1	
+	20	4	1	X.A?(X.a)
+	20	1	2	AS.S!(12)
+	20	5	1	X.B?(X.b)
+	20	9	3	BS.S!(9)
+	30	3	1	
+	40	2	1	X.G!(my_gcd(X.a,X.b))
+	40	13	4	GS.A?
+	50	6	1	
+Hello, world!
+	50	14	4	hello()
+	60	4	1	X.A?(X.a)
+	60	8	2	AS.S!(15)
+	60	5	1	X.B?(X.b)
+	60	12	3	BS.S!(16)
+	70	3	1	
+	80	2	1	X.G!(my_gcd(X.a,X.b))
+	80	13	4	GS.A?
+	90	6	1	
+Hello, world!
+	90	14	4	hello()
+	100	4	1	X.A?(X.a)
+	100	7	2	AS.S!(32)
+	100	5	1	X.B?(X.b)
+	100	11	3	BS.S!(27)
+	110	3	1	
+	120	2	1	X.G!(my_gcd(X.a,X.b))
+	120	13	4	GS.A?
+	130	6	1	
+Hello, world!
+	130	14	4	hello()
+	140	4	1	X.A?(X.a)
+	140	1	2	AS.S!(12)
+	140	5	1	X.B?(X.b)
+	140	10	3	BS.S!(34)
+	150	3	1	
+	160	2	1	X.G!(my_gcd(X.a,X.b))
+	160	13	4	GS.A?
+	170	6	1	
+Hello, world!
+	170	14	4	hello()
+	180	4	1	X.A?(X.a)
+	180	8	2	AS.S!(15)
+time: 180

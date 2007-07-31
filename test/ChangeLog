@@ -1,5 +1,33 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.65 2007/06/15 06:01:51 fang Exp $
+#	$Id: ChangeLog,v 1.66 2007/07/31 23:23:53 fang Exp $
+
+2007-07-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
+	  chpsim/Makefile.am: install the installtest/ subdirectory
+		as a runnable example in $(examplesdir).  
+		Added README to go along, back-referencing texinfo docs.
+
+
+2007-07-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-17:
+	  chpsim/Makefile.am: export PATH to recursive installcheck-local
+		Fixed EXTRA_DIST of installtest subdir.
+	  chpsim/installtest/Makefile.in: fixed confirm-exec target, 
+		use configure's CXX to compile.
+
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-16:
+	  Added installcheck support in chpsim[/installtest].
+
+
+2007-07-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-10:
+	  Added test support for extra dependencies from .chpsimrc, 
+		and dl-linking modules, with @modules@ tag for arguments.  
+
 
 2007-06-14	David Fang		<fangism@users.sourceforge.net>
 

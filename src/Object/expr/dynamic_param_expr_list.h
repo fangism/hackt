@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.14 2007/01/21 05:58:46 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.15 2007/07/31 23:23:13 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -12,12 +12,14 @@
 #include <vector>
 #include "Object/expr/param_expr_list.h"
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 
 namespace HAC {
 namespace entity {
 class const_param_expr_list;
 class template_formals_manager;
 using std::vector;
+using util::good_bool;
 
 //=============================================================================
 /**
@@ -66,7 +68,7 @@ public:
 	make_const_param_expr_list(void) const;
 
 	count_ptr<const param_expr>
-	operator [] (const size_t) const;
+	at(const size_t) const;
 
 	bool
 	may_be_equivalent(const param_expr_list& p) const;

@@ -1,0 +1,87 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename hacchpsim.info
+@settitle HACKT CHPSIM Manual
+@c `on' is the default
+@setchapternewpage odd
+@c for two-sided book-style printing
+@c %**end of header
+
+@c "chpsim.texi"
+@c $Id: hacchpsim.texi,v 1.2 2007/07/31 23:22:31 fang Exp $
+
+@copying
+This manual describes the usage and operation of HACKT's @command{chpsim} 
+simulator.  
+
+Copyright @copyright{} 2007 Cornell University
+
+@quotation
+Published by ...
+ 
+Permission is hereby granted to ...
+@end quotation
+@end copying
+
+@c Title page and Copyright
+@titlepage
+@title HACKT CHPSIM
+@subtitle A simulator manual
+@author David Fang
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ****************************** contents ************************************
+@shortcontents
+@contents
+
+@iftex
+@node List of Figures
+@unnumbered List of Figures
+@listoffloats Figure
+@end iftex
+
+@c ****************************** Top *****************************************
+@ifnottex
+@node Top
+@top CHPSIM Manual Outline
+@insertcopying
+@end ifnottex
+
+@c @copying is recommended here as well
+@menu
+* Introduction:: Introduction to CHPSIM.
+* Usage:: Command-line summary.
+* Commands:: Interpreter commands.
+* Extending simulation:: User-defined function libraries.
+* Event-driven Execution:: How execution works.
+* Command Index:: Interpreter commands.
+* Variable Index:: Variables.
+* Concept Index:: Concepts and terms.
+@end menu
+
+@c ****************************** chapter *************************************
+@include intro.texi
+@include usage.texi
+@include commands.texi
+@include extending.texi
+@include execution.texi
+
+@c ****************************** index ***************************************
+@node Command Index
+@unnumbered Command Index
+@printindex fn
+
+@node Variable Index
+@unnumbered Variable Index
+@printindex vr
+
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@c ****************************** finis ***************************************
+@bye
+

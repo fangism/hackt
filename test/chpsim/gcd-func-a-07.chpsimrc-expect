@@ -1,0 +1,2 @@
+nonexistentgcd.{la,so,dylib} not found in library paths.
+Failed to dlopen `nonexistentgcd'.

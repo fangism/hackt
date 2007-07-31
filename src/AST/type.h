@@ -1,9 +1,9 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type.h,v 1.4 2006/07/30 05:49:17 fang Exp $
+	$Id: type.h,v 1.5 2007/07/31 23:23:05 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: type.h,v 1.4 2006/07/30 05:49:17 fang Exp $
+	$Id: type.h,v 1.5 2007/07/31 23:23:05 fang Exp $
  */
 
 #ifndef __HAC_AST_TYPE_H__
@@ -75,6 +75,8 @@ public:
 protected:
 	typedef	data_type_ref_list_base			parent_type;
 public:
+	data_type_ref_list();
+
 	explicit
 	data_type_ref_list(const concrete_type_ref* c);
 

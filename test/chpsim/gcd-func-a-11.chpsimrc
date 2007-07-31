@@ -1,0 +1,13 @@
+# "gcd-func-a-11.chpsimrc"
+#	$Id: gcd-func-a-11.chpsimrc,v 1.2 2007/07/31 23:24:11 fang Exp $
+# Yes, use THIS object file
+# @haco@ missing_func-a.haco-a
+
+# opening module in script instead of on command-line
+
+dlcheckfunc my_gcd bogus
+dlopen gcd
+# @deps@ gcd.la
+dlassertfunc my_gcd bogus
+echo expect to fail on bogus
+

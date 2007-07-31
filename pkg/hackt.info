@@ -13,6 +13,8 @@ BuildDepends: <<
   guile18-dev	(>= 1.8.1-1),
   graphviz	(>= 1.12-1),
   transfig,
+  texinfo,
+  texi2html,
   tetex		(>= 3.0-1)
 <<
 Depends: <<
@@ -38,10 +40,11 @@ DescDetail: <<
 Describe me in detail.
 <<
 DescPackaging: <<
-Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-25.  
+Fink bundle package based on version tagged HACKT-00-01-04-main-00-81-41.  
 Maintainence: since build-deps are not recursive, keep this synchronized
 with the hackt-{dist,cvs}-deps.
 The MD5 sum should be edited by hand.  
+Also, guile-1.6 is actually sufficient.
 TODO: relocate environment setup scripts (init_hackt) to %p/etc/profile.d,
 decide how to install documentation files (soft-link?).  
 SplitOffs of -shlibs, -dev.
