@@ -2,7 +2,7 @@
 # "bootstrap" 
 # Maintainer script for regenerating Makefiles and configure scripts.
 # (also known as autogen.sh in some conventions)
-#	$Id: bootstrap,v 1.6.8.2 2007/07/28 22:35:01 fang Exp $
+#	$Id: bootstrap,v 1.6.8.3 2007/07/31 02:33:18 fang Exp $
 # picks up AUTOCONF, AUTOMAKE, etc. from environment, which is used
 # to override the default program names.
 
@@ -76,7 +76,7 @@ $LIBTOOLIZE --copy --force --ltdl
 # using the local versions of the autotools, in case of version mismatch.
 (cd libltdl && \
 	mkdir removed && \
-	rm -f Makefile.in configure aclocal.m4 removed )
+	mv -f Makefile.in configure aclocal.m4 removed )
 
 $ACLOCAL $ACLOCAL_FLAGS
 # optionally feature autoheader
