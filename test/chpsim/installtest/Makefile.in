@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.1.2.5 2007/07/31 05:22:58 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.6 2007/07/31 15:26:37 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -19,6 +19,8 @@
 srcdir = @srcdir@
 VPATH = @srcdir@
 # top_builddir = @top_builddir@
+prefix = @prefix@
+datadir = @datadir@
 pkgdatadir = $(datadir)/@PACKAGE@
 # probably resembles: /usr/local/share/hackt/lib
 
