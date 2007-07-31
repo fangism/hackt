@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.1.2.1 2007/07/30 22:50:01 fang Exp $
+@c $Id: usage.texi,v 1.1.2.2 2007/07/31 20:16:01 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -34,16 +34,19 @@ $ @kbd{hacchpsim -b test.haco < test.chpsimrc}
 @c ****************************************************************************
 @node Option Summary
 @section Option Summary
+@cindex options
+@cindex options, summary
 
 @c These might be better managed in the source file for ease of maintainence.
 For options that take an argument, the space between the flag
 and the argument is optional.  
 
-@defopt @r{(none)}
+@defopt @r{@i{none}}
 With no arguments, just print a list of all command-line options, 
 much like what is summarized below.  
 @end defopt
 
+@cindex batch mode
 @defopt	-b
 Batch mode, non-interactive, promptless.  
 This is useful for running scripts or piping in commands 
@@ -54,6 +57,7 @@ The opposing option is @option{-i}.
 this option for processing scripts due to a mishandling of EOF.  
 @end defopt
 
+@cindex checkpoint
 @defopt -d @var{checkpoint}
 Produce a textual dump of a checkpoint binary.  
 Exits without running the simulator.  
@@ -67,17 +71,22 @@ Exits without running the simulator.
 Help.  Print list of all interpreter commands and exit.  
 @end defopt
 
+@cindex interactive
+@cindex prompt
 @defopt -i
 Interactive, prompting.  This is the default mode.
 The opposing option is @option{-b}.  
 @end defopt
 
+@cindex source paths
 @defopt -I path @r{(repeatable)}
 @anchor{option-I}
 Append @var{path} to the list of paths to search for sourcing other 
 command scripts in the interpreter.  
 @end defopt
 
+@cindex module paths
+@cindex library paths
 @defopt -L path @r{(repeatable)}
 @anchor{option-L}
 Append @var{path} to the list of paths to search for opening shared library
@@ -87,6 +96,8 @@ The equivalent command in the interpreter is
 For more on building and loading shared-libraries, @xref{Extending simulation}.
 @end defopt
 
+@cindex module
+@cindex loading
 @defopt -l lib @r{(repeatable)}
 @anchor{option-l}
 Load the @var{lib} shared library module for registering user-defined
@@ -131,6 +142,7 @@ whole-program graph has been constructed.
 @defopt {-f dump-dot-struct}
 @cindex dot
 @cindex event-graph
+@cindex whole-program graph
 Produce a textual netlist of the whole-program event graph in 
 @command{dot} format @footnote{@command{dot} 
 is the name of a program (and its input language)
@@ -155,6 +167,7 @@ All of these options are also negatable with @option{no-} prefixed.
 Don't forget to pass @option{-f no-run} when not intending to run the 
 interpreter.  
 
+@cindex cluster
 @defopt {-f cluster-processes}
 Wrap process subgraphs into clusters, 
 which are enveloped in rectangular outlines.  Default off.  

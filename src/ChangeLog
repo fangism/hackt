@@ -4,6 +4,13 @@
 # This version tag is used in building "cvstag.h" for version identification.
 
 
+2007-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-39-chpsim-06-26:
+	  No source revision, documentation only.  (dox/ChangeLog)
+	  End of branch, ready to merge to trunk.
+
+
 2007-07-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:

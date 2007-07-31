@@ -1,5 +1,5 @@
 @c "extending.texi"
-@c $Id: extending.texi,v 1.1.2.2 2007/07/31 05:22:48 fang Exp $
+@c $Id: extending.texi,v 1.1.2.3 2007/07/31 20:15:57 fang Exp $
 
 @node Extending simulation
 @chapter Extending the simulator
@@ -10,7 +10,24 @@
 @cindex functions, external
 
 This chapter describes the procedure for providing user-defined functions
-through an external shared library module or plug-in.
+through an external shared library module (or plug-in).
+
+For this chapter (and in your own work)
+we @emph{strongly} recommend including the following template Makefile
+in your own working Makefile:
+
+@cindex hackt-lt.mk
+@example
+# "Makefile"
+include @i{prefix}/share/hackt/mk/hackt-lt.mk
+@end example
+
+@noindent
+where @t{prefix} refers to the base installation path of the tools.  
+This Makefile simplifies compilation and linking tremendously, 
+and also provide suffix compilation rules for @acronym{HAC} object files.  
+We will refer to some definitions found in @file{hackt-lt.mk}
+throughout this section.  
 
 @menu
 * Function Calls:: CHP source calls.
@@ -26,7 +43,8 @@ through an external shared library module or plug-in.
 @section CHP Function Calls
 @cindex function calls
 @cindex CHP functions
-
+@cindex external function
+@cindex unbound function
 
 In @acronym{CHP}, function calls may appear in expressions or
 as standalone statements.  
@@ -52,9 +70,45 @@ All such nonmeta (run-time) functions are only bound at @emph{run-time}.
 A consequence of such late binding is that the types and 
 number of parameters of function calls cannot be checked at compile time.  
 
+With the above example, instantiate some environment of sources and sinks:
+
+@example
+chan(int) X, Y, Z;
+func F(X, Y, Z);
+
+chp @{ *[X!(1)] @}    @r{// value source}
+chp @{ *[Y!(2)] @}
+chp @{ *[Z?]    @}    @r{// value sink}
+@end example
+
+If your file is called @file{chptest.hac}, 
+run @command{make chptest.haco-a}.
+This will compile, create, and allocate the state in an object file.  
+If you only make the @file{.haco} or @file{.haco-c} object files, 
+@command{hacchpsim} will automatically compile the object file
+as much as necessary.  
+
+You can now run the simulation:
+
+@example
+$ @kbd{hacchpsim chptest.haco-a}
+chpsim> @kbd{watchall-events}
+chpsim> @kbd{run}
+...
+@error{@sansserif{Eventually tries to call unbound function @t{alert_me}.}}
+@end example
+
+Such errors can be caught earlier using the 
+@ref{command-dlassertfunc,, @command{dlassertfunc}} command.  
+
+Next we compile a libary to provide these missing functions.  
+
 @c ****************************************************************************
 @node Module Creation
 @section Shared Module Creation
+
+There are two parts to building a shared library module:
+compiling and linking.
 
 
 @menu
@@ -64,13 +118,13 @@ number of parameters of function calls cannot be checked at compile time.
 
 @node Compiling module sources
 @subsection Compiling module sources
-@cindex hackt-config
-@cindex hackt-libtool
+@cindex compiling module objects
 
-Now we're ready to supply our functions in C++.  
-A typical chpsim-module source file will have the following parts:
+A typical @command{chpsim}-module source file (C++) 
+is organized as follows:
 
 @example
+@r{// "chptest.hac"}
 @r{// include headers}
 #include <sim/chpsim/chpsim_dlfunction.h>
 
@@ -129,7 +183,7 @@ These types are defined in the header @file{Object/expr/types.h}.
 @cindex int_value_type
 @deftp {Data type} int_value_type
 The signed integer data type, corresponding to @samp{int<W>} in @acronym{CHP}, 
-typically defined to the machine's native integer type.  
+typically defined to the host machine's native integer type.  
 @end deftp
 
 @cindex bool_value_type
@@ -145,9 +199,9 @@ The floating-point data type, corresponding to @samp{real} in @acronym{CHP},
 typically defined to @code{float} or @code{double}.  
 @end deftp
 
-All functions that are registered with @samp{CHP_DLFUNCTION_LOAD_DEFAULT}
+All functions that are registered with @code{CHP_DLFUNCTION_LOAD_DEFAULT()}
 are required to use only the above types in argument types
-and return types (and void).
+and return types (and @code{void}).
 If your function uses different but convertible types, then
 write a call-wrapper that uses only the allowed types and forwards 
 the arguments and return values.  
@@ -156,7 +210,7 @@ that belong to libraries beyond your control,
 or when you simply don't want to alter an existing library.  
 When in doubt, it is always safe to use a such a wrapper.  
 It is possible to change these types (say, to increase precision)
-if the entire suite of HACKT tools is re-compiled.  
+if the entire suite of @acronym{HACKT} tools is re-compiled.  
 
 @cindex position-independent code
 Compiling the source file for a shared library requires 
@@ -165,12 +219,8 @@ Fortunately, with the aid of conveniently installed template Makefiles,
 the complexities are hidden@footnote{Such complexities include additional 
 compiler flags for shared-library objects, 
 such as @acronym{PIC, position-independent-code}.}.  
-We will spare you the details.  
-For now it suffices to use the following line in your Makefile:
 
-@cindex hackt-lt.mk
-@code{include @i{prefix}/share/hackt/mk/hackt-lt.mk}
-
+@cindex Libtool
 For every C++ source file (@file{.cc}) that is to be linked into the 
 chpsim module, its corresponding object file should be referenced with
 the @file{.lo} extension (for Libtool object).  
@@ -178,13 +228,16 @@ The next section describes how to correctly link a chpsim module.
 
 @node Linking module libraries
 @subsection Linking module libraries
+@cindex Libtool
+@cindex linking module
+@cindex library, module
 
 In your working Makefile, you will refer to target libraries
 with a @file{.la} extension (Libtool archive).  
 The @file{.la} extension replaces what would normally be @file{.so}, 
 @file{.dylib}, @file{.dll}, or the native shared-object extension.  
 Libtool provides a platform-independent abstraction of shared libraries, 
-so the user doesn't have to worry about these details.  
+so the user need not worry about these details.  
 The target library name need not be prefixed with @samp{lib}, 
 since it is being dlopened as a module.  
 Suppose the above source file was named @file{foo.cc}, 
@@ -192,6 +245,7 @@ and our target library is @file{bar.la},
 one might write in the Makefile:
 
 @example
+# "Makefile" (continued)
 # list of dependent libraries (-l...)
 bar_la_LIBADD =
 
@@ -210,20 +264,21 @@ bar.la: $(bar_la_OBJECTS)
 
 The @file{bar.la} to @samp{bar_la} name canonicalization is borrowed from
 Automake's variable naming convention.  
-We've referenced some variables in the Makefile:
+We've referenced some variables in the Makefile, 
+defined in @file{hackt-lt.mk}:
 
 @defvr {Makefile variable} CHPSIM_MODULE_FLAGS
 Flags that tell Libtool to link the shared library to be suitable 
 for dlopening (dynamic loading).  
-Defined in @file{$(pkgdatadir)/mk/hackt-lt.mk}, and should remain unmodified.
+Value should remain unmodified.
 @end defvr
 
 @defvr {Makefile variable} CXXLINK
 The aggregate link command (without arguments).  
 
 @noindent
-Defined in @file{$(pkgdatadir)/mk/hackt-lt.mk}, and should remain unmodified.
 Invokes @command{hackt-libtool} as a link wrapper.  
+Should remain unmodified.
 Depends on the @var{CXX} Makefile variable.  
 @end defvr
 
@@ -239,58 +294,175 @@ Other relevant variables are also provided:
 @defvr {Makefile variable} HACKT_LIBTOOL
 @cindex hackt-libtool
 Defined to @command{hackt-libtool}, which is expected to be in the PATH.  
+This is a renamed copy of the @file{libtool} script that was configured
+during the compilation of the tools.  
+This has the advantage of storing and re-using all of the flags needed
+for building shared libraries on the host platform, thus saving the
+user from having to do any configure-detection when using @command{chpsim}.  
 @end defvr
 
 @defvr {Makefile variable} HACKT_CONFIG
 @cindex hackt-config
 Defined to @command{hackt-config}, which is expected to be in the PATH.  
+This script contains package installation information such as
+include header paths and libaries.  
+For building @command{chpsim} modules, 
+only a few compile time options are needed,
+no additional libraries are needed. 
 @end defvr
 
 @defvr {Makefile variable} CPPFLAGS
 @defvrx {Makefile variable} CHPSIM_OBJECT_CPPFLAGS
 Expands to flags needed to compile chpsim module source files.  
-Gratitously appled to all libtoolized compilations.  
-May be appended by the user.  
+Gratuitously appled to all libtoolized compilations.  
+@var{CPPFLAGS} may be appended by the user, 
+but @var{CHPSIM_OBJECT_CPPFLAGS} may not.  
 @end defvr
 
 @defvr {Makefile variable} CXXFLAGS
-Intially empty, may be appended by the user.  
+Intially empty, may be appended by the user for tuning compilation.  
 @end defvr
 
 Summary: defining @var{CXX} suffices to successfully build
 chpsim module @file{bar.la} in the above example.  
 One word of caution: the @file{.la} file is merely a placeholder
 that tells libtool where to find the actual built archives, 
-which are found in the @file{.libs} subdirectory.  
+which are actually built in the @file{.libs} subdirectory.  
 Don't expect to be able to move these files arbitrarily without breaking.  
 (There's still a good chance of it working because the libraries are not 
 built for use in an installed location.)
 
+Now you can build the module with @samp{make bar.la}.  
+
 @c ****************************************************************************
 @node Run-time Module Loading
 @section Run-time Module Loading
+@cindex loading modules
+@cindex module, loading
 
-Can load arbitrarily many libraries, as long as symbols don't conflict.  
+With our built module, we can now load it into @command{hacchpsim}.  
+One way is to pass libraries on the command line using the
+@ref{option-l,, @option{-l} option} and the
+@ref{option-L,, @option{-L} option}.
+@example
+$ @kbd{hacchpsim -lbar chptest.haco-a}
+loaded function: `alert_me'
+loaded function: `twiddle'
+chpsim> @kbd{watchall-events}
+chpsim> @kbd{step 40}
+@end example
+
+@noindent
+The alternative is to add library paths and load libraries after 
+the simulator is launched.  
+
+@example
+$ @kbd{hacchpsim chptest.haco-a}
+chpsim> @kbd{dlopen bar}
+loaded function: `alert_me'
+loaded function: `twiddle'
+chpsim> @kbd{watchall-events}
+chpsim> @kbd{step 40}
+@end example
+
+Loading libraries on the command-line and in the interpreter 
+is allowed, and works as expected.  
+@command{chpsim} can load arbitrarily many libraries 
+(within the limits of the operating system), 
+and as long as the registered function names don't conflict.  
 
 @c ****************************************************************************
 @node Run-time Diagnostics
 @section Run-time Diagnostics
+@cindex diagnostics, run-time
+@cindex errors, run-time
+@cindex argument checking
+@cindex type checking, run-time
+@cindex unbound function
 
-Run-time checking.
-Where can things go wrong?
+@command{chpsim} performs some run-time checks on the dynamically loaded
+functions when they are called.  
+Run-time errors will occur under any of the following conditions:
+
+@itemize
+@item If a function is called but yet unbound
+@item If function name-collision occurs while loading modules
+@item A function is passed an argument with the wrong type
+@item A function is passed too few arguments
+@item The called function throws an exception, 
+or calls @t{abort} or @t{terminate}
+@end itemize
+
+Note that passing too many arguments does not trigger an error, 
+the excess arguments are simply dropped.  
 
 @c ****************************************************************************
 @node chpsim-function example
 @section An Example
+@cindex example, installed module
 
+A complete example (from the test suite) is installed under:
+
+@noindent
+@file{@i{prefix}/share/hackt/doc/examples/chpsim-function/}
+
+The files contained therein are
+@file{README}, @file{hello.cc}, @file{hello-test.hac}, and @file{Makefile.in}.
+
+It is very similar to the example described earlier in this chapter.  
+To run this example (VPATH make using remote source directory), 
+do the following:
+
+@cindex VPATH
+@enumerate
+@item Create a new empty working directory, and enter it.
+
+For example, @samp{mkdir play && cd play}.
+@item Copy the example's @file{Makefile.in} locally to @file{Makefile}.
+@item Edit the @file{Makefile}:
+@enumerate a
+@item Point @t{srcdir} and @t{VPATH} to 
+
+@file{@i{prefix}/share/hackt/doc/examples/chpsim-function}.
+@item Delete the other variables in the preamble (optional).
+@item Point the include line to the installed @file{hackt-lt.mk}.  
+@item Set @var{CXX} to your C++ compiler.
+@end enumerate
+@end enumerate
+
+If you run @command{make}, it will perform all the necessary
+compilation steps and dump a short run of the simulation
+to an output file @file{hello-test.chpsimrc-out}.  
+
+Another output file @file{confirm-exec} is produced to confirm
+that all the necessary toolchain executables are found in your PATH.  
+Some additional clean targets are also provided.  
+
+If you want to modify the examples, 
+the (non-VPATH) alternative is to copy the whole example directory
+and dispense with setting @t{srcdir} and @t{VPATH}.  
 
 @c ****************************************************************************
 @node Module Rationale
 @section Module Rationale
+@cindex rational for modules
+@cindex portability
 
-Goals?
+The goals of our implementation of run-time bound user-defined functions were:
 
-Why?
+@itemize
+@item Convenience: eliminate unnecessary compilation of the toolchain
+@item Ease: installed Makefile templates provide simple interface
+@emph{without} expecting the user to deal with additional tools
+such as Autoconf, Automake, and Libtool  
+@item Flexibility: be able to re-bind functions by simulating the same 
+object file with different modules
+@item Portability: provide a consistent interface for shared library 
+management across all platforms (thanks to GNU Libtool!)
+@item Safety: provide reasonable run-time type checking on functions  
+@end itemize
+
+You be the judge of how we fared.  
 
 @c ****************************************************************************
 

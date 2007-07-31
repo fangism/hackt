@@ -8,7 +8,7 @@
 @c %**end of header
 
 @c "chpsim.texi"
-@c $Id: hacchpsim.texi,v 1.1.2.1 2007/07/30 22:49:59 fang Exp $
+@c $Id: hacchpsim.texi,v 1.1.2.2 2007/07/31 20:15:58 fang Exp $
 
 @copying
 This manual describes the usage and operation of HACKT's @command{chpsim} 
@@ -57,9 +57,8 @@ Permission is hereby granted to ...
 * Commands:: Interpreter commands.
 * Extending simulation:: User-defined function libraries.
 * Event-driven Execution:: How execution works.
-* Test Chapter:: Testing Texinfo features.
 * Command Index:: Interpreter commands.
-@c * Variable Index:: Variables.
+* Variable Index:: Variables.
 * Concept Index:: Concepts and terms.
 @end menu
 
@@ -69,17 +68,15 @@ Permission is hereby granted to ...
 @include commands.texi
 @include extending.texi
 @include execution.texi
-@c eventually remove this test chapter
-@include test.texi
 
 @c ****************************** index ***************************************
 @node Command Index
 @unnumbered Command Index
 @printindex fn
 
-@c @node Variable Index
-@c @unnumbered Variable Index
-@c @printindex vr
+@node Variable Index
+@unnumbered Variable Index
+@printindex vr
 
 @node Concept Index
 @unnumbered Concept Index

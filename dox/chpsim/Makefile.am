@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.4.6.3 2007/07/30 22:49:54 fang Exp $
+#	$Id: Makefile.am,v 1.4.6.4 2007/07/31 20:15:54 fang Exp $
 
 PDFS = hacchpsim.pdf
 # deprecated:
@@ -37,8 +37,7 @@ hacchpsim_INCLUDES = \
 	usage.texi \
 	commands.texi \
 	extending.texi \
-	execution.texi \
-	test.texi
+	execution.texi
 
 EXTRA_DIST += $(hacchpsim_INCLUDES)
 

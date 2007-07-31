@@ -1,10 +1,12 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.1.2.1 2007/07/30 22:49:58 fang Exp $
+@c $Id: commands.texi,v 1.1.2.2 2007/07/31 20:15:55 fang Exp $
 @c TODO: index commands
 
 @node Commands
 @chapter Commands
 @cindex commands
+@cindex interpreter commands
+@cindex interactive commands
 
 This chapter describes all of the simulator's interactive commands.  
 Commands are organized into the following categories:
@@ -71,6 +73,7 @@ single spaces by the interpreter's tokenizer.
 Exit the simulator.
 @end deffn
 
+@cindex aliases, command
 The following commands are related to command aliases.
 Every command line given to the interpreter recursively
 expands the first token if it has a known alias.  
@@ -124,6 +127,7 @@ Appends @var{path} to the search path for sourcing scripts.
 Print the list of paths searched for source scripts.  
 @end deffn
 
+@cindex module commands
 The following commands relate to extending the simulator with
 user-defined functions in dynamically loaded shared libraries.  
 More on shared modules can be found in @ref{Extending simulation}.
@@ -137,6 +141,7 @@ pass the corresponding paths on the command-line.
 See also @ref{option-L,, the @option{-L} option}.
 @end deffn
 
+@cindex dlopen
 @deffn Command dlopen lib
 @anchor{command-dlopen}
 Open shared library @var{lib} for loading external user-defined functions.  
@@ -177,6 +182,7 @@ Error out if the event queue is empty.
 Useful as a quick check for deadlock.
 @end deffn
 
+@cindex event queue
 @deffn Command queue
 Print an ordered list of all events in the checking event queue and 
 execution event queue.  
@@ -190,6 +196,7 @@ Print status information about event number @var{event-id}.
 Print textual summary of entire state of simulation.  
 @end deffn
 
+@cindex variable state
 @deffn Command get inst
 Print the state information about instance named @var{inst}.
 The name @var{inst} need not be canonical.  
@@ -220,6 +227,7 @@ Prints the type of the named instance @var{inst},
 along with its canonical name.  
 @end deffn
 
+@cindex aliases, instance
 @deffn Command who inst
 Print all equivalent aliases of the instance named @var{inst}.  
 @end deffn
@@ -262,6 +270,7 @@ With the @var{delay} argument, sets the said delay value.
 @section @t{simulation} commands
 @cindex simulation commands
 
+@cindex initialization, simulation
 @deffn Command initialize
 Resets the variable state of the simulation, while preserving
 other settings such as mode and breakpoints.  
@@ -295,6 +304,7 @@ Advances the simulation by @var{n} steps.
 Runs the simulation until the event queue is empty, if ever.  
 @end deffn
 
+@cindex breakpoints
 The following commands pertain to breakpoints.  
 
 @deffn Command break-event event-id
@@ -335,6 +345,7 @@ Removes all variable breakpoints.
 @section @t{tracing} commands
 @cindex tracing commands
 
+@cindex checkpointing
 Checkpointing is useful for saving long simulations.
 Checkpoint files are only valid for simulations that load 
 @emph{the same object file} that was used to produce the checkpoint.  
@@ -365,6 +376,7 @@ Restores the simulator state (variables and events) from a checkpoint
 file @var{ckpt}.  
 @end deffn
 
+@cindex tracing commands
 Entire execution traces may be saved away for offline analysis.  
 Again the structure of the whole-program (after state allocation) 
 is not recorded in the trace; rather, it is assumed from the object file.  
@@ -410,6 +422,7 @@ by the simulator as it executes events.
 Watchpoints are similar to breakpoints in the feedback that is
 printed, but without interrupting simulation.  
 
+@cindex cause, events
 @deffn Command cause
 Show causes of events when events are printed.  
 @end deffn
@@ -418,6 +431,7 @@ Show causes of events when events are printed.
 Turn off @command{cause} in feedback.  
 @end deffn
 
+@cindex event queue
 @deffn Command watch-queue
 Print events as they enter the event queue (either for checking or execution).
 This is generally recommended for debugging, 
@@ -428,6 +442,7 @@ as it prints @emph{a lot} of information.
 Disables @command{watch-queue}.
 @end deffn
 
+@cindex watchpoints
 @deffn Command watch-event event-id
 Watchpoint.  
 Print event @var{event-id} each time it executes, without interrupting.  

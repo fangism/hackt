@@ -1,5 +1,5 @@
 @c "chpsim/execution.tex"
-@c $Id: execution.texi,v 1.1.2.3 2007/07/31 05:22:46 fang Exp $
+@c $Id: execution.texi,v 1.1.2.4 2007/07/31 20:15:56 fang Exp $
 
 @node Event-driven Execution
 @chapter Event-driven Execution
@@ -19,6 +19,7 @@ Do we really need to devote an entire chapter to this?
 @node Event ordering
 @section Event ordering
 @cindex event ordering
+@cindex event life cycle
 
 @c See Figure @ref{fig:event_algo}.
 
@@ -32,6 +33,7 @@ Figure: Obsolete: CHP simulator event life cycle
 @image{figs/chpsim_event_cycle, 5in}
 @c @end float
 
+@cindex event algorithm
 @c @float Figure, fig:event_algo
 Figure: CHP simulator event algorithm
 
@@ -52,6 +54,9 @@ execution trace (and all possible traces).
 @cindex timing
 @cindex delay
 @cindex delay, prefix
+@cindex subscribers
+@cindex unblock
+@cindex block
 
 The delays associated with each event are @dfn{prefix} delays, 
 i.e. the delays are applied before the event is 

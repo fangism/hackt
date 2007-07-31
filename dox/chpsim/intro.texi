@@ -1,12 +1,12 @@
 @c "chpsim/intro.texi"
-@c $Id: intro.texi,v 1.1.2.2 2007/07/30 22:50:00 fang Exp $
+@c $Id: intro.texi,v 1.1.2.3 2007/07/31 20:15:59 fang Exp $
 
 @node Introduction
 @chapter Introduction
 @cindex introduction
 @cindex CHP
 @cindex CSP
-@cindex Hoare, C. A
+@cindex Hoare, C. A. R.
 @pindex hacchpsim
 
 @command{chpsim} is a simulator for the
