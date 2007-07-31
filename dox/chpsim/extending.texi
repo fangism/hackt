@@ -1,5 +1,5 @@
 @c "extending.texi"
-@c $Id: extending.texi,v 1.1.2.3 2007/07/31 20:15:57 fang Exp $
+@c $Id: extending.texi,v 1.1.2.4 2007/07/31 21:43:05 fang Exp $
 
 @node Extending simulation
 @chapter Extending the simulator
@@ -95,7 +95,7 @@ $ @kbd{hacchpsim chptest.haco-a}
 chpsim> @kbd{watchall-events}
 chpsim> @kbd{run}
 ...
-@error{@sansserif{Eventually tries to call unbound function @t{alert_me}.}}
+@error{@r{Eventually tries to call unbound function @t{alert_me}.}}
 @end example
 
 Such errors can be caught earlier using the 
