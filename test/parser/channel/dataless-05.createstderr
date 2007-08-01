@@ -22,9 +22,9 @@ Persistent Object Manager text dump:
 	18	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	chnalias	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	mchanref	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
