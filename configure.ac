@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.144 2007/07/31 23:22:25 fang Exp $
+#	$Id: configure.ac,v 1.145 2007/08/01 18:08:52 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -450,12 +450,15 @@ AC_SUBST(CONFIGDATE)
 
 cat <<ACEOF
 configuration summary:
+	CONFIG_SHELL:		$CONFIG_SHELL
 	CXX:			$CXX_VERSION
 	CPPFLAGS:		$CPPFLAGS
 	CXXFLAGS:		$CXXFLAGS
 	LDFLAGS:		$LDFLAGS
 	LEX:			$LEX_VERSION
 	YACC:			$YACC_VERSION
+	ltdl include:		$LTDLINCL
+	ltdl libs:		$LIBLTDL
 	readline include:	$RL_INCLUDE
 	readline LDFLAGS:	$RL_LDPATH
 	readline libs:		$RL_LIB
