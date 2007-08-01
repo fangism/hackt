@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2007/07/18 23:29:41 fang Exp $
+#	$Id: Makefile.am,v 1.27 2007/08/01 21:07:57 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -89,7 +89,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	copy-wire_copy-01 copy-wire_copy-02 \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
-	copy-wchb_copy-03 copy-wchb_copy-04
+	copy-wchb_copy-03 copy-wchb_copy-04 \
+	init-source-sink-a init-source-sink-b init-source-sink-c \
+	wchb-token-ring-a wchb-token-ring-b wchb-token-ring-c
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
@@ -150,9 +152,15 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	copy-wire_copy-01 copy-wire_copy-02 \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
-	copy-wchb_copy-03 copy-wchb_copy-04
+	copy-wchb_copy-03 copy-wchb_copy-04 \
+	init-source-sink-a-01 init-source-sink-a-02 \
+	init-source-sink-b-01 \
+	init-source-sink-c-01 init-source-sink-c-02 \
+	wchb-token-ring-a-01 wchb-token-ring-a-02 \
+	wchb-token-ring-c-01 wchb-token-ring-c-02
 
-HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES =
+HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
+	wchb-token-ring-b-01
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-lvs-01
@@ -161,6 +169,7 @@ HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 srcdir_EXTRA_DIST += README \
+	initial-reset.prsimrc \
 	reset-test.prsimrc \
 	reset-test-short.prsimrc \
 	reset-test-medium.prsimrc \

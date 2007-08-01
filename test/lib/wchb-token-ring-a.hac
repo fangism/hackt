@@ -1,0 +1,15 @@
+// "wchb-token-ring-a.hac"
+//	$Id: wchb-token-ring-a.hac,v 1.1 2007/08/01 21:08:04 fang Exp $
+
+import "buffer_init.hac";
+// import "buffer.hac";		// these were never tested...
+import "copy.hac";
+
+bool _Reset, Reset;
+e1of2 L, R;
+// initial value 0
+wchb2_init_e1of2	X<0>(L, R, _Reset, Reset);
+wchb_copy_e1of2<1>	C(R, {L}, _Reset);
+
+// 3 half-buffer cycle
+

@@ -1,0 +1,14 @@
+// "wchb-token-ring-b.hac"
+// copy-modified from "wchb-token-ring-a.hac"
+//	$Id: wchb-token-ring-b.hac,v 1.1 2007/08/01 21:08:07 fang Exp $
+// expected to fail: deadlock
+
+import "buffer_init.hac";
+
+bool _Reset, Reset;
+e1of2 L;
+// initial value 0
+wchb2_init_e1of2	X<0>(L, L, _Reset, Reset);
+
+// 3 half-buffer cycle: DEADLOCK
+

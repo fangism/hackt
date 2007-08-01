@@ -1,0 +1,17 @@
+# "initial-reset.prsimrc"
+#	$Id: initial-reset.prsimrc,v 1.1 2007/08/01 21:08:00 fang Exp $
+# common test script for initial value during reset
+
+initialize
+# timing random
+mode reset
+set _Reset 0
+set Reset 1
+cycle
+# status X
+
+mode run
+# now get/assert signals to confirm their initial value
+# nocause
+# because timing is random
+

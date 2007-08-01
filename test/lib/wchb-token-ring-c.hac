@@ -1,0 +1,17 @@
+// "wchb-token-ring-c.hac"
+// copy-modified from "wchb-token-ring-a.hac"
+//	$Id: wchb-token-ring-c.hac,v 1.1 2007/08/01 21:08:08 fang Exp $
+
+import "buffer_init.hac";
+// import "buffer.hac";		// these were never tested...
+import "copy.hac";
+
+bool _Reset, Reset;
+e1of2 L, M, R;
+// initial value 0
+wchb2_init_e1of2	X<0>(L, M, _Reset, Reset),
+			Y<1>(M, R, _Reset, Reset);
+wchb_copy_e1of2<1>	C(R, {L}, _Reset);
+
+// 5 half-buffer cycle with 2 tokens
+

@@ -1,0 +1,8 @@
+# "wchb-token-ring-b-01.prsimrc"
+#	$Id: wchb-token-ring-b-01.prsimrc,v 1.1 2007/08/01 21:08:06 fang Exp $
+# @haco@ wchb-token-ring-b.haco-a
+# testing stability of token ring
+
+source reset-test.prsimrc
+echo expect fail on deadlock
+

@@ -1,0 +1,8 @@
+# "wchb-token-ring-c-01.prsimrc"
+#	$Id: wchb-token-ring-c-01.prsimrc,v 1.1 2007/08/01 21:08:07 fang Exp $
+# @haco@ wchb-token-ring-c.haco-a
+# testing stability of token ring
+
+source stable-test-medium.prsimrc
+source reset-test-medium.prsimrc
+

@@ -40,8 +40,8 @@
 		might be nice to factor some out into skeletons.  
 		Also would be nice to use some flattening hint/attribute
 		for these cases.  
-	TODO: buffers with initial-value tokens
-	$Id: buffer.hac,v 1.6 2006/09/17 06:48:43 fang Exp $
+	buffers with initial-value tokens are in "buffer_init.hac".
+	$Id: buffer.hac,v 1.7 2007/08/01 21:07:54 fang Exp $
  */
 
 import "channel.hac";

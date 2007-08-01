@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.35 2007/07/31 23:22:33 fang Exp $
+#	$Id: ChangeLog,v 1.36 2007/08/01 21:07:54 fang Exp $
+
+2006-08-01	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-42:
+	  Added buffer_init.hac: a few WCHB buffer pairs with initial value,
+		defined using new relaxed template support.
+		Test cases included in test/lib.
+
 
 2006-07-31	David Fang	<fangism@users.sourceforce.net>
 

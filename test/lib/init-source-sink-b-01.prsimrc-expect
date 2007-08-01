@@ -1,0 +1,7 @@
+leaving environment inputs X ... 
+L.d[0] : X
+L.d[1] : X
+L.e : 0	[by X.fore.rv:=1]
+R.d[0] : 0	[by X.aft._r.d[0]:=1]
+R.d[1] : 0	[by X.aft._r.d[1]:=1]
+R.e : X

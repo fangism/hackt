@@ -1,0 +1,14 @@
+// "init-source-sink-a.hac"
+//	$Id: init-source-sink-a.hac,v 1.1 2007/08/01 21:07:59 fang Exp $
+
+import "buffer_init.hac";
+// import "buffer.hac";
+import "env.hac";
+
+bool _Reset, Reset;
+e1of2 L, R;
+// initial value 0
+wchb2_init_e1of2	X<0>(L, R, _Reset, Reset);
+cmos_source_e1of2	S<3,{1,1,0}>(L, _Reset, Reset);
+bitbucket_e1of2		Z(R, _Reset);
+

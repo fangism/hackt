@@ -1,0 +1,90 @@
+/**
+	\file "buffer_init.hac"
+	Buffers with initial tokens.
+	$Id: buffer_init.hac,v 1.1 2007/08/01 21:07:54 fang Exp $
+ */
+
+import "channel.hac";
+// import "buffer.hac";
+
+//=============================================================================
+/**
+	Front half of buffer-pair with initial token.
+	HSE:
+	\param N the with of the e1ofN channel
+	\param V the initial value (high rail of R)
+	\param L input channel
+	\param R input channel
+	\param _Reset active-low global reset
+	\param Reset active-high global reset
+ */
+template <pint N><pint V>
+defproc wchb_init_fore_e1of(e1of<N> L, R; bool _Reset, Reset) {
+_c1of2 _r;
+bool rv;
+prs {
+(:i:N:
+	R.e & L.d[i]		-> _r.d[i]-
+	~R.e & ~L.d[i]		-> _r.d[i]+
+[ i==V ->
+	_r.d[i] & _Reset	=> R.d[i]-
+	Reset			-> _r.d[i]-
+[] else ->
+	_r.d[i]			=> R.d[i]-
+	~_Reset			-> _r.d[i]+
+]
+)
+	(&:i:N: _r.d[i] )	=> rv-
+	rv			=> L.e-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Back half of buffer-pair with initial token.
+	HSE:
+	\param N the with of the e1ofN channel
+	\param L input channel
+	\param R input channel
+	\param _Reset active-low global reset
+ */
+template <pint N>
+defproc wchb_init_aft_e1of(e1of<N> L, R; bool _Reset) {
+_c1of2 _r;
+bool rv;
+prs {
+(:i:N:
+	_Reset & R.e & L.d[i]	-> _r.d[i]-
+	~R.e & ~L.d[i]		-> _r.d[i]+
+	~_Reset			-> _r.d[i]+
+	_r.d[i]			=> R.d[i]-
+)
+	(&:i:N: _r.d[i] )	=> rv-
+	rv			=> L.e-
+}
+}
+//=============================================================================
+/**
+	Buffer-pair that implements an initial token, WCHB reshuffling.
+	Expects inputs low during reset, 
+	and output acknowledge high (inactive).
+	NOTE: this resets the input acknowledge low (active) during reset!
+	\param N the with of the e1ofN channel
+	\param L input channel
+	\param R input channel
+	\param _Reset active-low global reset
+	\param Reset active-high global reset
+ */
+template <pint N><pint V>
+defproc wchb2_init_e1of(e1of<N> L, R; bool _Reset, Reset) {
+e1of<N> M;
+wchb_init_fore_e1of<N> fore<V>(L, M, _Reset, Reset);
+wchb_init_aft_e1of<N> aft(M, R, _Reset);
+}
+
+//=============================================================================
+
+template <><pint V>
+typedef wchb2_init_e1of<2>	wchb2_init_e1of2;
+
+
