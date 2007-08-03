@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.173 2007/07/31 23:22:46 fang Exp $
+#	$Id: Makefile.am,v 1.174 2007/08/03 17:55:06 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1056,6 +1056,7 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
+sim/ISE.lo sim/ISE.o: cvstag.h
 common/ICE.lo common/ICE.o: cvstag.h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 common/config.lo common/config.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
