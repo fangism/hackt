@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2007/07/31 23:23:56 fang Exp $
+#	$Id: Makefile.am,v 1.18 2007/08/08 20:06:20 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -475,6 +475,8 @@ gcdwrap_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 # minimalist Makefile without most standard automake targets.
 # We need to manage the subdirectory here.  
 installcheckdir = installtest
+
+all-local: $(installcheckdir)/Makefile
 
 $(installcheckdir)/Makefile: \
 		$(installcheckdir)/Makefile.in $(top_builddir)/config.status
