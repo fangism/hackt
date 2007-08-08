@@ -1,5 +1,5 @@
 # "installcheck.mk[.in]
-#	$Id: installcheck.mk.in,v 1.2 2007/07/31 23:22:26 fang Exp $
+#	$Id: installcheck.mk.in,v 1.3 2007/08/08 20:15:05 fang Exp $
 # install paths from configure
 
 bindir = @bindir@
@@ -8,6 +8,7 @@ build_alias = @build_alias@
 build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
+datarootdir = @datarootdir@
 datadir = @datadir@
 exec_prefix = @exec_prefix@
 host = @host@

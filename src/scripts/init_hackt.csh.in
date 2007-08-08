@@ -1,6 +1,6 @@
 #!/bin/sh
 # "init_hackt.csh"
-#	$Id: init_hackt.csh.in,v 1.4 2007/08/01 02:05:40 fang Exp $
+#	$Id: init_hackt.csh.in,v 1.5 2007/08/08 20:15:08 fang Exp $
 #	vi: ft=csh
 # source this file to sets up environment variables
 # MAINTAINENCE: keep this consistent with its init_hackt.sh counterpart
@@ -15,6 +15,7 @@ alias prepend_path 'if ( $\!:1 !~ \!:2\:* && $\!:1 !~ *\:\!:2\:* && $\!:1 !~ *\:
 
 # or somehow set this using Makefile substitution?
 set prefix=@prefix@
+set datarootdir=@datarootdir@
 set datadir=@datadir@
 set pkgdatadir=${datadir}/@PACKAGE@
 set infodir=@infodir@
