@@ -5,6 +5,11 @@
 
 2007-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-44:
+	  No source revision.  Setting up for improved installchecking.
+	  See ../ChangeLog.
+	
+
 	* HACKT-00-01-04-main-00-81-43:
 	  No source revision.  
 	  Makefile.am missing dependency: sim/ISE.{o,lo}: cvstag.h

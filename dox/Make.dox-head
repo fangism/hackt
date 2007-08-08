@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.9 2007/07/31 23:22:29 fang Exp $
+#	$Id: Make.dox-head,v 1.10 2007/08/08 23:01:27 fang Exp $
 #	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
@@ -9,6 +9,7 @@
 # PSS = <list of ps's>
 
 include $(top_srcdir)/Make.stddef
+include $(top_srcdir)/installdirs.mk
 
 # commented definitions are set by configure
 # DVIPS = dvips

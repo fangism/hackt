@@ -2,9 +2,10 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.43 2007/07/31 23:22:25 fang Exp $
+#	$Id: Makefile.am,v 1.44 2007/08/08 23:01:24 fang Exp $
 
 include $(top_srcdir)/Make.stddef
+include $(top_srcdir)/installdirs.mk
 
 AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -64,7 +65,11 @@ hackt-libtool: libtool
 	$(LN_S) $< $@
 
 # Many of these are already in DIST_COMMON
-EXTRA_DIST += Make.stddef Make.global local.cvsignore \
+EXTRA_DIST += \
+	Make.stddef \
+	Make.global \
+	installdirs.mk \
+	local.cvsignore \
 	bootstrap \
 	BOUNTY \
 	BRANCHES \

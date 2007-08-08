@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2007-08-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-44:
+	  Make.stddef: directory variables moved to ...
+	  installdirs.mk: some additional installation subdirectories, 
+		intended as post-configure variables, for convenience.  
+	  Makefile.am: distribute installdirs.mk
+
+
 2007-07-31	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-41-merged-chpsim-06-26:

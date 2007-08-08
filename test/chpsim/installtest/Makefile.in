@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.3 2007/08/08 20:15:09 fang Exp $
+#	$Id: Makefile.in,v 1.4 2007/08/08 23:01:31 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -14,19 +14,26 @@
 # appears earliest in the path to guarantee that the intended executables
 # are being tested.  
 
+# for: examplesdir
+top_srcdir = @top_srcdir@
+# include $(top_srcdir)/Make.stddef
+top_builddir = @top_builddir@
+# for list of install paths from configure
+include $(top_builddir)/installcheck.mk
+include $(top_srcdir)/installdirs.mk
+
+# pkgdatadir = $(datadir)/@PACKAGE@
+## probably resembles: /usr/local/share/hackt/lib
 
 # minimal configuration paths
-srcdir = @srcdir@
-VPATH = @srcdir@
-# top_builddir = @top_builddir@
-prefix = @prefix@
-datarootdir = @datarootdir@
-datadir = @datadir@
-pkgdatadir = $(datadir)/@PACKAGE@
-# probably resembles: /usr/local/share/hackt/lib
+# srcdir = @srcdir@
+# VPATH = @srcdir@
+# NOTE: we now reference the *INSTALLED* directory as the VPATH/srcdir
+srcdir = $(examplesdir)/chpsim-function
+# keep this consistent with parent directory's Makefile.am
+VPATH = $(srcdir)
+# ALERT: not all versions of make support variable expansion of VPATH
 
-# for list of install paths from configure
-# include $(top_builddir)/installcheck.mk
 
 #############################################################################
 ################### the important Makefile example below ####################
@@ -40,6 +47,8 @@ include $(pkgdatadir)/mk/hackt-lt.mk
 # up to user to define the following, or let make pick defaults:
 # CC = @CC@
 CXX = @CXX@
+ECHO = @ECHO@
+# or just 'echo'
 
 # just echo results back out
 all: confirm-exec hello-test.chpsimrc-out
@@ -47,7 +56,9 @@ all: confirm-exec hello-test.chpsimrc-out
 
 # non-essential, just for diagnostics only
 confirm-exec:
-	@{ $(ECHO) "PATH=$$PATH" ; \
+	@{ $(ECHO) "examplesdir=$(examplesdir)" && \
+	$(ECHO) "VPATH=$(VPATH)" && \
+	$(ECHO) "PATH=$$PATH" && \
 	which $(HACKT_CONFIG) && \
 	which $(HACKT_LIBTOOL) && \
 	which $(HACKT_EXE) && \

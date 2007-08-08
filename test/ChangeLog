@@ -1,5 +1,16 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.66 2007/07/31 23:23:53 fang Exp $
+#	$Id: ChangeLog,v 1.67 2007/08/08 23:01:29 fang Exp $
+
+2007-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-44:
+	  chpsim/Makefile.am: dependencies for installtest/Makefile
+		Use installdirs.mk.
+	  chpsim/installtest/Makefile.in: now use the *installed*
+		examples directory as the srcdir/VPATH for the 
+		install test's Makefile!  (as opposed to the srcdir)
+		Will do this from now on for installcheck tests.
+
 
 2007-07-30	David Fang		<fangism@users.sourceforge.net>
 

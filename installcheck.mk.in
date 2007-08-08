@@ -1,5 +1,6 @@
 # "installcheck.mk[.in]
-#	$Id: installcheck.mk.in,v 1.3 2007/08/08 20:15:05 fang Exp $
+#	$Id: installcheck.mk.in,v 1.4 2007/08/08 23:01:25 fang Exp $
+# TODO: rename this stdinstalldirs.mk since it's used for more than checking
 # install paths from configure
 
 bindir = @bindir@
@@ -36,4 +37,7 @@ target_alias = @target_alias@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
+
+# more install directories (only *indirectly* dependent on these variables)
+# are provided in $(top_srcdir)/installdirs.mk
 

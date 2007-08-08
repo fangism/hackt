@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.23 2007/07/31 23:22:24 fang Exp $
+#	$Id: Make.stddef,v 1.24 2007/08/08 23:01:24 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -55,17 +55,6 @@ TOUCH = @TOUCH@
 # defined with intention of self-modification... no used anymore
 # THISMAKEFILE = Makefile
 
-
-# more install directories
-# NOTE: these variables may already be defined by automake-1.10
-# where various documents (pdf, ps) should be installed
-# Keep these consistent with src/scripts/init_hackt.{csh,sh}[.in}
-docdir = $(pkgdatadir)/doc
-# infodir = $(datadir)/info
-htmldir = $(docdir)/html
-pdfdir = $(docdir)/pdf
-psdir = $(docdir)/ps
-examplesdir = $(docdir)/examples
 
 # standard automake targets to be initialized empty so subsequent uses
 # may simply accumulate using +=, without having to worry about initialization

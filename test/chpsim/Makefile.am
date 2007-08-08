@@ -1,8 +1,10 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2007/08/08 20:06:20 fang Exp $
+#	$Id: Makefile.am,v 1.19 2007/08/08 23:01:30 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
+include $(top_srcdir)/installdirs.mk
+# for examplesdir
 
 SUBDIRS = testlib .
 
@@ -470,7 +472,8 @@ gcdwrap_la_SOURCES = gcdwrap.cc
 gcdwrap_la_LIBADD = libgcdstatic.la
 gcdwrap_la_LDFLAGS = $(noinst_MODULE_FLAGS)
 
-# install checking
+###############################################################################
+############################ install checking #################################
 # we don't want to list this as a SUBDIR because it includes only a 
 # minimalist Makefile without most standard automake targets.
 # We need to manage the subdirectory here.  
@@ -481,6 +484,9 @@ all-local: $(installcheckdir)/Makefile
 $(installcheckdir)/Makefile: \
 		$(installcheckdir)/Makefile.in $(top_builddir)/config.status
 	$(RECONFIGURE)
+
+$(installcheckdir)/Makefile: $(top_builddir)/installcheck.mk \
+	$(top_srcdir)/installdirs.mk
 
 # explicitly prepend path to force subshell to find installed executables first
 INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
@@ -502,6 +508,9 @@ endif
 #	(cd $(installcheckdir) && $(MAKE) $(AM_MAKEFLAGS) clean)
 
 chpsimfuncdir = $(examplesdir)/chpsim-function
+# MAINTAINENCE: keep chpsimfuncdir definition consistent with 
+#	$(installcheckdir)/Makefile.in
+
 DISTCLEANFILES += $(installcheckdir)/Makefile
 
 dist_chpsimfunc_DATA = \
@@ -511,8 +520,9 @@ dist_chpsimfunc_DATA = \
 	$(installcheckdir)/hello-test.chpsimrc \
 	$(installcheckdir)/Makefile.in
 
-# EXTRA_DIST += $(chpsimfunc_DATA)
 
+############################ end install checking #############################
+###############################################################################
 
 include $(top_srcdir)/test/Make.test-tail
 

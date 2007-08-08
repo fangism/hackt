@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.14 2007/07/31 23:22:28 fang Exp $
+#	$Id: ChangeLog,v 1.15 2007/08/08 23:01:27 fang Exp $
+
+2007-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-44:
+	  Make.dox-head: use installdirs.mk
+
 
 2007-07-31	David Fang		<fangism@users.sourceforge.net>
 
