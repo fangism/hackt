@@ -1,8 +1,10 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2007/01/24 04:14:49 fang Exp $
+#	$Id: Makefile.am,v 1.23 2007/08/09 03:47:07 fang Exp $
 
 PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
+
+.NOTPARALLEL: hac.pdf hac.dvi
 
 include $(top_srcdir)/dox/Make.dox-head
 

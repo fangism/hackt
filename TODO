@@ -1,6 +1,6 @@
 to do list:
 
-#	$Id: TODO,v 1.26 2007/01/26 18:46:37 fang Exp $
+#	$Id: TODO,v 1.27 2007/08/09 03:47:01 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
 Pay more attention to the src/ChangeLog.  
@@ -39,14 +39,6 @@ list of things accomplished in 0.1.3 series:
 		inclusion dependence graphs! (*done* -- 10/09/04)
 
 -------------------------------------------------------------------------------
-PACKAGING
-
-	Write an installed script (init.csh) that sets environment variables
-and paths automatically, adjusting library paths, MAN_PATH, etc...
-One should be able to switch between installations in different locations
-by sourcing these scripts.  
-
--------------------------------------------------------------------------------
 source management:
 	automake: AUTO_IGNORE_PATTERNS for cvsignore
 
@@ -63,7 +55,7 @@ configury:
 		headers
 		packages...
 	summarize results of configure at the very end
-	stating which required packages missing
+		stating which required packages missing
 		which optional packages found, etc...
 	save errors until the very end for summary
 	produce a pkg-config .pc file if available, using configure results

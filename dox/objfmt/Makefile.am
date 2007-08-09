@@ -1,8 +1,10 @@
 # "dox/objfmt/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2006/11/26 04:41:12 fang Exp $
+#	$Id: Makefile.am,v 1.10 2007/08/09 03:47:08 fang Exp $
 
 PDFS = objfmt.pdf
 PSS = $(PDFS:.pdf=.ps)
+
+.NOTPARALLEL: objfmt.pdf objfmt.dvi
 
 include $(top_srcdir)/dox/Make.dox-head
 

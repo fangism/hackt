@@ -5,6 +5,10 @@
 
 2007-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-45:
+	  No source revision, documentation only.
+
+
 	* HACKT-00-01-04-main-00-81-44:
 	  No source revision.  Setting up for improved installchecking.
 	  See ../ChangeLog.

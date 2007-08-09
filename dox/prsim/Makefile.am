@@ -1,8 +1,10 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.1 2007/01/24 04:14:52 fang Exp $
+#	$Id: Makefile.am,v 1.2 2007/08/09 03:47:09 fang Exp $
 
 PDFS = prsim.pdf
 PSS = $(PDFS:.pdf=.ps)
+
+.NOTPARALLEL: prsim.pdf prsim.dvi
 
 include $(top_srcdir)/dox/Make.dox-head
 

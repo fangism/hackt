@@ -1,11 +1,11 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.10 2007/07/31 23:22:29 fang Exp $
+#	$Id: Make.dox-tail,v 1.11 2007/08/09 03:47:06 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
 local.cvsignore: $(top_srcdir)/dox/local.cvsignore
-	$(CP) $? $@
+	$(CP) $< $@
 
 AUTO_IGNORE += local.cvsignore
 DISTCLEANFILES += local.cvsignore
@@ -26,8 +26,8 @@ clean-figs: force
 	$(RM) figs/*.pdftex_t
 	$(RM) figs/*.png
 
-
-.NOTPARALLEL: pdf ps
+# prefer to list .pdf/.dvi pairs explicitly, more fine-grained
+# .NOTPARALLEL: pdf ps
 
 .PHONY: help-dox clean-figs
 
@@ -37,8 +37,8 @@ help-dox:
 	$(ECHO) "    ps: builds PostScript documents"
 
 help-local:
-	@$(CALLMAKE) help-dox 2> /dev/null
-	@$(CALLMAKE) help-latex 2> /dev/null
+	@{ $(CALLMAKE) help-dox ; \
+	$(CALLMAKE) help-latex ;} 2> /dev/null
 
 include $(top_srcdir)/dox/mk/Make.latex
 include $(top_srcdir)/dox/mk/Make.fig

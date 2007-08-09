@@ -1,10 +1,12 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2007/07/31 23:22:30 fang Exp $
+#	$Id: Makefile.am,v 1.6 2007/08/09 03:47:06 fang Exp $
 
 PDFS = hacchpsim.pdf
 # deprecated:
 noinst_DATA = chpsim-tex.pdf chpsim-tex.ps
 PSS = $(PDFS:.pdf=.ps)
+
+.NOTPARALLEL: chpsim-tex.pdf chpsim-tex.dvi
 
 include $(top_srcdir)/dox/Make.dox-head
 

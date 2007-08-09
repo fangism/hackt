@@ -1,5 +1,5 @@
 # "dox/mk/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2007/06/12 05:12:30 fang Exp $
+#	$Id: Makefile.am,v 1.9 2007/08/09 03:47:07 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -13,7 +13,7 @@ AUTO_IGNORE += local.cvsignore
 DISTCLEANFILES += local.cvsignore
 
 local.cvsignore: $(srcdir)/../local.cvsignore
-	$(CP) $? $@
+	$(CP) $< $@
 
 include $(top_srcdir)/Make.global
 

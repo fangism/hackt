@@ -2,6 +2,10 @@
 
 2007-08-08	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-45:
+	  Make.global: more echo-* targets listed under help.
+
+
 	* HACKT-00-01-04-main-00-81-44:
 	  Make.stddef: directory variables moved to ...
 	  installdirs.mk: some additional installation subdirectories, 

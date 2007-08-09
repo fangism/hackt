@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.44 2007/08/08 23:01:24 fang Exp $
+#	$Id: Makefile.am,v 1.45 2007/08/09 03:47:01 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 include $(top_srcdir)/installdirs.mk
@@ -53,6 +53,9 @@ doc_DATA = \
 	NEWS \
 	README \
 	TODO
+
+noinst_DATA = \
+	CLEANUP
 
 bin_SCRIPTS = \
 	hackt-config \

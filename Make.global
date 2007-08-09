@@ -7,9 +7,9 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.29 2007/01/24 23:20:20 fang Exp $
+#	$Id: Make.global,v 1.30 2007/08/09 03:47:01 fang Exp $
 
-# automatically runs autotools (and recursively in dubdirectories)
+# automatically runs autotools (and recursively in subdirectories)
 reconf: force
 	autoreconf
 
@@ -219,6 +219,24 @@ echo-programs: force
 echo-scripts: force
 	@$(ECHO) $(SCRIPTS)
 
+echo-data: force
+	@$(ECHO) $(DATA)
+
+echo-texinfos: force
+	@$(ECHO) $(TEXINFOS)
+
+echo-dvis: force
+	@$(ECHO) $(DVIS)
+
+echo-pdfs: force
+	@$(ECHO) $(PDFS)
+
+echo-pss: force
+	@$(ECHO) $(PSS)
+
+echo-htmls: force
+	@$(ECHO) $(htmls)
+
 echo-package: force
 	@$(ECHO) $(PACKAGE)
 
@@ -301,13 +319,14 @@ check.log.filter:
 		$(GREP) -v "src/hackt" > $@ \
 		|| $(ECHO) "\'make check.log\' first"
 
+# assumes 'wc' in PATH
 if HAVE_CVS
 cvsdiffs: force
-	-{ cd $(srcdir) && $(CVS) diff -uN ;} > $@
-	@$(ECHO) `$(GREP) "^-" $@ | $(GREP) -v "^---" | wc -l` "lines removed"
-	@$(ECHO) `$(GREP) "^+" $@ | $(GREP) -v "^+++" | wc -l` "lines added"
+	-{ cd $(srcdir) && $(CVS) $(DIFF) -uN ;} > $@
+	@$(ECHO) `$(GREP) "^-" $@ | $(GREP) -v "^---" | wc -l` "lines removed" ; \
+	$(ECHO) `$(GREP) "^+" $@ | $(GREP) -v "^+++" | wc -l` "lines added"
 else
-cvsdiffs:
+cvsdiffs: force
 	@$(ECHO) "Sorry, no 'cvs' found in path."
 endif
 
@@ -324,8 +343,8 @@ $(MORE_CLEAN_RECURSIVE_TARGETS):
 # help: help-global help-local
 help: 
 # ignore stderr
-	-@$(CALLMAKE) help-global 2> /dev/null
-	-@$(CALLMAKE) help-local 2> /dev/null
+	-@{ $(CALLMAKE) help-global ; \
+	$(CALLMAKE) help-local ;} 2> /dev/null
 
 help-local:
 
@@ -363,7 +382,8 @@ endif
 	$(ECHO) "	srcdir, top-srcdir, top-builddir, subdir, " ; \
 	$(ECHO) "	build, host, prefix, exec-prefix" ; \
 	$(ECHO) "	subdirs, dist-subdirs" ; \
-	$(ECHO) "	programs, scripts" ; \
+	$(ECHO) "	programs, scripts, data" ; \
+	$(ECHO) "	texinfos, dvis, pdfs, pss, htmls" ; \
 	$(ECHO) "	program-transform-name, package{,-version,-bugreport}" ; \
 	$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
 

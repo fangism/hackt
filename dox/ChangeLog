@@ -1,7 +1,14 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.15 2007/08/08 23:01:27 fang Exp $
+#	$Id: ChangeLog,v 1.16 2007/08/09 03:47:06 fang Exp $
 
 2007-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-45:
+	  Make.dox-tail: .NOTPARALLEL: ps pdf removed, 
+		in favor of explicit non-phony targets.
+		subdir Makefile.am's updated accordingly.
+	  chpsim/extending.texi: More notes on compiling modules.  
+
 
 	* HACKT-00-01-04-main-00-81-44:
 	  Make.dox-head: use installdirs.mk

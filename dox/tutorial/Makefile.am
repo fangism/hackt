@@ -1,9 +1,11 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.7 2006/11/26 04:41:15 fang Exp $
+#	$Id: Makefile.am,v 1.8 2007/08/09 03:47:10 fang Exp $
 
 PDFS = hackt.pdf
 PSS = $(PDFS:.pdf=.ps)
+
+.NOTPARALLEL: hackt.pdf hackt.dvi
 
 include $(top_srcdir)/dox/Make.dox-head
 
