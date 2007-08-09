@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.45 2007/08/09 03:47:01 fang Exp $
+#	$Id: Makefile.am,v 1.46 2007/08/09 06:37:29 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 include $(top_srcdir)/installdirs.mk
@@ -54,9 +54,6 @@ doc_DATA = \
 	README \
 	TODO
 
-noinst_DATA = \
-	CLEANUP
-
 bin_SCRIPTS = \
 	hackt-config \
 	hackt-libtool
@@ -77,6 +74,7 @@ EXTRA_DIST += \
 	BOUNTY \
 	BRANCHES \
 	BUILDS \
+	CLEANUP \
 	CONTRIBUTORS \
 	README.CVS \
 	README.maintainer \
