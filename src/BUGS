@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.11 2007/07/18 23:28:10 fang Exp $
+	$Id: BUGS,v 1.12 2007/08/09 05:49:25 fang Exp $
 
 guile: [CRITICAL]
 	This is an issue primarily with guile.
@@ -36,6 +36,15 @@ Global references from with definition-scopes:
 	trap out-of-scope references yet.  
 	TODO: make it at least catch such references and just error-out.  
 	Example case: param/049
+
+DEFECT:
+expression-lists with optional rvalues (e.g. function/template arguments)
+	potentially ambiguous interpretation of foo<>:
+		0 template arguments vs. 
+		1 template argument expecting default value
+	proposal: favor the latter
+	conflict: <> has special meaning in the context of relaxed types
+		with 0 strict template arguments.
 
 Relaxed actuals interaction with typedefs:
 	completely borked, see parser/template/env_source_typedef* test cases.

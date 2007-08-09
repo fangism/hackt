@@ -5,7 +5,7 @@ import "testlib/bool-peekbuf.hac";
 import "testlib/bool-sink-alt.hac";
 
 chan(bool) L, R;
-bool_source<3,{false,true,true}> S(L);
+bool_source S<3,{false,true,true}>(L);
 bool_peekbuf_fast B(L, R);	// faster version
 bool_sink_alt Z(R);
 

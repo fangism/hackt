@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46:
+	  No source revision, test cases updates and additions only.
+		See test/ChangeLog.
+	  BUGS: made note of empty template bracket <> ambiguity, 
+		which needs to be resolved as a language semantic defect.
+
+
 2007-08-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-45:

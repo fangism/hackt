@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2007/08/08 23:01:30 fang Exp $
+#	$Id: Makefile.am,v 1.20 2007/08/09 05:49:41 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -30,7 +30,7 @@ HACKT_PARSE_TEST_PASSES = \
 	select-fail-a \
 	select-block-a \
 	bool-and-test-a \
-	bool-or-test-a \
+	bool-or-test-a bool-or-test-b bool-or-test-c \
 	bool-xor-test-a \
 	channel-probe-a channel-probe-b channel-probe-c \
 	send-fail-a \
@@ -165,6 +165,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bool-and-test-a-03 \
 	bool-and-test-b-01 bool-and-test-b-02-trace \
 	bool-or-test-a-01 \
+	bool-or-test-b-01 \
+	bool-or-test-c-01 \
 	bool-xor-test-a-01 \
 	buffer-advance-to \
 	channel-probe-a-01 channel-probe-a-02 \

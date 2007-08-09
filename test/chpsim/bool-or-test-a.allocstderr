@@ -3,11 +3,11 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	A	bool_or<3>
 	channel: 4,1,2,3
 	bool: 1,2,3
-2	(top)	-	2	S0	bool_source<1, {0}>
+2	(top)	-	2	S0	bool_source<><1, {0}>
 	channel: 1
-3	(top)	-	3	S1	bool_source<3, {0,0,1}>
+3	(top)	-	3	S1	bool_source<><3, {0,0,1}>
 	channel: 2
-4	(top)	-	4	S2	bool_source<4, {1,0,0,0}>
+4	(top)	-	4	S2	bool_source<><4, {1,0,0,0}>
 	channel: 3
 5	(top)	-	5	Z	bool_sink<>
 	channel: 4

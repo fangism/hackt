@@ -3,7 +3,7 @@
 	Test case contributed by Tadeo, further reduced by Fang.
 	Trigged a bug in conflict-detection checking, 
 	now fixed as of HACKT-00-01-04-main-00-81-36.
-	$Id: mux-test-flat.hac,v 1.1 2007/06/16 23:05:30 fang Exp $
+	$Id: mux-test-flat.hac,v 1.2 2007/08/09 05:49:49 fang Exp $
  */
 
 import "int-source.hac";
@@ -53,7 +53,7 @@ chan(int) chanSelCol;
 chan(int) out;
 
 int_source_matrix<   32, 1, 2, { {1,2} } >  source ( chanMatrix );
-int_source < 32, 1, { 0} > sourceRow ( chanSelRow );
-int_source < 32, 2, {  0,1 }  > sourceCol ( chanSelCol );
+int_source < 32> sourceRow<1, { 0} > ( chanSelRow );
+int_source < 32> sourceCol<2, {  0,1 }  > ( chanSelCol );
 matrixMultiplexer<1,2> mux (  chanMatrix, chanSelRow, chanSelCol, out );
 int_sink <   32  > sinkOutput(   out   );

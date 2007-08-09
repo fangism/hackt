@@ -1,5 +1,5 @@
 // "channel-sync-desync-a.hac"
-//	$Id: channel-sync-desync-a.hac,v 1.2 2007/02/05 06:40:19 fang Exp $
+//	$Id: channel-sync-desync-a.hac,v 1.3 2007/08/09 05:49:47 fang Exp $
 // testing channel-field grouping and un-grouping
 
 import "channel-sync.hac";
@@ -13,8 +13,8 @@ chan(bool) BI, BO;
 chan(int) II, IO;
 chan(bool, int) M;
 
-bool_source_constant<true> bsrc(BI);
-int_source_constant<32, 17> isrc(II);
+bool_source_constant bsrc<true>(BI);
+int_source_constant<32> isrc<17>(II);
 channel_sync_bool_int<32> join(BI, II, M);
 channel_desync_bool_int<32> fork(M, BO, IO);
 bool_sink bsnk(BO);

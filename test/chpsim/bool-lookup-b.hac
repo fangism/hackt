@@ -1,6 +1,6 @@
 // "bool-lookup-b.hac"
 // copy-modified from "bool-lookup-a.hac"
-//	$Id: bool-lookup-b.hac,v 1.2 2007/02/05 06:40:07 fang Exp $
+//	$Id: bool-lookup-b.hac,v 1.3 2007/08/09 05:49:42 fang Exp $
 // Testing lookup table.  
 // Expected to fail on out-of-bounds access at run-time.
 
@@ -14,6 +14,6 @@ vals = { true, false, true, false, false, true, false, true};
 chan(int) Addr;
 chan(bool) Data;
 bool_lookup_table<8, vals> brom(Addr, Data);
-int_source<32, 8, {0,1,2,3,4,5,6,8}> adsrc(Addr);
+int_source<32> adsrc<8, {0,1,2,3,4,5,6,8}>(Addr);
 bool_sink bsnk(Data);
 

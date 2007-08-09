@@ -7,7 +7,7 @@ import "testlib/bool-sink.hac";
 pint M = 3;
 chan(bool) I, O[M];
 
-bool_source<1, {true}> src(I);
+bool_source src<1, {true}>(I);
 bool_split_alternator<M> spltr(I, O);
 bool_sink snk[M];
 (;i:M: snk[i](O[i]); )

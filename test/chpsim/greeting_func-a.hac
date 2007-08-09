@@ -21,7 +21,7 @@ chp {
 
 chan(int) A, B, G;
 my_gcd X(A, B, G);
-int_source<32, 3, {12,15,32}> AS(A);
-int_source<32, 4, {9,16,27,34}> BS(B);
+int_source<32> AS<3, {12,15,32}>(A);
+int_source<32> BS<4, {9,16,27,34}>(B);
 int_sink GS(G);
 
