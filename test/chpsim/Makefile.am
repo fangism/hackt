@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2007/08/09 05:49:41 fang Exp $
+#	$Id: Makefile.am,v 1.20.2.1 2007/08/09 23:05:50 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -429,6 +429,8 @@ EXTRA_LTLIBRARIES = \
 	bad_gcd1.la bad_gcd2.la bad_gcd3.la bad_gcd4.la \
 	libgcdstatic.la \
 	gcdwrap.la \
+	cond.la \
+	assert.la \
 	greeting.la
 
 libs: $(LTLIBRARIES) $(EXTRA_LTLIBRARIES)
@@ -473,6 +475,13 @@ libgcdstatic_la_SOURCES = gcdstatic.cc gcdstatic.h
 gcdwrap_la_SOURCES = gcdwrap.cc
 gcdwrap_la_LIBADD = libgcdstatic.la
 gcdwrap_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+cond_la_SOURCES = cond.cc
+cond_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
+assert_la_SOURCES = assert.cc
+assert_la_LDFLAGS = $(noinst_MODULE_FLAGS)
+
 
 ###############################################################################
 ############################ install checking #################################

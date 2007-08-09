@@ -5,6 +5,11 @@
 
 2007-08-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-01:
+	  Branch for chp/expresion additions, to support functions.
+	  Coming up: run-time cast expressions (operator-implicit)
+
+
 	* HACKT-00-01-04-main-00-81-46:
 	  No source revision, test cases updates and additions only.
 		See test/ChangeLog.

@@ -3,7 +3,7 @@
 	This is the primary header to include for linking chpsim
 	to dlopened libraries.  
 	Try not to include other headers explicitly.  
-	$Id: chpsim_dlfunction.h,v 1.2 2007/07/31 23:23:42 fang Exp $
+	$Id: chpsim_dlfunction.h,v 1.2.2.1 2007/08/09 23:05:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHPSIM_DLFUNCTION_H__
@@ -92,7 +92,8 @@ auto_wrap_chp_function(void (*f)(A0, A1, A2), const const_param_expr_list& a) {
 
 template <typename R, typename A0, typename A1, typename A2, typename A3>
 chp_function_return_type
-auto_wrap_chp_function(R (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
+auto_wrap_chp_function(R (*f)(A0, A1, A2, A3),
+		const const_param_expr_list& a) {
 	return make_chp_value((*f)(
 		extract_chp_value<A0>(a[0]),
 		extract_chp_value<A1>(a[1]),
@@ -103,12 +104,73 @@ auto_wrap_chp_function(R (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
 
 template <typename A0, typename A1, typename A2, typename A3>
 chp_function_return_type
-auto_wrap_chp_function(void (*f)(A0, A1, A2, A3), const const_param_expr_list& a) {
+auto_wrap_chp_function(void (*f)(A0, A1, A2, A3),
+		const const_param_expr_list& a) {
 	(*f)(
 		extract_chp_value<A0>(a[0]),
 		extract_chp_value<A1>(a[1]),
 		extract_chp_value<A2>(a[2]),
 		extract_chp_value<A3>(a[3])
+	);
+	return chp_function_return_type(NULL);
+}
+
+template <typename R,
+	typename A0, typename A1, typename A2, typename A3, typename A4>
+chp_function_return_type
+auto_wrap_chp_function(R (*f)(A0, A1, A2, A3, A4),
+		const const_param_expr_list& a) {
+	return make_chp_value((*f)(
+		extract_chp_value<A0>(a[0]),
+		extract_chp_value<A1>(a[1]),
+		extract_chp_value<A2>(a[2]),
+		extract_chp_value<A3>(a[3]),
+		extract_chp_value<A4>(a[4])
+	));
+}
+
+template <typename A0, typename A1, typename A2, typename A3, typename A4>
+chp_function_return_type
+auto_wrap_chp_function(void (*f)(A0, A1, A2, A3, A4),
+		const const_param_expr_list& a) {
+	(*f)(
+		extract_chp_value<A0>(a[0]),
+		extract_chp_value<A1>(a[1]),
+		extract_chp_value<A2>(a[2]),
+		extract_chp_value<A3>(a[3]),
+		extract_chp_value<A4>(a[4])
+	);
+	return chp_function_return_type(NULL);
+}
+
+template <typename R,
+	typename A0, typename A1, typename A2, typename A3, 
+	typename A4, typename A5>
+chp_function_return_type
+auto_wrap_chp_function(R (*f)(A0, A1, A2, A3, A4, A5),
+		const const_param_expr_list& a) {
+	return make_chp_value((*f)(
+		extract_chp_value<A0>(a[0]),
+		extract_chp_value<A1>(a[1]),
+		extract_chp_value<A2>(a[2]),
+		extract_chp_value<A3>(a[3]),
+		extract_chp_value<A4>(a[4]),
+		extract_chp_value<A5>(a[5])
+	));
+}
+
+template <typename A0, typename A1, typename A2, typename A3, 
+	typename A4, typename A5>
+chp_function_return_type
+auto_wrap_chp_function(void (*f)(A0, A1, A2, A3, A4, A5),
+		const const_param_expr_list& a) {
+	(*f)(
+		extract_chp_value<A0>(a[0]),
+		extract_chp_value<A1>(a[1]),
+		extract_chp_value<A2>(a[2]),
+		extract_chp_value<A3>(a[3]),
+		extract_chp_value<A4>(a[4]),
+		extract_chp_value<A5>(a[5])
 	);
 	return chp_function_return_type(NULL);
 }
@@ -124,19 +186,35 @@ using HAC::entity::chp_function_registrar;				\
 using HAC::entity::int_value_type;					\
 using HAC::entity::bool_value_type;					\
 using HAC::entity::real_value_type;					\
-using HAC::entity::const_param_expr_list;
+using HAC::entity::const_param_expr_list;				\
+using HAC::entity::extract_chp_value;					\
+using HAC::entity::make_chp_value;
 
 //=============================================================================
+/**
+	Declare an object that auto-loads the named function on construction.
+	The function name is retained, not wrapped.  
+	Part of public interface for 'advanced' users.
+ */
+#define	REGISTER_DLFUNCTION_RAW(key, fname)				\
+static const chp_function_registrar					\
+fname ## _receipt (key, fname);
+
+/**
+	Name transformation, not for general use.  
+ */
 #define	WRAP_DLFUNCTION_NAME(fname)		wrapped_ ## fname
 
 /**
 	Declare an object that auto-loads the named function on construction.
+	Not intended for general use.  
  */
 #define	REGISTER_DLFUNCTION(key, fname)					\
 static const chp_function_registrar					\
 fname ## _receipt (key, WRAP_DLFUNCTION_NAME(fname));
 
 /**
+	Intended for general use.  
 	\param key is the string for the function name.
 	\param fname is the function in the local module to register.
  */
@@ -147,41 +225,6 @@ WRAP_DLFUNCTION_NAME(fname) (const const_param_expr_list& a) {		\
 	return auto_wrap_chp_function(fname, a);			\
 }									\
 REGISTER_DLFUNCTION(key, fname)
-
-#if 0
-/**
-	and because I'm only a 3th degree black belt in C++ TMP, 
-	here's a variant of the macro for void return types.  
- */
-#define	CHP_DLFUNCTION_LOAD_VOID_DEFAULT(key, fname)			\
-static									\
-chp_function_return_type						\
-WRAP_DLFUNCTION_NAME(fname) (const const_param_expr_list& a) {		\
-	return auto_wrap_chp_function(fname, a);			\
-}									\
-REGISTER_DLFUNCTION(key, fname)
-#endif
-
-//=============================================================================
-#if 0
-// EXAMPLE:
-
-static
-int
-my_gcd(int a, int b) { ... }
-
-static
-chp_function_return_type
-wrap_my_gcd(const HAC::entity::const_param_expr_list& a) {
-	return make_chp_value(
-		my_gcd(
-			extract_int(a[0]), 
-			extract_int(a[1])
-		)
-	);
-	// or return auto_wrap_chp_function(&my_gcd, a);
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity
