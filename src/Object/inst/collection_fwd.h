@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_fwd.h"
 	Forward declarations for all instance and value collection classes.  
-	$Id: collection_fwd.h,v 1.6 2006/11/07 06:34:36 fang Exp $
+	$Id: collection_fwd.h,v 1.6.36.1 2007/08/10 06:49:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_FWD_H__
@@ -55,6 +55,8 @@ typedef instance_collection<int_tag>
 	int_instance_collection;
 typedef instance_collection<enum_tag>
 	enum_instance_collection;
+typedef instance_collection<real_tag>
+	real_instance_collection;
 typedef instance_collection<datastruct_tag>
 	struct_instance_collection;
 typedef instance_collection<channel_tag>
@@ -68,6 +70,8 @@ typedef instance_placeholder<int_tag>
 	int_instance_placeholder;
 typedef instance_placeholder<enum_tag>
 	enum_instance_placeholder;
+typedef instance_placeholder<real_tag>
+	real_instance_placeholder;
 typedef instance_placeholder<datastruct_tag>
 	struct_instance_placeholder;
 typedef instance_placeholder<channel_tag>
@@ -81,6 +85,8 @@ typedef port_formal_array<int_tag>
 	int_port_formal_array;
 typedef port_formal_array<enum_tag>
 	enum_port_formal_array;
+typedef port_formal_array<real_tag>
+	real_port_formal_array;
 typedef port_formal_array<datastruct_tag>
 	struct_port_formal_array;
 typedef port_formal_array<channel_tag>

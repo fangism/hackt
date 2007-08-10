@@ -1,10 +1,15 @@
 "TODO"
-#	$Id: TODO,v 1.54 2007/06/12 05:12:35 fang Exp $
+#	$Id: TODO,v 1.54.8.1 2007/08/10 06:49:40 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
 NOTE: see also sim/prsim/TODO
 NOTE: see also sim/chpsim/TODO
+
+===============================================================================
+language expression related tasks:
+	support reals (floating-point) on nonmeta language, CHP
+
 
 ===============================================================================
 sized PRS tools:
@@ -69,6 +74,8 @@ preprocessor:
 		imports to includes and passing include flags.  
 
 ===============================================================================
+PRS
+
 production rule templates and macro types
 	be able to define functions and patterns of rules for
 		simple construction of buffered functions.  
@@ -80,6 +87,9 @@ production rule templates and macro types
 			celeminv_p(a,b) : ~a & ~b
 		makes for combination composition...
 	need notion of unit (true) and null (false) constants.
+
+interpret the @node semantics (whose syntax came from -PRS-07 branch)
+	for internal nodes
 
 ===============================================================================
 pie-in-the-sky:

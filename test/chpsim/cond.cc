@@ -1,7 +1,10 @@
 /**
 	\file "cond.cc"
-	$Id: cond.cc,v 1.1.2.1 2007/08/09 23:05:54 fang Exp $
+	$Id: cond.cc,v 1.1.2.2 2007/08/10 06:50:11 fang Exp $
 	Conditional operator.
+	Unfortunately, all arguments are evaluated unconditionally
+		before one is selected.  To evaluate only one would require
+		a special form.  
 	And selection operator (one of many), eventually.
  */
 

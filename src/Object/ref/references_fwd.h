@@ -2,7 +2,7 @@
 	\file "Object/ref/references_fwd.h"
 	Foward declarations of all reference related classes, 
 	instances, values, meta, nonmeta, simple, member, aggregate...
-	$Id: references_fwd.h,v 1.4 2007/01/21 05:59:34 fang Exp $
+	$Id: references_fwd.h,v 1.4.24.1 2007/08/10 06:49:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCES_FWD_H__
@@ -44,6 +44,8 @@ typedef meta_instance_reference<bool_tag>
 	bool_meta_instance_reference_base;
 typedef meta_instance_reference<enum_tag>
 	enum_meta_instance_reference_base;
+typedef meta_instance_reference<real_tag>
+	real_meta_instance_reference_base;
 typedef meta_instance_reference<datastruct_tag>
 	struct_meta_instance_reference_base;
 // base classes for meta_value_references
@@ -84,6 +86,8 @@ typedef simple_nonmeta_value_reference<bool_tag>
 	simple_bool_nonmeta_instance_reference;
 typedef simple_nonmeta_value_reference<enum_tag>
 	simple_enum_nonmeta_instance_reference;
+typedef simple_nonmeta_value_reference<real_tag>
+	simple_real_nonmeta_instance_reference;
 typedef simple_nonmeta_value_reference<datastruct_tag>
 	simple_datastruct_nonmeta_instance_reference;
 
@@ -111,6 +115,8 @@ typedef simple_meta_instance_reference<int_tag>
 	simple_int_meta_instance_reference;
 typedef simple_meta_instance_reference<enum_tag>
 	simple_enum_meta_instance_reference;
+typedef simple_meta_instance_reference<real_tag>
+	simple_real_meta_instance_reference;
 typedef simple_meta_instance_reference<datastruct_tag>
 	simple_datastruct_meta_instance_reference;
 	
@@ -125,6 +131,8 @@ typedef aggregate_meta_instance_reference<int_tag>
 	aggregate_int_meta_instance_reference;
 typedef aggregate_meta_instance_reference<enum_tag>
 	aggregate_enum_meta_instance_reference;
+typedef aggregate_meta_instance_reference<real_tag>
+	aggregate_real_meta_instance_reference;
 typedef aggregate_meta_instance_reference<datastruct_tag>
 	aggregate_datastruct_meta_instance_reference;
 	
@@ -141,6 +149,8 @@ typedef member_meta_instance_reference<int_tag>
 	int_member_meta_instance_reference;
 typedef member_meta_instance_reference<enum_tag>
 	enum_member_meta_instance_reference;
+typedef member_meta_instance_reference<real_tag>
+	real_member_meta_instance_reference;
 typedef member_meta_instance_reference<datastruct_tag>
 	datastruct_member_meta_instance_reference;
 
@@ -169,6 +179,8 @@ typedef simple_nonmeta_value_reference<bool_tag>
 	simple_bool_nonmeta_value_reference;
 typedef simple_nonmeta_value_reference<enum_tag>
 	simple_enum_nonmeta_value_reference;
+typedef simple_nonmeta_value_reference<real_tag>
+	simple_real_nonmeta_value_reference;
 typedef simple_nonmeta_value_reference<datastruct_tag>
 	simple_struct_nonmeta_value_reference;
 

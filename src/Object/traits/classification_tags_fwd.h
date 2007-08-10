@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/classification_tags_fwd.h"
 	Forward declaration of meta-class type tags.  
-	$Id: classification_tags_fwd.h,v 1.2 2006/04/12 08:53:18 fang Exp $
+	$Id: classification_tags_fwd.h,v 1.2.72.1 2007/08/10 06:50:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_FWD_H__
@@ -14,6 +14,7 @@ struct datatype_tag;
 struct bool_tag;
 struct int_tag;
 struct enum_tag;
+struct real_tag;
 struct datastruct_tag;
 
 struct physical_instance_tag;

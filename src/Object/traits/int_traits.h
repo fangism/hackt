@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.19 2007/01/21 05:59:40 fang Exp $
+	$Id: int_traits.h,v 1.19.24.1 2007/08/10 06:50:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
@@ -116,6 +116,7 @@ struct class_traits<int_tag> {
 		of pints for the sake of nonmeta (rvalue) classification.  
 	 */
 	static const type_ref_ptr_type		magic_int_type_ptr;
+	static const type_ref_ptr_type&		nonmeta_data_type_ptr;
 };	// end struct class_traits<int_tag>
 
 //=============================================================================

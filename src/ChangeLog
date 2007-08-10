@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-02:
+	  Object/expr/nonmeta_cast_expr.{h,tcc}: new, middle-end
+		and run-time casting expressions for type-checking.
+		Corresponding type keys in Object/persistent_type_hash.h.
+		Instantiated in Object/expr/data_expr.cc.
+	  Object/traits/{int,bool}_traits.h: alias built-in type pointers
+		to nonmeta_data_type_ptr member for consistency, 
+		eventually reduce ugly specialization hacks, 
+		also helpful step towards introducing real (nonmeta) types.  
+	  Object/traits/real_traits.h: new, but not used yet (could be soon)
+	  Forward declaration headers: added 'real' (meta-type) typedefs.
+	  Next: front-end hooks to automatically apply nonmeta-type
+		conversions where applicable (AST/expr.cc).
+
+
 2007-08-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-46-chpsim-07-01:
