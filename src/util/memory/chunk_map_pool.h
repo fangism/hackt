@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.14 2007/03/17 19:58:19 fang Exp $
+	$Id: chunk_map_pool.h,v 1.14.16.1 2007/08/11 01:16:11 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -19,6 +19,16 @@
 
 //=============================================================================
 /**
+	Define the class-local static pool.
+	\param TemplSpec optional template specification.
+	\param _typename the typename keyword if needed.
+	\param T the name of the pool-allocated class. 
+ */
+#define	__CHUNK_MAP_POOL_DEFAULT_STATIC_INIT(TemplSpec, _typename, T)	\
+TemplSpec								\
+_typename T::pool_type T::pool;
+
+/**
 	General template macro for defining the new operator 
 	for a (default) chunk_map_pool-allocated class.  
 	\param TemplSpec optional template specification.
@@ -28,7 +38,6 @@
 		proprocessor limitations.  
  */
 #define	__CHUNK_MAP_POOL_DEFAULT_OPERATOR_NEW(TemplSpec, _typename, T)	\
-_typename T::pool_type T::pool;						\
 TemplSpec								\
 void*									\
 T::operator new (size_t s) {						\
@@ -66,6 +75,7 @@ T::operator delete (void* p) {						\
 	chunk_map_pool-allocating that class.  
  */
 #define	__CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(TemplSpec, _typename, T) \
+	__CHUNK_MAP_POOL_DEFAULT_STATIC_INIT(TemplSpec, _typename, T)	\
 	__CHUNK_MAP_POOL_DEFAULT_OPERATOR_NEW(TemplSpec, _typename, T)	\
 	__CHUNK_MAP_POOL_DEFAULT_OPERATOR_PLACEMENT_NEW(TemplSpec, T)	\
 	__CHUNK_MAP_POOL_DEFAULT_OPERATOR_DELETE(TemplSpec, T)

@@ -3,7 +3,7 @@
 	Convert an untyped value at run time.
 	For example, the return type of a nonmeta function call
 	is unknown until it is invoked.  
-	$Id: nonmeta_cast_expr.h,v 1.1.2.1 2007/08/10 06:49:45 fang Exp $
+	$Id: nonmeta_cast_expr.h,v 1.1.2.2 2007/08/11 01:16:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_CAST_EXPR_H__
@@ -11,6 +11,7 @@
 
 #include "Object/expr/data_expr.h"
 #include "util/memory/count_ptr.h"
+#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -92,6 +93,13 @@ private:
 	using result_type::unroll_resolve_copy;
 	using result_type::nonmeta_resolve_copy;
 
+public:
+	enum {
+		pool_chunk_size = 32
+	};
+
+	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(pool_chunk_size)
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(pool_chunk_size)
 };	// end class nonmeta_cast_expr
 
 

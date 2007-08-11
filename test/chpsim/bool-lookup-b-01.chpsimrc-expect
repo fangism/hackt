@@ -31,6 +31,7 @@ expect run-time error accessing out-of-bounds
 	150	1	1	brom.A?(brom.a)
 	150	4	2	adsrc.S!(8)
 ERROR: reference to uninstantiated pbool bool_lookup_table::V at index: [8]
+Run-time error writing channel: brom.D!(brom.V[brom.a])
 Run-time error while checking event.
 event[2]:	160	2	1	brom.D!(brom.V[brom.a])	[by:1]
 Caught run-time exception during execution.  Halting.

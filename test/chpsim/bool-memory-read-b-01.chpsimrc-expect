@@ -50,6 +50,7 @@ FATAL: reference to uninstantiated bool index [5]
 ERROR: unrolling aliases.
 Error resolving a single instance alias.
 Run-time error resolving nonmeta reference.
+Run-time error writing channel: brom.Read!(brom.data[brom.a])
 Run-time error while checking event.
 event[9]:	180	9	2	brom.Read!(brom.data[brom.a])	[by:10]
 Caught run-time exception during execution.  Halting.

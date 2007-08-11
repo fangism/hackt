@@ -1,15 +1,19 @@
 /**
 	\file "Object/expr/nonmeta_cast_expr.tcc"
-	$Id: nonmeta_cast_expr.tcc,v 1.1.2.1 2007/08/10 06:49:46 fang Exp $
+	$Id: nonmeta_cast_expr.tcc,v 1.1.2.2 2007/08/11 01:16:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_CAST_EXPR_TCC__
 #define	__HAC_OBJECT_EXPR_NONMETA_CAST_EXPR_TCC__
 
+#define	ENABLE_STACKTRACE			0
+
 #include <iostream>
 #include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/what.h"
+#include "util/stacktrace.h"
+#include "util/memory/chunk_map_pool.tcc"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +24,32 @@ struct expr_tag;
 //=============================================================================
 // class nonmeta_cast_expr method definitions
 
+// pool-allocator initialization
+// doesn't work because comma in arguments (templates) splits into 
+// multiple arguments in macro-expansion... :(
+#if 0
+TEMPLATE_CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(
+	NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE,
+	NONMETA_CAST_EXPR_CLASS)
+#elif 0
+// same issue, forwarding macro arguments
+__CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(
+	NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE,
+	typename,
+	NONMETA_CAST_EXPR_CLASS)
+#else
+__CHUNK_MAP_POOL_DEFAULT_STATIC_INIT(NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE,
+	typename, NONMETA_CAST_EXPR_CLASS)
+__CHUNK_MAP_POOL_DEFAULT_OPERATOR_NEW(NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE,
+	typename, NONMETA_CAST_EXPR_CLASS)
+__CHUNK_MAP_POOL_DEFAULT_OPERATOR_PLACEMENT_NEW(
+	NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE,
+	NONMETA_CAST_EXPR_CLASS)
+__CHUNK_MAP_POOL_DEFAULT_OPERATOR_DELETE(NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE,
+	NONMETA_CAST_EXPR_CLASS)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE
 NONMETA_CAST_EXPR_CLASS::nonmeta_cast_expr() : result_type(), rvalue() { }
 
@@ -84,6 +114,7 @@ NONMETA_CAST_EXPR_TEMPLATE_SIGNATURE
 count_ptr<const typename NONMETA_CAST_EXPR_CLASS::result_type>
 NONMETA_CAST_EXPR_CLASS::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const result_type>& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<const rvalue_type>
 		rd(rvalue->__unroll_resolve_copy(c, rvalue));
@@ -116,6 +147,7 @@ count_ptr<const typename NONMETA_CAST_EXPR_CLASS::const_expr_type>
 NONMETA_CAST_EXPR_CLASS::__nonmeta_resolve_rvalue(const nonmeta_context_base& c,
 		const count_ptr<const result_type>& p) const {
 	typedef	count_ptr<const const_expr_type>	return_type;
+	STACKTRACE_VERBOSE;
 	const count_ptr<const const_param>
 		r(rvalue->nonmeta_resolve_copy(c, rvalue));
 	if (r) {
@@ -127,10 +159,17 @@ NONMETA_CAST_EXPR_CLASS::__nonmeta_resolve_rvalue(const nonmeta_context_base& c,
 					>::tag_name <<
 				", but got a ";
 			r->what(cerr) << '.' << endl;
+//			THROW_EXIT;
 		}
 		return ret;
 	} else {
 		// already have error message?
+		cerr << "Run-time error: expecting a " <<
+			class_traits<
+				typename expr_tag<result_type>::type
+				>::tag_name <<
+			", but got (void)." << endl;
+//		THROW_EXIT;
 		return return_type(NULL);
 	}
 }

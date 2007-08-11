@@ -5,6 +5,18 @@
 
 2007-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-03:
+	  AST/expr.cc: arith, relational, logical exprs all 'intercept'
+		function call operands to automatically wrap them
+		in a run-time type-check cast.  
+	  Object/expr/nonmeta_cast_expr.{h,tcc}: now pool allocated.
+	  Object/expr/nonmeta_func_call.{h,cc}:
+		catch-and-rethrow error-handling and diagnostics
+	  sim/chpsim/EventExecutor.cc: when rechecking channel_sends (and
+		writing channel fields) catch exceptions and give diagnostic.
+	  Some test cases updated with better diagnostic messages.
+
+
 	* HACKT-00-01-04-main-00-81-46-chpsim-07-02:
 	  Object/expr/nonmeta_cast_expr.{h,tcc}: new, middle-end
 		and run-time casting expressions for type-checking.
