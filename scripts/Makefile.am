@@ -1,5 +1,5 @@
 # "scripts/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2007/06/10 02:56:35 fang Exp $
+#	$Id: Makefile.am,v 1.6.8.1 2007/08/11 23:32:02 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -21,6 +21,7 @@ EXTRA_DIST += $(PRECONFIGURED_TESTSCRIPTS) \
 	backup_repository.sh \
 	readable_gcc_errors.sed \
 	balance_indent.awk \
+	extract_texinfo.awk \
 	exhaust_check.sh \
 	rm_pattern.sh \
 	tally_tests.awk \

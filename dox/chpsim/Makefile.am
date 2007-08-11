@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2007/08/09 03:47:06 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.1 2007/08/11 23:31:59 fang Exp $
 
 PDFS = hacchpsim.pdf
 # deprecated:
@@ -41,10 +41,59 @@ hacchpsim_INCLUDES = \
 	extending.texi \
 	execution.texi
 
+EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
+	  $(AWK) '{printf(" \\\n\t" $$1);}'
+
+# HACCHPSIM_OPTIONS_TEXI = ...
+# HACCHPSIM_COMMANDS_TEXI = ...
+# HACCHPSIM_FUNCTIONS_TEXI = ...
+# source-extracted texinfo files: (can we deduce this automatically? done.)
+$(srcdir)/options.mk: usage.texi
+	{ $(ECHO) -n "HACCHPSIM_OPTIONS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
+$(srcdir)/commands.mk: commands.texi
+	{ $(ECHO) -n "HACCHPSIM_COMMANDS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
+# These are typically only built by the maintainer, since they are distributed.
+$(srcdir)/options.mk: Makefile
+$(srcdir)/commands.mk: Makefile
+
+-include $(srcdir)/options.mk
+-include $(srcdir)/commands.mk
+EXTRA_DIST += options.mk commands.mk
+AUTO_IGNORE += options.mk commands.mk
+MAINTAINERCLEANFILES = options.mk commands.mk
+# these could be CVS cleaned too...
+
+$(HACCHPSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/chpsim.cc
+	$(EXTRACT_TEXINFO) $<
+
+$(HACCHPSIM_COMMANDS_TEXI): $(top_srcdir)/src/sim/chpsim/Command.cc
+	$(EXTRACT_TEXINFO) $<
+
+$(HACCHPSIM_OPTIONS_TEXI): options
+$(HACCHPSIM_COMMANDS_TEXI): cmd
+
+options:
+	$(mkdir_p) $@
+
+cmd:
+	$(mkdir_p) $@
+
+CLEANFILES += $(HACCHPSIM_OPTIONS_TEXI) $(HACCHPSIM_COMMANDS_TEXI)
 EXTRA_DIST += $(hacchpsim_INCLUDES)
 
 # not bothering with more sophisticated dependency tracking
-hacchpsim.dvi hacchpsim.pdf hacchpsim.html hacchpsim.info: $(hacchpsim_INCLUDES)
+hacchpsim.dvi hacchpsim.pdf hacchpsim.html hacchpsim.info: \
+	$(hacchpsim_INCLUDES) \
+	$(HACCHPSIM_OPTIONS_TEXI) \
+	$(HACCHPSIM_COMMANDS_TEXI)
 
 # Q: do figures need to be installed?
 
@@ -71,7 +120,9 @@ EXTRA_DIST += $(SOURCE_FIGS) $(SOURCE_DOTS)
 
 AUTO_IGNORE += figs/build_path \
 	chpsim_event_cycle.fig \
-	chpsim_event_algo.fig
+	chpsim_event_algo.fig \
+	options \
+	cmd
 
 CLEANFILES += figs/build_path $(BUILT_FIGS)
 

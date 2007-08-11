@@ -1,5 +1,12 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.16 2007/08/09 03:47:06 fang Exp $
+#	$Id: ChangeLog,v 1.16.2.1 2007/08/11 23:31:57 fang Exp $
+
+2007-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-05:
+	  chpsim/: options and commands documentation relocated
+		to source code and extracted for ease of maintainence.
+
 
 2007-08-08	David Fang		<fangism@users.sourceforge.net>
 

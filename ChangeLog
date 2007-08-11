@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-08-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-05:
+	  Added scripts/extract_texinfo.awk.  Guess what it does.
+	  Make.stddef: use extract_texinfo.awk
+
+
 2007-08-08	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-45:
