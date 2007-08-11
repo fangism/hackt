@@ -5,6 +5,17 @@
 
 2007-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-04:
+	  No source revision, added test cases only:
+		tested proper error-handling and chaining of 
+		function call arguments and return values, 
+		stressed type-checking of new dynamic_cast operators.  
+	  Coming up: chpsim standard library of functions, 
+		including common utils like conditional expression, assert,
+		and math library.
+		More documentation management.
+
+
 	* HACKT-00-01-04-main-00-81-46-chpsim-07-03:
 	  AST/expr.cc: arith, relational, logical exprs all 'intercept'
 		function call operands to automatically wrap them

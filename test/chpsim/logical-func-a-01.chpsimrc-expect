@@ -1,0 +1,18 @@
+loaded function: `my_gcd'.
+	0	0	0	null
+	10	8	1	
+	20	4	1	X.A?(X.a)
+	20	1	2	AS.S!(false)
+	20	5	1	X.B?(X.b)
+	20	12	3	BS.S!(false)
+	20	6	1	X.C?(X.c)
+	20	17	4	CS.S!(false)
+	20	7	1	X.D?(X.d)
+	20	20	5	DS.S!(true)
+	30	3	1	
+Run-time error: expecting int, but got pbool-const
+Run-time error calling function: my_gcd(my_foo::a,my_foo::b)
+Run-time error writing channel: X.G!(bool(my_gcd(X.a,X.b))||bool(my_gcd(X.c,X.d)))
+Run-time error while checking event.
+event[2]:	40	2	1	X.G!(bool(my_gcd(X.a,X.b))||bool(my_gcd(X.c,X.d)))	[by:3]
+Caught run-time exception during execution.  Halting.

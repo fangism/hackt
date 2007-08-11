@@ -1,0 +1,28 @@
+// "gcd-nested-a.hac"
+// copy-modified from "missing_func-a.hac"
+// testing various composition uses of functions
+// here, return/argument types are all ints
+
+import "testlib/int-source.hac";
+import "testlib/int-sink.hac";
+
+defproc my_gcd(chan?(int) A, B, C, D; chan!(int) G) {
+int a, b, c, d;
+chp {
+*[
+	A?(a), B?(b), C?(c), D?(d);
+	G!(my_gcd(a, b) +my_gcd(c, d))
+	// NOTE: compiler automatically infers types as ints from operator
+	// and inserts run-time type-check casts
+]
+}
+}
+
+chan(int) A, B, C, D, G;
+my_gcd X(A, B, C, D, G);
+int_source<32> AS<4, {12,15,17,30}>(A);
+int_source<32> BS<5, {9,13,22,27,34}>(B);
+int_source<32> CS<3, {15,24,30}>(C);
+int_source<32> DS<6, {16,18,20,32,36,28}>(D);
+int_sink GS(G);
+

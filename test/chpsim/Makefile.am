@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.20.2.1 2007/08/09 23:05:50 fang Exp $
+#	$Id: Makefile.am,v 1.20.2.2 2007/08/11 03:22:06 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -34,7 +34,10 @@ HACKT_PARSE_TEST_PASSES = \
 	bool-xor-test-a \
 	channel-probe-a channel-probe-b channel-probe-c \
 	send-fail-a \
-	receive-fail-a
+	receive-fail-a \
+	gcd-nested-a gcd-nested-b \
+	logical-func-a logical-func-b \
+	relational-func-a
 
 # in this directory, no parse-fail tests
 HACKT_CREATE_TEST_PASSES = $(HACKT_PARSE_TEST_PASSES)
@@ -85,7 +88,10 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	mux-test-flat \
 	source-sink-void-a \
 	missing_func-a missing_func-b missing_func-c \
-	greeting_func-a
+	greeting_func-a \
+	gcd-nested-a gcd-nested-b \
+	logical-func-a logical-func-b \
+	relational-func-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -200,7 +206,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	gcd-func-a-05 gcd-func-a-06 gcd-func-a-08 gcd-func-a-09 \
 	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
 	greeting_func-a-01 greeting_func-a-02 \
-	greeting_func-a-03 greeting_func-a-04
+	greeting_func-a-03 greeting_func-a-04 \
+	gcd-nested-a-01 gcd-nested-b-01 \
+	relational-func-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -216,7 +224,11 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	send-fail-a-01 \
 	receive-fail-a-01 \
 	missing_func-a-01 missing_func-b-01 missing_func-c-01 \
-	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11
+	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11 \
+	gcd-nested-a-02 gcd-nested-b-02 \
+	logical-func-a-01 logical-func-a-02 \
+	logical-func-b-01 \
+	relational-func-a-02
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
 
@@ -312,100 +324,8 @@ KEEP_CHPSIM_TRACE_FILES = \
 	source-sink-peekbuf-a-02.chpsimtrace \
 	source-sink-peekbuf-b-02.chpsimtrace
 
-# Additional dependencies from known-side effects
-channel-sync-desync-a-04.chpsimtrace: channel-sync-desync-a-04-trace.chpsimrc-out
-	@test -f $@
-
-channel-sync-desync-a-05.chpsimtrace: channel-sync-desync-a-05-trace.chpsimrc-out
-	@test -f $@
-
-select-nested-loop-a-03.chpsimtrace: select-nested-loop-a-03-trace.chpsimrc-out
-	@test -f $@
-
-select-nested-loop-b-03.chpsimtrace: select-nested-loop-b-03-trace.chpsimrc-out
-	@test -f $@
-
-bool-split-select-a-02.chpsimtrace: bool-split-select-a-02-trace.chpsimrc-out
-	@test -f $@
-
-countdown-loop-a-02.chpsimtrace: countdown-loop-a-02-trace.chpsimrc-out
-	@test -f $@
-
-countdown-nested-a-03.chpsimtrace: countdown-nested-a-03-trace.chpsimrc-out
-	@test -f $@
-
-countdown-nested-b-03.chpsimtrace: countdown-nested-b-03-trace.chpsimrc-out
-	@test -f $@
-
-countdown-nested-c-03.chpsimtrace: countdown-nested-c-03-trace.chpsimrc-out
-	@test -f $@
-
-countdown-nested-d-03.chpsimtrace: countdown-nested-d-03-trace.chpsimrc-out
-	@test -f $@
-
-token-ring-a-01.chpsimtrace: token-ring-a-01.chpsimrc-out
-	@test -f $@
-
-bubble-ring-a-01.chpsimtrace: bubble-ring-a-01.chpsimrc-out
-	@test -f $@
-
-timed-fifo-a-01.chpsimtrace: timed-fifo-a-01.chpsimrc-out
-	@test -f $@
-
-timed-fifo-b-01.chpsimtrace: timed-fifo-b-01.chpsimrc-out
-	@test -f $@
-
-timed-fifo-c-01.chpsimtrace: timed-fifo-c-01.chpsimrc-out
-	@test -f $@
-
-timed-fifo-d-01.chpsimtrace: timed-fifo-d-01.chpsimrc-out
-	@test -f $@
-
-timed-fifo-e-01.chpsimtrace: timed-fifo-e-01.chpsimrc-out
-	@test -f $@
-
-timed-token-ring-a-01.chpsimtrace: timed-token-ring-a-01.chpsimrc-out
-	@test -f $@
-
-timed-token-ring-a-02.chpsimtrace: timed-token-ring-a-02.chpsimrc-out
-	@test -f $@
-
-timed-token-ring-b-01.chpsimtrace: timed-token-ring-b-01.chpsimrc-out
-	@test -f $@
-
-timed-token-ring-c-01.chpsimtrace: timed-token-ring-c-01.chpsimrc-out
-	@test -f $@
-
-timed-bubble-ring-a-01.chpsimtrace: timed-bubble-ring-a-01.chpsimrc-out
-	@test -f $@
-
-timed-bubble-ring-b-01.chpsimtrace: timed-bubble-ring-b-01.chpsimrc-out
-	@test -f $@
-
-timed-bubble-ring-c-01.chpsimtrace: timed-bubble-ring-c-01.chpsimrc-out
-	@test -f $@
-
-fib-test-a-01.chpsimtrace: fib-test-a-01.chpsimrc-out
-	@test -f $@
-
-fib-test-b-01.chpsimtrace: fib-test-b-01.chpsimrc-out
-	@test -f $@
-
-fib-test-c-01.chpsimtrace: fib-test-c-01.chpsimrc-out
-	@test -f $@
-
-bool-split-alternator-a-01.chpsimtrace: bool-split-alternator-a-01.chpsimrc-out
-	@test -f $@
-
-bool-merge-alternator-a-01.chpsimtrace: bool-merge-alternator-a-01.chpsimrc-out
-	@test -f $@
-
-source-sink-peekbuf-a-02.chpsimtrace: source-sink-peekbuf-a-02.chpsimrc-out
-	@test -f $@
-
-source-sink-peekbuf-b-02.chpsimtrace: source-sink-peekbuf-b-02.chpsimrc-out
-	@test -f $@
-
+# NOTE: tracefiles produced as side effects are already detected and
+# produce automatic dependencies in chpsimrc-out.autodepend
 
 # this should be redundant with chpsimrc-out dependence...
 $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)

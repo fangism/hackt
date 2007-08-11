@@ -1,0 +1,18 @@
+loaded function: `my_gcd'.
+	0	0	0	null
+	10	8	1	
+	20	4	1	X.A?(X.a)
+	20	1	2	AS.S!(12)
+	20	5	1	X.B?(X.b)
+	20	12	3	BS.S!(9)
+	20	6	1	X.C?(X.c)
+	20	17	4	CS.S!(15)
+	20	7	1	X.D?(X.d)
+	20	20	5	DS.S!(16)
+	30	3	1	
+Run-time error: expecting a int, but got a pbool-const.
+Run-time error: expecting a int, but got a pbool-const.
+Run-time error writing channel: X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
+Run-time error while checking event.
+event[2]:	40	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))	[by:3]
+Caught run-time exception during execution.  Halting.
