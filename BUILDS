@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.93 2007/08/10 17:01:56 fang Exp $
+	$Id: BUILDS,v 1.94 2007/08/11 03:10:00 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -109,12 +109,13 @@ lex: flex version 2.5.4
 yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 
+
 (Fang)
-Version: hackt 0.1.4-devel-20070503
-CVS Tag: HACKT-00-01-04-main-00-81-21
-Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '-C'
+Version: hackt 0.1.4-devel-20070808
+CVS Tag: HACKT-00-01-04-main-00-81-46
+Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-editline' '--with-guile-config=guile-1.8-config' '-C' --enable-ltdl-convenience
 build-triplet: powerpc-apple-darwin8.9.0
-c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)
+c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5367)
 config-CXXFLAGS: -g -O2
 config-LIBS: -ledit  -lncurses 
 lex: flex version 2.5.4
@@ -123,18 +124,22 @@ readline: BSD EditLine (histedit interface) ver. 2.9
 guile: guile-1.8-config - Guile version 1.8.1
 
 (Fang)
-// -O3 optimized
-Version: hackt 0.1.4-devel-20061121
-CVS Tag: HACKT-00-01-04-main-00-80-56
-Configured with: '--enable-fun' '--with-readline' 'YACC=/usr/bin/yacc' 'CFLAGS=-g -O3' 'CXXFLAGS=-g -O3' '-C'
-build-triplet: powerpc-apple-darwin8.8.0
-c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5363)
-config-LIBS: -ledit  -lncurses 
+// apple-g++ -O3 optimized
+Version: hackt 0.1.4-devel-20070808
+CVS Tag: HACKT-00-01-04-main-00-81-46
+Configured with: '--enable-fun' '--with-readline' 'YACC=/usr/bin/yacc' 'CFLAGS=-g -O3' 'CXXFLAGS=-g -O3' '--with-guile-config=guile-1.8-config' '-C' --enable-ltdl-convenience
+build-triplet: powerpc-apple-darwin8.9.0
+c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5367)
+config-CXXFLAGS: -g -O3
+config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
 yacc: /usr/bin/yacc
 readline: GNU readline EditLine wrapper
+guile: guile-1.8-config - Guile version 1.8.1
+
 
 (Fang)
+// FSF-g++
 Version: hackt 0.1.4-devel-20061026
 CVS Tag: HACKT-00-01-04-main-00-80-46
 Configured with: 'CC=ccache gcc-4' 'CXX=ccache g++-4' '--with-editline' '--enable-fun' '-C'
@@ -146,12 +151,12 @@ yacc: bison (GNU Bison) 2.3
 readline: BSD EditLine (histedit interface) ver. 2.9
 
 (Fang)
-// -O3 optimized
-Version: hackt 0.1.4-devel-20070503
-CVS Tag: HACKT-00-01-04-main-00-81-21
-Configured with: '--enable-fun' '--with-readline' '--with-guile-config=guile-1.8-config' 'CC=ccache gcc-4' 'CXX=ccache g++-4' 'CFLAGS=-g -O3' 'CXXFLAGS=-g -O3' '-C'
+// FSF-g++ -O3 optimized
+Version: hackt 0.1.4-devel-20070808
+CVS Tag: HACKT-00-01-04-main-00-81-46
+Configured with: '--enable-fun' '--with-readline' '--with-guile-config=guile-1.8-config' 'CC=ccache gcc-4' 'CXX=ccache g++-4' 'CXXFLAGS=-g -O3' '-C' --enable-ltdl-convenience
 build-triplet: powerpc-apple-darwin8.9.0
-c++: g++-4 (GCC) 4.2.0 20070430 (prerelease)
+c++: g++-4 (GCC) 4.2.1
 config-CXXFLAGS: -g -O3
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
