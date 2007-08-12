@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.19.2.1 2007/08/12 19:44:03 fang Exp $
+#	$Id: Makefile.am,v 1.19.2.2 2007/08/12 22:41:41 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -84,7 +84,7 @@ libstdchpfn_la_SOURCES = \
 	libchpfn/conditional.cc \
 	libchpfn/conditional.h
 
-pkginclude_HEADERS = \
+nobase_pkginclude_HEADERS = \
 	libchpfn/assert.h \
 	libchpfn/conditional.h
 

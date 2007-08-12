@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6.2.2 2007/08/12 19:44:01 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.3 2007/08/12 22:41:36 fang Exp $
 
 PDFS = hacchpsim.pdf
 # deprecated:
@@ -118,7 +118,7 @@ CLEANFILES += \
 EXTRA_DIST += $(hacchpsim_INCLUDES)
 
 # not bothering with more sophisticated dependency tracking
-hacchpsim.dvi hacchpsim.pdf hacchpsim.html $(srcdir)/hacchpsim.info: \
+hacchpsim.dvi hacchpsim.pdf hacchpsim.html hacchpsim.info: \
 	$(hacchpsim_INCLUDES) \
 	$(HACCHPSIM_OPTIONS_TEXI) \
 	$(HACCHPSIM_COMMANDS_TEXI) \
@@ -152,6 +152,7 @@ $(BUILT_FIGS) $(XFIG_TEX) $(XFIG_PSTEX) $(XFIG_PSTEX_T) \
 figs/.dirstamp:
 	$(mkdir_p) figs && touch $@
 
+DISTCLEANFILES += figs/.dirstamp
 EXTRA_DIST += $(SOURCE_FIGS) $(SOURCE_DOTS)
 
 AUTO_IGNORE += \
@@ -177,7 +178,7 @@ chpsim-tex.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
 built-figs hacchpsim.dvi: $(XFIG_EPS)
 built-figs hacchpsim.pdf hacchpsim.html: $(XFIG_PDFTEX)
 built-figs hacchpsim.html: $(XFIG_PNG)
-built-figs $(srcdir)/hacchpsim.info: $(XFIG_PNG)
+built-figs hacchpsim.info: $(XFIG_PNG)
 # still not sure why html looks for .eps figures...
 
 .PHONY: built-figs
