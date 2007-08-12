@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-08-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  configure.ac: replace docs/chpsim/figs/build_path with .dirstamp
+	  hackt-config.in: use datarootdir
+
+
 2007-08-11	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-46-chpsim-07-05:

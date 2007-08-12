@@ -1,5 +1,5 @@
 "lib/README"
-	$Id: README,v 1.2 2006/06/26 01:45:27 fang Exp $
+	$Id: README,v 1.2.60.1 2007/08/12 19:44:03 fang Exp $
 
 This is the home directory of general library files.  
 All files are architecture-independent.  
@@ -9,5 +9,6 @@ I'll write an install Makefile for this eventually.
 Contents of subdirectories:
 
 mk: makefile templates, standard and automake-style
-
+support: support files for 3rd party apps, like syntax highlighters
+libchpfn: standard library of CHP run-time functions
 

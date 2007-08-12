@@ -1,5 +1,14 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.16.2.1 2007/08/11 23:31:57 fang Exp $
+#	$Id: ChangeLog,v 1.16.2.2 2007/08/12 19:44:01 fang Exp $
+
+2007-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  chpsim/: Now extract documentation from module library functions
+		in lib/libchpfn/*.cc, included by stdchpfn.texi.
+	  mk/scantexdepend.awk: reject strings that cannot be file names,
+		because they contain special shell characters
+
 
 2007-08-11	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,5 +1,11 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.68.2.2 2007/08/11 03:22:05 fang Exp $
+#	$Id: ChangeLog,v 1.68.2.3 2007/08/12 19:44:15 fang Exp $
+
+2007-08-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  Removed cond.cc and assert.cc, moved to lib/libchpfn library.
+
 
 2007-08-10	David Fang		<fangism@users.sourceforge.net>
 

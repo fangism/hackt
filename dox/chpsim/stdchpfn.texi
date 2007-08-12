@@ -1,0 +1,34 @@
+@c "stdchpfn.texi"
+
+@node Standard Library Functions
+@chapter Standard Library Functions
+@cindex library
+@cindex functions
+@cindex standard library
+
+This section describes the usage of existing library functions.
+These library functions can be loaded by dlopening @file{stdchpfn.la},
+which is located in @file{@i{pkglibdir}} (like @file{prefix/lib/hackt}).
+
+@menu
+* Function Descriptions:: list of functions
+* Function Renaming:: customization and remapping
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Function Descriptions
+@section Function Descriptions
+
+@include fn/assert.texi
+@include fn/bcond.texi
+@include fn/zcond.texi
+@include fn/rcond.texi
+
+@c ----------------------------------------------------------------------------
+@node Function Renaming
+@section Function Renaming
+
+This section describes ways in which one can customize the standard library.
+Perhaps you don't like the names chosen, or you would like to remap
+selected functions to your own versions.
+

@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.36 2007/08/01 21:07:54 fang Exp $
+#	$Id: ChangeLog,v 1.36.2.1 2007/08/12 19:44:02 fang Exp $
+
+2006-08-12	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  Added chpsim function library to libchpfn subdir.
+
 
 2006-08-01	David Fang	<fangism@users.sourceforce.net>
 
