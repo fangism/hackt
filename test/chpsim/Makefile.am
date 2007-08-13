@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.20.2.3 2007/08/12 19:44:18 fang Exp $
+#	$Id: Makefile.am,v 1.20.2.4 2007/08/13 02:56:43 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -47,6 +47,7 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 # temporary for now:
 HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
+# NOTE: tests related to the CHP standard library should be prefixed 'lib-'
 # TODO: eventually generate object test cases for all of these:
 HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	defaults \
@@ -91,7 +92,9 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	greeting_func-a \
 	gcd-nested-a gcd-nested-b \
 	logical-func-a logical-func-b \
-	relational-func-a
+	relational-func-a \
+	lib-assert-test-a \
+	lib-zcond-test-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -208,7 +211,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	greeting_func-a-01 greeting_func-a-02 \
 	greeting_func-a-03 greeting_func-a-04 \
 	gcd-nested-a-01 gcd-nested-b-01 \
-	relational-func-a-01
+	relational-func-a-01 \
+	lib-zcond-test-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -228,7 +232,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	gcd-nested-a-02 gcd-nested-b-02 \
 	logical-func-a-01 logical-func-a-02 \
 	logical-func-b-01 \
-	relational-func-a-02
+	relational-func-a-02 \
+	lib-assert-test-a-01
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
 
@@ -411,18 +416,34 @@ $(installcheckdir)/Makefile: \
 $(installcheckdir)/Makefile: $(top_builddir)/installcheck.mk \
 	$(top_srcdir)/installdirs.mk
 
+
+# library install check test
+libinstallcheckdir = libinstalltest
+all-local: $(libinstallcheckdir)/Makefile
+
+$(libinstallcheckdir)/Makefile: \
+		$(libinstallcheckdir)/Makefile.in $(top_builddir)/config.status
+	$(RECONFIGURE)
+
+$(libinstallcheckdir)/Makefile: $(top_builddir)/installcheck.mk \
+	$(top_srcdir)/installdirs.mk
+
 # explicitly prepend path to force subshell to find installed executables first
 INSTALL_PATH_OVERRIDE = $(bindir)$(PATH_SEPARATOR)"$$PATH"
 
+INSTALLTEST_DIRS = $(installcheckdir) $(libinstallcheckdir)
+
 if INSTALL_TESTS
-installcheck-local: $(installcheckdir)/Makefile
+installcheck-local: $(installcheckdir)/Makefile $(libinstallcheckdir)/Makefile
 	PATH=$(INSTALL_PATH_OVERRIDE) ; \
 	export PATH ; \
 	$(ECHO) "installcheck-local" ; \
-	(cd $(installcheckdir) && \
-		$(MAKE) $(AM_MAKEFLAGS) && \
-		$(MAKE) $(AM_MAKEFLAGS) clean \
-	)
+	for d in '$(INSTALLTEST_DIRS)' ; do \
+	  if (cd $$d && \
+	    $(MAKE) $(AM_MAKEFLAGS) && \
+	    $(MAKE) $(AM_MAKEFLAGS) clean \
+	  ) ; then : ; else exit 1 ; fi \
+	done
 endif
 
 # clean-local: clean-installcheck
@@ -443,6 +464,14 @@ dist_chpsimfunc_DATA = \
 	$(installcheckdir)/hello-test.chpsimrc \
 	$(installcheckdir)/Makefile.in
 
+# library install test files, reusing existing build check test files
+chpsimlibdir = $(examplesdir)/chpsim-stdlib
+DISTCLEANFILES += $(libinstallcheckdir)/Makefile
+
+chpsimlib_DATA = \
+	$(libinstallcheckdir)/Makefile.in \
+	lib-zcond-test-a.hac \
+	lib-zcond-test-a-01.chpsimrc
 
 ############################ end install checking #############################
 ###############################################################################

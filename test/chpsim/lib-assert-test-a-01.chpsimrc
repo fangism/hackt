@@ -1,0 +1,11 @@
+# "lib-assert-test-a-01.chpsimrc"
+#	$Id: lib-assert-test-a-01.chpsimrc,v 1.1.2.1 2007/08/13 02:56:46 fang Exp $
+# @haco@ lib-assert-test-a.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/libstdchpfn.la
+
+watchall-events
+watch-value b
+step 50
+

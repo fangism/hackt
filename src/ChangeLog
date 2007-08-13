@@ -5,6 +5,15 @@
 
 2007-08-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-07:
+	  Object/expr/dlfunction.{h,cc}: global variable to toggle 
+		whether or not functions are acknowledged upon registration.
+	  main/chpsim.{h,cc}: -f ack-loaded-fns to toggle this flag.
+	  other: testing newly added chpsim standard library functions,
+		including installcheck test
+	  TODO: document standard library usage, and example
+
+
 	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
 	  No source revision, documentation and chpsim function library only.
 		Starting to build chpsim standard function library.

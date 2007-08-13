@@ -1,9 +1,9 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.4.2.1 2007/08/13 02:56:58 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.1 2007/08/13 02:57:01 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
-# Minimalist Makefile to demonstrate chpsim with function modules
+# Minimalist Makefile to demontstrate chpsim standard function library usage.
 # This is not run as part of the normal test suite, but rather, 
 # as a post-install test, suitable for installcheck-local.
 #
@@ -27,7 +27,7 @@ include $(top_srcdir)/installdirs.mk
 
 # minimal configuration paths
 # NOTE: we now reference the *INSTALLED* directory as the VPATH/srcdir
-srcdir = $(examplesdir)/chpsim-function
+srcdir = $(examplesdir)/chpsim-stdlib
 # keep this consistent with parent directory's Makefile.am
 VPATH = $(srcdir)
 # ALERT: not all versions of make support variable expansion of VPATH
@@ -39,8 +39,9 @@ VPATH = $(srcdir)
 
 # include the *installed* makefile template
 # pkgdatadir is defined by installcheck.mk
-include $(pkgdatadir)/mk/hackt-lt.mk
-# This is the libtool-enable Makefile template
+include $(pkgdatadir)/mk/hackt.mk
+# Here we test the non-libtoolized Makefile template because we are not
+# building any modules in this test, only using the standard library.
 
 # up to user to define the following, or let make pick defaults:
 # CC = @CC@
@@ -49,7 +50,7 @@ ECHO = @ECHO@
 # or just 'echo'
 
 # just echo results back out
-all: confirm-exec hello-test.chpsimrc-out
+all: confirm-exec lib-zcond-test.chpsimrc-out
 	cat $^
 
 # non-essential, just for diagnostics only
@@ -63,24 +64,19 @@ confirm-exec:
 	which $(HACKT_COMPILE_EXE) && \
 	which $(HACKT_CREATE_EXE) && \
 	which $(HACKT_ALLOC_EXE) && \
-	which $(HACKT_CHPSIM_EXE) ; \
+	which $(HACKT_CHPSIM_EXE) && \
+	$(ECHO) -n "hackt-config --idflags: " && \
+	$(HACKT_CONFIG) --ldflags && \
+	$(ECHO) "should match $$(pkglibdir): -L$(pkglibdir)" ; \
 	} > $@ 2>&1
 
+CHPSIM_LDFLAGS = `$(HACKT_CONFIG) --ldflags` -lstdchpfn
+# should be equivalent to -L$(pkglibdir)
+
 # run hacchpsim to and log results to file
-hello-test.chpsimrc-out: hello-test.chpsimrc hello-test.haco-a hello.la
-	$(HACKT_CHPSIM_EXE) -b -lhello hello-test.haco-a < \
-		$(srcdir)/hello-test.chpsimrc > $@
-
-# hand-written library building rules, in the style of automake-libtool
-hello_la_LIBADD =
-# CHPSIM_MODULE_FLAGS is critical
-hello_la_LDFLAGS = $(CHPSIM_MODULE_FLAGS)
-# OBJECTS is normally inferred from SOURCES by automake
-hello_la_OBJECTS = hello.lo
-
-# the libtool library for the plug-in module
-hello.la: $(hello_la_OBJECTS)
-	$(CXXLINK) $(hello_la_LDFLAGS) $(hello_la_OBJECTS) $(hello_la_LIBADD)
+lib-zcond-test.chpsimrc-out: lib-zcond-test-a-01.chpsimrc lib-zcond-test-a.haco-a
+	$(HACKT_CHPSIM_EXE) -b $(CHPSIM_LDFLAGS) lib-zcond-test-a.haco-a < \
+		$(srcdir)/lib-zcond-test-a-01.chpsimrc > $@
 
 # local clean-up
 clean: clean-test

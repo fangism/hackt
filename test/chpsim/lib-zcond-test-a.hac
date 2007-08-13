@@ -1,0 +1,25 @@
+// "lib-conditional-test-a.hac"
+//	$Id: lib-zcond-test-a.hac,v 1.1.2.1 2007/08/13 02:56:57 fang Exp $
+
+import "testlib/int-source.hac";
+import "testlib/int-sink.hac";
+import "testlib/bool-source.hac";
+
+chan(int) A, B, Z;
+chan(bool) S;
+int a, b;
+bool s;
+int_source<32>
+	AS<1,{42}>(A),
+	BS<3,{31,0,11}>(B);
+bool_source
+	SS<2,{false,true}>(S);
+int_sink<32>
+	ZZ(Z);
+
+chp {
+*[ A?(a), B?(b), S?(s);
+   Z!(zcond(s, a, b))
+]
+}
+

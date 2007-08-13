@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.9.2.1 2007/08/11 23:32:11 fang Exp $
+	$Id: chpsim.cc,v 1.9.2.2 2007/08/13 02:56:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/expr/dlfunction.h"	// for ack_loaded_functions
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
 #include "sim/chpsim/graph_options.h"
@@ -374,6 +375,10 @@ static void __chpsim_show_delays(chpsim_options& o)
 	{ o.graph_opts.show_delays = true; }
 static void __chpsim_no_show_delays(chpsim_options& o)
 	{ o.graph_opts.show_delays = false; }
+static void __ack_loaded_functions(chpsim_options&)
+	{ entity::ack_loaded_functions = true; }
+static void __no_ack_loaded_functions(chpsim_options&)
+	{ entity::ack_loaded_functions = false; }
 
 const chpsim::register_options_modifier
 /***
@@ -525,7 +530,22 @@ Annotate event nodes with their delay values.  Default off.
 		"for dot-graphs: wrap process subgraphs into clusters"), 
 	chpsim::_no_show_delays(
 		"no-show-delays", &__chpsim_no_show_delays,
-		"for dot-graphs: un-clustered process subgraphs");
+		"for dot-graphs: un-clustered process subgraphs"),
+/***
+@texinfo options/ack-loaded-fns.texi
+@defopt {-f ack-loaded-fns}
+Print names of functions as they are loaded from dlopened modules.  
+Default on.
+Mostly useful for diagnostics.  
+@end defopt
+@end texinfo
+***/
+	chpsim::_ack_loaded_functions(
+		"ack-loaded-fns", &__ack_loaded_functions,
+		"Print names of functions as they are loaded (default)."),
+	chpsim::_no_ack_loaded_functions(
+		"no-ack-loaded-fns", &__no_ack_loaded_functions,
+		"Suppress names of functions as they are loaded.");
 
 //=============================================================================
 }	// end namespace HAC

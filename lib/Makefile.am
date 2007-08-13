@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.19.2.2 2007/08/12 22:41:41 fang Exp $
+#	$Id: Makefile.am,v 1.19.2.3 2007/08/13 02:56:39 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -74,6 +74,7 @@ AM_CPPFLAGS = -I $(top_srcdir)/src
 AM_CXXFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 
 pkglib_LTLIBRARIES = libstdchpfn.la stdchpfn.la
+EXTRA_DIST += libchpfn/TODO
 
 # this is just a normal non-module library
 # MAINTAINENCE: don't forget to list new source files in 
