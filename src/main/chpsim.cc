@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.9 2007/07/31 23:23:28 fang Exp $
+	$Id: chpsim.cc,v 1.10 2007/08/13 20:55:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -229,7 +229,7 @@ chpsim::usage(void) {
 	}
 	cerr << "To run a script, use shell redirection or pipes." << endl;
 	cerr << "Additional documentation is installed in:\n"
-	"\t`info chpsim' (finds " INFODIR "/hacchpsim.info)\n"
+	"\t`info hacchpsim' (finds " INFODIR "/hacchpsim.info)\n"
 	"\tPDF: " PDFDIR "/hacchpsim.pdf\n"
 	"\tPS: " PSDIR "/hacchpsim.ps\n"
 	"\tHTML: " HTMLDIR "/hacchpsim.html/index.html" << endl;
