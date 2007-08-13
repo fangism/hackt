@@ -1,5 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.68 2007/08/09 05:49:41 fang Exp $
+#	$Id: ChangeLog,v 1.69 2007/08/13 23:30:53 fang Exp $
+
+2007-08-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-47:
+	  Make.test-compile, Make.test-head:
+		Added test support for cpp (preprocesed) input tests.
+		Affects only lexer/ dir.
+
 
 2007-08-09	David Fang		<fangism@users.sourceforge.net>
 

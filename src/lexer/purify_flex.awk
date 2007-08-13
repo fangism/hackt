@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.7 2007/06/15 20:28:49 fang Exp $
+#	$Id: purify_flex.awk,v 1.8 2007/08/13 23:30:52 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -211,6 +211,11 @@ function append_call_args(str, arg) {
 	} else if (match($0, "define YY_CURRENT_BUFFER yy_current_buffer")) {
 		# flex 2.5.4
 		gsub("yy", name ".&", $0);
+		print;
+	} else if (match($0, "define YY_AT_BOL.*yy_current_buffer")) {
+		# flex 2.5.4
+		gsub("yy_current_buffer", name ".&", $0);
+		# to avoid substituting the ->yy_at_bol
 		print;
 	} else if (match($0, "define YY_CURRENT_BUFFER.*yy_buffer_stack")) {
 		# flex 2.5.31

@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.6 2006/07/27 05:55:34 fang Exp $
+	$Id: file_manager.cc,v 1.7 2007/08/13 23:30:51 fang Exp $
  */
 
 #include <iostream>
@@ -236,6 +236,25 @@ file_manager::close_FILE(void) {
 	_fstack.pop();
 	_names.pop_back();
 	return &_fstack.top();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Coercively change the current file and line position.
+	USE WITH CAUTION, may leave file manager incoherent if
+	directives are imbalanced!!!
+	Consult physician if irritation occurs.  
+	\param fn the file name to change to (path expanded).
+	\param fp the line number to update the current position.
+ */
+void
+file_manager::coerce_line_directive(const string& fn, const int fp) {
+	_names.pop();
+	_names.push(fn);
+	_fstack.top().name = fn;
+	token_position& t(current_position());
+	t.line = fp -1;		// -1 because following newline will increment
+	t.col = 1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

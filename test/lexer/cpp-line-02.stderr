@@ -1,0 +1,17 @@
+At: "cpp-line-02-a.hac-cpp":5:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (instance-decl) ... [5:1..6]
+#STATE#	datatype: bool [5:1..4]
+#STATE#	datatype: bool [5:6..9]
+in state #STATE#, possible rules are:
+	base_data_type_ref : base_data_type . strict_relaxed_template_arguments  (#RULE#)
+	strict_relaxed_template_arguments : .  (#RULE#)
+acceptable tokens are: 
+	'(' (reduce)
+	')' (reduce)
+	',' (reduce)
+	'<' (shift)
+	ID (reduce)

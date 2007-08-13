@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.6 2006/07/30 05:49:16 fang Exp $
+	$Id: token.h,v 1.7 2007/08/13 23:30:51 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -44,6 +44,9 @@ public:
 
 	int
 	string_compare(const char* d) const;
+
+	pint_value_type
+	value(void) const { return val; }
 
 	ostream&
 	what(ostream& o) const;

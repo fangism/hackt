@@ -1,0 +1,1 @@
+bool<> a was originally declared as a single instance, and thus may not be extended or re-declared, ERROR!  [5:6]

@@ -1,13 +1,14 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.32 2007/06/12 20:59:36 fang Exp $
+#	$Id: Make.test-head,v 1.33 2007/08/13 23:30:53 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
-SUFFIXES = .hac .depend .haco .haco-u .haco-c .haco-a \
+SUFFIXES = .hac .depend .hac-cpp .hacdepend \
+	.haco .haco-u .haco-c .haco-a \
 	.hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
 	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
 	.hacktobjtest .outdump .indump .haco-dump \

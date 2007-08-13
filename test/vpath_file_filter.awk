@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: vpath_file_filter.awk,v 1.3 2006/11/15 00:09:23 fang Exp $
+#	$Id: vpath_file_filter.awk,v 1.4 2007/08/13 23:30:54 fang Exp $
 # Filters out path differences in file names, preserving only the
 # non-directory portion of the file name. 
 # Useful in making path-dependent tests distcheck-able.  
@@ -15,6 +15,7 @@
 
 function filter_vpath_files(str) {
 	if (match(str,"^At:") || match(str,"^From:")) {
+#		|| match(str, "^Error in:")
 		while(match(str,"\\/")) {
 			gsub("\"[^/]*\\/","\"",str);
 		}

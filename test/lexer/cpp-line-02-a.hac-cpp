@@ -1,0 +1,6 @@
+// "cpp-line-02-a.hac-cpp"
+//	$Id: cpp-line-02-a.hac-cpp,v 1.1 2007/08/13 23:30:55 fang Exp $
+// testing preprocessor line directives
+
+bool bool;	// error
+

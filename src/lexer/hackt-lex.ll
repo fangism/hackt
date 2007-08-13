@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.20 2007/03/17 19:58:15 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.21 2007/08/13 23:30:52 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -94,6 +94,7 @@ using namespace HAC::parser;
 #include "parser/hackt-union.h"
 #include "util/stacktrace.h"
 #include "util/sstream.h"
+#include "util/libc.h"			/* for strsep */
 using flex::lexer_state;
 
 /**
@@ -380,7 +381,7 @@ CLOSEINCOMMENT	"*/"
 OPENSTRING	"\""
 MORESTRING	[^\\\"\n]+
 CLOSESTRING	"\""
-FILESTRING	"\"[^\"]+\""
+FILESTRING	{OPENSTRING}{MORESTRING}{CLOSESTRING}
 
 OCTAL_ESCAPE	"\\"[0-7]{1,3}
 BAD_ESCAPE	"\\"[0-9]+
@@ -419,6 +420,9 @@ FALSE		"false"
 EXTERN		"extern"
 STATIC		"static"
 EXPORT		"export"
+
+/* whole line  for line directive */
+LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
 
 /* consider recording all tokens' (including punctuation) positions? */
 
@@ -464,6 +468,43 @@ EXPORT		"export"
 {SCOPE}		{ NODE_POSITION_UPDATE(*hackt_lval, foo); return SCOPE; }
 {RANGE}		{ NODE_POSITION_UPDATE(*hackt_lval, foo); return RANGE; }
 {DEFINEOP}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return DEFINEOP; }
+
+
+{LINE} {
+/**
+	line directive processing:
+	# INT STRING
+	NOTE: file name ("quoted") is *required* unlike ANSI C
+	NOTE: whitespace between arguments is mandatory
+	NOTE: tokens after the file name are ignored to end-of-line
+**/
+	STACKTRACE("lexing #line directive");
+	static const char delim[] = " \t\n";
+	char** stringp = &yytext;
+	char* last = strsep(stringp, delim);	// eat the #
+	NEVER_NULL(last);
+	last = strsep(stringp, delim);		// expect line number
+	NEVER_NULL(last);
+	int v;
+	std::istringstream iss(last);	/* slower, but safer */
+	iss >> v;
+	last = strsep(stringp, delim);		// expect quoted filename
+	NEVER_NULL(last);
+	// NOTE: strips quotes without honoring string escape sequences!
+	++last;
+	stringp = &last;
+	last = strsep(stringp, "\"");
+	NEVER_NULL(last);
+	// TODO: error handling, completely absent
+#if 0
+	cout << "line = " << v << endl;
+	cout << "file = " << last << endl;
+#endif
+	// coercively set current file and position
+	hackt_parse_file_manager.coerce_line_directive(last, v);
+	// read and ignore the rest of the line
+	// don't return, continue lexing next token
+}
 
 {IMPORT} {
 	STACKTRACE("lexing import");

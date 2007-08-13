@@ -1,0 +1,10 @@
+// "cpp-line-03.hac-cpp"
+//	$Id: cpp-line-03.hac-cpp,v 1.1 2007/08/13 23:30:59 fang Exp $
+// testing preprocessor line directives
+// should fail to compile, seeing same decls twice
+
+#include "cpp-line-01.hac-cpp"
+
+#include "cpp-line-01.hac-cpp"
+// error here
+

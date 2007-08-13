@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.7 2006/07/27 05:55:35 fang Exp $
+	$Id: file_manager.h,v 1.8 2007/08/13 23:30:52 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -218,6 +218,9 @@ public:
 		return _names.back();
 	}
 
+	bool
+	empty(void) const { return _names.empty(); }
+
 	/**
 		For the lexer to update the current file position.  
 		\pre File stack must not be empty.  
@@ -231,6 +234,10 @@ public:
 	current_position(void) const {
 		return _fstack.top().pos;
 	}
+
+	/// Egregious hack to half-ass support #line directives.
+	void
+	coerce_line_directive(const string&, const int);
 
 	/**
 		Subtracting 1 from size because there is always
