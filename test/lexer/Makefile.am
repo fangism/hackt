@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/08/13 23:30:54 fang Exp $
+#	$Id: Makefile.am,v 1.17 2007/08/14 00:55:17 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -8,12 +8,14 @@ HACKT_CPP_PARSE_TEST_FAILURES = \
 	cpp-line-03
 
 HACKT_CPP_PARSE_TEST_PASSES = \
-	cpp-line-01
+	cpp-line-01 \
+	cpp-line-04
 
 # other depend source files for testing
 EXTRA_DIST += \
 	cpp-line-01-a.hac-cpp \
-	cpp-line-02-a.hac-cpp
+	cpp-line-02-a.hac-cpp \
+	cpp-line-04-a.hac-cpp
 
 HACKT_PARSE_TEST_FAILURES = \
 	badid-000 badid-001 \
@@ -65,7 +67,7 @@ srcdir_EXTRA_DIST += empty.hac \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += string-002 string-003 \
-	import-014-c
+	import-014-c cpp-line-02
 
 include $(top_srcdir)/test/Make.test-tail
 

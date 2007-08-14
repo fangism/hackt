@@ -1,0 +1,13 @@
+// "cpp-line-01.hac-cpp"
+//	$Id: cpp-line-04-a.hac-cpp,v 1.1 2007/08/14 00:55:18 fang Exp $
+// testing preprocessor line directives
+
+#ifndef	__CPP_LINE_01_HAC_CPP__
+#define	__CPP_LINE_01_HAC_CPP__
+
+#include "cpp-line-01-a.hac-cpp"
+
+bool b;
+
+#endif	// __CPP_LINE_01_HAC_CPP__
+

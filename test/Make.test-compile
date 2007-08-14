@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.10 2007/08/14 00:10:01 fang Exp $
+#	$Id: Make.test-compile,v 1.11 2007/08/14 00:55:14 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -41,6 +41,16 @@ HACKT_CPP_FLAGS = $(HACO_FLAGS) -MP -MD -MF $@depend -MT $@
 .hac-cpp.hacdepend:
 	@$(TOUCH) $@
 #	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $<
+
+hac-cpp.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_CPP_PARSE_TEST_SUBJECTS)" | \
+		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
+		$(AWK) '/.+/ {print "-include " $$1 ".hacdepend"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hac-cpp.autodepend
+AUTO_DEPENDS += hac-cpp.autodepend
 
 if VERBOSE_CHECK
 ECHO_COMPILEDUMP_COMMAND = $(ECHO) "Compile-dumping $< to .compiledump (expect-fail)"
@@ -280,14 +290,19 @@ HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_WARNINGS) \
 	$(HACKT_PARSE_TEST_FAILURES)
 
+HACKT_CPP_PARSE_TEST_SUBJECTS = \
+	$(HACKT_CPP_PARSE_TEST_PASSES) \
+	$(HACKT_CPP_PARSE_TEST_FAILURES)
+
+CLEANFILES += $(HACKT_CPP_PARSE_TEST_SUBJECTS:=.hac)
+
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES) \
 	$(HACKT_PARSE_TEST_WARNINGS) \
 	$(HACKT_CPP_PARSE_TEST_PASSES)
 
 srcdir_EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
-	$(HACKT_CPP_PARSE_TEST_PASSES:=.hac-cpp) \
-	$(HACKT_CPP_PARSE_TEST_FAILURES:=.hac-cpp) \
+	$(HACKT_CPP_PARSE_TEST_SUBJECTS:=.hac-cpp) \
 	$(HACKT_PARSE_TEST_FAILURES:=.stderr) \
 	$(HACKT_CPP_PARSE_TEST_FAILURES:=.stderr) \
 	$(HACKT_PARSE_TEST_WARNINGS:=.stderr) \
