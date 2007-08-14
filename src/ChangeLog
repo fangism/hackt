@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-47-parser-05-01:
+	  Mini-branch for parser support of flattening with improved
+		line directives.  
+	  New construct for embedding imported files while emulating 
+		the import structure.  
+	  lexer/file_manager.cc: embed_manager class to fake importing
+		file without opening new file handle.  
+	  lexer/hacflat-lex.ll: replace enter/leave comments with
+		#FILE { ... } wrapping directives
+		also test/vpath_file_filter.awk updated.
+	  lexer/hackt-lex.ll: added EMBEDFILE construct, coupled with
+	  parser/hackt-parse.yy.in: embedded_module rule for in-place
+		imported file
+	  Test case: trivial differences (fail) introduced in
+		16 lexer, 8 parser/basic test cases only.
+		Will fix shortly.
+
+
 2007-08-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-47:

@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.21 2007/08/13 23:30:52 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.21.2.1 2007/08/14 05:16:44 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -66,6 +66,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <stack>
 
 #ifdef	LIBBOGUS
 // HACK: prevent the inclusion of "parser/hackt-prefix.h"
@@ -104,6 +105,15 @@ using flex::lexer_state;
  */
 HAC::lexer::file_manager
 hackt_parse_file_manager;
+
+/**
+	Auxiliary stack for file-embedding construct, whereby the
+	lexer pushes a fake file onto this stack, and the parser
+	pops it off the stack when the file construct is reduced.  
+ */
+HAC::lexer::embedded_file_stack_type
+hackt_embedded_file_stack;
+
 
 /// generated in "parser/hackt-union.cc" for deleting tokens
 extern
@@ -310,6 +320,11 @@ extern
 int
 hackt_at_eof(const flex::lexer_state&);
 
+
+static
+void
+hackt_lex_expect(YYSTYPE&, lexer_state&, const int, const char*);
+
 }	/* end namespace lexer */
 }	/* end namespace HAC */
 
@@ -424,6 +439,8 @@ EXPORT		"export"
 /* whole line  for line directive */
 LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
 
+EMBEDFILE	^#FILE
+
 /* consider recording all tokens' (including punctuation) positions? */
 
 /****** states ******/
@@ -529,21 +546,7 @@ LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
 	YYSTYPE& temp(*hackt_lval);
 	// YYSTYPE temp;
 	/* OK to reuse this lexer state in recursive lex */
-	{
-	const int expect_string = __hackt_lex(&temp, foo);
-	if (expect_string != STRING) {
-		cerr << "Expecting \"file\" after import." << endl;
-		if (!hackt_at_eof(foo)) {
-			yy_union_lookup_dump(temp, expect_string,
-				cerr << "got: ") << endl;
-			yy_union_lookup_delete(temp, expect_string);
-		} else {
-			// a.k.a. yytname[0]
-			cerr << "got: $end" << endl;
-		}
-		THROW_EXIT;
-	}
-	}
+	hackt_lex_expect(temp, foo, STRING, "Expecting \"file\" after import.");
 	STRING_FINISH(temp, foo);
 	/* excl_ptr will delete token if unused */
 	excl_ptr<const token_quoted_string>
@@ -552,20 +555,8 @@ LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
 	
 	const string& fstr(*fsp);
 	/* claim the semicolon first before opening file */
-	{
-	const int expect_semi = __hackt_lex(&temp, foo);
-	if (expect_semi != ';') {
-		cerr << "Expecting \';\' after import \"...\"." << endl;
-		if (!hackt_at_eof(foo)) {
-			yy_union_lookup_dump(temp, expect_semi,
-				cerr << "got: ") << endl;
-			yy_union_lookup_delete(temp, expect_semi);
-		} else {
-			cerr << "got: $end" << endl;
-		}
-		THROW_EXIT;
-	}
-	}
+	hackt_lex_expect(temp, foo, ';',
+		"Expecting \';\' after import \"...\".");
 	/* NODE_POSITION_UPDATE(*hackt_lval, foo); */
 	/* excl_ptr will delete token if unused */
 	const excl_ptr<const node_position>
@@ -680,6 +671,31 @@ LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
 {EXTERN}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXTERN; }
 {STATIC}	{ LINKAGE_UPDATE(*hackt_lval, foo); return STATIC; }
 {EXPORT}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXPORT; }
+{EMBEDFILE}	{
+	KEYWORD_UPDATE(*hackt_lval, foo);
+	excl_ptr<const keyword_position>
+		kw_file(hackt_lval->_keyword_position);
+	NEVER_NULL(kw_file);
+
+	YYSTYPE temp;
+	hackt_lex_expect(temp, foo, STRING, "Expecting \"file\" after #FILE.");
+	STRING_FINISH(temp, foo);
+	/* excl_ptr will delete token if unused */
+	excl_ptr<const token_quoted_string>
+		fsp(temp._token_quoted_string);
+	NEVER_NULL(fsp);
+	const string& fstr(*fsp);
+	hackt_lval->_imported_root = new imported_root(kw_file, fsp);
+	NEVER_NULL(hackt_lval->_imported_root);
+	// push a fake file onto the file-manager stack
+	// emulate the construction action of a input_manager
+	hackt_embedded_file_stack.push(
+		embedded_file_stack_type::value_type(
+			new file_manager::embed_manager(
+				hackt_parse_file_manager, fstr)));
+	// pop should be done by the corresponding reduce action
+	return EMBEDFILE;
+}
 
 {WHITESPACE}	TOKEN_UPDATE(foo);
 {NEWLINE}	NEWLINE_UPDATE();
@@ -916,12 +932,7 @@ LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
 		cerr << "end of quoted-string: \"" << string_buf << "\" " <<
 			LINE_COL(CURRENT) << endl;
 	}
-#if 0
-	STRING_UPDATE(foo);
-	hackt_lval->_token_quoted_string = new token_quoted_string(string_buf);
-#else
 	STRING_FINISH(*hackt_lval, foo);
-#endif
 	BEGIN(INITIAL);
 	return STRING;
 }
@@ -1011,6 +1022,34 @@ int hackt_at_eof(const flex::lexer_state& foo) {
 	return YY_CURRENT_BUFFER->yy_n_chars == 0;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	\param temp the return slot for the constructed token.
+	\param foo the lexer state structure.
+	\param tok the expected enumeration of upcoming token.
+	\param errmsg error message: expecting blah...
+	\throw std:::exception upon error.  
+ */
+// static
+void
+hackt_lex_expect(YYSTYPE& temp, lexer_state& foo, 
+		const int tok, const char* errmsg) {
+	const int expect = __hackt_lex(&temp, foo);
+	if (expect != tok) {
+		cerr << errmsg << endl;
+		if (!hackt_at_eof(foo)) {
+			yy_union_lookup_dump(temp, expect,
+				cerr << "got: ") << endl;
+			yy_union_lookup_delete(temp, expect);
+		} else {
+			// a.k.a. yytname[0]
+			cerr << "got: $end" << endl;
+		}
+		THROW_EXIT;
+	}
+}
+
+//=============================================================================
 }	/* end namespace lexer */
 }	/* end namespace HAC */
 

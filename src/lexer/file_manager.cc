@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.7 2007/08/13 23:30:51 fang Exp $
+	$Id: file_manager.cc,v 1.7.2.1 2007/08/14 05:16:44 fang Exp $
  */
 
 #include <iostream>
@@ -8,9 +8,18 @@
 #include "lexer/file_manager.h"
 #include "util/unique_list.tcc"
 // #include "util/unique_stack.tcc"
+#include "util/memory/count_ptr.tcc"
 
 #define	ENABLE_STACKTRACE			0
 #include "util/stacktrace.h"
+
+namespace util {
+namespace memory {
+using HAC::lexer::file_manager;
+// explicit template instantiation
+template class count_ptr<file_manager::embed_manager>;
+}	// end namespace memory
+}	// end namespace util
 
 namespace HAC {
 namespace lexer {
@@ -35,9 +44,6 @@ file_position_stack::~file_position_stack() {
  */
 bool
 file_position_stack::push(const file_position& fp) {
-#if 0
-	_files.push_back(fp);
-#else
 	if (fp.name.length()) {
 		if (_registry.push(fp.name)) {
 			return true;
@@ -50,34 +56,19 @@ file_position_stack::push(const file_position& fp) {
 		_files.push_back(fp);
 		return false;
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
-	Pushes file_position onto stack and registers file name with it
-	to the list of files seen.  
-	\return true if file was already included/opened previously.  
+	push a copy of the top.  
+	Intended for use with special-case file-stack management, 
+	like file embedding.  
+	This should be balanced with pop().
  */
-bool
-file_position_stack::push(const file_position& fp, const string& fn) {
-	STACKTRACE_VERBOSE;
-	if (_registry.push(fn)) {
-		return true;
-	} else {
-		_files.push_back(fp);
-		return false;
-	}
+void
+file_position_stack::dupe(void) {
+	_files.push_back(_files.back());
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-FILE*
-file_position_stack::open_FILE(const string& s) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 FILE*
@@ -85,13 +76,6 @@ file_position_stack::current_FILE(void) const {
 	STACKTRACE_VERBOSE;
 	return _files.back().file;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-FILE*
-file_position_stack::close_FILE(void) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -374,6 +358,28 @@ if (!deps.empty()) {
 }
 }
 	return o << endl << endl;
+}
+
+//=============================================================================
+// class file_manager::embed_manager method definitions
+
+/**
+	Register a fake opened file (embedded).
+ */
+file_manager::embed_manager::embed_manager(file_manager& m, const string& n) :
+		fm(m) {
+	fm._names.push(n);
+	fm._fstack.dupe();	// same file pointer, adjusted name
+	fm._fstack.top().name = n;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Close/unregister an embedded file.  
+ */
+file_manager::embed_manager::~embed_manager() {
+	fm._names.pop();
+	fm._fstack.pop();
 }
 
 //=============================================================================
