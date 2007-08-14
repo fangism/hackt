@@ -1,22 +1,22 @@
 // "import-013.hac"
 // testing directed acylic dependencies
 // both files reference "empty.hac"
-// enter: "import-012.hac"
+#FILE "import-012.hac" {
 // "import-012.hac"
 // imports valid empty file, duplicate of "import-004.hac"
-// enter: "empty.hac"
+#FILE "empty.hac" {
 // "empty.hac" -- empty
 
-// leave: "empty.hac"
+}	// "empty.hac"
 
 
-// leave: "import-012.hac"
+}	// "import-012.hac"
 
-// enter: "import-004.hac"
+#FILE "import-004.hac" {
 // "import-004.hac"
 // imports valid empty file
 
 
-// leave: "import-004.hac"
+}	// "import-004.hac"
 
 

@@ -1,8 +1,8 @@
 // "import-012.hac"
 // imports valid empty file, duplicate of "import-004.hac"
-// enter: "empty.hac"
+#FILE "empty.hac" {
 // "empty.hac" -- empty
 
-// leave: "empty.hac"
+}	// "empty.hac"
 
 

@@ -29,6 +29,13 @@ core.*
 *.hacf*diff
 *.hacflattest
 *.hacflatfailtest
+*.hacfo
+*.compileflatdump
+*.compileflatdump-filter
+*.compileflatdump-diff
+*.compileflatdump-test
+*.findump
+*.findump-filter
 *.artobjunroll
 *.unrolldump
 *.unrolldiff
