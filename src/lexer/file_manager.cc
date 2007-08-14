@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.7.2.1 2007/08/14 05:16:44 fang Exp $
+	$Id: file_manager.cc,v 1.7.2.2 2007/08/14 23:42:28 fang Exp $
  */
 
 #include <iostream>
@@ -68,6 +68,9 @@ file_position_stack::push(const file_position& fp) {
 void
 file_position_stack::dupe(void) {
 	_files.push_back(_files.back());
+	_files.back().pos.line = 0;
+	_files.back().pos.col = 1;
+	// column should be 1, but let row increment to 1 with newline
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -380,6 +383,8 @@ file_manager::embed_manager::embed_manager(file_manager& m, const string& n) :
 file_manager::embed_manager::~embed_manager() {
 	fm._names.pop();
 	fm._fstack.pop();
+	fm._fstack.top().pos.line--;
+	// back-track one line count
 }
 
 //=============================================================================

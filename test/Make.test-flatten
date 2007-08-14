@@ -1,6 +1,6 @@
 # "Make.test-flatten"
 #	vi: ft=automake
-#	$Id: Make.test-flatten,v 1.7.4.1 2007/08/14 21:17:57 fang Exp $
+#	$Id: Make.test-flatten,v 1.7.4.2 2007/08/14 23:42:29 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -113,8 +113,16 @@ AUTO_DEPENDS += hacfobjdifftest.autodepend
 	$(ECHO) "$$cmd" ; \
 	$$cmd > $@ 2>&1
 
+COMPILEFLATDUMP_EXTRA_FILTER = $(SED) -e '/^At:/s/\.hacf/.hac/' \
+	-e '/(imported-root.*)/s|\[.*\]|\[\#POS\#\]|' \
+	-e '/^At:.*:0:/d'
+# 1) trivially adjust file name as if it were non-flattened
+# 2) expanded embdedded files take up larger file position
+# 3) compensates for parse errors placement of import decl.
+
 .compileflatdump.compileflatdump-filter:
-	@$(CAT) $< | $(HACKT_COMPILE_ERROR_FILTER) > $@
+	@$(CAT) $< | $(HACKT_COMPILE_ERROR_FILTER) | \
+		$(COMPILEFLATDUMP_EXTRA_FILTER) > $@
 
 .compileflatdump-filter.compileflatdump-diff:
 	@expect=`$(ECHO) $@ | $(SED) 's/\.compileflatdump-diff$$/.compiledump-filter/g'` ; \
@@ -122,7 +130,13 @@ AUTO_DEPENDS += hacfobjdifftest.autodepend
 	if test -f "$$expect" ; then \
 	  $(ECHO_FLATTEN_DIFF_COMMAND) ; \
 	  $(DIFF) -bu "$$expect" $< > $@ ; \
-	  if test -s $@ ; then $(ECHO) "Differences in $@!" ; fi ; \
+	  if test -s $@ ; then \
+	    $(CAT) "$$expect" | $(COMPILEFLATDUMP_EXTRA_FILTER) > "$$expect"-tmp ; \
+	    $(DIFF) -bu "$$expect"-tmp $< > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "Differences in $@!" ; \
+	    fi ; \
+	  fi ; \
 	else exit 1 ; \
 	fi ; \
 	$(TOUCH) $@
@@ -204,8 +218,14 @@ hacflatdiffs: force
 hacflatfaildiffs: force
 	-$(CAT) *.hacf-fail-diff > $@
 
+hacfobjdiffs: force
+	-$(CAT) *.hacfobjdiff > $@
 
-CHECK_SUMMARIES += hacflatdiffs hacflatfaildiffs
+compileflatdiffs: force
+	-$(CAT) *.compileflatdump-diff > $@
+
+CHECK_SUMMARIES += hacflatdiffs hacflatfaildiffs \
+	hacfobjdiffs compileflatdiffs
 
 
 HACKT_FLATTEN_TEST_SUBJECTS = \
@@ -227,6 +247,9 @@ endif
 HACKT_FLATTEN_DUMPS = $(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf) \
 	$(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf-fail)
 $(HACKT_FLATTEN_DUMPS): $(HACKT_FLATTEN_EXE)
+# $(HACKT_FLATTEN_PARSE_TEST_PASSES:=.hacfo): $(HACKT_COMPILE_EXE)
+# $(HACKT_FLATTEN_PARSE_TEST_PASSES:=.findump): $(HACKT_OBJDUMP_EXE)
+# $(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compileflatdump): $(HACKT_COMPILE_EXE)
 
 build-check-local: \
 	$(HACKT_FLATTEN_TEST_PASSES:=.hacf) \
@@ -266,6 +289,7 @@ clean-flattentests:
 	-$(RM_PATTERN) "*.hacflattest"
 	-$(RM_PATTERN) "*.hacflatfailtest"
 	-$(RM_PATTERN) "*.hacfo"
+	-$(RM_PATTERN) "*.compiledump-filter-tmp"
 	-$(RM_PATTERN) "*.compileflatdump"
 	-$(RM_PATTERN) "*.compileflatdump-filter"
 	-$(RM_PATTERN) "*.compileflatdump-diff"

@@ -5,6 +5,16 @@
 
 2007-08-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-47-parser-05-03:
+	  file_position_stack::dupe(): reset token position to 0:1
+	  file_manager::embed_manager: decrement line one position after end.
+	  lexer/hac_lex.h: no longer assert line > 0 because of new
+		line compensation in file embedding directives.
+	  Enabled more lexer and parser/basic test cases with few exceptions.
+		Line numbers match-up between flattened and non-flattened
+		source files in compilation diagnostics, which was goal.
+
+
 	* HACKT-00-01-04-main-00-81-47-parser-05-02:
 	  No source revision, just updated trivial flatten test expects.
 		Added new flatten consistency check tests, currently failing.

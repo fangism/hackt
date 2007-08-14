@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2007/04/09 01:25:40 fang Exp $
+#	$Id: Makefile.am,v 1.23.16.1 2007/08/14 23:42:30 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -18,6 +18,15 @@ HACKT_PARSE_TEST_PASSES = \
 HACKT_FLATTEN_TEST_PASSES = \
 	015 016 017 018 019 \
 	020 021 022 023
+
+HACKT_FLATTEN_PARSE_TEST_PASSES = \
+	015 016 019 \
+	022
+
+HACKT_FLATTEN_PARSE_TEST_FAILURES = \
+	017 018 \
+	020 023
+# 021: parse failure vs. lex failures difference
 
 HACKT_PARSE_TEST_WARNINGS = \
 	oper-01

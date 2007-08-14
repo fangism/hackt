@@ -3,7 +3,7 @@
 	Header for a few simple structures, useful to the 
 	language front-end.  
 	Note, this is a C++ source file.  
-	$Id: hac_lex.h,v 1.3 2005/12/13 04:15:45 fang Exp $
+	$Id: hac_lex.h,v 1.3.110.1 2007/08/14 23:42:28 fang Exp $
 	This file's earlier revision history originates from:
 	Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp
  */
@@ -62,8 +62,10 @@ struct line_position {
 #endif
 
 	line_position() : line(0), col(0) { }
-	line_position(const long l, const long c) : line(l), col(c)
-		{ assert(line>0); assert(col>0); }
+	line_position(const long l, const long c) : line(l), col(c) {
+		// assert(line>0);	// allow 0-line compensation
+		assert(col>0);
+	}
 	line_position(const line_position& lp) :
 		line(lp.line), col(lp.col) { }		// no assertion yet
 	line_position(const token_position& tp) :
