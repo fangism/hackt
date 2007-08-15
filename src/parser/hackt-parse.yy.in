@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.27 2007/07/31 23:23:28 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.28 2007/08/15 01:08:19 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -76,6 +76,10 @@ extern FILE* yyin;
 // input stream manager, based in "lexer/hackt-lex.ll"
 extern file_manager
 hackt_parse_file_manager;
+
+// embedded file stack, based in "lexer/hackt-lex.ll"
+extern embedded_file_stack_type
+hackt_embedded_file_stack;
 
 /**
 	This is never used, libbogus.  
@@ -508,6 +512,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_keyword_position>	TEMPLATE
 %token	<_keyword_position>	ENUM
 %token	<_imported_root>	IMPORT
+%token	<_imported_root>	EMBEDFILE
 
 /* linkage modifiers */
 %token	<_token_keyword>	EXTERN STATIC EXPORT
@@ -532,6 +537,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* non-terminals */
 %type	<_root_body>	module
+%type	<_root_body>	embedded_module
 %type	<_imported_root_list>	imports imports_optional
 %type	<_imported_root>	import_item
 %type	<_root_body>	top_root body 
@@ -739,18 +745,26 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* top level syntax */
 
 module
+	: embedded_module
+	{
+		// In the name of pure-parsing, 
+		// we've hacked yyparse's prototype to take a
+		// YYSTYPE& yylval as an argument, which must be
+		// passed un by the caller.  
+		$$ = $1;
+		yylval._root_body = $$;
+	}
+	;
+
+embedded_module
 	: imports_optional top_root
-		{
-			// AST_root = util::memory::excl_ptr<root_body>($2);
-			// corresponds to yyval[0]
-			$$ = $2;
-			// In the name of pure-parsing, 
-			// we've hacked yyparse's prototype to take a
-			// YYSTYPE& yylval as an argument, which must be
-			// passed un by the caller.  
-			yylval._root_body = $2;
-			$2->push_front($1);
-		}
+	{
+		// AST_root = util::memory::excl_ptr<root_body>($2);
+		// corresponds to yyval[0]
+		$$ = $2;
+		$2->push_front($1);
+		// DO NOT CLOBBER yylval!
+	}
 	;
 
 imports_optional
@@ -777,6 +791,23 @@ import_item
 /***
 	The work for switching input files is actually done in the lexer!
 ***/
+/***
+	The embedded file construct pastes an imported file in-line, 
+	as is done by the flattener (hacpp).  
+	This really shouldn't be used directly, but only what is produced
+	by the flattener, hacpp.
+***/
+	| EMBEDFILE '{' embedded_module '}'
+	{
+		$$ = $1;
+		DELETE_TOKEN($2);
+		DELETE_TOKEN($4);
+		$$->attach_root($3);
+		// balance the embedded file stack by popping the
+		// fake imported file.  
+		INVARIANT(!hackt_embedded_file_stack.empty());
+		hackt_embedded_file_stack.pop();
+	}
 	;
 
 top_root

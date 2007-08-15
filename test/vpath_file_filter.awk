@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: vpath_file_filter.awk,v 1.4 2007/08/13 23:30:54 fang Exp $
+#	$Id: vpath_file_filter.awk,v 1.5 2007/08/15 01:08:32 fang Exp $
 # Filters out path differences in file names, preserving only the
 # non-directory portion of the file name. 
 # Useful in making path-dependent tests distcheck-able.  
@@ -24,9 +24,12 @@ function filter_vpath_files(str) {
 }
 
 # used by "hackt-flatten-expect-filter.awk"
+# now catch file-embedding directives
 function flatten_filter_vpath_files(str) {
 	if (match(str,"^At:") || match(str,"^From:") ||
-		match(str,"// enter:") || match(str,"// leave:")) {
+		match(str,"^#FILE \"[^\"]*\"") ||
+		match(str,"}\t// \"[^\"]*\"")) {
+#		match(str,"// enter:") || match(str,"// leave:")
 		# expect file name in quotes
 		while(match(str,"\".*\\/.*\"")) {
 			gsub("\"[^/]*\\/","\"",str);

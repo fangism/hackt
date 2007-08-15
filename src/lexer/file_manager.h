@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.8 2007/08/13 23:30:52 fang Exp $
+	$Id: file_manager.h,v 1.9 2007/08/15 01:08:17 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -18,6 +18,7 @@
 #include "lexer/hac_lex.h"
 #include "util/macros.h"
 #include "util/file_status.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
 namespace lexer {
@@ -117,10 +118,6 @@ public:
 	const registry_type&
 	get_registry(void) const { return _registry; }
 
-#if 0
-	bool
-	push(const file_position&, const string&);
-#endif
 
 	const file_position&
 	top(void) const { return _files.back(); }
@@ -129,29 +126,14 @@ public:
 	top(void) { return _files.back(); }
 
 	void
+	dupe(void);
+
+	void
 	pop(void);
 
-#if 0
-	/**
-		\return valid opened read-only FILE* if file
-			wasn't already opened (not already on stack).  
-			Returns null if already on stack.  
-	 */
-	FILE*
-	open_FILE(const string&);
-#endif
 
 	FILE*
 	current_FILE(void) const;
-
-#if 0
-	/**
-		Pops last file off stack.
-		\returns the previous file on stack (already opened).  
-	 */
-	FILE*
-	close_FILE(void);
-#endif
 
 	void
 	reset(void);
@@ -270,7 +252,26 @@ public:
 	ostream&
 	make_depend(ostream&, const string&) const;
 
+	/**
+		This struct manages the file_manager in a way to 
+		accommodate 'faking' pushing a file onto the stack
+		without actually opening a file, just manipulating
+		only the file name and token position stack.
+	 */
+	class embed_manager {
+	private:
+		file_manager& 			fm;
+	public:
+		embed_manager(file_manager&, const string&);
+		~embed_manager();
+		// heap-allocate OK
+		// do not copy, do not assign
+	};	// end struct embed_manager
+
 };	// end class file_manager
+
+typedef	std::stack<util::memory::count_ptr<file_manager::embed_manager> >
+			embedded_file_stack_type;
 
 //=============================================================================
 }	// end namespace lexer

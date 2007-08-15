@@ -1,18 +1,22 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.33 2007/08/13 23:30:53 fang Exp $
+#	$Id: Make.test-head,v 1.34 2007/08/15 01:08:28 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
+# (these can really be distributed across Makefiles...)
 SUFFIXES = .hac .depend .hac-cpp .hacdepend \
 	.haco .haco-u .haco-c .haco-a \
 	.hacktcmpltest .hacktcmplwarntest .hacktcmplfailtest \
 	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
 	.hacktobjtest .outdump .indump .haco-dump \
 	.outdump-filter .indump-filter .compileobjdiff \
+	.hacfo .compileflatdump .compileflatdump-filter \
+	.compileflatdump-diff .compileflatdump-test \
+	.findump .findump-filter .hacfobjdiff .hacfobjdifftest \
 	.hacflattest .hacf .hacf-filter .hacf-diff \
 	.hacflatfailtest .hacf-fail .hacf-fail-filter .hacf-fail-diff \
 	.hacktcreatetest .hacktcreatefailtest \
@@ -86,12 +90,16 @@ endif
 # NOTE: built test script should not be named here, as then need to be
 # chmod-ed to be executable.  
 BOGUS_SUFFIX_TARGETS = \
-	.hac .depend .haco .haco-u .haco-c .haco-a \
+	.hac .depend .hac-cpp .hacdepend \
+	.haco .haco-u .haco-c .haco-a \
 	.compiledump .compiledump-filter .compilewarndiff .compilefaildiff \
 	.stderr .outdump .indump .haco-dump \
 	.outdump-filter .indump-filter .compileobjdiff \
 	.hacf .hacf-filter .hacf-diff \
 	.hacf-fail .hacf-fail-filter .hacf-fail-diff \
+	.hacfo .compileflatdump .compileflatdump-filter \
+	.compileflatdump-diff \
+	.findump .findump-filter .hacfobjdiff \
 	.createstderr \
 	.createdump .createdump-filter .createfaildump .haco-c-dump \
 	.createfaildiff .haco-c-err .haco-c-from-haco .haco-c-from-haco-err \

@@ -1,5 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.69 2007/08/13 23:30:53 fang Exp $
+#	$Id: ChangeLog,v 1.70 2007/08/15 01:08:24 fang Exp $
+
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-47-parser-05-03:
+	  Minor filter adjustments to flatten consistency tests.
+
+
+	* HACKT-00-01-04-main-00-81-47-parser-05-02:
+	  Make.test-flatten: Added test support for flatten consistency checks.
+
 
 2007-08-12	David Fang		<fangism@users.sourceforge.net>
 

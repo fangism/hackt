@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2007/08/14 00:55:17 fang Exp $
+#	$Id: Makefile.am,v 1.18 2007/08/15 01:08:33 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -43,6 +43,27 @@ HACKT_FLATTEN_TEST_PASSES = \
 	import-014-a import-014-b import-014-c \
 	import-015-t import-022 \
 	empty2 empty3
+
+# pass flattening and parsing
+HACKT_FLATTEN_PARSE_TEST_PASSES = \
+	comment-003 comment-004 comment-005 comment-006 \
+	import-004 \
+	import-012 import-013 \
+	import-015-t
+
+# pass flattening, but not parsing
+HACKT_FLATTEN_PARSE_TEST_FAILURES = \
+	badid-000 badid-001 \
+	string-002 string-003 \
+	import-014-c
+
+# import-000: lex fails, so error output differs
+
+#	comment-007 comment-008
+#	import-014-a import-014-b 
+#	import-022
+#	empty2 empty3
+
 
 HACKT_FLATTEN_TEST_FAILURES = \
 	comment-000 comment-001 comment-002 \

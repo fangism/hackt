@@ -2,22 +2,22 @@
 // copy-extended from "018.hac"
 // known problem canonical name of namespace items is at the moment wrong!
 
-// enter: "001.hac"
+#FILE "001.hac" {
 /* "001.hac" this should pass */
 
 int N;
 
 
-// leave: "001.hac"
+}	// "001.hac"
 
-// enter: "003.hac"
+#FILE "003.hac" {
 // "003.hac" this should pass
 
 namespace rajit {
 int parser;
 }
 
-// leave: "003.hac"
+}	// "003.hac"
 
 
 bool Q;

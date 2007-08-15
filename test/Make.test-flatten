@@ -1,6 +1,6 @@
 # "Make.test-flatten"
 #	vi: ft=automake
-#	$Id: Make.test-flatten,v 1.7 2007/07/31 23:23:54 fang Exp $
+#	$Id: Make.test-flatten,v 1.8 2007/08/15 01:08:27 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -13,6 +13,7 @@ HACKT_FLATTEN_ERROR_FILTER = $(AWK) \
 		-f $(TEST_SRCDIR)/vpath_file_filter.awk
 
 
+###############################################################################
 # dependency tracking enabled by default
 .hac.hacf:
 	$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@
@@ -60,6 +61,100 @@ hacflattest.autodepend: Makefile
 
 -include hacflattest.autodepend
 
+###############################################################################
+# flattened files have no dependencies!
+# really don't need include $(HACO_FLAGS) flags for this...
+.hacf.hacfo:
+	@log="$$depbase.compileflatdump" ; \
+	cmd="$(HACKT_COMPILE_EXE) $< $@" ; \
+	$(ECHO) "$$cmd" ; \
+	$$cmd > "$$log" 2>&1
+
+.hacfo.findump:
+	$(DEFAULT_OBJDUMP_RULE_ACTION)
+
+# additional sed filter fakes the file name as if it were the original source
+.findump.findump-filter:
+	@$(CAT) $< | $(HACKT_OBJ_DIFF_FILTER) | \
+	$(SED) -e '/^In module/s|$*.hacf|$(srcdir)/$*.hac|' \
+		-e '/^In module/s| \./| |' > $@ ; \
+	$(ECHO_FILTERED)
+
+.findump-filter.hacfobjdiff:
+	@expect=`$(ECHO) $@ | $(SED) 's/\.hacfobjdiff$$/.indump-filter/g'` ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_FLATTEN_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ ; \
+	  if test -s $@ ; then $(ECHO) "Differences in $@!" ; fi ; \
+	else exit 1 ; \
+	fi ; \
+	$(TOUCH) $@
+
+.hacfobjdiff.hacfobjdifftest:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+hacfobjdifftest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_FLATTEN_PARSE_TEST_PASSES)" | \
+		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
+		$(AWK) '/.+/ {print $$1 ".hacfobjdiff: " $$1 ".indump-filter"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include hacfobjdifftest.autodepend
+AUTO_DEPENDS += hacfobjdifftest.autodepend
+
+###############################################################################
+# expect fail: dummy object target should fail to be produced
+# really don't need include $(HACO_FLAGS) flags for this...
+.hacf.compileflatdump:
+	-@obj=`$(ECHO) $@ | $(SED) 's/\.compileflatdump$$/.haco/g'` ; \
+	cmd="$(HACKT_COMPILE_EXE) $< $$obj" ; \
+	$(ECHO) "$$cmd" ; \
+	$$cmd > $@ 2>&1
+
+COMPILEFLATDUMP_EXTRA_FILTER = $(SED) -e '/^At:/s/\.hacf/.hac/' \
+	-e '/(imported-root.*)/s|\[.*\]|\[\#POS\#\]|' \
+	-e '/^At:.*:0:/d'
+# 1) trivially adjust file name as if it were non-flattened
+# 2) expanded embdedded files take up larger file position
+# 3) compensates for parse errors placement of import decl.
+
+.compileflatdump.compileflatdump-filter:
+	@$(CAT) $< | $(HACKT_COMPILE_ERROR_FILTER) | \
+		$(COMPILEFLATDUMP_EXTRA_FILTER) > $@
+
+.compileflatdump-filter.compileflatdump-diff:
+	@expect=`$(ECHO) $@ | $(SED) 's/\.compileflatdump-diff$$/.compiledump-filter/g'` ; \
+	$(RM) $@ ; \
+	if test -f "$$expect" ; then \
+	  $(ECHO_FLATTEN_DIFF_COMMAND) ; \
+	  $(DIFF) -bu "$$expect" $< > $@ ; \
+	  if test -s $@ ; then \
+	    $(CAT) "$$expect" | $(COMPILEFLATDUMP_EXTRA_FILTER) > "$$expect"-tmp ; \
+	    $(DIFF) -bu "$$expect"-tmp $< > $@ ; \
+	    if test -s $@ ; then \
+	      $(ECHO) "Differences in $@!" ; \
+	    fi ; \
+	  fi ; \
+	else exit 1 ; \
+	fi ; \
+	$(TOUCH) $@
+
+.compileflatdump-diff.compileflatdump-test:
+	@$(DEFAULT_DIFF_TEST_SCRIPT)
+
+compileflattest.autodepend: Makefile
+	@$(ECHO) "Generating dependencies $@" ; \
+	$(ECHO) "$(HACKT_FLATTEN_PARSE_TEST_FAILURES)" | \
+		$(SPACES_TO_NEWLINE) | $(SORT) -u | \
+		$(AWK) '/.+/ {print $$1 ".compileflatdump-diff: " $$1 ".compiledump-filter"; }' > $@ ; \
+	$(TOUCH) $@
+
+-include compileflattest.autodepend
+AUTO_DEPENDS += compileflattest.autodepend
+
+###############################################################################
 .hac.hacf-fail:
 	-$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@ 2> $@-stderr ; \
 	$(CAT) $@-stderr >> $@ ; \
@@ -92,6 +187,7 @@ hacflatfailtest.autodepend: Makefile
 	$(TOUCH) $@
 
 -include hacflatfailtest.autodepend
+###############################################################################
 
 
 # dummy test for when make variable is empty
@@ -101,8 +197,15 @@ hacflatfailtest.autodepend: Makefile
 .hacflatfailtest:
 	@$(DUMMY_TEST_SCRIPT)
 
+.hacfobjdifftest:
+	@$(DUMMY_TEST_SCRIPT)
 
-BOGUS_TESTS += .hacflattest .hacflatfailtest
+.compileflatdump-test:
+	@$(DUMMY_TEST_SCRIPT)
+
+
+BOGUS_TESTS += .hacflattest .hacflatfailtest \
+	.hacfobjdifftest .compileflatdump-test
 
 BOGUS_TARGETS += .hac .hacf .hacf-fail .hacf-filter .hacf-fail-filter
 
@@ -115,8 +218,14 @@ hacflatdiffs: force
 hacflatfaildiffs: force
 	-$(CAT) *.hacf-fail-diff > $@
 
+hacfobjdiffs: force
+	-$(CAT) *.hacfobjdiff > $@
 
-CHECK_SUMMARIES += hacflatdiffs hacflatfaildiffs
+compileflatdiffs: force
+	-$(CAT) *.compileflatdump-diff > $@
+
+CHECK_SUMMARIES += hacflatdiffs hacflatfaildiffs \
+	hacfobjdiffs compileflatdiffs
 
 
 HACKT_FLATTEN_TEST_SUBJECTS = \
@@ -129,13 +238,18 @@ srcdir_EXTRA_DIST += $(HACKT_FLATTEN_TEST_SUBJECTS:=.hac) \
 
 if CHECK_TESTS
 TESTS += $(HACKT_FLATTEN_TEST_PASSES:=.hacflattest) \
-	$(HACKT_FLATTEN_TEST_FAILURES:=.hacflatfailtest)
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacflatfailtest) \
+	$(HACKT_FLATTEN_PARSE_TEST_PASSES:=.hacfobjdifftest) \
+	$(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compileflatdump-test)
 endif
 
 # cover all possible cases, whether they pass or fail
 HACKT_FLATTEN_DUMPS = $(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf) \
 	$(HACKT_FLATTEN_TEST_SUBJECTS:=.hacf-fail)
 $(HACKT_FLATTEN_DUMPS): $(HACKT_FLATTEN_EXE)
+# $(HACKT_FLATTEN_PARSE_TEST_PASSES:=.hacfo): $(HACKT_COMPILE_EXE)
+# $(HACKT_FLATTEN_PARSE_TEST_PASSES:=.findump): $(HACKT_OBJDUMP_EXE)
+# $(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compileflatdump): $(HACKT_COMPILE_EXE)
 
 build-check-local: \
 	$(HACKT_FLATTEN_TEST_PASSES:=.hacf) \
@@ -143,7 +257,16 @@ build-check-local: \
 	$(HACKT_FLATTEN_TEST_PASSES:=.hacf-diff) \
 	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail) \
 	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail-filter) \
-	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail-diff)
+	$(HACKT_FLATTEN_TEST_FAILURES:=.hacf-fail-diff) \
+	$(HACKT_FLATTEN_PARSE_TEST_PASSES:=.hacfo) \
+	$(HACKT_FLATTEN_PARSE_TEST_PASSES:=.findump) \
+	$(HACKT_FLATTEN_PARSE_TEST_PASSES:=.findump-filter) \
+	$(HACKT_FLATTEN_PARSE_TEST_PASSES:=.hacfobjdiff) \
+	$(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compileflatdump) \
+	$(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compileflatdump-filter) \
+	$(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compiledump) \
+	$(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compiledump-filter) \
+	$(HACKT_FLATTEN_PARSE_TEST_FAILURES:=.compileflatdump-diff)
 
 
 echo-flatten-passes: force
@@ -165,6 +288,16 @@ clean-flattentests:
 	-$(RM_PATTERN) "*.hacf-fail-diff"
 	-$(RM_PATTERN) "*.hacflattest"
 	-$(RM_PATTERN) "*.hacflatfailtest"
+	-$(RM_PATTERN) "*.hacfo"
+	-$(RM_PATTERN) "*.compiledump-filter-tmp"
+	-$(RM_PATTERN) "*.compileflatdump"
+	-$(RM_PATTERN) "*.compileflatdump-filter"
+	-$(RM_PATTERN) "*.compileflatdump-diff"
+	-$(RM_PATTERN) "*.compileflatdump-test"
+	-$(RM_PATTERN) "*.findump"
+	-$(RM_PATTERN) "*.findump-filter"
+	-$(RM_PATTERN) "*.hacfobjdiff"
+	-$(RM_PATTERN) "*.hacfobjdifftest"
 
 clean-local: clean-flattentests
 

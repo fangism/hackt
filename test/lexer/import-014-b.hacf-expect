@@ -4,7 +4,7 @@
 	reduced by: David Fang
 */
 
-// enter: "import-014-a.hac"
+#FILE "import-014-a.hac" {
 // "import-014-a.hac"
 // contributed by: Clint Kelly
 // reduced by: David Fang
@@ -28,7 +28,7 @@ defproc e1of2 (bool d[2]; bool t,f,e)
 }
 
 
-// leave: "import-014-a.hac"
+}	// "import-014-a.hac"
 
 
 defproc srambit (pbit pb; ch1of2 b, w)

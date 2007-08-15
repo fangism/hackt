@@ -1,7 +1,7 @@
 /**
 	\file "AST/import_root.h"
 	Placeholder for a imported AST root.  
-	$Id: import_root.h,v 1.4 2006/01/22 06:52:54 fang Exp $
+	$Id: import_root.h,v 1.5 2007/08/15 01:08:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: import_root.h,v 1.2.2.1 2005/12/11 00:45:12 fang Exp
  */
@@ -36,6 +36,7 @@ class imported_root {
 	// screw the semicolon
 	/// full path name to file
 	string						name;
+	/// true if file is repeated import, and should be skipped
 	bool						seen;
 public:
 	// imported_root();
@@ -44,10 +45,16 @@ public:
 		excl_ptr<const token_quoted_string>&,
 		const string&, 
 		const bool);
+	imported_root( 
+		excl_ptr<const keyword_position>&,
+		excl_ptr<const token_quoted_string>&);
 	~imported_root();
 	
 	ostream&
 	what(ostream&) const;
+
+	void
+	attach_root(const root_body*);
 
 	int
 	string_compare(const char*) const;

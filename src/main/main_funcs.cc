@@ -3,11 +3,12 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.15 2007/03/17 19:58:17 fang Exp $
+	$Id: main_funcs.cc,v 1.16 2007/08/15 01:08:19 fang Exp $
  */
 
 #include <iostream>
 #include <fstream>
+#include <stack>
 
 #define	ENABLE_STACKTRACE		0
 #define	ENABLE_STATIC_TRACE		0
@@ -52,6 +53,7 @@ using util::memory::count_ptr;
  */
 extern	int	hackt_parse(void*, YYSTYPE&, FILE*);
 extern	HAC::lexer::file_manager	hackt_parse_file_manager;
+extern	HAC::lexer::embedded_file_stack_type	hackt_embedded_file_stack;
 extern	int	__hacflat_lex(std::string&, flex::lexer_state&);
 
 namespace HAC {
@@ -217,6 +219,10 @@ parse_to_AST(const char* c, const compile_options& opt) {
 	}
 }
 	if (need_to_clean_up_file_manager) {
+		// clear the embedded file stack
+		while (!hackt_embedded_file_stack.empty()) {
+			hackt_embedded_file_stack.pop();
+		}
 		hackt_parse_file_manager.reset();
 		return return_type(NULL);
 	}

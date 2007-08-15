@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.2 2007/02/14 00:31:09 fang Exp $
+ *	$Id: hacflat-lex.ll,v 1.3 2007/08/15 01:08:18 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -316,7 +316,12 @@ IMPORT		"import"
 		DUMP_FILE_NAME_STACK(cerr);
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		if (CURRENT.col != 1) { cout << "\n"; }
-		cout << "// enter: \"" << pstr << "\"" << endl;
+		// wrap file's contents in a #FILE embedding directive:
+		// EMBEDFILE STRING '{' module '}'
+		// TODO: maintain consistency with
+		//	"$(top_srcdir)/test/vpath_file_filter.awk"
+		cout << "#FILE \"" << pstr << "\" {" << endl;
+		// cout << "// enter: \"" << pstr << "\"" << endl;
 		if (!__flatten_source(ym.get_file()).good) {
 			// presumably already have error message from callee
 #if 0
@@ -325,7 +330,8 @@ IMPORT		"import"
 #endif
 			THROW_EXIT;
 		}
-		cout << "// leave: \"" << pstr << "\"" << endl;
+		cout << "}\t// \"" << pstr << "\"" << endl;
+		// cout << "// leave: \"" << pstr << "\"" << endl;
 		return HF_IMPORT;
 	}
 	case file_status::SEEN_FILE: {

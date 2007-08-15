@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/ref_count_pool.cc"
 	Implementation of reference count pool allocator.  
-	$Id: ref_count_pool.cc,v 1.4 2005/09/04 21:15:09 fang Exp $
+	$Id: ref_count_pool.cc,v 1.5 2007/08/15 01:08:22 fang Exp $
  */
 
 /**
@@ -13,9 +13,10 @@
 	NOTE: critical to delete count FIRST before ptr in count_ptr.tcc!
  */
 // #define	USE_REF_COUNT_POOL	0
+#define	ENABLE_STATIC_TRACE		0
 
 #include "util/static_trace.h"
-STATIC_TRACE_BEGIN("util/memory/ref_count_pool.cc")
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/memory/ref_count_pool_anchor.h"
 #include "util/memory/chunk_map_pool.tcc"
@@ -73,5 +74,5 @@ template class chunk_map_pool<size_t, 32>;
 }	// end namespace memory
 }	// end namespace util
 
-STATIC_TRACE_END("util/memory/ref_count_pool.cc")
+DEFAULT_STATIC_TRACE_END
 

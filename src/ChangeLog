@@ -3,6 +3,55 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-48-merged-parser-05-03:
+	  Merge -parser-05 branch.  Summary:
+		Support cpp #line directives (emitted by #include), 
+		reports lexical/syntactic errors only in deepest file, 
+		reports semantic errors only in outer file.
+	  flatten(hacpp) now emits imported files enclosed in an
+		embedded file wrapper recursively, which is then 
+		parsed as if file were actually imported.  This retains
+		file inclusion structure in import-flattened output, 
+		making for improved error reporting accuracy.
+
+
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-47-parser-05-03:
+	  file_position_stack::dupe(): reset token position to 0:1
+	  file_manager::embed_manager: decrement line one position after end.
+	  lexer/hac_lex.h: no longer assert line > 0 because of new
+		line compensation in file embedding directives.
+	  Enabled more lexer and parser/basic test cases with few exceptions.
+		Line numbers match-up between flattened and non-flattened
+		source files in compilation diagnostics, which was goal.
+
+
+	* HACKT-00-01-04-main-00-81-47-parser-05-02:
+	  No source revision, just updated trivial flatten test expects.
+		Added new flatten consistency check tests, currently failing.
+
+
+	* HACKT-00-01-04-main-00-81-47-parser-05-01:
+	  Mini-branch for parser support of flattening with improved
+		line directives.  
+	  New construct for embedding imported files while emulating 
+		the import structure.  
+	  lexer/file_manager.cc: embed_manager class to fake importing
+		file without opening new file handle.  
+	  lexer/hacflat-lex.ll: replace enter/leave comments with
+		#FILE { ... } wrapping directives
+		also test/vpath_file_filter.awk updated.
+	  lexer/hackt-lex.ll: added EMBEDFILE construct, coupled with
+	  parser/hackt-parse.yy.in: embedded_module rule for in-place
+		imported file
+	  Test case: trivial differences (fail) introduced in
+		16 lexer, 8 parser/basic test cases only.
+		Will fix shortly.
+
+
 2007-08-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-47:

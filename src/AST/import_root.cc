@@ -1,6 +1,6 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.7 2007/03/17 19:58:15 fang Exp $
+	$Id: import_root.cc,v 1.8 2007/08/15 01:08:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -49,6 +49,22 @@ imported_root::imported_root(excl_ptr<root_body>& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This construct is used when import-emulating reading an embedded file.
+ */
+imported_root::imported_root(
+		excl_ptr<const keyword_position>& k,
+		excl_ptr<const token_quoted_string>& f) :
+		root(NULL),
+		import(k), rel_file(f),
+		name(*rel_file), seen(false) {
+	NEVER_NULL(import);
+	NEVER_NULL(rel_file);
+	STACKTRACE_INDENT_PRINT("at " << this << endl);
+	STACKTRACE_INDENT_PRINT("#FILE (token) " << &*import << endl);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 imported_root::~imported_root() {
 	STACKTRACE_DTOR_VERBOSE;
 	STACKTRACE_INDENT_PRINT("at " << this << endl);
@@ -60,6 +76,16 @@ imported_root::~imported_root() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(imported_root)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transfer ownership of root pointer to member.  
+ */
+void
+imported_root::attach_root(const root_body* r) {
+	excl_ptr<const root_body> t(r);
+	root = t;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
