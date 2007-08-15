@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-50:
+	  No source revision, documentation management only (dox/ChangeLog).
+	  Removed dummy.cc phony sources in favor of letting configure
+		generate directories using AC_CONFIG_COMMANDS.
+		Removed uses of PHONYSOURCES in Makefiles.
+
+
 2007-08-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-49-merged-chpsim-07-08:

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2007/08/15 02:49:38 fang Exp $
+#	$Id: Makefile.am,v 1.22 2007/08/15 19:55:02 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -438,7 +438,9 @@ installcheck-local: $(installcheckdir)/Makefile $(libinstallcheckdir)/Makefile
 	PATH=$(INSTALL_PATH_OVERRIDE) ; \
 	export PATH ; \
 	$(ECHO) "installcheck-local" ; \
-	for d in '$(INSTALLTEST_DIRS)' ; do \
+	list='$(INSTALLTEST_DIRS)' ; \
+	for d in $$list ; do \
+	  $(ECHO) "installcheck: make-ing all and clean in $$d ..." && \
 	  if (cd $$d && \
 	    $(MAKE) $(AM_MAKEFLAGS) && \
 	    $(MAKE) $(AM_MAKEFLAGS) clean \
@@ -470,8 +472,14 @@ DISTCLEANFILES += $(libinstallcheckdir)/Makefile
 
 chpsimlib_DATA = \
 	$(libinstallcheckdir)/Makefile.in \
-	lib-zcond-test-a.hac \
+	lib-zcond-flat.hac \
 	lib-zcond-test-a-01.chpsimrc
+
+# flatten source so it doesn't depend on testlib imports after installed
+lib-zcond-flat.hac: lib-zcond-test-a.hac
+	$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@
+
+CLEANFILES += lib-zcond-flat.hac
 
 ############################ end install checking #############################
 ###############################################################################

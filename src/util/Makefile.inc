@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.31 2007/07/31 23:23:42 fang Exp $
+#	$Id: Makefile.inc,v 1.32 2007/08/15 19:54:59 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -13,9 +13,6 @@ util-programs: $(UTILPROGRAMS)
 util-libs: $(UTILLIBS)
 
 # SUBDIRS += util/test
-
-# phony program to generate _build/.../.deps directories on distcheck
-PHONYSOURCES += util/STL/dummy.cc util/lang/lexyacc/dummy.cc
 
 # template definition header files
 UTIL_TCC_FILES = \

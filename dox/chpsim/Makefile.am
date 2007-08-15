@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2007/08/15 02:48:32 fang Exp $
+#	$Id: Makefile.am,v 1.8 2007/08/15 19:54:50 fang Exp $
 
 PDFS = hacchpsim.pdf
 # deprecated:
@@ -19,6 +19,8 @@ EXTRA_DIST += \
 ################### texinfo documentation #####################################
 
 info_TEXINFOS += hacchpsim.texi
+INFOS = $(TEXINFOS:.texi=.info)
+
 # install doesn't know how to handle generated html *directory* :(
 # html_DATA = hacchpsim.html
 HTML_HOOKS = hacchpsim.html
@@ -44,7 +46,9 @@ hacchpsim_INCLUDES = \
 	stdchpfn.texi
 
 EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
-	  $(AWK) '{printf(" \\\n\t" $$1);}'
+	$(AWK) '{printf(" \\\n\t$$(srcdir)/" $$1);}'
+#	$(AWK) '{printf(" \\\n\t" $$1);}'
+# need $(srcdir) to force it to look there w/o relying on VPATH
 
 # HACCHPSIM_OPTIONS_TEXI = ...
 # HACCHPSIM_COMMANDS_TEXI = ...
@@ -69,9 +73,11 @@ $(srcdir)/functions.mk: stdchpfn.texi
 	$(ECHO) "" ;} > $@
 
 # These are typically only built by the maintainer, since they are distributed.
-$(srcdir)/options.mk: Makefile
-$(srcdir)/commands.mk: Makefile
-$(srcdir)/functions.mk: Makefile
+# Don't depend on Makefile, because that is configure-generated,
+# which would cause the following to be rebuilt by the user (not desired).
+$(srcdir)/options.mk: Makefile.in
+$(srcdir)/commands.mk: Makefile.in
+$(srcdir)/functions.mk: Makefile.in
 
 -include $(srcdir)/options.mk
 -include $(srcdir)/commands.mk
@@ -82,11 +88,15 @@ AUTO_IGNORE += $(AUTO_TEXINFO_DEPS)
 MAINTAINERCLEANFILES = $(AUTO_TEXINFO_DEPS)
 # these could be CVS cleaned too...
 
+# NOTE: these auto-generated .texi files are emitted in the maintainer's
+# $(srcdir), however, they are distributed as part of $(srcdir).  
 $(HACCHPSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/chpsim.cc
-	$(EXTRACT_TEXINFO) $<
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+#	$(EXTRACT_TEXINFO) $<
 
 $(HACCHPSIM_COMMANDS_TEXI): $(top_srcdir)/src/sim/chpsim/Command.cc
-	$(EXTRACT_TEXINFO) $<
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+#	$(EXTRACT_TEXINFO) $<
 
 CHPFN_SRCDIR = $(top_srcdir)/lib/libchpfn
 # should be synchronized with list of all sources files in lib/libchpfn/
@@ -96,42 +106,80 @@ STDCHPFN_SRCS = \
 
 # just re-generate all of them when any one changes...
 $(HACCHPSIM_FUNCTIONS_TEXI): $(STDCHPFN_SRCS)
-	$(EXTRACT_TEXINFO) $(STDCHPFN_SRCS)
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+#	$(EXTRACT_TEXINFO) $(STDCHPFN_SRCS)
 
-$(HACCHPSIM_OPTIONS_TEXI): options
-$(HACCHPSIM_COMMANDS_TEXI): cmd
-$(HACCHPSIM_FUNCTIONS_TEXI): fn
+# don't depend on directories, because these are always built newer
+# than their contents/file duing make dist...
+# $(HACCHPSIM_OPTIONS_TEXI): $(srcdir)/options
+# $(HACCHPSIM_COMMANDS_TEXI): $(srcdir)/cmd
+# $(HACCHPSIM_FUNCTIONS_TEXI): $(srcdir)/fn
 
-options:
-	$(mkdir_p) $@
-
-cmd:
-	$(mkdir_p) $@
-
-fn:
-	$(mkdir_p) $@
-
-AUTO_IGNORE += \
-	options \
-	cmd \
-	fn
-
-CLEANFILES += \
-	$(HACCHPSIM_OPTIONS_TEXI) \
-	$(HACCHPSIM_COMMANDS_TEXI) \
-	$(HACCHPSIM_FUNCTIONS_TEXI)
-EXTRA_DIST += $(hacchpsim_INCLUDES)
-
-# not bothering with more sophisticated dependency tracking
-hacchpsim.dvi hacchpsim.pdf hacchpsim.html $(srcdir)/hacchpsim.info: \
+hacchpsim_info_DEPS = \
 	$(hacchpsim_INCLUDES) \
 	$(HACCHPSIM_OPTIONS_TEXI) \
 	$(HACCHPSIM_COMMANDS_TEXI) \
 	$(HACCHPSIM_FUNCTIONS_TEXI)
 
+# $(srcdir)/options:
+#	$(mkdir_p) $@
+
+# $(srcdir)/cmd:
+#	$(mkdir_p) $@
+
+# $(srcdir)/fn:
+#	$(mkdir_p) $@
+
+# BUILT_DIRS = options cmd fn
+# CVS ignore these directories
+# AUTO_IGNORE += $(BUILT_DIRS)
+
+# these auto-generated and distributed files should not be cleaned by the user
+# they should only be explicitly cleaned by the maintainer.  
+MAINTAINERCLEANFILES += \
+	$(HACCHPSIM_OPTIONS_TEXI) \
+	$(HACCHPSIM_COMMANDS_TEXI) \
+	$(HACCHPSIM_FUNCTIONS_TEXI)
+
+# manually clean auto-generated documentation
+clean-texi:
+	-$(RM) $(HACCHPSIM_OPTIONS_TEXI)
+	-$(RM) $(HACCHPSIM_COMMANDS_TEXI)
+	-$(RM) $(HACCHPSIM_FUNCTIONS_TEXI)
+#	-(cd $(srcdir) && $(RM) -r $(BUILT_DIRS) )
+#	-$(RM) -r $(BUILT_DIRS)
+
+.PHONY: clean-texi
+
+# For a srcdir target like the .info to be distributed, 
+# its dependencies are best distributed along with to keep 
+# the user's build from trying to regenerate the .info.
+# This can occur during a distcheck if auto-generated .texi dependencies
+# are not shipped with the distribution.  
+EXTRA_DIST += $(hacchpsim_info_DEPS)
+
+# not bothering with more sophisticated dependency tracking
+hacchpsim.dvi hacchpsim.pdf hacchpsim.html $(srcdir)/hacchpsim.info: \
+	$(hacchpsim_info_DEPS)
+
 # Q: do figures need to be installed?
 
 # AM_MAKEINFOFLAGS =
+
+# hack: since the options, fn, cmd directories are created during make dist,
+# their time stamps will be newer than the files contained in those 
+# directories, which will cause the user to unnecessarily rebuild 
+# the dependent .info files.  Thus, we coercively touch the files
+# in dependency order, to guarantee this doesn't occur.
+# Unfortunately, not enough, because unpacking creates directories newer...
+# We've permanently added the source dirs to remove dependencies on them.
+# dist-hook:
+# 	(cd $(distdir) && \
+# 	for d in '$(BUILT_DIRS)' ; do \
+# 	  $(TOUCH) $$d/*.texi ; \
+# 	done && \
+# 	test -z "$(INFOS)" || $(TOUCH) $(INFOS) \
+# 	)
 
 ################# documentation figures #######################################
 SOURCE_FIGS =
@@ -150,15 +198,10 @@ XFIG_PNG = $(XFIG_FIGURES:.fig=.png)
 
 all-figs: $(BUILT_FIGS)
 
-# build the directory automatically
-$(BUILT_FIGS) $(XFIG_TEX) $(XFIG_PSTEX) $(XFIG_PSTEX_T) \
-	$(XFIG_PDFTEX) $(XFIG_PDFTEX_T) $(XFIG_EPS) $(XFIG_PNG): figs/.dirstamp
 
-figs/.dirstamp:
-	$(mkdir_p) figs && touch $@
-
-DISTCLEANFILES += figs/.dirstamp
-EXTRA_DIST += $(SOURCE_FIGS) $(SOURCE_DOTS)
+EXTRA_DIST += $(XFIG_FIGURES) $(SOURCE_DOTS) $(XFIG_PNG)
+# PNGs and built .figs too because distributed .info depends on them
+# (don't want user to have to rebuild .info)
 
 AUTO_IGNORE += \
 	chpsim_event_cycle.fig \

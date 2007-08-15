@@ -1,5 +1,20 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.17 2007/08/15 02:48:32 fang Exp $
+#	$Id: ChangeLog,v 1.18 2007/08/15 19:54:50 fang Exp $
+
+2007-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-50:
+	  Make.dox-head: provide script to cd $(srcdir) and extract texinfo
+		documentation in the $(srcdir) of documentation, 
+		no longer in $(builddir) because distribution needs 
+		auto-generated .texi files to suppress rebuild of .info, 
+		which is distributed by default.  Crucial for
+		distcheck, which uses non-writable $(srcdir).  
+		Mostly affects chpsim/Makefile.am, will be applicable to others.
+		Also had to dist-hook-touch subdir files to maintain
+		dependency-ordered timestamps so user need not regenerate
+		info files. 
+
 
 2007-08-14	David Fang		<fangism@users.sourceforge.net>
 

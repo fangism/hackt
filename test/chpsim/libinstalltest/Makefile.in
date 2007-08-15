@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.2 2007/08/15 02:50:23 fang Exp $
+#	$Id: Makefile.in,v 1.3 2007/08/15 19:55:05 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -85,8 +85,8 @@ CHPSIM_LDFLAGS = `$(HACKT_CONFIG) --ldflags` -lstdchpfn
 # should be equivalent to -L$(pkglibdir)
 
 # run hacchpsim to and log results to file
-lib-zcond-test.chpsimrc-out: lib-zcond-test-a-01.chpsimrc lib-zcond-test-a.haco-a
-	$(HACKT_CHPSIM_EXE) -b $(CHPSIM_LDFLAGS) lib-zcond-test-a.haco-a < \
+lib-zcond-test.chpsimrc-out: lib-zcond-test-a-01.chpsimrc lib-zcond-flat.haco-a
+	$(HACKT_CHPSIM_EXE) -b $(CHPSIM_LDFLAGS) lib-zcond-flat.haco-a < \
 		$(srcdir)/lib-zcond-test-a-01.chpsimrc > $@
 
 # local clean-up

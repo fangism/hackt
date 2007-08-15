@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.10 2007/08/08 23:01:27 fang Exp $
+#	$Id: Make.dox-head,v 1.11 2007/08/15 19:54:50 fang Exp $
 #	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
@@ -50,4 +50,18 @@ ps-local: $(PSS)
 # default and the right latex programs were found.  
 pdf_DATA = $(AUTOPDFS)
 ps_DATA = $(AUTOPSS)
+
+# extract texinfo documentation into $(srcdir)
+# For use with Makefile rules, 
+# works for rules with single or multiple dependencies
+# EXTRACT_TEXINFO_IN_SRCDIR defined in $(top_srcdir)/Make.stddef
+EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT = \
+	(cd $(srcdir) && \
+	for s in $? ; do \
+	  f="$(top_builddir)"`$(ECHO) $$s | $(SED) 's|$(top_srcdir)||'` ; \
+	  if (test -f $$f && test -r $$f) ; then \
+	    $(ECHO) "Extracting Texinfo from $$f ..." ; \
+	    $(EXTRACT_TEXINFO_IN_SRCDIR) $$f ; \
+	  fi ; \
+	done )
 

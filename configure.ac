@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.148 2007/08/15 02:48:27 fang Exp $
+#	$Id: configure.ac,v 1.149 2007/08/15 19:54:47 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -619,6 +619,19 @@ dnl 	[out=src/headers_deps.make
 dnl 	(cd src && make echo-header-depbases) | \
 dnl 		awk -f $srcdir/src/scripts/automake_include.awk >> $out
 dnl 	])
+
+dnl auxiliary directories
+AC_CONFIG_COMMANDS([mkdir-builddir],
+[builddirlist='
+dox/chpsim/figs
+src/util/STL/.deps
+src/util/lang/lexyacc
+'
+for d in $builddirlist
+do
+	test -d $d || mkdir -p $d
+done
+])
 
 AC_OUTPUT
 

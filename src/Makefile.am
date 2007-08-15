@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.175 2007/08/15 02:48:43 fang Exp $
+#	$Id: Makefile.am,v 1.176 2007/08/15 19:54:53 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -19,7 +19,6 @@ SUBDIRS = util/test . scm
 # cumulative targets
 AUTOHEADERS =
 BUILT_SOURCES =
-PHONYSOURCES =
 CLEANSUBDIRS =
 SUBDIR_CVSIGNORE =
 EXTRA_LTLIBRARIES =
@@ -68,8 +67,7 @@ scripts/init_hackt.sh: scripts/init_hackt.sh.in $(top_builddir)/config.status
 scripts/init_hackt.csh: scripts/init_hackt.csh.in $(top_builddir)/config.status
 	$(RECONFIGURE)
 
-# dirgen is completely bogus, workaround to coerce directory generation
-noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
+noinst_PROGRAMS = getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
@@ -275,15 +273,6 @@ getopt_test_SOURCES = test/getopt_test.cc
 BUILT_SOURCES += parser/hackt-parse.output.h \
 	parser/instref-parse.output.h \
 	parser/type-parse.output.h
-
-# phony program to generate _build/*/.deps directories on distcheck
-PHONYSOURCES += dummy.cc
-dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
-
-# these two targets cause automake to create the corresponding _build
-# subdirectories, that are needed for make distcheck, for check-headers
-$(PHONYSOURCES):
-	$(TOUCH) $@
 
 cvstag.h: ChangeLog
 	@{ $(ECHO) "#ifndef	CVSTAG" ; \
@@ -1581,6 +1570,7 @@ libhacktparsers_la_CXXFLAGS = \
 
 # is required to be set for Make.hchk-tail.am
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
+EXTRA_DIST += $(srcdir)/test/header_test.cc
 
 # there are a few headers we want exempt from stand-alone testing
 # what about their dependencies?  
