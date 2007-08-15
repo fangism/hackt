@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.149 2007/08/15 19:54:47 fang Exp $
+#	$Id: configure.ac,v 1.150 2007/08/15 23:58:33 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -84,6 +84,8 @@ dnl DOC_CHECK_PROG_DVIPS
 DOC_CHECK_PROG_PS2PDF
 DOC_CHECK_PROG_PS2EPSI
 AC_CHECK_PROG([PSNUP], psnup, psnup)
+AC_CHECK_PROG([INFO], info, info)
+AM_CONDITIONAL(HAVE_INFO, test -n "$INFO" )
 AC_CHECK_PROG([MAKEINFO], makeinfo, makeinfo)
 dnl covered by texinfos.am already
 dnl AC_CHECK_PROG([TEXI2DVI], texi2dvi, texi2dvi)

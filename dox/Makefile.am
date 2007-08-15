@@ -1,6 +1,6 @@
 # "dox/Makefile.am"
 # root Makefile for dox directory
-#	$Id: Makefile.am,v 1.11 2007/06/04 22:44:23 fang Exp $
+#	$Id: Makefile.am,v 1.12 2007/08/15 23:58:36 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -15,6 +15,23 @@ EXTRA_DIST += README TODO ChangeLog local.cvsignore \
 	common/hac.bib
 
 .NOTPARALLEL: pdf ps
+
+# test the installed .info files in INFO_PATH, set by init_hackt
+if HAVE_INFO
+installcheck-local: hacchpsim-top.txt
+	$(CAT) $^
+else
+installcheck-local:
+	@$(ECHO) "'info' command not found in path during configure." ; \
+	$(ECHO) "Skipping installcheck-local info test."
+endif
+
+hacchpsim-top.txt:
+	$(ECHO) "$@ is only built during installcheck[-local]" ; \
+	. $(bindir)/init_hackt.sh && \
+	$(INFO) -o $@ hacchpsim
+
+CLEANFILES += hacchpsim-top.txt
 
 help-local:
 	@$(ECHO) "'make pdf' or 'ps' to build documentation in subdirs."

@@ -2,6 +2,10 @@
 
 2007-08-15	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-52:
+	  Check for 'info' and AM_CONDITIONAL HAVE_INFO for installcheck.
+
+
 	* HACKT-00-01-04-main-00-81-50:
 	  Make.stddef: define EXTRACT_TEXINFO_IN_SRCDIR invokation of 
 		extract_texinfo.awk suitable in scripts that cd $(srcdir) first
