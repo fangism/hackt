@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.6 2007/01/21 05:58:06 fang Exp $
+	$Id: TODO,v 1.7 2007/08/15 21:57:01 fang Exp $
 
 Use configure to generate Makefiles suitable for installations of hackt.  
 Distinguish between build Makefiles and install Makefiles.  
@@ -30,6 +30,7 @@ inline documentation:
 	that it is working by pointing to the relevant test cases
 	in test/lib that demonstrate it (prsim with random timing for QDI).  
 	The pointer to the test case is a certification.  
+	Use embedded texinfo, and extract_texinfo.awk them!
 
 library additions:
 	buffered logic family

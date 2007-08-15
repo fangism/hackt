@@ -1,0 +1,21 @@
+// "pcehb_mux_4xe1of2-a.hac"
+// testing mux
+// with inactive reset on bucket
+
+import "mux.hac";
+import "env.hac";
+
+bool _Reset, Reset;
+e1of2 L[4], R;
+e1of4 C;
+cmos_source_e1of4 CS<4,{0,1,2,3}>(C, _Reset, Reset);
+cmos_source_e1of2 LS[4];
+LS[0]<1,{0}>;
+LS[1]<1,{1}>;
+LS[2]<3,{0,0,1}>;
+LS[3]<5,{0,1,1,1,0}>;
+(;i:4: LS[i](L[i], _Reset, Reset); )
+inactive_reset_bitbucket_e1of2 RB(R, _Reset);
+pcehb_mux_e1of<2,4> M(L, C, R, _Reset);
+
+

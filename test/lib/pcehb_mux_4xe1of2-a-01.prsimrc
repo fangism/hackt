@@ -1,0 +1,8 @@
+# "pcehb_mux_4xe1of2-a-01.prsimrc"
+#	$Id: pcehb_mux_4xe1of2-a-01.prsimrc,v 1.1 2007/08/15 21:57:07 fang Exp $
+# @haco@ pcehb_mux_4xe1of2-a.haco-a
+# testing stability of multiplexer
+
+source stable-test-medium.prsimrc
+source reset-test-medium.prsimrc
+

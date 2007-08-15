@@ -1,0 +1,56 @@
+/**
+	\file "mux.hac"
+	$Id: mux.hac,v 1.1 2007/08/15 21:57:01 fang Exp $
+	Multiplexer, not the same as merge.
+	Multiplexers unconditionally read all tokens, 
+	but only one output is selected; the others are eaten.
+ */
+
+import "channel.hac";
+import "logic.hac";
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+@texinfo qdi/mux/pcehb_mux_e1of.texi
+@deffn Cell pcehb_mux_e1of N M L C R
+This variant requires the R.e be high (inactive) on reset to reset properly.
+L.e is initially high (inactive).
+All data rails are expected low and set low.
+@end deffn
+@end texinfo
+ */
+template <pint N, M>
+defproc pcehb_mux_e1of(
+	e1of<N> L[M];
+	e1of<M> C;
+	e1of<N> R;
+	bool _Reset) {
+_c1of<N> _r;
+bool _lv[M+1], clv, _cv;
+_cv = _lv[M];
+bool rv, _en, en;
+std::logic::nor<M> cc(C.d, _cv);
+std::logic::nor<N> ln[M];
+(;i:M: ln[i](L[i].d, _lv[i]); )		// left completion
+std::logic::celeminv<M+1> lc(_lv, clv);	// left completion
+std::logic::nand<N> rc(_r.d, rv);	// right completion
+(;i:M: C.e = L[i].e; )			// shared input ack (ALERT: high fanout)
+prs {
+(:j:N:
+(:i:M:
+	en & L[i].d[j] & C.d[i]		-> _r.d[j]-
+)
+	~en				-> _r.d[j]+
+	~_Reset				-> _r.d[j]+
+	_r.d[j]				=> R.d[j]-
+)
+	clv & rv			-> C.e-
+	~clv & ~rv			-> C.e+		// drop ~rv to full-buf
+	// might want inverter pair on C.e for high fanout
+	C.e & R.e			-> _en-
+	~C.e & ~R.e			-> _en+
+	_en				=> en-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

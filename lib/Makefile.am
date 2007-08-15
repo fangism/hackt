@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2007/08/15 02:48:33 fang Exp $
+#	$Id: Makefile.am,v 1.21 2007/08/15 21:57:01 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -31,7 +31,8 @@ dist_hacktlib_DATA = \
 	sync.hac \
 	alternator.hac \
 	split.hac \
-	merge.hac
+	merge.hac \
+	mux.hac
 
 vim_DATA = \
 	support/hac.vim \

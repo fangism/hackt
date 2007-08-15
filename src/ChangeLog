@@ -5,6 +5,10 @@
 
 2007-08-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-51:
+	  No source revision, just PRS library and test (lib/ChangeLog).
+
+
 	* HACKT-00-01-04-main-00-81-50:
 	  No source revision, documentation management only (dox/ChangeLog).
 	  Removed dummy.cc phony sources in favor of letting configure
