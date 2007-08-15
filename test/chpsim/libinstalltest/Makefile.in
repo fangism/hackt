@@ -1,5 +1,5 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.1.2.1 2007/08/13 02:57:01 fang Exp $
+#	$Id: Makefile.in,v 1.1.2.2 2007/08/15 02:45:52 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
@@ -14,7 +14,10 @@
 # appears earliest in the path to guarantee that the intended executables
 # are being tested.  
 
-# for: examplesdir
+#############################################################################
+# This section for installcheck testing only.
+# USER: delete this section and ignore it.
+
 top_srcdir = @top_srcdir@
 # include $(top_srcdir)/Make.stddef
 top_builddir = @top_builddir@
@@ -24,24 +27,32 @@ include $(top_srcdir)/installdirs.mk
 
 # pkgdatadir = $(datadir)/@PACKAGE@
 ## probably resembles: /usr/local/share/hackt/lib
+#############################################################################
 
-# minimal configuration paths
+#############################################################################
+# SETUP INSTRUCTIONS FOR USER:
+
 # NOTE: we now reference the *INSTALLED* directory as the VPATH/srcdir
+#	during installcheck
 srcdir = $(examplesdir)/chpsim-stdlib
+# If you're running this example out of the installed directory (VPATH), 
+# then point srcdir to the installed example directory.   
+# If you've copied the example files to a local directory, set
+# srcdir = .
+
 # keep this consistent with parent directory's Makefile.am
 VPATH = $(srcdir)
 # ALERT: not all versions of make support variable expansion of VPATH
-
 
 #############################################################################
 ################### the important Makefile example below ####################
 #############################################################################
 
-# include the *installed* makefile template
-# pkgdatadir is defined by installcheck.mk
-include $(pkgdatadir)/mk/hackt.mk
-# Here we test the non-libtoolized Makefile template because we are not
-# building any modules in this test, only using the standard library.
+# Include the *installed* makefile template (Libtool-enabled variant)
+# pkgdatadir is defined by installcheck.mk durinst installcheck testing
+# USER: you can set pkgdatadir = prefix/share/hackt, or just substitute it
+# directly in the referenced include file below.
+include $(pkgdatadir)/mk/hackt-lt.mk
 
 # up to user to define the following, or let make pick defaults:
 # CC = @CC@

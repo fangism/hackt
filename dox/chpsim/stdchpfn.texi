@@ -10,14 +10,34 @@ This section describes the usage of existing library functions.
 These library functions can be loaded by dlopening @file{stdchpfn.la},
 which is located in @file{@i{pkglibdir}} (like @file{prefix/lib/hackt}).
 
+To load the standard library:
+@example
+$ @kbd{hacchpsim -Lprefix/lib/hackt -lstdchpfn foo.obj}
+@end example
+
+@cindex LDFLAGS
+@cindex hackt-config
+To help with passing the correct library flags, you can also invoke
+@samp{hackt-config --ldflags} to automatically expand the flags:
+
+@example
+$ @kbd{hacchpsim `hackt-config --ldflags` -lstdchpfn foo.obj}
+@end example
+
 @menu
 * Function Descriptions:: list of functions
+* Library Use Example:: example using standard library
 * Function Renaming:: customization and remapping
+* Library Organization:: file organization
 @end menu
 
 @c ----------------------------------------------------------------------------
 @node Function Descriptions
 @section Function Descriptions
+@cindex library functions
+
+This section gives brief usage descriptions of all functions 
+available from the standard @command{chpsim} library.  
 
 @include fn/assert.texi
 @include fn/bcond.texi
@@ -25,10 +45,49 @@ which is located in @file{@i{pkglibdir}} (like @file{prefix/lib/hackt}).
 @include fn/rcond.texi
 
 @c ----------------------------------------------------------------------------
+@node Library Use Example
+@section Library Use Example
+@cindex library example
+
+An example project that uses some standard library functions is installed
+under @file{@i{pkgdatadir}/doc/examples/chpsim-stdlib/}.
+
+@c ----------------------------------------------------------------------------
 @node Function Renaming
 @section Function Renaming
+@cindex renaming library functions
 
 This section describes ways in which one can customize the standard library.
 Perhaps you don't like the names chosen, or you would like to remap
 selected functions to your own versions.
+
+The source file for @file{stdchpfn.la} is also installed
+as @file{stdchpfn.cc} in the same location (@t{pkglibdir}).
+It merely contains function registration macros that map
+functions defined in @file{libstdchpfn.la} to names used in @command{chpsim}.
+One can use this file as a starting point for remapping 
+to functions to different names, or names to different functions.  
+To re-use the existing underlying functions, just link your new
+library against @samp{-L@i{pkglibdir} -lstdchpfn}
+(in @var{LIBADD}, by Libtool/Automake convention),
+which resolves to @file{libstdchpfn.la}, 
+not the dlopenable module, @file{stdchpfn.la}.  
+
+@c ----------------------------------------------------------------------------
+@node Library Organization
+@section Library Organization
+@cindex library organization
+
+The intentional separation between 
+@file{libstdchpfn.la} and @file{stdchpfn.la}
+demonstrates how one can build a @command{chpsim} module
+on top of an existing C or C++ library without modifying it.  
+
+@cindex library dependencies
+@cindex dependent libraries
+Q: When passing a module to @command{chpsim} with @option{-l} or dlopen, 
+how does the system know what dependent libraries to load?
+A: The @file{.la} Libtool archives encode library dependencies
+for shared libraries, and (Libtool) libltdl's lt_dlopen automatically
+takes care of dependent libraries for the user.  
 
