@@ -1,7 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.18 2007/08/15 19:54:50 fang Exp $
+#	$Id: ChangeLog,v 1.19 2007/08/15 22:31:31 fang Exp $
 
 2007-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-52:
+	  chpsim/usage.texi: disambiguate file clashes from case-insensitivity
+
 
 	* HACKT-00-01-04-main-00-81-50:
 	  Make.dox-head: provide script to cd $(srcdir) and extract texinfo

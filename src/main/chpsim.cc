@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.11 2007/08/15 02:49:18 fang Exp $
+	$Id: chpsim.cc,v 1.12 2007/08/15 22:31:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -235,7 +235,7 @@ The opposing option is @option{-b}.
 		o.interactive = true;
 		break;
 /***
-@texinfo options/option-I.texi
+@texinfo options/option-I-upper.texi
 @cindex source paths
 @defopt -I path @r{(repeatable)}
 @anchor{option-I}
@@ -271,7 +271,7 @@ The equivalent command in the interpreter is
 		}
 		break;
 /***
-@texinfo options/option-L.texi
+@texinfo options/option-L-upper.texi
 @cindex module paths
 @cindex library paths
 @defopt -L path @r{(repeatable)}

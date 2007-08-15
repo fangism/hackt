@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.3 2007/08/15 02:48:33 fang Exp $
+@c $Id: usage.texi,v 1.4 2007/08/15 22:31:31 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -51,8 +51,9 @@ much like what is summarized below.
 @include options/option-f.texi
 @include options/option-h.texi
 @include options/option-i.texi
-@include options/option-I.texi
-@include options/option-L.texi
+@c DAMN case-insensitive file systems!!!
+@include options/option-I-upper.texi
+@include options/option-L-upper.texi
 @include options/option-l.texi
 
 @c ****************************************************************************
