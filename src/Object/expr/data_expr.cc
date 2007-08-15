@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.17 2007/07/31 23:23:10 fang Exp $
+	$Id: data_expr.cc,v 1.18 2007/08/15 02:48:54 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -33,6 +33,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/loop_nonmeta_expr.tcc"
+#include "Object/expr/nonmeta_cast_expr.tcc"
+#include "Object/expr/nonmeta_func_call.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/nonmeta_channel_manipulator.h"
 
@@ -40,6 +42,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/data_type_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
 
 #include "common/TODO.h"
 
@@ -63,6 +66,8 @@ using HAC::entity::nonmeta_expr_list;
 using HAC::entity::int_range_expr;
 using HAC::entity::int_arith_loop_expr;
 using HAC::entity::bool_logical_loop_expr;
+using HAC::entity::bool_return_cast_expr;
+using HAC::entity::int_return_cast_expr;
 
 	SPECIALIZE_UTIL_WHAT(int_arith_expr, "int-arith-expr")
 	SPECIALIZE_UTIL_WHAT(int_relational_expr, "int-relatonal-expr")
@@ -74,6 +79,8 @@ using HAC::entity::bool_logical_loop_expr;
 	SPECIALIZE_UTIL_WHAT(int_range_expr, "int-range-expr")
 	SPECIALIZE_UTIL_WHAT(int_arith_loop_expr, "int-arith-loop-expr")
 	SPECIALIZE_UTIL_WHAT(bool_logical_loop_expr, "bool-logical-loop-expr")
+	SPECIALIZE_UTIL_WHAT(bool_return_cast_expr, "bool-cast-expr")
+	SPECIALIZE_UTIL_WHAT(int_return_cast_expr, "int-cast-expr")
 
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_arith_expr, NONMETA_INT_ARITH_EXPR_TYPE_KEY, 0)
@@ -95,6 +102,10 @@ using HAC::entity::bool_logical_loop_expr;
 		int_arith_loop_expr, NONMETA_INT_ARITH_LOOP_EXPR_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		bool_logical_loop_expr, NONMETA_BOOL_LOGICAL_LOOP_EXPR_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		bool_return_cast_expr, BOOL_RETURN_CAST_EXPR_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		int_return_cast_expr, INT_RETURN_CAST_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -104,6 +115,27 @@ using std::istream;
 using util::persistent_traits;
 using util::write_value;
 using util::read_value;
+
+//=============================================================================
+// reverse-translation of type to tag_type for class_traits
+
+template <class>
+struct expr_tag;
+
+template <>
+struct expr_tag<bool_expr> {
+	typedef	bool_tag	type;
+};
+
+template <>
+struct expr_tag<int_expr> {
+	typedef	int_tag		type;
+};
+
+template <>
+struct expr_tag<real_expr> {
+	typedef	real_tag	type;
+};
 
 //=============================================================================
 // class int_expr method definitions
@@ -1673,6 +1705,9 @@ nonmeta_expr_list::load_object(const persistent_object_manager& m,
 
 template class loop_nonmeta_expr<int_arith_expr>;
 template class loop_nonmeta_expr<bool_logical_expr>;
+
+template class nonmeta_cast_expr<int_expr, nonmeta_func_call>;
+template class nonmeta_cast_expr<bool_expr, nonmeta_func_call>;
 
 //=============================================================================
 }	// end namespace entity

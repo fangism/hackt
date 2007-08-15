@@ -1,7 +1,10 @@
 /**
 	\file "main/chpsim.cc"
 	Main module for new CHPSIM.
-	$Id: chpsim.cc,v 1.10 2007/08/13 20:55:21 fang Exp $
+	This file is also processed with a script to extract 
+	Texinfo documentation.
+	This allows us to keep the documentation close to the source.
+	$Id: chpsim.cc,v 1.11 2007/08/15 02:49:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/expr/dlfunction.h"	// for ack_loaded_functions
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
 #include "sim/chpsim/graph_options.h"
@@ -153,9 +157,32 @@ chpsim::parse_command_options(const int argc, char* argv[], options& o) {
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
+/***
+@texinfo options/option-b.texi
+@cindex batch mode
+@defopt -b
+Batch mode, non-interactive, promptless.  
+This is useful for running scripts or piping in commands 
+while suppressing prompts.  
+This mode also turns off tab-completion in the interpreter.  
+The opposing option is @option{-i}.
+@b{Note:} executables linked against @t{libeditline} may @emph{require} 
+this option for processing scripts due to a mishandling of EOF.  
+@end defopt
+@end texinfo
+***/
 	case 'b':
 		o.interactive = false;
 		break;
+/***
+@texinfo options/option-d.texi
+@cindex checkpoint
+@defopt -d @var{checkpoint}
+Produce a textual dump of a checkpoint binary.  
+Exits without running the simulator.  
+@end defopt
+@end texinfo
+***/
 	case 'd': {
 		o.dump_checkpoint = true;
 		std::ifstream f(optarg, std::ios_base::binary);
@@ -166,6 +193,13 @@ switch (c) {
 		State::dump_raw_checkpoint(cout, f);
 		break;
 	}
+/***
+@texinfo options/option-f.texi
+@defopt -f @var{flag}
+@xref{General Flags}.
+@end defopt
+@end texinfo
+***/
 	case 'f': {
 		const options_modifier_map_iterator
 			mi(options_modifier_map.find(optarg));
@@ -177,20 +211,79 @@ switch (c) {
 		}
 		break;
 	}
+/***
+@texinfo options/option-h.texi
+@defopt -h
+Help.  Print list of all interpreter commands and exit.  
+@end defopt
+@end texinfo
+***/
 	case 'h':
 		o.help_only = true;
 		break;
+/***
+@texinfo options/option-i.texi
+@cindex interactive
+@cindex prompt
+@defopt -i
+Interactive, prompting.  This is the default mode.
+The opposing option is @option{-b}.  
+@end defopt
+@end texinfo
+***/
 	case 'i':
 		o.interactive = true;
 		break;
+/***
+@texinfo options/option-I.texi
+@cindex source paths
+@defopt -I path @r{(repeatable)}
+@anchor{option-I}
+Append @var{path} to the list of paths to search for sourcing other 
+command scripts in the interpreter.  
+@end defopt
+@end texinfo
+***/
 	case 'I':
 		o.source_paths.push_back(optarg);
 		break;
+/***
+@texinfo options/option-l.texi
+@cindex module
+@cindex loading
+@defopt -l lib @r{(repeatable)}
+@anchor{option-l}
+Load the @var{lib} shared library module for registering user-defined
+run-time functions.  
+@var{lib} should be named @emph{without} its file extension, 
+for the sake of portability.  
+@c @var{lib}'s name should match that of the built library's base.
+For example, @file{libcrunch.la} should be referenced as @samp{libcrunch}, 
+and @file{chewy.so} should be referenced as @samp{chewy}.
+The equivalent command in the interpreter is
+@ref{command-dlopen,, @command{dlopen}}.
+@end defopt
+@end texinfo
+***/
 	case 'l':
 		if (!HAC::ltdl_open_append(optarg)) {
 			return 2;
 		}
 		break;
+/***
+@texinfo options/option-L.texi
+@cindex module paths
+@cindex library paths
+@defopt -L path @r{(repeatable)}
+@anchor{option-L}
+Append @var{path} to the list of paths to search for opening shared library
+plug-ins (modules).  
+The equivalent command in the interpreter is
+@ref{command-dladdpath,, @command{dladdpath}}.
+For more on building and loading shared-libraries, @xref{Extending simulation}.
+@end defopt
+@end texinfo
+***/
 	case 'L':
 		lt_dladdsearchdir(optarg);
 		break;
@@ -282,41 +375,107 @@ static void __chpsim_show_delays(chpsim_options& o)
 	{ o.graph_opts.show_delays = true; }
 static void __chpsim_no_show_delays(chpsim_options& o)
 	{ o.graph_opts.show_delays = false; }
+static void __ack_loaded_functions(chpsim_options&)
+	{ entity::ack_loaded_functions = true; }
+static void __no_ack_loaded_functions(chpsim_options&)
+	{ entity::ack_loaded_functions = false; }
 
 const chpsim::register_options_modifier
+/***
+@texinfo options/default.texi
+@defopt {-f default}
+Resets to default flags.  Has no negation.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_default(
 		"default", &__chpsim_default,
 		"default options"), 
+/***
+@texinfo options/run.texi
+@defopt {-f run}
+Actually run the simulator's interpreter.  Enabled by default.
+@samp{-f no-run} is explicitly needed when all that is desired
+are diagnostic dumps.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_run(
 		"run", &__chpsim_run,
 		"enable simulation run (default)"), 
 	chpsim::_no_run(
 		"no-run", &__chpsim_no_run,
 		"disable simulation run"), 
+/***
+@texinfo options/dump-graph-alloc.texi
+@defopt {-f dump-graph-alloc}
+Diagnostic tool.  
+Produce a textual dump of expression allocation after the internal 
+whole-program graph has been constructed.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_dump_graph_alloc(
 		"dump-graph-alloc", &__chpsim_dump_graph_alloc,
 		"show result of expression allocation"), 
 	chpsim::_no_dump_graph_alloc(
 		"no-dump-graph-alloc", &__chpsim_no_dump_graph_alloc,
 		"suppress result of expression allocation (default)"),
+/***
+@texinfo options/check-structure.texi
+@defopt {-f check-structure}
+Run additional internal graph (nodes and edges) consistency checks.
+Enabled by default.
+@end defopt
+@end texinfo
+***/
 	chpsim::_check_structure(
 		"check-structure", &__chpsim_check_structure,
 		"checks expression/node structure consistency (default)"), 
 	chpsim::_no_check_structure(
 		"no-check-structure", &__chpsim_no_check_structure,
 		"disable structural consistency checks"),
+/***
+@texinfo options/dump-dot-struct.texi
+@defopt {-f dump-dot-struct}
+@cindex dot
+@cindex event-graph
+@cindex whole-program graph
+Produce a textual netlist of the whole-program event graph in 
+@command{dot} format @footnote{@command{dot} 
+is the name of a program (and its input language)
+that is part of AT&T's GraphViz package (open-source).}.
+A list of options that tune this output can be found in
+@ref{Graph Generation}.
+@end defopt
+@end texinfo
+***/
 	chpsim::_dump_dot_struct(
 		"dump-dot-struct", &__chpsim_dump_dot_struct,
 		"print dot-formatted graph structure"), 
 	chpsim::_no_dump_dot_struct(
 		"no-dump-dot-struct", &__chpsim_no_dump_dot_struct,
 		"suppress dot-formatted graph structure (default)"),
+/***
+@texinfo options/show-event-index.texi
+@defopt {-f show-event-index}
+Annotate event nodes with their globally allocated indices.  Default off.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_show_event_index(
 		"show-event-index", &__chpsim_show_event_index,
 		"for dot-graphs: show event indices in graph"), 
 	chpsim::_no_show_event_index(
 		"no-show-event-index", &__chpsim_no_show_event_index,
 		"for dot-graphs: hide event indices"),
+/***
+@texinfo options/show-instances.texi
+@defopt {-f show-instances}
+Also show allocated instances as nodes.  Default off.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_show_instances(
 		"show-instances", &__chpsim_show_instances,
 		"for dot-graphs: show allocated instances as nodes"), 
@@ -331,24 +490,62 @@ const chpsim::register_options_modifier
 		"no-antidependencies", &__chpsim_no_antidependencies,
 		"for dot-graphs: hide anti-dependence edges"),
 #endif
+/***
+@texinfo options/cluster-processes.texi
+@cindex cluster
+@defopt {-f cluster-processes}
+Wrap process subgraphs into clusters, 
+which are enveloped in rectangular outlines.  Default off.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_process_clusters(
 		"cluster-processes", &__chpsim_process_clusters,
 		"for dot-graphs: wrap process subgraphs into clusters"), 
 	chpsim::_no_process_clusters(
 		"no-cluster-processes", &__chpsim_no_process_clusters,
 		"for dot-graphs: un-clustered process subgraphs"),
+/***
+@texinfo options/show-channels.texi
+@defopt {-f show-channels}
+Label channel edges with their channel names.  Default off.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_show_channels(
 		"show-channels", &__chpsim_show_channels,
 		"for dot-graphs: display channel communication event edges"), 
 	chpsim::_no_show_channels(
 		"no-show-channels", &__chpsim_no_show_channels,
 		"for dot-graphs: suppress channel-event edges"),
+/***
+@texinfo options/show-delays.texi
+@defopt {-f show-delays}
+Annotate event nodes with their delay values.  Default off.  
+@end defopt
+@end texinfo
+***/
 	chpsim::_show_delays(
 		"show-delays", &__chpsim_show_delays,
 		"for dot-graphs: wrap process subgraphs into clusters"), 
 	chpsim::_no_show_delays(
 		"no-show-delays", &__chpsim_no_show_delays,
-		"for dot-graphs: un-clustered process subgraphs");
+		"for dot-graphs: un-clustered process subgraphs"),
+/***
+@texinfo options/ack-loaded-fns.texi
+@defopt {-f ack-loaded-fns}
+Print names of functions as they are loaded from dlopened modules.  
+Default on.
+Mostly useful for diagnostics.  
+@end defopt
+@end texinfo
+***/
+	chpsim::_ack_loaded_functions(
+		"ack-loaded-fns", &__ack_loaded_functions,
+		"Print names of functions as they are loaded (default)."),
+	chpsim::_no_ack_loaded_functions(
+		"no-ack-loaded-fns", &__no_ack_loaded_functions,
+		"Suppress names of functions as they are loaded.");
 
 //=============================================================================
 }	// end namespace HAC

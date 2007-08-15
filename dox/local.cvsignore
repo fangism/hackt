@@ -3,6 +3,7 @@ latex
 *.stamp
 core.*
 *.core
+*.swp
 *.depend
 *.aux
 *.log

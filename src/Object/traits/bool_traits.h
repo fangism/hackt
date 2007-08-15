@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.20 2007/01/21 05:59:37 fang Exp $
+	$Id: bool_traits.h,v 1.21 2007/08/15 02:49:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -102,6 +102,7 @@ struct class_traits<bool_tag> {
 		"Object/traits/class_traits_types.cc"
 	 */
 	static const type_ref_ptr_type		built_in_type_ptr;
+	static const type_ref_ptr_type&		nonmeta_data_type_ptr;
 };	// end struct class_traits<bool_tag>
 
 //=============================================================================

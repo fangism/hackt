@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.18 2006/11/07 06:35:22 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.19 2007/08/15 02:49:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -188,6 +188,9 @@ const bool_traits::type_ref_ptr_type
 bool_traits::built_in_type_ptr(new data_type_reference(
 	never_ptr<const built_in_datatype_def>(&built_in_definition)));
 
+const bool_traits::type_ref_ptr_type&
+bool_traits::nonmeta_data_type_ptr(built_in_type_ptr);
+
 // be careful once type references are memory-pooled!
 // the following function call calls a bunch of allocators (new)
 const count_ptr<const data_type_reference>
@@ -195,6 +198,9 @@ int_traits::int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 
 const count_ptr<const data_type_reference>
 int_traits::magic_int_type_ptr(data_type_reference::make_quick_int_type_ref(0));
+
+const count_ptr<const data_type_reference>&
+int_traits::nonmeta_data_type_ptr(magic_int_type_ptr);
 
 //=============================================================================
 }	// end namespace entity

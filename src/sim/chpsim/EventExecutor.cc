@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.7 2007/07/31 23:23:41 fang Exp $
+	$Id: EventExecutor.cc,v 1.8 2007/08/15 02:49:24 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -27,6 +27,7 @@
 #include "Object/state_manager.h"
 #include "Object/global_channel_entry.h"
 #include "Object/nonmeta_channel_manipulator.h"
+#include "Object/traits/proc_traits.h"
 
 #include "sim/chpsim/StateConstructor.h"
 #include "sim/chpsim/DependenceCollector.h"
@@ -156,6 +157,7 @@ using util::reference_wrapper;
 using util::numeric::rand48;
 using util::memory::count_ptr;
 using entity::preal_const;
+using entity::process_tag;
 
 //=============================================================================
 /// helper routines
@@ -772,8 +774,23 @@ EventRechecker::visit(const channel_send& cs) {
 	}
 	// we actually write the data during a recheck
 	// this occurs without regard to the current channel state
+try {
 	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
 		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
+} catch (...) {
+	cerr << "Run-time error writing channel: ";
+	std::ostringstream canonical_name;
+	const size_t process_index = context.get_event().get_process_index();
+	if (process_index) {
+		context.sm->get_pool<process_tag>()[process_index]
+			.dump_canonical_name(canonical_name,
+				*context.topfp, *context.sm);
+	}
+	const expr_dump_context
+		edc(process_index ? canonical_name.str().c_str() : NULL);
+	cs.dump(cerr, edc) << endl;
+	throw;
+}
 #else
 	ret = nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
 #endif	// CHPSIM_COUPLED_CHANNELS

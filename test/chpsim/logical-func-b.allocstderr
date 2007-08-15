@@ -1,0 +1,29 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	X	my_foo<>
+	channel: 1,2,3,4,5
+	int: 1,2,3,4
+2	(top)	-	2	AS	int_source<32><4, {3,4,5,6}>
+	channel: 1
+3	(top)	-	3	BS	int_source<32><5, {4,5,6,7,8}>
+	channel: 2
+4	(top)	-	4	CS	int_source<32><3, {6,8,9}>
+	channel: 3
+5	(top)	-	5	DS	int_source<32><6, {2,5,3,6,4,7}>
+	channel: 4
+6	(top)	-	6	GS	bool_sink<>
+	channel: 5
+	bool: 1
+[global channel entries]
+1	(top)	-	1	A	chan(int<32>)
+2	(top)	-	2	B	chan(int<32>)
+3	(top)	-	3	C	chan(int<32>)
+4	(top)	-	4	D	chan(int<32>)
+5	(top)	-	5	G	chan(bool<>)
+[global int entries]
+1	process	1	1	X.a	
+2	process	1	2	X.b	
+3	process	1	3	X.c	
+4	process	1	4	X.d	
+[global bool entries]
+1	process	6	1	GS.b	

@@ -1,0 +1,13 @@
+# "gcd-nested-a-01.chpsimrc"
+#	$Id: gcd-nested-a-01.chpsimrc,v 1.2 2007/08/15 02:49:43 fang Exp $
+# Yes, use THIS object file
+# @haco@ gcd-nested-a.haco-a
+# @module@ -lgcd
+# @deps@ gcd.la
+
+watchall-events
+step 200
+time
+assert-queue
+
+

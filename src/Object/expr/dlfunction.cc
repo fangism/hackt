@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.2 2007/07/31 23:23:12 fang Exp $
+	$Id: dlfunction.cc,v 1.3 2007/08/15 02:48:57 fang Exp $
  */
 
 #include <iostream>
@@ -32,6 +32,12 @@ typedef	std::map<string, chp_mapped_func_ptr_type>
 
 static
 chp_func_map_type			chp_function_map;
+
+/**
+	By default, echo each function name as it is registered.
+ */
+bool
+ack_loaded_functions = true;
 
 //=============================================================================
 /**
@@ -144,10 +150,10 @@ register_chpsim_function(const string& fn, const chp_dlfunction_ptr_type fp) {
 	NEVER_NULL(fp);
 	chp_mapped_func_ptr_type& mf(chp_function_map[fn]);
 	if (!mf) {
-#if 1
+	if (ack_loaded_functions) {
 		// confirmation:
 		cout << "loaded function: `" << fn << "'." << endl;
-#endif
+	}
 		mf = chp_mapped_func_ptr_type(fp);
 	} else {
 		cerr << "ERROR: CHP function symbol `" << fn <<

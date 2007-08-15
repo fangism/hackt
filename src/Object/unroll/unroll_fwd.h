@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_fwd.h"
 	Forward declarations for all unroll-related classes.
-	$Id: unroll_fwd.h,v 1.2 2006/04/12 08:53:19 fang Exp $
+	$Id: unroll_fwd.h,v 1.3 2007/08/15 02:49:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_FWD_H__
@@ -41,6 +41,8 @@ typedef alias_connection<bool_tag>
 	bool_alias_connection;
 typedef alias_connection<enum_tag>
 	enum_alias_connection;
+typedef alias_connection<real_tag>
+	real_alias_connection;
 typedef alias_connection<datastruct_tag>
 	datastruct_alias_connection;
 typedef alias_connection<channel_tag>

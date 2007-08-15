@@ -6,7 +6,7 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.2 2007/07/31 23:23:13 fang Exp $
+	$Id: dlfunction.h,v 1.3 2007/08/15 02:48:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -131,6 +131,10 @@ lookup_chpsim_function(const std::string&);
 extern
 void
 list_chpsim_functions(std::ostream&);
+
+extern
+bool
+ack_loaded_functions;
 
 //=============================================================================
 }	// end namespace entity

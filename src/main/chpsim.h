@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim.h"
 	Interface header for the chpsim module.  
-	$Id: chpsim.h,v 1.5 2007/06/12 05:13:03 fang Exp $
+	$Id: chpsim.h,v 1.6 2007/08/15 02:49:20 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_H__
@@ -63,7 +63,8 @@ private:
 		_antidependencies, _no_antidependencies,
 		_process_clusters, _no_process_clusters,
 		_show_channels, _no_show_channels,
-		_show_delays, _no_show_delays;
+		_show_delays, _no_show_delays, 
+		_ack_loaded_functions, _no_ack_loaded_functions;
 
 };	// end class chpsim
 

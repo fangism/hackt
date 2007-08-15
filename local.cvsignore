@@ -1,5 +1,6 @@
 *.core
 core.*
+*.swp
 *.tar.gz
 *.tar.bz2
 flatsrc

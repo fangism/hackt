@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.13 2007/04/15 05:52:16 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.14 2007/08/15 02:49:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -76,6 +76,7 @@ namespace HAC {
 namespace entity {
 //=============================================================================
 // specializations
+// TODO: build specializations into proper class_traits
 
 /**
         Specialized data type reference resolved for parameter ints, 
@@ -85,11 +86,18 @@ namespace entity {
  */
 template <>
 struct data_type_resolver<pint_tag> {
-	typedef	class_traits<pint_tag>::simple_nonmeta_instance_reference_type
+	typedef	class_traits<pint_tag>		traits_type;
+	typedef	traits_type::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
+#if 0
 		return int_traits::magic_int_type_ptr;
+#else
+		// equivalent, but consistent and programmatic
+		return class_traits<traits_type::nonmeta_tag_type
+			>::nonmeta_data_type_ptr;
+#endif
 	}
 
 	/**
@@ -107,12 +115,19 @@ struct data_type_resolver<pint_tag> {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct data_type_resolver<pbool_tag> {
-	typedef	class_traits<pbool_tag>::simple_nonmeta_instance_reference_type
+	typedef	class_traits<pbool_tag>		traits_type;
+	typedef	traits_type::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
+#if 0
 		return bool_traits::built_in_type_ptr;
+#else
+		// equivalent, but consistent and programmatic
+		return class_traits<traits_type::nonmeta_tag_type
+			>::nonmeta_data_type_ptr;
+#endif
 	}
 
 	canonical_generic_datatype
@@ -126,15 +141,22 @@ struct data_type_resolver<pbool_tag> {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct data_type_resolver<preal_tag> {
-	typedef	class_traits<preal_tag>::simple_nonmeta_instance_reference_type
+	typedef	class_traits<preal_tag>		traits_type;
+	typedef	traits_type::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
 #if 0
 		return real_traits::built_in_type_ptr;
 #else
+#if 1
 		FINISH_ME(Fang);
 		return count_ptr<const data_type_reference>(NULL);
+#else
+		// equivalent, but consistent and programmatic
+		return class_traits<traits_type::nonmeta_tag_type
+			>::nonmeta_data_type_ptr;
+#endif
 #endif
 	}
 

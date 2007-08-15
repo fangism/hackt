@@ -1,5 +1,27 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.16 2007/08/09 03:47:06 fang Exp $
+#	$Id: ChangeLog,v 1.17 2007/08/15 02:48:32 fang Exp $
+
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-08:
+	  chpsim/: documented standard library usage, other feedback fixes.
+
+
+2007-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  chpsim/: Now extract documentation from module library functions
+		in lib/libchpfn/*.cc, included by stdchpfn.texi.
+	  mk/scantexdepend.awk: reject strings that cannot be file names,
+		because they contain special shell characters
+
+
+2007-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-05:
+	  chpsim/: options and commands documentation relocated
+		to source code and extracted for ease of maintainence.
+
 
 2007-08-08	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.2 2007/07/31 23:23:23 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.3 2007/08/15 02:49:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -9,6 +9,7 @@
 #include "Object/expr/nonmeta_expr_list.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/expr/const_param.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/persistent_type_hash.h"
@@ -165,8 +166,10 @@ count_ptr<const const_param>
 nonmeta_func_call::nonmeta_resolve_copy(const nonmeta_context_base& c, 
 		const count_ptr<const data_expr>& p) const {
 	typedef	count_ptr<const const_param>		return_type;
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	// resolve symbol if this is the first time
+try {
 	if (!fsym) {
 		const chp_dlfunction_ptr_type fp(lookup_chpsim_function(fname));
 		if (!fp) {
@@ -189,6 +192,21 @@ nonmeta_func_call::nonmeta_resolve_copy(const nonmeta_context_base& c,
 		return return_type(NULL);
 	}
 	return (*fsym)(*rargs);
+} catch (...) {
+	cerr << "Run-time error calling function: ";
+	// drat, process_index unavailable from context...
+#if 0
+	std::ostringstream canonical_name;
+	if (process_index) {
+		sm.get_pool<process_tag>()[process_index]
+			.dump_canonical_name(canonical_name, topfp, sm);
+	}
+	const expr_dump_context
+		edc(process_index ? canonical_name.str().c_str() : NULL);
+#endif
+	dump(cerr, expr_dump_context::brief) << endl;
+	throw;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,6 +214,7 @@ void
 nonmeta_func_call::evaluate_write(const nonmeta_context_base& c, 
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<const const_param> rv(nonmeta_resolve_copy(c, p));
 	if (!rv) {

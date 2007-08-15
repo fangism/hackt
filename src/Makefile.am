@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.174 2007/08/03 17:55:06 fang Exp $
+#	$Id: Makefile.am,v 1.175 2007/08/15 02:48:43 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -690,6 +690,7 @@ OBJECT_TCC_FILES = \
 	Object/expr/convert_expr.tcc \
 	Object/expr/loop_meta_expr.tcc \
 	Object/expr/loop_nonmeta_expr.tcc \
+	Object/expr/nonmeta_cast_expr.tcc \
 	Object/def/footprint_base.tcc \
 	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
@@ -729,6 +730,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/int_traits.h \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
+	Object/traits/real_traits.h \
 	Object/traits/struct_traits.h \
 	Object/traits/instance_traits.h \
 	Object/traits/type_tag_enum.h \
@@ -781,6 +783,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/meta_index_list.h \
 	Object/expr/meta_range_expr.h \
 	Object/expr/meta_range_list.h \
+	Object/expr/nonmeta_cast_expr.h \
 	Object/expr/nonmeta_expr_functor.h \
 	Object/expr/nonmeta_expr_list.h \
 	Object/expr/nonmeta_index_expr_base.h \

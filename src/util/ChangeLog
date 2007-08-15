@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.82 2007/07/31 23:23:42 fang Exp $
+#	$Id: ChangeLog,v 1.83 2007/08/15 02:49:25 fang Exp $
+
+2007-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-41-chpsim-07-03:
+	  util/memory/chunk_map_pool.h: default static pool init macros fixed.
+
 
 2007-07-31	David Fang		<fangism@users.sourceforge.net>
 

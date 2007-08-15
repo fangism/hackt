@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.27 2007/07/31 23:22:58 fang Exp $
+	$Id: expr.cc,v 1.28 2007/08/15 02:48:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -60,6 +60,8 @@
 #include "Object/expr/bool_logical_expr.h"
 #include "Object/expr/loop_meta_expr.h"
 #include "Object/expr/loop_nonmeta_expr.h"
+#include "Object/expr/nonmeta_func_call.h"
+#include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS.h"
 #include "Object/type/template_actuals.h"
@@ -142,6 +144,8 @@ using entity::int_negation_expr;
 using entity::int_relational_expr;
 using entity::bool_logical_expr;
 using entity::bool_negation_expr;
+using entity::bool_return_cast_expr;
+using entity::int_return_cast_expr;
 using entity::pint_expr;
 using entity::pint_const;
 using entity::pbool_expr;
@@ -158,6 +162,7 @@ using entity::preal_unary_expr;
 using entity::preal_relational_expr;
 using entity::meta_loop_base;
 using entity::meta_range_expr;
+using entity::nonmeta_func_call;
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
 
@@ -1870,10 +1875,28 @@ arith_expr::check_nonmeta_expr(const context& c) const {
 	}
 	// for now, only operate integer arithmetic on int_exprs
 	// TODO: operator overloading on user-defined types, YEAH RIGHT!
-	const count_ptr<int_expr> li(lo.is_a<int_expr>());
-	const count_ptr<int_expr> ri(ro.is_a<int_expr>());
-	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
-	const count_ptr<bool_expr> rb(ro.is_a<bool_expr>());
+
+	count_ptr<int_expr>
+		li(lo.is_a<int_expr>()),
+		ri(ro.is_a<int_expr>());
+	count_ptr<bool_expr>
+		lb(lo.is_a<bool_expr>()),
+		rb(ro.is_a<bool_expr>());
+{
+	// hack: intercept operands that are (untyped) function calls, 
+	// and wrap them in dynamic-cast expressions
+	const count_ptr<nonmeta_func_call>
+		lf(lo.is_a<nonmeta_func_call>()),
+		rf(ro.is_a<nonmeta_func_call>());
+	if (lf) {
+		li = count_ptr<int_expr>(new int_return_cast_expr(lf));
+		lb = count_ptr<bool_expr>(new bool_return_cast_expr(lf));
+	}
+	if (rf) {
+		ri = count_ptr<int_expr>(new int_return_cast_expr(rf));
+		rb = count_ptr<bool_expr>(new bool_return_cast_expr(rf));
+	}
+}
 	const char ch = op->text[0];
 	const char ch2 = op->text[1];
 	if (li && ri) {
@@ -2023,10 +2046,25 @@ relational_expr::check_nonmeta_expr(const context& c) const {
 			cerr << err_str << where(*r) << endl;
 		return return_type(NULL);
 	}
-	const count_ptr<int_expr> li(lo.is_a<int_expr>());
-	const count_ptr<int_expr> ri(ro.is_a<int_expr>());
-	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
-	const count_ptr<bool_expr> rb(ro.is_a<bool_expr>());
+	count_ptr<int_expr>
+		li(lo.is_a<int_expr>()),
+		ri(ro.is_a<int_expr>());
+	const count_ptr<bool_expr>
+		lb(lo.is_a<bool_expr>()),
+		rb(ro.is_a<bool_expr>());
+{
+	// hack: intercept operands that are (untyped) function calls, 
+	// and wrap them in dynamic-cast expressions
+	const count_ptr<nonmeta_func_call>
+		lf(lo.is_a<nonmeta_func_call>()),
+		rf(ro.is_a<nonmeta_func_call>());
+	if (lf) {
+		li = count_ptr<int_expr>(new int_return_cast_expr(lf));
+	}
+	if (rf) {
+		ri = count_ptr<int_expr>(new int_return_cast_expr(rf));
+	}
+}
 	if (li && ri) {
 		const string op_str(op->text);
 		const entity::int_relational_expr::op_type*
@@ -2151,10 +2189,25 @@ logical_expr::check_nonmeta_expr(const context& c) const {
 			cerr << err_str << where(*r) << endl;
 		return return_type(NULL);
 	}
-	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
-	const count_ptr<bool_expr> rb(ro.is_a<bool_expr>());
-	const count_ptr<int_expr> li(lo.is_a<int_expr>());
-	const count_ptr<int_expr> ri(ro.is_a<int_expr>());
+	count_ptr<bool_expr>
+		lb(lo.is_a<bool_expr>()),
+		rb(ro.is_a<bool_expr>());
+	const count_ptr<int_expr>
+		li(lo.is_a<int_expr>()),
+		ri(ro.is_a<int_expr>());
+{
+	// hack: intercept operands that are (untyped) function calls, 
+	// and wrap them in dynamic-cast expressions
+	const count_ptr<nonmeta_func_call>
+		lf(lo.is_a<nonmeta_func_call>()),
+		rf(ro.is_a<nonmeta_func_call>());
+	if (lf) {
+		lb = count_ptr<bool_expr>(new bool_return_cast_expr(lf));
+	}
+	if (rf) {
+		rb = count_ptr<bool_expr>(new bool_return_cast_expr(rf));
+	}
+}
 	// else is safe to make entity::bool_logical_expr object
 	const string op_str(op->text);
 if (lb && rb) {

@@ -5,6 +5,25 @@
 
 2007-08-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-49-merged-chpsim-07-08:
+	  Branch merge: -chpsim-07
+		chpsim: improved run-time type checking with dynamic casts,
+		standard library started
+		general texinfo documentation additions and edits.
+		documentation for options/commands/functions now
+			embedded in source and extracted for easy maintainence.
+		library installcheck tests
+
+
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-08:
+	  No source revision, chpsim +library documentation (dox/ChangeLog).
+	  Ready to merge.
+
+
+2007-08-14	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-48-merged-parser-05-03:
 	  Merge -parser-05 branch.  Summary:
 		Support cpp #line directives (emitted by #include), 
@@ -63,7 +82,80 @@
 	  Few test cases added to test/lexer.
 
 
+2007-08-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-07:
+	  Object/expr/dlfunction.{h,cc}: global variable to toggle 
+		whether or not functions are acknowledged upon registration.
+	  main/chpsim.{h,cc}: -f ack-loaded-fns to toggle this flag.
+	  other: testing newly added chpsim standard library functions,
+		including installcheck test
+	  TODO: document standard library usage, and example
+
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  No source revision, documentation and chpsim function library only.
+		Starting to build chpsim standard function library.
+	  See dox/ChangeLog and lib/ChangeLog.
+	  Next: test cases for library functions, more lib functions w/ docs,
+		and installcheck-tests.
+
+
+2007-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-05:
+	  No source revision, documentation only.
+		Migrated chpsim usage-options and command to in-source, 
+		which is then extracted into texinfo.
+		Keeps source-documentation close together.
+
+
+2007-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-04:
+	  No source revision, added test cases only:
+		tested proper error-handling and chaining of 
+		function call arguments and return values, 
+		stressed type-checking of new dynamic_cast operators.  
+	  Coming up: chpsim standard library of functions, 
+		including common utils like conditional expression, assert,
+		and math library.
+		More documentation management.
+
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-03:
+	  AST/expr.cc: arith, relational, logical exprs all 'intercept'
+		function call operands to automatically wrap them
+		in a run-time type-check cast.  
+	  Object/expr/nonmeta_cast_expr.{h,tcc}: now pool allocated.
+	  Object/expr/nonmeta_func_call.{h,cc}:
+		catch-and-rethrow error-handling and diagnostics
+	  sim/chpsim/EventExecutor.cc: when rechecking channel_sends (and
+		writing channel fields) catch exceptions and give diagnostic.
+	  Some test cases updated with better diagnostic messages.
+
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-02:
+	  Object/expr/nonmeta_cast_expr.{h,tcc}: new, middle-end
+		and run-time casting expressions for type-checking.
+		Corresponding type keys in Object/persistent_type_hash.h.
+		Instantiated in Object/expr/data_expr.cc.
+	  Object/traits/{int,bool}_traits.h: alias built-in type pointers
+		to nonmeta_data_type_ptr member for consistency, 
+		eventually reduce ugly specialization hacks, 
+		also helpful step towards introducing real (nonmeta) types.  
+	  Object/traits/real_traits.h: new, but not used yet (could be soon)
+	  Forward declaration headers: added 'real' (meta-type) typedefs.
+	  Next: front-end hooks to automatically apply nonmeta-type
+		conversions where applicable (AST/expr.cc).
+
+
 2007-08-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-01:
+	  Branch for chp/expresion additions, to support functions.
+	  Coming up: run-time cast expressions (operator-implicit)
+
 
 	* HACKT-00-01-04-main-00-81-46:
 	  No source revision, test cases updates and additions only.

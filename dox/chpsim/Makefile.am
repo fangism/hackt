@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2007/08/09 03:47:06 fang Exp $
+#	$Id: Makefile.am,v 1.7 2007/08/15 02:48:32 fang Exp $
 
 PDFS = hacchpsim.pdf
 # deprecated:
@@ -14,8 +14,9 @@ include $(top_srcdir)/dox/Make.dox-head
 EXTRA_DIST += \
 	chpsim-tex.tex \
 	intro.tex \
-	execution.tex \
-	figs/build_path.in
+	execution.tex
+
+################### texinfo documentation #####################################
 
 info_TEXINFOS += hacchpsim.texi
 # install doesn't know how to handle generated html *directory* :(
@@ -39,17 +40,100 @@ hacchpsim_INCLUDES = \
 	usage.texi \
 	commands.texi \
 	extending.texi \
-	execution.texi
+	execution.texi \
+	stdchpfn.texi
 
+EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
+	  $(AWK) '{printf(" \\\n\t" $$1);}'
+
+# HACCHPSIM_OPTIONS_TEXI = ...
+# HACCHPSIM_COMMANDS_TEXI = ...
+# HACCHPSIM_FUNCTIONS_TEXI = ...
+# source-extracted texinfo files: (can we deduce this automatically? done.)
+$(srcdir)/options.mk: usage.texi
+	{ $(ECHO) -n "HACCHPSIM_OPTIONS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
+$(srcdir)/commands.mk: commands.texi
+	{ $(ECHO) -n "HACCHPSIM_COMMANDS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
+$(srcdir)/functions.mk: stdchpfn.texi
+	{ $(ECHO) -n "HACCHPSIM_FUNCTIONS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
+# These are typically only built by the maintainer, since they are distributed.
+$(srcdir)/options.mk: Makefile
+$(srcdir)/commands.mk: Makefile
+$(srcdir)/functions.mk: Makefile
+
+-include $(srcdir)/options.mk
+-include $(srcdir)/commands.mk
+-include $(srcdir)/functions.mk
+AUTO_TEXINFO_DEPS = options.mk commands.mk functions.mk
+EXTRA_DIST += $(AUTO_TEXINFO_DEPS)
+AUTO_IGNORE += $(AUTO_TEXINFO_DEPS)
+MAINTAINERCLEANFILES = $(AUTO_TEXINFO_DEPS)
+# these could be CVS cleaned too...
+
+$(HACCHPSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/chpsim.cc
+	$(EXTRACT_TEXINFO) $<
+
+$(HACCHPSIM_COMMANDS_TEXI): $(top_srcdir)/src/sim/chpsim/Command.cc
+	$(EXTRACT_TEXINFO) $<
+
+CHPFN_SRCDIR = $(top_srcdir)/lib/libchpfn
+# should be synchronized with list of all sources files in lib/libchpfn/
+STDCHPFN_SRCS = \
+	$(CHPFN_SRCDIR)/assert.cc \
+	$(CHPFN_SRCDIR)/conditional.cc
+
+# just re-generate all of them when any one changes...
+$(HACCHPSIM_FUNCTIONS_TEXI): $(STDCHPFN_SRCS)
+	$(EXTRACT_TEXINFO) $(STDCHPFN_SRCS)
+
+$(HACCHPSIM_OPTIONS_TEXI): options
+$(HACCHPSIM_COMMANDS_TEXI): cmd
+$(HACCHPSIM_FUNCTIONS_TEXI): fn
+
+options:
+	$(mkdir_p) $@
+
+cmd:
+	$(mkdir_p) $@
+
+fn:
+	$(mkdir_p) $@
+
+AUTO_IGNORE += \
+	options \
+	cmd \
+	fn
+
+CLEANFILES += \
+	$(HACCHPSIM_OPTIONS_TEXI) \
+	$(HACCHPSIM_COMMANDS_TEXI) \
+	$(HACCHPSIM_FUNCTIONS_TEXI)
 EXTRA_DIST += $(hacchpsim_INCLUDES)
 
 # not bothering with more sophisticated dependency tracking
-hacchpsim.dvi hacchpsim.pdf hacchpsim.html hacchpsim.info: $(hacchpsim_INCLUDES)
+hacchpsim.dvi hacchpsim.pdf hacchpsim.html $(srcdir)/hacchpsim.info: \
+	$(hacchpsim_INCLUDES) \
+	$(HACCHPSIM_OPTIONS_TEXI) \
+	$(HACCHPSIM_COMMANDS_TEXI) \
+	$(HACCHPSIM_FUNCTIONS_TEXI)
 
 # Q: do figures need to be installed?
 
 # AM_MAKEINFOFLAGS =
 
+################# documentation figures #######################################
 SOURCE_FIGS =
 SOURCE_DOTS = \
 	figs/chpsim_event_cycle.dot \
@@ -64,16 +148,23 @@ XFIG_PDFTEX_T = $(XFIG_FIGURES:.fig=.pdftex_t)
 XFIG_EPS = $(XFIG_FIGURES:.fig=.eps)
 XFIG_PNG = $(XFIG_FIGURES:.fig=.png)
 
+all-figs: $(BUILT_FIGS)
 
-figs: $(BUILT_FIGS)
+# build the directory automatically
+$(BUILT_FIGS) $(XFIG_TEX) $(XFIG_PSTEX) $(XFIG_PSTEX_T) \
+	$(XFIG_PDFTEX) $(XFIG_PDFTEX_T) $(XFIG_EPS) $(XFIG_PNG): figs/.dirstamp
 
+figs/.dirstamp:
+	$(mkdir_p) figs && touch $@
+
+DISTCLEANFILES += figs/.dirstamp
 EXTRA_DIST += $(SOURCE_FIGS) $(SOURCE_DOTS)
 
-AUTO_IGNORE += figs/build_path \
+AUTO_IGNORE += \
 	chpsim_event_cycle.fig \
 	chpsim_event_algo.fig
 
-CLEANFILES += figs/build_path $(BUILT_FIGS)
+CLEANFILES += $(BUILT_FIGS)
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
@@ -90,6 +181,7 @@ chpsim-tex.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
 built-figs hacchpsim.dvi: $(XFIG_EPS)
 built-figs hacchpsim.pdf hacchpsim.html: $(XFIG_PDFTEX)
 built-figs hacchpsim.html: $(XFIG_PNG)
+built-figs $(srcdir)/hacchpsim.info: $(XFIG_PNG)
 # still not sure why html looks for .eps figures...
 
 .PHONY: built-figs

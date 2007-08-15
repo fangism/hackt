@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.10 2006/11/07 06:35:21 fang Exp $
+	$Id: class_traits.h,v 1.11 2007/08/15 02:49:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -165,6 +165,7 @@ class instantiation_statement_type_ref_default;
 typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
 typedef	instance_alias_info<int_tag>		int_instance_alias_info;
 typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
+typedef	instance_alias_info<real_tag>		real_instance_alias_info;
 typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
 typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
 typedef	instance_alias_info<process_tag>	process_instance_alias_info;

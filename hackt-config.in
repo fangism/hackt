@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: hackt-config.in,v 1.3 2007/07/31 23:22:26 fang Exp $
+#	$Id: hackt-config.in,v 1.4 2007/08/15 02:48:28 fang Exp $
 # vi: ft=sh
 # "hackt-config.in" -- configure-generated script to be installed
 # ripped off of other packages' config files
@@ -14,8 +14,8 @@ libdir=@libdir@
 pkglibdir=${libdir}/@PACKAGE@
 includedir=@includedir@
 pkgincludedir=${includedir}/@PACKAGE@
+datarootdir=@datarootdir@
 datadir=@datadir@
-# datadir=@datarootdir@
 pkgdatadir=${datadir}/@PACKAGE@
 # keep consistent with src/scm/Makefile.am
 scmdir=${pkgdatadir}/scm

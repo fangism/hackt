@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.8 2007/06/16 23:05:12 fang Exp $
+#	$Id: TODO,v 1.9 2007/08/15 02:49:25 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -84,8 +84,6 @@ low-priority:
 		and perform range-checking?
 	integer value formatting preference for dumping?
 	variable (variable-dependent) delays
-	support for user-defined functions, possibly with dynamic linking
-		for plug-in or module support
 	additional traces: event blocking trace
 
 ===============================================================================

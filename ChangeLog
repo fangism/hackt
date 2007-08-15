@@ -2,8 +2,32 @@
 
 2007-08-14	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-49-merged-chpsim-07-08:
+	  Merged -chpsim-07 branch.
+
+
+2007-08-14	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-48-merged-parser-05-03:
 	  Merged -parser-05 branch.
+
+
+2007-08-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-07:
+	  configure.ac: make test/chpsim/libinstalltest/Makefile
+
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
+	  configure.ac: replace docs/chpsim/figs/build_path with .dirstamp
+	  hackt-config.in: use datarootdir
+
+
+2007-08-11	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-46-chpsim-07-05:
+	  Added scripts/extract_texinfo.awk.  Guess what it does.
+	  Make.stddef: use extract_texinfo.awk
 
 
 2007-08-08	David Fang	<fangism@users.sourceforge.net>

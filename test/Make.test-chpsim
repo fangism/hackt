@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.11 2007/07/31 23:23:54 fang Exp $
+#	$Id: Make.test-chpsim,v 1.12 2007/08/15 02:49:35 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -180,6 +180,9 @@ endif
 .chpsimfailtest:
 	@$(DUMMY_TEST_SCRIPT)
 
+EXTRACT_CHPSIM_TRACE_DEP_PIPE = $(GREP) "^trace " | $(CUT) -d\  -f2
+EXTRACT_CHPSIM_TRACE_UNDEP_PIPE = $(GREP) "^!rm" | $(CUT) -d\  -f2
+
 chpsimrc-out.autodepend: Makefile
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) -n "" > $@ ; \
@@ -195,6 +198,14 @@ chpsimrc-out.autodepend: Makefile
 	    $(ECHO) -n "$$target " ; \
 	  done ; \
 	  $(ECHO) ": $$obj $$deps" ; \
+	  mktrc=`$(CAT) $$src | $(EXTRACT_CHPSIM_TRACE_DEP_PIPE)` ; \
+	  if test "$$mktrc" ; then \
+	    rmtrc=`$(CAT) $$src | $(EXTRACT_CHPSIM_TRACE_UNDEP_PIPE)` ; \
+	    if test x"$$rmtrc" != x"$$mktrc" ; then \
+	      $(ECHO) "$$mktrc: $$d.chpsimrc-out" ; \
+	      $(ECHO) "	@test -f $$""@" ; \
+            fi ; \
+	  fi ; \
 	done > $@ ; \
 	$(TOUCH) $@
 

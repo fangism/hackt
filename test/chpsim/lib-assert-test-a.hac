@@ -1,0 +1,13 @@
+// "lib-assert-test-a.hac"
+//	$Id: lib-assert-test-a.hac,v 1.2 2007/08/15 02:49:57 fang Exp $
+
+import "testlib/bool-source.hac";
+
+chan(bool) B;
+bool b;
+bool_source BS<3,{true,true,false}>(B);
+
+chp {
+*[ B?(b); assert(b) ]
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool_fwd.h"
 	Forward declarations for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool_fwd.h,v 1.8 2007/02/21 17:00:28 fang Exp $
+	$Id: chunk_map_pool_fwd.h,v 1.9 2007/08/15 02:49:30 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
@@ -51,7 +51,7 @@ public:									\
 #define	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(C)				\
 	friend class util::memory::chunk_map_pool<this_type,C>;		\
 	friend void _Construct<this_type>(this_type* __p);		\
-	friend void _Construct<this_type, this_type>(			\
+	friend void _Construct<this_type, this_type>(		\
 		this_type* __p, const this_type& __value);
 
 

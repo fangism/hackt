@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.10 2007/07/31 23:23:31 fang Exp $
+	$Id: Command.cc,v 1.11 2007/08/15 02:49:23 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -96,11 +96,29 @@ const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/echo.texi
+@deffn Command echo output
+Print @var{output} to stdout.  
+@b{Note:} multiple spaces in @var{output} are compacted into 
+single spaces by the interpreter's tokenizer.  
+@end deffn
+@end texinfo
+***/
 typedef	stateless_command_wrapper<Echo, State>	Echo;
 INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Echo, "echo", CHPSIM::builtin, 
 	"prints arguments back to stdout, space-delimited")
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/help.texi
+@deffn Command help cmd
+Help on command or category @var{cmd}.
+@samp{help all} gives a list of all commands available in all categories.
+@samp{help help} tells you how to use @command{help}.
+@end deffn
+@end texinfo
+***/
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Help, CHPSIM::builtin)
 }	// end namespace CHPSIM
 
@@ -110,6 +128,14 @@ template int CHPSIM::Help::main(const string_list&);
 // re-open namespace
 namespace CHPSIM {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/comment.texi
+@deffn Command # ...
+@deffnx Command comment ...
+Whole line comment, ignored by interpreter.  
+@end deffn
+@end texinfo
+***/
 typedef	stateless_command_wrapper<CommentPound, State>		CommentPound;
 typedef	stateless_command_wrapper<CommentComment, State>	CommentComment;
 
@@ -124,6 +150,14 @@ typedef	All<State>					All;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::All, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/exit.texi
+@deffn Command exit
+@deffnx Command quit
+Exit the simulator.
+@end deffn
+@end texinfo
+***/
 typedef	stateless_command_wrapper<Exit, State>		Exit;
 typedef	stateless_command_wrapper<Quit, State>		Quit;
 
@@ -133,56 +167,191 @@ INITIALIZE_STATELESS_COMMAND_CLASS(CHPSIM::Quit,
 	"quit", CHPSIM::builtin, "exits simulator")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/alias.texi
+@deffn Command alias cmd args
+Defines an alias, whereby the interpreter expands @var{cmd} into
+@var{args} before interpreting the command.
+@var{args} may consist of multiple tokens.  
+This is useful for shortening common commands.  
+@end deffn
+@end texinfo
+***/
 typedef	Alias<State>				Alias;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Alias, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unalias.texi
+@deffn Command unalias cmd
+Undefines an existing alias @var{cmd}.
+@end deffn
+@end texinfo
+***/
 typedef	UnAlias<State>				UnAlias;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::UnAlias, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unaliasall.texi
+@deffn Command unaliasall
+Undefines @emph{all} aliases.  
+@end deffn
+@end texinfo
+***/
 typedef	UnAliasAll<State>			UnAliasAll;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::UnAliasAll, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/aliases.texi
+@deffn Command aliases
+Print a list of all known aliases registered with the interpreter.
+@end deffn
+@end texinfo
+***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/source.texi
+@deffn Command source script
+@anchor{command-source}
+Loads commands to the interpreter from the @var{script} file.
+File is searched through include paths given by
+the @ref{option-I,, @option{-I}} command-line option 
+or the @ref{command-addpath,, @command{addpath}} command.  
+@end deffn
+@end texinfo
+***/
 typedef	Source<State>				Source;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Source, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/addpath.texi
+@deffn Command addpath path
+@anchor{command-addpath}
+Appends @var{path} to the search path for sourcing scripts.
+@end deffn
+@end texinfo
+***/
 typedef	AddPath<State>				AddPath;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AddPath, CHPSIM::general)
 
+/***
+@texinfo cmd/paths.texi
+@deffn Command paths
+Print the list of paths searched for source scripts.  
+@end deffn
+@end texinfo
+***/
 typedef	Paths<State>				Paths;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Paths, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dladdpath.texi
+@deffn Command dladdpath paths ...
+@anchor{command-dladdpath}
+Append @var{paths} to the list of paths to search for 
+opening shared library modules.  
+This is useful if you simply forget (or are too lazy) to 
+pass the corresponding paths on the command-line.  
+See also @ref{option-L,, the @option{-L} option}.
+@end deffn
+@end texinfo
+***/
 typedef	DLAddPath<State>			DLAddPath;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAddPath, CHPSIM::general)
 
+/***
+@texinfo cmd/dlpaths.texi
+@deffn Command dlpaths
+Prints the list of paths used in searching for dlopen-ing modules.  
+@end deffn
+@end texinfo
+***/
 typedef	DLPaths<State>				DLPaths;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLPaths, CHPSIM::general)
 
+/***
+@texinfo cmd/dlopen.texi
+@cindex dlopen
+@deffn Command dlopen lib
+@anchor{command-dlopen}
+Open shared library @var{lib} for loading external user-defined functions.  
+Library is found by searching through user-specified load paths and 
+the conventional library path environment variables.  
+The command-line equivalent is the @ref{option-l,, @option{-l} option},
+following the same naming guidelines.
+@end deffn
+@end texinfo
+***/
 typedef	DLOpen<State>				DLOpen;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLOpen, CHPSIM::general)
 
+/***
+@texinfo cmd/dlcheckfunc.texi
+@deffn Command dlcheckfunc funcs ...
+@anchor{command-dlcheckfunc}
+For each function named in @var{funcs}, report whether or not
+it has been bound to a symbol in a dynamically loaded module.
+Never errors out.  
+@xref{command-dlassertfunc,, command @command{dlassertfunc}}.
+@end deffn
+@end texinfo
+***/
 typedef	DLCheckFunc<State>			DLCheckFunc;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLCheckFunc, CHPSIM::general)
 
+/***
+@texinfo cmd/dlassertfunc.texi
+@deffn Command dlassertfunc funcs ...
+@anchor{command-dlassertfunc}
+Error out if any function named in @var{funcs} is unbound 
+to a module symbol.
+Useful for making sure a set of symbols is resolved before 
+any execution begins.  
+@xref{command-dlcheckfunc,, command @command{dlcheckfunc}}.
+@end deffn
+@end texinfo
+***/
 typedef	DLAssertFunc<State>			DLAssertFunc;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLAssertFunc, CHPSIM::general)
 
+/***
+@texinfo cmd/dlfuncs.texi
+@deffn Command dlfuncs
+Print list of registered functions, from dlopened modules.
+@end deffn
+@end texinfo
+***/
 typedef	DLFuncs<State>				DLFuncs;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::DLFuncs, CHPSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/initialize.texi
+@deffn Command initialize
+Resets the variable state of the simulation, while preserving
+other settings such as mode and breakpoints.  
+@end deffn
+@end texinfo
+***/
 typedef	Initialize<State>			Initialize;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Initialize, CHPSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/reset.texi
+@deffn Command reset
+Similar to @command{initialize}, but also resets all modes to their
+default values.  
+@end deffn
+@end texinfo
+***/
 typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
 
@@ -190,6 +359,12 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
 /**
 	Command class for stepping through one event at a time from
 	the event queue. 
+
+@texinfo cmd/step.texi
+@deffn Command step n
+Advances the simulation by @var{n} steps.  
+@end deffn
+@end texinfo
  */
 struct Step {
 public:
@@ -260,6 +435,13 @@ Step::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/advance.texi
+@deffn Command advance delay
+Advances the simulation @var{delay} units of time.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 	"advance the simulation in time units")
 
@@ -316,6 +498,13 @@ Advance::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/advance-to.texi
+@deffn Command advance-to t
+Advances the simulation @emph{until} time @var{t}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AdvanceTo, "advance-to", simulation,
 	"advance the simulation to time")
 
@@ -380,6 +569,13 @@ AdvanceTo::usage(ostream& o) {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/run.texi
+@deffn Command run
+Runs the simulation until the event queue is empty, if ever.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Run, "run", simulation,
  	"run until event queue empty or breakpoint")
 
@@ -428,6 +624,15 @@ Run::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/queue.texi
+@cindex event queue
+@deffn Command queue
+Print an ordered list of all events in the checking event queue and 
+execution event queue.  
+@end deffn
+@end texinfo
+***/
 typedef	Queue<State>				Queue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Queue, CHPSIM::info)
 
@@ -686,6 +891,13 @@ SetrF::usage(ostream& o) {
 //	"set node with random delay after event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/break-event.texi
+@deffn Command break-event event-id
+Stop the simulation when event @var{event-id} executes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakEvent, "break-event", simulation,
 	"set breakpoint on event")
 
@@ -720,6 +932,13 @@ BreakEvent::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unbreak-event.texi
+@deffn Command unbreak-event event-id
+Remove breakpoint on event @var{event-id}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakEvent, "unbreak-event", simulation,
 	"remove breakpoint and watchpoint on event")
 
@@ -754,6 +973,13 @@ UnBreakEvent::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unbreakall-events.texi
+@deffn Command unbreakall-events
+Removes all event breakpoints.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAllEvents, 
 	"unbreakall-events", simulation, 
 	"remove all breakpoint events")
@@ -776,6 +1002,13 @@ UnBreakAllEvents::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/show-event-breaks.texi
+@deffn Command show-event-breaks
+List all event breakpoints.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowEventBreaks, 
 	"show-event-breaks", simulation,
 	"list all events that are breakpoints")
@@ -798,6 +1031,14 @@ ShowEventBreaks::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/break-value.texi
+@deffn Command break-value inst
+Stop the simulation when variable @var{inst} is written, 
+event when its value does not change.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakValue, "break-value", simulation, 
 	"set breakpoint on selected variables")
 
@@ -835,6 +1076,13 @@ BreakValue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unbreak-value.texi
+@deffn Command unbreak-value inst
+Remove breakpoint on variable @var{inst}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakValue, 
 	"unbreak-value", simulation, 
 	"remove breakpoint on selected variables")
@@ -873,6 +1121,13 @@ UnBreakValue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unbreakall-values.texi
+@deffn Command unbreakall-values
+Removes all variable breakpoints.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAllValues,
 	"unbreakall-values", simulation, 
 	"clear all variable breakpoints")
@@ -895,6 +1150,13 @@ UnBreakAllValues::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/show-value-breaks.texi
+@deffn Command show-value-breaks
+List all variable breakpoints.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowValueBreaks,
 	"show-value-breaks", simulation, 
 	"list breakpoint variables with values")
@@ -940,14 +1202,38 @@ NoBreakPtAll::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/save.texi
+@deffn Command save ckpt
+Saves the current simulator state to a checkpoint file @var{ckpt}
+that can be restored later.  
+Overwrites @var{ckpt} if it already exists.  
+@end deffn
+@end texinfo
+***/
 typedef	Save<State>				Save;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Save, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/load.texi
+@deffn Command load ckpt
+Restores the simulator state (variables and events) from a checkpoint
+file @var{ckpt}.  
+@end deffn
+@end texinfo
+***/
 typedef	Load<State>				Load;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Load, CHPSIM::tracing)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-state.texi
+@deffn Command dump-state
+Print textual summary of entire state of simulation.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpState, "dump-state", info,
 	"print entire state of the simulation")
 
@@ -971,14 +1257,40 @@ DumpState::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/what.texi
+@deffn Command what inst
+Prints the type of the named instance @var{inst}, 
+along with its canonical name.  
+@end deffn
+@end texinfo
+***/
 typedef	What<State>				What;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::What, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/who.texi
+@cindex aliases, instance
+@deffn Command who inst
+Print all equivalent aliases of the instance named @var{inst}.  
+@end deffn
+@end texinfo
+***/
 typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Who, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/get.texi
+@cindex variable state
+@deffn Command get inst
+Print the state information about instance named @var{inst}.
+The name @var{inst} need not be canonical.  
+Information includes current run-time value, if applicable.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of instance")
 
@@ -1049,6 +1361,13 @@ GetAll::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/print-event-header.texi
+@deffn Command print-event-header
+Prints a table header suitable for interpreting printed event records.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(PrintEventHeader, 
 	"print-event-header", info,
 	"print the event table header")
@@ -1071,6 +1390,16 @@ PrintEventHeader::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/subscribers.texi
+@deffn Command subscribers inst
+@cindex subscribers
+Print a list of all events currently subscribed to the value of 
+variable @var{inst}.  Such events are alerted for rechecking
+when value of @var{inst} changes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Subscribers, "subscribers", info,
 	"list events subscribed to the named instance")
 
@@ -1104,6 +1433,13 @@ Subscribers::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/subscribers-all.texi
+@deffn Command subscribers-all
+Print a list of all events currently subscribed to any variables.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SubscribersAll, "subscribers-all", info,
 	"list all events subscribed sorted by instance")
 
@@ -1129,6 +1465,13 @@ SubscribersAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-event.texi
+@deffn Command dump-event event-id
+Print status information about event number @var{event-id}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpEvent, "dump-event", info,
 	"print event information")
 
@@ -1302,11 +1645,25 @@ AssertN::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
+/***
+@texinfo cmd/assert-queue.texi
+@deffn Command assert-queue
+Error out if the event queue is empty.
+Useful as a quick check for deadlock.
+@end deffn
+@end texinfo
+***/
 typedef	AssertQueue<State>			AssertQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertQueue, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/time.texi
+@deffn Command time
+Print the current simulator time.
+@end deffn
+@end texinfo
+***/
 typedef	Time<State>				Time;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Time, CHPSIM::info)
 
@@ -1319,6 +1676,14 @@ CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Time, CHPSIM::info)
 //	"confirm assertions silently")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watch-event.texi
+@deffn Command watch-event event-id
+Watchpoint.  
+Print event @var{event-id} each time it executes, without interrupting.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchEvent, "watch-event", view, 
 	"print activity on selected events")
 
@@ -1354,6 +1719,13 @@ WatchEvent::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unwatch-event.texi
+@deffn Command unwatch-event event-id
+Remove watchpoint on event @var{event-id}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchEvent, "unwatch-event", view, 
 	"silence activity on selected events")
 
@@ -1412,6 +1784,13 @@ UnWatchAllEvents::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watch-value.texi
+@deffn Command watch-value inst
+Print events that write to @var{inst} as they execute.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchValue, "watch-value", view, 
 	"print activity on selected variables")
 
@@ -1450,6 +1829,13 @@ WatchValue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unwatch-value.texi
+@deffn Command unwatch-value inst
+Stop watching @var{inst}. 
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchValue, "unwatch-value", view, 
 	"silence activity reporting on selected variables")
 
@@ -1509,6 +1895,13 @@ UnWatchAllValues::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/show-value-watches.texi
+@deffn Command show-event-values
+Print list of all watched variables.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowValueWatches,
 	"show-value-watches", view, 
 	"list watched variables with values")
@@ -1531,6 +1924,14 @@ ShowValueWatches::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall-events.texi
+@deffn Command watchall-events
+Print all events as they execute, @emph{regardless of whether or not they 
+are explicitly watched}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAllEvents, "watchall-events", view, 
 	"print activity of all events")
 
@@ -1581,6 +1982,16 @@ UnWatchAll::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/nowatchall-events.texi
+@deffn Command nowatchall-events
+Stop printing all events, but keep printing events that are explicitly
+listed watchpoints.  
+This is particularly useful for temporarily watching all events in detail, 
+and later restoring only explicitly watched events.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchAllEvents,
 	"nowatchall-events", view, 
 	"only print activity on explicitly watched events")
@@ -1608,6 +2019,13 @@ o << "turns off watchall-events, printing only explicitly watched events"
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/show-event-watches.texi
+@deffn Command show-event-watches
+Print list of all watched events.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ShowEventWatches, 
 	"show-event-watches", view,
 	"list all events that are explicitly watched")
@@ -1630,10 +2048,26 @@ ShowEventWatches::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watch-queue.texi
+@deffn Command watch-queue
+Print events as they enter the event queue (either for checking or execution).
+This is generally recommended for debugging, 
+as it prints @emph{a lot} of information.  
+@end deffn
+@end texinfo
+***/
 typedef	WatchQueue<State>			WatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WatchQueue, CHPSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/nowatch-queue.texi
+@deffn Command nowatch-queue
+Disables @command{watch-queue}.
+@end deffn
+@end texinfo
+***/
 typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchQueue, CHPSIM::view)
 
@@ -1744,6 +2178,15 @@ EvalOrder::usage(ostream& o) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/null-event-delay.texi
+@deffn Command null-event-delay [delay]
+Without the @var{delay} argument, prints the value of the delay used
+for ``trivial'' events.  
+With the @var{delay} argument, sets the said delay value.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NullEventDelay, "null-event-delay", modes, 
 	"set/get the delay of trivial events")
 
@@ -1780,6 +2223,15 @@ NullEventDelay::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/uniform-delay.texi
+@deffn Command uniform-delay [delay]
+The uniform delay value only takes effect in the @t{uniform} timing mode.
+Without the @var{delay} argument, prints the value of the delay.  
+With the @var{delay} argument, sets the said delay value.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UniformDelay, "uniform-delay", modes, 
 	"set/get the uniform delay of events")
 
@@ -1816,6 +2268,22 @@ UniformDelay::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing.texi
+@deffn Command timing mode
+Select timing mode for event delays.  
+@var{mode} can be one of the following:
+@table @option
+@item uniform
+Use the same delay for all events, set by @command{uniform-delay}.
+@item random
+Use a high-entropy random variable delay.
+@item per-event
+Use the delay specified by each individual event.
+@end table
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
 	"set/get timing mode")
 
@@ -2009,6 +2477,14 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/cause.texi
+@cindex cause, events
+@deffn Command cause
+Show causes of events when events are printed.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cause, "cause", view, 
 	"include causality with event diagnostics")
 
@@ -2031,6 +2507,13 @@ Cause::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+/***
+@texinfo cmd/nocause.texi
+@deffn Command nocause
+Turn off @command{cause} in feedback.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCause, "nocause", view, 
 	"suppress causality of event diagnostics")
 
@@ -2052,6 +2535,14 @@ NoCause::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace.texi
+@deffn Command trace file
+Record events to tracefile @var{file}.  
+Overwrites @var{file} if it already exists.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Trace, "trace", tracing, 
 	"record trace of all events to file")
 
@@ -2083,6 +2574,13 @@ Trace::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-file.texi
+@deffn Command trace-file
+Print the name of the currently opened trace file.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFile, "trace-file", tracing, 
 	"show the name of the active trace file")
 
@@ -2109,6 +2607,15 @@ TraceFile::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-close.texi
+@deffn Command trace-close
+Finish writing the currently opened tracefile by flushing out the last epoch
+and concatenating the header with the stream body.  
+Trace is automatically closed when the simulator exits.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceClose, "trace-close", tracing, 
 	"close the active trace file")
 
@@ -2130,6 +2637,13 @@ TraceClose::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-flush-notify.texi
+@deffn Command trace-flush-notify [0|1]
+Enable (1) or disable (0) notifications when trace epochs are flushed.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushNotify, 
 	"trace-flush-notify", tracing, 
 	"enable/disable trace flush notifications (debug)")
@@ -2167,6 +2681,15 @@ TraceFlushNotify::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-flush-interval.texi
+@deffn Command trace-flush-interval steps
+If @var{steps} is given, set the size of each epoch according to the
+number of events executed, otherwise report the current epoch size.  
+This regulates the granularity of saving traces in a space-time tradeoff.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceFlushInterval, 
 	"trace-flush-interval", tracing, 
 	"set/get the current trace chunk granularity")
@@ -2204,6 +2727,13 @@ TraceFlushInterval::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/trace-dump.texi
+@deffn Command trace-dump file
+Produce textual dump of trace file contents in @var{file}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TraceDump, 
 	"trace-dump", tracing, 
 	"spill a human-readable (?) text dump of a trace file")

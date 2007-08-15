@@ -7,6 +7,8 @@
 	30	3	1	
 ERROR: symbol `my_gcd' not found in presently loaded modules.
 Error resolving symbol of nonmeta function call.
+Run-time error calling function: my_gcd(my_gcd::a,my_gcd::b)
+Run-time error writing channel: X.G!(my_gcd(X.a,X.b))
 Run-time error while checking event.
 event[2]:	40	2	1	X.G!(my_gcd(X.a,X.b))	[by:3]
 Caught run-time exception during execution.  Halting.

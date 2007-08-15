@@ -7,6 +7,8 @@ loaded function: `my_gcd'.
 	20	10	3	BS.S!(9)
 	30	3	1	
 Error: out-of-bounds reference to index 2 out of 2
+Run-time error calling function: my_gcd(my_gcd::a,my_gcd::b)
+Run-time error writing channel: X.G!(my_gcd(X.a,X.b))
 Run-time error while checking event.
 event[2]:	40	2	1	X.G!(my_gcd(X.a,X.b))	[by:3]
 Caught run-time exception during execution.  Halting.

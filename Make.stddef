@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.24 2007/08/08 23:01:24 fang Exp $
+#	$Id: Make.stddef,v 1.25 2007/08/15 02:48:27 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -115,5 +115,8 @@ RM_PATTERN = $(top_srcdir)/scripts/rm_pattern.sh
 
 # for automatic regeneration of configured files:
 RECONFIGURE = cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+
+# script to extract texinfo documentation from source
+EXTRACT_TEXINFO = $(AWK) -f $(top_srcdir)/scripts/extract_texinfo.awk
 
 # end "Make.stddef"

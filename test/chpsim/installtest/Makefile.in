@@ -1,9 +1,9 @@
 # "Makefile[.in]"
-#	$Id: Makefile.in,v 1.4 2007/08/08 23:01:31 fang Exp $
+#	$Id: Makefile.in,v 1.5 2007/08/15 02:50:22 fang Exp $
 #
 # This Makefile should not be invoked until AFTER hackt is installed!
 #
-# Minimalist Makefile to demontstrate chpsim with function modules
+# Minimalist Makefile to demonstrate chpsim with function modules
 # This is not run as part of the normal test suite, but rather, 
 # as a post-install test, suitable for installcheck-local.
 #
@@ -14,7 +14,10 @@
 # appears earliest in the path to guarantee that the intended executables
 # are being tested.  
 
-# for: examplesdir
+#############################################################################
+# This section for installcheck testing only.
+# USER: delete this section and ignore it.
+
 top_srcdir = @top_srcdir@
 # include $(top_srcdir)/Make.stddef
 top_builddir = @top_builddir@
@@ -24,25 +27,32 @@ include $(top_srcdir)/installdirs.mk
 
 # pkgdatadir = $(datadir)/@PACKAGE@
 ## probably resembles: /usr/local/share/hackt/lib
+#############################################################################
 
-# minimal configuration paths
-# srcdir = @srcdir@
-# VPATH = @srcdir@
+#############################################################################
+# SETUP INSTRUCTIONS FOR USER:
+
 # NOTE: we now reference the *INSTALLED* directory as the VPATH/srcdir
+#	during installcheck
 srcdir = $(examplesdir)/chpsim-function
+# If you're running this example out of the installed directory (VPATH), 
+# then point srcdir to the installed example directory.   
+# If you've copied the example files to a local directory, set
+# srcdir = .
+
 # keep this consistent with parent directory's Makefile.am
 VPATH = $(srcdir)
 # ALERT: not all versions of make support variable expansion of VPATH
-
 
 #############################################################################
 ################### the important Makefile example below ####################
 #############################################################################
 
-# include the *installed* makefile template
-# pkgdatadir is defined by installcheck.mk
+# Include the *installed* makefile template (Libtool-enabled variant)
+# pkgdatadir is defined by installcheck.mk durinst installcheck testing
+# USER: you can set pkgdatadir = prefix/share/hackt, or just substitute it
+# directly in the referenced include file below.
 include $(pkgdatadir)/mk/hackt-lt.mk
-# This is the libtool-enable Makefile template
 
 # up to user to define the following, or let make pick defaults:
 # CC = @CC@
@@ -54,7 +64,7 @@ ECHO = @ECHO@
 all: confirm-exec hello-test.chpsimrc-out
 	cat $^
 
-# non-essential, just for diagnostics only
+# non-essential target, just for diagnostics only
 confirm-exec:
 	@{ $(ECHO) "examplesdir=$(examplesdir)" && \
 	$(ECHO) "VPATH=$(VPATH)" && \
@@ -75,10 +85,14 @@ hello-test.chpsimrc-out: hello-test.chpsimrc hello-test.haco-a hello.la
 
 # hand-written library building rules, in the style of automake-libtool
 hello_la_LIBADD =
-# CHPSIM_MODULE_FLAGS is critical
+# no other dependent libraries in this example
+
+# CHPSIM_MODULE_FLAGS is critical, from hackt-lt.mk
 hello_la_LDFLAGS = $(CHPSIM_MODULE_FLAGS)
+
 # OBJECTS is normally inferred from SOURCES by automake
 hello_la_OBJECTS = hello.lo
+# comes from hello.cc
 
 # the libtool library for the plug-in module
 hello.la: $(hello_la_OBJECTS)

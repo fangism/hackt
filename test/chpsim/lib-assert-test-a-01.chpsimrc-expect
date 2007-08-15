@@ -1,0 +1,21 @@
+	0	0	0	null
+	10	3	1	BS.S!(true)
+updated bool(s): 
+bool b = 1
+watch:	10	1	0	B?(b)
+	20	2	0	assert(b)
+updated bool(s): 
+bool b = 1
+watch:	30	1	0	B?(b)
+	30	5	1	BS.S!(true)
+	40	2	0	assert(b)
+updated bool(s): 
+bool b = 0
+watch:	50	1	0	B?(b)
+	50	4	1	BS.S!(false)
+Run-time assertion failed!
+Run-time error calling function: assert(b)
+Run-time error executing event 2.
+Run-time error while checking event.
+event[2]:	60	2	0	assert(b)	[by:1]
+Caught run-time exception during execution.  Halting.

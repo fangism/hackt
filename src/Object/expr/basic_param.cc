@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.26 2007/03/11 16:34:17 fang Exp $
+ 	$Id: basic_param.cc,v 1.27 2007/08/15 02:48:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -160,13 +160,13 @@ pbool_expr::~pbool_expr() {
  */
 count_ptr<const data_type_reference>
 pbool_expr::get_unresolved_data_type_ref(void) const {
-	return bool_traits::built_in_type_ptr;
+	return bool_traits::nonmeta_data_type_ptr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_datatype
 pbool_expr::get_resolved_data_type_ref(const unroll_context&) const {
-	return bool_traits::built_in_type_ptr->make_canonical_type();
+	return bool_traits::nonmeta_data_type_ptr->make_canonical_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -293,15 +293,11 @@ pint_expr::~pint_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	When pint is interpreted as an int, in non-meta language...
-	TODO: return int<0>? to signal something special?
+	\returns int<0> to signal something special
  */
 count_ptr<const data_type_reference>
 pint_expr::get_unresolved_data_type_ref(void) const {
-#if 0
-	return int_traits::int32_type_ptr;
-#else
-	return int_traits::magic_int_type_ptr;
-#endif
+	return int_traits::nonmeta_data_type_ptr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,7 +306,7 @@ pint_expr::get_unresolved_data_type_ref(void) const {
  */
 canonical_generic_datatype
 pint_expr::get_resolved_data_type_ref(const unroll_context&) const {
-	return int_traits::magic_int_type_ptr->make_canonical_type();
+	return int_traits::nonmeta_data_type_ptr->make_canonical_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -496,7 +492,7 @@ preal_expr::get_unresolved_data_type_ref(void) const {
 	FINISH_ME_EXIT(Fang);
 	return count_ptr<const data_type_reference>(NULL);
 #else
-	return bool_traits::built_in_type_ptr;
+	return real_traits::nonmeta_data_type_ptr;
 #endif
 }
 

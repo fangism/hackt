@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.8 2007/06/04 22:44:30 fang Exp $
+#	$Id: scantexdepend.awk,v 1.9 2007/08/15 02:48:33 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
@@ -21,8 +21,10 @@ BEGIN {
 }
 
 # valid readable file? (not a directory)
+# reject invalid characters (those that have special shell meanings)
 function valid_file(str) {
-	return !system("test -f " str " && test -r " str);
+	return !match(str, "[{}<>*&?()]") &&
+		!system("test -f " str " && test -r " str);
 }
 
 # the file extension string (excluding '.')
@@ -34,7 +36,7 @@ function extract_extension(str) {
 	}
 }
 
-# file is passes pattern filters
+# file passes pattern filters
 function matched_file(f) {
 	# print "\nEXT: " extract_extension(f);
 	return match(f, "[A-Za-z0-9_-]$") &&

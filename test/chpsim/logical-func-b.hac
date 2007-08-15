@@ -1,0 +1,31 @@
+// "logical-func-b.hac"
+// copy-modified from "logical-func-b.hac"
+// testing various composition uses of functions
+// here, return/argument types are all ints
+
+import "testlib/int-source.hac";
+import "testlib/bool-sink.hac";
+
+defproc my_foo(chan?(int) A, B, C, D; chan!(bool) G) {
+int a, b, c, d;
+chp {
+*[
+	A?(a), B?(b), C?(c), D?(d);
+	G!((my_gcd(a, b) || my_gcd(c, d)))
+	// NOTE: compiler automatically infers types as bools from operator
+	// and inserts run-time type-check casts
+	// if my_gcd returns non-bool, will result in error
+]
+}
+}
+
+chan(int) A, B, C, D;
+chan(bool) G;
+my_foo X(A, B, C, D, G);
+int_source<32>
+	AS<4, {3,4,5,6}>(A),
+	BS<5, {4,5,6,7,8}>(B),
+	CS<3, {6,8,9}>(C),
+	DS<6, {2,5,3,6,4,7}>(D);
+bool_sink GS(G);
+

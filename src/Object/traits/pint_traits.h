@@ -2,7 +2,7 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.16 2006/11/07 06:35:27 fang Exp $
+	$Id: pint_traits.h,v 1.17 2007/08/15 02:49:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PINT_TRAITS_H__
@@ -19,6 +19,7 @@ struct class_traits<pint_tag> {
 	struct rebind {	typedef	class_traits<Tag>	type; };
 
 	typedef	pint_tag			tag_type;
+	typedef	int_tag				nonmeta_tag_type;
 	static const char			tag_name[];
 	static const char			value_type_name[];
 	enum { type_tag_enum_value = META_TYPE_PINT };

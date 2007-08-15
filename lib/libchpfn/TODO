@@ -1,0 +1,11 @@
+# "TODO"
+#	$Id: TODO,v 1.2 2007/08/15 02:48:34 fang Exp $
+
+Functions to add:
+
+Logging and printing functions.
+Support for strings.
+Array selection function (vararg-like)
+
+Math library functions.
+

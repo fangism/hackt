@@ -1,5 +1,5 @@
 @c "usage.texi"
-@c $Id: usage.texi,v 1.2 2007/07/31 23:22:31 fang Exp $
+@c $Id: usage.texi,v 1.3 2007/08/15 02:48:33 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -46,70 +46,14 @@ With no arguments, just print a list of all command-line options,
 much like what is summarized below.  
 @end defopt
 
-@cindex batch mode
-@defopt	-b
-Batch mode, non-interactive, promptless.  
-This is useful for running scripts or piping in commands 
-while suppressing prompts.  
-This mode also turns off tab-completion in the interpreter.  
-The opposing option is @option{-i}.
-@b{Note:} executables linked against libeditline may @emph{require} 
-this option for processing scripts due to a mishandling of EOF.  
-@end defopt
-
-@cindex checkpoint
-@defopt -d @var{checkpoint}
-Produce a textual dump of a checkpoint binary.  
-Exits without running the simulator.  
-@end defopt
-
-@defopt -f @var{flag}
-@xref{General Flags}.
-@end defopt
-
-@defopt -h
-Help.  Print list of all interpreter commands and exit.  
-@end defopt
-
-@cindex interactive
-@cindex prompt
-@defopt -i
-Interactive, prompting.  This is the default mode.
-The opposing option is @option{-b}.  
-@end defopt
-
-@cindex source paths
-@defopt -I path @r{(repeatable)}
-@anchor{option-I}
-Append @var{path} to the list of paths to search for sourcing other 
-command scripts in the interpreter.  
-@end defopt
-
-@cindex module paths
-@cindex library paths
-@defopt -L path @r{(repeatable)}
-@anchor{option-L}
-Append @var{path} to the list of paths to search for opening shared library
-plug-ins (modules).  
-The equivalent command in the interpreter is
-@ref{command-dladdpath,, @command{dladdpath}}.
-For more on building and loading shared-libraries, @xref{Extending simulation}.
-@end defopt
-
-@cindex module
-@cindex loading
-@defopt -l lib @r{(repeatable)}
-@anchor{option-l}
-Load the @var{lib} shared library module for registering user-defined
-run-time functions.  
-@var{lib} should be named @emph{without} its file extension, 
-for the sake of portability.  
-@c @var{lib}'s name should match that of the built library's base.
-For example, @file{libcrunch.la} should be referenced as @samp{libcrunch}, 
-and @file{chewy.so} should be referenced as @samp{chewy}.
-The equivalent command in the interpreter is
-@ref{command-dlopen,, @command{dlopen}}.
-@end defopt
+@include options/option-b.texi
+@include options/option-d.texi
+@include options/option-f.texi
+@include options/option-h.texi
+@include options/option-i.texi
+@include options/option-I.texi
+@include options/option-L.texi
+@include options/option-l.texi
 
 @c ****************************************************************************
 @node General Flags
@@ -124,38 +68,12 @@ so @option{-f no-disassemble} is the intuitive negation
 of @option{-f disassemble}.  
 Later options always override earlier options.  
 
-@defopt {-f check-structure}
-Run additional internal graph (nodes and edges) consistency checks.
-Enabled by default.
-@end defopt
-
-@defopt {-f default}
-Resets to default flags.  Has no negation.  
-@end defopt
-
-@defopt {-f dump-graph-alloc}
-Diagnostic tool.  
-Produce a textual dump of expression allocation after the internal 
-whole-program graph has been constructed.  
-@end defopt
-
-@defopt {-f dump-dot-struct}
-@cindex dot
-@cindex event-graph
-@cindex whole-program graph
-Produce a textual netlist of the whole-program event graph in 
-@command{dot} format @footnote{@command{dot} 
-is the name of a program (and its input language)
-that is part of AT&T's GraphViz package (open-source).}.
-A list of options that tune this output can be found in
-@ref{Graph Generation}.
-@end defopt
-
-@defopt {-f run}
-Actually run the simulator's interpreter.  Enabled by default.
-@samp{-f no-run} is explicitly needed when all that is desired
-are diagnostic dumps.  
-@end defopt
+@include options/check-structure.texi
+@include options/default.texi
+@include options/dump-graph-alloc.texi
+@include options/dump-dot-struct.texi
+@include options/run.texi
+@include options/ack-loaded-fns.texi
 
 @c ****************************************************************************
 @node Graph Generation
@@ -167,26 +85,9 @@ All of these options are also negatable with @option{no-} prefixed.
 Don't forget to pass @option{-f no-run} when not intending to run the 
 interpreter.  
 
-@cindex cluster
-@defopt {-f cluster-processes}
-Wrap process subgraphs into clusters, 
-which are enveloped in rectangular outlines.  Default off.  
-@end defopt
-
-@defopt {-f show-channels}
-Label channel edges with their channel names.  Default off.  
-@end defopt
-
-@defopt {-f show-delays}
-Annotate event nodes with their delay values.  Default off.  
-@end defopt
-
-@defopt {-f show-event-index}
-Annotate event nodes with their globally allocated indices.  Default off.  
-@end defopt
-
-@defopt {-f show-instances}
-Also show allocated instances as nodes.  Default off.  
-@end defopt
-
+@include options/cluster-processes.texi
+@include options/show-channels.texi
+@include options/show-delays.texi
+@include options/show-event-index.texi
+@include options/show-instances.texi
 

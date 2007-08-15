@@ -1,0 +1,99 @@
+# "Makefile[.in]"
+#	$Id: Makefile.in,v 1.2 2007/08/15 02:50:23 fang Exp $
+#
+# This Makefile should not be invoked until AFTER hackt is installed!
+#
+# Minimalist Makefile to demontstrate chpsim standard function library usage.
+# This is not run as part of the normal test suite, but rather, 
+# as a post-install test, suitable for installcheck-local.
+#
+# This is a non-configured Makefile, as an example that doesn't
+# require automake, autoconf, or libtool.  
+#
+# When invoking this Makefile, make sure the intended install $(bindir)
+# appears earliest in the path to guarantee that the intended executables
+# are being tested.  
+
+#############################################################################
+# This section for installcheck testing only.
+# USER: delete this section and ignore it.
+
+top_srcdir = @top_srcdir@
+# include $(top_srcdir)/Make.stddef
+top_builddir = @top_builddir@
+# for list of install paths from configure
+include $(top_builddir)/installcheck.mk
+include $(top_srcdir)/installdirs.mk
+
+# pkgdatadir = $(datadir)/@PACKAGE@
+## probably resembles: /usr/local/share/hackt/lib
+#############################################################################
+
+#############################################################################
+# SETUP INSTRUCTIONS FOR USER:
+
+# NOTE: we now reference the *INSTALLED* directory as the VPATH/srcdir
+#	during installcheck
+srcdir = $(examplesdir)/chpsim-stdlib
+# If you're running this example out of the installed directory (VPATH), 
+# then point srcdir to the installed example directory.   
+# If you've copied the example files to a local directory, set
+# srcdir = .
+
+# keep this consistent with parent directory's Makefile.am
+VPATH = $(srcdir)
+# ALERT: not all versions of make support variable expansion of VPATH
+
+#############################################################################
+################### the important Makefile example below ####################
+#############################################################################
+
+# Include the *installed* makefile template (Libtool-enabled variant)
+# pkgdatadir is defined by installcheck.mk durinst installcheck testing
+# USER: you can set pkgdatadir = prefix/share/hackt, or just substitute it
+# directly in the referenced include file below.
+include $(pkgdatadir)/mk/hackt-lt.mk
+
+# up to user to define the following, or let make pick defaults:
+# CC = @CC@
+CXX = @CXX@
+ECHO = @ECHO@
+# or just 'echo'
+
+# just echo results back out
+all: confirm-exec lib-zcond-test.chpsimrc-out
+	cat $^
+
+# non-essential, just for diagnostics only
+confirm-exec:
+	@{ $(ECHO) "examplesdir=$(examplesdir)" && \
+	$(ECHO) "VPATH=$(VPATH)" && \
+	$(ECHO) "PATH=$$PATH" && \
+	which $(HACKT_CONFIG) && \
+	which $(HACKT_LIBTOOL) && \
+	which $(HACKT_EXE) && \
+	which $(HACKT_COMPILE_EXE) && \
+	which $(HACKT_CREATE_EXE) && \
+	which $(HACKT_ALLOC_EXE) && \
+	which $(HACKT_CHPSIM_EXE) && \
+	$(ECHO) -n "hackt-config --idflags: " && \
+	$(HACKT_CONFIG) --ldflags && \
+	$(ECHO) "should match $$(pkglibdir): -L$(pkglibdir)" ; \
+	} > $@ 2>&1
+
+CHPSIM_LDFLAGS = `$(HACKT_CONFIG) --ldflags` -lstdchpfn
+# should be equivalent to -L$(pkglibdir)
+
+# run hacchpsim to and log results to file
+lib-zcond-test.chpsimrc-out: lib-zcond-test-a-01.chpsimrc lib-zcond-test-a.haco-a
+	$(HACKT_CHPSIM_EXE) -b $(CHPSIM_LDFLAGS) lib-zcond-test-a.haco-a < \
+		$(srcdir)/lib-zcond-test-a-01.chpsimrc > $@
+
+# local clean-up
+clean: clean-test
+
+clean-test:
+	$(RM) *.depend
+	$(RM) *.chpsimrc-out
+	$(RM) confirm-exec
+
