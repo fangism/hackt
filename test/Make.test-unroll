@@ -1,6 +1,6 @@
 # "Make.test-unroll"
 #	vi: ft=automake
-#	$Id: Make.test-unroll,v 1.6 2007/07/31 23:23:55 fang Exp $
+#	$Id: Make.test-unroll,v 1.7 2007/08/16 06:11:06 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -8,6 +8,44 @@
 
 # obsolete:
 # HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
+
+if USE_UNROLL_PHASE
+HACKT_UNROLL_SUFFIXES = .haco-u \
+	.unrolldump .unrolldump-filter .unrollstderr \
+	.haco-u-dump .haco-u-dump-filter .unrolldiff \
+	.unrollfaildump .unrollfaildiff
+HACKT_UNROLL_TEST_SUFFIXES = .hacktunrolltest .hacktunrollfailtest
+endif
+SUFFIXES += $(HACKT_UNROLL_SUFFIXES) $(HACKT_UNROLL_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_UNROLL_SUFFIXES)
+
+HACKT_UNROLL_CLEAN_IGNORE_PATTERNS = \
+	"*.hacktobjtest" \
+	"*.hacktunrolltest" \
+	"*.hacktunrollfailtest" \
+	"*.indump" \
+	"*.outdump" \
+	"*.objdiff" \
+	"*.indump-filter" \
+	"*.outdump-filter" \
+	"*.compileobjdiff" \
+	"*.haco" \
+	"*.haco-dump" \
+	"*.haco-u" \
+	"*.haco-u-dump" \
+	"*.haco-u-fail" \
+	"*.unrolldiff" \
+	"*.unrollfaildiff" \
+	"*.unrolldump-noindex" \
+	"*.unrolldump-filter-noindex" \
+	"*.unrolldiff-noindex" \
+	"*.unrollstderr-noindex" \
+	"*.unrolldump" \
+	"*.unrolldump.filter" \
+	"*.unrolldump-filter" \
+	"*.unrollfaildump"
+
+AUTO_IGNORE += $(HACKT_UNROLL_CLEAN_IGNORE_PATTERNS)
 
 if USE_UNROLL_PHASE
 else
@@ -176,30 +214,11 @@ echo-unroll-tests: force
 	@$(ECHO) $(HACKT_UNROLL_TEST_SUBJECTS)
 
 clean-unrolltests:
-	-$(RM_PATTERN) "*.hacktobjtest"
-	-$(RM_PATTERN) "*.hacktunrolltest"
-	-$(RM_PATTERN) "*.hacktunrollfailtest"
-	-$(RM_PATTERN) "*.indump"
-	-$(RM_PATTERN) "*.outdump"
-	-$(RM_PATTERN) "*.objdiff"
-	-$(RM_PATTERN) "*.indump-filter"
-	-$(RM_PATTERN) "*.outdump-filter"
-	-$(RM_PATTERN) "*.compileobjdiff"
-	-$(RM_PATTERN) "*.haco"
-	-$(RM_PATTERN) "*.haco-dump"
-	-$(RM_PATTERN) "*.haco-u"
-	-$(RM_PATTERN) "*.haco-u-dump"
-	-$(RM_PATTERN) "*.haco-u-fail"
-	-$(RM_PATTERN) "*.unrolldiff"
-	-$(RM_PATTERN) "*.unrollfaildiff"
-	-$(RM_PATTERN) "*.unrolldump-noindex"
-	-$(RM_PATTERN) "*.unrolldump-filter-noindex"
-	-$(RM_PATTERN) "*.unrolldiff-noindex"
-	-$(RM_PATTERN) "*.unrollstderr-noindex"
-	-$(RM_PATTERN) "*.unrolldump"
-	-$(RM_PATTERN) "*.unrolldump.filter"
-	-$(RM_PATTERN) "*.unrolldump-filter"
-	-$(RM_PATTERN) "*.unrollfaildump"
+	patternlist='$(HACKT_UNROLL_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-unrolltests
 

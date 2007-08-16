@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.26 2007/08/15 19:54:47 fang Exp $
+#	$Id: Make.stddef,v 1.27 2007/08/16 06:11:02 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -91,7 +91,8 @@ SPACES_TO_NEWLINE = $(AWK) '{gsub("[ \t]+","\n"); print;}'
 
 # to accumulate and generate automatic .cvsignore
 # we've provided some project wide definitions in Make.global
-# NOTE: only directory and file names here, no wild-cards
+# NOTE: only directory and file names here
+# Wild-cards like "*.foo*" must be wrapped in quotes when listed
 AUTO_IGNORE =
 
 # automatically built dependencies

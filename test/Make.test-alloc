@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.7 2007/07/31 23:23:54 fang Exp $
+#	$Id: Make.test-alloc,v 1.8 2007/08/16 06:11:05 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -10,8 +10,43 @@
 # HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
 # HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
 
+# TODO: organize this file by test, and accumulate variables
 
 ALLOC_FILTER = $(SED) -f $(TEST_SRCDIR)/alloc_filter.sed
+
+HACKT_ALLOC_SUFFIXES = .haco-a .haco-a-dump .haco-a-dump-filter \
+	.haco-a-from-haco .haco-a-from-haco-dump .haco-a-from-haco-dump-filter \
+	.allocdump .allocfaildump .allocdump-filter \
+	.allocdiff .alloc-from-haco-diff \
+	.alloc-from-haco-dump .alloc-from-haco-dump-filter
+
+HACKT_ALLOC_TEST_SUFFIXES = .hacktalloctest .hacktallocfromhacotest
+SUFFIXES += $(HACKT_ALLOC_SUFFIXES) $(HACKT_ALLOC_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_ALLOC_SUFFIXES)
+
+if USE_UNROLL_PHASE
+HACKT_ALLOC_SUFFIXES += \
+	.haco-a-from-u .haco-a-from-u-dump .haco-a-from-u-dump-filter \
+	.alloc-from-u-dump .alloc-from-u-dump-filter
+endif
+
+# clean and cvsignore: list most suffixes, but protected in quotes
+HACKT_ALLOC_CLEAN_IGNORE_PATTERNS = \
+	"*.haco-a" \
+	"*.hacktalloctest" \
+	"*.hacktallocfailtest" \
+	"*.hacktallocfromhacotest" \
+	"*.allocdump" \
+	"*.allocdump-filter" \
+	"*.allocdump.filter" \
+	"*.allocfaildump" \
+	"*.allocdiff" \
+	"*.allocfaildiff" \
+	"*.haco-a-dump" \
+	"*.alloc-from*" \
+	"*.prsimexpr-O1"
+
+AUTO_IGNORE += $(HACKT_ALLOC_CLEAN_IGNORE_PATTERNS)
 
 # ALLOC tests
 .haco-c.haco-a:
@@ -303,20 +338,11 @@ echo-alloc-tests: force
 
 
 clean-alloctests:
-	-$(RM_PATTERN) "*.hacktalloctest"
-	-$(RM_PATTERN) "*.hacktallocfailtest"
-	-$(RM_PATTERN) "*.hacktallocfromhacotest"
-	-$(RM_PATTERN) "*.haco-a"
-	-$(RM_PATTERN) "*.allocdump"
-	-$(RM_PATTERN) "*.allocdump-filter"
-	-$(RM_PATTERN) "*.allocdump.filter"
-	-$(RM_PATTERN) "*.allocfaildump"
-	-$(RM_PATTERN) "*.allocdiff"
-	-$(RM_PATTERN) "*.allocfaildiff"
-	-$(RM_PATTERN) "*.haco-a-dump"
-	-$(RM_PATTERN) "*.alloc-from*"
-	-$(RM_PATTERN) "*.prsimexpr-O1"
-	-$(RM_PATTERN) "*.prs-dot-O1"
+	patternlist='$(HACKT_ALLOC_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-alloctests
 

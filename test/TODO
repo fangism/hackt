@@ -1,25 +1,12 @@
 "test/TODO"
-	$Id: TODO,v 1.4 2006/10/18 01:20:14 fang Exp $
+	$Id: TODO,v 1.5 2007/08/16 06:11:06 fang Exp $
 
-rewrite tests so they can be "run" in parallel
-	use check_TESTS, check_TESTS as a target and use dependency rules
-	to run the tests as targets, and have the scripts
-	just echo/return the result of the test.
-	This also requires heavy automatic dependency generation
-	for all tests.  
+re-organize Make.test-* contents so variables and targets associated
+	with each test are grouped together
 
 Detected whether or not we are VPATH building, for the cases
 	where we copy or link tests (.stderr) from srcdir to builddir, 
 	we'd prefer to distinguish when we'd need to clean certain files.
 	e.g. if !VPATH, don't remove the stderr files, else remove them
 	upon cleaning!  see why in artc-expect.sh.in.
-
-Detect presence of certain old cast-based tools? like prsim?
-	Would be nice to conditionally run them as regression tests.  
-	To be done with autoconf.  
-	list: prsim, ...
-
-Trivial:
-rename object files, eliminate 'art' from names
-	also in Makefiles, purge ART from names.
 

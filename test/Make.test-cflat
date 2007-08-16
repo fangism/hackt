@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.9 2007/07/31 23:23:54 fang Exp $
+#	$Id: Make.test-cflat,v 1.10 2007/08/16 06:11:05 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -12,6 +12,57 @@
 # HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
 # HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
 
+HACKT_CFLAT_SUFFIXES = \
+	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
+	.sprs .sprs-sort .sprs-diff .sprsdiff-sort \
+	.prsseu .prsseu-sort .prsseu-diff prsseudiff-sort \
+	.lvsprs .expect-lvsprs .lvsprsdiff .lvsprs-sort \
+	.expect-lvsprs-sort .lvsprsdiff-sort \
+	.lvsfail .lvsfaildiff \
+	.lvssprs
+HACKT_CFLAT_TEST_SUFFIXES = \
+	.hacktcflattest \
+	.hacktcflatlvstest \
+	.hacktcflatlvsfailtest \
+	.hacktcflatseutest \
+	.hacktsprstest
+SUFFIXES += $(HACKT_CFLAT_SUFFIXES) $(HACKT_CFLAT_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_CFLAT_SUFFIXES)
+
+# CVS ignore and clean these patterns
+HACKT_CFLAT_CLEAN_IGNORE_PATTERNS = \
+	"*.hacktcflattest" \
+	"*.hacktcflatlvstest" \
+	"*.hacktcflatlvsfailtest" \
+	"*.hacktsprstest" \
+	"*.hacktcflatseutest" \
+	"*.hacktprsimexprtest" \
+	"*.hacktprsdottest" \
+	"*.prs" \
+	"*.prs-sort" \
+	"*.prsdiff" \
+	"*.prsdiff-sort" \
+	"*.lvssprs" \
+	"*.lvsprs" \
+	"*.lvsprsdiff" \
+	"*.lvsprsdiff-sort" \
+	"*.lvsfail" \
+	"*.lvsfaildiff" \
+	"*.prsseu" \
+	"*.prsseudiff" \
+	"*.prsseu-diff" \
+	"*.prsimexpr" \
+	"*.prsimexprdiff" \
+	"*.prs-dot" \
+	"*.prs-dot-O1" \
+	"*.prs-*-ps" \
+	"*.prs-*-fig" \
+	"*.prs-*-pdf" \
+	"*.sprs" \
+	"*.sprsdiff" \
+	"*.sprsdiff-sort"
+
+AUTO_IGNORE += $(HACKT_CFLAT_CLEAN_IGNORE_PATTERNS)
 
 # CFLAT tests
 
@@ -490,38 +541,12 @@ echo-cflat-sprs-tests: force
 	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SUBJECTS)
 
 
-
 clean-cflattests:
-	-$(RM_PATTERN) "*.hacktcflattest"
-	-$(RM_PATTERN) "*.hacktcflatlvstest"
-	-$(RM_PATTERN) "*.hacktcflatlvsfailtest"
-	-$(RM_PATTERN) "*.hacktsprstest"
-	-$(RM_PATTERN) "*.hacktcflatseutest"
-	-$(RM_PATTERN) "*.hacktprsimexprtest"
-	-$(RM_PATTERN) "*.hacktprsdottest"
-	-$(RM_PATTERN) "*.prs"
-	-$(RM_PATTERN) "*.prs-sort"
-	-$(RM_PATTERN) "*.prsdiff"
-	-$(RM_PATTERN) "*.prsdiff-sort"
-	-$(RM_PATTERN) "*.lvssprs"
-	-$(RM_PATTERN) "*.lvsprs"
-	-$(RM_PATTERN) "*.lvsprsdiff"
-	-$(RM_PATTERN) "*.lvsprsdiff-sort"
-	-$(RM_PATTERN) "*.lvsfail"
-	-$(RM_PATTERN) "*.lvsfaildiff"
-	-$(RM_PATTERN) "*.prsseu"
-	-$(RM_PATTERN) "*.prsseudiff"
-	-$(RM_PATTERN) "*.prsseu-diff"
-	-$(RM_PATTERN) "*.prsimexpr"
-	-$(RM_PATTERN) "*.prsimexprdiff"
-	-$(RM_PATTERN) "*.prs-dot"
-	-$(RM_PATTERN) "*.prs-dot-O1"
-	-$(RM_PATTERN) "*.prs-*-ps"
-	-$(RM_PATTERN) "*.prs-*-fig"
-	-$(RM_PATTERN) "*.prs-*-pdf"
-	-$(RM_PATTERN) "*.sprs"
-	-$(RM_PATTERN) "*.sprsdiff"
-	-$(RM_PATTERN) "*.sprsdiff-sort"
+	patternlist='$(HACKT_CFLAT_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-cflattests
 

@@ -1,10 +1,43 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.10 2007/07/31 23:23:54 fang Exp $
+#	$Id: Make.test-guile,v 1.11 2007/08/16 06:11:06 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
+
+HACKT_GUILE_SUFFIXES = \
+	.hacscm .hacscm-out .hacscmfail-out .hacscm-diff .hacscmfail-diff \
+	.hacchpsimscm .hacchpsimscm-out .hacchpsimscmfail-out \
+	.hacchpsimscm-diff .hacchpsimscmfail-diff
+HACKT_GUILE_TEST_SUFFIXES = \
+	.hacscmtest .hacscmfailtest \
+	.hacchpsimscmtest .hacchpsimscmfailtest
+SUFFIXES += $(HACKT_GUILE_SUFFIXES) $(HACKT_GUILE_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_GUILE_SUFFIXES)
+
+HACKT_GUILE_CLEAN_IGNORE_PATTERNS = \
+	"*.hacscm-out" \
+	"*.hacscm-out-nosize" \
+	"*.hacscm-diff" \
+	"*.hacscm-expect-filter" \
+	"*.hacscmtest" \
+	"*.hacscmfail-out" \
+	"*.hacscmfail-diff" \
+	"*.hacscmfail-diff-orig" \
+	"*.hacscmfailtest" \
+	"*.hacchpsimscm-out" \
+	"*.hacchpsimscm-out-nosize" \
+	"*.hacchpsimscm-diff" \
+	"*.hacchpsimscm-diff-nosize" \
+	"*.hacchpsimscm-diff-orig" \
+	"*.hacchpsimscm-expect-nosize" \
+	"*.hacchpsimscmtest" \
+	"*.hacchpsimscmfail-out" \
+	"*.hacchpsimscmfail-diff" \
+	"*.hacchpsimscmfailtest"
+
+AUTO_IGNORE += $(HACKT_GUILE_CLEAN_IGNORE_PATTERNS)
 
 # second filter added to account for guile-1.6 error differences
 HACSCM_OUTPUT_FILTER = \
@@ -438,25 +471,11 @@ echo-hacchpsimscm-failures: force
 
 
 clean-hacscmtests:
-	-$(RM_PATTERN) "*.hacscm-out"
-	-$(RM_PATTERN) "*.hacscm-out-nosize"
-	-$(RM_PATTERN) "*.hacscm-diff"
-	-$(RM_PATTERN) "*.hacscm-expect-filter"
-	-$(RM_PATTERN) "*.hacscmtest"
-	-$(RM_PATTERN) "*.hacscmfail-out"
-	-$(RM_PATTERN) "*.hacscmfail-diff"
-	-$(RM_PATTERN) "*.hacscmfail-diff-orig"
-	-$(RM_PATTERN) "*.hacscmfailtest"
-	-$(RM_PATTERN) "*.hacchpsimscm-out"
-	-$(RM_PATTERN) "*.hacchpsimscm-out-nosize"
-	-$(RM_PATTERN) "*.hacchpsimscm-diff"
-	-$(RM_PATTERN) "*.hacchpsimscm-diff-nosize"
-	-$(RM_PATTERN) "*.hacchpsimscm-diff-orig"
-	-$(RM_PATTERN) "*.hacchpsimscm-expect-nosize"
-	-$(RM_PATTERN) "*.hacchpsimscmtest"
-	-$(RM_PATTERN) "*.hacchpsimscmfail-out"
-	-$(RM_PATTERN) "*.hacchpsimscmfail-diff"
-	-$(RM_PATTERN) "*.hacchpsimscmfailtest"
+	patternlist='$(HACKT_GUILE_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-hacscmtests
 

@@ -1,6 +1,6 @@
 # "Make.test-create"
 #	vi: ft=automake
-#	$Id: Make.test-create,v 1.9 2007/07/31 23:23:54 fang Exp $
+#	$Id: Make.test-create,v 1.10 2007/08/16 06:11:05 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -12,6 +12,44 @@
 
 
 # CREATE tests
+HACKT_CREATE_SUFFIXES = \
+	.haco-c .createdump .createdump-filter .createstderr .creatediff \
+	.createfaildump .createfaildiff .haco-c-dump .haco-c-err \
+	.haco-c-from-haco .haco-c-from-haco-err .create-from-haco-dump \
+	.create-from-haco-dump-filter .create-from-haco-diff
+
+HACKT_CREATE_TEST_SUFFIXES = \
+	.hacktcreatetest .hacktcreatefailtest
+if USE_UNROLL_PHASE
+HACKT_CREATE_TEST_SUFFIXES += .hacktcreatefromhacotest
+endif
+SUFFIXES += $(HACKT_CREATE_SUFFIXES) $(HACKT_CREATE_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_CREATE_SUFFIXES)
+
+HACKT_CREATE_CLEAN_IGNORE_PATTERNS = \
+	"*.hacktcreatetest" \
+	"*.hacktcreatefailtest" \
+	"*.hacktcreatefromhacotest" \
+	"*.haco-c" \
+	"*.haco-c-err" \
+	"*.createdump" \
+	"*.creatediff" \
+	"*.creatediff-orig" \
+	"*.createfaildump" \
+	"*.createfaildiff" \
+	"*.haco-c-dump" \
+	"*.createdump-filter" \
+	"*.createdump-filter-noindex" \
+	"*.createdump-filter-nosize" \
+	"*.createdump.filter" \
+	"*.createstderr-noindex" \
+	"*.creatediff-noindex" \
+	"*.createstderr-nosize" \
+	"*.creatediff-nosize" \
+	"*.create-from*" \
+	"*.haco-c-from*"
+
+AUTO_IGNORE += $(HACKT_CREATE_CLEAN_IGNORE_PATTERNS)
 
 CREATE_OBJDUMP_SCRIPT = \
 	if test -s $<-err ; then \
@@ -316,27 +354,11 @@ echo-create-tests: force
 
 
 clean-createtests:
-	-$(RM_PATTERN) "*.hacktcreatetest"
-	-$(RM_PATTERN) "*.hacktcreatefailtest"
-	-$(RM_PATTERN) "*.hacktcreatefromhacotest"
-	-$(RM_PATTERN) "*.haco-c"
-	-$(RM_PATTERN) "*.haco-c-err"
-	-$(RM_PATTERN) "*.createdump"
-	-$(RM_PATTERN) "*.creatediff"
-	-$(RM_PATTERN) "*.creatediff-orig"
-	-$(RM_PATTERN) "*.createfaildump"
-	-$(RM_PATTERN) "*.createfaildiff"
-	-$(RM_PATTERN) "*.haco-c-dump"
-	-$(RM_PATTERN) "*.createdump-filter"
-	-$(RM_PATTERN) "*.createdump-filter-noindex"
-	-$(RM_PATTERN) "*.createdump-filter-nosize"
-	-$(RM_PATTERN) "*.createdump.filter"
-	-$(RM_PATTERN) "*.createstderr-noindex"
-	-$(RM_PATTERN) "*.creatediff-noindex"
-	-$(RM_PATTERN) "*.createstderr-nosize"
-	-$(RM_PATTERN) "*.creatediff-nosize"
-	-$(RM_PATTERN) "*.create-from*"
-	-$(RM_PATTERN) "*.haco-c-from*"
+	patternlist='$(HACKT_CREATE_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-createtests
 

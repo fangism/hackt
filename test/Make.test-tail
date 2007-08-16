@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.80 2007/08/14 00:55:14 fang Exp $
+#	$Id: Make.test-tail,v 1.81 2007/08/16 06:11:06 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -295,17 +295,25 @@ distclean-depend-local:
 	-$(RM_PATTERN) "*.depend"
 	-$(RM_PATTERN) "*.hacdepend"
 
+GENERAL_CLEAN_IGNORE_PATTERNS = \
+	"*.core" "core.*" \
+	"*.test" "*.diff" \
+	"*.sort" \
+	"*.noindex" \
+	"*-from-haco" \
+	"*.*haco*" \
+	"*.*-from-*-dump" \
+	"*.*-from-*-diff"
+
+AUTO_IGNORE += $(GENERAL_CLEAN_IGNORE_PATTERNS)
+
 # automatically removes $(CLEANFILES)
 clean-local: clean-summaries-local
-	-$(RM_PATTERN) "*.core" "core.*"
-	-$(RM_PATTERN) "*.test" "*.diff"
-	-$(RM_PATTERN) "*.sort"
-	-$(RM_PATTERN) "*.noindex"
-	-$(RM_PATTERN) "*-from-haco"
-	-$(RM_PATTERN) "*.*haco*"
-	-$(RM_PATTERN) "*.*-from-*-dump"
-	-$(RM_PATTERN) "*.*-from-*-diff"
-# repeat some rm's to cover spilling command-line arguments
+	patternlist='$(GENERAL_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 cleaner: cleaner-recursive cleaner-am
 

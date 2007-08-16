@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.9 2007/07/31 23:23:55 fang Exp $
+#	$Id: Make.test-prsim,v 1.10 2007/08/16 06:11:06 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -12,6 +12,53 @@
 # HACKT_PRSIM_CKPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-ckpt.sh
 # HACKT_PRSIM_OPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-opt.sh
 # HACKT_PRS_DOT_TEST_SH = $(TEST_BUILDDIR)/hackt-prs-dot-test.sh
+
+HACKT_PRSIM_SUFFIXES = \
+	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
+	.prsimrcfail-out \
+	.prsimrcfail-out-filter .prsimrcfail-diff \
+	.prsimexpr .prsimexprdiff .prsimexpr-O1 \
+	.prsimckpt .prsimckpt-dump \
+	.prsimckpt-indump .prsimckpt-outdump .prsimckpt-diff \
+	.prsimckpt-dupe .prsimckpt-dupe-dump \
+	.prsimckpt-O1 .prsimckpt-O1-err \
+	.prsimckpt-01-dump .prsimopt-diff
+
+HACKT_PRSIM_TEST_SUFFIXES = \
+	.prsimtest .prsimfailtest \
+	.hacktprsimexprtest \
+	.prsimckpttest \
+	.prsimopttest \
+	.hacktprsdottest 
+SUFFIXES += $(HACKT_PRSIM_SUFFIXES) $(HACKT_PRSIM_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_PRSIM_SUFFIXES)
+
+HACKT_PRSIM_CLEAN_IGNORE_PATTERNS = \
+	"*.prsimtest" \
+	"*.prsimrc-out" \
+	"*.prsimrc-out-filter" \
+	"*.prsimrc-diff" \
+	"*.prsimfailtest" \
+	"*.prsimrcfail-out" \
+	"*.prsimrcfail-out-filter" \
+	"*.prsimrcfail-diff" \
+	"*.prsimckpt" \
+	"*.prsimckpttest" \
+	"*.prsimckpt-dump" \
+	"*.prsimckpt-dupe" \
+	"*.prsimckpt-dupe-dump" \
+	"*.prsimckpt-outdump" \
+	"*.prsimckpt-indump" \
+	"*.prsimckpt-diff" \
+	"*.prsimopttest" \
+	"*.prsimckpt-O1" \
+	"*.prsimckpt-O1-err" \
+	"*.prsimckpt-O1-dump" \
+	"*.prsimopt-diff" \
+	"*.prsimexpr-O1" \
+	"*.prs-dot-O1"
+
+AUTO_IGNORE += $(HACKT_PRSIM_CLEAN_IGNORE_PATTERNS)
 
 
 PRSIMRC_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-filter.awk
@@ -527,29 +574,11 @@ echo-prsimopt-tests: force
 
 
 clean-prsimtests:
-	-$(RM_PATTERN) "*.prsimtest"
-	-$(RM_PATTERN) "*.prsimrc-out"
-	-$(RM_PATTERN) "*.prsimrc-out-filter"
-	-$(RM_PATTERN) "*.prsimrc-diff"
-	-$(RM_PATTERN) "*.prsimfailtest"
-	-$(RM_PATTERN) "*.prsimrcfail-out"
-	-$(RM_PATTERN) "*.prsimrcfail-out-filter"
-	-$(RM_PATTERN) "*.prsimrcfail-diff"
-	-$(RM_PATTERN) "*.prsimckpt"
-	-$(RM_PATTERN) "*.prsimckpttest"
-	-$(RM_PATTERN) "*.prsimckpt-dump"
-	-$(RM_PATTERN) "*.prsimckpt-dupe"
-	-$(RM_PATTERN) "*.prsimckpt-dupe-dump"
-	-$(RM_PATTERN) "*.prsimckpt-outdump"
-	-$(RM_PATTERN) "*.prsimckpt-indump"
-	-$(RM_PATTERN) "*.prsimckpt-diff"
-	-$(RM_PATTERN) "*.prsimopttest"
-	-$(RM_PATTERN) "*.prsimckpt-O1"
-	-$(RM_PATTERN) "*.prsimckpt-O1-err"
-	-$(RM_PATTERN) "*.prsimckpt-O1-dump"
-	-$(RM_PATTERN) "*.prsimopt-diff"
-	-$(RM_PATTERN) "*.prsimexpr-O1"
-	-$(RM_PATTERN) "*.prs-dot-O1"
+	patternlist='$(HACKT_PRSIM_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-prsimtests
 

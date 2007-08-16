@@ -5,6 +5,11 @@
 
 2007-08-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-53:
+	  No source revision, test Makefile maintainence (test/ChangeLog).
+	  Soon... purge unroll phase from source.
+
+
 	* HACKT-00-01-04-main-00-81-52:
 	  No source revision, documentation only (dox/ChangeLog).
 

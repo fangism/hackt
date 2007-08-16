@@ -1,17 +1,51 @@
 # "Make.test-flatten"
 #	vi: ft=automake
-#	$Id: Make.test-flatten,v 1.8 2007/08/15 01:08:27 fang Exp $
+#	$Id: Make.test-flatten,v 1.9 2007/08/16 06:11:05 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
 
 
-
 HACKT_FLATTEN_ERROR_FILTER = $(AWK) \
 		-f $(TEST_SRCDIR)/hackt-flatten-expect-filter.awk \
 		-f $(TEST_SRCDIR)/vpath_file_filter.awk
 
+HACKT_FLATTEN_SUFFIXES = \
+	.hacf .hacf-filter .hacf-diff \
+	.hacf-fail .hacf-fail-filter .hacf-fail-diff \
+        .hacfo .compileflatdump .compileflatdump-filter \
+        .compileflatdump-diff \
+        .findump .findump-filter .hacfobjdiff
+HACKT_FLATTEN_TEST_SUFFIXES = \
+        .hacflattest \
+        .hacflatfailtest \
+	.hacfobjdifftest \
+	.compileflatdump-test
+SUFFIXES += $(HACKT_FLATTEN_SUFFIXES) $(HACKT_FLATTEN_TEST_SUFFIXES)
+BOGUS_SUFFIX_TARGETS += $(HACKT_FLATTEN_SUFFIXES)
+
+HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS = \
+	"*.hacf" \
+	"*.hacf-filter" \
+	"*.hacf-diff" \
+	"*.hacf-fail" \
+	"*.hacf-fail-filter" \
+	"*.hacf-fail-diff" \
+	"*.hacflattest" \
+	"*.hacflatfailtest" \
+	"*.hacfo" \
+	"*.compiledump-filter-tmp" \
+	"*.compileflatdump" \
+	"*.compileflatdump-filter" \
+	"*.compileflatdump-diff" \
+	"*.compileflatdump-test" \
+	"*.findump" \
+	"*.findump-filter" \
+	"*.hacfobjdiff" \
+	"*.hacfobjdifftest"
+
+AUTO_IGNORE += $(HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS)
 
 ###############################################################################
 # dependency tracking enabled by default
@@ -280,24 +314,11 @@ echo-flatten-tests: force
 
 
 clean-flattentests:
-	-$(RM_PATTERN) "*.hacf"
-	-$(RM_PATTERN) "*.hacf-filter"
-	-$(RM_PATTERN) "*.hacf-diff"
-	-$(RM_PATTERN) "*.hacf-fail"
-	-$(RM_PATTERN) "*.hacf-fail-filter"
-	-$(RM_PATTERN) "*.hacf-fail-diff"
-	-$(RM_PATTERN) "*.hacflattest"
-	-$(RM_PATTERN) "*.hacflatfailtest"
-	-$(RM_PATTERN) "*.hacfo"
-	-$(RM_PATTERN) "*.compiledump-filter-tmp"
-	-$(RM_PATTERN) "*.compileflatdump"
-	-$(RM_PATTERN) "*.compileflatdump-filter"
-	-$(RM_PATTERN) "*.compileflatdump-diff"
-	-$(RM_PATTERN) "*.compileflatdump-test"
-	-$(RM_PATTERN) "*.findump"
-	-$(RM_PATTERN) "*.findump-filter"
-	-$(RM_PATTERN) "*.hacfobjdiff"
-	-$(RM_PATTERN) "*.hacfobjdifftest"
+	patternlist='$(HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS)' ; \
+	for p in $$patternlist ; do \
+	  pp=`$(ECHO) $$p | $(SED) 's/"//g'` ; \
+	  $(RM_PATTERN) "$$pp" ; \
+	done
 
 clean-local: clean-flattentests
 
