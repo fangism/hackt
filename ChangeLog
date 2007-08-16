@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-08-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-53:
+	  Remove obsolete references to configured test scripts.
+
+
 2007-08-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-52:
