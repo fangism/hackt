@@ -1,6 +1,6 @@
 # "dox/Makefile.am"
 # root Makefile for dox directory
-#	$Id: Makefile.am,v 1.12 2007/08/15 23:58:36 fang Exp $
+#	$Id: Makefile.am,v 1.13 2007/08/16 23:48:02 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -11,6 +11,7 @@ SUBDIRS = mk lang util objfmt man tutorial cast2hac prsim chpsim
 EXTRA_DIST += README TODO ChangeLog local.cvsignore \
 	common/README \
 	common/hacdef.tex \
+	common/hacmacros.texi \
 	common/figtex.tex \
 	common/hac.bib
 

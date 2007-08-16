@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.20 2007/08/15 23:58:36 fang Exp $
+#	$Id: ChangeLog,v 1.21 2007/08/16 23:48:01 fang Exp $
+
+2007-08-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-54:
+	  Moved cast2hac docs to Texinfo.
+
 
 2007-08-15	David Fang		<fangism@users.sourceforge.net>
 

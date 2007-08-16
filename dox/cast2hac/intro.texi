@@ -1,0 +1,17 @@
+@c "cast2hac/intro.texi"
+@c $Id: intro.texi,v 1.1 2007/08/16 23:48:12 fang Exp $
+
+@node Introduction
+@chapter Introduction
+@cindex introduction
+@cindex CAST
+@cindex HAC
+@cindex HACKT
+
+The purpose of this document is to assist @CAST{} users in migrating
+old sources to the HAC language for use with the @HACKT{} tools.  
+This document assumes the reader is already familiar with the @CAST{} language
+and some of its tools.  
+This guide does not cover the new features of the @HAC{} language; 
+those are covered in the language reference.  
+

@@ -1,0 +1,81 @@
+@c "cast2hac/connections.texi"
+@c $Id: connections.texi,v 1.1 2007/08/16 23:48:10 fang Exp $
+
+@node Connections
+@chapter Connections
+@cindex connections
+
+@menu
+* Scalar instance connections::
+* Arrayed connections::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Scalar instance connections
+@section Scalar instance connections
+@cindex scalar connections
+
+@CAST{} allowed a definition to be connected with fewer port arguments than
+port parameters, assuming that the trailing ports remain 
+unconnected externally.  
+@HAC{} forbids this error-prone mismatch, and requires one to pass in
+blanks in place of all unconnected ports, even trailing ports.  
+
+For example, given a @kwdefproc{} (@kwdefine{}) @t{inv} with three
+@bool{} (@t{node}) ports and external nodes @t{x, y, z}, 
+@c Table~\ref{tab:ports} 
+The following table
+shows what declaration connections are legal:
+
+@c \caption{Examples of legal and illegal port connections}
+@multitable @columnfractions .4 .3 .3
+@headitem declaration @tab @CAST{} @tab @HAC{}
+@item @code{inv x;} @tab valid @tab valid
+@item @code{inv x();} @tab valid @tab invalid
+@item @code{inv x(x, y, z);} @tab valid @tab valid
+@item @code{inv x(x, y);} @tab valid @tab invalid
+@item @code{inv x(x);} @tab valid @tab invalid
+@item @code{inv x(x, , z);} @tab valid @tab valid
+@item @code{inv x(x, , );} @tab valid @tab valid
+@item @code{inv x(x, y, );} @tab valid @tab valid
+@end multitable
+
+The three invalid @HAC{} examples are invalid because
+the definition of @t{inv} requires exactly three port arguments, 
+where only fewer were given.  
+
+The above examples show a declaration with port connection in one statement.
+@HAC{} allows declarations and port connections to be decoupled, 
+so the following examples would be legal:
+
+@example
+bool i, o;
+inv x;
+x(i, o);
+inv y;
+y(i, );
+y(, o);
+y( , );
+@end example
+
+@c ----------------------------------------------------------------------------
+@node Arrayed connections
+@section Arrayed connections
+
+@HAC{} forbids the declaration of an array with port connections
+in the same statement@footnote{The rationale behind this decision
+is to disambiguate sparsely indexed declarations and arrayed connections.
+Most likely, such statements would form as the result of an error
+in translating from @CAST{}.}.  
+For example, @samp{inv x[4](i, o);} is invalid.  
+Given an array, one should declare the array up front and then
+connect the ports in a loop.  
+
+@example
+bool i[4], o[4];
+inv x[4];
+(;j:4:
+  x[j](i[j], o[j]);
+)
+@end example
+

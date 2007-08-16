@@ -1,0 +1,62 @@
+@c "cast2hac/arrays.texi"
+@c $Id: arrays.texi,v 1.1 2007/08/16 23:48:05 fang Exp $
+
+@node Arrays
+@chapter Arrays
+@cindex arrays
+@cindex sparse arrays
+@cindex dense arrays
+
+In @CAST{}, the dimensions were declared between the type-identifier
+and the instance-identifier.  
+Arrays in @HAC{} are syntactically C-style, where the dimensions of the 
+array follow the array's identifier.  
+
+Sparse arrays are also supported but with different syntax.  
+In @HAC{}, sparse arrays are @emph{always} declared using a range
+expression in the indices.  
+e.g. @samp{inv x[1..1];} declares a sparse 1D array populated at index 1.  
+(Yes, some of you may find this inconvenient.)
+
+@c Table~\ref{tab:arrays} 
+The following table
+shows some examples of equivalent declarations in
+@CAST{} and @HAC{}, where @t{inv} is defined as a type.  
+
+Examples of dense and sparse array declarations:
+@multitable @columnfractions .25 .25 .50
+@headitem @CAST{} @tab @HAC{} @tab meaning
+@item @code{inv[2] x;}
+@tab @code{inv x[2];}
+@tab 1D array with indices 0..1
+@item @code{inv[2] x, y;}
+@tab @code{inv x[2], y[2];}
+@tab 2 1D arrays with indices 0..1
+@item @code{inv[2][3] x;}
+@tab @code{inv x[2][3];}
+@tab 2D array with indices 0..1,0..2
+@item @code{inv x[2];}
+@tab @code{inv x[2..2];}
+@tab sparse 1D array indexed 2 only
+@item @code{inv x[2..4];}
+@tab @code{inv x[2..4];}
+@tab sparse 1D array indexed 2..4
+@item @code{inv x[2], x[4];}
+@tab @code{inv x[2..2], x[4..4];}
+@tab sparse 1D array indexed 2, 4 only
+@end multitable
+
+@cindex port connection
+@cindex sparse arrays
+@cindex dense arrays
+A common pitfall is to declare sparse index of an array and pass port
+connections in the same statement, such as: @samp{inv w[2](x, y, z);}.
+This illegal statement tries to declare an @emph{array} indexed 0..1, 
+and connect both instances with the same port parameters.  
+In @HAC{}, one cannot declare a collection and connect its ports
+in the same statement as in @CAST{}, however, one may declare a scalar instance
+and connect its ports in the same statement.  
+The proper way to instantiate and connect a sparse instance
+is to use a sparse range, just like in a sparse declaration:
+@samp{inv w[2..2](x, y, z);}.  
+

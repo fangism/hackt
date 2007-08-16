@@ -1,0 +1,63 @@
+@c "cast2hac/types.texi"
+@c $Id: types.texi,v 1.1 2007/08/16 23:48:14 fang Exp $
+
+@node Types
+@chapter Types
+@cindex types
+
+@menu
+* Fundamental Types:: basic types
+* User-defined Types:: structures
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Fundamental Types
+@section Fundamental Types
+@cindex pbool
+@cindex pint
+@cindex preal
+@cindex int (CAST)
+@cindex bool (CAST)
+@cindex node (CAST)
+
+The names of the primitive types have changed.  
+Types that correspond to compile-time meta parameters are prefixed with `p', 
+such as @pint{} and @pbool{}.  
+
+Here is a summary of changes in fundmental types from @CAST{} (first column)
+to @HAC{} (second column).
+
+@c TODO: formatting nicely in latex?
+
+@cindex fundamental types
+@multitable {xxxxxx} {xxxxxx}
+@headitem @CAST{}
+@tab @HAC{}
+@item @t{node}
+@tab @bool{}
+@item N/A
+@tab @Int{}
+@item @Int{}
+@tab @pint{}
+@item @bool{}
+@tab @pbool{}
+@item N/A
+@tab @preal{}
+@end multitable
+
+The new types @preal{} and @Int{} are explained in 
+the @HAC{} language reference.  
+
+@c ----------------------------------------------------------------------------
+@node User-defined Types
+@section User-defined Types
+@cindex structure types
+
+For the purposes of migrating from @CAST{}, we restrict our attention
+in the rest of this document to @emph{processes}, 
+the only kind of user-defined metaclass in @CAST{}.  
+@HAC{} supports data and channel metaclasses, 
+which have no equivalent in @CAST{}.  
+@c Section~\ref{sec:definitions} 
+@ref{Definitions},
+describes the changes in defining processes.  

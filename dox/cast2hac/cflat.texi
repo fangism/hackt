@@ -1,0 +1,101 @@
+@c "cast2hac/cflat.texi"
+@c $Id: cflat.texi,v 1.1 2007/08/16 23:48:09 fang Exp $
+
+@node Legacy Tools
+@chapter Legacy Tools
+@cindex legacy tools
+@cindex cflat
+@cindex hflat
+
+The old @CAST{} tools all started with a source processor called
+@command{cflat} which translated top-level instances into a text stream of the 
+flattened representation to be fed into subsequent tools in the toolchain.  
+In this section, we describe how to migrate away from some of the tools or 
+use the @HAC{} front-end as a backward-compatible replacement 
+for @command{cflat}.  
+
+The replacement, @command{hackt cflat} or @command{hflat}, features options
+similar to those of the original @command{cflat}.  
+Instead of running @samp{cflat -<@i{mode}> <@i{castfile}>}
+to produce flattened output, one now can now run
+@samp{hflat <mode> <objfile>}, where @i{objfile} is a 
+compiled @HAC{} object file.  
+For example, @samp{cflat -prsim foo.cast} would now be run as
+@samp{hflat prsim foo.haco}.  
+
+Running @command{hflat} with no arguments will produce a list of the various
+present modes and format flags available as command-line options.  
+All the formats used by the legacy tools come as named presets.  
+Further fine-tuning of the output format can be controlled by individual
+@option{-f <flag>} command-line options.  
+
+@menu
+* PRS Simulation::
+* LVS:: layout verification
+* CHPSIM:: CHP simulator
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Simulation
+@section PRS Simulation
+@cindex prsim
+@cindex hacprsim
+@cindex hflat
+
+To produce production rules suitable for simulation with the old 
+@command{prsim} simulator, simply invoke:
+@samp{hflat prsim <objfile>}, where @i{objfile} contains compiled
+top-level instances and definitions.  
+If the object file is not already created and allocated, 
+the flattener will automatically do so (possibly catching and 
+reporting errors from the later compile phases) before producing
+the flattened output.  
+The flattener produces a list of all instantiated production rules
+and connections in human-readable text, which can be redirected to a file
+or piped straight into the old @command{prsim}.  
+
+There is also a completely rewritten production rule simulator named
+(you guessed it) @command{hackt prsim}, or just @command{hacprsim}.  
+It emulates the behavior of the old @command{prsim} and provides new features.
+There (is, will be) a separate document for the new version, 
+coming to a documentation directory near you.  
+Very little documentation is required because there is a help system
+built into the program.  
+A list of all commands with one-line descriptions can be browsed
+by running @samp{hacprsim -h} with no other arguments.  
+In the interpreter, help for any command or category can be viewed
+by typing @samp{help <command>} at the prompt.  
+
+
+@c ----------------------------------------------------------------------------
+@node LVS
+@section LVS
+@cindex LVS
+@cindex cast2lvs
+@cindex hflat
+
+There was once a wrapper script named @command{cast2lvs} which 
+flattened a single instance of a given type in the top-level, 
+ignoring all other top-level instances.  
+This is particularly useful for being able to LVS definitions and cells
+hierchically from the leaf-cells up, facilitating efficient 
+layout verification.  
+The new mechanism to emulate @command{cast2lvs} is to use:
+@samp{hflat lvs -t <type> <objfile>}, 
+where @i{type} is the name of the complete type
+(with template arguments, if applicable), and @i{file} is the object file
+containing the compiled definition to unroll.  
+The object file need not contain any top-level instances, 
+which means it does not need to be unrolled.  
+Top-level instances are simple ignored with 
+the @option{-t type} option is used.  
+Recommendation: redirect the resulting output to a @file{.lvsprs} file
+or pipe it straight into the old @command{lvs} program.  
+
+@c ----------------------------------------------------------------------------
+@node CHPSIM
+@section CHPSIM
+@cindex chpsim
+
+For the CHP simulator, consult the @file{hacchpsim.@{info,pdf,ps@}} manuals.
+

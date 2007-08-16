@@ -1,0 +1,53 @@
+@c "cast2hac/CHP.texi"
+@c $Id: CHP.texi,v 1.1 2007/08/16 23:48:03 fang Exp $
+
+@node CHP
+@chapter CHP
+
+The CHP language, based on Hoare's CSP, 
+is slightly different in @HAC{} than in @CAST{}.
+@c ~\cite{ref:csp}.  
+
+@menu
+* CHP Lexical Conventions::
+* CHP Grammar::
+* New CHP Features::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node CHP Lexical Conventions
+@section Lexical Conventions
+
+In @HAC{}, @chpendprobsel{} is a token for ``end probabalistic selection,''
+thus, if the dividend of a modulus expression is indexed
+(ending with a @t{]}), then an extra space is required.
+For example, @samp{x[i]%2} must be written as
+@samp{x[i] %2}.
+
+@c ----------------------------------------------------------------------------
+@node CHP Grammar
+@section CHP Grammar
+
+Nondeterministic selections are delimited by @t{:} in @HAC{}, 
+whereas they were delimited by @t{|} in @CAST{}.  
+
+
+In @CAST{}, send and receive actions were written as:
+@samp{X!x} or @samp{Y!z}, but in @HAC{}, send and receive arguments must be
+enclosed within parenthesis like function call arguments:
+@samp{X!(x)} or @samp{Y!(z)}.  
+Rationale: syntactic consistency and disambiguation with the 
+concurrency operator (comma).  
+
+@HAC{} supports receive actions that do not write to any variables.
+@samp{Y?} acknowledges channel @t{Y} without writing its values.  
+
+@c ----------------------------------------------------------------------------
+@node New CHP Features
+@section New Features
+
+Compile-time meta-parameter repetitive expansions:
+see the @HAC{} Language documentation's CHP chapter.  
+
+Includes loops for concurrency, sequence, and selection statements.
+

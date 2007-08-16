@@ -1,14 +1,14 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2007/08/15 19:54:50 fang Exp $
+#	$Id: Makefile.am,v 1.9 2007/08/16 23:48:14 fang Exp $
+
+include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hacchpsim.pdf
 # deprecated:
-noinst_DATA = chpsim-tex.pdf chpsim-tex.ps
+noinst_DATA += chpsim-tex.pdf chpsim-tex.ps
 PSS = $(PDFS:.pdf=.ps)
 
 .NOTPARALLEL: chpsim-tex.pdf chpsim-tex.dvi
-
-include $(top_srcdir)/dox/Make.dox-head
 
 # have to add these by hand? :S
 EXTRA_DIST += \
@@ -23,19 +23,7 @@ INFOS = $(TEXINFOS:.texi=.info)
 
 # install doesn't know how to handle generated html *directory* :(
 # html_DATA = hacchpsim.html
-HTML_HOOKS = hacchpsim.html
-noinst_DATA += $(HTML_HOOKS)
-# workaround: use install hooks
-install-data-hook: $(HTML_HOOKS)
-	$(mkdir_p) $(DESTDIR)$(htmldir) ; \
-	for d in $^ ; do \
-	  $(CP) -r $$d $(DESTDIR)$(htmldir)/$$d ; \
-	done
-
-uninstall-hook:
-	for d in $(HTML_HOOKS) ; do \
-	  $(RM) -r $(DESTDIR)$(htmldir)/$$d ; \
-	done
+HTML_HOOKS += hacchpsim.html
 
 hacchpsim_INCLUDES = \
 	intro.texi \
@@ -44,11 +32,6 @@ hacchpsim_INCLUDES = \
 	extending.texi \
 	execution.texi \
 	stdchpfn.texi
-
-EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
-	$(AWK) '{printf(" \\\n\t$$(srcdir)/" $$1);}'
-#	$(AWK) '{printf(" \\\n\t" $$1);}'
-# need $(srcdir) to force it to look there w/o relying on VPATH
 
 # HACCHPSIM_OPTIONS_TEXI = ...
 # HACCHPSIM_COMMANDS_TEXI = ...

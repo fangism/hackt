@@ -1,0 +1,42 @@
+@c "cast2hac/spec.texi"
+@c $Id: spec.texi,v 1.1 2007/08/16 23:48:13 fang Exp $
+
+@node Spec Directives
+@chapter Spec Directives
+@cindex spec directives
+
+The @t{spec} sub-language in @HAC{} is a generalized version
+of the @t{spec} bodies in @CAST{}.  
+See the SPEC language chapter in the @file{hac.pdf} language reference.  
+
+Spec directives may be parameterized in @HAC{}, 
+and arguments may be passed in groups. 
+
+@menu
+* Porting SPEC from CAST::
+@end menu
+
+@node Porting SPEC from CAST
+@section Porting from CAST
+
+This section describes some common uses of spec-directives
+in migrating from @CAST{} to @HAC{}.  
+
+@cindex hacprsim
+@cindex prsim
+@cindex CHECK_CHANNELS
+@cindex exclhi
+@cindex excllo
+@t{CHECK_CHANNELS} production rules may be replaced 
+with @t{exclhi} and @t{excllo} directives, 
+which are used by @command{hacprsim} for built-in checking
+of mutual exclusion at run-time.  
+
+@cindex mk_exclhi
+@cindex mk_excllo
+Forced exclusive high/low rings, 
+which used to be @emph{inside PRS} bodies, 
+were declared as @t{exclhi} and @t{excllo}.  
+In @HAC{}, they are now the @t{mk_exclhi} and @t{mk_excllo} 
+spec directives.  
+

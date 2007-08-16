@@ -1,0 +1,210 @@
+@c "cast2hac/PRS.texi"
+@c $Id: PRS.texi,v 1.1 2007/08/16 23:48:04 fang Exp $
+
+@node PRS
+@chapter PRS
+@cindex PRS
+
+The syntax for normal production rules in the PRS language 
+is the same as in @CAST{} and @HAC{}.
+See the PRS chapter of the Language Reference @file{hac.pdf}.
+
+(Look at examples in the source @file{test/parser/prs}!)
+
+@menu
+* PRS Loop Rules::
+* PRS Conditional Rules::
+* PRS Loop Expressions::
+* PRS Rule Macros::
+* PRS Rule Attributes::
+* PRS Sized Literals::
+* PRS Miscellaneous::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Loop Rules
+@section Loop Rules
+@cindex PRS loops
+@cindex PRS loop rules
+@cindex loop rules in PRS
+
+In @CAST{}, loops of rules could be written like:
+
+@example
+<i:N:
+  ~x[i] | ~z -> y[i]+
+>
+@end example
+
+The enclosing loop syntax is slightly different in @HAC{}.
+The above example would be re-written as:
+
+@example
+(:i:N:
+  ~x[i] | ~z -> y[i]+
+)
+@end example
+
+Again, rule loops may be nested arbitrarily deep.  
+The notation @t{:N:} is also equivalent to @t{:0..N-1:}.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Conditional Rules
+@section Conditional Rules
+@cindex conditional rules
+@cindex PRS conditionals
+
+In @CAST{}, conditional production rules could be written inside
+PRS bodies as follows:
+
+@example
+prs @{
+[pred ->
+  x -> y-
+]
+@}
+@end example
+
+If the predicate @i{pred} evaluates true during the unroll compile phase, 
+then the body is processed, otherwise it is skipped.  
+In @HAC{}, the syntax remains unchanged apart from the syntax of
+PRS expressions in the predicate.  
+@HAC{} also allows an optional else clause in the conditional body:
+
+@example
+[pred ->
+  x -> y-
+[] else ->
+  z -> y-
+]
+@end example
+
+@noindent
+where in @CAST{}, one had to explicitly write the predicates complement
+in a separate conditional to achieve else-semantics.  
+
+In @CAST{}, conditional PRS bodies could appear inside instance-level 
+conditionals and loops, such as:
+
+@example
+[pred ->
+  prs @{
+    ...
+  @}
+]
+@end example
+
+@noindent
+however, in @HAC{}, language bodies including PRS are forbidden
+inside loops and conditionals.  
+Use the loop and conditional constructs native to the PRS sub-language.  
+Conditional bodies and loops in the PRS may be nested inside each other.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Loop Expressions
+@section Loop Expressions
+@cindex loop expressions
+@cindex PRS expression loops
+
+In @CAST{}, one could generalize an operator expression 
+in the following manner:
+
+@example
+<&i:N: x[i] >  -> y-
+@end example
+
+The LHS expression is the conjunction (AND) of nodes 
+@t{x[0]} through @t{x[N-1]}.  
+@HAC{} also provides an equivalent construct:
+
+@example
+(&:i:N: x[i] )  -> y-
+@end example
+
+The other operator which may be used in a loop expression is \prsor\ (OR).
+
+@c ----------------------------------------------------------------------------
+@node PRS Rule Macros
+@section Rule Macros
+@cindex PRS macros
+@cindex PRS rule macros
+@cindex macros in PRS
+
+Please read this section carefully.  
+
+Macros in PRS may be shorthand for other expanded rules or 
+they may mean something different that isn't expressible in
+the PRS base language.  
+@CAST{} provided some built-in macros into its PRS language, 
+which have been relocated into @HAC{}'s
+@t{spec} language (@ref{Spec Directives}).  
+For example, given @samp{exclhi(x,y)} in @CAST{}-PRS 
+(not to be confused with @CAST{}-spec's @t{exclhi}), 
+the result of @command{cflat} would direct @command{prsim} to 
+force nodes @{x,y@} to be exclusive high at all times.  
+Namely the @t{exclhi}, @t{excllo} PRS macros have been
+renamed as @t{mk_exclhi} and @t{mk_excllo} @emph{spec} directives.  
+Q: were there any other PRS macros in @CAST{}?
+
+@HAC{} has added support for emulating unidirectional pass-gates:
+@t{passn} and @t{passp}.
+The interpretation of these macros is tool-dependent.  
+
+Developers may define their own PRS macros by following the examples
+in the source code.  
+Generalized macros also support a syntax for taking parameter values
+as arguments in addition to instance references.  
+(We refrain from getting into that for this document.)
+
+@c ----------------------------------------------------------------------------
+@node PRS Rule Attributes
+@section Rule Attributes
+@cindex PRS rule attributes
+@cindex PRS attributes
+@cindex attributes in PRS
+
+(I don't know the grammar for rule attributes in @CAST{}.)
+In @HAC{}-PRS, production rules may be tagged with an
+arbitrary number of attributes.  
+
+The most common example is the @t{after} delay attribute, which
+was written in @CAST{}:
+
+@example
+after 100  p -> q+
+@end example
+
+which would now be written in @HAC{}:
+
+@example
+[after=100]  p -> q+
+@end example
+
+Attributes appear as a semicolon-delimited, square-bracket-enclosed list 
+of key-value pairs prefixing the rule.  
+An example of multiple attributes:
+
+@example
+[after=100;weak=1]  p -> q+
+@end example
+
+Attributes that appear before a loop-enclosed rule will apply to
+all iterations of the looped rule.  
+The expressions in attributes may be parameter-dependent or 
+induction-variable dependent, resulting in different values per iteration.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Sized Literals
+@section Sized Literals
+@cindex sized literals
+@cindex sizing of rules
+@cindex rule sizing
+
+Status: supported in syntax, but not used in any back-ends yet.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Miscellaneous
+@section Miscellaneous
+
+The @HAC{} language no longer supports the @t{env} sub-language.  
+

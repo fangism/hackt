@@ -1,0 +1,97 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename cast2hac.info
+@settitle CAST to HAC Migration Guide
+@c `on' is the default
+@setchapternewpage odd
+@c for two-sided book-style printing
+@c %**end of header
+
+@c "cast2hac.texi"
+@c $Id: cast2hac.texi,v 1.1 2007/08/16 23:48:08 fang Exp $
+
+@copying
+This document describes language and tool migration from old CAST to
+HAC tools.  
+
+Copyright @copyright{} 2007 Cornell University
+
+@quotation
+Published by ...
+ 
+Permission is hereby granted to ...
+@end quotation
+@end copying
+
+@c Title page and Copyright
+@titlepage
+@title CAST to HAC Migration Guide
+@author David Fang
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ****************************** macros **************************************
+@include hacmacros.texi
+@c @include ../common/hacmacros.texi
+
+@c ****************************** contents ************************************
+@shortcontents
+@contents
+
+
+@c ****************************** Top *****************************************
+@ifnottex
+@node Top
+@top CAST to HAC Migration Guide
+@insertcopying
+@end ifnottex
+
+@c @copying is recommended here as well
+@menu
+* Introduction:: Introduction to the guide.
+* Types:: Type system.
+* Definitions:: Type definitions.
+* Instances:: Type instances.
+* Arrays:: instance and value arrays.
+* Connections:: connection statements.
+* Loops:: repetition constructs.
+* Templates:: definition re-use.
+* Typedefs:: definition aliases.
+* PRS:: production rule sets.
+* CHP:: communicating hardware processes.
+* Spec Directives:: specification language.
+* Legacy Tools:: legacy tools.
+* Concept Index:: Concepts and terms.
+@end menu
+
+@c ****************************** chapter *************************************
+@include intro.texi
+@include types.texi
+@include definitions.texi
+@include instances.texi
+@include arrays.texi
+@include connections.texi
+@include loops.texi
+@include templates.texi
+@include typedefs.texi
+@include PRS.texi
+@include CHP.texi
+@include spec.texi
+@include cflat.texi
+
+@c ****************************** index ***************************************
+@ignore
+@node Command Index
+@unnumbered Command Index
+@printindex fn
+@end ignore
+
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@c ****************************** finis ***************************************
+@bye
+

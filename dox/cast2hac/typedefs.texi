@@ -1,0 +1,76 @@
+@c "cast2hac/typedefs.texi"
+@c $Id: typedefs.texi,v 1.1 2007/08/16 23:48:14 fang Exp $
+
+@node Typedefs
+@chapter Typedefs
+@cindex typedef
+@cindex type alias
+
+Type aliases or @emph{typedefs} were not supported in @CAST{}, 
+but are worth mentioning as a new feature of @HAC{}.  
+Like in C, typedefs are a mechanism for giving user-defined names
+to an existing type.  
+(TODO: discuss the benefits of style.)
+If one really wanted to use @t{node} and @bool{} as the same type, 
+one could write: @samp{typedef bool node;}
+and use @t{node} interchangeably with @bool{}.  
+
+The real benefit is being able to bind definitions templates
+to new definitions that just forward template arguments to
+underlying types.  
+
+In the library @file{channel.hac}, we see the following example:
+
+@example
+template <pint N>
+defproc e1of (bool d[N], e) @{ ... @}
+
+typedef	e1of<2> e1of2;
+@end example
+
+This declarations defines type @t{e1of2} to be an alias
+to the complete type @t{e1of<2>}.  
+In @CAST{}, @t{e1of(2)} and @t{e1of2} are different definitions and hence,
+could not be equivalent types.  
+Connecting them required connecting their public port members, 
+which was an inconvenience when mixing template types with non-template types.  
+More common examples can be found in the library @file{env.hac}.  
+
+@menu
+* Typedef Templates::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Typedef Templates
+@section Typedef Templates
+@cindex typedef templates
+
+Typedefs themselves may be templated, as best illustrated by 
+the following example:
+
+@example
+template <pint N, M>
+defproc matrix(bool x[N][M]) @{ ... @}
+
+template <pint L>
+typedef matrix<1, L> row;
+
+row<3> a_row_of_length_3;
+
+template <pint H>
+typedef matrix<H, 1> col;
+
+col<3> a_col_of_height_3;
+
+template <pint N>
+typedef matrix<N, N> square;
+
+square<2> a_2x2_square_matrix;
+@end example
+
+The typedef template feature is useful for binding selected parameters
+of highly generalized template definitions to conveniently
+reduce the number of parameters.  
+
+Q: Can typedef templates be defined with default parameter values?
+

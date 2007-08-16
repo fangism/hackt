@@ -1,0 +1,18 @@
+@c "cast2hac/instances.texi"
+@c $Id: instances.texi,v 1.1 2007/08/16 23:48:11 fang Exp $
+
+@node Instances
+@chapter Instances
+@cindex instances
+@cindex instances, named
+@cindex anonymous instances
+
+@CAST{} allowed declarations of instances to be anonymous, 
+which would result in automatically generated names such as @t{_a_0}.
+@HAC{}, however, requires all instances to be named.  
+Anonymous instances were sometimes used to declare 
+arrays of a particular type without namimng the instances.
+@c Now, declarations of instances must be named up front.  
+(Example?)
+
+

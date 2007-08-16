@@ -1,0 +1,58 @@
+@c "cast2hac/loops.texi"
+@c $Id: loops.texi,v 1.1 2007/08/16 23:48:13 fang Exp $
+
+@node Loops
+@chapter Loops
+@cindex loops
+
+@menu
+* Loop instantiations and connections::
+* PRS Loops::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Loop instantiations and connections
+@section Loop instantiations and connections
+@cindex loop instantiation
+@cindex loop connection
+
+In @CAST{}, the an example of a loop statement in the meta-language
+might look like:
+
+@example
+<i:N:
+  inv z[i];
+  x[i] = y[i];
+>
+@end example
+
+The equivalent in @HAC{} would look like:
+
+@example
+(;i:N:
+  inv z[i..i];
+  x[i] = y[i];
+)
+@end example
+
+The main difference is the use of parentheses instead of 
+angle brackets and an extra semicolon operator.  
+Notice that the declaration of @t{z} in the loop uses
+an explicit range to declare each sparse instance 
+in the collection (@ref{Arrays}).  
+(It is highly recommended to keep declarations outside of 
+loops where possible, leaving only connection statements inside loops.)
+
+@cindex loops, nested
+@cindex nested loops
+Like in @CAST{}, loops may be nested arbitrarily deep and
+may be nested with conditional bodies.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Loops
+@section PRS Loops
+
+Do @emph{NOT} write PRS bodies inside loops, the semantics are currently
+undefined.  The PRS sub-language includes a similar loop syntax, 
+described in @ref{PRS Loop Rules}.  
+

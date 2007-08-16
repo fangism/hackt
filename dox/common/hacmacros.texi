@@ -1,0 +1,107 @@
+@c "macros.texi"
+@c $Id: hacmacros.texi,v 1.1 2007/08/16 23:48:15 fang Exp $
+@c Eventually share this file across several documents
+
+@c ****************************** macros **************************************
+@macro bool
+@t{bool}
+@end macro
+
+@macro Int
+@t{int}
+@end macro
+
+@macro pbool
+@t{pbool}
+@end macro
+
+@macro pint
+@t{pint}
+@end macro
+
+@macro preal
+@t{preal}
+@end macro
+
+@macro CAST
+CAST
+@end macro
+
+@macro HAC
+HAC
+@end macro
+
+@macro HACKT
+HACKT
+@end macro
+
+@macro kwdefine
+@t{define}
+@end macro
+
+@macro kwdefproc
+@t{defproc}
+@end macro
+
+@macro kwdefchan
+@t{defchan}
+@end macro
+
+@macro kwdefdata
+@t{defdata}
+@end macro
+
+
+@macro chpbeginloop
+@t{*[}
+@end macro
+
+@macro chpendloop
+@t{]}
+@end macro
+
+@macro chpendprobsel
+@t{]%}
+@end macro
+@c probe?
+
+@macro prsand
+@t{&}
+@end macro
+
+@macro prsor
+@t{|}
+@end macro
+
+@macro prsnot
+@t{~}
+@end macro
+
+@macro prsup
+@t{+}
+@end macro
+
+@macro prsdn
+@t{-}
+@end macro
+
+@macro prsrarrow
+@t{->}
+@end macro
+
+@macro prslarrow
+@t{<-}
+@end macro
+
+@macro prscarrow
+@t{=>}
+@end macro
+
+@macro prsrarrowup
+@t{+>}
+@end macro
+
+@macro prslarrowup
+@t{<+}
+@end macro
+
