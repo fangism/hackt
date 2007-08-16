@@ -1,13 +1,10 @@
 # "Make.test-unroll"
 #	vi: ft=automake
-#	$Id: Make.test-unroll,v 1.7 2007/08/16 06:11:06 fang Exp $
+#	$Id: Make.test-unroll,v 1.8 2007/08/16 20:36:28 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
-
-# obsolete:
-# HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
 
 if USE_UNROLL_PHASE
 HACKT_UNROLL_SUFFIXES = .haco-u \

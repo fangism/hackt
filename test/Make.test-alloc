@@ -1,14 +1,10 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.8 2007/08/16 06:11:05 fang Exp $
+#	$Id: Make.test-alloc,v 1.9 2007/08/16 20:36:27 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
-
-# obsolete:
-# HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
-# HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
 
 # TODO: organize this file by test, and accumulate variables
 
@@ -164,25 +160,6 @@ allocfailtest.autodepend: Makefile
 
 -include allocfailtest.autodepend
 
-
-# .hac.hacktalloctest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_ALLOC_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-#		$* "\"$(ALLOC_FILTER)\"" \
-#		"\"$(ANALYZE_DIFF_AWK)\"" \
-#		"\"$(POM_INDEX_FILTER)\"" >> $@
-#	@$(CHMOD) +x $@
-
-# does a 3-way difference test
-# .hac.hacktallocfromhacotest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_ALLOC_FROM_HACO_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
-#		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-#		$* "\"$(ALLOC_FILTER)\"" >> $@
-#	@$(CHMOD) +x $@
 
 .haco-a-from-haco.alloc-from-haco-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)

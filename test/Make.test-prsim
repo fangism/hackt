@@ -1,17 +1,10 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.10 2007/08/16 06:11:06 fang Exp $
+#	$Id: Make.test-prsim,v 1.11 2007/08/16 20:36:28 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
-
-# obsolete:
-# HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
-# HACKT_PRSIMRC_TEST_SH = $(TEST_BUILDDIR)/hackt-prsimrc-expect.sh
-# HACKT_PRSIM_CKPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-ckpt.sh
-# HACKT_PRSIM_OPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-opt.sh
-# HACKT_PRS_DOT_TEST_SH = $(TEST_BUILDDIR)/hackt-prs-dot-test.sh
 
 HACKT_PRSIM_SUFFIXES = \
 	.prsimrc .prsimrc-out .prsimrc-out-filter .prsimrc-diff \
@@ -80,12 +73,6 @@ PRSIMCKPT_LOAD_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimckpt-load-template.prsimrc
 .haco-a.prs-dot-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
 
-# .hac.hacktprsdottest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_PRS_DOT_TEST_SH) $* >> $@
-#	@$(CHMOD) +x $@
-
 .prsimexpr-O1.hacktprsdottest:
 	@$(DUMMY_TEST_SCRIPT)
 
@@ -101,13 +88,6 @@ hacktprsdottest.autodepend: Makefile
 	$(TOUCH) $@
 
 -include hacktprsdottest.autodepend
-
-# .hac.hacktprsimexprtest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_PRSIMEXPR_TEST_SH) "\"$(HACKT_PRSIM_EXE)\"" \
-#		$(srcdir) $* >> $@
-#	@$(CHMOD) +x $@
 
 if VERBOSE_CHECK
 ECHO_PRSIMEXPR_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
@@ -143,18 +123,6 @@ prsimexprtest.autodepend: Makefile
 
 .hacktprsimexprtest:
 	@$(DUMMY_TEST_SCRIPT)
-
-
-# .prsimrc.prsimtest:
-# 	@$(ECHO) "#!$(SHELL)" > $@ ; \
-# 	$(ECHO) "# \"$@\"" >> $@ ; \
-# 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-# 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" \
-# 		"\"$(PRSIMRC_FILTER_AWK)\"" \
-# 		"\"$(PRSIMRC_TIME_FILTER_AWK)\"" >> $@ ; \
-# 	$(CHMOD) +x $@
-
-# semi-hackish way to conditionally filter random timing
 
 # touch is needed if the redirected output is empty
 PRSIMRC_TEST_SCRIPT = \
@@ -212,6 +180,7 @@ prsimrcfail-out.autodepend: Makefile
 -include prsimrc-out.autodepend
 -include prsimrcfail-out.autodepend
 
+# semi-hackish way to conditionally filter random timing
 # HACK: if the file name has 'random' in it, then filter out timestamps
 PRSIMRC_TEST_FILTER_SCRIPT = \
 	$(CAT) $< | \
@@ -295,23 +264,7 @@ prsimfailtest.autodepend: Makefile
 -include prsimtest.autodepend
 -include prsimfailtest.autodepend
 
-# .prsimrc.prsimckpttest:
-#	@$(ECHO) "#!$(SHELL)" > $@ ; \
-#	$(ECHO) "# \"$@\"" >> $@ ; \
-#	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-#	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@ ; \
-#	$(CHMOD) +x $@
-
 NO_OP_SCRIPT = test -f $< && test -f $@
-
-# .prsimrc.prsimckpt-outdump:
-#	@obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-#	ckpt=`$(ECHO) $@ | $(SED) 's/-outdump$$//g'` ; \
-#	$(ECHO) "ckpt: $(HACKT_PRSIM_EXE) -b -I$(srcdir) $$obj" ; \
-#	$(CAT) $(PRSIMCKPT_TEMPLATE_SCRIPT) | \
-#	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
-#	  $(HACKT_PRSIM_EXE) -b -I$(srcdir) "$$obj" 2>&1 | \
-#	  $(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' > $@
 
 .prsimrc-out.prsimckpt-outdump:
 	@$(SED) '/DELETE FROM HERE/,/DELETE TO HERE/d' $< > $@
@@ -382,13 +335,6 @@ prsimckpttest.autodepend: Makefile
 	$(TOUCH) $@
 
 -include prsimckpttest.autodepend
-
-# .prsimrc.prsimopttest:
-# 	@$(ECHO) "#!$(SHELL)" > $@ ; \
-# 	$(ECHO) "# \"$@\"" >> $@ ; \
-# 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
-# 	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@ ; \
-# 	$(CHMOD) +x $@
 
 PRSIMOPT_TEMPLATE_SCRIPT = $(TEST_SRCDIR)/prsimopt-template.prsimrc
 PRSIMOPT_FLAG = -O1

@@ -3,33 +3,24 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.81 2007/08/16 06:11:06 fang Exp $
+#	$Id: Make.test-tail,v 1.82 2007/08/16 20:36:28 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
-# HACKT_COMPILE_EXE = $(HACKT_EXE) compile
 HACKT_COMPILE_EXE = $(top_builddir)/src/haco
-# HACKT_FLATTEN_EXE = $(HACKT_EXE) flatten
 HACKT_FLATTEN_EXE = $(top_builddir)/src/hacpp
-# HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
 HACKT_OBJDUMP_EXE = $(top_builddir)/src/hacobjdump
 if USE_UNROLL_PHASE
-# HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
 HACKT_UNROLL_EXE = $(top_builddir)/src/hacunroll
 endif
-# HACKT_CREATE_EXE = $(HACKT_EXE) create
 HACKT_CREATE_EXE = $(top_builddir)/src/haccreate
-# HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
 HACKT_ALLOC_EXE = $(top_builddir)/src/hacalloc
-# HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
 HACKT_CFLAT_EXE = $(top_builddir)/src/hflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
 HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
 HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
-# HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 HACKT_PRSIM_EXE = $(top_builddir)/src/hacprsim
-# HACKT_CHPSIM_EXE = $(HACKT_EXE) chpsim
 HACKT_CHPSIM_EXE = $(top_builddir)/src/hacchpsim
 HACKT_GUILE_EXE = $(top_builddir)/src/hacguile
 HACKT_CHPSIM_GUILE_EXE = $(top_builddir)/src/hacchpsimguile
@@ -178,7 +169,6 @@ build-check-local: $(TESTS)
 # if we really cared we could subdivide this by the executable that
 # generated the output, e.g. haco, haccreate, hacalloc...
 # depending on the hackt dispatcher should cover everything
-# $(HAC_OBJECT_TARGETS): $(HACKT_EXE)
 $(HAC_COMPILE_OBJECT_TARGETS): $(HACKT_COMPILE_EXE)
 if USE_UNROLL_PHASE
 $(HAC_UNROLL_OBJECT_TARGETS): $(HACKT_UNROLL_EXE)
@@ -186,7 +176,6 @@ endif
 $(HAC_CREATE_OBJECT_TARGETS): $(HACKT_CREATE_EXE)
 $(HAC_ALLOC_OBJECT_TARGETS): $(HACKT_ALLOC_EXE)
 
-# $(HACKT_EXE): .libs
 
 HACGUILE_TARGETS = \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm-out) \
@@ -204,9 +193,6 @@ if HAVE_LIBGUILE
 $(HACCHPSIMGUILE_TARGETS): $(HACKT_CHPSIM_GUILE_EXE)
 endif
 
-# .libs: $(top_builddir)/src/.libs
-#	$(LN_S) $< $@
-
 ALL_OBJECT_TESTS = \
 	$(HACKT_PARSE_TEST_PASSES) \
 	$(HACKT_PARSE_TEST_WARNINGS) \
@@ -214,9 +200,7 @@ ALL_OBJECT_TESTS = \
 	$(HACKT_CHPSIMRC_TEST_SUBJECTS)
 
 HAC_OBJECT_DEPS = $(ALL_OBJECT_TESTS:=.depend)
-# HAC_OBJECT_DEPS = $(HAC_OBJECT_TARGETS:.haco=.depend)
 # $(HAC_OBJECT_DEPS): $(HACKT_EXE)
-# $(HAC_OBJECT_DEPS): .libs
 
 # source dependencies
 test.autodepend: Makefile
@@ -252,7 +236,6 @@ ALL_LOCAL =
 if AUTO_CVSIGNORE
 ALL_LOCAL += $(srcdir)/.cvsignore
 endif
-
 
 all-local: $(ALL_LOCAL)
 
@@ -321,7 +304,6 @@ cleaner-am: cleaner-local clean-am
 
 distclean-local: cleaner-local distclean-depend-local
 
-#TODO: use RECURSIVE_TARGET_SCRIPT
 MORE_CLEAN_RECURSIVE_TARGETS += cleaner-recursive
 
 .PHONY: cleaner cleaner-am cleaner-local check-summaries check-summaries-am \

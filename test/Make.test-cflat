@@ -1,16 +1,11 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.10 2007/08/16 06:11:05 fang Exp $
+#	$Id: Make.test-cflat,v 1.11 2007/08/16 20:36:28 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
 # should not be included by itself.  
 
-# obsolete:
-# HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
-# HACKT_CFLAT_LVS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-lvs-expect.sh
-# HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
-# HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
 
 HACKT_CFLAT_SUFFIXES = \
 	.prs .prsdiff .prs-sort .expect-prs .expect-prs-sort .prsdiff-sort \
@@ -71,13 +66,6 @@ AUTO_IGNORE += $(HACKT_CFLAT_CLEAN_IGNORE_PATTERNS)
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
 	@$(TOUCH) $@
-
-# .hac.hacktcflattest:
-# 	@$(ECHO) "#!$(SHELL)" > $@
-# 	@$(ECHO) "# \"$@\"" >> $@
-# 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
-# 		$(srcdir) $* >> $@
-# 	@$(CHMOD) +x $@
 
 OLD_PRSIM_TEST_SCRIPT =
 if HAVE_PRSIM
@@ -151,14 +139,6 @@ cflatprstest.autodepend: Makefile
 
 
 -include cflatprstest.autodepend
-
-
-# .hac.hacktcflatlvstest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_CFLAT_LVS_TEST_SH) "\"$(HACKT_CFLAT_LVS_EXE)\"" \
-#		$(srcdir) $* >> $@
-#	@$(CHMOD) +x $@
 
 if VERBOSE_CHECK
 ECHO_CFLAT_LVS_TYPE_COMMAND = $(ECHO) "$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@"
@@ -292,13 +272,6 @@ cflatlvsfailtest.autodepend: Makefile
 .haco-a.prsseu:
 	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
 
-# .hac.hacktcflatseutest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_CFLAT_SEU_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_SEU_EXE)\"" \
-#		$(srcdir) $* >> $@
-#	@$(CHMOD) +x $@
-
 .prsseu.prsseu-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
@@ -354,13 +327,6 @@ cflatprsseutest.autodepend: Makefile
 
 .haco-a.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
-
-# .hac.hacktsprstest:
-#	@$(ECHO) "#!$(SHELL)" > $@
-#	@$(ECHO) "# \"$@\"" >> $@
-#	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SH) "\"$(HACKT_CFLAT_SPRS_EXE)\"" \
-#		$(srcdir) $* >> $@
-#	@$(CHMOD) +x $@
 
 .sprs.sprs-sort:
 	$(DEFAULT_SORT_SCRIPT)
