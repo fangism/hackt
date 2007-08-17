@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.14 2007/08/17 00:36:33 fang Exp $
+#	$Id: Make.test-compile,v 1.15 2007/08/17 22:20:34 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -61,9 +61,16 @@ HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 #	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
 
 # -MD generates dependencies as a side-effect of preprocessing
-HACKT_CPP_FLAGS = $(HACO_FLAGS) -MP -MD -MF $@depend -MT $@
+# HACKT_CPP_FLAGS = $(HACO_FLAGS) -MP -MD -MF $@depend -MT $@
+HACKT_CPP_FLAGS = $(HACO_FLAGS) -MP -MD
+# workaround Apple's cpp bugs: -MF and -MT cause cpp to hang
 .hac-cpp.hac:
-	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $< > $@
+#	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $< > $@
+	$(CPP_TRADITIONAL) $(HACKT_CPP_FLAGS) $< | \
+		$(GREP) -v "^#pragma" > $@ ; \
+	$(SED) 's/^.*\.o:/$@:/' $*.d > $@depend ; \
+	$(RM) $*.d
+# does the same thing as -MF -MT
 
 # for making dependencies without normal preprocessing output
 # HACKT_CPP_MKDEPFLAGS = $(HACO_FLAGS) -MP -M -MF $@depend -MT $@

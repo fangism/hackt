@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.73 2007/08/16 20:39:16 fang Exp $
+#	$Id: ChangeLog,v 1.74 2007/08/17 22:20:34 fang Exp $
 # ChangeLog for test directory.
+
+2007-08-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-56:
+	  Make.test-compile: workaround Apple's cpp defects in .hac-cpp rule.
+
 
 2007-08-15	David Fang		<fangism@users.sourceforge.net>
 
