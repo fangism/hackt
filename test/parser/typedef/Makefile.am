@@ -1,5 +1,5 @@
 # "test/parser/typedef/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/12/01 23:30:39 fang Exp $
+#	$Id: Makefile.am,v 1.14 2007/08/17 00:46:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,24 +15,18 @@ HACKT_PARSE_TEST_PASSES = \
 # temporary adds until bug fixed
 EXTRA_DIST +=
 
-HACKT_UNROLL_TEST_PASSES = \
-	002 003 004 005 \
-	011 012 013 015 018 \
-	020
+# HACKT_UNROLL_TEST_PASSES = \
+#	002 003 004 005 \
+#	011 012 013 015 018 \
+#	020
 
-HACKT_UNROLL_TEST_FAILURES = \
+HACKT_CREATE_TEST_FAILURES = \
 	014 019
 
 HACKT_CREATE_TEST_PASSES = \
 	002 003 004 005 \
 	012 015 018 \
 	020
-
-HACKT_CREATE_TEST_FAILURES =
-if USE_UNROLL_PHASE
-else
-HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
-endif
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 

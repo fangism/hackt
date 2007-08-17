@@ -1,6 +1,0 @@
-FATAL: reference to bool with out-of-bounds indices [4]:[4]
-ERROR: unrolling aliases.
-ERROR: unrolling instance references in bool_connection::unroll().
-Instantiated from: foo<3>
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

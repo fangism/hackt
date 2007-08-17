@@ -1,5 +1,5 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/01/21 06:06:27 fang Exp $
+#	$Id: Makefile.am,v 1.17 2007/08/17 00:42:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,13 +15,13 @@ HACKT_PARSE_TEST_PASSES = \
 	021 022 023 026 027 028 029 \
 	030 031 033 037
 
-HACKT_UNROLL_TEST_PASSES = \
-	001 002 006 007 008 \
-	013 016 \
-	021 022 023 026 027 028 029 \
-	030 031 033
+# HACKT_UNROLL_TEST_PASSES = \
+#	001 002 006 007 008 \
+#	013 016 \
+#	021 022 023 026 027 028 029 \
+#	030 031 033
 
-HACKT_UNROLL_TEST_FAILURES = \
+HACKT_CREATE_TEST_FAILURES = \
 	037
 
 # omitted tests are uninteresting
@@ -37,12 +37,6 @@ HACKT_CREATE_TEST_PASSES = \
 # until they are well-defined in the language
 # (They were a nuisance to maintain because datatypes
 # don't have clear value or reference semantics.)
-
-if USE_UNROLL_PHASE
-HACKT_CREATE_TEST_FAILURES =
-else
-HACKT_CREATE_TEST_FAILURES = $(HACKT_UNROLL_TEST_FAILURES)
-endif
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 

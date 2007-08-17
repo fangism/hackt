@@ -1,3 +1,0 @@
-ERROR: Index [4] of foo already instantiated!
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

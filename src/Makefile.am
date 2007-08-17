@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.176 2007/08/15 19:54:53 fang Exp $
+#	$Id: Makefile.am,v 1.177 2007/08/17 00:36:20 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -53,9 +53,6 @@ bin_PROGRAMS = hackt haco haccreate hacalloc \
 if HAVE_LIBGUILE
 bin_PROGRAMS += hacguile hacchpsimguile
 endif
-if USE_UNROLL_PHASE
-bin_PROGRAMS += hacunroll
-endif
 # no need to name EXTRA_PROGRAMS = hacguile hacchpsimguile
 
 bin_SCRIPTS = scripts/init_hackt.csh scripts/init_hackt.sh
@@ -108,10 +105,6 @@ haco_CPPFLAGS = -DWITH_MAIN
 haco_LDADD = libhacktlib.la
 # goal: just libhacktparsers.la
 
-# haco: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
 
 hacobjdump_SOURCES = main/objdump.cc
 hacobjdump_CPPFLAGS = -DWITH_MAIN
@@ -121,52 +114,21 @@ hacpp_SOURCES = main/flatten.cc
 hacpp_CPPFLAGS = -DWITH_MAIN
 hacpp_LDADD = libhacktlib.la
 
-if USE_UNROLL_PHASE
-hacunroll_SOURCES = main/unroll.cc
-hacunroll_CPPFLAGS = -DWITH_MAIN
-hacunroll_LDADD = libhacktlib.la
-
-# hacunroll: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
-endif
-
 haccreate_SOURCES = main/create.cc
 haccreate_CPPFLAGS = -DWITH_MAIN
 haccreate_LDADD = libhacktlib.la
-
-# haccreate: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
 
 hacalloc_SOURCES = main/alloc.cc
 hacalloc_CPPFLAGS = -DWITH_MAIN
 hacalloc_LDADD = libhacktlib.la
 
-# hacalloc: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
-
 hflat_SOURCES = main/cflat.cc
 hflat_CPPFLAGS = -DWITH_MAIN
 hflat_LDADD = libhacktlib.la
 
-# hflat: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
-
 hacprsim_SOURCES = main/prsim.cc
 hacprsim_CPPFLAGS = -DWITH_MAIN
 hacprsim_LDADD = libhacktsim.la
-
-# hacprsim: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
 
 # enhanced with libtool/dlopen capability
 hacchpsim_SOURCES = main/chpsim.cc
@@ -177,11 +139,6 @@ hacchpsim_LDFLAGS = -export-dynamic
 # (only if symbols in executable needed to resolve from modules)
 
 main/chpsim.cc: install_paths.h
-
-# hacchpsim: $(top_builddir)/config.status
-#	@{ $(ECHO) "#!$(SH_PATH)" ; \
-#	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` chpsim \"$$""@\"" ;} > $@ ; \
-#	$(CHMOD) +x $@
 
 hacguile_SOURCES = main/guile.cc
 hacguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN
@@ -945,7 +902,6 @@ MAIN_EXEC_CC_FILES = \
 	main/parse_test.cc \
 	main/flatten.cc \
 	main/compile.cc \
-	main/unroll.cc \
 	main/create.cc \
 	main/alloc.cc \
 	main/cflat.cc \

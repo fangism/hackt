@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.11 2007/07/31 23:22:28 fang Exp $
+dnl	$Id: hackt.m4,v 1.12 2007/08/17 00:36:17 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -383,6 +383,7 @@ dnl if not given
 
 dnl @synopsis HACKT_ARG_ENABLE_UNROLL_PHASE
 dnl
+dnl Deprecated, and no longer used.
 dnl Phase out unroll compile phase.
 dnl Disables unroll tests.  
 dnl Eventually perm this.
@@ -393,7 +394,8 @@ dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_ENABLE_UNROLL_PHASE],
-[AC_MSG_CHECKING([whether or not to enable unroll phase])
+[AC_MSG_ERROR([This macro is obsolete, do not call it.])
+AC_MSG_CHECKING([whether or not to enable unroll phase])
 AC_ARG_ENABLE(unroll_phase,
 	AS_HELP_STRING([--enable-unroll-phase],
 		[Use (deprecated) unroll compile phase. (default=disabled)])

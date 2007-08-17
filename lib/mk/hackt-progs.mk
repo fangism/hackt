@@ -1,6 +1,6 @@
 # "mk/hackt-progs.mk"
 #	vi: ft=make
-#	$Id: hackt-progs.mk,v 1.3 2007/07/31 23:22:39 fang Exp $
+#	$Id: hackt-progs.mk,v 1.4 2007/08/17 00:36:17 fang Exp $
 # program variables
 
 # NOTE: program names have not been transformed (TODO?)
@@ -10,7 +10,6 @@ PARSE_TEST_EXE = $(HACKT_EXE) parse_test
 HACKT_COMPILE_EXE = haco
 # HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
 HACKT_OBJDUMP_EXE = hacobjdump
-# HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
 # HACKT_CREATE_EXE = $(HACKT_EXE) create
 HACKT_CREATE_EXE = haccreate
 # HACKT_ALLOC_EXE = $(HACKT_EXE) alloc

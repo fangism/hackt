@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2007/08/15 01:08:33 fang Exp $
+#	$Id: Makefile.am,v 1.19 2007/08/17 00:36:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -76,9 +76,6 @@ HACKT_FLATTEN_TEST_FAILURES = \
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 # HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)
-
-# should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
-# HACKT_UNROLL_TEST_SUBJECTS = $(HACKT_OBJ_TEST_SUBJECTS)
 
 # additional sources included by other test cases
 srcdir_EXTRA_DIST += empty.hac \

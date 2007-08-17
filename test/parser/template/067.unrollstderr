@@ -1,3 +1,0 @@
-ERROR: cannot unroll incomplete process type foo
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

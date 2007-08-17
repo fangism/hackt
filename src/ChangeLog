@@ -5,6 +5,14 @@
 
 2007-08-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-55:
+	  MASS PURGE: removed references and uses of unroll-phase, which was
+		slated as deprecated a long time ago.
+		Removed from configure script, and test suite cases, 
+		and test Makefile templates, library Makefile templates,
+		and documentation.
+
+
 	* HACKT-00-01-04-main-00-81-54:
 	  No source revision, documentation only (dox/ChangeLog).
 

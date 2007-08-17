@@ -1,6 +1,0 @@
-ERROR: reference to uninitialized pint n at index: [2]
-ERROR: resolving left operand of: n[2]-1
-ERROR: unable to resolve indices of m for instantiation: [0..n[2]-1]
-ERROR: resolving index range of instantiation!
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

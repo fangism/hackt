@@ -1,4 +1,0 @@
-Error: int<> must be instantiated with a positive width, but got: 0
-Instantiated from: int<0>
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

@@ -1,6 +1,0 @@
-Error: dimensions mismatch between sub-collection 1 and 2.
-	got: [2] and: [1]
-ERROR: unrolling lvalue references in pint assignment.
-ERROR: at position 1 of expression-assignment list.
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

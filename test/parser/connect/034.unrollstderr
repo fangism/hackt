@@ -1,5 +1,0 @@
-FATAL: reference to uninstantiated process basket<> index [6]
-ERROR: unrolling aliases.
-ERROR: unrolling instance references in process_connection::unroll().
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

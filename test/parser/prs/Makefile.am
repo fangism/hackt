@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.30 2006/12/01 23:30:24 fang Exp $
+#	$Id: Makefile.am,v 1.31 2007/08/17 00:44:58 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -42,11 +42,6 @@ HACKT_PARSE_TEST_PASSES = \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01
 
-# coincidentally:
-HACKT_UNROLL_TEST_PASSES = $(HACKT_OBJ_TEST_SUBJECTS)
-
-HACKT_UNROLL_TEST_FAILURES =
-
 HACKT_CREATE_TEST_PASSES = \
 	inv-14 inv-15 inv-16 inv-17 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
@@ -73,11 +68,6 @@ HACKT_CREATE_TEST_PASSES = \
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
 	null-01
-
-if USE_UNROLL_PHASE
-else
-HACKT_CREATE_TEST_FAILURES += $(HACKT_UNROLL_TEST_FAILURES)
-endif
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...

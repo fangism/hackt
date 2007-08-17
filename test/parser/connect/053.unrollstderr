@@ -1,7 +1,0 @@
-ERROR sizes mismatch in port connection: 
-	expected: [4]
-	got: [3]
-	external references: x[0], x[1], x[2], 
-	local port references: p.c[0], p.c[1], p.c[2], p.c[3], 
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

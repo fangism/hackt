@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2007/07/31 23:24:49 fang Exp $
+#	$Id: Makefile.am,v 1.21 2007/08/17 00:40:11 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -47,10 +47,6 @@ HACKT_PARSE_TEST_PASSES = \
 
 HACKT_PARSE_TEST_WARNINGS = \
 	101 103
-
-# should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
-HACKT_UNROLL_TEST_PASSES = \
-	$(HACKT_OBJ_TEST_SUBJECTS)
 
 HACKT_CREATE_TEST_PASSES = \
 	064 \

@@ -1,5 +1,0 @@
-ERROR: unrolling packed instance aliases in process_connection:
-	size of reference 2 (that) = [2][2]
-	size of reference 1 (this) = [2][3]
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

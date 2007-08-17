@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.45 2007/08/16 20:39:16 fang Exp $
+#	$Id: Makefile.am,v 1.46 2007/08/17 00:36:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -25,7 +25,6 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-compilestderr.sh \
 	update-compilestderr-bison.sh \
 	update-flatten-expect.sh \
-	update-unrollstderr.sh \
 	update-createstderr.sh \
 	update-allocstderr.sh \
 	update-expectprs.sh \

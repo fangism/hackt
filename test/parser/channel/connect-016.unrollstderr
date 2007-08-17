@@ -1,6 +1,0 @@
-Error: cannot alias two non-sharing producers of type channel.
-	got: receivers::x
-	and: receivers::y
-Instantiated from: receivers<>
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

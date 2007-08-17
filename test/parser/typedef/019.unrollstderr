@@ -1,5 +1,0 @@
-FATAL: reference to uninstantiated bool index [3]
-ERROR: unrolling aliases.
-ERROR: unrolling instance references in bool_connection::unroll().
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

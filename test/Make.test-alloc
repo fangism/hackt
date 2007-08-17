@@ -1,6 +1,6 @@
 # "Make.test-alloc"
 #	vi: ft=automake
-#	$Id: Make.test-alloc,v 1.9 2007/08/16 20:36:27 fang Exp $
+#	$Id: Make.test-alloc,v 1.10 2007/08/17 00:36:33 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -19,12 +19,6 @@ HACKT_ALLOC_SUFFIXES = .haco-a .haco-a-dump .haco-a-dump-filter \
 HACKT_ALLOC_TEST_SUFFIXES = .hacktalloctest .hacktallocfromhacotest
 SUFFIXES += $(HACKT_ALLOC_SUFFIXES) $(HACKT_ALLOC_TEST_SUFFIXES)
 BOGUS_SUFFIX_TARGETS += $(HACKT_ALLOC_SUFFIXES)
-
-if USE_UNROLL_PHASE
-HACKT_ALLOC_SUFFIXES += \
-	.haco-a-from-u .haco-a-from-u-dump .haco-a-from-u-dump-filter \
-	.alloc-from-u-dump .alloc-from-u-dump-filter
-endif
 
 # clean and cvsignore: list most suffixes, but protected in quotes
 HACKT_ALLOC_CLEAN_IGNORE_PATTERNS = \
@@ -51,11 +45,6 @@ AUTO_IGNORE += $(HACKT_ALLOC_CLEAN_IGNORE_PATTERNS)
 .haco.haco-a-from-haco:
 	$(HACKT_ALLOC_EXE) $< $@
 
-if USE_UNROLL_PHASE
-.haco-u.haco-a-from-u:
-	$(HACKT_ALLOC_EXE) $< $@
-endif
-
 .haco-a.haco-a-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
@@ -64,11 +53,6 @@ endif
 
 .haco-a-from-haco.haco-a-from-haco-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
-
-if USE_UNROLL_PHASE
-.haco-a-from-u.haco-a-from-u-dump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-endif
 
 if VERBOSE_CHECK
 ALLOCDUMP_FILTER_SCRIPT = $(CAT) $< | $(ALLOC_FILTER) > $@
@@ -84,11 +68,6 @@ endif
 
 .haco-a-from-haco-dump.haco-a-from-haco-filter:
 	$(ALLOCDUMP_FILTER_SCRIPT)
-
-if USE_UNROLL_PHASE
-.haco-a-from-u-dump.haco-a-from-u-filter:
-	$(ALLOCDUMP_FILTER_SCRIPT)
-endif
 
 if VERBOSE_CHECK
 ECHO_ALLOCDUMP_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $$""(srcdir)/$$stderr $<"
@@ -164,20 +143,9 @@ allocfailtest.autodepend: Makefile
 .haco-a-from-haco.alloc-from-haco-dump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
 
-if USE_UNROLL_PHASE
-.haco-a-from-u.alloc-from-u-dump:
-	$(DEFAULT_OBJDUMP_RULE_ACTION)
-endif
-
 .alloc-from-haco-dump.alloc-from-haco-dump-filter:
 	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
 	$(ECHO_FILTERED)
-
-if USE_UNROLL_PHASE
-.alloc-from-u-dump.alloc-from-u-dump-filter:
-	@$(CAT) $< | $(ALLOC_FILTER) > $@ ; \
-	$(ECHO_FILTERED)
-endif
 
 if VERBOSE_CHECK
 ECHO_ALLOCFROMHACO_DIFF_COMMAND = \
@@ -188,24 +156,6 @@ endif
 
 # unifies 3-way diff
 .alloc-from-haco-dump-filter.alloc-from-haco-diff:
-if USE_UNROLL_PHASE
-	@expect1=`$(ECHO) $@ | $(SED) 's/\.alloc-from-haco-diff$$/.allocdump-filter/g'` ; \
-	expect2=`$(ECHO) $@ | $(SED) 's/\.alloc-from-haco-diff$$/.alloc-from-u-dump-filter/g'` ; \
-	$(RM) $@ ; \
-	if test -f "$$expect1" ; then \
-	  if test -f "$$expect2" ; then \
-	    $(ECHO_ALLOCFROMHACO_DIFF_COMMAND) ; \
-	    $(DIFF) -bu "$$expect1" $< >> $@ 2>&1 ; \
-	    $(DIFF) -bu "$$expect2" $< >> $@ 2>&1 ; \
-	    if test -s $@ ; then \
-	      $(ECHO) "$@ is non-empty!" ; \
-	    fi ; \
-	  else $(ECHO) "Missing $$expect2." | $(TEE) $@ ; \
-	  fi ; \
-	else $(ECHO) "Missing $$expect1." | $(TEE) $@ ; \
-	fi ; \
-	$(TOUCH) $@
-else
 	@expect1=`$(ECHO) $@ | $(SED) 's/\.alloc-from-haco-diff$$/.allocdump-filter/g'` ; \
 	$(RM) $@ ; \
 	if test -f "$$expect1" ; then \
@@ -217,22 +167,13 @@ else
 	else $(ECHO) "Missing $$expect1." | $(TEE) $@ ; \
 	fi ; \
 	$(TOUCH) $@
-endif
 
 allocfromhaco.autodepend: Makefile
-if USE_UNROLL_PHASE
-	@$(ECHO) "Generating dependencies $@" ; \
-	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
-	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
-	  $(AWK) '/.+/ {print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter " $$1 ".alloc-from-u-dump-filter"; }' > $@ ; \
-	$(TOUCH) $@
-else
 	@$(ECHO) "Generating dependencies $@" ; \
 	$(ECHO) "$(HACKT_ALLOC_TEST_PASSES)" | \
 	  $(SPACES_TO_NEWLINE) | $(SORT) -u | \
 	  $(AWK) '/.+/ {print $$1 ".alloc-from-haco-diff: " $$1 ".allocdump-filter"; }' > $@ ; \
 	$(TOUCH) $@
-endif
 
 -include allocfromhaco.autodepend
 
@@ -292,12 +233,6 @@ ALLOC_BUILD_CHECK_LOCAL = \
 	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-haco-dump-filter) \
 	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-haco-diff)
 
-if USE_UNROLL_PHASE
-ALLOC_BUILD_CHECK_LOCAL += \
-	$(HACKT_ALLOC_TEST_PASSES:=.haco-a-from-u) \
-	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-u-dump) \
-	$(HACKT_ALLOC_TEST_PASSES:=.alloc-from-u-dump-filter)
-endif
 
 build-check-local: $(ALLOC_BUILD_CHECK_LOCAL)
 

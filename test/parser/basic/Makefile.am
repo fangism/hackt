@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2007/08/15 01:08:47 fang Exp $
+#	$Id: Makefile.am,v 1.25 2007/08/17 00:38:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -34,17 +34,10 @@ HACKT_PARSE_TEST_WARNINGS = \
 
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
 
-HACKT_UNROLL_TEST_PASSES = \
+HACKT_CREATE_TEST_PASSES = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
-HACKT_CREATE_TEST_PASSES = \
-	$(HACKT_UNROLL_TEST_PASSES)
-
-if USE_UNROLL_PHASE
 HACKT_CREATE_TEST_FAILURES =
-else
-HACKT_CREATE_TEST_FAILURES = $(HACKT_UNROLL_TEST_FAILURES)
-endif
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 004 005 008 010 017 018 \

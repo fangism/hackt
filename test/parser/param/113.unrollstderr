@@ -1,5 +1,0 @@
-lvalue/rvalue references dimensions mismatch in pint assignment.
-	got: [2][2] and: [2][3]
-ERROR: at position 1 of expression-assignment list.
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

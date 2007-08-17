@@ -1,5 +1,5 @@
 % "hackt/compiler.tex"
-%	$Id: compiler.tex,v 1.2 2006/05/26 23:16:55 fang Exp $
+%	$Id: compiler.tex,v 1.3 2007/08/17 00:36:17 fang Exp $
 
 \chapter{Compiler}
 \label{sec:compiler}
@@ -44,6 +44,7 @@ Options:
 as the extension for compiled object files}.
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\begin{comment}
 \section{Unroll}
 \label{sec:compiler:unroll}
 
@@ -58,6 +59,7 @@ is saved unchanged (essentially copied).
 Usage: \binhackt\ \ttt{unroll} \tit{in-object} \tit{out-object}
 
 \ttt{hacunroll} is provided as a single-command alias to \ttt{hackt unroll}.  
+\end{comment}
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Create}
@@ -65,9 +67,12 @@ Usage: \binhackt\ \ttt{unroll} \tit{in-object} \tit{out-object}
 
 The create phase generates footprints for each complete type once, 
 so that instances of the same type may share the same footprint.  
-The input object file is the result of \ttt{hackt unroll}.  
-If the input object is not already unrolled, it will automatically
-be unrolled.  
+Each type's definition is sequentially unrolled and expanded 
+(instantiations and connections) recursively after substituting
+meta-parameter arguments.  
+The input object file is the result of \ttt{hackt compile}.  
+% If the input object is not already unrolled, it will automatically
+% be unrolled.  
 
 Usage: \binhackt\ \ttt{create} \tit{in-object} \tit{out-object}
 
@@ -88,7 +93,7 @@ Usage: \binhackt\ \ttt{alloc} \tit{in-object} \tit{out-object}
 
 % Before you start worrying about having to keep track of compile phases, 
 In summary, 
-the unroll, create, and allocate compile phases 
+the create, and allocate compile phases 
 automatically run the necessary prerequisite phases where needed.  
 All developed tools should also implement this behavior.  
 
@@ -102,7 +107,7 @@ phase with which it was processed or produced.
 
 \begin{itemize}
 \item \ttt{.haco} -- compiled only
-\item \ttt{.haco-u} -- compiled and unrolled
+% \item \ttt{.haco-u} -- compiled and unrolled
 \item \ttt{.haco-c} -- compiled and created
 \item \ttt{.haco-a} -- compiled and allocated
 \end{itemize}

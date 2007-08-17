@@ -1,5 +1,0 @@
-ERROR: Index [0] of process_array_1D bar already instantiated!
-ERROR: Index [1] of process_array_1D bar already instantiated!
-ERROR: Index [2] of process_array_1D bar already instantiated!
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

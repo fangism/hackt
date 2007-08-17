@@ -1,7 +1,0 @@
-ERROR: attempted to connect instances with conflicting relaxed parameters!
-	got: 1
-	and: 3
-	from: ::bar
-	and :::snu
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.

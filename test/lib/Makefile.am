@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2007/08/15 21:57:06 fang Exp $
+#	$Id: Makefile.am,v 1.29 2007/08/17 00:36:36 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -22,10 +22,8 @@ HACKT_PARSE_TEST_PASSES = \
 # where there are actual instantiations
 # 20061017: removed these tests, too much of a pain to update
 # will re-instate later with a better testing strategy.  
-HACKT_UNROLL_TEST_PASSES =
-HACKT_UNROLL_TEST_FAILURES =
 
-HACKT_CREATE_TEST_PASSES = $(HACKT_UNROLL_TEST_PASSES)
+HACKT_CREATE_TEST_PASSES =
 HACKT_CREATE_TEST_FAILURES =
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)

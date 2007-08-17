@@ -1,4 +1,0 @@
-ERROR: cannot unroll incomplete process type array2d
-Instantiated from: array2d<3, 3>
-Error encountered during module::unroll.
-ERROR in unrolling.  Aborting.
