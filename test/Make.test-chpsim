@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.14 2007/08/19 04:00:40 fang Exp $
+#	$Id: Make.test-chpsim,v 1.15 2007/08/19 04:48:37 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -122,12 +122,13 @@ AUTO_DEPENDS += chpsimalloctest.autodepend
 # search for dependent module libraries, set CHPSIM_LIB_PATH
 # CHPSIM_LIB_PATH = .
 # should really iterate over paths in CHPSIM_LIB_PATH in loop
+
 CHPSIM_TEST_ENV = \
 	test -z "$(CHPSIM_LIB_PATH)" || \
-	  $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR) && \
+	  $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$$(LTDL_SHLIBPATH_VAR) && \
 	  export $(LTDL_SHLIBPATH_VAR)
 
-SHOW_CHPSIM_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)
+SHOW_CHPSIM_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)$(PATH_SEPARATOR)$$"$(LTDL_SHLIBPATH_VAR)"
 
 # TODO: support checkpointing in test cases that pass
 # NOTE: EXTRACT_HACO_PIPE is defined in "Make.test-prsim"
