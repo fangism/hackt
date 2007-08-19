@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.46 2007/08/09 06:37:29 fang Exp $
+#	$Id: Makefile.am,v 1.47 2007/08/19 04:00:34 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 include $(top_srcdir)/installdirs.mk
@@ -143,8 +143,6 @@ installcheck-local:
 	$(ECHO) "======== end of installcheck-local =============="
 endif
 
-# for recursive make to not parallelize these
-.NOTPARALLEL: pdf ps
 # .NOTPARALLEL: install
 .NOTPARALLEL: commit
 if HAVE_CVS

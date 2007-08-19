@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.152 2007/08/17 00:36:14 fang Exp $
+#	$Id: configure.ac,v 1.153 2007/08/19 04:00:34 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20070814, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20070818, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -35,6 +35,8 @@ HACKT_AUTO_CVSIGNORE
 
 AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
+dnl AM_TRUE is always true, needed to fake conditional Makefile
+AM_CONDITIONAL(ALWAYS_TRUE, true)
 
 # CALLMAKE is intended for shell scripts' invocations of make
 # NOT intended for direct use in configured Makefiles, because
@@ -148,6 +150,12 @@ dnl HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Adds corresponding dependencies to "Makefile.in".  
 HACKT_ARG_VAR_LIBTOOL_FLAGS
 AC_SUBST(LIBTOOL_DEPS)
+dnl need these variables to augment test environment
+LTDL_SHLIBPATH_VAR=$libltdl_cv_shlibpath_var
+AC_SUBST(LTDL_SHLIBPATH_VAR)
+LTDL_OBJDIR=$libltdl_cv_objdir
+AC_SUBST(LTDL_OBJDIR)
+
 
 if test "$enable_shared" = "no" ; then
   AC_MSG_WARN([You requested disabling shared libraries, however some features of this package require shared libraries, so certain tests will fail!])

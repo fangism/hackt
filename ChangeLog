@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2007-08-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-57:
+	  Critical patch needed for Darwin.
+	  configure.ac: AC_SUBST LTDL_SHLIBPATH_VAR and LTDL_OBJDIR
+		so Makefile can construct environment to pass during tests.
+
+
 2007-08-16	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-53:

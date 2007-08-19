@@ -1,6 +1,6 @@
 /**
 	\file "common/ltdl-wrap.cc"
-	$Id: ltdl-wrap.cc,v 1.2 2007/07/31 23:23:28 fang Exp $
+	$Id: ltdl-wrap.cc,v 1.3 2007/08/19 04:00:37 fang Exp $
  */
 
 #include "common/ltdl-wrap.h"
@@ -10,6 +10,12 @@
 #include <map>
 #include <list>
 #include "util/stacktrace.h"
+
+/**
+	Leave as 0 to use a consistent, but less informative error message.
+	For debugging, define to 1.  
+ */
+#define	USE_LT_DLERROR			0
 
 namespace HAC {
 // using util::memory::never_ptr;
@@ -77,7 +83,7 @@ ltdl_open_prepend(const string& mname) {
 			// The precise error message varies across platforms,
 			// depending on the dlopen library functions, 
 			// so for sake of test cases, we craft our own message.
-#if 0
+#if USE_LT_DLERROR
 			cerr << lt_dlerror() << endl;
 #else
 			cerr << mname <<
@@ -110,7 +116,7 @@ ltdl_open_append(const string& mname) {
 			// The precise error message varies across platforms,
 			// depending on the dlopen library functions, 
 			// so for sake of test cases, we craft our own message.
-#if 0
+#if USE_LT_DLERROR
 			// don't permanently remove, this can come in handy for
 			// diagnosing unexpected prblems on various platforms.
 			cerr << lt_dlerror() << endl;

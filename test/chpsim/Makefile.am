@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2007/08/15 19:55:02 fang Exp $
+#	$Id: Makefile.am,v 1.23 2007/08/19 04:00:41 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -9,6 +9,7 @@ include $(top_srcdir)/installdirs.mk
 SUBDIRS = testlib .
 
 HACO_FLAGS += -I$(srcdir)/testlib
+CHPSIM_LIB_PATH = ../../lib
 
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \

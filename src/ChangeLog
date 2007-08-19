@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-57:
+	  CRITICAL patch for Darwin.  (but no source revision)
+	  top-level configure[.ac]: pass LTDL variables via AC_SUBST
+		because testing requires passing some additional 
+		paths to library search path variables.  (Darwin only!)
+	  This fixes chpsim library tests that have been broken since
+		merge -chpsim-07.
+	  See also ChangeLog and test/ChangeLog.
+
+
 2007-08-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-56:

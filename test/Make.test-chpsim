@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.13 2007/08/16 06:11:05 fang Exp $
+#	$Id: Make.test-chpsim,v 1.14 2007/08/19 04:00:40 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -117,6 +117,18 @@ AUTO_DEPENDS += chpsimalloctest.autodepend
 
 # no additional dependencies for chpsimdottest needed
 
+# for Darwin: need some help finding shared libraries that are dependencies
+# of dlopened modules.  
+# search for dependent module libraries, set CHPSIM_LIB_PATH
+# CHPSIM_LIB_PATH = .
+# should really iterate over paths in CHPSIM_LIB_PATH in loop
+CHPSIM_TEST_ENV = \
+	test -z "$(CHPSIM_LIB_PATH)" || \
+	  $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR) && \
+	  export $(LTDL_SHLIBPATH_VAR)
+
+SHOW_CHPSIM_TEST_ENV = $(LTDL_SHLIBPATH_VAR)=$(CHPSIM_LIB_PATH)/$(LTDL_OBJDIR)
+
 # TODO: support checkpointing in test cases that pass
 # NOTE: EXTRACT_HACO_PIPE is defined in "Make.test-prsim"
 # TODO: extract additional command-line flags from the source script
@@ -125,8 +137,9 @@ CHPSIMRC_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/\.chpsim.*$$/.chpsimckpt/g'` ; \
+	$(CHPSIM_TEST_ENV) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$mods $$obj" ; \
-	$(ECHO) "ckpt: $$cmd < $<" ; \
+	$(ECHO) "ckpt: $(SHOW_CHPSIM_TEST_ENV) $$cmd < $<" ; \
 	$(CAT) $(CHPSIMCKPT_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|SOURCE|$<|g' -e 's|CHECKPOINT|'"$$ckpt"'|g' | \
 	  $$cmd > $@ 2>&1 && \
@@ -136,8 +149,9 @@ CHPSIMRC_TEST_SCRIPT = \
 CHPSIMRC_FAIL_TEST_SCRIPT = \
 	obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) $< | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
+	$(CHPSIM_TEST_ENV) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$mods $$obj" ; \
-	$(ECHO) "$$cmd < $<" ; \
+	$(ECHO) "$(SHOW_CHPSIM_TEST_ENV) $$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
 
 .chpsimrc.chpsimrc-out:
@@ -311,8 +325,9 @@ AUTO_DEPENDS += chpsimrcfailtest.autodepend
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
 	mods=`$(CAT) "$$rc" | $(EXTRACT_CHPSIM_MODULES_PIPE)` ; \
 	ckpt=`$(ECHO) $@ | $(SED) 's/-indump$$/-dupe/g'` ; \
+	$(CHPSIM_TEST_ENV) ; \
 	cmd="$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$mods $$obj" ; \
-	$(ECHO) "load: $$cmd" ; \
+	$(ECHO) "load: $(SHOW_CHPSIM_TEST_ENV) $$cmd" ; \
 	$(CAT) $(CHPSIMCKPT_LOAD_TEMPLATE_SCRIPT) | \
 	  $(SED) -e 's|LOAD|$<|g' -e 's|SAVE|'"$$ckpt"'|g' | \
 	  $$cmd > $@ 2>&1
@@ -322,9 +337,11 @@ AUTO_DEPENDS += chpsimrcfailtest.autodepend
 	@$(NO_OP_SCRIPT)
 
 # this one needs the object file attached
+# Doesn't really need TEST_ENV because no libraries are loaded.
 .chpsimckpt-dupe.chpsimckpt-dupe-dump:
 	@rc=$(srcdir)/`$(ECHO) $< | $(SED) 's/\.chpsimckpt-dupe$$/.chpsimrc/g'` ; \
 	obj=`$(CAT) "$$rc" | $(EXTRACT_HACO_PIPE)` ; \
+	$(CHPSIM_TEST_ENV) ; \
 	{ $(ECHO) "load $<" ; $(ECHO) "dump-state" ;} | \
 	  $(HACKT_CHPSIM_EXE) -b $< > $@
 

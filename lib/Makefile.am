@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2007/08/15 21:57:01 fang Exp $
+#	$Id: Makefile.am,v 1.22 2007/08/19 04:00:34 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -74,7 +74,18 @@ endif
 AM_CPPFLAGS = -I $(top_srcdir)/src
 AM_CXXFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 
+# BUG-libtool-ltdl?
+# Only on Darwin, stdchpfn.la fails to lt_dlopen from test directories, 
+# probably something to do with the way shared libraries are linked.
+# Darwin .la archives don't have/need relink_commands like linux/freebsd libs.
+# Bottom-line: for testing on Darwin, we must use a convenience library module, 
+# named stdchpfnc.la here, to distinguish from the installed library.  
+# NOTE: this issue is 'fixed' by passing addition library search paths
+# (pointing to this directory) to the right environment variables.
+# See test/Make.test-chpsim for CHPSIM_TEST_ENV for more notes.
+
 pkglib_LTLIBRARIES = libstdchpfn.la stdchpfn.la
+
 EXTRA_DIST += libchpfn/TODO
 
 # this is just a normal non-module library

@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.35 2007/08/16 06:11:06 fang Exp $
+#	$Id: Make.test-head,v 1.36 2007/08/19 04:00:41 fang Exp $
 #	vi: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -14,7 +14,7 @@ SUFFIXES = .hac .depend
 # then just touch empty files with name.
 # NOTE: built test script should not be named here, as then need to be
 # chmod-ed to be executable.  
-BOGUS_SUFFIX_TARGETS =
+BOGUS_SUFFIX_TARGETS = .hac .depend
 # accumulate this variable over other Makefiles
 
 if HAVE_CFLAT
