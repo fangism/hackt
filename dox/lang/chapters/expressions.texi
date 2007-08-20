@@ -1,0 +1,40 @@
+@c "chapters/expressions.texi"
+@c $Id: expressions.texi,v 1.1 2007/08/20 00:02:47 fang Exp $
+
+@node Expressions
+@chapter Expressions
+@cindex expressions
+@cindex meta-expressions
+
+Expressions live in the realm of parameters and datatypes.  
+Compile-time meta language.  
+
+Boolean.
+
+Integer.
+
+@menu
+* Range expressions::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Range expressions
+@section Range expressions
+@cindex range expressions
+
+Limits: interpretation of negative ranges?
+Are we allowing negative indices?
+
+Implicit ranges.
+
+Explicit ranges.
+Q: does @math{x<=y}?
+If we allow negative indices then yes, because we need to be able 
+to express empty ranges, when @math{x>y}.
+
+Compile-time (meta-language) interpretation.  
+
+See chapter on compile-time flow-control (loops and conditionals).  
+
+
+

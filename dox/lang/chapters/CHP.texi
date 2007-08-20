@@ -1,0 +1,489 @@
+@c "chapters/CHP.texi"
+@c $Id: CHP.texi,v 1.1 2007/08/20 00:02:41 fang Exp $
+
+@node CHP
+@chapter Communicating Hardware Processes
+@cindex CHP
+@cindex CSP
+
+This chapter describes the CHP sub-language, which is based on
+Hoare's CSP @cite{ref:csp}.  
+CHP operates in the non-meta language domain of @HAC{}, 
+meaning that the instances and values referenced may be
+resolved at compile-time, even after instantiation.  
+In fact, most values and references are only resolved at run-time.  
+
+@menu
+* CHP Expressions::
+* Channels in CHP::
+* CHP Statements::
+* CHP Flow Control::
+* Metaparameter loop constructs::
+* CHP Extensions::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node CHP Expressions
+@section Expressions
+@cindex expressions in CHP
+
+This section describes the kinds of expressions that CHP supports.  
+
+@menu
+* CHP Value References::
+* CHP Operators::
+* Integer Bit Slices::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node CHP Value References
+@subsection Value References
+@cindex value references in CHP
+@cindex nonmeta value references
+
+CHP describes the computation and communication of data variables
+over channels.  
+Since CHP describes the run-time behavior of programs, 
+the values referenced are only resolved at run-time, 
+just like in a traditional C program.  
+The data-types referenced may @bool{}, @Int{}, enums, or user-defined (structs)
+(@ref{Datatypes}).  
+
+The indices used to address values may themselves be run-time variables.  
+For example, in @t{x[i]}, @t{i} may be an @Int{} received over a channel.  
+Operationally, this means we need run-time array bounds checks on indices, 
+and existence checks in the case of sparse arrays.  
+
+In CHP, @pint{} s are considered @Int{}@t{<32>} values and
+@pbool s are considered @bool{} values as far as type-checking is concerned.  
+(Proposal: support for wildcard (automatic) widths when interpreting
+@pint{} as @Int{}.)  
+
+Note: the current implementation does not @emph{yet} support ranged
+references (@t{x[i..j]}). 
+We don't expect this to be difficult, but implementation will be deferred
+until this feature is warranted.  
+
+UPDATE: nonmeta languages, including CHP, no longer support 
+aggregate instance or value references.  
+This means meta-valued ranges cannot appear in any nonmeta language.  
+Nor can implicit non-scalar collection references appear in nonmeta language.  
+Simply put, all references in nonmeta languages must be scalar
+(0-dimensional).  
+
+Arbitrarily complex indexed and member references
+are supported in the nonmeta languages, such as CHP.
+However, it is up to the downstream toolchain to interpret or 
+impose further restrictions on the references. 
+For example, a reference such as @t{x[pi][j].y[k]}, where
+@t{pi} is a meta-valued index and @t{j} and @t{k} are nonmeta
+valued integers could lead to a very difficult synthesis or analysis.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Operators
+@subsection Operators
+@cindex operators in CHP
+
+Standard binary arithmetic operations.  
+Tentative type restriction: operands must be of equal @Int{} width.  
+Return type is the same as operands.  
+
+Old CAST-style syntax for boolean logic operations.  
+
+Proposal: use C-style syntax so we may distinguish bitwise from 
+logical operations.  
+
+Proposal: operator overloading to define arithmetic on user-defined types.  
+(Then we could call this a Hierarchical Operator-Overloading Object-Oriented
+Circuit Description Language, or HOOOORCD.)
+Low priority.  
+
+@c ----------------------------------------------------------------------------
+@node Integer Bit Slices
+@subsection Bit Slices
+@cindex bit slices
+@cindex bit fields
+
+@strong{TODO:} add support for bit slices.  
+Add public bit-array ports to the intrinsic @Int{} definition.  
+Add a built-in (private) type for bits.  
+
+@c ----------------------------------------------------------------------------
+@node Channels in CHP
+@section Channels
+@cindex channels
+
+@ref{Channels} presented the notion of channels
+in the context of general nonmeta languages.  
+
+We (provisionally) stated that the fundamental channel types, 
+such as @t{chan(bool)}, were abstract in that they describe
+@emph{what} information was communicated over a channel, 
+but not @emph{how} (encoding and protocol).  
+
+As far as the CHP level is concerned, 
+the implementation is irrelevant (?) to the 
+concurrent program semantics and functional behavior (and simulation).  
+
+Where does the implementation come into play?
+In automatic production-rule generation and mixed-level simuation
+involving production rule details.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Statements
+@section Statements
+
+This section describes the various statements that CHP supports.  
+
+@menu
+* CHP Communications::
+* CHP Assignments::
+* CHP Wait::
+* Statement Composition::
+* CHP Skip::
+* CHP Loops::
+* CHP Guarded Commands::
+* CHP Deterministic Selection::
+* CHP Nondeterministic Selection::
+* CHP Do-While::
+* Function Calls::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node CHP Communications
+@subsection Communications
+@cindex channel send
+@cindex channel receive
+@cindex send on channel
+@cindex receive on channel
+
+To receive data over a channel, one simply writes: 
+
+@itemize
+@item @i{CHP-receive} : @i{channel-reference} @t{?}
+	@t{(} @i{data-reference-list} @t{)}
+@end itemize
+
+@noindent
+For example, @t{X?(x, w)} means: receive values @math{x} and @math{w} over
+the two fields of channel @math{X}.  
+
+To send data over a channel, one writes:
+
+@itemize
+@item @i{CHP-send} : @i{channel-reference} @t{!}
+	@t{(} @i{nonmeta-expr-list} @t{)}
+@end itemize
+
+@noindent
+For example, @t{Y!(y, z)} means: send values @math{y} and @math{z} over
+the two fields of channel @math{Y}.  
+
+The channels referenced in sends and receives may be 
+either fundamental channel types or user-defined channel types.  
+However, the channel reference must be scalar (0-dimensional).  
+The variables in the reference list or expression list must type-check
+against the fields of the underlying fundamental channel type.  
+@xref{Fundamental Channel Types},
+regarding fundamental channel types.  
+If any types are template-parameter dependent, then type-checking
+is deferred until the template types have been instantiated.  
+
+Operational semantics:
+Sends and receives in CHP have blocking semantics, i.e., 
+a communication does not complete until its complement (the other side)
+is also reached.  
+After both sides of the communication have `synchronized,'
+can the communication proceed.  
+
+Execution clarification:
+Suppose we have the statement @t{X[i]!(y[j])}, where @t{i} and @t{j}
+are nonmeta (run-time) variables.  
+If we reach this program point, and find that @t{X[i]} is blocked
+(not ready to send), then we must suspend further execution until
+one of the following conditions changes:
+@itemize
+@item @t{X[k]} receive executes for @emph{some} value @t{k}
+@item @t{i} changes the reference to a different channel
+@end itemize
+If we were to be precise, and track dependencies dynamically 
+(rather than conservatively and statically), 
+we could narrow the first conditional to only @t{X[i]} receiving.  
+Only at the time of execution,
+do we evaluate the value of @t{y[j]} for sending.  
+The value and reference of @t{y[j]} is @emph{permitted to change} between
+the time it is blocked and the time the communication is executed!
+(Can we trap or alert when this is not intended?)
+
+TODO: Probes (implemented, but not documented yet)
+
+@c ----------------------------------------------------------------------------
+@node CHP Assignments
+@subsection Assignments
+@cindex assignment in CHP
+@cindex nonmeta value assignment
+
+The syntax for a variable assignment is simple:
+
+@itemize
+@item @i{CHP-assignment} : @i{lvalue} @t{:=} @i{rvalue}
+@end itemize
+
+@noindent
+For example, @t{x := y} assigns the value of @math{y} to @math{x}.  
+The @emph{lvalue} must refer to a scalar instance of a data type, 
+while the @emph{rvalue} may be any (nonmeta) expression.  
+The types for @emph{lvalue} and @emph{rvalue} must match.  
+
+Execution: just assign the current value of the rvalue to the lvalue.
+Assignments are atomic, so we need not consider changing references.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Wait
+@subsection Wait
+@cindex wait statement
+
+When a wait statement is reached, the program simply waits for a condition
+to become true before proceeding.  
+
+@itemize
+@item @i{CHP-wait} : @t{[} @i{CHP-expr} @t{]}
+@end itemize
+
+The expression must, of course, be boolean in value.  
+
+Execution: 
+When arriving at a wait event, evaluate the guard expresions.
+If true, then proceed immediately to the event that follows. 
+Otherwise, block this event pending any change on variables or channels
+that could possibly change the value of the expression.  
+In implementation, the set may be precise or conservative, but 
+the resulting evaluation must remain equivalent.  
+
+@c ----------------------------------------------------------------------------
+@node Statement Composition
+@subsection Composition
+@cindex sequential composition
+@cindex concurrent composition
+@cindex parallel composition
+
+CHP statements may be composed either sequentially or concurrently.  
+
+@itemize
+@item @i{CHP-sequence} : @i{CHP-stmt} @t{;} @i{CHP-stmt} ...
+@item @i{CHP-concurrence} : @i{CHP-stmt} @t{,} @i{CHP-stmt} ...
+@end itemize
+
+Concurrent composition has higher precedence than sequential composition, 
+so @math{X,Y;Z} is interpreted as @math{(X,Y);Z}.  
+However, one may explictly parenthesize @math{X,(Y;Z)}.  
+
+@cindex join
+@cindex fork
+Execution of concurrent branches behaves like a fork and join (barrier).
+Upon initial execution, each branch is begun concurently, 
+but the execution is not completely until all branches have reached
+the join-barrier.  
+(This can be easily implemented as a decrementing barrier counter.)
+
+@c ----------------------------------------------------------------------------
+@node CHP Skip
+@subsection Skip
+@cindex skip statement
+
+Skipping this section... haha.
+
+Note on syntax: A skip statement may only appear by itself in a 
+CHP body, i.e. never in a sequential or concurrent composition.  
+It may appear in-place of any @i{CHP-stmt-list}.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Flow Control
+@section Flow Control
+@cindex flow control in CHP
+
+This section describes the various flow control statements available in CHP.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Loops
+@subsection Loops
+@cindex loops in CHP
+@cindex action loops
+
+Loops never end.  
+Most hardware one will describe with CHP will contain a loop.  
+(What good is a program that only works once?)
+
+@itemize
+@item @i{CHP-loop} : @chpbeginloop{} @i{CHP-stmt-list} @chpendloop{}
+@end itemize
+
+Execution: after the last action in the loop executes, schedule
+the first action for execution.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Guarded Commands
+@subsection Guarded Commands
+@cindex guarded command
+
+@itemize
+@item @i{CHP-guarded-command} : @i{CHP-expr} @prsrarrow{} @i{CHP-stmt-list}
+@end itemize
+
+A special case of a guarded commands is an else-clause, 
+which replaces the guard expression with the keyword @t{else}.  
+An else clause may only appear at the end of deterministic selections, 
+but not any other selection statements.  
+
+Execution: 
+Interpretation depends on the context in which the guarded command appears, 
+e.g. deterministic vs. nondeterministic selection, or do-while loops.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Deterministic Selection
+@subsection Deterministic Selection
+@cindex selection, deterministic
+@cindex deterministic selection
+@cindex guarded command
+
+@itemize
+@item @i{CHP-det-selection} :
+	@t{[} @i{CHP-det-guarded-command-list} @t{]}
+@item @i{CHP-det-guarded-command-list} :
+	@i{CHP-guarded-command} @thickbar{} ...
+@end itemize
+
+The guarded command list must contain at least two guarded commands
+(else it's not a selection).  
+The last guarded statement may be an else clause.  
+
+Operational Semantics: 
+(Basically exclusive switch-case.)
+Only one of the guards is allowed to be true at a time (mutual exclusion).  
+If more than one guard is ever true, then there is an error in the program.  
+A deterministic selection blocks until one of its guards has become true
+and its guarded commands executed.  
+
+Execution: 
+Since branches are executed mutually exclusively, as soon as any branch
+finishes executing its last event, the events that immediately follow 
+the selection may be processes as if in the same sequence.  
+If at any time more than one guard evaluates true, a diagnostic is
+required, though signaling and error is recommended.  
+
+If initially none of the guards evaluate true, 
+then the selection is blocked until one of them becomes true.  
+(This can be accomplished by registering all dependent variables
+on a global watch-list.  
+When any variable on the watch-list changes status, then subscribed
+expressions are re-evaluated, to see if new events may be scheduled.)
+
+If the guards include an else-clause, then this selection never blocks, 
+because the else-clause will guarantee that one clause will execute.  
+
+@c ----------------------------------------------------------------------------
+@node CHP Nondeterministic Selection
+@subsection Nondeterministic Selection
+@cindex nondeterministic selection
+@cindex selection, nondeterministic
+
+@itemize
+@item @i{CHP-nondet-selection} :
+	@t{[} @i{CHP-nondet-guarded-command-list} @t{]}
+@item @i{CHP-nondet-guarded-command-list} :
+	@i{CHP-guarded-command} @thinbar{} ...
+@end itemize
+@c just realized reading the above can be confusing, overloaded ':'
+
+Note: for the sake of a cleaner grammar, 
+we use @thinbar{} instead of @oldthinbar{} to denote 
+a nondeterministic selection.  
+Can nondeterministic selections contain else-clauses?
+
+Operational Semantics: nondeterministic selection blocks until at least
+one guard becomes true.  
+While any number of guards may be true, one of the true guards is 
+chosen arbitrarily@footnote{Weakly fair.} as the path of execution.  
+
+Execution:
+More than one guard is allowed to be true, but only branch is chosen
+to be executed.  
+Q: Do we use the notion of a time-window before evaluating guards?
+
+@c ----------------------------------------------------------------------------
+@node CHP Do-While
+@subsection Do-While
+@cindex do-while loop
+
+@itemize
+@item @i{CHP-det-selection} :
+	@chpbeginloop{} @i{CHP-det-guarded-command-list} @chpendloop{}
+@end itemize
+
+No else clauses allowed.  
+
+Operational Semantics:
+Loop until all guards are false.  
+
+Execution:
+Never blocks because there is an implicit else-clause that
+skips/exits the loop.  
+
+@c ----------------------------------------------------------------------------
+@node Metaparameter loop constructs
+@section Metaparameter loop constructs
+@cindex loop constructs in CHP
+@cindex loop composition in CHP
+
+New syntaces for compile-time expanded repetitive constructs:
+
+@noindent
+@b{Sequential composition}
+@cindex sequential composition
+
+@example
+@{ ; i:N: ... @}
+@end example
+
+@noindent
+@b{Concurrent composition}
+@cindex concurrent composition
+@cindex parallel composition
+
+@example
+@{ , i:N: ... @}
+@end example
+
+@noindent
+@b{Determinstic selection}
+@cindex deterministic selection
+@cindex selection, deterministic
+
+@example
+[ [] i:N: ... ]
+@end example
+
+@noindent
+@b{Nondeterminstic selection}
+@cindex nondeterministic selection
+@cindex selection, nondeterministic
+
+@example
+[: i:N: ... ]
+@end example
+
+@c ----------------------------------------------------------------------------
+@node CHP Extensions
+@section Extensions
+
+@c ----------------------------------------------------------------------------
+@node Function Calls
+@subsection Function Calls
+@c @subsection C and C++ Routines
+@cindex function calls
+@cindex call statements
+
+Calling C/C++ functions.  
+
+This is better documented in the CHPSIM Manual.
+

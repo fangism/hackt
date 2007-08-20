@@ -1,0 +1,122 @@
+@c "chapters/typedefs.texi"
+@c $Id: typedefs.texi,v 1.1 2007/08/20 00:02:48 fang Exp $
+
+@node Typedefs
+@chapter Typedefs
+@cindex typedefs
+
+When and where are typedefs useful?  
+Where may typedefs appear?
+Can be in namespace, or local to a definition.  
+
+Two kinds of typedefs, with three syntaces.  
+
+@noindent
+@i{typedef-declaration}:
+@enumerate
+@item @t{typedef} @i{existing-definition-id} @i{identifier}@t{;}
+@item @t{typedef} @i{existing-definition-id} 
+	@t{<} @i{template argument list} @t{>} @i{identifier}@t{;}
+@item @i{template-signature}
+	@t{typedef} @i{existing-definition-id} 
+	@t{<} @i{template-argument-list} @t{>} @i{identifier}@t{;}
+@end enumerate
+
+In all three forms, 
+the @i{identifier} is the name of the new typedef.  
+The only prerequisite for the existing definition is that it has already 
+been declared.  
+
+The first form is a pseudo-typedef, a pure @emph{definition} name alias, 
+as if one had written 
+@t{#define} @i{identifier} @i{existing-definition-id} 
+in C-preprocessing, 
+with the existing defininition being a simple identifier.  
+(@i{existing-definition-id} may be a relative or absolute hierarchical name.) 
+The potential confusion with the first typedef is that 
+@i{existing-definition-id} identifier may be mistaken for a templated type
+with all parameter arguments with defaults 
+(the only condition in which template arguments 
+may be omitted from a templated definition).  
+
+The second form of typedef substitutes a fully-specified template type
+(one with all template parameters supplied) with an identifier.  
+This is convenient for reusing a templated type repeatedly without
+having to copy the arguments.  
+
+The third form of typedef is a template typedef (not yet supported in C++)
+which wraps a partially-specified template type with a new definition, 
+usually (not always) with fewer arguments.  
+This is particularly useful for binding template arguments
+to make simple template types.  
+If a definition doesn't already have default arguments, 
+this is one way of supplying additional default values 
+for an existing templated definition.  
+
+Typedefs can be defined in terms of other typedefs.  
+There is currently no restriction on the number of indirections
+of typedef-ing.  
+
+By construction, the graph of typedef definitions must form a tree,
+and thus, cannot have cycles.  
+Ultimately, every typedef must be defined in terms of a 
+unique non-typedef @emph{canonical definition}.
+@cindex canonical definition  
+The @emph{canonical parameters} are the values of the 
+parameters that are eventually passed to the canonical definition, 
+and are evaluated by the transformations defined by each typedef indirection.  
+
+Templates typedefs: should they be specializable?  
+Methinks not: that would make things incredibly confusing.  
+
+@menu
+* Typedef Type-equivalence::
+* Typedef Questions::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Typedef Type-equivalence
+@section Type-equivalence
+@cindex type equivalence
+
+@strong{TODO:} This section needs to be revised
+since the introduction of strict and relaxed template parameters!  
+(Should basically forbid relaxed template parameters in typedef templates.)
+Old text follows:
+
+We extend the notion of @emph{type-equivalence} to include typedefs as follows:
+
+Two instances of typedefs are type-equivalent if and only if
+they refer to the same canonical definition, and their canonical 
+parameters are equal.  
+
+Some implementation hints.
+Given two typedef instances or references.  
+Find greatest common ancestor.  
+Common ancestor may simplify equivalence deduction.  
+
+@c ----------------------------------------------------------------------------
+@node Typedef Questions
+@section Questions
+
+@strong{Forward declarations.}
+Can typedefs have forward declarations?  Should we allow this?  Rather not.
+``I'm declaring this typedef's name, but it's definition will be bound
+later...''
+Beware of typedef cycles!
+
+Can typedefs have external linkage?  Can cycles form?
+But what class of type is it: channel, process?
+e.g. @t{extern typedef foo;}
+
+@t{extern template <...> typedef foo;}
+
+@t{extern typedef old new;}
+
+@strong{Linkage.}  @xref{Linkage}.  
+
+Q: Should typedefs ever be templatable with relaxed arguments?
+A: Maybe only if we guarantee that strict arguments don't
+	ever depend on (escape to) relaxed parameters.  
+
+

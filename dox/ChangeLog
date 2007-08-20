@@ -1,5 +1,12 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.21 2007/08/16 23:48:01 fang Exp $
+#	$Id: ChangeLog,v 1.22 2007/08/20 00:02:33 fang Exp $
+
+2007-08-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-58:
+	  Migrated HAC language dox to texinfo, old ones still retained.
+		Very minimal modifications in port.  
+
 
 2007-08-16	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,0 +1,265 @@
+@c "chapters/channels.tex"
+@c $Id: channels.texi,v 1.1 2007/08/20 00:02:46 fang Exp $
+
+@node Channels
+@chapter Channels
+@cindex channels
+
+Processes communicate to each other via channels.  
+Channels are an abstract notion of a point-to-point medium
+of communication between sender and receiver.
+(@HAC{} does not yet support multi-sender or multi-receiver communication
+primitives.)  
+
+@menu
+* Sending and Receiving::
+* Fundamental Channel Types::
+* User-defined Channel Types::
+* Channel Issues::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Sending and Receiving
+@section Sending and Receiving
+@cindex sending on channels
+@cindex receiving on channels
+@cindex channel sending
+@cindex channel receiving
+
+Without going into the details of channels, we can define a notion of 
+directionality for channels.  
+Suppose we have some channel type @t{chan(bool)}.  
+
+@example
+chan(bool) X;
+chan?(bool) Y;
+chan!(bool) Z;
+@end example
+
+This declares a channel @t{X} with unspecified direction (nondirectional), 
+@t{Y} as a read-only (receive-only) directional channel, 
+and @t{Z} as a send-only directional channel.  
+Send-only and receive-only channels are the most useful in
+process port declarations ---
+what use are uni-directional channels in the global or local 
+scopes@footnote{Should multi-module linkage ever be specified and implemented, 
+a receive-only channel in one module could connect to 
+a send-only channel in another module.}?
+
+@menu
+* Channel Connections and Directions::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Channel Connections and Directions
+@subsection Connections and Directions
+@cindex channel directions
+@cindex direction of channels
+
+What are legal connections between channel instance references?
+Channels have directional connection semantics.
+Two value producers cannot be aliased, nor can two consumers.  
+
+Q: Should legal programs be restricted to connecting
+at most one-receiver to one-sender?
+
+A: Yes, until we support shared channels (see below).
+
+Q: Should dangling channels (one-way only) be allowed, rejected, or warned?
+Does not count definition ports, which are assumed to be connected.  
+
+Clarification: Channel directions indicated in port declarations only dictate
+which direction one @emph{cannot} connect to locally.  
+
+We use the following example program template to answer questions.  
+
+@example
+defproc inner(chan(bool) A; chan?(bool) B; chan!(bool) C) @{ ... @}
+defproc outer(chan(bool) P; chan?(bool) Q; chan!(bool) R) @{
+  inner x(...), y(...);
+@}
+@end example
+
+@itemize
+@item @t{x(P,Q,R), y;} -- legal
+@item @t{x, y; x.A = P; x.B = Q; x.C = R} -- legal, equivalent to the previous
+@item @t{x, y(x.A, x.B, x.C);} -- error: two receive ports being aliased
+@item @t{x(P,R,Q), y;} -- error: connecting send-only to receive-only channel
+@item @t{x, y(x.A, x.C, x.B);} -- error: equivalent to above
+@end itemize
+
+Goal: precise set of rules for channel connections.
+Q: does it depend on whether or not referenced channel is local vs. port?
+
+@strong{Proposal:} a read-only port can take a directionless or 
+read-only port (forwarded) channel as an argumnent.  
+(Likewise for send-only ports.)  
+(Update: accepted.)
+
+Should we allow alias connection syntax for channels?
+Aliasing is a symmetric relation, whereas port connections @emph{need not} be.  
+Yes, but with the following additional semantic constraints:
+
+@strong{Proposal:}
+Unidirectional channels should not be referenceable as aliases, only
+connected through ports.  
+Only nondirectional channels may use alias syntax.  
+Thus, directional channels may only be connected by passing port arguments.  
+Consequences: every physical channel must be connected to at least one
+nondirectional channel.  
+A send-receive pair must be connected using a nondirectional channel
+of the same type.  
+(Status: obsolete, in favor of the proposals below)
+
+@strong{Proposal:}
+A nondirectional channel may be connected to only one read-only channel
+and only one send-only channel.  
+(Update: accepted, with possible exception of explicitly shared channels, 
+proposed below.)
+The following example would be rejected:
+
+@example
+defproc bucket(chan?(bool) S) @{ ... @}
+chan(bool) R;
+bucket a(R), b(R);
+@end example
+
+Implementation detail: 
+As aliases are built using a union-find, make sure the canonical node
+always knows what direction of channels have been connected (propagation).  
+We will track this with a set of flags indicating whether a channel
+is already connected to a producer or consumer.  
+Note, however, that send/receive use of a channel in CHP body counts as 
+connecting a consumer/producer, respectively.  
+Thus, channel connection checking should include a final pass over
+the CHP's unrolled footprint.  
+
+@strong{Proposal:}
+Reject local channel declarations with directional qualifiers.  
+Rationale: It doesn't make sense to have a uni-directional channel
+in a local scope because any connection or use thereof would result
+in a block.  
+(Could this be useful for debugging, e.g. causing intentional deadlock?)
+
+@strong{Proposal:} Reject dangling channels.  
+Channels that are missing connection to a producer or consumer
+should be rejected.  Basically, when a channel is deduced as dangling, 
+at least a diagnostic should be issued.  
+@strong{Resolution:} issue warning diagnostic, without rejecting outright.
+Eventually, it is up to the final tool to accept or reject dangling
+connections.  
+
+@strong{Proposal:} Shared channels:
+Thus far, we've described one-to-one channels where producers
+and consumers are exclusively paired.  
+In some exceptional circumstances one might desire to share a 
+channel among multiple senders or multiple receivers, 
+where exclusive access is to be guaranteed by the programmer.  
+The following semantics are proposed for sharing channels:
+A channel is allowed to be connected to multiple receivers, if and only if
+all participating receivers agree to share, 
+by some implementation of `agree.'
+Likewise, multiple senders may share a channel, if and only if
+all participating senders agree to share.  
+One end of communication on a channel is indifferent
+to whether or not the other end is shared; 
+a non-shared sender however may connect to shared receivers, 
+and a non-shared receiver may connect to shared senders;
+To mix shared and non-shared uses on the same end is considered
+an error.  
+
+Rationale: Since channel sharing is exceptional, we want to prevent
+inadvertent sharing of channels.  Non-shared channels expect 
+exclusive use of the channel, so to share them would violate
+the fundamental assumption.  
+
+Syntax: a port declared with @t{??} or @t{!!} indicates that
+the channel may be shared (by receiving or sending).  
+A @t{??} port channel may be connected locally to multiple receivers, 
+and a @t{!!} port channel may be connected locally to multiple senders.  
+When referenced externally, as a member of process, 
+@t{??} ports may share the same channel as multiple receivers, and 
+@t{!!} ports may share the same channel as multiple senders.  
+
+TODO: examples.  
+
+@strong{Q}: should process aliases be allowed, 
+if processes declare directional channel ports?
+(Without further modification, they are rejected when attempting to 
+connect ports recursively.)
+
+@example
+defproc sink(chan?(bool) X) @{ @}
+sink x, y;
+x = y; @i{// results in x.X = y.X}
+@end example
+
+@strong{Q}: What is the initial `connected' state of a non-directional
+channel port (inside definition)?
+A: a read-only port is assumed to be connected to a producer, 
+and a write-only port is assumed to be connected to a consumer.  
+
+@strong{Q}: Should local `connected' state information be propagated
+from formal collections' aliases to actual collections' aliases?
+With this, channels that are locally dangling can be properly connected
+hierarchically.  
+A: Yes, we propagate local connectivity summaries up through formals
+to initialize the connectivity state of substructure actuals
+for more precise hierarchical alias analysis.  
+This may help check connectivity of non-directional channels.  
+NOTE: this would also apply to relaxed actuals, and is a necessary step
+towards properly implementing them (a general mechanism to propagate
+local information externally).  
+TODO: illustrative examples.  
+
+@strong{Q}: Do we allow a channel (member of an array) to be referenced 
+by both meta-parameter and nonmeta-parameters?  No.
+Rationale: Nonmeta indexed channels introduce another difficulty, 
+as they cannot be analyzed at compile time...
+Effectively, this restricts mixing of meta-aliasing and nonmeta-referencing, 
+at least for channels, variables may be another issue.
+This issue is related to alias disambiguation.  
+
+@c ----------------------------------------------------------------------------
+@node Fundamental Channel Types
+@section Fundamental Channel Types
+@cindex fundamental channel types
+@cindex channel types, fundamental
+
+Until now, we've used @t{chan(bool)} without discussing its meaning.  
+
+@c ----------------------------------------------------------------------------
+@node User-defined Channel Types
+@section User-defined Channel Types
+@cindex user-defined channel types
+@cindex channel types, user-defined
+
+User-defined channel types are dsecriptions of physical implementations
+of abstract channels and interfaces.  
+
+@c ----------------------------------------------------------------------------
+@node Channel Issues
+@section Issues
+
+This section is the most of asked (but not necessarily answered) questions
+pertaining to the channel aspects of the @HAC{} language.  
+
+@menu
+* Channel Typedefs::
+* Channel Relaxed Templates::
+@end menu
+
+@node Channel Typedefs
+@subsection Typedefs
+
+Q: Should channels be typedef-able?
+
+@node Channel Relaxed Templates
+@subsection Channel Relaxed Templates
+
+Q: Should channels ever involve relaxed template arguments?
+A: No.  Can't see a good reason for allowing channel type to vary
+	within a higher dimension collection.  This applies recursively
+	to data-types which fall into the channel's type specification.  
+	Can processes every be involved in channel type?  Probably not.  
+

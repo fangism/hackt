@@ -1,0 +1,29 @@
+@c "chapters/SPEC.texi"
+@c $Id: SPEC.texi,v 1.1 2007/08/20 00:02:44 fang Exp $
+
+@node SPEC Directives
+@chapter SPEC Directives
+@cindex SPEC directives
+
+This chapter describes the various directives available
+in the @t{spec} sub-language.  
+
+@strong{TODO:} extract directives from source documentation.
+
+Someone should write the various spec directives up, ahem!
+
+@itemize
+@item @t{exclhi} --- specifies that group of nodes are 
+	mutually exclusive high, i.e. only one member of he group can be
+	logic high at @emph{any} time.  For simulators, this produces
+	a run-time check directive.  For verifiers, like @command{lvs}, 
+	this may help with worst-case charge-sharing analysis.  
+@item @t{excllo} --- analogous to @t{exclhi} but for logic low
+@item @t{mk_exclhi} --- coercively forces (in simulation) only
+	one node of the set to be high at a time.  If a member of the
+	set is already high, then it blocks the others.  
+	This is useful for arbitration.  
+@item @t{mk_excllo} --- analogous to @t{mk_exclhi}
+@item @t{cross-coupled}
+@end itemize
+

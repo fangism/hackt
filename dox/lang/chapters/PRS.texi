@@ -1,0 +1,304 @@
+@c "chapters/PRS.texi"
+@c $Id: PRS.texi,v 1.1 2007/08/20 00:02:44 fang Exp $
+
+@node PRS
+@chapter Production Rule Set (PRS)
+@cindex PRS
+
+This chapter describes the Production Rule Set (PRS) sub-language.  
+PRS operates strictly in the meta-language domain of @HAC{}, 
+meaning that all involved instance references and connections are resolved
+at compile-time, upon instantiation of each complete definition.  
+Production rules, like connections, may be programmed to depend
+on meta-language parameters.  
+
+@menu
+* PRS Basics::
+* PRS Attributes::
+* PRS Loops::
+* PRS Extensions::
+* PRS Options::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Basics
+@section Basics
+@cindex PRS
+
+Basic production rules are written as follows:
+
+@itemize
+@item @i{rule} : @i{PRS-expr} @prsrarrow{} @i{node} @i{dir}
+@end itemize
+
+(Reference to lines of grammar...)
+(Denotational semantics, type-inference later...)
+
+@cindex literal, PRS
+The @i{dir} is either @prsup{} (pull-up) or @prsdn{} (pull-down).  
+A @i{literal} is an occurence of a (@bool{}) @i{node} on the
+left-hand-side of a production rule.  
+A PRS @i{literal} and the right-hand-side node
+must be a refer to a single (scalar) @bool{} instance.  
+A @i{PRS-expr} may be any boolean expression using the 
+operators @prsnot{}, @prsand{}, @prsor{}, and literals.  
+(The unary @prsnot{} operator has the highest precedence, 
+and the @prsand{} operator has higher precedence than the @prsor{} operator.)
+
+@cindex CMOS-implementable PRS
+Since production rules are an abstract description of logic, 
+the rules themselves need not be CMOS-implementable.  
+Enforcement of CMOS-implementability can be introduced by later tools
+or compiler phases where desired.  
+
+@menu
+* PRS Sizing::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Sizing
+@subsection Sizing
+@cindex sizing of PRS
+
+We provide a way of specifying transistor widths for every literal.  
+Each literal on the LHS may be followed by an optional size argument:
+
+@itemize
+@item @i{literal} :
+	@i{node-reference} @{ @t{<} @i{float} @t{>} @}@math{_{opt}}
+@end itemize
+
+Ideas: Specify a width/strength on the RHS and automatically infer
+the sizes of the literals on the LHS (only for this rule).  
+
+@c ----------------------------------------------------------------------------
+@node PRS Attributes
+@section Attributes
+@cindex attributes, PRS
+
+We need a clean way to tag nodes and rules with attributes
+for various tools.  
+
+@menu
+* PRS Node attributes::
+* PRS Rule attributes::
+* PRS Literal attributes::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Node attributes
+@subsection Node attributes
+@cindex node attributes
+@cindex attributes, node
+
+What happens when we connect nodes with conflicting attributes?
+
+Attributes from super-cells or sub-cells?
+
+@c ----------------------------------------------------------------------------
+@node PRS Rule attributes
+@subsection Rule attributes
+@cindex rule attributes
+@cindex attributes, rule
+
+We propose the following syntax for per-rule attributes:
+@itemize
+@item @i{rule-attrib-list} : @t{[} @i{rule-attrib} @t{;} ... @t{]}
+@item @i{rule-attrib} : @i{identifier} @t{=} @i{expr-list}
+@end itemize
+
+@i{Rule-attribs} are generalized as key-value(s) pairs, which permits
+the programmer to add arbitrary attributes to the language without
+adding more keywords to the language.  
+@i{Rule-attrib-list}s are just semicolon-delimited lists of one or more
+rule-attributes.  
+In the case of repeated attributes, the latter pair will override the former.  
+Rule-attribute-lists are optional prefixes to PRS-rules.  
+
+For now, the purpose of these attributes is to emit
+attribute lines suitable for consumption by another text-based tool, 
+such as old versions of @command{prsim}.  
+@cindex prsim
+
+Q: What happens when we OR-combine rules with different attributes?
+
+@c ----------------------------------------------------------------------------
+@node PRS Literal attributes
+@subsection Literal attributes
+@cindex literal attributes, PRS
+@cindex sizing of PRS
+
+The literals of the rule expressions may have attributes.  
+
+Mostly tool-specific use.
+
+Most common use: transistor sizing.  
+Also: for LVS.  
+
+Instance-specific attributes?
+Procedural layout?
+
+Automatic sizing
+
+TODO: PRS-07 branch syntax merges!!!
+
+@c ----------------------------------------------------------------------------
+@node PRS Loops
+@section Loops
+@cindex loops (PRS)
+@cindex rule loop
+
+Loop syntax, unrolling, etc...
+
+Loops can appear in expressions and in rules in the PRS language.  
+A @i{rule-loop} can be written as:
+
+@itemize
+@item @t{(:} @i{loop-var} @t{:} @i{range} @t{:}
+	@i{rules} @t{)}
+@end itemize
+
+The @i{loop-var} is declared with a identifier, and may be referenced
+in the body rules.  
+The rule-loop is repeatedly expanded using the values spanned
+by the @i{range}.  
+(The range may be written implicitly or explicitly.)
+If the range evaluates empty, then the body is skipped during unrolling.  
+Rule-loops may be nested, i.e., they may contain other loops.  
+
+An expression-loop is written as:
+@itemize
+@item @t{(} @i{op} @t{:} @i{loop-var} @t{:} @i{range} @t{:}
+	@i{PRS-expr} @t{)}
+@end itemize
+The @i{loop-var} and @i{range} have the same meanings as when used
+in rule-loops.  
+@i{op} may be @prsand{} or @prsor{}.  
+The body expression is repeatedly expanded with the @i{op} operator.  
+Expression-loops may be nested, i.e., they may contain other expression-loops.  
+If the range evaluates empty, ...
+@b{We need to specify these semantics}!
+
+Interpret the following:
+@itemize
+@item @code{(@prsand{}:i:0: x[i]) @prsrarrow{} y-}
+@item @code{(@prsor{}:i:0: x[i]) @prsrarrow{} y-}
+@item @code{z @prsand{} (@prsand{}:i:0: x[i]) @prsrarrow{} y-}
+@item @code{z @prsand{} (@prsor{}:i:0: x[i]) @prsrarrow{} y-}
+@item @code{z @prsor{} (@prsand{}:i:0: x[i]) @prsrarrow{} y-}
+@item @code{z @prsor{} (@prsor{}:i:0: x[i]) @prsrarrow{} y-}
+@end itemize
+
+@c ----------------------------------------------------------------------------
+@node PRS Extensions
+@section Extensions
+
+This section describes some of the recent extensions to the PRS language.  
+
+@menu
+* PRS Macros::
+* Pass-gates::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node PRS Macros
+@subsection Macros
+@cindex PRS macros
+@cindex macros, PRS
+
+As an alternative to a PRS-rule, one may write a macro to represent
+some custom topology of a netlist or as shorthand for an expansion.  
+
+We propose the following syntax for macros:
+
+@itemize
+@item @i{PRS-macro} : @i{identifier} @t{<} @i{expr-list} @t{>} @t{(} @i{PRS-literal-list} @t{)}
+@item @i{PRS-macro} : @i{identifier} @t{(} @i{PRS-literal-list} @t{)}
+@end itemize
+
+We do not hard-code any built-in macros into the language with keywords, 
+rather we allow the programmer to define the meaning of each macro.  
+Macros can also take parameters inside angle-brackets, 
+where the @i{expr-list} is a list of comma-separated expressions.  
+The number of arguments for a macro may also be variable, 
+and is defined by the macro's implementation.  
+The macro mechanism can potentially be used to attach attributes
+to nodes and other subnets.  
+As the list of macros grows, they should be documented here.  
+
+Examples of macros one may wish to define:
+@itemize
+@item @t{passn} --- @i{<W,L>(g,s,d)} @math{W} is an optional transistor width, 
+	@math{L} is an optional length.  If only one parameter is passed, 
+	it is interpreted as the width.  @math{g, s, d} are the
+	gate, source, and drain, respectively.  
+	The pseudo production rule generated (@t{cflat prsim}) 
+	is @emph{uni-directional}, i.e. the drain is driven as the output.  
+@item @t{passp} --- analogous to @t{passn}
+@item @t{pass} --- full symmetric pass-gate
+@item @t{assert}
+@item @t{stat}
+@item @t{comb-fb}
+@end itemize
+
+The remaining sections discuss other extensions that have been proposed
+at other times.  
+See which ones could be folded into a general macro!
+
+@c ----------------------------------------------------------------------------
+@node Pass-gates
+@subsection Pass-gates
+@cindex pass-gates
+
+True pass-gate logic was missing from the original CAST-PRS implementation.  
+A pass-gate could be emulated as a latch if the `direction' of operation was
+known at compile time.  
+Not having to support pass-gates greatly simplified other pieces of the 
+tool-chain, such as LVS and PRSIM.  
+
+We propose the following syntax for pass-gates:
+
+@enumerate
+@item @math{node_1} @t{<-} @math{node_2} @t{->} @math{node_3}
+denotes an NFET connecting @math{node_1} and @math{node_3} gated by @math{node_2}
+@item @math{node_1} @t{<+} @math{node_2} @t{+>} @math{node_3}
+denotes a PFET connecting @math{node_1} and @math{node_3} gated by @math{node_2}
+@ignore
+@item @math{node_1} @t{<=} @math{node_2} @t{=>} @math{node_3}
+denotes an NFET connecting @math{node_1} and @math{node_3} gated by @math{node_2}
+	with a PFET gated by @math{\overline{node_2}}
+@end ignore
+@end enumerate
+
+@ignore
+In all cases, @math{node_2} may be a literal node or its complement, 
+prefixed with a tilde.
+@end ignore
+@math{node_{1...3}} are production rule literals.  
+In case 1, when @math{node_2} is logic-1, the nodes on either side are connected.
+In case 2, when @math{node_2} is logic-0, the other terminals are connected.  
+@math{node_2} may be given an optional size to specify the 
+width of the transmission-gate.  
+In all cases, 
+if nodes on opposite sides are both driving in opposite directions, 
+then it is considered a short-circuit (error).  
+If neither side is driving, and the nodes' states are in opposition, 
+then both nodes will become unknown (X). 
+Otherwise, the one side that is being driven will flip the other side.  
+
+@math{node_2} may be given an optional @t{<size>} argument for specifying
+gate width.  
+
+Technically, one may use pass-gate to construct arbitrary transistor
+topologies.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Options
+@section Options
+
+Compiler warnings:
+
+CMOS-implementability (exceptions allowed for attribute).  
+
+Staticizers?
+

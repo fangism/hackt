@@ -1,0 +1,320 @@
+@c "chapters/arrays.texi"
+@c $Id: arrays.texi,v 1.1 2007/08/20 00:02:45 fang Exp $
+
+@node Arrays
+@chapter Arrays
+@cindex arrays
+
+In many languages, arrays are useful for collective or repetitive constructs.  
+In @HAC{}, arrays come in two flavors: sparse and dense.  
+
+@menu
+* Dense arrays::
+* Sparse arrays::
+* Array size-equivalence::
+* Array Declarations::
+* Array References::
+* Aggregates references::
+* Array Issues::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Dense arrays
+@section Dense arrays
+@cindex dense arrays
+@cindex arrays, dense
+
+Dense arrays, which may be multidimensional, have the constraint that
+each dimension is precisely covered by a set of contiguous indices, 
+expressible in the form @code{[a..x][b..y]}.
+The lower index of each dimension need not start at 0.
+
+The syntax for dense arrays is similar to that of C declarations,
+with a few extensions discussed in @ref{Array Declarations}.
+The following examples are all dense declarations, resulting in
+densely packed collections:
+
+Dense array declarations:
+@example
+pint y[2][2];      @i{// y is dense 2D}
+pint N = 5;
+int bar[4][5][N];  @i{// bar is dense 3D}
+int z[2..6][3];    @i{// z is dense 2D}
+@end example
+
+@c ----------------------------------------------------------------------------
+@node Sparse arrays
+@section Sparse arrays
+
+A sparse array, on the other hand, is a generalization of a 
+(possibly multidimensional) set, whose indices need not be continuous.  
+
+One feature of @HAC{} is that one may arbitrarily extend 
+arrays, as sets of indices, with multiple declarations.  
+A dense array can be made sparse by adding indexed instances that
+break the dense condition.
+
+This example declare collection @t{q} with two statements, 
+resulting in a sparsely poplulated (sparse) collection.  
+
+Sparse array from declarations:
+@example
+int q[2][2][2];
+int q[1][1][3..3];   @i{// result is sparse}
+@end example
+
+A sparse array can be populated densely by filling in indices to satisfy
+the dense condition, 
+
+Dense array from declarations:
+@example
+pint q[1..1][0..1][2..3];
+pint q[1][1][2..3];
+pint q[1][1..1][2..3]; @i{// result is dense}
+@end example
+
+The only constraint is that one cannot re-instantiate an index
+that has been previously instantiated.  
+
+@c ----------------------------------------------------------------------------
+@node Array size-equivalence
+@section Size-equivalence
+@cindex size-equivalence
+
+Two arrays are @emph{size-equivalent} if the following are true:
+@enumerate
+@item The number of dimensions match.
+@item Both are densely packed.  
+@item The size of each dimension is equal.  
+@end enumerate
+
+@cindex range-equivalence
+The range of indices covered by each dimension need not be equal.  
+@emph{Range-equivalence} is a stronger relationship that 
+requires that the respective upper and lower bounds of two arrays match.  
+
+Any array that is sparse cannot be size-equivalent to any other array, 
+even if the set of indices contained are identical!  
+
+When we refer to instances as being type-equivalent, 
+we also mean that they are size-equivalent.  
+A connection between two instances is legal if and only if 
+they are type-equivalent and size-equivalent.  
+In @ref{Connections}, we discuss connections more in-depth.  
+
+@c ----------------------------------------------------------------------------
+@node Array Declarations
+@section Declarations
+@cindex array declarations
+
+Arrays of any type (parameters, channels, processes, datatypes) 
+are declared the same way.  
+Two syntaces are available for declarations. 
+For example, a 1-D array may be declared using:
+@itemize
+@item @i{type identifier} @t{[} @i{range} @t{]}
+	(where @i{range} : @i{pint} .. @i{pint})
+@item @i{type identifier} @t{[} @i{pint} @t{]}
+	(@math{\equiv} @i{type identifier} @t{[} 0..@i{eval(pint)}-1 @t{]})
+@end itemize
+
+@noindent
+The first form explicitly specifies the range to instantiate, 
+whereas the second form implicitly starts instantiating from 0 and 
+ends at one less than the evaluated integer argument.  
+The second form is just a convenient syntax for a common construct.  
+
+Multidimensional arrays are declared with multiple dimension specifiers.  
+Each dimension of a multidimensional array may be specified using
+either style.  
+
+Instance declarations that extend an existing array are no different, 
+as long as the added range doesn't overlap with previous declarations.  
+
+Object implementation detail:
+Ranges of the second form are expanded out in the intermediate format.  
+
+Tracking the state of instantiations w.r.t. references.  
+
+@c ----------------------------------------------------------------------------
+@node Array References
+@section References
+@cindex array references
+
+Referencing arrays can be a little tricky.  
+One may reference dense subsets of either sparse or dense arrays
+by specifying the precise range of each dimension.  
+An error occurs if not every instance referenced has been instantiated.  
+
+For example, given the declaration @t{int z[100]}, 
+the reference @t{z[0..9]} would refer to the
+1-D array of length 10 containing z[0] through z[9].  
+@t{z[0..0]} refers to the 1-D array of length 1 containing z[0], 
+which is @emph{not} size-equivalent to @t{z[0]}, 
+a 0-D (single instance) reference to z[0], 
+because the number of dimensions do not match.  
+
+Indexing an array with a single @pint{} results in a size-type of one less
+dimension, in other words, every dimension singly indexed is @emph{collapsed}.  
+Dimensions indexed with an explicit range are @emph{preserved}.  
+Consider the following examples, given that @t{y} is a 2-D array:
+@itemize
+@item @t{y[i][j]} is a 0-D array, or single instance
+@item @t{y[i..i][j]} is a 1-D array of size 1
+@item @t{y[i][j..j]} is a 1-D array of size 1
+@item @t{y[i..i][j..j]} is a 2-D array of size 1 x 1
+@end itemize
+
+@menu
+* Implicit array size::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Implicit array size
+@subsection Implicit size
+@cindex implicit size of array reference
+
+For convenience, one may refer to the entire collection
+of an array with just the name of the instance.  
+However, such an @emph{implicit} collection reference is valid
+if and only if the implied collection (or sub-array) is densely packed.
+
+@i{some valid and invalid examples}
+@c tested in /test/parser/array/066.hac
+References with collapsing dimension:
+@example
+int y[3][4][5];
+int z[2][3];
+z[0..1][0..2] = y[2][2..3][0..2];  @i{// y ref. collapses 1st dim.}
+z[0..1][0..2] = y[1..2][1..3][3];  @i{// y ref. collapses 3rd dim.}
+z = y[0][2..3][0..2];
+int x[2][3];
+x = z;
+@end example
+
+(TODO: split the above example into several small ones...)
+
+The idea of implicit collections extends to higher dimensions as well.  
+Supposing the first @math{m} out of @math{n} dimensions are indexed, 
+with @math{k} unspecified dimensions, then the number of dimensions of the 
+reference is @math{m-d+k} or @math{n-d},
+where @math{d} is the number of collapsed dimensions in @math{m}.  
+In addition, for such a reference to be valid, 
+the set of subarrays rooted at the nodes indexed by the 
+first @math{m} dimensions must all be @emph{range-equivalent}, 
+not just size-equivalent.  
+Implicit array references that do not satisfy this are considered errors.  
+
+[tons of examples]
+
+@c ----------------------------------------------------------------------------
+@node Aggregates references
+@section Aggregates
+@cindex aggregate references
+
+For convenience, we often want to reference a collection of instances
+or expressions, and group them into the same entity.  
+This section describes the various modes of @emph{aggregate} references
+supported by the @HAC{} language.  
+
+@noindent
+@i{complex-expr-term}
+: @i{array-construction}
+| @i{loop-concatenation}
+| @i{simple-expr}
+
+(Here, @i{simple-expr} is actually a @i{shift-expr} in the grammar, 
+to eliminate ambiguity with repsect to the @t{<} and @t{>} operators, 
+which also wrap around template arguments.)
+
+The following subsections explain the various array-related constructs.  
+
+@menu
+* Array concatenation::
+* Array construction::
+* Loop concatenation::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Array concatenation
+@subsection Array concatenation
+@cindex array concatenation
+@cindex concatenation or arrays
+
+The syntax for concatenating arrays:
+
+@noindent
+@i{array-concatenation}
+: @i{array-concatenation} @t{#} @i{complex-expr-term}
+| @i{complex-expr-term}
+
+Semantics: 
+The result is an array of the same dimensionality as its constituents, 
+but the size of the first dimension is the sum of the first dimension
+of its constituents.  The constituents, therefore, cannot be scalars.  
+In 2 or higher dimensions, the sizes of all trailing dimensions
+(past the first) must match to form a valid concatenation.  
+This construction is valid for both meta-expressions and instance-references.  
+
+Example:
+1D-arrays of size [M], [N], [P] would be concatenated to form
+a 1D-array of size [M+N+P].
+2D-arrays of size [M][Q], [N][Q], [P][Q] would be concatenated to form
+a 2D-array of size [M+N+P][Q].
+
+@strong{Status}: implemented
+
+@c ----------------------------------------------------------------------------
+@node Array construction
+@subsection Array construction
+@cindex array construction
+@cindex construction of arrays
+
+The syntax for building higher-dimension arrays:
+
+@noindent
+@i{array-construction} : @t{@{} @i{construction-list} @t{@}}
+@i{construction-list}
+: @i{construction-list} @t{,} @i{complex-expr-term}
+| @i{complex-expr-term}
+
+Semantics:
+This construct takes @math{N}-dimension references and produces an 
+@math{N+1}-dimension array of references.  
+Technically, each element is first promoted one dimension
+(creating an @math{N+1}-dimension array with leading dimensions size [1])
+and the results are then concatenated.  
+The following are equivalent: @t{@{ x, y @}} vs. @t{@{x@} # @{y@}}.
+The dimension constraint for matching trailing dimensions also applies here.  
+This construction is valid for both meta-expressions and instance-references.  
+
+Example:
+This is most commonly used for grouping scalars into a 1D-array.  
+
+@strong{Status:} implemented
+
+@c ----------------------------------------------------------------------------
+@node Loop concatenation
+@subsection Loop concatenation
+@cindex loop concatenation
+
+The syntax for loop-style concatenation:
+
+@noindent
+@t{( # :} @i{identifier} @t{:} @i{range} @t{:}
+	@i{complex-expr-term} @t{)}
+
+Semantics:
+
+Example:
+
+Status: not yet implemented, low priority.
+
+@c ----------------------------------------------------------------------------
+@node Array Issues
+@section Issues
+
+Interpreter vs. compiler.
+
+Tracking what instances are available at the point-of-reference.  
+

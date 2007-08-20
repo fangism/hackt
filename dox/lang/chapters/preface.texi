@@ -1,0 +1,31 @@
+@c "chapters/preface.texi"
+@c $Id: preface.texi,v 1.1 2007/08/20 00:02:48 fang Exp $
+
+@node Preface
+@unnumbered Preface
+
+@flushright
+@verbatim
+You have acquired a scroll entitled
+'irk gleknow mizk'(n).--More--
+
+This is an IBM Manual scroll.--More--
+
+You are permanently confused.
+@end verbatim
+-- @i{Dave Decot}
+@end flushright
+
+@ignore
+Arnold's Laws of Documentation:
+@enumerate
+@item If it should exist, it doesn't.
+@item If it does exist, it's out of date.
+@item Only documentation for useless programs transcends the first two laws.
+@end enumerate
+@end ignore
+
+
+
+Why must every document have a preface?
+

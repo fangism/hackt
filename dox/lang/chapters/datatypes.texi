@@ -1,0 +1,172 @@
+@c "chapters/datatypes.tex"
+@c $Id: datatypes.texi,v 1.1 2007/08/20 00:02:47 fang Exp $
+
+@node Datatypes
+@chapter Datatypes
+@cindex datatypes
+@cindex data types
+
+Datatypes are physical representations of information.  
+Or not.  
+
+TODO: this must spell out structs and user-defined datatype implementations
+as distinct notions.  
+
+@menu
+* Built-in datatypes::
+* Enumerations::
+* User-defined datatypes::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Built-in datatypes
+@section Built-in datatypes
+@cindex built-in data types
+
+Currently, @HAC{} has two built in datatypes: @bool{} and @Int{}.  
+These are not to be confused with the parameter types @pbool{} and @pint{}.  
+A @bool{} represents the state of a physical or logical node.  
+An @Int{} is simply an array of @bool{}s with an integer interpretation.  
+
+@menu
+* Booleans::
+* Integers::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Booleans
+@subsection Booleans
+@cindex boolean data type
+
+In the nonmeta language, assigning a @pbool{} value to a @bool{}
+is common and legal.  
+The compiler should eventually resolve all meta-parameter values to
+constants, which would result in assigning a boolean constant
+to a @bool{} data instance.  
+
+In the following example, the @t{constant<true>} and
+@t{constant<false>} types would unroll as one-time
+assignments to different values.  
+(@xref{CHP}, for the description of the CHP language.)
+
+@example
+template <pbool B>
+defproc constant(bool b) @{
+  chp @{ b := B @}
+@}
+@end example
+
+Nonmeta operators: 
+e.g. in CHP.  
+
+@strong{Defect}: Currently @bool{} is overloaded to mean different things
+in different contexts.  It is (tentatively) both a physical type
+representing a single node or net, and abstract data type representing
+a boolean value (whose implementation may be multi-node, such as dual-rail.)
+In a data type context, @bool{} is synonymous with @t{int<1>}.  
+There is an ambiguity with @samp{defproc foo(bool b) @{...@}}, 
+where it is not known without additional context whether @bool{} refers to 
+the physical type or the data type.  
+Until implementation-interface semantics are better defined and implemented, 
+we must allow CHP to manipulate physical @bool{}s directly.  
+Eventually, we would like an unambiguous use of @bool{}, which may require
+introducing a typedef for @t{int<1>}, such as @t{dbool}, 
+either built-in or library-defined.  
+
+@c ----------------------------------------------------------------------------
+@node Integers
+@subsection Integers
+@cindex integer data type
+
+The @Int{} type can take an optional @emph{width} parameter that specifies
+the @emph{physical} number of bits used to represent the integer.  
+An integer value need not necessarily be encoded in two's-complement; 
+one may use more bits to encode more abstract values (like ``not-an-number''), 
+or employ error-correcting codes.  
+The default width of an @Int{} is 32@footnote{32 was chosen arbitrarily.}.
+Technically speaking, @Int{} is a built-in templated (parameterized) 
+datatype definition.  
+Templates are discussed in more detail in @ref{Templates}.  
+The specify an @Int{}'s width, one can write @t{int<}@i{pint}@t{>}.  
+
+For integer type-checking in the nonmeta language, 
+the assignment of a @pint{} value or constant to an @Int{} of
+@emph{any} width is legal.  
+Implementation detail: this is accomplished by using @t{int<0>}
+as a magic width type for meta-valued integers and constants.  
+
+Arithmetic and relational operators:
+In CHP, the standard arithmetic operations on @Int{} types interprets
+the bits as signed two's-complement integers.  
+Operator overloading is not yet supported for user-defined datatypes, 
+but may be in the future.  
+
+Update: @t{int<1>} is equivalent to @t{bool} in a data type context.  
+
+
+@c ----------------------------------------------------------------------------
+@node Enumerations
+@section Enumerations
+@cindex enumeration type
+
+Enumerations are sets of values associated with user-specified names.  
+The value members of an enumeration represent a set of 
+logical values that only have meaning in the enumeration's context, 
+i.e. they are not publicly observable values.  
+(This is unlike C, in which enumerations can take integer values that 
+can be passed to and from integer variables.)
+Enumerations are particularly useful for specifying 
+control and data interfaces between communicating processes.  
+Think of enumerations as tags that can be understood by 
+the sender and receiver of the enumerated type.  
+
+The only values that an enumerated instance can take are 
+those specified in the enumerated type.  
+Thus one can never assign an integer or boolean value to an enumeration, 
+nor can one assign an enumerated value to an @Int{} or \bool\ or
+other user-defined type.  
+One can only compare enumerated values of the same enumerated type.  
+
+There is no notion of equivalence between enumerated types 
+(outside of typedefs, @ref{Typedefs}).  
+
+@c ----------------------------------------------------------------------------
+@node User-defined datatypes
+@section User-defined datatypes
+@cindex user-deffined data types
+@cindex data types, user-defined
+
+In @HAC{}, one can define arbitrarily complex datatypes.  
+User-defined datatypes resemble structs in C.  
+
+Actually, the user-defined datatype implementations are
+NOT the same as plain structs.  
+They describe an @emph{implementation} of an abstract data type
+with physical types.  
+
+@menu
+* Datatype Declarations::
+* Datatype Definitions::
+* Datatype Views::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Datatype Declarations
+@subsection Declarations
+
+@c ----------------------------------------------------------------------------
+@node Datatype Definitions
+@subsection Definitions
+
+@c ----------------------------------------------------------------------------
+@node Datatype Views
+@subsection Views
+
+Views are a way of sub-typing datatypes.  
+
+Views are simply specific interpretations or refinements of a datatype.  
+
+
+
+@c ----------------------------------------------------------------------------
+

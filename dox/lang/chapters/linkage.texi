@@ -1,0 +1,53 @@
+@c "chapters/linkage.texi"
+@c $Id: linkage.texi,v 1.1 2007/08/20 00:02:48 fang Exp $
+
+@node Linkage
+@chapter Linkage
+@cindex linkage
+
+This is completely unimplemented...
+
+One of the strengths of the @HAC{} language is modularity.  
+The old implementation of the CAST language 
+was a single-pass interpreter.  
+The current implementation of an @HAC{} compiler allows
+one to compile modules independently and later link modules together
+into a coherent object file.  
+Modular compilation leads to efficient recompilation, 
+library development...
+
+@menu
+* Visibility::
+* Ordering::
+* Linkage Questions::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Visibility
+@section Visibility
+@cindex visibility
+
+Definitions and instantiations within a compilation module can either be
+publicly accessible to other modules, or private and inaccessible.  
+By default, all entities are public, i.e. their uses are @emph{exported}.  
+To make an entity private, simply prefix the first declaration
+or prototype with the keyword @t{static}, like in C.  
+To refer to an entity defined in another module, 
+simply prefix a declaration with the keyword @t{extern}, like in C.  
+
+Implementation:
+Generate automatic headers from implementation files.  
+
+@c ----------------------------------------------------------------------------
+@node Ordering
+@section Ordering
+
+
+@node Linkage Questions
+@section Questions
+
+How does linkage apply to typedefs?
+Can one make a definition static, but a typedef thereof exported?
+(Could be useful for simplifying interfaces to definitions...)
+
+

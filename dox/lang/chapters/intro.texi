@@ -1,0 +1,98 @@
+@c "chapters/intro.texi"
+@c $Id: intro.texi,v 1.1 2007/08/20 00:02:47 fang Exp $
+
+@node Introduction
+@chapter Introduction
+@cindex introduction
+
+@quotation
+But in our enthusiasm, we could not resist a radical overhaul of the
+system, in which all of its major weaknesses have been exposed,
+analyzed, and replaced with new weaknesses.
+
+@flushright
+@i{Bruce Leverett, ``Register Allocation in Optimizing Compilers''}
+@end flushright
+@end quotation
+
+@c ----------------------------------------------------------------------------
+@cindex CSP
+In the beginning, there was CSP.  
+@c \cite{ref:csp}.
+
+This document describes the language specification for the @HAC{} Language.  
+
+Should be largely implementation-independent.  
+But we discuss some of the issues.  
+
+Our implementation is a multi-phase compiler with four phases:
+
+@itemize
+@item Compile -- like precompiling modules
+@item Link
+@item Unroll -- hierarchical expansion of top-level instantiations.  
+@item Finalize -- @emph{unique} instantiation after connections.  
+@end itemize
+
+Compile-time is ...
+
+Link-time is ...
+
+Unroll-time is ...
+
+Finalize is ...
+
+@menu
+* Purpose::
+* Roots::
+* Overview::
+@end menu
+
+
+@c ----------------------------------------------------------------------------
+@node Purpose
+@section Purpose
+
+What is the purpose of @HAC{}?
+What is the meaning of life?
+
+What this IS:
+@itemize
+@item a hardware description language
+@end itemize
+
+What this IS NOT:
+@itemize
+@item a sequential programming language
+@end itemize
+
+@c ----------------------------------------------------------------------------
+@node Roots
+@section Roots
+@cindex history
+@c or History
+@cindex CAST
+
+The @HAC{} language is based on the @CAST{}
+(Caltech Asynchronous Synthesis Tool) language.  
+
+Discuss limitations.  
+Hierarchical information was lost, as a result of 
+flattening identifiers into strings.  
+
+@cindex vi
+@cindex emacs
+Religious differences, much like the
+@command{vi} versus @command{emacs} holy war, 
+led to a divergence of implementations and interpretations.  
+
+
+@c ----------------------------------------------------------------------------
+@node Overview
+@section Overview
+
+In Chapter blah we cover blah.  
+In Chapter foo we cover foo.  
+
+@c ----------------------------------------------------------------------------
+

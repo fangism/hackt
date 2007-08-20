@@ -1,12 +1,11 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2007/08/16 23:48:04 fang Exp $
+#	$Id: Makefile.am,v 1.12 2007/08/20 00:02:33 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = cast2hac.pdf
 PSS = $(PDFS:.pdf=.ps)
 .NOTPARALLEL: cast2hac-tex.pdf cast2hac-tex.dvi
-
 noinst_DATA += cast2hac-tex.pdf cast2hac-tex.dvi
 
 info_TEXINFOS += cast2hac.texi
@@ -33,7 +32,8 @@ hacmacros.texi: $(srcdir)/../common/hacmacros.texi
 
 CLEANFILES += hacmacros.texi
 
-AM_MAKEINFOFLAGS = -I $(srcdir)/../common
+# without $(srcdir) since makeinfo is run in the srcdir
+AM_MAKEINFOFLAGS = -I ../common -I $(srcdir)/../common
 
 cast2hac.pdf cast2hac.dvi cast2hac.html $(srcdir)/cast2hac.info: \
 	$(cast2hac_info_INCLUDES)

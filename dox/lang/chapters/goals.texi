@@ -1,0 +1,107 @@
+@c "chapters/goals.tex"
+@c $Id: goals.texi,v 1.1 2007/08/20 00:02:47 fang Exp $
+
+@node Goals
+@c @chapter Goals
+@unnumbered Goals
+@cindex goals
+
+Designing a new language is not a task for the faint-hearted.  
+There has to be sufficient motivation to justify such labor:
+
+@itemize
+@item No existing language (or composition thereof)
+meets the requirements demanded.  
+@item A workaround atop of existing languages is deemed to be insufficient.
+@item For fun.  
+@end itemize
+
+As selfish as it may seem, the @HAC{} language is designed to meet a very
+specific requirement of the author.  
+The author's desire is to provide a language to facilitate:
+
+@itemize
+@item Ease and effectiveness of (asynchronous) VLSI design automation
+@item Ease of automatic design space exploration 
+(at high architecture level and low level circuits)
+@end itemize
+
+@menu
+* Design Automation::
+* Design Space Exploration::
+* Asynchrony::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Design Automation
+@section Design Automation
+@cindex design automation
+
+What do other languages lack?
+Asynchrony?
+Heirarchical information.  
+
+When charged with the task of designing a circuit component, 
+one is usually given a functional specification to meet.  
+The difficulty often lies with coming up with fitting 
+functional specification ---
+knowing @emph{a priori} the context in which a component is used.  
+Without the context in which a component is used, 
+it is futile to optimize the design of that component.  
+Often, one functional specification for a component is really 
+meant to be used in multiple contexts, in which case, 
+one would design a different version for each context.  
+
+``Heavy-tree'' of definition uses (like calling context stacks).  
+
+Ramble ramble ramble...
+
+Shape and form factors...
+
+Optimization using dynamic performance information...
+
+@c ----------------------------------------------------------------------------
+@node Design Space Exploration
+@section Design Space Exploration
+@cindex design space exploration
+
+The ultimate ambition for this project is to be able to 
+automatically explore the design space of implementations of
+significantly complex functional specifications.  
+
+@cindex program transformation
+Program transformations.  
+
+Design choices fall into two major categories:
+1) Quantitative (How many?  How wide?  How large?) and
+2) Qualitative (What @emph{kind}?).  
+
+Quantitative parameters are simply traits that can be described
+quantitatively:  How many buffers?  How wide a datapath?  
+
+Examples of qualitative parameters:
+What kind of buffer?  What protocol or reshuffling?  
+Which kind of adder?  Whether or not to use a speculative path?
+Whether or not to introduce resource arbitration?
+Parallel or serial?
+
+Objectives.
+Area, energy, performance, efficiency.  
+How about aesthetics and simplicity (design time)?  
+
+@c ----------------------------------------------------------------------------
+@node Asynchrony
+@section Asynchrony
+@cindex asynchronous VLSI
+@cindex VLSI
+
+So what does @emph{asynchronous} VLSI have to do with deciding
+to use a new language?  
+
+@cindex Verilog
+@cindex VHDL
+Verilog and VHDL shortcomings...
+Other existing (public) async. synthesis tools.  
+
+@c ----------------------------------------------------------------------------
+

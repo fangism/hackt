@@ -1,0 +1,106 @@
+@c "chapters/namespaces.texi"
+@c $Id: namespaces.texi,v 1.1 2007/08/20 00:02:48 fang Exp $
+
+@node Namespaces
+@chapter Namespaces
+@cindex namespaces
+
+To avoid name collisions, @HAC{} supports namespaces.  
+Namespaces are also useful for organizing closely related definitions
+and instantiations.  
+@HAC{} allows namespaces to be nested, although one-level (flat)
+namespaces may be emulated by name-mangling.  
+
+The default namespace is the @emph{global} namespace, 
+the ultimate root of all user-defined namespaces.  
+The global namespace has no parent namespace.  
+
+See Appendix C.10 (Technicalities:Namespaces) of 
+Stroustrup's @i{The C++ Programming Language}.  
+
+@menu
+* Namespace Identifiers::
+* Importing Namespaces::
+* Namespace Resolution::
+* Namespace Issues::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Namespace Identifiers
+@section Identifiers
+@cindex namespace identifiers
+
+Identifiers may be prefixed with namespaces using the 
+scope (@t{::}) operator, e.g. @samp{zoo::aquatic::fish}.  
+Any identifier that begins with @t{::} is an absolute identifier, 
+one whose namespace path is specified from the global namespace.  
+Identifiers fall into one of several categories:
+
+@itemize
+@item unqualified, in which the parent namespace is implicit
+@item qualified-relative, where an identifier is prefixed with a
+	partial namespace path (e.g. @samp{dinner::food::salad})
+@item qualified-absolute, where the full path to a given entity is 
+	specified in the identifier's prefix.  
+	(e.g. @samp{::plane} or @samp{::farm::horse})
+@end itemize
+
+
+@c ----------------------------------------------------------------------------
+@node Importing Namespaces
+@section Importing
+@cindex importing namespaces
+
+To make all public definitions within a namespace available
+using unqualified identifiers, one can import an entire namespace.  
+
+Aliasing is like psuedo subnamespace.
+
+Each time a namepace is closed, all of its imported namespaces are
+discarded, which means that the next time that namespace is opened, 
+it loses its previous imports.  
+This can be useful for resetting imports, should the need or desire arise.  
+
+Since the global namespace cannot be closed, 
+import directives in the global namespace last until the end-of-file.  
+
+
+@c ----------------------------------------------------------------------------
+@node Namespace Resolution
+@section Resolution
+@cindex namespace resolution
+
+In this section, we describe the order in which namespaces are
+searched to resolve identifiers.  
+Given an unqualified identifier, references are resolved as follows:
+
+@enumerate
+@item Lookup the identifier in the current namespace 
+	(where the reference is made).  
+	If a match is found, it is guaranteed to be unique, 
+	otherwise, continue searching.  
+@item Lookup the identifier in each imported and aliased namespace.  
+	If a unique match is found, return it.  
+	In the case of multiple matches (in different namespaces), 
+	report ambiguity as an error.  
+	If no matches are found, continue searching.
+@item If not already in the global namespace, 
+	continue searching using steps 1 and 2 in the @emph{parent} namespace.  
+	Return the first unique match found or an error if zero
+	or more than one match is found.  
+@end enumerate
+
+@c ----------------------------------------------------------------------------
+@node Namespace Issues
+@section Issues
+
+Interpretation:
+
+What does it mean for a parameter assignment or connection to 
+appear in a namespace?  
+Doesn't make any sense.  
+Therefore forbid assignments and connections (actions) inside namespaces.  
+Namespaces may include instantiations and definitions and other namespaces.  
+
+Implementation:
+
