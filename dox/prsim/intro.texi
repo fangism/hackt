@@ -1,0 +1,15 @@
+@c "hacprsim/intro.texi"
+@c $Id: intro.texi,v 1.1 2007/08/20 21:12:33 fang Exp $
+
+@node Introduction
+@chapter Introduction
+
+@command{hacprsim} is a production rule simulator, 
+which is part of the HACKT tool set.  
+@command{hacprsim} simulates circuits at a digital level of abstraction.
+It is based on older versions of @command{prsim}.  
+In the remainder of this document @command{prsim} will 
+refer to the new version @command{hacprsim}.  
+
+@strong{TODO:} examples and tutorials taken from test suite?
+

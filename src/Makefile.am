@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.177 2007/08/17 00:36:20 fang Exp $
+#	$Id: Makefile.am,v 1.178 2007/08/20 21:12:38 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -139,6 +139,7 @@ hacchpsim_LDFLAGS = -export-dynamic
 # (only if symbols in executable needed to resolve from modules)
 
 main/chpsim.cc: install_paths.h
+main/prsim.cc: install_paths.h
 
 hacguile_SOURCES = main/guile.cc
 hacguile_CPPFLAGS = $(GUILE_CPPFLAGS) -DWITH_MAIN

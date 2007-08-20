@@ -1,0 +1,162 @@
+@c "hacprsim/commands.texi"
+@c $Id: commands.texi,v 1.1 2007/08/20 21:12:30 fang Exp $
+
+@node Commands
+@chapter Commands
+
+This chapter documents the various commands available in
+the interpreter.  
+Commands are organized into categories.  
+
+@strong{FYI:} the command documentation has been extracted from 
+source file @file{sim/prsim/Command-prsim.cc}.  
+
+@menu
+* Built-in Commands::
+* General Commands::
+* Simulation Commands::
+* Channel Commands::
+* Info Commands::
+* View Commands::
+* Modes Commands::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Built-in Commands
+@section Built-in Commands
+
+The following commands are listed in the @t{builtin} category.  
+
+@include cmd/help.texi
+@include cmd/echo.texi
+@include cmd/comment.texi
+@include cmd/exit.texi
+
+The following commands pertain to command aliases.
+
+@include cmd/alias.texi
+@include cmd/unalias.texi
+@include cmd/unaliasall.texi
+@include cmd/aliases.texi
+
+Shell commands may be executed by prefixing a line with '!'.  
+For example, @samp{!whoami}.  
+
+@c ----------------------------------------------------------------------------
+@node General Commands
+@section General Commands
+
+The following commands are listed in the @t{general} category.  
+
+@include cmd/source.texi
+@include cmd/addpath.texi
+@include cmd/paths.texi
+
+@c ----------------------------------------------------------------------------
+@node Simulation Commands
+@section @t{simulation} Commands
+
+@include cmd/initialize.texi
+@include cmd/reset.texi
+
+Running the simulation.  
+
+@include cmd/step.texi
+@include cmd/advance.texi
+@include cmd/cycle.texi
+
+Coercively setting values.
+
+@include cmd/set.texi
+@include cmd/setr.texi
+@include cmd/setf.texi
+@include cmd/setrf.texi
+@include cmd/unset.texi
+@include cmd/unsetall.texi
+
+Breakpoints.  
+
+@include cmd/breakpt.texi
+@include cmd/breaks.texi
+@include cmd/nobreakpt.texi
+@include cmd/nobreakptall.texi
+
+Checkpointing.
+
+@include cmd/save.texi
+@include cmd/load.texi
+
+@c ----------------------------------------------------------------------------
+@node Channel Commands
+@section @t{channel} Commands
+
+@c ----------------------------------------------------------------------------
+@node Info Commands
+@section @t{info} Commands
+
+The first subset of commands give information about the properties of the 
+simulated production rules and contain no stateful information.  
+
+@include cmd/fanin.texi
+@include cmd/fanout.texi
+@include cmd/rings-mk.texi
+@include cmd/allrings-mk.texi
+@include cmd/rings-chk.texi
+@include cmd/allrings-chk.texi
+@include cmd/what.texi
+@include cmd/who.texi
+
+The following commands give information about the state of the 
+simulator and the simulated production rules.  
+
+@include cmd/get.texi
+@include cmd/getall.texi
+@include cmd/assert.texi
+@include cmd/assertn.texi
+@include cmd/queue.texi
+@include cmd/assert-queue.texi
+@include cmd/backtrace.texi
+@include cmd/status.texi
+@include cmd/time.texi
+
+@c ----------------------------------------------------------------------------
+@node View Commands
+@section @t{view} Commands
+
+View commands affect what is displayed while the simulation is running.  
+
+@include cmd/watch.texi
+@include cmd/unwatch.texi
+@include cmd/watches.texi
+@include cmd/watchall.texi
+@include cmd/tcounts.texi
+@include cmd/zerotcounts.texi
+@include cmd/watch-queue.texi
+
+@c ----------------------------------------------------------------------------
+@node Modes Commands
+@section @t{modes} Commands
+
+This section lists commands that affect the execution of the simulation.  
+
+@include cmd/checkexcl.texi
+@include cmd/eval-order.texi
+
+Timing mode.
+
+@include cmd/timing.texi
+@include cmd/random.texi
+@include cmd/norandom.texi
+
+@include cmd/diagnostics.texi
+@include cmd/unstable.texi
+@include cmd/weak-unstable.texi
+@include cmd/interference.texi
+@include cmd/weak-interference.texi
+@include cmd/mode.texi
+
+Two additional commands control the behavior of unstable rules.  
+
+@include cmd/unstable-unknown.texi
+@include cmd/unstable-dequeue.texi
+

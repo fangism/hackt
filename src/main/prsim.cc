@@ -1,8 +1,9 @@
 /**
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
-
-	$Id: prsim.cc,v 1.12 2007/04/20 18:26:01 fang Exp $
+	This source file is processed by extract_texinfo.awk for 
+	command-line option documentation.  
+	$Id: prsim.cc,v 1.13 2007/08/20 21:12:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -29,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_common.h"
 #include "sim/prsim/ExprAllocFlags.h"
 #include "util/string.tcc"	// for string_to_num
+#include "install_paths.h"
 
 namespace HAC {
 using SIM::PRSIM::State;
@@ -188,10 +190,28 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
+/***
+@texinfo opt/option-b.texi
+@cindex batch mode
+@defopt -b
+Batch mode.  Run non-interactively, suppressing the prompt
+and disabling tab-completion (from readline or editline).  
+Useful for scripted jobs.  
+Opposite of @option{-i}.  
+@end defopt
+@end texinfo
+***/
 		case 'b':
 			// batch-mode, non-interactive
 			o.interactive = false;
 			break;
+/***
+@texinfo opt/option-d.texi
+@defopt -d ckpt
+Print textual dump of prsim checkpoint file @var{ckpt}.  
+@end defopt
+@end texinfo
+***/
 		case 'd': {
 			o.dump_checkpoint = true;
 			std::ifstream f(optarg, std::ios_base::binary);
@@ -202,6 +222,13 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			State::dump_checkpoint(cout, f);
 			break;
 		}
+/***
+@texinfo opt/option-f.texi
+@defopt -f @var{flag}
+@xref{General Flags}.
+@end defopt
+@end texinfo
+***/
 		case 'f': {
 			const options_modifier_map_iterator
 				mi(options_modifier_map.find(optarg));
@@ -214,16 +241,54 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			}
 			break;
 		}
+/***
+@texinfo opt/option-h.texi
+@defopt -h
+Help.  Print list of all interpreter commands and exit.  
+@end defopt
+@end texinfo
+***/
 		case 'h':
 			o.help_only = true;
 			// return 0
 			break;
+/***
+@texinfo opt/option-i.texi
+@cindex interactive mode
+@defopt -i
+Interactive mode.  Show prompt before each command.
+Enable tab-completion if built with readline/editline.  
+Opposite of @option{-b}.  
+@end defopt
+@end texinfo
+***/
 		case 'i':
 			o.interactive = true;
 			break;
+/***
+@texinfo opt/option-I-upper.texi
+@cindex source paths
+@defopt -I path @r{(repeatable)}
+@anchor{option-I}
+Append @var{path} to the list of paths to search for sourcing other 
+command scripts in the interpreter.  
+@end defopt
+@end texinfo
+***/
 		case 'I':
 			o.source_paths.push_back(optarg);
 			break;
+/***
+@texinfo opt/option-O-upper.texi
+@cindex optimization
+@defopt -O lvl
+Optimize internal expanded representation of production rules.
+Optimizations do not affect the event outcome of simulations.  
+Current valid values of @var{lvl} are 0 (none) and 1.  
+For more details, @xref{Optimization Flags}.
+@end defopt
+@end texinfo
+***/
 		case 'O': {
 			int opt_level;
 			if (string_to_num(optarg, opt_level)) {
@@ -265,6 +330,11 @@ prsim::usage(void) {
 		cerr << "flags (" << flags << " total):" << endl;
 		dump_options_briefs(cerr);
 	}
+	cerr << "Additional documentation is installed in:\n"
+	"\t`info hacprsim' (finds " INFODIR "/hacprsim.info)\n"
+	"\tPDF: " PDFDIR "/hacprsim.pdf\n"
+	"\tPS: " PSDIR "/hacprsim.ps\n"
+	"\tHTML: " HTMLDIR "/hacprsim.html/index.html" << endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -294,39 +364,105 @@ static void __prsim_no_denormalize_negations(prsim_options& o)
 	{ o.expr_alloc_flags.no_denormalize_negations(); }
 
 const prsim::register_options_modifier
+/***
+@texinfo opt/default.texi
+@defopt {-f default}
+Reset to the default set of configuration options.  
+Not negatable.  
+@end defopt
+@end texinfo
+***/
 	prsim::_default(
 		"default", &__prsim_default,
 		"default options"), 
+/***
+@texinfo opt/run.texi
+@defopt {-f run}
+Actually run the simulator's interpreter.  Enabled by default.
+@samp{-f no-run} is explicitly needed when all that is desired
+are diagnostic dumps.  
+@end defopt
+@end texinfo
+***/
 	prsim::_run(
 		"run", &__prsim_run,
 		"enable simulation run (default)"), 
 	prsim::_no_run(
 		"no-run", &__prsim_no_run,
 		"disable simulation run"), 
+/***
+@texinfo opt/dump-expr-alloc.texi
+@defopt {-f dump-expr-alloc}
+Diagnostic. 
+Print result of expression allocation prior to execution of the simulator.  
+@end defopt
+@end texinfo
+***/
 	prsim::_dump_expr_alloc(
 		"dump-expr-alloc", &__prsim_dump_expr_alloc,
 		"show result of expression allocation"), 
 	prsim::_no_dump_expr_alloc(
 		"no-dump-expr-alloc", &__prsim_no_dump_expr_alloc,
 		"suppress result of expression allocation (default)"),
+/***
+@texinfo opt/check-structure.texi
+@defopt {-f check-structure}
+Run some internal structural consistency checks 
+on nodes and expressions prior to simulation.
+Enabled by default.
+@end defopt
+@end texinfo
+***/
 	prsim::_check_structure(
 		"check-structure", &__prsim_check_structure,
 		"checks expression/node structure consistency (default)"), 
 	prsim::_no_check_structure(
 		"no-check-structure", &__prsim_no_check_structure,
 		"disable structural consistency checks"),
+/***
+@texinfo opt/dump-dot-struct.texi
+@defopt {-f dump-dot-struct}
+Diagnostic.  
+Print a @command{dot} format representation of the 
+whole-program production rule graph.  
+Recommend using with @option{-f no-run}.  
+@end defopt
+@end texinfo
+***/
 	prsim::_dump_dot_struct(
 		"dump-dot-struct", &__prsim_dump_dot_struct,
 		"print dot-formatted graph structure"), 
 	prsim::_no_dump_dot_struct(
 		"no-dump-dot-struct", &__prsim_no_dump_dot_struct,
 		"suppress dot-formatted graph structure (default)"),
+/***
+@texinfo opt/fold-literals.texi
+@defopt {-f fold-literals}
+Collapse leaf nodes of literals directly into their parent expressions.  
+Dramatically reduces the number of expression nodes allocated, 
+and shortens propagation paths to output nodes.  
+Enabled at level @option{-O 1} and above.  
+@end defopt
+@end texinfo
+***/
 	prsim::_fold_literals(
 		"fold-literals", &__prsim_fold_literals,
 		"[OPT] eliminate literal leaf nodes"), 
 	prsim::_no_fold_literals(
 		"no-fold-literals", &__prsim_no_fold_literals,
 		"[OPT] disable fold-literals"), 
+/***
+@texinfo opt/denormalize-negations.texi
+@defopt {-f denormalize-negations}
+Apply DeMorgan's rules to transform expressions by pushing negations
+as close each rule's root node as possible.  
+Production rules are restructured into equivalent expressions.  
+Reduces the number of negation expressions, 
+enabling better folding of negated literals.  
+Enabled at level @option{-O 1} and above.  
+@end defopt
+@end texinfo
+***/
 	prsim::_denormalize_negations(
 		"denormalize-negations", &__prsim_denormalize_negations,
 		"[OPT] apply DeMorgan\'s transformations"), 

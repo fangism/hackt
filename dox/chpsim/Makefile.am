@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2007/08/16 23:48:14 fang Exp $
+#	$Id: Makefile.am,v 1.10 2007/08/20 21:12:29 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -104,19 +104,6 @@ hacchpsim_info_DEPS = \
 	$(HACCHPSIM_COMMANDS_TEXI) \
 	$(HACCHPSIM_FUNCTIONS_TEXI)
 
-# $(srcdir)/options:
-#	$(mkdir_p) $@
-
-# $(srcdir)/cmd:
-#	$(mkdir_p) $@
-
-# $(srcdir)/fn:
-#	$(mkdir_p) $@
-
-# BUILT_DIRS = options cmd fn
-# CVS ignore these directories
-# AUTO_IGNORE += $(BUILT_DIRS)
-
 # these auto-generated and distributed files should not be cleaned by the user
 # they should only be explicitly cleaned by the maintainer.  
 MAINTAINERCLEANFILES += \
@@ -129,8 +116,6 @@ clean-texi:
 	-$(RM) $(HACCHPSIM_OPTIONS_TEXI)
 	-$(RM) $(HACCHPSIM_COMMANDS_TEXI)
 	-$(RM) $(HACCHPSIM_FUNCTIONS_TEXI)
-#	-(cd $(srcdir) && $(RM) -r $(BUILT_DIRS) )
-#	-$(RM) -r $(BUILT_DIRS)
 
 .PHONY: clean-texi
 

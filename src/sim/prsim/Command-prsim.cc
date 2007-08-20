@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.2 2007/02/28 21:22:08 fang Exp $
+	$Id: Command-prsim.cc,v 1.3 2007/08/20 21:12:41 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -105,11 +105,27 @@ const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
 	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/echo.texi
+@deffn Command echo args ...
+Prints the arguments back to stdout.
+@end deffn
+@end texinfo
+***/
 typedef	stateless_command_wrapper<Echo, State>	Echo;
 INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Echo, "echo", PRSIM::builtin, 
 	"prints arguments back to stdout, space-delimited")
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo cmd/help.texi
+@deffn Command help cmd
+Help on command or category @var{cmd}.
+@samp{help all} gives a list of all commands available in all categories.
+@samp{help help} tells you how to use @command{help}.
+@end deffn
+@end texinfo
+***/
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Help, PRSIM::builtin)
 }	// end namespace PRSIM
 
@@ -118,6 +134,14 @@ template class Help<PRSIM::State>;
 
 namespace PRSIM {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/comment.texi
+@deffn Command # ...
+@deffnx Command comment ...
+Whole line comment, ignored by interpreter.  
+@end deffn
+@end texinfo
+***/
 typedef	stateless_command_wrapper<CommentPound, State>		CommentPound;
 typedef	stateless_command_wrapper<CommentComment, State>	CommentComment;
 
@@ -132,6 +156,14 @@ typedef	All<State>					All;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::All, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/exit.texi
+@deffn Command exit
+@deffnx Command quit
+Exit the simulator.
+@end deffn
+@end texinfo
+***/
 typedef	stateless_command_wrapper<Exit, State>		Exit;
 typedef	stateless_command_wrapper<Quit, State>		Quit;
 
@@ -141,38 +173,111 @@ INITIALIZE_STATELESS_COMMAND_CLASS(PRSIM::Quit,
 	"quit", PRSIM::builtin, "exits simulator")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/alias.texi
+@deffn Command alias cmd args
+Defines an alias, whereby the interpreter expands @var{cmd} into
+@var{args} before interpreting the command.
+@var{args} may consist of multiple tokens.  
+This is useful for shortening common commands.  
+@end deffn
+@end texinfo
+***/
 typedef	Alias<State>				Alias;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Alias, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unalias.texi
+@deffn Command unalias cmd
+Undefines an existing alias @var{cmd}.
+@end deffn
+@end texinfo
+***/
 typedef	UnAlias<State>				UnAlias;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::UnAlias, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unaliasall.texi
+@deffn Command unaliasall
+Undefines @emph{all} aliases.  
+@end deffn
+@end texinfo
+***/
 typedef	UnAliasAll<State>			UnAliasAll;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::UnAliasAll, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/aliases.texi
+@deffn Command aliases
+Print a list of all known aliases registered with the interpreter.
+@end deffn
+@end texinfo
+***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/source.texi
+@deffn Command source script
+@anchor{command-source}
+Loads commands to the interpreter from the @var{script} file.
+File is searched through include paths given by
+the @ref{option-I,, @option{-I}} command-line option 
+or the @ref{command-addpath,, @command{addpath}} command.  
+@end deffn
+@end texinfo
+***/
 typedef	Source<State>				Source;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Source, PRSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/addpath.texi
+@deffn Command addpath path
+@anchor{command-addpath}
+Appends @var{path} to the search path for sourcing scripts.
+@end deffn
+@end texinfo
+***/
 typedef	AddPath<State>				AddPath;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AddPath, PRSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/paths.texi
+@deffn Command paths
+Print the list of paths searched for source scripts.  
+@end deffn
+@end texinfo
+***/
 typedef	Paths<State>				Paths;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Paths, PRSIM::general)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/initialize.texi
+@deffn Command initialize
+Resets the variable state of the simulation (to unknown), 
+while preserving other settings such as mode and breakpoints.  
+@end deffn
+@end texinfo
+***/
 typedef	Initialize<State>			Initialize;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Initialize, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/reset.texi
+@deffn Command reset
+Similar to @command{initialize}, but also resets all modes to their
+default values.  
+@end deffn
+@end texinfo
+***/
 typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Reset, PRSIM::simulation)
 
@@ -180,6 +285,12 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Reset, PRSIM::simulation)
 /**
 	Command class for stepping through one event at a time from
 	the event queue. 
+@texinfo cmd/step.texi
+@deffn Command step [n]
+Advances the simulation by @var{n} steps (events).  
+Without @var{n}, takes only a single step.  
+@end deffn
+@end texinfo
  */
 struct Step {
 public:
@@ -349,6 +460,13 @@ Step::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/advance.texi
+@deffn Command advance delay
+Advances the simulation @var{delay} units of time.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 	"advance the simulation in time units")
 
@@ -435,6 +553,14 @@ Advance::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/cycle.texi
+@deffn Command cycle
+Execute steps until the event queue is exhausted (if ever).  
+Can be interrupted by @kbd{Ctrl-C} or a @t{SIGINT} signal.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
  	"run until event queue empty or breakpoint")
 
@@ -504,10 +630,28 @@ Cycle::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/queue.texi
+@deffn Command queue
+Print the event queue.  
+@end deffn
+@end texinfo
+***/
 typedef	Queue<State>				Queue;
-CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Queue, PRSIM::simulation)
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Queue, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/set.texi
+@deffn Command set node val [delay]
+Set @var{node} to @var{val}.  
+If @var{delay} is omitted, the set event is inserted `now' at 
+the current time, at the head of the event queue.
+If @var{delay} is given with a @t{+} prefix, time is added relative to
+`now', otherwise it is scheduled at an absolute time @var{delay}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 	"set node immediately, or after delay")
 
@@ -593,6 +737,15 @@ Set::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/setf.texi
+@deffn Command setf node val [delay]
+Set forcefully.  
+Same as the @command{set} command, but this overrides any pending 
+events on @var{node}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
 	"same as set, but overriding pending events")
 
@@ -612,6 +765,19 @@ SetF::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unset.texi
+@deffn Command unset node
+Cancel any pending @command{set} commands on @var{node}.  
+This effectively causes a node to be re-evaluated based on the 
+state of its fanin.  
+If the evaluation results in a change of value, a firing 
+is scheduled in the event queue.  
+This command may be useful in releasing nodes from a stuck state caused by
+a coercive @command{set}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSet, "unset", simulation,
 	"force re-evaluation of node\'s input state, may cancel setf")
 
@@ -646,6 +812,14 @@ UnSet::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unsetall.texi
+@deffn Command unsetall
+Clears all coercive @command{set} commands, and re-evaluates
+@emph{all} nodes in terms of their fanins.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSetAll, "unsetall", simulation,
 	"force re-evaluation of all nodes\' inputs, cancelling setf")
 
@@ -671,6 +845,13 @@ o <<
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/setr.texi
+@deffn Command setr node val
+Same as the @command{set} command, but using a random delay into the future.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 	"set node to value after random delay")
 
@@ -728,6 +909,15 @@ Setr::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/setrf.texi
+@deffn Command setrf node val
+Same as @command{setf} and @command{setr} combined; 
+forcefully set @var{node} to @var{val} at random time in future, 
+overriding any pending events.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
 	"set node to value after random delay, overriding pending events")
 
@@ -750,6 +940,16 @@ SetrF::usage(ostream& o) {
 //	"set node with random delay after event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/breakpt.texi
+@deffn Command breakpt node
+Set a breakpoint on @var{node}.  
+When @var{node} changes value, interrupt the simulation
+(during @command{cycle}, @command{advance}, or @command{step}), 
+and return control back to the interpreter.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 	"set breakpoint on node")	// no vector support yet
 
@@ -785,6 +985,14 @@ BreakPt::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/nobreakpt.texi
+@deffn Command nobreakpt node
+@deffnx Command unbreak node
+Removes breakpoint on @var{node}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
 	"remove breakpoint on node")	// no vector support yet
 
@@ -833,6 +1041,14 @@ UnBreak::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/nobreakptall.texi
+@deffn Command nobreakptall
+@deffnx Command unbreakall
+Removes all breakpoints.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPtAll, "nobreakptall", simulation,
 	"remove all breakpoints")
 
@@ -871,6 +1087,13 @@ UnBreakAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/breaks.texi
+@deffn Command breaks
+Show all breakpoints (nodes).  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Breaks, "breaks", simulation,
 	"list all nodes that are breakpoints")
 
@@ -892,22 +1115,59 @@ Breaks::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/save.texi
+@deffn Command save ckpt
+Saves the current state of the production rules and nodes into 
+a checkpoint file @var{ckpt}.  The checkpoint file can be loaded to 
+resume or replay a simulation later.  
+@end deffn
+@end texinfo
+***/
 typedef	Save<State>				Save;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Save, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/load.texi
+@deffn Command load ckpt
+Loads a @command{hacprsim} checkpoint file into the simulator state.
+@end deffn
+@end texinfo
+***/
 typedef	Load<State>				Load;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Load, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/what.texi
+@deffn Command what name
+Print the type of the instance named @var{name}.  
+@end deffn
+@end texinfo
+***/
 typedef	What<State>				What;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::What, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/who.texi
+@deffn Command who name
+Print all equivalent aliases of instance @var{name}.  
+@end deffn
+@end texinfo
+***/
 typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Who, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/get.texi
+@deffn Command get node
+Print the current value of @var{node}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of node/vector")
 
@@ -944,6 +1204,14 @@ Get::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/getall.texi
+@deffn Command getall struct
+Print the state of all subnodes of @var{struct}.  
+Useful for observing channels and processes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
 	"print values of all subnodes")
 
@@ -979,6 +1247,16 @@ GetAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/status.texi
+@deffn Command status value
+Print all nodes whose current value is @var{value}.  
+Frequently used to find nodes that are in an unknown ('X') state.  
+Valid @var{value} arguments are [0fF] for logic-low, [1tT] for logic-high,
+[xXuU] for unknown value.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
 	"show all nodes matching a state value")
 
@@ -1008,6 +1286,13 @@ Status::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/fanin.texi
+@deffn Command fanin node
+Print all production rules that can fire @var{NODE}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 	"print rules that influence a node")
 
@@ -1039,6 +1324,13 @@ Fanin::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/fanout.texi
+@deffn Command fanout node
+Print all production rules that @var{NODE} participates in.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info, 
 	"print rules that a node influences")
 
@@ -1069,6 +1361,13 @@ Fanout::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/rings-mk.texi
+@deffn Command rings-mk node
+Print forced exclusive high/low rings of which @var{node} is a member.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMk, "rings-mk", info, 
 	"print forced exclusive rings of which a node is a member")
 
@@ -1098,6 +1397,13 @@ RingsMk::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/allrings-mk.texi
+@deffn Command allrings-mk
+Print all forced exclusive high/low rings.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsMk, "allrings-mk", info, 
 	"dump all forced exclusive hi/lo rings")
 
@@ -1120,6 +1426,13 @@ AllRingsMk::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/rings-chk.texi
+@deffn Command rings-chk node
+Print all checked exclusive rings of which @var{node} is a member.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsChk, "rings-chk", info, 
 	"print checked exclusive rings of which a node is a member")
 
@@ -1149,6 +1462,13 @@ RingsChk::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/allrings-chk.texi
+@deffn Command allrings-chk
+Print all checked exclusive rings of nodes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsChk, "allrings-chk", info, 
 	"dump all checked exclusive hi/lo rings")
 
@@ -1176,6 +1496,13 @@ AllRingsChk::usage(ostream& o) {
 //	"print information about a node/vector")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assert.texi
+@deffn Command assert node value
+Error out if @var{node} is not at value @var{value}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info, 
 	"error if node is NOT expected value")
 
@@ -1226,6 +1553,13 @@ Assert::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assertn.texi
+@deffn Command assertn node value
+Error out if @var{node} @emph{is} at value @var{value}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertN, "assertn", info, 
 	"error if node IS expected value")
 
@@ -1276,10 +1610,25 @@ AssertN::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assert-queue.texi
+@deffn Command assert-queue
+Error out if event queue is empty.  
+Useful for checking for deadlock.  
+@end deffn
+@end texinfo
+***/
 typedef	AssertQueue<State>			AssertQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/time.texi
+@deffn Command time
+What time is it (in the simulator)?
+@end deffn
+@end texinfo
+***/
 typedef	Time<State>				Time;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Time, PRSIM::info)
 
@@ -1293,6 +1642,16 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Time, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+/***
+@texinfo cmd/backtrace.texi
+@deffn Command backtrace node
+Trace backwards through a history of last-arriving transitions on
+node @var{node}, until a cycle is found.  
+Useful for tracking down causes of instabilities, 
+and identifying critical paths and cycle times.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(BackTrace, "backtrace", info, 
 	"trace backwards partial event causality history")
 
@@ -1326,6 +1685,14 @@ BackTrace::usage(ostream& o) {
 #endif	// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watch.texi
+@deffn Command watch nodes...
+Adds @var{nodes} to a watch-list of nodes to display when their values change,
+much like @command{breakpt}, but doesn't interrupt simulation.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
 	"print activity on selected nodes")
 
@@ -1365,6 +1732,13 @@ Watch::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unwatch.texi
+@deffn Command unwatch nodes...
+Removes @var{nodes} from list of watched nodes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
 	"silence activity reporting on selected nodes")
 
@@ -1402,6 +1776,16 @@ UnWatch::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall.texi
+@deffn Command watchall
+@deffnx Command nowatchall
+Display every node value change (regardless of present in watch-list).  
+@command{nowatchall} restores the state where only explicitly
+watched nodes are displayed on value changes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAll, "watchall", view, 
 	"print activity on all nodes (flag)")
 
@@ -1476,6 +1860,13 @@ NoWatchAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watches.texi
+@deffn Command watches
+Print list of all explicitly watched nodes.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watches, "watches", view,
 	"list all nodes that are explicitly watched")
 
@@ -1497,6 +1888,15 @@ Watches::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watch-queue.texi
+@deffn Command watch-queue
+@deffnx Command nowatch-queue
+Show changes to the event-queue as events are scheduled.
+Typically only used during debugging or detailed diagnostics.  
+@end deffn
+@end texinfo
+***/
 typedef	WatchQueue<State>			WatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchQueue, PRSIM::view)
 
@@ -1505,6 +1905,15 @@ typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchQueue, PRSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/tcounts.texi
+@deffn Command tcounts
+@deffnx Command notcounts
+@command{tcounts} displays transition counts on nodes as they change value.  
+@command{notcounts} hides transition count information.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(TCounts, "tcounts", view, 
 	"show transition counts on watched nodes")
 
@@ -1547,6 +1956,13 @@ NoTCounts::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/zerotcounts.texi
+@deffn Command zerotcounts
+Reset all transition counts to 0.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(ZeroTCounts, "zerotcounts", view, 
 	"reset transition counts on all nodes")
 
@@ -1569,6 +1985,14 @@ ZeroTCounts::usage(ostream& o) {
 
 //-----------------------------------------------------------------------------
 #if WANT_OLD_RANDOM_COMMANDS
+/***
+@texinfo cmd/random.texi
+@deffn Command random
+Deprecated, but retained for legacy compatibility.  
+Synonymous with @samp{timing random}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Random, "random", modes, 
 	"use random delays (deprecated)")
 
@@ -1592,6 +2016,14 @@ Random::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/norandom.texi
+@deffn Command norandom
+Deprecated, but retained for legacy compatibility.  
+Synonymous with @samp{timing uniform}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoRandom, "norandom", modes, 
 	"use non-random delays (deprecated)")
 
@@ -1618,6 +2050,18 @@ NoRandom::usage(ostream& o) {
 #endif	// WANT_OLD_RANDOM_COMMANDS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/eval-order.texi
+@deffn Command eval-order [mode]
+With no argument, reports the current evaluation ordering mode.
+With @var{mode} (either @t{inorder} or @t{random}), 
+fanouts are evaluated either in a pre-determined order, or in random order.
+Random ordering is useful for emulating random arbitration among
+fanouts of the same node.  
+Default mode is @t{inorder}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(EvalOrder, "eval-order", modes, 
 	"shuffle (or not) the evaluation ordering of fanouts")
 
@@ -1657,6 +2101,19 @@ EvalOrder::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/timing.texi
+@deffn Command timing [mode] ...
+Modes:
+@samp{uniform} @var{delay} applies the same delay to @emph{all} rules.  
+@t{uniform} is useful for getting quick transition counts.  
+@samp{random} gives every event a different randomly assigned delay.  
+@t{random} is most useful for detecting non-QDI logic violations.  
+@samp{after} applies a different delay for each rule, as determined
+by the @t{after} PRS rule attribute.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
 	"set/get timing mode")
 
@@ -1686,6 +2143,17 @@ Timing::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/checkexcl.texi
+@deffn Command checkexcl
+@deffnx Command nocheckexcl
+Enables mutual exclusion checking for checked exclusive node rings.  
+Checking is enabled by default.  
+Users of old @command{prsim} should replace uses of @t{CHECK_CHANNELS}
+with these commands.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckExcl, "checkexcl", modes, 
 	"enable mutual exclusion checks")
 
@@ -1729,6 +2197,15 @@ NoCheckExcl::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unstable-unknown.texi
+@deffn Command unstable-unknown
+When set, this causes unstable rules to be result in an unknown value
+on the output node.  
+The opposite effect is the @command{unstable-dequeue} command.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableUnknown, "unstable-unknown", 
 	modes, "rule instabilities propagate unknowns (default)")
 
@@ -1751,6 +2228,14 @@ UnstableUnknown::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unstable-dequeue.texi
+@deffn Command unstable-dequeue
+When set, this causes unstable rules to be dequeued from the event queue.
+The opposite effect is the @command{unstable-unknown} command.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableDequeue, "unstable-dequeue", 
 	modes, "rule instabilities dequeue events")
 
@@ -1818,24 +2303,82 @@ class_name::usage(ostream& o) {						\
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/diagnostics.texi
+@b{Diagnostic controls.}
+The following commands control the simulation policy for run-time
+logic violations.
+Allowed arguments are: @t{ignore}, @t{warn}, @t{notify}, and @t{break}.
+@t{ignore} silently ignores violations.
+@t{notify} is the same as @t{warn}, which prints a diagnostic message
+without interrupting the simulation.
+@t{break} reports an error and stops the simulation.    
+When no argument is given, just reports the current policy.  
+@end texinfo
+***/
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unstable.texi
+@deffn Command unstable [mode]
+Set the simulator policy in the event of an instability.
+A rule is unstable when it is enqueued to fire, 
+but a change in the input literal/expression stops the rule from firing.  
+Stability is a requirement of quasi-delay insensitive circuits.  
+Default mode is @t{break}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Unstable, "unstable", 
 	"alter simulation behavior on unstable", 
 	"Alters simulator behavior on an instability violation.",
 	unstable)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/weak-unstable.texi
+@deffn Command weak-unstable [mode]
+Set the simulator policy in the event of a weak-instability.
+A rule is weakly-unstable when it is enqueued to fire, 
+but a change in the input literal (to unknown) @emph{may} 
+stop the rule from firing.  
+Default mode is @t{warn}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakUnstable, "weak-unstable", 
 	"alter simulation behavior on weak-unstable",
 	"Alters simulator behavior on a weak-instability violation.", 
 	weak_unstable)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/interference.texi
+@deffn Command interference [mode]
+Set the simulator policy in the event of interference.
+A rule is interfering when it is fighting an opposing (up/down) firing rule.  
+Interference will always put the conflicting node into an unknown state.  
+Non-interference is a requirement of quasi-delay insensitive circuits.  
+Default mode is @t{break}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Interference, "interference", 
 	"alter simulation behavior on interference",
 	"Alters simulator behavior on an interference violation.",
 	interference)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/weak-interference.texi
+@deffn Command weak-interference [mode]
+Set the simulator policy in the event of weak-interference.
+A rule is weakly interfering when @emph{may} fight 
+an opposing (up/down) firing rule.  
+Weak-interference will put the conflicting node into an unknown state.  
+Default mode is @t{warn}.
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference", 
 	"alter simulation behavior on weak-interference",
 	"Alters simulator behavior on a weak-interference violation.",
@@ -1844,6 +2387,17 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/mode.texi
+@deffn Command mode [md]
+Without arguments, reports the current simulation policies on logic violations.
+With argument @var{md}, @t{run} is the default set of policies, 
+@t{reset} is only different in that @t{weak-unstable} is @t{ignore}d.  
+@t{reset} is useful during the initalization phase, when some rules
+may transiently and weakly interfere, as they come out of unknown state.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 
 	modes, "enable/disable weak-interference warnings")
 

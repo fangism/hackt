@@ -1,0 +1,46 @@
+@c "hacprsim/usage.texi"
+@c $Id: usage.texi,v 1.1 2007/08/20 21:12:34 fang Exp $
+
+@node Usage
+@chapter Usage
+@cindex usage
+
+@strong{FYI:} the documentation here is extracted from source file
+@file{main/prsim.cc}.  
+
+@include opt/option-b.texi
+@include opt/option-d.texi
+@include opt/option-f.texi
+@include opt/option-h.texi
+@include opt/option-i.texi
+@include opt/option-I-upper.texi
+@include opt/option-O-upper.texi
+
+@menu
+* General Flags::
+* Optimization Flags::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node General Flags
+@section General Flags
+
+General flags are all prefixed with @option{-f}.  
+Unless otherwise noted, all options are negatable with a
+@option{-f no-} counterpart.  
+
+@include opt/default.texi
+@include opt/run.texi
+@include opt/dump-expr-alloc.texi
+@include opt/check-structure.texi
+@include opt/dump-dot-struct.texi
+
+
+@c ----------------------------------------------------------------------------
+@node Optimization Flags
+@section Optimization Flags
+@cindex optimization
+
+@include opt/fold-literals.texi
+@include opt/denormalize-negations.texi
+
