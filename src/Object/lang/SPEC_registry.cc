@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.15 2006/09/09 06:59:16 fang Exp $
+	$Id: SPEC_registry.cc,v 1.16 2007/08/21 00:50:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -253,6 +253,15 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 /**
 	Possibly think of a better name for this directive:
 	'distinct', 'disjoint', 'unconnected'
+@texinfo spec/unaliased.texi
+@deffn Directive unaliased nodes...
+Usage: @samp{unaliased(...)}
+
+Error out if any of @var{nodes} are aliased to each other.  
+Tool-independent.  
+Useful for verifying that certain nodes are not accidentally connected.
+@end deffn
+@end texinfo
  */
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 
@@ -276,6 +285,17 @@ UnAliased::main(cflat_prs_printer& p, const param_args_type&,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo spec/assert.texi
+@deffn Directive assert P
+Usage: @samp{assert<P>()}
+
+Error out if predicate expression @var{P} is false.
+Tool-independent.
+Useful for enforcing parametric constraints.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(Assert, "assert")
 
 void
@@ -285,6 +305,35 @@ Assert::main(cflat_prs_printer& p, const param_args_type& a,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo spec/exclhi.texi
+@deffn Directive exclhi nodes...
+Usage: @samp{exclhi(...)}
+
+Emits directives to check that @var{nodes} are mutually exclusive high
+at run-time.  
+(This corresponds to the old @t{CHECK_CHANNELS} method of checking 
+for exclusivity.)
+In @command{hacprsim}, these form checking rings.  
+In @command{cflat lvs}, these directives affect 
+charge-sharing and sneak-path analysis.  
+@end deffn
+@end texinfo
+
+@texinfo spec/excllo.texi
+@deffn Directive excllo nodes...
+Usage: @samp{excllo(...)}
+
+Emits directives to check that @var{nodes} are mutually exclusive low
+at run-time.  
+(This corresponds to the old @t{CHECK_CHANNELS} method of checking 
+for exclusivity.)
+In @command{hacprsim}, these form checking rings.  
+In @command{cflat lvs}, these directives affect 
+charge-sharing and sneak-path analysis.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 
@@ -336,6 +385,13 @@ LVS_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo spec/order.texi
+@deffn Directive order nodes...
+For @command{cflat lvs}, specify the node checking order for BDD algorithms.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
 
 /**
@@ -357,6 +413,13 @@ LVS_BDD_order::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo spec/unstaticized.texi
+@deffn Directive unstaticized node
+For @command{cflat lvs}, specify that node should remain unstaticized.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
 
 /**
@@ -381,6 +444,14 @@ LVS_unstaticized::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo spec/cross_coupled_inverters.texi
+@deffn Directive cross_coupled_inverters x y
+For @command{cflat lvs}, just emit the directive back out with substituted
+canonical node names.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_cross_coupled_inverters,
 		"cross_coupled_inverters")
 
@@ -399,6 +470,23 @@ LVS_cross_coupled_inverters::main(cflat_prs_printer& p,
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo spec/mk_exclhi.texi
+@deffn Directive mk_exclhi nodes...
+For @command{cflat prsim} and @command{hacprsim}, 
+enforce logic-high mutual exclusion among @var{nodes}.  
+This is often used in describing arbiters.  
+@end deffn
+@end texinfo
+
+@texinfo spec/mk_excllo.texi
+@deffn Directive mk_excllo nodes...
+For @command{cflat prsim} and @command{hacprsim}, 
+enforce logic-low mutual exclusion among @var{nodes}.  
+This is often used in describing arbiters.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 
@@ -472,6 +560,20 @@ default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo spec/min_sep.texi
+@deffn Directive min_sep dist nodes...
+Usage: @samp{min_sep<dist>(nodes...)}
+
+Specify that @var{nodes} should have a miminum physical separation
+of distance @var{dist}.  
+@var{nodes} can be organized into aggregate groups:
+for @samp{min_sep(@{a,b@},@{c,d@})}, @t{a} and @t{b} must be separated
+from @t{c} and @t{d}.  
+Affects @command{cflat} for layout and @command{prsim}.  
+@end deffn
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
 
 /**

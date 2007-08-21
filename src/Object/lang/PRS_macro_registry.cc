@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.9 2006/10/04 23:18:27 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.10 2007/08/21 00:50:47 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -164,6 +164,16 @@ print_grouped_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo prs/macro-echo.texi
+@defmac echo nodes...
+Diagnostic.  This macro just prints @samp{echo(...)} back out
+where the original arguments are substituted with canonical hierarchical 
+instance (node) names.
+This demonstrates how one can add custom PRS macros.  
+@end defmac
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(Echo, "echo")
 
 /**
@@ -185,6 +195,39 @@ Echo::main(cflat_prs_printer& p, const param_args_type& params,
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo prs/macro-passn.texi
+@defmac passn W L g s d
+Usage: @samp{passn<W,L>(g, s, d)} or @samp{passn(g, s, d)}
+
+Declares an NFET pass-transistor with gate @var{g}, source @var{s}, 
+and drain @var{d}.
+Sizing parameters @var{W} and @var{L} are optional.
+In @command{cflat prsim} mode, 
+this prints a uni-directional (sized) production rule 
+@example
+after 0  g & ~s -> d-
+@end example
+In @command{cflat lvs} mode, this just prints @samp{passn(g, s, d)} back out.  
+@end defmac
+@end texinfo
+
+@texinfo prs/macro-passp.texi
+@defmac passn W L g s d
+Usage: @samp{passp<W,L>(g, s, d)} or @samp{passp(g, s, d)}
+
+Declares a PFET pass-transistor with gate @var{g}, source @var{s}, 
+and drain @var{d}.
+Sizing parameters @var{W} and @var{L} are optional.
+In @command{cflat prsim} mode, 
+this prints a uni-directional (sized) production rule 
+@example
+after 0 ~g & s -> d+
+@end example
+In @command{cflat lvs} mode, this just prints @samp{passp(g, s, d)} back out.  
+@end defmac
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(PassN, "passn")
 DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(PassP, "passp")
 

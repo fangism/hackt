@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.12 2007/08/16 23:48:02 fang Exp $
+#	$Id: Make.dox-tail,v 1.13 2007/08/21 00:50:35 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -44,10 +44,13 @@ clean-figs: force
 	$(RM) figs/*.pdftex_t
 	$(RM) figs/*.png
 
+clean-texi:
+	-test -z "$(TEXI_CLEANFILES)" || $(RM) $(TEXI_CLEANFILES)
+
 # prefer to list .pdf/.dvi pairs explicitly, more fine-grained
 # .NOTPARALLEL: pdf ps
 
-.PHONY: help-dox clean-figs
+.PHONY: help-dox clean-figs clean-texi
 
 help-dox:
 	@$(ECHO) "Documentation make targets" ; \

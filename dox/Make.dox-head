@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.12 2007/08/16 23:48:02 fang Exp $
+#	$Id: Make.dox-head,v 1.13 2007/08/21 00:50:35 fang Exp $
 #	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
@@ -75,5 +75,18 @@ EXTRACT_TEXI_INCLUDES = $(GREP) "^@include" | $(CUT) -d\  -f2 | \
 	$(AWK) '{printf(" \\\n\t$$(srcdir)/" $$1);}'
 #	$(AWK) '{printf(" \\\n\t" $$1);}'
 # need $(srcdir) to force it to look there w/o relying on VPATH
+
+# cumulative variables:
+# auto-generated Makefile snippets
+AUTO_TEXINFO_DEPS =
+# used by clean-texi target
+TEXI_CLEANFILES =
+# distribute generated texi files
+EXTRA_DIST += $(AUTO_TEXINFO_DEPS)
+# CVS ignore generated texi files
+AUTO_IGNORE += $(AUTO_TEXINFO_DEPS)
+MAINTAINERCLEANFILES = $(AUTO_TEXINFO_DEPS)
+MAINTAINERCLEANFILES += $(TEXI_CLEANFILES)
+# EXTRA_DIST += $(TEXI_CLEANFILES)
 
 

@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2007/08/20 00:02:35 fang Exp $
+#	$Id: Makefile.am,v 1.25 2007/08/21 00:50:36 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -41,9 +41,44 @@ hacmacros.texi: $(srcdir)/../common/hacmacros.texi
 
 CLEANFILES += hacmacros.texi
 
-hac.pdf hac.dvi hac.html $(srcdir)/hac.info: $(hac_info_INCLUDES)
+$(srcdir)/prsmacros.mk: chapters/PRS.texi
+	{ $(ECHO) -n "PRS_MACROS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
 
-EXTRA_DIST += $(hac_info_INCLUDES)
+$(srcdir)/spec.mk: chapters/SPEC.texi
+	{ $(ECHO) -n "SPEC_DIRECTIVES_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
+$(srcdir)/prsmacros.mk: Makefile.in
+$(srcdir)/spec.mk: Makefile.in
+
+-include $(srcdir)/prsmacros.mk
+-include $(srcdir)/spec.mk
+
+AUTO_TEXINFO_DEPS += prsmacros.mk spec.mk
+
+$(PRS_MACROS_TEXI): $(top_srcdir)/src/Object/lang/PRS_macro_registry.cc
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+
+$(SPEC_DIRECTIVES_TEXI): $(top_srcdir)/src/Object/lang/SPEC_registry.cc
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+
+hac_info_DEPS = \
+	$(hac_info_INCLUDES) \
+	$(PRS_MACROS_TEXI) \
+	$(SPEC_DIRECTIVES_TEXI)
+
+TEXI_CLEANFILES += \
+	$(PRS_MACROS_TEXI) \
+	$(SPEC_DIRECTIVES_TEXI)
+
+hac.pdf hac.dvi hac.html $(srcdir)/hac.info: $(hac_info_DEPS)
+
+EXTRA_DIST += $(hac_info_DEPS)
 
 ###############################################################################
 # obsolete latex sources

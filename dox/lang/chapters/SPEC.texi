@@ -1,5 +1,5 @@
 @c "chapters/SPEC.texi"
-@c $Id: SPEC.texi,v 1.1 2007/08/20 00:02:44 fang Exp $
+@c $Id: SPEC.texi,v 1.2 2007/08/21 00:50:39 fang Exp $
 
 @node SPEC Directives
 @chapter SPEC Directives
@@ -7,11 +7,10 @@
 
 This chapter describes the various directives available
 in the @t{spec} sub-language.  
+The following documentation is extracted from source file
+@file{Object/lang/SPEC_registry.cc}.  
 
-@strong{TODO:} extract directives from source documentation.
-
-Someone should write the various spec directives up, ahem!
-
+@ignore
 @itemize
 @item @t{exclhi} --- specifies that group of nodes are 
 	mutually exclusive high, i.e. only one member of he group can be
@@ -26,4 +25,16 @@ Someone should write the various spec directives up, ahem!
 @item @t{mk_excllo} --- analogous to @t{mk_exclhi}
 @item @t{cross-coupled}
 @end itemize
+@end ignore
+
+@include spec/unaliased.texi
+@include spec/assert.texi
+@include spec/exclhi.texi
+@include spec/excllo.texi
+@include spec/order.texi
+@include spec/unstaticized.texi
+@include spec/cross_coupled_inverters.texi
+@include spec/mk_exclhi.texi
+@include spec/mk_excllo.texi
+@include spec/min_sep.texi
 

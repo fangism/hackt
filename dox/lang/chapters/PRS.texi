@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.1 2007/08/20 00:02:44 fang Exp $
+@c $Id: PRS.texi,v 1.2 2007/08/21 00:50:38 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -244,6 +244,13 @@ Examples of macros one may wish to define:
 The remaining sections discuss other extensions that have been proposed
 at other times.  
 See which ones could be folded into a general macro!
+
+Below are a list of macros documented in the source file
+@file{Object/lang/PRS_macro_registry.cc}.
+
+@include prs/macro-passn.texi
+@include prs/macro-passp.texi
+@include prs/macro-echo.texi
 
 @c ----------------------------------------------------------------------------
 @node Pass-gates

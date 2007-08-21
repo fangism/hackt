@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2007/08/20 21:12:29 fang Exp $
+#	$Id: Makefile.am,v 1.11 2007/08/21 00:50:35 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -65,10 +65,7 @@ $(srcdir)/functions.mk: Makefile.in
 -include $(srcdir)/options.mk
 -include $(srcdir)/commands.mk
 -include $(srcdir)/functions.mk
-AUTO_TEXINFO_DEPS = options.mk commands.mk functions.mk
-EXTRA_DIST += $(AUTO_TEXINFO_DEPS)
-AUTO_IGNORE += $(AUTO_TEXINFO_DEPS)
-MAINTAINERCLEANFILES = $(AUTO_TEXINFO_DEPS)
+AUTO_TEXINFO_DEPS += options.mk commands.mk functions.mk
 # these could be CVS cleaned too...
 
 # NOTE: these auto-generated .texi files are emitted in the maintainer's
@@ -98,26 +95,18 @@ $(HACCHPSIM_FUNCTIONS_TEXI): $(STDCHPFN_SRCS)
 # $(HACCHPSIM_COMMANDS_TEXI): $(srcdir)/cmd
 # $(HACCHPSIM_FUNCTIONS_TEXI): $(srcdir)/fn
 
-hacchpsim_info_DEPS = \
-	$(hacchpsim_INCLUDES) \
+auto_hacchpsim_info_DEPS = \
 	$(HACCHPSIM_OPTIONS_TEXI) \
 	$(HACCHPSIM_COMMANDS_TEXI) \
 	$(HACCHPSIM_FUNCTIONS_TEXI)
+
+hacchpsim_info_DEPS = \
+	$(hacchpsim_INCLUDES) \
+	$(auto_hacchpsim_info_DEPS)
 
 # these auto-generated and distributed files should not be cleaned by the user
 # they should only be explicitly cleaned by the maintainer.  
-MAINTAINERCLEANFILES += \
-	$(HACCHPSIM_OPTIONS_TEXI) \
-	$(HACCHPSIM_COMMANDS_TEXI) \
-	$(HACCHPSIM_FUNCTIONS_TEXI)
-
-# manually clean auto-generated documentation
-clean-texi:
-	-$(RM) $(HACCHPSIM_OPTIONS_TEXI)
-	-$(RM) $(HACCHPSIM_COMMANDS_TEXI)
-	-$(RM) $(HACCHPSIM_FUNCTIONS_TEXI)
-
-.PHONY: clean-texi
+TEXI_CLEANFILES += $(auto_hacchpsim_info_DEPS)
 
 # For a srcdir target like the .info to be distributed, 
 # its dependencies are best distributed along with to keep 

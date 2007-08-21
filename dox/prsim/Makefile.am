@@ -1,5 +1,5 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2007/08/20 21:12:30 fang Exp $
+#	$Id: Makefile.am,v 1.4 2007/08/21 00:50:43 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -39,11 +39,7 @@ $(srcdir)/commands.mk: Makefile.in
 
 -include $(srcdir)/options.mk
 -include $(srcdir)/commands.mk
-
-AUTO_TEXINFO_DEPS = options.mk commands.mk
-EXTRA_DIST += $(AUTO_TEXINFO_DEPS)
-AUTO_IGNORE += $(AUTO_TEXINFO_DEPS)
-MAINTAINERCLEANFILES = $(AUTO_TEXINFO_DEPS)
+AUTO_TEXINFO_DEPS += options.mk commands.mk
 
 $(HACPRSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/prsim.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
@@ -51,21 +47,15 @@ $(HACPRSIM_OPTIONS_TEXI): $(top_srcdir)/src/main/prsim.cc
 $(HACPRSIM_COMMANDS_TEXI): $(top_srcdir)/src/sim/prsim/Command-prsim.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
+auto_hacprsim_info_DEPS = \
+	$(HACPRSIM_OPTIONS_TEXI) \
+	$(HACPRSIM_COMMANDS_TEXI)
+
 hacprsim_info_DEPS = \
 	$(hacprsim_INCLUDES) \
-	$(HACPRSIM_OPTIONS_TEXI) \
-	$(HACPRSIM_COMMANDS_TEXI)
+	$(auto_hacprsim_info_DEPS)
 
-MAINTAINERCLEANFILES += \
-	$(HACPRSIM_OPTIONS_TEXI) \
-	$(HACPRSIM_COMMANDS_TEXI)
-
-# manually clean (intended for maintainer)
-clean-texi:
-	-$(RM) $(HACPRSIM_OPTIONS_TEXI)
-	-$(RM) $(HACPRSIM_COMMANDS_TEXI)
-
-.PHONY: clean-texi
+TEXI_CLEANFILES += $(auto_hacprsim_info_DEPS)
 
 EXTRA_DIST += $(hacprsim_info_DEPS)
 
