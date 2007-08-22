@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.38 2007/08/15 21:57:00 fang Exp $
+#	$Id: ChangeLog,v 1.39 2007/08/22 20:24:32 fang Exp $
+
+2006-08-22	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-62:
+	  mk/Makefile.am: forgot dependence on hackt-stddef.mk
+
 
 2006-08-15	David Fang	<fangism@users.sourceforce.net>
 

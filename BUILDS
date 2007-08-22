@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.94 2007/08/11 03:10:00 fang Exp $
+	$Id: BUILDS,v 1.95 2007/08/22 20:24:25 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -386,6 +386,18 @@ guile:
 NOTE: -Wno-undef worked around a false-error in configure (autoconf-2.60) 
 	dying on an undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
 NOTE: guile disabled because version (1.4) is too old and unsupported
+
+Version: hackt 0.1.4-devel-20070821
+CVS Tag: HACKT-00-01-04-main-00-81-62
+Configured with: '--prefix=/usr/local/cad' '--disable-static' '--with-readline' 'YACC=yacc' 'ACLOCAL_FLAGS=-I /usr/local/share/aclocal' '--enable-fun' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
+build-triplet: i386-unknown-freebsd6.2
+c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses 
+lex: flex version 2.5.4
+yacc: /usr/bin/yacc
+readline: GNU readline 5.0
+guile: guile-config - Guile version 1.6.8
 
 ===============================================================================
 sparc-sun-solaris2.9
