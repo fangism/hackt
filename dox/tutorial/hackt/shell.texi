@@ -1,0 +1,25 @@
+@c "hackt/shell.texi"
+@c $Id: shell.texi,v 1.1 2007/08/22 02:09:24 fang Exp $
+
+@node Shell Interpreter
+@chapter Shell Interpreter
+@cindex shell
+@cindex interpreter
+
+The @command{hackt shell} is intended as a general purpose tool for 
+manipulating object files, directing fine-grain control over partial
+compilation, mechanical program transformations and analyses, etc.
+This project is barely begun.  
+It is merely an object of curiosity at the moment.  
+It currently supports no commands and is, thus, utterly useless.  
+The only feature of the shell is the ability to escape to the 
+parent shell and run commands.  
+For example, 
+
+@example
+hacksh> @kbd{!date}
+Fri May 26 18:20:47 EDT 2006
+@end example
+
+Not very exciting yet.  
+

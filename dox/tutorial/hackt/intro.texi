@@ -1,0 +1,38 @@
+@c "hackt/intro.texi"
+@c $Id: intro.texi,v 1.1 2007/08/22 02:09:23 fang Exp $
+
+@node Introduction
+@chapter Introduction
+@cindex version
+
+This document is a usage guide for the set of HACKT executables.  
+
+@command{hackt} is a command to dispatch one of many programs in its 
+collection of tools.  
+The general usage is:
+
+@command{hackt} @t{[}@i{general options}@t{]} @i{command}
+	@t{[}@i{command arguments}@t{]}
+
+For example, @samp{hackt version}
+prints the version and configuration information for the tools.  
+Currently, there are no general options to @command{hackt}, 
+but some may be added in the future.  
+
+Commands will give a brief summary of their options when 
+invoked without command arguments, or when passed @option{-h} for help.  
+Some common subprograms also have equivalent single-name commands
+that are installed by @t{make install}.  
+
+The following topics are @emph{not} covered in this guide:
+@itemize
+@item language -- covered in @file{hac.pdf}, built in @file{dox/lang}, 
+installed in @file{@i{prefix}/share/hackt/doc/pdf/}.
+@item simulators -- covered in separate guides @file{hacprsim.pdf}
+and @file{hacchpsim.pdf}.  
+@end itemize
+
+All documents come in the following formats: @file{.pdf}, @file{.ps}, 
+@file{.html}, @file{.info}, 
+installed in @file{@i{prefix}/share/hackt/doc/}.
+

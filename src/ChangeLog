@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61:
+	  No source revision, main/cflat.cc extracted for texinfo 
+		documentation (dox/ChangeLog).
+
+
 2007-08-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-60:

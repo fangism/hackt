@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.24 2007/08/21 00:50:34 fang Exp $
+#	$Id: ChangeLog,v 1.25 2007/08/22 02:09:16 fang Exp $
+
+2007-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61:
+	  tutorial:/ documentation migrated to texinfo.
+
 
 2007-08-20	David Fang		<fangism@users.sourceforge.net>
 

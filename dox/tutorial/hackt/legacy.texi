@@ -1,0 +1,121 @@
+@c "hackt/legacy.texi"
+@c $Id: legacy.texi,v 1.1 2007/08/22 02:09:24 fang Exp $
+
+@node Legacy Compatibility
+@chapter Legacy Compatibility
+@cindex legacy
+
+NOTE: this section is somewhat of redundant with the @t{cast2hac} 
+directory documentation.  
+Please refer to @t{cast2hac.pdf} for a guide on migrating
+to the new @command{hackt} tools.  
+
+This section is only useful to those who have used the legacy @CAST{} tools.  
+We provide some tool commands for use with legacy @CAST{} tools.  
+The aim is to provide a bridge from old tools to @command{hackt}.  
+
+@menu
+* CAST Flatten::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node CAST Flatten
+@section CAST Flatten
+
+The old @CAST{} tool chain uses flattened text files as input to other tools.  
+We provide similar functionality with HACKT's @t{cflat} command, 
+which is also installed under the alias @t{hflat}.  
+
+@deffn Program hflat mode [options] in-object
+Emulate the behavior of legacy @command{cflat}.  
+Modes and options are explained below.  
+@end deffn
+
+Instead of reading in the source file directly, it reads a compiled
+object file.  
+(Later, we may add an option to read a source file directly.)
+If the object file is not already in the allocated state
+(@ref{Allocate}), then it will automatically
+invoke the allocation phase before doing its real work.  
+The options and modes are described in 
+@ref{CFLAT Options}.  
+
+Starting with our example from @ref{Program Examples}.  
+we compile @t{inv.haco} first.  
+
+@example
+$ @kbd{hackt compile inv.hac inv.haco}
+@end example
+
+We then produce flattened text output with the command:
+
+@example
+$ @kbd{hackt cflat prsim inv.haco}
+@end example
+
+@noindent
+which results the following output, suitable for legacy @t{prsim}:
+
+@example
+"x" -> "y"-
+~"x" -> "y"+
+= "x" "Z.a"
+= "y" "Z.b"
+@end example
+
+This can be piped directly into @t{prsim} or saved to a file for later use.  
+
+@menu
+* CFLAT Options::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node CFLAT Options
+@subsection CFLAT Options
+
+@command{hflat} provides convenient and fine-grain control
+over the output text format.  
+Options can be divided into two categories, @emph{modes} and @emph{flags}.  
+Flags control individual traits of the output format, 
+whereas modes are presets of traits, named after specific tools. 
+The presets are set to emulate the formats expected by the legacy tools
+as closely as possible.  
+Currently, the following list of modes is supported:
+
+@include cflat/mode-prsim.texi
+@include cflat/mode-lvs.texi
+@include cflat/mode-ergen.texi
+@include cflat/mode-alint.texi
+@include cflat/mode-prlint.texi
+@include cflat/mode-prs2tau.texi
+@include cflat/mode-connect.texi
+@include cflat/mode-check.texi
+@include cflat/mode-wire.texi
+@include cflat/mode-aspice.texi
+@include cflat/mode-ADspice.texi
+@include cflat/mode-default.texi
+
+TODO: make table summarizing the flags implied by each preset mode.  
+
+Other non-preset options can be used to fine-tune and 
+customize the output format.
+All options except the @option{connect-*} options may also be 
+prefixed with @option{no-} for negation, e.g. @option{-f no-sizes} disables
+printing of sized production rule literals.  
+The following @option{-f} flags are supported:
+
+@include cflat/opt-connect-none.texi
+@include cflat/opt-connect-equal.texi
+@include cflat/opt-connect-connect.texi
+@include cflat/opt-connect-wire.texi
+@include cflat/opt-include-prs.texi
+@include cflat/opt-self-aliases.texi
+@include cflat/opt-quote-names.texi
+@include cflat/opt-SEU.texi
+@include cflat/opt-check-mode.texi
+@include cflat/opt-wire-mode.texi
+@include cflat/opt-dsim-prs.texi
+@include cflat/opt-sizes.texi
+
+Preset modes are just combinations of the individual mode modifiers.  
+

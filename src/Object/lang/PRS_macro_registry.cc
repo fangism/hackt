@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.10 2007/08/21 00:50:47 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.11 2007/08/22 02:09:26 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -213,7 +213,7 @@ In @command{cflat lvs} mode, this just prints @samp{passn(g, s, d)} back out.
 @end texinfo
 
 @texinfo prs/macro-passp.texi
-@defmac passn W L g s d
+@defmac passp W L g s d
 Usage: @samp{passp<W,L>(g, s, d)} or @samp{passp(g, s, d)}
 
 Declares a PFET pass-transistor with gate @var{g}, source @var{s}, 

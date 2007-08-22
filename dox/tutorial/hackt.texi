@@ -1,0 +1,90 @@
+\input texinfo	@c -*-texinfo-*-
+@c %**start of header
+@setfilename hackt.info
+@settitle HACKT Tutorials
+@c `on' is the default
+@setchapternewpage odd
+@c for two-sided book-style printing
+@c %**end of header
+
+@c "chpsim.texi"
+@c $Id: hackt.texi,v 1.1 2007/08/22 02:09:18 fang Exp $
+
+@copying
+This manual describes the usage and operation of HACKT's tools.  
+
+Copyright @copyright{} 2007 Cornell University
+
+@quotation
+Published by ...
+ 
+Permission is hereby granted to ...
+@end quotation
+@end copying
+
+@c Title page and Copyright
+@titlepage
+@title HACKT
+@subtitle Hierarchical Asynchronous Circuit Kompiler Toolkit
+@author David Fang
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ****************************** contents ************************************
+@shortcontents
+@contents
+
+@ignore
+@iftex
+@node List of Figures
+@unnumbered List of Figures
+@listoffloats Figure
+@end iftex
+@end ignore
+
+@c ****************************** Top *****************************************
+@ifnottex
+@node Top
+@top HACKT Tools
+@insertcopying
+@end ifnottex
+
+@include hacmacros.texi
+
+@c @copying is recommended here as well
+@menu
+* Introduction::
+* Compiler::
+* Shell Interpreter::
+* Diagnostics::
+* Legacy Compatibility::
+* Command Index::
+* Variable Index::
+* Concept Index::
+@end menu
+
+@c ****************************** chapter *************************************
+@include hackt/intro.texi
+@include hackt/compiler.texi
+@include hackt/shell.texi
+@include hackt/diagnostics.texi
+@include hackt/legacy.texi
+
+@c ****************************** index ***************************************
+@node Command Index
+@unnumbered Command Index
+@printindex fn
+
+@node Variable Index
+@unnumbered Variable Index
+@printindex vr
+
+@node Concept Index
+@unnumbered Concept Index
+@printindex cp
+
+@c ****************************** finis ***************************************
+@bye
+

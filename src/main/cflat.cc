@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.16 2007/03/16 07:07:20 fang Exp $
+	$Id: cflat.cc,v 1.17 2007/08/22 02:09:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -263,50 +263,121 @@ __cflat_check(cflat::options& cf) {
 // end of primary modes
 //=============================================================================
 STATIC_TRACE_HERE("before cflat option modifiers")
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const cflat::register_options_modifier
-	cflat::_prsim("prsim", &__cflat_prsim);
-
-STATIC_TRACE_HERE("after first cflat option modifier")
 
 const cflat::register_options_modifier
-	cflat::_lvs("lvs", &__cflat_lvs);
+/***
+@texinfo cflat/mode-prsim.texi
+@defvr {@t{cflat} option} prsim
+@command{prsim} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_prsim("prsim", &__cflat_prsim),
 
-const cflat::register_options_modifier
-	cflat::_LVS("LVS", &__cflat_lvs);		// re-use lvs
+/***
+@texinfo cflat/mode-lvs.texi
+@defvr {@t{cflat} option} lvs
+@defvrx {@t{cflat} option} LVS
+LVS output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_lvs("lvs", &__cflat_lvs),
+	cflat::_LVS("LVS", &__cflat_lvs),		// re-use lvs
 
-const cflat::register_options_modifier
-	cflat::_ergen("ergen", &__cflat_lvs);		// re-use lvs
+/***
+@texinfo cflat/mode-ergen.texi
+@defvr {@t{cflat} option} ergen
+@command{ergen} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_ergen("ergen", &__cflat_lvs),		// re-use lvs
 
-const cflat::register_options_modifier
-	cflat::_alint("alint", &__cflat_lvs);		// re-use lvs
+/***
+@texinfo cflat/mode-alint.texi
+@defvr {@t{cflat} option} alint
+@command{alint} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_alint("alint", &__cflat_lvs),		// re-use lvs
 
-const cflat::register_options_modifier
-	cflat::_prlint("prlint", &__cflat_prlint);
+/***
+@texinfo cflat/mode-prlint.texi
+@defvr {@t{cflat} option} prlint
+@command{prlint} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_prlint("prlint", &__cflat_prlint),
 
-const cflat::register_options_modifier
-	cflat::_prs2tau("prs2tau", &__cflat_lvs);	// re-use lvs
+/***
+@texinfo cflat/mode-prs2tau.texi
+@defvr {@t{cflat} option} prs2tau
+@command{prs2tau} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_prs2tau("prs2tau", &__cflat_lvs),	// re-use lvs
 
-const cflat::register_options_modifier
-	cflat::_connect("connect", &__cflat_connect);
+/***
+@texinfo cflat/mode-connect.texi
+@defvr {@t{cflat} option} connect
+@command{connect} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_connect("connect", &__cflat_connect),
 
-const cflat::register_options_modifier
-	cflat::_check("check", &__cflat_check);
+/***
+@texinfo cflat/mode-check.texi
+@defvr {@t{cflat} option} check
+@command{check} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_check("check", &__cflat_check),
 
-const cflat::register_options_modifier
-	cflat::_wire("wire", &__cflat_wire);
+/***
+@texinfo cflat/mode-wire.texi
+@defvr {@t{cflat} option} wire
+@command{wire} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_wire("wire", &__cflat_wire),
 
-const cflat::register_options_modifier
-	cflat::_aspice("aspice", &__cflat_wire);	// re-use wire
+/***
+@texinfo cflat/mode-aspice.texi
+@defvr {@t{cflat} option} aspice
+@defvrx {@t{cflat} option} Aspice
+@command{aspice} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_aspice("aspice", &__cflat_wire),	// re-use wire
+	cflat::_Aspice("Aspice", &__cflat_wire),	// re-use wire
 
-const cflat::register_options_modifier
-	cflat::_Aspice("Aspice", &__cflat_wire);	// re-use wire
+/***
+@texinfo cflat/mode-ADspice.texi
+@defvr {@t{cflat} option} ADspice
+@command{ADspice} output mode.
+@end defvr
+@end texinfo
+***/
+	cflat::_ADspice("ADspice", &__cflat_ADspice),
 
-const cflat::register_options_modifier
-	cflat::_ADspice("ADspice", &__cflat_ADspice);
-
-const cflat::register_options_modifier
+/***
+@texinfo cflat/mode-default.texi
+@defvr {@t{cflat} option} default
+@command{default} output mode.
+@end defvr
+@end texinfo
+***/
 	cflat::_default("default", &__cflat_default);
+
+STATIC_TRACE_HERE("after cflat option modifiers")
 
 //-----------------------------------------------------------------------------
 // for setting/unsetting individual flags
@@ -314,6 +385,14 @@ const cflat::register_options_modifier
 // TODO: reperitive code should be templated or macro'd
 // define for common patterns to reduce clutter.
 
+/***
+@texinfo cflat/opt-connect-none.texi
+@defvr {@t{cflat -f} option} no-connect
+@defvrx {@t{cflat -f} option} connect-none
+Suppress printing of aliases.  
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_connect_none(cflat::options& cf) {
@@ -325,6 +404,13 @@ const cflat::register_options_modifier
 	cflat::_no_connect("no-connect", &__cflat_connect_none, 
 		"(connect-none)");
 
+/***
+@texinfo cflat/opt-connect-equal.texi
+@defvr {@t{cflat -f} option} connect-equal
+Print aliases with style: @samp{= x y}.
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_connect_equal(cflat::options& cf) {
@@ -334,6 +420,13 @@ const cflat::register_options_modifier
 	cflat::_connect_equal("connect-equal", &__cflat_connect_equal, 
 		"alias-style: = x y");
 
+/***
+@texinfo cflat/opt-connect-connect.texi
+@defvr {@t{cflat -f} option} connect-connect
+Print aliases with style: @samp{connect x y}.
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_connect_connect(cflat::options& cf) {
@@ -343,6 +436,13 @@ const cflat::register_options_modifier
 	cflat::_connect_connect("connect-connect", &__cflat_connect_connect,
 		"alias-style: connect x y");
 
+/***
+@texinfo cflat/opt-connect-wire.texi
+@defvr {@t{cflat -f} option} connect-wire
+Print aliases with style: @samp{wire x y}.
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_connect_wire(cflat::options& cf) {
@@ -353,6 +453,16 @@ const cflat::register_options_modifier
 		"alias-style: wire x y");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-include-prs.texi
+@defvr {@t{cflat -f} option} include-prs
+@defvrx {@t{cflat -f} option} exclude-prs
+@defvrx {@t{cflat -f} option} no-include-prs
+@defvrx {@t{cflat -f} option} no-exclude-prs
+Include or exclude production rules from output.  
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_include_prs(cflat::options& cf) {
@@ -376,6 +486,14 @@ const cflat::register_options_modifier
 		"(exclude-prs)");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-self-aliases.texi
+@defvr {@t{cflat -f} option} self-aliases
+@defvrx {@t{cflat -f} option} no-self-aliases
+Includes or exclude aliases @samp{x = x}.
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_self_aliases(cflat::options& cf) {
@@ -395,6 +513,14 @@ const cflat::register_options_modifier
 		"excludes aliases x = x");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-quote-names.texi
+@defvr {@t{cflat -f} option} quote-names
+@defvrx {@t{cflat -f} option} no-quote-names
+Wrap all node names in ``quotes''.  
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_quote_names(cflat::options& cf) {
@@ -414,6 +540,14 @@ const cflat::register_options_modifier
 		"no quote around node names");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-SEU.texi
+@defvr {@t{cflat -f} option} SEU
+@defvrx {@t{cflat -f} option} no-SEU
+Enable single-event-upset mode for selected tool.  
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_SEU(cflat::options& cf) {
@@ -437,6 +571,15 @@ const cflat::register_options_modifier
 //	cf.namespace_policy = cflat::options::NAMESPACE_POLICY_NONE;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-check-mode.texi
+@defvr {@t{cflat -f} option} check-mode
+@defvrx {@t{cflat -f} option} no-check-mode
+Silences @command{cflat} output while traversing hierarchy.  
+Useful only as a diagnostic tool for debugging.  
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_check_mode(cflat::options& cf) {
@@ -456,6 +599,14 @@ const cflat::register_options_modifier
 		"cflat output enabled");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-wire-mode.texi
+@defvr {@t{cflat -f} option} wire-mode
+@defvrx {@t{cflat -f} option} no-wire-mode
+Accumulate aliases in the form: @samp{wire (x,y,...)}
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_wire_mode(cflat::options& cf) {
@@ -475,6 +626,14 @@ const cflat::register_options_modifier
 		"use one of the connect-* modes of printing aliases");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-dsim-prs.texi
+@defvr {@t{cflat -f} option} dsim-prs
+@defvrx {@t{cflat -f} option} no-dsim-prs
+Wraps prs in: @samp{dsim @{ ... @}}
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_dsim_prs(cflat::options& cf) {
@@ -494,6 +653,14 @@ const cflat::register_options_modifier
 		"not (dsim-prs)");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-sizes.texi
+@defvr {@t{cflat -f} option} sizes
+@defvrx {@t{cflat -f} option} no-sizes
+Prints rule literals with @t{<size>} specifications.  
+@end defvr
+@end texinfo
+***/
 static
 void
 __cflat_size_prs(cflat::options& cf) {

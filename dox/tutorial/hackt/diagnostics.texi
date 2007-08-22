@@ -1,0 +1,70 @@
+@c "hackt/diagnostics.texi"
+@c $Id: diagnostics.texi,v 1.1 2007/08/22 02:09:22 fang Exp $
+
+@node Diagnostics
+@chapter Diagnostics
+@cindex diagnostics
+
+This chapter describes some diagnostic commands of @command{hackt} tools.  
+
+@menu
+* Version::
+* Objdump::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Version
+@section Version
+@cindex version
+
+The @t{version} command just tells you the configuration with which
+@command{hackt} was compiled and installed.  
+The output may looks something like the following:
+
+@example
+$ @kbd{hackt version}
+Version: hackt 0.1.4-devel-20060508
+CVS Tag: HACKT-00-01-04-main-00-79-03-CHP-02-01
+Configured with: '--enable-fun' '--with-editline=/usr' 
+'YACC=/usr/bin/yacc' '--prefix=/Users/davidfang/local' '-C' 
+'CC=ccache gcc' 'CXX=ccache g++'
+build-triplet: powerpc-apple-darwin7.9.0
+c++: g++ (GCC) 3.3 20030304 (Apple Computer, Inc. build 1640)
+AM_CPPFLAGS: -I../../../src -I/usr/include   
+AM_CXXFLAGS: -pipe -ansi -pedantic-errors -Wold-style-cast 
+-Woverloaded-virtual -W -Wall -Wundef -Wshadow 
+-Wno-unused-parameter -Wpointer-arith -Wcast-qual -Wcast-align 
+-Wconversion -Werror
+AM_LDFLAGS: -L/usr/lib   
+config-CXXFLAGS: -g -O2
+config-CPPFLAGS: 
+config-LDFLAGS: 
+config-LIBS: -ledit  -lncurses 
+lex: flex version 2.5.4
+yacc: /usr/bin/yacc
+readline: BSD EditLine (histedit interface) ver. 2.9
+build-date: Wed May 10 18:24:59 EDT 2006
+@end example
+
+This information is especially useful for reporting bugs.  
+A list of known successful configurations is in the 
+top source directory's @t{BUILDS} file.  
+Reports of new configurations are always welcome.  
+
+@c ----------------------------------------------------------------------------
+@node Objdump
+@section Object Dump
+
+@command{hackt} also provides @t{objdump} as a command for viewing 
+the contents of a compiled object file as (questionably) human-readable text.  
+The regression test suite uses @t{objdump} heavily to verify the
+contents of object files as they are transformed through the various
+compile phases.  
+Occasionally, it may be useful to the casual or curious user for 
+bug tracking.  
+
+@deffn Program hacobjdump object-file
+Prints textual dump of compiled object file @var{object-file}.  
+Object file may be compiled to any phase.  
+@end deffn
+

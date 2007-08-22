@@ -1,0 +1,157 @@
+@c "hackt/compiler.texi"
+@c $Id: compiler.texi,v 1.1 2007/08/22 02:09:20 fang Exp $
+
+@node Compiler
+@chapter Compiler
+@cindex compiler
+
+TODO: figure of compile flow and phases.
+
+@menu
+* Compile::
+* Create::
+* Allocate::
+* File Conventions::
+* Program Examples::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Compile
+@section Compile
+@cindex compile
+
+The first compile phase produces a parsed and partially checked object
+file given an input text (source) file.  
+
+@deffn Program haco [options] source object
+Compile @HAC{} source to object file.
+@end deffn
+
+The source file is a text file in the @HAC{} language.  
+The object file, if given, is the result of the compile.  
+If the object file is omitted, the program just reports the result
+of complation without producing an object file.  
+
+Options:
+@defopt -h
+show usage
+@end defopt
+
+@defopt -I path
+adds include path @var{path} for importing other source files (repeatable)
+@end defopt
+
+@defopt -d
+Produces text dump of compiled module, 
+like @command{hacobjdump} in @ref{Objdump}.
+@end defopt
+
+@defopt -f optname
+general compile flags (repeatable) where @var{optname} is one of the following:
+@itemize
+@item @option{dump-include-paths}: 
+	dumps @option{-I} include paths as they are processed
+@item @option{dump-object-header}: 
+	(diagnostic) dumps persistent object header before saving
+@item @option{no-dump-include-paths}: 
+	suppress feedback of @option{-I} include paths
+@item @option{no-dump-object-header}: 
+	suppress persistent object header dump
+@end itemize
+@end defopt
+
+@t{haco} is provided as a single-command alias to 
+@t{hackt compile}@footnote{Thus named because we use @t{.haco} 
+as the extension for compiled object files}.
+
+@strong{TODO:} quick explanation of parse errors.  
+
+@c ----------------------------------------------------------------------------
+@node Create
+@section Create
+@cindex create
+
+The create phase generates footprints for each complete type once, 
+so that instances of the same type may share the same footprint.  
+Each type's definition is sequentially unrolled and expanded 
+(instantiations and connections) recursively after substituting
+meta-parameter arguments.  
+The input object file is the result of @t{haco}.  
+
+@deffn Program haccreate in-object out-object
+Further compiles an object file through the create phase.  
+@end deffn
+
+@t{haccreate} is provided as a single-command alias to @t{hackt create}.  
+
+@c ----------------------------------------------------------------------------
+@node Allocate
+@section Allocate
+@cindex allocate
+
+The alloc phase expands the entire instance hierarchy top-down, 
+so that every unique instance has its own state in memory.  
+The input object file is the result of @t{haccreate}, 
+but will automatically run @command{create} on the object file if necessary.  
+
+@deffn Program hacalloc in-object out-object
+Further compiles an object file through the alloc phase.  
+@end deffn
+
+@t{hacalloc} is provided as a single-command alias to @t{hackt alloc}.  
+
+In summary, 
+the create, and allocate compile phases 
+automatically run the necessary prerequisite phases where needed.  
+All developed tools should also implement this behavior.  
+
+
+@c ----------------------------------------------------------------------------
+@node File Conventions
+@section Conventions
+
+As a convention, we name our object files according to the last
+phase with which it was processed or produced.  
+The tools are actually extension agnostic; 
+you can use whatever file extensions you like for both
+source and object files.  
+
+@itemize
+@item @t{.haco} -- compiled only
+@item @t{.haco-c} -- compiled and created
+@item @t{.haco-a} -- compiled and allocated
+@end itemize
+
+These suffices can be used to define @t{make} rules.  
+Examples of Makefile templates can be found in the distribution
+@t{lib/mk} or installed in @t{@i{prefix}/share/hackt/mk/hackt.mk}.
+
+@c ----------------------------------------------------------------------------
+@node Program Examples
+@section Examples
+
+In this section, we use the following source @file{inv.hac} 
+as our input example.  
+
+@example
+defproc inv(bool a, b) @{
+prs @{
+  a    -> b-
+  ~a   -> b+
+@}
+@}
+
+bool x, y;
+inv Z(x, y);
+@end example
+
+This defines an inverter process @t{inv} with public boolean ports
+@t{a} and @t{b}.  
+The top-level declares boolean nodes @t{x} and @t{y}, 
+which are connected to the ports of instantiated inverter @t{Z}.  
+
+A more comprehensive description of the language can be found built in
+@file{dox/lang/hac.pdf} or installed as 
+@file{/install/share/hackt/doc/pdf/hac.pdf}.  
+
+TODO: fill in uses of example
