@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_visitor.h"
 	Expression visitor interface.  
-	$Id: expr_visitor.h,v 1.6 2007/08/15 02:48:59 fang Exp $
+	$Id: expr_visitor.h,v 1.6.2.1 2007/08/23 00:23:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_VISITOR_H__
@@ -43,6 +43,7 @@ virtual	VISIT_PROTO(data_expr);
 virtual	VISIT_PROTO(enum_expr) = 0;
 virtual	VISIT_PROTO(struct_expr) = 0;
 #endif
+virtual	VISIT_PROTO(string_expr) = 0;
 virtual	VISIT_PROTO(nonmeta_index_expr_base);
 virtual	VISIT_PROTO(nonmeta_range_expr_base);
 virtual	VISIT_PROTO(param_expr);

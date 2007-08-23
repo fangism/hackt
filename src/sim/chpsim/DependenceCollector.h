@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.6 2007/08/15 02:49:24 fang Exp $
+	$Id: DependenceCollector.h,v 1.6.2.1 2007/08/23 00:23:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -27,6 +27,7 @@ using entity::global_entry_context;
 using entity::bool_tag;
 using entity::int_tag;
 using entity::enum_tag;
+using entity::string_tag;
 using entity::channel_tag;
 class StateConstructor;
 
@@ -53,6 +54,7 @@ using entity::int_arith_loop_expr;
 using entity::bool_logical_loop_expr;
 using entity::channel_probe;
 // using entity::real_arith_loop_expr;
+using entity::string_expr;
 using entity::pint_unary_expr;
 using entity::pbool_unary_expr;
 using entity::preal_unary_expr;
@@ -173,6 +175,7 @@ public:
 	VISIT_PROTO(bool_logical_loop_expr);
 	VISIT_PROTO(channel_probe);
 //	VISIT_PROTO(real_arith_loop_expr);
+	VISIT_PROTO(string_expr);
 	VISIT_PROTO(int_range_expr);
 	VISIT_PROTO(nonmeta_func_call);
 //	VISIT_PROTO(nonmeta_expr_list);

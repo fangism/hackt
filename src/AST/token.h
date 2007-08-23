@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.7 2007/08/13 23:30:51 fang Exp $
+	$Id: token.h,v 1.7.4.1 2007/08/23 00:23:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -149,7 +149,7 @@ public:
 class token_quoted_string : public token_string, public expr {
 public:
 	explicit
-	token_quoted_string(const char* s);
+	token_quoted_string(const string& s);
 
 	~token_quoted_string();
 
@@ -167,6 +167,7 @@ public:
 	check_build(context& c) const;
 
 	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 
 };	// end class token_quoted_string
 

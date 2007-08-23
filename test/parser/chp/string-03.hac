@@ -1,0 +1,9 @@
+// "string-03.hac"
+// copy-modified from "string-02.hac"
+// testing how strings are passed in function calls
+
+chp {
+// two strings, should be concatenated as one
+*[ echo("Hello, " "world!") ]
+}
+

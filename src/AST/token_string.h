@@ -2,9 +2,9 @@
 	\file "AST/token_string.h"
 	Base set of classes for the HAC parser.  
 	These classes are implemented in "AST/token.cc"
-	$Id: token_string.h,v 1.2 2005/12/13 04:15:13 fang Exp $
+	$Id: token_string.h,v 1.2.112.1 2007/08/23 00:23:44 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: token_string.h,v 1.2 2005/12/13 04:15:13 fang Exp $
+	$Id: token_string.h,v 1.2.112.1 2007/08/23 00:23:44 fang Exp $
  */
 
 #ifndef __HAC_AST_TOKEN_STRING_H__
@@ -32,10 +32,12 @@ class token_string : public string, public terminal {
 public:
 /// uses base class' constructors to copy text and record position
 	explicit
-	token_string(const char* s) : string(s), terminal() { }
+	token_string(const string& s) : string(s), terminal() { }
 
+#if 0
 	/// default copy-constructor
 	token_string(const token_string& s) : string(s), terminal() { }
+#endif
 
 virtual ~token_string() { }
 

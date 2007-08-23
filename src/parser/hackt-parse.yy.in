@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.28 2007/08/15 01:08:19 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.28.2.1 2007/08/23 00:23:56 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -484,6 +484,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_float>		FLOAT
 %token	<_token_int>		INT
 %token	<_token_quoted_string>	STRING
+%type	<_token_quoted_string>	string	/* for concatenated string */
 
 /* range and scope separators should never need position information... */
 %token	<_node_position>	SCOPE RANGE
@@ -2219,9 +2220,16 @@ literal
 	/* all default actions, all are expr subclasses */
 	: INT { $$ = $1; }
 	| FLOAT { $$ = $1; }
-	| STRING { $$ = $1; }
+	| string { $$ = $1; }
 	| BOOL_TRUE { $$ = $1; }
 	| BOOL_FALSE { $$ = $1; }
+	;
+
+/* split strings are automatically concatenated */
+string
+	: string STRING
+		{ $$ = $1; *$1 += *$2; DELETE_TOKEN($2); }
+	| STRING { $$ = $1; }
 	;
 
 id_expr

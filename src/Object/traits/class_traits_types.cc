@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.19 2007/08/15 02:49:06 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.19.2.1 2007/08/23 00:23:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -36,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/preal_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/traits/string_traits.h"
 
 #if DEBUG_TRAITS_CLASS_TRAITS_TYPES
 #define	ENABLE_STACKTRACE		DEBUG_TRAITS_CLASS_TRAITS_TYPES
@@ -201,6 +202,18 @@ int_traits::magic_int_type_ptr(data_type_reference::make_quick_int_type_ref(0));
 
 const count_ptr<const data_type_reference>&
 int_traits::nonmeta_data_type_ptr(magic_int_type_ptr);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const built_in_datatype_def
+string_traits::built_in_definition = built_in_datatype_def(
+	never_ptr<const name_space>(&built_in_namespace), "string");
+
+const string_traits::type_ref_ptr_type
+string_traits::built_in_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&built_in_definition)));
+
+const string_traits::type_ref_ptr_type&
+string_traits::nonmeta_data_type_ptr(built_in_type_ptr);
 
 //=============================================================================
 }	// end namespace entity

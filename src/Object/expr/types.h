@@ -4,11 +4,17 @@
 	This is the ONE file that needs to be touched to change the 
 	precisions of meta-parameter (and simulation) values globally.  
 	NOTE: this file was moved from "Object/art_object_expr_types.h"
-	$Id: types.h,v 1.6 2006/06/26 01:46:10 fang Exp $
+	$Id: types.h,v 1.6.64.1 2007/08/23 00:23:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_TYPES_H__
 #define	__HAC_OBJECT_EXPR_TYPES_H__
+
+#if defined(BUILT_HACKT) || defined(INSTALLED_HACKT)
+#include <string>
+#else
+#include "util/string_fwd.h"	// depends on "config.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -49,6 +55,11 @@ namespace entity {
 		PUNT!
 	 */
 	typedef	preal_value_type	real_value_type;
+
+	/**
+		Native string type.  
+	 */
+	typedef	std::string		string_value_type;
 
 	/**
 		For now, limiting to 256 enumerations.  

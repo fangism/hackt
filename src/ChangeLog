@@ -5,8 +5,20 @@
 
 2007-08-22	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-81-62:
-	  No source revision: lib/mk/Makefile.am fix
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-01:
+	  Branch: for adding string support and more chpsim standard
+		library functions, especially user I/O functions.  
+	  new: Object/expr/string_expr.h Object/traits/string_traits.h:
+		welcome our new string metaclass!
+		string_expr methods defined in Object/expr/data_expr.cc
+		string_traits built-ins defined in traits/class_traits_types.cc
+	  Object/traits/type_tag_enum.h: bumped up enums for string type
+	  AST/token.cc: create string_expr in type-checking.
+	  lexer/hackt-lex.ll: added support for __FILE__ and __LINE__ 
+		directives, (like cpp) to be tested as function arguments.
+	  parser/hackt-parse.yy.in: 'string' is automatic concatenation
+		of STRING tokens.  "foo" "bar" -> "foobar"
+	  Few basic test cases in test/parser/chp.
 
 
 2007-08-21	David Fang		<fangism@users.sourceforge.net>
