@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: scantexdepend.awk,v 1.9 2007/08/15 02:48:33 fang Exp $
+#	$Id: scantexdepend.awk,v 1.9.2.1 2007/08/23 21:36:05 fang Exp $
 # "scantexdepend.awk"
 # Scans [pdf][la]tex .log files for include dependencies.  
 # usage: awk -f scantexdepend.awk [-v targets="..."] yourfile.log
@@ -23,7 +23,7 @@ BEGIN {
 # valid readable file? (not a directory)
 # reject invalid characters (those that have special shell meanings)
 function valid_file(str) {
-	return !match(str, "[{}<>*&?()]") &&
+	return !match(str, "[][{}<>;*&?()]") &&
 		!system("test -f " str " && test -r " str);
 }
 

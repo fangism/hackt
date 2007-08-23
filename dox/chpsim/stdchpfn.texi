@@ -39,10 +39,62 @@ $ @kbd{hacchpsim `hackt-config --ldflags` -lstdchpfn foo.obj}
 This section gives brief usage descriptions of all functions 
 available from the standard @command{chpsim} library.  
 
+@menu
+* Diagnostics Library::
+* Conditionals Library::
+* String Library::
+* I/O Library::
+@end menu
+
+@node Diagnostics Library
+@subsection Diagnostics
+
 @include fn/assert.texi
+
+@node Conditionals Library
+@subsection Conditionals
+
 @include fn/bcond.texi
 @include fn/zcond.texi
 @include fn/rcond.texi
+@include fn/select.texi
+
+@node String Library
+@subsection Strings
+
+@include fn/strcat.texi
+@include fn/strtoz.texi
+@include fn/strtob.texi
+@include fn/strtor.texi
+
+@node I/O Library
+@subsection Input/Output
+
+The first group of functions operate on @file{stdin} and @file{stdout}
+for interactiion with the user.  
+The @t{scan} input functions with throw a run-time exception 
+upon conversion failure.  
+
+@include fn/echo.texi
+@include fn/printerr.texi
+@include fn/zscan.texi
+@include fn/zscan_prompt.texi
+@include fn/bscan.texi
+@include fn/bscan_prompt.texi
+@include fn/sscan.texi
+@include fn/sscan_prompt.texi
+
+@strong{TODO:} @t{rscan} is not yet available, but is trivial to add.
+
+I/O can also operate on file streams.  
+
+@include fn/fprint.texi
+@include fn/fclose.texi
+@include fn/fflush.texi
+@include fn/fzscan.texi
+@include fn/fbscan.texi
+@include fn/fsscan.texi
+
 
 @c ----------------------------------------------------------------------------
 @node Library Use Example

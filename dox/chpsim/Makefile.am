@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2007/08/21 00:50:35 fang Exp $
+#	$Id: Makefile.am,v 1.11.2.1 2007/08/23 21:36:02 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -82,9 +82,15 @@ CHPFN_SRCDIR = $(top_srcdir)/lib/libchpfn
 # should be synchronized with list of all sources files in lib/libchpfn/
 STDCHPFN_SRCS = \
 	$(CHPFN_SRCDIR)/assert.cc \
-	$(CHPFN_SRCDIR)/conditional.cc
+	$(CHPFN_SRCDIR)/conditional.cc \
+	$(CHPFN_SRCDIR)/io.cc \
+	$(CHPFN_SRCDIR)/string.cc
 
 # just re-generate all of them when any one changes...
+# NOTE: this is a many-to-many dependence, which means that
+# there are some false dependencies which may not be resolvable.
+# If you find make keeps re-running texinfo programs, run "make clean-texi"
+# once first to force-regenerate all dependent texis.  
 $(HACCHPSIM_FUNCTIONS_TEXI): $(STDCHPFN_SRCS)
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 #	$(EXTRACT_TEXINFO) $(STDCHPFN_SRCS)

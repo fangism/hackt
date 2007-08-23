@@ -5,6 +5,14 @@
 
 2007-08-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-03:
+	  sim/chpsim/chpsim_dlfunction.h: aded wrapper support for when
+		argument (list) type does not need to be wrapper.
+	  Rest of revision is library additions and library documentation, 
+		see dox/ChangeLog and lib/ChangeLog.
+	  Next: testing new lib functions.
+
+
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-02:
 	  Object/expr/dlfunction_fwd.h: split-off foward declarations.
 	  Object/expr/const_param_expr_list.h:

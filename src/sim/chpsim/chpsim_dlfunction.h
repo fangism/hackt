@@ -3,7 +3,7 @@
 	This is the primary header to include for linking chpsim
 	to dlopened libraries.  
 	Try not to include other headers explicitly.  
-	$Id: chpsim_dlfunction.h,v 1.3.2.1 2007/08/23 06:57:31 fang Exp $
+	$Id: chpsim_dlfunction.h,v 1.3.2.2 2007/08/23 21:36:18 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHPSIM_DLFUNCTION_H__
@@ -23,6 +23,7 @@ namespace entity {
 //=============================================================================
 // wrapped and type-checked automatic argument forwarding to native functions
 
+// should these be inlined? or given static linkage?
 // TODO: provide declaration macros
 // TODO: use something like boost::function
 
@@ -48,6 +49,23 @@ template <typename A0>
 chp_function_return_type
 auto_wrap_chp_function(void (*f)(A0), const chp_function_argument_list_type& a) {
 	(*f)(extract_chp_value<A0>(a[0]));
+	return chp_function_return_type(NULL);
+}
+
+// wrapper for special case where argument type is already wrapped
+template <typename R>
+chp_function_return_type
+auto_wrap_chp_function(R (*f)(const chp_function_argument_list_type&),
+		const chp_function_argument_list_type& a) {
+	return make_chp_value((*f)(a));
+}
+
+// wrapper for special case where argument type is already wrapped
+// template <>
+chp_function_return_type
+auto_wrap_chp_function(void (*f)(const chp_function_argument_list_type&),
+		const chp_function_argument_list_type& a) {
+	(*f)(a);
 	return chp_function_return_type(NULL);
 }
 

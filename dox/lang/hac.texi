@@ -8,7 +8,7 @@
 @c %**end of header
 
 @c "hac.texi"
-@c $Id: hac.texi,v 1.2 2007/08/21 00:50:36 fang Exp $
+@c $Id: hac.texi,v 1.2.2.1 2007/08/23 21:36:04 fang Exp $
 
 @copying
 This manual describes the HAC language specification.
@@ -72,6 +72,8 @@ Permission is hereby granted to ...
 * CHP::
 * PRS::
 * SPEC Directives::
+* Keywords::
+* Grammar::
 * Function Index::
 * Concept Index::
 @end menu
@@ -94,6 +96,8 @@ Permission is hereby granted to ...
 @include chapters/CHP.texi
 @include chapters/PRS.texi
 @include chapters/SPEC.texi
+@include grammar/keywords.texi
+@include grammar/grammar.texi
 
 @c ****************************** index ***************************************
 @node Function Index

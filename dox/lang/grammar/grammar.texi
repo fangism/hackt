@@ -1,0 +1,12 @@
+@node Grammar
+@appendix Grammar
+@cindex grammar
+
+This appendix describes the @HAC{} language's grammar.
+
+@c auto-generated
+@c @verbatiminclude grammar/rules.texi
+@smallformat
+@include grammar/rules.texi
+@end smallformat
+

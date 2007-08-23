@@ -1,9 +1,13 @@
 /**
 	\file "libchpfn/conditional.cc"
-	$Id: conditional.cc,v 1.2 2007/08/15 02:48:35 fang Exp $
+	$Id: conditional.cc,v 1.2.2.1 2007/08/23 21:36:06 fang Exp $
  */
 
 #include "libchpfn/conditional.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/const_param.h"
+#include "Object/expr/dlfunction.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace CHP {
@@ -63,6 +67,20 @@ real_value_type
 rcond(const bool_value_type z,
 		const real_value_type a, const real_value_type b) {
 	return _cond(z, a, b);
+}
+
+/***
+@texinfo fn/select.texi
+@deffn Function select index args...
+Returns expression @i{args[index]}, where @var{index} is 0-based.  
+Throws run-time exception if @var{index} is out-of-range.  
+@end deffn
+@end texinfo
+***/
+chp_function_return_type
+select(const chp_function_argument_list_type& args) {
+	const int_value_type index = extract_int(*args[0]);
+	return args[index -1];
 }
 
 //=============================================================================

@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.1 2007/08/23 06:57:20 fang Exp $
+	$Id: io.cc,v 1.1.2.2 2007/08/23 21:36:07 fang Exp $
  */
 
 #include <iostream>
@@ -13,6 +13,7 @@
 #include "libchpfn/io.h"
 #include "util/memory/count_ptr.h"	// or .tcc
 #include "Object/expr/dlfunction.h"
+// #include "util/string.tcc"		// for string_to_num
 
 // from libhackt.la
 #include "Object/expr/const_param_expr_list.h"
@@ -83,8 +84,21 @@ static
 T
 scan(istream& i) {
 	T v;
+#if 1
 	i >> v;
+	if (i.fail()) {
+		cerr << "Error reading value." << endl;
+		THROW_EXIT;
+	}
 	return v;
+#else
+	if (util::string::string_to_num(i, v)) {
+		// TODO: better diagnostic message
+		cerr << "Error converting number." << endl;
+		THROW_EXIT;
+	}
+	return T;
+#endif
 }
 
 /**
