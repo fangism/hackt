@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/string_expr.h"
-	$Id: string_expr.h,v 1.1.2.1 2007/08/23 00:23:46 fang Exp $
+	$Id: string_expr.h,v 1.1.2.2 2007/08/23 06:57:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_STRING_EXPR_H__
@@ -9,6 +9,7 @@
 #include <string>
 #include "Object/expr/data_expr.h"
 #include "Object/expr/const_param.h"
+#include "Object/expr/types.h"
 
 namespace HAC {
 namespace entity {
@@ -26,6 +27,8 @@ using util::persistent_object_manager;
 class string_expr : public data_expr, public const_param
 {
 	typedef	string_expr			this_type;
+public:
+	typedef	string_value_type		value_type;
 private:
 	string				_string;
 	// any need to keep line information?
@@ -58,6 +61,10 @@ public:
 
 	bool
 	has_static_constant_dimensions(void) const;
+
+	// value_type
+	const value_type&
+	static_constant_value(void) const { return _string; }
 
 	const_range_list
 	static_constant_dimensions(void) const;

@@ -1,10 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.39 2007/08/22 20:24:32 fang Exp $
+#	$Id: ChangeLog,v 1.38.2.1 2007/08/23 06:57:16 fang Exp $
 
-2006-08-22	David Fang	<fangism@users.sourceforce.net>
+2006-08-23	David Fang	<fangism@users.sourceforce.net>
 
-	* HACKT-00-01-04-main-00-81-62:
-	  mk/Makefile.am: forgot dependence on hackt-stddef.mk
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-02:
+	  CHP library: added libchpfn/io.{h,cc} for I/O functions, 
+		through stdio and file streams.  Untested.
 
 
 2006-08-15	David Fang	<fangism@users.sourceforce.net>

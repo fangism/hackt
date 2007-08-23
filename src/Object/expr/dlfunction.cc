@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.3 2007/08/15 02:48:57 fang Exp $
+	$Id: dlfunction.cc,v 1.3.2.1 2007/08/23 06:57:24 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/string_expr.h"
 // #include "Object/expr/const_collection.h"
 #include "common/ltdl-wrap.h"
 #include "util/macros.h"
@@ -73,6 +74,16 @@ try {
 }
 }
 
+string_value_type
+extract_string(const const_param& p) {
+try {
+	return IS_A(const string_expr&, p).static_constant_value();
+} catch (std::bad_cast& e) {
+	p.what(cerr << "Run-time error: expecting string, but got ") << endl;
+	throw;		// re-throw
+}
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 int_value_type
@@ -107,20 +118,37 @@ extract_chp_value<real_value_type>(const chp_function_const_argument_type& v) {
 	}
 }
 
+template <>
+string_value_type
+extract_chp_value<string_value_type>(
+		const chp_function_const_argument_type& v) {
+	if (v)
+		return extract_string(*v);
+	else {
+		cerr << "Error extracting string from NULL argument." << endl;
+		THROW_EXIT;
+	}
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chp_function_return_type
-make_chp_value(const int_value_type v) {
+make_chp_value(chp_call_traits<int_value_type>::argument_type v) {
 	return chp_function_return_type(new pint_const(v));
 }
 
 chp_function_return_type
-make_chp_value(const bool_value_type v) {
+make_chp_value(chp_call_traits<bool_value_type>::argument_type v) {
 	return chp_function_return_type(new pbool_const(v));
 }
 
 chp_function_return_type
-make_chp_value(const real_value_type v) {
+make_chp_value(chp_call_traits<real_value_type>::argument_type v) {
 	return chp_function_return_type(new preal_const(v));
+}
+
+chp_function_return_type
+make_chp_value(chp_call_traits<string_value_type>::argument_type v) {
+	return chp_function_return_type(new string_expr(v));
 }
 
 //=============================================================================

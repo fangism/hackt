@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.178.2.1 2007/08/23 00:23:41 fang Exp $
+#	$Id: Makefile.am,v 1.178.2.2 2007/08/23 06:57:22 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -714,6 +714,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/const_range_list.h \
 	Object/expr/convert_expr.h \
 	Object/expr/data_expr.h \
+	Object/expr/dlfunction_fwd.h \
 	Object/expr/dynamic_meta_index_list.h \
 	Object/expr/dynamic_meta_range_list.h \
 	Object/expr/dynamic_param_expr_list.h \
@@ -939,6 +940,7 @@ nobase_pkginclude_HEADERS += \
 	Object/expr/param_expr.h \
 	Object/expr/param_expr_list.h \
 	Object/expr/types.h \
+	Object/expr/dlfunction_fwd.h \
 	Object/expr/dlfunction.h \
 	sim/chpsim/chpsim_dlfunction.h
 

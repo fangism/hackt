@@ -6,7 +6,7 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.3 2007/08/15 02:48:58 fang Exp $
+	$Id: dlfunction.h,v 1.3.2.1 2007/08/23 06:57:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -15,27 +15,12 @@
 #include <iosfwd>
 #include <string>
 // installed development headers should ideally not require any "config.h"
-#include "util/memory/pointer_classes_fwd.h"
+#include "Object/expr/dlfunction_fwd.h"
 #include "Object/expr/types.h"
 // #include "util/attributes.h"		// bah!
 
 namespace HAC {
 namespace entity {
-//=============================================================================
-using util::memory::count_ptr;
-class const_param;
-class const_param_expr_list;
-
-typedef	count_ptr<const_param>		chp_function_argument_type;
-typedef	count_ptr<const const_param>	chp_function_const_argument_type;
-typedef	count_ptr<const const_param>	chp_function_return_type;
-
-typedef
-chp_function_return_type
-(chp_dlfunction_type) (const const_param_expr_list&);
-
-typedef	chp_dlfunction_type*		chp_dlfunction_ptr_type;
-
 /**
 	This binds names to function symbols from dlopened modules.  
 	Loaders should call this in their init() routines, 
@@ -66,6 +51,57 @@ public:
 } /* __ATTRIBUTE_UNUSED__ */ ;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// call_traits
+
+/**
+	Template policy for passing/returning by value or reference.
+ */
+template <class T>
+struct chp_call_traits;
+
+template <>
+struct chp_call_traits<int_value_type> {
+	typedef	int_value_type		type;
+	typedef	int_value_type		return_type;
+	typedef	const int_value_type	argument_type;
+};
+
+template <>
+struct chp_call_traits<bool_value_type> {
+	typedef	bool_value_type		type;
+	typedef	bool_value_type		return_type;
+	typedef	const bool_value_type	argument_type;
+};
+
+/**
+	Consider changing to reference when upgrading to doubles.  
+ */
+template <>
+struct chp_call_traits<real_value_type> {
+	typedef	real_value_type		type;
+	typedef	real_value_type		return_type;
+	typedef	const real_value_type	argument_type;
+};
+
+template <>
+struct chp_call_traits<string_value_type> {
+	typedef	string_value_type		type;
+//	typedef	const string_value_type&	return_type;
+// should be fast, std::string is shallow ref-counted copy-on-write
+	typedef	string_value_type		return_type;
+	typedef	const string_value_type&	argument_type;
+};
+
+template <>
+struct chp_call_traits<const string_value_type&> {
+	typedef	string_value_type		type;
+//	typedef	const string_value_type&	return_type;
+// should be fast, std::string is shallow ref-counted copy-on-write
+	typedef	string_value_type		return_type;
+	typedef	const string_value_type&	argument_type;
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // wrappers to extract native type from dynamic HAC type
 // each of these throw exceptions in the event of type-check failure
 
@@ -82,13 +118,17 @@ extern
 real_value_type
 extract_real(const const_param&);
 
+extern
+string_value_type
+extract_string(const const_param&);
+
 /**
 	intentionally does not use template argument deduction
 	Also only explicitly instantiated/specialized for select types.  
 	Primary template is undefined.
  */
 template <typename V>
-V
+typename chp_call_traits<V>::return_type
 extract_chp_value(const chp_function_const_argument_type&);
 
 // forward declare specializations
@@ -104,19 +144,35 @@ template <>
 real_value_type
 extract_chp_value<real_value_type>(const chp_function_const_argument_type&);
 
+template <>
+string_value_type
+extract_chp_value<string_value_type>(const chp_function_const_argument_type&);
+
+template <>
+inline
+string_value_type
+extract_chp_value<const string_value_type&>(
+		const chp_function_const_argument_type& a) {
+	return extract_chp_value<string_value_type>(a);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // these require count_ptr and const_param to be complete types...
 extern
 chp_function_return_type
-make_chp_value(const int_value_type);
+make_chp_value(chp_call_traits<int_value_type>::argument_type);
 
 extern
 chp_function_return_type
-make_chp_value(const bool_value_type);
+make_chp_value(chp_call_traits<bool_value_type>::argument_type);
 
 extern
 chp_function_return_type
-make_chp_value(const real_value_type);
+make_chp_value(chp_call_traits<real_value_type>::argument_type);
+
+extern
+chp_function_return_type
+make_chp_value(chp_call_traits<string_value_type>::argument_type);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the following functions are only needed for internal compiling
