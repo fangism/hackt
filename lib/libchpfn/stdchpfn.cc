@@ -2,7 +2,7 @@
 	\file "libchpfn/stdchpfn.cc"
 	This exports the normal library functions into a chpsim module
 	suitable for run-time loading (dlopen).
-	$Id: stdchpfn.cc,v 1.2.2.2 2007/08/23 21:36:08 fang Exp $
+	$Id: stdchpfn.cc,v 1.2.2.3 2007/08/24 03:47:12 fang Exp $
  */
 
 #include "libchpfn/assert.h"
@@ -25,7 +25,7 @@ CHP_DLFUNCTION_LOAD_DEFAULT("assert", Assert)
 CHP_DLFUNCTION_LOAD_DEFAULT("bcond", bcond)
 CHP_DLFUNCTION_LOAD_DEFAULT("zcond", zcond)
 CHP_DLFUNCTION_LOAD_DEFAULT("rcond", rcond)
-CHP_DLFUNCTION_LOAD_DEFAULT("select", select)
+REGISTER_DLFUNCTION_RAW("select", select)
 
 // from "libchpfn/io.h"
 REGISTER_DLFUNCTION_RAW("echo", echo)
@@ -47,8 +47,13 @@ CHP_DLFUNCTION_LOAD_DEFAULT("fflush", fflush)
 CHP_DLFUNCTION_LOAD_DEFAULT("fzscan", fzscan)
 CHP_DLFUNCTION_LOAD_DEFAULT("fbscan", fbscan)
 CHP_DLFUNCTION_LOAD_DEFAULT("fsscan", fsscan)
+// CHP_DLFUNCTION_LOAD_DEFAULT("frscan", fsscan)
+CHP_DLFUNCTION_LOAD_DEFAULT("fzscan_loop", fzscan_loop)
+CHP_DLFUNCTION_LOAD_DEFAULT("fbscan_loop", fbscan_loop)
+CHP_DLFUNCTION_LOAD_DEFAULT("fsscan_loop", fsscan_loop)
+// CHP_DLFUNCTION_LOAD_DEFAULT("frscan_loop", frscan_loop)
 
-// from "libchpfn/io.h"
+// from "libchpfn/string.h"
 CHP_DLFUNCTION_LOAD_DEFAULT("strcat", strcat)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtoz", strtoz)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtob", strtob)

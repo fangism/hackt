@@ -1,7 +1,12 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.38.2.2 2007/08/23 21:36:05 fang Exp $
+#	$Id: ChangeLog,v 1.38.2.3 2007/08/24 03:47:01 fang Exp $
 
 2006-08-23	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-04:
+	  libchpfn/: conditional.cc: fix select()
+		io.{h,cc}: added scan_loop family of functions.  Documented.
+
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-03:
 	  CHP library: added string functions, documented.

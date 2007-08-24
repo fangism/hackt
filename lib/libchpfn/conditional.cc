@@ -1,13 +1,22 @@
 /**
 	\file "libchpfn/conditional.cc"
-	$Id: conditional.cc,v 1.2.2.1 2007/08/23 21:36:06 fang Exp $
+	$Id: conditional.cc,v 1.2.2.2 2007/08/24 03:47:10 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include "libchpfn/conditional.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/dlfunction.h"
 #include "util/memory/count_ptr.h"
+#include "util/stacktrace.h"
+
+#if ENABLE_STACKTRACE
+// debugging only
+#include <iostream>
+#include "Object/expr/expr_dump_context.h"
+#endif
 
 namespace HAC {
 namespace CHP {
@@ -79,8 +88,15 @@ Throws run-time exception if @var{index} is out-of-range.
 ***/
 chp_function_return_type
 select(const chp_function_argument_list_type& args) {
+	STACKTRACE_VERBOSE;
 	const int_value_type index = extract_int(*args[0]);
-	return args[index -1];
+	const chp_function_return_type& ret(args[index +1]);
+	NEVER_NULL(ret);
+#if ENABLE_STACKTRACE
+	ret->dump(std::cout << "select: ",
+		entity::expr_dump_context::default_value) << std::endl;
+#endif
+	return ret;
 }
 
 //=============================================================================

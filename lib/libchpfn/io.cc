@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.2 2007/08/23 21:36:07 fang Exp $
+	$Id: io.cc,v 1.1.2.3 2007/08/24 03:47:11 fang Exp $
  */
 
 #include <iostream>
@@ -84,23 +84,32 @@ static
 T
 scan(istream& i) {
 	T v;
-#if 1
 	i >> v;
 	if (i.fail()) {
 		cerr << "Error reading value." << endl;
 		THROW_EXIT;
 	}
 	return v;
-#else
-	if (util::string::string_to_num(i, v)) {
-		// TODO: better diagnostic message
-		cerr << "Error converting number." << endl;
-		THROW_EXIT;
-	}
-	return T;
-#endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as scan, but suppresses error message on EOF failure.
+ */
+template <typename T>
+static
+T
+try_scan(istream& i) {
+	T v;
+	i >> v;
+	if (i.eof()) {
+		// no error message
+		THROW_EXIT;
+	}
+	return v;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Never need custom prompt for non-stdin input streams, right?
  */
@@ -296,6 +305,34 @@ fscan(const string_value_type& fn) {
 	return scan<T>(*fp);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+static
+T
+fscan_loop(const string_value_type& fn) {
+	count_ptr<ifstream>& fp(ifstream_map[fn]);
+	if (!fp) {
+		fp = count_ptr<ifstream>(new ifstream(fn.c_str()));
+		if (!fp || !*fp) {
+			cerr << "Error opening file `" << fn <<
+				"\' in read mode." << endl;
+			THROW_EXIT;
+		}
+	}
+	INVARIANT(*fp);
+	// not the most robust handling...
+try {
+	// may EOF
+	return try_scan<T>(*fp);
+} catch (...) {
+	// on EOF, re-open file
+	fp = count_ptr<ifstream>(new ifstream(fn.c_str()));
+	INVARIANT(fp && *fp);
+	return scan<T>(*fp);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo fn/fzscan.texi
 @deffn Function fzscan file
@@ -333,6 +370,46 @@ Automatically opens new input file stream when referenced first time.
 string_value_type
 fsscan(const string_value_type& fn) {
 	return fscan<string_value_type>(fn);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo fn/fzscan_loop.texi
+@deffn Function fzscan_loop file
+Read the next integer from input file @var{file}.  
+Re-opens file to beginning after EOF is reached.
+@end deffn
+@end texinfo
+***/
+int_value_type
+fzscan_loop(const string_value_type& fn) {
+	return fscan_loop<int_value_type>(fn);
+}
+
+/***
+@texinfo fn/fbscan_loop.texi
+@deffn Function fbscan_loop file
+Read the next boolean from input file @var{file}.  
+Re-opens file to beginning after EOF is reached.
+@end deffn
+@end texinfo
+***/
+bool_value_type
+fbscan_loop(const string_value_type& fn) {
+	return fscan_loop<bool_value_type>(fn);
+}
+
+/***
+@texinfo fn/fsscan_loop.texi
+@deffn Function fsscan_loop file
+Read the next boolean from input file @var{file}.  
+Re-opens file to beginning after EOF is reached.
+@end deffn
+@end texinfo
+***/
+string_value_type
+fsscan_loop(const string_value_type& fn) {
+	return fscan_loop<string_value_type>(fn);
 }
 
 //=============================================================================

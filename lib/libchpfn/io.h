@@ -1,7 +1,7 @@
 /**
 	\file "libchpfn/io.h"
 	user-level I/O functions
-	$Id: io.h,v 1.1.2.1 2007/08/23 06:57:20 fang Exp $
+	$Id: io.h,v 1.1.2.2 2007/08/24 03:47:11 fang Exp $
  */
 
 #ifndef	__HAC_LIBCHPFN_IO_H__
@@ -100,6 +100,19 @@ fbscan(const string_value_type&);
 extern
 string_value_type
 fsscan(const string_value_type&);
+
+// loop-over-file variants
+extern
+int_value_type
+fzscan_loop(const string_value_type&);
+
+extern
+bool_value_type
+fbscan_loop(const string_value_type&);
+
+extern
+string_value_type
+fsscan_loop(const string_value_type&);
 
 //=============================================================================
 }	// end namespace CHP
