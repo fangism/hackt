@@ -95,6 +95,13 @@ I/O can also operate on file streams.
 @include fn/fbscan.texi
 @include fn/fsscan.texi
 
+The following variants automatically restart a file stream 
+once it reaches the end.
+
+@include fn/fzscan_loop.texi
+@include fn/fbscan_loop.texi
+@include fn/fsscan_loop.texi
+
 
 @c ----------------------------------------------------------------------------
 @node Library Use Example
