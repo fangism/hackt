@@ -1,5 +1,15 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.38.2.3 2007/08/24 03:47:01 fang Exp $
+#	$Id: ChangeLog,v 1.38.2.4 2007/08/24 21:08:54 fang Exp $
+
+2006-08-24	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-05:
+	  libchpfn/io.cc: Minor fix -- specialize scan for strings to
+		use getline instead of istream operator >>.
+	  Test cases for many new functions added to test/chpsim.
+		scan tests filed under FAIL tests to avoid checkpoint
+		wrapper script, which screws up stdin redirection.
+
 
 2006-08-23	David Fang	<fangism@users.sourceforce.net>
 

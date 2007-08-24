@@ -1,0 +1,13 @@
+// "lib-zscan-test-a.hac"
+//	$Id: lib-zscan-test-a.hac,v 1.1.2.1 2007/08/24 21:09:41 fang Exp $
+// testing interactive input functions
+
+int z;
+
+chp {
+*[
+  z:=zscan();
+  print("You entered: ", z)
+]
+}
+

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.27.6.1 2007/08/23 06:57:29 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.27.6.2 2007/08/24 21:09:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -127,7 +127,7 @@ const_param_expr_list::dump_raw_from(ostream& o, const size_t k) const {
 	i += k;
 	for ( ; i!=e; ++i) {
 		if (*i) {
-			(*i)->dump(o);
+			(*i)->dump_nonmeta(o);
 		}
 	}
 	return o;
@@ -153,7 +153,7 @@ const_param_expr_list::dump_formatted(ostream& o,
 		if (d)
 			o << d;
 		if (*i) {
-			(*i)->dump(o);
+			(*i)->dump_nonmeta(o);
 		}
 	}
 	if (r)

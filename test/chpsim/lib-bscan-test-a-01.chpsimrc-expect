@@ -1,0 +1,11 @@
+	0	0	0	null
+	10	1	0	b := bscan()
+You entered: false
+	20	2	0	print("You entered: ",b)
+	30	1	0	b := bscan()
+You entered: true
+	40	2	0	print("You entered: ",b)
+event queue:
+check queue:
+	time	eid	pid	event
+	50	1	0	b := bscan()

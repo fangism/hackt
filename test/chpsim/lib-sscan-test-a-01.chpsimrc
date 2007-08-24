@@ -1,0 +1,22 @@
+# "lib-sscan-test-a-01.chpsimrc"
+#	$Id: lib-sscan-test-a-01.chpsimrc,v 1.1.2.1 2007/08/24 21:09:34 fang Exp $
+# @haco@ lib-sscan-test-a.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la
+
+# NOTE: run this as a fail-test to avoid sourcing this script indirectly
+# because the stdin becomes redicrected incorrectly.
+
+watchall-events
+step 2
+this is all one string, read to newline
+step
+42
+step
+"Groovy!"
+step
+Hail to the king, baby!
+# step
+queue
+

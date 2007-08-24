@@ -1,0 +1,11 @@
+	0	0	0	null
+integer: 	10	1	0	z := zscan_prompt("integer: ")
+You entered: 123
+	20	2	0	print("You entered: ",z)
+integer: 	30	1	0	z := zscan_prompt("integer: ")
+You entered: 456
+	40	2	0	print("You entered: ",z)
+event queue:
+check queue:
+	time	eid	pid	event
+	50	1	0	z := zscan_prompt("integer: ")

@@ -1,0 +1,13 @@
+	0	0	0	null
+You entered: this is all one string, read to newline
+	10	1	0	print("You entered: ",sscan())
+You entered: 42
+	20	1	0	print("You entered: ",sscan())
+You entered: "Groovy!"
+	30	1	0	print("You entered: ",sscan())
+You entered: Hail to the king, baby!
+	40	1	0	print("You entered: ",sscan())
+event queue:
+check queue:
+	time	eid	pid	event
+	50	1	0	print("You entered: ",sscan())

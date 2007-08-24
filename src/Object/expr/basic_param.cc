@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.27 2007/08/15 02:48:52 fang Exp $
+ 	$Id: basic_param.cc,v 1.27.2.1 2007/08/24 21:08:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -143,6 +143,11 @@ param_expr::make_aggregate_meta_value_reference(
 ostream&
 const_param::dump(ostream& o) const {
 	return dump(o, expr_dump_context());
+}
+
+ostream&
+const_param::dump_nonmeta(ostream& o) const {
+	return dump(o);
 }
 
 //-----------------------------------------------------------------------------

@@ -1,0 +1,15 @@
+// "lib-echo-test-b.hac"
+// copy-modified from "lib-echo-test-a.hac"
+//	$Id: lib-echo-test-b.hac,v 1.1.2.1 2007/08/24 21:09:24 fang Exp $
+// testing echo function
+
+chp {
+*[
+	// parse will concatenate strings
+	echo("So long,\n"
+		"Farewell,\n");
+	echo("Auf Wiedersehen,\n"
+		"Goodbye!\n")
+]
+}
+

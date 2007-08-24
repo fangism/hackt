@@ -1,0 +1,19 @@
+// "lib-select-test-c.hac"
+// copy-modified from "lib-select-test-b.hac"
+// expect to fail out-of-bounds
+
+import "testlib/int-source.hac";
+
+chan(int) D, S;
+int s;
+
+int_source<32> SS<3,{0,1,2}>(S);
+
+chp {
+	// expect to fail on some iteration
+	*[ S?(s); D!(select(s, 13, 11)) ]
+}
+chp {
+	*[ D? ]
+}
+

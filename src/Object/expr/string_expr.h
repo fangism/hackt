@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/string_expr.h"
-	$Id: string_expr.h,v 1.1.2.2 2007/08/23 06:57:31 fang Exp $
+	$Id: string_expr.h,v 1.1.2.3 2007/08/24 21:09:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_STRING_EXPR_H__
@@ -43,6 +43,9 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
+	dump_nonmeta(ostream&) const;
 
 	size_t
 	dimensions(void) const;

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.18.2.2 2007/08/24 03:48:02 fang Exp $
+	$Id: data_expr.cc,v 1.18.2.3 2007/08/24 21:08:59 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1728,6 +1728,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(string_expr)
 ostream&
 string_expr::dump(ostream& o, const expr_dump_context&) const {
 	return o << '\"' << _string << '\"';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+string_expr::dump_nonmeta(ostream& o) const {
+	return o << _string;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

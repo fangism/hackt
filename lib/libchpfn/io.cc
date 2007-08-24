@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.3 2007/08/24 03:47:11 fang Exp $
+	$Id: io.cc,v 1.1.2.4 2007/08/24 21:08:56 fang Exp $
  */
 
 #include <iostream>
@@ -92,6 +92,19 @@ scan(istream& i) {
 	return v;
 }
 
+template <>
+static
+string_value_type
+scan<string_value_type>(istream& i) {
+	char buf[1024];
+	i.getline(buf, 1024);
+	if (i.fail()) {
+		cerr << "Error reading string." << endl;
+		THROW_EXIT;
+	}
+	return string_value_type(buf);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Same as scan, but suppresses error message on EOF failure.
@@ -107,6 +120,18 @@ try_scan(istream& i) {
 		THROW_EXIT;
 	}
 	return v;
+}
+
+template <>
+static
+string_value_type
+try_scan<string_value_type>(istream& i) {
+	char buf[1024];
+	i.getline(buf, 1024);
+	if (i.eof()) {
+		THROW_EXIT;
+	}
+	return string_value_type(buf);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.15 2007/08/19 04:48:37 fang Exp $
+#	$Id: Make.test-chpsim,v 1.15.2.1 2007/08/24 21:09:00 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -154,6 +154,11 @@ CHPSIMRC_FAIL_TEST_SCRIPT = \
 	cmd="$(HACKT_CHPSIM_EXE) -b -I$(srcdir) $$mods $$obj" ; \
 	$(ECHO) "$(SHOW_CHPSIM_TEST_ENV) $$cmd < $<" ; \
 	$$cmd < $< > $@ 2>&1
+
+# without generating checkpoint
+CHPSIMRC_NOCKPT_TEST_SCRIPT = \
+	$(CHPSIMRC_FAIL_TEST_SCRIPT) && \
+	$(TOUCH) $@
 
 .chpsimrc.chpsimrc-out:
 	@$(CHPSIMRC_TEST_SCRIPT)

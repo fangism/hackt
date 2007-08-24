@@ -3,7 +3,7 @@
 	Classes related to constant parameter expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param.h,v 1.13 2006/10/18 07:39:34 fang Exp $
+	$Id: const_param.h,v 1.13.44.1 2007/08/24 21:08:59 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_H__
@@ -32,6 +32,9 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& o, const expr_dump_context&) const = 0;
+
+virtual	ostream&
+	dump_nonmeta(ostream&) const;
 
 	ostream&
 	dump(ostream&) const;

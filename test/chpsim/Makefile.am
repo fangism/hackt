@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23.2.1 2007/08/24 03:48:05 fang Exp $
+#	$Id: Makefile.am,v 1.23.2.2 2007/08/24 21:09:01 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -96,7 +96,12 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	relational-func-a \
 	lib-assert-test-a \
 	lib-zcond-test-a \
-	lib-select-test-a
+	lib-select-test-a lib-select-test-b lib-select-test-c \
+	lib-echo-test-a lib-echo-test-b lib-echo-test-c lib-echo-test-d \
+	lib-print-test-a \
+	lib-zscan-test-a lib-zscan-test-b \
+	lib-bscan-test-a \
+	lib-sscan-test-a lib-sscan-test-b
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -215,7 +220,10 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	gcd-nested-a-01 gcd-nested-b-01 \
 	relational-func-a-01 \
 	lib-zcond-test-a-01 \
-	lib-select-test-a-01
+	lib-select-test-a-01 \
+	lib-echo-test-a-01 lib-echo-test-b-01 \
+	lib-echo-test-c-01 lib-echo-test-d-01 \
+	lib-print-test-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -236,12 +244,20 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	logical-func-a-01 logical-func-a-02 \
 	logical-func-b-01 \
 	relational-func-a-02 \
-	lib-assert-test-a-01
+	lib-assert-test-a-01 \
+	lib-select-test-c-01 \
+	lib-zscan-test-a-01 lib-zscan-test-a-02 lib-zscan-test-a-03 \
+	lib-zscan-test-b-01 \
+	lib-bscan-test-a-01 lib-bscan-test-a-02 \
+	lib-sscan-test-a-01 lib-sscan-test-b-01
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
+#	lib-assert-test-b-01 (assert-fail needs diagnostic)
 
 # quarantined test cases:
-srcdir_EXTRA_DIST += gcd-func-a-02.chpsimrc
+srcdir_EXTRA_DIST += \
+	gcd-func-a-02.chpsimrc \
+	lib-assert-test-b-01.chpsimrc
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
