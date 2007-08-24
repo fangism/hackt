@@ -6,7 +6,7 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.3.2.1 2007/08/23 06:57:25 fang Exp $
+	$Id: dlfunction.h,v 1.3.2.2 2007/08/24 03:48:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -160,19 +160,19 @@ extract_chp_value<const string_value_type&>(
 // these require count_ptr and const_param to be complete types...
 extern
 chp_function_return_type
-make_chp_value(chp_call_traits<int_value_type>::argument_type);
+make_chp_value(const int_value_type);
 
 extern
 chp_function_return_type
-make_chp_value(chp_call_traits<bool_value_type>::argument_type);
+make_chp_value(const bool_value_type);
 
 extern
 chp_function_return_type
-make_chp_value(chp_call_traits<real_value_type>::argument_type);
+make_chp_value(const real_value_type);
 
 extern
 chp_function_return_type
-make_chp_value(chp_call_traits<string_value_type>::argument_type);
+make_chp_value(const string_value_type&);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the following functions are only needed for internal compiling

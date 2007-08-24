@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2007/08/19 04:00:41 fang Exp $
+#	$Id: Makefile.am,v 1.23.2.1 2007/08/24 03:48:05 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -95,7 +95,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	logical-func-a logical-func-b \
 	relational-func-a \
 	lib-assert-test-a \
-	lib-zcond-test-a
+	lib-zcond-test-a \
+	lib-select-test-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -213,7 +214,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	greeting_func-a-03 greeting_func-a-04 \
 	gcd-nested-a-01 gcd-nested-b-01 \
 	relational-func-a-01 \
-	lib-zcond-test-a-01
+	lib-zcond-test-a-01 \
+	lib-select-test-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 

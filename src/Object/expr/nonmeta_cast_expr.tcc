@@ -1,12 +1,14 @@
 /**
 	\file "Object/expr/nonmeta_cast_expr.tcc"
-	$Id: nonmeta_cast_expr.tcc,v 1.3 2007/08/15 19:04:35 fang Exp $
+	$Id: nonmeta_cast_expr.tcc,v 1.3.2.1 2007/08/24 03:48:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_CAST_EXPR_TCC__
 #define	__HAC_OBJECT_EXPR_NONMETA_CAST_EXPR_TCC__
 
+#ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE			0
+#endif
 
 #include <iostream>
 #include "Object/expr/nonmeta_cast_expr.h"

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.18.2.1 2007/08/23 00:23:45 fang Exp $
+	$Id: data_expr.cc,v 1.18.2.2 2007/08/24 03:48:02 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -190,6 +190,7 @@ void
 int_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const pint_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -226,6 +227,7 @@ void
 bool_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const pbool_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -262,6 +264,7 @@ void
 real_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const preal_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -308,6 +311,7 @@ void
 enum_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const pint_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -1842,6 +1846,7 @@ string_expr::nonmeta_resolve_copy(const nonmeta_context_base&,
 void
 string_expr::evaluate_write(const nonmeta_context_base&, 
 		channel_data_writer&, const count_ptr<const data_expr>&) const {
+	STACKTRACE_VERBOSE;
 	FINISH_ME_EXIT(Fang);
 }
 

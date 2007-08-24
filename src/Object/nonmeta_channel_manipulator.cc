@@ -1,7 +1,14 @@
 /**
 	\file "Object/nonmeta_channel_manipulator.cc"
-	$Id: nonmeta_channel_manipulator.cc,v 1.2 2007/01/21 05:58:25 fang Exp $
+	$Id: nonmeta_channel_manipulator.cc,v 1.2.28.1 2007/08/24 03:48:02 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
+
+#if ENABLE_STACKTRACE
+#include <iostream>
+#include "Object/expr/expr_dump_context.h"
+#endif
 
 #include "Object/nonmeta_channel_manipulator.h"
 #include "Object/nonmeta_context.h"
@@ -9,9 +16,23 @@
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/macros.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
+//=============================================================================
+template <class Tag>
+channel_data_writer_base<Tag>::~channel_data_writer_base() {
+	INVARIANT(iter <= &data.member_fields[data.member_fields.size()]);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+channel_data_reader_base<Tag>::~channel_data_reader_base() {
+	INVARIANT(iter <= &data.member_fields[data.member_fields.size()]);
+}
+
 //=============================================================================
 // class nonmeta_expr_evaluator_channel_writer method defintions
 
@@ -22,7 +43,12 @@ namespace entity {
 void
 nonmeta_expr_evaluator_channel_writer::operator () (
 		const count_ptr<const data_expr>& d) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(d);
+#if ENABLE_STACKTRACE
+	d->dump(std::cout << "writer: ",
+		expr_dump_context::default_value) << std::endl;
+#endif
 	d->evaluate_write(context, writer, d);
 }
 
@@ -33,9 +59,15 @@ nonmeta_expr_evaluator_channel_writer::operator () (
 void
 nonmeta_reference_lookup_channel_reader::operator() (
 		const count_ptr<const data_nonmeta_instance_reference>& r) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(r);
 	r->direct_assign(context, updates, reader);
 }
+
+//=============================================================================
+channel_data_writer::~channel_data_writer() { }
+
+channel_data_reader::~channel_data_reader() { }
 
 //=============================================================================
 // class channel_data_dumper method definitions

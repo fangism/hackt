@@ -1,7 +1,7 @@
 /**
 	\file "Object/nonmeta_channel_manipulator.h"
 	Helper classes for manipulating channel fields at run-time.  
-	$Id: nonmeta_channel_manipulator.h,v 1.4 2007/03/11 16:34:17 fang Exp $
+	$Id: nonmeta_channel_manipulator.h,v 1.4.20.1 2007/08/24 03:48:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_NONMETA_CHANNEL_MANIPULATOR_H__
@@ -10,10 +10,8 @@
 #include <iosfwd>
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/nonmeta_variable.h"
-#include "sim/chpsim/devel_switches.h"
 #include "Object/ref/reference_set.h"
 #include "util/memory/pointer_classes_fwd.h"
-#include "util/macros.h"
 
 namespace HAC {
 namespace entity {
@@ -33,6 +31,7 @@ using std::ostream;
  */
 template <class Tag>
 struct channel_data_writer_base {
+protected:
 	typedef	typename channel_data_base<Tag>::member_variable_type
 					member_variable_type;
 	/**
@@ -53,9 +52,7 @@ struct channel_data_writer_base {
 		optional: assert iterator position checks upon destruction
 		\post never written out of bounds.  
 	 */
-	~channel_data_writer_base() {
-		INVARIANT(iter <= &data.member_fields[data.member_fields.size()]);
-	}
+	~channel_data_writer_base();
 
 };	// end struct channel_data_writer_base
 
@@ -68,6 +65,7 @@ struct channel_data_writer_base {
  */
 template <class Tag>
 struct channel_data_reader_base {
+protected:
 	typedef	typename channel_data_base<Tag>::member_variable_type
 					member_variable_type;
 	/**
@@ -87,9 +85,7 @@ struct channel_data_reader_base {
 		optional: assert iterator position checks upon destruction
 		\post never read out of bounds.  
 	 */
-	~channel_data_reader_base() {
-		INVARIANT(iter <= &data.member_fields[data.member_fields.size()]);
-	}
+	~channel_data_reader_base();
 
 };	// end struct channel_data_reader_base
 
@@ -109,6 +105,7 @@ struct channel_data_writer :
 	}
 
 	// default destructor (of base classes)
+	~channel_data_writer();
 
 	/**
 		\return iterator by reference.
@@ -135,6 +132,7 @@ struct channel_data_reader :
 	}
 
 	// default destructor (of base classes)
+	~channel_data_reader();
 
 	/**
 		\return const_iterator by reference.

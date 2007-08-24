@@ -1,7 +1,9 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.3.2.1 2007/08/23 06:57:24 fang Exp $
+	$Id: dlfunction.cc,v 1.3.2.2 2007/08/24 03:48:03 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE	0
 
 #include <iostream>
 #include <map>
@@ -132,22 +134,26 @@ extract_chp_value<string_value_type>(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chp_function_return_type
-make_chp_value(chp_call_traits<int_value_type>::argument_type v) {
+make_chp_value(const int_value_type v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new pint_const(v));
 }
 
 chp_function_return_type
-make_chp_value(chp_call_traits<bool_value_type>::argument_type v) {
+make_chp_value(const bool_value_type v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new pbool_const(v));
 }
 
 chp_function_return_type
-make_chp_value(chp_call_traits<real_value_type>::argument_type v) {
+make_chp_value(const real_value_type v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new preal_const(v));
 }
 
 chp_function_return_type
-make_chp_value(chp_call_traits<string_value_type>::argument_type v) {
+make_chp_value(const string_value_type& v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new string_expr(v));
 }
 

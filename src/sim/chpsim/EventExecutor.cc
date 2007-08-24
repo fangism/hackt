@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.8 2007/08/15 02:49:24 fang Exp $
+	$Id: EventExecutor.cc,v 1.8.2.1 2007/08/24 03:48:04 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -775,6 +775,8 @@ EventRechecker::visit(const channel_send& cs) {
 	// we actually write the data during a recheck
 	// this occurs without regard to the current channel state
 try {
+	// TODO: this should really obey the channel field types, 
+	// not what is actually passed...
 	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
 		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
 } catch (...) {
@@ -821,6 +823,8 @@ EventExecutor::visit(const channel_receive& cr) {
 	for_each(cr.get_insts().begin(), cr.get_insts().end(), 
 		entity::nonmeta_reference_lookup_channel_reader(
 			context, nc, context.updates));
+	// TODO: this should really obey the channel field types, 
+	// not what is actually passed...
 	// track the updated-reference (channel)
 if (!cr.is_peek()) {
 	context.updates.push_back(std::make_pair(

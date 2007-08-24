@@ -1,0 +1,24 @@
+// "lib-select-test-a.hac"
+// testing the standard library function 'select'
+//	$Id: lib-select-test-a.hac,v 1.1.2.1 2007/08/24 03:48:14 fang Exp $
+
+import "testlib/int-source.hac";
+import "testlib/int-sink.hac";
+
+chan(int) A, B, Z;
+chan(int) S;
+int a, b, s;
+int_source<32>
+	AS<1,{42}>(A),
+	BS<3,{31,0,11}>(B);
+int_source<32>
+	SS<4,{0,0,1,1}>(S);
+int_sink<32>
+	ZZ(Z);
+
+chp {
+*[ A?(a), B?(b), S?(s);
+   Z!(select(s, a, b))
+]
+}
+

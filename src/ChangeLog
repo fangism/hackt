@@ -5,6 +5,17 @@
 
 2007-08-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-04:
+	  First bug fix on branch!
+	  Object/expr/dlfunction.h: make_chp_value now uses plain
+		non-fancy simple function overloading, string_value_type
+		was not properly dispatching before.
+	  Random debugging codelets added during the bug hunt.
+	  Object/nonmeta_channel_manipulator.{h,cc}: de-inlined dtor.
+	  Added one test case in test/chpsim.
+	  Also fix and addition to chpsim std library.
+
+
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-03:
 	  sim/chpsim/chpsim_dlfunction.h: aded wrapper support for when
 		argument (list) type does not need to be wrapper.

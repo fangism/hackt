@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.3 2007/08/15 02:49:00 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.3.2.1 2007/08/24 03:48:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -210,6 +210,10 @@ try {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Must resolve value first before being able to call
+	virtual evaluate_write with actual value.
+ */
 void
 nonmeta_func_call::evaluate_write(const nonmeta_context_base& c, 
 		channel_data_writer& w, 
@@ -225,6 +229,10 @@ nonmeta_func_call::evaluate_write(const nonmeta_context_base& c,
 	const count_ptr<const data_expr>
 		trv(rv.is_a<const data_expr>());
 	NEVER_NULL(trv);
+#if ENABLE_STACKTRACE
+	rv->dump(cout << "const : ", expr_dump_context::default_value) << endl;
+	trv->dump(cout << "result: ", expr_dump_context::default_value) << endl;
+#endif
 	trv->evaluate_write(c, w, trv);
 }
 
