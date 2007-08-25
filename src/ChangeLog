@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-06:
+	  Expect-fail bug fix: do not dl_find_sym lookup functions, 
+		restrict interface to module-load-time registration.
+		This prevents accidentally finding exported symbols
+		in the executable's image (its shared dep-libs).  
+		file: Object/expr/dlfunction.cc
+		test case: chpsim/missing_func-d
+	  chp_function_ptr_type wrapped in never_ptr now (not needed).
+	  sim/chpsim/dlfunction.h: WRAP_DLFUNCTION_NAME is now UNIQUIFY-ed.
+
+
 2007-08-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-05:

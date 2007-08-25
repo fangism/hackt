@@ -3,7 +3,7 @@
 	This is the primary header to include for linking chpsim
 	to dlopened libraries.  
 	Try not to include other headers explicitly.  
-	$Id: chpsim_dlfunction.h,v 1.3.2.2 2007/08/23 21:36:18 fang Exp $
+	$Id: chpsim_dlfunction.h,v 1.3.2.3 2007/08/25 08:12:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_CHPSIM_DLFUNCTION_H__
@@ -294,7 +294,7 @@ UNIQUIFY(fname ## _receipt_) (key, fname);
 /**
 	Name transformation, not for general use.  
  */
-#define	WRAP_DLFUNCTION_NAME(fname)		wrapped_ ## fname
+#define	WRAP_DLFUNCTION_NAME(fname)	UNIQUIFY(wrapped_ ## fname ## _)
 
 /**
 	Declare an object that auto-loads the named function on construction.

@@ -4,16 +4,20 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.4 2007/08/24 21:08:56 fang Exp $
+	$Id: io.cc,v 1.1.2.5 2007/08/25 08:12:11 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <map>
 #include "libchpfn/io.h"
 #include "util/memory/count_ptr.h"	// or .tcc
 #include "Object/expr/dlfunction.h"
 // #include "util/string.tcc"		// for string_to_num
+#include "util/stacktrace.h"
 
 // from libhackt.la
 #include "Object/expr/const_param_expr_list.h"
@@ -30,6 +34,7 @@ using std::ofstream;
 using std::ifstream;
 using entity::extract_chp_value;
 using util::memory::count_ptr;
+using std::ostringstream;
 
 //=============================================================================
 /***
@@ -259,6 +264,7 @@ File streams are automatically closed and flushed upon library closing.
 ***/
 chp_function_return_type
 fprint(const chp_function_argument_list_type& args) {
+	STACKTRACE_VERBOSE;
 	const string_value_type&
 		fn(extract_chp_value<string_value_type>(args[0]));
 	count_ptr<ofstream>& fp(ofstream_map[fn]);
@@ -435,6 +441,24 @@ Re-opens file to beginning after EOF is reached.
 string_value_type
 fsscan_loop(const string_value_type& fn) {
 	return fscan_loop<string_value_type>(fn);
+}
+
+//=============================================================================
+/***
+@texinfo fn/sprint.texi
+@deffn Function sprint args...
+@deffnx Function tostring args...
+Returns a string that is the result of concatenating 
+its arguments @var{args} (converted to strings).  
+This function be be used to convert arguments to strings.
+@end deffn
+@end texinfo
+***/
+string_value_type
+sprint(const chp_function_argument_list_type& args) {
+	ostringstream oss;
+	args.dump_raw(oss);
+	return oss.str();
 }
 
 //=============================================================================

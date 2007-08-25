@@ -1,0 +1,11 @@
+// "missing_func-d.hac"
+//	$Id: missing_func-d.hac,v 1.1.2.1 2007/08/25 08:12:25 fang Exp $
+// testing missing function, do not lookup symbol with dl_find_sym, 
+// else may accidentally find symbol in executable's exported symbols (libc.so)
+
+chp {
+*[
+	printf("should NOT exist in library!\n")
+]
+}
+

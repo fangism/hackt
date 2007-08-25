@@ -66,6 +66,7 @@ available from the standard @command{chpsim} library.
 @include fn/strtoz.texi
 @include fn/strtob.texi
 @include fn/strtor.texi
+@include fn/sprint.texi
 
 @node I/O Library
 @subsection Input/Output

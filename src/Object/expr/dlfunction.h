@@ -6,7 +6,7 @@
 	Since these symbols are bound in the executable 
 	(or its shared libraries), the executable needs to be linked 
 	-export-dynamic.  
-	$Id: dlfunction.h,v 1.3.2.2 2007/08/24 03:48:03 fang Exp $
+	$Id: dlfunction.h,v 1.3.2.3 2007/08/25 08:12:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_H__
@@ -45,6 +45,9 @@ public:
 	 */
 	chp_function_registrar(const std::string&, 
 		const chp_dlfunction_ptr_type);
+
+	chp_function_registrar(const std::string&, 
+		chp_dlfunction_type* const);
 
 	~chp_function_registrar();
 

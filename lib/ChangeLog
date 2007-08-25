@@ -1,5 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.38.2.4 2007/08/24 21:08:54 fang Exp $
+#	$Id: ChangeLog,v 1.38.2.5 2007/08/25 08:12:11 fang Exp $
+
+2006-08-25	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-06:
+	  libchpfn/io.cc: added sprint function, similar to fprint, 
+		but through stringstream, and returns concat'd string.  
+		Also called tostring, which may be a more intuitive name.  
+
 
 2006-08-24	David Fang	<fangism@users.sourceforce.net>
 

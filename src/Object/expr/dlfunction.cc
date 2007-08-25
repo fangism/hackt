@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.3.2.2 2007/08/24 03:48:03 fang Exp $
+	$Id: dlfunction.cc,v 1.3.2.3 2007/08/25 08:12:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE	0
@@ -27,7 +27,8 @@ using util::memory::never_ptr;
 using std::string;
 #include "util/using_ostream.h"
 
-typedef	never_ptr<chp_dlfunction_type>
+// typedef	never_ptr<chp_dlfunction_type>
+typedef	chp_dlfunction_ptr_type
 					chp_mapped_func_ptr_type;
 
 typedef	std::map<string, chp_mapped_func_ptr_type>	
@@ -165,6 +166,13 @@ chp_function_registrar::chp_function_registrar(
 	}
 }
 
+chp_function_registrar::chp_function_registrar(
+		const string& fn, chp_dlfunction_type* const fp) {
+	if (register_chpsim_function(fn, chp_dlfunction_ptr_type(fp))) {
+		THROW_EXIT;
+	}
+}
+
 chp_function_registrar::~chp_function_registrar() {
 // un-register?
 }
@@ -202,25 +210,20 @@ register_chpsim_function(const string& fn, const chp_dlfunction_ptr_type fp) {
 	Automatically looks up function and caches resolved symbol.  
 	The dlsym lookup is a last resort if it wasn't found in the
 	managed function map already.  
+	CORRECTION: do NOT dl_find_sym, only use function registry interface.
  */
 chp_dlfunction_ptr_type
 lookup_chpsim_function(const std::string& fn) {
 	typedef	chp_func_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE;
-	chp_mapped_func_ptr_type& mf(chp_function_map[fn]);
-	if (!mf) {
-		lt_dlsym_union sym(ltdl_find_sym(fn));
-		if (!sym.func_ptr) {
-			cerr << "ERROR: symbol `" << fn << "\' not found "
-				"in presently loaded modules." << endl;
-			return NULL;
-		}
-		// here is the one type assumption: 
-		// that registered functions have the correct prototype
-		mf = chp_mapped_func_ptr_type(
-			reinterpret_cast<chp_dlfunction_ptr_type>(sym.func_ptr));
+	const const_iterator i(chp_function_map.find(fn));
+	if (i == chp_function_map.end()) {
+		cerr << "ERROR: symbol `" << fn << "\' not found "
+			"in presently loaded modules." << endl;
+		return chp_dlfunction_ptr_type(NULL);
+	} else {
+		return i->second;
 	}
-	return &*mf;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23.2.2 2007/08/24 21:09:01 fang Exp $
+#	$Id: Makefile.am,v 1.23.2.3 2007/08/25 08:12:17 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -89,7 +89,7 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat \
 	source-sink-void-a \
-	missing_func-a missing_func-b missing_func-c \
+	missing_func-a missing_func-b missing_func-c missing_func-d \
 	greeting_func-a \
 	gcd-nested-a gcd-nested-b \
 	logical-func-a logical-func-b \
@@ -238,7 +238,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-memory-write-b-01 \
 	send-fail-a-01 \
 	receive-fail-a-01 \
-	missing_func-a-01 missing_func-b-01 missing_func-c-01 \
+	missing_func-a-01 missing_func-b-01 \
+	missing_func-c-01 missing_func-d-01 \
 	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11 \
 	gcd-nested-a-02 gcd-nested-b-02 \
 	logical-func-a-01 logical-func-a-02 \

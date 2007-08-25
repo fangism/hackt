@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.3.2.1 2007/08/24 03:48:04 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.3.2.2 2007/08/25 08:12:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -207,7 +207,7 @@ try {
 	dump(cerr, expr_dump_context::brief) << endl;
 	throw;
 }
-}
+}	// end nonmeta_resolve_copy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/dlfunction_fwd.h"
 	Forward declarations of types. 
-	$Id: dlfunction_fwd.h,v 1.1.2.1 2007/08/23 06:57:28 fang Exp $
+	$Id: dlfunction_fwd.h,v 1.1.2.2 2007/08/25 08:12:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DLFUNCTION_FWD_H__
@@ -14,6 +14,7 @@ namespace HAC {
 namespace entity {
 //=============================================================================
 using util::memory::count_ptr;
+using util::memory::never_ptr;
 class const_param;
 class const_param_expr_list;
 
@@ -26,7 +27,9 @@ typedef
 chp_function_return_type
 (chp_dlfunction_type) (const chp_function_argument_list_type&);
 
-typedef	chp_dlfunction_type*		chp_dlfunction_ptr_type;
+// using pointer-class will guarantee that value is at least NULL-initialized
+// typedef	chp_dlfunction_type*		chp_dlfunction_ptr_type;
+typedef	never_ptr<chp_dlfunction_type>		chp_dlfunction_ptr_type;
 
 class chp_function_registrar;
 
