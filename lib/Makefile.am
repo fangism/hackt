@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.22.2.2 2007/08/23 21:36:06 fang Exp $
+#	$Id: Makefile.am,v 1.22.2.3 2007/08/25 19:55:51 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -99,6 +99,8 @@ libstdchpfn_la_SOURCES = \
 	libchpfn/conditional.h \
 	libchpfn/io.cc \
 	libchpfn/io.h \
+	libchpfn/OS.cc \
+	libchpfn/OS.h \
 	libchpfn/string.cc \
 	libchpfn/string.h
 # libstdchpfn_la_LIBADD = ../src/libhackt.la
@@ -107,6 +109,7 @@ nobase_pkginclude_HEADERS = \
 	libchpfn/assert.h \
 	libchpfn/conditional.h \
 	libchpfn/io.h \
+	libchpfn/OS.h \
 	libchpfn/string.h
 
 # install a copy of the source for reference (is libdir appropriate?)

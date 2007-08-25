@@ -5,6 +5,12 @@
 
 2007-08-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
+	  util/ChangeLog: stream_ptr.{h,cc}
+	  No other source revision, just a round of library test
+		cases and minor fixes (lib/ChangeLog).
+
+
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-06:
 	  Expect-fail bug fix: do not dl_find_sym lookup functions, 
 		restrict interface to module-load-time registration.

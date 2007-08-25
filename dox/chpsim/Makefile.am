@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.11.2.1 2007/08/23 21:36:02 fang Exp $
+#	$Id: Makefile.am,v 1.11.2.2 2007/08/25 19:55:48 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -84,6 +84,7 @@ STDCHPFN_SRCS = \
 	$(CHPFN_SRCDIR)/assert.cc \
 	$(CHPFN_SRCDIR)/conditional.cc \
 	$(CHPFN_SRCDIR)/io.cc \
+	$(CHPFN_SRCDIR)/OS.cc \
 	$(CHPFN_SRCDIR)/string.cc
 
 # just re-generate all of them when any one changes...

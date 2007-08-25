@@ -1,0 +1,15 @@
+// "lib-fprint-test-a.hac"
+//	$Id: lib-fprint-test-a.hac,v 1.1.2.1 2007/08/25 19:56:23 fang Exp $
+// testing printing to file
+
+chp {
+*[
+	fprint("lib-fprint-test-a-out.txt",
+		"welcome to libc!\n");
+	fprint("lib-fprint-test-a-out.txt",
+		28, " is a perfect number.\n");
+	fprint("lib-fprint-test-a-out.txt",
+		"To thine own self be ", true, ".\n")
+]
+}
+

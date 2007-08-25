@@ -1,7 +1,17 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.38.2.5 2007/08/25 08:12:11 fang Exp $
+#	$Id: ChangeLog,v 1.38.2.6 2007/08/25 19:55:50 fang Exp $
 
 2006-08-25	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
+	  libchpfn/io.cc:
+		fprint now opens file in create mode, instead of append.
+		fopen (new): opens file in create mode.
+		fappend (new): opens file in append mode.
+		fclose: now removes entries from stream maps.  
+	  libchpfn/OS.h: (new)
+		system: execute cmd string in shell.
+
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-06:
 	  libchpfn/io.cc: added sprint function, similar to fprint, 

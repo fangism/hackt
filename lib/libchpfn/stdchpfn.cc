@@ -2,12 +2,13 @@
 	\file "libchpfn/stdchpfn.cc"
 	This exports the normal library functions into a chpsim module
 	suitable for run-time loading (dlopen).
-	$Id: stdchpfn.cc,v 1.2.2.4 2007/08/25 08:12:12 fang Exp $
+	$Id: stdchpfn.cc,v 1.2.2.5 2007/08/25 19:55:52 fang Exp $
  */
 
 #include "libchpfn/assert.h"
 #include "libchpfn/conditional.h"
 #include "libchpfn/io.h"
+#include "libchpfn/OS.h"
 #include "libchpfn/string.h"
 #include "sim/chpsim/chpsim_dlfunction.h"
 
@@ -20,6 +21,9 @@ USING_CHPSIM_DLFUNCTION_PROLOGUE
 // Should you wish to create a library with remapped names, 
 // just copy-modify this file.
 CHP_DLFUNCTION_LOAD_DEFAULT("assert", Assert)
+
+// NOTE: all functions referenced are form the HAC::CHP namespace
+// (not the global C namespace) unless otherwise noted.  
 
 // from "libchpfn/conditional.h"
 CHP_DLFUNCTION_LOAD_DEFAULT("bcond", bcond)
@@ -42,6 +46,8 @@ CHP_DLFUNCTION_LOAD_DEFAULT("bscan_prompt", bscan_prompt)
 CHP_DLFUNCTION_LOAD_DEFAULT("sscan", sscan)
 CHP_DLFUNCTION_LOAD_DEFAULT("sscan_prompt", sscan_prompt)
 REGISTER_DLFUNCTION_RAW("fprint", fprint)
+CHP_DLFUNCTION_LOAD_DEFAULT("fopen", fopen)
+CHP_DLFUNCTION_LOAD_DEFAULT("fappend", fappend)
 CHP_DLFUNCTION_LOAD_DEFAULT("fclose", fclose)
 CHP_DLFUNCTION_LOAD_DEFAULT("fflush", fflush)
 CHP_DLFUNCTION_LOAD_DEFAULT("fzscan", fzscan)
@@ -54,6 +60,9 @@ CHP_DLFUNCTION_LOAD_DEFAULT("fsscan_loop", fsscan_loop)
 // CHP_DLFUNCTION_LOAD_DEFAULT("frscan_loop", frscan_loop)
 CHP_DLFUNCTION_LOAD_DEFAULT("sprint", sprint)
 CHP_DLFUNCTION_LOAD_DEFAULT("tostring", sprint)
+
+// from "libchpfn/OS.h"
+CHP_DLFUNCTION_LOAD_DEFAULT("system", System)
 
 // from "libchpfn/string.h"
 CHP_DLFUNCTION_LOAD_DEFAULT("strcat", strcat)

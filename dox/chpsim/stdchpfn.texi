@@ -89,6 +89,8 @@ upon conversion failure.
 
 I/O can also operate on file streams.  
 
+@include fn/fopen.texi
+@include fn/fappend.texi
 @include fn/fprint.texi
 @include fn/fclose.texi
 @include fn/fflush.texi
@@ -103,6 +105,9 @@ once it reaches the end.
 @include fn/fbscan_loop.texi
 @include fn/fsscan_loop.texi
 
+System-related operations are also supported.
+
+@include fn/system.texi
 
 @c ----------------------------------------------------------------------------
 @node Library Use Example

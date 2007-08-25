@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.15.2.1 2007/08/24 21:09:00 fang Exp $
+#	$Id: Make.test-chpsim,v 1.15.2.2 2007/08/25 19:56:02 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -258,6 +258,7 @@ chpsimrc-out.autodepend: Makefile
 	  src=$(srcdir)/$$d.chpsimrc ; \
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
 	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  antideps=`$(CAT) "$$src" | $(EXTRACT_ANTIDEPS_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(ECHO) -n "$$target " ; \
@@ -269,7 +270,14 @@ chpsimrc-out.autodepend: Makefile
 	    if test x"$$rmtrc" != x"$$mktrc" ; then \
 	      $(ECHO) "$$mktrc: $$d.chpsimrc-out" ; \
 	      $(ECHO) "	@test -f $$""@" ; \
+	      $(ECHO) "CLEANFILES += $$mktrc" ; \
             fi ; \
+	  fi ; \
+	  if test "$$antideps" ; then \
+	    $(ECHO) "$$antideps: $$d.chpsimrc-out" ; \
+	    $(ECHO) "	@:" ; \
+	    $(ECHO) "CLEANFILES += $$antideps" ; \
+	    $(ECHO) "AUTO_IGNORE += $$antideps" ; \
 	  fi ; \
 	done > $@ ; \
 	$(TOUCH) $@

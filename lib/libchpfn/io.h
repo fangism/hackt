@@ -1,7 +1,7 @@
 /**
 	\file "libchpfn/io.h"
 	user-level I/O functions
-	$Id: io.h,v 1.1.2.3 2007/08/25 08:12:11 fang Exp $
+	$Id: io.h,v 1.1.2.4 2007/08/25 19:55:51 fang Exp $
  */
 
 #ifndef	__HAC_LIBCHPFN_IO_H__
@@ -80,6 +80,14 @@ sscan_prompt(const string_value_type&);
 extern
 chp_function_return_type
 fprint(const chp_function_argument_list_type&);
+
+extern
+bool_value_type
+fappend(const string_value_type&);
+
+extern
+bool_value_type
+fopen(const string_value_type&);
 
 extern
 void

@@ -1,0 +1,8 @@
+	0	0	0	null
+	10	4	0	fprint("lib-fflush-test-a-out.txt","welcome to libc!
+")
+	20	3	0	fprint("lib-fflush-test-a-out.txt",28," is a perfect number.
+")
+	30	2	0	fprint("lib-fflush-test-a-out.txt","To thine own self be ",true,".
+")
+	40	1	0	fflush("lib-fflush-test-a-out.txt")

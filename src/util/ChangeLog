@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.83.2.1 2007/08/23 06:57:31 fang Exp $
+#	$Id: ChangeLog,v 1.83.2.2 2007/08/25 19:55:53 fang Exp $
+
+2007-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
+	  Added "util/stream_ptr.{h,cc} template class instantiations.
+
 
 2007-08-23	David Fang		<fangism@users.sourceforge.net>
 

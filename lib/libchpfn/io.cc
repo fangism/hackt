@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.5 2007/08/25 08:12:11 fang Exp $
+	$Id: io.cc,v 1.1.2.6 2007/08/25 19:55:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,7 +14,7 @@
 #include <sstream>
 #include <map>
 #include "libchpfn/io.h"
-#include "util/memory/count_ptr.h"	// or .tcc
+#include "util/memory/count_ptr.h"	// .tcc
 #include "Object/expr/dlfunction.h"
 // #include "util/string.tcc"		// for string_to_num
 #include "util/stacktrace.h"
@@ -270,16 +270,68 @@ fprint(const chp_function_argument_list_type& args) {
 	count_ptr<ofstream>& fp(ofstream_map[fn]);
 	if (!fp) {
 		fp = count_ptr<ofstream>(
-			new ofstream(fn.c_str(), ios_base::app));
+			new ofstream(fn.c_str())
+			// new ofstream(fn.c_str(), ios_base::app)
+			// stream remains open between calls, already appends
+		);
 		if (!fp || !*fp) {
 			cerr << "Error opening file `" << fn <<
-				"\' in write-append mode." << endl;
+				"\' in write mode." << endl;
 			THROW_EXIT;
 		}
 	}
 	INVARIANT(*fp);
 	args.dump_raw_from(*fp, 1);
 	return chp_function_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo fn/fappend.texi
+@deffn Function fappend file
+Like @command{fopen}, except @var{file} is first opened in append mode, 
+to not overwrite existing file.  
+Call this before @command{fprint} to append to @var{file}.  
+@end deffn
+@end texinfo
+***/
+bool_value_type
+fappend(const string_value_type& fn) {
+	count_ptr<ofstream>& fp(ofstream_map[fn]);
+	if (!fp) {
+		fp = count_ptr<ofstream>(new ofstream(fn.c_str(), 
+			ios_base::app));
+		if (!fp || !*fp) {
+			cerr << "Error opening file `" << fn <<
+				"\' in write-append mode." << endl;
+		}
+	}
+	return fp && *fp;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo fn/fopen.texi
+@deffn Function fopen file
+Open file @var{file} for writing, overwrite previous contents.
+Subsequent calls to @command{fprint} will still continue to append
+to the file.  
+If the file stream is already open, do nothing.  
+Return true if the stream is opened successfully (or was already open).  
+@end deffn
+@end texinfo
+***/
+bool_value_type
+fopen(const string_value_type& fn) {
+	count_ptr<ofstream>& fp(ofstream_map[fn]);
+	if (!fp) {
+		fp = count_ptr<ofstream>(new ofstream(fn.c_str()));
+		if (!fp || !*fp) {
+			cerr << "Error opening file `" << fn <<
+				"\' in write mode." << endl;
+		}
+	}
+	return fp && *fp;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -295,10 +347,12 @@ fclose(const string_value_type& fn) {
 	count_ptr<ofstream>& ofp(ofstream_map[fn]);
 	if (ofp) {
 		ofp->close();
+		ofstream_map.erase(fn);
 	}
 	count_ptr<ifstream>& ifp(ifstream_map[fn]);
 	if (ifp) {
 		ifp->close();
+		ifstream_map.erase(fn);
 	}
 }
 

@@ -1,0 +1,43 @@
+	0	0	0	null
+	10	9	0	c := 0
+	20	2	0	
+	30	8	0	fappend("lib-fappend-test-a-out.txt")
+	40	7	0	fprint("lib-fappend-test-a-out.txt","welcome to libc!
+")
+	50	6	0	fprint("lib-fappend-test-a-out.txt",28," is a perfect number.
+")
+	60	5	0	fprint("lib-fappend-test-a-out.txt","To thine own self be ",true,".
+")
+	70	4	0	fclose("lib-fappend-test-a-out.txt")
+	80	3	0	c := c+1
+	90	2	0	
+	100	8	0	fappend("lib-fappend-test-a-out.txt")
+	110	7	0	fprint("lib-fappend-test-a-out.txt","welcome to libc!
+")
+	120	6	0	fprint("lib-fappend-test-a-out.txt",28," is a perfect number.
+")
+	130	5	0	fprint("lib-fappend-test-a-out.txt","To thine own self be ",true,".
+")
+	140	4	0	fclose("lib-fappend-test-a-out.txt")
+	150	3	0	c := c+1
+	160	2	0	
+	170	8	0	fappend("lib-fappend-test-a-out.txt")
+	180	7	0	fprint("lib-fappend-test-a-out.txt","welcome to libc!
+")
+	190	6	0	fprint("lib-fappend-test-a-out.txt",28," is a perfect number.
+")
+	200	5	0	fprint("lib-fappend-test-a-out.txt","To thine own self be ",true,".
+")
+	210	4	0	fclose("lib-fappend-test-a-out.txt")
+	220	3	0	c := c+1
+	230	2	0	
+welcome to libc!
+28 is a perfect number.
+To thine own self be true.
+welcome to libc!
+28 is a perfect number.
+To thine own self be true.
+welcome to libc!
+28 is a perfect number.
+To thine own self be true.
+	240	1	0	system("cat lib-fappend-test-a-out.txt")

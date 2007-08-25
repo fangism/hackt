@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23.2.3 2007/08/25 08:12:17 fang Exp $
+#	$Id: Makefile.am,v 1.23.2.4 2007/08/25 19:56:06 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -101,7 +101,11 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	lib-print-test-a \
 	lib-zscan-test-a lib-zscan-test-b \
 	lib-bscan-test-a \
-	lib-sscan-test-a lib-sscan-test-b
+	lib-sscan-test-a lib-sscan-test-b \
+	lib-fprint-test-a \
+	lib-fflush-test-a \
+	lib-fclose-test-a lib-fclose-test-b \
+	lib-fappend-test-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -223,7 +227,11 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	lib-select-test-a-01 \
 	lib-echo-test-a-01 lib-echo-test-b-01 \
 	lib-echo-test-c-01 lib-echo-test-d-01 \
-	lib-print-test-a-01
+	lib-print-test-a-01 \
+	lib-fprint-test-a-01 \
+	lib-fflush-test-a-01 \
+	lib-fclose-test-a-01 lib-fclose-test-b-01 \
+	lib-fappend-test-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
