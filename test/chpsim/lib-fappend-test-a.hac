@@ -1,10 +1,13 @@
 // "lib-fappend-test-a.hac"
 // copy-modified from "lib-fappend-test-a.hac"
-//	$Id: lib-fappend-test-a.hac,v 1.1.2.1 2007/08/25 19:56:10 fang Exp $
+//	$Id: lib-fappend-test-a.hac,v 1.1.2.2 2007/08/25 21:31:09 fang Exp $
 // testing printing to file, and closing, and dumping
 
 int c;
 chp {
+	// wipe the file first
+{fopen("lib-fappend-test-a-out.txt");
+fclose("lib-fappend-test-a-out.txt")},
 c := 0;
 *[ (c < 3) ->
 	fappend("lib-fappend-test-a-out.txt");
