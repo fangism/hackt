@@ -1,0 +1,34 @@
+	0	0	0	null
+	10	5	0	i := 0
+	20	1	0	
+5
+	30	4	0	print(fzscan("fzscan-01.txt"))
+	40	3	0	i := i+1
+	50	1	0	
+4
+	60	4	0	print(fzscan("fzscan-01.txt"))
+	70	3	0	i := i+1
+	80	1	0	
+3
+	90	4	0	print(fzscan("fzscan-01.txt"))
+	100	3	0	i := i+1
+	110	1	0	
+2
+	120	4	0	print(fzscan("fzscan-01.txt"))
+	130	3	0	i := i+1
+	140	1	0	
+1
+	150	4	0	print(fzscan("fzscan-01.txt"))
+	160	3	0	i := i+1
+	170	1	0	
+0
+	180	4	0	print(fzscan("fzscan-01.txt"))
+	190	3	0	i := i+1
+	200	1	0	
+Error trying to scan past EOF.
+Run-time error calling function: fzscan("fzscan-01.txt")
+Run-time error calling function: print(fzscan("fzscan-01.txt"))
+Run-time error executing event 4.
+Run-time error while checking event.
+event[4]:	210	4	0	print(fzscan("fzscan-01.txt"))	[by:1]
+Caught run-time exception during execution.  Halting.

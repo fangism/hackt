@@ -1,7 +1,12 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.38.2.6 2007/08/25 19:55:50 fang Exp $
+#	$Id: ChangeLog,v 1.38.2.7 2007/08/26 02:39:47 fang Exp $
 
 2006-08-25	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-08:
+	  libchpfn/io.cc: scan now tests for .eof() before .fail().
+	  Rest of revision is just fscan test cases in test/chpsim.
+
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
 	  libchpfn/io.cc:

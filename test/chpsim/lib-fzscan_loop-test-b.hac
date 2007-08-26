@@ -1,0 +1,12 @@
+// "lib-fzscan_loop-test-b.hac"
+//	$Id: lib-fzscan_loop-test-b.hac,v 1.1.2.1 2007/08/26 02:40:06 fang Exp $
+// testing reading input from file, in a loop
+// depends on built input file "fzscan-01.txt"
+
+int z;
+chp {
+*[
+	print(fzscan_loop("fzscan-01.txt"))
+]
+}
+

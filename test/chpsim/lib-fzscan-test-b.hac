@@ -1,0 +1,16 @@
+// "lib-fzscan-test-b.hac"
+// copy-modified from "lib-fzscan-test-a.hac"
+//	$Id: lib-fzscan-test-b.hac,v 1.1.2.1 2007/08/26 02:40:04 fang Exp $
+// testing reading input from file
+// depends on built input file "fzscan-01.txt"
+
+int z;
+int i;
+chp {
+i:=0;
+*[ (i<8) ->	// read past end-of-file
+	print(fzscan("fzscan-01.txt"));
+	i:=i+1
+]
+}
+

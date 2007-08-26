@@ -5,6 +5,10 @@
 
 2007-08-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-08:
+	  No source revision, only chpsim library testing, another batch.
+
+
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
 	  util/ChangeLog: stream_ptr.{h,cc}
 	  No other source revision, just a round of library test

@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.6 2007/08/25 19:55:51 fang Exp $
+	$Id: io.cc,v 1.1.2.7 2007/08/26 02:39:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -90,7 +90,10 @@ T
 scan(istream& i) {
 	T v;
 	i >> v;
-	if (i.fail()) {
+	if (i.eof()) {
+		cerr << "Error trying to scan past EOF." << endl;
+		THROW_EXIT;
+	} else if (i.fail()) {
 		cerr << "Error reading value." << endl;
 		THROW_EXIT;
 	}
