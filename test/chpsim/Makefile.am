@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23.2.6 2007/08/27 20:30:47 fang Exp $
+#	$Id: Makefile.am,v 1.23.2.7 2007/08/27 21:47:27 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -386,6 +386,8 @@ fzscan-01.txt: Makefile
 	$(ECHO) "2" ; \
 	$(ECHO) "1" ; \
 	$(ECHO) "0" ;} > $@
+
+CLEANFILES += fascan-01.txt
 
 srcdir_EXTRA_DIST += \
 	random-timing-test-short.chpsimrc \
