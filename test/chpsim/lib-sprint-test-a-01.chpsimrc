@@ -1,0 +1,10 @@
+# "lib-sprint-test-a-01.chpsimrc"
+#	$Id: lib-sprint-test-a-01.chpsimrc,v 1.1.2.1 2007/08/27 20:30:49 fang Exp $
+# @haco@ lib-sprint-test-a.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la
+
+# watchall-events
+step 10
+

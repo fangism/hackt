@@ -1,0 +1,6 @@
+Error in conversion: strtoz("")
+Run-time error calling function: strtoz("")
+Run-time error executing event 2.
+Run-time error while checking event.
+event[2]:	10	2	0	z := strtoz("")
+Caught run-time exception during execution.  Halting.

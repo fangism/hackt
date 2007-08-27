@@ -4,14 +4,13 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.1.2.7 2007/08/26 02:39:49 fang Exp $
+	$Id: io.cc,v 1.1.2.8 2007/08/27 20:30:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <map>
 #include "libchpfn/io.h"
 #include "util/memory/count_ptr.h"	// .tcc
@@ -498,24 +497,6 @@ Re-opens file to beginning after EOF is reached.
 string_value_type
 fsscan_loop(const string_value_type& fn) {
 	return fscan_loop<string_value_type>(fn);
-}
-
-//=============================================================================
-/***
-@texinfo fn/sprint.texi
-@deffn Function sprint args...
-@deffnx Function tostring args...
-Returns a string that is the result of concatenating 
-its arguments @var{args} (converted to strings).  
-This function be be used to convert arguments to strings.
-@end deffn
-@end texinfo
-***/
-string_value_type
-sprint(const chp_function_argument_list_type& args) {
-	ostringstream oss;
-	args.dump_raw(oss);
-	return oss.str();
 }
 
 //=============================================================================

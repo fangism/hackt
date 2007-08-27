@@ -1,6 +1,6 @@
 /**
 	\file "libchpfn/string.cc"
-	$Id: string.cc,v 1.1.2.1 2007/08/23 21:36:11 fang Exp $
+	$Id: string.cc,v 1.1.2.2 2007/08/27 20:30:45 fang Exp $
  */
 
 #include <iostream>
@@ -22,6 +22,8 @@ using std::endl;
 /***
 @texinfo fn/strcat.texi
 @deffn Fucntion strcat args...
+@deffnx Fucntion sprint args...
+@deffnx Fucntion tostring args...
 Stringify all @var{args} and concatenate into a single string (returned).  
 This can be used to convert argument types to a string.  
 Does not include terminating newline.  
@@ -41,11 +43,13 @@ static
 T
 strto_(const char* fn, const string_value_type& str) {
 	T ret;
+	NEVER_NULL(fn);
 	if (util::strings::string_to_num(str, ret)) {
-		NEVER_NULL(fn);
-		cerr << "Error in " << fn << "(\"" << str << "\")" << endl;
+		cerr << "Error in conversion: "
+			<< fn << "(\"" << str << "\")" << endl;
 		THROW_EXIT;
 	}
+	return ret;
 }
 
 /***

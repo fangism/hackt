@@ -1,0 +1,12 @@
+// "lib-strtoz-test-d.hac"
+// copy-modified from "lib-strtoz-test-c.hac"
+//	$Id: lib-strtoz-test-d.hac,v 1.1.2.1 2007/08/27 20:31:17 fang Exp $
+// testing conversion of string to integer
+
+int z;
+chp {
+	z:= strtoz("");
+	// expect run-time failure on empty string
+	print(z)
+}
+
