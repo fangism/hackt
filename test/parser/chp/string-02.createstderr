@@ -1,0 +1,31 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	4	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	nexplist	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	stringex	0	#HEAD#	#TAIL#	19
+	8	##ADDR##	stringex	0	#HEAD#	#TAIL#	18
+	9	##ADDR##	footprnt	0	#HEAD#	#TAIL#	258
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+}
+
+top-level chp:
+  concurrent: {
+    *[
+      echo("Hello, ","world!")
+    ]
+  }
+footprint: {
+}

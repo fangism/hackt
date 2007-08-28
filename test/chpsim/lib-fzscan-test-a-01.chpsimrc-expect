@@ -1,0 +1,20 @@
+	0	0	0	null
+	10	5	0	i := 0
+	20	1	0	
+5
+	30	4	0	print(fzscan("fzscan-01.txt"))
+	40	3	0	i := i+1
+	50	1	0	
+4
+	60	4	0	print(fzscan("fzscan-01.txt"))
+	70	3	0	i := i+1
+	80	1	0	
+3
+	90	4	0	print(fzscan("fzscan-01.txt"))
+	100	3	0	i := i+1
+	110	1	0	
+2
+	120	4	0	print(fzscan("fzscan-01.txt"))
+	130	3	0	i := i+1
+	140	1	0	
+	150	2	0	null

@@ -1,5 +1,5 @@
 @c "extending.texi"
-@c $Id: extending.texi,v 1.4 2007/08/15 02:48:32 fang Exp $
+@c $Id: extending.texi,v 1.5 2007/08/28 04:53:42 fang Exp $
 
 @node Extending simulation
 @chapter Extending the simulator
@@ -178,13 +178,41 @@ expand its definition.
 @cindex dlopen
 @defmac CHP_DLFUNCTION_LOAD_DEFAULT name sym
 This is the macro that is responsible for binding the library symbol
-@var{sym} to a name of the user's choice @var{name}.  
+@var{sym} to a name of the user's choice @var{name}, a string.  
 Name binding occurs automatically as soon as the module is loaded (by dlopen).
 (If you must know, this is achieved through static object initialization.)
+The C++ function symbol @var{sym} must be a prototype that
+uses the restricted set of types: @t{int_value_type} and such.
+@end defmac
+
+@defmac REGISTER_DLFUNCTION_RAW name sym
+This macro is responsible for binding the library symbol
+@var{sym} to a name of the user's choice @var{name}, a string.  
+The function prototype of @var{sym} must be of the form:
+@samp{chp_function_return_type (*) (const chp_function_argument_list_type&)}.
 @end defmac
 
 @cindex return types
 @cindex argument types
+@cindex chp_function_return_type
+@deftp {Data type} chp_function_return_type
+This is the return type used in @command{chpsim}'s run-time environment.
+This is a memory-managed pointer (reference-counted) to 
+an abstract expression type.
+Defined in @file{Object/expr/dlfunction_fwd.h}.
+@end deftp
+
+@cindex chp_function_argument_list_type
+@deftp {Data type} chp_function_argument_list_type
+This is the argument list type passed to all registered CHP functions.
+From this list-type, arguments are automatically extracted and passed
+to native C++ functions by @t{CHP_LDLFUNCTION_LOAD_DEFAULT}.
+This is typically a list of memory-managed
+pointers to abstract expression types.  
+Defined in @file{Object/expr/dlfunction_fwd.h}.
+@end deftp
+
+
 @cindex types.h
 You may have noticed that the @samp{compute} function references
 return types and argument type @code{int_value_type}.  
@@ -208,6 +236,15 @@ typically defined to a C++ @code{bool}, or the smallest character type.
 @deftp {Data type} real_value_type
 The floating-point data type, corresponding to @samp{real} in @acronym{CHP}, 
 typically defined to @code{float} or @code{double}.  
+@end deftp
+
+@cindex string_value_type
+@deftp {Data type} string_value_type
+The string data type, typically defined to a C++ @code{std::string}.  
+@strong{Recommendation:}
+When defining functions that take this type as an argument, 
+pass it by reference, for example:
+@samp{void dump_string(const string_value_type&);}.
 @end deftp
 
 All functions that are registered with @code{CHP_DLFUNCTION_LOAD_DEFAULT()}

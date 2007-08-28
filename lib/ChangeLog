@@ -1,5 +1,61 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.39 2007/08/22 20:24:32 fang Exp $
+#	$Id: ChangeLog,v 1.40 2007/08/28 04:53:45 fang Exp $
+
+2006-08-27	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-09:
+	  libchpfn/string.cc: forgot to *return* the value...
+		Test cases added for remaining new functions.
+
+
+2006-08-25	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-08:
+	  libchpfn/io.cc: scan now tests for .eof() before .fail().
+	  Rest of revision is just fscan test cases in test/chpsim.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
+	  libchpfn/io.cc:
+		fprint now opens file in create mode, instead of append.
+		fopen (new): opens file in create mode.
+		fappend (new): opens file in append mode.
+		fclose: now removes entries from stream maps.  
+	  libchpfn/OS.h: (new)
+		system: execute cmd string in shell.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-06:
+	  libchpfn/io.cc: added sprint function, similar to fprint, 
+		but through stringstream, and returns concat'd string.  
+		Also called tostring, which may be a more intuitive name.  
+
+
+2006-08-24	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-05:
+	  libchpfn/io.cc: Minor fix -- specialize scan for strings to
+		use getline instead of istream operator >>.
+	  Test cases for many new functions added to test/chpsim.
+		scan tests filed under FAIL tests to avoid checkpoint
+		wrapper script, which screws up stdin redirection.
+
+
+2006-08-23	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-04:
+	  libchpfn/: conditional.cc: fix select()
+		io.{h,cc}: added scan_loop family of functions.  Documented.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-03:
+	  CHP library: added string functions, documented.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-02:
+	  CHP library: added libchpfn/io.{h,cc} for I/O functions, 
+		through stdio and file streams.  Untested.
+
 
 2006-08-22	David Fang	<fangism@users.sourceforce.net>
 

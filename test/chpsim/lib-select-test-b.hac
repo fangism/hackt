@@ -1,0 +1,19 @@
+// "lib-select-test-b.hac"
+// expect to fail passing wrong type
+// TODO: fix with proper diagnostic, instead of assert-fail
+
+import "testlib/int-source.hac";
+
+chan(int) D, S;
+int s;
+
+int_source<32> SS<2,{0,1}>(S);
+
+chp {
+	// expect to fail on some iteration
+	*[ S?(s); D!(select(s, 13, false)) ]
+}
+chp {
+	*[ D? ]
+}
+

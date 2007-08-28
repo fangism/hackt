@@ -1,0 +1,18 @@
+# "lib-zscan-test-c-01.chpsimrc"
+#	$Id: lib-zscan-test-c-01.chpsimrc,v 1.1 2007/08/28 04:55:29 fang Exp $
+# @haco@ lib-zscan-test-c.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la
+
+# NOTE: run this as a fail-test to avoid sourcing this script indirectly
+# because the stdin becomes redicrected incorrectly.
+
+watchall-events
+step 2
+-123
+step
+-456
+step
+queue
+

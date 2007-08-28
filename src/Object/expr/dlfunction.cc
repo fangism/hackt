@@ -1,7 +1,9 @@
 /**
 	\file "Object/expr/dlfunction.cc"
-	$Id: dlfunction.cc,v 1.3 2007/08/15 02:48:57 fang Exp $
+	$Id: dlfunction.cc,v 1.4 2007/08/28 04:54:04 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE	0
 
 #include <iostream>
 #include <map>
@@ -10,6 +12,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/string_expr.h"
 // #include "Object/expr/const_collection.h"
 #include "common/ltdl-wrap.h"
 #include "util/macros.h"
@@ -24,7 +27,8 @@ using util::memory::never_ptr;
 using std::string;
 #include "util/using_ostream.h"
 
-typedef	never_ptr<chp_dlfunction_type>
+// typedef	never_ptr<chp_dlfunction_type>
+typedef	chp_dlfunction_ptr_type
 					chp_mapped_func_ptr_type;
 
 typedef	std::map<string, chp_mapped_func_ptr_type>	
@@ -73,6 +77,16 @@ try {
 }
 }
 
+string_value_type
+extract_string(const const_param& p) {
+try {
+	return IS_A(const string_expr&, p).static_constant_value();
+} catch (std::bad_cast& e) {
+	p.what(cerr << "Run-time error: expecting string, but got ") << endl;
+	throw;		// re-throw
+}
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 int_value_type
@@ -107,26 +121,54 @@ extract_chp_value<real_value_type>(const chp_function_const_argument_type& v) {
 	}
 }
 
+template <>
+string_value_type
+extract_chp_value<string_value_type>(
+		const chp_function_const_argument_type& v) {
+	if (v)
+		return extract_string(*v);
+	else {
+		cerr << "Error extracting string from NULL argument." << endl;
+		THROW_EXIT;
+	}
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chp_function_return_type
 make_chp_value(const int_value_type v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new pint_const(v));
 }
 
 chp_function_return_type
 make_chp_value(const bool_value_type v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new pbool_const(v));
 }
 
 chp_function_return_type
 make_chp_value(const real_value_type v) {
+	STACKTRACE_VERBOSE;
 	return chp_function_return_type(new preal_const(v));
+}
+
+chp_function_return_type
+make_chp_value(const string_value_type& v) {
+	STACKTRACE_VERBOSE;
+	return chp_function_return_type(new string_expr(v));
 }
 
 //=============================================================================
 chp_function_registrar::chp_function_registrar(
 		const string& fn, const chp_dlfunction_ptr_type fp) {
 	if (register_chpsim_function(fn, fp)) {
+		THROW_EXIT;
+	}
+}
+
+chp_function_registrar::chp_function_registrar(
+		const string& fn, chp_dlfunction_type* const fp) {
+	if (register_chpsim_function(fn, chp_dlfunction_ptr_type(fp))) {
 		THROW_EXIT;
 	}
 }
@@ -168,25 +210,20 @@ register_chpsim_function(const string& fn, const chp_dlfunction_ptr_type fp) {
 	Automatically looks up function and caches resolved symbol.  
 	The dlsym lookup is a last resort if it wasn't found in the
 	managed function map already.  
+	CORRECTION: do NOT dl_find_sym, only use function registry interface.
  */
 chp_dlfunction_ptr_type
 lookup_chpsim_function(const std::string& fn) {
 	typedef	chp_func_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE;
-	chp_mapped_func_ptr_type& mf(chp_function_map[fn]);
-	if (!mf) {
-		lt_dlsym_union sym(ltdl_find_sym(fn));
-		if (!sym.func_ptr) {
-			cerr << "ERROR: symbol `" << fn << "\' not found "
-				"in presently loaded modules." << endl;
-			return NULL;
-		}
-		// here is the one type assumption: 
-		// that registered functions have the correct prototype
-		mf = chp_mapped_func_ptr_type(
-			reinterpret_cast<chp_dlfunction_ptr_type>(sym.func_ptr));
+	const const_iterator i(chp_function_map.find(fn));
+	if (i == chp_function_map.end()) {
+		cerr << "ERROR: symbol `" << fn << "\' not found "
+			"in presently loaded modules." << endl;
+		return chp_dlfunction_ptr_type(NULL);
+	} else {
+		return i->second;
 	}
-	return &*mf;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

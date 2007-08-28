@@ -6,18 +6,18 @@ state	value
 #STATE#	string: "abcdef... "Quote" 'quote' the end is near!\\" [4:53]
 #STATE#	end-of-file
 in state #STATE#, possible rules are:
-	multiplicative_expr : multiplicative_expr . muldiv_op unary_expr  (#RULE#)
-	additive_expr : multiplicative_expr .  (#RULE#)
+	literal : string .  (#RULE#)
+	string : string . STRING  (#RULE#)
 acceptable tokens are: 
 	'#' (reduce)
-	'%' (shift)
+	'%' (reduce)
 	'&' (reduce)
 	')' (reduce)
-	'*' (shift)
+	'*' (reduce)
 	'+' (reduce)
 	',' (reduce)
 	'-' (reduce)
-	'/' (shift)
+	'/' (reduce)
 	':' (reduce)
 	';' (reduce)
 	'<' (reduce)
@@ -27,6 +27,7 @@ acceptable tokens are:
 	'^' (reduce)
 	'|' (reduce)
 	'}' (reduce)
+	STRING (shift)
 	RANGE (reduce)
 	THICKBAR (reduce)
 	LE (reduce)

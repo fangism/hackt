@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.22 2007/08/15 01:08:18 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.23 2007/08/28 04:54:24 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -435,6 +435,9 @@ FALSE		"false"
 EXTERN		"extern"
 STATIC		"static"
 EXPORT		"export"
+/* just like C preprocessor built-in definitions */
+FILENAME	"__FILE__"
+LINENO		"__LINE__"
 
 /* whole line  for line directive */
 LINE		^#{WS}{INT}{WS}{FILESTRING}.*$
@@ -671,6 +674,20 @@ EMBEDFILE	^#FILE
 {EXTERN}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXTERN; }
 {STATIC}	{ LINKAGE_UPDATE(*hackt_lval, foo); return STATIC; }
 {EXPORT}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXPORT; }
+{FILENAME}	{ 
+	/* substitute __FILE__ with current file name */
+	hackt_lval->_token_quoted_string =
+		new token_quoted_string(hackt_parse_file_manager.top_FILE_name());
+	TOKEN_UPDATE(foo);
+	return STRING;
+}
+{LINENO}	{
+	/* substitute __LINE__ with current line number */
+	hackt_lval->_token_int =
+		new token_int(hackt_parse_file_manager.current_position().line);
+	TOKEN_UPDATE(foo);
+	return INT;
+}
 {EMBEDFILE}	{
 	KEYWORD_UPDATE(*hackt_lval, foo);
 	excl_ptr<const keyword_position>

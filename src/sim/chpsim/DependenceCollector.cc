@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.7 2007/08/15 02:49:24 fang Exp $
+	$Id: DependenceCollector.cc,v 1.8 2007/08/28 04:54:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -149,6 +149,7 @@ DEFINE_TRIVIAL_VISIT(preal_const)
 DEFINE_TRIVIAL_VISIT(pint_const_collection)
 DEFINE_TRIVIAL_VISIT(pbool_const_collection)
 DEFINE_TRIVIAL_VISIT(preal_const_collection)
+DEFINE_TRIVIAL_VISIT(string_expr)
 DEFINE_NEVER_VISIT(int_range_expr)
 
 DEFINE_NEVER_VISIT(pint_arith_expr)

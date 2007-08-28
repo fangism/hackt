@@ -1,0 +1,12 @@
+// "lib-sprint-test-a.hac"
+//	$Id: lib-sprint-test-a.hac,v 1.2 2007/08/28 04:55:13 fang Exp $
+// testing printing to file
+
+chp {
+*[
+	echo(sprint("welcome to libc!\n"),
+		tostring(28, " is a perfect number.\n"));
+	echo(sprint("To thine own self be ", true, ".\n"))
+]
+}
+

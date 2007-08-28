@@ -1,0 +1,10 @@
+# "lib-fzscan_loop-test-b-01.chpsimrc"
+#	$Id: lib-fzscan_loop-test-b-01.chpsimrc,v 1.2 2007/08/28 04:55:06 fang Exp $
+# @haco@ lib-fzscan_loop-test-b.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la fzscan-01.txt
+
+# watchall-events
+step 40
+

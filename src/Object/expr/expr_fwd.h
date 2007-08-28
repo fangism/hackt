@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_fwd.h"
 	Forward declarations of all expression-related classes.  
-	$Id: expr_fwd.h,v 1.7 2007/08/15 02:48:58 fang Exp $
+	$Id: expr_fwd.h,v 1.8 2007/08/28 04:54:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_FWD_H__
@@ -19,6 +19,7 @@ namespace entity {
 	class real_expr;        // not officially supported
 	class enum_expr;
 	class struct_expr;
+	class string_expr;
 	class int_range_expr;
 	class nonmeta_index_expr_base;
 	class nonmeta_range_expr_base;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.h"
-	$Id: nonmeta_func_call.h,v 1.2 2007/07/31 23:23:24 fang Exp $
+	$Id: nonmeta_func_call.h,v 1.3 2007/08/28 04:54:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_FUNC_CALL_H__
@@ -9,6 +9,7 @@
 #include <string>
 #include "Object/expr/data_expr.h"
 #include "util/memory/count_ptr.h"
+#include "util/memory/excl_ptr.h"	// for never_ptr
 #include "Object/expr/dlfunction.h"	// for function typedef
 
 namespace HAC {
@@ -28,11 +29,8 @@ class nonmeta_func_call : public data_expr {
 	typedef	nonmeta_func_call		this_type;
 public:
 	typedef	count_ptr<const nonmeta_expr_list>	fargs_ptr_type;
-#if 0
-	typedef	count_ptr<const_param> (*function_ptr_type) (const const_param_expr_list&);
-#else
+	// is a never_ptr
 	typedef	chp_dlfunction_ptr_type		function_ptr_type;
-#endif
 private:
 	/**
 		Name of function to call.

@@ -1,0 +1,13 @@
+// "lib-strtob-test-a.hac"
+//	$Id: lib-strtob-test-a.hac,v 1.2 2007/08/28 04:55:21 fang Exp $
+// testing conversion of string to boolean
+
+bool z;
+chp {
+	print(strtob("0"));
+	print(strtob("1"));
+	// uses operand type deduction
+	z:= strtob("0") || strtob("1");
+	print(z)
+}
+

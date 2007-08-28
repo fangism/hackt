@@ -3,6 +3,116 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-63-merged-chpsim-08-09:
+	  Branch merge of -chpsim-08.  Summary:
+	  Added nonmeta-support for string-literal values, 
+		currently only exposed to nonmeta language, such as CHP.
+	  Added run-time support for passing around of string values (CHP).
+	  CHPSIM standard library: added IO, file-stream, string manipulation
+		library functions, all tested and documented.  
+	  chpsim:dlopen: no longer use ltdl_find_sym, only use restricted
+		interface for registering functions.  
+	  parser: consecutive string-literals are automatically concatenated
+	  lexer: support __FILE__ string token and __LINE__ integer token.
+	  Internal improvements to CHPSIM module development headers.
+	  Object/nonmeta_variable.h: minor bug fix -- use expr/types.h types
+		for integer type consistency.
+	  Many test cases added and helped iron out bugs.  
+
+
+2007-08-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-09:
+	  No source revision, only library update and testing.
+	  Ready to merge to trunk.  
+
+
+2007-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-08:
+	  No source revision, only chpsim library testing, another batch.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
+	  util/ChangeLog: stream_ptr.{h,cc}
+	  No other source revision, just a round of library test
+		cases and minor fixes (lib/ChangeLog).
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-06:
+	  Expect-fail bug fix: do not dl_find_sym lookup functions, 
+		restrict interface to module-load-time registration.
+		This prevents accidentally finding exported symbols
+		in the executable's image (its shared dep-libs).  
+		file: Object/expr/dlfunction.cc
+		test case: chpsim/missing_func-d
+	  chp_function_ptr_type wrapped in never_ptr now (not needed).
+	  sim/chpsim/dlfunction.h: WRAP_DLFUNCTION_NAME is now UNIQUIFY-ed.
+
+
+2007-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-05:
+	  Implemented const_param::nonmeta_dump, which defaults to
+		dump except for string_expr, which strips quotes.  
+	  Rest is library testing and fixing. 
+
+
+2007-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-04:
+	  First bug fix on branch!
+	  Object/expr/dlfunction.h: make_chp_value now uses plain
+		non-fancy simple function overloading, string_value_type
+		was not properly dispatching before.
+	  Random debugging codelets added during the bug hunt.
+	  Object/nonmeta_channel_manipulator.{h,cc}: de-inlined dtor.
+	  Added one test case in test/chpsim.
+	  Also fix and addition to chpsim std library.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-03:
+	  sim/chpsim/chpsim_dlfunction.h: aded wrapper support for when
+		argument (list) type does not need to be wrapper.
+	  Rest of revision is library additions and library documentation, 
+		see dox/ChangeLog and lib/ChangeLog.
+	  Next: testing new lib functions.
+
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-02:
+	  Object/expr/dlfunction_fwd.h: split-off foward declarations.
+	  Object/expr/const_param_expr_list.h:
+		more dump methods intended for nonmeta function calls
+		from the CHP standard library.
+	  Object/expr/dlfunction.{h,cc}: added support for
+		string conversion and extraction.  
+	  sim/chpsim/chpsim_dlfunction.h: use chp_function_* typedefs, 
+		added more auto_wrap wrappers (wish for variadic), 
+		registration macros now uniquify identifiers, 
+		in case the same function is registered with different aliases.
+	  Added bunch of CHP I/O functions to library (lib/ChangeLog).
+
+
+2007-08-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-01:
+	  Branch: for adding string support and more chpsim standard
+		library functions, especially user I/O functions.  
+	  new: Object/expr/string_expr.h Object/traits/string_traits.h:
+		welcome our new string metaclass!
+		string_expr methods defined in Object/expr/data_expr.cc
+		string_traits built-ins defined in traits/class_traits_types.cc
+	  Object/traits/type_tag_enum.h: bumped up enums for string type
+	  AST/token.cc: create string_expr in type-checking.
+	  lexer/hackt-lex.ll: added support for __FILE__ and __LINE__ 
+		directives, (like cpp) to be tested as function arguments.
+	  parser/hackt-parse.yy.in: 'string' is automatic concatenation
+		of STRING tokens.  "foo" "bar" -> "foobar"
+	  Few basic test cases in test/parser/chp.
+
+
 2007-08-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-62:

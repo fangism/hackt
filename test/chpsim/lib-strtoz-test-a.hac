@@ -1,0 +1,11 @@
+// "lib-strtoz-test-a.hac"
+//	$Id: lib-strtoz-test-a.hac,v 1.2 2007/08/28 04:55:23 fang Exp $
+// testing conversion of string to integer
+
+int z;
+chp {
+	// uses operand type deduction
+	z:= strtoz("10") +strtoz("1");
+	print(z)
+}
+

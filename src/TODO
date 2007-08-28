@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.55 2007/08/15 02:48:48 fang Exp $
+#	$Id: TODO,v 1.56 2007/08/28 04:53:57 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -9,7 +9,7 @@ NOTE: see also sim/chpsim/TODO
 ===============================================================================
 language expression related tasks:
 	support reals (floating-point) on nonmeta language, CHP
-
+	support strings (done for nonmeta language)
 
 ===============================================================================
 sized PRS tools:
@@ -21,6 +21,7 @@ prs2spice replacement
 		* be able to size rules semi-automatically depending on fanout
 	far future: sprsim (sizing simulator, with self-sizing!)
 		constraint solving...
+	see Rajit's netgen for reference behavior
 
 rule attributes (proposed):
 	weak feedback (cross-coupled interference case)
@@ -337,6 +338,10 @@ parser:
 	LOW PRIORITY:
 		Piece together grammar snippets m4-style?
 
+	LOW PRIORITY: (easy)
+		lexical token '__TYPE__' for a type string (nonmeta?)
+		token '__PID__' tor process-ID integer (nonmeta-only)
+
 ===============================================================================
 LANGUAGES:
 	Is there any need to support the addition of languages
@@ -363,14 +368,6 @@ Expression resolutions:
 		until g++-3.4.x, therefore we'd have to check for
 		covariant correctness during configure and work-around.
 		Too much effort for now... just screw it.  
-
-===============================================================================
-KNOWN BUGS
-
-test cases:
-parser/connect/120.hac, 121.hac
-	regarding hierarchical propagation and checking of relaxed actuals
-	(2005-08-18: punting)
 
 ===============================================================================
 DEFECT REPORTS:

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.27 2007/07/31 23:23:19 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.28 2007/08/28 04:54:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -104,6 +104,61 @@ ostream&
 const_param_expr_list::dump(ostream& o, const expr_dump_context& c) const {
 	if (empty())	return o;
 	else		return dump_range(o, c, 0, size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints each element in sequence, with no delimiters, 
+	and skipping NULL elements.  
+ */
+ostream&
+const_param_expr_list::dump_raw(ostream& o) const {
+	return dump_raw_from(o, 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Useful for printing "the remaining arguments"
+	\param k the number of elements to skip from the front.
+ */
+ostream&
+const_param_expr_list::dump_raw_from(ostream& o, const size_t k) const {
+	const_iterator i(begin()), e(end());
+	i += k;
+	for ( ; i!=e; ++i) {
+		if (*i) {
+			(*i)->dump_nonmeta(o);
+		}
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param o the output stream
+	\param l the left enclosure (optional, NULL)
+	\param d the delimiter (optional, NULL)
+	\param r the right enclosure (optional, NULL)
+ */
+ostream&
+const_param_expr_list::dump_formatted(ostream& o, 
+		const char* l, const char* d, const char* r) const {
+	const_iterator i(begin()), e(end());
+	if (l)
+		o << l;
+	if (*i) {
+		(*i)->dump(o);
+	}
+	for (++i; i!=e; ++i) {
+		if (d)
+			o << d;
+		if (*i) {
+			(*i)->dump_nonmeta(o);
+		}
+	}
+	if (r)
+		o << r;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

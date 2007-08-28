@@ -1,0 +1,13 @@
+// "lib-print-test-a.hac"
+//	$Id: lib-print-test-a.hac,v 1.2 2007/08/28 04:55:08 fang Exp $
+// testing echo function
+
+chp {
+*[
+	print("So long, (", 1, ")");
+	print("Farewell,");
+	print("Auf ", "Wiedersehen,");
+	print("Goodbye!" " (repeat)\n")	// extra newline
+]
+}
+

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.83 2007/08/17 00:36:34 fang Exp $
+#	$Id: Make.test-tail,v 1.84 2007/08/28 04:54:38 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -103,6 +103,10 @@ EXTRACT_CHPSIMTRACE_PIPE = $(GREP) "@chpsimtrace@" | $(HEAD) -n1 | \
 
 # General script for extracting additional dependencies from source files.
 EXTRACT_DEPS_PIPE = $(GREP) "@deps@" | $(SED) 's/^.*@deps@//g'
+
+# General script for extracting additional anti-dependencies from source files.
+# Useful for automatically cleaning side-effect files.
+EXTRACT_ANTIDEPS_PIPE = $(GREP) "@antideps@" | $(SED) 's/^.*@antideps@//g'
 
 
 # This mechanism could be generalized to produce extra dependencies

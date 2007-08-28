@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.6 2007/06/16 23:05:02 fang Exp $
+	$Id: nonmeta_variable.h,v 1.7 2007/08/28 04:53:59 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -124,7 +124,8 @@ public:
 	/**
 		The value type.
 	 */
-	typedef	char				value_type;
+	typedef	bool_value_type			value_type;
+//	typedef	char				value_type;
 	value_type				value;
 
 	// for now...
@@ -151,7 +152,7 @@ class IntVariable : public nonmeta_variable_base {
 public:
 	typedef	int_tag				tag_type;
 	/// the value type
-	typedef	unsigned int			value_type;
+	typedef	int_value_type			value_type;
 	value_type				value;
 
 	// for now...
@@ -177,7 +178,7 @@ class EnumVariable : public nonmeta_variable_base {
 public:
 	typedef	enum_tag				tag_type;
 	/// the value type
-	typedef	unsigned int			value_type;
+	typedef	enum_value_type			value_type;
 	value_type				value;
 
 	// for now...

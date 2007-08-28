@@ -1,0 +1,7 @@
+Error in conversion: strtob("23")
+Run-time error calling function: strtob("23")
+Run-time error calling function: print(strtob("23"))
+Run-time error executing event 1.
+Run-time error while checking event.
+event[1]:	10	1	0	print(strtob("23"))
+Caught run-time exception during execution.  Halting.

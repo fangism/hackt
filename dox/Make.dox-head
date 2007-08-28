@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.13 2007/08/21 00:50:35 fang Exp $
+#	$Id: Make.dox-head,v 1.14 2007/08/28 04:53:42 fang Exp $
 #	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
@@ -60,9 +60,10 @@ HTML_HOOKS =
 # For use with Makefile rules, 
 # works for rules with single or multiple dependencies
 # EXTRACT_TEXINFO_IN_SRCDIR defined in $(top_srcdir)/Make.stddef
+# want to be "for s in $?", but leaves false deps...
 EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT = \
 	(cd $(srcdir) && \
-	for s in $? ; do \
+	for s in $^ ; do \
 	  f="$(top_builddir)"`$(ECHO) $$s | $(SED) 's|$(top_srcdir)||'` ; \
 	  if (test -f $$f && test -r $$f) ; then \
 	    $(ECHO) "Extracting Texinfo from $$f ..." ; \

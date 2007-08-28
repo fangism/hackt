@@ -1,0 +1,10 @@
+// "lib-sscan-test-a.hac"
+//	$Id: lib-sscan-test-a.hac,v 1.2 2007/08/28 04:55:16 fang Exp $
+// testing interactive input functions
+
+chp {
+*[
+  print("You entered: ", sscan())
+]
+}
+

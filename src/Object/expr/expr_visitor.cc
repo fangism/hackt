@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/expr_visitor.cc"
-	$Id: expr_visitor.cc,v 1.4 2007/07/31 23:23:15 fang Exp $
+	$Id: expr_visitor.cc,v 1.5 2007/08/28 04:54:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -33,6 +33,7 @@
 #include "Object/expr/nonmeta_func_call.h"
 
 #include "common/ICE.h"
+#include "util/memory/excl_ptr.h"	// for never_ptr
 #include "util/stacktrace.h"
 
 namespace HAC {

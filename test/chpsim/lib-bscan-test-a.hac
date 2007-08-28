@@ -1,0 +1,13 @@
+// "lib-bscan-test-a.hac"
+//	$Id: lib-bscan-test-a.hac,v 1.2 2007/08/28 04:54:49 fang Exp $
+// testing interactive input functions
+
+bool b;
+
+chp {
+*[
+  b:=bscan();
+  print("You entered: ", b)
+]
+}
+

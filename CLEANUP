@@ -1,5 +1,5 @@
 # "CLEANUP"
-#	$Id: CLEANUP,v 1.1 2007/08/09 03:48:32 fang Exp $
+#	$Id: CLEANUP,v 1.2 2007/08/28 04:53:39 fang Exp $
 # Project-wide list of things to tidy up, re-organize, or just plain expurgate
 # As a first step, I will keep clean-up related tasks in this single file
 # instead of distributed across subdirectories.  
@@ -19,11 +19,12 @@ dox/
 		remove .tex source files (total replacement).  
 
 test/
-	Remove all traces of the unroll phase.
-		Especially the .unrollstderr's in CVS.
-		also in src, lib/mk, dox...
 
 config/
 
 scripts/
+
+libltdl/
+	Patch configure.ac to point to ../config AC_CONFIG_DIR
+	and remove redundant automake 'missing' files.  
 

@@ -1,0 +1,16 @@
+// "lib-echo-test-d.hac"
+// copy-modified from "lib-echo-test-c.hac"
+//	$Id: lib-echo-test-d.hac,v 1.2 2007/08/28 04:54:56 fang Exp $
+// testing echo function, variadic, with multiple string arguments
+
+chp {
+*[
+	// parse will concatenate strings
+	echo("So long (", 1, "), \n"
+		"Farewell (", 4/2, "),\n");
+	cout("Auf Wiedersehen (", 1+2, "),\n", 
+		"Goodbye! (", 4, ")\n");
+	cout("true = ", true, ", false = ", false, "\n")
+]
+}
+

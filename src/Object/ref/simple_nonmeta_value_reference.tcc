@@ -1,9 +1,9 @@
 /**
-	\file "Object/ref/simple_nonmeta_value_reference.cc"
+	\file "Object/ref/simple_nonmeta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.25 2007/07/31 23:23:26 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.26 2007/08/28 04:54:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__

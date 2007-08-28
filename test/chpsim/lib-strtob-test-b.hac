@@ -1,0 +1,9 @@
+// "lib-strtob-test-b.hac"
+//	$Id: lib-strtob-test-b.hac,v 1.2 2007/08/28 04:55:21 fang Exp $
+// testing conversion of string to boolean
+
+chp {
+	// exect to fail: only "0" and "1" are acceptable bools
+	print(strtob("23"))
+}
+

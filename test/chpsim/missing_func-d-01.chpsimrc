@@ -1,0 +1,7 @@
+# "missing_func-d-01.chpsimrc"
+#	$Id: missing_func-d-01.chpsimrc,v 1.2 2007/08/28 04:55:30 fang Exp $
+# @haco@ missing_func-d.haco-a
+
+step 5
+echo expect to die right away
+

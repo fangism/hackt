@@ -1,0 +1,11 @@
+// "lib-sscan-test-b.hac"
+// copy-modified from "lib-sscan-test-a.hac"
+//	$Id: lib-sscan-test-b.hac,v 1.2 2007/08/28 04:55:19 fang Exp $
+// testing interactive input functions
+
+chp {
+*[
+  print("You entered: ", sscan_prompt("string: "))
+]
+}
+

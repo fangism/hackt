@@ -1,0 +1,34 @@
+@c "chapters/keywords.texi"
+@c $Id: keywords.texi,v 1.2 2007/08/28 04:53:45 fang Exp $
+
+@node Keywords
+@appendix Keywords
+@cindex keywords
+
+This appendix describes some of the keywords and terminal tokens
+in the @HAC{} language.
+The following are all special words recognized by the lexer.  
+
+Terminals (tokens):
+
+@strong{TODO:} extract from @command{yacc} output file.
+
+Keywords:
+
+@table @t
+@item __FILE__
+A string that repesents the current file (absolute path).
+@item __LINE__
+Compile-time integer (@pint{}) that holds the current line number
+in the input stream or file.  
+@item import
+The directive for including another source file.
+Automatically ignores the file if it was already read.  
+(implicit pragma-include-once)
+@item #FILE
+Reserved, not intended for general use.  
+Embedded file directive, emitted by flattening a source file's
+@t{import} directives recursively.  
+Allows a single file to behave as if sections were included hierarchically.
+@end table
+

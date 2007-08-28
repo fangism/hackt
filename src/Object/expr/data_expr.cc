@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.18 2007/08/15 02:48:54 fang Exp $
+	$Id: data_expr.cc,v 1.19 2007/08/28 04:54:01 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -32,17 +32,24 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/string_expr.h"
 #include "Object/expr/loop_nonmeta_expr.tcc"
 #include "Object/expr/nonmeta_cast_expr.tcc"
 #include "Object/expr/nonmeta_func_call.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/nonmeta_channel_manipulator.h"
+// only need these for string_expr:
+#include "Object/expr/const_range_list.h"
+#include "Object/unroll/param_expression_assignment.h"
+#include "Object/ref/aggregate_meta_value_reference_base.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+// #include "Object/traits/real_traits.h"
+#include "Object/traits/string_traits.h"
 
 #include "common/TODO.h"
 
@@ -68,6 +75,7 @@ using HAC::entity::int_arith_loop_expr;
 using HAC::entity::bool_logical_loop_expr;
 using HAC::entity::bool_return_cast_expr;
 using HAC::entity::int_return_cast_expr;
+using HAC::entity::string_expr;
 
 	SPECIALIZE_UTIL_WHAT(int_arith_expr, "int-arith-expr")
 	SPECIALIZE_UTIL_WHAT(int_relational_expr, "int-relatonal-expr")
@@ -81,6 +89,7 @@ using HAC::entity::int_return_cast_expr;
 	SPECIALIZE_UTIL_WHAT(bool_logical_loop_expr, "bool-logical-loop-expr")
 	SPECIALIZE_UTIL_WHAT(bool_return_cast_expr, "bool-cast-expr")
 	SPECIALIZE_UTIL_WHAT(int_return_cast_expr, "int-cast-expr")
+	SPECIALIZE_UTIL_WHAT(string_expr, "string-expr")
 
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_arith_expr, NONMETA_INT_ARITH_EXPR_TYPE_KEY, 0)
@@ -106,6 +115,8 @@ using HAC::entity::int_return_cast_expr;
 		bool_return_cast_expr, BOOL_RETURN_CAST_EXPR_TYPE_KEY, 0)
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		int_return_cast_expr, INT_RETURN_CAST_EXPR_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		string_expr, STRING_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -179,6 +190,7 @@ void
 int_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const pint_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -215,6 +227,7 @@ void
 bool_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const pbool_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -251,6 +264,7 @@ void
 real_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const preal_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -297,6 +311,7 @@ void
 enum_expr::evaluate_write(const nonmeta_context_base& c,
 		channel_data_writer& w, 
 		const count_ptr<const data_expr>& _this) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(_this == this);
 	const count_ptr<const pint_const>
 		d(__nonmeta_resolve_rvalue(c, _this.is_a<const this_type>()));
@@ -1695,6 +1710,209 @@ nonmeta_expr_list::load_object(const persistent_object_manager& m,
 		m.load_object_once(&const_cast<data_expr&>(*ip));
 	}
 #endif
+}
+
+//=============================================================================
+// class string_expr method definitions
+
+string_expr::string_expr() : data_expr(), const_param(), _string() { }
+
+string_expr::string_expr(const string& s) : 
+	data_expr(), const_param(), _string(s) { }
+
+string_expr::~string_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(string_expr)
+
+ostream&
+string_expr::dump(ostream& o, const expr_dump_context&) const {
+	return o << '\"' << _string << '\"';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+string_expr::dump_nonmeta(ostream& o) const {
+	return o << _string;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	No array support for strings yet.  
+ */
+size_t
+string_expr::dimensions(void) const {
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+string_expr::is_true(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+string_expr::is_relaxed_formal_dependent(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+string_expr::has_static_constant_dimensions(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+string_expr::static_constant_param(void) const {
+	return count_ptr<const this_type>(new this_type(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+string_expr::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Could only conceivable be called during template parameter comparison.
+ */
+bool
+string_expr::operator < (const const_param& r) const {
+	const this_type* const pp = IS_A(const this_type*, &r);
+	if (pp) {
+		// string comparison
+		return _string < pp->_string;
+	} else {
+		// string collections don't exist yet
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+string_expr::may_be_equivalent_generic(const param_expr& p) const {
+	const this_type* pp = IS_A(const this_type*, &p);
+	if (pp) {
+		return _string == pp->_string;
+	}
+	else return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since there are no variable strings in the meta language, 
+	may and must equivalence are the same.  
+ */
+bool
+string_expr::must_be_equivalent_generic(const param_expr& p) const {
+	return may_be_equivalent_generic(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_type_reference>
+string_expr::get_unresolved_data_type_ref(void) const {
+	return string_traits::built_in_type_ptr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_generic_datatype
+string_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	return string_traits::nonmeta_data_type_ptr->make_canonical_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_expr>
+string_expr::unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+string_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const const_param>();	// should static_cast
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param>
+string_expr::nonmeta_resolve_copy(const nonmeta_context_base&, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	// should really static_cast...
+	return p.is_a<const this_type>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+string_expr::evaluate_write(const nonmeta_context_base&, 
+		channel_data_writer&, const count_ptr<const data_expr>&) const {
+	STACKTRACE_VERBOSE;
+	FINISH_ME_EXIT(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const param_expr>
+string_expr::substitute_default_positional_parameters(
+		const template_formals_manager&,
+		const dynamic_param_expr_list&,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unreachable until strings are referenceable as rvalues
+	in the meta language.
+ */
+param_expr::assignment_ptr_type
+string_expr::make_param_expression_assignment_private(
+		const count_ptr<const param_expr>& p) const {
+	FINISH_ME(Fang);
+	return assignment_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<aggregate_meta_value_reference_base>
+string_expr::make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>& p) const {
+	typedef	count_ptr<aggregate_meta_value_reference_base>	return_type;
+	FINISH_ME(Fang);
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+string_expr::accept(nonmeta_expr_visitor& v) const {
+	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+string_expr::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this,
+		persistent_traits<this_type>::type_key)) {
+	// no pointers to visit
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+string_expr::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	write_value(o, _string);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+string_expr::load_object(const persistent_object_manager& m, istream& i) {
+	read_value(i, _string);
 }
 
 //=============================================================================

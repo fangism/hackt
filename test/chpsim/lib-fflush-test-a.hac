@@ -1,0 +1,14 @@
+// "lib-fflush-test-a.hac"
+//	$Id: lib-fflush-test-a.hac,v 1.2 2007/08/28 04:54:59 fang Exp $
+// testing printing to file, and flushing
+
+chp {
+	fprint("lib-fflush-test-a-out.txt",
+		"welcome to libc!\n");
+	fprint("lib-fflush-test-a-out.txt",
+		28, " is a perfect number.\n");
+	fprint("lib-fflush-test-a-out.txt",
+		"To thine own self be ", true, ".\n");
+	fflush("lib-fflush-test-a-out.txt")
+}
+

@@ -1,0 +1,13 @@
+// "lib-echo-test-a.hac"
+//	$Id: lib-echo-test-a.hac,v 1.2 2007/08/28 04:54:51 fang Exp $
+// testing echo function
+
+chp {
+*[
+	echo("So long,\n");
+	echo("Farewell,\n");
+	echo("Auf Wiedersehen,\n");
+	echo("Goodbye!\n")
+]
+}
+

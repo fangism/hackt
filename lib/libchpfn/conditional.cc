@@ -1,9 +1,22 @@
 /**
 	\file "libchpfn/conditional.cc"
-	$Id: conditional.cc,v 1.2 2007/08/15 02:48:35 fang Exp $
+	$Id: conditional.cc,v 1.3 2007/08/28 04:53:47 fang Exp $
  */
 
+#define	ENABLE_STACKTRACE		0
+
 #include "libchpfn/conditional.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/const_param.h"
+#include "Object/expr/dlfunction.h"
+#include "util/memory/count_ptr.h"
+#include "util/stacktrace.h"
+
+#if ENABLE_STACKTRACE
+// debugging only
+#include <iostream>
+#include "Object/expr/expr_dump_context.h"
+#endif
 
 namespace HAC {
 namespace CHP {
@@ -63,6 +76,27 @@ real_value_type
 rcond(const bool_value_type z,
 		const real_value_type a, const real_value_type b) {
 	return _cond(z, a, b);
+}
+
+/***
+@texinfo fn/select.texi
+@deffn Function select index args...
+Returns expression @i{args[index]}, where @var{index} is 0-based.  
+Throws run-time exception if @var{index} is out-of-range.  
+@end deffn
+@end texinfo
+***/
+chp_function_return_type
+select(const chp_function_argument_list_type& args) {
+	STACKTRACE_VERBOSE;
+	const int_value_type index = extract_int(*args[0]);
+	const chp_function_return_type& ret(args[index +1]);
+	NEVER_NULL(ret);
+#if ENABLE_STACKTRACE
+	ret->dump(std::cout << "select: ",
+		entity::expr_dump_context::default_value) << std::endl;
+#endif
+	return ret;
 }
 
 //=============================================================================

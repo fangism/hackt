@@ -1,5 +1,13 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.25 2007/08/22 02:09:16 fang Exp $
+#	$Id: ChangeLog,v 1.26 2007/08/28 04:53:42 fang Exp $
+
+2007-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-03:
+	  chpsim:/ Updated standard function library documentation.
+		Updated types and macro documentation. 
+	  mk/scantexdepend.awk: exclude more shell patterns from search
+
 
 2007-08-21	David Fang		<fangism@users.sourceforge.net>
 

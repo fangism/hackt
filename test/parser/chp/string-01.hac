@@ -1,0 +1,7 @@
+// "string-01.hac"
+// testing how strings are passed in function calls
+
+chp {
+*[ echo("Hello, world!") ]
+}
+

@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.75 2007/08/19 04:00:39 fang Exp $
+#	$Id: ChangeLog,v 1.76 2007/08/28 04:54:34 fang Exp $
 # ChangeLog for test directory.
+
+2007-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-61-chpsim-08-07:
+	  Make.test-chpsim: added support for automatic anti-dependencies,
+		targets created as a side-effect of another command
+
 
 2007-08-18	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.10 2007/03/11 16:34:16 fang Exp $
+	$Id: token.cc,v 1.11 2007/08/28 04:53:58 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -33,6 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
+#include "Object/expr/string_expr.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
@@ -102,6 +103,7 @@ using entity::bool_traits;
 using entity::int_traits;
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
+using entity::string_expr;
 
 //=============================================================================
 // class terminal definitions
@@ -479,7 +481,7 @@ token_else::check_meta_expr(const context& c) const {
 // class token_quoted_string method definitions
 
 CONSTRUCTOR_INLINE
-token_quoted_string::token_quoted_string(const char* s) :
+token_quoted_string::token_quoted_string(const string& s) :
 	token_string(s), expr() { }
 
 DESTRUCTOR_INLINE
@@ -514,14 +516,18 @@ token_quoted_string::rightmost(void) const {
  */
 never_ptr<const object>
 token_quoted_string::check_build(context& c) const {
-	FINISH_ME(Fang);
+	FINISH_ME_EXIT(Fang);
 	return never_ptr<const object>(NULL);
 }
 
 expr::meta_return_type
 token_quoted_string::check_meta_expr(const context& c) const {
-	FINISH_ME(Fang);
-	return expr::meta_return_type(NULL);
+	return meta_return_type(new string_expr(*this));
+}
+
+expr::nonmeta_return_type
+token_quoted_string::check_nonmeta_expr(const context& c) const {
+	return nonmeta_return_type(new string_expr(*this));
 }
 
 //=============================================================================

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.178 2007/08/20 21:12:38 fang Exp $
+#	$Id: Makefile.am,v 1.179 2007/08/28 04:53:56 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -678,6 +678,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
 	Object/traits/real_traits.h \
+	Object/traits/string_traits.h \
 	Object/traits/struct_traits.h \
 	Object/traits/instance_traits.h \
 	Object/traits/type_tag_enum.h \
@@ -713,6 +714,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/const_range_list.h \
 	Object/expr/convert_expr.h \
 	Object/expr/data_expr.h \
+	Object/expr/dlfunction_fwd.h \
 	Object/expr/dynamic_meta_index_list.h \
 	Object/expr/dynamic_meta_range_list.h \
 	Object/expr/dynamic_param_expr_list.h \
@@ -756,6 +758,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/preal_arith_expr.h \
 	Object/expr/preal_relational_expr.h \
 	Object/expr/preal_unary_expr.h \
+	Object/expr/string_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/lang/cflat_visitee.h \
@@ -937,6 +940,7 @@ nobase_pkginclude_HEADERS += \
 	Object/expr/param_expr.h \
 	Object/expr/param_expr_list.h \
 	Object/expr/types.h \
+	Object/expr/dlfunction_fwd.h \
 	Object/expr/dlfunction.h \
 	sim/chpsim/chpsim_dlfunction.h
 

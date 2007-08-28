@@ -1,0 +1,14 @@
+// "lib-zscan-test-b.hac"
+// copy-modified from "lib-zscan-test-a.hac"
+//	$Id: lib-zscan-test-b.hac,v 1.2 2007/08/28 04:55:28 fang Exp $
+// testing interactive input functions, with prompt
+
+int z;
+
+chp {
+*[
+  z:=zscan_prompt("integer: ");
+  print("You entered: ", z)
+]
+}
+

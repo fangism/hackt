@@ -1,0 +1,11 @@
+// "lib-zscan-test-c.hac"
+// copy-modified from "lib-zscan-test-a.hac"
+//	$Id: 
+// testing interactive input functions
+
+chp {
+*[
+  print("You entered: ", zscan())
+]
+}
+

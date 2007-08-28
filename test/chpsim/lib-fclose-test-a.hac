@@ -1,0 +1,15 @@
+// "lib-fclose-test-a.hac"
+//	$Id: lib-fclose-test-a.hac,v 1.2 2007/08/28 04:54:57 fang Exp $
+// testing printing to file, and closing, and dumping
+
+chp {
+	fprint("lib-fclose-test-a-out.txt",
+		"welcome to libc!\n");
+	fprint("lib-fclose-test-a-out.txt",
+		28, " is a perfect number.\n");
+	fprint("lib-fclose-test-a-out.txt",
+		"To thine own self be ", true, ".\n");
+	fclose("lib-fclose-test-a-out.txt");
+	system("cat lib-fclose-test-a-out.txt")
+}
+

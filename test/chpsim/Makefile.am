@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2007/08/19 04:00:41 fang Exp $
+#	$Id: Makefile.am,v 1.24 2007/08/28 04:54:44 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -89,13 +89,29 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	source-sink-peekbuf-a source-sink-peekbuf-b \
 	mux-test-flat \
 	source-sink-void-a \
-	missing_func-a missing_func-b missing_func-c \
+	missing_func-a missing_func-b missing_func-c missing_func-d \
 	greeting_func-a \
 	gcd-nested-a gcd-nested-b \
 	logical-func-a logical-func-b \
 	relational-func-a \
 	lib-assert-test-a \
-	lib-zcond-test-a
+	lib-zcond-test-a \
+	lib-select-test-a lib-select-test-b lib-select-test-c \
+	lib-echo-test-a lib-echo-test-b lib-echo-test-c lib-echo-test-d \
+	lib-print-test-a \
+	lib-zscan-test-a lib-zscan-test-b lib-zscan-test-c \
+	lib-bscan-test-a \
+	lib-sscan-test-a lib-sscan-test-b \
+	lib-fprint-test-a \
+	lib-fflush-test-a \
+	lib-fclose-test-a lib-fclose-test-b \
+	lib-fappend-test-a \
+	lib-fzscan-test-a lib-fzscan-test-b \
+	lib-fzscan_loop-test-a lib-fzscan_loop-test-b \
+	lib-sprint-test-a \
+	lib-strtoz-test-a lib-strtoz-test-b \
+	lib-strtoz-test-c lib-strtoz-test-d \
+	lib-strtob-test-a lib-strtob-test-b lib-strtob-test-c
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -213,7 +229,21 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	greeting_func-a-03 greeting_func-a-04 \
 	gcd-nested-a-01 gcd-nested-b-01 \
 	relational-func-a-01 \
-	lib-zcond-test-a-01
+	lib-zcond-test-a-01 \
+	lib-select-test-a-01 \
+	lib-echo-test-a-01 lib-echo-test-b-01 \
+	lib-echo-test-c-01 lib-echo-test-d-01 \
+	lib-print-test-a-01 \
+	lib-fprint-test-a-01 \
+	lib-fflush-test-a-01 \
+	lib-fclose-test-a-01 lib-fclose-test-b-01 \
+	lib-fappend-test-a-01 \
+	lib-fzscan-test-a-01 \
+	lib-fzscan_loop-test-a-01 \
+	lib-fzscan_loop-test-b-01 \
+	lib-sprint-test-a-01 \
+	lib-strtoz-test-a-01 lib-strtoz-test-b-01 \
+	lib-strtob-test-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -228,18 +258,31 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	bool-memory-write-b-01 \
 	send-fail-a-01 \
 	receive-fail-a-01 \
-	missing_func-a-01 missing_func-b-01 missing_func-c-01 \
+	missing_func-a-01 missing_func-b-01 \
+	missing_func-c-01 missing_func-d-01 \
 	gcd-func-a-03 gcd-func-a-04 gcd-func-a-07 gcd-func-a-11 \
 	gcd-nested-a-02 gcd-nested-b-02 \
 	logical-func-a-01 logical-func-a-02 \
 	logical-func-b-01 \
 	relational-func-a-02 \
-	lib-assert-test-a-01
+	lib-assert-test-a-01 \
+	lib-select-test-c-01 \
+	lib-zscan-test-a-01 lib-zscan-test-a-02 lib-zscan-test-a-03 \
+	lib-zscan-test-b-01 \
+	lib-zscan-test-c-01 \
+	lib-bscan-test-a-01 lib-bscan-test-a-02 \
+	lib-sscan-test-a-01 lib-sscan-test-b-01 \
+	lib-fzscan-test-b-01 \
+	lib-strtoz-test-c-01 lib-strtoz-test-d-01 \
+	lib-strtob-test-b-01 lib-strtob-test-c-01
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
+#	lib-assert-test-b-01 (assert-fail needs diagnostic)
 
 # quarantined test cases:
-srcdir_EXTRA_DIST += gcd-func-a-02.chpsimrc
+srcdir_EXTRA_DIST += \
+	gcd-func-a-02.chpsimrc \
+	lib-assert-test-b-01.chpsimrc
 
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
@@ -335,6 +378,17 @@ KEEP_CHPSIM_TRACE_FILES = \
 
 # this should be redundant with chpsimrc-out dependence...
 $(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
+
+# generate input file in build directory for scan tests
+fzscan-01.txt: Makefile
+	{ $(ECHO) "5" ; \
+	$(ECHO) "4" ; \
+	$(ECHO) "3" ; \
+	$(ECHO) "2" ; \
+	$(ECHO) "1" ; \
+	$(ECHO) "0" ;} > $@
+
+CLEANFILES += fzscan-01.txt
 
 srcdir_EXTRA_DIST += \
 	random-timing-test-short.chpsimrc \

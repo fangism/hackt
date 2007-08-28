@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/type_tag_enum.h"
 	Global enumerations pertaining to meta types.  
-	$Id: type_tag_enum.h,v 1.7 2007/02/26 22:00:54 fang Exp $
+	$Id: type_tag_enum.h,v 1.8 2007/08/28 04:54:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_TYPE_TAG_ENUM_H__
@@ -21,12 +21,13 @@ typedef	enum {
 	META_TYPE_BOOL = 4,
 	META_TYPE_INT = 5,
 	META_TYPE_ENUM = 6,
-	META_TYPES_PHYSICAL = 7,	// use as a MAX size
+	META_TYPE_STRING = 7,
+	META_TYPES_PHYSICAL = 8,	// use as a MAX size
 	// parameter types must follow physical types
-	META_TYPE_PBOOL = 7,
-	META_TYPE_PINT = 8,
-	META_TYPE_PREAL = 9,
-	META_TYPES_ALL = 10		// use as a MAX size
+	META_TYPE_PBOOL = 8,
+	META_TYPE_PINT = 9,
+	META_TYPE_PREAL = 10,
+	META_TYPES_ALL = 11		// use as a MAX size
 }	meta_type_tag_enum;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -55,6 +56,9 @@ struct meta_type_map<META_TYPE_INT> { typedef	int_tag		type; };
 
 template <>
 struct meta_type_map<META_TYPE_ENUM> { typedef	enum_tag	type; };
+
+template <>
+struct meta_type_map<META_TYPE_STRING> { typedef string_tag	type; };
 
 template <>
 struct meta_type_map<META_TYPE_PBOOL> { typedef	pbool_tag	type; };

@@ -1,0 +1,22 @@
+// "lib-fclose-test-b.hac"
+//	$Id: lib-fclose-test-b.hac,v 1.2 2007/08/28 04:54:58 fang Exp $
+// testing printing to file, and closing, and dumping
+
+int c;
+chp {
+c := 0;
+*[ (c < 3) ->
+	fprint("lib-fclose-test-b-out.txt",
+		"welcome to libc!\n");
+	fprint("lib-fclose-test-b-out.txt",
+		28, " is a perfect number.\n");
+	fprint("lib-fclose-test-b-out.txt",
+		"To thine own self be ", true, ".\n");
+	fclose("lib-fclose-test-b-out.txt");
+	c := c+1
+];
+	// expect one set of outputs, no repeat
+	// because file is re-opened without append each time
+	system("cat lib-fclose-test-b-out.txt")
+}
+
