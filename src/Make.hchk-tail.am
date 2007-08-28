@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.14 2007/03/08 23:07:26 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.15 2007/08/28 18:24:35 fang Exp $
 #	vi: ft=automake
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
@@ -49,11 +49,17 @@ FAKE_DEP_FILTER = $(GREP) "^#" | $(GREP) -v '\"/' | $(GREP) -v '\"<' | \
 # make the script accessible to those who want to override
 # predefine more_hchk_flags before invoking the test script to 
 # add CPPFLAGS for the header check test
+
+# We now strip srcdir to force the -include header to undergo -I path lookup
+# which helps find built header files mistakenly referenced in the srcdir
+# by the Makefile from VPATH lookup.
 H_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 H_CHECK_TEST_SCRIPT += \
+	$(SED_srcdir_strip_setup) ; \
+	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
 	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
-	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $< \
+	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
 		-c $(EMPTY_SOURCE) -o $@; \
 	then $(CAT) "$$depbase.Thd" | $(FILTER_HEADER_DEPS) | \
@@ -62,7 +68,9 @@ H_CHECK_TEST_SCRIPT += \
 	else $(RM) "$$depbase.Thd"; exit 1; fi
 else
 H_CHECK_TEST_SCRIPT += \
-	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $< -c $(EMPTY_SOURCE) -o $@
+	$(SED_srcdir_strip_setup) ; \
+	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_SOURCE) -o $@
 endif
 
 .h.hchk:
@@ -72,8 +80,10 @@ endif
 HH_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 HH_CHECK_TEST_SCRIPT += \
+	$(SED_srcdir_strip_setup) ; \
+	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
 	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hhchk$$||'`; \
-	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $< \
+	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thhd" \
 		-c $(EMPTY_SOURCE) -o $@; \
 	then $(CAT) "$$depbase.Thhd" | $(FILTER_HEADER_DEPS) | \
@@ -82,7 +92,9 @@ HH_CHECK_TEST_SCRIPT += \
 	else $(RM) "$$depbase.Thhd"; exit 1; fi
 else
 HH_CHECK_TEST_SCRIPT += \
-	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $< -c $(EMPTY_SOURCE) -o $@
+	$(SED_srcdir_strip_setup) ; \
+	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_SOURCE) -o $@
 endif
 .hh.hhchk:
 	@$(ECHO) "Validating $< ... " ; \
@@ -91,8 +103,10 @@ endif
 TCC_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 TCC_CHECK_TEST_SCRIPT += \
+	$(SED_srcdir_strip_setup) ; \
+	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
 	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
-	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $< \
+	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
 		-c $(EMPTY_SOURCE) -o $@; \
 	then $(CAT) "$$depbase.Ttccd" | $(FILTER_HEADER_DEPS) | \
@@ -101,7 +115,9 @@ TCC_CHECK_TEST_SCRIPT += \
 	else $(RM) "$$depbase.Ttccd"; exit 1; fi
 else
 TCC_CHECK_TEST_SCRIPT += \
-	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $< -c $(EMPTY_SOURCE) -o $@
+	$(SED_srcdir_strip_setup) ; \
+	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_SOURCE) -o $@
 endif
 .tcc.tccchk:
 	@$(ECHO) "Validating $< ... " ; \

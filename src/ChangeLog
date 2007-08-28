@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-64:
+	  No source revision.  
+	  Make.hchk-tail: header-check script now strips srcdir from 
+		dependency when compiling to force path search
+		for built headers.  
+
+
 2007-08-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-63-merged-chpsim-08-09:
