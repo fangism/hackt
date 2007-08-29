@@ -1,6 +1,6 @@
 /**
 	\file "bitmanip_test.cc"
-	$Id: bitmanip_test.cc,v 1.1 2007/08/29 04:45:56 fang Exp $
+	$Id: bitmanip_test.cc,v 1.2 2007/08/29 15:50:25 fang Exp $
  */
 #ifdef	NDEBUG
 #undef	NDEBUG
@@ -41,15 +41,16 @@ template <class R, class A>
 static
 void
 test_func_shift(R (*f)(A), const char* fn, 
-		size_t min, const size_t max, const size_t step) {
-	INVARIANT(min < max);
+		size_t min, const size_t count, const size_t step) {
+	size_t i = 0;
 	do {
 		cout << fn << "(0x";
 		cout << std::hex << min;
 		cout << ") = " << std::dec << size_t((*f)(min)) << endl;
 		min <<= 1;
 		min += step;
-	} while (min <= max);
+		++i;
+	} while (i < count);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -91,31 +92,33 @@ main(const int, char*[]) {
 	test_func_step(&clz<unsigned short>,
 		"clz<ushort>", 1, 0xF00D, 0xF7);
 	test_func_shift(&clz<unsigned short>,
-		"clz<ushort>", 1, 0xEEEE, 0);
+		"clz<ushort>", 1, 16, 0);
 	test_func_shift(&clz<unsigned short>,
-		"clz<ushort>", 1, 0xEEEE, 1);
+		"clz<ushort>", 1, 15, 1);
 	test_func_shift(&clz<unsigned int>,
-		"clz<uint>", 1, 0xEEEEEEEE, 0);
+		"clz<uint>", 1, 32, 0);
 	test_func_shift(&clz<unsigned int>,
-		"clz<uint>", 1, 0xEEEEEEEE, 1);
+		"clz<uint>", 1, 31, 1);
 
 	test_func_step(&msb<unsigned char>,
 		"msb<uchar>", 1, 0xFF, 1);
 	test_func_step(&msb<unsigned short>,
 		"msb<ushort>", 1, 0xF00D, 0xF7);
 	test_func_shift(&msb<unsigned short>,
-		"msb<ushort>", 1, 0xEEEE, 0);
+		"msb<ushort>", 1, 16, 0);
 	test_func_shift(&msb<unsigned short>,
-		"msb<ushort>", 1, 0xEEEE, 1);
+		"msb<ushort>", 1, 15, 1);
 	test_func_shift(&msb<unsigned int>,
-		"msb<uint>", 1, 0xEEEEEEEE, 0);
+		"msb<uint>", 1, 32, 0);
 	test_func_shift(&msb<unsigned int>,
-		"msb<uint>", 1, 0xEEEEEEEE, 1);
+		"msb<uint>", 1, 31, 1);
 
 	test_func_step(&ctz<unsigned char>,
 		"ctz<uchar>", 1, 0xFF, 1);
 	test_func_step(&ctz<unsigned short>,
-		"ctz<ushort>", 0, 0xF00C, 0xF7);
+		"ctz<ushort>", 0x1, 0xF00C, 0x3F5);
+	test_func_step(&ctz<unsigned short>,
+		"ctz<ushort>", 0xF7, 0xF00C, 0xF7);
 	test_func_shift_repeat(&ctz<unsigned short>,
 		"ctz<ushort>", 1, 16);
 	test_func_shift_repeat(&ctz<unsigned short>,

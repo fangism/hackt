@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.59 2007/08/29 04:45:55 fang Exp $
+#	$Id: Makefile.am,v 1.60 2007/08/29 15:50:25 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -299,6 +299,12 @@ static_count_ptr_test.out-filter: static_count_ptr_test.out
 	$(CAT) $< | $(SED) '/chunk/s/16\*[0-9]/16*4/g' | $(ADDRESS_FILTER) > $@
 endif
 
+# don't filter out hex
+bitmanip_test.diff: bitmanip_test.out bitmanip_test.stderr
+	-@out=`$(ECHO) $@ | $(SED) 's/\.diff$$/.out/g'` ; \
+	expect=$(srcdir)/`$(ECHO) $@ | $(SED) 's/\.diff$$/.stderr/g'` ; \
+	$(ECHO) "$(DIFF) -u $$expect $$out > $@" && \
+	$(DIFF) -u $$expect $$out > $@ 2>&1
 
 # some tests require more than the default filtering
 MOREFILTER_TESTS = \
@@ -359,7 +365,12 @@ AUTO_IGNORE += test-expect.sh $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 
 # all-local: $(TESTS)
 
-build-check-local: $(TESTS)
+build-check-local: \
+	$(TESTS) \
+	$(noinst_PROGRAMS:=.out) \
+	$(noinst_PROGRAMS:=.out-filter) \
+	$(noinst_PROGRAMS:=.stderr-filter) \
+	$(noinst_PROGRAMS:=.diff)
 
 clean-local:
 	-$(RM) $(BUILT_SOURCES)
