@@ -1,5 +1,5 @@
 dnl "config/cc.m4"
-dnl	$Id: cc.m4,v 1.5 2007/08/29 18:56:42 fang Exp $
+dnl	$Id: cc.m4,v 1.6 2007/08/29 19:50:11 fang Exp $
 dnl General configure macros for detecting characteristics of the C compiler.
 dnl
 
@@ -282,10 +282,8 @@ AC_CACHE_CHECK([whether C++ considers size_t and unsigned long the same],
 #include "util/type_traits.h"
 #include "util/size_t.h"
 		],[[
-int main(int, char*[]) {
         UTIL_STATIC_ASSERT((util::is_same<size_t, size_t>::value));
         UTIL_STATIC_ASSERT((util::is_same<size_t, unsigned long>::value));
-}
 		]]),
 		[fang_cv_type_equiv_size_t_unsigned_long=yes],
 		[fang_cv_type_equiv_size_t_unsigned_long=no]
