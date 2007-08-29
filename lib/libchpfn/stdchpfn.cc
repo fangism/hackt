@@ -2,7 +2,7 @@
 	\file "libchpfn/stdchpfn.cc"
 	This exports the normal library functions into a chpsim module
 	suitable for run-time loading (dlopen).
-	$Id: stdchpfn.cc,v 1.3 2007/08/28 04:53:49 fang Exp $
+	$Id: stdchpfn.cc,v 1.4 2007/08/29 04:45:41 fang Exp $
  */
 
 #include "libchpfn/assert.h"
@@ -10,6 +10,7 @@
 #include "libchpfn/io.h"
 #include "libchpfn/OS.h"
 #include "libchpfn/string.h"
+#include "libchpfn/bitmanip.h"
 #include "sim/chpsim/chpsim_dlfunction.h"
 
 namespace HAC {
@@ -69,6 +70,15 @@ CHP_DLFUNCTION_LOAD_DEFAULT("tostring", strcat)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtoz", strtoz)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtob", strtob)
 CHP_DLFUNCTION_LOAD_DEFAULT("strtor", strtor)
+
+// from "libchpfn/bitmanip.h"
+CHP_DLFUNCTION_LOAD_DEFAULT("popcount", popcount)
+CHP_DLFUNCTION_LOAD_DEFAULT("parity", parity)
+CHP_DLFUNCTION_LOAD_DEFAULT("clz32", clz32)
+CHP_DLFUNCTION_LOAD_DEFAULT("ctz", ctz)
+CHP_DLFUNCTION_LOAD_DEFAULT("ffs", ffs)
+CHP_DLFUNCTION_LOAD_DEFAULT("msb", msb)
+CHP_DLFUNCTION_LOAD_DEFAULT("lsb", lsb)
 
 //=============================================================================
 }	// end namespace CHP

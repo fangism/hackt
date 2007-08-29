@@ -1,5 +1,5 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2007/08/28 04:53:42 fang Exp $
+#	$Id: Makefile.am,v 1.13 2007/08/29 04:45:40 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -82,6 +82,7 @@ CHPFN_SRCDIR = $(top_srcdir)/lib/libchpfn
 # should be synchronized with list of all sources files in lib/libchpfn/
 STDCHPFN_SRCS = \
 	$(CHPFN_SRCDIR)/assert.cc \
+	$(CHPFN_SRCDIR)/bitmanip.cc \
 	$(CHPFN_SRCDIR)/conditional.cc \
 	$(CHPFN_SRCDIR)/io.cc \
 	$(CHPFN_SRCDIR)/OS.cc \

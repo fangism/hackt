@@ -1,5 +1,22 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.84 2007/08/28 04:54:27 fang Exp $
+#	$Id: ChangeLog,v 1.85 2007/08/29 04:45:44 fang Exp $
+
+2007-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-65:
+	  util/bitmanip.h: new, includes new manip headers in util/numeric/
+	  util/numeric/{clz,ctz,popcount,parity,ffs}.h:
+		uniform type-based dispatches to built-in functions
+		using template argumet deduction, and with defined
+		specializations for unsigned int, long, long long types.
+		Added test/bitmanip_test.cc to compare outputs.  
+	  util/numeric/nibble_tables.{h,cc}: no longer defines MSB_position,
+		now only contains lookup-table decalrations.  
+	  util/numeric/sign_traits.h: argument-deduced convenience functions.
+	  util/Makefile.inc: added new files.  
+	  util/memory/typeless_memory_chunk.tcc:
+		conditionally use numeric/clz.h to call msb().
+
 
 2007-08-25	David Fang		<fangism@users.sourceforge.net>
 

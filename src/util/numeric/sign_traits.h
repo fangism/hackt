@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/sign_traits.h"
 	Template metafunctions for signedness of integer types.  
-	$Id: sign_traits.h,v 1.4 2007/06/15 20:28:55 fang Exp $
+	$Id: sign_traits.h,v 1.5 2007/08/29 04:45:55 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_SIGN_TRAITS_H__
@@ -119,6 +119,29 @@ template <>
 struct unsigned_type<uint64> {	typedef	uint64		type; };
 #endif
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	static_cast to equivalent-sized signed type.  
+	Template-argument deduced dispatch.
+ */
+template <class T>
+inline
+typename signed_type<T>::type
+to_signed_type(const T v) {
+	return typename signed_type<T>::type(v);
+}
+
+/**
+	static_cast to equivalent-sized signed type.  
+	Template-argument deduced dispatch.
+ */
+template <class T>
+inline
+typename unsigned_type<T>::type
+to_unsigned_type(const T v) {
+	return typename unsigned_type<T>::type(v);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace numeric

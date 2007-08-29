@@ -44,6 +44,8 @@ available from the standard @command{chpsim} library.
 * Conditionals Library::
 * String Library::
 * I/O Library::
+* OS Library::
+* Bitmanip Library::
 @end menu
 
 @node Diagnostics Library
@@ -104,9 +106,26 @@ once it reaches the end.
 @include fn/fbscan_loop.texi
 @include fn/fsscan_loop.texi
 
+@node OS Library
+@subsection Operating System Library
+
 System-related operations are also supported.
 
 @include fn/system.texi
+
+@node Bitmanip Library
+@subsection Bit-manipulation Library
+
+The following functions are provided as fast implementations of
+low-level bitwise manipulation functions.  
+
+@include fn/parity.texi
+@include fn/popcount.texi
+@include fn/clz32.texi
+@include fn/ctz.texi
+@include fn/ffs.texi
+@include fn/msb.texi
+@include fn/lsb.texi
 
 @c ----------------------------------------------------------------------------
 @node Library Use Example

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-65:
+	  Util library revisions only (significant): see util/ChangeLog.
+	  CHPSIM standard library added new bit-manip functions, 
+		also documented, see lib/ChangeLog.  
+
+
 2007-08-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-64:

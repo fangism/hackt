@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.33 2007/08/28 04:54:27 fang Exp $
+#	$Id: Makefile.inc,v 1.34 2007/08/29 04:45:46 fang Exp $
 
 # TODO: consider moving guile support down to subdirectory, like lang/guile
 #	vi: ft=automake
@@ -85,6 +85,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
 	util/attributes.h \
+	util/bitmanip.h \
 	util/boolean_types.h \
 	util/c99.h \
 	util/c_decl.h \
@@ -149,9 +150,14 @@ UTIL_HEADER_FILES = \
 	util/nullary_function.h \
 	util/null_construct.h \
 	util/numeric/bigger_ints.h \
+	util/numeric/clz.h \
+	util/numeric/ctz.h \
+	util/numeric/ffs.h \
 	util/numeric/integer_traits.h \
 	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \
+	util/numeric/parity.h \
+	util/numeric/popcount.h \
 	util/numeric/random.h \
 	util/numeric/sign_traits.h \
 	util/numeric/zerodiv_detect.h \
@@ -216,9 +222,13 @@ UTIL_CC_FILES = \
 	util/stream_ptr.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc \
+	util/numeric/nibble_tables.cc \
 	util/numeric/random.cc
 
-libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
+libfangutil_la_SOURCES = \
+	$(UTIL_CC_FILES) \
+	$(UTIL_HEADER_FILES) \
+	$(UTIL_TCC_FILES)
 
 # installed headers (keep to minimum)
 nobase_pkginclude_HEADERS += \

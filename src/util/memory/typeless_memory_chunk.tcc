@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/typeless_memory_chunk.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: typeless_memory_chunk.tcc,v 1.2 2007/02/22 05:30:14 fang Exp $
+	$Id: typeless_memory_chunk.tcc,v 1.3 2007/08/29 04:45:53 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_TYPELESS_MEMORY_CHUNK_TCC__
@@ -17,8 +17,10 @@
 #include "util/macros.h"
 #include "util/static_assert.h"
 #include "util/bitset.tcc"
-#include "util/numeric/nibble_tables.h"		// may not need anymore :(
 #include "util/numeric/integer_traits.h"	// may not need anymore :(
+#if !TYPELESS_MEMORY_CHUNK_USE_BITSET
+#include "util/numeric/clz.h"			// may not need anymore :(
+#endif
 
 /**
 	Whether or not we try to be fancy and hand optimize.  
@@ -29,7 +31,9 @@
 namespace util {
 namespace memory {
 // #include "util/using_ostream.h"
-using numeric::MSB_position;
+#if !TYPELESS_MEMORY_CHUNK_USE_BITSET
+using numeric::msb;
+#endif
 using numeric::divide_by_constant;
 using numeric::is_power_of_2;
 
@@ -79,7 +83,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
 #if	TYPELESS_MEMORY_CHUNK_USE_BITSET
 		alloc_bit.find_first();		// or LSB
 #else
-		MSB_position<bit_map_type>()(alloc_bit);
+		msb<bit_map_type>()(alloc_bit);
 #endif
 	INVARIANT(alloc_position < chunk_size);
 #if 0

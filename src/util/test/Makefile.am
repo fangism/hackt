@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.58 2007/07/31 23:23:53 fang Exp $
+#	$Id: Makefile.am,v 1.59 2007/08/29 04:45:55 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -90,6 +90,7 @@ noinst_PROGRAMS = \
 	stacktrace_test \
 	friend_function_formal_bug \
 	link_test \
+	bitmanip_test \
 	pointer_classes_test \
 	excl_ptr_variant_test \
 	gxx-pr29164-operator-delete \
@@ -156,7 +157,7 @@ EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
 AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
 BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
-	ref_count_pool.cc bitset.cc \
+	ref_count_pool.cc bitset.cc nibble_tables.cc \
 	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -173,6 +174,8 @@ deque_iterator_test_LDADD = libfangutil.la
 hash_map_iterator_O2_bug_test_SOURCES = hash_map_iterator_O2_bug_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
 friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
+bitmanip_test_SOURCES = bitmanip_test.cc
+bitmanip_test_LDADD = libfangutil.la
 link_test_SOURCES = link_test.cc
 link_test_LDADD = liblinktest.la libbogusutil.la
 list_vector_test_SOURCES = list_vector_test.cc
@@ -224,7 +227,7 @@ collection_pool_test_SOURCES = collection_pool_test.cc
 collection_pool_test_LDADD = libfangutil.la
 
 libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
-	ref_count_pool.cc bitset.cc
+	ref_count_pool.cc bitset.cc nibble_tables.cc
 libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.h static_trace.cc
 libpooled_la_SOURCES = \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
@@ -267,6 +270,9 @@ ref_count_pool.cc: ../memory/ref_count_pool.cc
 	$(LN_S) $? $@
 
 bitset.cc: ../bitset.cc
+	$(LN_S) $? $@
+
+nibble_tables.cc: ../numeric/nibble_tables.cc
 	$(LN_S) $? $@
 
 friend_function_formal_bug.stderr:

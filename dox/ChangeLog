@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.26 2007/08/28 04:53:42 fang Exp $
+#	$Id: ChangeLog,v 1.27 2007/08/29 04:45:39 fang Exp $
+
+2007-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-65:
+	  chpsim:/stdchpfn.texi: documented bit-manip functions.
+
 
 2007-08-23	David Fang		<fangism@users.sourceforge.net>
 
