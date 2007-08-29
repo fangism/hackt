@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2007-08-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-66:
+	  configure.ac, config/cc.m4:
+		Check for non-conforming type equivalence between
+		size_t and unsigned long, for workarounds.  
+
+
 2007-08-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-57:

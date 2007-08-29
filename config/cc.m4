@@ -1,5 +1,5 @@
 dnl "config/cc.m4"
-dnl	$Id: cc.m4,v 1.4 2006/05/09 05:39:13 fang Exp $
+dnl	$Id: cc.m4,v 1.5 2007/08/29 18:56:42 fang Exp $
 dnl General configure macros for detecting characteristics of the C compiler.
 dnl
 
@@ -258,4 +258,49 @@ fi
 fi
 ])dnl
 
+
+dnl @synopsis FANG_TYPE_EQUIV_SIZE_T_UNSIGNED_LONG
+dnl
+dnl Workaround SuSE-linux-g++3.3 defect, where size_t is not considered
+dnl the exact same as unsigned long.
+dnl AC_DEFINEs TYPE_EQUIV_SIZE_T_UNSIGNED_LONG to 0 or 1.
+dnl This result is used in util/numeric/inttype_traits.h.
+dnl
+AC_DEFUN([FANG_TYPE_EQUIV_SIZE_T_UNSIGNED_LONG],
+[AC_CHECK_SIZEOF(size_t)
+AC_CHECK_SIZEOF(unsigned long)
+test "$ac_cv_sizeof_size_t" != 0 && \
+	test "$ac_cv_sizeof_unsigned_long" != 0 || \
+	AC_MSG_ERROR([size_t and unsigned long are not both defined types!])
+AC_CACHE_CHECK([whether C++ considers size_t and unsigned long the same],
+	[fang_cv_type_equiv_size_t_unsigned_long],
+	[save_CPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I $srcdir/src"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM([
+#include "util/static_assert.h"
+#include "util/type_traits.h"
+#include "util/size_t.h"
+		],[[
+int main(int, char*[]) {
+        UTIL_STATIC_ASSERT((util::is_same<size_t, size_t>::value));
+        UTIL_STATIC_ASSERT((util::is_same<size_t, unsigned long>::value));
+}
+		]]),
+		[fang_cv_type_equiv_size_t_unsigned_long=yes],
+		[fang_cv_type_equiv_size_t_unsigned_long=no]
+	)dnl AC_COMPILE_IFELSE
+
+	CPPFLAGS=$save_CPPFLAGS
+	]
+)dnl AC_CACHE_CHECK
+
+if test "$fang_cv_type_equiv_size_t_unsigned_long" = yes ; then
+	AC_DEFINE(TYPE_EQUIV_SIZE_T_UNSIGNED_LONG, 1,
+		[Define to 1 if size_t is identical to unsigned long (C++).])
+else
+	AC_DEFINE(TYPE_EQUIV_SIZE_T_UNSIGNED_LONG, 0,
+		[Define to 1 if size_t is identical to unsigned long (C++).])
+fi
+])dnl AC_DEFUN
 

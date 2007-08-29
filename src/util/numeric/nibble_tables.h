@@ -2,7 +2,7 @@
 	\file "util/numeric/nibble_tables.h"
 	Includable small tables, useful for bit operations.  
 	See "util/bitmanip.h" for built-in functions.  
-	$Id: nibble_tables.h,v 1.5 2007/08/29 04:45:54 fang Exp $
+	$Id: nibble_tables.h,v 1.6 2007/08/29 18:56:45 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_NIBBLE_TABLES_H__
@@ -42,6 +42,9 @@ const char nibble_popcount[16];
 
 extern
 const char nibble_parity[16];
+
+extern
+const char nibble_LZ[16];
 
 /**
 	\return true if this module has been statically, globally initialized.

@@ -2,7 +2,7 @@
 	\file "util/numeric/ctz.h"
 	Count-trailing zero related functions.
 	Includes most-significant-bit functions.  
-	$Id: ctz.h,v 1.1 2007/08/29 04:45:53 fang Exp $
+	$Id: ctz.h,v 1.2 2007/08/29 18:56:44 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_CTZ_H__
@@ -27,7 +27,7 @@ struct trailing_zeros_counter<uint8> {
 	static const arg_type	half_mask = 0xF;
 	char
 	operator () (const arg_type c) const {
-#if HAVE_BUILTIN_CTZ
+#ifdef HAVE_BUILTIN_CTZ
 		// adjust for integer size difference in casting
 		// unsigned casting is OK
 		return __builtin_ctz(c);
@@ -91,7 +91,9 @@ template <class T>
 inline
 char
 ctz(const T v) {
-	return trailing_zeros_counter<T>()(v);
+	trailing_zeros_counter<T> O;
+	return O(v);
+//	return trailing_zeros_counter<T>()(v);	// g++-3.3 chokes on this
 }
 
 //=============================================================================

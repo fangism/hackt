@@ -2,7 +2,7 @@
 	\file "util/numeric/clz.h"
 	Count-leading zero related functions.
 	Includes most-significant-bit functions.  
-	$Id: clz.h,v 1.1 2007/08/29 04:45:53 fang Exp $
+	$Id: clz.h,v 1.2 2007/08/29 18:56:44 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_CLZ_H__
@@ -31,12 +31,12 @@ struct leading_zeros_counter<uint8> {
 	typedef	uint8		arg_type;
 	enum {	half_size = 4 };
 	static const arg_type	half_mask = 0xF;
-#if HAVE_BUILTIN_CLZ
+#ifdef HAVE_BUILTIN_CLZ
 	enum {	sizediff = (sizeof(int) -sizeof(arg_type)) << 3 };
 #endif
 	char
 	operator () (const arg_type c) const {
-#if HAVE_BUILTIN_CLZ
+#ifdef HAVE_BUILTIN_CLZ
 		// adjust for integer size difference in casting
 		// unsigned casting is OK
 		return __builtin_clz(c) -sizediff;
@@ -44,8 +44,8 @@ struct leading_zeros_counter<uint8> {
 		// make 0 -> numbits? no, leave as undefined
 #else	// HAVE_BUILTIN_CLZ
 		const arg_type upper = c >> half_size;
-		return upper ? nibble_LSB_position[upper] :
-			nibble_LSB_position[c & half_mask] +half_size;
+		return upper ? nibble_LZ[upper] :
+			nibble_LZ[c & half_mask] +half_size;
 #endif	// HAVE_BUILTIN_CLZ
 	}
 };	// end struct leading_zeros_counter

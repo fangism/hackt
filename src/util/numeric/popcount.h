@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/popcount.h"
 	Population count of bits.  
-	$Id: popcount.h,v 1.1 2007/08/29 04:45:54 fang Exp $
+	$Id: popcount.h,v 1.2 2007/08/29 18:56:45 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_POPCOUNT_H__
@@ -38,7 +38,7 @@ struct population_counter<uint8> {
 	 */
 	char
 	operator () (const arg_type c) const {
-#if HAVE_BUILTIN_POPCOUNT
+#ifdef HAVE_BUILTIN_POPCOUNT
 		return __builtin_popcount(c);
 #else	// HAVE_BUILTIN_POPCOUNT
 		// unsigned shift is OK
@@ -67,8 +67,8 @@ struct population_counter {
 	 */
 	char
 	operator () (const arg_type s) const {
-		return population_counter<half_type>(s >> half_size)
-			+population_counter<half_type>(s & half_mask);
+		return population_counter<half_type>()(s >> half_size)
+			+population_counter<half_type>()(s & half_mask);
 	}
 };	// end struct population_counter
 
@@ -105,7 +105,9 @@ template <class T>
 inline
 char
 popcount(const T v) {
-	return population_counter<T>()(v);
+	population_counter<T> O;
+	return O(v);
+//	return population_counter<T>()(v);	// g++-3.3 chokes
 }
 
 //=============================================================================

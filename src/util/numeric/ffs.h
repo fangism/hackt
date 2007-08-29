@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/ffs.h"
 	Find first set bit (LSB).  
-	$Id: ffs.h,v 1.1 2007/08/29 04:45:53 fang Exp $
+	$Id: ffs.h,v 1.2 2007/08/29 18:56:44 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_FFS_H__
@@ -26,14 +26,16 @@ struct first_set_finder<uint8> {
 	static const arg_type	half_mask = 0xF;
 	char
 	operator () (const arg_type c) const {
-#if HAVE_BUILTIN_FFS
+#ifdef HAVE_BUILTIN_FFS
 		// adjust for integer size difference in casting
 		// unsigned casting is OK
 		return __builtin_ffs(c);
 #else	// HAVE_BUILTIN_FFS
+		if (c) {
 		const arg_type lower = c & half_mask;
 		return lower ? nibble_FS_position[lower] :
 			nibble_FS_position[c >> half_size] +half_size;
+		} else return 0;
 #endif	// HAVE_BUILTIN_FFS
 	}
 };	// end struct first_set_finder
@@ -48,11 +50,13 @@ struct first_set_finder {
 	static const half_type half_mask;		// = -1
 	char
 	operator () (const arg_type c) const {
-		const char lowerct =
-			first_set_finder<half_type>()(c & half_mask);
-		return (lowerct == half_size) ?
-			lowerct +first_set_finder<half_type>()(c >> half_size)
-			: lowerct;
+		if (c) {
+		const half_type lower = c & half_mask;
+		return lower ?
+			first_set_finder<half_type>()(lower) :
+			first_set_finder<half_type>()(c >> half_size)
+				+half_size;
+		} else return 0;
 	}
 };	// end struct first_set_finder
 

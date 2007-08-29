@@ -3,7 +3,7 @@
 	Parity counter.  
 	TODO: fallback implementation should look for popcount, 
 	and use its LSB as the result (& 1).  
-	$Id: parity.h,v 1.1 2007/08/29 04:45:54 fang Exp $
+	$Id: parity.h,v 1.2 2007/08/29 18:56:45 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_PARITY_H__
@@ -40,7 +40,7 @@ struct parity_counter<uint8> {
 	 */
 	char
 	operator () (const arg_type c) const {
-#if HAVE_BUILTIN_PARITY
+#ifdef HAVE_BUILTIN_PARITY
 		return __builtin_parity(c);
 #else	// HAVE_BUILTIN_PARITY
 		// unsigned shift is OK
@@ -69,8 +69,8 @@ struct parity_counter {
 	 */
 	char
 	operator () (const arg_type s) const {
-		return parity_counter<half_type>(s >> half_size)
-			^ parity_counter<half_type>(s & half_mask);
+		return parity_counter<half_type>()(s >> half_size)
+			^ parity_counter<half_type>()(s & half_mask);
 	}
 };	// end struct parity_counter
 
@@ -107,7 +107,9 @@ template <class T>
 inline
 char
 parity(const T v) {
-	return parity_counter<T>()(v);
+	parity_counter<T> O;
+	return O(v);
+//	return parity_counter<T>()(v);	// g++-3.3 chokes
 }
 
 //=============================================================================

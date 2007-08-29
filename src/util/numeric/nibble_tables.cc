@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/nibble_tables.cc"
 	Lookup tables for bit manipulation functions.  
-	$Id: nibble_tables.cc,v 1.1 2007/08/29 04:45:54 fang Exp $
+	$Id: nibble_tables.cc,v 1.2 2007/08/29 18:56:45 fang Exp $
  */
 
 #include "util/numeric/nibble_tables.h"
@@ -47,6 +47,18 @@ nibble_parity[16] = {
 	1, 0, 0, 1,
 	1, 0, 0, 1,
 	0, 1, 1, 0
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Number of leading zeros in nibble.  
+ */
+const char
+nibble_LZ[16] = {
+	4, 3, 2, 2,
+	1, 1, 1, 1,
+	0, 0, 0, 0,
+	0, 0, 0, 0
 };
 
 //=============================================================================

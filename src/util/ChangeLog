@@ -1,5 +1,18 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.85 2007/08/29 04:45:44 fang Exp $
+#	$Id: ChangeLog,v 1.86 2007/08/29 18:56:43 fang Exp $
+
+2007-08-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-66:
+	  util/bitset.cc: use numeric::ctz.
+	  util/numeric/*.h: #if to #ifdef corrections,
+		workaround g++-3.3 syntax shortcomings.
+	  util/numeric/clz.h: use correct lookup table
+	  util/numeric/ffs.h: fix recursive definition
+	  util/numeric/{parity,popcount}.h: missing parens
+	  util/numeric/inttype_traits.h: provide specialization for
+		half_type<unsigned long> if configure detects 
+		type is not equivalent to size_t.
 
 2007-08-29	David Fang		<fangism@users.sourceforge.net>
 
