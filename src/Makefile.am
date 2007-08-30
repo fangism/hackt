@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.179 2007/08/28 04:53:56 fang Exp $
+#	$Id: Makefile.am,v 1.180 2007/08/30 15:36:38 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -9,6 +9,7 @@ SUFFIXES = .yy .ll .ii .test .i .hii. .hhii .tccii .gesnarfed
 # appends to SUFFIXES
 include $(srcdir)/Make.hchk-head.am
 # includes "Make.stddef"
+include $(top_srcdir)/installdirs.mk
 
 AUTOMAKE_OPTIONS += subdir-objects
 
