@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.23 2007/08/28 04:54:24 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.24 2007/08/30 00:20:32 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -94,6 +94,7 @@ using namespace HAC::parser;
 #include "lexer/flex_lexer_state.h"
 #include "parser/hackt-union.h"
 #include "util/stacktrace.h"
+#include "util/format_IO.h"
 #include "util/sstream.h"
 #include "util/libc.h"			/* for strsep */
 using flex::lexer_state;
@@ -341,7 +342,10 @@ SIGN_INT	[+-]?{INT}
 EXP		[eE]{SIGN_INT}
 FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
-HEX		0x{HEXDIGIT}+
+HEX		0[xX]{HEXDIGIT}+
+BIN		0[bB][01]+
+QUAD		0[qQ][0-3]+
+/* OCTAL? */
 
 /* note: '-' signed ints are lexed as two tokens and combined in the parser
 	as a unary expr, thus, no numerical tokens in the language 
@@ -777,6 +781,38 @@ EMBEDFILE	^#FILE
 	/* could try to use faster, but unsafe istrstream (deprecated) */
 	hackt_lval->_token_int = new token_int(v);
 	/* hackt_lval->_token_int = new token_int(atoi(yytext)); */
+	TOKEN_UPDATE(foo);
+	return INT;
+}
+
+{QUAD}	{
+	if (token_feedback) {
+		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
+	}
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	/* what if we need atol? */
+	size_t v = 0;
+	// std::istringstream iss(yytext +2);	/* skip the '0q' prefix */
+	// iss >> std::setbase(4) >> v;	/* setbase doesn't work for input */
+	util::string_to_int_base(yytext +2, 4, v);
+	hackt_lval->_token_int = new token_int(HAC::entity::pint_value_type(v));
+	TOKEN_UPDATE(foo);
+	return INT;
+}
+
+{BIN}	{
+	if (token_feedback) {
+		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
+	}
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	/* what if we need atol? */
+	size_t v = 0;
+	// std::istringstream iss(yytext +2);	/* skip the '0b' prefix */
+	// iss >> std::setbase(2) >> v;	/* setbase doesn't work for input */
+	util::string_to_int_binary(yytext +2, v);
+	hackt_lval->_token_int = new token_int(HAC::entity::pint_value_type(v));
 	TOKEN_UPDATE(foo);
 	return INT;
 }

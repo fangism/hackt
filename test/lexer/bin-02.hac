@@ -1,0 +1,5 @@
+// "bin-02.hac"
+// testing binary input
+
+pint x = 0b00200;
+

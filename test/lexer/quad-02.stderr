@@ -1,0 +1,3 @@
+At: "quad-02.hac":4:
+bad identifier: "0q01212321240" on line 4:11
+Caught exception from lexer, aborting parsing.

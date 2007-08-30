@@ -1,0 +1,3 @@
+At: "bin-02.hac":4:
+bad identifier: "0b00200" on line 4:10
+Caught exception from lexer, aborting parsing.

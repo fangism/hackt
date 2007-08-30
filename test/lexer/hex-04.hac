@@ -1,0 +1,10 @@
+// "hex-04.hac"
+// copy-modified from "hex-01.hac"
+// testing hexadecimal lexing, using '0X' prefix instead of '0x'
+// should pass
+
+pint x = 0Xf00d;
+pint y = 0XBeef;
+pint z = 0Xdead;
+pint w = x + 0X9999;
+

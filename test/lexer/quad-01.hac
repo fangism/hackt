@@ -1,0 +1,8 @@
+// "quad-01.hac"
+// testing quad input
+
+pint x = 0q00000;
+pint y = 0Q010;
+pint z = 0q1210;
+pint zz = 0q33333333;
+

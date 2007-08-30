@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.24 2007/08/28 04:54:44 fang Exp $
+#	$Id: Makefile.am,v 1.25 2007/08/30 00:20:44 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -111,7 +111,11 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	lib-sprint-test-a \
 	lib-strtoz-test-a lib-strtoz-test-b \
 	lib-strtoz-test-c lib-strtoz-test-d \
-	lib-strtob-test-a lib-strtob-test-b lib-strtob-test-c
+	lib-strtob-test-a lib-strtob-test-b lib-strtob-test-c \
+	lib-bzscan-test-a \
+	lib-xzscan-test-a \
+	lib-fxzscan-test-a \
+	lib-fxzscan_loop-test-a
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -243,7 +247,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	lib-fzscan_loop-test-b-01 \
 	lib-sprint-test-a-01 \
 	lib-strtoz-test-a-01 lib-strtoz-test-b-01 \
-	lib-strtob-test-a-01
+	lib-strtob-test-a-01 \
+	lib-fxzscan-test-a-01 \
+	lib-fxzscan_loop-test-a-01
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -274,7 +280,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES = \
 	lib-sscan-test-a-01 lib-sscan-test-b-01 \
 	lib-fzscan-test-b-01 \
 	lib-strtoz-test-c-01 lib-strtoz-test-d-01 \
-	lib-strtob-test-b-01 lib-strtob-test-c-01
+	lib-strtob-test-b-01 lib-strtob-test-c-01 \
+	lib-bzscan-test-a-01 lib-bzscan-test-a-02 lib-bzscan-test-a-03 \
+	lib-xzscan-test-a-01 lib-xzscan-test-a-02
 # FIXME: ISEs on invalid, diagnostic needed
 #	gcd-func-a-02
 #	lib-assert-test-b-01 (assert-fail needs diagnostic)
@@ -388,7 +396,15 @@ fzscan-01.txt: Makefile
 	$(ECHO) "1" ; \
 	$(ECHO) "0" ;} > $@
 
-CLEANFILES += fzscan-01.txt
+fxzscan-01.txt: Makefile
+	{ $(ECHO) "0001" ; \
+	$(ECHO) "C0De" ; \
+	$(ECHO) "DEAD" ; \
+	$(ECHO) "beef" ; \
+	$(ECHO) "f00d" ; \
+	$(ECHO) "d000dE" ;} > $@
+
+CLEANFILES += fzscan-01.txt fxzscan-01.txt
 
 srcdir_EXTRA_DIST += \
 	random-timing-test-short.chpsimrc \

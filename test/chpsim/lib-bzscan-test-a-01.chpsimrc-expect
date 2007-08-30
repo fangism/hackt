@@ -1,0 +1,9 @@
+You entered: 0
+You entered: 4
+You entered: 100
+You entered: 255
+You entered: 65535
+event queue:
+check queue:
+	time	eid	pid	event
+	110	1	0	z := bzscan()

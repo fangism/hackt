@@ -1,0 +1,15 @@
+// "lib-fxzscan-test-a.hac"
+//	$Id: lib-fxzscan-test-a.hac,v 1.1 2007/08/30 00:20:48 fang Exp $
+// testing reading input from file
+// depends on built input file "fxzscan-01.txt"
+
+int z;
+int i;
+chp {
+i:=0;
+*[ (i<4) ->
+	print(fxzscan("fxzscan-01.txt"));
+	i:=i+1
+]
+}
+

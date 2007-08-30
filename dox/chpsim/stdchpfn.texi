@@ -81,6 +81,10 @@ upon conversion failure.
 @include fn/printerr.texi
 @include fn/zscan.texi
 @include fn/zscan_prompt.texi
+@include fn/bzscan.texi
+@include fn/bzscan_prompt.texi
+@include fn/xzscan.texi
+@include fn/xzscan_prompt.texi
 @include fn/bscan.texi
 @include fn/bscan_prompt.texi
 @include fn/sscan.texi
@@ -96,6 +100,8 @@ I/O can also operate on file streams.
 @include fn/fclose.texi
 @include fn/fflush.texi
 @include fn/fzscan.texi
+@include fn/fbzscan.texi
+@include fn/fxzscan.texi
 @include fn/fbscan.texi
 @include fn/fsscan.texi
 
@@ -103,6 +109,8 @@ The following variants automatically restart a file stream
 once it reaches the end.
 
 @include fn/fzscan_loop.texi
+@include fn/fbzscan_loop.texi
+@include fn/fxzscan_loop.texi
 @include fn/fbscan_loop.texi
 @include fn/fsscan_loop.texi
 

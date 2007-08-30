@@ -1,0 +1,24 @@
+# "lib-bzscan-test-a-01.chpsimrc"
+#	$Id: lib-bzscan-test-a-01.chpsimrc,v 1.1 2007/08/30 00:20:46 fang Exp $
+# @haco@ lib-bzscan-test-a.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la
+
+# NOTE: run this as a fail-test to avoid sourcing this script indirectly
+# because the stdin becomes redicrected incorrectly.
+
+# watchall-events
+step 2
+0
+step 2
+0100
+step 2
+1100100
+step 2
+11111111
+step 2
+1111111111111111
+step
+queue
+

@@ -1,0 +1,5 @@
+// "quad-02.hac"
+// testing quad input
+
+pint zz = 0q01212321240;	// 4 invalid digit in base 4
+

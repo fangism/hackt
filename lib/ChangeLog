@@ -1,7 +1,18 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.41 2007/08/29 16:51:34 fang Exp $
+#	$Id: ChangeLog,v 1.42 2007/08/30 00:20:28 fang Exp $
 
 2006-08-29	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-67:
+	  libchpfn/io.{h,cc}: added new hexedecimal and binary integer
+		scanners for formatted input.  
+		Re-factored family of scan functions to maximize code-reuse.
+		EOF cases throw EOF_exception to distinguish from
+		other failures.  
+		Test cases added for most key functions, minus repetition. 
+		Documentation updated. 
+	  New functions registered in libchpsim/stdchpfn.cc.
+
 
 	* HACKT-00-01-04-main-00-81-65:
 	  libchpfn/bitmanip.{h,cc}: new, bit manipulation functions.

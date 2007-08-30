@@ -1,0 +1,12 @@
+You entered: 0
+You entered: 256
+You entered: 256
+You entered: 61453
+You entered: 57005
+You entered: 48879
+You entered: 49374
+You entered: 65535
+event queue:
+check queue:
+	time	eid	pid	event
+	170	1	0	z := xzscan()

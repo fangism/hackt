@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.2 2007/08/28 04:53:47 fang Exp $
+	$Id: io.cc,v 1.3 2007/08/30 00:20:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,7 @@
 #include <map>
 #include "libchpfn/io.h"
 #include "util/memory/count_ptr.h"	// .tcc
+#include "util/format_IO.h"
 #include "Object/expr/dlfunction.h"
 // #include "util/string.tcc"		// for string_to_num
 #include "util/stacktrace.h"
@@ -34,6 +35,17 @@ using std::ifstream;
 using entity::extract_chp_value;
 using util::memory::count_ptr;
 using std::ostringstream;
+
+//=============================================================================
+/**
+	End-of-file exception, not necessarily fatal.  
+ */
+struct EOF_exception { };
+
+static
+inline
+void
+throw_EOF(void) { throw EOF_exception(); }
 
 //=============================================================================
 /***
@@ -83,15 +95,19 @@ printerr_nl(const chp_function_argument_list_type& p) {
 }
 
 //=============================================================================
+static const char eof_err_msg[] = "Error trying to scan past EOF.";
+
+//=============================================================================
 template <typename T>
 static
 T
-scan(istream& i) {
+__scan(istream& i, const char* eof_msg) {
+	STACKTRACE_VERBOSE;
 	T v;
 	i >> v;
 	if (i.eof()) {
-		cerr << "Error trying to scan past EOF." << endl;
-		THROW_EXIT;
+		if (eof_msg) { cerr << eof_msg << endl; }
+		throw_EOF();
 	} else if (i.fail()) {
 		cerr << "Error reading value." << endl;
 		THROW_EXIT;
@@ -99,17 +115,89 @@ scan(istream& i) {
 	return v;
 }
 
+template <typename T>
+static
+T
+scan(istream& i) {
+	return __scan<T>(i, eof_err_msg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+int_value_type
+__bzscan(istream& i, const char* eof_msg) {
+	STACKTRACE_VERBOSE;
+	size_t v = 0;
+	string vs;
+	i >> vs;
+	if (i.eof()) {
+		if (eof_msg) { cerr << eof_msg << endl; }
+		throw_EOF();
+	} else if (i.fail()) {
+		cerr << "Error reading binary value." << endl;
+		THROW_EXIT;
+	} else if (!util::string_to_int_binary(vs.c_str(), v).good) {
+		cerr << "Error converting string to binary: \"" << vs << "\"."
+			<< endl;
+		THROW_EXIT;
+	}
+	return v;	// convert unsigned to signed
+}
+
+static
+int_value_type
+bzscan(istream& i) {
+	return __bzscan(i, eof_err_msg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+int_value_type
+__xzscan(istream& i, const char* eof_msg) {
+	STACKTRACE_VERBOSE;
+	int_value_type v;
+	i >> std::hex >> v;	// doesn't seem to work on file streams!?
+	// works on stdin/cin
+	if (i.eof()) {
+		if (eof_msg) { cerr << eof_msg << endl; }
+		throw_EOF();
+	} else if (i.fail()) {
+		cerr << "Error reading hexadecimal value." << endl;
+		THROW_EXIT;
+	}
+	return v;
+}
+
+static
+int_value_type
+xzscan(istream& i) {
+	return __xzscan(i, eof_err_msg);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 static
 string_value_type
-scan<string_value_type>(istream& i) {
+__scan<string_value_type>(istream& i, const char* eof_msg) {
+	STACKTRACE_VERBOSE;
 	char buf[1024];
 	i.getline(buf, 1024);
-	if (i.fail()) {
+	if (i.eof()) {
+		if (eof_msg) { cerr << eof_msg << endl; }
+		throw_EOF();
+	} else if (i.fail()) {
 		cerr << "Error reading string." << endl;
 		THROW_EXIT;
 	}
 	return string_value_type(buf);
+}
+
+//-----------------------------------------------------------------------------
+template <typename T>
+static
+T
+__try_scan(istream& i, T (*f)(istream&, const char*)) {
+	return (*f)(i, NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -120,25 +208,21 @@ template <typename T>
 static
 T
 try_scan(istream& i) {
-	T v;
-	i >> v;
-	if (i.eof()) {
-		// no error message
-		THROW_EXIT;
-	}
-	return v;
+	return __try_scan(i, &__scan<T>);
 }
 
-template <>
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// this could be replaced using std::bind...
 static
-string_value_type
-try_scan<string_value_type>(istream& i) {
-	char buf[1024];
-	i.getline(buf, 1024);
-	if (i.eof()) {
-		THROW_EXIT;
-	}
-	return string_value_type(buf);
+int_value_type
+try_bzscan(istream& i) {
+	return __try_scan(i, &__bzscan);
+}
+
+static
+int_value_type
+try_xzscan(istream& i) {
+	return __try_scan(i, &__xzscan);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -157,8 +241,10 @@ scan_prompt(const string_value_type& ppt) {
 /***
 @texinfo fn/zscan.texi
 @deffn Function zscan
+@deffnx Function dzscan
 Read an integer from @file{stdin}.  
 Use with caution, because events in the simulator are relatively asynchronous.
+The `d' in the @command{dzscan} command alias is for decimal, base-10.  
 See also @command{zscan_prompt}.
 @end deffn
 @end texinfo
@@ -169,8 +255,35 @@ zscan(void) {
 }
 
 /***
+@texinfo fn/bzscan.texi
+@deffn Function bzscan
+Reads an integer, expected in binary, containing only 0's and 1's.  
+Input should exclude any ``0b'' prefix.  
+@end deffn
+@end texinfo
+***/
+int_value_type
+bzscan(void) {
+	return bzscan(cin);
+}
+
+/***
+@texinfo fn/xzscan.texi
+@deffn Function xzscan
+Reads an integer, expected in hexadecimal.  
+Input may include an optional ``0x'' prefix.
+@end deffn
+@end texinfo
+***/
+int_value_type
+xzscan(void) {
+	return xzscan(cin);
+}
+
+/***
 @texinfo fn/zscan_prompt.texi
 @deffn Function zscan_prompt str
+@deffnx Function dzscan_prompt str
 Same as @command{zscan}, but takes a prompt string @var{str} as an argument
 and prints it to prompt the user.  
 @end deffn
@@ -179,6 +292,32 @@ and prints it to prompt the user.
 int_value_type
 zscan_prompt(const string_value_type& str) {
 	return scan_prompt<int_value_type>(str);
+}
+
+/***
+@texinfo fn/bzscan_prompt.texi
+@deffn Function bzscan_prompt.texi
+Prompts use to enter an integer in binary.
+@end deffn
+@end texinfo
+***/
+int_value_type
+bzscan_prompt(const string_value_type& str) {
+	cout << str;
+	return bzscan();
+}
+
+/***
+@texinfo fn/xzscan_prompt.texi
+@deffn Function xzscan_prompt.texi
+Prompts use to enter an integer in hexadecimal.
+@end deffn
+@end texinfo
+***/
+int_value_type
+xzscan_prompt(const string_value_type& str) {
+	cout << str;
+	return xzscan();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -236,13 +375,8 @@ sscan_prompt(const string_value_type& str) {
 }
 
 //=============================================================================
-#if 0
-typedef	std::map<string, ofstream>	ofstream_map_type;
-typedef	std::map<string, ifstream>	ifstream_map_type;
-#else
 typedef	std::map<string, count_ptr<ofstream> >	ofstream_map_type;
 typedef	std::map<string, count_ptr<ifstream> >	ifstream_map_type;
-#endif
 
 /**
 	CHP library open file registry.  
@@ -378,7 +512,8 @@ fflush(const string_value_type& fn) {
 template <class T>
 static
 T
-fscan(const string_value_type& fn) {
+__fscan(const string_value_type& fn, T (*f)(istream&)) {
+	STACKTRACE_VERBOSE;
 	count_ptr<ifstream>& fp(ifstream_map[fn]);
 	if (!fp) {
 		fp = count_ptr<ifstream>(new ifstream(fn.c_str()));
@@ -389,14 +524,28 @@ fscan(const string_value_type& fn) {
 		}
 	}
 	INVARIANT(*fp);
-	return scan<T>(*fp);
+	return (*f)(*fp);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 static
 T
-fscan_loop(const string_value_type& fn) {
+fscan(const string_value_type& fn) {
+	return __fscan(fn, &scan<T>);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param f1 the function to try first, may throw.
+	\param f2 the function to try second (retry).
+ */
+template <class T>
+static
+T
+__fscan_loop(const string_value_type& fn,
+	T (*f1)(istream&), 
+	T (*f2)(istream&)) {
+	STACKTRACE_VERBOSE;
 	count_ptr<ifstream>& fp(ifstream_map[fn]);
 	if (!fp) {
 		fp = count_ptr<ifstream>(new ifstream(fn.c_str()));
@@ -410,20 +559,29 @@ fscan_loop(const string_value_type& fn) {
 	// not the most robust handling...
 try {
 	// may EOF
-	return try_scan<T>(*fp);
-} catch (...) {
+	return (*f1)(*fp);
+} catch (const EOF_exception& e) {
 	// on EOF, re-open file
 	fp = count_ptr<ifstream>(new ifstream(fn.c_str()));
 	INVARIANT(fp && *fp);
-	return scan<T>(*fp);
+	return (*f2)(*fp);
 }
+}
+
+template <class T>
+static
+T
+fscan_loop(const string_value_type& fn) {
+	return __fscan_loop(fn, &try_scan<T>, &scan<T>);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 @texinfo fn/fzscan.texi
 @deffn Function fzscan file
+@deffnx Function fdzscan file
 Read the next integer from input file @var{file}.  
+Expects integer in decimal. 
 Automatically opens new input file stream when referenced first time.  
 @end deffn
 @end texinfo
@@ -431,6 +589,30 @@ Automatically opens new input file stream when referenced first time.
 int_value_type
 fzscan(const string_value_type& fn) {
 	return fscan<int_value_type>(fn);
+}
+
+/***
+@texinfo fn/fbzscan.texi
+@deffn Function fbzscan file
+Same as @command{fzscan}, but expects integer in binary.  
+@end deffn
+@end texinfo
+***/
+int_value_type
+fbzscan(const string_value_type& fn) {
+	return __fscan(fn, &bzscan);
+}
+
+/***
+@texinfo fn/fxzscan.texi
+@deffn Function fxzscan file
+Same as @command{fzscan}, but expects integer in binary.  
+@end deffn
+@end texinfo
+***/
+int_value_type
+fxzscan(const string_value_type& fn) {
+	return __fscan(fn, &xzscan);
 }
 
 /***
@@ -463,6 +645,7 @@ fsscan(const string_value_type& fn) {
 /***
 @texinfo fn/fzscan_loop.texi
 @deffn Function fzscan_loop file
+@deffnx Function fdzscan_loop file
 Read the next integer from input file @var{file}.  
 Re-opens file to beginning after EOF is reached.
 @end deffn
@@ -471,6 +654,30 @@ Re-opens file to beginning after EOF is reached.
 int_value_type
 fzscan_loop(const string_value_type& fn) {
 	return fscan_loop<int_value_type>(fn);
+}
+
+/***
+@texinfo fn/fbzscan_loop.texi
+@deffn Function fbzscan_loop file
+Like @command{fzscan_loop}, but expects integer in binary.  
+@end deffn
+@end texinfo
+***/
+int_value_type
+fbzscan_loop(const string_value_type& fn) {
+	return __fscan_loop(fn, &try_bzscan, &bzscan);
+}
+
+/***
+@texinfo fn/fxzscan_loop.texi
+@deffn Function fxzscan_loop file
+Like @command{fzscan_loop}, but expects integer in hexadecimal.
+@end deffn
+@end texinfo
+***/
+int_value_type
+fxzscan_loop(const string_value_type& fn) {
+	return __fscan_loop(fn, &try_xzscan, &xzscan);
 }
 
 /***

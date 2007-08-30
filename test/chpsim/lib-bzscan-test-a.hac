@@ -1,0 +1,14 @@
+// "lib-bzscan-test-a.hac"
+// copy-modified from "lib-zscan-test-a.hac"
+//	$Id: lib-bzscan-test-a.hac,v 1.1 2007/08/30 00:20:47 fang Exp $
+// testing interactive input functions
+
+int z;
+
+chp {
+*[
+  z:=bzscan();		// input must be in binary
+  print("You entered: ", z)
+]
+}
+

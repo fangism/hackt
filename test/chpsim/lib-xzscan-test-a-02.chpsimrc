@@ -1,0 +1,19 @@
+# "lib-xzscan-test-a-02.chpsimrc"
+#	$Id: lib-xzscan-test-a-02.chpsimrc,v 1.1 2007/08/30 00:20:49 fang Exp $
+# @haco@ lib-xzscan-test-a.haco-a
+# Use the *built* library for this test (as opposed to installed)
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la
+
+# NOTE: run this as a fail-test to avoid sourcing this script indirectly
+# because the stdin becomes redicrected incorrectly.
+
+watchall-events
+step 2
+0000
+# should error next: invalid binary
+step 2
+not_an_integer
+step
+queue
+

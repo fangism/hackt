@@ -1,7 +1,7 @@
 /**
 	\file "libchpfn/io.h"
 	user-level I/O functions
-	$Id: io.h,v 1.2 2007/08/28 04:53:48 fang Exp $
+	$Id: io.h,v 1.3 2007/08/30 00:20:28 fang Exp $
  */
 
 #ifndef	__HAC_LIBCHPFN_IO_H__
@@ -50,6 +50,22 @@ zscan(void);
 extern
 int_value_type
 zscan_prompt(const string_value_type&);
+
+extern
+int_value_type
+bzscan(void);
+
+extern
+int_value_type
+bzscan_prompt(const string_value_type&);
+
+extern
+int_value_type
+xzscan(void);
+
+extern
+int_value_type
+xzscan_prompt(const string_value_type&);
 
 extern
 bool_value_type
@@ -102,6 +118,14 @@ int_value_type
 fzscan(const string_value_type&);
 
 extern
+int_value_type
+fbzscan(const string_value_type&);
+
+extern
+int_value_type
+fxzscan(const string_value_type&);
+
+extern
 bool_value_type
 fbscan(const string_value_type&);
 
@@ -113,6 +137,14 @@ fsscan(const string_value_type&);
 extern
 int_value_type
 fzscan_loop(const string_value_type&);
+
+extern
+int_value_type
+fbzscan_loop(const string_value_type&);
+
+extern
+int_value_type
+fxzscan_loop(const string_value_type&);
 
 extern
 bool_value_type

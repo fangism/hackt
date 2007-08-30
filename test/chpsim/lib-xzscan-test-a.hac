@@ -1,0 +1,14 @@
+// "lib-xzscan-test-a.hac"
+// copy-modified from "lib-zscan-test-a.hac"
+//	$Id: lib-xzscan-test-a.hac,v 1.1 2007/08/30 00:20:49 fang Exp $
+// testing interactive input functions
+
+int z;
+
+chp {
+*[
+  z:=xzscan();		// input must be in hex
+  print("You entered: ", z)
+]
+}
+
