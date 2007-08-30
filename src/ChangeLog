@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68:
+	  bootstrap: create and distribute headers_deps.make and 
+		include it from the srcdir.  Header-check dependencies
+		were not being honored before.  
+	  Makefile.am: fake ../libltdl/ltdl.hchk, and clean it.
+
+
 2007-08-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-67:

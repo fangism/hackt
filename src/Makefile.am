@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.180 2007/08/30 15:36:38 fang Exp $
+#	$Id: Makefile.am,v 1.181 2007/08/30 20:23:00 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1550,6 +1550,11 @@ sim/devel_switches.hchk: sim/devel_switches.h
 
 sim/prsim/devel_switches.hchk: sim/prsim/devel_switches.h
 	@$(TOUCH) $@
+
+../libltdl/ltdl.hchk: ../libltdl/ltdl.h
+	@$(TOUCH) $@
+
+CLEANFILES += ../libltdl/ltdl.hchk
 
 __config__.hchk: __config__.h
 	@$(TOUCH) $@
