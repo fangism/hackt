@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-69:
+	  header-check-dependencies: can now strip away more than one
+		srcdir in promote_header_deps.awk.
+	  Perm'd Object/devel_switches.h:
+		FOOTPRINT_LOCKS -- was done long ago without switch
+		REF_COUNT_FOOTPRINTS -- no need with locks
+
+
 2007-08-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68:

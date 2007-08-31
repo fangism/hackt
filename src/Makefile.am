@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.181 2007/08/30 20:23:00 fang Exp $
+#	$Id: Makefile.am,v 1.182 2007/08/31 21:02:34 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1399,6 +1399,10 @@ AM_CPPFLAGS = -I$(srcdir) @AUTO_CPPFLAGS@
 # will need _build directories for "make distcheck" with auto-generated headers
 # the last -Iparser is for the relative path in the build directory
 
+# for header-check dependency generation
+# Add paths here to adjust for out-of-directory sources
+# The first prefix-matching path in the list will be stripped away.
+HEADER_CHECK_SRCDIRS = $(srcdir) $(top_builddir)
 
 # extremely anal-retentive
 if HAVE_GXX

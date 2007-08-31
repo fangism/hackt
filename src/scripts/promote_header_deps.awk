@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "promote_header_deps.awk"
-#	$Id: promote_header_deps.awk,v 1.4 2006/02/21 04:48:47 fang Exp $
+#	$Id: promote_header_deps.awk,v 1.5 2007/08/31 21:02:35 fang Exp $
 
 # Description:
 #	Takes a make-dependence file produced by gcc -MD
@@ -8,13 +8,24 @@
 #	checked header target, like .hchk and .tccchk
 
 # Usage:
-#	-v srcdir=<path> -- the path to srcdir, may be left blank
+#	-v srcdir=<paths> -- the path to srcdir, may be left blank
+#		Multiple paths may be space-delimited, 
+#		e.g., -v srcdir=".. ../.."
+#		The first directory should be the primary srcdir,
+#		i.e. the srcdir relative path from this working directory.
 
 BEGIN {
 	current_target = "";
-	strip_length = length(srcdir) +1;
-	strip_dir = srcdir;
-	strip_dir_regex = literal_string_to_regex(strip_dir);
+	num_paths = split(srcdir, toks);
+	for (i=1; i<=num_paths; ++i) {
+		srcdirs[i] = toks[i];
+		strip_dir_regex[i] = literal_string_to_regex(toks[i]);
+	}
+	# what is assumed if no srcdirs are given? '.'?
+	primary_srcdir = srcdirs[1];
+#	strip_dir = srcdir;
+#	strip_dir_regex = literal_string_to_regex(strip_dir);
+#	strip_length = length(srcdir) +1;
 #	print "# strip_dir = " strip_dir;
 #	print "# strip_dir_regex = " strip_dir_regex;
 }
@@ -81,22 +92,33 @@ function demote_header_dep(f) {
 # we have to undo that effect, by redirecting it to look in the
 # builddir for generated .hchk and .tccchk files.  
 # To accomplish this, we strip off the srcdir.
-function srcdir_to_builddir(f) {
+function srcdir_to_builddir(f, 
+# local vars
+	i) {
 #	if (match(f, "^" strip_dir_regex)) {
 #		# just decapitate the $(srcdir)/ part of the path name
 #		# same effect as substitution
 #		i = length(f);
 #		return substr(f, strip_length +1, i -strip_length +1);
 #	} else	return f;
-	sub("^" strip_dir_regex "/", "", f);
+#	sub("^" strip_dir_regex "/", "", f);
+
+	for (i=1; i<=num_paths; ++i) {
+		rm_prefix = "^" strip_dir_regex[i] "/";
+		if (match(f, rm_prefix)) {
+			sub(rm_prefix, "", f);
+			return f;	# break as soon as one prefix is removed
+		}
+		# else continue to check next one
+	}
 	return f;
 }
 
 END {
 	print "";
 	# print one phony target for the top-level header file
-	if (length(srcdir) && srcdir != ".")
-		printf(srcdir "/");
+	if (length(primary_srcdir) && primary_srcdir != ".")
+		printf(primary_srcdir "/");
 	# else leave blank
 	print demote_header_dep(current_target) ":";
 }

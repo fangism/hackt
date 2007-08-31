@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.16 2007/08/30 20:23:00 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.17 2007/08/31 21:02:34 fang Exp $
 #	vi: ft=automake
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
@@ -8,6 +8,9 @@
 # ALL_HEADER_FILES -- list of all .h files to check
 # ALL_TCC_FILES -- list of all .tcc files to check
 # EMPTY_SOURCE -- dummy (empty) source file (not defined in the -head)
+# HEADER_CHECK_SRCDIRS -- used by promote_header_deps.awk to adjust paths
+#	The first path should be the primary srcdir relative to this
+#	working directory $(srcdir), subsequent paths are space-delimited.  
 
 ###############################################################################
 # EMPTY_SOURCE = $(srcdir)/test/header_test.cc
@@ -21,7 +24,7 @@ CXXPREPROCESS = $(CXXCOMPILE) -E
 # expects name of temporary file after -MF
 FAST_MAKEDEP_FLAGS = -MMD -MT $@ -MF
 PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
-	-v srcdir=$(srcdir)
+	-v srcdir="$(HEADER_CHECK_SRCDIRS)"
 FILTER_HEADER_DEPS = $(SED) -e 's|[^ ]*config\.h||g' -e 's|[^ ]*\.cc||g' \
 	-e 's| /[^ ]*||g'
 FAKE_DEP_FILTER = $(GREP) "^#" | $(GREP) -v '\"/' | $(GREP) -v '\"<' | \

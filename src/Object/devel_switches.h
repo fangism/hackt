@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.43 2007/08/17 00:36:22 fang Exp $
+	$Id: devel_switches.h,v 1.44 2007/08/31 21:02:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -37,7 +37,8 @@
 	in a second phase through connections.  
 	Goal: 1
 	Priority: medium
-	Status: partially complete, need to test connection semantics
+	Status: complete and tested
+		(as of 00-01-04-main-00-01-40-merged-template-02-28)
 	Notes: will need mechanism similar to port-summaries to 
 		pass pre-determined port parameters up the instance hierarchy.
  */
@@ -116,25 +117,6 @@
 	Priority: low (enhancement, non-critical)
  */
 #define	POOL_ALLOCATE_FOOTPRINTS		0
-
-/**
-	Define to 1 to reference-count footprints. 
-	Don't know if this is necessary, or a good idea, but it is an option.
-	Purpose: Could use this to validate acylic dependencies...
-	Prerequisite: heap-allocating footprints (done)
-	Goal: ?
-	Status: not begun
- */
-#define	REF_COUNT_FOOTPRINTS			0
-
-/**
-	Define to 1 to employ locks to check acyclic dependencies 
-	between footprints.  
-	Goal: 1
-	Status: not begun
-	Priority: low-medium, for stronger invariant checking.  
- */
-#define	FOOTPRINT_LOCKS				0
 
 /**
 	Define to 1 to use footprint sub-types, distinguishing between
