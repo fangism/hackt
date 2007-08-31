@@ -1,6 +1,6 @@
 /**
 	\file "Object/nonmeta_variable.h"
-	$Id: nonmeta_variable.h,v 1.7 2007/08/28 04:53:59 fang Exp $
+	$Id: nonmeta_variable.h,v 1.7.2.1 2007/08/31 22:59:16 fang Exp $
 	TODO: consider including history tracing capabilities here?
  */
 
@@ -12,7 +12,6 @@
 #include <iosfwd>
 #include <valarray>
 #include <set>
-#include "sim/chpsim/devel_switches.h"	// for CHPSIM_COUPLED_CHANNELS
 
 namespace HAC {
 namespace entity {
@@ -294,7 +293,6 @@ public:
  */
 class channel_state_base : public ChannelData {
 protected:
-#if CHPSIM_COUPLED_CHANNELS
 	/**
 		INVARIANT: channel exclusivity (non-shared access)
 		if sender is already blocked, it is an error for
@@ -318,18 +316,9 @@ protected:
 		inactive, received-blocked, sender-blocked.
 	 */
 	char				status;
-#else
-	/**
-		State bit.  
-		If this is true, channel is ready to be received, 
-		else it is ready to be sent.  
-	 */
-	bool				full;
-#endif	// CHPSIM_COUPLED_CHANNELS
 public:
 	channel_state_base();
 
-#if CHPSIM_COUPLED_CHANNELS
 	bool
 	probe(void) const {
 		return status == CHANNEL_SENDER_BLOCKED;
@@ -397,25 +386,6 @@ public:
 		else	// status == CHANNEL_SENT
 			status = CHANNEL_INACTIVE;
 	}
-
-#else	// CHPSIM_COUPLED_CHANNELS
-	bool
-	can_receive(void) const { return full; }
-
-	bool
-	probe(void) const {
-		return can_receive();
-	}
-
-	bool
-	can_send(void) const { return !full; }
-
-	void
-	send(void) { full = true; }
-
-	void
-	receive(void) { full = false; }
-#endif	// CHPSIM_COUPLED_CHANNELS
 
 	void
 	reset(void);

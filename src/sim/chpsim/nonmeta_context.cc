@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.5 2007/06/16 23:05:12 fang Exp $
+	$Id: nonmeta_context.cc,v 1.5.12.1 2007/08/31 22:59:36 fang Exp $
  */
 
 #include <vector>
@@ -34,12 +34,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				: NULL),
 			r.instances),
 		event(&e), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		first_checks(), 
-#else
-		enqueue_list(r.__enqueue_list), 
-		rechecks(r.__rechecks), 
-#endif
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
@@ -56,12 +51,7 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		State& r) :
 		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		first_checks(), 
-#else
-		enqueue_list(r.__enqueue_list), 
-		rechecks(r.__rechecks), 
-#endif
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
@@ -98,18 +88,6 @@ nonmeta_context::get_event_index(void) const {
 	INVARIANT(event);
 	return std::distance(&event_pool[0], event);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-/**
-	\pre ei is NOT already in queue
-	\post no duplicat entries in enqueue
- */
-void
-nonmeta_context::enqueue(const event_index_type ei) const {
-	enqueue_list.push_back(ei);
-}
-#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.5 2007/07/31 23:23:41 fang Exp $
+	$Id: EventExecutor.h,v 1.5.8.1 2007/08/31 22:59:31 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -9,7 +9,6 @@
 
 #include <iosfwd>
 #include "Object/lang/CHP_visitor.h"
-#include "sim/chpsim/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -46,16 +45,10 @@ class EventNode;
 class EventExecutor : public chp_visitor {
 	typedef	EventExecutor			this_type;
 protected:
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	const
-#endif
 	nonmeta_context&			context;
 public:
-	EventExecutor(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context& c);
+	explicit
+	EventExecutor(nonmeta_context&);
 
 	void
 	visit(const action_sequence&);

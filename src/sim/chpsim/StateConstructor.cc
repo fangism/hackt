@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.6 2007/07/31 23:23:41 fang Exp $
+	$Id: StateConstructor.cc,v 1.6.8.1 2007/08/31 22:59:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -13,7 +13,7 @@
 #include "sim/chpsim/Event.h"
 #include "Object/module.h"
 #include "Object/global_entry.tcc"
-#include "Object/lang/CHP_footprint.h"
+// #include "Object/lang/CHP_footprint.h"
 #include "Object/lang/CHP.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/bool_expr.h"

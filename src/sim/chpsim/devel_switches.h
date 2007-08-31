@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8 2007/06/12 05:13:20 fang Exp $
+	$Id: devel_switches.h,v 1.8.14.1 2007/08/31 22:59:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -34,31 +34,13 @@
 #define	CHPSIM_READ_WRITE_DEPENDENCIES		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to implement channels using tight coupling, 
-		i.e. truly blocking send-receive atomic pairs.  
-	Rationale: channels should have slack 0
-		without this, channels inherently have slack 1 because
-		the occupancy bit does not block a channel.  
-	Goal: 1
-	Priority: top
-	Status: done, tested, ready to perm.
-	Co-dependent: CHPSIM_DELAYED_SUCCESSOR_CHECKS
- */
-#define	CHPSIM_COUPLED_CHANNELS			1
+// Perm'd (00-01-04-main-00-81-68-chpsim-09-01)
+// Summary: send-receive action pairs slack-zero
+// #define	CHPSIM_COUPLED_CHANNELS			1
 
-/**
-	Define to 1 to apply prefix delays *before* events are first checked.
-	Rationale: to faciliate send/receive atomicity/simultaneity.
-	Goal: 1
-	Priority: TOP
-	Status: done, tested, ready to perm.
-	Co-dependent: CHPSIM_COUPLED_CHANNELS
-	Plan: instate a first_recheck_queue, where successors first arrive.
-		step() will now recheck events in order until one (or two)
-		*actually* executes.  
- */
-#define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
+// Perm'd (00-01-04-main-00-81-68-chpsim-09-01)
+// Summary: apply prefix-delay, i.e. before event is *first* checked
+// #define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -79,8 +61,10 @@
 	Also makes events per process contiguous in allocation, making
 	reverse-mapping much easier.  
 	Goal: 1
-	Status: not begun
-	Priority: low-medium
+	Status: begun (main-00-81-68-chpsim-09 branch)
+	Priority: high
+	Rationale: to enable reverse-event lookups, 
+		also helps with memory efficiency
  */
 #define	CHPSIM_FOOTPRINTIZE_EVENTS		0
 

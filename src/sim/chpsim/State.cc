@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12 2007/06/16 23:05:12 fang Exp $
+	$Id: State.cc,v 1.12.12.1 2007/08/31 22:59:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -152,24 +152,17 @@ struct State::recheck_transformer {
 	this_type&		state;
 	// other option is to pass in a pre-made nonmeta_context
 	nonmeta_context		context;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_index_type	cause_event_id;
 	const size_t		cause_trace_id;
-#endif
 
 	explicit
-	recheck_transformer(this_type& s
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, const event_index_type cei, const size_t cti
-#endif
-		) : 
+	recheck_transformer(this_type& s,
+		const event_index_type cei, const size_t cti) : 
 		state(s), 
 		context(state.mod.get_state_manager(), 
 			state.mod.get_footprint(),
-			state)
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-			, cause_event_id(cei), cause_trace_id(cti)
-#endif
+			state),
+			cause_event_id(cei), cause_trace_id(cti)
 		{ }
 
 	/**
@@ -186,7 +179,6 @@ struct State::recheck_transformer {
 		DEBUG_QUEUE_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
 		context.set_event(e);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		// To accomodate blocking-sends that wake-up probes
 		// we must prevent self-wake up in this corner case.
 		if (cause_event_id != ei) {
@@ -209,9 +201,6 @@ struct State::recheck_transformer {
 		} else {
 			DEBUG_QUEUE_PRINT("ignored cause_event_id == ei" << endl);
 		} // end if self-wake-up
-#else	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		e.recheck(context, ei);
-#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	}
 
 };	// end class recheck_transformer
@@ -265,11 +254,7 @@ struct State::event_enqueuer {
 			state.dump_event(cout << "enqueue: ", ei, new_time)
 				<< endl;
 		}
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		state.check_event_queue.insert(new_event);
-#else
-		state.event_queue.insert(new_event);
-#endif
 	}
 
 };	// end class event_enqueuer
@@ -297,11 +282,7 @@ State::State(const module& m) :
 		state_base(m, "chpsim> "), 
 		instances(m.get_state_manager()), 
 		event_pool(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		check_event_queue(), 
-#else
-		event_queue(), 
-#endif
 		timing_mode(TIMING_DEFAULT), 
 		current_time(0), 
 		uniform_delay(event_type::default_delay),
@@ -309,13 +290,8 @@ State::State(const module& m) :
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		__enqueue_list(), 
-#endif
 		__rechecks(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		immediate_event_fifo(),
-#endif
 		event_watches(), 
 		event_breaks(),
 		value_watches(), 
@@ -326,9 +302,6 @@ State::State(const module& m) :
 	// perform initializations here
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	__enqueue_list.reserve(16);	// optional pre-allocation
-#endif
 {
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
@@ -373,23 +346,12 @@ State::initialize(void) {
 	// initialize state of all channels and variables
 	instances.reset();
 	// empty the event_queue
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
-#else
-	event_queue.clear();
-#endif
 	// seed events that are ready to go, like active initializations
 	//	note: we use event[0] as the launching event (concurrent)
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	check_event_queue.insert(event_placeholder_type(current_time, 0));
-#else
-	event_queue.insert(event_placeholder_type(current_time, 0));
-#endif
 	__updated_list.clear();
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	__enqueue_list.clear();
-#endif
 	__rechecks.clear();
 	for_each(event_pool.begin(), event_pool.end(),
 		mem_fun_ref(&event_type::reset)
@@ -427,13 +389,8 @@ State::reset(void) {
 State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_placeholder_type ret(*check_event_queue.begin());
 	check_event_queue.erase(check_event_queue.begin());
-#else
-	const event_placeholder_type ret(*event_queue.begin());
-	event_queue.erase(event_queue.begin());
-#endif
 	return ret;
 }
 
@@ -444,17 +401,12 @@ State::dequeue_event(void) {
  */
 State::time_type
 State::next_event_time(void) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	if (!immediate_event_fifo.empty()) {
 		return immediate_event_fifo.begin()->time;
 	} else {
 		INVARIANT(!check_event_queue.empty());
 		return check_event_queue.begin()->time;
 	}
-#else
-	INVARIANT(!event_queue.empty());
-	return event_queue.begin()->time;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -471,33 +423,24 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	std::pair<bool, bool>	status(false, false);
 do {
 	// TODO: check immediate event FIFO first
 	// or check and load into FIFO first?
-#endif
 	event_placeholder_type ep;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	bool immediate = false;
 	if (immediate_event_fifo.empty()) {
 	// TODO: grab and check events until one is ready to execute
 	// and execute it.
-	if (check_event_queue.empty())
-#else
-	if (event_queue.empty())
-#endif
-	{
+	if (check_event_queue.empty()) {
 		return false;
 	}
 	ep = dequeue_event();
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	} else {
 		ep = immediate_event_fifo.front();
 		immediate_event_fifo.pop_front();
 		immediate = true;
 	}	// end if immediate_event_fifo empty
-#endif
 
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
@@ -512,23 +455,18 @@ do {
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	__enqueue_list.clear();
-#endif
 	__updated_list.clear();
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
 	c.set_event(ev);	// not nonmeta_context::event_setter!!!
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	try {
 	// this is where events are checked for their first time as successor
 	if (immediate || ev.first_check(c, ei)) {
 		DEBUG_STEP_PRINT("executing..." << endl);
 		// don't recheck if event is immediate
 		status.first = true;
-#endif
 		try {
 			ev.execute(c);
 		} catch (...) {
@@ -536,7 +474,6 @@ do {
 				<< ei << "." << endl;
 			throw;		// rethrow
 		}
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		const size_t cti = (is_tracing() ?
 			trace_manager->last_event_trace_id() : 0);
 		DEBUG_STEP_PRINT("this trace index = " << cti << endl);
@@ -545,10 +482,6 @@ do {
 		for_each(c.first_checks.begin(), c.first_checks.end(),
 			event_enqueuer(*this, ei, cti));
 		// c.first_checks.clear();	// not needed, loop will exit
-#else
-	return __step(ei, cause_event_id, cause_trace_id);
-#endif
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	} else {	// end if recheck
 		// TODO: is this on critical path?
 		// initial check failed predicate, block waiting, 
@@ -584,7 +517,6 @@ do {
 	}
 } while (!status.first);
 	return status.second;
-#endif
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -626,7 +558,6 @@ State::__notify_updates_for_recheck(const size_t ti) {
 }	// end __notify_updates_for_recheck()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
 	This variation only processes updates and rechecks without
 	saving the state of modified variables to trace.  
@@ -652,7 +583,6 @@ State::__notify_updates_for_recheck_no_trace(const size_t ti) {
 		copy(es.begin(), es.end(), set_inserter(__rechecks));
 	}
 }	// end __notify_updates_for_recheck()
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -662,24 +592,14 @@ State::__notify_updates_for_recheck_no_trace(const size_t ti) {
  */
 void
 State::__perform_rechecks(const event_index_type ei, 
-		const event_index_type cause_event_id
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, const size_t ti
-#endif
-		) {
+		const event_index_type cause_event_id, const size_t ti) {
 	STACKTRACE_VERBOSE_QUEUE;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 // NOTE: since delays have been paid for up front, rechecked events that
 // now pass are immediately ready for execution, and hence should be placed
 // in the immediate_event_fifo.  Change happens in recheck_transformer.
-#endif
 try {
 	for_each(__rechecks.begin(), __rechecks.end(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		recheck_transformer(*this, ei, ti)
-#else
-		recheck_transformer(*this)
-#endif
 	);
 } catch (...) {
 	cerr << "Run-time error while rechecking events." << endl;
@@ -751,11 +671,7 @@ State::__step(const event_index_type ei,
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
 #endif
-	__perform_rechecks(ei, cause_event_id
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, ti
-#endif
-	);
+	__perform_rechecks(ei, cause_event_id, ti);
 	// TODO: factor out watch/break into subroutine
 	bool value_trig = false;
 	bool value_break = false;
@@ -812,19 +728,8 @@ State::__step(const event_index_type ei,
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
 	// temporarily disabled for regression testing
-#if DEBUG_STEP
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	// debug: print list of event to enqueue
-	dump_enqueue_events(cout);
-#endif
-#endif
 	// transfer events from staging queue to event queue, 
 	// and schedule them with some delay
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	for_each(__enqueue_list.begin(), __enqueue_list.end(),
-		event_enqueuer(*this, ei, ti)
-	);
-#endif
 	// check for flush period
 	// TODO: count events in State, shouldn't depend on TraceManager for it.
 	if (is_tracing() && 
@@ -1262,7 +1167,6 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	get_event(ei).dump_subscribed_status(o << "status: ", instances, ei)
 		<< endl;
 {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// NOTE: this means that an event is scheduled to be CHECKED not
 	// necessarily executed.  Only events in immediate_event_fifo are
 	// are guaranteed to execute.
@@ -1276,10 +1180,6 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	}
 	const event_queue_type& temp(check_event_queue);	// just alias
 	o << "\nin check queue: ";
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-	o << "in queue: ";
-#endif
 	if (find_if(temp.begin(), temp.end(), 
 			event_placeholder_type::index_finder(ei))
 			== temp.end()) {
@@ -1300,7 +1200,6 @@ ostream&
 State::dump_event_queue(ostream& o) const {
 	o << "event queue:" << endl;
 	bool empty = true;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 // print the check-event-queue separately
 {
 	typedef	immediate_event_queue_type::const_iterator	const_iterator;
@@ -1323,9 +1222,6 @@ State::dump_event_queue(ostream& o) const {
 }
 	o << "check queue:" << endl;
 	const event_queue_type& temp(check_event_queue);	// just alias
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-#endif
 {
 	typedef	event_queue_type::const_iterator	const_iterator;
 	const_iterator i(temp.begin()), e(temp.end());
@@ -1354,7 +1250,6 @@ State::dump_event_queue(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
 	Synonym to original definition, because too lazy to
 	rename with new check-event changes.  
@@ -1363,7 +1258,6 @@ ostream&
 State::dump_check_event_queue(ostream& o) const {
 	return dump_event_queue(o);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1578,17 +1472,6 @@ State::dump_recheck_events(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-ostream&
-State::dump_enqueue_events(ostream& o) const {
-	o << "to be enqueued: ";
-	ostream_iterator<size_t> osi(o, ", ");
-	copy(__enqueue_list.begin(), __enqueue_list.end(), osi);
-	return o << endl;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Implementation for the `get' command.  
 	Prints canonical name and current value.  
@@ -1741,16 +1624,12 @@ State::save_checkpoint(ostream& o) const {
 	for_each(tmp.begin(), tmp.end(), value_writer<size_t>(o));
 }{
 	// save the event queue
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	size_t s = immediate_event_fifo.size();
 	write_value(o, s);
 	for_each(immediate_event_fifo.begin(), immediate_event_fifo.end(), 
 		value_writer<event_placeholder_type>(o));
 }{
 	const event_queue_type& temp(check_event_queue);	// just alias
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-#endif
 	size_t s = temp.size();
 	write_value(o, s);
 	for_each(temp.begin(), temp.end(), 
@@ -1789,12 +1668,8 @@ State::load_checkpoint(istream& i) {
 	read_value(i, s);
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), *this);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
-#else
-	event_queue.clear();
-#endif
 	for ( ; j<s; ++j) {
 		event_index_type ei;
 		read_value(i, ei);
@@ -1808,9 +1683,7 @@ State::load_checkpoint(istream& i) {
 		}
 		event_pool[ei].subscribe_deps(c, ei);
 	}
-}
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-{
+}{
 	// restore the immediate event queue
 	size_t s;
 	read_value(i, s);
@@ -1821,9 +1694,7 @@ State::load_checkpoint(istream& i) {
 		read(ep);
 		immediate_event_fifo.push_back(ep);
 	}
-}
-#endif
-{
+}{
 	// restore the event queue
 	size_t s;
 	read_value(i, s);
@@ -1832,11 +1703,7 @@ State::load_checkpoint(istream& i) {
 	for ( ; j<s; ++j) {
 		event_placeholder_type ep;
 		read(ep);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		check_event_queue.insert(ep);
-#else
-		event_queue.insert(ep);
-#endif
 	}
 }
 	read_value(i, current_time);

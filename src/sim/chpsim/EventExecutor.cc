@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.9 2007/08/28 04:54:26 fang Exp $
+	$Id: EventExecutor.cc,v 1.9.2.1 2007/08/31 22:59:30 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -173,28 +173,14 @@ using entity::process_tag;
 static
 inline
 void
-recheck_all_successor_events(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context& c) {
+recheck_all_successor_events(nonmeta_context& c) {
 	typedef	EventNode	event_type;
 	typedef	size_t		event_index_type;
 	STACKTRACE_CHPSIM_VERBOSE;
 	const event_type::successor_list_type&
 		succ(c.get_event().successor_events);
 	copy(std::begin(succ), std::end(succ), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		set_inserter(c.first_checks)
-#else
-		set_inserter(c.rechecks)
-#endif
-		);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	// deferred to State::step()
-	for_each(std::begin(succ), std::end(succ), 
-		event_type::countdown_decrementer(c.event_pool));
-#endif
+		set_inserter(c.first_checks));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -242,11 +228,7 @@ dump_selection_successor_edges(const selection_list_type& l,
 	I realize now that EventRechecker is slightly redundant:
 	it has two equivalent references to the state_manager and top_footprint.
  */
-EventExecutor::EventExecutor(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context& c) : 
+EventExecutor::EventExecutor(nonmeta_context& c) : 
 	chp_visitor(*c.get_state_manager(), *c.get_top_footprint_ptr()), 
 	context(c) { }
 
@@ -354,7 +336,6 @@ EventRechecker::visit(const guarded_action&) {
 void
 EventExecutor::visit(const deterministic_selection& ds) {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// really stupid to re-evaluate, fix later...
 	guarded_action::selection_evaluator G(context);	// needs reference wrap
 	for_each(ds.begin(), ds.end(),
@@ -363,11 +344,6 @@ EventExecutor::visit(const deterministic_selection& ds) {
 	EventNode& t(context.get_event());	// this event
 	const size_t ei = t.successor_events[G.ready.front()];
 	context.first_checks.insert(ei);
-#else
-	// never enqueues itself, only successors
-	// see recheck() below
-	ICE_NEVER_CALL(cerr);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -404,22 +380,7 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		break;
 	}
 	case 1: {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		ret = RECHECK_UNBLOCKED_THIS;
-#else
-		EventNode& t(context.get_event());	// this event
-		const size_t ei = t.successor_events[G.ready.front()];
-		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
-		t.reset_countdown();
-		// act like this event (its predecessor) executed
-		EventNode::countdown_decrementer(context.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(context.event_pool[ei]);
-		const nonmeta_context::event_setter x(context, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(context, ei);
-		ret = RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
 		break;
 	}
 	default:
@@ -482,12 +443,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	}
 	case 1: {
 		const size_t ei = t.successor_events[G.ready.front()];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		context.first_checks.insert(ei);
-#else
-		context.rechecks.insert(ei);
-		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
 		break;
 	}
 	default: {
@@ -495,12 +451,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		static rand48<unsigned long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = t.successor_events[G.ready[r%m]];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		context.first_checks.insert(ei);
-#else
-		context.rechecks.insert(ei);
-		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
 	}
 	}	// end switch
 }	// end visit(const nondeterministic_selection&)
@@ -703,21 +654,11 @@ EventExecutor::visit(const channel_send& cs) {
 	}
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if CHPSIM_COUPLED_CHANNELS
 	// we already wrote data to channel during check
-#else
-	// evaluate rvalues of channel send statement (may throw!)
-	// write to the ChannelState using canonical_fundamental_type
-	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
-		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
-#endif
 	// track the updated-reference (channel)
 	// expressions are only read, no lvalue data modified
 	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
-#if !CHPSIM_COUPLED_CHANNELS
-	NEVER_NULL(nc.can_send());	// else run-time exception
-#endif
 	nc.send();
 	recheck_all_successor_events(context);
 }
@@ -734,12 +675,8 @@ EventRechecker::visit(const channel_send& cs) {
 	const channel_send::chan_ptr_type& chan(cs.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-#if !CHPSIM_COUPLED_CHANNELS
-	const 
-#endif
 	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if CHPSIM_COUPLED_CHANNELS
 	if (nc.can_send()) {
 		STACKTRACE_INDENT_PRINT("channel was ready to send\n");
 		// receiver arrived first and was waiting
@@ -793,9 +730,6 @@ try {
 	cs.dump(cerr, edc) << endl;
 	throw;
 }
-#else
-	ret = nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-#endif	// CHPSIM_COUPLED_CHANNELS
 }
 
 //=============================================================================
@@ -829,9 +763,6 @@ EventExecutor::visit(const channel_receive& cr) {
 if (!cr.is_peek()) {
 	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
-#if !CHPSIM_COUPLED_CHANNELS
-	INVARIANT(nc.can_receive());	// else run-time exception
-#endif
 	nc.receive();
 }
 	recheck_all_successor_events(context);
@@ -850,12 +781,8 @@ EventRechecker::visit(const channel_receive& cr) {
 	const channel_receive::chan_ptr_type& chan(cr.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-#if !CHPSIM_COUPLED_CHANNELS
-	const
-#endif
 	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if CHPSIM_COUPLED_CHANNELS
 	if (nc.can_receive()) {
 		STACKTRACE_INDENT_PRINT("channel was ready to receive\n");
 		ret = RECHECK_UNBLOCKED_THIS;
@@ -883,9 +810,6 @@ EventRechecker::visit(const channel_receive& cr) {
 			<< ")" << endl;
 		THROW_EXIT;
 	}
-#else
-	ret = nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-#endif	// CHPSIM_COUPLED_CHANNELS
 }
 #undef	ASSERT_CHAN_INDEX
 
@@ -943,12 +867,7 @@ EventExecutor::visit(const do_while_loop& dw) {
 		THROW_EXIT;
 	}	// end switch
 	const size_t ei = context.get_event().successor_events[si];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	context.first_checks.insert(ei);
-#else
-	context.rechecks.insert(ei);
-	EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

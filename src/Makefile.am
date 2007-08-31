@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.182 2007/08/31 21:02:34 fang Exp $
+#	$Id: Makefile.am,v 1.181.2.1 2007/08/31 22:59:14 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -764,7 +764,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/types.h \
 	Object/lang/cflat_visitee.h \
 	Object/lang/CHP_footprint.h \
-	Object/lang/CHP_footprint_expr.h \
 	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \
@@ -1399,10 +1398,6 @@ AM_CPPFLAGS = -I$(srcdir) @AUTO_CPPFLAGS@
 # will need _build directories for "make distcheck" with auto-generated headers
 # the last -Iparser is for the relative path in the build directory
 
-# for header-check dependency generation
-# Add paths here to adjust for out-of-directory sources
-# The first prefix-matching path in the list will be stripped away.
-HEADER_CHECK_SRCDIRS = $(srcdir) $(top_builddir)
 
 # extremely anal-retentive
 if HAVE_GXX

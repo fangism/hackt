@@ -5,12 +5,26 @@
 
 2007-08-31	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-81-69:
-	  header-check-dependencies: can now strip away more than one
-		srcdir in promote_header_deps.awk.
-	  Perm'd Object/devel_switches.h:
-		FOOTPRINT_LOCKS -- was done long ago without switch
-		REF_COUNT_FOOTPRINTS -- no need with locks
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-01:
+	  Primary objectives of this branch:
+	  CHP event footprint (local events) to eliminate replication.
+		Globally allocated events will just 'point' to
+		local events and carry only per-event data.  
+		Allocation of events will in bulk, per-process.  
+		Since local event references never leave process, 
+		can use offset arithmetic to perform lookups.  
+		Can also construct interval map from global event ID to PID.  
+		Block may-dependencies will have to be delayed until
+		global event/variable allocation.  
+	  CHP actions back-link to parents in tree representation, 
+		enable precise contextual printing and referencing, 
+		and reverse-lookup to source.
+	  Initial revision cleanup:
+		Object/lang/CHP_footprint_expr.h: never used, purged.
+		Perm'd sim/chpsim/devel_switches.h:
+			CHPSIM_COUPLED_CHANNELS
+			CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		Object/lang/CHP_footprint.h: wiped, will start over.
 
 
 2007-08-30	David Fang		<fangism@users.sourceforge.net>

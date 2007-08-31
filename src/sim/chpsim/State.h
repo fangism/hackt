@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7 2007/05/04 18:16:48 fang Exp $
+	$Id: State.h,v 1.7.16.1 2007/08/31 22:59:34 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -9,7 +9,6 @@
 
 #include <iosfwd>
 #include <vector>
-#include "sim/chpsim/devel_switches.h"
 #include <set>		// for std::multiset
 #include "sim/time.h"
 #include "sim/event.h"
@@ -200,7 +199,6 @@ private:
 	// event pools: for each type of event?
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	/**
 		This is where successors are scheduled to be checked for the
 		first time.  Successors are scheduled using the event delay
@@ -212,10 +210,6 @@ private:
 		Aside from that renaming is unnecessary.  
 	 */
 	event_queue_type			check_event_queue;
-#else
-	// event queue: unified priority queue of event_placeholders
-	event_queue_type			event_queue;
-#endif
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separately)
@@ -246,15 +240,6 @@ private:
 		Why not a set, to guarantee uniqueness?
 	 */
 	typedef	vector<event_index_type>	enqueue_list_type;
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	/**
-		List of events to enqueue for certain, accumulated
-		in step() method.  
-		We keep this around between step() invocations
-		to avoid repeated initial allocations.  
-	 */
-	enqueue_list_type			__enqueue_list;
-#endif
 	/**
 		Set of events to recheck for unblocking.  
 		NOTE: this is not to be used for checking successors
@@ -264,7 +249,6 @@ private:
 		for rechecking.  
 	 */
 	event_subscribers_type			__rechecks;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	typedef	std::deque<event_placeholder_type>
 						immediate_event_queue_type;
 	/**
@@ -277,7 +261,6 @@ private:
 		Should dequeued check_events go through this fifo?
 	 */
 	immediate_event_queue_type		immediate_event_fifo;
-#endif
 	/**
 		Events to print when they are executed.  
 		Not preserved by checkpointing.  
@@ -342,12 +325,8 @@ public:
 	 */
 	bool
 	pending_events(void) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		return !immediate_event_fifo.empty() ||
 			!check_event_queue.empty();
-#else
-		return !event_queue.empty();
-#endif
 	}
 
 	const time_type&
@@ -392,22 +371,16 @@ private:
 	__step(const event_index_type, const event_index_type, const size_t);
 		// THROWS_STEP_EXCEPTION
 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	template <class Tag>
 	void
 	__notify_updates_for_recheck_no_trace(const size_t);
-#endif
 
 	void
 	__notify_updates_for_recheck(const size_t);
 
 	void
 	__perform_rechecks(const event_index_type, 
-		const event_index_type
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, const size_t
-#endif
-		);
+		const event_index_type, const size_t);
 
 public:
 	step_return_type
@@ -487,7 +460,6 @@ public:
 	ostream&
 	dump_break_values(ostream&) const;
 
-// CHPSIM_DELAYED_SUCCESSOR_CHECKS (rename?)
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
 
@@ -575,10 +547,8 @@ public:
 	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;
 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	ostream&
 	dump_check_event_queue(ostream&) const;
-#endif
 
 	ostream&
 	dump_event_queue(ostream&) const;
@@ -616,11 +586,6 @@ private:
 
 	ostream&
 	dump_recheck_events(ostream&) const;
-
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	ostream&
-	dump_enqueue_events(ostream&) const;
-#endif
 
 };	// end class State
 

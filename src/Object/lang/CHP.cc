@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.26 2007/07/31 23:23:25 fang Exp $
+	$Id: CHP.cc,v 1.26.8.1 2007/08/31 22:59:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -45,7 +45,6 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/preal_const.h"
 #include "Object/def/template_formals_manager.h"
-#include "sim/chpsim/devel_switches.h"	// CHPSIM_DELAYED_SUCCESSOR_EVENTS
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -735,7 +734,6 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 ostream&
 deterministic_selection::dump_event(ostream& o, 
 		const expr_dump_context& c) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// want to print some shorthand for selection event...
 	// [G1 -> ... [] G2 -> ... ]
 	const_iterator i(begin());
@@ -745,9 +743,6 @@ deterministic_selection::dump_event(ostream& o,
 	for (++i; i!=e; ++i)
 		(*i)->dump_brief(o << " [] ", c);
 	return o << " ]";
-#else
-	return o;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -836,7 +831,6 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 ostream&
 nondeterministic_selection::dump_event(ostream& o, 
 		const expr_dump_context& c) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// want to print some shorthand for selection event...
 	// [G1 -> ... : G2 -> ... ]
 	const_iterator i(begin());
@@ -846,9 +840,6 @@ nondeterministic_selection::dump_event(ostream& o,
 	for (++i; i!=e; ++i)
 		(*i)->dump_brief(o << " : ", c);
 	return o << " ]";
-#else
-	return o;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

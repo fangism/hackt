@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10 2007/07/31 23:23:37 fang Exp $
+	$Id: Event.cc,v 1.10.8.1 2007/08/31 22:59:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -194,9 +194,6 @@ if (countdown) {
 		const char r = rc.ret;
 		if (r & __RECHECK_ENQUEUE_THIS) {
 			STACKTRACE_INDENT_PRINT("ready to fire!" << endl);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-			c.enqueue(ei);
-#endif	// else let caller handle it
 			ret = true;
 		} else {
 			STACKTRACE_INDENT_PRINT("blocked." << endl);
@@ -211,9 +208,6 @@ if (countdown) {
 	} else {
 		// RECHECK_NEVER_BLOCKED
 		STACKTRACE_INDENT_PRINT("null fire." << endl);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		c.enqueue(ei);
-#endif	// else let caller handle it
 		ret = true;
 	}
 }
@@ -221,7 +215,6 @@ if (countdown) {
 }	// end method recheck
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
 	Predecessor barrier count is now done when an event is actually
 	checked for its first time, because it can now appear multiply
@@ -238,7 +231,6 @@ EventNode::first_check(const nonmeta_context& c, const event_index_type ei) {
 	}
 	return recheck(c, ei);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -250,11 +242,7 @@ EventNode::first_check(const nonmeta_context& c, const event_index_type ei) {
 	What if channel receive? (two modifications?)
  */
 void
-EventNode::execute(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context& c) {
+EventNode::execute(nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();
@@ -273,16 +261,8 @@ EventNode::execute(
 		// whatever is done here should be consistent with that!
 		// remember: decrement successors' predecessor-arrival countdown
 		copy(begin(successor_events), end(successor_events), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 			set_inserter(c.first_checks)
-#else
-			set_inserter(c.rechecks)
-#endif
 		);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		for_each(begin(successor_events), end(successor_events), 
-			countdown_decrementer(c.event_pool));
-#endif
 	}
 }	// end method execute
 

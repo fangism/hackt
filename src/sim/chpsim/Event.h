@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10 2007/07/31 23:23:39 fang Exp $
+	$Id: Event.h,v 1.10.8.1 2007/08/31 22:59:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -321,20 +321,14 @@ public:
 	reset_countdown(void) { countdown = predecessors; }
 
 	void
-	execute(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context&);
+	execute(nonmeta_context&);
 
 	/// \return true if enqueued.
 	bool
 	recheck(const nonmeta_context&, const event_index_type) const;
 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	bool
 	first_check(const nonmeta_context&, const event_index_type);
-#endif
 
 	void
 	subscribe_deps(const nonmeta_context&, const event_index_type) const;
@@ -391,25 +385,6 @@ public:
 			const event_index_type ei) const {
 		return block_deps.dump_subscribed_status(o, s, ei);
 	}
-
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-public:
-	// helper classes
-	class countdown_decrementer {
-		typedef	vector<this_type>	event_pool_type;
-		event_pool_type&		pool;
-	public:
-		explicit
-		countdown_decrementer(event_pool_type& p) : pool(p) { }
-
-		void
-		operator () (const event_index_type ei) const {
-			// INVARIANT checks and assertions?
-			INVARIANT(pool[ei].countdown);
-			--pool[ei].countdown;
-		}
-	};	// end struct count_decrementer
-#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 
 };	// end class EventNode
 
