@@ -1,7 +1,7 @@
 /**
 	\file "util/discrete_interval_set.tcc"
 	Template class method definitions for discrete_interval_set.
-	$Id: discrete_interval_set.tcc,v 1.6 2006/02/13 02:48:06 fang Exp $
+	$Id: discrete_interval_set.tcc,v 1.6.90.1 2007/09/02 20:49:36 fang Exp $
  */
 
 #ifndef	__UTIL_DISCRETE_INTERVAL_SET_TCC__
@@ -52,8 +52,8 @@ void
 discrete_interval_set<T>::check_integrity(void) const {
 	if (!parent.empty()) {
 		T temp;
-		const_iterator i = parent.begin();
-		const const_iterator e = parent.end();
+		const_iterator i(parent.begin());
+		const const_iterator e(parent.end());
 		INVARIANT(i->first <= i->second);
 		temp = i->second;
 		i++;
@@ -78,6 +78,19 @@ discrete_interval_set<T>::clear(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
+typename discrete_interval_set<T>::size_type
+discrete_interval_set<T>::member_size(void) const {
+	size_type ret = 0;
+	const_iterator i(parent.begin()), e(parent.end());
+	for ( ; i!=e; ++i) {
+		ret += i->second -i->first +1;
+	}
+	// or std::accumulate ... select_2nd
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Queries if value is one of the intervals in the set.  
 	\param v the value to probe.
@@ -87,7 +100,7 @@ discrete_interval_set<T>::clear(void) {
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 typename discrete_interval_set<T>::iterator
 discrete_interval_set<T>::contains(const T v) {
-	iterator ret = parent.upper_bound(v);
+	iterator ret(parent.upper_bound(v));
 		// b/c lower_bound misses equality condition
 	// (ret != parent.end()) is irrelevant.  
 	if (ret != parent.begin()) {
@@ -108,7 +121,7 @@ discrete_interval_set<T>::contains(const T v) {
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 typename discrete_interval_set<T>::const_iterator
 discrete_interval_set<T>::contains(const T v) const {
-	const_iterator ret = parent.upper_bound(v);
+	const_iterator ret(parent.upper_bound(v));
 		// lower_bound misses equality condition
 	// (ret != parent.end()) is irrelevant.  
 	if (ret != parent.begin()) {
@@ -127,10 +140,10 @@ discrete_interval_set<T>::contains(const T v) const {
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 typename discrete_interval_set<T>::const_iterator
 discrete_interval_set<T>::contains_entirely(const T min, const T max) const {
-	const_iterator l = contains(min);
+	const const_iterator l(contains(min));
 	if (l == parent.end())
 		return l;
-	const_iterator u = contains(max);
+	const const_iterator u(contains(max));
 	return (u == l) ? u : parent.end();
 }
 
@@ -155,7 +168,7 @@ discrete_interval_set<T>::query_overlap(const T min, const T max) const {
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 bool
 discrete_interval_set<T>::behead(const T m) {
-	iterator li = contains(m);
+	iterator li(contains(m));
 	if (li != parent.end()) {
 		T new_max = li->second;
 		T new_min = m +1;
@@ -177,7 +190,7 @@ discrete_interval_set<T>::behead(const T m) {
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 bool
 discrete_interval_set<T>::betail(const T m) {
-	iterator ui = contains(m);
+	iterator ui(contains(m));
 	if (ui != parent.end()) {
 		if (ui->first == m) {
 		} else {
@@ -199,7 +212,7 @@ DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 bool
 discrete_interval_set<T>::meet(const discrete_interval_set& b) {
 	bool ret;
-	const_iterator i = b.begin();
+	const_iterator i(b.begin());
 	if (i != b.end()) {
 		T temp = i->second +1;
 		ret = behead(i->first -1);
@@ -220,7 +233,7 @@ DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 bool
 discrete_interval_set<T>::join(const discrete_interval_set& b) {
 	bool ret = false;
-	const_iterator i = b.begin();
+	const_iterator i(b.begin());
 	for ( ; i!=b.end(); i++)
 		ret = add_range(i->first, i->second) || ret;
 	return ret;
@@ -231,7 +244,7 @@ DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 bool
 discrete_interval_set<T>::subtract(const discrete_interval_set<T>& b) {
 	bool ret = false;
-	const_iterator i = b.begin();
+	const_iterator i(b.begin());
 	for ( ; i!=b.end(); i++)
 		ret = delete_range(i->first, i->second) || ret;
 	return ret;
@@ -247,8 +260,8 @@ bool
 discrete_interval_set<T>::add_range(const T min, const T max) {
 	const bool overlap = query_overlap(min, max);
 	// doesn't catch case where both miss around other intervals...
-	iterator li = contains(min -1);
-	iterator ui = contains(max +1);
+	iterator li(contains(min -1));
+	iterator ui(contains(max +1));
 	// fuse: condition for merging off-by-one
 	const bool fuse = (li != parent.end() || ui != parent.end());
 	T new_min, new_max;
@@ -313,8 +326,8 @@ bool
 discrete_interval_set<T>::delete_range(const T min, const T max) {
 	const bool overlap = query_overlap(min, max);
 if (overlap) {
-	iterator li = contains(min);
-	iterator ui = contains(max);
+	iterator li(contains(min));
+	iterator ui(contains(max));
 	const bool lfnem = (li->first != min);
 	const bool lueq = (li == ui);
 
@@ -350,7 +363,7 @@ template <class U>
 ostream&
 operator << (ostream& o, const discrete_interval_set<U>& r) {
 	o << "{";
-	typename discrete_interval_set<U>::const_iterator i = r.begin();
+	typename discrete_interval_set<U>::const_iterator i(r.begin());
 	for ( ; i!=r.end(); i++) {
 		U lo = i->first;
 		U hi = i->second;

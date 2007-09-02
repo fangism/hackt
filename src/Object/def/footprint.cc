@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.34 2007/07/18 23:28:30 fang Exp $
+	$Id: footprint.cc,v 1.34.8.1 2007/09/02 20:49:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -68,6 +68,9 @@
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/CHP.h"
+#if LOCAL_CHP_EVENT_FOOTPRINT
+#include "Object/lang/CHP_event_alloc.h"
+#endif
 #include "Object/persistent_type_hash.h"
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
@@ -325,10 +328,22 @@ footprint::footprint() :
 	scope_aliases(), 
 	port_aliases(),
 	prs_footprint(new PRS::footprint), 
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	chp_footprint(NULL), 	// allocate when we actually need it
+#else
 	chp_footprint(new chp_footprint_type), 
+#endif
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	chp_event_footprint(), 
+#endif
 	spec_footprint(new SPEC::footprint), 
 	lock_state(false) {
 	STACKTRACE_CTOR_VERBOSE;
+	NEVER_NULL(prs_footprint);
+#if !LOCAL_CHP_EVENT_FOOTPRINT
+	NEVER_NULL(chp_footprint);
+#endif
+	NEVER_NULL(spec_footprint);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -356,11 +371,20 @@ footprint::footprint(const footprint& t) :
 	scope_aliases(), 
 	port_aliases(),
 	prs_footprint(new PRS::footprint), 
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	chp_footprint(NULL), 	// allocate when we actually need it
+#else
 	chp_footprint(new chp_footprint_type), 
+#endif
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	chp_event_footprint(), 
+#endif
 	spec_footprint(new SPEC::footprint), 
 	lock_state(false) {
 	NEVER_NULL(prs_footprint);
+#if !LOCAL_CHP_EVENT_FOOTPRINT
 	NEVER_NULL(chp_footprint);
+#endif
 	NEVER_NULL(spec_footprint);
 	STACKTRACE_CTOR_VERBOSE;
 	INVARIANT(t.instance_collection_map.empty());
@@ -423,7 +447,15 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		scope_aliases.dump(o);
 #endif
 		prs_footprint->dump(o, *this);
+#if LOCAL_CHP_EVENT_FOOTPRINT
+		if (chp_footprint)
+#endif
 		chp_footprint->dump(o, *this, dc);
+#if LOCAL_CHP_EVENT_FOOTPRINT
+		// const char* const no_scope = NULL;
+		// chp_event_footprint.dump(o, expr_dump_context(no_scope));
+		chp_event_footprint.dump(o, dc);
+#endif
 		spec_footprint->dump(o, *this);
 	}	// end if is_created
 	}	// end if collection_map is not empty
@@ -502,6 +534,22 @@ footprint::operator [] (const collection_map_entry_type& e) const {
 		return instance_collection_ptr_type(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if LOCAL_CHP_EVENT_FOOTPRINT
+/**
+	Now allocate the CHP_event_footprint on-demand.
+ */
+footprint::chp_footprint_type&
+footprint::get_chp_footprint(void) {
+	if (!chp_footprint) {
+		chp_footprint =
+			excl_ptr<chp_footprint_type>(new chp_footprint_type);
+		NEVER_NULL(chp_footprint);
+	}
+	return *chp_footprint;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -767,6 +815,34 @@ footprint::connection_diagnostics(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if LOCAL_CHP_EVENT_FOOTPRINT
+/**
+	\pre chp_footprint has already been created.  
+ */
+void
+footprint::allocate_chp_events(void) {
+if (chp_footprint) {
+	CHP::local_event_allocator v(chp_event_footprint);
+	chp_footprint->accept(v);
+#if ENABLE_STACKTRACE
+#define	DUMP_EVENT_ALLOCATOR						\
+	if (v.valid_last_event_index()) {				\
+		cout << "root index = " << v.last_event_index << endl;	\
+		chp_event_footprint.dump(cout, 				\
+			expr_dump_context::default_value);		\
+	}
+#else
+#define	DUMP_EVENT_ALLOCATOR
+#endif
+	DUMP_EVENT_ALLOCATOR;
+	v.compact_and_canonicalize();
+	DUMP_EVENT_ALLOCATOR;
+#undef	DUMP_EVENT_ALLOCATOR
+}	// else nothing to do
+}
+#endif	// LOCAL_CHP_EVENT_FOOTPRINT
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prefixless wrapper.  
 	Called from top-level only, in module::__cflat().
@@ -860,7 +936,20 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<bool_tag>::collect_transient_info_base(m);
 	// value_footprint_bases don't have pointers
 	prs_footprint->collect_transient_info_base(m);
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	// now we need to register it because locally allocated events
+	// may now contain a live pointer to the top-concurrent-actions
+	if (chp_footprint) {
+		chp_footprint->collect_transient_info(m);
+	}
+	// alternative is to hack an exception... not worth it
+#else
 	chp_footprint->collect_transient_info_base(m);
+#endif
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	// this *shouldn't* be necessary, but also performs sanity check
+	chp_event_footprint.collect_transient_info_base(m);
+#endif
 	spec_footprint->collect_transient_info_base(m);
 	// scope/port alias_sets don't have pointers
 }
@@ -916,7 +1005,14 @@ footprint::write_object_base(const persistent_object_manager& m,
 #endif
 
 	prs_footprint->write_object_base(m, o);
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	m.write_pointer(o, chp_footprint);
+	// persistent_object_manager will pick up chp_footprint
+	chp_event_footprint.write_object_base(m, o);
+	// alternative: re-construct event footprint upon loading?
+#else
 	chp_footprint->write_object_base(m, o);
+#endif
 	spec_footprint->write_object_base(m, o);
 }
 
@@ -973,7 +1069,13 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 #endif
 
 	prs_footprint->load_object_base(m, i);
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	m.read_pointer(i, chp_footprint);
+	// alternative: re-construct event footprint upon loading?
+	chp_event_footprint.load_object_base(m, i);
+#else
 	chp_footprint->load_object_base(m, i);
+#endif
 	spec_footprint->load_object_base(m, i);
 }
 

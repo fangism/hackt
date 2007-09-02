@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.87 2007/08/30 00:20:34 fang Exp $
+#	$Id: ChangeLog,v 1.87.2.1 2007/09/02 20:49:33 fang Exp $
+
+2007-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-02:
+	  util/discrete_interval_set: prefer initialization to assignment.
+		provide insert/erase set-like interface methods
+	  util/persistent_object_manager.h: assert_ptr_registered function
+
 
 2007-08-29	David Fang		<fangism@users.sourceforge.net>
 

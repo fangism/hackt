@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.5.8.1 2007/08/31 22:59:31 fang Exp $
+	$Id: EventExecutor.h,v 1.5.8.2 2007/09/02 20:49:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -170,7 +170,7 @@ private:
 
 //-----------------------------------------------------------------------------
 /**
-	Event rechecking visitor.
+	Successor printing visitor.
  */
 class EventSuccessorDumper : public chp_visitor {
 	typedef	EventSuccessorDumper		this_type;

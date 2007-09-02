@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8.14.1 2007/08/31 22:59:35 fang Exp $
+	$Id: devel_switches.h,v 1.8.14.2 2007/09/02 20:49:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -53,20 +53,6 @@
 	Q: what do we do about tracing with random timing?
 	At least issue a warning that analysis will be nonsense?
  */
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to construct one canonical process event subgraph per
-	complete type (with CHP) to make allocation easier, and faster.
-	Also makes events per process contiguous in allocation, making
-	reverse-mapping much easier.  
-	Goal: 1
-	Status: begun (main-00-81-68-chpsim-09 branch)
-	Priority: high
-	Rationale: to enable reverse-event lookups, 
-		also helps with memory efficiency
- */
-#define	CHPSIM_FOOTPRINTIZE_EVENTS		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

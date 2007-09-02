@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.44 2007/08/31 21:02:35 fang Exp $
+	$Id: devel_switches.h,v 1.43.4.1 2007/09/02 20:49:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -37,8 +37,7 @@
 	in a second phase through connections.  
 	Goal: 1
 	Priority: medium
-	Status: complete and tested
-		(as of 00-01-04-main-00-01-40-merged-template-02-28)
+	Status: partially complete, need to test connection semantics
 	Notes: will need mechanism similar to port-summaries to 
 		pass pre-determined port parameters up the instance hierarchy.
  */
@@ -119,6 +118,25 @@
 #define	POOL_ALLOCATE_FOOTPRINTS		0
 
 /**
+	Define to 1 to reference-count footprints. 
+	Don't know if this is necessary, or a good idea, but it is an option.
+	Purpose: Could use this to validate acylic dependencies...
+	Prerequisite: heap-allocating footprints (done)
+	Goal: ?
+	Status: not begun
+ */
+#define	REF_COUNT_FOOTPRINTS			0
+
+/**
+	Define to 1 to employ locks to check acyclic dependencies 
+	between footprints.  
+	Goal: 1
+	Status: not begun
+	Priority: low-medium, for stronger invariant checking.  
+ */
+#define	FOOTPRINT_LOCKS				0
+
+/**
 	Define to 1 to use footprint sub-types, distinguishing between
 	process, datastruct, and channel footprints.  
 	Currently footprint is generic union of needed features, bloated.  
@@ -168,6 +186,20 @@
 	Priority: high -- for chpsim function support
  */
 #define	USE_TOP_DATA_TYPE			1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to construct one canonical process event subgraph per
+	complete type (with CHP) to make allocation easier, and faster.
+	Also makes events per process contiguous in allocation, making
+	reverse-mapping much easier.  
+	Goal: 1
+	Status: begun (main-00-81-68-chpsim-09 branch)
+	Priority: high
+	Rationale: to enable reverse-event lookups, 
+		also helps with memory efficiency
+ */
+#define	LOCAL_CHP_EVENT_FOOTPRINT		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

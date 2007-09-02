@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.23.8.1 2007/08/31 22:59:19 fang Exp $
+	$Id: footprint.h,v 1.23.8.2 2007/09/02 20:49:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -13,6 +13,9 @@
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
 #include "Object/devel_switches.h"
+#if LOCAL_CHP_EVENT_FOOTPRINT
+#include "Object/lang/CHP_footprint.h"
+#endif
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -192,8 +195,17 @@ private:
 		Meta-param unrolled footprint of CHP, 
 		established during the create phase.  
 		Privatized implementation.  
+		Now managed by the persistent_object_manager, 
+		because this pointer needs to be reconstructed
+		for references from the chp_event_footprint.
 	 */
 	excl_ptr<chp_footprint_type>		chp_footprint;
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	/**
+		Local pool of events in the footprint of this definition.
+	 */
+	CHP::local_event_footprint		chp_event_footprint;
+#endif
 	/**
 		Unrolled specifications, local to this scope.  
 		This is populated during the create phase.  
@@ -334,10 +346,20 @@ public:
 	get_prs_footprint(void) const { return *prs_footprint; }
 
 	chp_footprint_type&
-	get_chp_footprint(void) { return *chp_footprint; }
+	get_chp_footprint(void)
+#if LOCAL_CHP_EVENT_FOOTPRINT
+		;
+#else
+		{ return *chp_footprint; }
+#endif
 
 	const chp_footprint_type&
-	get_chp_footprint(void) const { return *chp_footprint; }
+	get_chp_footprint(void) const { 
+#if LOCAL_CHP_EVENT_FOOTPRINT
+		NEVER_NULL(chp_footprint);
+#endif
+		return *chp_footprint;
+	}
 
 	SPEC::footprint&
 	get_spec_footprint(void) { return *spec_footprint; }
@@ -359,6 +381,11 @@ public:
 	// eventually pass parameter for warning control 
 	good_bool
 	connection_diagnostics(void) const;
+
+#if LOCAL_CHP_EVENT_FOOTPRINT
+	void
+	allocate_chp_events(void);
+#endif
 
 	void
 	accept(alias_visitor&) const;

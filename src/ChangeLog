@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-02:
+	  Copy-reduced many sim/chpsim/ event classes/functions to
+		Object/lang/CHP_event* (new): event, footprint-pool-allocator.
+	  Object/devel_switches.h: LOCAL_CHP_EVENT_FOOTPRINT, 
+		enabled and in progress.
+	  Object/def/footprint.{h,cc}: chp_footprint (concurrent_actions)
+		pointer is now registered persistently, not just private-impl,
+		because event footprint needs back-refs to all CHP actions.
+	  Tests expected to fail with new chp-event footprints printed, 
+		need to hand-verify many test cases...
+		Would help to have graph visualization per-footprint def...
+		No tests were touched.  
+
+
 2007-08-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-01:

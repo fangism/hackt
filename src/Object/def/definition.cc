@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.39 2007/07/31 23:23:09 fang Exp $
+ 	$Id: definition.cc,v 1.39.8.1 2007/09/02 20:49:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3314,10 +3314,13 @@ process_definition::__create_complete_type(
 			// already have error message
 			return good_bool(false);
 		}
-		// TODO: final pass of channel connectivity over the CHP
-		// body to mark channels as having been connected to 
-		// senders and/or receivers.  
+		// check channel producer/consumer connectivity:
 		f.connection_diagnostics();	// returns good_bool
+#if LOCAL_CHP_EVENT_FOOTPRINT
+		// allocate local event pool
+		// similar to StateConstructor
+		f.allocate_chp_events();
+#endif
 		// f.mark_created();	// ?
 	}
 	return good_bool(true);
