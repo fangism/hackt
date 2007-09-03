@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.14 2006/10/18 18:38:14 fang Exp $
+	$Id: module.h,v 1.14.46.1 2007/09/03 19:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -155,9 +155,6 @@ private:
 
 	good_bool
 	__cflat_aliases(ostream&, const cflat_options&) const;
-
-	good_bool
-	__cflat_aliases_no_import(ostream&, const cflat_options&) const;
 
 	good_bool
 	__allocate_unique(void);
