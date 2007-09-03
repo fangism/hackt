@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2007/08/17 00:44:58 fang Exp $
+#	$Id: Makefile.am,v 1.31.4.1 2007/09/03 21:29:58 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -93,7 +93,7 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	top-level-01
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
-	nand-04 nand-08 \
+	nand-04 nand-08 nand-09 \
 	lvs-order-01 lvs-order-03 \
 	lvs-xcpl-inv-01
 
@@ -132,9 +132,6 @@ BISON_OUTPUTS += inv-01 inv-11 \
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac
-
-# pending test cases
-srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

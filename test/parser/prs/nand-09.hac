@@ -1,0 +1,10 @@
+// "nand-09.hac"
+// should pass, testing cflat lvs -t <type>
+
+import "nand-08.hac";
+
+nandN<2> A, B, C;	// top-instances will be ignored by -t
+
+// this line used by Makefile rule for .lvsprs
+// @hflat-type@ nandN<4>
+
