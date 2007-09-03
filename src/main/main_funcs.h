@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.8 2007/03/16 07:07:24 fang Exp $
+	$Id: main_funcs.h,v 1.8.22.1 2007/09/03 22:28:47 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
@@ -12,9 +12,13 @@
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
+namespace entity {
+class process_type_reference;
+}	// end namespace process_type_reference
 using util::good_bool;
 using util::memory::count_ptr;
 using entity::module;
+using entity::process_type_reference;
 class compile_options;		// defined in "main/compile_options.h"
 
 //=============================================================================
@@ -57,6 +61,10 @@ load_module(const char*);
 extern
 count_ptr<module>
 load_module_debug(const char*);
+
+extern
+count_ptr<const process_type_reference>
+parse_and_create_complete_process_type(const char*, const module&);
 
 //=============================================================================
 }	// end namespace HAC

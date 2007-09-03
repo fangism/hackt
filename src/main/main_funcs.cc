@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.16 2007/08/15 01:08:19 fang Exp $
+	$Id: main_funcs.cc,v 1.16.4.1 2007/09/03 22:28:46 fang Exp $
  */
 
 #include <iostream>
@@ -26,9 +26,11 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "AST/root.h"	// for parser::root_body
+#include "AST/root.h"			// for parser::root_body
+#include "AST/type_base.h"		// for parser::concrete_type_ref
 #include "AST/parse_context.h"		// for parser::context
 #include "main/compile_options.h"
+#include "Object/type/process_type_reference.h"
 #include "util/getopt_portable.h"
 #include "util/persistent_object_manager.h"
 
@@ -71,6 +73,7 @@ using std::ifstream;
 using std::ofstream;
 using std::ios_base;
 using parser::root_body;
+using parser::concrete_type_ref;
 using util::persistent;
 using util::persistent_object_manager;
 using lexer::file_manager;
@@ -404,6 +407,38 @@ load_module_debug(const char* fname) {
 	persistent::warn_unimplemented = true;
 	persistent_object_manager::dump_reconstruction_table = true;
 	return load_module(fname);
+}
+
+//=============================================================================
+/**
+	Parse the process type and unroll/create it.  
+	\return NULL on any errors.  
+ */
+count_ptr<const process_type_reference>
+parse_and_create_complete_process_type(const char* _type, const module& m) {
+	typedef	count_ptr<const process_type_reference>	return_type;
+	NEVER_NULL(_type);
+	// parse the type
+	// cerr << "type string: " << cf.named_process_type.c_str() << endl;
+	const concrete_type_ref::return_type
+		t(parser::parse_and_check_complete_type(_type, m));
+	if (!t) {
+		cerr << "Error with type reference \'" <<
+			_type << "\'." << endl;
+		return return_type(NULL);
+	}
+	const return_type pt(t.is_a<const process_type_reference>());
+	if (!pt) {
+		cerr << "Error: \'" << _type << "\' does not "
+			"refer to a process type." << endl;
+		return return_type(NULL);
+	}
+	const return_type rpt(pt->unroll_resolve());
+	if (!rpt) {
+		cerr << "Error resolving process type parameters." << endl;
+		return return_type(NULL);
+	}
+	return rpt;
 }
 
 //=============================================================================

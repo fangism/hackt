@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.32.8.1 2007/09/03 19:42:09 fang Exp $
+ 	$Id: module.cc,v 1.32.8.2 2007/09/03 22:28:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -345,25 +345,6 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 #endif
 		return __allocate_unique();
 	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: factor out process_type functions separately...
- */
-good_bool
-module::cflat_process_type(const process_type_reference& pt, ostream& o, 
-		const cflat_options& cf) {
-	if (!allocate_unique_process_type(pt).good) {
-		cerr << "ERROR in allocating global state.  Aborting." << endl;
-		return good_bool(false);
-	}
-#if ENABLE_STACKTRACE
-	get_footprint().dump_with_collections(cerr << "module\'s footprint: ", 
-		dump_flags::default_value,
-		expr_dump_context::default_value) << endl;
-#endif
-	return __cflat(o, cf);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

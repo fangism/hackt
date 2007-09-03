@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.14.46.1 2007/09/03 19:42:10 fang Exp $
+	$Id: module.h,v 1.14.46.2 2007/09/03 22:28:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -135,10 +135,6 @@ public:
 	good_bool
 	cflat(ostream&, const cflat_options&);
 
-	good_bool
-	cflat_process_type(const process_type_reference&, 
-		ostream&, const cflat_options&);
-
 	template <class Tag>
 	void
 	match_aliases(util::string_list&, const size_t) const;
@@ -159,7 +155,7 @@ private:
 	good_bool
 	__allocate_unique(void);
 
-	// no needed publicly yet
+public:
 	good_bool
 	allocate_unique_process_type(const process_type_reference&);
 public:

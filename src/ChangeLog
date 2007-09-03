@@ -5,6 +5,12 @@
 
 2007-09-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-05:
+	  main/main_funcs: new function parse_and_create_complete_process_type
+		recycled from main/cflat.cc for reuse.
+	  main/cflat.cc: use newly refactored code
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-04:
 	  Tiny clean-up:
 	  Object/module.{h,cc}: historic __cflat_aliases_no_import

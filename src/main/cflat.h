@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.11 2007/03/11 16:34:31 fang Exp $
+	$Id: cflat.h,v 1.11.22.1 2007/09/03 22:28:46 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -19,9 +19,7 @@ namespace HAC {
 class cflat_options;
 using std::string;
 using std::ostream;
-namespace entity {
-	class module;
-}
+
 //=============================================================================
 /**
 	Instance-less class.  
@@ -102,11 +100,6 @@ private:
 	static
 	void
 	getopt_cflat_type_only(options&, const char*);
-
-	static
-	int
-	process_complete_type(const char*, const entity::module&, 
-		const options&);
 
 };	// end class cflat
 
