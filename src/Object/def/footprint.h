@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.23.8.2 2007/09/02 20:49:17 fang Exp $
+	$Id: footprint.h,v 1.23.8.3 2007/09/03 03:46:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -360,6 +360,9 @@ public:
 #endif
 		return *chp_footprint;
 	}
+
+	bool
+	has_chp_footprint(void) const { return chp_footprint; }
 
 	SPEC::footprint&
 	get_spec_footprint(void) { return *spec_footprint; }

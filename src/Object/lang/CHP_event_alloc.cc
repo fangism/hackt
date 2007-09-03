@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event_alloc.cc"
 	Copy-ripped from "sim/chpsim/StateConstructor.cc"
-	$Id: CHP_event_alloc.cc,v 1.1.2.1 2007/09/02 20:49:25 fang Exp $
+	$Id: CHP_event_alloc.cc,v 1.1.2.2 2007/09/03 03:46:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -12,6 +12,9 @@
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"		// for guard->dump
 #include "Object/traits/chan_traits.h"
+#if ENABLE_STACKTRACE
+#include "Object/expr/expr_dump_context.h"
+#endif
 #include "common/ICE.h"
 #include "util/visitor_functor.h"
 #include "util/stacktrace.h"
@@ -474,6 +477,7 @@ local_event_allocator::visit(const do_forever_loop& fl) {
 	2) just free the loopback placeholder, by forwarding around it, 
 		return a reference to the head_event
 ***/
+#if 0
 	const size_t back_index = event_pool_size() -1;
 	event_type& back_event(get_event(back_index));
 	STACKTRACE_INDENT_PRINT("considering back: " << back_index << endl);
@@ -493,18 +497,21 @@ if (back_event.is_movable()) {
 	// need to update return value (head index), using loopback slot
 		last_event_index = loopback_index;
 	}
-} else {
+} else
+#endif
+{
 	// 1) then we can recycle the loopback slot safely (tested)
 	// first: forward successors through condemned event
+	// let later optimization pass re-compact events
 	const size_t ret = forward_successor(loopback_index);
 	INVARIANT(ret == last_event_index);
 	// last: free the condemned event
 	deallocate_event(loopback_index);		// recycle it!
 	// loopback_event is now dead
 	STACKTRACE_INDENT_PRINT("recycling loopback: " << loopback_index << endl);
-//	s.last_event_index = ret;	// redundant
+//	last_event_index = ret;	// redundant
 }
-#else
+#else	// OPTIMIZE_CHPSIM_EVENTS
 	// let compact_and_canonicalize take care of things...
 	// TODO: pass to find NULL events with singletone-successor
 #endif	// OPTIMIZE_CHPSIM_EVENTS
@@ -833,6 +840,9 @@ do {
 		}
 	}	// end for
 } while (removed_some);
+#if ENABLE_STACKTRACE
+	event_footprint.dump(cout, expr_dump_context::default_value);
+#endif
 	// 2. move events from tail end to free_list spots, 
 	// remembering to keep track of root-node index!
 	STACKTRACE_INDENT_PRINT("compacting events..." << endl);
@@ -849,6 +859,9 @@ while (!free_list.empty()) {
 	deallocate_event(ns);	// does event_footprint.pop_back();
 }	// end while
 #endif	// OPTIMIZE_CHPSIM_EVENTS
+#if ENABLE_STACKTRACE
+	event_footprint.dump(cout, expr_dump_context::default_value);
+#endif
 	// 3. move root-node to index[0], a swap
 	// invariant: free_list is empty and events are densely packed
 	STACKTRACE_INDENT_PRINT("canonicalizing root node..." << endl);
@@ -860,14 +873,14 @@ if (last_event_index && event_footprint.size()) {		// != 0
 	substitute_successor(0, temp, last_event_index);
 	event_footprint[0] = event_footprint[last_event_index];
 	substitute_successor(last_event_index, 0, 0);
-	event_footprint[last_event_index] = copy;
+	event_footprint[last_event_index] = event_footprint[temp];
 	substitute_successor(temp, last_event_index, 0);
 	last_event_index = 0;
 	deallocate_event(temp);
 	INVARIANT(free_list.empty());
+}
 	// 4. if root-event has no predecessors, add one for the entry point
 	event_footprint[0].mark_as_entry();
-}
 }	// end if event_footprint.size()
 }	// end compact_and_canonicalize
 

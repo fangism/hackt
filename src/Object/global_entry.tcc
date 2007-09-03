@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.17 2007/01/21 05:58:24 fang Exp $
+	$Id: global_entry.tcc,v 1.17.30.1 2007/09/03 03:46:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -223,8 +223,10 @@ CHP_substructure<true>::accept(const global_entry<Tag>& _this, Visitor& v) {
 	const footprint* const f(_this._frame._footprint);
 	NEVER_NULL(f);
 	const typename Visitor::footprint_frame_setter tmp(v, _this._frame);
+if (f->has_chp_footprint()) {
 	const CHP::concurrent_actions& cfp(f->get_chp_footprint());
 	cfp.accept(v);
+}
 }
 
 //=============================================================================

@@ -61,30 +61,32 @@ Persistent Object Manager text dump:
 	50	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	51	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
+	53	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
 	54	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
-	64	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	66	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	70	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	462
-	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	65	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	68	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	footprnt	0	#HEAD#	#TAIL#	462
+	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -153,6 +155,10 @@ In namespace "", we have: {
                 out[x[y]]!(0)
               }
             ]
+          chp events: {
+            event[0]: receive: index?(y), #pred: 1, succ: 1 
+            event[1]: send: out[x[y]]!(0), #pred: 1, succ: 0 
+          }
         }
         <1> {
           I = pint^0 value: 1
@@ -182,6 +188,10 @@ In namespace "", we have: {
                 out[x[y]]!(1)
               }
             ]
+          chp events: {
+            event[0]: receive: index?(y), #pred: 1, succ: 1 
+            event[1]: send: out[x[y]]!(1), #pred: 1, succ: 0 
+          }
         }
       }
       }

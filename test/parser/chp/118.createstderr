@@ -75,47 +75,50 @@ Persistent Object Manager text dump:
 	64	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	410
+	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	490
 	68	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	70	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	72	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	73	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	74	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
-	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	74	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	78	##ADDR##	footprnt	0	#HEAD#	#TAIL#	410
-	79	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	80	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	81	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	82	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	83	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	84	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
-	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	87	##ADDR##	footprnt	0	#HEAD#	#TAIL#	410
-	88	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	89	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	90	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	91	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	92	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
-	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	95	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	96	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	97	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	footprnt	0	#HEAD#	#TAIL#	490
+	80	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	83	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	84	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	85	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	footprnt	0	#HEAD#	#TAIL#	490
+	90	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	94	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	95	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
+	97	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	98	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	99	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	100	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	101	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	102	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	103	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	104	##ADDR##	footprnt	0	#HEAD#	#TAIL#	506
-	105	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	104	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	106	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	footprnt	0	#HEAD#	#TAIL#	506
+	108	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	110	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -189,6 +192,13 @@ In namespace "", we have: {
                 }
               }
             ]
+          chp events: {
+            event[0]: peek: index#(y), #pred: 1, succ: 4 
+            event[1]: null: , #pred: 2, succ: 0 
+            event[2]: receive: index?, #pred: 1, succ: 1 
+            event[3]: send: out!(x[0][y]), #pred: 1, succ: 1 
+            event[4]: fork: , #pred: 1, succ: 2 3 
+          }
         }
         <1> {
           I = pint^0 value: 1
@@ -218,6 +228,13 @@ In namespace "", we have: {
                 }
               }
             ]
+          chp events: {
+            event[0]: peek: index#(y), #pred: 1, succ: 4 
+            event[1]: null: , #pred: 2, succ: 0 
+            event[2]: receive: index?, #pred: 1, succ: 1 
+            event[3]: send: out!(x[1][y]), #pred: 1, succ: 1 
+            event[4]: fork: , #pred: 1, succ: 2 3 
+          }
         }
         <3> {
           I = pint^0 value: 3
@@ -247,6 +264,13 @@ In namespace "", we have: {
                 }
               }
             ]
+          chp events: {
+            event[0]: peek: index#(y), #pred: 1, succ: 4 
+            event[1]: null: , #pred: 2, succ: 0 
+            event[2]: receive: index?, #pred: 1, succ: 1 
+            event[3]: send: out!(x[3][y]), #pred: 1, succ: 1 
+            event[4]: fork: , #pred: 1, succ: 2 3 
+          }
         }
       }
       }

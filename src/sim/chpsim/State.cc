@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12.12.1 2007/08/31 22:59:33 fang Exp $
+	$Id: State.cc,v 1.12.12.2 2007/09/03 03:46:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -303,14 +303,17 @@ State::State(const module& m) :
 	event_pool.reserve(256);
 	event_pool.resize(1);		// 0th entry is a dummy
 {
+	const footprint& topfp(mod.get_footprint());
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
 	// v.current_process_index = 0;	// already initialized
-	mod.get_footprint().get_chp_footprint().accept(v);
+if (topfp.has_chp_footprint()) {
+	topfp.get_chp_footprint().accept(v);
 	if (v.last_event_index) {
 		v.initial_events.push_back(v.last_event_index);
 		// first top-level event
 	}
+}
 	// visit hierarchical footprints
 	const state_manager& sm(mod.get_state_manager());
 	sm.accept(v);	// may throw

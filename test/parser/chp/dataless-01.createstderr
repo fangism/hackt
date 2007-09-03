@@ -13,30 +13,32 @@ Persistent Object Manager text dump:
 	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
 	10	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
 	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
 	13	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
-	15	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
-	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	389
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
+	16	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
+	22	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	footprnt	0	#HEAD#	#TAIL#	389
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -65,6 +67,9 @@ In namespace "", we have: {
         1	clack::Y
         resolved concurrent actions:
           Y?
+        chp events: {
+          event[0]: receive: Y?, #pred: 1, succ: 
+        }
       }
       }
 
@@ -87,6 +92,9 @@ In namespace "", we have: {
         1	click::X
         resolved concurrent actions:
           X!
+        chp events: {
+          event[0]: send: X!, #pred: 1, succ: 
+        }
       }
       }
 

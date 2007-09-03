@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-03:
+	  Object/lang/CHP_event_alloc.cc:
+		in do_forever_loop, defer loop-back slot elision
+			to the compaction/canonicalization pass.  
+		minor bug fixes in canonicalization:
+			s/copy/event_footprint[temp]/
+			mark_as_entry() *unconditionally*
+	  Object/lang/CHP.cc: 
+		concurrent_actions::unroll no longer get_chp_footprint
+		unless it is not empty, to save unnecessary allocation.
+		In other places, check footprint::has_chp_footprint() first.
+	  re-confirmed/updated all test cases in test/parser/{chp,channel}:
+		createstderrs gained chp events per unrolled footprint,
+		also headers gained CHP-concurrent actions objects.  
+	  Next batch to re-confirm in test/chpsim.
+
+
 2007-09-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-02:

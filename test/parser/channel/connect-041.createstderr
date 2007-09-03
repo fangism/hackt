@@ -21,20 +21,21 @@ Persistent Object Manager text dump:
 	17	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	297
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	341
 	21	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
-	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -78,6 +79,11 @@ In namespace "", we have: {
           *[
             B!(false)
           ]
+        chp events: {
+          event[0]: fork: , #pred: 1, succ: 2 1 
+          event[1]: send: B!(false), #pred: 1, succ: 1 
+          event[2]: receive: B?(x), #pred: 1, succ: 2 
+        }
       }
       }
 
