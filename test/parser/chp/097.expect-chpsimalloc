@@ -7,7 +7,7 @@ int[4]: "f.w"
 Event graph: 
 event[0]: fork: null, pid: 0, #pred: 0, succ: 5 
 event[1]: null: null, pid: 0, #pred: 0, succ: 
-event[2]: null: , pid: 1, #pred: 2, succ: 5 
+event[2]: join: , pid: 1, #pred: 2, succ: 5 
 event[3]: assign: f.x := f.y, pid: 1, #pred: 1, succ: 2 
 event[4]: assign: f.z := f.w, pid: 1, #pred: 1, succ: 2 
 event[5]: fork: , pid: 1, #pred: 1, succ: 3 4 

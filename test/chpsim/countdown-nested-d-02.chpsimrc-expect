@@ -14,7 +14,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	20	1	0	
+	20	1	0	*[ c<3 -> ... ]
 c : int c = 0
 d : int d = 0
 event queue:
@@ -41,7 +41,7 @@ event queue:
 check queue:
 	time	eid	pid	event
 	30	3	0	
-	40	5	0	
+	40	5	0	*[ d<2 -> ... ]
 c : int c = 1
 d : int d = 0
 event queue:
@@ -53,7 +53,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	60	5	0	
+	60	5	0	*[ d<2 -> ... ]
 c : int c = 1
 d : int d = 1
 event queue:
@@ -65,7 +65,7 @@ d : int d = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	80	5	0	
+	80	5	0	*[ d<2 -> ... ]
 c : int c = 1
 d : int d = 2
 event queue:
@@ -77,7 +77,7 @@ d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	90	1	0	
+	90	1	0	*[ c<3 -> ... ]
 c : int c = 1
 d : int d = 2
 event queue:
@@ -104,7 +104,7 @@ event queue:
 check queue:
 	time	eid	pid	event
 	100	3	0	
-	110	5	0	
+	110	5	0	*[ d<2 -> ... ]
 c : int c = 2
 d : int d = 0
 event queue:
@@ -116,7 +116,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	130	5	0	
+	130	5	0	*[ d<2 -> ... ]
 c : int c = 2
 d : int d = 1
 event queue:
@@ -128,7 +128,7 @@ d : int d = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	150	5	0	
+	150	5	0	*[ d<2 -> ... ]
 c : int c = 2
 d : int d = 2
 event queue:
@@ -140,7 +140,7 @@ d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	160	1	0	
+	160	1	0	*[ c<3 -> ... ]
 c : int c = 2
 d : int d = 2
 event queue:
@@ -167,7 +167,7 @@ event queue:
 check queue:
 	time	eid	pid	event
 	170	3	0	
-	180	5	0	
+	180	5	0	*[ d<2 -> ... ]
 c : int c = 3
 d : int d = 0
 event queue:
@@ -179,7 +179,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	200	5	0	
+	200	5	0	*[ d<2 -> ... ]
 c : int c = 3
 d : int d = 1
 event queue:
@@ -191,7 +191,7 @@ d : int d = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	220	5	0	
+	220	5	0	*[ d<2 -> ... ]
 c : int c = 3
 d : int d = 2
 event queue:
@@ -203,7 +203,7 @@ d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	230	1	0	
+	230	1	0	*[ c<3 -> ... ]
 c : int c = 3
 d : int d = 2
 event queue:

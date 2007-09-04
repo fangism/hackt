@@ -10,7 +10,7 @@ Event graph:
 event[0]: fork: null, pid: 0, #pred: 0, succ: 1 
 event[1]: peek: Z.G#(Z.g), pid: 1, #pred: 1, succ: 9 
 channel deps: 3 
-event[2]: null: , pid: 1, #pred: 2, succ: 1 
+event[2]: join: , pid: 1, #pred: 2, succ: 1 
 event[3]: receive: Z.G?, pid: 1, #pred: 1, succ: 2 
 channel deps: 3 
 event[4]: send: Z.Z!(Z.x), pid: 1, #pred: 1, succ: 2 

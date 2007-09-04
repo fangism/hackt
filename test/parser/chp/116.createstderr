@@ -289,7 +289,7 @@ In namespace "", we have: {
           ]
         chp events: {
           event[0]: peek: L#(l), #pred: 1, succ: 21 
-          event[1]: null: , #pred: 2, succ: 0 
+          event[1]: join: , #pred: 2, succ: 0 
           event[2]: receive: L?, #pred: 1, succ: 1 
           event[3]: null: null, #pred: 1, succ: 1 
           event[4]: send: R!(b[0]), #pred: 1, succ: 3 

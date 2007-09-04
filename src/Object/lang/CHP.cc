@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.26.8.3 2007/09/03 03:46:41 fang Exp $
+	$Id: CHP.cc,v 1.26.8.4 2007/09/04 15:36:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -148,6 +148,26 @@ static
 good_bool
 set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&, 
 	const unroll_context&, const bool, const bool);
+
+static
+ostream&
+dump_selection_event(ostream& o, const selection_list_type& sl, 
+		const expr_dump_context& c, 
+		const char* b, const char* d, const char* f) {
+	typedef	selection_list_type::const_iterator	const_iterator;
+	NEVER_NULL(b);
+	NEVER_NULL(d);
+	NEVER_NULL(f);
+	// want to print some shorthand for selection event...
+	// [G1 -> ... [] G2 -> ... ]
+	const_iterator i(sl.begin());
+	const const_iterator e(sl.end());
+	INVARIANT(i!=e);
+	(*i)->dump_brief(o << b, c);
+	for (++i; i!=e; ++i)
+		(*i)->dump_brief(o << d, c);
+	return o << f;
+}
 
 //=============================================================================
 // class action method definitions
@@ -733,21 +753,12 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't print anything.  Not a single statement/event.  
- */
 ostream&
 deterministic_selection::dump_event(ostream& o, 
 		const expr_dump_context& c) const {
 	// want to print some shorthand for selection event...
 	// [G1 -> ... [] G2 -> ... ]
-	const_iterator i(begin());
-	const const_iterator e(end());
-	INVARIANT(i!=e);
-	(*i)->dump_brief(o << "[ ", c);
-	for (++i; i!=e; ++i)
-		(*i)->dump_brief(o << " [] ", c);
-	return o << " ]";
+	return dump_selection_event(o, *this, c, "[ ", " [] ", " ]");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -838,13 +849,7 @@ nondeterministic_selection::dump_event(ostream& o,
 		const expr_dump_context& c) const {
 	// want to print some shorthand for selection event...
 	// [G1 -> ... : G2 -> ... ]
-	const_iterator i(begin());
-	const const_iterator e(end());
-	INVARIANT(i!=e);
-	(*i)->dump_brief(o << "[ ", c);
-	for (++i; i!=e; ++i)
-		(*i)->dump_brief(o << " : ", c);
-	return o << " ]";
+	return dump_selection_event(o, *this, c, "[ ", " : ", " ]");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1808,12 +1813,9 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't print, not a single statement/event.  
- */
 ostream&
-do_while_loop::dump_event(ostream& o, const expr_dump_context&) const {
-	return o;
+do_while_loop::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump_selection_event(o, *this, c, "*[ ", " [] ", " ]");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

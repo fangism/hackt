@@ -119,6 +119,6 @@ footprint: {
     event[10]: select: [ a -> ... [] else -> ... ], #pred: 1, succ: 5 9 
     event[11]: assign: a := false, #pred: 1, succ: 13 
     event[12]: assign: b := false, #pred: 1, succ: 13 
-    event[13]: null: , #pred: 2, succ: 10 
+    event[13]: join: , #pred: 2, succ: 10 
   }
 }

@@ -107,7 +107,7 @@ In namespace "", we have: {
           ]
         chp events: {
           event[0]: fork: , #pred: 1, succ: 3 5 
-          event[1]: null: , #pred: 2, succ: 0 
+          event[1]: join: , #pred: 2, succ: 0 
           event[2]: assign: y := y+1, #pred: 1, succ: 1 
           event[3]: assign: x := y, #pred: 1, succ: 2 
           event[4]: assign: w := w+1, #pred: 1, succ: 1 

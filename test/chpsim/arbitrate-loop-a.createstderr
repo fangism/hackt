@@ -145,17 +145,17 @@ footprint: {
   chp events: {
     event[0]: assign: a := true, #pred: 1, succ: 17 
     event[1]: null: null, #pred: 1, succ: 17 
-    event[2]: null: , #pred: 2, succ: 1 
+    event[2]: join: , #pred: 2, succ: 1 
     event[3]: assign: b := true, #pred: 1, succ: 2 
     event[4]: assign: c := true, #pred: 1, succ: 2 
     event[5]: fork: , #pred: 1, succ: 3 4 
     event[6]: assign: a := false, #pred: 1, succ: 5 
-    event[7]: null: , #pred: 2, succ: 1 
+    event[7]: join: , #pred: 2, succ: 1 
     event[8]: assign: c := true, #pred: 1, succ: 7 
     event[9]: assign: a := true, #pred: 1, succ: 7 
     event[10]: fork: , #pred: 1, succ: 8 9 
     event[11]: assign: b := false, #pred: 1, succ: 10 
-    event[12]: null: , #pred: 2, succ: 1 
+    event[12]: join: , #pred: 2, succ: 1 
     event[13]: assign: a := true, #pred: 1, succ: 12 
     event[14]: assign: b := true, #pred: 1, succ: 12 
     event[15]: fork: , #pred: 1, succ: 13 14 

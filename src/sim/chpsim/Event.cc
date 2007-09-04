@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.1 2007/08/31 22:59:28 fang Exp $
+	$Id: Event.cc,v 1.10.8.2 2007/09/04 15:36:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -371,7 +371,7 @@ EventNode::dump_struct(ostream& o
 #endif
 		) const {
 	switch (event_type) {
-	case EVENT_NULL: o << "null"; break;
+	case EVENT_NULL: o << (predecessors > 1 ? "join" : "null"); break;
 	case EVENT_ASSIGN: o << "assign"; break;
 	case EVENT_SEND: o << "send"; break;
 	case EVENT_RECEIVE: o << "receive"; break;

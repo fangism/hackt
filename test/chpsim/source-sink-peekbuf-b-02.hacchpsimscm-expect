@@ -1,7 +1,7 @@
 all trivial-events:
 (0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 4 9 
 >)
-(5 . #<raw-chpsim-event-node: null: , pid: 2, #pred: 2, succ: 4 
+(5 . #<raw-chpsim-event-node: join: , pid: 2, #pred: 2, succ: 4 
 >)
 (8 . #<raw-chpsim-event-node: fork: , pid: 2, #pred: 1, succ: 6 7 
 >)

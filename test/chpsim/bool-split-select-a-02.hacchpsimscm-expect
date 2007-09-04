@@ -3,7 +3,7 @@
 >)
 (7 . #<raw-chpsim-event-node: null: null, pid: 3, #pred: 1, succ: 16 
 >)
-(13 . #<raw-chpsim-event-node: null: , pid: 3, #pred: 2, succ: 12 
+(13 . #<raw-chpsim-event-node: join: , pid: 3, #pred: 2, succ: 12 
 >)
 (16 . #<raw-chpsim-event-node: fork: , pid: 3, #pred: 1, succ: 14 15 
 >)

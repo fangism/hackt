@@ -16,7 +16,7 @@ event[3]: receive: A.L?, pid: 1, #pred: 1, succ: 2
 channel deps: 1 
 event[4]: peek: B.L#(B.x), pid: 2, #pred: 1, succ: 8 
 channel deps: 3 
-event[5]: null: , pid: 2, #pred: 2, succ: 4 
+event[5]: join: , pid: 2, #pred: 2, succ: 4 
 event[6]: receive: B.L?, pid: 2, #pred: 1, succ: 5 
 channel deps: 3 
 event[7]: send: B.R!(B.x), pid: 2, #pred: 1, succ: 5 

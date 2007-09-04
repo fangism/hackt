@@ -6,7 +6,7 @@ bool[4]: "d"
 
 Event graph: 
 event[0]: fork: null, pid: 0, #pred: 0, succ: 15 
-event[1]: null: , pid: 0, #pred: 4, succ: 
+event[1]: join: , pid: 0, #pred: 4, succ: 
 event[2]: assign: a := true, pid: 0, #pred: 1, succ: 1 
 event[3]: assign: b := true, pid: 0, #pred: 1, succ: 1 
 event[4]: wait: [a], pid: 0, #pred: 1, succ: 3 
@@ -18,7 +18,7 @@ event[7]: assign: d := true, pid: 0, #pred: 1, succ: 1
 event[8]: wait: [c], pid: 0, #pred: 1, succ: 7 
 bool deps: 3 
 event[9]: fork: , pid: 0, #pred: 1, succ: 2 4 6 8 
-event[10]: null: , pid: 0, #pred: 4, succ: 9 
+event[10]: join: , pid: 0, #pred: 4, succ: 9 
 event[11]: assign: a := false, pid: 0, #pred: 1, succ: 10 
 event[12]: assign: b := false, pid: 0, #pred: 1, succ: 10 
 event[13]: assign: c := false, pid: 0, #pred: 1, succ: 10 

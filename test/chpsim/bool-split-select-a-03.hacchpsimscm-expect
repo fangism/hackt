@@ -22,7 +22,7 @@ channel deps: 6
 (12 . #<raw-chpsim-event-node: select: [ split.c==0 -> ... [] split.c==1 -> ... [] split.c==2 -> ... [] split.c==3 -> ... ], pid: 3, #pred: 1, succ: 8 9 10 11 
 int deps: 1 
 >)
-(13 . #<raw-chpsim-event-node: null: , pid: 3, #pred: 2, succ: 12 
+(13 . #<raw-chpsim-event-node: join: , pid: 3, #pred: 2, succ: 12 
 >)
 (14 . #<raw-chpsim-event-node: receive: split.C?(split.c), pid: 3, #pred: 1, succ: 13 
 channel deps: 2 

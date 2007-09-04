@@ -10,7 +10,7 @@ event[0]: fork: null, pid: 0, #pred: 0, succ: 6
 event[1]: null: null, pid: 0, #pred: 0, succ: 
 event[2]: send: foo.out!(foo.x[foo.y][foo.z]), pid: 1, #pred: 1, succ: 6 
 channel deps: 3 
-event[3]: null: , pid: 1, #pred: 2, succ: 2 
+event[3]: join: , pid: 1, #pred: 2, succ: 2 
 event[4]: receive: foo.index[0]?(foo.y), pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
 event[5]: receive: foo.index[1]?(foo.z), pid: 1, #pred: 1, succ: 3 

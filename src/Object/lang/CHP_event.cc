@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_event.cc"
-	$Id: CHP_event.cc,v 1.1.2.1 2007/09/02 20:49:22 fang Exp $
+	$Id: CHP_event.cc,v 1.1.2.2 2007/09/04 15:36:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -110,7 +110,7 @@ local_event::dump_source(ostream& o, const expr_dump_context& dc) const {
 ostream&
 local_event::dump_struct(ostream& o, const expr_dump_context& edc) const {
 	switch (event_type) {
-	case EVENT_NULL: o << "null"; break;
+	case EVENT_NULL: o << (predecessors > 1 ? "join" : "null"); break;
 	case EVENT_ASSIGN: o << "assign"; break;
 	case EVENT_SEND: o << "send"; break;
 	case EVENT_RECEIVE: o << "receive"; break;

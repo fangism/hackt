@@ -63,6 +63,6 @@ footprint: {
     event[0]: assign: c := 5, #pred: 1, succ: 3 
     event[1]: null: null, #pred: 1, succ: 
     event[2]: assign: c := c-1, #pred: 1, succ: 3 
-    event[3]: select: , #pred: 1, succ: 2 1 
+    event[3]: select: *[ c>0 -> ... ], #pred: 1, succ: 2 1 
   }
 }

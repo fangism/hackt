@@ -16,7 +16,7 @@ event[1]: send: S0.S!(true), pid: 2, #pred: 1, succ: 1
 channel deps: 1 
 event[2]: send: A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3]), pid: 1, #pred: 1, succ: 8 
 channel deps: 5 
-event[3]: null: , pid: 1, #pred: 4, succ: 2 
+event[3]: join: , pid: 1, #pred: 4, succ: 2 
 event[4]: receive: A.A[0]?(A.a[0]), pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
 event[5]: receive: A.A[1]?(A.a[1]), pid: 1, #pred: 1, succ: 3 

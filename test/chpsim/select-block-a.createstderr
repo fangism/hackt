@@ -224,7 +224,7 @@ footprint: {
     event[10]: assign: b := false, #pred: 1, succ: 9 
     event[11]: assign: a := false, #pred: 1, succ: 10 
     event[12]: assign: e := true, #pred: 1, succ: 11 
-    event[13]: null: , #pred: 2, succ: 12 
+    event[13]: join: , #pred: 2, succ: 12 
     event[14]: assign: a := false, #pred: 1, succ: 13 
     event[15]: assign: b := false, #pred: 1, succ: 13 
     event[16]: fork: , #pred: 1, succ: 14 15 
@@ -236,7 +236,7 @@ footprint: {
     event[22]: assign: c := c, #pred: 1, succ: 20 
     event[23]: select: [ a -> ... [] b -> ... ], #pred: 1, succ: 21 22 
     event[24]: wait: [e], #pred: 1, succ: 23 
-    event[25]: null: , #pred: 2, succ: 1 
+    event[25]: join: , #pred: 2, succ: 1 
     event[26]: assign: c := false, #pred: 1, succ: 25 
     event[27]: assign: e := false, #pred: 1, succ: 25 
   }

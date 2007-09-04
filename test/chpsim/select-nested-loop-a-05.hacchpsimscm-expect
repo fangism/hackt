@@ -7,9 +7,9 @@
 >)
 "should be empty:"
 "concurrent joins:"
-(1 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 17 
+(1 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 17 
 >)
-(4 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 3 
+(4 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 3 
 >)
-(11 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 10 
+(11 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 10 
 >)

@@ -98,12 +98,12 @@ footprint: {
   chp events: {
     event[0]: assign: c := 0, #pred: 1, succ: 8 
     event[1]: null: null, #pred: 1, succ: 
-    event[2]: null: , #pred: 2, succ: 8 
+    event[2]: join: , #pred: 2, succ: 8 
     event[3]: assign: c := c+1, #pred: 1, succ: 2 
-    event[4]: select: , #pred: 1, succ: 5 2 
+    event[4]: select: *[ d<2 -> ... ], #pred: 1, succ: 5 2 
     event[5]: assign: d := d+1, #pred: 1, succ: 4 
     event[6]: assign: d := 0, #pred: 1, succ: 4 
     event[7]: fork: , #pred: 1, succ: 3 6 
-    event[8]: select: , #pred: 1, succ: 7 1 
+    event[8]: select: *[ c<3 -> ... ], #pred: 1, succ: 7 1 
   }
 }

@@ -75,13 +75,13 @@
 "all static events:"
 (0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 20 
 >)
-(1 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 17 
+(1 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 17 
 >)
 (2 . #<raw-chpsim-event-node: null: null, pid: 0, #pred: 1, succ: 17 
 >)
 (3 . #<raw-chpsim-event-node: null: null, pid: 0, #pred: 1, succ: 2 
 >)
-(4 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 3 
+(4 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 3 
 >)
 (5 . #<raw-chpsim-event-node: assign: a := false, pid: 0, #pred: 1, succ: 4 
 >)
@@ -95,7 +95,7 @@
 >)
 (10 . #<raw-chpsim-event-node: null: null, pid: 0, #pred: 1, succ: 2 
 >)
-(11 . #<raw-chpsim-event-node: null: , pid: 0, #pred: 2, succ: 10 
+(11 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 10 
 >)
 (12 . #<raw-chpsim-event-node: assign: a := true, pid: 0, #pred: 1, succ: 11 
 >)

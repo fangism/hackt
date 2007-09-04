@@ -5,6 +5,14 @@
 
 2007-09-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-07:
+	  Minor revision:
+	  Print do_while_loops as selection events (either loop or exit)
+		in pretty-printing output.  
+	  Print null events with multiple predecessors as 'join'.
+	  Much more readable now... test cases updated accordingly.
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-06:
 	  Object/lang/CHP_footprint.cc: impl. dump_struct_dot, more limited
 		than original version from sim/chpsim/State.cc.

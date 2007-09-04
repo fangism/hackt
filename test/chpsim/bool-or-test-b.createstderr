@@ -468,7 +468,7 @@ In namespace "", we have: {
           chp events: {
             event[0]: fork: , #pred: 1, succ: 3 4 5 
             event[1]: send: O!(a[0]||a[1]||a[2]), #pred: 1, succ: 0 
-            event[2]: null: , #pred: 3, succ: 1 
+            event[2]: join: , #pred: 3, succ: 1 
             event[3]: receive: A[0]?(a[0]), #pred: 1, succ: 2 
             event[4]: receive: A[1]?(a[1]), #pred: 1, succ: 2 
             event[5]: receive: A[2]?(a[2]), #pred: 1, succ: 2 

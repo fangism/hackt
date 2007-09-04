@@ -75,7 +75,7 @@ footprint: {
     event[0]: fork: , #pred: 1, succ: 4 5 
     event[1]: assign: b := true, #pred: 1, succ: 6 
     event[2]: select: [ a -> ... [] else -> ... ], #pred: 1, succ: 1 6 
-    event[3]: null: , #pred: 2, succ: 2 
+    event[3]: join: , #pred: 2, succ: 2 
     event[4]: assign: a := false, #pred: 1, succ: 3 
     event[5]: assign: b := false, #pred: 1, succ: 3 
     event[6]: null: null, #pred: 1, succ: 

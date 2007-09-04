@@ -4,7 +4,7 @@
 	20	12	0	c := 0
 	30	10	0	fclose("lib-fappend-test-a-out.txt")
 	40	9	0	
-	50	2	0	
+	50	2	0	*[ c<3 -> ... ]
 	60	8	0	fappend("lib-fappend-test-a-out.txt")
 	70	7	0	fprint("lib-fappend-test-a-out.txt","welcome to libc!
 ")
@@ -14,7 +14,7 @@
 ")
 	100	4	0	fclose("lib-fappend-test-a-out.txt")
 	110	3	0	c := c+1
-	120	2	0	
+	120	2	0	*[ c<3 -> ... ]
 	130	8	0	fappend("lib-fappend-test-a-out.txt")
 	140	7	0	fprint("lib-fappend-test-a-out.txt","welcome to libc!
 ")
@@ -24,7 +24,7 @@
 ")
 	170	4	0	fclose("lib-fappend-test-a-out.txt")
 	180	3	0	c := c+1
-	190	2	0	
+	190	2	0	*[ c<3 -> ... ]
 	200	8	0	fappend("lib-fappend-test-a-out.txt")
 	210	7	0	fprint("lib-fappend-test-a-out.txt","welcome to libc!
 ")
@@ -34,7 +34,7 @@
 ")
 	240	4	0	fclose("lib-fappend-test-a-out.txt")
 	250	3	0	c := c+1
-	260	2	0	
+	260	2	0	*[ c<3 -> ... ]
 welcome to libc!
 28 is a perfect number.
 To thine own self be true.

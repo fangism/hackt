@@ -16,7 +16,7 @@ event[1]: send: AS.S!(3), pid: 2, #pred: 1, succ: 11
 channel deps: 1 
 event[2]: send: X.G!(bool(my_gcd(X.a,X.b))||bool(my_gcd(X.c,X.d))), pid: 1, #pred: 1, succ: 8 
 channel deps: 5 
-event[3]: null: , pid: 1, #pred: 4, succ: 2 
+event[3]: join: , pid: 1, #pred: 4, succ: 2 
 event[4]: receive: X.A?(X.a), pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
 event[5]: receive: X.B?(X.b), pid: 1, #pred: 1, succ: 3 
