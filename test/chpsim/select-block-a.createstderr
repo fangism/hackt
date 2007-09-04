@@ -92,7 +92,8 @@ Persistent Object Manager text dump:
 	88	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	89	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	90	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	91	##ADDR##	footprnt	0	#HEAD#	#TAIL#	778
+	92	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -209,4 +210,34 @@ footprint: {
         ]
       }
     }
+  chp events: {
+    event[0]: fork: , #pred: 1, succ: 26 27 
+    event[1]: fork: , #pred: 1, succ: 17 24 
+    event[2]: null: null, #pred: 1, succ: 17 
+    event[3]: assign: b := true, #pred: 1, succ: 2 
+    event[4]: assign: a := false, #pred: 1, succ: 3 
+    event[5]: assign: a := true, #pred: 1, succ: 2 
+    event[6]: assign: b := false, #pred: 1, succ: 5 
+    event[7]: select: [ c -> ... [] else -> ... ], #pred: 1, succ: 4 6 
+    event[8]: assign: b := false, #pred: 1, succ: 7 
+    event[9]: assign: a := false, #pred: 1, succ: 8 
+    event[10]: assign: b := false, #pred: 1, succ: 9 
+    event[11]: assign: a := false, #pred: 1, succ: 10 
+    event[12]: assign: e := true, #pred: 1, succ: 11 
+    event[13]: null: , #pred: 2, succ: 12 
+    event[14]: assign: a := false, #pred: 1, succ: 13 
+    event[15]: assign: b := false, #pred: 1, succ: 13 
+    event[16]: fork: , #pred: 1, succ: 14 15 
+    event[17]: wait: [~e], #pred: 1, succ: 16 
+    event[18]: assign: e := false, #pred: 1, succ: 24 
+    event[19]: assign: c := ~c, #pred: 1, succ: 18 
+    event[20]: null: null, #pred: 1, succ: 19 
+    event[21]: assign: c := c, #pred: 1, succ: 20 
+    event[22]: assign: c := c, #pred: 1, succ: 20 
+    event[23]: select: [ a -> ... [] b -> ... ], #pred: 1, succ: 21 22 
+    event[24]: wait: [e], #pred: 1, succ: 23 
+    event[25]: null: , #pred: 2, succ: 1 
+    event[26]: assign: c := false, #pred: 1, succ: 25 
+    event[27]: assign: e := false, #pred: 1, succ: 25 
+  }
 }

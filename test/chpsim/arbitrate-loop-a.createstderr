@@ -57,7 +57,8 @@ Persistent Object Manager text dump:
 	53	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
+	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	604
+	57	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -141,4 +142,24 @@ footprint: {
         }
       ]
     }
+  chp events: {
+    event[0]: assign: a := true, #pred: 1, succ: 17 
+    event[1]: null: null, #pred: 1, succ: 17 
+    event[2]: null: , #pred: 2, succ: 1 
+    event[3]: assign: b := true, #pred: 1, succ: 2 
+    event[4]: assign: c := true, #pred: 1, succ: 2 
+    event[5]: fork: , #pred: 1, succ: 3 4 
+    event[6]: assign: a := false, #pred: 1, succ: 5 
+    event[7]: null: , #pred: 2, succ: 1 
+    event[8]: assign: c := true, #pred: 1, succ: 7 
+    event[9]: assign: a := true, #pred: 1, succ: 7 
+    event[10]: fork: , #pred: 1, succ: 8 9 
+    event[11]: assign: b := false, #pred: 1, succ: 10 
+    event[12]: null: , #pred: 2, succ: 1 
+    event[13]: assign: a := true, #pred: 1, succ: 12 
+    event[14]: assign: b := true, #pred: 1, succ: 12 
+    event[15]: fork: , #pred: 1, succ: 13 14 
+    event[16]: assign: c := false, #pred: 1, succ: 15 
+    event[17]: select: [ a -> ... : b -> ... : c -> ... ], #pred: 1, succ: 6 11 16 
+  }
 }
