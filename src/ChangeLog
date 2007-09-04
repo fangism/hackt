@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-06:
+	  Object/lang/CHP_footprint.cc: impl. dump_struct_dot, more limited
+		than original version from sim/chpsim/State.cc.
+	  process_type_reference: lookup_footprint convenience method.
+	  main/chpsim.cc: support for -t and -T to specify a process-type
+		to operate on instead of the top-level instances.
+	  Test suite: updated remaining chpsim tests with updated
+		definition footprint dumps of chp event graphs.  
+
+
 2007-09-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-05:

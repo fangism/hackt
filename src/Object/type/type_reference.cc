@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.28 2007/07/31 23:23:27 fang Exp $
+ 	$Id: type_reference.cc,v 1.28.8.1 2007/09/04 04:34:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -2008,6 +2008,17 @@ process_type_reference::unroll_port_instances(
 		// or can the actuals always be resolved one scope at a time?
 		port_formals.unroll_ports(cc, sub.get_array());
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre this type must only depend on constants (canonical).  
+ */
+const footprint*
+process_type_reference::lookup_footprint(void) const {
+	const canonical_process_type cpt(make_canonical_type());
+	return &cpt.get_base_def()->get_footprint(
+		cpt.get_raw_template_params());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

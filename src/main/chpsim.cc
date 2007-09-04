@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.12 2007/08/15 22:31:37 fang Exp $
+	$Id: chpsim.cc,v 1.12.4.1 2007/09/04 04:34:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,6 +21,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/type/process_type_reference.h"
+#include "Object/def/footprint.h"
+#include "Object/lang/CHP_footprint.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/expr/dlfunction.h"	// for ack_loaded_functions
 #include "sim/chpsim/State.h"
 #include "sim/chpsim/Command.h"
@@ -28,6 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/command_common.h"
 #include "util/getopt_mapped.h"		// for getopt()
 #include "common/ltdl-wrap.h"
+#include "common/TODO.h"
 #include "install_paths.h"
 
 namespace HAC {
@@ -36,6 +41,9 @@ using SIM::CHPSIM::State;
 using SIM::CHPSIM::CommandRegistry;
 using SIM::CHPSIM::graph_options;
 using entity::canonical_fundamental_chan_type_base;
+using entity::process_type_reference;
+using entity::footprint;
+using entity::CHP::local_event_footprint;
 
 //=============================================================================
 template class options_modifier_policy<chpsim_options>;
@@ -104,27 +112,74 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 	if (!the_module)
 		return 1;
 //	the_module->dump(cerr);
+	static const char alloc_errstr[] =  "ERROR in allocating.  Aborting.";
+
+	count_ptr<module> top_module;
+	// when we want to print information for only a specific type
+	const footprint* fp = NULL;
+	if (opt.use_type) {
+		// parse complete type
+		const count_ptr<const process_type_reference>
+			pt(parse_and_create_complete_process_type(
+			opt.complete_type_name.c_str(), *the_module));
+		if (!pt) {
+			// already have error message
+			return 1;
+		}
+		// resolve footprint
+		fp = pt->lookup_footprint();
+		NEVER_NULL(fp);
+		// create fake top-level module from them (import)
+		top_module = count_ptr<module>(new module("<auxiliary>"));
+		NEVER_NULL(top_module);
+		if (!top_module->allocate_unique_process_type(*pt).good) {
+			cerr << alloc_errstr << endl;
+			return 1;
+		}
+		// if (opt.instantiate_type_recursively)
+	} else {
+		top_module = the_module;
+	}
+
 	// automatically compile as far as needed:
-	if (!the_module->is_allocated()) {
-		if (!the_module->allocate_unique().good) {
-			cerr << "ERROR in allocating.  Aborting." << endl;
+	if (!top_module->is_allocated()) {
+		if (!top_module->allocate_unique().good) {
+			cerr << alloc_errstr << endl;
 			return 1;
 		}
 	}
 try {
 	// first, cache all built-in channel types' summaries
 	canonical_fundamental_chan_type_base::refresh_all_footprints();
-	State sim_state(*the_module);		// may throw
+	State sim_state(*top_module);		// may throw
 	// install interrupt signal handler
 	const State::signal_handler int_handler(&sim_state);
-	if (opt.dump_graph_alloc)
+	if (opt.dump_graph_alloc) {
+	if (opt.use_type && !opt.instantiate_type_recursively) {
+		NEVER_NULL(fp);
+		const char* const null = NULL;
+		fp->get_chp_event_footprint().dump(cout, 
+			entity::expr_dump_context(null)) << endl;;
+	} else {
 		sim_state.dump_struct(cout) << endl;
+	}
+	}
 #if 0
 	if (opt.check_structure)
 		sim_state.check_structure();
 #endif
-	if (opt.dump_dot_struct)
+	if (opt.dump_dot_struct) {
+	if (opt.use_type && !opt.instantiate_type_recursively) {
+		NEVER_NULL(fp);
+		const local_event_footprint::dot_graph_wrapper G(cout);
+		fp->get_chp_event_footprint().dump_struct_dot(
+			cout, opt.graph_opts) << endl;
+		// this mode doesn't support channel edges (no deps analysis)
+		// process clustering is also not applicable (is one process)
+	} else {
 		sim_state.dump_struct_dot(cout, opt.graph_opts) << endl;
+	}
+	}
 	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
@@ -286,6 +341,42 @@ For more on building and loading shared-libraries, @xref{Extending simulation}.
 ***/
 	case 'L':
 		lt_dladdsearchdir(optarg);
+		break;
+/***
+@texinfo options/option-t.texi
+@defopt -t type
+Instead of expanding the whole top-level instances, only operator
+on the given type @var{type}, i.e. instantiate one instance
+of @var{type} as the top-level.  
+This variation, however does @strong{not} expand subinstances recursively, 
+like the @option{-T} option.  
+This is particularly useful for examining the CHP event structure of
+a particular definition.  
+@end defopt
+@end texinfo
+***/
+	case 't':
+		o.use_type = true;
+		o.instantiate_type_recursively = false;
+		o.complete_type_name = optarg;
+		break;
+/***
+@texinfo options/option-T-upper.texi
+@defopt -T type
+Instantiate one instance of type @var{type} as the top-level, 
+ignoring all previous top-level instances in the object file.  
+This variation @emph{does} recursively instantiate substructures.  
+The ports of the instance of @var{type} (if any) will not be connected
+to any other processes.  
+This is particularly useful for selecting test structures
+out of a collection of test structure definitions.  
+@end defopt
+@end texinfo
+***/
+	case 'T':
+		o.use_type = true;
+		o.instantiate_type_recursively = true;
+		o.complete_type_name = optarg;
 		break;
 	case ':':
 		cerr << "Expected but missing option-argument." << endl;

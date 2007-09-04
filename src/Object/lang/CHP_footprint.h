@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_footprint.h"
 	Class definitions for unrolled CHP action instances.  
-	$Id: CHP_footprint.h,v 1.3.30.2 2007/09/02 20:49:28 fang Exp $
+	$Id: CHP_footprint.h,v 1.3.30.3 2007/09/04 04:34:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_FOOTPRINT_H__
@@ -31,8 +31,19 @@ using std::istream;
  */
 class local_event_footprint : public std::vector<local_event> {
 	// parent process/channel footprint? need back-link?
-	typedef	std::vector<local_event>	event_pool_type;
+	typedef	local_event			event_type;
+	typedef	std::vector<event_type>	event_pool_type;
+	typedef	event_type::event_index_type	event_index_type;
 	event_pool_type				event_pool;
+public:
+	class dot_graph_wrapper {
+		ostream&			ostr;
+	public:
+		explicit
+		dot_graph_wrapper(ostream&, const char* n = NULL);
+
+		~dot_graph_wrapper();
+	};	// end struct dot_graph_wrapper
 public:
 #if 0
 	local_event_footprint();
@@ -42,6 +53,9 @@ public:
 #endif
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
+	dump_struct_dot(ostream&, const SIM::CHPSIM::graph_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

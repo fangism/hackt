@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim_options.h"
 	Main module for new CHPSIM.
-	$Id: chpsim_options.h,v 1.1 2007/03/18 00:25:02 fang Exp $
+	$Id: chpsim_options.h,v 1.1.22.1 2007/09/04 04:34:14 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_OPTIONS_H__
@@ -9,7 +9,6 @@
 
 #include <string>
 #include <list>
-// #include "main/chpsim.h"
 #include "sim/chpsim/graph_options.h"
 
 namespace HAC {
@@ -38,11 +37,19 @@ public:
 	source_paths_type		source_paths;
 	/// fine-tuning graph options
 	SIM::CHPSIM::graph_options	graph_opts;
+	/// whether or not operation on type is requested
+	bool				use_type;
+	/// whether or not instantiated type should be expanded recursively
+	bool				instantiate_type_recursively;
+	/// name of type to instantiate
+	std::string			complete_type_name;
 
 	chpsim_options() : help_only(false), interactive(true), 
 		run(true), dump_graph_alloc(false), check_structure(true),
 		dump_dot_struct(false), dump_checkpoint(false), 
-		source_paths() { }
+		source_paths(), 
+		use_type(false), instantiate_type_recursively(false),
+		complete_type_name() { }
 };	// end class chpsim_options
 
 //=============================================================================
