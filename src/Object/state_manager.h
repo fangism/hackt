@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.11 2007/01/21 05:58:36 fang Exp $
+	$Id: state_manager.h,v 1.11.30.1 2007/09/05 04:47:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -22,6 +22,7 @@ namespace entity {
 class footprint;
 class state_manager;
 class entry_collection;	// defined in "Object/entry_collection.h"
+struct expr_dump_context;
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -167,6 +168,9 @@ public:
 	void
 	collect_subentries(entry_collection&, const size_t) const;
 
+	// TODO: templatize to other metatypes (with structure)
+	expr_dump_context
+	make_process_dump_context(const footprint&, const size_t) const;
 private:
 	explicit
 	state_manager(const this_type&);

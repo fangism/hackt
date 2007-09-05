@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.17 2007/01/21 05:58:36 fang Exp $
+	$Id: state_manager.cc,v 1.17.30.1 2007/09/05 04:47:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <functional>
+#include <sstream>
 #include "Object/state_manager.tcc"
 #include "Object/global_entry.tcc"
 #if BUILTIN_CHANNEL_FOOTPRINTS
@@ -23,6 +24,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/inst/channel_instance_collection.h"
 #include "Object/entry_collection.h"
+#include "Object/expr/expr_dump_context.h"
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
@@ -223,6 +225,25 @@ if (cf.include_prs) {
 	return good_bool(true);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create an expr_dump_context suitable containing the canonical
+	name of the process indexed pid, useful for prefixing subinstances
+	of a particular process.
+	\param topfp the top-level footprint.
+ */
+expr_dump_context
+state_manager::make_process_dump_context(const footprint& topfp, 
+		const size_t pid) const {
+	std::ostringstream canonical_name;
+	if (pid) {
+		get_pool<process_tag>()[pid]
+			.dump_canonical_name(canonical_name,
+				topfp, *this);
+	}
+	return expr_dump_context(pid ? canonical_name.str().c_str() : NULL);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

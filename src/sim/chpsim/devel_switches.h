@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8.14.2 2007/09/02 20:49:30 fang Exp $
+	$Id: devel_switches.h,v 1.8.14.3 2007/09/05 04:48:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -53,6 +53,19 @@
 	Q: what do we do about tracing with random timing?
 	At least issue a warning that analysis will be nonsense?
  */
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to allocate events using the local event pools
+	established by process footprints.  
+	Rationale: speeds up allocation, reduces memory, and enables
+		reverse-lookup of event to CHP language source.  
+	Prereq: LOCAL_CHP_EVENT_FOOTPRINT in "Object/devel_switches.h"
+	Goal: 1
+	Status: just begun
+	Priority: TOP -- reverse-lookup required for thesis
+ */
+#define	CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

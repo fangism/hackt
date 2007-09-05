@@ -5,6 +5,13 @@
 
 2007-09-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-08:
+	  Object/state_manger: make_process_dump_context function reuse.
+	  sim/chpsim/{Event,State}: started sketching out 
+		CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS (new switch, disabled)
+		use make_process_dump_context, delete dupe code
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-07:
 	  Minor revision:
 	  Print do_while_loops as selection events (either loop or exit)

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.43.4.1 2007/09/02 20:49:11 fang Exp $
+	$Id: devel_switches.h,v 1.43.4.2 2007/09/05 04:47:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -194,7 +194,7 @@
 	Also makes events per process contiguous in allocation, making
 	reverse-mapping much easier.  
 	Goal: 1
-	Status: begun (main-00-81-68-chpsim-09 branch)
+	Status: done, tested (main-00-81-68-chpsim-09 branch)
 	Priority: high
 	Rationale: to enable reverse-event lookups, 
 		also helps with memory efficiency

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10.8.1 2007/08/31 22:59:29 fang Exp $
+	$Id: Event.h,v 1.10.8.2 2007/09/05 04:48:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -10,22 +10,25 @@
 #include "util/size_t.h"
 #include "util/attributes.h"
 #include "util/string_fwd.h"
+#include "sim/chpsim/devel_switches.h"
 #include <iosfwd>
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #include <valarray>
-#include <vector>
+#endif
 #include "sim/time.h"
 #include "sim/chpsim/Dependence.h"
-#include "sim/chpsim/devel_switches.h"
 #include "util/macros.h"
 
 namespace HAC {
 namespace entity {
 #if CHPSIM_DUMP_PARENT_CONTEXT
-class state_manager;
-class footprint;
+struct expr_dump_context;
 #endif
 namespace CHP {
 	class action;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	class local_event;
+#endif
 }
 }
 namespace SIM {
@@ -35,12 +38,14 @@ class nonmeta_context;
 class graph_options;
 using std::ostream;
 using std::string;
-using std::vector;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 using std::valarray;
+#endif
 using entity::CHP::action;
 using entity::nonmeta_state_manager;
 
 //=============================================================================
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Event type numeration codes.
 	Can also introduce 'special' types of events like I/O.  
@@ -62,7 +67,9 @@ enum {
 	EVENT_CONDITION_WAIT = 7,	///< predicate wait
 	EVENT_FUNCTION_CALL = 8		///< external function call
 };
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Enumerated results for recheck functions.  
  */
@@ -114,8 +121,8 @@ enum recheck_result {
 
 //=============================================================================
 /**
-	This represents a node in the event graph, which can be 
-	thought of as a marked graph.  
+	This represents a node in the global, whole-program event graph, 
+	which can be thought of as a marked graph.  
 	We 'allocate' graph nodes with back-references to their
 	corresponding events in the CHP footprint.  
 	The 'edges' between graph nodes form predecessor-successor relations.
@@ -124,15 +131,26 @@ enum recheck_result {
  */
 class EventNode {
 	typedef	EventNode		this_type;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	typedef	entity::local_event	local_event_type;
+#endif
 public:
 	/**
 		Hard-coded time type for now.
 	 */
 	typedef	real_time		time_type;
 	typedef	size_t			event_index_type;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	typedef	valarray<event_index_type>	successor_list_type;
+#endif
 	static const real_time		default_delay;
 	static const char		node_prefix[];
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	/**
+		Pointer to instance-invariant event information.
+	 */
+	const local_event_type*		__local_event;
+#else
 private:
 	/**
 		the (atomic) event to occur corresponding to this node
@@ -149,25 +167,14 @@ public:
 		deterministic, nondeterministic) is depending on the type.  
 	 */
 	successor_list_type		successor_events;
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 private:
-#if 1
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		enumeration for this event, 
 		semi-redundant with the action pointer.  
 	 */
 	unsigned short			event_type;
-#endif
-#if 1
-	/**
-		General purpose flags (space-filler).  
-	 */
-	unsigned short			flags;
-#endif
-	/**
-		footprint, footprint frame / global_entry<process>
-		or just 0-based index to process entries.  (0 => top)
-	 */
-	size_t				process_index;
 	/**
 		The number of concurrent event predecessors.
 		Wait for this number of events to precede before executing, 
@@ -178,6 +185,12 @@ private:
 		Should be const, incidentally...
 	 */
 	unsigned short			predecessors;
+	/**
+		footprint, footprint frame / global_entry<process>
+		or just 0-based index to process entries.  (0 => top)
+	 */
+	size_t				process_index;
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		barrier count: from number of predecessors (join operation)
 		Event fires when countdown reaches zero, post-decrement.  
@@ -190,6 +203,10 @@ private:
 		The countdown is reset immediately upon event execution.  
 	 */
 	unsigned short			countdown;
+	/**
+		General purpose flags (space-filler).  
+	 */
+	unsigned short			flags;
 	/**
 		The constant value of delay for this event, 
 		set by the event constructor.  
@@ -223,17 +240,23 @@ private:
 public:
 	EventNode();
 
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	EventNode(const local_event_type*, const time_type);
+#else
 	EventNode(const action*, const unsigned short, const size_t pid);
 
 	EventNode(const action*, const unsigned short, const size_t pid, 
 		const time_type);
+#endif
 
 	~EventNode();
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// need to override because valarray doesn't implement 
 	// operator = using default container behavior
 	this_type&
 	operator = (const this_type&);
+#endif
 
 	void
 	orphan(void);
@@ -246,10 +269,15 @@ public:
 			be combined in event graph optimization.  
 	 */
 	bool
-	is_trivial(void) const {
+	is_trivial(void) const
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	;
+#else
+	{
 		return (event_type == EVENT_NULL) ||
 			(event_type == EVENT_CONCURRENT_FORK);
 	}
+#endif
 
 	/**
 		Condition-waits are classified as having "trivial-delay", 
@@ -257,10 +285,16 @@ public:
 		They shouldn't incur additional delay unless set otherwise.
 	 */
 	bool
-	has_trivial_delay(void) const {
+	has_trivial_delay(void) const
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	;
+#else
+	{
 		return is_trivial() || (event_type == EVENT_CONDITION_WAIT);
 	}
+#endif
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		NOTE: need not be trivial, just copiable and 
 		successor-substitutable.  
@@ -270,28 +304,48 @@ public:
 	is_movable(void) const {
 		return (successor_events.size() == 1);
 	}
+#endif
 
 	/**
 		this 'leaks' out the pointer, it is not meant to be misused, 
 		only short-lived temporary references.  
 	 */
 	const action*
-	get_chp_action(void) const { return action_ptr; }
+	get_chp_action(void) const
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		;
+#else
+		{ return action_ptr; }
+#endif
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t
 	get_process_index(void) const { return process_index; }
 
 	void
 	set_event_type(const unsigned short t) { event_type = t; }
+#endif
 
 	unsigned short
-	get_event_type(void) const { return event_type; }
+	get_event_type(void) const
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		;
+#else
+		{ return event_type; }
+#endif
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	void
 	set_predecessors(const event_index_type n) { predecessors = n; }
+#endif
 
 	unsigned short
-	get_predecessors(void) const { return predecessors; }
+	get_predecessors(void) const
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		;
+#else
+		{ return predecessors; }
+#endif
 
 	void
 	import_block_dependencies(const DependenceSetCollector& d) {
@@ -318,7 +372,7 @@ public:
 	reset(void);
 
 	void
-	reset_countdown(void) { countdown = predecessors; }
+	reset_countdown(void) { countdown = get_predecessors(); }
 
 	void
 	execute(nonmeta_context&);
@@ -347,13 +401,13 @@ public:
 
 #if CHPSIM_DUMP_PARENT_CONTEXT
 	ostream&
-	dump_brief(ostream&, const entity::state_manager&,
-		const entity::footprint&) const;
+	dump_brief(ostream&, 
+		const entity::expr_dump_context&) const;
 
 	// overloaded, I know...
 	ostream&
-	dump_source(ostream&, const entity::state_manager&,
-		const entity::footprint&) const;
+	dump_source(ostream&, 
+		const entity::expr_dump_context&) const;
 #endif
 
 	ostream&
@@ -362,8 +416,7 @@ public:
 	ostream&
 	dump_struct(ostream&
 #if CHPSIM_DUMP_PARENT_CONTEXT
-		, const entity::state_manager&
-		, const entity::footprint&
+		, const entity::expr_dump_context&
 #endif
 		) const;
 
@@ -371,8 +424,7 @@ public:
 	dump_dot_node(ostream&, const event_index_type, 
 		const graph_options&
 #if CHPSIM_DUMP_PARENT_CONTEXT
-		, const entity::state_manager&
-		, const entity::footprint&
+		, const entity::expr_dump_context&
 #endif
 		) const;
 

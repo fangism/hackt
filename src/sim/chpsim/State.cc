@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12.12.2 2007/09/03 03:46:45 fang Exp $
+	$Id: State.cc,v 1.12.12.3 2007/09/05 04:48:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -30,6 +30,7 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/expr/expr_dump_context.h"
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -128,6 +129,7 @@ using entity::META_TYPE_ENUM;
 using entity::META_TYPE_CHANNEL;
 using entity::META_TYPE_PROCESS;
 using entity::canonical_fundamental_chan_type_base;
+using entity::expr_dump_context;
 using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
@@ -1122,6 +1124,18 @@ if (trace_manager) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_DUMP_PARENT_CONTEXT
+/**
+	Create the parent name context from the process-index.
+ */
+entity::expr_dump_context
+State::make_process_dump_context(const node_index_type pid) const {
+	return mod.get_state_manager().make_process_dump_context(
+		mod.get_footprint(), pid);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints event in brief form for queue, with time prefixed.  
  */
@@ -1133,7 +1147,9 @@ State::dump_event(ostream& o, const event_index_type ei,
 	o << ei << '\t';
 #if CHPSIM_DUMP_PARENT_CONTEXT
 	o << ev.get_process_index() << '\t';
-	return ev.dump_brief(o, mod.get_state_manager(), mod.get_footprint());
+//	return ev.dump_brief(o, mod.get_state_manager(), mod.get_footprint());
+	return ev.dump_brief(o,
+		make_process_dump_context(ev.get_process_index()));
 #else
 	return ev.dump_brief(o);
 #endif
@@ -1149,7 +1165,9 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	o << "event[" << ei << "]: ";
 	const event_type& e(event_pool[ei]);
 #if CHPSIM_DUMP_PARENT_CONTEXT
-	e.dump_struct(o, mod.get_state_manager(), mod.get_footprint());
+//	e.dump_struct(o, mod.get_state_manager(), mod.get_footprint());
+	e.dump_struct(o,
+		make_process_dump_context(e.get_process_index()));
 #else
 	e.dump_struct(o);
 #endif
@@ -1285,7 +1303,10 @@ State::dump_struct(ostream& o) const {
 	for ( ; i<es; ++i) {
 		o << "event[" << i << "]: ";
 #if CHPSIM_DUMP_PARENT_CONTEXT
-		event_pool[i].dump_struct(o, sm, topfp);	// << endl;
+		const event_type& e(event_pool[i]);
+//		e.dump_struct(o, sm, topfp);	// << endl;
+		e.dump_struct(o,
+			make_process_dump_context(e.get_process_index()));
 #else
 		event_pool[i].dump_struct(o);	// << endl;
 #endif
@@ -1320,7 +1341,10 @@ if (g.show_instances) {
 	for ( ; i<es; ++i) {
 		const event_type& e(event_pool[i]);
 #if CHPSIM_DUMP_PARENT_CONTEXT
-		e.dump_dot_node(o, i, g, sm, topfp) << endl;
+//		e.dump_dot_node(o, i, g, sm, topfp) << endl;
+		e.dump_dot_node(o, i, g,
+			make_process_dump_context(
+				e.get_process_index())) << endl;
 #else
 		e.dump_dot_node(o, i, g) << endl;
 #endif

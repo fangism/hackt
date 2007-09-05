@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.4 2007/06/12 05:12:54 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.4.14.1 2007/09/05 04:47:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,7 @@
 #include "sim/chpsim/Dependence.h"
 #include "Object/lang/CHP.h"	// for dynamic_cast on actions
 #include "Object/traits/classification_tags_fwd.h"
+#include "Object/expr/expr_dump_context.h"
 #include "guile/scm_chpsim_event_node.h"
 #if CHPSIM_DUMP_PARENT_CONTEXT
 #include "guile/libhackt-wrap.h"
@@ -99,7 +100,10 @@ print_raw_chpsim_event_node_ptr(SCM obj, SCM port, scm_print_state* p) {
 #if CHPSIM_DUMP_PARENT_CONTEXT
 	NEVER_NULL(obj_module);
 	const module& m(*obj_module);
-	ptr->dump_struct(oss, m.get_state_manager(), m.get_footprint());
+//	ptr->dump_struct(oss, m.get_state_manager(), m.get_footprint());
+	ptr->dump_struct(oss, 
+		m.get_state_manager().make_process_dump_context(
+			m.get_footprint(), ptr->get_process_index()));
 	// too verbose?
 #else
 	ptr->dump_struct(oss);			// too verbose?

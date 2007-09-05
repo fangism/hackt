@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7.16.1 2007/08/31 22:59:34 fang Exp $
+	$Id: State.h,v 1.7.16.2 2007/09/05 04:48:06 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -22,6 +22,9 @@
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
+namespace entity {
+struct expr_dump_context;
+}
 namespace SIM {
 namespace CHPSIM {
 using std::vector;
@@ -50,12 +53,18 @@ class State : public state_base {
 friend class StateConstructor;
 friend class nonmeta_context;
 	typedef	State				this_type;
+	/**
+		Global event type, with links back to local event info.
+	 */
 	typedef	EventNode			event_type;
 public:
 	/**
 		Numeric type for time, currently hard-coded to real (double).
 	 */
 	typedef	event_type::time_type		time_type;
+	/**
+		For managing SIGINT interruption.
+	 */
 	typedef	signal_handler<this_type>	signal_handler;
 	/**
 		Basic tuple for event scheduling.  
@@ -527,6 +536,11 @@ public:
 		INVARIANT(i);
 		trace_flush_interval = i;
 	}
+
+#if CHPSIM_DUMP_PARENT_CONTEXT
+	entity::expr_dump_context
+	make_process_dump_context(const node_index_type) const;
+#endif
 
 	ostream&
 	dump_struct(ostream&) const;
