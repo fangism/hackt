@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.5.12.1 2007/08/31 22:59:36 fang Exp $
+	$Id: nonmeta_context.cc,v 1.5.12.2 2007/09/06 06:17:59 fang Exp $
  */
 
 #include <vector>
@@ -19,6 +19,7 @@ using entity::process_tag;
 //=============================================================================
 // class nonmeta_context method definitions
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	If process_index is 0 duplicate the top-level footprint as the 
 	local footprint, else use the global entry's local footprint pointer.  
@@ -34,12 +35,16 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 				: NULL),
 			r.instances),
 		event(&e), 
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		global_event_offset(0), 	// any invalid value
+#endif
 		first_checks(), 
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
 		{
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -51,6 +56,9 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		State& r) :
 		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		global_event_offset(0), 	// any invalid value
+#endif
 		first_checks(), 
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
@@ -63,9 +71,18 @@ nonmeta_context::~nonmeta_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-nonmeta_context::set_event(event_type& e) {
+nonmeta_context::set_event(event_type& e
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, const size_t pid
+		, const event_index_type offset
+#endif
+		) {
 	event = &e;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	global_event_offset = offset;
+#else
 	const size_t pid = e.get_process_index();
+#endif
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
 }
 
@@ -87,6 +104,16 @@ size_t
 nonmeta_context::get_event_index(void) const {
 	INVARIANT(event);
 	return std::distance(&event_pool[0], event);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+nonmeta_context::insert_first_checks(const event_index_type ei) {
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	first_checks.insert(ei +global_event_offset);
+#else
+	first_checks.insert(ei);
+#endif
 }
 
 //=============================================================================

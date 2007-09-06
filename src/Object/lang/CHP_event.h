@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event.h"
 	Various classes of chpsim events.  
-	$Id: CHP_event.h,v 1.1.2.3 2007/09/06 01:12:13 fang Exp $
+	$Id: CHP_event.h,v 1.1.2.4 2007/09/06 06:17:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_H__
@@ -142,6 +142,11 @@ public:
 	mark_as_entry(void) {
 		if (!predecessors)
 			predecessors = 1;
+	}
+
+	bool
+	is_null(void) const {
+		return (event_type == EVENT_NULL);
 	}
 
 	/**

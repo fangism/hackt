@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7.16.3 2007/09/06 01:12:20 fang Exp $
+	$Id: State.h,v 1.7.16.4 2007/09/06 06:17:56 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -248,7 +248,7 @@ private:
 		logical place.  Set event_pool[0] to point to
 		this.  
 	 */
-	local_event				global_root_event;
+	entity::CHP::local_event		global_root_event;
 	/// translate global-event id to process id
 	global_event_to_pid_map_type		global_event_to_pid;
 	/// lookup global event offset from global process id
@@ -417,6 +417,11 @@ public:
 
 	size_t
 	event_pool_size(void) const { return event_pool.size(); }
+
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	size_t
+	get_process_id(const event_index_type) const;
+#endif
 
 private:
 	event_placeholder_type
@@ -589,10 +594,8 @@ public:
 		trace_flush_interval = i;
 	}
 
-#if CHPSIM_DUMP_PARENT_CONTEXT
 	entity::expr_dump_context
 	make_process_dump_context(const node_index_type) const;
-#endif
 
 	ostream&
 	dump_struct(ostream&) const;

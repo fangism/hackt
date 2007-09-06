@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.30 2007/06/12 05:12:52 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.30.14.1 2007/09/06 06:17:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -20,7 +20,6 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
-#include "sim/chpsim/devel_switches.h"	// for CHPSIM_DUMP_PARENT_PROCESS
 #include "common/TODO.h"
 #include "common/ICE.h"
 #include "util/what.h"
@@ -122,14 +121,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 	if (c.include_type_info)
 		this->what(o) << " ";
 	NEVER_NULL(this->inst_collection_ref);
-#if CHPSIM_DUMP_PARENT_CONTEXT
 	if (c.parent_instance_name) {
 		o << c.parent_instance_name << ".";
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
-	} else
-#endif
-	if (c.enclosing_scope) {
+	} else if (c.enclosing_scope) {
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
 	} else {

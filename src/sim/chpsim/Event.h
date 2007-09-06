@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10.8.3 2007/09/06 01:12:19 fang Exp $
+	$Id: Event.h,v 1.10.8.4 2007/09/06 06:17:52 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -21,9 +21,7 @@
 
 namespace HAC {
 namespace entity {
-#if CHPSIM_DUMP_PARENT_CONTEXT
 struct expr_dump_context;
-#endif
 namespace CHP {
 	class action;
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
@@ -132,7 +130,7 @@ enum recheck_result {
 class EventNode {
 	typedef	EventNode		this_type;
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	typedef	entity::local_event	local_event_type;
+	typedef	entity::CHP::local_event	local_event_type;
 #endif
 public:
 	/**
@@ -393,13 +391,14 @@ public:
 		return block_deps.is_subscribed(s, ei);
 	}
 
+#if 0
 	ostream&
 	dump_brief(ostream&) const;
 
 	ostream&
 	dump_source(ostream&) const;
+#endif
 
-#if CHPSIM_DUMP_PARENT_CONTEXT
 	ostream&
 	dump_brief(ostream&, 
 		const entity::expr_dump_context&) const;
@@ -408,25 +407,16 @@ public:
 	ostream&
 	dump_source(ostream&, 
 		const entity::expr_dump_context&) const;
-#endif
 
 	ostream&
 	dump_pending(ostream&) const;
 
 	ostream&
-	dump_struct(ostream&
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		, const entity::expr_dump_context&
-#endif
-		) const;
+	dump_struct(ostream&, const entity::expr_dump_context&) const;
 
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 
-		const graph_options&
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		, const entity::expr_dump_context&
-#endif
-		) const;
+		const graph_options&, const entity::expr_dump_context&) const;
 
 	ostream&
 	dump_successor_edges_default(ostream&, const event_index_type) const;

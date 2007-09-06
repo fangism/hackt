@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.26 2007/08/28 04:54:14 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.26.2.1 2007/09/06 06:17:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -46,7 +46,6 @@
 #include "Object/nonmeta_variable.h"
 #include "Object/nonmeta_state.h"
 #include "Object/nonmeta_channel_manipulator.h"
-#include "sim/chpsim/devel_switches.h"	// for CHPSIM_DUMP_PARENT_PROCESS
 
 #include "common/ICE.h"
 
@@ -530,14 +529,11 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
-#if CHPSIM_DUMP_PARENT_CONTEXT
 	if (c.parent_instance_name) {
 		o << c.parent_instance_name << ".";
 		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
-	} else
-#endif
-	if (c.enclosing_scope) {
+	} else if (c.enclosing_scope) {
 		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
 	} else {

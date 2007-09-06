@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.9.2.1 2007/08/31 22:59:30 fang Exp $
+	$Id: EventExecutor.cc,v 1.9.2.2 2007/09/06 06:17:53 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -179,8 +179,7 @@ recheck_all_successor_events(nonmeta_context& c) {
 	STACKTRACE_CHPSIM_VERBOSE;
 	const event_type::successor_list_type&
 		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), 
-		set_inserter(c.first_checks));
+	copy(std::begin(succ), std::end(succ), set_inserter(c));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -343,7 +342,7 @@ EventExecutor::visit(const deterministic_selection& ds) {
 	INVARIANT(G.ready.size() == 1);
 	EventNode& t(context.get_event());	// this event
 	const size_t ei = t.successor_events[G.ready.front()];
-	context.first_checks.insert(ei);
+	context.insert_first_checks(ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -443,7 +442,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	}
 	case 1: {
 		const size_t ei = t.successor_events[G.ready.front()];
-		context.first_checks.insert(ei);
+		context.insert_first_checks(ei);
 		break;
 	}
 	default: {
@@ -451,7 +450,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		static rand48<unsigned long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = t.successor_events[G.ready[r%m]];
-		context.first_checks.insert(ei);
+		context.insert_first_checks(ei);
 	}
 	}	// end switch
 }	// end visit(const nondeterministic_selection&)
@@ -867,7 +866,7 @@ EventExecutor::visit(const do_while_loop& dw) {
 		THROW_EXIT;
 	}	// end switch
 	const size_t ei = context.get_event().successor_events[si];
-	context.first_checks.insert(ei);
+	context.insert_first_checks(ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

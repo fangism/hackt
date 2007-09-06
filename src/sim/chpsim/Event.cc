@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.4 2007/09/06 01:12:18 fang Exp $
+	$Id: Event.cc,v 1.10.8.5 2007/09/06 06:17:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,7 +16,9 @@
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/graph_options.h"
 #include "sim/chpsim/EventExecutor.h"
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#include "Object/lang/CHP_event.h"
+#else
 #include "util/STL/valarray_iterator.h"
 #endif
 #include "util/stacktrace.h"
@@ -27,8 +29,10 @@ namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 using std::begin;
 using std::end;
+#endif
 using std::copy;
 using std::back_inserter;
 using std::for_each;
@@ -303,15 +307,21 @@ EventNode::execute(nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();
-	if ((event_type != EVENT_NULL) && action_ptr) {
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const action* action_ptr = get_chp_action();
+#endif
+	if (
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		__local_event->is_null()
+#else
+		(event_type != EVENT_NULL)
+#endif
+		&& action_ptr) {
 		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type
 		// execute is responsible for scheduling successors for recheck
 		// and decrement the predecessor-arrival countdown
 		EventExecutor x(c);
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		const action* action_ptr = get_chp_action();
-#endif
 		action_ptr->accept(x);
 	} else {	// event is NULL or action_ptr is NULL
 		STACKTRACE_INDENT_PRINT("no action" << endl);
@@ -320,9 +330,15 @@ EventNode::execute(nonmeta_context& c) {
 		// see also "Object/lang/CHP.cc":recheck_all_successor_events()
 		// whatever is done here should be consistent with that!
 		// remember: decrement successors' predecessor-arrival countdown
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		const local_event_type::successor_list_type&
+			successor_events(__local_event->successor_events);
+		copy(successor_events.begin(), successor_events.end(), 
+			set_inserter(c));
+#else
 		copy(begin(successor_events), end(successor_events), 
-			set_inserter(c.first_checks)
-		);
+			set_inserter(c));
+#endif
 	}
 }	// end method execute
 
@@ -334,6 +350,7 @@ EventNode::subscribe_deps(const nonmeta_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	For printing the event queue.  
 	TODO: a line/position in source might be nice, 
@@ -355,9 +372,9 @@ EventNode::dump_brief(ostream& o) const {
 	return o;
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DUMP_PARENT_CONTEXT
 ostream&
 EventNode::dump_brief(ostream& o, 
 		const expr_dump_context& edc) const {
@@ -375,9 +392,9 @@ EventNode::dump_brief(ostream& o,
 	return o;
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	TODO: source-annotated delays?
  */
@@ -395,12 +412,14 @@ EventNode::dump_source(ostream& o) const {
 	return o;
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DUMP_PARENT_CONTEXT
+/**
+	TODO: source-annotated delays?
+ */
 ostream&
-EventNode::dump_source(ostream& o, 
-		const expr_dump_context& edc) const {
+EventNode::dump_source(ostream& o, const expr_dump_context& edc) const {
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	if (action_ptr) {
 #endif
@@ -414,7 +433,6 @@ EventNode::dump_source(ostream& o,
 	return o;
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -432,11 +450,7 @@ EventNode::dump_pending(ostream& o) const {
 	TODO: delays?
  */
 ostream&
-EventNode::dump_struct(ostream& o
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		, const expr_dump_context& edc
-#endif
-		) const {
+EventNode::dump_struct(ostream& o, const expr_dump_context& edc) const {
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	__local_event->dump_struct(o, edc);
 	// missing pid and global event offset!
@@ -457,11 +471,7 @@ EventNode::dump_struct(ostream& o
 	}
 	o << ": ";
 	// factored out code
-#if CHPSIM_DUMP_PARENT_CONTEXT
 	dump_brief(o, edc);
-#else
-	dump_brief(o);
-#endif
 	// flags?
 	o << ", pid: " << process_index;
 	o << ", #pred: " << predecessors;
@@ -483,11 +493,7 @@ EventNode::dump_struct(ostream& o
  */
 ostream&
 EventNode::dump_dot_node(ostream& o, const event_index_type i, 
-		const graph_options& g 
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		, const expr_dump_context& edc
-#endif
-		) const {
+		const graph_options& g, const expr_dump_context& edc) const {
 	o << node_prefix << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
