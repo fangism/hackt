@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10.8.2 2007/09/05 04:48:03 fang Exp $
+	$Id: Event.h,v 1.10.8.3 2007/09/06 01:12:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -256,10 +256,10 @@ public:
 	// operator = using default container behavior
 	this_type&
 	operator = (const this_type&);
-#endif
 
 	void
 	orphan(void);
+#endif
 
 	/**
 		\return true if this event type is considered trivial, 

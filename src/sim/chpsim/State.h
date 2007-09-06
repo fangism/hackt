@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7.16.2 2007/09/05 04:48:06 fang Exp $
+	$Id: State.h,v 1.7.16.3 2007/09/06 01:12:20 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -20,10 +20,20 @@
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "util/memory/excl_ptr.h"
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#include <map>		// for global-event to pid translator
+#include "Object/lang/CHP_event.h"	// for global_root event
+#endif
 
 namespace HAC {
 namespace entity {
 struct expr_dump_context;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+namespace CHP {
+class local_event;
+class local_event_footprint;
+}
+#endif
 }
 namespace SIM {
 namespace CHPSIM {
@@ -40,6 +50,9 @@ class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using entity::global_references_set;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+using entity::CHP::local_event_footprint;
+#endif
 
 //=============================================================================
 /**
@@ -115,6 +128,27 @@ private:
 	typedef	std::multiset<event_placeholder_type>
 						event_queue_type;
 	typedef	vector<event_type>		event_pool_type;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	/**
+		Translates global event index to global process index, 
+		using a lower-bound lookup.
+	 */
+	typedef	std::map<event_index_type, size_t>
+						global_event_to_pid_map_type;
+	/**
+		Lookup table for translating each process index to
+		the starting index of its globally allocated events.  
+		Each process's allocated events now occupy a contiguous
+		range indices for easy of reverse-lookup.
+		Same size as process-instance pool.  
+		The first of each pair is the index of the first
+		global event, and the second is the size of the 
+		corresponding local event pool (for bounds checking).  
+		Index 0 is reserved for the top-level.  
+	 */
+	typedef	vector<std::pair<event_index_type, size_t> >
+						pid_to_offset_map_type;
+#endif
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
 
@@ -208,6 +242,18 @@ private:
 	// event pools: for each type of event?
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	/**
+		Nobody else 'owns' a global root event, so this is a
+		logical place.  Set event_pool[0] to point to
+		this.  
+	 */
+	local_event				global_root_event;
+	/// translate global-event id to process id
+	global_event_to_pid_map_type		global_event_to_pid;
+	/// lookup global event offset from global process id
+	pid_to_offset_map_type			pid_to_offset;
+#endif
 	/**
 		This is where successors are scheduled to be checked for the
 		first time.  Successors are scheduled using the event delay
@@ -390,6 +436,12 @@ private:
 	void
 	__perform_rechecks(const event_index_type, 
 		const event_index_type, const size_t);
+
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	void
+	initialize_process_event_chunk(const local_event_footprint&, 
+		const size_t pid);
+#endif
 
 public:
 	step_return_type

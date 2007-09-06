@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event.h"
 	Various classes of chpsim events.  
-	$Id: CHP_event.h,v 1.1.2.2 2007/09/05 04:47:55 fang Exp $
+	$Id: CHP_event.h,v 1.1.2.3 2007/09/06 01:12:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_H__
@@ -130,8 +130,10 @@ public:
 
 	~local_event();
 
+#if 0
 	void
 	orphan(void);
+#endif
 
 	/**
 		Entry events must have one predecessor.

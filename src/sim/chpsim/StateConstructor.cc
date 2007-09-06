@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.6.8.1 2007/08/31 22:59:34 fang Exp $
+	$Id: StateConstructor.cc,v 1.6.8.2 2007/09/06 01:12:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -50,11 +50,12 @@ using util::memory::free_list_release;
 // class StateConstructor method definitions
 
 StateConstructor::StateConstructor(State& s) : 
-		state(s), 
-		free_list(), 
-		// last_event_indices(), 
+		state(s)
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, free_list(), 
 		last_event_index(0), 
 		current_process_index(0)	// top-level
+#endif
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -62,14 +63,17 @@ StateConstructor::StateConstructor(State& s) :
 	Some clean-up to avoid printing dead nodes.  
  */
 StateConstructor::~StateConstructor() {
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	typedef free_list_type::const_iterator	const_iterator;
 	const_iterator i(free_list.begin()), e(free_list.end());
 	for ( ; i!=e; ++i) {
 		get_event(*i).orphan();
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Clears the last_event_index.
 	Call this before visiting each process.  
@@ -78,6 +82,7 @@ void
 StateConstructor::reset(void) {
 	last_event_index = 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -88,6 +93,7 @@ StateConstructor::reset(void) {
 void
 StateConstructor::visit(const action_sequence& l) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 //	for_each(rbegin(), rend(), util::visitor_ptr(s));
 	action_sequence::const_iterator i(l.begin()), e(l.end());
 	INVARIANT(i!=e);	// else would be empty
@@ -96,6 +102,7 @@ StateConstructor::visit(const action_sequence& l) {
 		(*e)->accept(*this);
 		// events will link themselves (callee responsible)
 	} while (i!=e);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,6 +119,7 @@ StateConstructor::visit(const concurrent_actions& ca) {
 	// TODO: using footprint frame, allocate event edge graph
 	// there will be multiple outgoing edges
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t branches = ca.size();
 	STACKTRACE_INDENT_PRINT("branches: " << branches << endl);
 // check for degenerate cases first: 0, 1
@@ -176,11 +184,12 @@ if (!branches) {
 	// leave trail of this event for predecessor
 	last_event_index = fork_index;
 	// construct an event join graph-node?
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 }	// end visit(const concurrent_actions&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\pre a slection-merge event is pointed to by s.last_event_index.
+	\pre a selection-merge event is pointed to by s.last_event_index.
 	Plan: construct guards in all branches first
 	(guarded actions), then move them into a union.  
 	It is the selection' (caller) responsibility to collect
@@ -191,10 +200,12 @@ if (!branches) {
 void
 StateConstructor::visit(const guarded_action& s) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	if (s.get_action()) {
 		s.get_action()->accept(*this);
 	// it is the selection's responsibility to evaluate the guards
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -206,6 +217,7 @@ void
 StateConstructor::visit(const deterministic_selection& ds) {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t branches = ds.size();
 	const size_t merge_index = allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
@@ -219,7 +231,7 @@ StateConstructor::visit(const deterministic_selection& ds) {
 	merge_event.set_predecessors(1);	// expect ONE branch only
 	count_predecessors(merge_event);
 }
-
+#endif
 	deterministic_selection::const_iterator i(ds.begin()), e(ds.end());
 	SIM::CHPSIM::DependenceSetCollector deps(*this);	// args
 	vector<size_t> tmp;
@@ -240,6 +252,7 @@ StateConstructor::visit(const deterministic_selection& ds) {
 		}
 	}
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t split_index = allocate_event(
 		EventNode(&ds, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
@@ -256,8 +269,10 @@ StateConstructor::visit(const deterministic_selection& ds) {
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(get_event(split_index));
+#endif
 	split_event.import_block_dependencies(deps);
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	split_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
 
@@ -266,6 +281,7 @@ StateConstructor::visit(const deterministic_selection& ds) {
 }
 	// leave trail of this event for predecessor
 	last_event_index = split_index;
+#endif
 }	// end visit(const deterministic_selection&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -276,6 +292,7 @@ void
 StateConstructor::visit(const nondeterministic_selection& ns) {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t branches = ns.size();
 	const size_t merge_index = allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
@@ -289,6 +306,7 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 	merge_event.set_predecessors(1);	// expect ONE branch only
 	count_predecessors(merge_event);
 }
+#endif
 
 	nondeterministic_selection::const_iterator i(ns.begin()), e(ns.end());
 	SIM::CHPSIM::DependenceSetCollector deps(*this);	// args
@@ -310,6 +328,7 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 		}
 	}
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t split_index = allocate_event(
 		EventNode(&ns, SIM::CHPSIM::EVENT_SELECTION_BEGIN, 
@@ -325,8 +344,10 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(get_event(split_index));
+#endif
 	split_event.import_block_dependencies(deps);
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	split_event.successor_events.resize(branches);
 	copy(tmp.begin(), tmp.end(), &split_event.successor_events[0]);
 
@@ -335,6 +356,7 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 }
 	// leave trail of this event for predecessor
 	last_event_index = split_index;
+#endif
 }	// end visit(const nondeterminstic_selection&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -353,6 +375,7 @@ StateConstructor::visit(const metaloop_statement&) {
 void
 StateConstructor::visit(const assignment& a) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = allocate_event(
 		EventNode(&a, SIM::CHPSIM::EVENT_ASSIGN, 
@@ -366,6 +389,7 @@ StateConstructor::visit(const assignment& a) {
 	// over variable assignment.  
 	STACKTRACE_INDENT_PRINT("new assigment: " << new_index << endl);
 	EventNode& new_event(get_event(new_index));
+#endif
 
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 {
@@ -378,6 +402,7 @@ StateConstructor::visit(const assignment& a) {
 }
 #endif
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);
 	// assignments are atomic and never block
 	// thus we need no dependencies.  
@@ -389,6 +414,7 @@ StateConstructor::visit(const assignment& a) {
 
 	// updates successors' predecessor-counts
 	count_predecessors(new_event);
+#endif
 }	// end visit(const assignment&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -428,6 +454,7 @@ StateConstructor::visit(const function_call_stmt& fc) {
 void
 StateConstructor::visit(const condition_wait& cw) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// register guard expression dependents
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = allocate_event(
@@ -442,12 +469,14 @@ StateConstructor::visit(const condition_wait& cw) {
 	// unblocks its successor(s)
 	STACKTRACE_INDENT_PRINT("wait index: " << new_index << endl);
 	EventNode& new_event(get_event(new_index));
+#endif
 	if (cw.get_guard()) {
 		SIM::CHPSIM::DependenceSetCollector deps(*this);
 		cw.get_guard()->accept(deps);
 		new_event.import_block_dependencies(deps);
 	}
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);
 
 	// leave trail of this event for predecessor
@@ -457,12 +486,14 @@ StateConstructor::visit(const condition_wait& cw) {
 
 	// updates successors' predecessor-counts
 	count_predecessors(new_event);
+#endif
 }	// end visit(const condition_wait&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 StateConstructor::visit(const channel_send& cs) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// atomic event
 	// construct event graph
 	const size_t new_index = allocate_event(
@@ -476,14 +507,14 @@ StateConstructor::visit(const channel_send& cs) {
 	// default to small delay
 	STACKTRACE_INDENT_PRINT("send index: " << new_index << endl);
 	EventNode& new_event(get_event(new_index));
-
+#endif
 {
 	// can block on channel, so we add dependencies
 	SIM::CHPSIM::DependenceSetCollector deps(*this);
 	cs.get_chan()->accept(deps);
 	new_event.import_block_dependencies(deps);
 }
-
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);
 
 	// leave trail of this event for predecessor
@@ -493,12 +524,14 @@ StateConstructor::visit(const channel_send& cs) {
 
 	// updates successors' predecessor-counts
 	count_predecessors(new_event);
+#endif
 }	// end visit(const channel_send&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 StateConstructor::visit(const channel_receive& cr) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// atomic event
 	// construct event graph
 	const bool peek = cr.is_peek();
@@ -517,7 +550,7 @@ StateConstructor::visit(const channel_receive& cr) {
 	// this delay would be more meaningful in a handshaking expansion
 	STACKTRACE_INDENT_PRINT("receive index: " << new_index << endl);
 	EventNode& new_event(get_event(new_index));
-
+#endif
 {
 	// receive can block on channel, so we add dependencies
 	// channel peeks can also block
@@ -525,6 +558,7 @@ StateConstructor::visit(const channel_receive& cr) {
 	cr.get_chan()->accept(deps);
 	new_event.import_block_dependencies(deps);
 }
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);
 
 	// leave trail of this event for predecessor
@@ -534,6 +568,7 @@ StateConstructor::visit(const channel_receive& cr) {
 
 	// updates successors' predecessor-counts
 	count_predecessors(new_event);
+#endif
 }	// end visit(const channel_receive&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -548,6 +583,7 @@ StateConstructor::visit(const channel_receive& cr) {
 void
 StateConstructor::visit(const do_forever_loop& fl) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	// OR use the 0th event slot as the dummy!
@@ -619,6 +655,7 @@ if (back_event.is_movable()) {
 	head_event.set_predecessors(1);	// but may have multiple entries
 	// caller will count_predecessors
 }
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 }	// end visit(const do_forever_loop&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -632,6 +669,7 @@ if (back_event.is_movable()) {
 void
 StateConstructor::visit(const do_while_loop& dw) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	const size_t branches = dw.size();
@@ -697,9 +735,11 @@ StateConstructor::visit(const do_while_loop& dw) {
 	count_predecessors(loopback_event);
 	last_event_index = loopback_index;
 }
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 }	// end visit(const do_while_loop&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Copy-modified from entity::cflat_visitor::visit()
 	top-level CHP is already visited by the caller
@@ -925,6 +965,7 @@ StateConstructor::count_predecessors(const event_type& ev) const {
 		state.event_pool[*i].set_predecessors(1);
 	}
 }
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 //=============================================================================
 }	// end namespace CHPSIM

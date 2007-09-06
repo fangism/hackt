@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.3 2007/09/05 04:48:01 fang Exp $
+	$Id: Event.cc,v 1.10.8.4 2007/09/06 01:12:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -193,6 +193,7 @@ EventNode::get_predecessors(void) const {
 #endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Completely resets the event.  
  */
@@ -201,6 +202,7 @@ EventNode::orphan(void) {
 	this->~EventNode();
 	new (this) EventNode();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

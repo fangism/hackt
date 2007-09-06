@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.h"
-	$Id: DependenceCollector.h,v 1.7 2007/08/28 04:54:26 fang Exp $
+	$Id: DependenceCollector.h,v 1.7.2.1 2007/09/06 01:12:18 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEPENDENCECOLLECTOR_H__
@@ -30,6 +30,7 @@ using entity::enum_tag;
 using entity::string_tag;
 using entity::channel_tag;
 class StateConstructor;
+class State;
 
 using entity::nonmeta_func_call;
 using entity::int_range_expr;
@@ -143,7 +144,10 @@ struct DependenceSetCollector :
 		public dependence_collector_base<channel_tag> {
 	typedef	entity::nonmeta_expr_visitor	parent_type;
 public:
+	explicit
 	DependenceSetCollector(const StateConstructor&);
+
+	DependenceSetCollector(const state_manager&, const footprint&);
 
 	~DependenceSetCollector();
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event_alloc.cc"
 	Copy-ripped from "sim/chpsim/StateConstructor.cc"
-	$Id: CHP_event_alloc.cc,v 1.1.2.2 2007/09/03 03:46:43 fang Exp $
+	$Id: CHP_event_alloc.cc,v 1.1.2.3 2007/09/06 01:12:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -50,11 +50,13 @@ local_event_allocator::local_event_allocator(local_event_footprint& s) :
 	Some clean-up to avoid printing dead nodes.  
  */
 local_event_allocator::~local_event_allocator() {
+#if 0
 	typedef free_list_type::const_iterator	const_iterator;
 	const_iterator i(free_list.begin()), e(free_list.end());
 	for ( ; i!=e; ++i) {
 		get_event(*i).orphan();
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

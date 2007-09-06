@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12.12.3 2007/09/05 04:48:04 fang Exp $
+	$Id: State.cc,v 1.12.12.4 2007/09/06 01:12:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,6 +31,9 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/expr/expr_dump_context.h"
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#include "Object/lang/CHP_footprint.h"
+#endif
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -142,6 +145,9 @@ using util::read_value;
 using util::value_writer;
 using util::value_reader;
 using util::discrete_interval_set;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+using entity::CHP::local_event_footprint;
+#endif
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -284,6 +290,11 @@ State::State(const module& m) :
 		state_base(m, "chpsim> "), 
 		instances(m.get_state_manager()), 
 		event_pool(), 
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		global_root_event(),
+		global_event_to_pid(),
+		pid_to_offset(),
+#endif
 		check_event_queue(), 
 		timing_mode(TIMING_DEFAULT), 
 		current_time(0), 
@@ -302,10 +313,38 @@ State::State(const module& m) :
 		trace_flush_interval(1L<<16)
 		{
 	// perform initializations here
-	event_pool.reserve(256);
-	event_pool.resize(1);		// 0th entry is a dummy
+	event_pool.reserve(256);	// pre-allocate some
+	event_pool.resize(1);		// 0th entry is a global-spawn event
+	event_type& init(event_pool[0]);
 {
 	const footprint& topfp(mod.get_footprint());
+	const state_manager& sm(mod.get_state_manager());
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	init.make_global_root(&global_root_event);	// use the FORK, Luke...
+	const size_t procs = sm.get_pool<process_tag>().size();
+	pid_to_offset.resize(procs);
+
+	// top-level process is reserves index 0
+	initialize_process_event_chunk(topfp.get_chp_event_footprint(), 0);
+
+	size_t i = 1;
+	for ( ; i<procs; ++i) {
+		initialize_process_event_chunk(
+			sm.get_pool<process_tag>()[i]._frame._footprint
+				->get_chp_event_footprint(), 
+			i);
+	}
+	// connect all process-root events to the spawn event
+{
+	typedef	global_event_to_pid_map_type::const_iterator const_iterator;
+	const_iterator j(global_event_to_pid.begin()),
+		e(global_event_to_pid.end());
+	for ( ; j!=e; ++j) {
+		// the offsets also point to the root event of each process
+		init.append_successor(j->first);
+	}
+}
+#else	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	StateConstructor v(*this);	// + option flags
 	// visit top-level footprint
 	// v.current_process_index = 0;	// already initialized
@@ -317,12 +356,10 @@ if (topfp.has_chp_footprint()) {
 	}
 }
 	// visit hierarchical footprints
-	const state_manager& sm(mod.get_state_manager());
 	sm.accept(v);	// may throw
 
 	// now we have a list of initial_events, use event slot 0 to
 	// launch them all concurrently upon startup.
-	event_type& init(event_pool[0]);
 	init.set_predecessors(0);		// first event, no predecessors
 	// init.process_index = 0;		// associate with top-level
 	init.set_event_type(EVENT_CONCURRENT_FORK);
@@ -330,6 +367,7 @@ if (topfp.has_chp_footprint()) {
 	copy(v.initial_events.begin(), v.initial_events.end(),
 		&init.successor_events[0]);
 	v.count_predecessors(init);	// careful: event optimizations!
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 }
 }
 
@@ -339,6 +377,32 @@ State::~State() {
 	// optional, but recommended: run some diagnostics
 	// anything to do with trace_manager?
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+/**
+	Only called during construction and state allocation.  
+ */
+void
+State::initialize_process_event_chunk(const local_event_footprint& chpfp, 
+		const size_t pid) {
+	const size_t offset = event_pool.size();
+	const size_t local_events = chpfp.size();
+	pid_to_offset[pid] = make_pair(offset, local_events);
+	if (local_events) {
+		global_event_to_pid[offset] = pid;	// pid 0 is top-level
+		const size_t M = event_pool.size() +local_events;
+		event_pool.resize(M);
+//		const global_entry_context::footprint_frame_setter fs(dc, pid);
+		size_t i = 0;
+		do {
+			// setup per-event info: dependencies, delays, ...
+			event_pool[i +offset].setup(&chpfp[i], *this);
+			++i;
+		} while (i<local_events);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

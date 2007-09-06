@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_event.cc"
-	$Id: CHP_event.cc,v 1.1.2.2 2007/09/04 15:36:39 fang Exp $
+	$Id: CHP_event.cc,v 1.1.2.3 2007/09/06 01:12:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -63,6 +63,7 @@ local_event::local_event(const action* a, const unsigned short t) :
 local_event::~local_event() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Completely resets the event.  
  */
@@ -71,6 +72,7 @@ local_event::orphan(void) {
 	this->~local_event();
 	new (this) this_type();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

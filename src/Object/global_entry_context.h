@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.5 2007/06/16 23:05:01 fang Exp $
+	$Id: global_entry_context.h,v 1.5.12.1 2007/09/06 01:12:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -106,6 +106,8 @@ public:
 	public:
 		footprint_frame_setter(global_entry_context&,
 			const footprint_frame&);
+		footprint_frame_setter(global_entry_context&,
+			const size_t pid);
 		~footprint_frame_setter();
 	} __ATTRIBUTE_UNUSED__ ;	// end class footprint_frame_setter
 

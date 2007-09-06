@@ -1,14 +1,19 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.4 2007/07/31 23:23:41 fang Exp $
+	$Id: StateConstructor.h,v 1.4.8.1 2007/09/06 01:12:22 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 #define	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 
+#include "sim/chpsim/devel_switches.h"
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+// include "sim/chpsim/DependenceSetCollector.h"?
+#else
 #include <vector>
 #include <set>		// or use util/memory/free_list interface
+#endif
 #include "Object/lang/CHP_visitor.h"
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/common.h"
@@ -52,14 +57,19 @@ public:
 	typedef	State				state_type;
 	// typedef	std::default_vector<size_t>::type	return_indices_type;
 	typedef	EventNode			event_type;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 //	typedef	state_type::event_pool_type	event_pool_type;
 	typedef	std::vector<event_type>		event_pool_type;
 private:
 	typedef	std::set<size_t>		free_list_type;
+#endif
 private:
 	state_type&				state;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	free_list_type				free_list;
+#endif
 public:
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		Return value slot to indicate last allocated event(s).  
 		Should be non-zero.  
@@ -76,6 +86,7 @@ public:
 		List of initially ready events.  
 	 */
 	std::vector<event_index_type>		initial_events;
+#endif
 private:
 	// non-copy-able
 	explicit
@@ -86,6 +97,7 @@ public:
 
 	~StateConstructor();
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const state_manager&
 	get_state_manager(void) const;
 
@@ -123,6 +135,7 @@ protected:
 	void
 	forward_successor(const event_index_type, const event_index_type, 
 		const event_index_type);
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 public:
 	void
@@ -170,12 +183,14 @@ public:
 protected:
 	using chp_visitor::visit;
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	void
 	reset(void);
 
 	// overrides
 	void
 	visit(const state_manager&);
+#endif
 
 };	// end class StateConstructor
 

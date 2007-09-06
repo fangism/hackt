@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/DependenceCollector.cc"
-	$Id: DependenceCollector.cc,v 1.8 2007/08/28 04:54:26 fang Exp $
+	$Id: DependenceCollector.cc,v 1.8.2.1 2007/09/06 01:12:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -10,6 +10,7 @@
 #include <iterator>
 #include "sim/chpsim/DependenceCollector.h"
 #include "sim/chpsim/StateConstructor.h"
+#include "sim/chpsim/State.h"
 
 #include "Object/expr/int_negation_expr.h"
 #include "Object/expr/int_arith_expr.h"
@@ -102,9 +103,24 @@ DependenceSetCollector::DependenceSetCollector(const StateConstructor& s) :
 		dependence_collector_base<int_tag>(), 
 		dependence_collector_base<enum_tag>(), 
 		dependence_collector_base<channel_tag>() {
+	// all processes except the top-level should have valid footprint-frame
 	if (s.current_process_index) {
 		NEVER_NULL(fpf);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	With this constructor, footprint_frame pointer is not set, 
+	and should be set using global_entry_context::footprint_frame_setter.
+ */
+DependenceSetCollector::DependenceSetCollector(const state_manager& _sm, 
+		const footprint& _topfp) : 
+		global_entry_context(_sm, _topfp), 
+		dependence_collector_base<bool_tag>(), 
+		dependence_collector_base<int_tag>(), 
+		dependence_collector_base<enum_tag>(), 
+		dependence_collector_base<channel_tag>() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
