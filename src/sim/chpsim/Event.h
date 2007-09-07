@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10.8.5 2007/09/07 01:33:16 fang Exp $
+	$Id: Event.h,v 1.10.8.6 2007/09/07 21:07:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -439,7 +439,12 @@ public:
 	dump_pending(ostream&) const;
 
 	ostream&
-	dump_struct(ostream&, const entity::expr_dump_context&) const;
+	dump_struct(ostream&, const entity::expr_dump_context&
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, const size_t
+		, const event_index_type
+#endif
+		) const;
 
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 

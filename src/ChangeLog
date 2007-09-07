@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-12:
+	  Continued work on CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS:
+		most test cases at least run without crashing, 
+		results looking promising.
+		Test dumps for chpsim-alloc/dot and execution need to
+		be massively updated and re-verified by hand... *sigh*
+
+
 2007-09-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-11:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8.14.4 2007/09/06 06:17:58 fang Exp $
+	$Id: devel_switches.h,v 1.8.14.5 2007/09/07 21:07:47 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -65,7 +65,7 @@
 	Status: just begun
 	Priority: TOP -- reverse-lookup required for thesis
  */
-#define	CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS		0
+#define	CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Perm'd (00-01-04-main-00-81-68-chpsim-09-10)

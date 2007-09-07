@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.6.8.3 2007/09/07 01:33:21 fang Exp $
+	$Id: StateConstructor.cc,v 1.6.8.4 2007/09/07 21:07:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -65,8 +65,18 @@ StateConstructor::StateConstructor(
 		free_list(), 
 		last_event_index(0), 
 #endif
-		current_process_index(0)	// top-level
-		{ }
+		current_process_index(
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+			state.get_process_id(event)
+#else
+			0
+#endif
+			)	// top-level
+		{
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("pid = " << current_process_index << endl);
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -802,6 +812,7 @@ StateConstructor::visit(const state_manager& _sm) {
 		}
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const state_manager&
@@ -825,6 +836,7 @@ StateConstructor::get_process_footprint(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 StateConstructor::event_type&
 StateConstructor::get_event(const event_index_type ei) {
 	return state.event_pool[ei];

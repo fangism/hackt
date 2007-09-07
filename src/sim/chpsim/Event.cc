@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.6 2007/09/07 01:33:14 fang Exp $
+	$Id: Event.cc,v 1.10.8.7 2007/09/07 21:07:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -207,6 +207,14 @@ EventNode::num_successors(void) const {
 	NEVER_NULL(__local_event);
 	return __local_event->successor_events.size();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+EventNode::make_global_root(const local_event_type* g) {
+	NEVER_NULL(g);
+	__local_event = g;
+	// INVARIANT event type is concurrent fork
+}
 #endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -225,6 +233,7 @@ EventNode::orphan(void) {
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 void
 EventNode::setup(const local_event_type* l, const State& s) {
+	STACKTRACE_VERBOSE;
 	__local_event = l;
 	NEVER_NULL(__local_event);
 	StateConstructor v(s, *this);
@@ -234,6 +243,7 @@ EventNode::setup(const local_event_type* l, const State& s) {
 	}
 }
 #endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resets the state of the event, for beginning simulation.  
@@ -477,10 +487,16 @@ EventNode::dump_pending(ostream& o) const {
 	TODO: delays?
  */
 ostream&
-EventNode::dump_struct(ostream& o, const expr_dump_context& edc) const {
+EventNode::dump_struct(ostream& o, const expr_dump_context& edc
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	__local_event->dump_struct(o, edc);
-	// missing pid and global event offset!
+		, const size_t pid
+		, const event_index_type offset
+#endif
+		) const {
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	NEVER_NULL(__local_event);
+	__local_event->dump_struct(o, edc, pid, offset);
+	// missing pid
 #else
 	switch (event_type) {
 	case EVENT_NULL: o << (predecessors > 1 ? "join" : "null"); break;

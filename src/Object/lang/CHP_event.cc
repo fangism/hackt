@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_event.cc"
-	$Id: CHP_event.cc,v 1.1.2.4 2007/09/07 01:33:09 fang Exp $
+	$Id: CHP_event.cc,v 1.1.2.5 2007/09/07 21:07:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <functional>
 #include <string>
 #include "Object/lang/CHP_event.h"
 #include "Object/lang/CHP_event_alloc.h"	// for EventSuccessorDumper
@@ -25,7 +26,7 @@ namespace entity {
 namespace CHP {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
-using std::copy;
+using std::transform;
 using std::back_inserter;
 using std::for_each;
 using util::set_inserter;
@@ -108,9 +109,12 @@ local_event::dump_source(ostream& o, const expr_dump_context& dc) const {
 	For diagnostics.  
 	Calls to this are wrapped in auto-indent, so use indent 
 	if line-breaks are ever added.  
+	\param offset the offset to add to successor event indices.
  */
 ostream&
-local_event::dump_struct(ostream& o, const expr_dump_context& edc) const {
+local_event::dump_struct(ostream& o, const expr_dump_context& edc, 
+		const size_t pid, 
+		const event_index_type offset) const {
 	switch (event_type) {
 	case EVENT_NULL: o << (predecessors > 1 ? "join" : "null"); break;
 	case EVENT_ASSIGN: o << "assign"; break;
@@ -129,15 +133,16 @@ local_event::dump_struct(ostream& o, const expr_dump_context& edc) const {
 	// factored out code
 	dump_brief(o, edc);
 	// flags?
-//	o << ", pid: " << process_index;
+if (offset) {
+	o << ", pid: " << pid;
+}	// don't bother with 0-offset
 	o << ", #pred: " << predecessors;
-	// countdown? only in state dump
-	// o << endl;
 	o << ", succ: ";
 	ostream_iterator<event_index_type> osi(o, " ");
-	copy(successor_events.begin(), successor_events.end(), osi);
+	transform(successor_events.begin(), successor_events.end(), osi,
+		std::bind2nd(std::plus<event_index_type>(), offset));
 	o << endl;
-//	block_deps.dump(o);	// includes endl already
+	// no dependencies
 	return o;
 }
 
@@ -151,6 +156,7 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
 		const graph_options& g, const expr_dump_context& edc,
 		const char* extra_label_text, 
 		const event_index_type offset) const {
+//	const event_index_type i = _i +offset;
 	o << node_prefix << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
@@ -174,16 +180,10 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
 	if (g.show_event_index) {
 		o << "[" << i << "] ";
 	}
-#if 0
-	if (!g.process_event_clusters || !process_index) {
-		// always show pid 0 because top-level is not clustered
-		o << "pid=" << process_index;
-	}
-#else
 	if (extra_label_text) {
+		// can include process_index, for example.
 		o << extra_label_text;
 	}
-#endif
 	// seems a waste to do this multiple times for same process...
 	// can't change until we-reorganize events into contiguous ranges.
 	// and that's happening right now (-chpsim-09 branch)
@@ -193,9 +193,9 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
 	// no edges
 	// no deps
 	o << "\"];" << endl;
+	// successor edges
 	if (action_ptr) {
-		// not SIM::CHPSIM::EventSuccessorDumper
-		EventSuccessorDumper d(o, *this, i, edc);
+		EventSuccessorDumper d(o, *this, i, edc, offset);
 		action_ptr->accept(d);
 	} else {
 		dump_successor_edges_default(o, i, offset);
