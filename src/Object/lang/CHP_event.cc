@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_event.cc"
-	$Id: CHP_event.cc,v 1.1.2.3 2007/09/06 01:12:12 fang Exp $
+	$Id: CHP_event.cc,v 1.1.2.4 2007/09/07 01:33:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -148,7 +148,9 @@ local_event::dump_struct(ostream& o, const expr_dump_context& edc) const {
  */
 ostream&
 local_event::dump_dot_node(ostream& o, const event_index_type i, 
-		const graph_options& g, const expr_dump_context& edc) const {
+		const graph_options& g, const expr_dump_context& edc,
+		const char* extra_label_text, 
+		const event_index_type offset) const {
 	o << node_prefix << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
@@ -177,6 +179,10 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
 		// always show pid 0 because top-level is not clustered
 		o << "pid=" << process_index;
 	}
+#else
+	if (extra_label_text) {
+		o << extra_label_text;
+	}
 #endif
 	// seems a waste to do this multiple times for same process...
 	// can't change until we-reorganize events into contiguous ranges.
@@ -192,7 +198,7 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
 		EventSuccessorDumper d(o, *this, i, edc);
 		action_ptr->accept(d);
 	} else {
-		dump_successor_edges_default(o, i);
+		dump_successor_edges_default(o, i, offset);
 	}
 	return o;
 }
@@ -205,12 +211,13 @@ local_event::dump_dot_node(ostream& o, const event_index_type i,
  */
 ostream&
 local_event::dump_successor_edges_default(ostream& o, 
-		const event_index_type i) const {
+		const event_index_type i, 
+		const event_index_type offset) const {
 	// iterate over edges
 	successor_list_type::const_iterator
 		j(successor_events.begin()), z(successor_events.end());
 	for ( ; j!=z; ++j) {
-		const event_index_type h = *j;
+		const event_index_type h = *j +offset;
 		o << node_prefix << i << " -> " << node_prefix << h <<
 			';' << endl;
 	}

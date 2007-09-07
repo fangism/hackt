@@ -2,7 +2,7 @@
 	\file "Object/lang/CHP_event_alloc.h"
 	The visitor that initializes and allocates local CHP events.
 	Class based on "sim/chpsim/StateConstructor.h".
-	$Id: CHP_event_alloc.h,v 1.1.2.1 2007/09/02 20:49:26 fang Exp $
+	$Id: CHP_event_alloc.h,v 1.1.2.2 2007/09/07 01:33:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_ALLOC_H__
@@ -34,8 +34,9 @@ public:
 	// typedef	std::default_vector<size_t>::type	return_indices_type;
 	typedef	local_event			event_type;
 	typedef	std::vector<event_type>		event_pool_type;
+	typedef	size_t				event_index_type;
 private:
-	typedef	std::set<size_t>		free_list_type;
+	typedef	std::set<event_index_type>	free_list_type;
 private:
 	local_event_footprint&			event_footprint;
 	free_list_type				free_list;
@@ -48,7 +49,6 @@ public:
 	 */
 	// return_indices_type			last_event_indices;
 	// should be from sim/common.h, must be *unsigned*
-	typedef	size_t				event_index_type;
 	event_index_type			last_event_index;
 private:
 	// non-copy-able
@@ -169,19 +169,24 @@ protected:
 class EventSuccessorDumper : public chp_visitor {
 	typedef	EventSuccessorDumper		this_type;
 	typedef	local_event			event_type;
+public:
+	typedef	size_t				event_index_type;
 protected:
 	ostream&				os;
 	const event_type&			event;
 	// eventually add an offset to translate to global allocated index!
-	const size_t				index;
+	const event_index_type			index;
+	const event_index_type			offset;
 	const expr_dump_context&		dump_context;
 public:
 	/// uninitialized return value
 	char					ret;
 public:
-	EventSuccessorDumper(ostream& o, const local_event& e, const size_t i, 
-		const expr_dump_context& edc) : 
-		os(o), event(e), index(i), dump_context(edc) { }
+	EventSuccessorDumper(ostream& o, const local_event& e,
+		const event_index_type i, 
+		const expr_dump_context& edc, 
+		const event_index_type off = 0) : 
+		os(o), event(e), index(i), offset(off), dump_context(edc) { }
 
 	void
 	visit(const action_sequence&);

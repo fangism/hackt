@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12.12.5 2007/09/06 06:17:54 fang Exp $
+	$Id: State.cc,v 1.12.12.6 2007/09/07 01:33:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -146,7 +146,10 @@ using util::value_writer;
 using util::value_reader;
 using util::discrete_interval_set;
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+using entity::CHP::local_event;
 using entity::CHP::local_event_footprint;
+using entity::CHP::EVENT_SEND;
+using entity::CHP::EVENT_RECEIVE;
 #endif
 
 //=============================================================================
@@ -347,7 +350,7 @@ State::State(const module& m) :
 		e(global_event_to_pid.end());
 	for ( ; j!=e; ++j) {
 		// the offsets also point to the root event of each process
-		init.append_successor(j->first);
+		global_root_event.successor_events.push_back(j->first);
 	}
 }
 #else	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
@@ -394,6 +397,20 @@ size_t
 State::get_process_id(const event_index_type ei) const {
 	// INVARIANT check?
 	return global_event_to_pid.lower_bound(ei)->second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+State::get_process_id(const event_type& e) const {
+	return get_process_id(get_event_id(e));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+event_index_type
+State::get_event_id(const event_type& e) const {
+	const event_index_type d = std::distance(&event_pool[0], &e);
+	INVARIANT(d < event_pool.size());
+	return d;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1408,6 +1425,13 @@ State::dump_struct(ostream& o) const {
  */
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	// should be event_type::local_event_type
+	static const char* node_prefix = local_event::node_prefix;
+#else
+	static const char* node_prefix = event_type::node_prefix;
+#endif
+
 	o << "digraph G {" << endl;
 	// consider using global_entry_context_base instead...
 	const state_manager& sm(mod.get_state_manager());
@@ -1428,7 +1452,11 @@ if (g.show_instances) {
 #else
 		const size_t pid = e.get_process_index();
 #endif
-		e.dump_dot_node(o, i, g, make_process_dump_context(pid)) << endl;
+		e.dump_dot_node(o, i, g, make_process_dump_context(pid)
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+			, pid, pid_to_offset[pid].first
+#endif
+			) << endl;
 		// includes outgoing edges
 	}
 if (g.process_event_clusters) {
@@ -1469,8 +1497,7 @@ if (g.process_event_clusters) {
 		for ( ; ii!=ie; ++ii) {
 			size_t j = ii->first;
 			for ( ; j <= ii->second; ++j) {
-				o << event_type::node_prefix << j
-					<< ';' << endl;
+				o << node_prefix << j << ';' << endl;
 			}
 		}
 		o << "}" << endl;
@@ -1528,18 +1555,17 @@ if (g.show_channels) {
 				<< "\"];" << endl;
 			// edges (unlabeled)
 			for ( ; si!=se; ++si) {
-				o << event_type::node_prefix << *si << " -> " <<
+				o << node_prefix << *si << " -> " <<
 					channel_prefix << i << ';' << endl;
 			}
 			for ( ; ri!=re; ++ri) {
 				o << channel_prefix << i << " -> " <<
-					event_type::node_prefix << *ri << ';'
-					<< endl;
+					node_prefix << *ri << ';' << endl;
 			}
 		} else {
 			// just collapse into a single labeled edge
-			o << event_type::node_prefix << *si << " -> " <<
-				event_type::node_prefix << *ri <<
+			o << node_prefix << *si << " -> " <<
+				node_prefix << *ri <<
 				"\t[label=\"" << oss.str() << "\"];" << endl;
 		}
 	}	// end for all channels

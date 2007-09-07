@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.9.2.2 2007/09/06 06:17:53 fang Exp $
+	$Id: EventExecutor.cc,v 1.9.2.3 2007/09/07 01:33:17 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -163,6 +163,7 @@ using entity::process_tag;
 /// helper routines
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	For all non-selection events that execute, schedule all successor
 	events for recheck.
@@ -175,14 +176,15 @@ inline
 void
 recheck_all_successor_events(nonmeta_context& c) {
 	typedef	EventNode	event_type;
-	typedef	size_t		event_index_type;
 	STACKTRACE_CHPSIM_VERBOSE;
 	const event_type::successor_list_type&
 		succ(c.get_event().successor_events);
 	copy(std::begin(succ), std::end(succ), set_inserter(c));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Print outgoing edges adorned with guard expressions as labels. 
  */
@@ -221,6 +223,7 @@ dump_selection_successor_edges(const selection_list_type& l,
 	// check for else clause
 	return o;
 }
+#endif
 
 //=============================================================================
 /**
@@ -243,11 +246,15 @@ EventRechecker::EventRechecker(const nonmeta_context& c) :
 /**
 	By default print all successor edge, unadorned.  
  */
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#define DEFAULT_EVENT_SUCCESSOR_DUMPER(T)
+#else
 #define DEFAULT_EVENT_SUCCESSOR_DUMPER(T)				\
 void									\
 EventSuccessorDumper::visit(const T&) {					\
 	event.dump_successor_edges_default(os, index);			\
 }
+#endif
 
 //=============================================================================
 // class action_sequence method definitions
@@ -291,7 +298,8 @@ DEFAULT_EVENT_SUCCESSOR_DUMPER(concurrent_actions)
 void
 EventExecutor::visit(const concurrent_actions& ca) {
 	STACKTRACE_CHPSIM_VERBOSE;
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -340,7 +348,12 @@ EventExecutor::visit(const deterministic_selection& ds) {
 	for_each(ds.begin(), ds.end(),
 		guarded_action::selection_evaluator_ref(G));
 	INVARIANT(G.ready.size() == 1);
-	EventNode& t(context.get_event());	// this event
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const entity::CHP::local_event&
+		t(context.get_event().get_local_event());
+#else
+	const EventNode& t(context.get_event());	// this event
+#endif
 	const size_t ei = t.successor_events[G.ready.front()];
 	context.insert_first_checks(ei);
 }
@@ -391,10 +404,12 @@ EventRechecker::visit(const deterministic_selection& ds) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 void
 EventSuccessorDumper::visit(const deterministic_selection& ds) {
 	dump_selection_successor_edges(ds, os, event, index, dump_context);
 }
+#endif
 
 //=============================================================================
 // class nondeterministic_selection method definitions
@@ -432,7 +447,12 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	for_each(ns.begin(), ns.end(),
 		guarded_action::selection_evaluator_ref(G));
 	const size_t m = G.ready.size();
-	EventNode& t(context.get_event());
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const entity::CHP::local_event&
+		t(context.get_event().get_local_event());
+#else
+	const EventNode& t(context.get_event());
+#endif
 	switch (m) {
 	case 0: {
 		// this can happen because guards may be unstable, 
@@ -491,10 +511,12 @@ EventRechecker::visit(const nondeterministic_selection& ns) {
 }	// end visit(const nondeterministic_selection&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 void
 EventSuccessorDumper::visit(const nondeterministic_selection& ns) {
 	dump_selection_successor_edges(ns, os, event, index, dump_context);
 }
+#endif
 
 //=============================================================================
 // class metaloop_selection method definitions
@@ -561,7 +583,8 @@ EventExecutor::visit(const assignment& a) {
 	STACKTRACE_CHPSIM_VERBOSE;
 	a.get_lval()->nonmeta_assign(a.get_rval(), context, context.updates);
 		// also tracks updated reference
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -590,7 +613,8 @@ DEFAULT_EVENT_SUCCESSOR_DUMPER(condition_wait)
 void
 EventExecutor::visit(const condition_wait& cw) {
 	STACKTRACE_CHPSIM_VERBOSE;
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -659,7 +683,8 @@ EventExecutor::visit(const channel_send& cs) {
 	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 	nc.send();
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -718,7 +743,11 @@ try {
 } catch (...) {
 	cerr << "Run-time error writing channel: ";
 	std::ostringstream canonical_name;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const size_t process_index = context.get_process_index();
+#else
 	const size_t process_index = context.get_event().get_process_index();
+#endif
 	if (process_index) {
 		context.sm->get_pool<process_tag>()[process_index]
 			.dump_canonical_name(canonical_name,
@@ -764,7 +793,8 @@ if (!cr.is_peek()) {
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
 	nc.receive();
 }
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -865,7 +895,12 @@ EventExecutor::visit(const do_while_loop& dw) {
 			"do-while-loop evaluated TRUE!" << endl;
 		THROW_EXIT;
 	}	// end switch
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const size_t ei = context.get_event()
+		.get_local_event().successor_events[si];
+#else
 	const size_t ei = context.get_event().successor_events[si];
+#endif
 	context.insert_first_checks(ei);
 }
 
@@ -884,10 +919,12 @@ EventRechecker::visit(const do_while_loop&) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 void
 EventSuccessorDumper::visit(const do_while_loop& dw) {
 	dump_selection_successor_edges(dw, os, event, index, dump_context);
 }
+#endif
 
 //=============================================================================
 // class function_call_stmt method definitions
@@ -899,7 +936,8 @@ EventExecutor::visit(const function_call_stmt& fc) {
 		caller(fc.get_caller());
 	NEVER_NULL(caller);
 	caller->nonmeta_resolve_copy(context, caller);
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

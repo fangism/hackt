@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.5.12.2 2007/09/06 06:17:59 fang Exp $
+	$Id: nonmeta_context.h,v 1.5.12.3 2007/09/07 01:33:24 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -36,6 +36,7 @@ class TraceManager;
  */
 class nonmeta_context : public nonmeta_context_base {
 	typedef	nonmeta_context			this_type;
+// TODO: is local_event enough, do we need global_event?
 	// these types must correspond to those used in CHPSIM::State!
 	// but I'm too lazy to include its header here...
 	typedef	EventNode			event_type;
@@ -59,6 +60,11 @@ private:
 		Should be set by set_event.  
 	 */
 	event_index_type			global_event_offset;
+	/**
+		Current process index for this event.
+		Mostly used for diagnostics.
+	 */
+	size_t					process_index;
 #endif
 	/**
 		Successor of a just-executed event to check 
@@ -117,6 +123,11 @@ public:
 	 */
 	size_t
 	get_event_index(void) const;
+	
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	event_index_type
+	get_process_index(void) const { return process_index; }
+#endif
 
 	void
 	subscribe_this_event(void) const;
@@ -134,6 +145,9 @@ public:
 
 	const_iterator
 	first_checks_end(void) const { return first_checks.end(); }
+
+	void
+	first_check_all_successors(void);
 
 };	// end class nonmeta_context
 

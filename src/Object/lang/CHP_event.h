@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event.h"
 	Various classes of chpsim events.  
-	$Id: CHP_event.h,v 1.1.2.4 2007/09/06 06:17:40 fang Exp $
+	$Id: CHP_event.h,v 1.1.2.5 2007/09/07 01:33:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_H__
@@ -219,10 +219,15 @@ public:
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 
 		const SIM::CHPSIM::graph_options&,
-		const expr_dump_context&) const;
+		const expr_dump_context&, 
+		const char* = NULL, 	// extra label text
+		const event_index_type = 0	// offset to add to successors
+		) const;
 
 	ostream&
-	dump_successor_edges_default(ostream&, const event_index_type) const;
+	dump_successor_edges_default(ostream&, const event_index_type ,
+		const event_index_type = 0	// offset to add to successors
+		) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

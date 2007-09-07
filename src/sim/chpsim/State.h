@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7.16.4 2007/09/06 06:17:56 fang Exp $
+	$Id: State.h,v 1.7.16.5 2007/09/07 01:33:20 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -421,6 +421,12 @@ public:
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	size_t
 	get_process_id(const event_index_type) const;
+
+	size_t
+	get_process_id(const event_type&) const;
+
+	event_index_type
+	get_event_id(const event_type&) const;
 #endif
 
 private:

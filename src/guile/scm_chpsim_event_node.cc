@@ -1,17 +1,23 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.4.14.2 2007/09/06 06:17:48 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.4.14.3 2007/09/07 01:33:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include "sim/chpsim/Event.h"
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#include "sim/chpsim/State.h"
+#endif
 #include "sim/chpsim/Dependence.h"
 #include "Object/lang/CHP.h"	// for dynamic_cast on actions
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/expr/expr_dump_context.h"
 #include "guile/scm_chpsim_event_node.h"
 #include "guile/libhackt-wrap.h"
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#include "guile/chpsim-wrap.h"
+#endif
 #include "Object/module.h"
 #include "guile/hackt-documentation.h"
 #include <sstream>
@@ -38,6 +44,11 @@ using util::guile::make_scm_list;
 using util::guile::scm_gsubr_type;
 using util::guile::scm_c_define_gsubr_exported;
 USING_SCM_ASSERT_SMOB_TYPE
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#define	EVENT_ENUM_NAMESPACE	HAC::entity::CHP
+#else
+#define	EVENT_ENUM_NAMESPACE	HAC::SIM::CHPSIM
+#endif
 
 //=============================================================================
 /**
@@ -80,6 +91,18 @@ free_raw_chpsim_event_node_ptr(SCM obj) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+inline
+size_t 
+event_to_process_index(const scm_chpsim_event_node_ptr ptr) {
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	return chpsim_state->get_process_id(*ptr);
+#else
+	return ptr->get_process_index();
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Probably prints too much information by default...
 	\return non-zero to indicate success.
@@ -98,7 +121,7 @@ print_raw_chpsim_event_node_ptr(SCM obj, SCM port, scm_print_state* p) {
 	const module& m(*obj_module);
 	ptr->dump_struct(oss, 
 		m.get_state_manager().make_process_dump_context(
-			m.get_footprint(), ptr->get_process_index()));
+			m.get_footprint(), event_to_process_index(ptr)));
 	scm_puts(oss.str().c_str(), port);
 	scm_puts(">", port);
 	return 1;
@@ -165,7 +188,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_wait_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_CONDITION_WAIT);
+		EVENT_ENUM_NAMESPACE::EVENT_CONDITION_WAIT);
 }
 #undef	FUNC_NAME
 
@@ -181,7 +204,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_assign_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_ASSIGN);
+		EVENT_ENUM_NAMESPACE::EVENT_ASSIGN);
 }
 #undef	FUNC_NAME
 
@@ -197,7 +220,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_send_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_SEND);
+		EVENT_ENUM_NAMESPACE::EVENT_SEND);
 }
 #undef	FUNC_NAME
 
@@ -213,7 +236,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_receive_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_RECEIVE);
+		EVENT_ENUM_NAMESPACE::EVENT_RECEIVE);
 }
 #undef	FUNC_NAME
 
@@ -229,7 +252,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_peek_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_PEEK);
+		EVENT_ENUM_NAMESPACE::EVENT_PEEK);
 }
 #undef	FUNC_NAME
 
@@ -245,7 +268,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_fork_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_CONCURRENT_FORK);
+		EVENT_ENUM_NAMESPACE::EVENT_CONCURRENT_FORK);
 }
 #undef	FUNC_NAME
 
@@ -263,7 +286,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_join_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_CONCURRENT_JOIN &&
+		EVENT_ENUM_NAMESPACE::EVENT_CONCURRENT_JOIN &&
 		(ptr->get_predecessors() > 1));
 }
 #undef	FUNC_NAME
@@ -280,7 +303,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_select_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN);
+		EVENT_ENUM_NAMESPACE::EVENT_SELECTION_BEGIN);
 }
 #undef	FUNC_NAME
 
@@ -296,7 +319,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_select_det_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>((ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN) &&
+		EVENT_ENUM_NAMESPACE::EVENT_SELECTION_BEGIN) &&
 		IS_A(const deterministic_selection*, ptr->get_chp_action()));
 }
 #undef	FUNC_NAME
@@ -314,7 +337,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_select_nondet_p, FUNC_NAME, 1, 0, 0,
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>((ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN) &&
+		EVENT_ENUM_NAMESPACE::EVENT_SELECTION_BEGIN) &&
 		IS_A(const nondeterministic_selection*, ptr->get_chp_action()));
 }
 #undef	FUNC_NAME
@@ -332,7 +355,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_branch_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN &&
+		EVENT_ENUM_NAMESPACE::EVENT_SELECTION_BEGIN &&
 		!IS_A(const do_while_loop*, ptr->get_chp_action()));
 }
 #undef	FUNC_NAME
@@ -349,7 +372,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_do_while_p, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 	return make_scm<bool>(ptr->get_event_type() ==
-		HAC::SIM::CHPSIM::EVENT_SELECTION_BEGIN &&
+		EVENT_ENUM_NAMESPACE::EVENT_SELECTION_BEGIN &&
 		IS_A(const do_while_loop*, ptr->get_chp_action()));
 }
 #undef	FUNC_NAME
@@ -367,7 +390,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_process_index, FUNC_NAME, 1, 0, 0,
 "Return the parent process index of the indexed event @var{obj} (smob).") {
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
-	return make_scm(ptr->get_process_index());
+	return make_scm(event_to_process_index(ptr));
 }
 #undef	FUNC_NAME
 
@@ -416,7 +439,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_num_successors, FUNC_NAME, 1, 0, 0,
 "Return the number of successors events that follow this event @var{obj}.") {
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
-	return make_scm(ptr->successor_events.size());
+	return make_scm(ptr->num_successors());
 }
 #undef	FUNC_NAME
 
@@ -430,7 +453,11 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_successors, FUNC_NAME, 1, 0, 0, (SCM obj),
 "Return a list of the successor events of event @var{obj}.") {
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	return make_scm_list(ptr->__local_event->successor_events);
+#else
 	return make_scm_list(ptr->successor_events);
+#endif
 }
 #undef	FUNC_NAME
 

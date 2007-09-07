@@ -5,6 +5,12 @@
 
 2007-09-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-11:
+	  Finished first draft of CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS, 
+		still disabled (but at least compiles), 
+		tests show no regressions.  Next, flip the switch and pray...
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-10:
 	  Perm'd DUMP_CHPSIM_PARENT_CONTEXT (sim/chpsim/devel_switches.h)
 

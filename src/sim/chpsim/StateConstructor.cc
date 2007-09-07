@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.6.8.2 2007/09/06 01:12:21 fang Exp $
+	$Id: StateConstructor.cc,v 1.6.8.3 2007/09/07 01:33:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -49,13 +49,23 @@ using util::memory::free_list_release;
 //=============================================================================
 // class StateConstructor method definitions
 
-StateConstructor::StateConstructor(State& s) : 
-		state(s)
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		, free_list(), 
-		last_event_index(0), 
-		current_process_index(0)	// top-level
+StateConstructor::StateConstructor(
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		const
 #endif
+		State& s
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, event_type& e
+#endif
+		) : 
+		state(s),
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		event(e),
+#else
+		free_list(), 
+		last_event_index(0), 
+#endif
+		current_process_index(0)	// top-level
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -217,8 +227,8 @@ void
 StateConstructor::visit(const deterministic_selection& ds) {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t branches = ds.size();
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t merge_index = allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
 			current_process_index, 0));
@@ -238,9 +248,11 @@ StateConstructor::visit(const deterministic_selection& ds) {
 	tmp.reserve(branches);
 	// construct concurrent chains
 	for ( ; i!=e; ++i) {
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		last_event_index = merge_index;	// pass down
 		(*i)->accept(*this);
 		tmp.push_back(last_event_index);	// head of each chain
+#endif
 		const guarded_action::guard_ptr_type& g((*i)->get_guard());
 		if (g) {
 			g->accept(deps);
@@ -269,8 +281,10 @@ StateConstructor::visit(const deterministic_selection& ds) {
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(get_event(split_index));
-#endif
 	split_event.import_block_dependencies(deps);
+#else
+	event.import_block_dependencies(deps);
+#endif
 
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	split_event.successor_events.resize(branches);
@@ -292,8 +306,8 @@ void
 StateConstructor::visit(const nondeterministic_selection& ns) {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t branches = ns.size();
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t merge_index = allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
 			current_process_index, 0));
@@ -314,9 +328,11 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 	tmp.reserve(branches);
 	// construct concurrent chains
 	for ( ; i!=e; ++i) {
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		last_event_index = merge_index;	// pass down
 		(*i)->accept(*this);
 		tmp.push_back(last_event_index);	// head of each chain
+#endif
 		const guarded_action::guard_ptr_type& g((*i)->get_guard());
 		if (g) {
 			g->accept(deps);
@@ -344,8 +360,10 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 {
 	STACKTRACE_INDENT_PRINT("split index: " << split_index << endl);
 	EventNode& split_event(get_event(split_index));
-#endif
 	split_event.import_block_dependencies(deps);
+#else
+	event.import_block_dependencies(deps);
+#endif
 
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	split_event.successor_events.resize(branches);
@@ -424,6 +442,7 @@ StateConstructor::visit(const assignment& a) {
 void
 StateConstructor::visit(const function_call_stmt& fc) {
 	STACKTRACE_VERBOSE;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t new_index = allocate_event(
 		EventNode(&fc, SIM::CHPSIM::EVENT_FUNCTION_CALL, 
 			current_process_index, 
@@ -435,12 +454,15 @@ StateConstructor::visit(const function_call_stmt& fc) {
 	// we give an arbitrary delay to function call
 	STACKTRACE_INDENT_PRINT("new call: " << new_index << endl);
 	EventNode& new_event(get_event(new_index));
+#endif
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 	// collect rvalues, no lvalues
 #endif
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);
 	last_event_index = new_index;
 	count_predecessors(new_event);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -473,7 +495,11 @@ StateConstructor::visit(const condition_wait& cw) {
 	if (cw.get_guard()) {
 		SIM::CHPSIM::DependenceSetCollector deps(*this);
 		cw.get_guard()->accept(deps);
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		event.import_block_dependencies(deps);
+#else
 		new_event.import_block_dependencies(deps);
+#endif
 	}
 
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
@@ -512,7 +538,11 @@ StateConstructor::visit(const channel_send& cs) {
 	// can block on channel, so we add dependencies
 	SIM::CHPSIM::DependenceSetCollector deps(*this);
 	cs.get_chan()->accept(deps);
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	event.import_block_dependencies(deps);
+#else
 	new_event.import_block_dependencies(deps);
+#endif
 }
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);
@@ -556,7 +586,11 @@ StateConstructor::visit(const channel_receive& cr) {
 	// channel peeks can also block
 	SIM::CHPSIM::DependenceSetCollector deps(*this);
 	cr.get_chan()->accept(deps);
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	event.import_block_dependencies(deps);
+#else
 	new_event.import_block_dependencies(deps);
+#endif
 }
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	connect_successor_events(new_event);

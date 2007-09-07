@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.4.8.2 2007/09/06 06:17:57 fang Exp $
+	$Id: StateConstructor.h,v 1.4.8.3 2007/09/07 01:33:23 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
@@ -64,7 +64,13 @@ private:
 	typedef	std::set<size_t>		free_list_type;
 #endif
 private:
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const
+#endif
 	state_type&				state;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	event_type&				event;
+#endif
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	free_list_type				free_list;
 #endif
@@ -78,10 +84,12 @@ public:
 	 */
 	// return_indices_type			last_event_indices;
 	event_index_type			last_event_index;
+#endif
 	/**
 		index of the globally allocated process, for context.  
 	 */
 	node_index_type				current_process_index;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		List of initially ready events.  
 	 */
@@ -93,7 +101,15 @@ private:
 	StateConstructor(const StateConstructor&);
 public:
 	explicit
-	StateConstructor(state_type&);
+	StateConstructor(
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		const
+#endif
+		state_type&
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, event_type&
+#endif
+		);
 
 	~StateConstructor();
 

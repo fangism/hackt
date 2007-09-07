@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event_alloc.cc"
 	Copy-ripped from "sim/chpsim/StateConstructor.cc"
-	$Id: CHP_event_alloc.cc,v 1.1.2.3 2007/09/06 01:12:14 fang Exp $
+	$Id: CHP_event_alloc.cc,v 1.1.2.4 2007/09/07 01:33:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -896,8 +896,10 @@ if (last_event_index && event_footprint.size()) {		// != 0
 static
 ostream&
 dump_selection_successor_edges(const selection_list_type& l, 
-		ostream& o, const local_event& e, const size_t i, 
-		const expr_dump_context& c) {
+		ostream& o, const local_event& e, 
+		const EventSuccessorDumper::event_index_type i, 
+		const expr_dump_context& c, 
+		const EventSuccessorDumper::event_index_type offset = 0) {
 	typedef	local_event		event_type;
 	typedef	selection_list_type::const_iterator const_iterator;
 	const event_type::successor_list_type& succ(e.successor_events);
@@ -908,7 +910,7 @@ dump_selection_successor_edges(const selection_list_type& l,
 		const guarded_action::guard_ptr_type&
 			g((*li)->get_guard());
 		o << event_type::node_prefix << i << " -> " <<
-			event_type::node_prefix << *si << "\t[label=\"";
+			event_type::node_prefix << *si +offset << "\t[label=\"";
 		if (g) {
 			g->dump(o, c);
 		} else {
@@ -920,11 +922,10 @@ dump_selection_successor_edges(const selection_list_type& l,
 	// if there is an implicit else-clause
 	if (si != se) {
 		o << event_type::node_prefix << i << " -> " <<
-			event_type::node_prefix << *si <<
+			event_type::node_prefix << *si +offset <<
 			"\t[label=\"else\"];" << endl;
 		++si;
 		INVARIANT(si == se);
-		
 	}
 	// check for else clause
 	return o;
@@ -937,7 +938,7 @@ dump_selection_successor_edges(const selection_list_type& l,
 #define DEFAULT_EVENT_SUCCESSOR_DUMPER(T)				\
 void									\
 EventSuccessorDumper::visit(const T&) {					\
-	event.dump_successor_edges_default(os, index);			\
+	event.dump_successor_edges_default(os, index, offset);		\
 }
 
 /**
@@ -947,7 +948,7 @@ EventSuccessorDumper::visit(const T&) {					\
 void									\
 EventSuccessorDumper::visit(const T& s) {				\
 	dump_selection_successor_edges(					\
-		s, os, event, index, dump_context);			\
+		s, os, event, index, dump_context, offset);		\
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

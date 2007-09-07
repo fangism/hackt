@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.h"
 	Visitor classes for CHP events.  
-	$Id: EventExecutor.h,v 1.5.8.2 2007/09/02 20:49:29 fang Exp $
+	$Id: EventExecutor.h,v 1.5.8.3 2007/09/07 01:33:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENTEXECUTOR_H__
@@ -9,11 +9,14 @@
 
 #include <iosfwd>
 #include "Object/lang/CHP_visitor.h"
+#include "sim/chpsim/devel_switches.h"
 
 namespace HAC {
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 namespace entity {
 	struct expr_dump_context;
 }	/// end namespace entity
+#endif
 namespace SIM {
 namespace CHPSIM {
 using std::ostream;
@@ -32,7 +35,9 @@ using entity::CHP::channel_receive;
 using entity::CHP::do_while_loop;
 using entity::CHP::do_forever_loop;
 using entity::CHP::function_call_stmt;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 using entity::expr_dump_context;
+#endif
 class nonmeta_context;
 class EventExecutor;
 class EventRechecker;
@@ -169,6 +174,7 @@ private:
 };	// end class EventRechecker
 
 //-----------------------------------------------------------------------------
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Successor printing visitor.
  */
@@ -238,6 +244,7 @@ private:
 	operator = (const this_type&);
 
 };	// end class EventSuccessorDumper
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 //=============================================================================
 }	// end namespace CHPSIM

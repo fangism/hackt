@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10.8.4 2007/09/06 06:17:52 fang Exp $
+	$Id: Event.h,v 1.10.8.5 2007/09/07 01:33:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -12,7 +12,9 @@
 #include "util/string_fwd.h"
 #include "sim/chpsim/devel_switches.h"
 #include <iosfwd>
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#include <sstream>
+#else
 #include <valarray>
 #endif
 #include "sim/time.h"
@@ -36,7 +38,9 @@ class nonmeta_context;
 class graph_options;
 using std::ostream;
 using std::string;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+class State;		// arg... event shouldn't depend on State?
+#else
 using std::valarray;
 #endif
 using entity::CHP::action;
@@ -142,7 +146,9 @@ public:
 	typedef	valarray<event_index_type>	successor_list_type;
 #endif
 	static const real_time		default_delay;
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	static const char		node_prefix[];
+#endif
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		Pointer to instance-invariant event information.
@@ -304,6 +310,11 @@ public:
 	}
 #endif
 
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const local_event_type&
+	get_local_event(void) const { return *__local_event; }
+#endif
+
 	/**
 		this 'leaks' out the pointer, it is not meant to be misused, 
 		only short-lived temporary references.  
@@ -343,6 +354,22 @@ public:
 		;
 #else
 		{ return predecessors; }
+#endif
+
+	size_t
+	num_successors(void) const
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		;
+#else
+		{ return successor_events.size(); }
+#endif
+
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	void
+	make_global_root(const local_event_type*);
+
+	void
+	setup(const local_event_type*, const State&);
 #endif
 
 	void
@@ -416,7 +443,12 @@ public:
 
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 
-		const graph_options&, const entity::expr_dump_context&) const;
+		const graph_options&, const entity::expr_dump_context&
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, const size_t
+		, const event_index_type
+#endif
+		) const;
 
 	ostream&
 	dump_successor_edges_default(ostream&, const event_index_type) const;

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.5 2007/09/06 06:17:50 fang Exp $
+	$Id: Event.cc,v 1.10.8.6 2007/09/07 01:33:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,8 @@
 #include "sim/chpsim/EventExecutor.h"
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #include "Object/lang/CHP_event.h"
+#include "Object/lang/CHP_event_alloc.h"	// for Dumper
+#include "sim/chpsim/StateConstructor.h"	// for dependencies
 #else
 #include "util/STL/valarray_iterator.h"
 #endif
@@ -29,7 +31,9 @@ namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+using entity::CHP::EventSuccessorDumper;
+#else
 using std::begin;
 using std::end;
 #endif
@@ -45,8 +49,10 @@ using entity::footprint;
 //=============================================================================
 // class EventNode method definitions
 
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 const char 
 EventNode::node_prefix[] = "EVENT_";
+#endif
 
 const EventNode::time_type
 EventNode::default_delay = 10;
@@ -194,6 +200,13 @@ EventNode::get_predecessors(void) const {
 	NEVER_NULL(__local_event);
 	return __local_event->get_predecessors();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+EventNode::num_successors(void) const {
+	NEVER_NULL(__local_event);
+	return __local_event->successor_events.size();
+}
 #endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -208,6 +221,19 @@ EventNode::orphan(void) {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+void
+EventNode::setup(const local_event_type* l, const State& s) {
+	__local_event = l;
+	NEVER_NULL(__local_event);
+	StateConstructor v(s, *this);
+	const action* action_ptr = get_chp_action();
+	if (action_ptr) {
+		action_ptr->accept(v);
+	}
+}
+#endif
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resets the state of the event, for beginning simulation.  
@@ -335,6 +361,7 @@ EventNode::execute(nonmeta_context& c) {
 			successor_events(__local_event->successor_events);
 		copy(successor_events.begin(), successor_events.end(), 
 			set_inserter(c));
+		c.first_check_all_successors();
 #else
 		copy(begin(successor_events), end(successor_events), 
 			set_inserter(c));
@@ -382,7 +409,7 @@ EventNode::dump_brief(ostream& o,
 	if (action_ptr) {
 #endif
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		return __local_event->dump_event(o, edc);
+		return __local_event->dump_brief(o, edc);
 #else
 		action_ptr->dump_event(o, edc);
 	} else {
@@ -493,7 +520,23 @@ EventNode::dump_struct(ostream& o, const expr_dump_context& edc) const {
  */
 ostream&
 EventNode::dump_dot_node(ostream& o, const event_index_type i, 
-		const graph_options& g, const expr_dump_context& edc) const {
+		const graph_options& g, const expr_dump_context& edc
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		, const size_t process_index
+		, const event_index_type offset
+#endif
+		) const {
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	std::ostringstream extra;
+	if (g.show_delays) {
+		extra << '@' << delay << ' ';
+	}
+	if (!g.process_event_clusters || !process_index) {
+		// always show pid 0 because top-level is not clustered
+		extra << "pid=" << process_index;
+	}
+	__local_event->dump_dot_node(o, i, g, edc, extra.str().c_str(), offset);
+#else
 	o << node_prefix << i << '\t';
 	o << "[shape=";
 	switch (event_type) {
@@ -539,6 +582,7 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 	} else {
 		dump_successor_edges_default(o, i);
 	}
+#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 	if (g.show_instances) {
 		block_deps.dump_dependence_edges(o, i);
@@ -549,6 +593,7 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	Just prints edge label if applicable.
 	TODO: somehow print guards on edges of selection.  
@@ -567,6 +612,7 @@ EventNode::dump_successor_edges_default(ostream& o,
 	}
 	return o;
 }
+#endif
 
 //=============================================================================
 }	// end namespace CHPSIM
