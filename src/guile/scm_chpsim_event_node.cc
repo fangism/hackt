@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.4.14.4 2007/09/07 21:07:36 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.4.14.5 2007/09/09 21:18:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -118,15 +118,8 @@ print_raw_chpsim_event_node_ptr(SCM obj, SCM port, scm_print_state* p) {
 	NEVER_NULL(ptr);
 	ostringstream oss;
 	NEVER_NULL(obj_module);
-	const module& m(*obj_module);
-	const size_t pid = event_to_process_index(ptr);
-	ptr->dump_struct(oss, 
-		m.get_state_manager().make_process_dump_context(
-			m.get_footprint(), pid)
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-			, pid, chpsim_state->get_offset_from_pid(pid)
-#endif
-			);
+//	INVARIANT(obj_module == chpsim_state->get_module());
+	chpsim_state->dump_event(oss, *ptr);
 	scm_puts(oss.str().c_str(), port);
 	scm_puts(">", port);
 	return 1;

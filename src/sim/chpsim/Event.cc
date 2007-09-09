@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.7 2007/09/07 21:07:38 fang Exp $
+	$Id: Event.cc,v 1.10.8.8 2007/09/09 21:18:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -348,7 +348,7 @@ EventNode::execute(nonmeta_context& c) {
 #endif
 	if (
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		__local_event->is_null()
+		!__local_event->is_null()
 #else
 		(event_type != EVENT_NULL)
 #endif

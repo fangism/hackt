@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/StateConstructor.cc"
-	$Id: StateConstructor.cc,v 1.6.8.4 2007/09/07 21:07:46 fang Exp $
+	$Id: StateConstructor.cc,v 1.6.8.5 2007/09/09 21:18:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -13,7 +13,6 @@
 #include "sim/chpsim/Event.h"
 #include "Object/module.h"
 #include "Object/global_entry.tcc"
-// #include "Object/lang/CHP_footprint.h"
 #include "Object/lang/CHP.h"
 #include "Object/expr/preal_const.h"
 #include "Object/expr/bool_expr.h"
@@ -30,7 +29,9 @@
 	such as fusion.  
 	TODO: control in execute-time switch.  
  */
+#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #define	OPTIMIZE_CHPSIM_EVENTS			1
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -42,6 +43,9 @@ using std::endl;
 using entity::process_tag;
 using entity::global_entry_pool;
 using entity::preal_const;
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+using entity::CHP::delay_ptr_type;
+#endif
 using util::memory::free_list_acquire;
 using util::memory::free_list_release;
 #include "util/using_ostream.h"
@@ -139,7 +143,22 @@ StateConstructor::visit(const concurrent_actions& ca) {
 	// TODO: using footprint frame, allocate event edge graph
 	// there will be multiple outgoing edges
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	switch (event.get_event_type()) {
+	case entity::CHP::EVENT_CONCURRENT_JOIN:
+		event.set_delay(0);
+		break;
+	case entity::CHP::EVENT_CONCURRENT_FORK: {
+		const delay_ptr_type& d(ca.get_delay());
+		event.set_delay(d ?
+			d.is_a<const preal_const>()->static_constant_value() :
+			1);	// small delay
+		}
+		break;
+	default:
+		DIE;
+	}
+#else
 	const size_t branches = ca.size();
 	STACKTRACE_INDENT_PRINT("branches: " << branches << endl);
 // check for degenerate cases first: 0, 1
@@ -238,7 +257,21 @@ StateConstructor::visit(const deterministic_selection& ds) {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
 	const size_t branches = ds.size();
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	switch (event.get_event_type()) {
+	case entity::CHP::EVENT_SELECTION_BEGIN: {
+		const delay_ptr_type& d(ds.get_delay());
+		event.set_delay(d ?
+			d.is_a<const preal_const>()->static_constant_value() :
+			1);
+		}
+		break;
+	case entity::CHP::EVENT_SELECTION_END:
+		event.set_delay(0);
+		break;
+	default: DIE;
+	}
+#else
 	const size_t merge_index = allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
 			current_process_index, 0));
@@ -317,7 +350,21 @@ StateConstructor::visit(const nondeterministic_selection& ns) {
 	STACKTRACE_VERBOSE;
 	// TODO: run-time check for guard exclusion
 	const size_t branches = ns.size();
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	switch (event.get_event_type()) {
+	case entity::CHP::EVENT_SELECTION_BEGIN: {
+		const delay_ptr_type& d(ns.get_delay());
+		event.set_delay(d ?
+			d.is_a<const preal_const>()->static_constant_value() :
+			15);
+		}
+		break;
+	case entity::CHP::EVENT_SELECTION_END:
+		event.set_delay(0);
+		break;
+	default: DIE;
+	}
+#else
 	const size_t merge_index = allocate_event(
 		EventNode(NULL, SIM::CHPSIM::EVENT_SELECTION_END, 
 			current_process_index, 0));
@@ -403,7 +450,14 @@ StateConstructor::visit(const metaloop_statement&) {
 void
 StateConstructor::visit(const assignment& a) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+{
+	const delay_ptr_type& d(a.get_delay());
+	event.set_delay(d ?
+		d.is_a<const preal_const>()->static_constant_value() :
+		10);
+}
+#else
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = allocate_event(
 		EventNode(&a, SIM::CHPSIM::EVENT_ASSIGN, 
@@ -452,7 +506,14 @@ StateConstructor::visit(const assignment& a) {
 void
 StateConstructor::visit(const function_call_stmt& fc) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+{
+	const delay_ptr_type& d(fc.get_delay());
+	event.set_delay(d ?
+		d.is_a<const preal_const>()->static_constant_value() :
+		5);
+}
+#else
 	const size_t new_index = allocate_event(
 		EventNode(&fc, SIM::CHPSIM::EVENT_FUNCTION_CALL, 
 			current_process_index, 
@@ -486,7 +547,14 @@ StateConstructor::visit(const function_call_stmt& fc) {
 void
 StateConstructor::visit(const condition_wait& cw) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+{
+	const delay_ptr_type& d(cw.get_delay());
+	event.set_delay(d ?
+		d.is_a<const preal_const>()->static_constant_value() :
+		0);
+}
+#else
 	// register guard expression dependents
 	// construct successor event graph edge? or caller's responsibility?
 	const size_t new_index = allocate_event(
@@ -529,7 +597,14 @@ StateConstructor::visit(const condition_wait& cw) {
 void
 StateConstructor::visit(const channel_send& cs) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+{
+	const delay_ptr_type& d(cs.get_delay());
+	event.set_delay(d ?
+		d.is_a<const preal_const>()->static_constant_value() :
+		2);
+}
+#else
 	// atomic event
 	// construct event graph
 	const size_t new_index = allocate_event(
@@ -571,7 +646,14 @@ StateConstructor::visit(const channel_send& cs) {
 void
 StateConstructor::visit(const channel_receive& cr) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+{
+	const delay_ptr_type& d(cr.get_delay());
+	event.set_delay(d ?
+		d.is_a<const preal_const>()->static_constant_value() :
+		(cr.is_peek() ? 3 : 5));
+}
+#else
 	// atomic event
 	// construct event graph
 	const bool peek = cr.is_peek();
@@ -627,7 +709,11 @@ StateConstructor::visit(const channel_receive& cr) {
 void
 StateConstructor::visit(const do_forever_loop& fl) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+// NOTE: the loopback event is always eliminated by event-graph optimization
+// thus there is no need to set any delays here
+//	event.set_delay(0);
+#else
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	// OR use the 0th event slot as the dummy!
@@ -713,7 +799,15 @@ if (back_event.is_movable()) {
 void
 StateConstructor::visit(const do_while_loop& dw) {
 	STACKTRACE_VERBOSE;
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+{
+	const delay_ptr_type& d(dw.get_delay());
+	event.set_delay(d ?
+		d.is_a<const preal_const>()->static_constant_value() :
+		((event.get_event_type() ==
+			entity::CHP::EVENT_SELECTION_BEGIN) ? 3 : 0));
+}
+#else
 	// construct cyclic event graph
 	// create a dummy event first (epilogue) and loop it around.
 	const size_t branches = dw.size();

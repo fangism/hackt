@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.11 2007/08/15 02:49:23 fang Exp $
+	$Id: Command.cc,v 1.11.4.1 2007/09/09 21:18:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2569,7 +2569,7 @@ void
 Trace::usage(ostream& o) {
 	o << name << " <file>" << endl;
 	o << "Records all data and events to file for later analysis.\n"
-"Trace-file is completed with a \'trace-finish\' command, or automatically\n"
+"Trace-file is completed with a \'trace-close\' command, or automatically\n"
 "upon termination of ths simulation." << endl;
 }
 

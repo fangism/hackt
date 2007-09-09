@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.11.16.1 2007/09/02 20:49:20 fang Exp $
+	$Id: CHP_base.h,v 1.11.16.2 2007/09/09 21:18:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -29,7 +29,7 @@ class action;
 class chp_visitor;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
-typedef	count_ptr<const  preal_expr>		delay_ptr_type;
+typedef	count_ptr<const preal_expr>		delay_ptr_type;
 
 //=============================================================================
 /**
