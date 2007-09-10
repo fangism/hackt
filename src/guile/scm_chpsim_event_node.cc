@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.4.14.5 2007/09/09 21:18:40 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.4.14.6 2007/09/10 22:33:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -33,6 +33,7 @@ using HAC::entity::CHP::do_while_loop;
 using HAC::entity::CHP::deterministic_selection;
 using HAC::entity::CHP::nondeterministic_selection;
 using HAC::SIM::CHPSIM::DependenceSet;
+using HAC::SIM::event_index_type;
 using HAC::entity::bool_tag;
 using HAC::entity::int_tag;
 using HAC::entity::enum_tag;
@@ -452,7 +453,13 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_successors, FUNC_NAME, 1, 0, 0, (SCM obj),
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	return make_scm_list(ptr->__local_event->successor_events);
+	std::vector<event_index_type> global_successors;
+	std::transform(ptr->local_successors_begin(), 
+		ptr->local_successors_end(),
+		back_inserter(global_successors),
+		bind1st(std::plus<event_index_type>(), 
+			chpsim_state->get_offset_from_event(*ptr)));
+	return make_scm_list(global_successors);
 #else
 	return make_scm_list(ptr->successor_events);
 #endif

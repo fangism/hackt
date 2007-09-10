@@ -2,13 +2,13 @@ null-event-delay = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 a : bool a = 0
 b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	14	0	
+	0	1	0	
 a : bool a = 0
 b : bool b = 0
 event queue:
@@ -22,14 +22,14 @@ event queue:
 check queue:
 	time	eid	pid	event
 	10	13	0	b := false
-	10	1	0	
+	10	14	0	
 a : bool a = 0
 b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	1	0	
-	10	1	0	
+	10	14	0	
+	10	14	0	
 a : bool a = 0
 b : bool b = 0
 executing selection 

@@ -5,6 +5,12 @@
 
 2007-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-15:
+	  No source revision, only test updates.
+	  Most of remaining test cases in test/chpsim updated, re-validated.
+		The few remaining need more staring...
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-14:
 	  No source revision, only test updates.
 	  Majority of affected regression tests updated (the trivial ones).

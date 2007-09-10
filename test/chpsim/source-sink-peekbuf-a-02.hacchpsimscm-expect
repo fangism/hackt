@@ -1,9 +1,9 @@
 all trivial-events:
-(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 4 7 
+(0 . #<raw-chpsim-event-node: fork: null, #pred: 0, succ: 1 4 7 
 >)
 
 all fork-events:
-(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 4 7 
+(0 . #<raw-chpsim-event-node: fork: null, #pred: 0, succ: 1 4 7 
 >)
 
 all wait-events:

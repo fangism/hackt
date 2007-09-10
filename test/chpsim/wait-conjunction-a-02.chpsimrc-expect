@@ -2,13 +2,13 @@ null-event-delay = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 a : bool a = 0
 b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	18	0	
+	0	1	0	
 a : bool a = 0
 b : bool b = 0
 event queue:
@@ -70,7 +70,7 @@ b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	30	1	0	
+	30	18	0	
 	40	4	0	a := false
 a : bool a = 0
 b : bool b = 1
@@ -90,13 +90,13 @@ event queue:
 	time	eid	pid	event
 	60	13	0	[a&&b]
 check queue:
-	60	1	0	
+	60	18	0	
 a : bool a = 1
 b : bool b = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	60	1	0	
+	60	18	0	
 	60	12	0	
 a : bool a = 1
 b : bool b = 1
@@ -124,7 +124,7 @@ b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	70	1	0	
+	70	18	0	
 a : bool a = 0
 b : bool b = 0
 event queue:

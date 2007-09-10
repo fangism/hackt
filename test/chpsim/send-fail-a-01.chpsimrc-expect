@@ -1,19 +1,36 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
+time: 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	5	0	
+	10	1	0	
+time: 0
 event queue:
 check queue:
 	time	eid	pid	event
-	20	2	0	X!(true)
-	20	3	0	X!(false)
-	20	4	0	[after=20] X?(x)
+	20	2	0	[after=20] X?(x)
+	20	3	0	X!(true)
+	20	4	0	X!(false)
+time: 10
+event queue:
+	time	eid	pid	event
+	20	2	0	[after=20] X?(x)
+check queue:
+	20	4	0	X!(false)
+	30	3	0	X!(true)
+time: 20
+event queue:
+check queue:
+	time	eid	pid	event
+	20	4	0	X!(false)
+	30	3	0	X!(true)
+	30	2	0	[after=20] X?(x)
+time: 20
 ERROR: detected attempt to send on channel that is already blocked waiting to send!
 	on channel[1] (X)
 Run-time error while checking event.
-event[3]:	20	3	0	X!(false)	[by:5]
+event[3]:	30	3	0	X!(true)	[by:3]
 Caught run-time exception during execution.  Halting.

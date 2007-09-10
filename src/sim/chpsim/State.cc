@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12.12.8 2007/09/09 21:18:44 fang Exp $
+	$Id: State.cc,v 1.12.12.9 2007/09/10 22:33:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -439,6 +439,24 @@ State::get_event_id(const event_type& e) const {
 	const event_index_type d = std::distance(&event_pool[0], &e);
 	INVARIANT(d < event_pool.size());
 	return d;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the base offset of the process to which this event belongs.
+ */
+event_index_type
+State::get_offset_from_event(const event_index_type eid) const {
+	return get_offset_from_pid(get_process_id(eid));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the base offset of the process to which this event belongs.
+ */
+event_index_type
+State::get_offset_from_event(const event_type& e) const {
+	return get_offset_from_pid(get_process_id(e));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

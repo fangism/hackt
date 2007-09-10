@@ -4,9 +4,9 @@
 ((2) (3) (10) (17))
 "testing a depth-first traversal from root node:"
 0
-20
-18
 1
+18
+20
 17
 9
 7

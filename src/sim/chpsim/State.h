@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7.16.7 2007/09/09 21:18:46 fang Exp $
+	$Id: State.h,v 1.7.16.8 2007/09/10 22:33:04 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -430,6 +430,12 @@ public:
 
 	event_index_type
 	get_offset_from_pid(const size_t) const;
+
+	event_index_type
+	get_offset_from_event(const event_index_type) const;
+
+	event_index_type
+	get_offset_from_event(const event_type&) const;
 
 	bool
 	valid_process_id(const size_t) const;

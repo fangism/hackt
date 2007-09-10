@@ -68,14 +68,14 @@
 (7 60.0 15 . 6)
 (6 50.0 16 . 5)
 (5 40.0 17 . 4)
-(4 30.0 1 . 3)
+(4 30.0 20 . 3)
 (3 20.0 19 . 1)
-(1 10.0 20 . 0)
+(1 10.0 1 . 0)
 (0 0.0 0 . 0)
 "all static events:"
-(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 20 
+(0 . #<raw-chpsim-event-node: fork: null, #pred: 0, succ: 1 
 >)
-(1 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 17 
+(1 . #<raw-chpsim-event-node: fork: , pid: 0, #pred: 1, succ: 18 19 
 >)
 (2 . #<raw-chpsim-event-node: null: null, pid: 0, #pred: 1, succ: 17 
 >)
@@ -109,11 +109,11 @@
 >)
 (17 . #<raw-chpsim-event-node: select: [ a -> ... [] else -> ... ], pid: 0, #pred: 1, succ: 9 16 
 >)
-(18 . #<raw-chpsim-event-node: assign: a := false, pid: 0, #pred: 1, succ: 1 
+(18 . #<raw-chpsim-event-node: assign: a := false, pid: 0, #pred: 1, succ: 20 
 >)
-(19 . #<raw-chpsim-event-node: assign: b := false, pid: 0, #pred: 1, succ: 1 
+(19 . #<raw-chpsim-event-node: assign: b := false, pid: 0, #pred: 1, succ: 20 
 >)
-(20 . #<raw-chpsim-event-node: fork: , pid: 0, #pred: 1, succ: 18 19 
+(20 . #<raw-chpsim-event-node: join: , pid: 0, #pred: 2, succ: 17 
 >)
 "all select-events:"
 (9 . #<raw-chpsim-event-node: select: [ b -> ... [] else -> ... ], pid: 0, #pred: 1, succ: 7 8 

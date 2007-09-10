@@ -1,7 +1,7 @@
 #!hacchpsimguile -b
 !#
 ;; "channel-sync-desync-a-22.hacchpsimscm"
-;;	$Id: channel-sync-desync-a-22.hacchpsimscm,v 1.2 2007/04/20 18:27:02 fang Exp $
+;;	$Id: channel-sync-desync-a-22.hacchpsimscm,v 1.2.18.1 2007/09/10 22:33:24 fang Exp $
 ;; vi: ft=scheme
 ;; @haco@ channel-sync-desync-a.haco-a
 ;; @chpsimtrace@ channel-sync-desync-a-04.chpsimtrace
@@ -15,7 +15,7 @@
 
 ; only look at event 2 (using predicate)
 (define (event-two? e) (= 2 (chpsim-trace-entry-event e)))
-(define (event-three? e) (= 3 (chpsim-trace-entry-event e)))
+(define (event-eight? e) (= 8 (chpsim-trace-entry-event e)))
 
 (define zz (stream-filter-split event-two? y))
 ; zz
@@ -23,7 +23,7 @@
 (stream->list (cdr zz))
 ; (stream->list (stream-filter event-two? y))
 
-(define ww (stream-filter-split event-three? y))
+(define ww (stream-filter-split event-eight? y))
 ; ww
 (stream->list (car ww))
 (stream->list (cdr ww))

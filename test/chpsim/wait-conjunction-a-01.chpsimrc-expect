@@ -1,13 +1,13 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 a : bool a = 0
 b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	18	0	
+	10	1	0	
 a : bool a = 0
 b : bool b = 0
 event queue:
@@ -72,13 +72,13 @@ event queue:
 check queue:
 	time	eid	pid	event
 	70	4	0	a := false
-	70	1	0	
+	70	18	0	
 a : bool a = 0
 b : bool b = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	70	1	0	
+	70	18	0	
 	80	3	0	a := false
 a : bool a = 0
 b : bool b = 1
@@ -92,13 +92,13 @@ event queue:
 	time	eid	pid	event
 	90	13	0	[a&&b]
 check queue:
-	100	1	0	
+	100	18	0	
 a : bool a = 1
 b : bool b = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	100	1	0	
+	100	18	0	
 	100	12	0	
 a : bool a = 1
 b : bool b = 1
@@ -126,7 +126,7 @@ b : bool b = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	130	1	0	
+	130	18	0	
 a : bool a = 0
 b : bool b = 0
 event queue:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10.8.6 2007/09/07 21:07:40 fang Exp $
+	$Id: Event.h,v 1.10.8.7 2007/09/10 22:33:02 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -149,13 +149,13 @@ public:
 #if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	static const char		node_prefix[];
 #endif
+private:
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		Pointer to instance-invariant event information.
 	 */
 	const local_event_type*		__local_event;
 #else
-private:
 	/**
 		the (atomic) event to occur corresponding to this node
 		Would be nice if some of theses actions were 
@@ -365,6 +365,12 @@ public:
 #endif
 
 #if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+	const event_index_type*		// const_iterator
+	local_successors_begin(void) const;
+
+	const event_index_type*		// const_iterator
+	local_successors_end(void) const;
+
 	void
 	make_global_root(const local_event_type*);
 

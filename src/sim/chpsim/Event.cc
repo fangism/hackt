@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.8 2007/09/09 21:18:43 fang Exp $
+	$Id: Event.cc,v 1.10.8.9 2007/09/10 22:33:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -209,6 +209,26 @@ EventNode::num_successors(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a pointer iterator to the front of the local successors list.
+ */
+const event_index_type*
+EventNode::local_successors_begin(void) const {
+	NEVER_NULL(__local_event);
+	return &*__local_event->successor_events.begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a pointer iterator to the end of the local successors list.
+ */
+const event_index_type*
+EventNode::local_successors_end(void) const {
+	NEVER_NULL(__local_event);
+	return &*__local_event->successor_events.end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 EventNode::make_global_root(const local_event_type* g) {
 	NEVER_NULL(g);
@@ -241,6 +261,12 @@ EventNode::setup(const local_event_type* l, const State& s) {
 	if (action_ptr) {
 		action_ptr->accept(v);
 	}
+#if 0
+	else {
+		// set default delay for NULL events
+		delay = 0;
+	}
+#endif
 }
 #endif
 

@@ -1,12 +1,12 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	4	0	c := 0
+	10	1	0	c := 0
 c : int c = 0
 event queue:
 check queue:
@@ -26,7 +26,7 @@ c : int c = 3
 event queue:
 check queue:
 	time	eid	pid	event
-	50	1	0	c := c-1
+	50	4	0	c := c-1
 c : int c = 3
 event queue:
 check queue:
@@ -36,7 +36,7 @@ c : int c = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	70	1	0	c := c-1
+	70	4	0	c := c-1
 c : int c = 2
 event queue:
 check queue:
@@ -46,7 +46,7 @@ c : int c = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	90	1	0	c := c-1
+	90	4	0	c := c-1
 c : int c = 1
 event queue:
 check queue:
@@ -66,7 +66,7 @@ c : int c = 3
 event queue:
 check queue:
 	time	eid	pid	event
-	130	1	0	c := c-1
+	130	4	0	c := c-1
 c : int c = 3
 event queue:
 check queue:
@@ -76,5 +76,5 @@ c : int c = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	150	1	0	c := c-1
+	150	4	0	c := c-1
 c : int c = 2
