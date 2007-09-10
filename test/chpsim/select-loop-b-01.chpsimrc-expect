@@ -1,7 +1,7 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 a : bool a = 0
 b : bool b = 0
 event queue:

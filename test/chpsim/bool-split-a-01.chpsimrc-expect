@@ -1,13 +1,13 @@
-	0	0	0	null
-	10	11	3	
+	0	0	8	null
+	10	6	3	
 	20	9	3	split.C?(split.c)
 	20	2	2	c.S!(0)
 	20	10	3	split.I?(split.x)
 	20	1	1	src.S!(true)
 	30	8	3	
 	40	7	3	split.O[split.c]!(split.x)
-	40	6	4	snk[0].B?(snk[0].b)
-	50	11	3	
+	40	11	4	snk[0].B?(snk[0].b)
+	50	6	3	
 	60	9	3	split.C?(split.c)
 	60	5	2	c.S!(1)
 	60	10	3	split.I?(split.x)
@@ -15,7 +15,7 @@
 	70	8	3	
 	80	7	3	split.O[split.c]!(split.x)
 	80	12	5	snk[1].B?(snk[1].b)
-	90	11	3	
+	90	6	3	
 	100	9	3	split.C?(split.c)
 	100	4	2	c.S!(2)
 	100	10	3	split.I?(split.x)
@@ -23,7 +23,7 @@
 	110	8	3	
 	120	7	3	split.O[split.c]!(split.x)
 	120	13	6	snk[2].B?(snk[2].b)
-	130	11	3	
+	130	6	3	
 	140	9	3	split.C?(split.c)
 	140	3	2	c.S!(3)
 	140	10	3	split.I?(split.x)
@@ -31,15 +31,15 @@
 	150	8	3	
 	160	7	3	split.O[split.c]!(split.x)
 	160	14	7	snk[3].B?(snk[3].b)
-	170	11	3	
+	170	6	3	
 	180	9	3	split.C?(split.c)
 	180	2	2	c.S!(0)
 	180	10	3	split.I?(split.x)
 	180	1	1	src.S!(true)
 	190	8	3	
 	200	7	3	split.O[split.c]!(split.x)
-	200	6	4	snk[0].B?(snk[0].b)
-	210	11	3	
+	200	11	4	snk[0].B?(snk[0].b)
+	210	6	3	
 	220	9	3	split.C?(split.c)
 	220	5	2	c.S!(1)
 	220	10	3	split.I?(split.x)
@@ -47,7 +47,7 @@
 	230	8	3	
 	240	7	3	split.O[split.c]!(split.x)
 	240	12	5	snk[1].B?(snk[1].b)
-	250	11	3	
+	250	6	3	
 	260	9	3	split.C?(split.c)
 	260	4	2	c.S!(2)
 	260	10	3	split.I?(split.x)
@@ -55,7 +55,7 @@
 	270	8	3	
 	280	7	3	split.O[split.c]!(split.x)
 	280	13	6	snk[2].B?(snk[2].b)
-	290	11	3	
+	290	6	3	
 	300	9	3	split.C?(split.c)
 	300	3	2	c.S!(3)
 	300	10	3	split.I?(split.x)
@@ -63,15 +63,15 @@
 	310	8	3	
 	320	7	3	split.O[split.c]!(split.x)
 	320	14	7	snk[3].B?(snk[3].b)
-	330	11	3	
+	330	6	3	
 	340	9	3	split.C?(split.c)
 	340	2	2	c.S!(0)
 	340	10	3	split.I?(split.x)
 	340	1	1	src.S!(true)
 	350	8	3	
 	360	7	3	split.O[split.c]!(split.x)
-	360	6	4	snk[0].B?(snk[0].b)
-	370	11	3	
+	360	11	4	snk[0].B?(snk[0].b)
+	370	6	3	
 	380	9	3	split.C?(split.c)
 	380	5	2	c.S!(1)
 	380	10	3	split.I?(split.x)

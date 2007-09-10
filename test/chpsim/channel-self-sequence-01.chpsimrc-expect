@@ -3,13 +3,13 @@ X : chan(bool<>) X = (0) [empty]
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 b : bool b = 0
 X : chan(bool<>) X = (0) [empty]
 event queue:
 check queue:
 	time	eid	pid	event
-	10	6	0	X!(true)
+	10	1	0	X!(true)
 b : bool b = 0
 X : chan(bool<>) X = (1) [full]
 event queue:

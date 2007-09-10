@@ -1,12 +1,12 @@
 # "do-while-countdown-03-watch.chpsimrc"
-#	$Id: do-while-countdown-03-watch.chpsimrc,v 1.2 2007/02/26 22:01:36 fang Exp $
+#	$Id: do-while-countdown-03-watch.chpsimrc,v 1.2.24.1 2007/09/10 05:19:17 fang Exp $
 # @haco@ do-while-countdown.haco-a
 
 cause
-watch-event 1
+watch-event 4
 show-event-watches
 show-event-breaks
-echo expect to see event 1
+echo expect to see event 4
 step 30
 time
 echo initializing...
@@ -45,7 +45,7 @@ show-event-watches
 
 echo restarting...
 initialize
-watch-event 2 3 4
+watch-event 2 3 1
 watchall-events
 step 30
 time

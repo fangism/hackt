@@ -1,4 +1,4 @@
-	0	0	0	null
+	0	0	1	null
 	10	1	0	z := zscan()
 You entered: 666
 	20	2	0	print("You entered: ",z)

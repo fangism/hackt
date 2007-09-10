@@ -5,13 +5,21 @@ chan[3]: "poo.out"
 chan[4]: "bar.out" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 3 4 
+event[0]: fork: null, #pred: 0, succ: 1 2 3 4 
+
+# process[1]:
 event[1]: send: foo.out!(1), pid: 1, #pred: 1, succ: 1 
 channel deps: 1 
+
+# process[2]:
 event[2]: send: ick.out!(2), pid: 2, #pred: 1, succ: 2 
 channel deps: 2 
+
+# process[3]:
 event[3]: send: poo.out!(3), pid: 3, #pred: 1, succ: 3 
 channel deps: 3 
+
+# process[4]:
 event[4]: send: bar.out!(4), pid: 4, #pred: 1, succ: 4 
 channel deps: 4 
 

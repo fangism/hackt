@@ -2,11 +2,13 @@ Variables:
 chan[1]: "Z.S" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 3 
-event[1]: send: Z.S!, pid: 1, #pred: 1, succ: 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[1]:
+event[1]: send: Z.S!, pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
-event[2]: send: Z.S!, pid: 1, #pred: 1, succ: 1 
+event[2]: send: Z.S!, pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
-event[3]: send: Z.S!, pid: 1, #pred: 1, succ: 2 
+event[3]: send: Z.S!, pid: 1, #pred: 1, succ: 
 channel deps: 1 
 

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-14:
+	  No source revision, only test updates.
+	  Majority of affected regression tests updated (the trivial ones).
+		Majority of remaining are coupled to guile-scm tests, 
+		and should be verified and update together, with more scrutiny.
+
+
 2007-09-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-13:

@@ -1,11 +1,11 @@
 Writing simulation trace to "bool-and-test-b-02.chpsimtrace".
-	0	0	0	null
+	0	0	7	null
 Out : chan(bool<>) Out = (0) [empty]
-	1	8	1	
+	1	1	1	
 Out : chan(bool<>) Out = (0) [empty]
 	6	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (0) [wait]
-	6	1	2	S0.S!(true)
+	6	8	2	S0.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
 	6	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (0) [wait]
@@ -25,11 +25,11 @@ Out : chan(bool<>) Out = (0) [wait]
 Out : chan(bool<>) Out = (1) [sent]
 	22	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (1) [empty]
-	23	8	1	
+	23	1	1	
 Out : chan(bool<>) Out = (1) [empty]
 	28	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (1) [wait]
-	28	1	2	S0.S!(true)
+	28	8	2	S0.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
 	28	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (1) [wait]
@@ -49,11 +49,11 @@ Out : chan(bool<>) Out = (1) [wait]
 Out : chan(bool<>) Out = (0) [sent]
 	42	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (0) [empty]
-	43	8	1	
+	43	1	1	
 Out : chan(bool<>) Out = (0) [empty]
 	48	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (0) [wait]
-	48	1	2	S0.S!(true)
+	48	8	2	S0.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
 	48	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (0) [wait]
@@ -73,11 +73,11 @@ Out : chan(bool<>) Out = (0) [wait]
 Out : chan(bool<>) Out = (0) [sent]
 	62	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (0) [empty]
-	63	8	1	
+	63	1	1	
 Out : chan(bool<>) Out = (0) [empty]
 	68	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (0) [wait]
-	68	1	2	S0.S!(true)
+	68	8	2	S0.S!(true)
 Out : chan(bool<>) Out = (0) [wait]
 	68	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (0) [wait]
@@ -97,11 +97,11 @@ Out : chan(bool<>) Out = (0) [wait]
 Out : chan(bool<>) Out = (1) [sent]
 	82	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (1) [empty]
-	83	8	1	
+	83	1	1	
 Out : chan(bool<>) Out = (1) [empty]
 	88	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (1) [wait]
-	88	1	2	S0.S!(true)
+	88	8	2	S0.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
 	88	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (1) [wait]
@@ -121,11 +121,11 @@ Out : chan(bool<>) Out = (1) [wait]
 Out : chan(bool<>) Out = (1) [sent]
 	102	17	6	Z.B?(Z.b)
 Out : chan(bool<>) Out = (1) [empty]
-	103	8	1	
+	103	1	1	
 Out : chan(bool<>) Out = (1) [empty]
 	108	4	1	A.A[0]?(A.a[0])
 Out : chan(bool<>) Out = (1) [wait]
-	108	1	2	S0.S!(true)
+	108	8	2	S0.S!(true)
 Out : chan(bool<>) Out = (1) [wait]
 	108	5	1	A.A[1]?(A.a[1])
 Out : chan(bool<>) Out = (1) [wait]
@@ -154,9 +154,9 @@ Epoch 0:
 	event		event	cause
 	index	time	node	index
 	0	0	0	0
-	1	1	8	0
+	1	1	1	0
 	2	6	4	1
-	3	6	1	2
+	3	6	8	2
 	4	6	5	1
 	5	6	9	4
 	6	6	6	1
@@ -166,9 +166,9 @@ Epoch 0:
 	10	20	3	9
 	11	22	2	10
 	12	22	17	11
-	13	23	8	11
+	13	23	1	11
 	14	28	4	13
-	15	28	1	14
+	15	28	8	14
 	16	28	5	13
 	17	28	11	16
 	18	28	6	13
@@ -178,9 +178,9 @@ Epoch 0:
 	22	40	3	21
 	23	42	2	22
 	24	42	17	23
-	25	43	8	23
+	25	43	1	23
 	26	48	4	25
-	27	48	1	26
+	27	48	8	26
 	28	48	5	25
 	29	48	10	28
 	30	48	6	25
@@ -190,9 +190,9 @@ Epoch 0:
 	34	60	3	33
 	35	62	2	34
 	36	62	17	35
-	37	63	8	35
+	37	63	1	35
 	38	68	4	37
-	39	68	1	38
+	39	68	8	38
 	40	68	5	37
 	41	68	9	40
 	42	68	6	37
@@ -202,9 +202,9 @@ Epoch 0:
 	46	80	3	45
 	47	82	2	46
 	48	82	17	47
-	49	83	8	47
+	49	83	1	47
 	50	88	4	49
-	51	88	1	50
+	51	88	8	50
 	52	88	5	49
 	53	88	11	52
 	54	88	6	49
@@ -214,9 +214,9 @@ Epoch 0:
 	58	100	3	57
 	59	102	2	58
 	60	102	17	59
-	61	103	8	59
+	61	103	1	59
 	62	108	4	61
-	63	108	1	62
+	63	108	8	62
 	64	108	5	61
 	65	108	10	64
 	66	108	6	61

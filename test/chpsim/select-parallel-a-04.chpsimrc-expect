@@ -2,11 +2,11 @@ testing new commands
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 All event subscriptions:
-	0	0	0	null
+	0	0	1	null
 All event subscriptions:
-	10	23	0	
+	10	1	0	
 All event subscriptions:
 	20	19	0	a := false
 All event subscriptions:
@@ -52,7 +52,7 @@ All event subscriptions:
 All event subscriptions:
 	120	8	0	
 All event subscriptions:
-	130	1	0	
+	130	23	0	
 All event subscriptions:
 event queue:
 check queue:

@@ -1,26 +1,26 @@
-	0	0	0	null
-	10	5	0	
-	20	2	0	S?(s)
-	20	6	1	SS.S!(0)
+	0	0	2	null
+	10	1	0	
+	20	4	0	S?(s)
+	20	5	1	SS.S!(0)
 updated channel(s): 
 chan(int<32>) D = (13) [sent]
 watch:	30	3	0	D!(select(s,13,11))
 updated channel(s): 
 chan(int<32>) D = (13) [empty]
-watch:	30	4	0	D?
-	40	2	0	S?(s)
-	40	8	1	SS.S!(1)
+watch:	30	2	0	D?
+	40	4	0	S?(s)
+	40	7	1	SS.S!(1)
 updated channel(s): 
 chan(int<32>) D = (11) [sent]
 watch:	50	3	0	D!(select(s,13,11))
 updated channel(s): 
 chan(int<32>) D = (11) [empty]
-watch:	50	4	0	D?
-	60	2	0	S?(s)
-	60	7	1	SS.S!(2)
+watch:	50	2	0	D?
+	60	4	0	S?(s)
+	60	6	1	SS.S!(2)
 Error: out-of-bounds reference to index 3 out of 3
 Run-time error calling function: select(s,13,11)
 Run-time error writing channel: D!(select(s,13,11))
 Run-time error while checking event.
-event[3]:	70	3	0	D!(select(s,13,11))	[by:2]
+event[3]:	70	3	0	D!(select(s,13,11))	[by:4]
 Caught run-time exception during execution.  Halting.

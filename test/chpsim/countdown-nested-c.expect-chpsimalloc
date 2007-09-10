@@ -3,14 +3,16 @@ int[1]: "c"
 int[2]: "d" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 9 
-event[1]: select: *[ c<3 -> ... ], pid: 0, #pred: 1, succ: 8 2 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
+event[1]: assign: c := 0, pid: 0, #pred: 1, succ: 9 
 event[2]: null: null, pid: 0, #pred: 1, succ: 
-event[3]: join: , pid: 0, #pred: 2, succ: 1 
+event[3]: join: , pid: 0, #pred: 2, succ: 9 
 event[4]: select: *[ d<2 -> ... ], pid: 0, #pred: 1, succ: 5 3 
 event[5]: assign: d := d+1, pid: 0, #pred: 1, succ: 4 
 event[6]: assign: c := c+1, pid: 0, #pred: 1, succ: 3 
 event[7]: fork: , pid: 0, #pred: 1, succ: 4 6 
 event[8]: assign: d := 0, pid: 0, #pred: 1, succ: 7 
-event[9]: assign: c := 0, pid: 0, #pred: 1, succ: 1 
+event[9]: select: *[ c<3 -> ... ], pid: 0, #pred: 1, succ: 8 2 
 

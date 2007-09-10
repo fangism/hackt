@@ -3,13 +3,17 @@ bool[1]: "y"
 chan[1]: "x" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 2 4 
-event[1]: receive: x?(y), pid: 0, #pred: 1, succ: 
+event[0]: fork: null, #pred: 0, succ: 1 3 
+
+# process[0]:
+event[1]: receive: x?(y), pid: 0, #pred: 1, succ: 2 
 channel deps: 1 
-event[2]: receive: x?(y), pid: 0, #pred: 1, succ: 1 
+event[2]: receive: x?(y), pid: 0, #pred: 1, succ: 
 channel deps: 1 
-event[3]: send: a.y.a!(false), pid: 2, #pred: 1, succ: 
+
+# process[2]:
+event[3]: send: a.y.a!(true), pid: 2, #pred: 1, succ: 4 
 channel deps: 1 
-event[4]: send: a.y.a!(true), pid: 2, #pred: 1, succ: 3 
+event[4]: send: a.y.a!(false), pid: 2, #pred: 1, succ: 
 channel deps: 1 
 

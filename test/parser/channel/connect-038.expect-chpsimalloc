@@ -3,11 +3,12 @@ bool[1]: "lecture.x"
 chan[1]: "lecture.B" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 4 
-event[1]: join: , pid: 1, #pred: 2, succ: 
-event[2]: receive: lecture.B?(lecture.x), pid: 1, #pred: 1, succ: 2 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[1]:
+event[1]: fork: , pid: 1, #pred: 1, succ: 3 2 
+event[2]: send: lecture.B!(false), pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
-event[3]: send: lecture.B!(false), pid: 1, #pred: 1, succ: 3 
+event[3]: receive: lecture.B?(lecture.x), pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
-event[4]: fork: , pid: 1, #pred: 1, succ: 2 3 
 

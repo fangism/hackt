@@ -1,5 +1,5 @@
 Out : chan(bool<>) Out = (0) [empty]
-Out : chan(bool<>) Out = (0) [wait]
+Out : chan(bool<>) Out = (0) [empty]
 Out : chan(bool<>) Out = (0) [wait]
 Out : chan(bool<>) Out = (0) [wait]
 Out : chan(bool<>) Out = (0) [wait]

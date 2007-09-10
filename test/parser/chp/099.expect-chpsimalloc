@@ -5,9 +5,11 @@ int[1]: "f.y"
 int[2]: "f.w" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 11 
-event[1]: null: null, pid: 0, #pred: 0, succ: 
-event[2]: join: , pid: 1, #pred: 2, succ: 11 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[1]:
+event[1]: fork: , pid: 1, #pred: 1, succ: 6 10 
+event[2]: join: , pid: 1, #pred: 2, succ: 1 
 event[3]: null: null, pid: 1, #pred: 1, succ: 2 
 event[4]: assign: f.y := f.y+1, pid: 1, #pred: 1, succ: 3 
 event[5]: assign: f.y := f.y-1, pid: 1, #pred: 1, succ: 3 
@@ -16,5 +18,4 @@ event[7]: null: null, pid: 1, #pred: 1, succ: 2
 event[8]: assign: f.w := f.w+1, pid: 1, #pred: 1, succ: 7 
 event[9]: assign: f.w := f.w-1, pid: 1, #pred: 1, succ: 7 
 event[10]: select: [ f.z -> ... [] else -> ... ], pid: 1, #pred: 1, succ: 8 9 
-event[11]: fork: , pid: 1, #pred: 1, succ: 6 10 
 

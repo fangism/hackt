@@ -3,9 +3,13 @@ bool[1]: "b.x"
 chan[1]: "B" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 
+event[0]: fork: null, #pred: 0, succ: 1 2 
+
+# process[1]:
 event[1]: send: [after=20] s.S!(true), pid: 1, #pred: 1, succ: 1 
 channel deps: 1 
+
+# process[2]:
 event[2]: receive: b.S?(b.x), pid: 2, #pred: 1, succ: 2 
 channel deps: 1 
 

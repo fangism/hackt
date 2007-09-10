@@ -1,4 +1,4 @@
-	0	0	0	null
+	0	0	1	null
 	10	1	0	fprint("lib-fprint-test-a-out.txt","welcome to libc!
 ")
 	20	3	0	fprint("lib-fprint-test-a-out.txt",28," is a perfect number.

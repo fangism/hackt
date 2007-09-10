@@ -1,4 +1,4 @@
-	0	0	0	null
+	0	0	2	null
 expect empty queue, deadlock 
 event queue:
 check queue:

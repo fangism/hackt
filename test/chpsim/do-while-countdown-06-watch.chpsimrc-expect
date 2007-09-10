@@ -5,22 +5,22 @@ break values:
 expect to see int c 
 updated int(s): 
 int c = 5
-watch:	10	4	0	c := 5
+watch:	10	1	0	c := 5
 updated int(s): 
 int c = 4
-watch:	30	3	0	c := c-1	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 3
-watch:	50	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 2
-watch:	70	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 1
-watch:	90	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 0
-watch:	110	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:4]
 time: 130
 initializing... 
 watched values:
@@ -45,49 +45,49 @@ time: 130
 now mix with event-watches (should look the same) 
 updated int(s): 
 int c = 5
-watch:	10	4	0	c := 5
+watch:	10	1	0	c := 5
 updated int(s): 
 int c = 4
-watch:	30	3	0	c := c-1	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 3
-watch:	50	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 2
-watch:	70	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 1
-watch:	90	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:4]
 updated int(s): 
 int c = 0
-watch:	110	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:4]
 time: 130
 updated int(s): 
 int c = 5
-watch:	10	4	0	c := 5
+watch:	10	1	0	c := 5
 updated int(s): 
 int c = 4
-watch:	30	3	0	c := c-1	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 	*** break, 2 steps left.
 time: 30
 updated int(s): 
 int c = 3
-watch:	50	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 50
 updated int(s): 
 int c = 2
-watch:	70	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 70
 updated int(s): 
 int c = 1
-watch:	90	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 90
 updated int(s): 
 int c = 0
-watch:	110	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 110
 time: 130

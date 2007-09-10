@@ -1,4 +1,4 @@
-	0	0	0	null
+	0	0	1	null
 You entered: -123
 	10	1	0	print("You entered: ",zscan())
 You entered: -456

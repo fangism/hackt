@@ -3,13 +3,13 @@ i : int i = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 b : bool b = 0
 i : int i = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	4	0	
+	10	1	0	
 b : bool b = 0
 i : int i = 0
 event queue:
@@ -23,21 +23,21 @@ event queue:
 check queue:
 	time	eid	pid	event
 	20	3	0	b := true
-	30	1	0	
+	30	4	0	
 b : bool b = 1
 i : int i = 13
 event queue:
 check queue:
 	time	eid	pid	event
-	30	1	0	
-	30	1	0	
+	30	4	0	
+	30	4	0	
 time: 20
 queue should be contain only null (join) event here 
 event queue:
 check queue:
 	time	eid	pid	event
-	30	1	0	
-	30	1	0	
+	30	4	0	
+	30	4	0	
 now queue should be empty 
 event queue:
 check queue:

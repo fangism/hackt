@@ -1,13 +1,13 @@
-	0	0	0	null
-	10	11	3	
+	0	0	8	null
+	10	6	3	
 	20	9	3	split.C?(split.c)
 	20	2	2	c.S!(0)
 	20	10	3	split.I?(split.x)
 	20	1	1	src.S!(true)
 	30	8	3	
 	40	7	3	split.O[split.c]!(split.x)
-	40	6	4	snk[0].B?(snk[0].b)
-	50	11	3	
+	40	11	4	snk[0].B?(snk[0].b)
+	50	6	3	
 	60	9	3	split.C?(split.c)
 	60	5	2	c.S!(1)
 	60	10	3	split.I?(split.x)
@@ -15,7 +15,7 @@
 	70	8	3	
 	80	7	3	split.O[split.c]!(split.x)
 	80	12	5	snk[1].B?(snk[1].b)
-	90	11	3	
+	90	6	3	
 	100	9	3	split.C?(split.c)
 	100	4	2	c.S!(2)
 	100	10	3	split.I?(split.x)
@@ -23,7 +23,7 @@
 	110	8	3	
 	120	7	3	split.O[split.c]!(split.x)
 	120	13	6	snk[2].B?(snk[2].b)
-	130	11	3	
+	130	6	3	
 	140	9	3	split.C?(split.c)
 	140	3	2	c.S!(4)
 	140	10	3	split.I?(split.x)

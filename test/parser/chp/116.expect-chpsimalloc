@@ -20,7 +20,9 @@ chan[1]: "M.L"
 chan[2]: "M.R" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[1]:
 event[1]: peek: M.L#(M.l), pid: 1, #pred: 1, succ: 22 
 channel deps: 1 
 event[2]: join: , pid: 1, #pred: 2, succ: 1 

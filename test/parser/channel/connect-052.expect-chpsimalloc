@@ -5,7 +5,9 @@ chan[2]: "B[0]"
 chan[3]: "B[1]" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
 event[1]: receive: S?(s), pid: 0, #pred: 1, succ: 2 
 channel deps: 1 
 event[2]: send: B[s]!(true), pid: 0, #pred: 1, succ: 1 

@@ -1,49 +1,49 @@
-watch events: 1
-break events: 1
-expect to see event 1 
-watch:	20	1	0	*[ c>0 -> ... ]	[by:4]
+watch events: 4
+break events: 4
+expect to see event 4 
+watch:	20	4	0	*[ c>0 -> ... ]	[by:1]
 	*** break, 8 steps left.
 time: 20
-watch:	40	1	0	*[ c>0 -> ... ]	[by:3]
+watch:	40	4	0	*[ c>0 -> ... ]	[by:3]
 	*** break, 9 steps left.
 time: 40
-watch:	60	1	0	*[ c>0 -> ... ]	[by:3]
+watch:	60	4	0	*[ c>0 -> ... ]	[by:3]
 	*** break, 9 steps left.
 time: 60
-watch:	80	1	0	*[ c>0 -> ... ]	[by:3]
+watch:	80	4	0	*[ c>0 -> ... ]	[by:3]
 	*** break, 9 steps left.
 time: 80
-watch:	100	1	0	*[ c>0 -> ... ]	[by:3]
+watch:	100	4	0	*[ c>0 -> ... ]	[by:3]
 	*** break, 9 steps left.
 time: 100
-watch:	120	1	0	*[ c>0 -> ... ]	[by:3]
+watch:	120	4	0	*[ c>0 -> ... ]	[by:3]
 	*** break, 9 steps left.
 time: 120
 time: 130
 initializing... 
-watch events: 1
-break events: 1
+watch events: 4
+break events: 4
 resetting... 
 watch events: 
 break events: 
 restarting... 
 break events: 2, 3
-watch:	30	3	0	c := c-1	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 	*** break, 2 steps left.
 time: 30
-watch:	50	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 50
-watch:	70	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 70
-watch:	90	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 90
-watch:	110	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 110
-watch:	130	2	0	null	[by:1]
+watch:	130	2	0	null	[by:4]
 	*** break, 4 steps left.
 time: 130
 time: 130
@@ -52,19 +52,19 @@ Invalid event index: 5
 break events: 3
 break events: 
 break events: 3
-watch:	30	3	0	c := c-1	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 	*** break, 2 steps left.
 time: 30
-watch:	50	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 50
-watch:	70	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 70
-watch:	90	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 90
-watch:	110	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:4]
 	*** break, 4 steps left.
 time: 110
 time: 130
@@ -72,60 +72,60 @@ testing unbreakall-events
 break events: 0, 1, 2, 3, 4
 break events: 
 restarting... 
-	0	0	0	null
-watch:	10	4	0	c := 5
+	0	0	1	null
+watch:	10	1	0	c := 5
 	*** break, 9 steps left.
 time: 10
-	20	1	0	*[ c>0 -> ... ]	[by:4]
-watch:	30	3	0	c := c-1	[by:1]
+	20	4	0	*[ c>0 -> ... ]	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 30
-	40	1	0	*[ c>0 -> ... ]	[by:3]
-watch:	50	3	0	c := c-1	[by:1]
+	40	4	0	*[ c>0 -> ... ]	[by:3]
+watch:	50	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 50
-	60	1	0	*[ c>0 -> ... ]	[by:3]
-watch:	70	3	0	c := c-1	[by:1]
+	60	4	0	*[ c>0 -> ... ]	[by:3]
+watch:	70	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 70
-	80	1	0	*[ c>0 -> ... ]	[by:3]
-watch:	90	3	0	c := c-1	[by:1]
+	80	4	0	*[ c>0 -> ... ]	[by:3]
+watch:	90	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 90
-	100	1	0	*[ c>0 -> ... ]	[by:3]
-watch:	110	3	0	c := c-1	[by:1]
+	100	4	0	*[ c>0 -> ... ]	[by:3]
+watch:	110	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 110
-	120	1	0	*[ c>0 -> ... ]	[by:3]
-watch:	130	2	0	null	[by:1]
+	120	4	0	*[ c>0 -> ... ]	[by:3]
+watch:	130	2	0	null	[by:4]
 	*** break, 9 steps left.
 time: 130
 testing nowatchall-events with watched events 
-watch events: 2, 3, 4
-watch:	10	4	0	c := 5
+watch events: 1, 2, 3
+watch:	10	1	0	c := 5
 	*** break, 9 steps left.
 time: 10
-watch:	30	3	0	c := c-1	[by:1]
+watch:	30	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 30
-watch:	50	3	0	c := c-1	[by:1]
+watch:	50	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 50
-watch:	70	3	0	c := c-1	[by:1]
+watch:	70	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 70
-watch:	90	3	0	c := c-1	[by:1]
+watch:	90	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 90
-watch:	110	3	0	c := c-1	[by:1]
+watch:	110	3	0	c := c-1	[by:4]
 	*** break, 9 steps left.
 time: 110
-watch:	130	2	0	null	[by:1]
+watch:	130	2	0	null	[by:4]
 	*** break, 9 steps left.
 time: 130
 testing unbreakall-events 
 NOTE: break-events were not removed from the watch-event list.
-break events: 2, 3, 4
+break events: 1, 2, 3
 break events: 
 no breaks 
 time: 130

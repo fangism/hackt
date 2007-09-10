@@ -2,19 +2,19 @@ null-event-delay = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 c : int c = 0
 d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	7	0	c := 0
+	10	1	0	c := 0
 c : int c = 0
 d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	20	1	0	*[ c<3 -> ... ]
+	20	7	0	*[ c<3 -> ... ]
 c : int c = 0
 d : int d = 0
 event queue:
@@ -62,7 +62,7 @@ d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	100	1	0	*[ c<3 -> ... ]
+	100	7	0	*[ c<3 -> ... ]
 c : int c = 1
 d : int d = 2
 event queue:
@@ -110,7 +110,7 @@ d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	180	1	0	*[ c<3 -> ... ]
+	180	7	0	*[ c<3 -> ... ]
 c : int c = 2
 d : int d = 2
 event queue:
@@ -158,7 +158,7 @@ d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	260	1	0	*[ c<3 -> ... ]
+	260	7	0	*[ c<3 -> ... ]
 c : int c = 3
 d : int d = 2
 event queue:

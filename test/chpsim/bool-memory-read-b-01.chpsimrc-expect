@@ -1,14 +1,14 @@
 expecting out-of-bounds access run-time error 
-	0	0	0	null
-	10	6	1	
+	0	0	7	null
+	10	1	1	
 	20	4	1	reqsync.B?(reqsync.x1)
 	20	17	6	rsrc.S!(false)
 	20	5	1	reqsync.I?(reqsync.x2)
 	20	11	3	adsrc.S!(0)
 	30	3	1	
 	40	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
-	40	1	2	brom.Req?(brom.w,brom.a)
-	50	6	1	
+	40	6	2	brom.Req?(brom.w,brom.a)
+	50	1	1	
 	50	10	2	[ brom.w -> ... [] else -> ... ]
 	60	4	1	reqsync.B?(reqsync.x1)
 	60	17	6	rsrc.S!(false)
@@ -18,10 +18,10 @@ expecting out-of-bounds access run-time error
 	60	15	4	bsnk.B?(bsnk.b)
 	70	3	1	
 	70	7	2	null
-	80	1	2	brom.Req?(brom.w,brom.a)
+	80	6	2	brom.Req?(brom.w,brom.a)
 	80	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
 	90	10	2	[ brom.w -> ... [] else -> ... ]
-	90	6	1	
+	90	1	1	
 	100	9	2	brom.Read!(brom.data[brom.a])
 	100	15	4	bsnk.B?(bsnk.b)
 	100	4	1	reqsync.B?(reqsync.x1)
@@ -31,8 +31,8 @@ expecting out-of-bounds access run-time error
 	110	7	2	null
 	110	3	1	
 	120	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
-	120	1	2	brom.Req?(brom.w,brom.a)
-	130	6	1	
+	120	6	2	brom.Req?(brom.w,brom.a)
+	130	1	1	
 	130	10	2	[ brom.w -> ... [] else -> ... ]
 	140	4	1	reqsync.B?(reqsync.x1)
 	140	17	6	rsrc.S!(false)
@@ -42,10 +42,10 @@ expecting out-of-bounds access run-time error
 	140	15	4	bsnk.B?(bsnk.b)
 	150	3	1	
 	150	7	2	null
-	160	1	2	brom.Req?(brom.w,brom.a)
+	160	6	2	brom.Req?(brom.w,brom.a)
 	160	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
 	170	10	2	[ brom.w -> ... [] else -> ... ]
-	170	6	1	
+	170	1	1	
 FATAL: reference to uninstantiated bool index [5]
 ERROR: unrolling aliases.
 Error resolving a single instance alias.

@@ -1,4 +1,4 @@
-	0	0	0	null
+	0	0	1	null
 	10	1	0	b := bscan()
 You entered: false
 	20	2	0	print("You entered: ",b)
