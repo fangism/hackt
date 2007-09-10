@@ -6,7 +6,9 @@
 2007-09-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-15:
-	  No source revision, only test updates.
+	  Mostly test updates.
+	  guile/chpsim_event_node.cc: fixed successor reporting to
+		use the new local process offsets.  
 	  Most of remaining test cases in test/chpsim updated, re-validated.
 		The few remaining need more staring...
 
