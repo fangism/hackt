@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.5.12.3 2007/09/07 01:33:24 fang Exp $
+	$Id: nonmeta_context.h,v 1.5.12.4 2007/09/11 05:32:27 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -13,7 +13,6 @@
 #include "sim/common.h"
 #include "util/member_saver.h"
 #include "util/memory/excl_ptr.h"
-#include "sim/chpsim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
@@ -53,7 +52,6 @@ private:
 		Reference to the event in question.
 	 */
 	event_type*				event;
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	/**
 		Offset to add to local-event indices to 
 		translate to global event indices.  
@@ -65,7 +63,6 @@ private:
 		Mostly used for diagnostics.
 	 */
 	size_t					process_index;
-#endif
 	/**
 		Successor of a just-executed event to check 
 		for the first time, after their respective delays.  
@@ -97,23 +94,13 @@ public:
 			event_setter_base(const_cast<this_type&>(t), e) { }
 	};
 public:
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	nonmeta_context(const state_manager&, const footprint&, 
-		event_type&, State&);
-#endif
-
 	nonmeta_context(const state_manager&, const footprint&, 
 		State&);
 
 	~nonmeta_context();
 
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	void
 	set_event(event_type&, const size_t, const event_index_type);
-#else
-	void
-	set_event(event_type&);
-#endif
 
 	event_type&
 	get_event(void) const { return *event; }
@@ -124,10 +111,8 @@ public:
 	size_t
 	get_event_index(void) const;
 	
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	event_index_type
 	get_process_index(void) const { return process_index; }
-#endif
 
 	void
 	subscribe_this_event(void) const;

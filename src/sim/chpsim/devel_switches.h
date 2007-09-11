@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8.14.6 2007/09/11 00:17:55 fang Exp $
+	$Id: devel_switches.h,v 1.8.14.7 2007/09/11 05:32:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -60,12 +60,9 @@
 	established by process footprints.  
 	Rationale: speeds up allocation, reduces memory, and enables
 		reverse-lookup of event to CHP language source.  
-	Prereq: LOCAL_CHP_EVENT_FOOTPRINT in "Object/devel_switches.h"
-	Goal: 1
-	Status: done, tested
-	Priority: TOP -- reverse-lookup required for thesis
- */
+	Completed and perm'd on branch 00-01-04-main-00-81-68-chpsim-09.
 #define	CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS		1
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // Perm'd (00-01-04-main-00-81-68-chpsim-09-10)

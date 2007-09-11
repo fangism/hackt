@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.9.2.3 2007/09/07 01:33:17 fang Exp $
+	$Id: EventExecutor.cc,v 1.9.2.4 2007/09/11 05:32:18 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -162,69 +162,6 @@ using entity::process_tag;
 //=============================================================================
 /// helper routines
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	For all non-selection events that execute, schedule all successor
-	events for recheck.
-	Also decrement those events' countdown upon execution of this event.  
-	Don't forget to decrement the selected event's counter for selections!
-	This should be kept consistent with CHPSIM::EventNode::execute().
- */
-static
-inline
-void
-recheck_all_successor_events(nonmeta_context& c) {
-	typedef	EventNode	event_type;
-	STACKTRACE_CHPSIM_VERBOSE;
-	const event_type::successor_list_type&
-		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), set_inserter(c));
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-/**
-	Print outgoing edges adorned with guard expressions as labels. 
- */
-static
-ostream&
-dump_selection_successor_edges(const selection_list_type& l, 
-		ostream& o, const EventNode& e, const size_t i, 
-		const expr_dump_context& c) {
-	typedef	selection_list_type::const_iterator const_iterator;
-	const EventNode::successor_list_type& succ(e.successor_events);
-	const size_t* si = std::begin(succ);
-	const size_t* se = std::end(succ);
-	const_iterator li(l.begin()), le(l.end());
-	for ( ; li!=le; ++li, ++si) {
-		const guarded_action::guard_ptr_type&
-			g((*li)->get_guard());
-		o << EventNode::node_prefix << i << " -> " <<
-			EventNode::node_prefix << *si << "\t[label=\"";
-		if (g) {
-			g->dump(o, c);
-		} else {
-			o << "else";
-		}
-		o << "\"];" << endl;
-	}
-	// guard list may have ONE less than successor list
-	// if there is an implicit else-clause
-	if (si != se) {
-		o << EventNode::node_prefix << i << " -> " <<
-			EventNode::node_prefix << *si <<
-			"\t[label=\"else\"];" << endl;
-		++si;
-		INVARIANT(si == se);
-		
-	}
-	// check for else clause
-	return o;
-}
-#endif
-
 //=============================================================================
 /**
 	I realize now that EventRechecker is slightly redundant:
@@ -242,25 +179,9 @@ EventRechecker::EventRechecker(const nonmeta_context& c) :
 //=============================================================================
 // class action method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	By default print all successor edge, unadorned.  
- */
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-#define DEFAULT_EVENT_SUCCESSOR_DUMPER(T)
-#else
-#define DEFAULT_EVENT_SUCCESSOR_DUMPER(T)				\
-void									\
-EventSuccessorDumper::visit(const T&) {					\
-	event.dump_successor_edges_default(os, index);			\
-}
-#endif
-
 //=============================================================================
 // class action_sequence method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(action_sequence)
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
@@ -286,9 +207,6 @@ EventRechecker::visit(const action_sequence&) {
 //=============================================================================
 // class concurrent_actions method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(concurrent_actions)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
@@ -316,7 +234,7 @@ EventRechecker::visit(const concurrent_actions&) {
 }
 
 //=============================================================================
-DEFAULT_EVENT_SUCCESSOR_DUMPER(guarded_action)
+// class guarded_action method definitions
 
 void
 EventExecutor::visit(const guarded_action&) {
@@ -348,12 +266,8 @@ EventExecutor::visit(const deterministic_selection& ds) {
 	for_each(ds.begin(), ds.end(),
 		guarded_action::selection_evaluator_ref(G));
 	INVARIANT(G.ready.size() == 1);
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const entity::CHP::local_event&
 		t(context.get_event().get_local_event());
-#else
-	const EventNode& t(context.get_event());	// this event
-#endif
 	const size_t ei = t.successor_events[G.ready.front()];
 	context.insert_first_checks(ei);
 }
@@ -403,14 +317,6 @@ EventRechecker::visit(const deterministic_selection& ds) {
 	}	// end switch
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-void
-EventSuccessorDumper::visit(const deterministic_selection& ds) {
-	dump_selection_successor_edges(ds, os, event, index, dump_context);
-}
-#endif
-
 //=============================================================================
 // class nondeterministic_selection method definitions
 
@@ -447,12 +353,8 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	for_each(ns.begin(), ns.end(),
 		guarded_action::selection_evaluator_ref(G));
 	const size_t m = G.ready.size();
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const entity::CHP::local_event&
 		t(context.get_event().get_local_event());
-#else
-	const EventNode& t(context.get_event());
-#endif
 	switch (m) {
 	case 0: {
 		// this can happen because guards may be unstable, 
@@ -510,20 +412,9 @@ EventRechecker::visit(const nondeterministic_selection& ns) {
 	}
 }	// end visit(const nondeterministic_selection&)
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-void
-EventSuccessorDumper::visit(const nondeterministic_selection& ns) {
-	dump_selection_successor_edges(ns, os, event, index, dump_context);
-}
-#endif
-
 //=============================================================================
 // class metaloop_selection method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(metaloop_selection)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Never called, always expanded.  
  */
@@ -545,9 +436,6 @@ EventRechecker::visit(const metaloop_selection&) {
 //=============================================================================
 // class metaloop_statement method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(metaloop_statement)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Never called, always expanded.  
  */
@@ -569,9 +457,6 @@ EventRechecker::visit(const metaloop_statement&) {
 //=============================================================================
 // class assignment method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(assignment)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	lvalue must be bool, int, or enum reference.  
 	\param u collection of references updated by the assignment execution,
@@ -601,9 +486,6 @@ EventRechecker::visit(const assignment&) {
 //=============================================================================
 // class condition_wait method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(condition_wait)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does nothing, is a NULL event.  
 	NOTE: it is possible that guard is no longer true, 
@@ -654,9 +536,6 @@ EventRechecker::visit(const condition_wait& cw) {
 //=============================================================================
 // class channel_send method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(channel_send)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
@@ -743,11 +622,7 @@ try {
 } catch (...) {
 	cerr << "Run-time error writing channel: ";
 	std::ostringstream canonical_name;
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t process_index = context.get_process_index();
-#else
-	const size_t process_index = context.get_event().get_process_index();
-#endif
 	if (process_index) {
 		context.sm->get_pool<process_tag>()[process_index]
 			.dump_canonical_name(canonical_name,
@@ -763,9 +638,6 @@ try {
 //=============================================================================
 // class channel_receive method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(channel_receive)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
@@ -845,9 +717,6 @@ EventRechecker::visit(const channel_receive& cr) {
 //=============================================================================
 // class do_forever_loop method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(do_forever_loop)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	No-op, this should never be called from simulator, as loop
 	body events are expanded.  
@@ -895,12 +764,8 @@ EventExecutor::visit(const do_while_loop& dw) {
 			"do-while-loop evaluated TRUE!" << endl;
 		THROW_EXIT;
 	}	// end switch
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t ei = context.get_event()
 		.get_local_event().successor_events[si];
-#else
-	const size_t ei = context.get_event().successor_events[si];
-#endif
 	context.insert_first_checks(ei);
 }
 
@@ -917,14 +782,6 @@ EventRechecker::visit(const do_while_loop&) {
 	STACKTRACE_CHPSIM_VERBOSE;
 	ret = RECHECK_NEVER_BLOCKED;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-void
-EventSuccessorDumper::visit(const do_while_loop& dw) {
-	dump_selection_successor_edges(dw, os, event, index, dump_context);
-}
-#endif
 
 //=============================================================================
 // class function_call_stmt method definitions
@@ -947,11 +804,7 @@ EventRechecker::visit(const function_call_stmt& fc) {
 	ret = RECHECK_NEVER_BLOCKED;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DEFAULT_EVENT_SUCCESSOR_DUMPER(function_call_stmt)
-
 //=============================================================================
-#undef	DEFAULT_EVENT_SUCCESSOR_DUMPER
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.10 2007/09/11 00:17:54 fang Exp $
+	$Id: Event.cc,v 1.10.8.11 2007/09/11 05:32:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,7 @@
 #include <iterator>
 #include <algorithm>
 #include <string>
+#include <sstream>
 #include "sim/chpsim/Event.h"
 #include "sim/ISE.h"
 #include "Object/expr/expr_dump_context.h"
@@ -16,13 +17,9 @@
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/graph_options.h"
 #include "sim/chpsim/EventExecutor.h"
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #include "Object/lang/CHP_event.h"
 #include "Object/lang/CHP_event_alloc.h"	// for Dumper
 #include "sim/chpsim/StateConstructor.h"	// for dependencies
-#else
-#include "util/STL/valarray_iterator.h"
-#endif
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
 
@@ -31,12 +28,7 @@ namespace SIM {
 namespace CHPSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 using entity::CHP::EventSuccessorDumper;
-#else
-using std::begin;
-using std::end;
-#endif
 using std::copy;
 using std::back_inserter;
 using std::for_each;
@@ -49,25 +41,12 @@ using entity::footprint;
 //=============================================================================
 // class EventNode method definitions
 
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-const char 
-EventNode::node_prefix[] = "EVENT_";
-#endif
-
 const EventNode::time_type
 EventNode::default_delay = 10;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EventNode::EventNode() :
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		__local_event(NULL),
-#else
-		action_ptr(NULL),
-		successor_events(), 
-		event_type(EVENT_NULL),
-		predecessors(0),
-		process_index(0),
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		countdown(0), 
 		flags(0),
 		delay(default_delay), 
@@ -79,53 +58,13 @@ EventNode::EventNode() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 /**
 	\param a the CHP::action pointer (may be NULL)
 		using shallow reference, not reference counting.
  */
-EventNode::EventNode(
-		const action* a, 
-		const unsigned short t, const size_t pid
-		) :
-		action_ptr(a),
-		successor_events(), 
-		event_type(t),
-		predecessors(0),
-		process_index(pid),
-		countdown(0), 
-		flags(0),
-		delay(default_delay), 
-		block_deps()
-#if CHPSIM_READ_WRITE_DEPENDENCIES
-		, anti_deps()
-#endif
-		{
-}
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param a the CHP::action pointer (may be NULL)
-		using shallow reference, not reference counting.
- */
-EventNode::EventNode(
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		const local_event_type* e, 
-#else
-		const action* a, 
-		const unsigned short t, const size_t pid, 
-#endif
+EventNode::EventNode(const local_event_type* e, 
 		const time_type d) :
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		__local_event(e),
-#else
-		action_ptr(a),
-		successor_events(), 
-		event_type(t),
-		predecessors(0),
-		process_index(pid),
-#endif
 		countdown(0), 
 		flags(0),
 		delay(d), 
@@ -140,33 +79,6 @@ EventNode::EventNode(
 EventNode::~EventNode() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-/**
-	Need to manually define valarray assignment with 
-	container-like semantics.  
- */
-EventNode&
-EventNode::operator = (const this_type& e) {
-	action_ptr = e.action_ptr;
-	successor_events.resize(e.successor_events.size());
-	copy(begin(e.successor_events), end(e.successor_events), 
-		begin(successor_events));
-	event_type = e.event_type;
-	flags = e.flags;
-	process_index = e.process_index;
-	predecessors = e.predecessors;
-	countdown = e.countdown;
-	delay = e.delay;
-	block_deps = e.block_deps;		// re-defined!
-#if CHPSIM_READ_WRITE_DEPENDENCIES
-	anti_deps = e.anti_deps;
-#endif
-	return *this;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 bool
 EventNode::is_trivial(void) const {
 	NEVER_NULL(__local_event);
@@ -235,22 +147,8 @@ EventNode::make_global_root(const local_event_type* g) {
 	__local_event = g;
 	// INVARIANT event type is concurrent fork
 }
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-/**
-	Completely resets the event.  
- */
-void
-EventNode::orphan(void) {
-	this->~EventNode();
-	new (this) EventNode();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 void
 EventNode::setup(const local_event_type* l, const State& s) {
 	STACKTRACE_VERBOSE;
@@ -265,7 +163,6 @@ EventNode::setup(const local_event_type* l, const State& s) {
 		delay = 0;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -305,9 +202,7 @@ if (countdown) {
 	// don't bother subscribing, let the last arrived event cause subscribe
 	// return RECHECK_COUNT_BLOCK;
 } else {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const action* action_ptr = get_chp_action();
-#endif
 	if (action_ptr) {
 		EventRechecker rc(c);
 		action_ptr->accept(rc);
@@ -366,16 +261,8 @@ EventNode::execute(nonmeta_context& c) {
 	STACKTRACE_VERBOSE;
 	// reset countdown FIRST (because of self-reference event cycles)
 	reset_countdown();
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const action* action_ptr = get_chp_action();
-#endif
-	if (
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		!__local_event->is_null()
-#else
-		(event_type != EVENT_NULL)
-#endif
-		&& action_ptr) {
+	if (!__local_event->is_null() && action_ptr) {
 		STACKTRACE_INDENT_PRINT("got action" << endl);
 		// at the same time, enqueue successors, depending on event_type
 		// execute is responsible for scheduling successors for recheck
@@ -389,16 +276,11 @@ EventNode::execute(nonmeta_context& c) {
 		// see also "Object/lang/CHP.cc":recheck_all_successor_events()
 		// whatever is done here should be consistent with that!
 		// remember: decrement successors' predecessor-arrival countdown
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		const local_event_type::successor_list_type&
 			successor_events(__local_event->successor_events);
 		copy(successor_events.begin(), successor_events.end(), 
 			set_inserter(c));
 		c.first_check_all_successors();
-#else
-		copy(begin(successor_events), end(successor_events), 
-			set_inserter(c));
-#endif
 	}
 }	// end method execute
 
@@ -410,69 +292,11 @@ EventNode::subscribe_deps(const nonmeta_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	For printing the event queue.  
-	TODO: a line/position in source might be nice, 
-		in case of repetition.  
- */
-ostream&
-EventNode::dump_brief(ostream& o) const {
-	o << process_index << '\t';
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	NEVER_NULL(__local_event);
-	return __local_event->dump_brief(o, expr_dump_context::default_value);
-#else
-	if (action_ptr) {
-		action_ptr->dump_event(o, expr_dump_context::default_value);
-	} else {
-		o << "null";
-	}
-	// countdown/predecessors?
-	return o;
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 EventNode::dump_brief(ostream& o, 
 		const expr_dump_context& edc) const {
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	if (action_ptr) {
-#endif
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		return __local_event->dump_brief(o, edc);
-#else
-		action_ptr->dump_event(o, edc);
-	} else {
-		o << "null";
-	}
-	// countdown/predecessors?
-	return o;
-#endif
+	return __local_event->dump_brief(o, edc);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	TODO: source-annotated delays?
- */
-ostream&
-EventNode::dump_source(ostream& o) const {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	NEVER_NULL(__local_event);
-	return __local_event->dump_source(expr_dump_context::default_value);
-#else
-	if (action_ptr) {
-		action_ptr->dump(o, expr_dump_context::default_value);
-	} else {
-		o << "null";
-	}
-	return o;
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -480,29 +304,8 @@ EventNode::dump_source(ostream& o) const {
  */
 ostream&
 EventNode::dump_source(ostream& o, const expr_dump_context& edc) const {
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	if (action_ptr) {
-#endif
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		return __local_event->dump_source(o, edc);
-#else
-		action_ptr->dump(o, edc);
-	} else {
-		o << "null";
-	}
-	return o;
-#endif
+	return __local_event->dump_source(o, edc);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Dumps more stateful information about node.  
- */
-ostream&
-EventNode::dump_pending(ostream& o) const {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -510,44 +313,10 @@ EventNode::dump_pending(ostream& o) const {
 	TODO: delays?
  */
 ostream&
-EventNode::dump_struct(ostream& o, const expr_dump_context& edc
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		, const size_t pid
-		, const event_index_type offset
-#endif
-		) const {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+EventNode::dump_struct(ostream& o, const expr_dump_context& edc,
+		const size_t pid, const event_index_type offset) const {
 	NEVER_NULL(__local_event);
 	__local_event->dump_struct(o, edc, pid, offset);
-	// missing pid
-#else
-	switch (event_type) {
-	case EVENT_NULL: o << (predecessors > 1 ? "join" : "null"); break;
-	case EVENT_ASSIGN: o << "assign"; break;
-	case EVENT_SEND: o << "send"; break;
-	case EVENT_RECEIVE: o << "receive"; break;
-	case EVENT_PEEK: o << "peek"; break;
-	case EVENT_CONCURRENT_FORK: o << "fork"; break;
-	case EVENT_SELECTION_BEGIN: o << "select"; break;
-	case EVENT_CONDITION_WAIT: o << "wait"; break;
-	case EVENT_FUNCTION_CALL: o << "call"; break;
-	default:
-		ISE(cerr, cerr << "Invalid event type enum: "
-			<< event_type << endl;)
-	}
-	o << ": ";
-	// factored out code
-	dump_brief(o, edc);
-	// flags?
-	o << ", pid: " << process_index;
-	o << ", #pred: " << predecessors;
-	// countdown? only in state dump
-	// o << endl;
-	o << ", succ: ";
-	ostream_iterator<event_index_type> osi(o, " ");
-	copy(begin(successor_events), end(successor_events), osi);
-	o << endl;
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	block_deps.dump(o);	// includes endl already
 	return o;
 }
@@ -559,13 +328,10 @@ EventNode::dump_struct(ostream& o, const expr_dump_context& edc
  */
 ostream&
 EventNode::dump_dot_node(ostream& o, const event_index_type i, 
-		const graph_options& g, const expr_dump_context& edc
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		, const size_t process_index
-		, const event_index_type offset
-#endif
-		) const {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		const graph_options& g, const expr_dump_context& edc,
+		const size_t process_index, 
+		const event_index_type offset) const {
+	// pass extra text info to printer
 	std::ostringstream extra;
 	if (g.show_delays) {
 		extra << '@' << delay << ' ';
@@ -575,53 +341,6 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 		extra << "pid=" << process_index;
 	}
 	__local_event->dump_dot_node(o, i, g, edc, extra.str().c_str(), offset);
-#else
-	o << node_prefix << i << '\t';
-	o << "[shape=";
-	switch (event_type) {
-	case EVENT_NULL:
-		o << ((predecessors > 1) ? "diamond" : "ellipse"); 
-		break;
-	case EVENT_ASSIGN: o << "box"; break;
-	case EVENT_SEND: o << "house"; break;
-	case EVENT_RECEIVE: o << "invhouse"; break;
-	case EVENT_PEEK: o << "invhouse"; break;	// or ASSIGN shape?
-	case EVENT_CONCURRENT_FORK: o << "hexagon"; break;
-	case EVENT_SELECTION_BEGIN: o << "trapezium"; break;
-	case EVENT_CONDITION_WAIT: o << "ellipse"; break;
-	case EVENT_FUNCTION_CALL: o << "octogon"; break;
-		// TODO: flag for non-deterministic? extra periphery?
-	default:
-		ISE(cerr, cerr << "Invalid event type enum: "
-			<< event_type << endl;)
-	}
-	o << ", label=\"";
-	if (g.show_event_index) {
-		o << "[" << i << "] ";
-	}
-	if (g.show_delays) {
-		o << '@' << delay << ' ';
-	}
-	if (!g.process_event_clusters || !process_index) {
-		// always show pid 0 because top-level is not clustered
-		o << "pid=" << process_index;
-	}
-	// seems a waste to do this multiple times for same process...
-	// can't change until we-reorganize events into contiguous ranges.
-	if (action_ptr) {
-		// TODO: pass context scope to suppress scope qualifier
-		action_ptr->dump_event(o << "\\n", edc);
-	}
-	// no edges
-	// no deps
-	o << "\"];" << endl;
-	if (action_ptr) {
-		EventSuccessorDumper d(o, *this, i, edc);
-		action_ptr->accept(d);
-	} else {
-		dump_successor_edges_default(o, i);
-	}
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #if CHPSIM_READ_WRITE_DEPENDENCIES
 	if (g.show_instances) {
 		block_deps.dump_dependence_edges(o, i);
@@ -630,28 +349,6 @@ EventNode::dump_dot_node(ostream& o, const event_index_type i,
 #endif
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-/**
-	Just prints edge label if applicable.
-	TODO: somehow print guards on edges of selection.  
-		Do this in the print of selection.
- */
-ostream&
-EventNode::dump_successor_edges_default(ostream& o, 
-		const event_index_type i) const {
-	// iterate over edges
-	const event_index_type* j = begin(successor_events);
-	const event_index_type* z = end(successor_events);
-	for ( ; j!=z; ++j) {
-		const event_index_type h = *j;
-		o << node_prefix << i << " -> " << node_prefix << h <<
-			';' << endl;
-	}
-	return o;
-}
-#endif
 
 //=============================================================================
 }	// end namespace CHPSIM

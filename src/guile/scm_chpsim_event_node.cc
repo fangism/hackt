@@ -1,23 +1,19 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.4.14.6 2007/09/10 22:33:00 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.4.14.7 2007/09/11 05:32:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include "sim/chpsim/Event.h"
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #include "sim/chpsim/State.h"
-#endif
 #include "sim/chpsim/Dependence.h"
 #include "Object/lang/CHP.h"	// for dynamic_cast on actions
 #include "Object/traits/classification_tags_fwd.h"
 #include "Object/expr/expr_dump_context.h"
 #include "guile/scm_chpsim_event_node.h"
 #include "guile/libhackt-wrap.h"
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #include "guile/chpsim-wrap.h"
-#endif
 #include "Object/module.h"
 #include "guile/hackt-documentation.h"
 #include <sstream>
@@ -45,11 +41,7 @@ using util::guile::make_scm_list;
 using util::guile::scm_gsubr_type;
 using util::guile::scm_c_define_gsubr_exported;
 USING_SCM_ASSERT_SMOB_TYPE
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #define	EVENT_ENUM_NAMESPACE	HAC::entity::CHP
-#else
-#define	EVENT_ENUM_NAMESPACE	HAC::SIM::CHPSIM
-#endif
 
 //=============================================================================
 /**
@@ -96,11 +88,7 @@ static
 inline
 size_t 
 event_to_process_index(const scm_chpsim_event_node_ptr ptr) {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	return chpsim_state->get_process_id(*ptr);
-#else
-	return ptr->get_process_index();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -452,7 +440,6 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_successors, FUNC_NAME, 1, 0, 0, (SCM obj),
 "Return a list of the successor events of event @var{obj}.") {
 	const scm_chpsim_event_node_ptr ptr =
 		scm_smob_to_chpsim_event_node_ptr(obj);
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	std::vector<event_index_type> global_successors;
 	std::transform(ptr->local_successors_begin(), 
 		ptr->local_successors_end(),
@@ -460,9 +447,6 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_successors, FUNC_NAME, 1, 0, 0, (SCM obj),
 		bind1st(std::plus<event_index_type>(), 
 			chpsim_state->get_offset_from_event(*ptr)));
 	return make_scm_list(global_successors);
-#else
-	return make_scm_list(ptr->successor_events);
-#endif
 }
 #undef	FUNC_NAME
 

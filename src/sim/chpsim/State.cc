@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12.12.9 2007/09/10 22:33:03 fang Exp $
+	$Id: State.cc,v 1.12.12.10 2007/09/11 05:32:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,9 +31,7 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
 #include "Object/expr/expr_dump_context.h"
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 #include "Object/lang/CHP_footprint.h"
-#endif
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -145,12 +143,10 @@ using util::read_value;
 using util::value_writer;
 using util::value_reader;
 using util::discrete_interval_set;
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 using entity::CHP::local_event;
 using entity::CHP::local_event_footprint;
 using entity::CHP::EVENT_SEND;
 using entity::CHP::EVENT_RECEIVE;
-#endif
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -189,12 +185,8 @@ struct State::recheck_transformer {
 	operator () (const event_index_type ei) {
 		DEBUG_QUEUE_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		const size_t pid = state.get_process_id(ei);
 		context.set_event(e, pid, state.get_offset_from_pid(pid));
-#else
-		context.set_event(e);
-#endif
 		// To accomodate blocking-sends that wake-up probes
 		// we must prevent self-wake up in this corner case.
 		if (cause_event_id != ei) {
@@ -298,11 +290,9 @@ State::State(const module& m) :
 		state_base(m, "chpsim> "), 
 		instances(m.get_state_manager()), 
 		event_pool(), 
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 		global_root_event(NULL, entity::CHP::EVENT_CONCURRENT_FORK),
 		global_event_to_pid(),
 		pid_to_offset(),
-#endif
 		check_event_queue(), 
 		timing_mode(TIMING_DEFAULT), 
 		current_time(0), 
@@ -327,7 +317,7 @@ State::State(const module& m) :
 {
 	const footprint& topfp(mod.get_footprint());
 	const state_manager& sm(mod.get_state_manager());
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+
 	init.make_global_root(&global_root_event);	// use the FORK, Luke...
 	const size_t procs = sm.get_pool<process_tag>().size();
 	pid_to_offset.resize(procs +1);
@@ -356,30 +346,6 @@ State::State(const module& m) :
 		global_root_event.successor_events.push_back(j->first);
 	}
 }
-#else	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	StateConstructor v(*this);	// + option flags
-	// visit top-level footprint
-	// v.current_process_index = 0;	// already initialized
-if (topfp.has_chp_footprint()) {
-	topfp.get_chp_footprint().accept(v);
-	if (v.last_event_index) {
-		v.initial_events.push_back(v.last_event_index);
-		// first top-level event
-	}
-}
-	// visit hierarchical footprints
-	sm.accept(v);	// may throw
-
-	// now we have a list of initial_events, use event slot 0 to
-	// launch them all concurrently upon startup.
-	init.set_predecessors(0);		// first event, no predecessors
-	// init.process_index = 0;		// associate with top-level
-	init.set_event_type(EVENT_CONCURRENT_FORK);
-	init.successor_events.resize(v.initial_events.size());
-	copy(v.initial_events.begin(), v.initial_events.end(),
-		&init.successor_events[0]);
-	v.count_predecessors(init);	// careful: event optimizations!
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 }
 }
 
@@ -399,7 +365,6 @@ State::~State() {
  */
 size_t
 State::get_process_id(const event_index_type ei) const {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("event = " << ei << endl);
 	global_event_to_pid_map_type::const_iterator
@@ -410,14 +375,11 @@ State::get_process_id(const event_index_type ei) const {
 	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
 	INVARIANT(pid < pid_to_offset.size());
 	return pid;
-#else
-	// not really dependent on state...
-	return event_pool[ei].get_process_index();
-#endif
+// used to be embedded for fast lookup at the cost of storage:
+//	return event_pool[ei].get_process_index();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 size_t
 State::get_process_id(const event_type& e) const {
 	return get_process_id(get_event_id(e));
@@ -489,7 +451,6 @@ State::initialize_process_event_chunk(const local_event_footprint& chpfp,
 		} while (i<local_events);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -614,13 +575,9 @@ do {
 	__updated_list.clear();
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t pid = get_process_id(ei);
 	const event_index_type offset = get_offset_from_pid(pid);
 	c.set_event(ev, pid, offset);	// not nonmeta_context::event_setter!!!
-#else
-	c.set_event(ev);	// not nonmeta_context::event_setter!!!
-#endif
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
 	try {
@@ -1288,11 +1245,7 @@ entity::expr_dump_context
 State::make_process_dump_context(const node_index_type pid) const {
 	// -1 because we allocated one more pid slot for the
 	// global spawn event.
-	if (pid
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-		&& valid_process_id(pid)
-#endif
-		) {
+	if (pid && valid_process_id(pid)) {
 		return mod.get_state_manager().make_process_dump_context(
 			mod.get_footprint(), pid);
 	} else {
@@ -1303,15 +1256,10 @@ State::make_process_dump_context(const node_index_type pid) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_event(ostream& o, const event_type& e) const {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t pid = get_process_id(e);
 	return e.dump_struct(o, make_process_dump_context(pid), 
 		valid_process_id(pid) ? pid : 0, 
 		get_offset_from_pid(pid));
-#else
-	const size_t pid = e.get_process_index();
-	return e.dump_struct(o, make_process_dump_context(pid));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1324,11 +1272,7 @@ State::dump_event(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 	o << '\t' << t << '\t';
 	o << ei << '\t';
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t pid = get_process_id(ei);
-#else
-	const size_t pid = ev.get_process_index();
-#endif
 	o << pid << '\t';
 	// caution: global-root event's pid
 	return ev.dump_brief(o, make_process_dump_context(pid));
@@ -1343,7 +1287,6 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	INVARIANT(ei < event_pool.size());
 	o << "event[" << ei << "]: ";
 	const event_type& e(event_pool[ei]);
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	const size_t pid = get_process_id(ei);
 	if (valid_process_id(pid)) {
 		// because global root event is a fake process
@@ -1352,10 +1295,6 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	} else {
 		e.dump_struct(o, expr_dump_context::default_value, 0, 0);
 	}
-#else
-	const size_t pid = e.get_process_index();
-	e.dump_struct(o, make_process_dump_context(pid));
-#endif
 	// o << endl;
 	e.dump_source(o << "source: ", expr_dump_context::default_value) << endl;
 	return o;
@@ -1478,22 +1417,19 @@ State::dump_struct(ostream& o) const {
 {
 	o << "Variables: " << endl;
 	instances.dump_struct(o, sm, topfp);
-}
 	o << endl;
-{
+}
 // CHP graph structures (non-hierarchical)
 	o << "Event graph: " << endl;
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// group events by process, since they now lie in contiguous ranges
 	// event[0] is special, print it separately
-{
+
 	o << "event[0]: ";
 //	const size_t pid = get_process_id(0);
 	event_pool[0].dump_struct(o, 
 		expr_dump_context::default_value, 0, 0
 //		make_process_dump_context(pid), get_offset_from_pid(pid)
 	);
-}
 {
 	typedef	pid_to_offset_map_type::const_iterator	const_iterator;
 	const_iterator i(pid_to_offset.begin()), e(--pid_to_offset.end());
@@ -1515,18 +1451,6 @@ State::dump_struct(ostream& o) const {
 	}
 	}
 }
-#else	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-	const event_index_type es = event_pool.size();
-	event_index_type i = 0;		// FIRST_VALID_EVENT;
-	// we use the 0th event to launch initial batch of events
-	for ( ; i<es; ++i) {
-		o << "event[" << i << "]: ";
-		const event_type& e(event_pool[i]);
-		const size_t pid = e.get_process_index();
-		e.dump_struct(o, make_process_dump_context(pid));
-	}
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-}
 	return o;
 }
 
@@ -1540,12 +1464,8 @@ State::dump_struct(ostream& o) const {
  */
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	// should be event_type::local_event_type
 	static const char* node_prefix = local_event::node_prefix;
-#else
-	static const char* node_prefix = event_type::node_prefix;
-#endif
 
 	o << "digraph G {" << endl;
 	// consider using global_entry_context_base instead...
@@ -1559,7 +1479,6 @@ if (g.show_instances) {
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
 	// group events by process (making subgraph clustering trivial)
-#if CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 	size_t pid = 0;
 	event_pool[0].dump_dot_node(o, 0, g,
 		expr_dump_context::default_value, 0, 0) << endl;
@@ -1595,59 +1514,6 @@ for ( ; pid < mp; ++pid) {
 	}	// end if max
 }	// end for-all pid's
 }
-#else	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
-{
-	event_index_type i = 0;		// FIRST_VALID_EVENT;
-	// we use the 0th event to launch initial batch of events
-	for ( ; i<es; ++i) {
-		const event_type& e(event_pool[i]);
-		const size_t pid = e.get_process_index();
-		e.dump_dot_node(o, i, g, make_process_dump_context(pid))
-			<< endl;
-		// includes outgoing edges
-	}
-}
-if (g.process_event_clusters) {
-	// since event-node ranges are not necessarily contiguous,
-	// we may need to collect them in discrete_set_intervals
-	// TODO: once subgraphs are copy-allocated from footprints, 
-	// we can do-away with this sparse-gathering
-	o << "# Process clusters: " << endl;
-	// Forunately, dot lets you declare node clusterings after nodes
-	// have been declared and defined.  
-	typedef discrete_interval_set<size_t>	event_id_set_type;
-	const global_entry_pool<process_tag>&
-		ppool(sm.get_pool<process_tag>());
-	vector<event_id_set_type> pmap(ppool.size());
-	// gather event-ids by process id
-	event_index_type i = 0;		// FIRST_VALID_EVENT
-	for ( ; i<es; ++i) {
-		const size_t pid = get_process_id(i);
-		const bool b = pmap[pid].add_range(i, i);
-		INVARIANT(!b);	// no overlap
-	}
-	vector<event_id_set_type>::const_iterator
-		pi(pmap.begin()), pe(pmap.end());
-	INVARIANT(pi != pe);
-	size_t c = 1;	// skip process 0, which represents the top-level
-	for (++pi; pi!=pe; ++pi, ++c) {
-		o << "subgraph cluster" << c << " {" << endl;
-		std::ostringstream oss;
-		ppool[c].dump_canonical_name(oss, topfp, sm);
-		o << "label=\"pid=" << c << ": " << oss.str() << "\";" << endl;
-		// interval_set is a map of [start,length] pairs
-		event_id_set_type::const_iterator
-			ii(pi->begin()), ie(pi->end());
-		for ( ; ii!=ie; ++ii) {
-			size_t j = ii->first;
-			for ( ; j <= ii->second; ++j) {
-				o << node_prefix << j << ';' << endl;
-			}
-		}
-		o << "}" << endl;
-	}
-}	// end if process_event_clusters
-#endif	// CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
 if (g.show_channels) {
 	static const char channel_prefix[] = "CHANNEL_";
 	// TODO: can this re-used as a guile-routine?
