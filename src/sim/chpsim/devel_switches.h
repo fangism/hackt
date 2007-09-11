@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8.14.5 2007/09/07 21:07:47 fang Exp $
+	$Id: devel_switches.h,v 1.8.14.6 2007/09/11 00:17:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -62,7 +62,7 @@
 		reverse-lookup of event to CHP language source.  
 	Prereq: LOCAL_CHP_EVENT_FOOTPRINT in "Object/devel_switches.h"
 	Goal: 1
-	Status: just begun
+	Status: done, tested
 	Priority: TOP -- reverse-lookup required for thesis
  */
 #define	CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS		1

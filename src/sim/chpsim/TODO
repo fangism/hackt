@@ -1,5 +1,5 @@
 "sim/chpsim/TODO"
-#	$Id: TODO,v 1.9 2007/08/15 02:49:25 fang Exp $
+#	$Id: TODO,v 1.9.4.1 2007/09/11 00:17:55 fang Exp $
 
 ===============================================================================
 chpsim:
@@ -62,13 +62,6 @@ low-priority:
 		print allocated instances and dependency edges to them
 			prereq: static data-dependencies and anti-dependencies
 		[done for channels only]
-	footprint-ize: processes' CHP event subgraphs, easier because
-		they are not shared.  This way, process events can be 
-		allocated in chunks and clustered together.  
-		Compute subgraph (templatized) once per process type.  
-		These footprints *could* just use local 
-		instance IDs plus a footprint frame lookup.  
-		Advantage: makes graph allocation and event-mapping easier
 	enhancement: Maybe flag references that are meta to avoid re-checking
 		as nonmeta references at run-time.  
 		Possibly cache-it as a redundant pointer in CHP expressions.
@@ -93,6 +86,14 @@ BUGS:
 completed work (for the record):
 	[can wipe these any time]
 
+	footprint-ize: processes' CHP event subgraphs, easier because
+		they are not shared.  This way, process events can be 
+		allocated in chunks and clustered together.  
+		Compute subgraph (templatized) once per process type.  
+		These footprints *could* just use local 
+		instance IDs plus a footprint frame lookup.  
+		Advantage: makes graph allocation and event-mapping easier
+		[STATUS: DONE]
 	expr_dump_context: enhance with optional prefix string for
 		the enclosing process, useful for printing events with
 		more reasonable process names (instead of just pid number)

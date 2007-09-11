@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.10.8.9 2007/09/10 22:33:01 fang Exp $
+	$Id: Event.cc,v 1.10.8.10 2007/09/11 00:17:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -260,13 +260,10 @@ EventNode::setup(const local_event_type* l, const State& s) {
 	const action* action_ptr = get_chp_action();
 	if (action_ptr) {
 		action_ptr->accept(v);
-	}
-#if 0
-	else {
+	} else {
 		// set default delay for NULL events
 		delay = 0;
 	}
-#endif
 }
 #endif
 

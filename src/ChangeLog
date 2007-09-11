@@ -5,6 +5,13 @@
 
 2007-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-16:
+	  sim/chpsim/Event.cc: assign 0 delay to NULL events.  
+	  Last remaining test cases updated and re-verified, 
+		leaving NO regressions with this revision.  
+	  Ready to merge after cleanup.
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-15:
 	  Mostly test updates.
 	  guile/chpsim_event_node.cc: fixed successor reporting to

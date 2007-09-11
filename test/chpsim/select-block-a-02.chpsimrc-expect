@@ -4,27 +4,27 @@ there is little exposed concurrency
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 e : bool e = 0
 step 5 
-	0	0	0	null
-	1	29	0	
+	0	0	1	null
+	1	1	0	
 	11	27	0	c := false
 	11	28	0	e := false
 	11	26	0	
 event queue:
 check queue:
 	time	eid	pid	event
-	12	25	0	
+	12	2	0	
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 e : bool e = 0
 time: 11
-event[18]: wait: [e], pid: 0, #pred: 1, succ: 24 
+event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
 bool deps: 4 
 source: [e]
 status: (currently not subscribed to its dependencies)
@@ -32,8 +32,8 @@ in queue: no
 in check queue: no
 All event subscriptions:
 step 1 
-	12	25	0	
-event[18]: wait: [e], pid: 0, #pred: 1, succ: 24 
+	12	2	0	
+event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
 bool deps: 4 
 source: [e]
 status: (currently not subscribed to its dependencies)
@@ -41,39 +41,39 @@ in queue: no
 in check queue: yes
 All event subscriptions:
 step 1 
-	12	2	0	[~e]
+	12	18	0	[~e]
 All event subscriptions:
 event queue:
 check queue:
 	time	eid	pid	event
-	12	18	0	[e]
+	12	25	0	[e]
 	13	17	0	
 step 4 
 	13	17	0	
 	23	15	0	a := false
 	23	16	0	b := false
 	23	14	0	
-event 18 still subscribed to `e' 
+event 25 still subscribed to `e' 
 event queue:
 check queue:
 	time	eid	pid	event
 	33	13	0	e := true
-event[18]: wait: [e], pid: 0, #pred: 1, succ: 24 
+event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
 bool deps: 4 
 source: [e]
 status: (blocked and subscribed to its dependencies)
 in queue: no
 in check queue: no
 All event subscriptions:
-bool[4]: "e" : 18 
+bool[4]: "e" : 25 
 	33	13	0	e := true
-should wake up event 18, now in queue 
+should wake up event 25, now in queue 
 event queue:
 	time	eid	pid	event
-	33	18	0	[e]
+	33	25	0	[e]
 check queue:
 	43	12	0	a := false
-event[18]: wait: [e], pid: 0, #pred: 1, succ: 24 
+event[25]: wait: [e], pid: 0, #pred: 1, succ: 24 
 bool deps: 4 
 source: [e]
 status: (currently not subscribed to its dependencies)
@@ -91,7 +91,7 @@ status: (currently not subscribed to its dependencies)
 in queue: no
 in check queue: no
 step 4 
-	33	18	0	[e]
+	33	25	0	[e]
 	43	12	0	a := false
 	53	11	0	b := false
 	63	10	0	a := false
@@ -168,37 +168,37 @@ event queue:
 check queue:
 	time	eid	pid	event
 	114	20	0	c := ~c
-event 2 should now be blocked on `e' 
-event[2]: wait: [~e], pid: 0, #pred: 1, succ: 17 
+event 18 should now be blocked on `e' 
+event[18]: wait: [~e], pid: 0, #pred: 1, succ: 17 
 bool deps: 4 
 source: [~e]
 status: (blocked and subscribed to its dependencies)
 in queue: no
 in check queue: no
 All event subscriptions:
-bool[4]: "e" : 2 
+bool[4]: "e" : 18 
 step 2 
 	114	20	0	c := ~c
 	124	19	0	e := false
 time: 124
-event 2 should be released 
+event 18 should be released 
 event queue:
 	time	eid	pid	event
-	124	2	0	[~e]
+	124	18	0	[~e]
 check queue:
-	124	18	0	[e]
-event[2]: wait: [~e], pid: 0, #pred: 1, succ: 17 
+	124	25	0	[e]
+event[18]: wait: [~e], pid: 0, #pred: 1, succ: 17 
 bool deps: 4 
 source: [~e]
 status: (currently not subscribed to its dependencies)
 in queue: yes
 in check queue: no
 step 2 
-	124	2	0	[~e]
+	124	18	0	[~e]
 	125	17	0	
 All event subscriptions:
-bool[4]: "e" : 18 
-now event 18 is waiting for handshake on `e' 
+bool[4]: "e" : 25 
+now event 25 is waiting for handshake on `e' 
 step 3 
 	135	15	0	a := false
 	135	16	0	b := false
