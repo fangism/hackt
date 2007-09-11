@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.39.8.1 2007/09/02 20:49:13 fang Exp $
+ 	$Id: definition.cc,v 1.39.8.2 2007/09/11 00:48:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3316,11 +3316,8 @@ process_definition::__create_complete_type(
 		}
 		// check channel producer/consumer connectivity:
 		f.connection_diagnostics();	// returns good_bool
-#if LOCAL_CHP_EVENT_FOOTPRINT
-		// allocate local event pool
-		// similar to StateConstructor
+		// allocate local CHP event pool
 		f.allocate_chp_events();
-#endif
 		// f.mark_created();	// ?
 	}
 	return good_bool(true);
@@ -3334,15 +3331,6 @@ process_definition::create_complete_type(
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* const f = &footprint_map[p];
-#if 0
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		f = &footprint_map[*p];
-	} else {
-		INVARIANT(!footprint_map.arity());
-		f = &footprint_map.only();
-	}
-#endif
 	return __create_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot create undefined process " <<

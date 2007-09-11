@@ -5,6 +5,10 @@
 
 2007-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-17:
+	  Perm'd LOCAL_CHP_EVENT_FOOTPRINT in Object/devel_switches.h.
+
+
 	* HACKT-00-01-04-main-00-81-68-chpsim-09-16:
 	  sim/chpsim/Event.cc: assign 0 delay to NULL events.  
 	  Last remaining test cases updated and re-verified, 

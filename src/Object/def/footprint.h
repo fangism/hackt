@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.23.8.4 2007/09/04 04:34:05 fang Exp $
+	$Id: footprint.h,v 1.23.8.5 2007/09/11 00:48:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -13,9 +13,7 @@
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
 #include "Object/devel_switches.h"
-#if LOCAL_CHP_EVENT_FOOTPRINT
 #include "Object/lang/CHP_footprint.h"
-#endif
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -200,12 +198,12 @@ private:
 		for references from the chp_event_footprint.
 	 */
 	excl_ptr<chp_footprint_type>		chp_footprint;
-#if LOCAL_CHP_EVENT_FOOTPRINT
 	/**
 		Local pool of events in the footprint of this definition.
+		Simulator events may just point back to this
+		structure for most stateless information.  
 	 */
 	CHP::local_event_footprint		chp_event_footprint;
-#endif
 	/**
 		Unrolled specifications, local to this scope.  
 		This is populated during the create phase.  
@@ -346,18 +344,11 @@ public:
 	get_prs_footprint(void) const { return *prs_footprint; }
 
 	chp_footprint_type&
-	get_chp_footprint(void)
-#if LOCAL_CHP_EVENT_FOOTPRINT
-		;
-#else
-		{ return *chp_footprint; }
-#endif
+	get_chp_footprint(void);
 
 	const chp_footprint_type&
 	get_chp_footprint(void) const { 
-#if LOCAL_CHP_EVENT_FOOTPRINT
 		NEVER_NULL(chp_footprint);
-#endif
 		return *chp_footprint;
 	}
 
@@ -388,10 +379,8 @@ public:
 	good_bool
 	connection_diagnostics(void) const;
 
-#if LOCAL_CHP_EVENT_FOOTPRINT
 	void
 	allocate_chp_events(void);
-#endif
 
 	void
 	accept(alias_visitor&) const;
