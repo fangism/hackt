@@ -11,11 +11,15 @@ chan[3]: "bar.index"
 chan[4]: "bar.out" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 3 
+event[0]: fork: null, #pred: 0, succ: 1 3 
+
+# process[1]:
 event[1]: receive: foo.index?(foo.y), pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
 event[2]: send: foo.out!(foo.z[(0+foo.x[foo.y])%2]), pid: 1, #pred: 1, succ: 1 
 channel deps: 2 
+
+# process[2]:
 event[3]: receive: bar.index?(bar.y), pid: 2, #pred: 1, succ: 4 
 channel deps: 3 
 event[4]: send: bar.out!(bar.z[(1+bar.x[bar.y])%2]), pid: 2, #pred: 1, succ: 3 

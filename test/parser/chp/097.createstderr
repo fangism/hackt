@@ -26,11 +26,12 @@ Persistent Object Manager text dump:
 	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	330
-	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	26	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -80,6 +81,12 @@ In namespace "", we have: {
               z := w
             }
           ]
+        chp events: {
+          event[0]: fork: , #pred: 1, succ: 2 3 
+          event[1]: join: , #pred: 2, succ: 0 
+          event[2]: assign: x := y, #pred: 1, succ: 1 
+          event[3]: assign: z := w, #pred: 1, succ: 1 
+        }
       }
       }
 

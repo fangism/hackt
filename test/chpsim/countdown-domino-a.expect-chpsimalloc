@@ -4,16 +4,18 @@ int[2]: "b"
 int[3]: "c" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 11 
-event[1]: null: , pid: 0, #pred: 4, succ: 
-event[2]: assign: b := 2, pid: 0, #pred: 1, succ: 1 
-event[3]: select: , pid: 0, #pred: 1, succ: 4 2 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
+event[1]: fork: , pid: 0, #pred: 1, succ: 3 6 8 10 
+event[2]: assign: b := 2, pid: 0, #pred: 1, succ: 11 
+event[3]: select: *[ a>0 -> ... ], pid: 0, #pred: 1, succ: 4 2 
 event[4]: assign: a := a-1, pid: 0, #pred: 1, succ: 3 
-event[5]: assign: c := 3, pid: 0, #pred: 1, succ: 1 
-event[6]: select: , pid: 0, #pred: 1, succ: 7 5 
+event[5]: assign: c := 3, pid: 0, #pred: 1, succ: 11 
+event[6]: select: *[ b>0 -> ... ], pid: 0, #pred: 1, succ: 7 5 
 event[7]: assign: b := b-1, pid: 0, #pred: 1, succ: 6 
-event[8]: select: , pid: 0, #pred: 1, succ: 9 1 
+event[8]: select: *[ c>0 -> ... ], pid: 0, #pred: 1, succ: 9 11 
 event[9]: assign: c := c-1, pid: 0, #pred: 1, succ: 8 
-event[10]: assign: a := 1, pid: 0, #pred: 1, succ: 1 
-event[11]: fork: , pid: 0, #pred: 1, succ: 3 6 8 10 
+event[10]: assign: a := 1, pid: 0, #pred: 1, succ: 11 
+event[11]: join: , pid: 0, #pred: 4, succ: 
 

@@ -1,16 +1,17 @@
 /**
 	\file "sim/chpsim/nonmeta_context.cc"
-	$Id: nonmeta_context.cc,v 1.5 2007/06/16 23:05:12 fang Exp $
+	$Id: nonmeta_context.cc,v 1.6 2007/09/11 06:53:15 fang Exp $
  */
 
 #include <vector>
-// #include <iterator>
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/Event.h"
 #include "sim/chpsim/State.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "Object/traits/proc_traits.h"
+#include "Object/lang/CHP_event.h"
+#include "util/iterator_more.h"
 
 namespace HAC {
 namespace SIM {
@@ -18,33 +19,6 @@ namespace CHPSIM {
 using entity::process_tag;
 //=============================================================================
 // class nonmeta_context method definitions
-
-/**
-	If process_index is 0 duplicate the top-level footprint as the 
-	local footprint, else use the global entry's local footprint pointer.  
- */
-nonmeta_context::nonmeta_context(const state_manager& s, 
-		const footprint& f, 
-		event_type& e, 
-		State& r) :
-		nonmeta_context_base(s, f, 
-			(e.get_process_index() ?
-				&s.get_pool<process_tag>()
-				[e.get_process_index()]._frame
-				: NULL),
-			r.instances),
-		event(&e), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		first_checks(), 
-#else
-		enqueue_list(r.__enqueue_list), 
-		rechecks(r.__rechecks), 
-#endif
-		updates(r.__updated_list),
-		event_pool(r.event_pool), 
-		trace_manager(r.get_trace_manager_if_tracing())
-		{
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -56,12 +30,9 @@ nonmeta_context::nonmeta_context(const state_manager& s,
 		State& r) :
 		nonmeta_context_base(s, f, NULL, r.instances),
 		event(NULL), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		global_event_offset(0), 	// any invalid value
+		process_index(0),
 		first_checks(), 
-#else
-		enqueue_list(r.__enqueue_list), 
-		rechecks(r.__rechecks), 
-#endif
 		updates(r.__updated_list),
 		event_pool(r.event_pool), 
 		trace_manager(r.get_trace_manager_if_tracing())
@@ -73,9 +44,11 @@ nonmeta_context::~nonmeta_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-nonmeta_context::set_event(event_type& e) {
+nonmeta_context::set_event(event_type& e,
+		const size_t pid, const event_index_type offset) {
 	event = &e;
-	const size_t pid = e.get_process_index();
+	global_event_offset = offset;
+	process_index = pid;
 	fpf = (pid ? &sm->get_pool<process_tag>()[pid]._frame : NULL);
 }
 
@@ -100,16 +73,26 @@ nonmeta_context::get_event_index(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
-	\pre ei is NOT already in queue
-	\post no duplicat entries in enqueue
+	Add offset to translate from local to global event index!
  */
 void
-nonmeta_context::enqueue(const event_index_type ei) const {
-	enqueue_list.push_back(ei);
+nonmeta_context::insert_first_checks(const event_index_type ei) {
+	first_checks.insert(ei +global_event_offset);
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Enqueue all successors to first-check queue.  
+	Only call this for non-selection events.
+ */
+void
+nonmeta_context::first_check_all_successors(void) {
+	const event_type::local_event_type::successor_list_type&
+		l(event->get_local_event().successor_events);
+	copy(l.begin(), l.end(), util::set_inserter(*this));
+	// use set_inserter to automatically transform with offset
+}
 
 //=============================================================================
 }	// end namespace CHPSIM

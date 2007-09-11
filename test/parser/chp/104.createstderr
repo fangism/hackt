@@ -73,13 +73,14 @@ Persistent Object Manager text dump:
 	62	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	63	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	438
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	626
 	66	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	70	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -174,6 +175,19 @@ In namespace "", we have: {
               }
             }
           ]
+        chp events: {
+          event[0]: fork: , #pred: 1, succ: 9 10 
+          event[1]: join: , #pred: 4, succ: 0 
+          event[2]: send: C!(z), #pred: 1, succ: 1 
+          event[3]: send: D!(~z), #pred: 1, succ: 1 
+          event[4]: send: E!(a&b), #pred: 1, succ: 1 
+          event[5]: send: F!(a|b), #pred: 1, succ: 1 
+          event[6]: fork: , #pred: 1, succ: 2 3 4 5 
+          event[7]: assign: z := a^b, #pred: 1, succ: 6 
+          event[8]: join: , #pred: 2, succ: 7 
+          event[9]: receive: A?(a), #pred: 1, succ: 8 
+          event[10]: receive: B?(b), #pred: 1, succ: 8 
+        }
       }
       }
 

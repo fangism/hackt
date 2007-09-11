@@ -2,16 +2,16 @@ loaded function: `hello'.
 loaded function: `my_gcd'.
 function `my_gcd': bound.
 function `hello': bound.
-	0	0	0	null
-	10	6	1	
+	0	0	5	null
+	10	1	1	
 	20	4	1	X.A?(X.a)
-	20	1	2	AS.S!(12)
+	20	6	2	AS.S!(12)
 	20	5	1	X.B?(X.b)
 	20	9	3	BS.S!(9)
 	30	3	1	
 	40	2	1	X.G!(my_gcd(X.a,X.b))
 	40	13	4	GS.A?
-	50	6	1	
+	50	1	1	
 Hello, world!
 	50	14	4	hello()
 	60	4	1	X.A?(X.a)
@@ -21,7 +21,7 @@ Hello, world!
 	70	3	1	
 	80	2	1	X.G!(my_gcd(X.a,X.b))
 	80	13	4	GS.A?
-	90	6	1	
+	90	1	1	
 Hello, world!
 	90	14	4	hello()
 	100	4	1	X.A?(X.a)
@@ -31,17 +31,17 @@ Hello, world!
 	110	3	1	
 	120	2	1	X.G!(my_gcd(X.a,X.b))
 	120	13	4	GS.A?
-	130	6	1	
+	130	1	1	
 Hello, world!
 	130	14	4	hello()
 	140	4	1	X.A?(X.a)
-	140	1	2	AS.S!(12)
+	140	6	2	AS.S!(12)
 	140	5	1	X.B?(X.b)
 	140	10	3	BS.S!(34)
 	150	3	1	
 	160	2	1	X.G!(my_gcd(X.a,X.b))
 	160	13	4	GS.A?
-	170	6	1	
+	170	1	1	
 Hello, world!
 	170	14	4	hello()
 	180	4	1	X.A?(X.a)
@@ -51,7 +51,7 @@ Hello, world!
 	190	3	1	
 	200	2	1	X.G!(my_gcd(X.a,X.b))
 	200	13	4	GS.A?
-	210	6	1	
+	210	1	1	
 Hello, world!
 	210	14	4	hello()
 	220	4	1	X.A?(X.a)
@@ -61,11 +61,11 @@ Hello, world!
 	230	3	1	
 	240	2	1	X.G!(my_gcd(X.a,X.b))
 	240	13	4	GS.A?
-	250	6	1	
+	250	1	1	
 Hello, world!
 	250	14	4	hello()
 	260	4	1	X.A?(X.a)
-	260	1	2	AS.S!(12)
+	260	6	2	AS.S!(12)
 	260	5	1	X.B?(X.b)
 	260	11	3	BS.S!(27)
 time: 260

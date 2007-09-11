@@ -1,4 +1,4 @@
-(0 . #<raw-chpsim-event-node: fork: null, pid: 0, #pred: 0, succ: 1 2 16 6 17 18 19 
+(0 . #<raw-chpsim-event-node: fork: null, #pred: 0, succ: 1 2 6 16 17 18 19 
 >)
 (1 . #<raw-chpsim-event-node: send: src.S!(true), pid: 1, #pred: 1, succ: 1 
 channel deps: 1 
@@ -15,10 +15,9 @@ channel deps: 2
 (5 . #<raw-chpsim-event-node: send: c.S!(1), pid: 2, #pred: 1, succ: 4 
 channel deps: 2 
 >)
-(6 . #<raw-chpsim-event-node: receive: snk[0].B?(snk[0].b), pid: 4, #pred: 1, succ: 6 
-channel deps: 3 
+(6 . #<raw-chpsim-event-node: fork: , pid: 3, #pred: 1, succ: 14 15 
 >)
-(7 . #<raw-chpsim-event-node: null: null, pid: 3, #pred: 1, succ: 16 
+(7 . #<raw-chpsim-event-node: null: null, pid: 3, #pred: 1, succ: 6 
 >)
 (8 . #<raw-chpsim-event-node: send: split.O[0]!(split.x), pid: 3, #pred: 1, succ: 7 
 channel deps: 3 
@@ -35,7 +34,7 @@ channel deps: 6
 (12 . #<raw-chpsim-event-node: select: [ split.c==0 -> ... [] split.c==1 -> ... [] split.c==2 -> ... [] split.c==3 -> ... ], pid: 3, #pred: 1, succ: 8 9 10 11 
 int deps: 1 
 >)
-(13 . #<raw-chpsim-event-node: null: , pid: 3, #pred: 2, succ: 12 
+(13 . #<raw-chpsim-event-node: join: , pid: 3, #pred: 2, succ: 12 
 >)
 (14 . #<raw-chpsim-event-node: receive: split.C?(split.c), pid: 3, #pred: 1, succ: 13 
 channel deps: 2 
@@ -43,7 +42,8 @@ channel deps: 2
 (15 . #<raw-chpsim-event-node: receive: split.I?(split.x), pid: 3, #pred: 1, succ: 13 
 channel deps: 1 
 >)
-(16 . #<raw-chpsim-event-node: fork: , pid: 3, #pred: 1, succ: 14 15 
+(16 . #<raw-chpsim-event-node: receive: snk[0].B?(snk[0].b), pid: 4, #pred: 1, succ: 16 
+channel deps: 3 
 >)
 (17 . #<raw-chpsim-event-node: receive: snk[1].B?(snk[1].b), pid: 5, #pred: 1, succ: 17 
 channel deps: 4 
@@ -56,14 +56,14 @@ channel deps: 6
 >)
 ((0 . #f) (1 . #f) (2 . #f) (3 . #f) (4 . #f) (5 . #f) (6 . #f) (7 . #f) (8 . #f) (9 . #f) (10 . #f) (11 . #f) (12 . #f) (13 . #f) (14 . #f) (15 . #f) (16 . #f) (17 . #f) (18 . #f) (19 . #f))
 "successor lists: (unsorted)"
-(0 1 2 16 6 17 18 19)
+(0 1 2 6 16 17 18 19)
 (1 1)
 (2 5)
 (3 2)
 (4 3)
 (5 4)
-(6 6)
-(7 16)
+(6 14 15)
+(7 6)
 (8 7)
 (9 7)
 (10 7)
@@ -72,7 +72,7 @@ channel deps: 6
 (13 12)
 (14 13)
 (15 13)
-(16 14 15)
+(16 16)
 (17 17)
 (18 18)
 (19 19)
@@ -104,7 +104,7 @@ channel deps: 6
 (3 . ((4)))
 (4 . ((5)))
 (5 . ((2)))
-(6 . ((0) (6)))
+(6 . ((0) (7)))
 (7 . ((8) (9) (10) (11)))
 (8 . ((12)))
 (9 . ((12)))
@@ -112,9 +112,9 @@ channel deps: 6
 (11 . ((12)))
 (12 . ((13)))
 (13 . ((14) (15)))
-(14 . ((16)))
-(15 . ((16)))
-(16 . ((0) (7)))
+(14 . ((6)))
+(15 . ((6)))
+(16 . ((0) (16)))
 (17 . ((0) (17)))
 (18 . ((0) (18)))
 (19 . ((0) (19)))

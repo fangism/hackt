@@ -2,10 +2,10 @@ null-event-delay = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 run until end 
-	0	0	0	null
-	0	23	0	
+	0	0	1	null
+	0	1	0	
 	10	19	0	a := false
 	10	20	0	b := false
 	10	21	0	c := false
@@ -27,6 +27,6 @@ run until end
 	50	9	0	c := false
 	50	10	0	d := false
 	50	8	0	
-	50	1	0	
+	50	23	0	
 THAT was fast! 
 time: 50

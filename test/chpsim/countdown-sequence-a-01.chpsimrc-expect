@@ -1,17 +1,17 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	10	0	c := 3
+	10	1	0	c := 3
 c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	20	8	0	
+	20	8	0	*[ c>0 -> ... ]
 c : int c = 3
 event queue:
 check queue:
@@ -21,7 +21,7 @@ c : int c = 3
 event queue:
 check queue:
 	time	eid	pid	event
-	40	8	0	
+	40	8	0	*[ c>0 -> ... ]
 c : int c = 2
 event queue:
 check queue:
@@ -31,7 +31,7 @@ c : int c = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	60	8	0	
+	60	8	0	*[ c>0 -> ... ]
 c : int c = 1
 event queue:
 check queue:
@@ -41,12 +41,12 @@ c : int c = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	80	8	0	
+	80	8	0	*[ c>0 -> ... ]
 c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	90	6	0	
+	90	6	0	*[ c<2 -> ... ]
 c : int c = 0
 event queue:
 check queue:
@@ -56,7 +56,7 @@ c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	110	6	0	
+	110	6	0	*[ c<2 -> ... ]
 c : int c = 1
 event queue:
 check queue:
@@ -66,12 +66,12 @@ c : int c = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	130	6	0	
+	130	6	0	*[ c<2 -> ... ]
 c : int c = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	140	4	0	
+	140	4	0	*[ c>0 -> ... ]
 c : int c = 2
 event queue:
 check queue:
@@ -81,7 +81,7 @@ c : int c = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	160	4	0	
+	160	4	0	*[ c>0 -> ... ]
 c : int c = 1
 event queue:
 check queue:
@@ -91,12 +91,12 @@ c : int c = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	180	4	0	
+	180	4	0	*[ c>0 -> ... ]
 c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	190	1	0	
+	190	10	0	*[ c<2 -> ... ]
 c : int c = 0
 event queue:
 check queue:
@@ -106,7 +106,7 @@ c : int c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	210	1	0	
+	210	10	0	*[ c<2 -> ... ]
 c : int c = 1
 event queue:
 check queue:
@@ -116,7 +116,7 @@ c : int c = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	230	1	0	
+	230	10	0	*[ c<2 -> ... ]
 c : int c = 2
 event queue:
 check queue:

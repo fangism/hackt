@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.32 2007/07/18 23:28:26 fang Exp $
+ 	$Id: module.cc,v 1.33 2007/09/11 06:52:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -349,23 +349,6 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-module::cflat_process_type(const process_type_reference& pt, ostream& o, 
-		const cflat_options& cf) {
-	if (!allocate_unique_process_type(pt).good) {
-		cerr << "ERROR in allocating global state.  Aborting." << endl;
-		return good_bool(false);
-	}
-#if ENABLE_STACKTRACE
-	get_footprint().dump_with_collections(cerr << "module\'s footprint: ", 
-		dump_flags::default_value,
-		expr_dump_context::default_value) << endl;
-#endif
-	return good_bool(__cflat_rules(o, cf).good &&
-		__cflat_aliases_no_import(o, cf).good);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
 module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 	// our priting visitor functor
 	PRS::cflat_prs_printer cfp(o, cf);
@@ -407,22 +390,6 @@ module::__cflat_aliases(ostream& o, const cflat_options& cf) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	This variation assumes that the top-level footprint is already
-	loaded with instances to visit.  
- */
-good_bool
-module::__cflat_aliases_no_import(ostream& o, const cflat_options& cf) const {
-	// TODO: instance_visitor
-	if (cf.connect_style) {
-		STACKTRACE("cflatting aliases.");
-		const footprint& _footprint(get_footprint());
-		_footprint.cflat_aliases(o, global_state, cf);
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	The actual cflat procedure.  
 	Always prints all rules before aliases.  
 	TODO: if necessary, make the order an option
@@ -433,13 +400,8 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 	STACKTRACE_VERBOSE;
 	// print the production rules first, using canonical names
 	// print the name aliases in the manner requested in cflat_options
-#if 0
-	// can't depend on ordering (overloaded), my bad
-	return __cflat_rules(o, cf) && __cflat_aliases(o, cf);
-#else
 	return good_bool(__cflat_rules(o, cf).good &&
 			__cflat_aliases(o, cf).good);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

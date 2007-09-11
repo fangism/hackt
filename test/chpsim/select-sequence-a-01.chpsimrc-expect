@@ -1,14 +1,14 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	14	0	
+	10	1	0	
 a : bool a = 0
 b : bool b = 0
 c : bool c = 0
@@ -88,7 +88,7 @@ c : bool c = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	110	1	0	null
+	110	14	0	null
 a : bool a = 1
 b : bool b = 1
 c : bool c = 1

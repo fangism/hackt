@@ -3,6 +3,201 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-70-merged-chpsim-09-18:
+	  Branch merge of -chpsim-09.  Summary:
+	  Event data structures' stateless information is created once per
+		process type, including local structural information about
+		the event graph.  This saves a *tremendous* amount of memory
+		in only allocating stateful information in CHPSIM, 
+		and gives a consistent event-subgraph footprint per type, 
+		which allows rapid allocation and reverse-lookup from 
+		global-events to local-events.  e.g., global event successors 
+		are evaluated using simple offsets resulting from 
+		bulk-allocations.  Events belonging to instantiated processes
+		are now allocated in contiguous index ranges.
+
+
+2007-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-18:
+	  Perm'd CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS 
+		in sim/chpsim/devel_switches.h
+	  Ready to merge to trunk, passes distcheck.  
+	  Will resume CHP-action parent-tracing on new branch.  
+
+
+2007-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-17:
+	  Perm'd LOCAL_CHP_EVENT_FOOTPRINT in Object/devel_switches.h.
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-16:
+	  sim/chpsim/Event.cc: assign 0 delay to NULL events.  
+	  Last remaining test cases updated and re-verified, 
+		leaving NO regressions with this revision.  
+	  Ready to merge after cleanup.
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-15:
+	  Mostly test updates.
+	  guile/chpsim_event_node.cc: fixed successor reporting to
+		use the new local process offsets.  
+	  Most of remaining test cases in test/chpsim updated, re-validated.
+		The few remaining need more staring...
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-14:
+	  No source revision, only test updates.
+	  Majority of affected regression tests updated (the trivial ones).
+		Majority of remaining are coupled to guile-scm tests, 
+		and should be verified and update together, with more scrutiny.
+
+
+2007-09-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-13:
+	  sim/chpsim/*: fixes print condition in Event.cc, 
+		State.cc: factored pid validity checking, provide
+			reference-based dump_event, 
+			fixed dump_struct check for pid validity
+		StateConstructor.cc: now assign same delays as before.
+	  No tests updated yet, still with new flag enabled.  
+
+
+2007-09-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-12:
+	  Continued work on CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS:
+		most test cases at least run without crashing, 
+		results looking promising.
+		Test dumps for chpsim-alloc/dot and execution need to
+		be massively updated and re-verified by hand... *sigh*
+
+
+2007-09-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-11:
+	  Finished first draft of CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS, 
+		still disabled (but at least compiles), 
+		tests show no regressions.  Next, flip the switch and pray...
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-10:
+	  Perm'd DUMP_CHPSIM_PARENT_CONTEXT (sim/chpsim/devel_switches.h)
+
+
+2007-09-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-09:
+	  Made more cut marks around CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS
+		and added provisional code to switch over, but still disabled.
+	  Planned out some changes to chpsim/State and StateConstructor.
+
+
+2007-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-08:
+	  Object/state_manger: make_process_dump_context function reuse.
+	  sim/chpsim/{Event,State}: started sketching out 
+		CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS (new switch, disabled)
+		use make_process_dump_context, delete dupe code
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-07:
+	  Minor revision:
+	  Print do_while_loops as selection events (either loop or exit)
+		in pretty-printing output.  
+	  Print null events with multiple predecessors as 'join'.
+	  Much more readable now... test cases updated accordingly.
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-06:
+	  Object/lang/CHP_footprint.cc: impl. dump_struct_dot, more limited
+		than original version from sim/chpsim/State.cc.
+	  process_type_reference: lookup_footprint convenience method.
+	  main/chpsim.cc: support for -t and -T to specify a process-type
+		to operate on instead of the top-level instances.
+	  Test suite: updated remaining chpsim tests with updated
+		definition footprint dumps of chp event graphs.  
+
+
+2007-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-05:
+	  main/main_funcs: new function parse_and_create_complete_process_type
+		recycled from main/cflat.cc for reuse.
+	  main/cflat.cc: use newly refactored code
+
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-04:
+	  Tiny clean-up:
+	  Object/module.{h,cc}: historic __cflat_aliases_no_import
+		removed b/c identical to its counterpart after refactoring.
+	  Preparing to reuse complete-type-to-module code...
+
+
+2007-09-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-03:
+	  Object/lang/CHP_event_alloc.cc:
+		in do_forever_loop, defer loop-back slot elision
+			to the compaction/canonicalization pass.  
+		minor bug fixes in canonicalization:
+			s/copy/event_footprint[temp]/
+			mark_as_entry() *unconditionally*
+	  Object/lang/CHP.cc: 
+		concurrent_actions::unroll no longer get_chp_footprint
+		unless it is not empty, to save unnecessary allocation.
+		In other places, check footprint::has_chp_footprint() first.
+	  re-confirmed/updated all test cases in test/parser/{chp,channel}:
+		createstderrs gained chp events per unrolled footprint,
+		also headers gained CHP-concurrent actions objects.  
+	  Next batch to re-confirm in test/chpsim.
+
+
+2007-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-02:
+	  Copy-reduced many sim/chpsim/ event classes/functions to
+		Object/lang/CHP_event* (new): event, footprint-pool-allocator.
+	  Object/devel_switches.h: LOCAL_CHP_EVENT_FOOTPRINT, 
+		enabled and in progress.
+	  Object/def/footprint.{h,cc}: chp_footprint (concurrent_actions)
+		pointer is now registered persistently, not just private-impl,
+		because event footprint needs back-refs to all CHP actions.
+	  Tests expected to fail with new chp-event footprints printed, 
+		need to hand-verify many test cases...
+		Would help to have graph visualization per-footprint def...
+		No tests were touched.  
+
+
+2007-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-68-chpsim-09-01:
+	  Primary objectives of this branch:
+	  CHP event footprint (local events) to eliminate replication.
+		Globally allocated events will just 'point' to
+		local events and carry only per-event data.  
+		Allocation of events will in bulk, per-process.  
+		Since local event references never leave process, 
+		can use offset arithmetic to perform lookups.  
+		Can also construct interval map from global event ID to PID.  
+		Block may-dependencies will have to be delayed until
+		global event/variable allocation.  
+	  CHP actions back-link to parents in tree representation, 
+		enable precise contextual printing and referencing, 
+		and reverse-lookup to source.
+	  Initial revision cleanup:
+		Object/lang/CHP_footprint_expr.h: never used, purged.
+		Perm'd sim/chpsim/devel_switches.h:
+			CHPSIM_COUPLED_CHANNELS
+			CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		Object/lang/CHP_footprint.h: wiped, will start over.
+
+
 2007-08-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-69:

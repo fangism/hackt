@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.182 2007/08/31 21:02:34 fang Exp $
+#	$Id: Makefile.am,v 1.183 2007/09/11 06:52:34 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -610,6 +610,9 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
+	Object/lang/CHP_event.cc \
+	Object/lang/CHP_event_alloc.cc \
+	Object/lang/CHP_footprint.cc \
 	Object/lang/CHP_visitor.cc \
 	Object/lang/SPEC.cc \
 	Object/lang/SPEC_common.cc \
@@ -763,8 +766,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/lang/cflat_visitee.h \
-	Object/lang/CHP_footprint.h \
-	Object/lang/CHP_footprint_expr.h \
 	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \

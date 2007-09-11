@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/devel_switches.h"
 	Development feature switches.  
-	$Id: devel_switches.h,v 1.8 2007/06/12 05:13:20 fang Exp $
+	$Id: devel_switches.h,v 1.9 2007/09/11 06:53:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_DEVEL_SWITCHES_H__
@@ -34,31 +34,13 @@
 #define	CHPSIM_READ_WRITE_DEPENDENCIES		0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to implement channels using tight coupling, 
-		i.e. truly blocking send-receive atomic pairs.  
-	Rationale: channels should have slack 0
-		without this, channels inherently have slack 1 because
-		the occupancy bit does not block a channel.  
-	Goal: 1
-	Priority: top
-	Status: done, tested, ready to perm.
-	Co-dependent: CHPSIM_DELAYED_SUCCESSOR_CHECKS
- */
-#define	CHPSIM_COUPLED_CHANNELS			1
+// Perm'd (00-01-04-main-00-81-68-chpsim-09-01)
+// Summary: send-receive action pairs slack-zero
+// #define	CHPSIM_COUPLED_CHANNELS			1
 
-/**
-	Define to 1 to apply prefix delays *before* events are first checked.
-	Rationale: to faciliate send/receive atomicity/simultaneity.
-	Goal: 1
-	Priority: TOP
-	Status: done, tested, ready to perm.
-	Co-dependent: CHPSIM_COUPLED_CHANNELS
-	Plan: instate a first_recheck_queue, where successors first arrive.
-		step() will now recheck events in order until one (or two)
-		*actually* executes.  
- */
-#define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
+// Perm'd (00-01-04-main-00-81-68-chpsim-09-01)
+// Summary: apply prefix-delay, i.e. before event is *first* checked
+// #define	CHPSIM_DELAYED_SUCCESSOR_CHECKS		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -74,26 +56,17 @@
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Define to 1 to construct one canonical process event subgraph per
-	complete type (with CHP) to make allocation easier, and faster.
-	Also makes events per process contiguous in allocation, making
-	reverse-mapping much easier.  
-	Goal: 1
-	Status: not begun
-	Priority: low-medium
- */
-#define	CHPSIM_FOOTPRINTIZE_EVENTS		0
+	Define to 1 to allocate events using the local event pools
+	established by process footprints.  
+	Rationale: speeds up allocation, reduces memory, and enables
+		reverse-lookup of event to CHP language source.  
+	Completed and perm'd on branch 00-01-04-main-00-81-68-chpsim-09.
+#define	CHPSIM_BULK_ALLOCATE_GLOBAL_EVENTS		1
+**/
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Define to 1 to print hierarchical alias instead of definition-local
-	names in chp dumps.  
-	Goal: 1
-	Rationale: feedback readability
-	Priority: medium
-	Status: done, tested, ready to perm.
- */
-#define	CHPSIM_DUMP_PARENT_CONTEXT		1
+// Perm'd (00-01-04-main-00-81-68-chpsim-09-10)
+// #define	CHPSIM_DUMP_PARENT_CONTEXT		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

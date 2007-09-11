@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.7 2007/05/04 18:16:48 fang Exp $
+	$Id: State.h,v 1.8 2007/09/11 06:53:11 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -9,7 +9,7 @@
 
 #include <iosfwd>
 #include <vector>
-#include "sim/chpsim/devel_switches.h"
+#include <map>		// for global-event to pid translator
 #include <set>		// for std::multiset
 #include "sim/time.h"
 #include "sim/event.h"
@@ -18,11 +18,19 @@
 #include "sim/chpsim/Event.h"
 #include "Object/nonmeta_state.h"
 #include "Object/ref/reference_set.h"
+#include "Object/lang/CHP_event.h"	// for global_root event
 #include "util/macros.h"
 #include "util/tokenize_fwd.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
+namespace entity {
+struct expr_dump_context;
+namespace CHP {
+class local_event;
+class local_event_footprint;
+}
+}
 namespace SIM {
 namespace CHPSIM {
 using std::vector;
@@ -38,6 +46,7 @@ class TraceManager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using entity::global_references_set;
+using entity::CHP::local_event_footprint;
 
 //=============================================================================
 /**
@@ -51,12 +60,18 @@ class State : public state_base {
 friend class StateConstructor;
 friend class nonmeta_context;
 	typedef	State				this_type;
+	/**
+		Global event type, with links back to local event info.
+	 */
 	typedef	EventNode			event_type;
 public:
 	/**
 		Numeric type for time, currently hard-coded to real (double).
 	 */
 	typedef	event_type::time_type		time_type;
+	/**
+		For managing SIGINT interruption.
+	 */
 	typedef	signal_handler<this_type>	signal_handler;
 	/**
 		Basic tuple for event scheduling.  
@@ -107,6 +122,25 @@ private:
 	typedef	std::multiset<event_placeholder_type>
 						event_queue_type;
 	typedef	vector<event_type>		event_pool_type;
+	/**
+		Translates global event index to global process index, 
+		using a lower-bound lookup.
+	 */
+	typedef	std::map<event_index_type, size_t>
+						global_event_to_pid_map_type;
+	/**
+		Lookup table for translating each process index to
+		the starting index of its globally allocated events.  
+		Each process's allocated events now occupy a contiguous
+		range indices for easy of reverse-lookup.
+		Same size as process-instance pool.  
+		The first of each pair is the index of the first
+		global event, and the second is the size of the 
+		corresponding local event pool (for bounds checking).  
+		Index 0 is reserved for the top-level.  
+	 */
+	typedef	vector<std::pair<event_index_type, size_t> >
+						pid_to_offset_map_type;
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
 
@@ -200,7 +234,16 @@ private:
 	// event pools: for each type of event?
 	// to give CHP action classes access ...
 	event_pool_type				event_pool;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	/**
+		Nobody else 'owns' a global root event, so this is a
+		logical place.  Set event_pool[0] to point to
+		this.  
+	 */
+	entity::CHP::local_event		global_root_event;
+	/// translate global-event id to process id
+	global_event_to_pid_map_type		global_event_to_pid;
+	/// lookup global event offset from global process id
+	pid_to_offset_map_type			pid_to_offset;
 	/**
 		This is where successors are scheduled to be checked for the
 		first time.  Successors are scheduled using the event delay
@@ -212,10 +255,6 @@ private:
 		Aside from that renaming is unnecessary.  
 	 */
 	event_queue_type			check_event_queue;
-#else
-	// event queue: unified priority queue of event_placeholders
-	event_queue_type			event_queue;
-#endif
 	// do we need a successor graph representing allocated
 	//	CHP dataflow constructs?  
 	//	predecessors? (if we want them, construct separately)
@@ -246,15 +285,6 @@ private:
 		Why not a set, to guarantee uniqueness?
 	 */
 	typedef	vector<event_index_type>	enqueue_list_type;
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	/**
-		List of events to enqueue for certain, accumulated
-		in step() method.  
-		We keep this around between step() invocations
-		to avoid repeated initial allocations.  
-	 */
-	enqueue_list_type			__enqueue_list;
-#endif
 	/**
 		Set of events to recheck for unblocking.  
 		NOTE: this is not to be used for checking successors
@@ -264,7 +294,6 @@ private:
 		for rechecking.  
 	 */
 	event_subscribers_type			__rechecks;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	typedef	std::deque<event_placeholder_type>
 						immediate_event_queue_type;
 	/**
@@ -277,7 +306,6 @@ private:
 		Should dequeued check_events go through this fifo?
 	 */
 	immediate_event_queue_type		immediate_event_fifo;
-#endif
 	/**
 		Events to print when they are executed.  
 		Not preserved by checkpointing.  
@@ -342,12 +370,8 @@ public:
 	 */
 	bool
 	pending_events(void) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		return !immediate_event_fifo.empty() ||
 			!check_event_queue.empty();
-#else
-		return !event_queue.empty();
-#endif
 	}
 
 	const time_type&
@@ -384,6 +408,27 @@ public:
 	size_t
 	event_pool_size(void) const { return event_pool.size(); }
 
+	size_t
+	get_process_id(const event_index_type) const;
+
+	size_t
+	get_process_id(const event_type&) const;
+
+	event_index_type
+	get_event_id(const event_type&) const;
+
+	event_index_type
+	get_offset_from_pid(const size_t) const;
+
+	event_index_type
+	get_offset_from_event(const event_index_type) const;
+
+	event_index_type
+	get_offset_from_event(const event_type&) const;
+
+	bool
+	valid_process_id(const size_t) const;
+
 private:
 	event_placeholder_type
 	dequeue_event(void);
@@ -392,22 +437,20 @@ private:
 	__step(const event_index_type, const event_index_type, const size_t);
 		// THROWS_STEP_EXCEPTION
 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	template <class Tag>
 	void
 	__notify_updates_for_recheck_no_trace(const size_t);
-#endif
 
 	void
 	__notify_updates_for_recheck(const size_t);
 
 	void
 	__perform_rechecks(const event_index_type, 
-		const event_index_type
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, const size_t
-#endif
-		);
+		const event_index_type, const size_t);
+
+	void
+	initialize_process_event_chunk(const local_event_footprint&, 
+		const size_t pid);
 
 public:
 	step_return_type
@@ -487,7 +530,6 @@ public:
 	ostream&
 	dump_break_values(ostream&) const;
 
-// CHPSIM_DELAYED_SUCCESSOR_CHECKS (rename?)
 	void
 	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
 
@@ -556,6 +598,9 @@ public:
 		trace_flush_interval = i;
 	}
 
+	entity::expr_dump_context
+	make_process_dump_context(const node_index_type) const;
+
 	ostream&
 	dump_struct(ostream&) const;
 
@@ -567,6 +612,9 @@ public:
 	dump_event_table_header(ostream&);
 
 	ostream&
+	dump_event(ostream&, const event_type&) const;
+
+	ostream&
 	dump_event(ostream&, const event_index_type) const;
 
 	ostream&
@@ -575,10 +623,8 @@ public:
 	ostream&
 	dump_event(ostream&, const event_index_type, const time_type) const;
 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	ostream&
 	dump_check_event_queue(ostream&) const;
-#endif
 
 	ostream&
 	dump_event_queue(ostream&) const;
@@ -616,11 +662,6 @@ private:
 
 	ostream&
 	dump_recheck_events(ostream&) const;
-
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	ostream&
-	dump_enqueue_events(ostream&) const;
-#endif
 
 };	// end class State
 

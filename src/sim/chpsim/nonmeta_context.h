@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/nonmeta_context.h"
 	This is used to lookup run-time values and references.  
-	$Id: nonmeta_context.h,v 1.5 2007/06/16 23:05:12 fang Exp $
+	$Id: nonmeta_context.h,v 1.6 2007/09/11 06:53:15 fang Exp $
  */
 #ifndef	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
 #define	__HAC_SIM_CHPSIM_NONMETA_CONTEXT_H__
@@ -35,43 +35,41 @@ class TraceManager;
  */
 class nonmeta_context : public nonmeta_context_base {
 	typedef	nonmeta_context			this_type;
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-friend class EventNode;
-#endif
+// TODO: is local_event enough, do we need global_event?
 	// these types must correspond to those used in CHPSIM::State!
 	// but I'm too lazy to include its header here...
 	typedef	EventNode			event_type;
 	typedef	std::default_vector<event_index_type>::type
 							enqueue_queue_type;
 	typedef	std::default_vector<event_type>::type	event_pool_type;
+	/// for set-insert interface to first_checks
+	typedef	event_subscribers_type::const_iterator	const_iterator;
+public:
+	typedef	event_subscribers_type::value_type	value_type;
+	typedef	event_subscribers_type::const_reference	const_reference;
 private:
 	/**
 		Reference to the event in question.
 	 */
 	event_type*				event;
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	/**
-		may need that enqueue_list again...
-		deterministic selections may need to enqueue 
-		successor events directly.  
+		Offset to add to local-event indices to 
+		translate to global event indices.  
+		Should be set by set_event.  
 	 */
-	enqueue_queue_type&			enqueue_list;
-#endif
-public:
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+	event_index_type			global_event_offset;
+	/**
+		Current process index for this event.
+		Mostly used for diagnostics.
+	 */
+	size_t					process_index;
 	/**
 		Successor of a just-executed event to check 
 		for the first time, after their respective delays.  
 		NOTE: this is a local structure now, not a reference!
 	 */
 	event_subscribers_type			first_checks;
-#else
-	/**
-		Set of events to re-evaluate, so see if they 
-		can move from pending (blocked) to execute.  
-	 */
-	event_subscribers_type&			rechecks;
-#endif
+public:
 	/**
 		List of references modified by the visiting event.
 	 */
@@ -97,15 +95,12 @@ public:
 	};
 public:
 	nonmeta_context(const state_manager&, const footprint&, 
-		event_type&, State&);
-
-	nonmeta_context(const state_manager&, const footprint&, 
 		State&);
 
 	~nonmeta_context();
 
 	void
-	set_event(event_type&);
+	set_event(event_type&, const size_t, const event_index_type);
 
 	event_type&
 	get_event(void) const { return *event; }
@@ -115,16 +110,30 @@ public:
 	 */
 	size_t
 	get_event_index(void) const;
+	
+	event_index_type
+	get_process_index(void) const { return process_index; }
 
 	void
 	subscribe_this_event(void) const;
 
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-private:
-	// for EventNode only
 	void
-	enqueue(const event_index_type) const;
-#endif
+	insert_first_checks(const event_index_type);
+
+	void
+	insert(const event_index_type ei) {
+		insert_first_checks(ei);
+	}
+
+	const_iterator
+	first_checks_begin(void) const { return first_checks.begin(); }
+
+	const_iterator
+	first_checks_end(void) const { return first_checks.end(); }
+
+	void
+	first_check_all_successors(void);
+
 };	// end class nonmeta_context
 
 //=============================================================================

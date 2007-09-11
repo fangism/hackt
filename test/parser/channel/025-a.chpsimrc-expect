@@ -1,32 +1,32 @@
 x : bool x = 0
 B : chan(bool<>) B = (0) [empty]
-	0	0	0	null
+	0	0	1	null
 x : bool x = 0
 B : chan(bool<>) B = (0) [empty]
-	10	5	0	
+	10	1	0	
 x : bool x = 0
 B : chan(bool<>) B = (0) [empty]
-	20	4	0	x := true
+	20	2	0	x := true
 x : bool x = 1
-B : chan(bool<>) B = (0) [wait]
-	30	3	0	B!(~x)
+B : chan(bool<>) B = (0) [empty]
+	30	4	0	B!(~x)
 x : bool x = 1
 B : chan(bool<>) B = (0) [sent]
-	30	2	0	B?(x)
+	30	3	0	B?(x)
 x : bool x = 0
 B : chan(bool<>) B = (0) [empty]
-	40	2	0	B?(x)
+	40	3	0	B?(x)
 x : bool x = 1
 B : chan(bool<>) B = (0) [recvd]
-	40	3	0	B!(~x)
+	40	4	0	B!(~x)
 x : bool x = 1
 B : chan(bool<>) B = (0) [empty]
-	50	3	0	B!(~x)
+	50	4	0	B!(~x)
 x : bool x = 1
 B : chan(bool<>) B = (0) [sent]
-	50	2	0	B?(x)
+	50	3	0	B?(x)
 x : bool x = 0
 B : chan(bool<>) B = (0) [empty]
-	60	2	0	B?(x)
+	60	3	0	B?(x)
 x : bool x = 1
 B : chan(bool<>) B = (0) [recvd]

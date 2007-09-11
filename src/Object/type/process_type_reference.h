@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.11 2007/07/18 23:28:55 fang Exp $
+ 	$Id: process_type_reference.h,v 1.12 2007/09/11 06:52:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -16,6 +16,7 @@
 namespace HAC {
 namespace entity {
 class process_definition_base;
+class footprint;
 
 //=============================================================================
 /**
@@ -95,6 +96,9 @@ public:
 
 	canonical_process_type
 	make_canonical_type(void) const;
+
+	const footprint*
+	lookup_footprint(void) const;
 
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;

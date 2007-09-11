@@ -69,32 +69,34 @@ Persistent Object Manager text dump:
 	60	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	410
+	63	##ADDR##	footprnt	0	#HEAD#	#TAIL#	438
 	64	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	68	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	69	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	70	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
-	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	70	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	73	##ADDR##	footprnt	0	#HEAD#	#TAIL#	410
-	74	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	76	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	77	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
-	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	80	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	81	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	82	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	84	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	85	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
-	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	footprnt	0	#HEAD#	#TAIL#	438
+	75	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	79	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
+	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -162,6 +164,10 @@ In namespace "", we have: {
                 out!(x[0][y])
               }
             ]
+          chp events: {
+            event[0]: receive: index?(y), #pred: 1, succ: 1 
+            event[1]: send: out!(x[0][y]), #pred: 1, succ: 0 
+          }
         }
         <1> {
           I = pint^0 value: 1
@@ -188,6 +194,10 @@ In namespace "", we have: {
                 out!(x[1][y])
               }
             ]
+          chp events: {
+            event[0]: receive: index?(y), #pred: 1, succ: 1 
+            event[1]: send: out!(x[1][y]), #pred: 1, succ: 0 
+          }
         }
       }
       }

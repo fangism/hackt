@@ -36,11 +36,12 @@ Persistent Object Manager text dump:
 	28	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
 	32	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -86,4 +87,8 @@ footprint: {
         B[s]!(true)
       }
     ]
+  chp events: {
+    event[0]: receive: S?(s), #pred: 1, succ: 1 
+    event[1]: send: B[s]!(true), #pred: 1, succ: 0 
+  }
 }

@@ -2,9 +2,13 @@ Variables:
 chan[1]: "Z" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 2 
+event[0]: fork: null, #pred: 0, succ: 1 2 
+
+# process[1]:
 event[1]: send: A.X!, pid: 1, #pred: 1, succ: 
 channel deps: 1 
+
+# process[2]:
 event[2]: receive: B.Y?, pid: 2, #pred: 1, succ: 
 channel deps: 1 
 

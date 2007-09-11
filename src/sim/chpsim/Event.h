@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/Event.h"
 	Various classes of chpsim events.  
-	$Id: Event.h,v 1.10 2007/07/31 23:23:39 fang Exp $
+	$Id: Event.h,v 1.11 2007/09/11 06:53:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_EVENT_H__
@@ -10,22 +10,18 @@
 #include "util/size_t.h"
 #include "util/attributes.h"
 #include "util/string_fwd.h"
+#include "sim/chpsim/devel_switches.h"
 #include <iosfwd>
-#include <valarray>
-#include <vector>
 #include "sim/time.h"
 #include "sim/chpsim/Dependence.h"
-#include "sim/chpsim/devel_switches.h"
 #include "util/macros.h"
 
 namespace HAC {
 namespace entity {
-#if CHPSIM_DUMP_PARENT_CONTEXT
-class state_manager;
-class footprint;
-#endif
+struct expr_dump_context;
 namespace CHP {
 	class action;
+	class local_event;
 }
 }
 namespace SIM {
@@ -33,36 +29,13 @@ namespace CHPSIM {
 class DependenceSetCollector;
 class nonmeta_context;
 class graph_options;
+class State;		// arg... event shouldn't depend on State?
 using std::ostream;
 using std::string;
-using std::vector;
-using std::valarray;
 using entity::CHP::action;
 using entity::nonmeta_state_manager;
 
 //=============================================================================
-/**
-	Event type numeration codes.
-	Can also introduce 'special' types of events like I/O.  
- */
-enum {
-	EVENT_NULL = 0,		///< can be used to mean 'skip' or 'no-op'
-	EVENT_ASSIGN = 1,
-	EVENT_SEND = 2,
-	EVENT_RECEIVE = 3,
-	EVENT_PEEK = 4,		///< read values from channel w/o acknowledge
-	EVENT_CONCURRENT_FORK = 5,	///< divergence of concurrent events
-	EVENT_CONCURRENT_JOIN = EVENT_NULL,	///< convergence event (no-op)
-	/**
-		the start of any selection: 
-		deterministic, non-deterministic, and do-while loops
-	 */
-	EVENT_SELECTION_BEGIN = 6,
-	EVENT_SELECTION_END = EVENT_NULL,	///< end of any selection (no-op)
-	EVENT_CONDITION_WAIT = 7,	///< predicate wait
-	EVENT_FUNCTION_CALL = 8		///< external function call
-};
-
 /**
 	Enumerated results for recheck functions.  
  */
@@ -114,8 +87,8 @@ enum recheck_result {
 
 //=============================================================================
 /**
-	This represents a node in the event graph, which can be 
-	thought of as a marked graph.  
+	This represents a node in the global, whole-program event graph, 
+	which can be thought of as a marked graph.  
 	We 'allocate' graph nodes with back-references to their
 	corresponding events in the CHP footprint.  
 	The 'edges' between graph nodes form predecessor-successor relations.
@@ -125,59 +98,18 @@ enum recheck_result {
 class EventNode {
 	typedef	EventNode		this_type;
 public:
+	typedef	entity::CHP::local_event	local_event_type;
 	/**
 		Hard-coded time type for now.
 	 */
 	typedef	real_time		time_type;
 	typedef	size_t			event_index_type;
-	typedef	valarray<event_index_type>	successor_list_type;
 	static const real_time		default_delay;
-	static const char		node_prefix[];
 private:
 	/**
-		the (atomic) event to occur corresponding to this node
-		Would be nice if some of theses actions were 
-		resolved to static references... (don't optimize now)
-		Can be lightweight pointer instead of reference count?
+		Pointer to instance-invariant event information.
 	 */
-	// count_ptr<const action>		action_ptr;
-	const action*			action_ptr;
-public:
-	/**
-		events that follow this event.  
-		The interpretation of these events (concurrent, 
-		deterministic, nondeterministic) is depending on the type.  
-	 */
-	successor_list_type		successor_events;
-private:
-#if 1
-	/**
-		enumeration for this event, 
-		semi-redundant with the action pointer.  
-	 */
-	unsigned short			event_type;
-#endif
-#if 1
-	/**
-		General purpose flags (space-filler).  
-	 */
-	unsigned short			flags;
-#endif
-	/**
-		footprint, footprint frame / global_entry<process>
-		or just 0-based index to process entries.  (0 => top)
-	 */
-	size_t				process_index;
-	/**
-		The number of concurrent event predecessors.
-		Wait for this number of events to precede before executing, 
-		like a barrier count.  
-		Sequential actions (in chain) only have one predecessor.  
-		Selection statements re-join with only one predecessor.  
-		Do we keep predecessor edge information anywhere else?
-		Should be const, incidentally...
-	 */
-	unsigned short			predecessors;
+	const local_event_type*		__local_event;
 	/**
 		barrier count: from number of predecessors (join operation)
 		Event fires when countdown reaches zero, post-decrement.  
@@ -190,6 +122,10 @@ private:
 		The countdown is reset immediately upon event execution.  
 	 */
 	unsigned short			countdown;
+	/**
+		General purpose flags (space-filler).  
+	 */
+	unsigned short			flags;
 	/**
 		The constant value of delay for this event, 
 		set by the event constructor.  
@@ -223,20 +159,9 @@ private:
 public:
 	EventNode();
 
-	EventNode(const action*, const unsigned short, const size_t pid);
-
-	EventNode(const action*, const unsigned short, const size_t pid, 
-		const time_type);
+	EventNode(const local_event_type*, const time_type);
 
 	~EventNode();
-
-	// need to override because valarray doesn't implement 
-	// operator = using default container behavior
-	this_type&
-	operator = (const this_type&);
-
-	void
-	orphan(void);
 
 	/**
 		\return true if this event type is considered trivial, 
@@ -246,10 +171,7 @@ public:
 			be combined in event graph optimization.  
 	 */
 	bool
-	is_trivial(void) const {
-		return (event_type == EVENT_NULL) ||
-			(event_type == EVENT_CONCURRENT_FORK);
-	}
+	is_trivial(void) const;
 
 	/**
 		Condition-waits are classified as having "trivial-delay", 
@@ -257,41 +179,38 @@ public:
 		They shouldn't incur additional delay unless set otherwise.
 	 */
 	bool
-	has_trivial_delay(void) const {
-		return is_trivial() || (event_type == EVENT_CONDITION_WAIT);
-	}
+	has_trivial_delay(void) const;
 
-	/**
-		NOTE: need not be trivial, just copiable and 
-		successor-substitutable.  
-		NOTE: No selection has only one successor.  
-	 */
-	bool
-	is_movable(void) const {
-		return (successor_events.size() == 1);
-	}
+	const local_event_type&
+	get_local_event(void) const { return *__local_event; }
 
 	/**
 		this 'leaks' out the pointer, it is not meant to be misused, 
 		only short-lived temporary references.  
 	 */
 	const action*
-	get_chp_action(void) const { return action_ptr; }
-
-	const size_t
-	get_process_index(void) const { return process_index; }
-
-	void
-	set_event_type(const unsigned short t) { event_type = t; }
+	get_chp_action(void) const;
 
 	unsigned short
-	get_event_type(void) const { return event_type; }
-
-	void
-	set_predecessors(const event_index_type n) { predecessors = n; }
+	get_event_type(void) const;
 
 	unsigned short
-	get_predecessors(void) const { return predecessors; }
+	get_predecessors(void) const;
+
+	size_t
+	num_successors(void) const;
+
+	const event_index_type*		// const_iterator
+	local_successors_begin(void) const;
+
+	const event_index_type*		// const_iterator
+	local_successors_end(void) const;
+
+	void
+	make_global_root(const local_event_type*);
+
+	void
+	setup(const local_event_type*, const State&);
 
 	void
 	import_block_dependencies(const DependenceSetCollector& d) {
@@ -318,23 +237,17 @@ public:
 	reset(void);
 
 	void
-	reset_countdown(void) { countdown = predecessors; }
+	reset_countdown(void) { countdown = get_predecessors(); }
 
 	void
-	execute(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context&);
+	execute(nonmeta_context&);
 
 	/// \return true if enqueued.
 	bool
 	recheck(const nonmeta_context&, const event_index_type) const;
 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	bool
 	first_check(const nonmeta_context&, const event_index_type);
-#endif
 
 	void
 	subscribe_deps(const nonmeta_context&, const event_index_type) const;
@@ -346,41 +259,25 @@ public:
 	}
 
 	ostream&
-	dump_brief(ostream&) const;
-
-	ostream&
-	dump_source(ostream&) const;
-
-#if CHPSIM_DUMP_PARENT_CONTEXT
-	ostream&
-	dump_brief(ostream&, const entity::state_manager&,
-		const entity::footprint&) const;
+	dump_brief(ostream&, 
+		const entity::expr_dump_context&) const;
 
 	// overloaded, I know...
 	ostream&
-	dump_source(ostream&, const entity::state_manager&,
-		const entity::footprint&) const;
-#endif
+	dump_source(ostream&, 
+		const entity::expr_dump_context&) const;
 
 	ostream&
 	dump_pending(ostream&) const;
 
 	ostream&
-	dump_struct(ostream&
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		, const entity::state_manager&
-		, const entity::footprint&
-#endif
-		) const;
+	dump_struct(ostream&, const entity::expr_dump_context&,
+		const size_t, const event_index_type) const;
 
 	ostream&
 	dump_dot_node(ostream&, const event_index_type, 
-		const graph_options&
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		, const entity::state_manager&
-		, const entity::footprint&
-#endif
-		) const;
+		const graph_options&, const entity::expr_dump_context&,
+		const size_t, const event_index_type) const;
 
 	ostream&
 	dump_successor_edges_default(ostream&, const event_index_type) const;
@@ -391,25 +288,6 @@ public:
 			const event_index_type ei) const {
 		return block_deps.dump_subscribed_status(o, s, ei);
 	}
-
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-public:
-	// helper classes
-	class countdown_decrementer {
-		typedef	vector<this_type>	event_pool_type;
-		event_pool_type&		pool;
-	public:
-		explicit
-		countdown_decrementer(event_pool_type& p) : pool(p) { }
-
-		void
-		operator () (const event_index_type ei) const {
-			// INVARIANT checks and assertions?
-			INVARIANT(pool[ei].countdown);
-			--pool[ei].countdown;
-		}
-	};	// end struct count_decrementer
-#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 
 };	// end class EventNode
 

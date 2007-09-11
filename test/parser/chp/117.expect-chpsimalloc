@@ -7,18 +7,22 @@ chan[3]: "bar.index"
 chan[4]: "bar.out" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 1 6 
+event[0]: fork: null, #pred: 0, succ: 1 6 
+
+# process[1]:
 event[1]: peek: foo.index#(foo.y), pid: 1, #pred: 1, succ: 5 
 channel deps: 1 
-event[2]: null: , pid: 1, #pred: 2, succ: 1 
+event[2]: join: , pid: 1, #pred: 2, succ: 1 
 event[3]: receive: foo.index?, pid: 1, #pred: 1, succ: 2 
 channel deps: 1 
 event[4]: send: foo.out!(foo.x[0][foo.y]), pid: 1, #pred: 1, succ: 2 
 channel deps: 2 
 event[5]: fork: , pid: 1, #pred: 1, succ: 3 4 
+
+# process[2]:
 event[6]: peek: bar.index#(bar.y), pid: 2, #pred: 1, succ: 10 
 channel deps: 3 
-event[7]: null: , pid: 2, #pred: 2, succ: 6 
+event[7]: join: , pid: 2, #pred: 2, succ: 6 
 event[8]: receive: bar.index?, pid: 2, #pred: 1, succ: 7 
 channel deps: 3 
 event[9]: send: bar.out!(bar.x[1][bar.y]), pid: 2, #pred: 1, succ: 7 

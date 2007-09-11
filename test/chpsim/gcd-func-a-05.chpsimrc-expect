@@ -1,14 +1,14 @@
 loaded function: `my_gcd'.
-	0	0	0	null
-	10	6	1	
+	0	0	5	null
+	10	1	1	
 	20	4	1	X.A?(X.a)
-	20	1	2	AS.S!(12)
+	20	6	2	AS.S!(12)
 	20	5	1	X.B?(X.b)
 	20	10	3	BS.S!(9)
 	30	3	1	
 	40	2	1	X.G!(my_gcd(X.a,X.b))
 	40	15	4	GS.B?(GS.b)
-	50	6	1	
+	50	1	1	
 	60	4	1	X.A?(X.a)
 	60	9	2	AS.S!(15)
 	60	5	1	X.B?(X.b)
@@ -16,7 +16,7 @@ loaded function: `my_gcd'.
 	70	3	1	
 	80	2	1	X.G!(my_gcd(X.a,X.b))
 	80	15	4	GS.B?(GS.b)
-	90	6	1	
+	90	1	1	
 	100	4	1	X.A?(X.a)
 	100	8	2	AS.S!(17)
 	100	5	1	X.B?(X.b)
@@ -24,7 +24,7 @@ loaded function: `my_gcd'.
 	110	3	1	
 	120	2	1	X.G!(my_gcd(X.a,X.b))
 	120	15	4	GS.B?(GS.b)
-	130	6	1	
+	130	1	1	
 	140	4	1	X.A?(X.a)
 	140	7	2	AS.S!(30)
 	140	5	1	X.B?(X.b)
@@ -32,15 +32,15 @@ loaded function: `my_gcd'.
 	150	3	1	
 	160	2	1	X.G!(my_gcd(X.a,X.b))
 	160	15	4	GS.B?(GS.b)
-	170	6	1	
+	170	1	1	
 	180	4	1	X.A?(X.a)
-	180	1	2	AS.S!(12)
+	180	6	2	AS.S!(12)
 	180	5	1	X.B?(X.b)
 	180	11	3	BS.S!(34)
 	190	3	1	
 	200	2	1	X.G!(my_gcd(X.a,X.b))
 	200	15	4	GS.B?(GS.b)
-	210	6	1	
+	210	1	1	
 	220	4	1	X.A?(X.a)
 	220	9	2	AS.S!(15)
 	220	5	1	X.B?(X.b)
@@ -48,7 +48,7 @@ loaded function: `my_gcd'.
 	230	3	1	
 	240	2	1	X.G!(my_gcd(X.a,X.b))
 	240	15	4	GS.B?(GS.b)
-	250	6	1	
+	250	1	1	
 	260	4	1	X.A?(X.a)
 	260	8	2	AS.S!(17)
 	260	5	1	X.B?(X.b)
@@ -56,7 +56,7 @@ loaded function: `my_gcd'.
 	270	3	1	
 	280	2	1	X.G!(my_gcd(X.a,X.b))
 	280	15	4	GS.B?(GS.b)
-	290	6	1	
+	290	1	1	
 	300	4	1	X.A?(X.a)
 	300	7	2	AS.S!(30)
 	300	5	1	X.B?(X.b)
@@ -64,15 +64,15 @@ loaded function: `my_gcd'.
 	310	3	1	
 	320	2	1	X.G!(my_gcd(X.a,X.b))
 	320	15	4	GS.B?(GS.b)
-	330	6	1	
+	330	1	1	
 	340	4	1	X.A?(X.a)
-	340	1	2	AS.S!(12)
+	340	6	2	AS.S!(12)
 	340	5	1	X.B?(X.b)
 	340	12	3	BS.S!(27)
 	350	3	1	
 	360	2	1	X.G!(my_gcd(X.a,X.b))
 	360	15	4	GS.B?(GS.b)
-	370	6	1	
+	370	1	1	
 	380	4	1	X.A?(X.a)
 	380	9	2	AS.S!(15)
 	380	5	1	X.B?(X.b)
@@ -80,7 +80,7 @@ loaded function: `my_gcd'.
 	390	3	1	
 	400	2	1	X.G!(my_gcd(X.a,X.b))
 	400	15	4	GS.B?(GS.b)
-	410	6	1	
+	410	1	1	
 	420	4	1	X.A?(X.a)
 	420	8	2	AS.S!(17)
 	420	5	1	X.B?(X.b)
@@ -88,7 +88,7 @@ loaded function: `my_gcd'.
 	430	3	1	
 	440	2	1	X.G!(my_gcd(X.a,X.b))
 	440	15	4	GS.B?(GS.b)
-	450	6	1	
+	450	1	1	
 	460	4	1	X.A?(X.a)
 	460	7	2	AS.S!(30)
 	460	5	1	X.B?(X.b)
@@ -96,7 +96,7 @@ loaded function: `my_gcd'.
 	470	3	1	
 	480	2	1	X.G!(my_gcd(X.a,X.b))
 	480	15	4	GS.B?(GS.b)
-	490	6	1	
+	490	1	1	
 	500	4	1	X.A?(X.a)
-	500	1	2	AS.S!(12)
+	500	6	2	AS.S!(12)
 time: 500

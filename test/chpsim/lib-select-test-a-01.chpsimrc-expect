@@ -1,7 +1,7 @@
-	0	0	0	null
-	10	7	0	
+	0	0	5	null
+	10	1	0	
 	20	4	0	A?(a)
-	20	1	1	AS.S!(42)
+	20	7	1	AS.S!(42)
 	20	5	0	B?(b)
 	20	8	2	BS.S!(31)
 	20	6	0	S?(s)
@@ -13,9 +13,9 @@ watch:	40	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	40	15	4	ZZ.B?(ZZ.b)
-	50	7	0	
+	50	1	0	
 	60	4	0	A?(a)
-	60	1	1	AS.S!(42)
+	60	7	1	AS.S!(42)
 	60	5	0	B?(b)
 	60	10	2	BS.S!(0)
 	60	6	0	S?(s)
@@ -27,9 +27,9 @@ watch:	80	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	80	15	4	ZZ.B?(ZZ.b)
-	90	7	0	
+	90	1	0	
 	100	4	0	A?(a)
-	100	1	1	AS.S!(42)
+	100	7	1	AS.S!(42)
 	100	5	0	B?(b)
 	100	9	2	BS.S!(11)
 	100	6	0	S?(s)
@@ -41,9 +41,9 @@ watch:	120	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (11) [empty]
 watch:	120	15	4	ZZ.B?(ZZ.b)
-	130	7	0	
+	130	1	0	
 	140	4	0	A?(a)
-	140	1	1	AS.S!(42)
+	140	7	1	AS.S!(42)
 	140	5	0	B?(b)
 	140	8	2	BS.S!(31)
 	140	6	0	S?(s)
@@ -55,9 +55,9 @@ watch:	160	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (31) [empty]
 watch:	160	15	4	ZZ.B?(ZZ.b)
-	170	7	0	
+	170	1	0	
 	180	4	0	A?(a)
-	180	1	1	AS.S!(42)
+	180	7	1	AS.S!(42)
 	180	5	0	B?(b)
 	180	10	2	BS.S!(0)
 	180	6	0	S?(s)
@@ -69,9 +69,9 @@ watch:	200	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	200	15	4	ZZ.B?(ZZ.b)
-	210	7	0	
+	210	1	0	
 	220	4	0	A?(a)
-	220	1	1	AS.S!(42)
+	220	7	1	AS.S!(42)
 	220	5	0	B?(b)
 	220	9	2	BS.S!(11)
 	220	6	0	S?(s)
@@ -83,9 +83,9 @@ watch:	240	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	240	15	4	ZZ.B?(ZZ.b)
-	250	7	0	
+	250	1	0	
 	260	4	0	A?(a)
-	260	1	1	AS.S!(42)
+	260	7	1	AS.S!(42)
 	260	5	0	B?(b)
 	260	8	2	BS.S!(31)
 	260	6	0	S?(s)
@@ -97,9 +97,9 @@ watch:	280	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (31) [empty]
 watch:	280	15	4	ZZ.B?(ZZ.b)
-	290	7	0	
+	290	1	0	
 	300	4	0	A?(a)
-	300	1	1	AS.S!(42)
+	300	7	1	AS.S!(42)
 	300	5	0	B?(b)
 	300	10	2	BS.S!(0)
 	300	6	0	S?(s)
@@ -111,9 +111,9 @@ watch:	320	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (0) [empty]
 watch:	320	15	4	ZZ.B?(ZZ.b)
-	330	7	0	
+	330	1	0	
 	340	4	0	A?(a)
-	340	1	1	AS.S!(42)
+	340	7	1	AS.S!(42)
 	340	5	0	B?(b)
 	340	9	2	BS.S!(11)
 	340	6	0	S?(s)
@@ -125,9 +125,9 @@ watch:	360	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	360	15	4	ZZ.B?(ZZ.b)
-	370	7	0	
+	370	1	0	
 	380	4	0	A?(a)
-	380	1	1	AS.S!(42)
+	380	7	1	AS.S!(42)
 	380	5	0	B?(b)
 	380	8	2	BS.S!(31)
 	380	6	0	S?(s)
@@ -139,9 +139,9 @@ watch:	400	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	400	15	4	ZZ.B?(ZZ.b)
-	410	7	0	
+	410	1	0	
 	420	4	0	A?(a)
-	420	1	1	AS.S!(42)
+	420	7	1	AS.S!(42)
 	420	5	0	B?(b)
 	420	10	2	BS.S!(0)
 	420	6	0	S?(s)
@@ -153,9 +153,9 @@ watch:	440	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (0) [empty]
 watch:	440	15	4	ZZ.B?(ZZ.b)
-	450	7	0	
+	450	1	0	
 	460	4	0	A?(a)
-	460	1	1	AS.S!(42)
+	460	7	1	AS.S!(42)
 	460	5	0	B?(b)
 	460	9	2	BS.S!(11)
 	460	6	0	S?(s)
@@ -167,9 +167,9 @@ watch:	480	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (11) [empty]
 watch:	480	15	4	ZZ.B?(ZZ.b)
-	490	7	0	
+	490	1	0	
 	500	4	0	A?(a)
-	500	1	1	AS.S!(42)
+	500	7	1	AS.S!(42)
 	500	5	0	B?(b)
 	500	8	2	BS.S!(31)
 	500	6	0	S?(s)
@@ -181,9 +181,9 @@ watch:	520	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	520	15	4	ZZ.B?(ZZ.b)
-	530	7	0	
+	530	1	0	
 	540	4	0	A?(a)
-	540	1	1	AS.S!(42)
+	540	7	1	AS.S!(42)
 	540	5	0	B?(b)
 	540	10	2	BS.S!(0)
 	540	6	0	S?(s)
@@ -195,9 +195,9 @@ watch:	560	2	0	Z!(select(s,a,b))
 updated channel(s): 
 chan(int<32>) Z = (42) [empty]
 watch:	560	15	4	ZZ.B?(ZZ.b)
-	570	7	0	
+	570	1	0	
 	580	4	0	A?(a)
-	580	1	1	AS.S!(42)
+	580	7	1	AS.S!(42)
 	580	5	0	B?(b)
 	580	9	2	BS.S!(11)
 	580	6	0	S?(s)

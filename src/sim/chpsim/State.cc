@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.12 2007/06/16 23:05:12 fang Exp $
+	$Id: State.cc,v 1.13 2007/09/11 06:53:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -30,6 +30,8 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/type/canonical_fundamental_chan_type.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/lang/CHP_footprint.h"
 
 #include "common/TODO.h"
 #include "sim/ISE.h"
@@ -128,6 +130,7 @@ using entity::META_TYPE_ENUM;
 using entity::META_TYPE_CHANNEL;
 using entity::META_TYPE_PROCESS;
 using entity::canonical_fundamental_chan_type_base;
+using entity::expr_dump_context;
 using std::copy;
 using std::back_inserter;
 using std::mem_fun_ref;
@@ -140,6 +143,10 @@ using util::read_value;
 using util::value_writer;
 using util::value_reader;
 using util::discrete_interval_set;
+using entity::CHP::local_event;
+using entity::CHP::local_event_footprint;
+using entity::CHP::EVENT_SEND;
+using entity::CHP::EVENT_RECEIVE;
 
 //=============================================================================
 // class State::recheck_transformer definition
@@ -152,24 +159,17 @@ struct State::recheck_transformer {
 	this_type&		state;
 	// other option is to pass in a pre-made nonmeta_context
 	nonmeta_context		context;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_index_type	cause_event_id;
 	const size_t		cause_trace_id;
-#endif
 
 	explicit
-	recheck_transformer(this_type& s
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, const event_index_type cei, const size_t cti
-#endif
-		) : 
+	recheck_transformer(this_type& s,
+		const event_index_type cei, const size_t cti) : 
 		state(s), 
 		context(state.mod.get_state_manager(), 
 			state.mod.get_footprint(),
-			state)
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-			, cause_event_id(cei), cause_trace_id(cti)
-#endif
+			state),
+			cause_event_id(cei), cause_trace_id(cti)
 		{ }
 
 	/**
@@ -185,8 +185,8 @@ struct State::recheck_transformer {
 	operator () (const event_index_type ei) {
 		DEBUG_QUEUE_PRINT("rechecking event " << ei << endl);
 		event_type& e(state.event_pool[ei]);
-		context.set_event(e);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		const size_t pid = state.get_process_id(ei);
+		context.set_event(e, pid, state.get_offset_from_pid(pid));
 		// To accomodate blocking-sends that wake-up probes
 		// we must prevent self-wake up in this corner case.
 		if (cause_event_id != ei) {
@@ -209,9 +209,6 @@ struct State::recheck_transformer {
 		} else {
 			DEBUG_QUEUE_PRINT("ignored cause_event_id == ei" << endl);
 		} // end if self-wake-up
-#else	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		e.recheck(context, ei);
-#endif	// CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	}
 
 };	// end class recheck_transformer
@@ -265,11 +262,7 @@ struct State::event_enqueuer {
 			state.dump_event(cout << "enqueue: ", ei, new_time)
 				<< endl;
 		}
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		state.check_event_queue.insert(new_event);
-#else
-		state.event_queue.insert(new_event);
-#endif
 	}
 
 };	// end class event_enqueuer
@@ -297,11 +290,10 @@ State::State(const module& m) :
 		state_base(m, "chpsim> "), 
 		instances(m.get_state_manager()), 
 		event_pool(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
+		global_root_event(NULL, entity::CHP::EVENT_CONCURRENT_FORK),
+		global_event_to_pid(),
+		pid_to_offset(),
 		check_event_queue(), 
-#else
-		event_queue(), 
-#endif
 		timing_mode(TIMING_DEFAULT), 
 		current_time(0), 
 		uniform_delay(event_type::default_delay),
@@ -309,13 +301,8 @@ State::State(const module& m) :
 		interrupted(false),
 		flags(FLAGS_DEFAULT), 
 		__updated_list(), 
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		__enqueue_list(), 
-#endif
 		__rechecks(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		immediate_event_fifo(),
-#endif
 		event_watches(), 
 		event_breaks(),
 		value_watches(), 
@@ -324,34 +311,41 @@ State::State(const module& m) :
 		trace_flush_interval(1L<<16)
 		{
 	// perform initializations here
-	event_pool.reserve(256);
-	event_pool.resize(1);		// 0th entry is a dummy
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	__enqueue_list.reserve(16);	// optional pre-allocation
-#endif
-{
-	StateConstructor v(*this);	// + option flags
-	// visit top-level footprint
-	// v.current_process_index = 0;	// already initialized
-	mod.get_footprint().get_chp_footprint().accept(v);
-	if (v.last_event_index) {
-		v.initial_events.push_back(v.last_event_index);
-		// first top-level event
-	}
-	// visit hierarchical footprints
-	const state_manager& sm(mod.get_state_manager());
-	sm.accept(v);	// may throw
-
-	// now we have a list of initial_events, use event slot 0 to
-	// launch them all concurrently upon startup.
+	event_pool.reserve(256);	// pre-allocate some
+	event_pool.resize(1);		// 0th entry is a global-spawn event
 	event_type& init(event_pool[0]);
-	init.set_predecessors(0);		// first event, no predecessors
-	// init.process_index = 0;		// associate with top-level
-	init.set_event_type(EVENT_CONCURRENT_FORK);
-	init.successor_events.resize(v.initial_events.size());
-	copy(v.initial_events.begin(), v.initial_events.end(),
-		&init.successor_events[0]);
-	v.count_predecessors(init);	// careful: event optimizations!
+{
+	const footprint& topfp(mod.get_footprint());
+	const state_manager& sm(mod.get_state_manager());
+
+	init.make_global_root(&global_root_event);	// use the FORK, Luke...
+	const size_t procs = sm.get_pool<process_tag>().size();
+	pid_to_offset.resize(procs +1);
+	// use pid_to_offset[procs] to represent the spawn event (offset 0)
+	pid_to_offset[procs] = std::make_pair(0, 1);
+	global_event_to_pid[0] = procs;	// map event 0 to top-process (procs)
+
+	// top-level process reserves index 0
+	initialize_process_event_chunk(topfp.get_chp_event_footprint(), 0);
+
+	size_t i = 1;
+	for ( ; i<procs; ++i) {
+		initialize_process_event_chunk(
+			sm.get_pool<process_tag>()[i]._frame._footprint
+				->get_chp_event_footprint(), 
+			i);
+	}
+	// connect all process-root events to the spawn event
+{
+	typedef	global_event_to_pid_map_type::const_iterator const_iterator;
+	// +1 to skip the global-root event
+	const_iterator j(++global_event_to_pid.begin()),
+		e(global_event_to_pid.end());
+	for ( ; j!=e; ++j) {
+		// the offsets also point to the root event of each process
+		global_root_event.successor_events.push_back(j->first);
+	}
+}
 }
 }
 
@@ -360,6 +354,102 @@ State::~State() {
 	// clean-up
 	// optional, but recommended: run some diagnostics
 	// anything to do with trace_manager?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translate global event index to process id, which is possible
+	because events belonging to the same process lie are contiguous.
+	NOTE: pid for the global-root event does NOT correspond to a 
+	real process, so caller should check valid_process_id() as needed.
+ */
+size_t
+State::get_process_id(const event_index_type ei) const {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("event = " << ei << endl);
+	global_event_to_pid_map_type::const_iterator
+		f(global_event_to_pid.upper_bound(ei));
+	INVARIANT(f != global_event_to_pid.begin());
+	--f;
+	const size_t pid = f->second;
+	STACKTRACE_INDENT_PRINT("pid = " << pid << endl);
+	INVARIANT(pid < pid_to_offset.size());
+	return pid;
+// used to be embedded for fast lookup at the cost of storage:
+//	return event_pool[ei].get_process_index();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+State::get_process_id(const event_type& e) const {
+	return get_process_id(get_event_id(e));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only invalid pid is the last one, which is faked as the 
+	owner/parent of the global-root event.  
+ */
+bool
+State::valid_process_id(const size_t pid) const {
+	return pid < (pid_to_offset.size() -1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+event_index_type
+State::get_event_id(const event_type& e) const {
+	const event_index_type d = std::distance(&event_pool[0], &e);
+	INVARIANT(d < event_pool.size());
+	return d;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the base offset of the process to which this event belongs.
+ */
+event_index_type
+State::get_offset_from_event(const event_index_type eid) const {
+	return get_offset_from_pid(get_process_id(eid));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the base offset of the process to which this event belongs.
+ */
+event_index_type
+State::get_offset_from_event(const event_type& e) const {
+	return get_offset_from_pid(get_process_id(e));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+event_index_type
+State::get_offset_from_pid(const size_t pid) const {
+	return pid_to_offset[pid].first;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only called during construction and state allocation.  
+ */
+void
+State::initialize_process_event_chunk(const local_event_footprint& chpfp, 
+		const size_t pid) {
+	STACKTRACE_VERBOSE;
+	const size_t offset = event_pool.size();
+	const size_t local_events = chpfp.size();
+	pid_to_offset[pid] = std::make_pair(offset, local_events);
+	if (local_events) {
+		global_event_to_pid[offset] = pid;	// pid 0 is top-level
+		const size_t M = event_pool.size() +local_events;
+		event_pool.resize(M);
+//		const global_entry_context::footprint_frame_setter fs(dc, pid);
+		size_t i = 0;
+		do {
+			// setup per-event info: dependencies, delays, ...
+			event_pool[i +offset].setup(&chpfp[i], *this);
+			++i;
+		} while (i<local_events);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -373,23 +463,12 @@ State::initialize(void) {
 	// initialize state of all channels and variables
 	instances.reset();
 	// empty the event_queue
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
-#else
-	event_queue.clear();
-#endif
 	// seed events that are ready to go, like active initializations
 	//	note: we use event[0] as the launching event (concurrent)
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	check_event_queue.insert(event_placeholder_type(current_time, 0));
-#else
-	event_queue.insert(event_placeholder_type(current_time, 0));
-#endif
 	__updated_list.clear();
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	__enqueue_list.clear();
-#endif
 	__rechecks.clear();
 	for_each(event_pool.begin(), event_pool.end(),
 		mem_fun_ref(&event_type::reset)
@@ -427,13 +506,8 @@ State::reset(void) {
 State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	const event_placeholder_type ret(*check_event_queue.begin());
 	check_event_queue.erase(check_event_queue.begin());
-#else
-	const event_placeholder_type ret(*event_queue.begin());
-	event_queue.erase(event_queue.begin());
-#endif
 	return ret;
 }
 
@@ -444,17 +518,12 @@ State::dequeue_event(void) {
  */
 State::time_type
 State::next_event_time(void) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	if (!immediate_event_fifo.empty()) {
 		return immediate_event_fifo.begin()->time;
 	} else {
 		INVARIANT(!check_event_queue.empty());
 		return check_event_queue.begin()->time;
 	}
-#else
-	INVARIANT(!event_queue.empty());
-	return event_queue.begin()->time;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -471,33 +540,24 @@ State::step(void) {
 	// pseudocode:
 	// 1) grab event off of pending event queue, dequeue it
 	nonmeta_context c(mod.get_state_manager(), mod.get_footprint(), *this);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	std::pair<bool, bool>	status(false, false);
 do {
 	// TODO: check immediate event FIFO first
 	// or check and load into FIFO first?
-#endif
 	event_placeholder_type ep;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	bool immediate = false;
 	if (immediate_event_fifo.empty()) {
 	// TODO: grab and check events until one is ready to execute
 	// and execute it.
-	if (check_event_queue.empty())
-#else
-	if (event_queue.empty())
-#endif
-	{
+	if (check_event_queue.empty()) {
 		return false;
 	}
 	ep = dequeue_event();
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	} else {
 		ep = immediate_event_fifo.front();
 		immediate_event_fifo.pop_front();
 		immediate = true;
 	}	// end if immediate_event_fifo empty
-#endif
 
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
@@ -512,23 +572,20 @@ do {
 
 	// 2) execute the event (alter state, variables, channel, etc.)
 	//	expect references to the channel/variable(s) affected
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	__enqueue_list.clear();
-#endif
 	__updated_list.clear();
 	__rechecks.clear();
 	event_type& ev(event_pool[ei]);
-	c.set_event(ev);	// not nonmeta_context::event_setter!!!
+	const size_t pid = get_process_id(ei);
+	const event_index_type offset = get_offset_from_pid(pid);
+	c.set_event(ev, pid, offset);	// not nonmeta_context::event_setter!!!
 	// TODO: re-use this nonmeta-context in the recheck_transformer
 	// TODO: unify check and execute into "chexecute"
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	try {
 	// this is where events are checked for their first time as successor
 	if (immediate || ev.first_check(c, ei)) {
 		DEBUG_STEP_PRINT("executing..." << endl);
 		// don't recheck if event is immediate
 		status.first = true;
-#endif
 		try {
 			ev.execute(c);
 		} catch (...) {
@@ -536,19 +593,14 @@ do {
 				<< ei << "." << endl;
 			throw;		// rethrow
 		}
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		const size_t cti = (is_tracing() ?
 			trace_manager->last_event_trace_id() : 0);
 		DEBUG_STEP_PRINT("this trace index = " << cti << endl);
 		status.second = __step(ei, cause_event_id, cause_trace_id);
 		// enqueue these events for first-checking (after delay)
-		for_each(c.first_checks.begin(), c.first_checks.end(),
+		for_each(c.first_checks_begin(), c.first_checks_end(),
 			event_enqueuer(*this, ei, cti));
 		// c.first_checks.clear();	// not needed, loop will exit
-#else
-	return __step(ei, cause_event_id, cause_trace_id);
-#endif
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	} else {	// end if recheck
 		// TODO: is this on critical path?
 		// initial check failed predicate, block waiting, 
@@ -584,7 +636,6 @@ do {
 	}
 } while (!status.first);
 	return status.second;
-#endif
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -626,7 +677,6 @@ State::__notify_updates_for_recheck(const size_t ti) {
 }	// end __notify_updates_for_recheck()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
 	This variation only processes updates and rechecks without
 	saving the state of modified variables to trace.  
@@ -652,7 +702,6 @@ State::__notify_updates_for_recheck_no_trace(const size_t ti) {
 		copy(es.begin(), es.end(), set_inserter(__rechecks));
 	}
 }	// end __notify_updates_for_recheck()
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -662,24 +711,14 @@ State::__notify_updates_for_recheck_no_trace(const size_t ti) {
  */
 void
 State::__perform_rechecks(const event_index_type ei, 
-		const event_index_type cause_event_id
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, const size_t ti
-#endif
-		) {
+		const event_index_type cause_event_id, const size_t ti) {
 	STACKTRACE_VERBOSE_QUEUE;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 // NOTE: since delays have been paid for up front, rechecked events that
 // now pass are immediately ready for execution, and hence should be placed
 // in the immediate_event_fifo.  Change happens in recheck_transformer.
-#endif
 try {
 	for_each(__rechecks.begin(), __rechecks.end(), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		recheck_transformer(*this, ei, ti)
-#else
-		recheck_transformer(*this)
-#endif
 	);
 } catch (...) {
 	cerr << "Run-time error while rechecking events." << endl;
@@ -751,11 +790,7 @@ State::__step(const event_index_type ei,
 	// debug: print list of events to recheck
 	dump_recheck_events(cout);
 #endif
-	__perform_rechecks(ei, cause_event_id
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		, ti
-#endif
-	);
+	__perform_rechecks(ei, cause_event_id, ti);
 	// TODO: factor out watch/break into subroutine
 	bool value_trig = false;
 	bool value_break = false;
@@ -812,19 +847,8 @@ State::__step(const event_index_type ei,
 	// enqueue any events that are ready to fire
 	//	NOTE: check the guard expressions of events before enqueuing
 	// temporarily disabled for regression testing
-#if DEBUG_STEP
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	// debug: print list of event to enqueue
-	dump_enqueue_events(cout);
-#endif
-#endif
 	// transfer events from staging queue to event queue, 
 	// and schedule them with some delay
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	for_each(__enqueue_list.begin(), __enqueue_list.end(),
-		event_enqueuer(*this, ei, ti)
-	);
-#endif
 	// check for flush period
 	// TODO: count events in State, shouldn't depend on TraceManager for it.
 	if (is_tracing() && 
@@ -1215,6 +1239,31 @@ if (trace_manager) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Create the parent name context from the process-index.
+ */
+entity::expr_dump_context
+State::make_process_dump_context(const node_index_type pid) const {
+	// -1 because we allocated one more pid slot for the
+	// global spawn event.
+	if (pid && valid_process_id(pid)) {
+		return mod.get_state_manager().make_process_dump_context(
+			mod.get_footprint(), pid);
+	} else {
+		return expr_dump_context::default_value;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_event(ostream& o, const event_type& e) const {
+	const size_t pid = get_process_id(e);
+	return e.dump_struct(o, make_process_dump_context(pid), 
+		valid_process_id(pid) ? pid : 0, 
+		get_offset_from_pid(pid));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints event in brief form for queue, with time prefixed.  
  */
 ostream&
@@ -1223,12 +1272,10 @@ State::dump_event(ostream& o, const event_index_type ei,
 	const event_type& ev(get_event(ei));
 	o << '\t' << t << '\t';
 	o << ei << '\t';
-#if CHPSIM_DUMP_PARENT_CONTEXT
-	o << ev.get_process_index() << '\t';
-	return ev.dump_brief(o, mod.get_state_manager(), mod.get_footprint());
-#else
-	return ev.dump_brief(o);
-#endif
+	const size_t pid = get_process_id(ei);
+	o << pid << '\t';
+	// caution: global-root event's pid
+	return ev.dump_brief(o, make_process_dump_context(pid));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1240,13 +1287,16 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	INVARIANT(ei < event_pool.size());
 	o << "event[" << ei << "]: ";
 	const event_type& e(event_pool[ei]);
-#if CHPSIM_DUMP_PARENT_CONTEXT
-	e.dump_struct(o, mod.get_state_manager(), mod.get_footprint());
-#else
-	e.dump_struct(o);
-#endif
+	const size_t pid = get_process_id(ei);
+	if (valid_process_id(pid)) {
+		// because global root event is a fake process
+		e.dump_struct(o, make_process_dump_context(pid), 
+			pid, get_offset_from_pid(pid));
+	} else {
+		e.dump_struct(o, expr_dump_context::default_value, 0, 0);
+	}
 	// o << endl;
-	e.dump_source(o << "source: ") << endl;
+	e.dump_source(o << "source: ", expr_dump_context::default_value) << endl;
 	return o;
 }
 
@@ -1262,7 +1312,6 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	get_event(ei).dump_subscribed_status(o << "status: ", instances, ei)
 		<< endl;
 {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// NOTE: this means that an event is scheduled to be CHECKED not
 	// necessarily executed.  Only events in immediate_event_fifo are
 	// are guaranteed to execute.
@@ -1276,10 +1325,6 @@ State::dump_event_status(ostream& o, const event_index_type ei) const {
 	}
 	const event_queue_type& temp(check_event_queue);	// just alias
 	o << "\nin check queue: ";
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-	o << "in queue: ";
-#endif
 	if (find_if(temp.begin(), temp.end(), 
 			event_placeholder_type::index_finder(ei))
 			== temp.end()) {
@@ -1300,7 +1345,6 @@ ostream&
 State::dump_event_queue(ostream& o) const {
 	o << "event queue:" << endl;
 	bool empty = true;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 // print the check-event-queue separately
 {
 	typedef	immediate_event_queue_type::const_iterator	const_iterator;
@@ -1322,12 +1366,9 @@ State::dump_event_queue(ostream& o) const {
 	}
 }
 	o << "check queue:" << endl;
-	const event_queue_type& temp(check_event_queue);	// just alias
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-#endif
 {
 	typedef	event_queue_type::const_iterator	const_iterator;
+	const event_queue_type& temp(check_event_queue);	// just alias
 	const_iterator i(temp.begin()), e(temp.end());
 	if (i!=e) {
 		if (empty) {
@@ -1354,7 +1395,6 @@ State::dump_event_queue(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 /**
 	Synonym to original definition, because too lazy to
 	rename with new check-event changes.  
@@ -1363,12 +1403,12 @@ ostream&
 State::dump_check_event_queue(ostream& o) const {
 	return dump_event_queue(o);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints non-hierarchical structure of the entire allocated state.
 	See also: dump_struct_dot() for a graphical view.  
+	TODO: with bulk-allocated events, print and group by process!
  */
 ostream&
 State::dump_struct(ostream& o) const {
@@ -1377,21 +1417,38 @@ State::dump_struct(ostream& o) const {
 {
 	o << "Variables: " << endl;
 	instances.dump_struct(o, sm, topfp);
-}
 	o << endl;
-{
+}
 // CHP graph structures (non-hierarchical)
 	o << "Event graph: " << endl;
-	const event_index_type es = event_pool.size();
-	event_index_type i = 0;		// FIRST_VALID_EVENT;
-	// we use the 0th event to launch initial batch of events
-	for ( ; i<es; ++i) {
-		o << "event[" << i << "]: ";
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		event_pool[i].dump_struct(o, sm, topfp);	// << endl;
-#else
-		event_pool[i].dump_struct(o);	// << endl;
-#endif
+	// group events by process, since they now lie in contiguous ranges
+	// event[0] is special, print it separately
+
+	o << "event[0]: ";
+//	const size_t pid = get_process_id(0);
+	event_pool[0].dump_struct(o, 
+		expr_dump_context::default_value, 0, 0
+//		make_process_dump_context(pid), get_offset_from_pid(pid)
+	);
+{
+	typedef	pid_to_offset_map_type::const_iterator	const_iterator;
+	const_iterator i(pid_to_offset.begin()), e(--pid_to_offset.end());
+	// skip last one because that is reserved for event[0]
+	size_t pid = 0;
+	for ( ; i!=e; ++i, ++pid) {
+	if (i->second) {
+		o << "\n# process[" << pid << "]:" << endl;
+		const event_index_type offset = i->first;
+		event_index_type j = 0;
+		const expr_dump_context edc(make_process_dump_context(pid));
+		for ( ; j < i->second; ++j) {
+			const size_t eid = offset +j;
+			o << "event[" << eid << "]: ";
+			const event_type& ev(event_pool[eid]);
+//			const size_t pid = get_process_id(eid);
+			ev.dump_struct(o, edc, pid, offset);
+		}
+	}
 	}
 }
 	return o;
@@ -1407,6 +1464,9 @@ State::dump_struct(ostream& o) const {
  */
 ostream&
 State::dump_struct_dot(ostream& o, const graph_options& g) const {
+	// should be event_type::local_event_type
+	static const char* node_prefix = local_event::node_prefix;
+
 	o << "digraph G {" << endl;
 	// consider using global_entry_context_base instead...
 	const state_manager& sm(mod.get_state_manager());
@@ -1418,68 +1478,52 @@ if (g.show_instances) {
 }
 	o << "# Events: " << endl;
 	const event_index_type es = event_pool.size();
-	event_index_type i = 0;		// FIRST_VALID_EVENT;
-	// we use the 0th event to launch initial batch of events
-	for ( ; i<es; ++i) {
-		const event_type& e(event_pool[i]);
-#if CHPSIM_DUMP_PARENT_CONTEXT
-		e.dump_dot_node(o, i, g, sm, topfp) << endl;
-#else
-		e.dump_dot_node(o, i, g) << endl;
-#endif
-		// includes outgoing edges
-	}
-if (g.process_event_clusters) {
-	// since event-node ranges are not necessarily contiguous,
-	// we may need to collect them in discrete_set_intervals
-	// TODO: once subgraphs are copy-allocated from footprints, 
-	// we can do-away with this sparse-gathering
-	o << "# Process clusters: " << endl;
-	// Forunately, dot lets you declare node clusterings after nodes
-	// have been declared and defined.  
-	typedef discrete_interval_set<size_t>	event_id_set_type;
-	const global_entry_pool<process_tag>&
-		ppool(sm.get_pool<process_tag>());
-	vector<event_id_set_type> pmap(ppool.size());
-	// gather event-ids by process id
-	i = 0;		// FIRST_VALID_EVENT
-	for ( ; i<es; ++i) {
-		const size_t pid = event_pool[i].get_process_index();
-		const bool b = pmap[pid].add_range(i, i);
-		INVARIANT(!b);	// no overlap
-	}
-	vector<event_id_set_type>::const_iterator
-		pi(pmap.begin()), pe(pmap.end());
-	INVARIANT(pi != pe);
-	size_t c = 1;	// skip process 0, which represents the top-level
-	for (++pi; pi!=pe; ++pi, ++c) {
-		o << "subgraph cluster" << c << " {" << endl;
+	// group events by process (making subgraph clustering trivial)
+	size_t pid = 0;
+	event_pool[0].dump_dot_node(o, 0, g,
+		expr_dump_context::default_value, 0, 0) << endl;
+{
+	// the last event was reserved for event[0], the global root event
+	const size_t mp = pid_to_offset.size() -1;
+	const global_entry_pool<process_tag>& ppool(sm.get_pool<process_tag>());
+for ( ; pid < mp; ++pid) {
+	const size_t max = pid_to_offset[pid].second;
+	if (max) {
+		// events are already clustered by process
+		// but don't cluster the top-level process
+	if (pid && g.process_event_clusters) {
+		o << "subgraph cluster" << pid << " {" << endl;
 		std::ostringstream oss;
-		ppool[c].dump_canonical_name(oss, topfp, sm);
-		o << "label=\"pid=" << c << ": " << oss.str() << "\";" << endl;
-		// interval_set is a map of [start,length] pairs
-		event_id_set_type::const_iterator
-			ii(pi->begin()), ie(pi->end());
-		for ( ; ii!=ie; ++ii) {
-			size_t j = ii->first;
-			for ( ; j <= ii->second; ++j) {
-				o << event_type::node_prefix << j
-					<< ';' << endl;
-			}
+		ppool[pid].dump_canonical_name(oss, topfp, sm);
+		o << "label=\"pid=" << pid << ": " << oss.str() << "\";"
+			<< endl;
+	} else {
+		o << "# process " << pid << endl;
+	}
+		const size_t offset = get_offset_from_pid(pid);
+		const expr_dump_context edc(make_process_dump_context(pid));
+		size_t i = 0;
+		for ( ; i<max; ++i) {
+			const event_index_type eid = i +offset;
+			const event_type& e(event_pool[eid]);
+			e.dump_dot_node(o, eid, g, edc, pid, offset) << endl;
 		}
+	if (pid && g.process_event_clusters) {
 		o << "}" << endl;
 	}
-}	// end if process_event_clusters
+	}	// end if max
+}	// end for-all pid's
+}
 if (g.show_channels) {
 	static const char channel_prefix[] = "CHANNEL_";
 	// TODO: can this re-used as a guile-routine?
 	o << "# Channels:" << endl;
-	typedef std::set<size_t>	event_id_set_type;
+	typedef std::set<event_index_type>	event_id_set_type;
 	const global_entry_pool<channel_tag>&
 		cpool(sm.get_pool<channel_tag>());
 	vector<event_id_set_type>
 		send_map(cpool.size()), recv_map(cpool.size());
-	i = 0;		// FIRST_VALID_EVENT
+	event_index_type i = 0;		// FIRST_VALID_EVENT
 	// collect communicating channels over all events
 	for ( ; i<es; ++i) {
 		const event_type& e(event_pool[i]);
@@ -1522,18 +1566,17 @@ if (g.show_channels) {
 				<< "\"];" << endl;
 			// edges (unlabeled)
 			for ( ; si!=se; ++si) {
-				o << event_type::node_prefix << *si << " -> " <<
+				o << node_prefix << *si << " -> " <<
 					channel_prefix << i << ';' << endl;
 			}
 			for ( ; ri!=re; ++ri) {
 				o << channel_prefix << i << " -> " <<
-					event_type::node_prefix << *ri << ';'
-					<< endl;
+					node_prefix << *ri << ';' << endl;
 			}
 		} else {
 			// just collapse into a single labeled edge
-			o << event_type::node_prefix << *si << " -> " <<
-				event_type::node_prefix << *ri <<
+			o << node_prefix << *si << " -> " <<
+				node_prefix << *ri <<
 				"\t[label=\"" << oss.str() << "\"];" << endl;
 		}
 	}	// end for all channels
@@ -1541,7 +1584,7 @@ if (g.show_channels) {
 }
 	o << "}" << endl;
 	return o;
-}
+}	// end dump_struct_dot
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -1576,17 +1619,6 @@ State::dump_recheck_events(ostream& o) const {
 	copy(__rechecks.begin(), __rechecks.end(), osi);
 	return o << endl;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-ostream&
-State::dump_enqueue_events(ostream& o) const {
-	o << "to be enqueued: ";
-	ostream_iterator<size_t> osi(o, ", ");
-	copy(__enqueue_list.begin(), __enqueue_list.end(), osi);
-	return o << endl;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1741,16 +1773,12 @@ State::save_checkpoint(ostream& o) const {
 	for_each(tmp.begin(), tmp.end(), value_writer<size_t>(o));
 }{
 	// save the event queue
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	size_t s = immediate_event_fifo.size();
 	write_value(o, s);
 	for_each(immediate_event_fifo.begin(), immediate_event_fifo.end(), 
 		value_writer<event_placeholder_type>(o));
 }{
 	const event_queue_type& temp(check_event_queue);	// just alias
-#else
-	const event_queue_type& temp(event_queue);	// just alias
-#endif
 	size_t s = temp.size();
 	write_value(o, s);
 	for_each(temp.begin(), temp.end(), 
@@ -1789,12 +1817,8 @@ State::load_checkpoint(istream& i) {
 	read_value(i, s);
 	const nonmeta_context
 		c(mod.get_state_manager(), mod.get_footprint(), *this);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	immediate_event_fifo.clear();
 	check_event_queue.clear();
-#else
-	event_queue.clear();
-#endif
 	for ( ; j<s; ++j) {
 		event_index_type ei;
 		read_value(i, ei);
@@ -1808,9 +1832,7 @@ State::load_checkpoint(istream& i) {
 		}
 		event_pool[ei].subscribe_deps(c, ei);
 	}
-}
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-{
+}{
 	// restore the immediate event queue
 	size_t s;
 	read_value(i, s);
@@ -1821,9 +1843,7 @@ State::load_checkpoint(istream& i) {
 		read(ep);
 		immediate_event_fifo.push_back(ep);
 	}
-}
-#endif
-{
+}{
 	// restore the event queue
 	size_t s;
 	read_value(i, s);
@@ -1832,11 +1852,7 @@ State::load_checkpoint(istream& i) {
 	for ( ; j<s; ++j) {
 		event_placeholder_type ep;
 		read(ep);
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		check_event_queue.insert(ep);
-#else
-		event_queue.insert(ep);
-#endif
 	}
 }
 	read_value(i, current_time);

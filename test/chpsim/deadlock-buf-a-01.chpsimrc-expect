@@ -1,11 +1,11 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	10	3	1	X.x := true
+	10	1	1	X.x := true
 event queue:
 check queue:
 	time	eid	pid	event
-	12	1	1	X.R!(X.x)
+	12	3	1	X.R!(X.x)
 M! is in check queue, but will block 
 event queue:
 check queue:

@@ -1,12 +1,12 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 event queue:
 check queue:
 	time	eid	pid	event
-	10	2	0	[ true -> ... [] true -> ... ]
+	10	1	0	[ true -> ... [] true -> ... ]
 Run-time error: multiple exclusive guards of deterministic selection evaluated TRUE!
 Run-time error while checking event.
-event[2]:	10	2	0	[ true -> ... [] true -> ... ]
+event[1]:	10	1	0	[ true -> ... [] true -> ... ]
 Caught run-time exception during execution.  Halting.

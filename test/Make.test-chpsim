@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.16 2007/08/28 04:54:35 fang Exp $
+#	$Id: Make.test-chpsim,v 1.17 2007/09/11 06:53:19 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -474,19 +474,26 @@ build-check-local: \
 	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt-indump) \
 	$(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt-diff)
 
+ALL_CHPSIM_ALLOC = $(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS:=.expect-chpsimalloc) \
 ALL_CHPSIM_DOT = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-dot)
 ALL_CHPSIM_PS = $(HACKT_CHPSIM_DOT_TEST_SUBJECTS:=.chpsim-event-ps)
 ALL_CHPSIMRC_OUT = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES:=.chpsimrc-out) \
 	$(HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES:=.chpsimrcfail-out)
 ALL_CHPSIM_CKPT = $(HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES:=.chpsimckpt)
 
+$(ALL_CHPSIM_ALLOC): $(HACKT_CHPSIM_EXE)
 $(ALL_CHPSIM_DOT): $(HACKT_CHPSIM_EXE)
 $(ALL_CHPSIMRC_OUT): $(HACKT_CHPSIM_EXE)
 $(ALL_CHPSIM_CKPT): $(HACKT_CHPSIM_EXE)
 
+all-chpsim-alloc: $(ALL_CHPSIM_ALLOC)
+
 all-chpsim-dot: $(ALL_CHPSIM_DOT)
 
 all-chpsim-ps: $(ALL_CHPSIM_PS)
+
+clean-chpsim-alloc: force
+	-$(RM) $(ALL_CHPSIM_ALLOC)
 
 clean-chpsim-dot: force
 	-$(RM) $(ALL_CHPSIM_DOT)

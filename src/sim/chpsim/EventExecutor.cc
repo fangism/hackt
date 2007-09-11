@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.9 2007/08/28 04:54:26 fang Exp $
+	$Id: EventExecutor.cc,v 1.10 2007/09/11 06:53:08 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -162,91 +162,12 @@ using entity::process_tag;
 //=============================================================================
 /// helper routines
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	For all non-selection events that execute, schedule all successor
-	events for recheck.
-	Also decrement those events' countdown upon execution of this event.  
-	Don't forget to decrement the selected event's counter for selections!
-	This should be kept consistent with CHPSIM::EventNode::execute().
- */
-static
-inline
-void
-recheck_all_successor_events(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context& c) {
-	typedef	EventNode	event_type;
-	typedef	size_t		event_index_type;
-	STACKTRACE_CHPSIM_VERBOSE;
-	const event_type::successor_list_type&
-		succ(c.get_event().successor_events);
-	copy(std::begin(succ), std::end(succ), 
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		set_inserter(c.first_checks)
-#else
-		set_inserter(c.rechecks)
-#endif
-		);
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	// deferred to State::step()
-	for_each(std::begin(succ), std::end(succ), 
-		event_type::countdown_decrementer(c.event_pool));
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Print outgoing edges adorned with guard expressions as labels. 
- */
-static
-ostream&
-dump_selection_successor_edges(const selection_list_type& l, 
-		ostream& o, const EventNode& e, const size_t i, 
-		const expr_dump_context& c) {
-	typedef	selection_list_type::const_iterator const_iterator;
-	const EventNode::successor_list_type& succ(e.successor_events);
-	const size_t* si = std::begin(succ);
-	const size_t* se = std::end(succ);
-	const_iterator li(l.begin()), le(l.end());
-	for ( ; li!=le; ++li, ++si) {
-		const guarded_action::guard_ptr_type&
-			g((*li)->get_guard());
-		o << EventNode::node_prefix << i << " -> " <<
-			EventNode::node_prefix << *si << "\t[label=\"";
-		if (g) {
-			g->dump(o, c);
-		} else {
-			o << "else";
-		}
-		o << "\"];" << endl;
-	}
-	// guard list may have ONE less than successor list
-	// if there is an implicit else-clause
-	if (si != se) {
-		o << EventNode::node_prefix << i << " -> " <<
-			EventNode::node_prefix << *si <<
-			"\t[label=\"else\"];" << endl;
-		++si;
-		INVARIANT(si == se);
-		
-	}
-	// check for else clause
-	return o;
-}
-
 //=============================================================================
 /**
 	I realize now that EventRechecker is slightly redundant:
 	it has two equivalent references to the state_manager and top_footprint.
  */
-EventExecutor::EventExecutor(
-#if !CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		const
-#endif
-		nonmeta_context& c) : 
+EventExecutor::EventExecutor(nonmeta_context& c) : 
 	chp_visitor(*c.get_state_manager(), *c.get_top_footprint_ptr()), 
 	context(c) { }
 
@@ -258,21 +179,9 @@ EventRechecker::EventRechecker(const nonmeta_context& c) :
 //=============================================================================
 // class action method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	By default print all successor edge, unadorned.  
- */
-#define DEFAULT_EVENT_SUCCESSOR_DUMPER(T)				\
-void									\
-EventSuccessorDumper::visit(const T&) {					\
-	event.dump_successor_edges_default(os, index);			\
-}
-
 //=============================================================================
 // class action_sequence method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(action_sequence)
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sequences should never be used as leaf events, 
 	so this does nothing.  
@@ -298,9 +207,6 @@ EventRechecker::visit(const action_sequence&) {
 //=============================================================================
 // class concurrent_actions method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(concurrent_actions)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Action groups should never be used as leaf events, 
 	so this does nothing.  
@@ -310,7 +216,8 @@ DEFAULT_EVENT_SUCCESSOR_DUMPER(concurrent_actions)
 void
 EventExecutor::visit(const concurrent_actions& ca) {
 	STACKTRACE_CHPSIM_VERBOSE;
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -327,7 +234,7 @@ EventRechecker::visit(const concurrent_actions&) {
 }
 
 //=============================================================================
-DEFAULT_EVENT_SUCCESSOR_DUMPER(guarded_action)
+// class guarded_action method definitions
 
 void
 EventExecutor::visit(const guarded_action&) {
@@ -354,20 +261,15 @@ EventRechecker::visit(const guarded_action&) {
 void
 EventExecutor::visit(const deterministic_selection& ds) {
 	STACKTRACE_CHPSIM_VERBOSE;
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// really stupid to re-evaluate, fix later...
 	guarded_action::selection_evaluator G(context);	// needs reference wrap
 	for_each(ds.begin(), ds.end(),
 		guarded_action::selection_evaluator_ref(G));
 	INVARIANT(G.ready.size() == 1);
-	EventNode& t(context.get_event());	// this event
+	const entity::CHP::local_event&
+		t(context.get_event().get_local_event());
 	const size_t ei = t.successor_events[G.ready.front()];
-	context.first_checks.insert(ei);
-#else
-	// never enqueues itself, only successors
-	// see recheck() below
-	ICE_NEVER_CALL(cerr);
-#endif
+	context.insert_first_checks(ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -404,22 +306,7 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		break;
 	}
 	case 1: {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 		ret = RECHECK_UNBLOCKED_THIS;
-#else
-		EventNode& t(context.get_event());	// this event
-		const size_t ei = t.successor_events[G.ready.front()];
-		STACKTRACE_INDENT_PRINT("have a winner! eid: " << ei << endl);
-		t.reset_countdown();
-		// act like this event (its predecessor) executed
-		EventNode::countdown_decrementer(context.event_pool)(ei);
-		// recheck it on the spot
-		EventNode& suc(context.event_pool[ei]);
-		const nonmeta_context::event_setter x(context, &suc);
-		// temporary, too lazy to copy, will restore upon destruction
-		suc.recheck(context, ei);
-		ret = RECHECK_DEFERRED_TO_SUCCESSOR;
-#endif
 		break;
 	}
 	default:
@@ -428,12 +315,6 @@ EventRechecker::visit(const deterministic_selection& ds) {
 		THROW_EXIT;
 		ret = RECHECK_BLOCKED_THIS;		// unreachable
 	}	// end switch
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-EventSuccessorDumper::visit(const deterministic_selection& ds) {
-	dump_selection_successor_edges(ds, os, event, index, dump_context);
 }
 
 //=============================================================================
@@ -472,7 +353,8 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	for_each(ns.begin(), ns.end(),
 		guarded_action::selection_evaluator_ref(G));
 	const size_t m = G.ready.size();
-	EventNode& t(context.get_event());
+	const entity::CHP::local_event&
+		t(context.get_event().get_local_event());
 	switch (m) {
 	case 0: {
 		// this can happen because guards may be unstable, 
@@ -482,12 +364,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 	}
 	case 1: {
 		const size_t ei = t.successor_events[G.ready.front()];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		context.first_checks.insert(ei);
-#else
-		context.rechecks.insert(ei);
-		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
+		context.insert_first_checks(ei);
 		break;
 	}
 	default: {
@@ -495,12 +372,7 @@ EventExecutor::visit(const nondeterministic_selection& ns) {
 		static rand48<unsigned long> rgen;
 		const size_t r = rgen();	// random-generate
 		const size_t ei = t.successor_events[G.ready[r%m]];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-		context.first_checks.insert(ei);
-#else
-		context.rechecks.insert(ei);
-		EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
+		context.insert_first_checks(ei);
 	}
 	}	// end switch
 }	// end visit(const nondeterministic_selection&)
@@ -540,18 +412,9 @@ EventRechecker::visit(const nondeterministic_selection& ns) {
 	}
 }	// end visit(const nondeterministic_selection&)
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-EventSuccessorDumper::visit(const nondeterministic_selection& ns) {
-	dump_selection_successor_edges(ns, os, event, index, dump_context);
-}
-
 //=============================================================================
 // class metaloop_selection method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(metaloop_selection)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Never called, always expanded.  
  */
@@ -573,9 +436,6 @@ EventRechecker::visit(const metaloop_selection&) {
 //=============================================================================
 // class metaloop_statement method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(metaloop_statement)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Never called, always expanded.  
  */
@@ -597,9 +457,6 @@ EventRechecker::visit(const metaloop_statement&) {
 //=============================================================================
 // class assignment method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(assignment)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	lvalue must be bool, int, or enum reference.  
 	\param u collection of references updated by the assignment execution,
@@ -611,7 +468,8 @@ EventExecutor::visit(const assignment& a) {
 	STACKTRACE_CHPSIM_VERBOSE;
 	a.get_lval()->nonmeta_assign(a.get_rval(), context, context.updates);
 		// also tracks updated reference
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -628,9 +486,6 @@ EventRechecker::visit(const assignment&) {
 //=============================================================================
 // class condition_wait method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(condition_wait)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does nothing, is a NULL event.  
 	NOTE: it is possible that guard is no longer true, 
@@ -640,7 +495,8 @@ DEFAULT_EVENT_SUCCESSOR_DUMPER(condition_wait)
 void
 EventExecutor::visit(const condition_wait& cw) {
 	STACKTRACE_CHPSIM_VERBOSE;
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -680,9 +536,6 @@ EventRechecker::visit(const condition_wait& cw) {
 //=============================================================================
 // class channel_send method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(channel_send)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Only the channel is 'modified' by a send, so we register it
@@ -703,23 +556,14 @@ EventExecutor::visit(const channel_send& cs) {
 	}
 	ASSERT_CHAN_INDEX
 	ChannelState& nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if CHPSIM_COUPLED_CHANNELS
 	// we already wrote data to channel during check
-#else
-	// evaluate rvalues of channel send statement (may throw!)
-	// write to the ChannelState using canonical_fundamental_type
-	for_each(cs.get_exprs().begin(), cs.get_exprs().end(), 
-		entity::nonmeta_expr_evaluator_channel_writer(context, nc));
-#endif
 	// track the updated-reference (channel)
 	// expressions are only read, no lvalue data modified
 	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
-#if !CHPSIM_COUPLED_CHANNELS
-	NEVER_NULL(nc.can_send());	// else run-time exception
-#endif
 	nc.send();
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -734,12 +578,8 @@ EventRechecker::visit(const channel_send& cs) {
 	const channel_send::chan_ptr_type& chan(cs.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-#if !CHPSIM_COUPLED_CHANNELS
-	const 
-#endif
 	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if CHPSIM_COUPLED_CHANNELS
 	if (nc.can_send()) {
 		STACKTRACE_INDENT_PRINT("channel was ready to send\n");
 		// receiver arrived first and was waiting
@@ -782,7 +622,7 @@ try {
 } catch (...) {
 	cerr << "Run-time error writing channel: ";
 	std::ostringstream canonical_name;
-	const size_t process_index = context.get_event().get_process_index();
+	const size_t process_index = context.get_process_index();
 	if (process_index) {
 		context.sm->get_pool<process_tag>()[process_index]
 			.dump_canonical_name(canonical_name,
@@ -793,17 +633,11 @@ try {
 	cs.dump(cerr, edc) << endl;
 	throw;
 }
-#else
-	ret = nc.can_send() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-#endif	// CHPSIM_COUPLED_CHANNELS
 }
 
 //=============================================================================
 // class channel_receive method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(channel_receive)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Assigns the 'fields' of the channel and flips the (lock) state bit.  
 	Both the channel and lvalues are 'modified' by a receive, 
@@ -829,12 +663,10 @@ EventExecutor::visit(const channel_receive& cr) {
 if (!cr.is_peek()) {
 	context.updates.push_back(std::make_pair(
 		size_t(entity::META_TYPE_CHANNEL), chan_index));
-#if !CHPSIM_COUPLED_CHANNELS
-	INVARIANT(nc.can_receive());	// else run-time exception
-#endif
 	nc.receive();
 }
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -850,12 +682,8 @@ EventRechecker::visit(const channel_receive& cr) {
 	const channel_receive::chan_ptr_type& chan(cr.get_chan());
 	const size_t chan_index = chan->lookup_nonmeta_global_index(context);
 	ASSERT_CHAN_INDEX
-#if !CHPSIM_COUPLED_CHANNELS
-	const
-#endif
 	ChannelState&
 		nc(context.values.get_pool<channel_tag>()[chan_index]);
-#if CHPSIM_COUPLED_CHANNELS
 	if (nc.can_receive()) {
 		STACKTRACE_INDENT_PRINT("channel was ready to receive\n");
 		ret = RECHECK_UNBLOCKED_THIS;
@@ -883,18 +711,12 @@ EventRechecker::visit(const channel_receive& cr) {
 			<< ")" << endl;
 		THROW_EXIT;
 	}
-#else
-	ret = nc.can_receive() ? RECHECK_UNBLOCKED_THIS : RECHECK_BLOCKED_THIS;
-#endif	// CHPSIM_COUPLED_CHANNELS
 }
 #undef	ASSERT_CHAN_INDEX
 
 //=============================================================================
 // class do_forever_loop method definitions
 
-DEFAULT_EVENT_SUCCESSOR_DUMPER(do_forever_loop)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	No-op, this should never be called from simulator, as loop
 	body events are expanded.  
@@ -942,13 +764,9 @@ EventExecutor::visit(const do_while_loop& dw) {
 			"do-while-loop evaluated TRUE!" << endl;
 		THROW_EXIT;
 	}	// end switch
-	const size_t ei = context.get_event().successor_events[si];
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
-	context.first_checks.insert(ei);
-#else
-	context.rechecks.insert(ei);
-	EventNode::countdown_decrementer(context.event_pool)(ei);
-#endif
+	const size_t ei = context.get_event()
+		.get_local_event().successor_events[si];
+	context.insert_first_checks(ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -965,12 +783,6 @@ EventRechecker::visit(const do_while_loop&) {
 	ret = RECHECK_NEVER_BLOCKED;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-EventSuccessorDumper::visit(const do_while_loop& dw) {
-	dump_selection_successor_edges(dw, os, event, index, dump_context);
-}
-
 //=============================================================================
 // class function_call_stmt method definitions
 
@@ -981,7 +793,8 @@ EventExecutor::visit(const function_call_stmt& fc) {
 		caller(fc.get_caller());
 	NEVER_NULL(caller);
 	caller->nonmeta_resolve_copy(context, caller);
-	recheck_all_successor_events(context);
+//	recheck_all_successor_events(context);
+	context.first_check_all_successors();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -991,11 +804,7 @@ EventRechecker::visit(const function_call_stmt& fc) {
 	ret = RECHECK_NEVER_BLOCKED;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DEFAULT_EVENT_SUCCESSOR_DUMPER(function_call_stmt)
-
 //=============================================================================
-#undef	DEFAULT_EVENT_SUCCESSOR_DUMPER
 }	// end namespace CHPSIM
 }	// end namespace SIM
 }	// end namespace HAC

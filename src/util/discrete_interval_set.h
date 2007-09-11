@@ -3,7 +3,7 @@
 	Class for a set of intervals over the set of integers
 	or discrete, integer-like values.  
 	This class is used to build the "multidimensional_sparse_set" class.  
-	$Id: discrete_interval_set.h,v 1.8 2005/05/10 04:51:23 fang Exp $
+	$Id: discrete_interval_set.h,v 1.9 2007/09/11 06:53:17 fang Exp $
  */
 
 // by David Fang, Cornell University, 2004
@@ -75,8 +75,17 @@ public:
 	const_iterator
 	end(void) const { return parent.end(); }
 
+	/**
+		\return the number of *intervals*
+	 */
 	size_type
 	size(void) const { return parent.size(); }
+
+	/**
+		Sum of all ranges covered.  
+	 */
+	size_type
+	member_size(void) const;
 
 	bool
 	empty(void) const { return parent.empty(); }
@@ -122,6 +131,18 @@ public:
 	 */
 	bool
 	delete_range(const T min, const T max);
+
+	/// set-interface operation
+	void
+	insert(const T v) {
+		add_range(v, v);
+	}
+
+	/// set-interface operation
+	void
+	erase(const T v) {
+		delete_range(v, v);
+	}
 
 	/**
 		Removes the range (-INF, m].

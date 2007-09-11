@@ -11,12 +11,13 @@ chan[4]: "In[3]"
 chan[5]: "Out" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 8 1 9 12 16 17 
-event[1]: send: S0.S!(true), pid: 2, #pred: 1, succ: 1 
-channel deps: 1 
-event[2]: send: A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3]), pid: 1, #pred: 1, succ: 8 
+event[0]: fork: null, #pred: 0, succ: 1 8 9 12 16 17 
+
+# process[1]:
+event[1]: fork: , pid: 1, #pred: 1, succ: 4 5 6 7 
+event[2]: send: A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3]), pid: 1, #pred: 1, succ: 1 
 channel deps: 5 
-event[3]: null: , pid: 1, #pred: 4, succ: 2 
+event[3]: join: , pid: 1, #pred: 4, succ: 2 
 event[4]: receive: A.A[0]?(A.a[0]), pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
 event[5]: receive: A.A[1]?(A.a[1]), pid: 1, #pred: 1, succ: 3 
@@ -25,13 +26,20 @@ event[6]: receive: A.A[2]?(A.a[2]), pid: 1, #pred: 1, succ: 3
 channel deps: 3 
 event[7]: receive: A.A[3]?(A.a[3]), pid: 1, #pred: 1, succ: 3 
 channel deps: 4 
-event[8]: fork: , pid: 1, #pred: 1, succ: 4 5 6 7 
+
+# process[2]:
+event[8]: send: S0.S!(true), pid: 2, #pred: 1, succ: 8 
+channel deps: 1 
+
+# process[3]:
 event[9]: send: S1.S!(true), pid: 3, #pred: 1, succ: 11 
 channel deps: 2 
 event[10]: send: S1.S!(false), pid: 3, #pred: 1, succ: 9 
 channel deps: 2 
 event[11]: send: S1.S!(true), pid: 3, #pred: 1, succ: 10 
 channel deps: 2 
+
+# process[4]:
 event[12]: send: S2.S!(true), pid: 4, #pred: 1, succ: 15 
 channel deps: 3 
 event[13]: send: S2.S!(true), pid: 4, #pred: 1, succ: 12 
@@ -40,8 +48,12 @@ event[14]: send: S2.S!(true), pid: 4, #pred: 1, succ: 13
 channel deps: 3 
 event[15]: send: S2.S!(false), pid: 4, #pred: 1, succ: 14 
 channel deps: 3 
+
+# process[5]:
 event[16]: send: S3.S!(true), pid: 5, #pred: 1, succ: 16 
 channel deps: 4 
+
+# process[6]:
 event[17]: receive: Z.B?(Z.b), pid: 6, #pred: 1, succ: 17 
 channel deps: 5 
 

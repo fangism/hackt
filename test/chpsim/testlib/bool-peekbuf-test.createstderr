@@ -34,40 +34,42 @@ Persistent Object Manager text dump:
 	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
 	29	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
-	32	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	33	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	34	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	45	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	49	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
-	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	footprnt	0	#HEAD#	#TAIL#	314
-	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	38	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	50	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	56	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	57	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	58	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
-	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	footprnt	0	#HEAD#	#TAIL#	422
+	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -118,6 +120,11 @@ In namespace "", we have: {
               R!(x)
             }
           ]
+        chp events: {
+          event[0]: peek: L#(x), #pred: 1, succ: 2 
+          event[1]: send: R!(x), #pred: 1, succ: 0 
+          event[2]: receive: L?, #pred: 1, succ: 1 
+        }
       }
       }
 
@@ -166,6 +173,13 @@ In namespace "", we have: {
               }
             }
           ]
+        chp events: {
+          event[0]: peek: L#(x), #pred: 1, succ: 4 
+          event[1]: join: , #pred: 2, succ: 0 
+          event[2]: receive: L?, #pred: 1, succ: 1 
+          event[3]: send: R!(x), #pred: 1, succ: 1 
+          event[4]: fork: , #pred: 1, succ: 2 3 
+        }
       }
       }
 

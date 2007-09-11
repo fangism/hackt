@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.17 2007/08/22 02:09:26 fang Exp $
+	$Id: cflat.cc,v 1.18 2007/09/11 06:52:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,7 +21,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/options_modifier.tcc"
 #include "main/global_options.h"
 
-#include "AST/type_base.h"
 #include "Object/type/process_type_reference.h"
 #include "common/TODO.h"
 
@@ -35,16 +34,7 @@ using util::persistent;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
 using entity::process_type_reference;
-using parser::concrete_type_ref;
 
-namespace entity {
-class module;
-}
-
-namespace parser {
-concrete_type_ref::return_type
-parse_and_check_complete_type(const char*, const entity::module&);
-}
 
 //=============================================================================
 // explicit early class instantiation for proper static initializer ordering
@@ -730,61 +720,34 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 
+	static const char alloc_errstr[] = 
+		"ERROR in allocating global state.  Aborting.";
 	const count_ptr<module> the_module(load_module(ofn));
 	if (!the_module)
 		return 1;
-
+	count_ptr<module> top_module;	// use this module to cflat
 if (cf.use_referenced_type_instead_of_top_level) {
-	return process_complete_type(
-		cf.named_process_type.c_str(), *the_module, cf);
+	const count_ptr<const process_type_reference>
+		rpt(parse_and_create_complete_process_type(
+			cf.named_process_type.c_str(), *the_module));
+	if (!rpt) {
+		return 1;		// already have error message
+	}
+	top_module = count_ptr<module>(new module("<auxiliary>"));
+	NEVER_NULL(top_module);
+	if (!top_module->allocate_unique_process_type(*rpt).good) {
+		cerr << alloc_errstr << endl;
+		return 1;
+	}
 } else {
 	if (!the_module->allocate_unique().good) {
-		cerr << "ERROR in allocating global state.  Aborting." << endl;
+		cerr << alloc_errstr << endl;
 		return 1;
 	}
-
-	// cflat here!!!
+	top_module = the_module;
+}	// end if use_referenced_type_instead_of_top_level
 	// based on mode, set the options to pass into the module.
-	if (!the_module->cflat(cout, cf).good) {
-		cerr << "Error during cflat." << endl;
-		return 1;
-	}
-}
-	return 0;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Useful function, keep around for re-use!
- */
-int
-cflat::process_complete_type(const char* _type, const module& m, 
-		const cflat_options& opt) {
-	// parse the type
-	// cerr << "type string: " << cf.named_process_type.c_str() << endl;
-	const concrete_type_ref::return_type
-		t(parser::parse_and_check_complete_type(_type, m));
-	if (!t) {
-		cerr << "Error with type reference \'" <<
-			opt.named_process_type << "\'." << endl;
-		return 1;
-	}
-	const count_ptr<const process_type_reference>
-		pt(t.is_a<const process_type_reference>());
-	if (!pt) {
-		cerr << "Error: \'" << opt.named_process_type << "\' does not "
-			"refer to a process type." << endl;
-		return 1;
-	}
-	const count_ptr<const process_type_reference>
-		rpt(pt->unroll_resolve());
-	if (!rpt) {
-		cerr << "Error resolving process type parameters." << endl;
-		return 1;
-	}
-	// create a temporary module for unpacking complete type's guts
-	module temp_top("<auxiliary>");
-	if (!temp_top.cflat_process_type(*rpt, cout, opt).good) {
+	if (!top_module->cflat(cout, cf).good) {
 		cerr << "Error during cflat." << endl;
 		return 1;
 	}
@@ -839,6 +802,8 @@ int
 cflat::initialize_master_options_map(void) {
 	master_options.add_option('f', &getopt_f_options);
 	master_options.add_option('t', &getopt_cflat_type_only);
+//	master_options.add_option('p', &getopt_cflat_type_only);
+//	*someone* else uses '-p' instead...
 	return 1;
 }
 

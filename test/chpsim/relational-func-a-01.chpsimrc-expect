@@ -1,8 +1,8 @@
 loaded function: `my_gcd'.
-	0	0	0	null
-	10	8	1	
+	0	0	7	null
+	10	1	1	
 	20	4	1	X.A?(X.a)
-	20	1	2	AS.S!(12)
+	20	8	2	AS.S!(12)
 	20	5	1	X.B?(X.b)
 	20	12	3	BS.S!(9)
 	20	6	1	X.C?(X.c)
@@ -12,7 +12,7 @@ loaded function: `my_gcd'.
 	30	3	1	
 	40	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	40	26	6	GS.B?(GS.b)
-	50	8	1	
+	50	1	1	
 	60	4	1	X.A?(X.a)
 	60	11	2	AS.S!(15)
 	60	5	1	X.B?(X.b)
@@ -24,7 +24,7 @@ loaded function: `my_gcd'.
 	70	3	1	
 	80	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	80	26	6	GS.B?(GS.b)
-	90	8	1	
+	90	1	1	
 	100	4	1	X.A?(X.a)
 	100	10	2	AS.S!(17)
 	100	5	1	X.B?(X.b)
@@ -36,7 +36,7 @@ loaded function: `my_gcd'.
 	110	3	1	
 	120	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	120	26	6	GS.B?(GS.b)
-	130	8	1	
+	130	1	1	
 	140	4	1	X.A?(X.a)
 	140	9	2	AS.S!(30)
 	140	5	1	X.B?(X.b)
@@ -48,9 +48,9 @@ loaded function: `my_gcd'.
 	150	3	1	
 	160	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	160	26	6	GS.B?(GS.b)
-	170	8	1	
+	170	1	1	
 	180	4	1	X.A?(X.a)
-	180	1	2	AS.S!(12)
+	180	8	2	AS.S!(12)
 	180	5	1	X.B?(X.b)
 	180	13	3	BS.S!(34)
 	180	6	1	X.C?(X.c)
@@ -60,7 +60,7 @@ loaded function: `my_gcd'.
 	190	3	1	
 	200	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	200	26	6	GS.B?(GS.b)
-	210	8	1	
+	210	1	1	
 	220	4	1	X.A?(X.a)
 	220	11	2	AS.S!(15)
 	220	5	1	X.B?(X.b)
@@ -72,7 +72,7 @@ loaded function: `my_gcd'.
 	230	3	1	
 	240	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	240	26	6	GS.B?(GS.b)
-	250	8	1	
+	250	1	1	
 	260	4	1	X.A?(X.a)
 	260	10	2	AS.S!(17)
 	260	5	1	X.B?(X.b)
@@ -84,7 +84,7 @@ loaded function: `my_gcd'.
 	270	3	1	
 	280	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	280	26	6	GS.B?(GS.b)
-	290	8	1	
+	290	1	1	
 	300	4	1	X.A?(X.a)
 	300	9	2	AS.S!(30)
 	300	5	1	X.B?(X.b)
@@ -96,9 +96,9 @@ loaded function: `my_gcd'.
 	310	3	1	
 	320	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	320	26	6	GS.B?(GS.b)
-	330	8	1	
+	330	1	1	
 	340	4	1	X.A?(X.a)
-	340	1	2	AS.S!(12)
+	340	8	2	AS.S!(12)
 	340	5	1	X.B?(X.b)
 	340	14	3	BS.S!(27)
 	340	6	1	X.C?(X.c)
@@ -108,7 +108,7 @@ loaded function: `my_gcd'.
 	350	3	1	
 	360	2	1	X.G!(int(my_gcd(X.a,X.b))<int(my_gcd(X.c,X.d)))
 	360	26	6	GS.B?(GS.b)
-	370	8	1	
+	370	1	1	
 	380	4	1	X.A?(X.a)
 	380	11	2	AS.S!(15)
 	380	5	1	X.B?(X.b)

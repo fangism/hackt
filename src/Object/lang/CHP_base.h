@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.11 2007/05/04 18:16:45 fang Exp $
+	$Id: CHP_base.h,v 1.12 2007/09/11 06:52:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -9,7 +9,6 @@
 
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
-// #include "util/STL/vector_fwd.h"
 #include "Object/devel_switches.h"
 
 
@@ -30,7 +29,7 @@ class action;
 class chp_visitor;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
-typedef	count_ptr<const  preal_expr>		delay_ptr_type;
+typedef	count_ptr<const preal_expr>		delay_ptr_type;
 
 //=============================================================================
 /**
@@ -96,6 +95,7 @@ virtual	CHP_DUMP_EVENT_PROTO = 0;
 		const action_ptr_type&) const
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
+
 
 #define	CHP_ACTION_ACCEPT_PROTO						\
 	void								\

@@ -14,39 +14,41 @@ Persistent Object Manager text dump:
 	10	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	279
+	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	287
 	14	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
-	17	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
-	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	31	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	42	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	350
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	101
+	18	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	footprnt	0	#HEAD#	#TAIL#	358
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -75,6 +77,9 @@ In namespace "", we have: {
         1	inner::a
         resolved concurrent actions:
           a!(true)
+        chp events: {
+          event[0]: send: a!(true), #pred: 1, succ: 
+        }
       }
       }
 
@@ -127,4 +132,7 @@ footprint: {
   1	y
   resolved concurrent actions:
     x?(y)
+  chp events: {
+    event[0]: receive: x?(y), #pred: 1, succ: 
+  }
 }

@@ -3,16 +3,18 @@ int[1]: "y"
 int[2]: "z" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 10 
-event[1]: null: , pid: 0, #pred: 2, succ: 
-event[2]: assign: y := 2, pid: 0, #pred: 1, succ: 1 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
+event[1]: fork: , pid: 0, #pred: 1, succ: 8 9 
+event[2]: assign: y := 2, pid: 0, #pred: 1, succ: 10 
 event[3]: wait: [x[z]!=0], pid: 0, #pred: 1, succ: 2 
 int deps: 2 
-event[4]: select: , pid: 0, #pred: 1, succ: 5 1 
+event[4]: select: *[ z<4 -> ... ], pid: 0, #pred: 1, succ: 5 10 
 event[5]: assign: z := z+1, pid: 0, #pred: 1, succ: 4 
 event[6]: fork: , pid: 0, #pred: 1, succ: 3 4 
-event[7]: null: , pid: 0, #pred: 2, succ: 6 
+event[7]: join: , pid: 0, #pred: 2, succ: 6 
 event[8]: assign: z := 0, pid: 0, #pred: 1, succ: 7 
 event[9]: assign: y := 0, pid: 0, #pred: 1, succ: 7 
-event[10]: fork: , pid: 0, #pred: 1, succ: 8 9 
+event[10]: join: , pid: 0, #pred: 2, succ: 
 

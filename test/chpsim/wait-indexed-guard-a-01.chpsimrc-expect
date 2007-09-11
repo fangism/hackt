@@ -1,13 +1,13 @@
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 z : int z = 0
 y : int y = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	10	0	
+	10	1	0	
 z : int z = 0
 y : int y = 0
 event queue:
@@ -41,7 +41,7 @@ event queue:
 check queue:
 	time	eid	pid	event
 	50	3	0	[x[z]!=0]
-	50	4	0	
+	50	4	0	*[ z<4 -> ... ]
 z : int z = 0
 y : int y = 0
 event queue:
@@ -53,7 +53,7 @@ y : int y = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	70	4	0	
+	70	4	0	*[ z<4 -> ... ]
 z : int z = 1
 y : int y = 0
 event queue:
@@ -66,13 +66,13 @@ event queue:
 	time	eid	pid	event
 	80	3	0	[x[z]!=0]
 check queue:
-	90	4	0	
+	90	4	0	*[ z<4 -> ... ]
 z : int z = 2
 y : int y = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	90	4	0	
+	90	4	0	*[ z<4 -> ... ]
 	90	2	0	y := 2
 z : int z = 2
 y : int y = 0
@@ -87,14 +87,14 @@ event queue:
 check queue:
 	time	eid	pid	event
 	100	5	0	z := z+1
-	100	1	0	
+	100	10	0	
 z : int z = 2
 y : int y = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	100	1	0	
-	110	4	0	
+	100	10	0	
+	110	4	0	*[ z<4 -> ... ]
 z : int z = 3
 y : int y = 2
 event queue:
@@ -106,13 +106,13 @@ y : int y = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	130	4	0	
+	130	4	0	*[ z<4 -> ... ]
 z : int z = 4
 y : int y = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	140	1	0	
+	140	10	0	
 z : int z = 4
 y : int y = 2
 event queue:

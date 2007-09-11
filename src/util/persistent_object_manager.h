@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.26 2007/07/31 23:23:47 fang Exp $
+	$Id: persistent_object_manager.h,v 1.27 2007/09/11 06:53:18 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -278,6 +278,15 @@ public:
 	bool
 	check_reconstruction_table_range(const size_t) const;
 
+	/**
+		Expect that pointer has been previously registered.  
+	 */
+	void
+	assert_ptr_registered(const persistent* ptr) const {
+		if (ptr) {
+			INVARIANT(lookup_ptr_index(ptr));
+		}
+	}
 public:
 	/**
 		I'm deeply ashamed of the following hack:

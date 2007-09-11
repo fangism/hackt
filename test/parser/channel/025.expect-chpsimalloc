@@ -3,12 +3,13 @@ bool[1]: "x"
 chan[1]: "B" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 5 
-event[1]: null: , pid: 0, #pred: 2, succ: 
-event[2]: receive: B?(x), pid: 0, #pred: 1, succ: 2 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
+event[1]: fork: , pid: 0, #pred: 1, succ: 3 2 
+event[2]: assign: x := true, pid: 0, #pred: 1, succ: 4 
+event[3]: receive: B?(x), pid: 0, #pred: 1, succ: 3 
 channel deps: 1 
-event[3]: send: B!(~x), pid: 0, #pred: 1, succ: 3 
+event[4]: send: B!(~x), pid: 0, #pred: 1, succ: 4 
 channel deps: 1 
-event[4]: assign: x := true, pid: 0, #pred: 1, succ: 3 
-event[5]: fork: , pid: 0, #pred: 1, succ: 2 4 
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.23 2007/07/18 23:28:31 fang Exp $
+	$Id: footprint.h,v 1.24 2007/09/11 06:52:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -13,6 +13,7 @@
 // #include "Object/inst/alias_visitee.h"
 #include "Object/inst/collection_index_entry.h"
 #include "Object/devel_switches.h"
+#include "Object/lang/CHP_footprint.h"
 
 #include "util/boolean_types.h"
 #include "util/string_fwd.h"
@@ -192,8 +193,17 @@ private:
 		Meta-param unrolled footprint of CHP, 
 		established during the create phase.  
 		Privatized implementation.  
+		Now managed by the persistent_object_manager, 
+		because this pointer needs to be reconstructed
+		for references from the chp_event_footprint.
 	 */
 	excl_ptr<chp_footprint_type>		chp_footprint;
+	/**
+		Local pool of events in the footprint of this definition.
+		Simulator events may just point back to this
+		structure for most stateless information.  
+	 */
+	CHP::local_event_footprint		chp_event_footprint;
 	/**
 		Unrolled specifications, local to this scope.  
 		This is populated during the create phase.  
@@ -201,7 +211,7 @@ private:
 	 */
 	excl_ptr<SPEC::footprint>		spec_footprint;
 	/**
-		Lock to detect recursion.  
+		Lock to detect recursion and cyclic dependencies.  
 	 */
 	bool					lock_state;
 public:
@@ -334,10 +344,19 @@ public:
 	get_prs_footprint(void) const { return *prs_footprint; }
 
 	chp_footprint_type&
-	get_chp_footprint(void) { return *chp_footprint; }
+	get_chp_footprint(void);
 
 	const chp_footprint_type&
-	get_chp_footprint(void) const { return *chp_footprint; }
+	get_chp_footprint(void) const { 
+		NEVER_NULL(chp_footprint);
+		return *chp_footprint;
+	}
+
+	bool
+	has_chp_footprint(void) const { return chp_footprint; }
+
+	const CHP::local_event_footprint&
+	get_chp_event_footprint(void) const { return chp_event_footprint; }
 
 	SPEC::footprint&
 	get_spec_footprint(void) { return *spec_footprint; }
@@ -359,6 +378,9 @@ public:
 	// eventually pass parameter for warning control 
 	good_bool
 	connection_diagnostics(void) const;
+
+	void
+	allocate_chp_events(void);
 
 	void
 	accept(alias_visitor&) const;

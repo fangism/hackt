@@ -1,13 +1,13 @@
-	0	0	0	null
-	10	6	1	
+	0	0	7	null
+	10	1	1	
 	20	4	1	reqsync.B?(reqsync.x1)
 	20	17	6	rsrc.S!(false)
 	20	5	1	reqsync.I?(reqsync.x2)
 	20	11	3	adsrc.S!(0)
 	30	3	1	
 	40	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
-	40	1	2	brom.Req?(brom.w,brom.a)
-	50	6	1	
+	40	6	2	brom.Req?(brom.w,brom.a)
+	50	1	1	
 	50	10	2	[ brom.w -> ... [] else -> ... ]
 	60	4	1	reqsync.B?(reqsync.x1)
 	60	17	6	rsrc.S!(false)
@@ -17,10 +17,10 @@
 	60	15	4	bsnk.B?(bsnk.b)
 	70	3	1	
 	70	7	2	null
-	80	1	2	brom.Req?(brom.w,brom.a)
+	80	6	2	brom.Req?(brom.w,brom.a)
 	80	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
 	90	10	2	[ brom.w -> ... [] else -> ... ]
-	90	6	1	
+	90	1	1	
 	100	9	2	brom.Read!(brom.data[brom.a])
 	100	15	4	bsnk.B?(bsnk.b)
 	100	4	1	reqsync.B?(reqsync.x1)
@@ -30,8 +30,8 @@
 	110	7	2	null
 	110	3	1	
 	120	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
-	120	1	2	brom.Req?(brom.w,brom.a)
-	130	6	1	
+	120	6	2	brom.Req?(brom.w,brom.a)
+	130	1	1	
 	130	10	2	[ brom.w -> ... [] else -> ... ]
 	140	4	1	reqsync.B?(reqsync.x1)
 	140	17	6	rsrc.S!(false)
@@ -41,10 +41,10 @@
 	140	15	4	bsnk.B?(bsnk.b)
 	150	3	1	
 	150	7	2	null
-	160	1	2	brom.Req?(brom.w,brom.a)
+	160	6	2	brom.Req?(brom.w,brom.a)
 	160	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
 	170	10	2	[ brom.w -> ... [] else -> ... ]
-	170	6	1	
+	170	1	1	
 	180	9	2	brom.Read!(brom.data[brom.a])
 	180	15	4	bsnk.B?(bsnk.b)
 	180	4	1	reqsync.B?(reqsync.x1)
@@ -54,8 +54,8 @@
 	190	7	2	null
 	190	3	1	
 	200	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
-	200	1	2	brom.Req?(brom.w,brom.a)
-	210	6	1	
+	200	6	2	brom.Req?(brom.w,brom.a)
+	210	1	1	
 	210	10	2	[ brom.w -> ... [] else -> ... ]
 	220	4	1	reqsync.B?(reqsync.x1)
 	220	17	6	rsrc.S!(false)
@@ -65,10 +65,10 @@
 	220	15	4	bsnk.B?(bsnk.b)
 	230	3	1	
 	230	7	2	null
-	240	1	2	brom.Req?(brom.w,brom.a)
+	240	6	2	brom.Req?(brom.w,brom.a)
 	240	2	1	reqsync.O!(reqsync.x1,reqsync.x2)
 	250	10	2	[ brom.w -> ... [] else -> ... ]
-	250	6	1	
+	250	1	1	
 	260	9	2	brom.Read!(brom.data[brom.a])
 	260	15	4	bsnk.B?(bsnk.b)
 	260	4	1	reqsync.B?(reqsync.x1)

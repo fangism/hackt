@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.11 2007/08/16 06:11:06 fang Exp $
+#	$Id: Make.test-guile,v 1.12 2007/09/11 06:53:20 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -456,6 +456,17 @@ build-check-local: \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscm-diff) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-out) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-diff)
+
+HACKT_GUILE_OUT = \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.hacscm-out) \
+	$(HACKT_GUILE_TEST_SUBJECTS:=.hacscmfail-out)
+
+HACKT_CHPSIM_GUILE_OUT = \
+	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.hacchpsimscm-out) \
+	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.hacchpsimscmfail-out)
+
+$(HACKT_GUILE_OUT): $(HACKT_GUILE_EXE)
+$(HACKT_CHPSIM_GUILE_OUT): $(HACKT_CHPSIM_GUILE_EXE)
 
 echo-hacscm-passes: force
 	@$(ECHO) $(HACKT_GUILE_TEST_SCRIPTS_PASSES)

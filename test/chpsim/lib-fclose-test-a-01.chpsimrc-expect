@@ -1,5 +1,5 @@
-	0	0	0	null
-	10	5	0	fprint("lib-fclose-test-a-out.txt","welcome to libc!
+	0	0	1	null
+	10	1	0	fprint("lib-fclose-test-a-out.txt","welcome to libc!
 ")
 	20	4	0	fprint("lib-fclose-test-a-out.txt",28," is a perfect number.
 ")
@@ -9,4 +9,4 @@
 welcome to libc!
 28 is a perfect number.
 To thine own self be true.
-	50	1	0	system("cat lib-fclose-test-a-out.txt")
+	50	5	0	system("cat lib-fclose-test-a-out.txt")

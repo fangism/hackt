@@ -1,4 +1,4 @@
-	0	0	0	null
+	0	0	1	null
 You entered: this is all one string, read to newline
 	10	1	0	print("You entered: ",sscan())
 You entered: 42

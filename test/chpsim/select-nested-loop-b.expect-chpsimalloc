@@ -3,8 +3,10 @@ bool[1]: "a"
 bool[2]: "b" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 14 
-event[1]: null: , pid: 0, #pred: 2, succ: 11 
+event[0]: fork: null, #pred: 0, succ: 1 
+
+# process[0]:
+event[1]: fork: , pid: 0, #pred: 1, succ: 12 13 
 event[2]: null: null, pid: 0, #pred: 1, succ: 11 
 event[3]: null: null, pid: 0, #pred: 1, succ: 2 
 event[4]: assign: b := false, pid: 0, #pred: 1, succ: 3 
@@ -15,7 +17,7 @@ event[8]: assign: a := true, pid: 0, #pred: 1, succ: 7
 event[9]: assign: b := true, pid: 0, #pred: 1, succ: 7 
 event[10]: select: [ b -> ... [] else -> ... ], pid: 0, #pred: 1, succ: 8 9 
 event[11]: select: [ a -> ... [] else -> ... ], pid: 0, #pred: 1, succ: 6 10 
-event[12]: assign: a := false, pid: 0, #pred: 1, succ: 1 
-event[13]: assign: b := false, pid: 0, #pred: 1, succ: 1 
-event[14]: fork: , pid: 0, #pred: 1, succ: 12 13 
+event[12]: assign: a := false, pid: 0, #pred: 1, succ: 14 
+event[13]: assign: b := false, pid: 0, #pred: 1, succ: 14 
+event[14]: join: , pid: 0, #pred: 2, succ: 11 
 

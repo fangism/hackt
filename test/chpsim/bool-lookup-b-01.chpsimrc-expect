@@ -1,5 +1,5 @@
 expect run-time error accessing out-of-bounds 
-	0	0	0	null
+	0	0	4	null
 	10	3	2	adsrc.S!(0)
 	10	1	1	brom.A?(brom.a)
 	20	2	1	brom.D!(brom.V[brom.a])

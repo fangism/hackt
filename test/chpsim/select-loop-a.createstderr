@@ -29,7 +29,8 @@ Persistent Object Manager text dump:
 	25	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -78,4 +79,12 @@ footprint: {
         }
       ]
     }
+  chp events: {
+    event[0]: assign: a := false, #pred: 1, succ: 5 
+    event[1]: null: null, #pred: 1, succ: 5 
+    event[2]: assign: a := false, #pred: 1, succ: 1 
+    event[3]: assign: b := true, #pred: 1, succ: 2 
+    event[4]: assign: a := true, #pred: 1, succ: 1 
+    event[5]: select: [ a -> ... [] else -> ... ], #pred: 1, succ: 3 4 
+  }
 }

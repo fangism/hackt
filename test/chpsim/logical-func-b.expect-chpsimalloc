@@ -11,12 +11,13 @@ chan[4]: "D"
 chan[5]: "G" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 8 1 12 17 20 26 
-event[1]: send: AS.S!(3), pid: 2, #pred: 1, succ: 11 
-channel deps: 1 
-event[2]: send: X.G!(bool(my_gcd(X.a,X.b))||bool(my_gcd(X.c,X.d))), pid: 1, #pred: 1, succ: 8 
+event[0]: fork: null, #pred: 0, succ: 1 8 12 17 20 26 
+
+# process[1]:
+event[1]: fork: , pid: 1, #pred: 1, succ: 4 5 6 7 
+event[2]: send: X.G!(bool(my_gcd(X.a,X.b))||bool(my_gcd(X.c,X.d))), pid: 1, #pred: 1, succ: 1 
 channel deps: 5 
-event[3]: null: , pid: 1, #pred: 4, succ: 2 
+event[3]: join: , pid: 1, #pred: 4, succ: 2 
 event[4]: receive: X.A?(X.a), pid: 1, #pred: 1, succ: 3 
 channel deps: 1 
 event[5]: receive: X.B?(X.b), pid: 1, #pred: 1, succ: 3 
@@ -25,13 +26,18 @@ event[6]: receive: X.C?(X.c), pid: 1, #pred: 1, succ: 3
 channel deps: 3 
 event[7]: receive: X.D?(X.d), pid: 1, #pred: 1, succ: 3 
 channel deps: 4 
-event[8]: fork: , pid: 1, #pred: 1, succ: 4 5 6 7 
-event[9]: send: AS.S!(6), pid: 2, #pred: 1, succ: 1 
+
+# process[2]:
+event[8]: send: AS.S!(3), pid: 2, #pred: 1, succ: 11 
+channel deps: 1 
+event[9]: send: AS.S!(6), pid: 2, #pred: 1, succ: 8 
 channel deps: 1 
 event[10]: send: AS.S!(5), pid: 2, #pred: 1, succ: 9 
 channel deps: 1 
 event[11]: send: AS.S!(4), pid: 2, #pred: 1, succ: 10 
 channel deps: 1 
+
+# process[3]:
 event[12]: send: BS.S!(4), pid: 3, #pred: 1, succ: 16 
 channel deps: 2 
 event[13]: send: BS.S!(8), pid: 3, #pred: 1, succ: 12 
@@ -42,12 +48,16 @@ event[15]: send: BS.S!(6), pid: 3, #pred: 1, succ: 14
 channel deps: 2 
 event[16]: send: BS.S!(5), pid: 3, #pred: 1, succ: 15 
 channel deps: 2 
+
+# process[4]:
 event[17]: send: CS.S!(6), pid: 4, #pred: 1, succ: 19 
 channel deps: 3 
 event[18]: send: CS.S!(9), pid: 4, #pred: 1, succ: 17 
 channel deps: 3 
 event[19]: send: CS.S!(8), pid: 4, #pred: 1, succ: 18 
 channel deps: 3 
+
+# process[5]:
 event[20]: send: DS.S!(2), pid: 5, #pred: 1, succ: 25 
 channel deps: 4 
 event[21]: send: DS.S!(7), pid: 5, #pred: 1, succ: 20 
@@ -60,6 +70,8 @@ event[24]: send: DS.S!(3), pid: 5, #pred: 1, succ: 23
 channel deps: 4 
 event[25]: send: DS.S!(5), pid: 5, #pred: 1, succ: 24 
 channel deps: 4 
+
+# process[6]:
 event[26]: receive: GS.B?(GS.b), pid: 6, #pred: 1, succ: 26 
 channel deps: 5 
 

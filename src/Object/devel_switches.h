@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.44 2007/08/31 21:02:35 fang Exp $
+	$Id: devel_switches.h,v 1.45 2007/09/11 06:52:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -168,6 +168,19 @@
 	Priority: high -- for chpsim function support
  */
 #define	USE_TOP_DATA_TYPE			1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Define to 1 to construct one canonical process event subgraph per
+	complete type (with CHP) to make allocation easier, and faster.
+	Also makes events per process contiguous in allocation, making
+	reverse-mapping much easier.  
+	Status: Completed and perm'd: main-00-81-68-chpsim-09 branch
+#define	LOCAL_CHP_EVENT_FOOTPRINT		1
+**/
+
+// Idea: regenerate CHP event footprint upon load as an alternative to
+// storing in object file?  Perhaps leave as command-line option.  
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

@@ -2,19 +2,19 @@ null-event-delay = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	0	0	0	null
+	0	0	1	null
 c : int c = 0
 d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	10	9	0	c := 0
+	10	1	0	c := 0
 c : int c = 0
 d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	20	1	0	
+	20	9	0	*[ c<3 -> ... ]
 c : int c = 0
 d : int d = 0
 event queue:
@@ -47,7 +47,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	40	3	0	
+	40	3	0	*[ d<2 -> ... ]
 c : int c = 1
 d : int d = 0
 event queue:
@@ -59,7 +59,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	60	3	0	
+	60	3	0	*[ d<2 -> ... ]
 c : int c = 1
 d : int d = 1
 event queue:
@@ -71,13 +71,13 @@ d : int d = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	80	3	0	
+	80	3	0	*[ d<2 -> ... ]
 c : int c = 1
 d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	90	1	0	
+	90	9	0	*[ c<3 -> ... ]
 c : int c = 1
 d : int d = 2
 event queue:
@@ -110,7 +110,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	110	3	0	
+	110	3	0	*[ d<2 -> ... ]
 c : int c = 2
 d : int d = 0
 event queue:
@@ -122,7 +122,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	130	3	0	
+	130	3	0	*[ d<2 -> ... ]
 c : int c = 2
 d : int d = 1
 event queue:
@@ -134,13 +134,13 @@ d : int d = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	150	3	0	
+	150	3	0	*[ d<2 -> ... ]
 c : int c = 2
 d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	160	1	0	
+	160	9	0	*[ c<3 -> ... ]
 c : int c = 2
 d : int d = 2
 event queue:
@@ -173,7 +173,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	180	3	0	
+	180	3	0	*[ d<2 -> ... ]
 c : int c = 3
 d : int d = 0
 event queue:
@@ -185,7 +185,7 @@ d : int d = 0
 event queue:
 check queue:
 	time	eid	pid	event
-	200	3	0	
+	200	3	0	*[ d<2 -> ... ]
 c : int c = 3
 d : int d = 1
 event queue:
@@ -197,13 +197,13 @@ d : int d = 1
 event queue:
 check queue:
 	time	eid	pid	event
-	220	3	0	
+	220	3	0	*[ d<2 -> ... ]
 c : int c = 3
 d : int d = 2
 event queue:
 check queue:
 	time	eid	pid	event
-	230	1	0	
+	230	9	0	*[ c<3 -> ... ]
 c : int c = 3
 d : int d = 2
 event queue:

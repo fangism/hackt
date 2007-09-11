@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.14 2007/06/12 05:12:54 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.15 2007/09/11 06:52:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -20,7 +20,6 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/global_entry.h"
 #include "Object/ref/nonmeta_ref_implementation.tcc"
-#include "sim/chpsim/devel_switches.h"	// for CHPSIM_DUMP_PARENT_PROCESS
 #include "util/what.h"
 #include "util/persistent_object_manager.tcc"
 
@@ -95,14 +94,11 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 	if (c.include_type_info)
 		this->what(o) << " ";
 	NEVER_NULL(this->inst_collection_ref);
-#if CHPSIM_DUMP_PARENT_CONTEXT
 	if (c.parent_instance_name) {
 		o << c.parent_instance_name << ".";
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
-	} else
-#endif
-	if (c.enclosing_scope) {
+	} else if (c.enclosing_scope) {
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
 	} else {

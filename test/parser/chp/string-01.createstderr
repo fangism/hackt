@@ -9,7 +9,8 @@ Persistent Object Manager text dump:
 	5	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	nexplist	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	stringex	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	258
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	270
+	9	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

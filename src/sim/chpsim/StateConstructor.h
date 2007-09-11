@@ -1,14 +1,12 @@
 /**
 	\file "sim/chpsim/StateConstructor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: StateConstructor.h,v 1.4 2007/07/31 23:23:41 fang Exp $
+	$Id: StateConstructor.h,v 1.5 2007/09/11 06:53:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 #define	__HAC_SIM_CHPSIM_STATECONSTRUCTOR_H__
 
-#include <vector>
-#include <set>		// or use util/memory/free_list interface
 #include "Object/lang/CHP_visitor.h"
 #include "sim/chpsim/StateConstructorFlags.h"
 #include "sim/common.h"
@@ -19,7 +17,7 @@ namespace CHPSIM {
 class EventNode;		// from "sim/chpsim/Event.h"
 class State;
 using entity::state_manager;
-using entity::cflat_context_visitor;
+// using entity::cflat_context_visitor;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_macro;
 using entity::PRS::footprint_expr_node;
@@ -52,37 +50,21 @@ public:
 	typedef	State				state_type;
 	// typedef	std::default_vector<size_t>::type	return_indices_type;
 	typedef	EventNode			event_type;
-//	typedef	state_type::event_pool_type	event_pool_type;
-	typedef	std::vector<event_type>		event_pool_type;
 private:
-	typedef	std::set<size_t>		free_list_type;
-private:
-	state_type&				state;
-	free_list_type				free_list;
+	const state_type&			state;
+	event_type&				event;
 public:
-	/**
-		Return value slot to indicate last allocated event(s).  
-		Should be non-zero.  
-		There may be more than one in the case of concurrency.  
-		These are needed to re-link predecessors to successors.  
-	 */
-	// return_indices_type			last_event_indices;
-	event_index_type			last_event_index;
 	/**
 		index of the globally allocated process, for context.  
 	 */
 	node_index_type				current_process_index;
-	/**
-		List of initially ready events.  
-	 */
-	std::vector<event_index_type>		initial_events;
 private:
 	// non-copy-able
 	explicit
 	StateConstructor(const StateConstructor&);
 public:
 	explicit
-	StateConstructor(state_type&);
+	StateConstructor(const state_type&, event_type&);
 
 	~StateConstructor();
 
@@ -91,38 +73,6 @@ public:
 
 	const entity::footprint&
 	get_process_footprint(void) const;
-
-protected:
-	event_type&
-	get_event(const event_index_type ei);
-
-	const event_type&
-	get_event(const event_index_type ei) const;
-
-	event_index_type
-	allocate_event(const event_type&);
-
-	// only needed when trying to be clever and recycle useless events
-	void
-	deallocate_event(const event_index_type);
-
-	size_t
-	event_pool_size(void) const;
-
-	void
-	connect_successor_events(event_type&) const;
-
-public:
-	void
-	count_predecessors(const event_type&) const;
-
-protected:
-	event_index_type
-	forward_successor(const event_index_type);
-
-	void
-	forward_successor(const event_index_type, const event_index_type, 
-		const event_index_type);
 
 public:
 	void
@@ -169,13 +119,6 @@ public:
 
 protected:
 	using chp_visitor::visit;
-
-	void
-	reset(void);
-
-	// overrides
-	void
-	visit(const state_manager&);
 
 };	// end class StateConstructor
 

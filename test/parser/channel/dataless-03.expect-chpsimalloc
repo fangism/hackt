@@ -4,5 +4,5 @@ chan[2]: "work.out"
 chan[3]: "work.peek" 
 
 Event graph: 
-event[0]: fork: null, pid: 0, #pred: 0, succ: 
+event[0]: fork: null, #pred: 0, succ: 
 

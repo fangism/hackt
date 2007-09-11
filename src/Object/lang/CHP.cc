@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.26 2007/07/31 23:23:25 fang Exp $
+	$Id: CHP.cc,v 1.27 2007/09/11 06:52:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -45,7 +45,6 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/preal_const.h"
 #include "Object/def/template_formals_manager.h"
-#include "sim/chpsim/devel_switches.h"	// CHPSIM_DELAYED_SUCCESSOR_EVENTS
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -149,6 +148,26 @@ static
 good_bool
 set_channel_alias_directions(const simple_channel_nonmeta_instance_reference&, 
 	const unroll_context&, const bool, const bool);
+
+static
+ostream&
+dump_selection_event(ostream& o, const selection_list_type& sl, 
+		const expr_dump_context& c, 
+		const char* b, const char* d, const char* f) {
+	typedef	selection_list_type::const_iterator	const_iterator;
+	NEVER_NULL(b);
+	NEVER_NULL(d);
+	NEVER_NULL(f);
+	// want to print some shorthand for selection event...
+	// [G1 -> ... [] G2 -> ... ]
+	const_iterator i(sl.begin());
+	const const_iterator e(sl.end());
+	INVARIANT(i!=e);
+	(*i)->dump_brief(o << b, c);
+	for (++i; i!=e; ++i)
+		(*i)->dump_brief(o << d, c);
+	return o << f;
+}
 
 //=============================================================================
 // class action method definitions
@@ -499,8 +518,13 @@ good_bool
 concurrent_actions::unroll(const unroll_context& c,
 		entity::footprint& f) const {
 	STACKTRACE_VERBOSE;
-	this_type& t(f.get_chp_footprint());
+if (!empty()) {
+	this_type& t(f.get_chp_footprint());	// allocates on-demand
 	return __unroll(c, t);
+} else {
+	// don't bother if is empty
+	return good_bool(true);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -729,25 +753,12 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't print anything.  Not a single statement/event.  
- */
 ostream&
 deterministic_selection::dump_event(ostream& o, 
 		const expr_dump_context& c) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// want to print some shorthand for selection event...
 	// [G1 -> ... [] G2 -> ... ]
-	const_iterator i(begin());
-	const const_iterator e(end());
-	INVARIANT(i!=e);
-	(*i)->dump_brief(o << "[ ", c);
-	for (++i; i!=e; ++i)
-		(*i)->dump_brief(o << " [] ", c);
-	return o << " ]";
-#else
-	return o;
-#endif
+	return dump_selection_event(o, *this, c, "[ ", " [] ", " ]");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -836,19 +847,9 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 ostream&
 nondeterministic_selection::dump_event(ostream& o, 
 		const expr_dump_context& c) const {
-#if CHPSIM_DELAYED_SUCCESSOR_CHECKS
 	// want to print some shorthand for selection event...
 	// [G1 -> ... : G2 -> ... ]
-	const_iterator i(begin());
-	const const_iterator e(end());
-	INVARIANT(i!=e);
-	(*i)->dump_brief(o << "[ ", c);
-	for (++i; i!=e; ++i)
-		(*i)->dump_brief(o << " : ", c);
-	return o << " ]";
-#else
-	return o;
-#endif
+	return dump_selection_event(o, *this, c, "[ ", " : ", " ]");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1812,12 +1813,9 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't print, not a single statement/event.  
- */
 ostream&
-do_while_loop::dump_event(ostream& o, const expr_dump_context&) const {
-	return o;
+do_while_loop::dump_event(ostream& o, const expr_dump_context& c) const {
+	return dump_selection_event(o, *this, c, "*[ ", " [] ", " ]");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,15 +1,15 @@
 lecture : (process)
 lecture.x : bool lecture.x = 0
 lecture.B : chan(bool<>) lecture.B = (0) [empty]
-	0	0	0	null
-	10	4	1	
+	0	0	2	null
+	10	1	1	
 lecture.B : chan(bool<>) lecture.B = (0) [empty]
-	20	3	1	lecture.B!(false)
-lecture.B : chan(bool<>) lecture.B = (0) [sent]
-	20	2	1	lecture.B?(lecture.x)
-lecture.B : chan(bool<>) lecture.B = (0) [empty]
-	30	2	1	lecture.B?(lecture.x)
+	20	3	1	lecture.B?(lecture.x)
 lecture.B : chan(bool<>) lecture.B = (0) [recvd]
-	30	3	1	lecture.B!(false)
+	20	2	1	lecture.B!(false)
+lecture.B : chan(bool<>) lecture.B = (0) [empty]
+	30	2	1	lecture.B!(false)
+lecture.B : chan(bool<>) lecture.B = (0) [sent]
+	30	3	1	lecture.B?(lecture.x)
 lecture.B : chan(bool<>) lecture.B = (0) [empty]
 lecture.x : bool lecture.x = 0
