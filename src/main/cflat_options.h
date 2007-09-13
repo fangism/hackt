@@ -1,12 +1,13 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.11 2007/04/19 03:13:40 fang Exp $
+	$Id: cflat_options.h,v 1.12 2007/09/13 01:14:10 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
 #define	__HAC_MAIN_CFLAT_OPTIONS_H__
 
 #include <string>
+#include "main/compile_options.h"
 
 namespace HAC {
 
@@ -154,7 +155,10 @@ public:
 		in lieu of the top-level instance hierarchy.  
 	 */
 	std::string			named_process_type;
-
+	/**
+		Options to forward to compiler driver.  
+	 */
+	compile_options			comp_opt;
 	// ignore policies...
 	// warning flags...
 	// error flags...
@@ -172,7 +176,8 @@ public:
 		csim_style_prs(false), dsim_prs(false), 
 		size_prs(false), 
 		use_referenced_type_instead_of_top_level(false), 
-		named_process_type() {
+		named_process_type(), 
+		comp_opt() {
 	}
 
 	~cflat_options() { }

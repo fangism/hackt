@@ -1,12 +1,13 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.9 2007/09/11 06:53:02 fang Exp $
+	$Id: main_funcs.h,v 1.10 2007/09/13 01:14:17 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
 #define	__HAC_MAIN_MAIN_FUNCS_H__
 
+#include <iosfwd>
 #include "util/boolean_types.h"
 #include "Object/module.h"
 #include "util/memory/count_ptr.h"
@@ -19,6 +20,7 @@ using util::good_bool;
 using util::memory::count_ptr;
 using entity::module;
 using entity::process_type_reference;
+using std::ostream;
 class compile_options;		// defined in "main/compile_options.h"
 
 //=============================================================================
@@ -65,6 +67,14 @@ load_module_debug(const char*);
 extern
 count_ptr<const process_type_reference>
 parse_and_create_complete_process_type(const char*, const module&);
+
+extern
+int
+parse_create_flag(const int, compile_options&);
+
+extern
+void
+create_usage(const char*, ostream&);
 
 //=============================================================================
 }	// end namespace HAC

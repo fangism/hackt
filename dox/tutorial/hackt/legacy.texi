@@ -1,5 +1,5 @@
 @c "hackt/legacy.texi"
-@c $Id: legacy.texi,v 1.1 2007/08/22 02:09:24 fang Exp $
+@c $Id: legacy.texi,v 1.2 2007/09/13 01:14:00 fang Exp $
 
 @node Legacy Compatibility
 @chapter Legacy Compatibility
@@ -72,6 +72,10 @@ This can be piped directly into @t{prsim} or saved to a file for later use.
 @c ----------------------------------------------------------------------------
 @node CFLAT Options
 @subsection CFLAT Options
+
+General options:
+@include cflat/opt-c.texi
+@include cflat/opt-C-upper.texi
 
 @command{hflat} provides convenient and fine-grain control
 over the output text format.  

@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.18 2007/09/11 06:52:59 fang Exp $
+	$Id: cflat.cc,v 1.19 2007/09/13 01:14:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -716,13 +716,17 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 	const char* const ofn = argv[optind+1];
-
-	if (!check_object_loadable(ofn).good)
-		return 1;
-
 	static const char alloc_errstr[] = 
 		"ERROR in allocating global state.  Aborting.";
-	const count_ptr<module> the_module(load_module(ofn));
+	count_ptr<module> the_module;
+if (cf.comp_opt.compile_input) {
+	the_module = parse_and_check(ofn, cf.comp_opt);
+} else {
+	if (!check_object_loadable(ofn).good)
+		return 1;
+	the_module = load_module(ofn);
+	// load_module_debug(ofn);
+}
 	if (!the_module)
 		return 1;
 	count_ptr<module> top_module;	// use this module to cflat
@@ -798,8 +802,39 @@ if (opt.use_referenced_type_instead_of_top_level) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-c.texi
+@defopt -c
+Indicate that input file is source, as opposed to an object file,
+and needs to be compiled.
+@end defopt
+@end texinfo
+***/
+static
+void
+__cflat_getopt_c(cflat_options& opt) {
+	parse_create_flag('c', opt.comp_opt);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cflat/opt-C-upper.texi
+@defopt -C opts
+When compiling input source, forward options @var{opt} to the compiler driver.
+@end defopt
+@end texinfo
+***/
+static
+void
+__cflat_getopt_compile_flags(cflat_options& opt, const char* optarg) {
+	parse_create_flag('C', opt.comp_opt);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 cflat::initialize_master_options_map(void) {
+	master_options.add_option('c', &__cflat_getopt_c);
+	master_options.add_option('C', &__cflat_getopt_compile_flags);
 	master_options.add_option('f', &getopt_f_options);
 	master_options.add_option('t', &getopt_cflat_type_only);
 //	master_options.add_option('p', &getopt_cflat_type_only);
@@ -816,6 +851,8 @@ cflat::usage(void) {
 	cerr << "usage: " << name << " <mode> [options] <hackt-obj-infile>"
 		<< endl;
 	cerr << "options: " << endl;
+	cerr << "\t-c : input file is a source, to be compiled\n";
+	cerr << "\t-C <opts> : flags to forward to compiler\n";
 	cerr << "\t-t \"type\" : perform flattening on an instance of the named type,\n"
 		"\t\tignoring top-level instances (quotes recommended)." << endl;
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"

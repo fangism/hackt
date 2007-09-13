@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim_options.h"
 	Main module for new CHPSIM.
-	$Id: chpsim_options.h,v 1.2 2007/09/11 06:53:00 fang Exp $
+	$Id: chpsim_options.h,v 1.3 2007/09/13 01:14:13 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CHPSIM_OPTIONS_H__
@@ -10,6 +10,7 @@
 #include <string>
 #include <list>
 #include "sim/chpsim/graph_options.h"
+#include "main/compile_options.h"
 
 namespace HAC {
 //=============================================================================
@@ -43,13 +44,16 @@ public:
 	bool				instantiate_type_recursively;
 	/// name of type to instantiate
 	std::string			complete_type_name;
+	/// compiler-driver flags
+	compile_options			comp_opt;
 
 	chpsim_options() : help_only(false), interactive(true), 
 		run(true), dump_graph_alloc(false), check_structure(true),
 		dump_dot_struct(false), dump_checkpoint(false), 
 		source_paths(), 
 		use_type(false), instantiate_type_recursively(false),
-		complete_type_name() { }
+		complete_type_name(), 
+		comp_opt() { }
 };	// end class chpsim_options
 
 //=============================================================================

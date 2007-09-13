@@ -1,24 +1,50 @@
 /**
 	\file "util/getopt_mapped.cc"
-	$Id: getopt_mapped.cc,v 1.2 2007/01/21 06:01:11 fang Exp $
+	$Id: getopt_mapped.cc,v 1.3 2007/09/13 01:14:20 fang Exp $
  */
 
 #include "util/getopt_mapped.h"
 #include <iostream>
+#include "util/libc.h"		// for strsep
 
 namespace util {
+using std::vector;
 using std::ostream;
 using std::endl;
+
 //=============================================================================
 /**     
 	Standard bad option error message.  
  */     
 void
 unknown_option(ostream& os, const int o) {
-       if (isprint(o))
+	if (isprint(o))
 		os << "Unknown option `-" << char(o) << "'." << endl;
 	else os << "Unknown option character `" <<
 		reinterpret_cast<void*>(o) << "'." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Splits argument string (using strsep) into an array of 
+	characters pointing to the beginning of each token, 
+	accumulated in argv.  
+	\param args the original string.
+	\param argv return array for tokenized strings, shallow copy pointers.
+	LIMITATION: does not recognize quoted strings in args.
+	Will need lex to handle that.  
+ */
+void
+splitopt(char* args, vector<char*>& argv) {
+	static const char delim[] = " \t\n";
+	char** stringp = &args;
+	char* last;
+	while ((last = strsep(stringp, delim))) {
+		// eat consecutive whitespace
+		if (*last == ' ') continue;
+//		std::cout << "tok = " << last << endl;
+		argv.push_back(last);
+	}
 }
 
 //=============================================================================

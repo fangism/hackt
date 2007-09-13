@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.7 2006/04/28 03:20:14 fang Exp $
+	$Id: compile.h,v 1.8 2007/09/13 01:14:14 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_COMPILE_H__
@@ -11,9 +11,15 @@
 #include "util/boolean_types.h"
 #include "util/STL/map_fwd.h"
 #include "util/string_fwd.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
 class compile_options;
+namespace entity {
+class module;
+}
+using util::memory::count_ptr;
+
 //=============================================================================
 /**
 	Instance-less class for parser/self-test module.  
@@ -36,6 +42,10 @@ public:
 	static const char		brief_str[];
 
 	compile();
+
+	static
+	int
+	make_module(int, char*[], options&, count_ptr<entity::module>&);
 
 	static
 	int

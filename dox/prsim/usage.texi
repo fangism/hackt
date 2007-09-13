@@ -1,5 +1,5 @@
 @c "hacprsim/usage.texi"
-@c $Id: usage.texi,v 1.1 2007/08/20 21:12:34 fang Exp $
+@c $Id: usage.texi,v 1.2 2007/09/13 01:14:00 fang Exp $
 
 @node Usage
 @chapter Usage
@@ -15,6 +15,8 @@
 @include opt/option-i.texi
 @include opt/option-I-upper.texi
 @include opt/option-O-upper.texi
+@include opt/option-c.texi
+@include opt/option-C-upper.texi
 
 @menu
 * General Flags::

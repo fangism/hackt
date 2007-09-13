@@ -4,7 +4,7 @@
 	This file is also processed with a script to extract 
 	Texinfo documentation.
 	This allows us to keep the documentation close to the source.
-	$Id: chpsim.cc,v 1.13 2007/09/11 06:53:00 fang Exp $
+	$Id: chpsim.cc,v 1.14 2007/09/13 01:14:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -105,10 +105,15 @@ chpsim::main(int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 	const char* const ofn = argv[optind];
+	count_ptr<module> the_module;
+if (opt.comp_opt.compile_input) {
+	the_module = parse_and_check(ofn, opt.comp_opt);
+} else {
 	if (!check_object_loadable(ofn).good)
 		return 1;
-	const count_ptr<module> the_module(load_module(ofn));
-		// load_module_debug(ofn);
+	the_module = load_module(ofn);
+	// load_module_debug(ofn);
+}
 	if (!the_module)
 		return 1;
 //	the_module->dump(cerr);
@@ -208,7 +213,7 @@ try {
  */
 int
 chpsim::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bd:f:hiI:l:L:";
+	static const char optstring[] = "+bcC:d:f:hiI:l:L:";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
@@ -228,6 +233,29 @@ this option for processing scripts due to a mishandling of EOF.
 ***/
 	case 'b':
 		o.interactive = false;
+		break;
+/***
+@texinfo options/option-c.texi
+@defopt -c
+Pass to indicate that input file is a source (to be compiled)
+as opposed to an object file.
+@end defopt
+@end texinfo
+***/
+	case 'c':
+		// just forward to a convenience function
+		// fall-through
+/***
+@texinfo options/option-C-upper.texi
+@defopt -C options
+When input is a source file, forward @var{options} to the compiler driver.  
+@end defopt
+@end texinfo
+***/
+	case 'C': {
+		const int r = parse_create_flag(c, o.comp_opt);
+		if (r) return r;
+	}
 		break;
 /***
 @texinfo options/option-d.texi

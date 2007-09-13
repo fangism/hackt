@@ -1,7 +1,7 @@
 /**
 	\file "main/create.h"
 	Interface header for create module.  
-	$Id: create.h,v 1.4 2006/01/27 08:07:21 fang Exp $
+	$Id: create.h,v 1.5 2007/09/13 01:14:14 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CREATE_H__
@@ -10,6 +10,7 @@
 #include "main/hackt_fwd.h"
 
 namespace HAC {
+class compile_options;
 
 /**
 	Instance-less class.  
@@ -18,7 +19,7 @@ namespace HAC {
  */
 class create {
 private:
-	class options;
+	typedef	compile_options		options;
 
 public:
 	static const char		name[];
@@ -30,17 +31,15 @@ public:
 	int
 	main(const int, char*[], const global_options&);
 
-private:
 	static
 	void
 	usage(void);
 
-#if 0
 	static
 	int
 	parse_command_options(const int, char*[], options&);
-#endif
 
+private:
 	static
 	const size_t
 	program_id;

@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-71:
+	  Added option to all tool-commands to read in source file
+		as input in-place of an object file.  
+		-c tells the driver input is to be compiled (text source)
+		and -C "..." forwards options to the compiler-driver, 
+		as if it were running haco (compile).
+		TIP: wrap in quotes in shell to bundle flags together.
+		For those of you who never want to see object files, 
+		and want to get off the ground faster with the tools.  
+	  main/compile.cc is now part of the core library, since other
+		programs can invoke the compiler.
+	  Documentation updated too.
+
+
 2007-09-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-70-merged-chpsim-09-18:

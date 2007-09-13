@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.183 2007/09/11 06:52:34 fang Exp $
+#	$Id: Makefile.am,v 1.184 2007/09/13 01:14:03 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -101,7 +101,7 @@ hackt_LDADD = libhacktexec.la
 # no need to use $(DESTDIR) (typically used for a staged install)
 # installcheck is never run on the staged install, only on the final
 
-haco_SOURCES = main/compile.cc
+haco_SOURCES = main/haco.cc
 haco_CPPFLAGS = -DWITH_MAIN
 haco_LDADD = libhacktlib.la
 # goal: just libhacktparsers.la
@@ -179,7 +179,10 @@ LIBBOGUS4_LA = libbogus4_la
 libhacktexec_la_LIBADD = libhacktsim.la
 
 # pass in a C++ file to coerce --tag=CXX linkage
-libhacktlib_la_SOURCES = main/main_funcs.cc
+libhacktlib_la_SOURCES = \
+	main/main_funcs.cc \
+	main/compile.cc \
+	main/compile.h
 # want to split-off:  main/parse_funcs.cc
 libhacktlib_la_LIBADD = libhacktparsers.la
 # libhacktexec.la
@@ -907,7 +910,7 @@ MAIN_EXEC_CC_FILES = \
 	main/program_registry.cc \
 	main/parse_test.cc \
 	main/flatten.cc \
-	main/compile.cc \
+	main/haco.cc \
 	main/create.cc \
 	main/alloc.cc \
 	main/cflat.cc \

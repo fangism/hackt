@@ -1,7 +1,7 @@
 /**
 	\file "main/alloc.h"
 	Interface header for alloc module.  
-	$Id: alloc.h,v 1.4 2006/01/27 08:07:20 fang Exp $
+	$Id: alloc.h,v 1.5 2007/09/13 01:14:07 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_ALLOC_H__
@@ -10,6 +10,7 @@
 #include "main/hackt_fwd.h"
 
 namespace HAC {
+class compile_options;
 
 /**
 	Instance-less class.  
@@ -18,7 +19,7 @@ namespace HAC {
  */
 class alloc {
 private:
-	class options;
+	typedef	compile_options		options;
 
 public:
 	static const char		name[];

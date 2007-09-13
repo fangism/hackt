@@ -3,14 +3,13 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.15 2007/03/16 07:07:21 fang Exp $
+	$Id: compile.cc,v 1.16 2007/09/13 01:14:13 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 #include <string>
 #include <map>
-#include "main/program_registry.h"
 #include "main/compile.h"
 #include "main/main_funcs.h"
 #include "main/compile_options.h"
@@ -19,6 +18,7 @@
 #include "util/getopt_portable.h"
 #include "util/getopt_mapped.h"
 #include "util/attributes.h"
+#include "util/stacktrace.h"
 
 extern HAC::lexer::file_manager
 hackt_parse_file_manager;
@@ -63,10 +63,6 @@ compile::name[] = "compile";
 const char
 compile::brief_str[] = "Compiles HACKT source to object file.";
 
-#ifndef	WITH_MAIN
-const size_t
-compile::program_id = register_hackt_program_class<compile>();
-#endif	// WITH_MAIN
 
 /**
 	Options modifier map must be initialized before any registrations.  
@@ -158,55 +154,72 @@ compile::compile() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main program for compiling source to object.  
-	TODO: clean up file manager after done?
+	Also parses options and sets flags.  
+	\return negative number for non-error 'exit-now' status, 
+		0 for success, positive number for other error.  
+	TODO: is there a way to return the number of arguments parsed, 
+		or just optind?
  */
 int
-compile::main(const int argc, char* argv[], const global_options&) {
-	options opt;
+compile::make_module(int argc, char* argv[], options& opt, 
+		count_ptr<module>& ret) {
 	if (parse_command_options(argc, argv, opt)) {
 		usage();
 		return 1;
 	}
-	/***
-		Now would be a good time to add include paths 
-		to the parser's file manager.  
-		Don't use a global file_manager, use local variables
-		and pass as arguments, to allow these main subprograms
-		to be re-entrant.  
-		Q: Should file_manager be a member of module?
-	***/
-	opt.export_include_paths(hackt_parse_file_manager);
+	argv += optind;		// shift
+	argc -= optind;
 
-	if (argc -optind > 2 || argc -optind <= 0) {
+	if (argc > 2 || argc <= 0) {
 		usage();
 		return 0;
 	}
-	argv += optind;		// shift
-	FILE* f = open_source_file(argv[0]);
-	if (!f)	return 1;
-	if (argc -optind >= 2) {
-		if (!check_file_writeable(argv[1]).good)
-			return 1;
-	}
+	opt.source_file = argv[0];
+	FILE* f = open_source_file(opt.source_file.c_str());
+	if (!f)
+		return 1;
 
 	// dependency generation setup
-	opt.source_file = argv[0];
-	if (argc -optind >= 2) {
+	if (!opt.have_target()) {
+	if (argc >= 2) {
 		opt.target_object = argv[1];
 	} else {
 		// default: append 'o' to get object file name
-		opt.target_object = string(argv[0]) + 'o';
+		opt.target_object = opt.source_file + 'o';
 	}
+	}	// else ignore argv[1], use whatever was set before
+	// have target by now
+	NEVER_NULL(opt.have_target());
+	if (!check_file_writeable(opt.target_object.c_str()).good)
+		return 1;
 
 	// parse it
-	const count_ptr<const module> mod(parse_and_check(argv[0], opt));
+	ret = parse_and_check(opt.source_file.c_str(), opt);
+	if (!ret) {
+		return 1;
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+compile::main(const int argc, char* argv[], const global_options&) {
+	options opt;
+	count_ptr<module> mod;
+	const int err = make_module(argc, argv, opt, mod);
+	if (err < 0) {
+		return 1;
+	} else if (err > 0) {
+		return err;
+	}
 	if (!mod) {
 		return 1;
 	}
 	if (argc -optind >= 2) {
-		// save_module(*mod, argv[1]);
-		// save_module_debug(*mod, argv[1]);
-		save_module_debug(*mod, argv[1], opt.dump_object_header);
+		// save_module(*mod, opt.target_object);
+		// save_module_debug(*mod, opt.target_object);
+		save_module_debug(*mod, opt.target_object.c_str(), 
+			opt.dump_object_header);
 	}
 	if (opt.dump_module)
 		mod->dump(cerr);
@@ -218,18 +231,46 @@ compile::main(const int argc, char* argv[], const global_options&) {
 /**
 	\return 0 if is ok to continue, anything else will signal early
 		termination, an error will cause exit(1).
+	Set global variable optind to the number of initial tokens to
+		skip (default = 1).
 	NOTE: the getopt option string begins with '+' to enforce
 		POSIXLY correct termination at the first non-option argument.  
  */
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+df:hI:M:";
+	STACKTRACE_VERBOSE;
+	static const char* optstring = "+df:hI:M:o:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
+/***
+@texinfo compile/option-d.texi
+@defopt -d
+Produces text dump of compiled module, 
+like @command{hacobjdump} in @ref{Objdump}.
+@end defopt
+@end texinfo
+***/
 	case 'd':
 		opt.dump_module = true;
 		break;
+/***
+@texinfo compile/option-f.texi
+@defopt -f optname
+general compile flags (repeatable) where @var{optname} is one of the following:
+@itemize
+@item @option{dump-include-paths}:
+        dumps @option{-I} include paths as they are processed
+@item @option{dump-object-header}:
+        (diagnostic) dumps persistent object header before saving
+@item @option{no-dump-include-paths}:
+        suppress feedback of @option{-I} include paths
+@item @option{no-dump-object-header}:
+        suppress persistent object header dump
+@end itemize
+@end defopt
+@end texinfo
+***/
 	case 'f': {
 		const options_modifier_map_type::const_iterator
 			mi(options_modifier_map.find(optarg));
@@ -241,15 +282,49 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 		}
 		break;
 	}
+/***
+@texinfo compile/option-h.texi
+@defopt -h
+Show usage.
+@end defopt
+@end texinfo
+***/
 	case 'h':
 		return 1;
+/***
+@texinfo compile/option-I-upper.texi
+@defopt -I path
+Adds include path @var{path} for importing other source files (repeatable).
+@end defopt
+@end texinfo
+***/
 	case 'I':
 		// no need to check validity of paths yet
 		opt.include_paths.push_back(optarg);
 		break;
+/***
+@texinfo compile/option-M-upper.texi
+@defopt -M depfile
+Emit import dependencies in file @var{depfile} as a side-effect.
+Useful for automatic dynamic dependency-tracking in Makefiles.  
+@end defopt
+@end texinfo
+***/
 	case 'M':
 		opt.make_depend = true;
 		opt.make_depend_target = optarg;
+		break;
+/***
+@texinfo compile/option-o.texi
+@defopt -o objfile
+Names @var{objfile} as the output object file to save.  
+This is an alternative to naming the object file as the second
+non-option argument.
+@end defopt
+@end texinfo
+***/
+	case 'o':
+		opt.target_object = optarg;
 		break;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;
@@ -261,6 +336,17 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 		abort();
 	}       // end switch
 	}       // end while
+	/***
+		Now would be a good time to add include paths 
+		to the parser's file manager.  
+		Don't use a global file_manager, use local variables
+		and pass as arguments, to allow these main subprograms
+		to be re-entrant.  
+		Q: Should file_manager be a member of module?
+		Caution: calling this function multiple times with the 
+		same options object will accumulate duplicate paths.
+	***/
+	opt.export_include_paths(hackt_parse_file_manager);
 	return 0;
 }
 
@@ -288,24 +374,13 @@ compile::usage(void) {
 	cerr << "\t-h: gives this usage messsage" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
+	cerr << "\t-o <objfile> : option to name output object file" << endl;
 	cerr << "\tIf no output object file is given, compiled module will not be saved."
 		<< endl;
 }
 
 //=============================================================================
 }	// end namespace HAC
-
-//=============================================================================
-#ifdef	WITH_MAIN
-/**
-	Assumes no global hackt options.  
- */
-int
-main(const int argc, char* argv[]) {
-	const HAC::global_options g;
-	return HAC::compile::main(argc, argv, g);
-}
-#endif	// WITH_MAIN
 
 
 

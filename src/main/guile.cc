@@ -1,7 +1,7 @@
 /**
 	\file "main/guile.cc"
 	Main module for new CHPSIM.
-	$Id: guile.cc,v 1.5 2007/04/20 18:26:01 fang Exp $
+	$Id: guile.cc,v 1.6 2007/09/13 01:14:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,6 +15,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/program_registry.h"	// to register with hackt's dispatcher
 #include "main/main_funcs.h"		// for save/load_module()
 #include "main/options_modifier.tcc"
+#include "main/compile_options.h"
 #include "main/global_options.h"
 #include "guile/libhackt-wrap.h"
 #include "util/getopt_mapped.h"		// for getopt()
@@ -34,6 +35,7 @@ template class options_modifier_policy<guile_options>;
 struct guile_options {
 	bool			interactive;
 	bool			help_only;
+	compile_options		comp_opt;
 	guile_options() : interactive(true), help_only(false) { }
 };	// end class guile_options
 
@@ -123,12 +125,17 @@ guile::main(int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 	const char* const ofn = argv[optind];
+if (opt.comp_opt.compile_input) {
+	obj_module = parse_and_check(ofn, opt.comp_opt);
+} else {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 	obj_module = load_module(ofn);
-		// load_module_debug(ofn);
+	// load_module_debug(ofn);
+}
 	if (!obj_module)
 		return 1;
+
 	// got error message?
 //	obj_module->dump(cerr);
 	// automatically allocate as needed
@@ -155,12 +162,18 @@ guile::main(int argc, char* argv[], const global_options&) {
  */
 int
 guile::parse_command_options(const int argc, char* argv[], options& o) {
-	static const char optstring[] = "+bhi";
+	static const char optstring[] = "+bcC:hi";
 	int c;
 while((c = getopt(argc, argv, optstring)) != -1) {
 switch (c) {
 	case 'b':
 		o.interactive = false;
+		break;
+	case 'c':
+	case 'C': {
+		const int r = parse_create_flag(c, o.comp_opt);
+		if (r) return r;
+	}
 		break;
 #if 0
 	case 'f': {
@@ -204,7 +217,8 @@ guile::usage(void) {
 	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
 	cerr << "options:" << endl;
 	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
-//	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
+	cerr << "\t-c : input file is a source, not an object" << endl;
+	cerr << "\t-C <opts> : forward flags to compiler-driver" << endl;
 //	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print this help and exit" << endl;
 	cerr << "\t-i : interactive (default)" << endl;

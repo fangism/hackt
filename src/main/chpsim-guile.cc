@@ -1,7 +1,7 @@
 /**
 	\file "main/chpsim-guile.cc"
 	Main module for new CHPSIM guile interface.
-	$Id: chpsim-guile.cc,v 1.3 2007/04/20 18:25:59 fang Exp $
+	$Id: chpsim-guile.cc,v 1.4 2007/09/13 01:14:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -104,10 +104,14 @@ chpsim_guile::main(int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 	const char* const ofn = argv[optind];
+if (opt.comp_opt.compile_input) {
+	obj_module = parse_and_check(ofn, opt.comp_opt);
+} else {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 	obj_module = load_module(ofn);
-		// load_module_debug(ofn);
+	// load_module_debug(ofn);
+}
 	if (!obj_module)
 		return 1;
 //	the_module->dump(cerr);

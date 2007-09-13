@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.13 2007/08/20 21:12:40 fang Exp $
+	$Id: prsim.cc,v 1.14 2007/09/13 01:14:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,6 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/options_modifier.tcc"
 #include "main/simple_options.tcc"
 #include "main/global_options.h"
+#include "main/compile_options.h"
 #include "util/getopt_mapped.h"
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State-prsim.h"
@@ -68,6 +69,8 @@ public:
 	/// whether or not checkpoint dump is requested
 	bool			dump_checkpoint;
 	ExprAllocFlags		expr_alloc_flags;
+	/// compiler-driver flags
+	compile_options		comp_opt;
 
 	typedef	std::list<string>	source_paths_type;
 	/// include search paths for sources
@@ -78,6 +81,7 @@ public:
 		check_structure(true), dump_dot_struct(false), 
 		dump_checkpoint(false),
 		expr_alloc_flags(), 
+		comp_opt(),
 		source_paths() { }
 
 };	// end class prsim_options
@@ -127,10 +131,14 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	}
 	const char* const ofn = argv[optind];
 	// cerr << "loading " << ofn << endl;
+	count_ptr<module> the_module;
+if (opt.comp_opt.compile_input) {
+	the_module = parse_and_check(ofn, opt.comp_opt);
+} else {
 	if (!check_object_loadable(ofn).good)
 		return 1;
-
-	const count_ptr<module> the_module(load_module(ofn));
+	the_module = load_module(ofn);
+}
 	if (!the_module)
 		return 1;
 
@@ -186,7 +194,7 @@ try {
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 	// now we're adding our own flags
-	static const char optstring[] = "+bd:f:hiI:O:";
+	static const char optstring[] = "+bcC:d:f:hiI:O:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -204,6 +212,29 @@ Opposite of @option{-i}.
 		case 'b':
 			// batch-mode, non-interactive
 			o.interactive = false;
+			break;
+/***
+@texinfo opt/option-c.texi
+@defopt -c
+Pass to indicate that input file is a source (to be compiled)
+as opposed to an object file.
+@end defopt
+@end texinfo
+***/
+		case 'c':
+			// just forward to a convenience function
+			// fall-through
+/***
+@texinfo opt/option-C-upper.texi
+@defopt -C options
+When input is a source file, forward @var{options} to the compiler driver.  
+@end defopt
+@end texinfo
+***/
+		case 'C': {
+			const int r = parse_create_flag(c, o.comp_opt);
+			if (r) return r;
+		}
 			break;
 /***
 @texinfo opt/option-d.texi

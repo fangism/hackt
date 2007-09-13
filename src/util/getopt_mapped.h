@@ -2,7 +2,7 @@
 	\file "util/getopt_mapped.h"
 	Using a map-like interface (and implementation) of
 	getopt features.  
-	$Id: getopt_mapped.h,v 1.1 2006/07/30 05:50:14 fang Exp $
+	$Id: getopt_mapped.h,v 1.2 2007/09/13 01:14:20 fang Exp $
  */
 
 #ifndef	__UTIL_GETOPT_MAPPED_H__
@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include <map>
 #include <string>
+#include <vector>
 
 namespace util {
 //=============================================================================
@@ -36,6 +37,10 @@ struct getopt_exception {
 extern
 void
 unknown_option(std::ostream&, const int);
+
+extern
+void
+splitopt(char*, std::vector<char*>&);
 
 //=============================================================================
 /**

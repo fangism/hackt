@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.88 2007/09/11 06:53:15 fang Exp $
+#	$Id: ChangeLog,v 1.89 2007/09/13 01:14:18 fang Exp $
+
+2007-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-71:
+	  util/getopt_mapped.cc: added splitopt to tokenize a string
+		into an array of strings suitable for getopt.  
+
 
 2007-09-01	David Fang		<fangism@users.sourceforge.net>
 

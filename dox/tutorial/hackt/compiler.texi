@@ -1,5 +1,5 @@
 @c "hackt/compiler.texi"
-@c $Id: compiler.texi,v 1.1 2007/08/22 02:09:20 fang Exp $
+@c $Id: compiler.texi,v 1.2 2007/09/13 01:14:00 fang Exp $
 
 @node Compiler
 @chapter Compiler
@@ -33,32 +33,13 @@ If the object file is omitted, the program just reports the result
 of complation without producing an object file.  
 
 Options:
-@defopt -h
-show usage
-@end defopt
 
-@defopt -I path
-adds include path @var{path} for importing other source files (repeatable)
-@end defopt
-
-@defopt -d
-Produces text dump of compiled module, 
-like @command{hacobjdump} in @ref{Objdump}.
-@end defopt
-
-@defopt -f optname
-general compile flags (repeatable) where @var{optname} is one of the following:
-@itemize
-@item @option{dump-include-paths}: 
-	dumps @option{-I} include paths as they are processed
-@item @option{dump-object-header}: 
-	(diagnostic) dumps persistent object header before saving
-@item @option{no-dump-include-paths}: 
-	suppress feedback of @option{-I} include paths
-@item @option{no-dump-object-header}: 
-	suppress persistent object header dump
-@end itemize
-@end defopt
+@include compile/option-h.texi
+@include compile/option-I-upper.texi
+@include compile/option-d.texi
+@include compile/option-f.texi
+@include compile/option-M-upper.texi
+@include compile/option-o.texi
 
 @t{haco} is provided as a single-command alias to 
 @t{hackt compile}@footnote{Thus named because we use @t{.haco} 
@@ -78,11 +59,17 @@ Each type's definition is sequentially unrolled and expanded
 meta-parameter arguments.  
 The input object file is the result of @t{haco}.  
 
-@deffn Program haccreate in-object out-object
+@deffn Program haccreate [options] in-object out-object
 Further compiles an object file through the create phase.  
 @end deffn
 
 @t{haccreate} is provided as a single-command alias to @t{hackt create}.  
+
+All programs that normally expect object files as inputs can also
+invoke the compiler on a source file with the following options.
+
+@include compile/option-c.texi
+@include compile/option-C-upper.texi
 
 @c ----------------------------------------------------------------------------
 @node Allocate
@@ -99,6 +86,7 @@ Further compiles an object file through the alloc phase.
 @end deffn
 
 @t{hacalloc} is provided as a single-command alias to @t{hackt alloc}.  
+@t{hacalloc} supports the same options as @t{haccreate}.  
 
 In summary, 
 the create, and allocate compile phases 

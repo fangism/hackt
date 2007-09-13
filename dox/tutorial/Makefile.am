@@ -1,6 +1,6 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.10 2007/08/22 02:25:58 fang Exp $
+#	$Id: Makefile.am,v 1.11 2007/09/13 01:14:00 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -31,6 +31,12 @@ hacmacros.texi: $(srcdir)/../common/hacmacros.texi
 
 CLEANFILES += hacmacros.texi
 
+$(srcdir)/compile.mk: hackt/compiler.texi
+	{ $(ECHO) -n "COMPILE_OPTIONS_TEXI = " ; \
+	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
+	$(ECHO) "" ; \
+	$(ECHO) "" ;} > $@
+
 $(srcdir)/cflat.mk: hackt/legacy.texi
 	{ $(ECHO) -n "HFLAT_OPTIONS_TEXI = " ; \
 	$(CAT) $< | $(EXTRACT_TEXI_INCLUDES) ; \
@@ -38,14 +44,25 @@ $(srcdir)/cflat.mk: hackt/legacy.texi
 	$(ECHO) "" ;} > $@
 
 $(srcdir)/cflat.mk: Makefile.in
+$(srcdir)/compile.mk: Makefile.in
 
 -include $(srcdir)/cflat.mk
 AUTO_TEXINFO_DEPS += cflat.mk
 
+-include $(srcdir)/compile.mk
+AUTO_TEXINFO_DEPS += compile.mk
+
+$(COMPILE_OPTIONS_TEXI): \
+		$(top_srcdir)/src/main/compile.cc \
+		$(top_srcdir)/src/main/main_funcs.cc 
+	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
+
 $(HFLAT_OPTIONS_TEXI): $(top_srcdir)/src/main/cflat.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
-auto_hackt_info_DEPS = $(HFLAT_OPTIONS_TEXI)
+auto_hackt_info_DEPS = \
+	$(COMPILE_OPTIONS_TEXI) \
+	$(HFLAT_OPTIONS_TEXI)
 hackt_info_DEPS = $(hackt_INCLUDES) $(auto_hackt_info_DEPS)
 
 TEXI_CLEANFILES += $(auto_hackt_info_DEPS)

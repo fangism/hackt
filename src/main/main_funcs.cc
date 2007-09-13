@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.17 2007/09/11 06:53:01 fang Exp $
+	$Id: main_funcs.cc,v 1.18 2007/09/13 01:14:17 fang Exp $
  */
 
 #include <iostream>
@@ -30,8 +30,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/type_base.h"		// for parser::concrete_type_ref
 #include "AST/parse_context.h"		// for parser::context
 #include "main/compile_options.h"
+#include "main/compile.h"
+#include "main/create.h"
 #include "Object/type/process_type_reference.h"
 #include "util/getopt_portable.h"
+#include "util/getopt_mapped.h"
+#include "util/value_saver.h"
 #include "util/persistent_object_manager.h"
 
 #if KEEP_PARSE_FUNCS
@@ -463,6 +467,101 @@ compile_options::export_include_paths(file_manager& fm) const {
 			}
 		}
 	}
+}
+
+//=============================================================================
+// class create method definitions
+
+/**
+	\param f the flag returned by getopt.  
+ */
+int
+parse_create_flag(const int f, compile_options& opt) {
+switch (f) {
+/***
+@texinfo compile/option-c.texi
+@defopt -c
+Indicate that input file is a source, not object file, 
+and needs to be compiled.
+@end defopt
+@end texinfo
+***/
+	case 'c':
+		opt.compile_input = true;
+		break;
+/***
+@texinfo compile/option-C-upper.texi
+@defopt -C opts
+When compiling source, forward options @var{opts} to the compiler-driver.  
+@strong{Suggestion}: when passing compiler-options on the command-line, 
+wrap in ``double-quotes'' to group a list of arguments into a single string
+in the shell.
+@end defopt
+@end texinfo
+***/
+	case 'C': {
+		// forward bundled arguments to compile-driver
+		// because getopt is not re-entrant...
+		util::value_saver<int> s(optind);
+		optind = 0;	// don't skip the first argument
+		std::vector<char*> cargs;
+		util::splitopt(optarg, cargs);
+		const int r =
+			compile::parse_command_options(cargs.size(), 
+				&cargs[0], opt);
+		if (r) {
+			compile::usage();
+			return r;
+		}
+		}
+		break;
+	default:
+		abort();
+
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+create::parse_command_options(const int argc, char* argv[], options& opt) {
+	static const char* optstring = "+hcC:";
+	int c;
+	while ((c = getopt(argc, argv, optstring)) != -1) {
+	switch (c) {
+	case 'c':
+	case 'C': {
+		const int r = parse_create_flag(c, opt);
+		if (r) return r;
+	}
+		break;
+	case 'h':
+		create_usage(argv[0], cerr);
+		return 0;
+	case ':':
+		cerr << "Expected but missing non-option argument." << endl;
+		return 1;
+	case '?':
+		util::unknown_option(cerr, optopt);
+		return 1;
+	default:
+		abort();
+
+	}
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+create_usage(const char* name, ostream& o) {
+        o << "usage: " << name <<
+                " <hackt-obj-infile> <hackt-obj-outfile>" << endl;
+        o << "options:" << endl;
+        o << "\t-c : input file is a source (compile it), not object\n"
+                "\t-C <opts> : forward options to compiler (driver)\n"
+                "\t-h : print this help"
+                << endl;
 }
 
 //=============================================================================

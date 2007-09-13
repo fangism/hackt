@@ -1,7 +1,7 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.8 2007/03/11 16:34:33 fang Exp $
+	$Id: compile_options.h,v 1.9 2007/09/13 01:14:14 fang Exp $
  */
 
 #include <list>
@@ -30,6 +30,13 @@ public:
 	bool					dump_object_header;
 	/// whether or not to emit make dependencies
 	bool					make_depend;
+	/**
+		Whether or not input file should be compiled (default no)
+		Alternatively, input may already be an object file
+		for other compiler tools.  
+		This flag is not applicable to the compile program, of course.
+	 */
+	bool					compile_input;
 	/// the name of the make-dependency target
 	string					make_depend_target;
 	/// the name of the output target
@@ -45,6 +52,7 @@ public:
 		dump_include_paths(false), 
 		dump_object_header(false),
 		make_depend(false),
+		compile_input(false),
 		make_depend_target(),
 		source_file(), 
 		target_object(), 
@@ -54,6 +62,9 @@ public:
 	// NOTE: this is defined in "main/main_funcs.cc"
 	void
 	export_include_paths(lexer::file_manager&) const;
+
+	bool
+	have_target(void) const { return target_object.size(); }
 
 };	// end class compile_options
 
