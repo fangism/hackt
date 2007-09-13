@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.40 2007/09/11 06:52:39 fang Exp $
+ 	$Id: definition.cc,v 1.41 2007/09/13 20:37:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -785,6 +785,7 @@ user_def_chan::user_def_chan() :
 		key(), parent(), 
 		base_chan_type_ref(), 
 		port_formals(), 
+		spec(), 
 		send_chp(), recv_chp() {
 }
 
@@ -798,6 +799,7 @@ user_def_chan::user_def_chan(const never_ptr<const name_space> o,
 		key(name), parent(o), 
 		base_chan_type_ref(), 
 		port_formals(), 
+		spec(), 
 		send_chp(), recv_chp() {
 }
 
@@ -834,6 +836,13 @@ user_def_chan::dump(ostream& o) const {
 		o << auto_indent << "unroll sequence: " << endl;
 		{	INDENT_SECTION(o);
 			sequential_scope::dump(o, dc);
+		}
+		// SPEC
+		if (!spec.empty()) {
+			o << auto_indent << "spec:" << endl;
+			INDENT_SECTION(o);
+			const PRS::rule_dump_context rdc(*this);
+			spec.dump(o, rdc);	// << endl;
 		}
 		// CHP
 		if (!send_chp.empty()) {
@@ -980,6 +989,7 @@ user_def_chan::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	// nothing until this has a footprint manager
+	// don't forget spec
 	return good_bool(true);
 }
 
@@ -989,6 +999,7 @@ user_def_chan::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
 		const footprint& top) const {
 	// nothing until this has a footprint manager
+	// don't forget spec
 	return good_bool(true);
 }
 
@@ -1007,6 +1018,7 @@ if (!m.register_transient_object(this,
 	port_formals.collect_transient_info_base(m);
 #endif
 	sequential_scope::collect_transient_info_base(m);
+	spec.collect_transient_info_base(m);
 	send_chp.collect_transient_info_base(m);
 	recv_chp.collect_transient_info_base(m);
 }
@@ -1028,6 +1040,7 @@ user_def_chan::write_object(
 	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
+	spec.write_object_base(m, f);
 	send_chp.write_object_base(m, f);
 	recv_chp.write_object_base(m, f);
 }
@@ -1047,6 +1060,7 @@ user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
 	port_formals.load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
+	spec.load_object_base(m, f);
 	send_chp.load_object_base(m, f);
 	recv_chp.load_object_base(m, f);
 }

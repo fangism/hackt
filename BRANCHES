@@ -1,5 +1,5 @@
 "BRANCHES"
-	$Id: BRANCHES,v 1.22 2007/08/31 21:02:31 fang Exp $
+	$Id: BRANCHES,v 1.23 2007/09/13 20:37:09 fang Exp $
 
 This file contains a list of currently open branches.  
 We don't want to forget branches!.  
@@ -9,14 +9,10 @@ When a branch is merged for the last time, delete the entry from this file.
 
 Open branches:
 
-	HACKT-00-01-04-main-00-81-68-chpsim-09
-		for precise positional referencing in source
-		and localized event allocation and mappings.
-
-	HACKT-00-01-04-main-00-81-16-PRS-07
-		parser accommodations requested by Clint
-
 Coming soon:
+	HACKT-00-01-04-main-00-81-??-chpsim-10
+		for syntax tree positional tracking event-to-source
+
 	HACKT-00-01-04-main-00-81-??-scm-02
 		guile/scheme work for chpsim trace analysis framework
 		for dissertation

@@ -11,9 +11,12 @@ state	value
 #STATE#	( [3:30]
 #STATE#	paramtype: pint [3:31..34]
 in state #STATE#, possible rules are:
-	data_param_decl_list_in_parens: '(' . data_param_decl_list ')'  (#RULE#)
+	optional_port_formal_decl_list_in_parens: '(' . port_formal_decl_list ')'  (#RULE#)
+	                                        | '(' . ')'  (#RULE#)
 acceptable tokens are: 
+	')' (shift)
 	ID (shift)
 	SCOPE (shift)
+	CHANNEL (shift)
 	INT_TYPE (shift)
 	BOOL_TYPE (shift)

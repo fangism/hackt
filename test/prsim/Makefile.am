@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2007/04/19 03:13:46 fang Exp $
+#	$Id: Makefile.am,v 1.18 2007/09/13 20:38:22 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head

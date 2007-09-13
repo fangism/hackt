@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.5 2006/07/17 02:53:30 fang Exp $
+	$Id: PRS.h,v 1.6 2007/09/13 20:37:13 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -88,14 +88,26 @@ class literal : public inst_ref_expr {
 	/// not const, b/c we may wish to transfer it to macro
 	excl_ptr<const expr_list>			params;
 public:
+	explicit
+	literal(inst_ref_expr*);
+
 	literal(inst_ref_expr*, const expr_list*);
+
 	~literal();
+
+	excl_ptr<inst_ref_expr>&
+	release_reference(void) {
+		return ref;
+	}
 
 	excl_ptr<const token_identifier>
 	extract_identifier(void);
 
 	excl_ptr<const expr_list>
 	extract_parameters(void);
+
+	void
+	attach_parameters(const expr_list*);
 
 	ostream&
 	what(ostream&) const;
@@ -138,7 +150,7 @@ protected:
 public:
 	rule(const attribute_list*, const expr* g, 
 		const char_punctuation_type* a,
-		const inst_ref_expr* rhs, const char_punctuation_type* d);
+		literal* rhs, const char_punctuation_type* d);
 
 	~rule();
 
@@ -273,8 +285,9 @@ public:
 //=============================================================================
 /**
 	Collection of production rules.  
+	Now is also a body_item because of nested bodies.  
  */
-class body : public language_body {
+class body : public language_body, public body_item {
 	typedef	default_vector<body_item::return_type>::type
 				checked_rules_type;
 protected:
@@ -296,6 +309,12 @@ public:
 	// needs the return-type of language-body
 	ROOT_CHECK_PROTO;
 #endif
+	PRS_ITEM_CHECK_PROTO;
+
+protected:
+	bool
+	__check_rules(context&, checked_rules_type&) const;
+
 };	// end class body
 
 //=============================================================================

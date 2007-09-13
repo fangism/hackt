@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.3 2007/04/26 05:46:36 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.4 2007/09/13 20:37:17 fang Exp $
  */
 
 #include <iostream>

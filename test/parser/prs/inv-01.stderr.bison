@@ -10,11 +10,9 @@ state	value
 #STATE#	{ [3:24]
 #STATE#	keyword: prs [4:1..3]
 #STATE#	{ [4:5]
+#STATE#	(unknown)
 #STATE#	} [6:1]
 in state #STATE#, possible rules are:
-	language_body: PRS_LANG '{' . prs_body '}'  (#RULE#)
+	prs_literal_base: prs_internal_optional . relative_member_index_expr  (#RULE#)
 acceptable tokens are: 
-	'[' (shift)
-	'(' (shift)
-	'~' (shift)
 	ID (shift)

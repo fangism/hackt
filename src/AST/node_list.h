@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.h"
 	Base set of classes for the HAC parser.  
-	$Id: node_list.h,v 1.5 2007/07/18 23:28:19 fang Exp $
+	$Id: node_list.h,v 1.6 2007/09/13 20:37:14 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -170,6 +170,11 @@ public:
 	template <class R, class A>
 	void
 	check_list_optional(
+		R&, typename R::value_type (T::*)(A&) const, A&) const;
+
+	template <class R, class A>
+	void
+	check_list_omit_null(
 		R&, typename R::value_type (T::*)(A&) const, A&) const;
 
 #if 0

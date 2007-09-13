@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.9 2006/10/18 01:19:14 fang Exp $
+	$Id: user_def_chan.h,v 1.10 2007/09/13 20:37:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_CHAN_H__
@@ -13,6 +13,7 @@
 #include "Object/unroll/sequential_scope.h"
 #include "Object/def/port_formals_manager.h"
 #include "Object/lang/CHP.h"
+#include "Object/lang/SPEC.h"
 
 namespace HAC {
 namespace entity {
@@ -38,6 +39,7 @@ protected:
 	count_ptr<const builtin_channel_type_reference>
 						base_chan_type_ref;
 	port_formals_manager			port_formals;
+	SPEC::directives_set			spec;
 	CHP::action_sequence			send_chp;
 	CHP::action_sequence			recv_chp;
 private:
@@ -87,6 +89,9 @@ public:
 
 	CHP::action_sequence&
 	get_recv_body(void) { return recv_chp; }
+
+	SPEC::directives_set&
+	get_spec_directives_set(void) { return spec; }
 
 	// from class definition_base
 	DEFINITION_ADD_PORT_FORMAL_PROTO;

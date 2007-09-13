@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.9 2006/04/23 07:37:21 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.10 2007/09/13 20:37:18 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -112,6 +112,23 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 		ostream& o(p.os);
 		o << "weak\t";
 	}
+}
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Unstab, "unstab")
+
+/**
+      Prints out "unstab" before a rule in cflat.  
+ */
+void
+Unstab::main(visitor_type& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+      const pint_const& pi(*v[0].is_a<const pint_const>());
+      if (pi.static_constant_value()) {
+              ostream& o(p.os);
+              o << "unstab\t";
+      }
 }
 }
 

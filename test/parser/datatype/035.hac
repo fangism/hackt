@@ -1,6 +1,7 @@
 // "035.hac"
 // copy-modified from "033.hac"
 // should reject process inside datatype
+// NO LONGER: because deftypes are munged into process definitions
 
 defproc myproc () { }
 

@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.8 2007/03/11 16:34:15 fang Exp $
+	$Id: SPEC.cc,v 1.9 2007/09/13 20:37:14 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include "AST/parse_context.h"
 
 #include "Object/def/process_definition.h"
+#include "Object/def/user_def_chan.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
@@ -44,6 +45,7 @@ using std::copy;
 using std::back_inserter;
 using entity::definition_base;
 using entity::process_definition;
+using entity::user_def_chan;
 using std::mem_fun_ref;
 using std::find_if;
 
@@ -168,8 +170,19 @@ never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
 	const never_ptr<definition_base> d(c.get_current_open_definition());
+	entity::SPEC::directives_set* dss;
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
-	NEVER_NULL(pd);
+	const never_ptr<user_def_chan> cd(d.is_a<user_def_chan>());
+	if (pd) {
+		dss = &pd->get_spec_directives_set();
+	} else if (cd) {
+		dss = &cd->get_spec_directives_set();
+	} else {
+		cerr << "ERROR: spec body can only be used in "
+"process definitions or user-defined channels.  ";
+		cerr << where(*this) << endl;
+		THROW_EXIT;
+	}
 	typedef	std::vector<directive::return_type>	checked_directives_type;
 	checked_directives_type checked_directives;
 	directives->check_list(checked_directives, &directive::check_spec, c);
@@ -179,7 +192,7 @@ body::check_build(context& c) const {
 		null_iter(find(i, e, directive::return_type()));
 	if (null_iter == e) {
 		// transfer over to process_definition's spec set
-		copy(i, e, back_inserter(pd->get_spec_directives_set()));
+		copy(i, e, back_inserter(*dss));
 	} else {
 		cerr << "ERROR: at least one error in spec body." << endl;
 		THROW_EXIT;

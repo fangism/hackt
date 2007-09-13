@@ -1,0 +1,7 @@
+// "subckt-03.hac"
+// instantiating a definition in "subckt-02.hac"
+
+import "subckt-02.hac";
+
+bogus Z;
+

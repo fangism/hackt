@@ -1,0 +1,7 @@
+// "tree-03.hac"
+// instantiate definition from "tree-01.hac"
+
+import "tree-01.hac";
+
+bogus Q;
+

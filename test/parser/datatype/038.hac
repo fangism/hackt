@@ -1,0 +1,13 @@
+// "038.hac"
+// contributed by Virantha
+
+deftype ch1of2 <: bool (bool d[2]; bool t, f) {
+d[0] = f;
+d[1] = t;
+spec { exclhi(f,t) }
+set {}
+get {}
+}
+
+ch1of2 FOO;
+

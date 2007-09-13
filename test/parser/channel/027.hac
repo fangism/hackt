@@ -1,0 +1,25 @@
+// "027.hac"
+// contributed by Virantha
+
+defchan e1of2 <: chan(bool) (bool d[2]; bool t,f,e) {
+  d[0] = f;
+  d[1] = t;
+  spec{exclhi(f,t)}
+  send {}
+  recv{}
+}
+
+defchan e1of4 <: chan(int<2>) (bool d[4]; bool d0, d1, d2, d3, e) {
+  d[0] = d0;
+  d[1] = d1;
+  d[2] = d2;
+  d[3] = d3;
+  spec { exclhi(d0,d1,d2,d3) }
+  send { }
+  recv { }
+}
+
+e1of2 a;
+e1of2 b;
+e1of4 a4;
+

@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2007/08/17 00:39:06 fang Exp $
+#	$Id: Makefile.am,v 1.16 2007/09/13 20:37:45 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,7 +12,7 @@ HACKT_PARSE_TEST_FAILURES = 000 003 004 006 007 \
 HACKT_PARSE_TEST_PASSES = \
 	001 002 005 008 009 010 \
 	011 012 014 015 016 017 019 \
-	020 021 024 025 \
+	020 021 024 025 026 027 \
 	connect-001 connect-002 connect-003 connect-004 connect-005 \
 	connect-006 connect-007 connect-008 connect-009 connect-010 \
 	connect-011 connect-012 \
@@ -40,7 +40,7 @@ HACKT_PARSE_TEST_PASSES = \
 # 	connect-033 connect-034 connect-035 connect-036
 
 # TODO: other unroll-passes
-HACKT_CREATE_TEST_PASSES = \
+HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = \
 	025 \
 	connect-001 connect-002 connect-005 connect-006 \
 	connect-009 connect-010 \
@@ -51,6 +51,9 @@ HACKT_CREATE_TEST_PASSES = \
 	connect-041 connect-042 connect-045 connect-048 \
 	connect-051 connect-052 \
 	dataless-01 dataless-02 dataless-03 dataless-05
+
+HACKT_CREATE_TEST_PASSES = $(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS) \
+	027
 
 HACKT_CREATE_TEST_FAILURES = \
 	024 \
@@ -67,8 +70,9 @@ HACKT_CREATE_TEST_FAILURES = \
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 
-# temporary for now:
-HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_PASSES)
+HACKT_CFLAT_TEST_SUBJECTS = \
+	027
+
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	connect-038-a connect-038-b \

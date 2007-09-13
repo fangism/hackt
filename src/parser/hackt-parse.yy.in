@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.29 2007/08/28 04:54:25 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.30 2007/09/13 20:37:24 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -30,6 +30,7 @@
 #include "lexer/hackt-lex-options.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
+#include "Object/devel_switches.h"	// for DEFCHAN_LIKE_PROCESS
 
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
@@ -284,10 +285,13 @@ extern const char* const yyrule[];
 	chan_type*		_chan_type;
 	user_chan_type_prototype*	_user_chan_type_prototype;
 	user_chan_type_def*	_user_chan_type_def;
+/***
+// superceded by generic port formals
 	data_param_id*		_data_param_id;
 	data_param_id_list*	_data_param_id_list;
 	data_param_decl*	_data_param_decl;
 	data_param_decl_list*	_data_param_decl_list;
+***/
 	instance_management*	_instance_management;
 	instance_base*		_instance_base;
 	HAC::parser::instance_array*	_instance_array;
@@ -473,7 +477,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_node_position>	'+' '-' '*' '/' '%'
 %type	<_node_position>	'~' '&' '|' '^'
 %type	<_node_position>	'!' '?'
-%type	<_node_position>	'$'
+%type	<_node_position>	'$' '@'
 
 /*
 	the following tokens are defined below because they consist of
@@ -505,6 +509,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_keyword_position>	NAMESPACE
 %token	<_keyword_position>	OPEN AS
 %token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG SPEC_LANG
+%token	<_keyword_position>	TREE_LANG SUBCKT_LANG
 %token	<_keyword_position>	SKIP LOG
 %token	<_keyword_position>	DEFINE DEFPROC DEFCHAN DEFTYPE
 %token	<_keyword_position>	TYPEDEF
@@ -552,8 +557,12 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_keyword_position>	def_or_proc
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
-%type	<_user_data_type_prototype>	declare_datatype_proto
-%type	<_user_chan_type_prototype>	declare_chan_proto
+/* for DEFTYPE_LIKE_PROCESS */
+%type	<_process_prototype>	declare_datatype_proto
+/* %type	<_user_data_type_prototype>	declare_datatype_proto */
+/* for DEFCHAN_LIKE_PROCESS */
+%type	<_process_prototype>	declare_chan_proto
+/* %type	<_user_chan_type_prototype>	declare_chan_proto */
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
 %type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
 %type	<_template_formal_decl_list>	template_formal_decl_nodefault_list_in_angles template_formal_decl_nodefault_list
@@ -581,14 +590,20 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_enum_prototype>	declare_enum
 %type	<_enum_def>		defenum
 %type	<_enum_member_list>	enum_member_list
-%type	<_user_data_type_def>	defdatatype
-%type	<_user_chan_type_def>	defchan
+/* for DEFTYPE_LIKE_PROCESS */
+%type	<_process_def>	defdatatype
+/* %type	<_user_data_type_def>	defdatatype */
+/* for DEFCHAN_LIKE_PROCESS */
+%type	<_process_def>	defchan
+/* %type	<_user_chan_type_def>	defchan	*/
 %type	<_chp_body>	set_body get_body send_body recv_body
+/***
 %type	<_data_param_decl_list>	data_param_decl_list
 %type	<_data_param_decl_list>	data_param_decl_list_in_parens
 %type	<_data_param_decl>	data_param_decl
 %type	<_data_param_id_list>	data_param_id_list
 %type	<_data_param_id>	data_param_id
+***/
 %type	<_definition_body>	definition_body optional_definition_body
 %type	<_instance_management_list>	instance_management_list
 %type	<_def_body_item>	definition_body_item
@@ -697,6 +712,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr>	relative_member_index_expr
 %type	<_inst_ref_expr>	grouped_reference
 /* %type	<_inst_ref_expr>	type_completion_reference */
+%type	<_prs_literal>	prs_literal_base
 %type	<_prs_literal>	prs_literal
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
@@ -1201,19 +1217,39 @@ declare_datatype_proto
 	: optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
-          data_param_decl_list_in_parens ';'
-		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
-		  DELETE_TOKEN($7); }
+	/* DEFTYPE_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens ';'
+/*	  data_param_decl_list_in_parens ';'	*/
+		{
+#if DEFTYPE_LIKE_PROCESS
+		$$ = new process_prototype($1, $2, $3, $6);
+		  DELETE_TOKEN($4); DELETE_TOKEN($5); DELETE_TOKEN($7);
+#else
+		$$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7);
+#endif
+		}
 	;
 
 defdatatype
 	: optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
-          data_param_decl_list_in_parens
+	/* DEFTYPE_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens
+/*	  data_param_decl_list_in_parens */
 	  '{' optional_definition_body set_body get_body '}'
-		{ $$ = new user_data_type_def(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11); }
+		{
+#if DEFTYPE_LIKE_PROCESS
+		WRAP_LIST($7, $8, $11);
+		$$ = new process_def($1, $2, $3, $6, $8);
+		DELETE_TOKEN($4); DELETE_TOKEN($5);
+		DELETE_TOKEN($9); DELETE_TOKEN($10);
+#else
+		$$ = new user_data_type_def(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+#endif
+		}
 	;
 
 set_body
@@ -1252,17 +1288,37 @@ enum_member_list
 
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-	  data_param_decl_list_in_parens ';'
-		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
-		  DELETE_TOKEN($7); }
+	/* for DEFCHAN_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens ';'
+/*	  data_param_decl_list_in_parens ';'	*/
+		{
+#if DEFCHAN_LIKE_PROCESS
+		$$ = new process_prototype($1, $2, $3, $6);
+		  DELETE_TOKEN($4); DELETE_TOKEN($5); DELETE_TOKEN($7);
+#else
+		$$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7);
+#endif
+		}
 	;
 	
 defchan
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-          data_param_decl_list_in_parens
+	/* for DEFCHAN_LIKE_PROCESS */
+	  optional_port_formal_decl_list_in_parens
+/*	  data_param_decl_list_in_parens	*/
 	  '{' optional_definition_body send_body recv_body '}'
-		{ $$ = new user_chan_type_def(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11); }
+		{
+#if DEFCHAN_LIKE_PROCESS
+		WRAP_LIST($7, $8, $11);
+		$$ = new process_def($1, $2, $3, $6, $8);
+		DELETE_TOKEN($4); DELETE_TOKEN($5);
+		DELETE_TOKEN($9); DELETE_TOKEN($10);
+#else
+		$$ = new user_chan_type_def(
+			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+#endif
+		}
 	;
 
 send_body
@@ -1277,14 +1333,16 @@ recv_body
 		  $$ = new CHP::body($1, $3); }
 	;
 
+/***
+// unused since channels and datatypes resemble processes
 data_param_decl_list_in_parens
 	: '(' data_param_decl_list ')'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 data_param_decl_list
-/* like declarations in formals list
-	consider using ';', similar to C-style... */
+// like declarations in formals list
+//	consider using ';', similar to C-style...
 	: data_param_decl_list ';' data_param_decl
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| data_param_decl
@@ -1292,12 +1350,10 @@ data_param_decl_list
 	;
 
 data_param_decl
-/*
-	forseen problem: array brackets are with data_type
-	but to follow C-style, we want the arrays to go with identifiers
-	thinking of forbidding list, restricting to single
-	semicolon-delimited declarations
-*/
+//	forseen problem: array brackets are with data_type
+//	but to follow C-style, we want the arrays to go with identifiers
+//	thinking of forbidding list, restricting to single
+//	semicolon-delimited declarations
 	: data_type_ref data_param_id_list
 		{ $$ = new data_param_decl($1, $2); }
 	;
@@ -1310,11 +1366,11 @@ data_param_id_list
 	;
 
 data_param_id
-	/** really, this should be formal */
+	// really, this should be formal
 	: ID optional_dense_range_list
 		{ $$ = new data_param_id($1, $2); }
 	;
-
+***/
 
 /* --- definition_body --- */
 definition_body
@@ -2008,6 +2064,14 @@ prs_body_item
 	| prs_loop { $$ = $1; }
 	| prs_conditional { $$ = $1; }
 	| prs_macro { $$ = $1; }
+	/* extensions requested by Clint for forked tool-chain */
+	/* actions here are provisional dummy actions, not real impl. */
+	| TREE_LANG optional_template_arguments_in_angles '{' prs_body '}'
+		{ DELETE_TOKEN($2);
+		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
+	| SUBCKT_LANG optional_template_arguments_in_angles '{' prs_body '}'
+		{ DELETE_TOKEN($2);
+		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
 	;
 
 /* looks like a function call */
@@ -2065,9 +2129,9 @@ single_prs
 	/* note: type-check prs_expr as boolean return type */
 	/* conflict: expr can end ID, and prs_expr can start ID, S/R on :: */
 	: prs_rule_attribute_list_in_brackets
-		prs_expr prs_arrow relative_member_index_expr dir
+		prs_expr prs_arrow prs_literal_base dir
 		{ $$ = new PRS::rule($1, $2, $3, $4, $5); }
-	| prs_expr prs_arrow relative_member_index_expr dir
+	| prs_expr prs_arrow prs_literal_base dir
 		{ $$ = new PRS::rule(NULL, $1, $2, $3, $4); }
 	;
 
@@ -2123,10 +2187,22 @@ prs_paren_expr
 		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
+/* internal node annotation, just parsed and ignored for now */
+prs_literal_base
+	: prs_internal_optional relative_member_index_expr
+		{ $$ = new PRS::literal($2); }
+	;
+
 /* the optional expr-list are transistor sizes */
 prs_literal
-	: relative_member_index_expr expr_list_in_angles_optional
-		{ $$ = new PRS::literal($1, $2); }
+	: prs_literal_base expr_list_in_angles_optional
+		{ $$ = $1; $$->attach_parameters($2); }
+	;
+
+/* internal node annotation, just parsed and ignored for now */
+prs_internal_optional
+	: '@' { DELETE_TOKEN($1); }
+	|
 	;
 
 prs_unary_expr
@@ -2142,9 +2218,10 @@ prs_not
 	| prs_unary_expr { $$ = $1; }
 	;
 
+/* only allow precharge notation on & operator -- Clint */
 prs_and
-	: prs_and '&' prs_not
-		{ $$ = new logical_expr($1, $2, $3); }
+	: prs_and '&' prs_operator_attribute_optional prs_not
+		{ $$ = new logical_expr($1, $2, $4); }
 	| prs_not { $$ = $1; }
 	;
 
@@ -2152,6 +2229,19 @@ prs_or
 	: prs_or '|' prs_and
 		{ $$ = new logical_expr($1, $2, $3); }
 	| prs_and { $$ = $1; }
+	;
+
+/* even the operators get attributes now... no token left behind! */
+prs_operator_attribute
+	: '{' dir prs_expr '}'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($2); 
+			DELETE_TOKEN($3); DELETE_TOKEN($4); }
+	;
+
+/* for now, no return type yet */
+prs_operator_attribute_optional
+	: prs_operator_attribute
+	|
 	;
 
 /* non-short-circuit AND */

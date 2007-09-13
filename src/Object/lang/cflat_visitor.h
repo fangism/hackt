@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.6 2007/04/19 03:13:40 fang Exp $
+	$Id: cflat_visitor.h,v 1.7 2007/09/13 20:37:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__

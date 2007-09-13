@@ -11,9 +11,9 @@ state	value
 #STATE#	keyword: prs [4:1..3]
 #STATE#	{ [4:5]
 #STATE#	~ [5:2]
+#STATE#	(unknown)
 #STATE#	~ [5:3]
 in state #STATE#, possible rules are:
-	prs_not: '~' . prs_unary_expr  (#RULE#)
+	prs_literal_base: prs_internal_optional . relative_member_index_expr  (#RULE#)
 acceptable tokens are: 
-	'(' (shift)
 	ID (shift)

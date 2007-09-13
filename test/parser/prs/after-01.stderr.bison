@@ -14,7 +14,7 @@ state	value
 #STATE#	(prs-literal) [7:1..5]
 #STATE#	int: 12 [7:7]
 in state #STATE#, possible rules are:
-	single_prs: prs_expr . prs_arrow relative_member_index_expr dir  (#RULE#)
+	single_prs: prs_expr . prs_arrow prs_literal_base dir  (#RULE#)
 acceptable tokens are: 
 	IMPLIES (shift)
 	RARROW (shift)

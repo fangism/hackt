@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.12 2007/09/13 01:14:10 fang Exp $
+	$Id: cflat_options.h,v 1.13 2007/09/13 20:37:22 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__

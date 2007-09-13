@@ -4,17 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	datadefn	0	#HEAD#	#TAIL#	84
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
 	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	254
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -24,16 +21,12 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    my_data = user-defined-datatype (declared) my_data
-      int<24>
-      (
+    my_data = process-definition (declared) my_data(
         int<28> x
       )
-      In datatype definition "my_data", we have: {
+      In definition "my_data", we have: {
       Instances:
         x = int<28> my_data::x
-      unroll sequence: 
-        int<28> x
       }
 
 }

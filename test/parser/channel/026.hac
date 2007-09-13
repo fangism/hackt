@@ -1,0 +1,11 @@
+// "026.hac"
+// from Virantha
+
+defchan e1of2 <: chan(bool) (bool d[2]; bool t, f, e) {
+d[0] = f;
+d[1] = t;
+spec { exclhi(f,t) }
+send {}
+recv{}
+}
+

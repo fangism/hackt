@@ -1,0 +1,13 @@
+// "subckt-00.hac"
+// testing grammatic extensions to language
+
+defproc bogus(bool x, y, z) {
+prs {
+	x -> y-
+subckt {
+	~y -> z+
+}
+}
+}
+
+

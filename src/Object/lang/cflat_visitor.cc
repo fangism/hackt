@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.7 2007/04/19 03:13:39 fang Exp $
+	$Id: cflat_visitor.cc,v 1.8 2007/09/13 20:37:19 fang Exp $
  */
 
 #include <algorithm>

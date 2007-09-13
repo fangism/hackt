@@ -11,10 +11,10 @@ state	value
 #STATE#	list<(def-body-item)>: (instance-decl) ... [12:2--13:15]
 #STATE#	keyword: prs [16:2..4]
 #STATE#	{ [16:6]
-#STATE#	(id-expr): foo [17:3..5]
+#STATE#	(prs-literal) [17:3..5]
 #STATE#	+ [17:6]
 in state #STATE#, possible rules are:
-	prs_literal : relative_member_index_expr . expr_list_in_angles_optional  (#RULE#)
+	prs_literal : prs_literal_base . expr_list_in_angles_optional  (#RULE#)
 	expr_list_in_angles_optional : .  (#RULE#)
 acceptable tokens are: 
 	'&' (reduce)
@@ -22,5 +22,6 @@ acceptable tokens are:
 	')' (reduce)
 	'<' (shift)
 	'|' (reduce)
+	'}' (reduce)
 	IMPLIES (reduce)
 	RARROW (reduce)

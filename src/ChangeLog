@@ -3,6 +3,35 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-72-merged-PRS-07-13:
+	  Five month old branch merged.  Syntactic support for
+		PRS extensions tree and subckt, just parsed and ignored.
+		Minimalist test cases included.
+		Datatypes are now parsed like processes for simplicity.
+		Added unstab attribute to PRS.  
+
+
+2007-09-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-13:
+	  parser/hackt-parse.yy.in: commented-out no longer used data_param
+		syntax rules and types, superceded by generic types in grammar.
+
+
+2007-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-12:
+	  Four months later... still no contributed test cases... XS
+	  Synchronizes with (Rajit's) ACT update from 20070909.
+	  Support optional parameters in subckt <...> {...} syntax.
+		Still just ignores, but parses.
+		Intended parameters are single integer or "string".  
+		Added minimal pass test cases, not bothering fail tests.  
+	  Going to attempt long-distance branch merge...
+
+
 2007-09-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-71:
@@ -1571,6 +1600,19 @@
 
 2007-05-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-16-PRS-07-11:
+	  deftype (for datatypes) is also now 'snarfed' as a process definition
+		analogous to defchan.  set and get bodies are dropped.  
+		Consequence: user-defined datatypes will not work as intended.
+	  More tests updated than expected: expect-fails (rejecting process
+		instantiations inside deftype) are now accepted.
+		deftype createdumps updated accordingly.  
+		Other parser-related test cases updated, including for bison.
+	  Added minimialist test case for deftype (fake) support.  
+
+
+2007-05-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-31:
 	  No source revision: added long-awaited token-hole test and 
 		expected deadlock chpsim tests.
@@ -1651,6 +1693,38 @@
 		Some expect-fail tests haven't been addressed yet.
 
 
+2007-04-30	Virantha Ekanayake	<viran@csl.cornell.edu>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-10:
+	  Added unstab attribute to production rules
+	  Also added a minimalist test-case in parser/prs (Fang).
+
+
+2007-04-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-09:
+	  As per request by Virantha:
+		defchan is now treated like a process, where the 
+			:> built-chan-type is ignored, and the 
+			send/recv CHP bodies are ignored.  
+		Only change was done in the parser, leaving middle-end
+			type-checking unchanged, merely piggy-backing
+			off of the process infrastructure.
+		I repeat: defchan == defproc
+		User-defined channels will never connect to fundamental
+			channel types this way, so it shall remain broken.
+		Small handful of parser expect-fail tests updated for bison.
+	  Added defchan test case from Virantha, works as expected.  
+
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-08:
+	  User-defined channels now accept SPEC directives in body.
+	  parser/hackt-parse.yy.in: only allow expression attributes
+		like precharge to apply to & (and), not | (or) exprs.
+	  Bunch of minimal test cases added, tree and subckt now generate
+		cflattened prs as requested.  
+
+
 2007-04-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-19-chpsim-04-23:
@@ -1703,6 +1777,22 @@
 	  Updated a handful test cases, now many initial sends block
 		properly, now effectively slack 0!
 	  Next: keep updating tests.  
+
+
+2007-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-07:
+	  Clean-up of previous patch, along with some code refactoring
+		to reduce duplication.  
+
+
+2007-04-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-06:
+	  parser::PRS::body is now a body_item, for prs rule nesting.
+	  HAC::entity::PRS::nested_rules class for convenient nesting.
+		tree and subckt now forward rules to their enclosing 
+		environment, and are treated like normal PRS.  
 
 
 2007-04-26	David Fang		<fangism@users.sourceforge.net>
@@ -1912,6 +2002,14 @@
 
 2007-04-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-16-PRS-07-05-backport-main-00-81-18:
+	  Backtport of delta HACKT-00-01-04-main-00-81-17 to -00-81-18 patch.
+	  sim/prsim/Expr.h: now define HUGE_MAX_EXPR_COUNT to use short to 
+		increase range, and some improved diagnostics.  
+
+
+2007-04-18	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-18:
 	  Virantha wins the lottery!  He is the first person to 
 		exceed the 255 term limit of prs expressions in prsim,
@@ -1976,12 +2074,51 @@
 	  Scheme-only revision: see scm/ChangeLog: new rb-tree implementation.
 
 
+2007-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-04:
+	  grammar: allow prs_literal to take an optional '@' prefix
+		for provisional internal-node notation.  
+		Token is just ignored and has no impact on rest of front-end.  
+	  Minor restructuring to AST/PRS.{h,cc} to accomodate 
+		prs_literal_base construction.  
+	  Handful of parse expect-fail tests updated.  
+
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-03:
+	  Minor fix to prev. patch: tree/subckt language bodies are
+		only nested inside PRS.  
+	  AST/PRS.cc: body::check_build() PRS body items may now be NULL, 
+		as returned by ignored language extension constructs.  
+
+
+2007-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-02:
+	  Added new language bodies 'tree' and 'subckt' as per Clint's request
+		to support extensions in forked tool-chain.  
+	  NOTE: this adds new keywords!!! don't blame me for breakage.  :P
+	  Added a few minimal test cases.
+
+
 2007-04-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-15-scm-01-28:
 	  No compiled-source revision, only scheme additions, see scm/ChangeLog.
 		Summary: branch-selection histogram construction, and
 		other general utility procedures.  
+
+
+2007-04-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-01:
+	  Branchlet to support Clint's proposed PRS annotations.
+	  This revision augmented the prs_and and prs_or syntax to support
+		an (optional) operator-suffix attribute for precharge notation.
+		The tokens, however, are just deleted, and not processed,
+			as per request.  
+		A scant few test expect-fails updated (yacc-only), no changes
+			necessary for bison.  
 
 
 2007-04-08	David Fang		<fangism@users.sourceforge.net>
