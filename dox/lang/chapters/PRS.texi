@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.2 2007/08/21 00:50:38 fang Exp $
+@c $Id: PRS.texi,v 1.3 2007/09/13 23:53:00 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -53,6 +53,7 @@ or compiler phases where desired.
 
 @menu
 * PRS Sizing::
+* PRS Internal Nodes::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -71,6 +72,32 @@ Each literal on the LHS may be followed by an optional size argument:
 Ideas: Specify a width/strength on the RHS and automatically infer
 the sizes of the literals on the LHS (only for this rule).  
 
+Actually, literal parameters may be any generalized list of expressions.  
+
+@c ----------------------------------------------------------------------------
+@node PRS Internal Nodes
+@subsection Internal Nodes
+@cindex internal nodes
+
+A literal may be optionally prefixed with @samp{@@} to indicate that
+it is only an internal node, and is not declared as a normal bool.  
+Internal nodes are useful for specifying more general 
+circuit topologies.  
+
+@example
+en -> @@_en_int-         @r{// defines an internal node}
+~@@_en_int & Ld -> _rd-  @r{// uses internal node as foot transistor}
+@end example
+
+Above, @t{_en_int} is not declared as a bool, but the first rule that
+drives it effectively declares it.  
+An internal node may only be referenced as the leftmost literal
+of any conjunctive (and) term.  
+
+@strong{Status}: parsed, but not yet implemented in the front-end.  
+
+TODO: should this work with arrays or in loops?
+
 @c ----------------------------------------------------------------------------
 @node PRS Attributes
 @section Attributes
@@ -83,6 +110,7 @@ for various tools.
 * PRS Node attributes::
 * PRS Rule attributes::
 * PRS Literal attributes::
+* PRS Operator attributes::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -122,6 +150,12 @@ such as old versions of @command{prsim}.
 
 Q: What happens when we OR-combine rules with different attributes?
 
+Some existing attributes:
+
+@include prs/attribute-after.texi
+@include prs/attribute-weak.texi
+@include prs/attribute-unstab.texi
+
 @c ----------------------------------------------------------------------------
 @node PRS Literal attributes
 @subsection Literal attributes
@@ -140,7 +174,26 @@ Procedural layout?
 
 Automatic sizing
 
-TODO: PRS-07 branch syntax merges!!!
+@c ----------------------------------------------------------------------------
+@node PRS Operator attributes
+@subsection Operator attributes
+@cindex operator attributes, PRS
+@cindex precharge
+
+The @prsand{} operator may take an optional suffix attribute
+to indicate that an internal node is precharged.  For example:
+
+@example
+en &@{+~en@} Ld & Ci -> _rd-
+@end example
+
+@noindent
+states that the internal node between gates @t{en} and @t{Ld} is
+precharged with a PFET gated with @t{~en}.  
+
+
+@strong{Status}: parsed, but ignored.
+Should this be done with @prsor{} as well?
 
 @c ----------------------------------------------------------------------------
 @node PRS Loops

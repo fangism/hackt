@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2007/08/28 04:53:43 fang Exp $
+#	$Id: Makefile.am,v 1.27 2007/09/13 23:52:58 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -68,7 +68,9 @@ $(srcdir)/spec.mk: Makefile.in
 
 AUTO_TEXINFO_DEPS += prsmacros.mk spec.mk
 
-$(PRS_MACROS_TEXI): $(top_srcdir)/src/Object/lang/PRS_macro_registry.cc
+$(PRS_MACROS_TEXI): \
+		$(top_srcdir)/src/Object/lang/PRS_macro_registry.cc \
+		$(top_srcdir)/src/Object/lang/PRS_attribute_registry.cc
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
 
 $(SPEC_DIRECTIVES_TEXI): $(top_srcdir)/src/Object/lang/SPEC_registry.cc

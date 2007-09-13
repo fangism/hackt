@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.10 2007/09/13 20:37:18 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.11 2007/09/13 23:53:01 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -83,6 +83,14 @@ namespace cflat_rule_attributes {
 		register_cflat_attribute_class)
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-after.texi
+@defmac after d
+Applies a fixed delay @var{d} to a single rule.
+Affects @command{hflat} output and @command{hacprsim} operation.  
+@end defmac
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(After, "after")
 
 /**
@@ -99,6 +107,14 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-weak.texi
+@defmac weak b
+If @var{b} is true, rule is considered weak, e.g. feedback, 
+and may be overpowered by non-weak rules.  
+@end defmac
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Weak, "weak")
 
 /**
@@ -116,6 +132,13 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 
 //-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-unstab.texi
+@defmac unstab b
+If @var{b} is true, rule is allowed to be unstable, as an exception.
+@end defmac
+@end texinfo
+***/
 DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Unstab, "unstab")
 
 /**

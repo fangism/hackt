@@ -5,6 +5,10 @@
 
 2007-09-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-73:
+	  No source revision, documentation updates only for PRS-07 merge.
+
+
 	* HACKT-00-01-04-main-00-81-72-merged-PRS-07-13:
 	  Five month old branch merged.  Syntactic support for
 		PRS extensions tree and subckt, just parsed and ignored.
