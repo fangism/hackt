@@ -1,0 +1,14 @@
+// "subckt-04.hac"
+// copy-modified from "subckt-00.hac"
+// testing grammatic extensions to language
+
+defproc bogus(bool x, y, z) {
+prs {
+	x -> y-
+subckt <"my_name_is"> {
+	~y -> z+
+}
+}
+}
+
+

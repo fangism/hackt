@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-16-PRS-07-12:
+	  Four months later... still no contributed test cases... XS
+	  Synchronizes with (Rajit's) ACT update from 20070909.
+	  Support optional parameters in subckt <...> {...} syntax.
+		Still just ignores, but parses.
+		Intended parameters are single integer or "string".  
+		Added minimal pass test cases, not bothering fail tests.  
+	  Going to attempt long-distance branch merge...
+
 
 2007-05-02	David Fang		<fangism@users.sourceforge.net>
 
