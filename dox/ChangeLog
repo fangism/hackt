@@ -1,10 +1,12 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.28 2007/09/14 01:54:32 fang Exp $
+#	$Id: ChangeLog,v 1.29 2007/09/14 04:29:51 fang Exp $
 
 2007-09-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74:
 	  Removed most obsolete latex sources, superceded by texinfo sources.
+	  Texinfo dvi and pdf cannot be built in parallel because 
+		auxiliary file collide.
 
 
 2007-08-29	David Fang		<fangism@users.sourceforge.net>

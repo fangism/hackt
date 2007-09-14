@@ -1,10 +1,11 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2007/09/14 02:53:31 fang Exp $
+#	$Id: Makefile.am,v 1.30 2007/09/14 04:29:53 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
+.NOTPARALLEL: hac.pdf hac.dvi
 
 info_TEXINFOS += hac.texi
 INFOS = $(TEXINFOS:.texi=.info)

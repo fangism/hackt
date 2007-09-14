@@ -6,7 +6,9 @@
 2007-09-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74:
-	  No source revision, removed obsolete latex documentation.
+	  main/compile.cc: don't auto-name object file, because
+		srcdir of input file is not automatically stripped.
+	  dox/: Removed obsolete latex documentation.
 
 
 	* HACKT-00-01-04-main-00-81-73:

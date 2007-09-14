@@ -1,10 +1,11 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2007/09/14 01:55:08 fang Exp $
+#	$Id: Makefile.am,v 1.6 2007/09/14 04:29:53 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hacprsim.pdf
 PSS = $(PDFS:.pdf=.ps)
+.NOTPARALLEL: hacprsim.dvi hacprsim.pdf
 
 info_TEXINFOS += hacprsim.texi
 INFOS = $(TEXINFOS:.texi=.info)

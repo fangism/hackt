@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.16 2007/09/13 01:14:13 fang Exp $
+	$Id: compile.cc,v 1.17 2007/09/14 04:29:56 fang Exp $
  */
 
 #include <iostream>
@@ -181,17 +181,20 @@ compile::make_module(int argc, char* argv[], options& opt,
 
 	// dependency generation setup
 	if (!opt.have_target()) {
+		// if not already named by -o, use next non-option argument
 	if (argc >= 2) {
 		opt.target_object = argv[1];
 	} else {
 		// default: append 'o' to get object file name
-		opt.target_object = opt.source_file + 'o';
+		// problem: doesn't automatically strip srcdir
+		// opt.target_object = opt.source_file + 'o';
 	}
 	}	// else ignore argv[1], use whatever was set before
 	// have target by now
-	NEVER_NULL(opt.have_target());
+	if (opt.have_target()) {
 	if (!check_file_writeable(opt.target_object.c_str()).good)
 		return 1;
+	}
 
 	// parse it
 	ret = parse_and_check(opt.source_file.c_str(), opt);
@@ -215,7 +218,8 @@ compile::main(const int argc, char* argv[], const global_options&) {
 	if (!mod) {
 		return 1;
 	}
-	if (argc -optind >= 2) {
+	// if (argc -optind >= 2)
+	if (opt.have_target()) {
 		// save_module(*mod, opt.target_object);
 		// save_module_debug(*mod, opt.target_object);
 		save_module_debug(*mod, opt.target_object.c_str(), 

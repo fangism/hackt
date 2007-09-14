@@ -1,10 +1,11 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2007/09/14 01:54:47 fang Exp $
+#	$Id: Makefile.am,v 1.15 2007/09/14 04:29:52 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hacchpsim.pdf
 PSS = $(PDFS:.pdf=.ps)
+.NOTPARALLEL: hacchpsim.dvi hacchpsim.pdf
 
 ################### texinfo documentation #####################################
 
