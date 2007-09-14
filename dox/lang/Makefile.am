@@ -1,13 +1,10 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/09/13 23:52:58 fang Exp $
+#	$Id: Makefile.am,v 1.28 2007/09/14 01:54:51 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
-
-noinst_DATA += hac-tex.pdf hac-tex.dvi
-.NOTPARALLEL: hac-tex.pdf hac-tex.dvi
 
 info_TEXINFOS += hac.texi
 INFOS = $(TEXINFOS:.texi=.info)
@@ -17,8 +14,13 @@ HTML_HOOKS += hac.html
 AM_MAKEINFOFLAGS = -I$(srcdir)/../common -I../common
 
 # generate grammar appendix
-GRAMMAR_SOURCE = $(top_builddir)/src/parser/hackt-parse.output
+GRAMMAR_DIR = $(top_builddir)/src
+GRAMMAR_OUTPUT = parser/hackt-parse.output
+GRAMMAR_SOURCE = $(GRAMMAR_DIR)/$(GRAMMAR_OUTPUT)
 GRAMMAR_TEXI = grammar/rules.texi
+
+$(GRAMMAR_SOURCE):
+	cd $(GRAMMAR_DIR) && $(MAKE) $(AM_MAKEFLAGS) $(GRAMMAR_OUTPUT)
 
 hac_info_INCLUDES = \
 	hacmacros.texi \
@@ -79,11 +81,10 @@ $(SPEC_DIRECTIVES_TEXI): $(top_srcdir)/src/Object/lang/SPEC_registry.cc
 # don't make true dependency becaues srcdir depending on built file
 # will break distribution, forcing docs to always be rebuilt.
 # $(srcdir)/$(GRAMMAR_TEXI).texi: $(GRAMMAR_SOURCE)
-$(srcdir)/$(GRAMMAR_TEXI):
-	test -f $(GRAMMAR_SOURCE) && \
-	$(CAT) $(GRAMMAR_SOURCE) | \
+$(srcdir)/$(GRAMMAR_TEXI): $(GRAMMAR_SOURCE)
+	$(CAT) $< | \
 	$(AWK) '{if (match($$1,"[0-9]+") && match($$0,"[:|]") && !match($$0,"[.]")) print;}' | \
-	  $(SED) -e 's/{/@{/g' -e 's/}/@}/g' > $@
+	  $(SED) -e 's/@/@@/g' -e 's/{/@{/g' -e 's/}/@}/g' > $@
 # the filter should work for yacc and bison
 # sed filtering is to escape braces for non-verbatim texinfo inclusion
 
@@ -102,38 +103,8 @@ hac.pdf hac.dvi hac.html $(srcdir)/hac.info: $(hac_info_DEPS)
 EXTRA_DIST += $(hac_info_DEPS)
 
 ###############################################################################
-# obsolete latex sources
-# have to add these by hand? :S
 EXTRA_DIST += \
-	hac-tex.tex \
-	chapters/preface.tex \
-	chapters/goals.tex \
-	chapters/intro.tex \
-	chapters/types.tex \
-	chapters/expressions.tex \
-	chapters/arrays.tex \
-	chapters/processes.tex \
-	chapters/channels.tex \
-	chapters/datatypes.tex \
-	chapters/namespaces.tex \
-	chapters/templates.tex \
-	chapters/typedefs.tex \
-	chapters/connections.tex \
-	chapters/linkage.tex \
-	chapters/CHP.tex \
-	chapters/PRS.tex \
-	chapters/SPEC.tex \
 	TODO ChangeLog
-
-# need GNU make for the following:
-# automatically generated dependencies in this (built) dir
-# -include hac.depend
-# AUTO_DEPENDS += hac.depend 
--include hac-tex.pdfdepend
--include hac-tex.dvidepend
-AUTO_DEPENDS += hac-tex.pdfdepend hac-tex.dvidepend
-
-hac-tex.pdf hac-tex.dvi: $(srcdir)/../common/hac.bib
 
 include $(top_srcdir)/dox/Make.dox-tail
 

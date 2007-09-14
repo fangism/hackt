@@ -1,20 +1,10 @@
 # "dox/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2007/08/29 04:45:40 fang Exp $
+#	$Id: Makefile.am,v 1.14 2007/09/14 01:54:47 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hacchpsim.pdf
-# deprecated:
-noinst_DATA += chpsim-tex.pdf chpsim-tex.ps
 PSS = $(PDFS:.pdf=.ps)
-
-.NOTPARALLEL: chpsim-tex.pdf chpsim-tex.dvi
-
-# have to add these by hand? :S
-EXTRA_DIST += \
-	chpsim-tex.tex \
-	intro.tex \
-	execution.tex
 
 ################### texinfo documentation #####################################
 
@@ -95,13 +85,6 @@ STDCHPFN_SRCS = \
 # once first to force-regenerate all dependent texis.  
 $(HACCHPSIM_FUNCTIONS_TEXI): $(STDCHPFN_SRCS)
 	$(EXTRACT_TEXINFO_SRCDIR_BATCH_SCRIPT)
-#	$(EXTRACT_TEXINFO) $(STDCHPFN_SRCS)
-
-# don't depend on directories, because these are always built newer
-# than their contents/file duing make dist...
-# $(HACCHPSIM_OPTIONS_TEXI): $(srcdir)/options
-# $(HACCHPSIM_COMMANDS_TEXI): $(srcdir)/cmd
-# $(HACCHPSIM_FUNCTIONS_TEXI): $(srcdir)/fn
 
 auto_hacchpsim_info_DEPS = \
 	$(HACCHPSIM_OPTIONS_TEXI) \
@@ -130,7 +113,6 @@ hacchpsim.dvi hacchpsim.pdf hacchpsim.html $(srcdir)/hacchpsim.info: \
 # Q: do figures need to be installed?
 
 # AM_MAKEINFOFLAGS =
-
 # hack: since the options, fn, cmd directories are created during make dist,
 # their time stamps will be newer than the files contained in those 
 # directories, which will cause the user to unnecessarily rebuild 
@@ -163,7 +145,6 @@ XFIG_PNG = $(XFIG_FIGURES:.fig=.png)
 
 all-figs: $(BUILT_FIGS)
 
-
 EXTRA_DIST += $(XFIG_FIGURES) $(SOURCE_DOTS) $(XFIG_PNG)
 # PNGs and built .figs too because distributed .info depends on them
 # (don't want user to have to rebuild .info)
@@ -174,16 +155,8 @@ AUTO_IGNORE += \
 
 CLEANFILES += $(BUILT_FIGS)
 
-# need GNU make for the following:
-# automatically generated dependencies in this (built) dir
--include chpsim-tex.pdfdepend
--include chpsim-tex.dvidepend
-AUTO_DEPENDS += chpsim-tex.pdfdepend chpsim-tex.dvidepend
+# COMMON_DEPS = $(srcdir)/../common/hac.bib $(XFIG_TEX)
 
-COMMON_DEPS = $(srcdir)/../common/hac.bib $(XFIG_TEX)
-
-chpsim-tex.pdf: $(COMMON_DEPS) $(XFIG_PDFTEX) $(XFIG_PDFTEX_T)
-chpsim-tex.dvi: $(COMMON_DEPS) $(XFIG_PSTEX) $(XFIG_PSTEX_T)
 # all-figs named so automake doesn't think we're overriding the targets' rule
 # LIMITATION: choosing not to try to include the .pdftex_t for now
 built-figs hacchpsim.dvi: $(XFIG_EPS)

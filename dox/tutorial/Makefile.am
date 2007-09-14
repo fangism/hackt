@@ -1,14 +1,11 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.11 2007/09/13 01:14:00 fang Exp $
+#	$Id: Makefile.am,v 1.12 2007/09/14 01:55:09 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hackt.pdf
 PSS = $(PDFS:.pdf=.ps)
-
-noinst_DATA += hackt.pdf hackt.ps
-.NOTPARALLEL: hackt-tex.pdf hackt-tex.dvi
 
 info_TEXINFOS += hackt.texi
 INFOS = $(TEXINFOS:.texi=.info)
@@ -71,20 +68,7 @@ EXTRA_DIST += $(auto_hackt_info_DEPS)
 
 hackt.dvi hackt.pdf hackt.html $(srcdir)/hackt.info: $(hackt_info_DEPS)
 
-######## old latex sources ####################################################
-EXTRA_DIST += README ChangeLog \
-	hackt-tex.tex \
-	hackt/intro.tex \
-	hackt/compiler.tex \
-	hackt/shell.tex \
-	hackt/diagnostics.tex \
-	hackt/legacy.tex
-
-# -include hackt.depend
-# AUTO_DEPENDS += hackt.depend
--include hackt-tex.pdfdepend
--include hackt-tex.dvidepend
-AUTO_DEPENDS += hackt-tex.pdfdepend hackt-tex.dvidepend
+EXTRA_DIST += README ChangeLog
 
 include $(top_srcdir)/dox/Make.dox-tail
 

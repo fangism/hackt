@@ -1,5 +1,5 @@
 # "CLEANUP"
-#	$Id: CLEANUP,v 1.2 2007/08/28 04:53:39 fang Exp $
+#	$Id: CLEANUP,v 1.3 2007/09/14 01:54:30 fang Exp $
 # Project-wide list of things to tidy up, re-organize, or just plain expurgate
 # As a first step, I will keep clean-up related tasks in this single file
 # instead of distributed across subdirectories.  
@@ -25,6 +25,4 @@ config/
 scripts/
 
 libltdl/
-	Patch configure.ac to point to ../config AC_CONFIG_DIR
-	and remove redundant automake 'missing' files.  
 

@@ -1,14 +1,10 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2007/08/21 00:50:43 fang Exp $
+#	$Id: Makefile.am,v 1.5 2007/09/14 01:55:08 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = hacprsim.pdf
 PSS = $(PDFS:.pdf=.ps)
-
-# deprecated
-noinst_DATA += prsim.pdf prsim.ps
-.NOTPARALLEL: prsim.pdf prsim.dvi
 
 info_TEXINFOS += hacprsim.texi
 INFOS = $(TEXINFOS:.texi=.info)
@@ -62,19 +58,6 @@ EXTRA_DIST += $(hacprsim_info_DEPS)
 # extra static dependencies
 hacprsim.dvi hacprsim.pdf hacprsim.html $(srcdir)/hacprsim.info: \
 	$(hacprsim_info_DEPS)
-
-########### old latex targets #################################################
-# have to add these by hand? :S
-EXTRA_DIST += \
-	prsim.tex
-
-# need GNU make for the following:
-# automatically generated dependencies in this (built) dir
-# -include cast2hac.depend
-# AUTO_DEPENDS += cast2hac.depend
--include prsim.pdfdepend
--include prsim.dvidepend
-AUTO_DEPENDS += prsim.pdfdepend prsim.dvidepend
 
 include $(top_srcdir)/dox/Make.dox-tail
 

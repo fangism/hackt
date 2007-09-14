@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.27 2007/08/29 04:45:39 fang Exp $
+#	$Id: ChangeLog,v 1.28 2007/09/14 01:54:32 fang Exp $
+
+2007-09-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74:
+	  Removed most obsolete latex sources, superceded by texinfo sources.
+
 
 2007-08-29	David Fang		<fangism@users.sourceforge.net>
 

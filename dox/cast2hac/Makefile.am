@@ -1,12 +1,10 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2007/08/20 00:02:33 fang Exp $
+#	$Id: Makefile.am,v 1.13 2007/09/14 01:54:33 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = cast2hac.pdf
 PSS = $(PDFS:.pdf=.ps)
-.NOTPARALLEL: cast2hac-tex.pdf cast2hac-tex.dvi
-noinst_DATA += cast2hac-tex.pdf cast2hac-tex.dvi
 
 info_TEXINFOS += cast2hac.texi
 INFOS = $(TEXINFOS:.texi=.info)
@@ -44,31 +42,7 @@ EXTRA_DIST += $(cast2hac_info_INCLUDES)
 # html_DATA = cast2hac.html
 HTML_HOOKS += cast2hac.html
 
-# have to add these by hand? :S
-EXTRA_DIST += \
-	ChangeLog \
-	cast2hac-tex.tex \
-	intro.tex \
-	CHP.tex \
-	PRS.tex \
-	arrays.tex \
-	connections.tex \
-	definitions.tex \
-	instances.tex \
-	loops.tex \
-	spec.tex \
-	templates.tex \
-	types.tex \
-	typedefs.tex \
-	cflat.tex
-
-# need GNU make for the following:
-# automatically generated dependencies in this (built) dir
-# -include cast2hac.depend
-# AUTO_DEPENDS += cast2hac.depend
--include cast2hac-tex.pdfdepend
--include cast2hac-tex.dvidepend
-AUTO_DEPENDS += cast2hac-tex.pdfdepend cast2hac-tex.dvidepend
+EXTRA_DIST += ChangeLog 
 
 include $(top_srcdir)/dox/Make.dox-tail
 
