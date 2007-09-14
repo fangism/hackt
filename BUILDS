@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.100 2007/09/13 20:37:10 fang Exp $
+	$Id: BUILDS,v 1.101 2007/09/14 20:13:48 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -247,8 +247,8 @@ readline: GNU readline 5.0
 i686-*-linux-gnu
 
 (Fang)
-Version: hackt 0.1.4-devel-20070830
-CVS Tag: HACKT-00-01-04-main-00-81-67
+Version: hackt 0.1.4-devel-20070913
+CVS Tag: HACKT-00-01-04-main-00-81-74
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
 build-triplet: i686-pc-linux-gnu
 c++: g++ (GCC) 3.3.4 (pre 3.3.5 20040809)
@@ -354,8 +354,8 @@ amd64-unknown-freebsd
 NOTE: this is an LP64 platform
 
 (Fang)
-Version: hackt 0.1.4-devel-20070830
-CVS Tag: HACKT-00-01-04-main-00-81-67
+Version: hackt 0.1.4-devel-20070913
+CVS Tag: HACKT-00-01-04-main-00-81-74
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '--enable-fun' 'YACC=yacc' 'ACLOCAL_FLAGS=-I /usr/local/share/aclocal' 'CONFIG_SHELL=/bin/sh' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
 build-triplet: amd64-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
@@ -387,8 +387,8 @@ NOTE: -Wno-undef worked around a false-error in configure (autoconf-2.60)
 	dying on an undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
 NOTE: guile disabled because version (1.4) is too old and unsupported
 
-Version: hackt 0.1.4-devel-20070830
-CVS Tag: HACKT-00-01-04-main-00-81-67
+Version: hackt 0.1.4-devel-20070913
+CVS Tag: HACKT-00-01-04-main-00-81-74
 Configured with: '--prefix=/usr/local/cad' '--disable-static' '--with-readline' '--enable-fun' 'YACC=yacc' 'ACLOCAL_FLAGS=-I /usr/local/share/aclocal' '-C' 'CC=ccache gcc' 'CXX=ccache g++' --enable-ltdl-convenience
 build-triplet: i386-unknown-freebsd6.2
 c++: g++ (GCC) 3.4.6 [FreeBSD] 20060305
