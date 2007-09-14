@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2007/09/14 01:54:51 fang Exp $
+#	$Id: Makefile.am,v 1.29 2007/09/14 02:53:31 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -80,9 +80,10 @@ $(SPEC_DIRECTIVES_TEXI): $(top_srcdir)/src/Object/lang/SPEC_registry.cc
 
 # don't make true dependency becaues srcdir depending on built file
 # will break distribution, forcing docs to always be rebuilt.
-# $(srcdir)/$(GRAMMAR_TEXI).texi: $(GRAMMAR_SOURCE)
-$(srcdir)/$(GRAMMAR_TEXI): $(GRAMMAR_SOURCE)
-	$(CAT) $< | \
+# $(srcdir)/$(GRAMMAR_TEXI): $(GRAMMAR_SOURCE)
+$(srcdir)/$(GRAMMAR_TEXI):
+	test -f $(GRAMMAR_SOURCE) && \
+	$(CAT) $(GRAMMAR_SOURCE) | \
 	$(AWK) '{if (match($$1,"[0-9]+") && match($$0,"[:|]") && !match($$0,"[.]")) print;}' | \
 	  $(SED) -e 's/@/@@/g' -e 's/{/@{/g' -e 's/}/@}/g' > $@
 # the filter should work for yacc and bison
