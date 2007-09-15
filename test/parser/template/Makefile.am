@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/08/17 00:46:38 fang Exp $
+#	$Id: Makefile.am,v 1.27.6.1 2007/09/15 05:43:13 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -14,7 +14,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	103 104 \
 	env_source_typedef-01a \
 	env_source_typedef-01d \
-	env_source_typedef-03
+	env_source_typedef-03 \
+	act-006 act-009 act-010
 
 # No longer statically checking dimensions, so the following tests pass parsing:
 # 067
@@ -66,13 +67,16 @@ HACKT_PARSE_TEST_PASSES = \
 	env_source_typedef-05 env_source_typedef-05a env_source_typedef-05b \
 	env_source_typedef-06 env_source_typedef-06a env_source_typedef-06b \
 	env_source_typedef-07 env_source_typedef-07a env_source_typedef-07b \
-	env_source_typedef-08 env_source_typedef-08a env_source_typedef-08b
+	env_source_typedef-08 env_source_typedef-08a env_source_typedef-08b \
+	act-004 act-005 act-007 act-008 act-011
+# pending: act-001 act-002 act-003
 
 # KNOWN BUGS:
 # should fail at unroll-time:
 #	057 058 (not propagating relaxed formal dependence yet)
 
-BISON_OUTPUTS += 027 028 042 050 103
+BISON_OUTPUTS += 027 028 042 050 103 \
+	act-009
 
 # HACKT_UNROLL_TEST_PASSES = \
 #	001 002 004 006 007 008 009 \

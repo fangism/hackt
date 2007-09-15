@@ -1,0 +1,13 @@
+// "act-001.hac"
+// stolen from "act/tests/inst/0.act"
+
+bool x;
+ 
+defproc foo(bool b)
+{
+ int x, xx;
+
+}
+ 
+foo xx;
+

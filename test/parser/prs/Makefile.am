@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33 2007/09/13 20:37:56 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.1 2007/09/15 05:42:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -48,7 +48,10 @@ HACKT_PARSE_TEST_PASSES = \
 	subckt-04 subckt-05 \
 	internal-node-00 \
 	precharge-00 \
-	unstab-01
+	unstab-01 \
+	act-001 act-002 act-003 act-004 act-005 \
+	act-006 act-007 act-010
+# pending: act-008 act-009
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-14 inv-15 inv-16 inv-17 \
@@ -74,9 +77,11 @@ HACKT_CREATE_TEST_PASSES = \
 	lvs-xcpl-inv-01 \
 	tree-02 tree-03 \
 	subckt-01 subckt-03 subckt-05 \
-	unstab-01
+	unstab-01 \
+	act-001 act-002 act-006 act-007 act-010
 
 # TODO: precharge-00 etc. to middle and back-end tests
+# pending: act-003 act-004 act-005
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
@@ -87,7 +92,8 @@ HACKT_CREATE_TEST_FAILURES = \
 # null-01: waiting for null-expression resolution
 # loop-01: (same)
 
-HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
+HACKT_CFLAT_TEST_SUBJECTS = \
+	inv-14 inv-15 inv-16 inv-17 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
@@ -106,7 +112,9 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	top-level-01 \
 	tree-02 tree-03 \
 	subckt-01 \
-	unstab-01
+	unstab-01 \
+	act-001 act-002 act-006 act-007 act-010
+# pending: act-003 act-004 act-005
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
@@ -126,7 +134,9 @@ HACKT_ALLOC_TEST_PASSES = \
 #	$(HACKT_CFLAT_LVS_TEST_PASSES)
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
-	size-01 size-03 size-04 size-05
+	size-01 size-03 size-04 size-05 \
+	act-010
+# pending: act-004.hac act-005
 
 # subset of HACKT_CFLAT_TEST_SUBJECTS
 HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \

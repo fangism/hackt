@@ -1,0 +1,2 @@
+ERROR: type of redeclaration of x does not match previous declaration: 
+	was: int<22>, got: int<32> ERROR!  [9:5]

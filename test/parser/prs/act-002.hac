@@ -1,0 +1,15 @@
+// "act-002.hac"
+// stolen from "act/tests/expand/1.act"
+
+template <pint i>
+defproc foo (bool x[i]; bool y[i])
+{ 
+  prs {
+   (:k:i: x[k] => y[k]-)
+  }
+}
+
+
+foo<3> x;
+
+

@@ -1,0 +1,11 @@
+// "act-003.hac"
+// stolen from "act/test/connect/3.act"
+
+int N[8];
+int M[2][1];
+
+int x;
+
+{{N[3]},{x}} = M;
+
+

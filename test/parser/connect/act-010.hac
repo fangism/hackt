@@ -1,0 +1,9 @@
+// "act-010.hac"
+// stolen from "act/tests/other/2.act"
+// expect fail: dereference non-array
+
+bool a, c;
+
+a[3] = c;
+
+

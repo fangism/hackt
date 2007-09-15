@@ -1,0 +1,10 @@
+// "act-004.hac"
+// stolen from "act/tests/ns/6.act"
+
+template <pint x>
+defproc foo(bool a, b)
+{
+  
+}
+
+

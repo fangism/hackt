@@ -1,0 +1,278 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	378
+	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	132
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	29	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	55	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	56	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	58	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	68	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	69	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	71	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	72	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	75	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	84	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	744
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	89	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	footprnt	0	#HEAD#	#TAIL#	485
+	96	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Parameters:
+    j = pint<> j
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> i
+      >(
+        bool<> w[0..i-1]
+      )
+      In definition "bar", we have: {
+      Parameters:
+        i = pint<> bar::i
+      Instances:
+        w = bool<> bar::w^1
+      unroll sequence: 
+        bool<> w[0..i-1]
+      prs:
+        w[0] -> w[1]-
+      footprint collection: {
+        <5> {
+          i = pint^0 value: 5
+          w = bool^1
+            {
+              [0] = bar::w[0] (1) 
+              [1] = bar::w[1] (2) 
+              [2] = bar::w[2] (3) 
+              [3] = bar::w[3] (4) 
+              [4] = bar::w[4] (5) 
+            }
+          Created state:
+          bool instance pool:
+          1	bar::w[0]
+          2	bar::w[1]
+          3	bar::w[2]
+          4	bar::w[3]
+          5	bar::w[4]
+          resolved prs:
+          w[0] -> w[1]-
+        }
+      }
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> i
+      >(
+        bool<> x[0..i-1]
+        bool<> y[0..i-1]
+        bool<> z[0..j+i-1]
+      )
+      In definition "foo", we have: {
+      Parameters:
+        i = pint<> foo::i
+      Instances:
+        b = bar<2+foo::i> foo::b
+        x = bool<> foo::x^1
+        y = bool<> foo::y^1
+        z = bool<> foo::z^1
+      unroll sequence: 
+        bool<> x[0..i-1]
+        bool<> y[0..i-1]
+        bool<> z[0..j+i-1]
+        bar<2+foo::i> b
+      prs:
+        (:k:[0..i-1]:
+          ~x[$k] -> y[$k]+
+          x[$k] -> y[$k]-
+        )
+      footprint collection: {
+        <3> {
+          b = process bar<5>^0 = foo::b (1) (
+            w = bool^1
+              {
+                [0] = foo::b.w[0] (1) 
+                [1] = foo::b.w[1] (2) 
+                [2] = foo::b.w[2] (3) 
+                [3] = foo::b.w[3] (4) 
+                [4] = foo::b.w[4] (5) 
+              }
+          )
+          i = pint^0 value: 3
+          x = bool^1
+            {
+              [0] = foo::x[0] (6) 
+              [1] = foo::x[1] (7) 
+              [2] = foo::x[2] (8) 
+            }
+          y = bool^1
+            {
+              [0] = foo::y[0] (9) 
+              [1] = foo::y[1] (10) 
+              [2] = foo::y[2] (11) 
+            }
+          z = bool^1
+            {
+              [0] = foo::z[0] (12) 
+              [1] = foo::z[1] (13) 
+              [2] = foo::z[2] (14) 
+              [3] = foo::z[3] (15) 
+            }
+          Created state:
+          process instance pool:
+          1	foo::b
+          bool instance pool:
+          1	foo::b.w[0]
+          2	foo::b.w[1]
+          3	foo::b.w[2]
+          4	foo::b.w[3]
+          5	foo::b.w[4]
+          6	foo::x[0]
+          7	foo::x[1]
+          8	foo::x[2]
+          9	foo::y[0]
+          10	foo::y[1]
+          11	foo::y[2]
+          12	foo::z[0]
+          13	foo::z[1]
+          14	foo::z[2]
+          15	foo::z[3]
+          resolved prs:
+          ~x[0] -> y[0]+
+          x[0] -> y[0]-
+          ~x[1] -> y[1]+
+          x[1] -> y[1]-
+          ~x[2] -> y[2]+
+          x[2] -> y[2]-
+        }
+      }
+      }
+
+  Instances:
+    x = foo<3> x
+}
+
+footprint: {
+  j = pint^0 value: 1
+  x = process foo<3>^0 = x (1) (
+    x = bool^1
+      {
+        [0] = x.x[0] (1) 
+        [1] = x.x[1] (2) 
+        [2] = x.x[2] (3) 
+      }
+    y = bool^1
+      {
+        [0] = x.y[0] (4) 
+        [1] = x.y[1] (5) 
+        [2] = x.y[2] (6) 
+      }
+    z = bool^1
+      {
+        [0] = x.z[0] (7) 
+        [1] = x.z[1] (8) 
+        [2] = x.z[2] (9) 
+        [3] = x.z[3] (10) 
+      }
+  )
+  Created state:
+  process instance pool:
+  1	x
+  bool instance pool:
+  1	x.x[0]
+  2	x.x[1]
+  3	x.x[2]
+  4	x.y[0]
+  5	x.y[1]
+  6	x.y[2]
+  7	x.z[0]
+  8	x.z[1]
+  9	x.z[2]
+  10	x.z[3]
+}

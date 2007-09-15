@@ -1,0 +1,1 @@
+concrete_type_ref: bad definition reference "bar::bar"!  ERROR! [8:1..8]

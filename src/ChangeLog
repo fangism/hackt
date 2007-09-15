@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-01:
+	  No source revision.
+	  This branch is intended to resolve language differences with
+		Rajit's ACT toolchain.  (Thanks to 2 years of miscommunication)
+	  First revision adds most of ACT's test suite.  
+	  Known differences are documented on the art mailing list.  
+
+
 2007-09-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74:

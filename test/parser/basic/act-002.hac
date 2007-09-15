@@ -1,0 +1,10 @@
+// "act-002.hac"
+// stolen from "act/tests/inst/1.act"
+// expect fail on re-instantiation of different type
+
+int<22> x[10];
+ 
+int y[20];
+
+int x[10];
+

@@ -1,0 +1,79 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	100
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	68
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	304
+	17	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	323
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> b
+      )
+      In definition "foo", we have: {
+      Instances:
+        b = bool<> foo::b
+        x = int<32> foo::x
+        xx = int<32> foo::xx
+      unroll sequence: 
+        bool<> b
+        int<32> x
+        int<32> xx
+      footprint: {
+        b = bool^0 = foo::b (1) 
+        x = int<32>^0 = foo::x (1) 
+        xx = int<32>^0 = foo::xx (2) 
+        Created state:
+        int instance pool:
+        1	foo::x
+        2	foo::xx
+        bool instance pool:
+        1	foo::b
+      }
+      }
+
+  Instances:
+    x = bool<> x
+    xx = foo<> xx
+}
+
+footprint: {
+  x = bool^0 = x (2) 
+  xx = process foo<>^0 = xx (1) (
+    b = bool^0 = xx.b (1) 
+  )
+  Created state:
+  process instance pool:
+  1	xx
+  bool instance pool:
+  1	xx.b
+  2	x
+}

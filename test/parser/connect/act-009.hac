@@ -1,0 +1,14 @@
+// "act-009.hac"
+// stolen from "act/tests/other/1.act"
+// expect fail: dereference non-array
+
+defproc bar(bool a) { }
+defproc foo(bool a, b, c) {
+        bool bar[5];
+        //a = xbar[5].a;
+        a[2] = b;
+
+}
+
+foo f;
+

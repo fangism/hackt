@@ -1,0 +1,20 @@
+// "act-003.hac"
+// stolen from "act/tests/expand/2.act"
+// NOTE: uses operator attribute for internal node precharge
+
+bool x[5][3], y[5][4];
+
+pint j = 2; 
+
+prs { 
+   
+ (:i:5: x[i][j] -> y[i][j]-)
+
+}
+
+bool a,b,c,d,pchg;
+
+prs {
+   a &{+pchg} b & c -> d-
+}
+
