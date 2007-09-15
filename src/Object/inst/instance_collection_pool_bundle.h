@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_collection_pool_bundle.h"
-	$Id: instance_collection_pool_bundle.h,v 1.4 2007/07/18 23:28:43 fang Exp $
+	$Id: instance_collection_pool_bundle.h,v 1.5 2007/09/15 18:56:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_POOL_BUNDLE_H__
@@ -9,7 +9,7 @@
 #include <iosfwd>
 #include "Object/inst/collection_pool.h"
 #include "Object/inst/collection_index_entry.h"
-#include "Object/devel_switches.h"	// for COPY_IF_PORT_ALIASES
+#include "Object/devel_switches.h"	// for ENABLE_RELAXED_TEMPLATE_PARAMETERS
 #include "util/boolean_types.h"
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
@@ -67,12 +67,6 @@ protected:
 	good_bool
 	allocate_local_instance_ids(footprint&);
 
-#if !COPY_IF_PORT_ALIASES
-	// iterate over port-pools (scalar and port_formal_array)
-	void
-	collect_port_aliases(port_alias_tracker&) const;
-#endif
-
 	void
 	collect_scope_aliases(port_alias_tracker&) const;
 
@@ -90,9 +84,6 @@ private:
 	struct dependent_creator;
 	struct index_allocator;
 	struct scope_alias_collector;
-#if !COPY_IF_PORT_ALIASES
-	struct port_alias_collector;
-#endif
 	struct footprint_frame_assigner;
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	struct substructure_finalizer;
@@ -210,14 +201,8 @@ struct instance_collection_pool_bundle :
 	allocate_local_instance_ids(footprint&);
 
 	// iterate over port-pools (scalar and port_formal_array)
-#if COPY_IF_PORT_ALIASES
 	void
 	collect_scope_aliases(port_alias_tracker&) const;
-#else
-	void
-	collect_scope_and_port_aliases(
-		port_alias_tracker&, port_alias_tracker&) const;
-#endif
 
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
 	good_bool

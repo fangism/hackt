@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.14 2007/07/18 23:28:45 fang Exp $
+	$Id: port_alias_tracker.h,v 1.15 2007/09/15 18:56:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -139,12 +139,10 @@ public:
 	get_string_cache(void) const { return cache; }
 #endif
 
-#if COPY_IF_PORT_ALIASES
 	void
 	__import_port_aliases(const this_type&);
 
 	struct port_alias_predicate;
-#endif
 
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
@@ -186,11 +184,6 @@ protected:
 	port_alias_tracker_base();
 	~port_alias_tracker_base();
 
-#if !COPY_IF_PORT_ALIASES
-	void
-	filter_unique(void);
-#endif
-
 	ostream&
 	dump_map(ostream&) const;
 
@@ -205,12 +198,10 @@ protected:
 	good_bool
 	check_connections(void) const;
 
-#if COPY_IF_PORT_ALIASES
 	void
 	__import_port_aliases(const this_type&);
 
 	struct port_alias_importer;
-#endif
 
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
 #if 0
@@ -277,10 +268,6 @@ public:
 	get_id_map(void) const { return port_alias_tracker_base<Tag>::_ids; }
 
 public:
-#if !COPY_IF_PORT_ALIASES
-	void
-	filter_uniques(void);
-#endif
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
@@ -291,10 +278,8 @@ public:
 	good_bool
 	check_channel_connections(void) const;
 
-#if COPY_IF_PORT_ALIASES
 	void
 	import_port_aliases(const this_type&);
-#endif
 
 public:
 

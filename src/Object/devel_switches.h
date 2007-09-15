@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.46 2007/09/13 20:37:14 fang Exp $
+	$Id: devel_switches.h,v 1.47 2007/09/15 18:56:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -38,7 +38,7 @@
 	Goal: 1
 	Priority: medium
 	Status: complete and tested
-		(as of 00-01-04-main-00-01-40-merged-template-02-28)
+		(as of 00-01-04-main-00-81-40-merged-template-02-28)
 	Notes: will need mechanism similar to port-summaries to 
 		pass pre-determined port parameters up the instance hierarchy.
  */
@@ -226,14 +226,11 @@
 #define	RECURSE_COLLECT_ALIASES			1
 
 /**
-	Define to 1 to simplify implementation of collecting port aliases
+	Simplify implementation of collecting port aliases
 	by collecting over scope-aliases in a separate pass.  
-	Affects: footprint, port_alias_tracker.  
-	Goal: 1
-	Rationale: code reduction, maintainability
-	Status: enabled and tested (perm. it later)
- */
+	Status: perm'd
 #define	COPY_IF_PORT_ALIASES			1
+**/
 
 /**
 	Define to 1 to not serialize scope-alias summaries, but rather

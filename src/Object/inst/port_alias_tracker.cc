@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.19 2007/07/18 23:28:45 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.20 2007/09/15 18:56:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -178,7 +178,6 @@ alias_reference_set<Tag>::shortest_alias(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COPY_IF_PORT_ALIASES
 /**
 	Can this be replaced with mem_fun(&alias_type::is_port_alias())?
 	Need compose with dereference to mem_fun_ref.
@@ -207,7 +206,6 @@ alias_reference_set<Tag>::__import_port_aliases(const this_type& s) {
 	copy_if(s.alias_array.begin(), s.alias_array.end(), 
 		back_inserter(alias_array), port_alias_predicate());
 }
-#endif
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -255,30 +253,6 @@ alias_reference_set<Tag>::load_object_base(
 
 //=============================================================================
 // class port_alias_tracker_base method definitions
-
-#if !COPY_IF_PORT_ALIASES
-/**
-	Removes all unique entries of the alias map, i.e. all alias sets
-	with only one alias.  
- */
-template <class Tag>
-void
-port_alias_tracker_base<Tag>::filter_unique(void) {
-	// iterate and erase
-	iterator i(_ids.begin());
-	const iterator e(_ids.end());
-	for ( ; i!=e; ) {
-		if (i->second.is_unique()) {
-			iterator j(i);
-			j++;
-			_ids.erase(i);
-			i = j;
-		} else {
-			i++;
-		}
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -359,7 +333,6 @@ port_alias_tracker_base<Tag>::check_connections(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COPY_IF_PORT_ALIASES
 /**
 	Functor for importing port aliases.  
 	TODO: mark as visibility hiddden, no need to export.
@@ -398,7 +371,6 @@ port_alias_tracker_base<Tag>::__import_port_aliases(const this_type& t) {
 	const_iterator i(t._ids.begin()), e(t._ids.end());
 	for_each(i, e, port_alias_importer(*this));
 }
-#endif	// COPY_IF_PORT_ALIASES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !AUTO_CACHE_FOOTPRINT_SCOPE_ALIASES
@@ -467,33 +439,6 @@ port_alias_tracker::port_alias_tracker() :
 port_alias_tracker::~port_alias_tracker() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !COPY_IF_PORT_ALIASES
-/**
-	Removes all unique aliases from all sets.  
- */
-void
-port_alias_tracker::filter_uniques(void) {
-	port_alias_tracker_base<process_tag>::filter_unique();
-	port_alias_tracker_base<channel_tag>::filter_unique();
-#if ENABLE_DATASTRUCTS
-	port_alias_tracker_base<datastruct_tag>::filter_unique();
-#endif
-	port_alias_tracker_base<enum_tag>::filter_unique();
-	port_alias_tracker_base<int_tag>::filter_unique();
-	port_alias_tracker_base<bool_tag>::filter_unique();
-	has_internal_aliases =
-		!port_alias_tracker_base<process_tag>::_ids.empty() ||
-		!port_alias_tracker_base<channel_tag>::_ids.empty() ||
-#if ENABLE_DATASTRUCTS
-		!port_alias_tracker_base<datastruct_tag>::_ids.empty() ||
-#endif
-		!port_alias_tracker_base<enum_tag>::_ids.empty() ||
-		!port_alias_tracker_base<int_tag>::_ids.empty() ||
-		!port_alias_tracker_base<bool_tag>::_ids.empty();
-}
-#endif	// COPY_IF_PORT_ALIASES
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 port_alias_tracker::replay_internal_aliases(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
@@ -547,7 +492,6 @@ port_alias_tracker::check_channel_connections(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COPY_IF_PORT_ALIASES
 /**
 	This collects aliases that are only ports, and
 	filters out unique sets.  
@@ -574,7 +518,6 @@ port_alias_tracker::import_port_aliases(const this_type& t) {
 		!port_alias_tracker_base<int_tag>::_ids.empty() ||
 		!port_alias_tracker_base<bool_tag>::_ids.empty();
 }
-#endif	// COPY_IF_PORT_ALIASES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
