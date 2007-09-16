@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.12.4.1 2007/09/16 18:00:06 fang Exp $
+	$Id: CHP_base.h,v 1.12.4.2 2007/09/16 20:59:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -131,10 +131,16 @@ virtual	CHP_DUMP_EVENT_PROTO = 0;
 		operator () (const action_ptr_type&) const;
 	};
 
+#if CHP_ACTION_PARENT_LINK
+#define	CHP_UNROLL_ACTION_PROTO						\
+	action_ptr_type							\
+	unroll_resolve_copy(const unroll_context&) const
+#else
 #define	CHP_UNROLL_ACTION_PROTO						\
 	action_ptr_type							\
 	unroll_resolve_copy(const unroll_context&,			\
 		const action_ptr_type&) const
+#endif
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
 

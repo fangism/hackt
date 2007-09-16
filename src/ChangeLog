@@ -5,6 +5,12 @@
 
 2007-09-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-75-CHP-03-02:
+	  Object/lang/CHP_base.h: stripped away no-longer used 
+		shared-this argument from unroll_resolve_copy.
+	  Still need to update test dumps.
+
+
 	* HACKT-00-01-04-main-00-81-75-CHP-03-01:
 	  This branch adds information necessary to reconstruct the
 		precise context of every CHP statement with parent links.

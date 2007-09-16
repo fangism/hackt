@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.21.12.1 2007/09/16 18:00:06 fang Exp $
+	$Id: CHP.h,v 1.21.12.2 2007/09/16 20:59:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -225,9 +225,14 @@ public:
 	set_parent(const action* p) const;
 #endif
 
+#if CHP_ACTION_PARENT_LINK
+	unroll_return_type
+	unroll_resolve_copy(const unroll_context&) const;
+#else
 	unroll_return_type
 	unroll_resolve_copy(const unroll_context&,
 		const count_ptr<const guarded_action>&) const;
+#endif
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;

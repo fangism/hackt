@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.27.4.1 2007/09/16 18:00:05 fang Exp $
+	$Id: CHP.cc,v 1.27.4.2 2007/09/16 20:59:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -185,7 +185,11 @@ dump_selection_event(ostream& o, const selection_list_type& sl,
 action_ptr_type
 action::transformer::operator () (const action_ptr_type& a) const {
 	NEVER_NULL(a);
+#if CHP_ACTION_PARENT_LINK
+	return a->unroll_resolve_copy(_context);
+#else
 	return a->unroll_resolve_copy(_context, a);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -335,10 +339,15 @@ action_sequence::push_back(list_type::const_reference s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-action_sequence::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+action_sequence::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
 // consider using __unroll_resolve_rvalue -> preal_const
@@ -552,10 +561,15 @@ concurrent_actions::push_back(list_type::const_reference s) {
 		allocated sequence if changed, NULL if error encountered.  
  */
 action_ptr_type
-concurrent_actions::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+concurrent_actions::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
@@ -653,7 +667,11 @@ count_ptr<const guarded_action>
 guarded_action::unroll_resolver::operator () (
 		const count_ptr<const guarded_action>& g) const {
 	NEVER_NULL(g);
+#if CHP_ACTION_PARENT_LINK
+	return g->unroll_resolve_copy(_context);
+#else
 	return g->unroll_resolve_copy(_context, g);
+#endif
 }
 
 //=============================================================================
@@ -711,10 +729,15 @@ guarded_action::set_parent(const action* p) const {
 	Unroll-resolves the data-expression and action.  
  */
 guarded_action::unroll_return_type
-guarded_action::unroll_resolve_copy(const unroll_context& c, 
-		const count_ptr<const this_type>& p) const {
+guarded_action::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const count_ptr<const this_type>& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	guard_ptr_type g(NULL);
 	if (guard) {
 		g = guard->unroll_resolve_copy(c, guard);
@@ -724,7 +747,12 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 		}
 	}
 if (stmt) {
-	const action_ptr_type a(stmt->unroll_resolve_copy(c, stmt));
+	const action_ptr_type
+#if CHP_ACTION_PARENT_LINK
+		a(stmt->unroll_resolve_copy(c));
+#else
+		a(stmt->unroll_resolve_copy(c, stmt));
+#endif
 	if (!a) {
 		cerr << "Error resolving action statement of guarded action."
 			<< endl;
@@ -865,10 +893,15 @@ deterministic_selection::push_back(list_type::const_reference s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-deterministic_selection::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+deterministic_selection::unroll_resolve_copy(const unroll_context& c 
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const count_ptr<this_type> r(new this_type);
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(r)
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
@@ -979,10 +1012,15 @@ nondeterministic_selection::push_back(list_type::const_reference s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-nondeterministic_selection::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+nondeterministic_selection::unroll_resolve_copy(const unroll_context& c 
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const count_ptr<this_type> r(new this_type);
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(r)
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
@@ -1092,10 +1130,15 @@ metaloop_selection::dump_event(ostream& o, const expr_dump_context&) const {
 	Partially ripped from entity::PRS::rule_loop::unroll().  
  */
 action_ptr_type
-metaloop_selection::unroll_resolve_copy(const unroll_context& c,
-		const action_ptr_type& p) const {
+metaloop_selection::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";
@@ -1122,7 +1165,11 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 	const unroll_context cc(&f, c);
 	for (i = min; i <= max; ++i) {
 		const selection_list_type::value_type	// guarded_action
+#if CHP_ACTION_PARENT_LINK
+			g(body->unroll_resolve_copy(cc));
+#else
 			g(body->unroll_resolve_copy(cc, body));
+#endif
 		if (!g) {
 			cerr << "Error resolving metaloop_selection at "
 				"iteration " << i << "." << endl;
@@ -1250,10 +1297,15 @@ metaloop_statement::dump_event(ostream& o, const expr_dump_context&) const {
 	Partially ripped from entity::PRS::rule_loop::unroll().  
  */
 action_ptr_type
-metaloop_statement::unroll_resolve_copy(const unroll_context& c,
-		const action_ptr_type& p) const {
+metaloop_statement::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";
@@ -1280,7 +1332,11 @@ metaloop_statement::unroll_resolve_copy(const unroll_context& c,
 	const unroll_context cc(&f, c);
 	for (i = min; i <= max; ++i) {
 		const action_list_type::value_type	// guarded_action
+#if CHP_ACTION_PARENT_LINK
+			g(body->unroll_resolve_copy(cc));
+#else
 			g(body->unroll_resolve_copy(cc, body));
+#endif
 		if (!g) {
 			cerr << "Error resolving metaloop_statement at "
 				"iteration " << i << "." << endl;
@@ -1393,10 +1449,15 @@ assignment::dump_event(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-assignment::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+assignment::unroll_resolve_copy(const unroll_context& c 
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const lval_ptr_type lc(lval->unroll_resolve_copy(c, lval));
 	const rval_ptr_type rc(rval->unroll_resolve_copy(c, rval));
 // consider using __unroll_resolve_rvalue -> preal_const
@@ -1493,10 +1554,15 @@ condition_wait::dump_event(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-condition_wait::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+condition_wait::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const cond_ptr_type g(cond->unroll_resolve_copy(c, cond));
 	UNROLL_COPY_ATTRIBUTES
 	if (!g) {
@@ -1660,10 +1726,15 @@ channel_send::dump_event(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-channel_send::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+channel_send::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const chan_ptr_type cc(chan->unroll_resolve_copy(c, chan));
 	expr_list_type exprs_c;
 	transform(exprs.begin(), exprs.end(), back_inserter(exprs_c), 
@@ -1790,10 +1861,15 @@ channel_receive::dump_event(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-channel_receive::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+channel_receive::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const chan_ptr_type cc(chan->unroll_resolve_copy(c, chan));
 	inst_ref_list_type refs;
 	transform(insts.begin(), insts.end(), back_inserter(refs), 
@@ -1919,11 +1995,21 @@ do_forever_loop::dump_event(ostream& o, const expr_dump_context&) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-do_forever_loop::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+do_forever_loop::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
-	const action_ptr_type b(body->unroll_resolve_copy(c, body));
+#endif
+	const action_ptr_type
+#if CHP_ACTION_PARENT_LINK
+		b(body->unroll_resolve_copy(c));
+#else
+		b(body->unroll_resolve_copy(c, body));
+#endif
 	if (!b) {
 		cerr << "Error resolving do-forever loop." << endl;
 		return action_ptr_type(NULL);
@@ -2029,10 +2115,15 @@ do_while_loop::push_back(list_type::const_reference s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-do_while_loop::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+do_while_loop::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const count_ptr<this_type> r(new this_type);
 	NEVER_NULL(r);
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(r)
@@ -2122,9 +2213,14 @@ function_call_stmt::dump_event(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
-function_call_stmt::unroll_resolve_copy(const unroll_context& c, 
-		const action_ptr_type& p) const {
+function_call_stmt::unroll_resolve_copy(const unroll_context& c
+#if !CHP_ACTION_PARENT_LINK
+		, const action_ptr_type& p
+#endif
+		) const {
+#if !CHP_ACTION_PARENT_LINK
 	INVARIANT(p == this);
+#endif
 	const call_expr_ptr_type
 		e(call_expr->__unroll_resolve_copy(c, call_expr));
 	if (!e) {
