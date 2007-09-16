@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.27.4.2 2007/09/16 20:59:48 fang Exp $
+	$Id: CHP.cc,v 1.27.4.3 2007/09/16 21:53:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -332,8 +332,10 @@ action_sequence::dump_event(ostream& o, const expr_dump_context&) const {
 void
 action_sequence::push_back(list_type::const_reference s) {
 	list_type::push_back(s);
-	NEVER_NULL(s);
-	s->set_parent(this);
+//	NEVER_NULL(s);		// caller accumulator checks for NULLs
+	if (s) {
+		s->set_parent(this);
+	}
 }
 #endif
 
@@ -545,8 +547,10 @@ concurrent_actions::__unroll(const unroll_context& c, this_type& r) const {
 void
 concurrent_actions::push_back(list_type::const_reference s) {
 	list_type::push_back(s);
-	NEVER_NULL(s);
-	s->set_parent(this);
+//	NEVER_NULL(s);		// caller accumulator checks for NULLs
+	if (s) {
+		s->set_parent(this);
+	}
 }
 #endif
 
@@ -886,8 +890,10 @@ deterministic_selection::dump_event(ostream& o,
 void
 deterministic_selection::push_back(list_type::const_reference s) {
 	list_type::push_back(s);
-	NEVER_NULL(s);
-	s->set_parent(this);
+//	NEVER_NULL(s);		// caller accumulator checks for NULLs
+	if (s) {
+		s->set_parent(this);
+	}
 }
 #endif
 
@@ -1005,8 +1011,10 @@ nondeterministic_selection::dump_event(ostream& o,
 void
 nondeterministic_selection::push_back(list_type::const_reference s) {
 	list_type::push_back(s);
-	NEVER_NULL(s);
-	s->set_parent(this);
+//	NEVER_NULL(s);		// caller accumulator checks for NULLs
+	if (s) {
+		s->set_parent(this);
+	}
 }
 #endif
 
@@ -2108,8 +2116,10 @@ do_while_loop::dump_event(ostream& o, const expr_dump_context& c) const {
 void
 do_while_loop::push_back(list_type::const_reference s) {
 	list_type::push_back(s);
-	NEVER_NULL(s);
-	s->set_parent(this);
+//	NEVER_NULL(s);		// caller accumulator checks for NULLs
+	if (s) {
+		s->set_parent(this);
+	}
 }
 #endif
 
