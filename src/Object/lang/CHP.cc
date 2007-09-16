@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.27 2007/09/11 06:52:40 fang Exp $
+	$Id: CHP.cc,v 1.27.4.1 2007/09/16 18:00:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -45,6 +45,11 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/preal_const.h"
 #include "Object/def/template_formals_manager.h"
+#if CHP_ACTION_PARENT_LINK
+#include <functional>
+#include "util/compose.h"
+#include "util/dereference.h"
+#endif
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -191,6 +196,14 @@ action::action() : persistent(), delay() { }
 action::action(const attributes_type& a) : persistent(), delay(a) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+// inline
+action::action(const action& a) : 
+		persistent(), parent(NULL), delay(a.delay) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
 action::~action() { }
 
@@ -237,6 +250,8 @@ action::write_object_base(const persistent_object_manager& m,
 void
 action::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	// DO NOT write the parent-link pointer, 
+	// that can and will  be trivially reconstructed upon load
 	m.read_pointer(i, delay);
 }
 
@@ -305,6 +320,20 @@ action_sequence::dump_event(ostream& o, const expr_dump_context&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+/**
+	\pre this sequence is the exclusive owner of action s, 
+		to correctly establish its back-link.
+ */
+void
+action_sequence::push_back(list_type::const_reference s) {
+	list_type::push_back(s);
+	NEVER_NULL(s);
+	s->set_parent(this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 action_sequence::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -324,18 +353,6 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		ret->set_delay(atts);					\
 	}
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
-#if 0
-	try {
-		transform(begin(), end(), back_inserter(*ret), 
-			action::transformer(c)
-		);
-	} catch (...) {
-		cerr << "Error unrolling action_sequence." << endl;
-		return unroll_action_return_type();
-	}
-	const bool eq = equal(begin(), end(), ret->begin());
-	return unroll_action_return_type(!eq, ret);
-#else
 	transform(begin(), end(), back_inserter(*ret), action::transformer(c));
 	const const_iterator
 		f(find(ret->begin(), ret->end(), action_ptr_type(NULL)));
@@ -343,13 +360,17 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error unrolling action_sequence." << endl;
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if (
 		// eventually to attribute list pointer comparison
 		(delay == ret->delay) && 
 		equal(begin(), end(), ret->begin()))
 		return p;
-	else	return ret;
+	else
+#else
+	// always return fresh copy
 #endif
+		return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -391,11 +412,34 @@ action_sequence::write_object(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+/**
+	Give me boost::functional!!! PLEASE!
+ */
+template <class ListIterator, class ParentType>
+static
+void
+relink_parent_actions(ListIterator b, ListIterator e, const ParentType* p) {
+	typedef	typename ListIterator::value_type	ptr_type;
+	typedef	typename util::memory::pointee<ptr_type>::type
+							element_type;
+	std::for_each(b, e, 
+		ADS::unary_compose(
+		std::bind2nd(std::mem_fun_ref(&element_type::set_parent), p), 
+		util::dereference<ptr_type>())
+	);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 action_sequence::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+#if CHP_ACTION_PARENT_LINK
+	relink_parent_actions(begin(), end(), this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -484,6 +528,20 @@ concurrent_actions::__unroll(const unroll_context& c, this_type& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+/**
+	\pre this sequence is the exclusive owner of action s, 
+		to correctly establish its back-link.
+ */
+void
+concurrent_actions::push_back(list_type::const_reference s) {
+	list_type::push_back(s);
+	NEVER_NULL(s);
+	s->set_parent(this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates a partially-deep copy of the language tree, 
 	re-using references to unchanged members where possible.  
@@ -502,9 +560,14 @@ concurrent_actions::unroll_resolve_copy(const unroll_context& c,
 	NEVER_NULL(ret);
 	UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 	if (__unroll(c, *ret).good) {
+#if !CHP_ACTION_PARENT_LINK
 		if (equal(begin(), end(), ret->begin()))
 			return p;
-		else	return ret;
+		else
+#else
+		// always return fresh copy, with parents linked
+#endif
+			return ret;
 	} else {
 		return action_ptr_type(NULL);
 	}
@@ -571,6 +634,9 @@ concurrent_actions::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+#if CHP_ACTION_PARENT_LINK
+	relink_parent_actions(begin(), end(), this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -631,6 +697,16 @@ guarded_action::dump_brief(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+void
+guarded_action::set_parent(const action* p) const {
+	if (stmt) {
+		stmt->set_parent(p);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Unroll-resolves the data-expression and action.  
  */
@@ -654,21 +730,33 @@ if (stmt) {
 			<< endl;
 		return unroll_return_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if (g == guard && a == stmt) {
 		// resolving resulted in no change
 		return p;
 	} else {
+#else
+		// always return deep copy, caller will link parents
+#endif
 		return unroll_return_type(new this_type(g, a));
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 } else {
 	// have a 'skip' statement (NULL)
+#if !CHP_ACTION_PARENT_LINK
 	if (g == guard) {
 		// resolving resulted in no change
 		return p;
 	} else {
+#else
+	// return fresh deep copy
+#endif
 		return unroll_return_type(
 			new this_type(g, action_ptr_type(NULL)));
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 }	// end method unroll_resolve_copy
 
@@ -762,6 +850,20 @@ deterministic_selection::dump_event(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+/**
+	\pre this sequence is the exclusive owner of action s, 
+		to correctly establish its back-link.
+ */
+void
+deterministic_selection::push_back(list_type::const_reference s) {
+	list_type::push_back(s);
+	NEVER_NULL(s);
+	s->set_parent(this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 deterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -773,13 +875,19 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error unrolling deterministic selection." << endl;
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if (equal(begin(), end(), r->begin())) {
 		// return self-copy
 		return p;
 	} else {
+#else
+		// always return fresh deep copy
+#endif
 		// return newly constructed copy
 		return r;
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -813,6 +921,9 @@ deterministic_selection::load_object(const persistent_object_manager& m,
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+#if CHP_ACTION_PARENT_LINK
+	relink_parent_actions(begin(), end(), this);
+#endif
 }
 
 //=============================================================================
@@ -853,6 +964,20 @@ nondeterministic_selection::dump_event(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+/**
+	\pre this sequence is the exclusive owner of action s, 
+		to correctly establish its back-link.
+ */
+void
+nondeterministic_selection::push_back(list_type::const_reference s) {
+	list_type::push_back(s);
+	NEVER_NULL(s);
+	s->set_parent(this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 nondeterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -864,13 +989,19 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error unrolling nondeterministic selection." << endl;
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if (equal(begin(), end(), r->begin())) {
 		// return self-copy
 		return p;
 	} else {
+#else
+		// always return fresh deep copy
+#endif
 		// return newly constructed copy
 		return r;
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -904,6 +1035,9 @@ nondeterministic_selection::load_object(const persistent_object_manager& m,
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+#if CHP_ACTION_PARENT_LINK
+	relink_parent_actions(begin(), end(), this);
+#endif
 }
 
 //=============================================================================
@@ -918,6 +1052,9 @@ metaloop_selection::metaloop_selection(const ind_var_ptr_type& i,
 		const bool t) :
 		action(), meta_loop_base(i, r), body(b), selection_type(t) {
 	NEVER_NULL(body);
+#if CHP_ACTION_PARENT_LINK
+	body->set_parent(this);
+#endif
 }
 
 metaloop_selection::~metaloop_selection() { }
@@ -997,14 +1134,24 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<deterministic_selection>
 			ret(new deterministic_selection);
 		NEVER_NULL(ret);
+#if CHP_ACTION_PARENT_LINK
+		// back_insert (push_back) automatically link parent-child
+		copy(result.begin(), result.end(), back_inserter(*ret));
+#else
 		ret->swap(result);
+#endif
 		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	} else {
 		const count_ptr<nondeterministic_selection>
 			ret(new nondeterministic_selection);
 		NEVER_NULL(ret);
+#if CHP_ACTION_PARENT_LINK
+		// back_insert (push_back) automatically link parent-child
+		copy(result.begin(), result.end(), back_inserter(*ret));
+#else
 		ret->swap(result);
+#endif
 		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	}
@@ -1045,6 +1192,10 @@ metaloop_selection::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, selection_type);
+#if CHP_ACTION_PARENT_LINK
+	NEVER_NULL(body);
+	body->set_parent(this);
+#endif
 }
 
 //=============================================================================
@@ -1059,6 +1210,9 @@ metaloop_statement::metaloop_statement(const ind_var_ptr_type& i,
 		const bool t) :
 		action(), meta_loop_base(i, r), body(b), statement_type(t) {
 	NEVER_NULL(body);
+#if CHP_ACTION_PARENT_LINK
+	body->set_parent(this);
+#endif
 }
 
 metaloop_statement::~metaloop_statement() { }
@@ -1138,14 +1292,24 @@ metaloop_statement::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<concurrent_actions>
 			ret(new concurrent_actions);
 		NEVER_NULL(ret);
+#if CHP_ACTION_PARENT_LINK
+		// back_insert (push_back) automatically link parent-child
+		copy(result.begin(), result.end(), back_inserter(*ret));
+#else
 		ret->swap(result);
+#endif
 		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	} else {
 		const count_ptr<action_sequence>
 			ret(new action_sequence);
 		NEVER_NULL(ret);
+#if CHP_ACTION_PARENT_LINK
+		// back_insert (push_back) automatically link parent-child
+		copy(result.begin(), result.end(), back_inserter(*ret));
+#else
 		ret->swap(result);
+#endif
 		UNROLL_ATTACH_RESULT_ATTRIBUTES(ret)
 		return ret;
 	}
@@ -1189,6 +1353,10 @@ metaloop_statement::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
 	read_value(i, statement_type);
+#if CHP_ACTION_PARENT_LINK
+	NEVER_NULL(body);
+	body->set_parent(this);
+#endif
 }
 
 //=============================================================================
@@ -1244,10 +1412,12 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 	UNROLL_COPY_ATTRIBUTES
 	if (!lc || !rc) {
 		return action_ptr_type(NULL);
+#if !CHP_ACTION_PARENT_LINK
 	} else if (
 		(delay == atts) &&
 		(lc == lval) && (rc == rval)) {
 		return p;
+#endif
 	} else {
 		const count_ptr<this_type> ret(new this_type(lc, rc));
 		ret->set_delay(atts);
@@ -1332,10 +1502,12 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 	if (!g) {
 		cerr << "Error resolving condition-wait." << endl;
 		return action_ptr_type(NULL);
+#if !CHP_ACTION_PARENT_LINK
 	} else if (
 		(delay == atts) &&
 		(g == cond)) {
 		return p;
+#endif
 	} else {
 		const count_ptr<this_type> ret(new this_type(g));
 		ret->set_delay(atts);
@@ -1516,18 +1688,24 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 			<< endl;
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if ((cc == chan) && 
 		(atts == delay) &&
 			equal(exprs.begin(), exprs.end(), exprs_c.begin())) {
 		// resolved members match exactly, return copy
 		return p;
 	} else {
+#else
+		// always return deep copy
+#endif
 		const count_ptr<this_type> ret(new this_type(cc));
 		NEVER_NULL(ret);
 		ret->exprs.swap(exprs_c);	// faster than copying/assigning
 		ret->set_delay(atts);
 		return ret;
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1641,18 +1819,24 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 			<< endl;
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if ((cc == chan) &&
 		(atts == delay) && 
 			equal(insts.begin(), insts.end(), refs.begin())) {
 		// resolved members match exactly, return copy
 		return p;
 	} else {
+#else
+		// always return deep copy
+#endif
 		count_ptr<this_type> ret(new this_type(cc, peek));
 		NEVER_NULL(ret);
 		ret->insts.swap(refs);	// faster than copying/assigning
 		ret->set_delay(atts);
 		return ret;
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1701,6 +1885,9 @@ do_forever_loop::do_forever_loop() : parent_type(), body() { }
 do_forever_loop::do_forever_loop(const body_ptr_type& b) :
 		parent_type(), body(b) {
 	NEVER_NULL(body);
+#if CHP_ACTION_PARENT_LINK
+	body->set_parent(this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1742,17 +1929,21 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	UNROLL_COPY_ATTRIBUTES
+#if !CHP_ACTION_PARENT_LINK
 	if (
 		(atts == delay) && 
 		(b == body)) {
 		// return self-copy
 		return p;
 	} else {
+#endif
 		// return newly constructed copy
 		const count_ptr<this_type> ret(new this_type(b));
 		ret->set_delay(atts);
 		return ret;
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1785,6 +1976,10 @@ do_forever_loop::load_object(const persistent_object_manager& m,
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer(i, body);
+#if CHP_ACTION_PARENT_LINK
+	NEVER_NULL(body);
+	body->set_parent(this);
+#endif
 }
 
 //=============================================================================
@@ -1819,6 +2014,20 @@ do_while_loop::dump_event(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CHP_ACTION_PARENT_LINK
+/**
+	\pre this sequence is the exclusive owner of action s, 
+		to correctly establish its back-link.
+ */
+void
+do_while_loop::push_back(list_type::const_reference s) {
+	list_type::push_back(s);
+	NEVER_NULL(s);
+	s->set_parent(this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 action_ptr_type
 do_while_loop::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1831,15 +2040,19 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 		cerr << "Error unrolling do-while loop." << endl;
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if (
 		(delay == r->delay) &&
 		equal(begin(), end(), r->begin())) {
 		// return self-copy
 		return p;
 	} else {
+#endif
 		// return newly constructed copy
 		return r;
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1873,6 +2086,9 @@ do_while_loop::load_object(const persistent_object_manager& m,
 		istream& i) {
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+#if CHP_ACTION_PARENT_LINK
+	relink_parent_actions(begin(), end(), this);
+#endif
 }
 
 //=============================================================================
@@ -1915,11 +2131,15 @@ function_call_stmt::unroll_resolve_copy(const unroll_context& c,
 		// got error message already?
 		return action_ptr_type(NULL);
 	}
+#if !CHP_ACTION_PARENT_LINK
 	if (call_expr == e) {
 		return p;
 	} else {
+#endif
 		return action_ptr_type(new this_type(e));
+#if !CHP_ACTION_PARENT_LINK
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

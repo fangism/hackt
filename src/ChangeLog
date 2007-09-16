@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-01:
+	  This branch adds information necessary to reconstruct the
+		precise context of every CHP statement with parent links.
+	  Object/lang/CHP_base.h: flag CHP_ACTION_PARENT_LINK drafted
+		and enabled.  This results in mandatorily deep-copying
+		statement trees upon unroll to maintain correct 
+		parent-child link relationships.  
+		Test suite only fails on create-object differences
+		due to statement replication.
+
+
 2007-09-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-75:
