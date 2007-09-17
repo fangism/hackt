@@ -5,6 +5,10 @@
 
 2007-09-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-75-CHP-03-03:
+	  No source revision, only updated create-dump test cases (~100).
+
+
 	* HACKT-00-01-04-main-00-81-75-CHP-03-02:
 	  Object/lang/CHP_base.h: stripped away no-longer used 
 		shared-this argument from unroll_resolve_copy.

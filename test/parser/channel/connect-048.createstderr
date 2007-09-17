@@ -60,6 +60,12 @@ Persistent Object Manager text dump:
 	50	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	55	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	58	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

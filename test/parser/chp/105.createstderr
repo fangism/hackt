@@ -75,10 +75,21 @@ Persistent Object Manager text dump:
 	64	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	66	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	68	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
-	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	69	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	70	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	71	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	72	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
+	74	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	77	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	footprnt	0	#HEAD#	#TAIL#	446
+	81	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

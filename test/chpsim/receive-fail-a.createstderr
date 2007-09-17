@@ -33,8 +33,12 @@ Persistent Object Manager text dump:
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
 	31	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

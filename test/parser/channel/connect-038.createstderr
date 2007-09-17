@@ -25,11 +25,15 @@ Persistent Object Manager text dump:
 	21	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
-	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	footprnt	0	#HEAD#	#TAIL#	311
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

@@ -59,6 +59,28 @@ Persistent Object Manager text dump:
 	55	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	56	##ADDR##	footprnt	0	#HEAD#	#TAIL#	604
 	57	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	59	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	CHPndtsl	0	#HEAD#	#TAIL#	28
+	62	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	64	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	70	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

@@ -52,6 +52,23 @@ Persistent Object Manager text dump:
 	48	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	570
 	50	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
+	53	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	32
+	58	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
