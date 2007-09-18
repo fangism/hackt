@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.184 2007/09/13 01:14:03 fang Exp $
+#	$Id: Makefile.am,v 1.184.4.1 2007/09/18 04:50:51 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -617,6 +617,7 @@ OBJECT_CC_FILES = \
 	Object/lang/CHP_event_alloc.cc \
 	Object/lang/CHP_footprint.cc \
 	Object/lang/CHP_visitor.cc \
+	Object/lang/CHP_context_printer.cc \
 	Object/lang/SPEC.cc \
 	Object/lang/SPEC_common.cc \
 	Object/lang/SPEC_footprint.cc \

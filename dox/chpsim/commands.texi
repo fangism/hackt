@@ -1,5 +1,5 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.3 2007/08/15 02:48:32 fang Exp $
+@c $Id: commands.texi,v 1.3.8.1 2007/09/18 04:50:47 fang Exp $
 @c TODO: index commands
 
 @node Commands
@@ -109,6 +109,7 @@ More on shared modules can be found in @ref{Extending simulation}.
 @include cmd/assert-queue.texi
 @include cmd/queue.texi
 @include cmd/dump-event.texi
+@include cmd/dump-event-source.texi
 @include cmd/dump-state.texi
 @include cmd/get.texi
 @include cmd/print-event-header.texi

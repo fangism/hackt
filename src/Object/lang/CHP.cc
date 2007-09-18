@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.27.4.3 2007/09/16 21:53:03 fang Exp $
+	$Id: CHP.cc,v 1.27.4.4 2007/09/18 04:50:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -194,10 +194,20 @@ action::transformer::operator () (const action_ptr_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // default destructor
-action::action() : persistent(), delay() { }
+action::action() : 
+		persistent(), 
+#if CHP_ACTION_PARENT_LINK
+		parent(NULL), 
+#endif
+		delay() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-action::action(const attributes_type& a) : persistent(), delay(a) { }
+action::action(const attributes_type& a) : 
+		persistent(), 
+#if CHP_ACTION_PARENT_LINK
+		parent(NULL), 
+#endif
+		delay(a) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if CHP_ACTION_PARENT_LINK
@@ -257,6 +267,23 @@ action::load_object_base(const persistent_object_manager& m,
 	// DO NOT write the parent-link pointer, 
 	// that can and will  be trivially reconstructed upon load
 	m.read_pointer(i, delay);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Traces an action's position in its syntax tree by following
+	parent links.  
+	Accumulates parent path recursively.  
+ */
+void
+make_action_parent_path(const action& a, action_parent_list_type& path) {
+	STACKTRACE_VERBOSE;
+	const action* p = &a;
+	do {
+		path.push_front(p);
+		STACKTRACE_INDENT_PRINT("parent = " << p << endl);
+		p = p->get_parent();
+	} while (p);
 }
 
 //=============================================================================

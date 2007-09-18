@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.13 2007/09/11 06:53:10 fang Exp $
+	$Id: State.cc,v 1.13.4.1 2007/09/18 04:51:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1298,6 +1298,19 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	// o << endl;
 	e.dump_source(o << "source: ", expr_dump_context::default_value) << endl;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_event_source(ostream& o, const event_index_type ei) const {
+if (ei) {
+	INVARIANT(ei < event_pool.size());
+	const event_type& e(event_pool[ei]);
+	const size_t pid = get_process_id(ei);
+	return e.dump_source_context(o, make_process_dump_context(pid));
+} else {
+	return o << "[global-root]" << endl;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.21.12.2 2007/09/16 20:59:49 fang Exp $
+	$Id: CHP.h,v 1.21.12.3 2007/09/18 04:50:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -39,6 +39,14 @@ using util::persistent_object_manager;
 	Typical action list.  
  */
 typedef	list<action_ptr_type>			action_list_type;
+
+#if CHP_ACTION_PARENT_LINK
+typedef	list<const action*>			action_parent_list_type;
+
+extern
+void
+make_action_parent_path(const action&, action_parent_list_type&);
+#endif
 
 //=============================================================================
 /**

@@ -1,16 +1,13 @@
 /**
 	\file "Object/lang/CHP_visitor.h"
 	The visitor that initializes and allocates CHPSIM state.  
-	$Id: CHP_visitor.h,v 1.4 2007/07/31 23:23:26 fang Exp $
+	$Id: CHP_visitor.h,v 1.4.12.1 2007/09/18 04:50:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_VISITOR_H__
 #define	__HAC_OBJECT_LANG_CHP_VISITOR_H__
 
-// #include <vector>
-// #include <set>		// or use util/memory/free_list interface
 #include "Object/lang/cflat_context_visitor.h"
-// #include "sim/common.h"
 
 namespace HAC {
 namespace entity {
