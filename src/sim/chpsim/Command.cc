@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.12.4.1 2007/09/18 04:50:55 fang Exp $
+	$Id: Command.cc,v 1.12.4.2 2007/09/20 04:26:49 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1544,6 +1544,35 @@ void
 DumpEventSource::usage(ostream& o) {
 	o << name << " <index>" << endl;
 	o << "Dumps source of referenced event with full-context." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-all-event-source.texi
+@deffn Command dump-all-event-source
+Print full-context of the source for all events.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpAllEventSource, 
+	"dump-all-event-source", info,
+	"print all event with full source context")
+
+int
+DumpAllEventSource::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_all_event_source(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+DumpAllEventSource::usage(ostream& o) {
+	o << name << endl;
+	o << "Dumps source of all events with full-context." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

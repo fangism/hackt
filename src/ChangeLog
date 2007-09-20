@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-05:
+	  Object/lang/CHP.cc: bugfix: load selection statements' guarded
+		actions before relinking, to guarantee their action
+		statments are valid before invoking ::set_parent.
+	  sim/chpsim/Commands,State: implemented 'dump-all-event-source'
+		command to print contextual dumps of CHP source of events.
+		First batch of test cases added.
+	  sim/chpim/Event.cc: refactored dump_type
+	  Minor library updates in util/, see util/ChangeLog.
+
+
 2007-09-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-75-CHP-03-04:

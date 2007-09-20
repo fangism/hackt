@@ -1,0 +1,10 @@
+
+# process[1]:
+event[1]: receive: *[{
+  pea_soup.S?(pea_soup.s);
+  ...
+}]
+event[2]: send: *[{
+  ...;
+  pea_soup.B[pea_soup.s]!(true)
+}]

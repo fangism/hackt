@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2007/09/13 20:37:45 fang Exp $
+#	$Id: Makefile.am,v 1.16.4.1 2007/09/20 04:27:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -75,8 +75,14 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 
 
 HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
-	connect-038-a connect-038-b \
-	025-a 025-b
+	connect-001-a connect-009-a \
+	connect-010-a \
+	connect-027-a connect-028-a connect-029-a \
+	connect-030-a connect-031-a connect-032-a \
+	connect-038-a connect-038-b connect-038-c \
+	connect-039-a \
+	connect-045-a \
+	025-a 025-b 025-c
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 000 003 004 006 007 \

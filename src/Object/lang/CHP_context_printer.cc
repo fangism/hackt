@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_context_printer.cc"
 	Implementation of CHP context printer.  
-	$Id: CHP_context_printer.cc,v 1.1.2.1 2007/09/18 04:50:53 fang Exp $
+	$Id: CHP_context_printer.cc,v 1.1.2.2 2007/09/20 04:26:48 fang Exp $
  */
 
 #include <iostream>
@@ -141,9 +141,13 @@ chp_context_printer::print_list_on_match(const ListType& l,
 void
 chp_context_printer::visit(const guarded_action& s) {
 	// print the whole sequence
-	s.get_guard()->dump(os, dump_context);
+	if (s.get_guard())
+		s.get_guard()->dump(os, dump_context);
+	else	os << "else";
 	os << " -> ";	// endl?
-	s.get_action()->accept(*this);
+	if (s.get_action())
+		s.get_action()->accept(*this);
+	else	os << "skip";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -194,9 +198,9 @@ if (here == path.end()) {
 //	s.dump(os, dump_context);
 	const value_saver<bool> B(print_all);
 	print_all = true;
-	print_list_on_match(s, "[", "[]\n", "]");
+	print_list_on_match(s, "[", " []\n", "]");
 } else {
-	print_list_on_match(s, "[", "[]\n", "]");
+	print_list_on_match(s, "[", " []\n", "]");
 }
 }
 
@@ -208,9 +212,9 @@ if (here == path.end()) {
 //	s.dump(os, dump_context);
 	const value_saver<bool> B(print_all);
 	print_all = true;
-	print_list_on_match(s, "[", ":\n", "]");
+	print_list_on_match(s, "[", " :\n", "]");
 } else {
-	print_list_on_match(s, "[", ":\n", "]");
+	print_list_on_match(s, "[", " :\n", "]");
 }
 }
 
@@ -222,9 +226,9 @@ if (here == path.end()) {
 //	s.dump(os, dump_context);
 	const value_saver<bool> B(print_all);
 	print_all = true;
-	print_list_on_match(s, "*[", "[]\n", "]");
+	print_list_on_match(s, "*[", " []\n", "]");
 } else {
-	print_list_on_match(s, "*[", "[]\n", "]");
+	print_list_on_match(s, "*[", " []\n", "]");
 }
 }
 

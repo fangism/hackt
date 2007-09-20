@@ -1,0 +1,6 @@
+# "064-a.chpsimrc"
+#	$Id: 064-a.chpsimrc,v 1.1.2.1 2007/09/20 04:27:34 fang Exp $
+# @haco@ 064.haco-a
+
+dump-all-event-source
+

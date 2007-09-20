@@ -1,0 +1,10 @@
+
+# process[1]:
+event[1]: receive: *[{
+  traffic.S?(traffic.s);
+  ...
+}]
+event[2]: receive: *[{
+  ...;
+  traffic.B[traffic.s]?(traffic.b)
+}]

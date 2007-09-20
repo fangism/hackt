@@ -1,0 +1,34 @@
+
+# process[1]:
+event[1]: fork: *[{
+  {
+    foo.index[0]?(foo.y),
+    foo.index[1]?(foo.z)
+  };
+  ...
+}]
+event[2]: send: *[{
+  ...;
+  foo.out!(foo.x[foo.y][foo.z])
+}]
+event[3]: join: *[{
+  {
+    foo.index[0]?(foo.y),
+    foo.index[1]?(foo.z)
+  };
+  ...
+}]
+event[4]: receive: *[{
+  {
+    foo.index[0]?(foo.y),
+    ...
+  };
+  ...
+}]
+event[5]: receive: *[{
+  {
+    ...,
+    foo.index[1]?(foo.z)
+  };
+  ...
+}]

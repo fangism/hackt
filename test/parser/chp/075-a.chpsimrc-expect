@@ -1,0 +1,9 @@
+
+# process[1]:
+event[1]: assign: *[X.b := 123]
+
+# process[2]:
+event[2]: assign: *[Y.b := 456]
+
+# process[3]:
+event[3]: assign: *[Z.b := 789]

@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.13.4.1 2007/09/18 04:51:00 fang Exp $
+	$Id: State.cc,v 1.13.4.2 2007/09/20 04:26:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1311,6 +1311,34 @@ if (ei) {
 } else {
 	return o << "[global-root]" << endl;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all events grouped by process.  
+	Skips global-root event because it has no source.
+ */
+ostream&
+State::dump_all_event_source(ostream& o) const {
+	typedef	pid_to_offset_map_type::const_iterator	const_iterator;
+	const_iterator i(pid_to_offset.begin()), e(--pid_to_offset.end());
+	// skip last process because that is reserved for event[0] (fake)
+	size_t pid = 0;
+	for ( ; i!=e; ++i, ++pid) {
+	if (i->second) {
+		o << "\n# process[" << pid << "]:" << endl;
+		const event_index_type offset = i->first;
+		event_index_type j = 0;
+		const expr_dump_context edc(make_process_dump_context(pid));
+		for ( ; j < i->second; ++j) {
+			const size_t eid = offset +j;
+			o << "event[" << eid << "]: ";
+			const event_type& ev(event_pool[eid]);
+			ev.dump_source_context(o, edc);
+		}
+	}
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

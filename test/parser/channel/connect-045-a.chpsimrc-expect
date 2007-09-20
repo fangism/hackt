@@ -1,0 +1,27 @@
+
+# process[0]:
+event[1]: fork: {
+  *[Y?(b)],
+  *[{
+    Z?(i);
+    X[i]?(b)
+  }]
+}
+event[2]: receive: {
+  ...,
+  *[{
+    Z?(i);
+    ...
+  }]
+}
+event[3]: receive: {
+  *[Y?(b)],
+  ...
+}
+event[4]: receive: {
+  ...,
+  *[{
+    ...;
+    X[i]?(b)
+  }]
+}

@@ -1,0 +1,50 @@
+
+# process[1]:
+event[1]: fork: *[{
+  {
+    f.x := f.y;
+    f.y := f.y+1
+  },
+  {
+    f.z := f.w;
+    f.w := f.w+1
+  }
+}]
+event[2]: join: *[{
+  {
+    f.x := f.y;
+    f.y := f.y+1
+  },
+  {
+    f.z := f.w;
+    f.w := f.w+1
+  }
+}]
+event[3]: assign: *[{
+  {
+    ...;
+    f.y := f.y+1
+  },
+  ...
+}]
+event[4]: assign: *[{
+  {
+    f.x := f.y;
+    ...
+  },
+  ...
+}]
+event[5]: assign: *[{
+  ...,
+  {
+    ...;
+    f.w := f.w+1
+  }
+}]
+event[6]: assign: *[{
+  ...,
+  {
+    f.z := f.w;
+    ...
+  }
+}]

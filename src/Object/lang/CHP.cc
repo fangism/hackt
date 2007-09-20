@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.27.4.4 2007/09/18 04:50:52 fang Exp $
+	$Id: CHP.cc,v 1.27.4.5 2007/09/20 04:26:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -47,6 +47,7 @@
 #include "Object/def/template_formals_manager.h"
 #if CHP_ACTION_PARENT_LINK
 #include <functional>
+#include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
 #endif
@@ -461,6 +462,7 @@ relink_parent_actions(ListIterator b, ListIterator e, const ParentType* p) {
 	typedef	typename ListIterator::value_type	ptr_type;
 	typedef	typename util::memory::pointee<ptr_type>::type
 							element_type;
+	STACKTRACE_VERBOSE;
 	std::for_each(b, e, 
 		ADS::unary_compose(
 		std::bind2nd(std::mem_fun_ref(&element_type::set_parent), p), 
@@ -747,6 +749,10 @@ guarded_action::dump_brief(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if CHP_ACTION_PARENT_LINK
+/**
+	\pre guarded action must ALREADY BE LOADED from persistent 
+		reconstruction, so stmt pointer is valid.  
+ */
 void
 guarded_action::set_parent(const action* p) const {
 	if (stmt) {
@@ -988,6 +994,8 @@ deterministic_selection::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 #if CHP_ACTION_PARENT_LINK
+	// need to guarantee that actions are loaded before relinking
+	m.load_once_pointer_list(static_cast<list_type&>(*this));
 	relink_parent_actions(begin(), end(), this);
 #endif
 }
@@ -1109,6 +1117,8 @@ nondeterministic_selection::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 #if CHP_ACTION_PARENT_LINK
+	// need to guarantee that actions are loaded before relinking
+	m.load_once_pointer_list(static_cast<list_type&>(*this));
 	relink_parent_actions(begin(), end(), this);
 #endif
 }
@@ -2215,6 +2225,8 @@ do_while_loop::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, i);
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
 #if CHP_ACTION_PARENT_LINK
+	// need to guarantee that actions are loaded before relinking
+	m.load_once_pointer_list(static_cast<list_type&>(*this));
 	relink_parent_actions(begin(), end(), this);
 #endif
 }

@@ -1,0 +1,17 @@
+
+# process[1]:
+event[1]: receive: {
+  differ.L?(differ.x);
+  ...;
+  ...
+}
+event[2]: receive: {
+  ...;
+  differ.L?(differ.z);
+  ...
+}
+event[3]: send: {
+  ...;
+  ...;
+  differ.R!(differ.x-differ.z)
+}

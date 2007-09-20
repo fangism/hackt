@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.35 2007/03/16 07:07:25 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.35.26.1 2007/09/20 04:26:54 fang Exp $
  */
 
 // flags and switches
@@ -1127,6 +1127,16 @@ persistent_object_manager::__load_object_once(
 		p->load_object(*this, i);
 		STRIP_OBJECT_FOOTER(i);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Provided to coerce const pointers.  
+ */
+void
+persistent_object_manager::__load_object_once(
+		const persistent* p, raw_pointer_tag) const {
+	__load_object_once(const_cast<persistent*>(p), raw_pointer_tag());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

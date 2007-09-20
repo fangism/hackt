@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.27 2007/07/31 23:23:49 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.27.12.1 2007/09/20 04:26:58 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -324,6 +324,16 @@ persistent_object_manager::pointer_reader::operator() (const P& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+inline
+void
+persistent_object_manager::pointer_loader::operator() (const P& p) {
+if (p) {
+	pom.load_object_once(p);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Visits a sequence of pointers, calls registration.  
 	Container only needs a simple forward iterator interface.  
@@ -384,6 +394,17 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 		l.push_back(pointer_type());
 		read_pointer(f, l.back());		// in-place
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Loads each pointed object once if not already loaded.  
+ */
+template <class L>
+void
+persistent_object_manager::load_once_pointer_list(const L& l) const {
+//	typedef	typename L::const_iterator	const_iterator;
+	for_each(l.begin(), l.end(), pointer_loader(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

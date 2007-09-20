@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.89 2007/09/13 01:14:18 fang Exp $
+#	$Id: ChangeLog,v 1.89.4.1 2007/09/20 04:26:51 fang Exp $
+
+2007-09-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-05:
+	  util/binders.h: added binder1st_argval_void and friends.
+	  util/persistent_object_manager:
+		added load_once_pointer_list and helpers.  
+
 
 2007-09-12	David Fang		<fangism@users.sourceforge.net>
 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.11.4.1 2007/09/18 04:50:57 fang Exp $
+	$Id: Event.cc,v 1.11.4.2 2007/09/20 04:26:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -313,11 +313,12 @@ ostream&
 EventNode::dump_source_context(ostream& o, const expr_dump_context& edc) const {
 	const action* a = get_chp_action();
 	if (a) {
+		__local_event->dump_type(o) << ": ";
 		entity::CHP::chp_context_printer P(*a, o, edc);
 		P();
 		return o;
 	} else {
-		return o << "[null]";
+		return o << "[null]" << endl;
 	}
 }
 
