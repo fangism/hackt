@@ -6,7 +6,7 @@ namespace A {
 
 namespace B {
 	open A;
-	open A as C;
+	open A -> C;
 	int foo;		// is ok
 }
 

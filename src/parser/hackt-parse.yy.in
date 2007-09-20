@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.30 2007/09/13 20:37:24 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.30.2.1 2007/09/20 07:29:41 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -507,7 +507,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* _token_keyword: covert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
-%token	<_keyword_position>	OPEN AS
+%token	<_keyword_position>	OPEN
+%token	<_keyword_position>	AS
 %token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG SPEC_LANG
 %token	<_keyword_position>	TREE_LANG SUBCKT_LANG
 %token	<_keyword_position>	SKIP LOG
@@ -867,7 +868,8 @@ namespace_management
 		  WRAP_LIST($3, $4, $5);
 		  $$ = new namespace_body($1, $2, $4); }
 	/* or C++ style: using namespace blah; */
-	| OPEN namespace_id AS ID ';'
+	/* | OPEN namespace_id AS ID ';' */
+	| OPEN namespace_id RARROW ID ';'
 		{ $$ = new using_namespace($1, $2, $4);
 		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
 	| OPEN namespace_id ';'

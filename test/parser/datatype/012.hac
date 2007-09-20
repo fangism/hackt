@@ -2,5 +2,5 @@
 
 namespace A { }
 int x;
-open A as x;
+open A -> x;
 

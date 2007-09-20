@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.25 2007/09/13 20:37:21 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.25.2.1 2007/09/20 07:29:40 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -650,7 +650,12 @@ EMBEDFILE	^#FILE
 
 {NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(*hackt_lval, foo); return OPEN; }
-{AS}		{ KEYWORD_UPDATE(*hackt_lval, foo); return AS; }
+{AS}		{ // KEYWORD_UPDATE(*hackt_lval, foo); return AS;
+	cerr << "WARNING: \'as\' is a deprecated keyword.  "
+		"Assuming you want \'->\' instead..." << endl;
+	cerr << "(Eventually, this keyword will be removed.)" << endl;
+	NODE_POSITION_UPDATE(*hackt_lval, foo); return RARROW;
+	}
 {TEMPLATE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return TEMPLATE; }
 {DEFINE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return DEFINE; }
 {DEFCHAN}	{ KEYWORD_UPDATE(*hackt_lval, foo); return DEFCHAN; }

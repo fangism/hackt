@@ -4,10 +4,10 @@ namespace J {
 
 }
 
-open J as K;
+open J -> K;
 
-open K as L;
+open K -> L;
 
-open L as J;		// BAD! J already taken as a sub-namespace
+open L -> J;		// BAD! J already taken as a sub-namespace
 
 

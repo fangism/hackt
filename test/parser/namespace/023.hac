@@ -4,9 +4,9 @@ namespace J {
 
 }
 
-open J as K;
+open J -> K;
 
-open K as L;
+open K -> L;
 
 // fine up to here
 
