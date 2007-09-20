@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.18 2007/07/31 23:22:51 fang Exp $
+	$Id: CHP.cc,v 1.18.10.1 2007/09/20 17:19:32 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -1604,6 +1604,9 @@ function_call_expr::__check_nonmeta_expr(const context& c) const {
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS
+
+template 
+node_list<const CHP::stmt_attribute>::node_list();
 
 template 
 node_list<const CHP::stmt_attribute>::node_list(const CHP::stmt_attribute*);

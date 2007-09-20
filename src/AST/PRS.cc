@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25 2007/09/13 20:37:13 fang Exp $
+	$Id: PRS.cc,v 1.25.2.1 2007/09/20 17:19:33 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -917,6 +917,9 @@ attribute::check(context& c) const {
 
 #if 1
 // This is temporary, until node_list::check_build is overhauled.  
+template
+node_list<const PRS::body_item>::node_list();
+
 template
 node_list<const PRS::body_item>::node_list(const PRS::body_item*);
 

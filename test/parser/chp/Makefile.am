@@ -1,10 +1,10 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2007/08/28 04:55:37 fang Exp $
+#	$Id: Makefile.am,v 1.22.4.1 2007/09/20 17:19:42 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
-	001 003 004 006 007 008 009 \
+	001 004 006 007 008 009 \
 	010 011 012 013 014 016 018 019b \
 	023 \
 	030 031 035 037 038 \
@@ -24,7 +24,7 @@ HACKT_PARSE_TEST_FAILURES = \
 # affects: dataless-02
 
 HACKT_PARSE_TEST_PASSES = \
-	000 002 005 \
+	000 002 003 005 \
 	015 017 019 \
 	020 021 022 024 025 026 027 028 029 \
 	032 033 034 036 039 \
@@ -50,6 +50,7 @@ HACKT_PARSE_TEST_WARNINGS = \
 	101 103
 
 HACKT_CREATE_TEST_PASSES = \
+	003 \
 	064 \
 	074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \

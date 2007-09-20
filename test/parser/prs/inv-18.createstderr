@@ -1,0 +1,80 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	104
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	343
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+      Instances:
+        a = bool<> inv::a
+        b = bool<> inv::b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+      prs:
+        a -> b-
+        ~a -> b+
+      footprint: {
+        a = bool^0 = inv::a (1) 
+        b = bool^0 = inv::b (2) 
+        Created state:
+        bool instance pool:
+        1	inv::a
+        2	inv::b
+        resolved prs:
+        a -> b-
+        ~a -> b+
+      }
+      }
+
+  Instances:
+    erse = inv<> erse
+}
+
+footprint: {
+  erse = process inv<>^0 = erse (1) (
+    a = bool^0 = erse.a (1) 
+    b = bool^0 = erse.b (2) 
+  )
+  Created state:
+  process instance pool:
+  1	erse
+  bool instance pool:
+  1	erse.a
+  2	erse.b
+}

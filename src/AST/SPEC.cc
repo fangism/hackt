@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.9 2007/09/13 20:37:14 fang Exp $
+	$Id: SPEC.cc,v 1.9.2.1 2007/09/20 17:19:33 fang Exp $
  */
 
 #include <iostream>
@@ -207,6 +207,7 @@ body::check_build(context& c) const {
 // EXPLICIT TEMPLATE INSTANTIATIONS
 
 // template class node_list<const directive>;
+template node_list<const SPEC::directive>::node_list();
 template node_list<const SPEC::directive>::node_list(const SPEC::directive*);
 template node_list<const SPEC::directive>::~node_list();
 template ostream& node_list<const SPEC::directive>::what(ostream&) const;

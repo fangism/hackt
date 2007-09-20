@@ -5,6 +5,12 @@
 
 2007-09-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-04:
+	  Grammar: allow empty prs/chp/hse/spec bodies, 
+		also in tree and subckt.
+	  Test cases updated accordingly, a few new ones.  
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-03:
 	  Trivial change: 'as' keyword is marked deprecated, 
 		namespace using directive uses "->" now.

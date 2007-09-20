@@ -1,10 +1,10 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.1 2007/09/15 05:42:53 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.2 2007/09/20 17:19:44 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
-	inv-01 inv-04 inv-05 inv-10 inv-11 \
+	inv-04 inv-05 inv-10 inv-11 \
 	celem-07 celem-08 \
 	echo-02 echo-03 echo-04 \
 	after-01 \
@@ -19,7 +19,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	precharge-01
 
 HACKT_PARSE_TEST_PASSES = \
-	inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
+	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
@@ -42,10 +42,11 @@ HACKT_PARSE_TEST_PASSES = \
 	top-level-01\
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
-	tree-00 tree-01 tree-02 tree-03 \
+	tree-00 tree-01 tree-02 tree-03 tree-04 \
 	subckt-00 subckt-01 \
 	subckt-02 subckt-03 \
 	subckt-04 subckt-05 \
+	subckt-06 \
 	internal-node-00 \
 	precharge-00 \
 	unstab-01 \
@@ -54,7 +55,8 @@ HACKT_PARSE_TEST_PASSES = \
 # pending: act-008 act-009
 
 HACKT_CREATE_TEST_PASSES = \
-	inv-14 inv-15 inv-16 inv-17 \
+	inv-01 \
+	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
@@ -75,8 +77,8 @@ HACKT_CREATE_TEST_PASSES = \
 	top-level-01 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
-	tree-02 tree-03 \
-	subckt-01 subckt-03 subckt-05 \
+	tree-02 tree-03 tree-04 \
+	subckt-01 subckt-03 subckt-05 subckt-06 \
 	unstab-01 \
 	act-001 act-002 act-006 act-007 act-010
 
@@ -93,7 +95,7 @@ HACKT_CREATE_TEST_FAILURES = \
 # loop-01: (same)
 
 HACKT_CFLAT_TEST_SUBJECTS = \
-	inv-14 inv-15 inv-16 inv-17 \
+	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
@@ -144,7 +146,8 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 	short-01 short-02 short-03 short-04 short-05
 
 # expecting empty .prs
-EMPTY_CFLAT_PRS_TESTS += null-00 loop-00 \
+EMPTY_CFLAT_PRS_TESTS += \
+	null-00 loop-00 \
 	cond-05 \
 	macro-pass-01
 
