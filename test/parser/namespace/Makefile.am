@@ -1,5 +1,5 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.13.6.1 2007/09/15 05:42:42 fang Exp $
+#	$Id: Makefile.am,v 1.13.6.2 2007/09/20 15:06:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -7,7 +7,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	    006 \
 	011 012 013 \
 	021 023 024 026 028 \
-	act-003 act-004
+	act-002 act-003 act-004
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 HACKT_PARSE_TEST_PASSES = \

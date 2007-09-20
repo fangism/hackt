@@ -1,0 +1,9 @@
+// "act-002.hac"
+// stolen from "act/tests/ns/3.act"
+
+import "act-001.hac";
+
+open foo::bar -> bar;
+  
+bar::bar x;
+
