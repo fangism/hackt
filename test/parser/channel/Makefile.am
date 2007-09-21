@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.16.2.1 2007/09/15 05:42:11 fang Exp $
+#	$Id: Makefile.am,v 1.16.2.2 2007/09/21 20:51:26 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -29,6 +29,8 @@ HACKT_PARSE_TEST_PASSES = \
 	dataless-01 dataless-02 dataless-03 dataless-04 dataless-05 \
 	act-002 act-003
 # pending: act-001
+# set/get should be rejected
+srcdir_EXTRA_DIST += act-001.hac
 
 # HACKT_UNROLL_TEST_PASSES = \
 # 	001 002 005 008 009 010 \
