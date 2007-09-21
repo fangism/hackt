@@ -1,0 +1,9 @@
+// "act-001.hac"
+// stolen from "act/tests/ns/7.act"
+// expect fail: need set/get bodies
+
+deftype foo <: int<3> (bool q)
+{
+
+}
+

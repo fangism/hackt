@@ -1,17 +1,16 @@
-At: "035.hac":10:
+At: "033.hac":7:
 parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	list<(root_item)>: (process-definition) ... [7:1..21]
 #STATE#	(null) 
-#STATE#	keyword: deftype [9:1..7]
-#STATE#	identifier: my_data [9:9..15]
-#STATE#	<: [9:17]
-#STATE#	(type-ref) [9:20..25]
-#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [9:27..44]
-#STATE#	{ [9:46]
-#STATE#	datatype: bool [10:2..5]
+#STATE#	keyword: deftype [6:1..7]
+#STATE#	identifier: my_data [6:9..15]
+#STATE#	<: [6:17]
+#STATE#	(type-ref) [6:20..25]
+#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [6:27..44]
+#STATE#	{ [6:46]
+#STATE#	datatype: bool [7:2..5]
 in state #STATE#, possible rules are:
 	defdatatype : optional_template_specification DEFTYPE ID DEFINEOP data_type_ref optional_port_formal_decl_list_in_parens '{' . optional_datatype_body set_body get_body '}'  (#RULE#)
 	optional_datatype_body : .  (#RULE#)

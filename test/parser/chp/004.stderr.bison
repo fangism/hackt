@@ -13,6 +13,6 @@ state	value
 #STATE#	list<(chp-statement)>: list<(chp-statement)>: (chp-send) ... ... [5:2..3]
 #STATE#	bool: false [5:4..8]
 in state #STATE#, possible rules are:
-	language_body: CHP_LANG '{' chp_body . '}'  (#RULE#)
+	language_body: CHP_LANG '{' chp_body_optional . '}'  (#RULE#)
 acceptable tokens are: 
 	'}' (shift)

@@ -11,23 +11,9 @@ state	value
 #STATE#	(type-ref) [12:20..25]
 #STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [12:27..44]
 #STATE#	{ [12:46]
+#STATE#	list<(def-body-item)>: ... [0:0]
 #STATE#	datatype: bool [13:2..5]
 in state #STATE#, possible rules are:
-	defdatatype : optional_template_specification DEFTYPE ID DEFINEOP data_type_ref optional_port_formal_decl_list_in_parens '{' . optional_datatype_body set_body get_body '}'  (#RULE#)
-	optional_datatype_body : .  (#RULE#)
+	defdatatype: optional_template_specification DEFTYPE ID DEFINEOP data_type_ref optional_port_formal_decl_list_in_parens '{' optional_datatype_body . set_body get_body '}'  (#RULE#)
 acceptable tokens are: 
-	'!' (shift)
-	'(' (shift)
-	'-' (shift)
-	'[' (shift)
-	'{' (shift)
-	'~' (shift)
-	ID (shift)
-	FLOAT (shift)
-	INT (shift)
-	STRING (shift)
-	SCOPE (shift)
-	SPEC_LANG (shift)
-	SET (reduce)
-	BOOL_TRUE (shift)
-	BOOL_FALSE (shift)
+	SET (shift)

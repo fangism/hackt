@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.89 2007/09/13 01:14:18 fang Exp $
+#	$Id: ChangeLog,v 1.89.2.1 2007/09/21 14:20:48 fang Exp $
+
+2007-09-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-05:
+	  Added util/convert.h: converting functor, using explicit construction
+
 
 2007-09-12	David Fang		<fangism@users.sourceforge.net>
 
