@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.2 2007/09/20 17:19:44 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.3 2007/09/21 16:31:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,7 +20,7 @@ HACKT_PARSE_TEST_FAILURES = \
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
-	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
+	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 inv-18 \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
