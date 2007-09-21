@@ -1,0 +1,258 @@
+
+# process[0]:
+event[1]: fork: {
+  {
+    a := false,
+    b := false,
+    c := false,
+    d := false
+  };
+  ...;
+  ...
+}
+event[2]: [null]
+event[3]: assign: {
+  ...;
+  ...;
+  {
+    [
+      a -> c := true []
+      ... -> ...
+    ],
+    ...,
+    ...
+  }
+}
+event[4]: select: {
+  ...;
+  ...;
+  {
+    [
+      a -> c := true []
+      else -> skip
+    ],
+    ...,
+    ...
+  }
+}
+event[5]: [null]
+event[6]: assign: {
+  ...;
+  ...;
+  {
+    ...,
+    [
+      b -> d := true []
+      ... -> ...
+    ],
+    ...
+  }
+}
+event[7]: select: {
+  ...;
+  ...;
+  {
+    ...,
+    [
+      b -> d := true []
+      else -> skip
+    ],
+    ...
+  }
+}
+event[8]: join: {
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      {
+        c := false,
+        d := false
+      }
+    }
+  }
+}
+event[9]: assign: {
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      {
+        c := false,
+        ...
+      }
+    }
+  }
+}
+event[10]: assign: {
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      {
+        ...,
+        d := false
+      }
+    }
+  }
+}
+event[11]: fork: {
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      {
+        c := false,
+        d := false
+      }
+    }
+  }
+}
+event[12]: wait: {
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    {
+      [c&&d];
+      ...
+    }
+  }
+}
+event[13]: fork: {
+  ...;
+  ...;
+  {
+    [
+      a -> c := true []
+      else -> skip
+    ],
+    [
+      b -> d := true []
+      else -> skip
+    ],
+    {
+      [c&&d];
+      {
+        c := false,
+        d := false
+      }
+    }
+  }
+}
+event[14]: join: {
+  ...;
+  {
+    b := true,
+    a := true
+  };
+  ...
+}
+event[15]: assign: {
+  ...;
+  {
+    b := true,
+    ...
+  };
+  ...
+}
+event[16]: assign: {
+  ...;
+  {
+    ...,
+    a := true
+  };
+  ...
+}
+event[17]: fork: {
+  ...;
+  {
+    b := true,
+    a := true
+  };
+  ...
+}
+event[18]: join: {
+  {
+    a := false,
+    b := false,
+    c := false,
+    d := false
+  };
+  ...;
+  ...
+}
+event[19]: assign: {
+  {
+    a := false,
+    ...,
+    ...,
+    ...
+  };
+  ...;
+  ...
+}
+event[20]: assign: {
+  {
+    ...,
+    b := false,
+    ...,
+    ...
+  };
+  ...;
+  ...
+}
+event[21]: assign: {
+  {
+    ...,
+    ...,
+    c := false,
+    ...
+  };
+  ...;
+  ...
+}
+event[22]: assign: {
+  {
+    ...,
+    ...,
+    ...,
+    d := false
+  };
+  ...;
+  ...
+}
+event[23]: join: {
+  ...;
+  ...;
+  {
+    [
+      a -> c := true []
+      else -> skip
+    ],
+    [
+      b -> d := true []
+      else -> skip
+    ],
+    {
+      [c&&d];
+      {
+        c := false,
+        d := false
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+# "select-block-a-03.chpsimrc"
+#	$Id: select-block-a-03.chpsimrc,v 1.1.2.1 2007/09/21 19:51:42 fang Exp $
+# @haco@ select-block-a.haco-a
+
+dump-all-event-source
+

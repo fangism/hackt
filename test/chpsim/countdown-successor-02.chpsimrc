@@ -1,0 +1,6 @@
+# "countdown-successor-02.chpsimrc"
+#	$Id: countdown-successor-02.chpsimrc,v 1.1.2.1 2007/09/21 19:51:38 fang Exp $
+# @haco@ countdown-successor.haco-a
+
+dump-all-event-source
+

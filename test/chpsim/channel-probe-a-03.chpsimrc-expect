@@ -1,0 +1,30 @@
+
+# process[0]:
+event[1]: wait: *[{
+  [#A];
+  ...;
+  ...
+}]
+event[2]: send: *[{
+  ...;
+  ...;
+  B!(a)
+}]
+event[3]: receive: *[{
+  ...;
+  A?(a);
+  ...
+}]
+
+# process[1]:
+event[4]: send: *[{
+  bs.S!(true);
+  ...
+}]
+event[5]: send: *[{
+  ...;
+  bs.S!(false)
+}]
+
+# process[2]:
+event[6]: receive: *[snk.B?(snk.b)]

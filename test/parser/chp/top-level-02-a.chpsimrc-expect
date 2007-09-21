@@ -1,0 +1,14 @@
+
+# process[0]:
+event[1]: fork: {
+  *[x := true],
+  *[y := false]
+}
+event[2]: assign: {
+  ...,
+  *[y := false]
+}
+event[3]: assign: {
+  *[x := true],
+  ...
+}

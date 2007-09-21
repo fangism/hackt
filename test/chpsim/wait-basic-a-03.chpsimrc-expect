@@ -1,0 +1,173 @@
+
+# process[0]:
+event[1]: fork: {
+  {
+    a := false,
+    b := false,
+    c := false,
+    d := false
+  };
+  ...
+}
+event[2]: assign: {
+  ...;
+  {
+    a := true,
+    ...,
+    ...,
+    ...
+  }
+}
+event[3]: assign: {
+  ...;
+  {
+    ...,
+    {
+      ...;
+      b := true
+    },
+    ...,
+    ...
+  }
+}
+event[4]: wait: {
+  ...;
+  {
+    ...,
+    {
+      [a];
+      ...
+    },
+    ...,
+    ...
+  }
+}
+event[5]: assign: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      c := true
+    },
+    ...
+  }
+}
+event[6]: wait: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      [b];
+      ...
+    },
+    ...
+  }
+}
+event[7]: assign: {
+  ...;
+  {
+    ...,
+    ...,
+    ...,
+    {
+      ...;
+      d := true
+    }
+  }
+}
+event[8]: wait: {
+  ...;
+  {
+    ...,
+    ...,
+    ...,
+    {
+      [c];
+      ...
+    }
+  }
+}
+event[9]: fork: {
+  ...;
+  {
+    a := true,
+    {
+      [a];
+      b := true
+    },
+    {
+      [b];
+      c := true
+    },
+    {
+      [c];
+      d := true
+    }
+  }
+}
+event[10]: join: {
+  {
+    a := false,
+    b := false,
+    c := false,
+    d := false
+  };
+  ...
+}
+event[11]: assign: {
+  {
+    a := false,
+    ...,
+    ...,
+    ...
+  };
+  ...
+}
+event[12]: assign: {
+  {
+    ...,
+    b := false,
+    ...,
+    ...
+  };
+  ...
+}
+event[13]: assign: {
+  {
+    ...,
+    ...,
+    c := false,
+    ...
+  };
+  ...
+}
+event[14]: assign: {
+  {
+    ...,
+    ...,
+    ...,
+    d := false
+  };
+  ...
+}
+event[15]: join: {
+  ...;
+  {
+    a := true,
+    {
+      [a];
+      b := true
+    },
+    {
+      [b];
+      c := true
+    },
+    {
+      [c];
+      d := true
+    }
+  }
+}

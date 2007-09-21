@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.22.6.1 2007/09/20 04:27:46 fang Exp $
+#	$Id: Makefile.am,v 1.22.6.2 2007/09/21 19:52:02 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -86,7 +86,12 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	064-a \
 	075-a \
 	080-a 083-a 086-a 087-a \
-	097-a 098-a
+	097-a 098-a 099-a \
+	104-a \
+	114-a 116-a 117-a 118-a \
+	dataless-01-a \
+	source-sink-delay-01-a \
+	top-level-02-a
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 019b \

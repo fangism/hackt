@@ -1,0 +1,6 @@
+# "countdown-domino-a-02.chpsimrc"
+#	$Id: countdown-domino-a-02.chpsimrc,v 1.1.2.1 2007/09/21 19:51:27 fang Exp $
+# @haco@ countdown-domino-a.haco-a
+
+dump-all-event-source
+

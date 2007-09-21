@@ -1,0 +1,66 @@
+
+# process[1]:
+event[1]: fork: *[{
+  [
+    f.x -> f.y := f.y+1 []
+    else -> f.y := f.y-1
+  ],
+  [
+    f.z -> f.w := f.w+1 []
+    else -> f.w := f.w-1
+  ]
+}]
+event[2]: join: *[{
+  [
+    f.x -> f.y := f.y+1 []
+    else -> f.y := f.y-1
+  ],
+  [
+    f.z -> f.w := f.w+1 []
+    else -> f.w := f.w-1
+  ]
+}]
+event[3]: [null]
+event[4]: assign: *[{
+  [
+    f.x -> f.y := f.y+1 []
+    ... -> ...
+  ],
+  ...
+}]
+event[5]: assign: *[{
+  [
+    ... -> ... []
+    else -> f.y := f.y-1
+  ],
+  ...
+}]
+event[6]: select: *[{
+  [
+    f.x -> f.y := f.y+1 []
+    else -> f.y := f.y-1
+  ],
+  ...
+}]
+event[7]: [null]
+event[8]: assign: *[{
+  ...,
+  [
+    f.z -> f.w := f.w+1 []
+    ... -> ...
+  ]
+}]
+event[9]: assign: *[{
+  ...,
+  [
+    ... -> ... []
+    else -> f.w := f.w-1
+  ]
+}]
+event[10]: select: *[{
+  ...,
+  [
+    f.z -> f.w := f.w+1 []
+    else -> f.w := f.w-1
+  ]
+}]

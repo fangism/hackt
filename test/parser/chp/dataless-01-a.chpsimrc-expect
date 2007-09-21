@@ -1,0 +1,6 @@
+
+# process[1]:
+event[1]: send: A.X!
+
+# process[2]:
+event[2]: receive: B.Y?

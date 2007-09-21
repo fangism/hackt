@@ -1,0 +1,6 @@
+# "select-skip-a-02.chpsimrc"
+#	$Id: select-skip-a-02.chpsimrc,v 1.1.2.1 2007/09/21 19:51:49 fang Exp $
+# @haco@ select-skip-a.haco-a
+
+dump-all-event-source
+

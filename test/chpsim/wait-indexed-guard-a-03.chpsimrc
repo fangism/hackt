@@ -1,0 +1,6 @@
+# "wait-indexed-guard-a-03.chpsimrc"
+#	$Id: wait-indexed-guard-a-03.chpsimrc,v 1.1.2.1 2007/09/21 19:51:54 fang Exp $
+# @haco@ wait-indexed-guard-a.haco-a
+
+dump-all-event-source
+

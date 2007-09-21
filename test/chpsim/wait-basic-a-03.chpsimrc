@@ -1,0 +1,6 @@
+# "wait-basic-a-03.chpsimrc"
+#	$Id: wait-basic-a-03.chpsimrc,v 1.1.2.1 2007/09/21 19:51:50 fang Exp $
+# @haco@ wait-basic-a.haco-a
+
+dump-all-event-source
+

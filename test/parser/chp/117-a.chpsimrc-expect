@@ -1,0 +1,68 @@
+
+# process[1]:
+event[1]: peek: *[{
+  foo.index#(foo.y);
+  ...
+}]
+event[2]: join: *[{
+  ...;
+  {
+    foo.index?,
+    foo.out!(foo.x[0][foo.y])
+  }
+}]
+event[3]: receive: *[{
+  ...;
+  {
+    foo.index?,
+    ...
+  }
+}]
+event[4]: send: *[{
+  ...;
+  {
+    ...,
+    foo.out!(foo.x[0][foo.y])
+  }
+}]
+event[5]: fork: *[{
+  ...;
+  {
+    foo.index?,
+    foo.out!(foo.x[0][foo.y])
+  }
+}]
+
+# process[2]:
+event[6]: peek: *[{
+  bar.index#(bar.y);
+  ...
+}]
+event[7]: join: *[{
+  ...;
+  {
+    bar.index?,
+    bar.out!(bar.x[1][bar.y])
+  }
+}]
+event[8]: receive: *[{
+  ...;
+  {
+    bar.index?,
+    ...
+  }
+}]
+event[9]: send: *[{
+  ...;
+  {
+    ...,
+    bar.out!(bar.x[1][bar.y])
+  }
+}]
+event[10]: fork: *[{
+  ...;
+  {
+    bar.index?,
+    bar.out!(bar.x[1][bar.y])
+  }
+}]

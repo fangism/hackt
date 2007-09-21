@@ -1,0 +1,44 @@
+
+# process[0]:
+event[1]: assign: {
+  a := false;
+  ...
+}
+event[2]: [null]
+event[3]: assign: {
+  ...;
+  *[[
+    a -> {
+      ...;
+      a := false
+    } []
+    ... -> ...
+  ]]
+}
+event[4]: assign: {
+  ...;
+  *[[
+    a -> {
+      b := true;
+      ...
+    } []
+    ... -> ...
+  ]]
+}
+event[5]: assign: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> a := true
+  ]]
+}
+event[6]: select: {
+  ...;
+  *[[
+    a -> {
+      b := true;
+      a := false
+    } []
+    else -> a := true
+  ]]
+}
