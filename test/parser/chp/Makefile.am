@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.22.4.1 2007/09/20 17:19:42 fang Exp $
+#	$Id: Makefile.am,v 1.22.4.2 2007/09/25 22:43:29 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -84,7 +84,7 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS += 001 003 004 019b \
+BISON_OUTPUTS += 001 004 019b \
 	035 055 056 059 062 107
 
 srcdir_EXTRA_DIST +=

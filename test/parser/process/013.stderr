@@ -3,6 +3,7 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
+#STATE#	(null) 
 #STATE#	keyword: template [3:1..8]
 #STATE#	< [3:10]
 #STATE#	paramtype: pint [3:11..14]

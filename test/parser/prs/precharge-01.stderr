@@ -3,10 +3,7 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	(null) 
-#STATE#	keyword: defproc [5:1..7]
-#STATE#	identifier: pchg_fail [5:9..17]
-#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [5:18..35]
+#STATE#	(process-prototype) [5:1..35]
 #STATE#	{ [5:37]
 #STATE#	keyword: prs [6:1..3]
 #STATE#	{ [6:5]

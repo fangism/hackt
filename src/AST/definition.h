@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition.h"
 	Definition-related parser classes for HAC.  
-	$Id: definition.h,v 1.4 2006/07/31 22:22:21 fang Exp $
+	$Id: definition.h,v 1.4.64.1 2007/09/25 22:42:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.h,v 1.17.40.1 2005/12/11 00:45:04 fang Exp
  */
@@ -55,12 +55,22 @@ virtual	~prototype();
  */
 class signature_base {
 protected:
-	const excl_ptr<const template_formal_decl_list_pair>	temp_spec;
-	const excl_ptr<const token_identifier>		id;
+	excl_ptr<const template_formal_decl_list_pair>	temp_spec;
+	excl_ptr<const token_identifier>		id;
 public:
 	signature_base(const template_formal_decl_list_pair* tf, 
 		const token_identifier* i);
 
+protected:
+	// ownership transferring copy-constructor
+	explicit
+	signature_base(signature_base&);
+
+private:
+	// no default copy-ctor
+	signature_base(const signature_base&);
+
+public:
 virtual	~signature_base();
 
 	PURE_VIRTUAL_NODE_METHODS
@@ -81,15 +91,22 @@ public:
 	typedef	never_ptr<const object>			return_type;
 #endif
 protected:
-	const excl_ptr<const generic_keyword_type>	def;	///< definition keyword
+	excl_ptr<const generic_keyword_type>	exp;	///< export keyword
+	excl_ptr<const generic_keyword_type>	def;	///< definition keyword
 		// should never be NULL, could be const reference?
 	/**
 		Optional port formal list.  
 		Never NULL, but may be empty.  
 	 */
-	const excl_ptr<const port_formal_decl_list>	ports;
+	excl_ptr<const port_formal_decl_list>	ports;
+
+	/// transferring copy-ctor
+	explicit
+	process_signature(process_signature&);
 public:
-	process_signature(const template_formal_decl_list_pair* tf, 
+	process_signature(
+		const generic_keyword_type* e, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
 
@@ -104,7 +121,9 @@ virtual	~process_signature();
 /// process prototype declaration
 class process_prototype : public prototype, public process_signature {
 public:
-	process_prototype(const template_formal_decl_list_pair* tf, 
+	process_prototype(
+		const generic_keyword_type* e, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
 
@@ -134,9 +153,15 @@ protected:
 //	const excl_ptr<const port_formal_decl_list>	ports;	//  inherited
 	const excl_ptr<const definition_body>		body;	///< definition body
 public:
-	process_def(const template_formal_decl_list_pair*, 
+#if 0
+	process_def(
+		const generic_keyword_type* e, 
+		const template_formal_decl_list_pair*, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b);
+#else
+	process_def(process_signature& s, const definition_body* b);
+#endif
 
 	~process_def();
 

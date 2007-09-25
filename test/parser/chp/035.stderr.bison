@@ -4,6 +4,7 @@ parser stacks:
 state	value
 #STATE#	(null) 
 #STATE#	(null) 
+#STATE#	(null) 
 #STATE#	keyword: defproc [4:1..7]
 #STATE#	identifier: sum_diff [4:9..16]
 #STATE#	( [4:17]

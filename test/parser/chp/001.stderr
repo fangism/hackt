@@ -4,6 +4,7 @@ parser stacks:
 state	value
 #STATE#	(null) 
 #STATE#	(null) 
+#STATE#	(null) 
 #STATE#	keyword: defproc [3:1..7]
 #STATE#	identifier: empty [3:9..13]
 #STATE#	( [3:14]

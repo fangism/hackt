@@ -3,6 +3,7 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
+#STATE#	(null) 
 #STATE#	keyword: template [3:1..8]
 #STATE#	list<(template-formal-decl)>: (template-formal-decl) ... [3:10..18]
 #STATE#	< [3:20]

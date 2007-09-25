@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.25.2.1 2007/09/20 07:29:40 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.25.2.2 2007/09/25 22:42:54 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -217,8 +217,12 @@ KEYWORD_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 
 static inline void
 LINKAGE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+#if 0
 	hackt_lval._token_keyword = new token_keyword(yytext);
 	TOKEN_UPDATE(foo);
+#else
+	KEYWORD_UPDATE(hackt_lval, foo);
+#endif
 }
 
 static inline void

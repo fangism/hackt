@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.6 2006/07/31 22:22:21 fang Exp $
+	$Id: definition.cc,v 1.6.64.1 2007/09/25 22:42:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -114,6 +114,10 @@ inline
 signature_base::signature_base(const template_formal_decl_list_pair* tf,
 		const token_identifier* i) :
 		temp_spec(tf), id(i) {
+}
+
+signature_base::signature_base(signature_base& s) :
+		temp_spec(s.temp_spec), id(s.id) {
 }
 
 inline
@@ -607,10 +611,18 @@ user_chan_type_def::check_build(context& c) const {
 // class process_signature method definitions
 
 CONSTRUCTOR_INLINE
-process_signature::process_signature(const template_formal_decl_list_pair* tf, 
+process_signature::process_signature(
+		const generic_keyword_type* e, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p) :
-		signature_base(tf,i), def(d), ports(p) {
+		signature_base(tf,i), exp(e), def(d), ports(p) {
+	NEVER_NULL(def);
+	NEVER_NULL(ports);		// not any more!
+}
+
+process_signature::process_signature(process_signature& s) :
+		signature_base(s), exp(s.exp), def(s.def), ports(s.ports) {
 	NEVER_NULL(def);
 	NEVER_NULL(ports);		// not any more!
 }
@@ -672,11 +684,13 @@ process_signature::check_signature(context& c) const {
 // class process_prototype method definitions
 
 CONSTRUCTOR_INLINE
-process_prototype::process_prototype(const template_formal_decl_list_pair* tf, 
+process_prototype::process_prototype(
+		const generic_keyword_type* e, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p) :
 		prototype(),
-		process_signature(tf, d, i, p) {
+		process_signature(e, tf, d, i, p) {
 }
 
 DESTRUCTOR_INLINE
@@ -712,14 +726,26 @@ process_prototype::check_build(context& c) const {
 // class process_def method definitions
 
 CONSTRUCTOR_INLINE
-process_def::process_def(const template_formal_decl_list_pair* tf, 
+#if 0
+process_def::process_def(
+		const generic_keyword_type* e, 
+		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p, const definition_body* b) :
 		definition(),
-		process_signature(tf, d, i, p), 
+		process_signature(e, tf, d, i, p), 
 		body(b) {
 	NEVER_NULL(body);		// body may be empty, is is not NULL
 }
+#else
+process_def::process_def(
+		process_signature& s, const definition_body* b) :
+		definition(),
+		process_signature(s), 
+		body(b) {
+	NEVER_NULL(body);		// body may be empty, is is not NULL
+}
+#endif
 
 DESTRUCTOR_INLINE
 process_def::~process_def() { }
