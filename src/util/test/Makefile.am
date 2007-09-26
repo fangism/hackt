@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.60 2007/08/29 15:50:25 fang Exp $
+#	$Id: Makefile.am,v 1.61 2007/09/26 16:51:35 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -133,7 +133,7 @@ exec.autodepend: Makefile
 	test -z "$$list" || \
 	for e in $$list ; do \
 	  $(ECHO) "$$e.out: $$e" ; \
-	  $(ECHO) "	-$$""< > $$""@ 2>&1" ; \
+	  $(ECHO) "	-./$$""< > $$""@ 2>&1" ; \
 	  $(ECHO) "" ; \
 	done > $@ ; \
 	$(TOUCH) $@
