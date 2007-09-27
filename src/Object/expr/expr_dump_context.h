@@ -1,12 +1,13 @@
 /**
 	\file "Object/expr/expr_dump_context.h"
 	Flags and modifiers for manipulating expression dumps.  
-	$Id: expr_dump_context.h,v 1.6 2007/06/12 05:12:41 fang Exp $
+	$Id: expr_dump_context.h,v 1.7 2007/09/27 02:03:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
 #define	__HAC_OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
 
+#include <string>
 #include "util/memory/excl_ptr.h"
 #include "util/member_saver.h"
 #include "util/attributes.h"
@@ -14,6 +15,7 @@
 namespace HAC {
 namespace entity {
 class scopespace;
+using std::string;
 using util::memory::never_ptr;
 
 namespace PRS {
@@ -51,7 +53,7 @@ struct expr_dump_context {
 		This takes precedence over enclosing_scope.  
 		e.g. subinstance 'y' of 'x' becomes "x.y".
 	 */
-	const char*				parent_instance_name;
+	string					parent_instance_name;
 	/**
 		Whether or not type information should be included
 		with instance reference dumps.  
@@ -78,7 +80,7 @@ struct expr_dump_context {
 	expr_dump_context(const scopespace*);
 
 	explicit
-	expr_dump_context(const char*);
+	expr_dump_context(const string&);
 
 	expr_dump_context(const char, const scopespace*, 
 		const bool);
@@ -97,7 +99,7 @@ struct expr_dump_context {
 	/**
 		Pass NULL to temporarily suppress parent instance.  
 	 */
-	typedef util::member_saver<expr_dump_context, const char*, 
+	typedef util::member_saver<expr_dump_context, string, 
 			&expr_dump_context::parent_instance_name>
 						parent_suppressor;
 

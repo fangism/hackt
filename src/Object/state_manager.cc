@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.18 2007/09/11 06:52:38 fang Exp $
+	$Id: state_manager.cc,v 1.19 2007/09/27 02:03:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -242,7 +242,9 @@ state_manager::make_process_dump_context(const footprint& topfp,
 			.dump_canonical_name(canonical_name,
 				topfp, *this);
 	}
-	return expr_dump_context(pid ? canonical_name.str().c_str() : NULL);
+	// ALERT: must pass string as a copy, not a shallow char*
+	// because memory will be released, leaving dangling pointer!
+	return expr_dump_context(pid ? canonical_name.str() : string());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

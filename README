@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.23 2007/06/15 20:28:40 fang Exp $
+	$Id: README,v 1.24 2007/09/27 02:03:37 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -93,6 +93,12 @@ The following guile (scheme) modules are used and required by HACKT:
 	ice-9 streams
 They are most likely installed in /prefix/share/guile/.../ice-9
 as they are architecture-independent files.  
+
+-------------------------------------------------------------------------------
+Other optional dependencies:
+
+Supported versions of readline: 4.1, 4.3, 5.0, 5.2
+editline also tested
 
 ===============================================================================
 KNOWN ISSUES

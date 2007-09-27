@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.33 2007/09/11 06:52:53 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.34 2007/09/27 02:03:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -133,7 +133,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 	NEVER_NULL(this->value_collection_ref);
 #if 0
 	// No, because we may refer to global out-of-scope values
-	if (c.parent_instance_name) {
+	if (c.parent_instance_name.size()) {
 		o << c.parent_instance_name << ".";
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);

@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.102 2007/09/14 20:18:04 fang Exp $
+	$Id: BUILDS,v 1.103 2007/09/27 02:03:37 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -259,7 +259,20 @@ readline: GNU readline 5.0
 ===============================================================================
 i686-*-linux-gnu
 
-(Fang)
+(Fang: simba)
+CVS Tag: HACKT-00-01-04-main-00-81-76
+Configured with: '--prefix=/usr/local/cad' '--enable-fun' '--with-readline' '--disable-docs' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'
+build-triplet: i686-pc-linux-gnu
+c++: g++ (GCC) 4.1.2 (Ubuntu 4.1.2-0ubuntu4)
+config-CXXFLAGS: -g -O2
+config-LIBS:  -lreadline -lncurses 
+lex: flex version 2.5.4
+yacc: bison (GNU Bison) 2.3
+readline: GNU readline 5.2
+guile: guile-config - Guile version 1.8.1
+
+
+(Fang: duma)
 Version: hackt 0.1.4-devel-20070913
 CVS Tag: HACKT-00-01-04-main-00-81-74
 Configured with: '--prefix=/usr/local/cad' '--with-readline' '-C' 'CC=ccache gcc' 'CXX=ccache g++' '--enable-ltdl-convenience'

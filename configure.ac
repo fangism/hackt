@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.159 2007/09/13 20:37:10 fang Exp $
+#	$Id: configure.ac,v 1.160 2007/09/27 02:03:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -31,6 +31,9 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 # AC_DISABLE_SHARED
 
 AC_CANONICAL_HOST
+if test "$AWK" = "mawk" ; then
+  AC_MSG_WARN([mawk is known to die on valid input, please try any other awk!])
+fi
 HACKT_AUTO_CVSIGNORE
 
 AC_CHECK_PROG([SH], sh, sh)
@@ -415,16 +418,23 @@ dnl check prototype of readline() if applicable
 FANG_CHECK_READLINE_ARG_CONST
 
 dnl check for X11 includes and libraries
+hackt_have_x11=no
 AC_PATH_X
 if test -d "$ac_x_includes" ; then
   X11_INCLUDE="-I$ac_x_includes"
+  if test -d "$ac_x_libraries" ; then
+    hackt_have_x11=yes
+  fi
 fi
 if test -d "$ac_x_libraries" ; then
   X11_LDPATH="-L$ac_x_libraries"
 fi
 AC_SUBST(X11_INCLUDE)
 AC_SUBST(X11_LDPATH)
-
+if test "$hackt_have_x11" = "yes" ; then
+    AC_DEFINE(HAVE_X11, 1, [Define to 1 if we X11 includes/libs found])
+fi
+AM_CONDITIONAL(HAVE_X11, test "$hackt_have_x11" = "yes")
 
 
 dnl check for guile-config

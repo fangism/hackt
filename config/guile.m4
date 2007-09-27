@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.12 2007/06/18 18:24:29 fang Exp $
+dnl	$Id: guile.m4,v 1.13 2007/09/27 02:03:40 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -98,7 +98,7 @@ AC_CHECK_TYPES(scm_bits_t)
 CPPFLAGS="$guile_save_CPPFLAGS"
 
 dnl what does the following test for?
-AC_CHECK_FUNCS(scm_boot_guile, , libguile_b=no)
+dnl AC_CHECK_FUNCS(scm_boot_guile, , libguile_b=no)
 dnl AC_CHECK_FUNCS(scm_from_ulong)
 AC_CHECK_FUNCS(scm_num2ulong)
 AC_CHECK_FUNCS(gh_scm2ulong) dnl from 1.6 API
@@ -148,7 +148,9 @@ else
 fi
 fi
 fi dnl test $with_guile_config
+
 AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_boot_guile" = "yes")
+
 dnl AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
 dnl if test "$ac_cv_func_scm_is_pair" != "yes" ; then
 dnl	AC_MSG_WARN([[guile-1.8 API missing, disabling guile!]])

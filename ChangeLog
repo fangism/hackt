@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2007-09-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-76:
+	  configure.ac: WARN if mawk is found and used (it sucks),
+	  	AM_CONDITIONAL and AC_DEFINE HAVE_X11.
+	  config/guile.m4: remove unused test AC_CHECK_FUNCS(scm_boot_guile)
+	  Note: this snapshot validated against autoconf-2.61, automake-1.10.
+
+
 2007-08-29	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-66:

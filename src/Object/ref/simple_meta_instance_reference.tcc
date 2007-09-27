@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.31 2007/09/11 06:52:53 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.32 2007/09/27 02:03:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -121,7 +121,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 	if (c.include_type_info)
 		this->what(o) << " ";
 	NEVER_NULL(this->inst_collection_ref);
-	if (c.parent_instance_name) {
+	if (c.parent_instance_name.size()) {
 		o << c.parent_instance_name << ".";
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);

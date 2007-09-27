@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/EventExecutor.cc"
 	Visitor implementations for CHP events.  
-	$Id: EventExecutor.cc,v 1.10 2007/09/11 06:53:08 fang Exp $
+	$Id: EventExecutor.cc,v 1.11 2007/09/27 02:03:43 fang Exp $
 	Early revision history of most of these functions can be found 
 	(some on branches) in Object/lang/CHP.cc.  
  */
@@ -629,7 +629,7 @@ try {
 				*context.topfp, *context.sm);
 	}
 	const expr_dump_context
-		edc(process_index ? canonical_name.str().c_str() : NULL);
+		edc(process_index ? canonical_name.str() : string());
 	cs.dump(cerr, edc) << endl;
 	throw;
 }

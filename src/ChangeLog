@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-76:
+	  Critical BUG fix: string corruption because expr_dump_context
+		only shallow copied a char*, which was last dangling
+		after context construction.  Problem only exhibited in
+		one line of one test case in the entire test suite
+		on one platform, one compiler.  
+		test/chsim/channel-sync-desyng-a-11.hacchpsimscm
+		Lesson: you can never have too many tests.  
+	  Other: util/test/Makefile.am: call test programs with ./
+	  Makefile.am: install_path.h dependencies fixed on prsim.cc, 
+		chpsim.cc
+
+
 2007-09-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-75:

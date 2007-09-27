@@ -1,5 +1,5 @@
 # "misc/guile-logo/Makefile.inc"
-#	$Id: Makefile.inc,v 1.5 2007/03/14 04:06:24 fang Exp $
+#	$Id: Makefile.inc,v 1.6 2007/09/27 02:03:43 fang Exp $
 #	vim: ft=automake
 # play-testing guile functionality
 
@@ -7,9 +7,11 @@ GUILE_LOGO_DIR = misc/guile-logo
 
 if WANT_LIBMISCFUN
 if HAVE_LIBGUILE
+if HAVE_X11
 FUNPROGRAMS += misc/guile-logo/demo1 misc/guile-logo/guile-logo
 FUNLIBS += misc/guile-logo/libtortoise.la \
 	misc/guile-logo/libtortoise-guile.la
+endif
 endif
 endif
 

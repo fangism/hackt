@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/nonmeta_func_call.cc"
-	$Id: nonmeta_func_call.cc,v 1.4 2007/08/28 04:54:12 fang Exp $
+	$Id: nonmeta_func_call.cc,v 1.5 2007/09/27 02:03:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				0
@@ -202,7 +202,7 @@ try {
 			.dump_canonical_name(canonical_name, topfp, sm);
 	}
 	const expr_dump_context
-		edc(process_index ? canonical_name.str().c_str() : NULL);
+		edc(process_index ? canonical_name.str() : string());
 #endif
 	dump(cerr, expr_dump_context::brief) << endl;
 	throw;

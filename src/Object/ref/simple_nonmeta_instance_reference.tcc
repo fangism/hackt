@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.15 2007/09/11 06:52:54 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.16 2007/09/27 02:03:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -94,7 +94,7 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 	if (c.include_type_info)
 		this->what(o) << " ";
 	NEVER_NULL(this->inst_collection_ref);
-	if (c.parent_instance_name) {
+	if (c.parent_instance_name.size()) {
 		o << c.parent_instance_name << ".";
 		this->inst_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
