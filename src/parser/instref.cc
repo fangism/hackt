@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.6 2007/03/15 06:11:06 fang Exp $
+	$Id: instref.cc,v 1.6.24.1 2007/09/27 05:18:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -147,7 +147,7 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 	Passing "true" as the 2nd arg says we want all names 
 	publicly visible, see AST::parser::context::view_all_publicly.
 ***/
-	const context c(m, true);
+	const context c(m, parse_options(), true);
 	return_type r;
 	try {
 		// NOTE: this checks for PUBLIC members only

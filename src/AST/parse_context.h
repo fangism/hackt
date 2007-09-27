@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.14 2007/07/18 23:28:23 fang Exp $
+	$Id: parse_context.h,v 1.14.10.1 2007/09/27 05:18:01 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -16,6 +16,7 @@
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "AST/parse_options.h"
 #include "Object/common/util_types.h"
 #include "Object/devel_switches.h"
 #include "util/boolean_types.h"
@@ -235,13 +236,17 @@ private:
 		Default: false, enforcing port visibility only.  
 	 */
 	bool					view_all_publicly;
-
+public:
+	/**
+		User-controlled parse-check options.
+	 */
+	const parse_options&			parse_opts;
 public:
 	explicit
-	context(module& m);
+	context(module&, const parse_options&);
 
 	explicit
-	context(const module& m, const bool _public);
+	context(const module&, const parse_options&, const bool _public);
 
 private:
 	// private undefined copy-constructor
@@ -397,6 +402,9 @@ private:
 
 	void
 	reset_current_fundamental_type(void);
+
+	never_ptr<const definition_base>
+	__lookup_definition_return(const never_ptr<const object>) const;
 
 public:
 // never_ptr<const fundamental_type_reference>

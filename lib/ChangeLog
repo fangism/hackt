@@ -1,5 +1,11 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.42 2007/08/30 00:20:28 fang Exp $
+#	$Id: ChangeLog,v 1.42.4.1 2007/09/27 05:17:53 fang Exp $
+
+2006-09-26	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-07:
+	  logic.hac: explicitly export all definitions
+
 
 2006-08-29	David Fang	<fangism@users.sourceforce.net>
 

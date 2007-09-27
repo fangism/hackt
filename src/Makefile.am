@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.184 2007/09/13 01:14:03 fang Exp $
+#	$Id: Makefile.am,v 1.184.2.1 2007/09/27 05:17:55 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -381,6 +381,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/HSE_fwd.h \
 	AST/PRS_fwd.h \
 	AST/SPEC_fwd.h \
+	AST/parse_options.h \
 	AST/AST.h \
 	AST/common.h \
 	AST/expr_base.h \

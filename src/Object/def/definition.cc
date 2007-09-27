@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.41 2007/09/13 20:37:15 fang Exp $
+ 	$Id: definition.cc,v 1.41.2.1 2007/09/27 05:18:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -159,6 +159,14 @@ definition_base::pair_dump(ostream& o) const {
 	o << auto_indent << get_key() << " = ";
 	return dump(o) << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REQUIRE_DEFINITION_EXPORT
+bool
+definition_base::is_exported(void) const {
+	return exported;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -586,6 +594,14 @@ typedef_base::typedef_base() :
 typedef_base::~typedef_base() {
 	STACKTRACE_DTOR("~typedef_base()");
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REQUIRE_DEFINITION_EXPORT
+bool
+typedef_base::is_exported(void) const {
+	return get_base_type_ref()->get_base_def()->is_exported();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
@@ -1300,6 +1316,9 @@ built_in_datatype_def::built_in_datatype_def(
 		key(n), 
 		parent(o) {
 	mark_defined();
+#if REQUIRE_DEFINITION_EXPORT
+	mark_export();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1629,6 +1648,9 @@ built_in_param_def::built_in_param_def(
 		key(n), 
 		parent(p) {
 	mark_defined();
+#if REQUIRE_DEFINITION_EXPORT
+	mark_export();		// does one ever typedef param types??
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

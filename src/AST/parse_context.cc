@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.17 2007/07/18 23:28:22 fang Exp $
+ 	$Id: parse_context.cc,v 1.17.10.1 2007/09/27 05:18:00 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -68,7 +68,7 @@ using entity::pint_scalar;
 	built-in types.  
 	\param g pointer to global namespace.
  */
-context::context(module& m) :
+context::context(module& m, const parse_options& o) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -85,7 +85,8 @@ context::context(module& m) :
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
-		view_all_publicly(false)
+		view_all_publicly(false), 
+		parse_opts(o)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -119,7 +120,7 @@ context::context(module& m) :
 	\param _pub pass true to be able to view all members publicly, 
 		lifting port-visibility restriction.  
  */
-context::context(const module& m, const bool _pub) :
+context::context(const module& m, const parse_options& o, const bool _pub) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -136,7 +137,8 @@ context::context(const module& m, const bool _pub) :
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
-		view_all_publicly(_pub)
+		view_all_publicly(_pub), 
+		parse_opts(o)
 		{
 	namespace_stack.push(global_namespace);
 #if SUPPORT_NESTED_DEFINITIONS
@@ -562,6 +564,28 @@ context::add_assignment(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const definition_base>
+context::__lookup_definition_return(const never_ptr<const object> o) const {
+#if REQUIRE_DEFINITION_EXPORT
+	const never_ptr<const definition_base>
+		ret(o.is_a<const definition_base>());
+	if (ret) {
+		if (!parse_opts.export_all && 
+				(get_current_namespace() != ret->get_parent())
+				&& !ret->is_exported()) {
+			cerr << "Error: definition `" <<
+				ret->get_qualified_name() <<
+				"\' is not exported from its home namespace."
+				<< endl;
+			return never_ptr<const definition_base>();
+		}
+	}
+	return ret;
+#else
+	return o.is_a<const definition_base>();
+#endif
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Ok to start search in namespace, because definitions
 	can only be found in namespaces, not other types of scopes.  
@@ -570,7 +594,7 @@ never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
-	return o.is_a<const definition_base>();
+	return __lookup_definition_return(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -584,8 +608,10 @@ never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
-	return o.is_a<const definition_base>();
+	return __lookup_definition_return(o);
 }
+
+#undef	LOOKUP_DEFINITION_RETURN
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,8 +1,9 @@
-// "029.hac"
+// "031.hac"
+// copy-modified from "029.hac"
 // reduced bug test-case
+// expect fail on unexported definition
 
 namespace std {
-export
 defproc bar() { }
 }
 

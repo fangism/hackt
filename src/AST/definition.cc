@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.6.64.1 2007/09/25 22:42:52 fang Exp $
+	$Id: definition.cc,v 1.6.64.2 2007/09/27 05:17:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -188,6 +188,11 @@ user_data_type_signature::check_signature(context& c) const {
 		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
+#if 0 && REQUIRE_DEFINITION_EXPORT
+	if (exp) {
+		o->mark_export();
+	}
+#endif
 	return o;
 }
 
@@ -501,6 +506,11 @@ user_chan_type_signature::check_signature(context& c) const {
 		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
+#if 0 && REQUIRE_DEFINITION_EXPORT
+	if (exp) {
+		o->mark_export();
+	}
+#endif
 	return o;
 }
 
@@ -676,6 +686,11 @@ process_signature::check_signature(context& c) const {
 		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
+#if REQUIRE_DEFINITION_EXPORT
+	if (exp) {
+		o->mark_export();
+	}
+#endif
 	return o;
 //	return c.set_current_prototype(ret);
 }
@@ -701,7 +716,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(process_prototype)
 
 line_position
 process_prototype::leftmost(void) const {
-	// temp_spec->leftmost()?
+	// if (exp)		return exp->leftmost();
+	// if (temp_spec)	return temp_spec->leftmost();
 	return def->leftmost();
 }
 
@@ -754,6 +770,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(process_def)
 
 line_position
 process_def::leftmost(void) const {
+	// if (exp)		return exp->leftmost();
+	// if (temp_spec)	return temp_spec->leftmost();
 	return def->leftmost();
 }
 

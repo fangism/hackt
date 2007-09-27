@@ -1,8 +1,9 @@
-// "027.hac"
+// "030.hac"
+// copy-modified from "027.hac"
 // testing lookup of definition in namespace
+// expect to fail on non-exported definition
 
 namespace foo {
-export
 defproc bar() { }
 }
 

@@ -1,11 +1,12 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.9 2007/09/13 01:14:14 fang Exp $
+	$Id: compile_options.h,v 1.9.2.1 2007/09/27 05:18:05 fang Exp $
  */
 
 #include <list>
 #include <string>
+#include "AST/parse_options.h"
 
 namespace HAC {
 using std::list;
@@ -47,6 +48,10 @@ public:
 		Q: should include paths be a part of global options?
 	 */
 	include_paths_type			include_paths;
+	/**
+		User-tweaked options for type checking.  
+	 */
+	parser::parse_options			parse_opts;
 
 	compile_options() : dump_module(false),
 		dump_include_paths(false), 
@@ -56,7 +61,8 @@ public:
 		make_depend_target(),
 		source_file(), 
 		target_object(), 
-		include_paths()
+		include_paths(), 
+		parse_opts()
 		{ }
 
 	// NOTE: this is defined in "main/main_funcs.cc"

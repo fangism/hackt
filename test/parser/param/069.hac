@@ -13,6 +13,7 @@ defproc ick() {
 	bool z[X];
 }
 
+export
 defproc foo() {
 	ick<Q> zoo[Q];
 }
