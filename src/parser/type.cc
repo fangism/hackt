@@ -1,6 +1,6 @@
 /**
 	\file "parser/type.cc"
-	$Id: type.cc,v 1.1.64.1 2007/09/27 05:18:09 fang Exp $
+	$Id: type.cc,v 1.1.64.2 2007/09/27 20:44:09 fang Exp $
  */
 
 #include <iostream>
@@ -94,7 +94,10 @@ check_complete_type(const concrete_type_ref& tr,
 	publicly visible, see AST::parser::context::view_all_publicly.
 	This only matters once we introduce nested types.  
 ***/
-	const context c(m, parse_options(), true);
+	parse_options po;
+	// allow the type-parser to access ALL definitions, even non-exported
+	po.export_all = true;
+	const context c(m, po, true);
 	return_type r;
 	try {
 		// NOTE: this checks for PUBLIC members only
