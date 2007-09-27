@@ -1,0 +1,22 @@
+#!hacchpsimguile -b
+!#
+;; "event-source-context.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: event-source-context.hacchpsimscm,v 1.1.2.1 2007/09/27 18:24:53 fang Exp $
+
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(display "(event-id . source-context)")
+(newline)
+
+(stream-for-each
+  (lambda (x)
+    (display (cons (car x)
+      (hac:chpsim-event-source (cdr x))))
+    (newline)
+  )
+  all-static-events-stream)
+

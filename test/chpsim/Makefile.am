@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.25.6.1 2007/09/21 19:51:17 fang Exp $
+#	$Id: Makefile.am,v 1.25.6.2 2007/09/27 18:24:36 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -329,7 +329,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	channel-sync-desync-a-30 channel-sync-desync-a-31 \
 	channel-sync-desync-a-32 channel-sync-desync-a-33 \
 	channel-sync-desync-a-34 channel-sync-desync-a-35 \
-	channel-sync-desync-a-36 \
+	channel-sync-desync-a-36 channel-sync-desync-a-37 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03 select-nested-loop-a-04 \
 	select-nested-loop-a-05 select-nested-loop-a-06 \
@@ -338,6 +338,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	countdown-loop-a-01 countdown-loop-a-02 \
 	countdown-loop-a-03 countdown-loop-a-04 \
 	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-a-03 \
 	countdown-nested-b-01 countdown-nested-b-02 \
 	countdown-nested-c-01 countdown-nested-c-02 \
 	countdown-nested-d-01 countdown-nested-d-02 \
@@ -350,7 +351,11 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bool-split-alternator-a-01 \
 	bool-merge-alternator-a-01 \
 	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
-	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02
+	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
+	bool-and-test-a-01 \
+	channel-probe-a-01 \
+	gcd-nested-a-01 \
+	select-block-a-01
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -423,6 +428,7 @@ srcdir_EXTRA_DIST += \
 	random-timing-test-series.chpsimrc \
 	event-classification.hacchpsimscm \
 	event-types.hacchpsimscm \
+	event-source-context.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
 

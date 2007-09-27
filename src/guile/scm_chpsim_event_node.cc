@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.5 2007/09/11 06:52:59 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.5.4.1 2007/09/27 18:24:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -447,6 +447,23 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_successors, FUNC_NAME, 1, 0, 0, (SCM obj),
 		bind1st(std::plus<event_index_type>(), 
 			chpsim_state->get_offset_from_event(*ptr)));
 	return make_scm_list(global_successors);
+}
+#undef	FUNC_NAME
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the full source (with context) of the event.  
+	\param SMOB of the scm chpsim-event.
+	\return a string with the source of the event with context.  
+ */
+#define	FUNC_NAME "chpsim-event-source"
+HAC_GUILE_DEFINE(wrap_chpsim_event_source, FUNC_NAME, 1, 0, 0, (SCM obj),
+"Print the full context of the CHP corresponding to event @var{obj}.") {
+	const scm_chpsim_event_node_ptr ptr =
+		scm_smob_to_chpsim_event_node_ptr(obj);
+	ostringstream oss;
+	chpsim_state->dump_event_source(oss, *ptr);
+	return make_scm(oss.str());
 }
 #undef	FUNC_NAME
 

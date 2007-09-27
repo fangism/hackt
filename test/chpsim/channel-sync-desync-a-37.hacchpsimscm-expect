@@ -1,0 +1,85 @@
+(event-id . source-context)
+(0 . [global-root]
+)
+(1 . send: *[bsrc.S!(true)]
+)
+(2 . send: *[isrc.S!(17)]
+)
+(3 . fork: *[{
+  {
+    join.B?(join.x1),
+    join.I?(join.x2)
+  };
+  ...
+}]
+)
+(4 . send: *[{
+  ...;
+  join.O!(join.x1,join.x2)
+}]
+)
+(5 . join: *[{
+  {
+    join.B?(join.x1),
+    join.I?(join.x2)
+  };
+  ...
+}]
+)
+(6 . receive: *[{
+  {
+    join.B?(join.x1),
+    ...
+  };
+  ...
+}]
+)
+(7 . receive: *[{
+  {
+    ...,
+    join.I?(join.x2)
+  };
+  ...
+}]
+)
+(8 . receive: *[{
+  fork.O?(fork.x1,fork.x2);
+  ...
+}]
+)
+(9 . join: *[{
+  ...;
+  {
+    fork.B!(fork.x1),
+    fork.I!(fork.x2)
+  }
+}]
+)
+(10 . send: *[{
+  ...;
+  {
+    fork.B!(fork.x1),
+    ...
+  }
+}]
+)
+(11 . send: *[{
+  ...;
+  {
+    ...,
+    fork.I!(fork.x2)
+  }
+}]
+)
+(12 . fork: *[{
+  ...;
+  {
+    fork.B!(fork.x1),
+    fork.I!(fork.x2)
+  }
+}]
+)
+(13 . receive: *[bsnk.B?(bsnk.b)]
+)
+(14 . receive: *[isnk.B?(isnk.b)]
+)

@@ -1,0 +1,33 @@
+(event-id . source-context)
+(0 . [global-root]
+)
+(1 . wait: *[{
+  [#A];
+  ...;
+  ...
+}]
+)
+(2 . send: *[{
+  ...;
+  ...;
+  B!(a)
+}]
+)
+(3 . receive: *[{
+  ...;
+  A?(a);
+  ...
+}]
+)
+(4 . send: *[{
+  bs.S!(true);
+  ...
+}]
+)
+(5 . send: *[{
+  ...;
+  bs.S!(false)
+}]
+)
+(6 . receive: *[snk.B?(snk.b)]
+)

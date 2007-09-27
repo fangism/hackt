@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.13.4.2 2007/09/20 04:26:50 fang Exp $
+	$Id: State.cc,v 1.13.4.3 2007/09/27 18:24:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1311,6 +1311,15 @@ if (ei) {
 } else {
 	return o << "[global-root]" << endl;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param e event MUST be a member event of this simulation state.
+ */
+ostream&
+State::dump_event_source(ostream& o, const event_type& e) const {
+	return dump_event_source(o, get_event_id(e));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
