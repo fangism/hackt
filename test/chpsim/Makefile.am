@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.25.6.2 2007/09/27 18:24:36 fang Exp $
+#	$Id: Makefile.am,v 1.25.6.3 2007/09/28 01:40:31 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -347,7 +347,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
 	timed-token-ring-a-02 \
 	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01 \
-	fib-test-a-01 fib-test-b-01 fib-test-c-01 \
+	fib-test-a-01 fib-test-a-02 fib-test-a-03 fib-test-a-04 \
+	fib-test-b-01 fib-test-b-02 \
+	fib-test-c-01 fib-test-c-02 \
 	bool-split-alternator-a-01 \
 	bool-merge-alternator-a-01 \
 	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
@@ -355,7 +357,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bool-and-test-a-01 \
 	channel-probe-a-01 \
 	gcd-nested-a-01 \
-	select-block-a-01
+	select-block-a-01 select-block-a-02
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -429,7 +431,9 @@ srcdir_EXTRA_DIST += \
 	event-classification.hacchpsimscm \
 	event-types.hacchpsimscm \
 	event-source-context.hacchpsimscm \
+	event-process-map.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
+	critical-path-verbose.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
 
 AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT -UHAVE_CONFIG_H

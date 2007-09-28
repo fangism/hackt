@@ -5,6 +5,17 @@
 
 2007-09-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-75-CHP-03-08:
+	  guile/libhackt-wrap.cc, scm_chpsim_event_node.cc:
+		added some utility functions: map event to process-id, 
+		check for valid process-id.  
+	  new scheme functions (scm/ChangeLog), 
+		and new test cases in test/chpsim.
+	  We now have a routine for detailed critical path, 
+		showing source in full context for every critical event.
+	  Ready to merge to trunk, add documentation later.
+
+
 	* HACKT-00-01-04-main-00-81-75-CHP-03-07:
 	  Implemented dump-event-source in scm, added some test cases
 		looks similar to dump-all-event-source.

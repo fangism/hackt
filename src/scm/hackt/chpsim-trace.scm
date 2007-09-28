@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.4 2007/06/10 02:57:50 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.4.18.1 2007/09/28 01:40:31 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -259,6 +259,29 @@ trace-file name @var{tr-name}.  Starts at the last event in trace by default."
     (1- (hac:chpsim-trace-num-entries tr-name))
   )
 ) ; end define
+
+;; this is useful for detailed critical path
+(define-public (display-trace-entry-verbose entry)
+"Print a detailed report of the chpsim event trace @var{entry}"
+  (display "trace-index: ") (display (chpsim-trace-entry-index entry))
+  (newline)
+  (display "cause-index: ") (display (chpsim-trace-entry-critical entry))
+  (newline)
+  (display "time: ") (display (chpsim-trace-entry-time entry))
+  (newline)
+  (let* ((eid (chpsim-trace-entry-event entry))
+         (evp (hac:chpsim-get-event eid))
+         (ev (cdr evp))
+         (pid (hac:chpsim-event-process-id ev)))
+    (display "event-index: ") (display eid)
+    (newline)
+    (display "process[") (display pid)
+    (display "]: ") (display (process-id->string pid))
+    (newline)
+    (display "source-context: ") (display (hac:chpsim-event-source ev))
+    (newline)
+  )
+)
 
 ;;;;;;;;;;; BRANCH FREQUENCY ANALYSIS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

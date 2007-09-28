@@ -1,0 +1,12 @@
+#!hacchpsimguile -b
+!#
+;; "fib-test-c-02.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: fib-test-c-02.hacchpsimscm,v 1.1.2.1 2007/09/28 01:40:51 fang Exp $
+;; @haco@ fib-test-c.haco-a
+;; @chpsimtrace@ fib-test-c-01.chpsimtrace
+
+(define trace-name "fib-test-c-01.chpsimtrace")
+
+(load-from-path "critical-path-verbose.hacchpsimscm")
+

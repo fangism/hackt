@@ -1,5 +1,5 @@
 "scm/TODO"
-	$Id: TODO,v 1.5 2007/06/04 22:44:34 fang Exp $
+	$Id: TODO,v 1.5.20.1 2007/09/28 01:40:30 fang Exp $
 
 Populate this directory with Scheme modules for working with HACKT.
 
@@ -46,13 +46,10 @@ FIFO-identification for automatic slack-matching
 testing:
 	have scripts exit-upon-first-error, to simplify debugging
 
-source-referencing: be able to refer events back to source?
-	complete trace-back from event to definition in source.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+source-referencing: be able to refer events back to source in context?
 	[priority: HIGH -- dissertation]
-	e.g. tree-walk of CHP tree to refer to node, 
-		nth body, mth loop, kth select, 2nd clause
-	In program memory, need to keep track of which statements (nodes)
-		produced which events in the event-graph
+	[status: DONE on -00-01-04-main-00-81-75-CHP-03 branch]
 
 ===============================================================================
 ANALYSIS ROUTINES: mostly for thesis work
@@ -131,4 +128,12 @@ guile has 'procedure-documentation' function that looks for embedded
 string for documentation inside function bodies.  
 TODO: collect all hackt-scheme functions in modules (module-reflection)
 and export documentation to texinfo.  
+
+NEW IDEA:
+Now that we've learned texinfo, we could just extract the documentation 
+directly from source, which doesn't require running guile to extract
+the documentation.  However, this doesn't help provide online
+in-rogram documentation.
+There might be a good way to provide procedure-documentation strings
+with texinfo excerpts...
 

@@ -1,0 +1,119 @@
+(event-id . source-context)
+(0 . [global-root]
+)
+(1 . assign: {
+  fibber.b0.x := 1;
+  ...
+}
+)
+(2 . receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b0.L?(fibber.b0.x)
+  }]
+}
+)
+(3 . send: {
+  ...;
+  *[{
+    fibber.b0.R!(fibber.b0.x);
+    ...
+  }]
+}
+)
+(4 . assign: {
+  fibber.b1.x := 1;
+  ...
+}
+)
+(5 . receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+)
+(6 . send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+)
+(7 . fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+)
+(8 . send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+)
+(9 . join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+)
+(10 . receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+)
+(11 . receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+)
+(12 . receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+)
+(13 . join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+)
+(14 . send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+)
+(15 . send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+)
+(16 . fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+)

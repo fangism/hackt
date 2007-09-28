@@ -1,0 +1,29 @@
+#!hacchpsimguile -b
+!#
+;; "event-process-map.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: event-process-map.hacchpsimscm,v 1.1.2.1 2007/09/28 01:40:33 fang Exp $
+
+(use-modules (hackt hackt))
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt chpsim))
+; (use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(display "(event-id process-id . process-name)")
+(newline)
+
+(stream-for-each
+  (lambda (x)
+    (let ((pid (hac:chpsim-event-process-id (cdr x))))
+      (display (cons (car x)
+          (cons pid (process-id->string pid)
+	# process-id->string defined in "scm/hackt/hackt.scm"
+        )) ; end cons
+      ) ; end display
+    ) ; end let
+    (newline)
+  )
+  all-static-events-stream
+)
+
