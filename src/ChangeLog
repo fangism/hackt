@@ -5,6 +5,13 @@
 
 2007-09-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-79:
+	  Object/lang/PRS.cc: added check for expression loop max size here, 
+		so error is caught long before prsim allocation, during unroll.
+		test case prsm/expr-limit-b revised to create-fail, 
+		which saves a lot of time.  
+
+
 	* HACKT-00-01-04-main-00-81-78:
 	  int type-trait check, see util/ChangeLog.
 

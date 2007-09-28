@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24 2007/09/13 20:37:15 fang Exp $
+	$Id: PRS.cc,v 1.25 2007/09/28 19:30:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1114,6 +1114,7 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 			<< endl;
 		return 0;
 	}
+	static const size_t lim = std::numeric_limits<expr_count_type>::max();
 	const pint_value_type min = cr.lower();
 	const pint_value_type max = cr.upper();
 #if 0
@@ -1123,6 +1124,10 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		cerr << "Sorry, empty expression loops are not yet supported.  "
 			"Currently waiting for resolution on language "
 			"defect report." << endl;
+		return 0;
+	} else if (size_t(max -min) > lim) {
+		cerr << "ERROR: size of prs expression exceeded limit: " <<
+			max -min << " > " << lim << endl;
 		return 0;
 	}
 #endif

@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.3 2007/09/13 23:53:00 fang Exp $
+@c $Id: PRS.texi,v 1.4 2007/09/28 19:30:36 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -218,6 +218,7 @@ by the @i{range}.
 (The range may be written implicitly or explicitly.)
 If the range evaluates empty, then the body is skipped during unrolling.  
 Rule-loops may be nested, i.e., they may contain other loops.  
+The current limit for the size of an expression is 65535 sub-expressions.
 
 An expression-loop is written as:
 @itemize

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.9 2007/09/13 20:37:25 fang Exp $
+	$Id: Expr.h,v 1.10 2007/09/28 19:30:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -13,20 +13,13 @@
 #include <utility>
 #include "sim/common.h"
 #include "util/macros.h"
-#include "util/utypes.h"
 #include "util/attributes.h"
+#include "Object/lang/PRS_fwd.h"	// for expr_count_type
 
 /**
 	Define to 1 to use PULL_WEAK == 1.
  */
 #define	USE_BETTER_PULL_ENCODING		0
-
-/**
-	Define to 1 to use short for count type instead of char.
-	I can't believe *someone* actually wrote prs with more than
-	255 terms in a monolithic AND...
- */
-#define	HUGE_MAX_EXPR_COUNT			1
 
 namespace HAC {
 namespace SIM {
@@ -36,14 +29,7 @@ using std::istream;
 // using std::valarray;
 using std::vector;
 using std::pair;
-#if HUGE_MAX_EXPR_COUNT
-typedef	ushort				expr_count_type;
-#else
-typedef	uchar				expr_count_type;
-#endif
-
-// keep this macro local
-#undef	HUGE_MAX_EXPR_COUNT
+using entity::PRS::expr_count_type;
 
 //=============================================================================
 /**
@@ -54,6 +40,10 @@ typedef	uchar				expr_count_type;
 	TODO: split up into structural and stateful information.  
  */
 struct Expr {
+	/**
+		unsigned short or char, to count maximum number
+		of expression-children per node.  
+	 */
 	typedef	expr_count_type		count_type;
 	/**
 		There is no NODE expr, just use AND/OR of size 1.  
