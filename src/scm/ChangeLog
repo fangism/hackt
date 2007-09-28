@@ -1,5 +1,21 @@
 "scm/ChangeLog"
 
+2007-09-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-77-merged-CHP-03-08:
+	  Branch merge.
+
+
+2007-09-27	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-08:
+	  Added support functions in scm:
+	  hackt/hackt.scm: process-id->string prints canonical name
+		or suitable alternative for top-level.
+	  hackt/chpsim-trace.scm: display-trace-entry-verbose
+		shows event with source in context, good for critical path.
+
+
 2007-06-09	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-29:

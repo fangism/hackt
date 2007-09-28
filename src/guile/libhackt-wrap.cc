@@ -1,6 +1,6 @@
 /**
 	\file "guile/libhackt-wrap.cc"
-	$Id: libhackt-wrap.cc,v 1.5 2007/06/10 02:57:05 fang Exp $
+	$Id: libhackt-wrap.cc,v 1.6 2007/09/28 05:37:00 fang Exp $
 	TODO: consider replacing or supplementing print functions 
 		with to-string functions, in case we want to process 
 		the strings.
@@ -301,11 +301,34 @@ HAC_GUILE_DEFINE(wrap_canonical_reference_to_string, FUNC_NAME, 1, 0, 0,
 }	// end wrap_canonical_reference_to_string
 #undef	FUNC_NAME
 
+#undef	EXTRACT_TYPE_ENUM
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+static
+size_t
+__get_pool_size(void) {
+	NEVER_NULL(obj_module);
+	return obj_module->get_state_manager().template get_pool<Tag>().size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: also for other meta types... channel, bool, int...
+ */
+#define	FUNC_NAME	"valid-process-id?"
+HAC_GUILE_DEFINE(wrap_valid_process_id_p, FUNC_NAME, 1, 0, 0, (SCM ind), 
+	"Return true if process-index is valid.  [Is 0 valid?]") {
+	size_t index;
+	extract_scm(ind, index);
+	return make_scm(index < __get_pool_size<process_tag>());
+}
+#undef	FUNC_NAME
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace guile_wrap
 }	// end namespace HAC
 
-#undef	EXTRACT_TYPE_ENUM
 #undef	HAC_GUILE_DEFINE
 //=============================================================================
 

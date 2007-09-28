@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2007/08/30 00:20:44 fang Exp $
+#	$Id: Makefile.am,v 1.26 2007/09/28 05:37:21 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -142,42 +142,51 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	do-while-countdown-05-break \
 	do-while-countdown-06-watch \
 	do-while-countdown-07-break \
-	countdown-successor-01 \
+	do-while-countdown-08 \
+	countdown-successor-01 countdown-successor-02 \
 	countdown-loop-a-01 countdown-loop-b-01 \
 	countdown-loop-a-02-trace \
+	countdown-loop-a-03 \
 	countdown-sequence-a-01 \
 	countdown-nested-a-01 countdown-nested-a-02 \
-	countdown-nested-a-03-trace \
+	countdown-nested-a-03-trace countdown-nested-a-04 \
 	countdown-nested-b-01 countdown-nested-b-02 \
-	countdown-nested-b-03-trace \
+	countdown-nested-b-03-trace countdown-nested-b-04 \
 	countdown-nested-c-01 countdown-nested-c-02 \
-	countdown-nested-c-03-trace \
+	countdown-nested-c-03-trace countdown-nested-c-04 \
 	countdown-nested-d-01 countdown-nested-d-02 \
-	countdown-nested-d-03-trace \
-	countdown-domino-a-01 \
+	countdown-nested-d-03-trace countdown-nested-d-04 \
+	countdown-domino-a-01 countdown-domino-a-02 \
 	countdown-domino-b-01 \
 	countdown-domino-b-02-cause countdown-domino-b-03-cause \
-	wait-basic-a-01 wait-basic-a-02 \
-	wait-conjunction-a-01 wait-conjunction-a-02 \
-	wait-conjunction-b-01 wait-conjunction-b-02 \
-	wait-conjunction-c-01 wait-conjunction-c-02 \
+	countdown-domino-b-04 \
+	wait-basic-a-01 wait-basic-a-02 wait-basic-a-03 \
+	wait-conjunction-a-01 wait-conjunction-a-02 wait-conjunction-a-03 \
+	wait-conjunction-b-01 wait-conjunction-b-02 wait-conjunction-b-03 \
+	wait-conjunction-c-01 wait-conjunction-c-02 wait-conjunction-c-03 \
 	wait-indexed-guard-a-01 wait-indexed-guard-a-02 \
-	select-skip-a-01 \
+	wait-indexed-guard-a-03 \
+	select-skip-a-01 select-skip-a-02 \
 	select-skip-b-01 \
 	select-sequence-a-01 select-sequence-a-02-cause \
 	select-sequence-a-03 select-sequence-a-04-cause \
+	select-sequence-a-05 \
 	select-parallel-a-01 select-parallel-a-02 \
 	select-parallel-a-03 select-parallel-a-04 \
-	select-loop-a-01 \
-	select-loop-b-01 \
-	arbitrate-skip-a-01 \
+	select-parallel-a-05 \
+	select-loop-a-01 select-loop-a-02 \
+	select-loop-b-01 select-loop-b-02 \
+	arbitrate-skip-a-01 arbitrate-skip-a-02 \
 	arbitrate-skip-b-01 \
-	arbitrate-loop-a-01 arbitrate-loop-a-02 arbitrate-loop-a-03 \
+	arbitrate-loop-a-01 arbitrate-loop-a-02 \
+	arbitrate-loop-a-03 arbitrate-loop-a-04 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03-trace \
+	select-nested-loop-a-04 \
 	select-nested-loop-b-01 select-nested-loop-b-02 \
 	select-nested-loop-b-03-trace \
-	select-block-a-01 select-block-a-02 \
+	select-nested-loop-b-04 \
+	select-block-a-01 select-block-a-02 select-block-a-03 \
 	bool-split-a-01 bool-split-a-02 \
 	bool-split-select-a-01 \
 	bool-split-select-a-02-trace \
@@ -192,16 +201,16 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bool-memory-write-a-01 bool-memory-write-a-02 \
 	bool-and-test-a-01 \
 	bool-and-test-a-02-break \
-	bool-and-test-a-03 \
+	bool-and-test-a-03 bool-and-test-a-04 \
 	bool-and-test-b-01 bool-and-test-b-02-trace \
 	bool-or-test-a-01 \
 	bool-or-test-b-01 \
 	bool-or-test-c-01 \
 	bool-xor-test-a-01 \
 	buffer-advance-to \
-	channel-probe-a-01 channel-probe-a-02 \
+	channel-probe-a-01 channel-probe-a-02 channel-probe-a-03 \
 	channel-probe-b-01 \
-	channel-probe-c-01 channel-probe-c-02 \
+	channel-probe-c-01 channel-probe-c-02 channel-probe-c-03 \
 	delayed-source-a-01 delayed-source-a-02-trace \
 	delayed-sink-a-01 delayed-sink-a-02-trace \
 	token-ring-a-01 token-ring-a-02 \
@@ -231,7 +240,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	gcd-func-a-10 gcd-func-a-12 gcd-func-a-13 gcd-func-a-14 \
 	greeting_func-a-01 greeting_func-a-02 \
 	greeting_func-a-03 greeting_func-a-04 \
-	gcd-nested-a-01 gcd-nested-b-01 \
+	gcd-nested-a-01 gcd-nested-a-03 \
+	gcd-nested-b-01 \
 	relational-func-a-01 \
 	lib-zcond-test-a-01 \
 	lib-select-test-a-01 \
@@ -319,7 +329,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	channel-sync-desync-a-30 channel-sync-desync-a-31 \
 	channel-sync-desync-a-32 channel-sync-desync-a-33 \
 	channel-sync-desync-a-34 channel-sync-desync-a-35 \
-	channel-sync-desync-a-36 \
+	channel-sync-desync-a-36 channel-sync-desync-a-37 \
 	select-nested-loop-a-01 select-nested-loop-a-02 \
 	select-nested-loop-a-03 select-nested-loop-a-04 \
 	select-nested-loop-a-05 select-nested-loop-a-06 \
@@ -328,6 +338,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	countdown-loop-a-01 countdown-loop-a-02 \
 	countdown-loop-a-03 countdown-loop-a-04 \
 	countdown-nested-a-01 countdown-nested-a-02 \
+	countdown-nested-a-03 \
 	countdown-nested-b-01 countdown-nested-b-02 \
 	countdown-nested-c-01 countdown-nested-c-02 \
 	countdown-nested-d-01 countdown-nested-d-02 \
@@ -336,11 +347,17 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	timed-token-ring-a-01 timed-token-ring-b-01 timed-token-ring-c-01 \
 	timed-token-ring-a-02 \
 	timed-bubble-ring-a-01 timed-bubble-ring-b-01 timed-bubble-ring-c-01 \
-	fib-test-a-01 fib-test-b-01 fib-test-c-01 \
+	fib-test-a-01 fib-test-a-02 fib-test-a-03 fib-test-a-04 \
+	fib-test-b-01 fib-test-b-02 \
+	fib-test-c-01 fib-test-c-02 \
 	bool-split-alternator-a-01 \
 	bool-merge-alternator-a-01 \
 	source-sink-peekbuf-a-01 source-sink-peekbuf-a-02 \
-	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02
+	source-sink-peekbuf-b-01 source-sink-peekbuf-b-02 \
+	bool-and-test-a-01 \
+	channel-probe-a-01 \
+	gcd-nested-a-01 \
+	select-block-a-01 select-block-a-02
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -413,7 +430,10 @@ srcdir_EXTRA_DIST += \
 	random-timing-test-series.chpsimrc \
 	event-classification.hacchpsimscm \
 	event-types.hacchpsimscm \
+	event-source-context.hacchpsimscm \
+	event-process-map.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
+	critical-path-verbose.hacchpsimscm \
 	trace-reference-cycle.hacchpsimscm
 
 AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT -UHAVE_CONFIG_H

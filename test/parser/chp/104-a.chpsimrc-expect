@@ -1,0 +1,99 @@
+
+# process[1]:
+event[1]: fork: *[{
+  {
+    bar.A?(bar.a),
+    bar.B?(bar.b)
+  };
+  ...;
+  ...
+}]
+event[2]: join: *[{
+  ...;
+  ...;
+  {
+    bar.C!(bar.z),
+    bar.D!(~bar.z),
+    bar.E!(bar.a&bar.b),
+    bar.F!(bar.a|bar.b)
+  }
+}]
+event[3]: send: *[{
+  ...;
+  ...;
+  {
+    bar.C!(bar.z),
+    ...,
+    ...,
+    ...
+  }
+}]
+event[4]: send: *[{
+  ...;
+  ...;
+  {
+    ...,
+    bar.D!(~bar.z),
+    ...,
+    ...
+  }
+}]
+event[5]: send: *[{
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    bar.E!(bar.a&bar.b),
+    ...
+  }
+}]
+event[6]: send: *[{
+  ...;
+  ...;
+  {
+    ...,
+    ...,
+    ...,
+    bar.F!(bar.a|bar.b)
+  }
+}]
+event[7]: fork: *[{
+  ...;
+  ...;
+  {
+    bar.C!(bar.z),
+    bar.D!(~bar.z),
+    bar.E!(bar.a&bar.b),
+    bar.F!(bar.a|bar.b)
+  }
+}]
+event[8]: assign: *[{
+  ...;
+  bar.z := bar.a^bar.b;
+  ...
+}]
+event[9]: join: *[{
+  {
+    bar.A?(bar.a),
+    bar.B?(bar.b)
+  };
+  ...;
+  ...
+}]
+event[10]: receive: *[{
+  {
+    bar.A?(bar.a),
+    ...
+  };
+  ...;
+  ...
+}]
+event[11]: receive: *[{
+  {
+    ...,
+    bar.B?(bar.b)
+  };
+  ...;
+  ...
+}]

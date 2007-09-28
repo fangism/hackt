@@ -1,0 +1,6 @@
+# "do-while-countdown-08.chpsimrc"
+#	$Id: do-while-countdown-08.chpsimrc,v 1.2 2007/09/28 05:38:08 fang Exp $
+# @haco@ do-while-countdown.haco-a
+
+dump-all-event-source
+

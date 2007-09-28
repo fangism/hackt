@@ -1,9 +1,9 @@
 #!hacchpsimguile -b
 !#
-;; "basic-analysis.hacchpsimscm"
+;; "basic-trace-analysis.hacchpsimscm"
 ;; common analysis routines
 ;; vi: ft=scheme
-;;	$Id: basic-trace-analysis.hacchpsimscm,v 1.2 2007/04/20 18:26:22 fang Exp $
+;;	$Id: basic-trace-analysis.hacchpsimscm,v 1.3 2007/09/28 05:37:28 fang Exp $
 
 ;; don't call this script directly, but load me from another
 

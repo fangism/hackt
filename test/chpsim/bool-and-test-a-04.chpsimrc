@@ -1,0 +1,6 @@
+# "bool-and-test-a-04.chpsimrc"
+#	$Id: bool-and-test-a-04.chpsimrc,v 1.2 2007/09/28 05:37:29 fang Exp $
+# @haco@ bool-and-test-a.haco-a
+
+dump-all-event-source
+

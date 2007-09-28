@@ -1,0 +1,9 @@
+#!hacchpsimguile -b
+!#
+;; "gcd-nested-a-01.hacchpsimscm"
+;;	$Id: gcd-nested-a-01.hacchpsimscm,v 1.2 2007/09/28 05:38:18 fang Exp $
+;; vi: ft=scheme
+;; @haco@ gcd-nested-a.haco-a
+
+(load-from-path "event-source-context.hacchpsimscm")
+

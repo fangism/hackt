@@ -1,0 +1,19 @@
+
+# process[0]:
+event[1]: assign: {
+  c := 5;
+  ...
+}
+event[2]: [null]
+event[3]: assign: {
+  ...;
+  *[
+    c>0 -> c := c-1
+  ]
+}
+event[4]: select: {
+  ...;
+  *[
+    c>0 -> c := c-1
+  ]
+}

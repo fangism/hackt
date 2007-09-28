@@ -1,0 +1,8 @@
+#!hacchpsimguile -b
+!#
+;; "fib-test-a-02.hacchpsimscm"
+;; vi: ft=scheme
+;;	$Id: fib-test-a-02.hacchpsimscm,v 1.2 2007/09/28 05:38:10 fang Exp $
+;; @haco@ fib-test-a.haco-a
+
+(load-from-path "event-source-context.hacchpsimscm")

@@ -1,0 +1,20 @@
+
+# process[1]:
+event[1]: receive: *[{
+  lanes.S?(lanes.s);
+  ...
+}]
+event[2]: receive: *[{
+  ...;
+  lanes.B[lanes.s]?(lanes.b)
+}]
+
+# process[2]:
+event[3]: receive: *[{
+  hairs.S?(hairs.s);
+  ...
+}]
+event[4]: send: *[{
+  ...;
+  hairs.B[hairs.s]!(true)
+}]

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.27 2007/09/11 06:53:18 fang Exp $
+	$Id: persistent_object_manager.h,v 1.28 2007/09/28 05:37:18 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -380,6 +380,7 @@ public:
 private:
 	/**
 		Helper functor for writing sequences of pointers.  
+		Are these redundant with persistent_functor classes?
 	 */
 	class pointer_writer {
 	private:
@@ -394,7 +395,6 @@ private:
 		operator () (const P& p);
 	};	// end class pointer_writer
 
-	/// is this ever used?
 	class pointer_reader {
 	private:
 		const persistent_object_manager&	pom;
@@ -407,6 +407,19 @@ private:
 		void
 		operator () (const P& p);
 	};	// end class pointer_reader
+
+	class pointer_loader {
+	private:
+		const persistent_object_manager&	pom;
+	public:
+		explicit
+		pointer_loader(const persistent_object_manager& m) :
+			pom(m) { }
+
+		template <class P>
+		void
+		operator () (const P&);
+	};	// end class pointer_loader
 
 public:
 	/**
@@ -433,6 +446,14 @@ public:
 	void
 	read_pointer_list(istream& f, L& l) const;
 
+	/**
+		Forces pointers of containers to be loaded immediately
+		if they haven't already been loaded.
+	 */
+	template <class L>
+	void
+	load_once_pointer_list(const L&) const;
+
 #if 0
 	/**
 		Writes a map of pointers in some order, ignoring the keys.
@@ -449,6 +470,9 @@ public:
 private:
 	void
 	__load_object_once(persistent* p, raw_pointer_tag) const;
+
+	void
+	__load_object_once(const persistent* p, raw_pointer_tag) const;
 
 	template <class P>
 	void

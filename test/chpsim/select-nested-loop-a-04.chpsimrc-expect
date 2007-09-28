@@ -1,0 +1,202 @@
+
+# process[0]:
+event[1]: fork: {
+  {
+    a := false,
+    b := false
+  };
+  ...
+}
+event[2]: [null]
+event[3]: [null]
+event[4]: join: {
+  ...;
+  *[[
+    a -> [
+      b -> {
+        a := false,
+        b := false
+      } []
+      ... -> ...
+    ] []
+    ... -> ...
+  ]]
+}
+event[5]: assign: {
+  ...;
+  *[[
+    a -> [
+      b -> {
+        a := false,
+        ...
+      } []
+      ... -> ...
+    ] []
+    ... -> ...
+  ]]
+}
+event[6]: assign: {
+  ...;
+  *[[
+    a -> [
+      b -> {
+        ...,
+        b := false
+      } []
+      ... -> ...
+    ] []
+    ... -> ...
+  ]]
+}
+event[7]: fork: {
+  ...;
+  *[[
+    a -> [
+      b -> {
+        a := false,
+        b := false
+      } []
+      ... -> ...
+    ] []
+    ... -> ...
+  ]]
+}
+event[8]: assign: {
+  ...;
+  *[[
+    a -> [
+      ... -> ... []
+      else -> b := true
+    ] []
+    ... -> ...
+  ]]
+}
+event[9]: select: {
+  ...;
+  *[[
+    a -> [
+      b -> {
+        a := false,
+        b := false
+      } []
+      else -> b := true
+    ] []
+    ... -> ...
+  ]]
+}
+event[10]: [null]
+event[11]: join: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> [
+      b -> {
+        a := true,
+        b := false
+      } []
+      ... -> ...
+    ]
+  ]]
+}
+event[12]: assign: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> [
+      b -> {
+        a := true,
+        ...
+      } []
+      ... -> ...
+    ]
+  ]]
+}
+event[13]: assign: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> [
+      b -> {
+        ...,
+        b := false
+      } []
+      ... -> ...
+    ]
+  ]]
+}
+event[14]: fork: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> [
+      b -> {
+        a := true,
+        b := false
+      } []
+      ... -> ...
+    ]
+  ]]
+}
+event[15]: assign: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> [
+      ... -> ... []
+      else -> b := true
+    ]
+  ]]
+}
+event[16]: select: {
+  ...;
+  *[[
+    ... -> ... []
+    else -> [
+      b -> {
+        a := true,
+        b := false
+      } []
+      else -> b := true
+    ]
+  ]]
+}
+event[17]: select: {
+  ...;
+  *[[
+    a -> [
+      b -> {
+        a := false,
+        b := false
+      } []
+      else -> b := true
+    ] []
+    else -> [
+      b -> {
+        a := true,
+        b := false
+      } []
+      else -> b := true
+    ]
+  ]]
+}
+event[18]: assign: {
+  {
+    a := false,
+    ...
+  };
+  ...
+}
+event[19]: assign: {
+  {
+    ...,
+    b := false
+  };
+  ...
+}
+event[20]: join: {
+  {
+    a := false,
+    b := false
+  };
+  ...
+}

@@ -3,6 +3,41 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-77-merged-CHP-03-08:
+	  Merged CHP-03 branch.  Summary:
+	  CHP tree intermediate representation now carries up-link
+		information so full context of every CHP action can be
+		reconstructed.  chpsim-event diagnostics now have access
+		to CHP action contexts.  
+	  Critical path routine now come with a verbose variant script
+		that prints the full context of every critical event, 
+		see test/chpsim/critical-path-verbose.hacchpsimscm.
+	  added some supporting scheme functions (scm/ChangeLog)
+	  Tons of test cases added.  
+	  TODO: document scheme functions.
+
+
+2007-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-08:
+	  guile/libhackt-wrap.cc, scm_chpsim_event_node.cc:
+		added some utility functions: map event to process-id, 
+		check for valid process-id.  
+	  new scheme functions (scm/ChangeLog), 
+		and new test cases in test/chpsim.
+	  We now have a routine for detailed critical path, 
+		showing source in full context for every critical event.
+	  Ready to merge to trunk, add documentation later.
+
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-07:
+	  Implemented dump-event-source in scm, added some test cases
+		looks similar to dump-all-event-source.
+	  Next: added event->process mapping functions to scm.
+
+
 2007-09-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-76:
@@ -16,6 +51,60 @@
 	  Other: util/test/Makefile.am: call test programs with ./
 	  Makefile.am: install_path.h dependencies fixed on prsim.cc, 
 		chpsim.cc
+
+
+2007-09-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-06:
+	  No source revision, added TONS of test cases for printing
+		CHP events/actions in their whole context.
+	  Next: add to guile API for chpsim lib
+
+
+2007-09-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-05:
+	  Object/lang/CHP.cc: bugfix: load selection statements' guarded
+		actions before relinking, to guarantee their action
+		statments are valid before invoking ::set_parent.
+	  sim/chpsim/Commands,State: implemented 'dump-all-event-source'
+		command to print contextual dumps of CHP source of events.
+		First batch of test cases added.
+	  sim/chpim/Event.cc: refactored dump_type
+	  Minor library updates in util/, see util/ChangeLog.
+
+
+2007-09-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-04:
+	  Implemented a contextual CHP event printer, first draft looks good.
+		Needs rigorous testing...
+	  Added dump-event-source command to chpsim to print this.
+	  Minor bugfix, initialize CHP::action::parent to NULL.
+	  TODO: add to guile API.
+
+
+2007-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-03:
+	  No source revision, only updated create-dump test cases (~100).
+
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-02:
+	  Object/lang/CHP_base.h: stripped away no-longer used 
+		shared-this argument from unroll_resolve_copy.
+	  Still need to update test dumps.
+
+
+	* HACKT-00-01-04-main-00-81-75-CHP-03-01:
+	  This branch adds information necessary to reconstruct the
+		precise context of every CHP statement with parent links.
+	  Object/lang/CHP_base.h: flag CHP_ACTION_PARENT_LINK drafted
+		and enabled.  This results in mandatorily deep-copying
+		statement trees upon unroll to maintain correct 
+		parent-child link relationships.  
+		Test suite only fails on create-object differences
+		due to statement replication.
 
 
 2007-09-15	David Fang		<fangism@users.sourceforge.net>

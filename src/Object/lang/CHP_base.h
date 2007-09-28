@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.12 2007/09/11 06:52:42 fang Exp $
+	$Id: CHP_base.h,v 1.13 2007/09/28 05:36:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -11,6 +11,21 @@
 #include "util/memory/count_ptr.h"
 #include "Object/devel_switches.h"
 
+/**
+	Define to 1 to maintain links to parent CHP actions.  
+	Useful for printing the precise context in which each action
+	is found.  
+	CONSEQUENCE: unrolling can long rely on sharing shallow copies, 
+		deep copies of actions are required (expressions may still
+		be shared), thus unroll MUST deep-copy actions, 
+		and reconnect parent links in fresh copies.
+		NOTE: unroll_resolve_copy never needs shared-this pointer
+		argument anymore!
+	Goal: 1
+	Rationale: to graduate!
+	Status: just begun
+ */
+#define	CHP_ACTION_PARENT_LINK		1
 
 namespace HAC {
 namespace entity {
@@ -43,12 +58,30 @@ public:
 	 */
 	typedef	delay_ptr_type			attributes_type;
 protected:
+#if CHP_ACTION_PARENT_LINK
+	/**
+		Up-pointer to parent action in syntax tree.  
+		Should not be saved persistently, but regenerated
+		upon reconstruction by parents.  
+		Should NOT be copied, but re-linked.
+		Mutable because doesn't change semantic value.  
+	 */
+	mutable const action*			parent;
+#endif
+	/**
+		Delay expression, eventually resolved to constant.
+	 */
 	attributes_type				delay;
 protected:
 	action();
 
 	explicit
 	action(const attributes_type&);
+
+#if CHP_ACTION_PARENT_LINK
+	// custom copy-ctor
+	action(const action&);
+#endif
 public:
 virtual	~action();
 
@@ -57,6 +90,15 @@ virtual	~action();
 
 	const delay_ptr_type&
 	get_delay(void) const { return delay; }
+
+#if CHP_ACTION_PARENT_LINK
+	void
+	set_parent(const action* a) const { parent = a; }
+	// or mutable, doesn't change value
+
+	const action*
+	get_parent(void) const { return parent; }
+#endif
 
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
@@ -89,10 +131,16 @@ virtual	CHP_DUMP_EVENT_PROTO = 0;
 		operator () (const action_ptr_type&) const;
 	};
 
+#if CHP_ACTION_PARENT_LINK
+#define	CHP_UNROLL_ACTION_PROTO						\
+	action_ptr_type							\
+	unroll_resolve_copy(const unroll_context&) const
+#else
 #define	CHP_UNROLL_ACTION_PROTO						\
 	action_ptr_type							\
 	unroll_resolve_copy(const unroll_context&,			\
 		const action_ptr_type&) const
+#endif
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
 

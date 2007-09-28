@@ -1,0 +1,9 @@
+#!hacchpsimguile -b
+!#
+;; "bool-and-test-a-01.hacchpsimscm"
+;;	$Id: bool-and-test-a-01.hacchpsimscm,v 1.2 2007/09/28 05:37:28 fang Exp $
+;; vi: ft=scheme
+;; @haco@ bool-and-test-a.haco-a
+
+(load-from-path "event-source-context.hacchpsimscm")
+

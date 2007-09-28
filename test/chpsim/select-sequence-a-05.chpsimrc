@@ -1,0 +1,6 @@
+# "select-sequence-a-05.chpsimrc"
+#	$Id: select-sequence-a-05.chpsimrc,v 1.2 2007/09/28 05:38:41 fang Exp $
+# @haco@ select-sequence-a.haco-a
+
+dump-all-event-source
+

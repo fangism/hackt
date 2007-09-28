@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/Event.cc"
-	$Id: Event.cc,v 1.11 2007/09/11 06:53:07 fang Exp $
+	$Id: Event.cc,v 1.12 2007/09/28 05:37:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -14,6 +14,7 @@
 #include "sim/ISE.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/CHP_base.h"
+#include "Object/lang/CHP_context_printer.h"
 #include "sim/chpsim/nonmeta_context.h"
 #include "sim/chpsim/graph_options.h"
 #include "sim/chpsim/EventExecutor.h"
@@ -305,6 +306,20 @@ EventNode::dump_brief(ostream& o,
 ostream&
 EventNode::dump_source(ostream& o, const expr_dump_context& edc) const {
 	return __local_event->dump_source(o, edc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+EventNode::dump_source_context(ostream& o, const expr_dump_context& edc) const {
+	const action* a = get_chp_action();
+	if (a) {
+		__local_event->dump_type(o) << ": ";
+		entity::CHP::chp_context_printer P(*a, o, edc);
+		P();
+		return o;
+	} else {
+		return o << "[null]" << endl;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

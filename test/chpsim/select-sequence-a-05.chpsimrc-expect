@@ -1,0 +1,123 @@
+
+# process[0]:
+event[1]: fork: {
+  {
+    a := false,
+    b := false,
+    c := false
+  };
+  ...;
+  ...;
+  ...
+}
+event[2]: assign: {
+  ...;
+  ...;
+  ...;
+  [
+    ... -> ... []
+    else -> c := true
+  ]
+}
+event[3]: select: {
+  ...;
+  ...;
+  ...;
+  [
+    ~b -> skip []
+    else -> c := true
+  ]
+}
+event[4]: [null]
+event[5]: assign: {
+  ...;
+  ...;
+  [
+    a -> {
+      ...;
+      c := false
+    } []
+    ... -> ...
+  ];
+  ...
+}
+event[6]: assign: {
+  ...;
+  ...;
+  [
+    a -> {
+      b := true;
+      ...
+    } []
+    ... -> ...
+  ];
+  ...
+}
+event[7]: assign: {
+  ...;
+  ...;
+  [
+    ... -> ... []
+    ~a -> b := false
+  ];
+  ...
+}
+event[8]: select: {
+  ...;
+  ...;
+  [
+    a -> {
+      b := true;
+      c := false
+    } []
+    ~a -> b := false
+  ];
+  ...
+}
+event[9]: assign: {
+  ...;
+  a := true;
+  ...;
+  ...
+}
+event[10]: join: {
+  {
+    a := false,
+    b := false,
+    c := false
+  };
+  ...;
+  ...;
+  ...
+}
+event[11]: assign: {
+  {
+    a := false,
+    ...,
+    ...
+  };
+  ...;
+  ...;
+  ...
+}
+event[12]: assign: {
+  {
+    ...,
+    b := false,
+    ...
+  };
+  ...;
+  ...;
+  ...
+}
+event[13]: assign: {
+  {
+    ...,
+    ...,
+    c := false
+  };
+  ...;
+  ...;
+  ...
+}
+event[14]: [null]

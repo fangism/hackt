@@ -1,0 +1,6 @@
+# "top-level-02-a.chpsimrc"
+#	$Id: top-level-02-a.chpsimrc,v 1.2 2007/09/28 05:39:51 fang Exp $
+# @haco@ top-level-02.haco-a
+
+dump-all-event-source
+

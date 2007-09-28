@@ -1,0 +1,254 @@
+
+# process[0]:
+event[1]: fork: {
+  {
+    a := false,
+    b := false
+  };
+  ...
+}
+event[2]: assign: {
+  ...;
+  {
+    {
+      ...;
+      ...;
+      ...;
+      ...;
+      a := true
+    },
+    ...,
+    ...
+  }
+}
+event[3]: assign: {
+  ...;
+  {
+    {
+      ...;
+      ...;
+      ...;
+      a := false;
+      ...
+    },
+    ...,
+    ...
+  }
+}
+event[4]: assign: {
+  ...;
+  {
+    {
+      ...;
+      ...;
+      a := false;
+      ...;
+      ...
+    },
+    ...,
+    ...
+  }
+}
+event[5]: assign: {
+  ...;
+  {
+    {
+      ...;
+      a := false;
+      ...;
+      ...;
+      ...
+    },
+    ...,
+    ...
+  }
+}
+event[6]: assign: {
+  ...;
+  {
+    {
+      a := false;
+      ...;
+      ...;
+      ...;
+      ...
+    },
+    ...,
+    ...
+  }
+}
+event[7]: assign: {
+  ...;
+  {
+    ...,
+    {
+      ...;
+      b := true
+    },
+    ...
+  }
+}
+event[8]: assign: {
+  ...;
+  {
+    ...,
+    {
+      b := false;
+      ...
+    },
+    ...
+  }
+}
+event[9]: join: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      ...;
+      {
+        a := false,
+        b := false
+      }
+    }
+  }
+}
+event[10]: assign: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      ...;
+      {
+        a := false,
+        ...
+      }
+    }
+  }
+}
+event[11]: assign: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      ...;
+      {
+        ...,
+        b := false
+      }
+    }
+  }
+}
+event[12]: fork: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      ...;
+      {
+        a := false,
+        b := false
+      }
+    }
+  }
+}
+event[13]: wait: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      ...;
+      [a];
+      ...
+    }
+  }
+}
+event[14]: wait: {
+  ...;
+  {
+    ...,
+    ...,
+    {
+      [b];
+      ...;
+      ...
+    }
+  }
+}
+event[15]: fork: {
+  ...;
+  {
+    {
+      a := false;
+      a := false;
+      a := false;
+      a := false;
+      a := true
+    },
+    {
+      b := false;
+      b := true
+    },
+    {
+      [b];
+      [a];
+      {
+        a := false,
+        b := false
+      }
+    }
+  }
+}
+event[16]: join: {
+  {
+    a := false,
+    b := false
+  };
+  ...
+}
+event[17]: assign: {
+  {
+    a := false,
+    ...
+  };
+  ...
+}
+event[18]: assign: {
+  {
+    ...,
+    b := false
+  };
+  ...
+}
+event[19]: join: {
+  ...;
+  {
+    {
+      a := false;
+      a := false;
+      a := false;
+      a := false;
+      a := true
+    },
+    {
+      b := false;
+      b := true
+    },
+    {
+      [b];
+      [a];
+      {
+        a := false,
+        b := false
+      }
+    }
+  }
+}

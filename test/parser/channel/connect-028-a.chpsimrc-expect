@@ -1,0 +1,20 @@
+
+# process[0]:
+event[1]: send: {
+  x!(true);
+  ...
+}
+event[2]: send: {
+  ...;
+  x!(false)
+}
+
+# process[2]:
+event[3]: receive: {
+  a.y.a?(a.y.z);
+  ...
+}
+event[4]: receive: {
+  ...;
+  a.y.a?(a.y.z)
+}

@@ -11,6 +11,8 @@ Persistent Object Manager text dump:
 	7	##ADDR##	stringex	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	270
 	9	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	CHPfcall	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

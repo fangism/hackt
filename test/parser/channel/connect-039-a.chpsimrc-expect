@@ -1,0 +1,6 @@
+
+# process[0]:
+event[1]: send: *[Q!(false)]
+
+# process[1]:
+event[2]: receive: *[lecture.B?(lecture.x)]

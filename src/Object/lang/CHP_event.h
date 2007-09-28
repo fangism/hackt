@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_event.h"
 	Various classes of chpsim events.  
-	$Id: CHP_event.h,v 1.2 2007/09/11 06:52:43 fang Exp $
+	$Id: CHP_event.h,v 1.3 2007/09/28 05:36:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_EVENT_H__
@@ -211,6 +211,9 @@ public:
 
 	ostream&
 	dump_pending(ostream&) const;
+
+	ostream&
+	dump_type(ostream&) const;
 
 	ostream&
 	dump_struct(ostream&, const expr_dump_context&, 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/CHP_event.cc"
-	$Id: CHP_event.cc,v 1.2 2007/09/11 06:52:42 fang Exp $
+	$Id: CHP_event.cc,v 1.3 2007/09/28 05:36:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -105,16 +105,8 @@ local_event::dump_source(ostream& o, const expr_dump_context& dc) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	For diagnostics.  
-	Calls to this are wrapped in auto-indent, so use indent 
-	if line-breaks are ever added.  
-	\param offset the offset to add to successor event indices.
- */
 ostream&
-local_event::dump_struct(ostream& o, const expr_dump_context& edc, 
-		const size_t pid, 
-		const event_index_type offset) const {
+local_event::dump_type(ostream& o) const {
 	switch (event_type) {
 	case EVENT_NULL: o << (predecessors > 1 ? "join" : "null"); break;
 	case EVENT_ASSIGN: o << "assign"; break;
@@ -129,7 +121,21 @@ local_event::dump_struct(ostream& o, const expr_dump_context& edc,
 		ICE(cerr, cerr << "Invalid event type enum: "
 			<< event_type << endl;)
 	}
-	o << ": ";
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For diagnostics.  
+	Calls to this are wrapped in auto-indent, so use indent 
+	if line-breaks are ever added.  
+	\param offset the offset to add to successor event indices.
+ */
+ostream&
+local_event::dump_struct(ostream& o, const expr_dump_context& edc, 
+		const size_t pid, 
+		const event_index_type offset) const {
+	dump_type(o) << ": ";
 	// factored out code
 	dump_brief(o, edc);
 	// flags?

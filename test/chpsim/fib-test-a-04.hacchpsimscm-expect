@@ -1,0 +1,1082 @@
+procesing tracefile: fib-test-a-01.chpsimtrace
+critical-path (verbose):
+trace-index: 199
+cause-index: 197
+time: 154.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 197
+cause-index: 196
+time: 154.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 196
+cause-index: 189
+time: 154.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 189
+cause-index: 188
+time: 149.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 188
+cause-index: 185
+time: 149.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 185
+cause-index: 182
+time: 144.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 182
+cause-index: 179
+time: 143.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 179
+cause-index: 178
+time: 141.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 178
+cause-index: 177
+time: 141.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 177
+cause-index: 176
+time: 141.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 176
+cause-index: 174
+time: 139.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 174
+cause-index: 171
+time: 138.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 171
+cause-index: 169
+time: 133.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 169
+cause-index: 168
+time: 133.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 168
+cause-index: 161
+time: 133.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 161
+cause-index: 160
+time: 128.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 160
+cause-index: 157
+time: 128.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 157
+cause-index: 154
+time: 123.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 154
+cause-index: 151
+time: 122.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 151
+cause-index: 150
+time: 120.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 150
+cause-index: 149
+time: 120.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 149
+cause-index: 148
+time: 120.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 148
+cause-index: 146
+time: 118.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 146
+cause-index: 143
+time: 117.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 143
+cause-index: 141
+time: 112.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 141
+cause-index: 140
+time: 112.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 140
+cause-index: 133
+time: 112.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 133
+cause-index: 132
+time: 107.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 132
+cause-index: 129
+time: 107.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 129
+cause-index: 126
+time: 102.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 126
+cause-index: 123
+time: 101.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 123
+cause-index: 122
+time: 99.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 122
+cause-index: 121
+time: 99.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 121
+cause-index: 120
+time: 99.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 120
+cause-index: 118
+time: 97.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 118
+cause-index: 115
+time: 96.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 115
+cause-index: 113
+time: 91.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 113
+cause-index: 112
+time: 91.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 112
+cause-index: 105
+time: 91.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 105
+cause-index: 104
+time: 86.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 104
+cause-index: 101
+time: 86.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 101
+cause-index: 98
+time: 81.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 98
+cause-index: 95
+time: 80.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 95
+cause-index: 94
+time: 78.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 94
+cause-index: 93
+time: 78.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 93
+cause-index: 92
+time: 78.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 92
+cause-index: 90
+time: 76.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 90
+cause-index: 87
+time: 75.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 87
+cause-index: 85
+time: 70.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 85
+cause-index: 84
+time: 70.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 84
+cause-index: 77
+time: 70.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 77
+cause-index: 76
+time: 65.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 76
+cause-index: 73
+time: 65.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 73
+cause-index: 70
+time: 60.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 70
+cause-index: 67
+time: 59.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 67
+cause-index: 66
+time: 57.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 66
+cause-index: 65
+time: 57.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 65
+cause-index: 64
+time: 57.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 64
+cause-index: 62
+time: 55.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 62
+cause-index: 59
+time: 54.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 59
+cause-index: 57
+time: 49.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 57
+cause-index: 56
+time: 49.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 56
+cause-index: 49
+time: 49.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 49
+cause-index: 48
+time: 44.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 48
+cause-index: 45
+time: 44.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 45
+cause-index: 42
+time: 39.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 42
+cause-index: 39
+time: 38.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 39
+cause-index: 38
+time: 36.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 38
+cause-index: 37
+time: 36.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 37
+cause-index: 36
+time: 36.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 36
+cause-index: 34
+time: 34.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 34
+cause-index: 31
+time: 33.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 31
+cause-index: 29
+time: 28.0
+event-index: 13
+process[5]: fibber.c
+source-context: join: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 29
+cause-index: 28
+time: 28.0
+event-index: 14
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    ...
+  }
+}]
+
+trace-index: 28
+cause-index: 21
+time: 28.0
+event-index: 5
+process[3]: fibber.b1
+source-context: receive: {
+  ...;
+  *[{
+    ...;
+    fibber.b1.L?(fibber.b1.x)
+  }]
+}
+
+trace-index: 21
+cause-index: 20
+time: 23.0
+event-index: 6
+process[3]: fibber.b1
+source-context: send: {
+  ...;
+  *[{
+    fibber.b1.R!(fibber.b1.x);
+    ...
+  }]
+}
+
+trace-index: 20
+cause-index: 17
+time: 23.0
+event-index: 10
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    ...
+  };
+  ...
+}]
+
+trace-index: 17
+cause-index: 14
+time: 18.0
+event-index: 7
+process[4]: fibber.a
+source-context: fork: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 14
+cause-index: 11
+time: 17.0
+event-index: 8
+process[4]: fibber.a
+source-context: send: *[{
+  ...;
+  fibber.a.S!(fibber.a.a+fibber.a.b)
+}]
+
+trace-index: 11
+cause-index: 10
+time: 15.0
+event-index: 9
+process[4]: fibber.a
+source-context: join: *[{
+  {
+    fibber.a.A?(fibber.a.a),
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 10
+cause-index: 9
+time: 15.0
+event-index: 11
+process[4]: fibber.a
+source-context: receive: *[{
+  {
+    ...,
+    fibber.a.B?(fibber.a.b)
+  };
+  ...
+}]
+
+trace-index: 9
+cause-index: 8
+time: 15.0
+event-index: 15
+process[5]: fibber.c
+source-context: send: *[{
+  ...;
+  {
+    ...,
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 8
+cause-index: 5
+time: 13.0
+event-index: 16
+process[5]: fibber.c
+source-context: fork: *[{
+  ...;
+  {
+    fibber.c.O[0]!(fibber.c.a),
+    fibber.c.O[1]!(fibber.c.a)
+  }
+}]
+
+trace-index: 5
+cause-index: 4
+time: 12.0
+event-index: 12
+process[5]: fibber.c
+source-context: receive: *[{
+  fibber.c.A?(fibber.c.a);
+  ...
+}]
+
+trace-index: 4
+cause-index: 2
+time: 12.0
+event-index: 3
+process[2]: fibber.b0
+source-context: send: {
+  ...;
+  *[{
+    fibber.b0.R!(fibber.b0.x);
+    ...
+  }]
+}
+
+trace-index: 2
+cause-index: 0
+time: 10.0
+event-index: 1
+process[2]: fibber.b0
+source-context: assign: {
+  fibber.b0.x := 1;
+  ...
+}
+
+trace-index: 0
+cause-index: 0
+time: 0.0
+event-index: 0
+process[6]: [global-root]
+source-context: [global-root]
+

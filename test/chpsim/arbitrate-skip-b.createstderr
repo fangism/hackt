@@ -29,6 +29,14 @@ Persistent Object Manager text dump:
 	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
 	27	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	CHPndtsl	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

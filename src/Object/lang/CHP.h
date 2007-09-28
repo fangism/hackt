@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.21 2007/07/31 23:23:26 fang Exp $
+	$Id: CHP.h,v 1.22 2007/09/28 05:36:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -39,6 +39,14 @@ using util::persistent_object_manager;
 	Typical action list.  
  */
 typedef	list<action_ptr_type>			action_list_type;
+
+#if CHP_ACTION_PARENT_LINK
+typedef	list<const action*>			action_parent_list_type;
+
+extern
+void
+make_action_parent_path(const action&, action_parent_list_type&);
+#endif
 
 //=============================================================================
 /**
@@ -86,6 +94,12 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if CHP_ACTION_PARENT_LINK
+	// override parent's
+	void
+	push_back(list_type::const_reference);
+#endif
+
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
@@ -131,6 +145,12 @@ public:
 	ostream&
 	dump(ostream&, const entity::footprint&, 
 		const expr_dump_context&) const;
+
+#if CHP_ACTION_PARENT_LINK
+	// override parent's
+	void
+	push_back(list_type::const_reference);
+#endif
 
 	// helper methods needed for process_definition
 	void
@@ -208,9 +228,19 @@ public:
 	ostream&
 	dump_brief(ostream&, const expr_dump_context&) const;
 
+#if CHP_ACTION_PARENT_LINK
+	void
+	set_parent(const action* p) const;
+#endif
+
+#if CHP_ACTION_PARENT_LINK
+	unroll_return_type
+	unroll_resolve_copy(const unroll_context&) const;
+#else
 	unroll_return_type
 	unroll_resolve_copy(const unroll_context&,
 		const count_ptr<const guarded_action>&) const;
+#endif
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
@@ -253,6 +283,12 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if CHP_ACTION_PARENT_LINK
+	// override parent's
+	void
+	push_back(list_type::const_reference);
+#endif
+
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
 	CHP_ACTION_ACCEPT_PROTO;
@@ -278,6 +314,12 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if CHP_ACTION_PARENT_LINK
+	// override parent's
+	void
+	push_back(list_type::const_reference);
+#endif
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;
@@ -579,6 +621,12 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if CHP_ACTION_PARENT_LINK
+	// override parent's
+	void
+	push_back(list_type::const_reference);
+#endif
 
 	CHP_DUMP_EVENT_PROTO;
 	CHP_UNROLL_ACTION_PROTO;

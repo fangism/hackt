@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.13 2007/09/11 06:53:10 fang Exp $
+	$Id: State.cc,v 1.14 2007/09/28 05:37:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1297,6 +1297,56 @@ State::dump_event(ostream& o, const event_index_type ei) const {
 	}
 	// o << endl;
 	e.dump_source(o << "source: ", expr_dump_context::default_value) << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_event_source(ostream& o, const event_index_type ei) const {
+if (ei) {
+	INVARIANT(ei < event_pool.size());
+	const event_type& e(event_pool[ei]);
+	const size_t pid = get_process_id(ei);
+	return e.dump_source_context(o, make_process_dump_context(pid));
+} else {
+	return o << "[global-root]" << endl;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param e event MUST be a member event of this simulation state.
+ */
+ostream&
+State::dump_event_source(ostream& o, const event_type& e) const {
+	return dump_event_source(o, get_event_id(e));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all events grouped by process.  
+	Skips global-root event because it has no source.
+ */
+ostream&
+State::dump_all_event_source(ostream& o) const {
+	typedef	pid_to_offset_map_type::const_iterator	const_iterator;
+	const_iterator i(pid_to_offset.begin()), e(--pid_to_offset.end());
+	// skip last process because that is reserved for event[0] (fake)
+	size_t pid = 0;
+	for ( ; i!=e; ++i, ++pid) {
+	if (i->second) {
+		o << "\n# process[" << pid << "]:" << endl;
+		const event_index_type offset = i->first;
+		event_index_type j = 0;
+		const expr_dump_context edc(make_process_dump_context(pid));
+		for ( ; j < i->second; ++j) {
+			const size_t eid = offset +j;
+			o << "event[" << eid << "]: ";
+			const event_type& ev(event_pool[eid]);
+			ev.dump_source_context(o, edc);
+		}
+	}
+	}
 	return o;
 }
 

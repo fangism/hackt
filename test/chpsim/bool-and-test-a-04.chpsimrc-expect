@@ -1,0 +1,112 @@
+
+# process[1]:
+event[1]: fork: *[{
+  {
+    A.A[0]?(A.a[0]),
+    A.A[1]?(A.a[1]),
+    A.A[2]?(A.a[2]),
+    A.A[3]?(A.a[3])
+  };
+  ...
+}]
+event[2]: send: *[{
+  ...;
+  A.O!(A.a[0]&&A.a[1]&&A.a[2]&&A.a[3])
+}]
+event[3]: join: *[{
+  {
+    A.A[0]?(A.a[0]),
+    A.A[1]?(A.a[1]),
+    A.A[2]?(A.a[2]),
+    A.A[3]?(A.a[3])
+  };
+  ...
+}]
+event[4]: receive: *[{
+  {
+    A.A[0]?(A.a[0]),
+    ...,
+    ...,
+    ...
+  };
+  ...
+}]
+event[5]: receive: *[{
+  {
+    ...,
+    A.A[1]?(A.a[1]),
+    ...,
+    ...
+  };
+  ...
+}]
+event[6]: receive: *[{
+  {
+    ...,
+    ...,
+    A.A[2]?(A.a[2]),
+    ...
+  };
+  ...
+}]
+event[7]: receive: *[{
+  {
+    ...,
+    ...,
+    ...,
+    A.A[3]?(A.a[3])
+  };
+  ...
+}]
+
+# process[2]:
+event[8]: send: *[S0.S!(true)]
+
+# process[3]:
+event[9]: send: *[{
+  S1.S!(true);
+  ...;
+  ...
+}]
+event[10]: send: *[{
+  ...;
+  ...;
+  S1.S!(false)
+}]
+event[11]: send: *[{
+  ...;
+  S1.S!(true);
+  ...
+}]
+
+# process[4]:
+event[12]: send: *[{
+  S2.S!(true);
+  ...;
+  ...;
+  ...
+}]
+event[13]: send: *[{
+  ...;
+  ...;
+  ...;
+  S2.S!(true)
+}]
+event[14]: send: *[{
+  ...;
+  ...;
+  S2.S!(true);
+  ...
+}]
+event[15]: send: *[{
+  ...;
+  S2.S!(false);
+  ...;
+  ...
+}]
+
+# process[5]:
+event[16]: send: *[S3.S!(true)]
+
+# process[6]:
+event[17]: receive: *[Z.B?(Z.b)]

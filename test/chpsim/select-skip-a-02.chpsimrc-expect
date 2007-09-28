@@ -1,0 +1,45 @@
+
+# process[0]:
+event[1]: fork: {
+  {
+    a := false,
+    b := false
+  };
+  ...
+}
+event[2]: assign: {
+  ...;
+  [
+    ... -> ... []
+    else -> b := true
+  ]
+}
+event[3]: select: {
+  ...;
+  [
+    a -> skip []
+    else -> b := true
+  ]
+}
+event[4]: join: {
+  {
+    a := false,
+    b := false
+  };
+  ...
+}
+event[5]: assign: {
+  {
+    a := false,
+    ...
+  };
+  ...
+}
+event[6]: assign: {
+  {
+    ...,
+    b := false
+  };
+  ...
+}
+event[7]: [null]

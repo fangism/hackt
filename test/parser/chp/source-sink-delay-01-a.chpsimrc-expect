@@ -1,0 +1,6 @@
+
+# process[1]:
+event[1]: send: *[[after=20] s.S!(true)]
+
+# process[2]:
+event[2]: receive: *[b.S?(b.x)]

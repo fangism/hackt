@@ -1,0 +1,6 @@
+# "countdown-nested-a-04.chpsimrc"
+#	$Id: countdown-nested-a-04.chpsimrc,v 1.2 2007/09/28 05:37:54 fang Exp $
+# @haco@ countdown-nested-a.haco-a
+
+dump-all-event-source
+

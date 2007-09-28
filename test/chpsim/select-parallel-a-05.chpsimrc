@@ -1,0 +1,6 @@
+# "select-parallel-a-05.chpsimrc"
+#	$Id: select-parallel-a-05.chpsimrc,v 1.2 2007/09/28 05:38:39 fang Exp $
+# @haco@ select-parallel-a.haco-a
+
+dump-all-event-source
+

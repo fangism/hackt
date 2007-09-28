@@ -1,0 +1,27 @@
+
+# process[0]:
+event[1]: fork: {
+  *[B?(x)],
+  {
+    x := true;
+    *[B!(~x)]
+  }
+}
+event[2]: assign: {
+  ...,
+  {
+    x := true;
+    ...
+  }
+}
+event[3]: receive: {
+  *[B?(x)],
+  ...
+}
+event[4]: send: {
+  ...,
+  {
+    ...;
+    *[B!(~x)]
+  }
+}

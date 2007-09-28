@@ -1,0 +1,9 @@
+#!hacchpsimguile -b
+!#
+;; "channel-probe-a-01.hacchpsimscm"
+;;	$Id: channel-probe-a-01.hacchpsimscm,v 1.2 2007/09/28 05:37:37 fang Exp $
+;; vi: ft=scheme
+;; @haco@ channel-probe-a.haco-a
+
+(load-from-path "event-source-context.hacchpsimscm")
+

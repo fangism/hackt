@@ -1,0 +1,14 @@
+
+# process[1]:
+event[1]: fork: {
+  *[lecture.B?(lecture.x)],
+  *[lecture.B!(false)]
+}
+event[2]: send: {
+  ...,
+  *[lecture.B!(false)]
+}
+event[3]: receive: {
+  *[lecture.B?(lecture.x)],
+  ...
+}

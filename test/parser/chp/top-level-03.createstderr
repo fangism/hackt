@@ -21,6 +21,10 @@ Persistent Object Manager text dump:
 	17	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
 	19	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

@@ -2,7 +2,7 @@
  *	\file "util/binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
- *	$Id: binders.h,v 1.8 2007/02/05 06:39:58 fang Exp $
+ *	$Id: binders.h,v 1.9 2007/09/28 05:37:14 fang Exp $
  */
 
 #ifndef	__UTIL_BINDERS_H__
@@ -61,6 +61,35 @@ public:
 	}
 };	// end class binder1st_argval
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialization for void return type.  
+ */
+template <class B>
+class binder1st_argval_void :
+	public std::unary_function<typename B::second_argument_type, void> {
+public:
+	typedef	typename B::first_argument_type		arg1_type;
+	typedef	typename B::second_argument_type	argument_type;
+	typedef	typename B::result_type			result_type;
+protected:
+	B		op;
+	arg1_type	arg1;
+public:
+	binder1st_argval_void(const B& b, const arg1_type v) :
+		op(b), arg1(v) { }
+
+	void
+	operator() (const argument_type& x) const {
+		op(arg1, x);
+	}
+
+	void
+	operator() (argument_type& x) const {
+		op(arg1, x);
+	}
+};	// end class binder1st_argval
+
 //-----------------------------------------------------------------------------
 /**
 	Helper function for binding 1st value when it is a const reference.  
@@ -90,6 +119,22 @@ inline
 binder1st_argval<B>
 bind1st_argval(const B& op, T& v) {
 	return binder1st_argval<B>(op, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class B, class T>
+inline
+binder1st_argval_void<B>
+bind1st_argval_void(const B& op, const T& v) {
+	return binder1st_argval_void<B>(op, v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class B, class T>
+inline
+binder1st_argval_void<B>
+bind1st_argval_void(const B& op, T& v) {
+	return binder1st_argval_void<B>(op, v);
 }
 
 //=============================================================================

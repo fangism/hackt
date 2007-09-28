@@ -5,6 +5,7 @@
 ;; defined by "guile/libhackt-wrap.cc"
 
 (define-module (hackt hackt))
+(use-modules (hackt hackt-primitives))
 
 ; already pre-loaded
 ; (use-modules (hackt hackt-primitives))
@@ -26,4 +27,16 @@ For example: (reference-equal? '(channel . 1) '(channel . 1)) -> #t."
 ;; shorthand for extracting embedded documentation
 ;; also works on non-hackt-related procedures that are so-documented
 (define-public (help-hackt proc) procedure-documentation proc)
+
+(define-public (process-id->string pid)
+"Print the canonical name of the process.  If @var{pid} is too high, assume
+it is a globa-root (fake process) for spawning events.  If @var{pid} is
+0, then call it the [top] process."
+  (if (hac:valid-process-id? pid)
+    (if (= pid 0) "[top]"
+      (hac:canonical-reference->string (cons 'process pid))
+    )
+    "[global-root]"
+  ) ; end if
+) ; end define
 

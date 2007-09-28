@@ -1,0 +1,30 @@
+#!hacchpsimguile -b
+!#
+;; "critical-path-verbose.hacchpsimscm"
+;; common analysis routines
+;; vi: ft=scheme
+;;	$Id: critical-path-verbose.hacchpsimscm,v 1.2 2007/09/28 05:38:06 fang Exp $
+
+;; don't call this script directly, but load me from another
+
+(use-modules (hackt chpsim-trace))
+(use-modules (hackt chpsim-primitives))
+(use-modules (hackt hackt))
+; (use-modules (hackt chpsim))
+; (use-modules (hackt algorithm)) ; for list-flatten
+(use-modules (hackt rb-tree))
+(use-modules (hackt streams))
+(use-modules (ice-9 streams))
+
+(display "procesing tracefile: ")
+(display trace-name)
+(newline)
+
+(define trace-stream (open-chpsim-trace-stream trace-name))
+
+(define crit (chpsim-trace-critical-path trace-name))
+
+(display "critical-path (verbose):\n")
+
+(stream-for-each display-trace-entry-verbose crit)
+

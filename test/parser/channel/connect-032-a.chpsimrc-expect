@@ -1,0 +1,78 @@
+
+# process[0]:
+event[1]: fork: *[{
+  {
+    c[0]!(1),
+    c[1]!(1)
+  };
+  ...
+}]
+event[2]: join: *[{
+  ...;
+  {
+    c[0]!(0),
+    c[1]!(0)
+  }
+}]
+event[3]: send: *[{
+  ...;
+  {
+    c[0]!(0),
+    ...
+  }
+}]
+event[4]: send: *[{
+  ...;
+  {
+    ...,
+    c[1]!(0)
+  }
+}]
+event[5]: fork: *[{
+  ...;
+  {
+    c[0]!(0),
+    c[1]!(0)
+  }
+}]
+event[6]: join: *[{
+  {
+    c[0]!(1),
+    c[1]!(1)
+  };
+  ...
+}]
+event[7]: send: *[{
+  {
+    c[0]!(1),
+    ...
+  };
+  ...
+}]
+event[8]: send: *[{
+  {
+    ...,
+    c[1]!(1)
+  };
+  ...
+}]
+
+# process[1]:
+event[9]: receive: *[{
+  lanes.S?(lanes.s);
+  ...
+}]
+event[10]: receive: *[{
+  ...;
+  lanes.B[lanes.s]?(lanes.b)
+}]
+
+# process[2]:
+event[11]: receive: *[{
+  hairs.S?(hairs.s);
+  ...
+}]
+event[12]: send: *[{
+  ...;
+  hairs.B[hairs.s]!(true)
+}]

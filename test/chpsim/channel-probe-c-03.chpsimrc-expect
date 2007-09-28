@@ -1,0 +1,152 @@
+
+# process[0]:
+event[1]: fork: {
+  *[{
+    X?(x);
+    Y!(x)
+  }],
+  *[{
+    [#A&&#Y];
+    {
+      {
+        A?(a);
+        B!(a)
+      },
+      {
+        Y?(z);
+        Z!(z)
+      }
+    }
+  }]
+}
+event[2]: wait: {
+  ...,
+  *[{
+    [#A&&#Y];
+    ...
+  }]
+}
+event[3]: send: {
+  *[{
+    ...;
+    Y!(x)
+  }],
+  ...
+}
+event[4]: receive: {
+  *[{
+    X?(x);
+    ...
+  }],
+  ...
+}
+event[5]: join: {
+  ...,
+  *[{
+    ...;
+    {
+      {
+        A?(a);
+        B!(a)
+      },
+      {
+        Y?(z);
+        Z!(z)
+      }
+    }
+  }]
+}
+event[6]: send: {
+  ...,
+  *[{
+    ...;
+    {
+      {
+        ...;
+        B!(a)
+      },
+      ...
+    }
+  }]
+}
+event[7]: receive: {
+  ...,
+  *[{
+    ...;
+    {
+      {
+        A?(a);
+        ...
+      },
+      ...
+    }
+  }]
+}
+event[8]: send: {
+  ...,
+  *[{
+    ...;
+    {
+      ...,
+      {
+        ...;
+        Z!(z)
+      }
+    }
+  }]
+}
+event[9]: receive: {
+  ...,
+  *[{
+    ...;
+    {
+      ...,
+      {
+        Y?(z);
+        ...
+      }
+    }
+  }]
+}
+event[10]: fork: {
+  ...,
+  *[{
+    ...;
+    {
+      {
+        A?(a);
+        B!(a)
+      },
+      {
+        Y?(z);
+        Z!(z)
+      }
+    }
+  }]
+}
+
+# process[1]:
+event[11]: send: *[{
+  bs.S!(true);
+  ...
+}]
+event[12]: send: *[{
+  ...;
+  bs.S!(false)
+}]
+
+# process[2]:
+event[13]: send: *[{
+  xs.S!(true);
+  ...
+}]
+event[14]: send: *[{
+  ...;
+  xs.S!(false)
+}]
+
+# process[3]:
+event[15]: receive: *[snk0.B?(snk0.b)]
+
+# process[4]:
+event[16]: receive: *[sink1.B?(sink1.b)]

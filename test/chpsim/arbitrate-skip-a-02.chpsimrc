@@ -1,0 +1,6 @@
+# "arbitrate-skip-a-02.chpsimrc"
+#	$Id: arbitrate-skip-a-02.chpsimrc,v 1.2 2007/09/28 05:37:25 fang Exp $
+# @haco@ arbitrate-skip-a.haco-a
+
+dump-all-event-source
+

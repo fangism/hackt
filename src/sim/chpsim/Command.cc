@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.12 2007/09/11 06:53:03 fang Exp $
+	$Id: Command.cc,v 1.13 2007/09/28 05:37:03 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1504,6 +1504,75 @@ void
 DumpEvent::usage(ostream& o) {
 	o << name << " <index>" << endl;
 	o << "Dumps information about the referenced event." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-event-source.texi
+@deffn Command dump-event-source event-id
+Print full-context of the source in which event @var{event-id} occurs.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpEventSource, "dump-event-source", info,
+	"print event with full source context")
+
+int
+DumpEventSource::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	size_t i;
+	if (string_to_num(a.back(), i)) {
+		cerr << "Error parsing event index number." << endl;
+		return Command::BADARG;
+	}
+	const size_t z = s.event_pool_size();
+	if (i >= z) {
+		cerr << "Error: index out-of-range, must be < " <<
+			z << "." << endl;
+		return Command::BADARG;
+	}
+	// dump structural information
+	s.dump_event_source(cout, i);
+	return Command::NORMAL;
+}
+}
+
+void
+DumpEventSource::usage(ostream& o) {
+	o << name << " <index>" << endl;
+	o << "Dumps source of referenced event with full-context." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/dump-all-event-source.texi
+@deffn Command dump-all-event-source
+Print full-context of the source for all events.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(DumpAllEventSource, 
+	"dump-all-event-source", info,
+	"print all event with full source context")
+
+int
+DumpAllEventSource::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_all_event_source(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+DumpAllEventSource::usage(ostream& o) {
+	o << name << endl;
+	o << "Dumps source of all events with full-context." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

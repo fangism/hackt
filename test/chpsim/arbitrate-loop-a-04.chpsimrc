@@ -1,0 +1,6 @@
+# "arbitrate-loop-a-04.chpsimrc"
+#	$Id: arbitrate-loop-a-04.chpsimrc,v 1.2 2007/09/28 05:37:21 fang Exp $
+# @haco@ arbitrate-loop-a.haco-a
+
+dump-all-event-source
+

@@ -1,0 +1,6 @@
+# "connect-010-a.chpsimrc"
+#	$Id: connect-010-a.chpsimrc,v 1.2 2007/09/28 05:39:06 fang Exp $
+# @haco@ connect-010.haco-a
+
+dump-all-event-source
+

@@ -1,0 +1,6 @@
+
+# process[0]:
+event[1]: send: x!(true)
+
+# process[2]:
+event[2]: receive: a.y.a?(a.y.z)
