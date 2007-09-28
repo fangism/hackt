@@ -1,5 +1,5 @@
 dnl "config/cc.m4"
-dnl	$Id: cc.m4,v 1.6 2007/08/29 19:50:11 fang Exp $
+dnl	$Id: cc.m4,v 1.7 2007/09/28 18:34:02 fang Exp $
 dnl General configure macros for detecting characteristics of the C compiler.
 dnl
 
@@ -299,6 +299,55 @@ if test "$fang_cv_type_equiv_size_t_unsigned_long" = yes ; then
 else
 	AC_DEFINE(TYPE_EQUIV_SIZE_T_UNSIGNED_LONG, 0,
 		[Define to 1 if size_t is identical to unsigned long (C++).])
+fi
+])dnl AC_DEFUN
+
+
+dnl @synopsis FANG_TYPE_EQUIV_UINT32_UNSIGNED_LONG
+dnl
+dnl On cygwin-g++3.4 defect, detect that uint32_t is
+dnl the exact same as unsigned long.
+dnl AC_DEFINEs TYPE_EQUIV_UINT32_UNSIGNED_LONG to 0 or 1.
+dnl This result is used in util/numeric/inttype_traits.h.
+dnl
+AC_DEFUN([FANG_TYPE_EQUIV_UINT32_UNSIGNED_LONG],
+[AC_CHECK_SIZEOF(uint32_t)
+AC_CHECK_SIZEOF(unsigned long)
+test "$ac_cv_sizeof_uint32_t" != 0 && \
+	test "$ac_cv_sizeof_unsigned_long" != 0 || \
+	AC_MSG_ERROR([uint32 and unsigned long are not both defined types!])
+AC_CACHE_CHECK([whether C++ considers uint32_t and unsigned long the same],
+	[fang_cv_type_equiv_uint32_unsigned_long],
+	[save_CPPFLAGS=$CPPFLAGS
+	CPPFLAGS="$CPPFLAGS -I $srcdir/src"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM([
+#ifdef	HAVE_STDINT_H
+#include <stdint.h>
+#endif
+#ifdef	HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
+#include "util/static_assert.h"
+#include "util/type_traits.h"
+		],[[
+        UTIL_STATIC_ASSERT((util::is_same<uint32_t, uint32_t>::value));
+        UTIL_STATIC_ASSERT((util::is_same<uint32_t, unsigned long>::value));
+		]]),
+		[fang_cv_type_equiv_uint32_unsigned_long=yes],
+		[fang_cv_type_equiv_uint32_unsigned_long=no]
+	)dnl AC_COMPILE_IFELSE
+
+	CPPFLAGS=$save_CPPFLAGS
+	]
+)dnl AC_CACHE_CHECK
+
+if test "$fang_cv_type_equiv_uint32_unsigned_long" = yes ; then
+	AC_DEFINE(TYPE_EQUIV_UINT32_UNSIGNED_LONG, 1,
+		[Define to 1 if uint32_t is identical to unsigned long (C++).])
+else
+	AC_DEFINE(TYPE_EQUIV_UINT32_UNSIGNED_LONG, 0,
+		[Define to 1 if uint32_t is identical to unsigned long (C++).])
 fi
 ])dnl AC_DEFUN
 

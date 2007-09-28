@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.161 2007/09/28 05:41:12 fang Exp $
+#	$Id: configure.ac,v 1.162 2007/09/28 18:33:58 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -394,6 +394,7 @@ AC_CHECK_SIZEOF(u_int64_t)
 FANG_TYPE_QUAD_T_ARITHMETIC
 FANG_TYPE_U_QUAD_T_ARITHMETIC
 FANG_TYPE_EQUIV_SIZE_T_UNSIGNED_LONG
+FANG_TYPE_EQUIV_UINT32_UNSIGNED_LONG
 AC_LANG_POP(C++)
 
 dnl test whether or not we're expecting 32b binari interface

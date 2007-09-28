@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-09-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-78:
+	  configure.ac, config/cc.m4: check whether or not 
+		unsigned long is equivalent to uint32_t.
+
+
 2007-09-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-76:

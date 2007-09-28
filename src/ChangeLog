@@ -5,6 +5,12 @@
 
 2007-09-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-78:
+	  int type-trait check, see util/ChangeLog.
+
+
+2007-09-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-77-merged-CHP-03-08:
 	  Merged CHP-03 branch.  Summary:
 	  CHP tree intermediate representation now carries up-link
