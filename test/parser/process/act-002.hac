@@ -1,0 +1,9 @@
+// "act-002.hac"
+// stolen from "act/tests/ns/10.act"
+
+import "act-002a.hac";
+
+baz::bar q;
+
+baz::foo f;
+

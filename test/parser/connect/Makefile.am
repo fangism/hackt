@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.30.6.1 2007/09/15 05:42:15 fang Exp $
+#	$Id: Makefile.am,v 1.30.6.2 2007/09/28 05:01:15 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,7 +15,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	080 081 082 \
 	090 \
 	138 \
-	act-006 act-007 act-009 act-010
+	act-006 act-007 act-009 act-010 act-011
 
 # The following tests now pass parsing since we've disabled static 
 # compile-time checks:
@@ -36,8 +36,7 @@ HACKT_PARSE_TEST_PASSES = \
 	110 111 112 113 114 114a 115 116 117 118 119 \
 	120 120a 120b 121 122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 135 136 137 139 \
-	act-001 act-002 act-003 act-005 act-008
-# pending: act-004
+	act-001 act-002 act-003 act-004 act-005 act-008 act-012
 
 HACKT_CREATE_TEST_PASSES = \
 	001 006 006b 007 \
@@ -54,7 +53,7 @@ HACKT_CREATE_TEST_PASSES = \
 	111 112 113 114a 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139 \
-	act-001 act-002 act-003 act-005
+	act-001 act-002 act-003 act-005 act-012
 
 HACKT_CREATE_TEST_FAILURES = \
 	020 020a 023 023a 024 \
@@ -67,7 +66,7 @@ HACKT_CREATE_TEST_FAILURES = \
 	110 114 115 116 117 \
 	120 120a 120b 121 \
 	135 \
-	act-008
+	act-004 act-008
 
 HACKT_ALLOC_TEST_PASSES = \
 	001 006 006b 007 \
@@ -83,7 +82,7 @@ HACKT_ALLOC_TEST_PASSES = \
 	111 112 113 114a 118 119 \
 	122 123 124 125 126 127 128 129 \
 	130 131 132 133 134 136 137 139 \
-	act-001 act-002 act-003 act-005
+	act-001 act-002 act-003 act-005 act-012
 
 HACKT_ALLOC_TEST_FAILURES =
 

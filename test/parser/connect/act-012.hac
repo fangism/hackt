@@ -1,0 +1,13 @@
+// "act-012.hac"
+// stolen from "act/tests/other/5.act"
+
+defproc foo(bool a, b, c) {
+        prs { a & b -> c- }
+
+}
+
+
+bool x, y, z;
+foo f[4];
+
+f[2](x, y, z);

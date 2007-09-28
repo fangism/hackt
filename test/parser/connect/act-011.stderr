@@ -1,0 +1,2 @@
+Instance reference port connection must be scalar, but got a 1-dim reference!
+HALT: at least one error in port connection list.  [13:1..10]

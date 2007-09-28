@@ -1,0 +1,2 @@
+Error: definition `ick::foo' is not exported from its home namespace.
+concrete_type_ref: bad definition reference "foo"!  ERROR! [11:2..4]

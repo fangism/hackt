@@ -1,0 +1,13 @@
+// "035.hac"
+// copy-modified from "032.hac"
+// child namespace cannot see un-exported definition in parent namespace
+// expect fail
+
+namespace ick {
+
+defproc foo() { }
+
+namespace earth {
+	foo bar;
+}	// end namespace earth
+}	// end namespace ick

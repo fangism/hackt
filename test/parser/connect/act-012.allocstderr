@@ -1,0 +1,23 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	f[0]	foo<>
+	bool: 1,2,3
+2	(top)	-	2	f[1]	foo<>
+	bool: 4,5,6
+3	(top)	-	3	f[2]	foo<>
+	bool: 7,8,9
+4	(top)	-	4	f[3]	foo<>
+	bool: 10,11,12
+[global bool entries]
+1	(top)	-	1	f[0].a	
+2	(top)	-	2	f[0].b	
+3	(top)	-	3	f[0].c	
+4	(top)	-	4	f[1].a	
+5	(top)	-	5	f[1].b	
+6	(top)	-	6	f[1].c	
+7	(top)	-	7	x	
+8	(top)	-	8	y	
+9	(top)	-	9	z	
+10	(top)	-	10	f[3].a	
+11	(top)	-	11	f[3].b	
+12	(top)	-	12	f[3].c	
