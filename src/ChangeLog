@@ -5,6 +5,12 @@
 
 2007-09-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11:
+	  gramamr: prs lang construct is allowed to take optional parameters
+		e.g. prs <HVdd, GND> { ... }
+		For now, we ignore these parameters, just parse.
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-10:
 	  AST/parse_context,PRS: eliminated unnecessary call to
 		add_top_level_production_rules, was obsolete long ago

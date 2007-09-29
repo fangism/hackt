@@ -6,6 +6,7 @@ state	value
 #STATE#	(process-prototype) [5:1..35]
 #STATE#	{ [5:37]
 #STATE#	keyword: prs [6:1..3]
+#STATE#	(null) 
 #STATE#	{ [6:5]
 #STATE#	(prs-literal) [8:3]
 #STATE#	| [8:5]

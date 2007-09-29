@@ -5,6 +5,7 @@ state	value
 #STATE#	(null) 
 #STATE#	list<(root_item)>: (namespace-body: foo) ... [7:1--9:1]
 #STATE#	keyword: prs [11:1..3]
+#STATE#	(null) 
 #STATE#	{ [11:5]
 #STATE#	(prs-literal) [12:2..4]
 #STATE#	:: [12:5]

@@ -1,0 +1,9 @@
+// "prs-param-01.hac"
+
+bool V, G;
+prs <V> {
+}
+
+prs <V, G> {
+}
+
