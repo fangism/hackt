@@ -1,0 +1,10 @@
+// "053.hac"
+// copy-modified from "052.hac"
+// testing connections in subnamespaces
+// is this a good idea?
+
+namespace foo {
+bool x, y;
+x = y;
+}
+

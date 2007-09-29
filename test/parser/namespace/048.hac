@@ -1,0 +1,13 @@
+// "048.hac"
+// checking exporting of typedefs
+
+namespace foo {
+defproc bar(bool x) { }
+
+typedef	bar	ick;
+// ACT dies on typedef...
+}
+
+foo::ick Q;
+
+

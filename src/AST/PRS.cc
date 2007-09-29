@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.1 2007/09/20 17:19:33 fang Exp $
+	$Id: PRS.cc,v 1.25.2.2 2007/09/29 06:12:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -559,7 +559,7 @@ body::__check_rules(context& c, checked_rules_type& checked_rules) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
-	STACKTRACE("PRS::body::check_build()");
+	STACKTRACE_VERBOSE;
 if (rules) {
 	// check context's current open definition
 	const never_ptr<definition_base> d(c.get_current_open_definition());

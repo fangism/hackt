@@ -1,0 +1,11 @@
+// "057.hac"
+// copy-modified from "055.hac"
+// top-level instance accepted in hac, not in act
+
+pbool bar;
+namespace foo {
+bar = false;
+}
+
+// should this be allowed? assigning value out of namespace?
+

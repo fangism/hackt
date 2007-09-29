@@ -1,6 +1,6 @@
 /**
 	\file "AST/parse_options.h"
-	$Id: parse_options.h,v 1.1.2.1 2007/09/27 16:14:23 fang Exp $
+	$Id: parse_options.h,v 1.1.2.2 2007/09/29 06:13:00 fang Exp $
  */
 
 #ifndef	__HAC_AST_PARSE_OPTIONS_H__
@@ -18,18 +18,26 @@ struct parse_options {
 	/**
 		If set to true, all definitions are treated as exported, 
 		for backwards HAC compatibility.  
+		This flag however does NOT affect the lookup procedure.  
 		TODO: consider variants export-strict, export-all, export-warn.
-		Default false.
+		Default false.  (ACT-mode: false)
 	 */
 	bool		export_all;
+	/**
+		If true, allow instance-management statements 
+		in subnamespace from the global namespace.  
+		Default true.  (ACT-mode: false)
+	 */
+	bool		namespace_instances;
 
 	parse_options() : 
 #if REQUIRE_DEFINITION_EXPORT
-		export_all(false)
+		export_all(false),
 #else
-		export_all(true)
+		export_all(true),
 #endif
-		 { }
+		namespace_instances(true)
+		{ }
 
 };	// end class parse_options
 

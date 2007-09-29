@@ -7,3 +7,5 @@ open foo::bar -> bar;
   
 bar::bar x;
 
+// should fail: bar::bar doesn't exist
+

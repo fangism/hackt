@@ -1,0 +1,10 @@
+// "050.hac"
+// testing connections in subnamespaces
+// is this a good idea?
+
+bool x, y;
+
+namespace foo {
+x = y;
+}
+

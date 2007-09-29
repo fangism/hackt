@@ -1,0 +1,15 @@
+// "041.hac"
+// copy-modified from "040.hac"
+// prototype first, then definition
+
+namespace earth {
+defproc foo(bool x);
+
+export
+defproc foo(bool x) { }
+}
+
+earth::foo bar;
+
+// currently fails cflat: re-definition signature mismatch (wrong)
+

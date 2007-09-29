@@ -1,0 +1,2 @@
+Error: top-level CHP is only supported in the global namespace.
+	got: chp { ... } [5:1--7:1]

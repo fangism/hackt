@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.14.10.1 2007/09/27 05:18:01 fang Exp $
+	$Id: parse_context.h,v 1.14.10.2 2007/09/29 06:12:59 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -359,6 +359,15 @@ public:
 	never_ptr<const name_space>
 	get_current_namespace(void) const
 		{ return namespace_stack.top(); }
+
+	bool
+	in_nonglobal_namespace(void) const;
+
+	bool
+	reject_namespace_lang_body(void) const;
+
+	bool
+	reject_nonglobal_instance_management(void) const;
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);

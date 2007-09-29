@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.9.2.1 2007/09/20 17:19:33 fang Exp $
+	$Id: SPEC.cc,v 1.9.2.2 2007/09/29 06:12:55 fang Exp $
  */
 
 #include <iostream>
@@ -21,6 +21,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/param_expr.h"
+#include "Object/module.h"
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_registry.h"
 #include "Object/lang/PRS.h"	// for PRS::literal
@@ -174,6 +175,14 @@ body::check_build(context& c) const {
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	const never_ptr<user_def_chan> cd(d.is_a<user_def_chan>());
 	if (pd) {
+		// top-level module is OK too, but not subnamespace
+		if (c.reject_namespace_lang_body()) {
+			cerr << "Error: top-level SPEC is only supported "
+				"in the global namespace." << endl;
+			cerr << "\tgot: spec { ... } " << where(*this)
+				<< endl;
+			THROW_EXIT;
+		}
 		dss = &pd->get_spec_directives_set();
 	} else if (cd) {
 		dss = &cd->get_spec_directives_set();

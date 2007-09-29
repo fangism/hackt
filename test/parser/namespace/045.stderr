@@ -1,0 +1,2 @@
+Error: top-level PRS is only supported in the global namespace.
+	got: prs { ... } [5:1--7:1]

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.18.10.1 2007/09/20 17:19:32 fang Exp $
+	$Id: CHP.cc,v 1.18.10.2 2007/09/29 06:12:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -46,6 +46,7 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
+#include "Object/module.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
 
@@ -409,6 +410,7 @@ body::check_build(context& c) const {
 		NEVER_NULL(def);
 		const never_ptr<process_definition>
 			proc_def(def.is_a<process_definition>());
+#if 0
 		if (!proc_def) {
 			cerr << "Currently only support CHP in "
 				"process definition, bug Fang about it."
@@ -417,6 +419,18 @@ body::check_build(context& c) const {
 			return never_ptr<const object>(NULL);
 		}
 		// also reject if current namespace is not the global one
+#else
+		// check is no longer needed, since top-level is effectively
+		// a process_definition (module)
+		NEVER_NULL(proc_def);
+#endif
+		if (c.reject_namespace_lang_body()) {
+			cerr << "Error: top-level CHP is only supported "
+				"in the global namespace." << endl;
+			cerr << "\tgot: chp { ... } " << where(*this)
+				<< endl;
+			THROW_EXIT;
+		}
 		const_checked_iterator loop_iter(checked_stmts.begin());
 		const const_checked_iterator e(checked_stmts.end());
 		while (loop_iter != e) {

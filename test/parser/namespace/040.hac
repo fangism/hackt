@@ -1,0 +1,15 @@
+// "040.hac"
+// copy-modified from "032.hac"
+// prototype first, then definition
+
+defproc foo(bool x);
+
+export
+defproc foo(bool x) { }
+
+namespace earth {
+	foo bar;
+}
+
+// fails cflat: doesn't like instances in subnamespaces
+

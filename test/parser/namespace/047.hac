@@ -1,0 +1,9 @@
+// "047.hac"
+// expect fail: spec forbidden outside global namespace
+
+namespace foo {
+spec {
+
+}
+}	// end namespace foo
+

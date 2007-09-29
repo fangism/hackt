@@ -1,0 +1,9 @@
+// "045.hac"
+// expect fail: prs forbidden outside global namespace
+
+namespace foo {
+prs {
+
+}
+}	// end namespace foo
+

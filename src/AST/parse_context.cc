@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.17.10.1 2007/09/27 05:18:00 fang Exp $
+ 	$Id: parse_context.cc,v 1.17.10.2 2007/09/29 06:12:57 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -22,6 +22,7 @@
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/def/enum_datatype_def.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
@@ -56,6 +57,7 @@ using entity::process_definition;
 using entity::user_def_chan;
 using entity::user_def_datatype;
 using entity::pint_scalar;
+using entity::expr_dump_context;
 
 //=============================================================================
 // class context method definition
@@ -221,6 +223,59 @@ context::close_namespace(void) {
 	//	types, definitions...
 	namespace_stack.pop();
 	INVARIANT(get_current_namespace() == new_top);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if in a definition scope or not in global namespace.
+	NOTE: this is not affected by parse_opts.namespace_instances
+ */
+bool
+context::in_nonglobal_namespace(void) const {
+	const never_ptr<const definition_base> d(get_current_open_definition());
+	return
+#if SUPPORT_NESTED_DEFINITIONS
+		!d.is_a<const module>() ||	// is a non-module definition
+#else
+		d ||		// UNTESTED
+#endif
+		(get_current_namespace() != global_namespace);
+		// else in non-global namespace
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if not in a definition scope and not in global namespace.
+	NOTE: this is not affected by parse_opts.namespace_instances
+ */
+bool
+context::reject_namespace_lang_body(void) const {
+	const never_ptr<const definition_base> d(get_current_open_definition());
+	return
+#if SUPPORT_NESTED_DEFINITIONS
+		d.is_a<const module>() &&	// is a non-module definition
+#else
+		!d &&		// UNTESTED
+#endif
+		(get_current_namespace() != global_namespace);
+		// else in non-global namespace
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if trying to add an instance to a non-global namespace.
+	This check can be disabled by parse_opts.namespace_instances.
+ */
+bool
+context::reject_nonglobal_instance_management(void) const {
+	const bool ret =
+		!parse_opts.namespace_instances && in_nonglobal_namespace();
+	if (ret) {
+cerr << "Error: instance management statements are forbidden "
+	"in non-global namespaces outside definitions." << endl;
+cerr << "To allow them, pass -f namespace-instances to the compiler." << endl;
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -532,6 +587,11 @@ context::alias_definition(const never_ptr<const definition_base> d,
 void
 context::add_instance_management(
 		const count_ptr<const instance_management_base>& c) {
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
+		THROW_EXIT;
+	}
 	get_current_sequential_scope()->append_instance_management(c);
 }
 
@@ -545,6 +605,11 @@ void
 context::add_connection(
 		const count_ptr<const meta_instance_reference_connection>& c
 		) {
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
+		THROW_EXIT;
+	}
 	get_current_sequential_scope()->append_instance_management(c);
 }
 
@@ -560,6 +625,11 @@ void
 context::add_assignment(
 		const count_ptr<const param_expression_assignment>& c
 		) {
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
+		THROW_EXIT;
+	}
 	get_current_sequential_scope()->append_instance_management(c);
 }
 
@@ -768,6 +838,11 @@ context::add_instance(const token_identifier& id,
 		index_collection_item_ptr_type dim) {
 	typedef	placeholder_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		cerr << "got instance name: " << id << endl;
+		return return_type(NULL);
+	}
 	NEVER_NULL(current_fundamental_type);
 	const never_ptr<scopespace>
 		current_named_scope(get_current_named_scope());

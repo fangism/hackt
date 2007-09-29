@@ -1,0 +1,4 @@
+Error: instance management statements are forbidden in non-global namespaces outside definitions.
+To allow them, pass -f namespace-instances to the compiler.
+got: bar[1] = 3;
+From: "059.hac"
