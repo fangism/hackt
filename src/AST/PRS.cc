@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.2 2007/09/29 06:12:55 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3 2007/09/29 06:39:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -570,32 +570,20 @@ if (rules) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-#if SUPPORT_NESTED_DEFINITIONS
-		if (pd && !pd.is_a<module>())
-#else
-		if (pd)
-#endif
-		{
-			for ( ; i!=e; i++) {
-				excl_ptr<entity::PRS::rule>
-					xfer(i->exclusive_release());
-//				xfer->check();		// paranoia
-				pd->add_production_rule(xfer);
-			}
-		} else {
-			if (c.get_current_namespace() != c.global_namespace) {
-				cerr << "Error: top-level PRS is only supported "
-					"in the global namespace." << endl;
-				cerr << "\tgot: prs { ... } " << where(*this)
-					<< endl;
-				THROW_EXIT;
-			}
-			for ( ; i!=e; i++) {
-				excl_ptr<entity::PRS::rule>
-					xfer(i->exclusive_release());
-//				xfer->check();		// paranoia
-				c.add_top_level_production_rule(xfer);
-			}
+		if (c.reject_namespace_lang_body()) {
+			cerr << "Error: top-level PRS is only supported "
+				"in the global namespace." << endl;
+			cerr << "\tgot: prs { ... } " << where(*this)
+				<< endl;
+			THROW_EXIT;
+		}
+		for ( ; i!=e; i++) {
+			excl_ptr<entity::PRS::rule>
+				xfer(i->exclusive_release());
+//			xfer->check();		// paranoia
+			pd->add_production_rule(xfer);
+			// now also works on top-level module
+			// b/c it is also a process_definition.
 		}
 	} else {
 		cerr << "ERROR: at least one error in PRS body."

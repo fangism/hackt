@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.14.10.2 2007/09/29 06:12:59 fang Exp $
+	$Id: parse_context.h,v 1.14.10.3 2007/09/29 06:39:36 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -45,10 +45,6 @@ namespace entity {
 	class loop_scope;
 	class conditional_scope;
 	struct pint_tag;
-namespace PRS {
-	class rule;
-	class rule_set;
-}
 }	// end namespace entity
 
 namespace parser {
@@ -184,11 +180,6 @@ private:
 		Remember to push NULL initially.  
 	 */
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
-
-	/**
-		TODO: should just contain reference to module...
-	 */
-	entity::PRS::rule_set&			top_prs;
 
 	typedef	value_placeholder<pint_tag>	loop_var_placeholder_type;
 	typedef	list<count_ptr<const loop_var_placeholder_type> >
@@ -477,9 +468,6 @@ public:
 
 	void
 	commit_definition_arity(void);
-
-	void
-	add_top_level_production_rule(excl_ptr<entity::PRS::rule>&);
 
 private:
 	// TODO:

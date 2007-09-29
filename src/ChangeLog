@@ -5,6 +5,12 @@
 
 2007-09-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-10:
+	  AST/parse_context,PRS: eliminated unnecessary call to
+		add_top_level_production_rules, was obsolete long ago
+		when module was subtyped from process_definition.
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-09:
 	  AST/parse_options.h: namespace_instances -- switch to reject
 		non-global namespace instance mamagement.  
