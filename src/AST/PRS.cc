@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3 2007/09/29 06:39:34 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.1 2007/10/01 03:57:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -101,13 +101,13 @@ body_item::~body_item() { }
 // class literal method definitions
 
 literal::literal(inst_ref_expr* r, const expr_list* p) :
-		ref(r), params(p) {
+		ref(r), params(p), internal(false) {
 	NEVER_NULL(ref);
 	// params are optional
 }
 
 literal::literal(inst_ref_expr* r) :
-		ref(r), params(NULL) {
+		ref(r), params(NULL), internal(false) {
 	NEVER_NULL(ref);
 	// params are optional
 }
@@ -173,10 +173,18 @@ literal::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use different lookup for internal nodes
+ */
 prs_literal_ptr_type
 literal::check_prs_literal(const context& c) const {
+if (internal) {
+	FINISH_ME(Fang);
+	return prs_literal_ptr_type(NULL);
+} else {
 	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
 if (ret && params) {
+	// NOTE: parameters are not applicable to RHS or rules
 	if (params->size() > 2) {
 		cerr << "Error: rule literals can take a maximum of 2 "
 			"(width, length) parameters.  " << where(*params)
@@ -199,6 +207,24 @@ if (ret && params) {
 	copy(i, e, back_inserter(ret->get_params()));
 }
 	return ret;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called to check a literal on the RHS of a rule.
+	Special case needed when literal is marked as internal node, 
+	in which case this is a *declaration* of an internal node.  
+	Signal to caller that this is internal (flag the created IR literal).
+ */
+prs_literal_ptr_type
+literal::check_prs_rhs(const context& c) const {
+	if (internal) {
+		FINISH_ME(Fang);
+		return prs_literal_ptr_type(NULL);
+	} else {
+		return check_prs_literal(c);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -234,7 +260,7 @@ rule::rule(const attribute_list* atts, const expr* g,
 		const char_punctuation_type* a,
 		literal* rhs, const char_punctuation_type* d) :
 		body_item(), attribs(atts), guard(g), arrow(a),
-		r(rhs->release_reference()), dir(d) {
+		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
 }
 
@@ -273,7 +299,7 @@ rule::check_rule(context& c) const {
 		THROW_EXIT;
 	}
 //	g->check();	// paranoia
-	prs_literal_ptr_type o(r->check_prs_literal(c));
+	prs_literal_ptr_type o(r->check_prs_rhs(c));
 	if (!o) {
 		cerr << "ERROR in the output node reference at " <<
 			where(*r) << "." << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24 2007/09/13 20:37:15 fang Exp $
+	$Id: PRS.cc,v 1.24.6.1 2007/10/01 03:57:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1739,11 +1739,16 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class literal method definitions
 
-literal::literal() : prs_expr(), base_type(), params() { }
+literal::literal() : prs_expr(), base_type(), params()
+#if PRS_INTERNAL_NODES
+		, int_node()
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
-		prs_expr(), base_type(l), params() { }
+		prs_expr(), base_type(l), params()
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -1761,7 +1766,16 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
+#if PRS_INTERNAL_NODES
+	if (int_node) {
+		o << '@';
+		int_node->dump(o, c);
+	} else {
+		base_type::dump(o, c);
+	}
+#else
 	base_type::dump(o, c);
+#endif
 	directive_source::dump_params(params, o, c);
 	return o;
 }
@@ -1770,8 +1784,12 @@ literal::dump(ostream& o, const expr_dump_context& c) const {
 void
 literal::check(void) const {
 	STACKTRACE("literal::check()");
+#if PRS_INTERNAL_NODES
+	assert(var || int_node);
+#else
 	assert(var);
 	// var->check();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1803,6 +1821,12 @@ literal::negation_normalize(void) {
  */
 size_t
 literal::unroll_node(const unroll_context& c) const {
+#if PRS_INTERNAL_NODES
+if (int_node) {
+	FINISH_ME(Fang);
+	return 0;
+} else {
+#endif
 	const size_t ret = unroll_base(c);
 	if (!ret) {
 		base_type::dump(
@@ -1811,14 +1835,17 @@ literal::unroll_node(const unroll_context& c) const {
 			<< endl;
 	}
 	return ret;
+#if PRS_INTERNAL_NODES
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: check parameters!
 	Has code in common with pull_up/pull_dn...
 	\return the index of the new expression represented by this
 		literal reference, else 0 if error occurs.  
+	TODO: adjust for internal node
  */
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
@@ -1859,16 +1886,26 @@ if (!m.register_transient_object(this,
 void
 literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
-	write_object_base(m, o);
+	write_object_base(m, o);		// saves var
 	m.write_pointer_list(o, params);
+#if PRS_INTERNAL_NODES
+	if (!var) {
+		m.write_pointer(o, int_node);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
-	load_object_base(m, i);
+	load_object_base(m, i);			// restores var
 	m.read_pointer_list(i, params);
+#if PRS_INTERNAL_NODES
+	if (!var) {
+		m.read_pointer(i, int_node);
+	}
+#endif
 }
 
 //=============================================================================

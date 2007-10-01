@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.9 2006/06/26 01:46:19 fang Exp $
+	$Id: PRS_footprint.h,v 1.9.72.1 2007/10/01 03:57:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -17,6 +17,12 @@
 #include "util/list_vector.h"
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
+
+#include "Object/lang/PRS_base.h"	// just for PRS_INTERNAL_NODES switch
+#if PRS_INTERNAL_NODES
+#include <map>
+#include <string>
+#endif
 
 namespace HAC {
 struct cflat_options;
@@ -36,6 +42,10 @@ namespace PRS {
 using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
+#if PRS_INTERNAL_NODES
+using std::map;
+using std::string;
+#endif
 
 //=============================================================================
 /**
@@ -55,7 +65,15 @@ public:
 	typedef	footprint_expr_node		expr_node;
 	typedef	footprint_rule			rule;
 	typedef	footprint_macro			macro;
-
+#if PRS_INTERNAL_NODES
+	/**
+		This map keeps track of internal nodes defined in 
+		terms of one-sided guard expressions.  
+		String should be of the form: x[...]+.
+		Each pull may only be defined once.  
+	 */
+	typedef	map<string, expr_node>		internal_node_expr_map_type;
+#endif
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
@@ -67,6 +85,9 @@ private:
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
+#if PRS_INTERNAL_NODES
+	internal_node_expr_map_type		internal_node_expr_map;
+#endif
 
 public:
 	footprint();
@@ -94,6 +115,10 @@ private:
 	dump_macro(const macro&, ostream&, const node_pool_type&);
 
 public:
+#if PRS_INTERNAL_NODES
+	// a method for registering internal nodes and expressions
+#endif
+
 	// returns reference to new expression node
 	expr_node&
 	push_back_expr(const char, const size_t);

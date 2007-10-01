@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4 2007/09/29 19:44:29 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.1 2007/10/01 03:57:57 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -47,13 +47,18 @@ HACKT_PARSE_TEST_PASSES = \
 	subckt-02 subckt-03 \
 	subckt-04 subckt-05 \
 	subckt-06 \
-	internal-node-00 \
 	precharge-00 \
 	unstab-01 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-010
 # pending: act-008 act-009
+# in progress:
+#	internal-node-00 ...
+
+EXTRA_DIST += \
+	internal-node-00.hac internal-node-01.hac internal-node-02.hac \
+	internal-node-03.hac internal-node-04.hac
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \

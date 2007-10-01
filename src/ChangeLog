@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-09-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-01:
+	  Sub-branch: work on internal node support in PRS
+	  In this revision:
+		parser::PRS::literal has 'internal' flag.
+		Replaced non-code with finish-me.
+		parse::PRS::rule's RHS promoted to literal.
+		Object/lang/PRS.h: provisional support for internal node
+			currently disabled with flag PRS_INTERNAL_NODES.
+		Object/lang/PRS_footprint.h: proposing to maintain
+			unrolled internal node expr map here.
+	  TODO: instantiate node_placeholder class to be created, 
+		probably fake arrays, use different lookup in PRS context.
+	  Tentatively disabled lone internal-node test in parser/prs.
+
+
 2007-09-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11:

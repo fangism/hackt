@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC.h"
 	Common base class for spec-like directives, including PRS macros.  
-	$Id: directive_source.h,v 1.3 2006/04/12 08:53:16 fang Exp $
+	$Id: directive_source.h,v 1.3.84.1 2007/10/01 03:57:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_SOURCE_H__
@@ -11,7 +11,6 @@
 #include <string>
 #include <vector>
 #include "Object/lang/SPEC_fwd.h"
-#include "Object/lang/bool_literal.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"

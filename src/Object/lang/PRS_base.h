@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.8 2006/07/31 22:22:36 fang Exp $
+	$Id: PRS_base.h,v 1.8.68.1 2007/10/01 03:57:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -13,6 +13,14 @@
 #include "util/persistent.h"
 #include "util/boolean_types.h"
 #include "Object/inst/instance_pool_fwd.h"
+
+/**
+	Define to 1 to support internal nodes.
+	Goal: 1
+	Priority: med (for ACT compatbility)
+	Status: just begun
+**/
+#define	PRS_INTERNAL_NODES			0
 
 namespace HAC {
 namespace entity {
@@ -141,6 +149,7 @@ public:
 //=============================================================================
 /**
 	Abstract base class for a production rule.  
+	TODO: parent link for upward structure?
  */
 class rule : public persistent {
 public:
