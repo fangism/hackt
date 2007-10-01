@@ -7,6 +7,7 @@ state	value
 #STATE#	{ [11:1]
 #STATE#	list<(def-body-item)>: (instance-decl) ... [12:2--13:15]
 #STATE#	keyword: prs [16:2..4]
+#STATE#	(null)
 #STATE#	{ [16:6]
 #STATE#	(prs-literal) [17:3..5]
 #STATE#	+ [17:6]
