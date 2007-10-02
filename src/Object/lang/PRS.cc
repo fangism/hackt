@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.1 2007/10/01 03:57:49 fang Exp $
+	$Id: PRS.cc,v 1.24.6.2 2007/10/02 16:12:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1890,7 +1890,10 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer_list(o, params);
 #if PRS_INTERNAL_NODES
 	if (!var) {
+		NEVER_NULL(int_node);
 		m.write_pointer(o, int_node);
+	} else {
+		ALWAYS_NULL(int_node);
 	}
 #endif
 }
@@ -1904,6 +1907,7 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 #if PRS_INTERNAL_NODES
 	if (!var) {
 		m.read_pointer(i, int_node);
+		NEVER_NULL(int_node);
 	}
 #endif
 }
