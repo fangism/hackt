@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3.2.2 2007/10/02 00:17:50 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.3 2007/10/02 05:14:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -223,6 +223,20 @@ literal::check_prs_rhs(const context& c) const {
 	if (internal) {
 		FINISH_ME(Fang);
 // 1) restrict the ref to not be a member reference
+#if 0
+		const never_ptr<const index_expr>
+			ir(ref.is_a<const index_expr>());
+		const never_ptr<const id_expr>
+			dr(ref.is_a<const id_expr>());
+		if (ir) {
+			c.add_internal_node();
+		} else if (dr) {
+			c.add_internal_node(dr->get_id()->front());
+		} else {
+			cerr << "Unexpected prs-literal type: "
+				<< where(*ref) << endl;
+		}
+#endif
 		return prs_literal_ptr_type(NULL);
 	} else {
 		return check_prs_literal(c);

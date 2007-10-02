@@ -5,6 +5,15 @@
 
 2007-10-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-03:
+	  Added dummy_placeholder class for internal nodes meta-class, 
+		so that it may (soon) be registered with definition scopes.
+		Includes many TODO markers.
+	  TODO: to AST/parse_context, add add_internal_node, 
+		and construct basic instance-reference from it, 
+		add reference to entity::PRS::literal class.
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-02:
 	  Grammar: only allow member expressions in non-internal nodes
 		in rules' rhs.  Restrict literal references to scalars.

@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.23 2007/09/13 20:37:14 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.23.6.1 2007/10/02 05:14:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -65,6 +65,7 @@
 #define	ENUM_INSTANCE_PLACEHOLDER_TYPE_KEY			"enumplch"
 #define	DBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY			"dboolplh"
 #define	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY			"dintplch"
+#define	NODE_INSTANCE_PLACEHOLDER_TYPE_KEY			"nodeplch"
 #define	PBOOL_VALUE_PLACEHOLDER_TYPE_KEY			"pboolplh"
 #define	PINT_VALUE_PLACEHOLDER_TYPE_KEY				"pintplch"
 #define	PREAL_VALUE_PLACEHOLDER_TYPE_KEY			"prealplh"

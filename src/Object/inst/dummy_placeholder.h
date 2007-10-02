@@ -1,12 +1,12 @@
 /**
-	\file "Object/inst/instance_placeholder.h"
+	\file "Object/inst/dummy_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.5.48.1 2007/10/02 05:15:04 fang Exp $
+	$Id: dummy_placeholder.h,v 1.1.2.1 2007/10/02 05:15:02 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
-#define	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
+#ifndef	__HAC_OBJECT_INST_DUMMY_PLACEHOLDER_H__
+#define	__HAC_OBJECT_INST_DUMMY_PLACEHOLDER_H__
 
 #include "Object/inst/physical_instance_placeholder.h"	// for macros
 #include "Object/type/canonical_type_fwd.h"	// for conditional
@@ -14,36 +14,32 @@
 // #include "util/memory/chunk_map_pool_fwd.h"
 #include "util/inttypes.h"
 
-/**
-	Define to 1 if you want instance_arrays and scalars pool-allocated.  
-	Hasn't been applied to placeholders yet.
- */
-#define	POOL_ALLOCATE_INSTANCE_PLACEHOLDERS		1
-
 namespace HAC {
 namespace entity {
 using std::list;
 
+#if 0
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
 template <class> class instance_collection_pool_bundle;
+#endif
 
 //=============================================================================
-#define	INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE				\
+#define	DUMMY_PLACEHOLDER_TEMPLATE_SIGNATURE				\
 template <class Tag>
 
-#define	INSTANCE_PLACEHOLDER_CLASS					\
-instance_placeholder<Tag>
+#define	DUMMY_PLACEHOLDER_CLASS					\
+dummy_placeholder<Tag>
 
 /**
 	Interface to collection of instance aliases.  
 	This abstract base class is dimension-generic.  
  */
-INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
-class instance_placeholder :
+DUMMY_PLACEHOLDER_TEMPLATE_SIGNATURE
+class dummy_placeholder :
 	public class_traits<Tag>::instance_placeholder_parent_type
 {
 public:
@@ -52,11 +48,13 @@ private:
 	typedef	Tag					category_type;
 	typedef	typename traits_type::instance_placeholder_parent_type
 							parent_type;
-	typedef	INSTANCE_PLACEHOLDER_CLASS		this_type;
+	typedef	DUMMY_PLACEHOLDER_CLASS		this_type;
 	FRIEND_PERSISTENT_TRAITS
+//	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
+	typedef	typename traits_type::instance_collection_generic_type
+					instance_collection_generic_type;
+#if 0
 public:
-//	typedef	typename traits_type::type_ref_type	type_ref_type;
-	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	// placeholders need not know about instance aliases
 	typedef	typename traits_type::simple_meta_instance_reference_type
 					simple_meta_instance_reference_type;
@@ -69,9 +67,11 @@ public:
 	typedef	instance_collection_pool_bundle<Tag>
 					collection_pool_bundle_type;
 protected:
+#endif
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	typename parent_type::member_inst_ref_ptr_type
 						member_inst_ref_ptr_type;
+#if 0
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
@@ -86,24 +86,24 @@ protected:
 	 */
 	initial_instantiation_statement_ptr_type
 					initial_instantiation_statement_ptr;
+#endif
 protected:
-	instance_placeholder();
+	dummy_placeholder();
 
 	explicit
-	instance_placeholder(const size_t d) :
-		parent_type(d), 
-		initial_instantiation_statement_ptr(NULL) { }
+	dummy_placeholder(const size_t d) :
+		parent_type(d) { }
 
-	instance_placeholder(const this_type&, const footprint&);
+	dummy_placeholder(const this_type&, const footprint&);
 
 private:
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 
 public:
-	instance_placeholder(const scopespace& o, const string& n, 
+	dummy_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
-	~instance_placeholder();
+	~dummy_placeholder();
 
 	instance_collection_generic_type*
 	make_collection(footprint&) const;
@@ -129,9 +129,11 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_unresolved_type_ref(void) const;
 
+#if 0
 	// same thing, but covariant return type
 	type_ref_ptr_type
 	get_unresolved_type_ref_subtype(void) const;
+#endif
 
 	bool
 	must_be_collectibly_type_equivalent(const this_type&) const;
@@ -165,11 +167,11 @@ protected:
 	void
 	load_object(const persistent_object_manager&, istream&);
 
-};	// end class instance_placeholder
+};	// end class dummy_placeholder
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
+#endif	// __HAC_OBJECT_INST_DUMMY_PLACEHOLDER_H__
 
