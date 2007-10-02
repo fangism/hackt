@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.30.2.5.2.1 2007/10/01 03:57:55 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.30.2.5.2.2 2007/10/02 00:17:53 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -735,7 +735,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_inst_ref_expr>	type_completion_reference */
 %type	<_prs_literal>	prs_literal_base
 %type	<_prs_literal>	prs_literal
-%type	<_node_position>	prs_internal_optional;
+/* %type	<_node_position>	prs_internal_optional */
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
 %type	<_member_expr>	member_expr local_member_expr
@@ -2359,8 +2359,27 @@ prs_paren_expr
 
 /* internal node annotation, just parsed and ignored for now */
 prs_literal_base
+/***
 	: prs_internal_optional relative_member_index_expr
 		{ $$ = new PRS::literal($2); 
+		  if ($1) {
+			$$->mark_internal();
+			DELETE_TOKEN($1);
+		  }
+		}
+***/
+	: relative_member_index_expr
+		{ $$ = new PRS::literal($1); }
+/* internal node annotation, just parsed and ignored for now */
+	| '@' ID optional_dense_range_list
+		{ if ($3) {
+			$$ = new PRS::literal(
+				new index_expr($2, new range_list(*$3)));
+			DELETE_TOKEN($3);
+		  } else {
+			$$ = new PRS::literal(
+				new id_expr(new qualified_id($2)));
+		  }
 		  if ($1) {
 			$$->mark_internal();
 			DELETE_TOKEN($1);
@@ -2374,11 +2393,12 @@ prs_literal
 		{ $$ = $1; $$->attach_parameters($2); }
 	;
 
-/* internal node annotation, just parsed and ignored for now */
+/***
 prs_internal_optional
 	: '@' { $$ = $1; }
 	| { $$ = NULL; }
 	;
+***/
 
 prs_unary_expr
 	/* TODO: process optional size arguments */

@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4.2.1 2007/10/01 03:57:57 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.2 2007/10/02 00:17:57 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -58,7 +58,7 @@ HACKT_PARSE_TEST_PASSES = \
 
 EXTRA_DIST += \
 	internal-node-00.hac internal-node-01.hac internal-node-02.hac \
-	internal-node-03.hac internal-node-04.hac
+	internal-node-03.hac internal-node-04.hac internal-node-05.hac
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \

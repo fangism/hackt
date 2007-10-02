@@ -13,9 +13,8 @@ state	value
 #STATE#	{ [8:6]
 in state #STATE#, possible rules are:
 	prs_or : prs_or '|' . prs_and  (#RULE#)
-	prs_internal_optional : .  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
 	'@' (shift)
 	'~' (shift)
-	ID (reduce)
+	ID (shift)

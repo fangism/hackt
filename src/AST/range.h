@@ -1,7 +1,7 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range.h,v 1.5 2007/07/18 23:28:24 fang Exp $
+	$Id: range.h,v 1.5.14.1 2007/10/02 00:17:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_range.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp
  */
@@ -37,9 +37,14 @@ protected:
 	const count_ptr<const expr>	lower;	///< inclusive lower bound
 	const count_ptr<const expr>	upper;	///< inclusive upper bound
 public:
+	struct copy_allocator;
+public:
 /// simple constructor for when range is just one integer expression
 	explicit
 	range(const expr* l);
+
+	explicit
+	range(const count_ptr<const expr>& l);
 /**
 	Full range constructor with min and max.  
  */

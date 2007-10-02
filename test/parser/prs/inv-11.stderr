@@ -12,8 +12,7 @@ state	value
 #STATE#	~ [5:3]
 in state #STATE#, possible rules are:
 	prs_not : '~' . prs_unary_expr  (#RULE#)
-	prs_internal_optional : .  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
 	'@' (shift)
-	ID (reduce)
+	ID (shift)

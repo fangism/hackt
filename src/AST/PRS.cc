@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3.2.1 2007/10/01 03:57:47 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.2 2007/10/02 00:17:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -186,6 +186,7 @@ if (internal) {
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
 	if (params->size() > 2) {
+		// TODO: update me to take a transistor type [ACT]
 		cerr << "Error: rule literals can take a maximum of 2 "
 			"(width, length) parameters.  " << where(*params)
 			<< endl;
@@ -221,6 +222,7 @@ prs_literal_ptr_type
 literal::check_prs_rhs(const context& c) const {
 	if (internal) {
 		FINISH_ME(Fang);
+// 1) restrict the ref to not be a member reference
 		return prs_literal_ptr_type(NULL);
 	} else {
 		return check_prs_literal(c);
