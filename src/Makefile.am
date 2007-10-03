@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.184.2.1.2.1 2007/10/02 05:14:56 fang Exp $
+#	$Id: Makefile.am,v 1.184.2.1.2.2 2007/10/03 06:43:48 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -502,6 +502,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 OBJECT_REF_CC_FILES = \
 	Object/ref/instance_reference.cc \
 	Object/ref/instance_reference_datatype.cc \
+	Object/ref/instance_reference_node.cc \
 	Object/expr/nonmeta_param_value_reference.cc \
 	Object/ref/reference_set.cc
 
@@ -512,6 +513,7 @@ OBJECT_REF_TCC_FILES = \
 	Object/ref/meta_instance_reference_subtypes.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
+	Object/ref/simple_meta_dummy_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
 	Object/ref/simple_meta_value_reference.tcc \
 	Object/ref/simple_nonmeta_value_reference.tcc \
@@ -536,6 +538,7 @@ OBJECT_REF_H_FILES = \
 	Object/ref/nonmeta_instance_reference_base.h \
 	Object/ref/nonmeta_instance_reference_subtypes.h \
 	Object/ref/data_nonmeta_instance_reference.h \
+	Object/ref/simple_meta_dummy_reference.h \
 	Object/ref/simple_meta_instance_reference.h \
 	Object/ref/simple_meta_indexed_reference_base.h \
 	Object/ref/simple_meta_value_reference.h \

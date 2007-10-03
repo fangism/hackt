@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: node_instance_collection.cc,v 1.1.2.1 2007/10/02 05:15:06 fang Exp $
+	$Id: node_instance_collection.cc,v 1.1.2.2 2007/10/03 06:43:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NODE_INSTANCE_COLLECTION_CC__
@@ -69,7 +69,7 @@ namespace entity {
 //=============================================================================
 // explicit instantiations
 
-// template class instance_placeholder<node_tag>;
+template class dummy_placeholder<node_tag>;
 // template class state_instance<node_tag>;
 // template class instance_pool<state_instance<node_tag> >;
 // template class instance_alias_info<node_tag>;

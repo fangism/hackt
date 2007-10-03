@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.12 2006/10/18 18:38:18 fang Exp $
+	$Id: process_definition.h,v 1.12.52.1 2007/10/03 06:43:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -110,6 +110,8 @@ public:
 
 	void
 	compact_prs_references(void);
+
+	using scopespace::add_node_instance_idempotent;
 
 	void
 	add_concurrent_chp_body(const count_ptr<CHP::action>&);

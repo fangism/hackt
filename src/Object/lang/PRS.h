@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.19.6.1 2007/10/01 03:57:50 fang Exp $
+	$Id: PRS.h,v 1.19.6.2 2007/10/03 06:44:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -38,6 +38,10 @@ using std::string;
  */
 typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
 typedef	directive_source_params_type		literal_params_type;
+#if PRS_INTERNAL_NODES
+typedef	count_ptr<const simple_node_meta_instance_reference>
+						node_literal_ptr_type;
+#endif
 
 //=============================================================================
 /**
@@ -65,13 +69,18 @@ private:
 		bool_literal's reference pointer.
 		Really, they could go in a tagged union.  
 	 */
-	// node_literal_ptr_type		int_node;
+	node_literal_ptr_type			int_node;
 #endif
 public:
 	literal();
 
 	explicit
 	literal(const literal_base_ptr_type&);
+
+#if PRS_INTERNAL_NODES
+	explicit
+	literal(const node_literal_ptr_type&);
+#endif
 
 	// default copy constructor (is copy-constructible)
 

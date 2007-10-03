@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3.2.3 2007/10/02 05:14:56 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.4 2007/10/03 06:43:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -20,6 +20,7 @@
 #include "AST/reference.h"	// for id_expr
 #include "AST/expr_list.h"	// for attributes
 #include "AST/range.h"
+#include "AST/range_list.h"
 #include "AST/token.h"
 #include "AST/token_char.h"
 #include "AST/token_string.h"
@@ -33,6 +34,7 @@
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
 #include "Object/expr/meta_range_expr.h"
+#include "Object/expr/meta_index_list.h"
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
@@ -46,6 +48,9 @@
 #if SUPPORT_NESTED_DEFINITIONS
 #include "Object/module.h"
 #endif
+#include "Object/ref/simple_meta_dummy_reference.h"
+#include "Object/ref/references_fwd.h"
+#include "Object/traits/node_traits.h"
 
 #include "common/TODO.h"
 
@@ -178,11 +183,51 @@ literal::rightmost(void) const {
  */
 prs_literal_ptr_type
 literal::check_prs_literal(const context& c) const {
+	STACKTRACE_VERBOSE;
+	prs_literal_ptr_type ret;
 if (internal) {
-	FINISH_ME(Fang);
-	return prs_literal_ptr_type(NULL);
+	STACKTRACE_INDENT_PRINT("internal node setup" << endl);
+	const never_ptr<const index_expr>
+		ir(ref.is_a<const index_expr>());
+	never_ptr<const id_expr> dr;
+	never_ptr<const range_list> ind;
+	if (ir) {
+		const never_ptr<const inst_ref_expr> b(ir->get_base());
+		dr = b.is_a<const id_expr>();
+		NEVER_NULL(b && dr);
+		ind = ir->get_indices();
+	} else {
+		dr = ref.is_a<const id_expr>();
+		if (!dr) {
+			cerr << "Unexpected prs-literal type: "
+				<< where(*ref) << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+	}
+	const token_identifier& id(*dr->get_id()->front());
+	const never_ptr<const node_instance_placeholder>
+		np(c.lookup_internal_node(id));
+	if (!np) {
+		cerr << "Internal node `" << id << "\' not found." << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	const count_ptr<entity::simple_node_meta_instance_reference>
+		nref(new entity::simple_node_meta_instance_reference(np));
+	if (ind) {
+		const range_list::checked_meta_indices_type
+			checked_indices(ind->check_meta_indices(c));
+		if (!checked_indices) {
+			cerr << "Error in internal node reference." << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+		nref->attach_indices(checked_indices);
+	}
+	ret = prs_literal_ptr_type(new entity::PRS::literal(
+		nref.as_a<const entity::simple_node_meta_instance_reference>()));
+	NEVER_NULL(ret);
 } else {
-	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
+	ret = ref->check_prs_literal(c);
+}
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
 	if (params->size() > 2) {
@@ -208,8 +253,7 @@ if (ret && params) {
 	copy(i, e, back_inserter(ret->get_params()));
 }
 	return ret;
-}
-}
+}	// end literal::check_prs_literal
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -219,28 +263,41 @@ if (ret && params) {
 	Signal to caller that this is internal (flag the created IR literal).
  */
 prs_literal_ptr_type
-literal::check_prs_rhs(const context& c) const {
+literal::check_prs_rhs(context& c) const {
+	STACKTRACE_VERBOSE;
 	if (internal) {
-		FINISH_ME(Fang);
-// 1) restrict the ref to not be a member reference
-#if 0
+		STACKTRACE_INDENT_PRINT("internal node setup" << endl);
+		// inject an implicit internal node declaration
 		const never_ptr<const index_expr>
 			ir(ref.is_a<const index_expr>());
 		const never_ptr<const id_expr>
 			dr(ref.is_a<const id_expr>());
+		never_ptr<const node_instance_placeholder> nd;
 		if (ir) {
-			c.add_internal_node();
+			// extract base and index dimensions
+			const never_ptr<const inst_ref_expr> b(ir->get_base());
+			const never_ptr<const id_expr>
+				bd(b.is_a<const id_expr>());
+			NEVER_NULL(b && bd);
+			nd = c.add_internal_node(*bd->get_id()->front(), 
+				ir->implicit_dimensions());
+			// only care about dimensions, not indices
 		} else if (dr) {
-			c.add_internal_node(dr->get_id()->front());
+			// is a scalar
+			nd = c.add_internal_node(*dr->get_id()->front(), 0);
 		} else {
 			cerr << "Unexpected prs-literal type: "
 				<< where(*ref) << endl;
+			return prs_literal_ptr_type(NULL);
 		}
-#endif
-		return prs_literal_ptr_type(NULL);
-	} else {
-		return check_prs_literal(c);
+		if (!nd) {
+			cerr << "Error implicitly declaring internal node.  "
+				<< where(*ref) << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+		// now return to normal lookup
 	}
+	return check_prs_literal(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,9 +1,9 @@
-// "internal-node-02.hac"
-// testing grammatic extensions to language
+// "internal-node-07.hac"
+// copy-modified from "internal-node-02.hac"
 // expect fail: internal pull can only be defined once
 // i.e. no OR-disjunction.
 
-defproc bogus(bool x, y, z, w) {
+defproc bogus(bool x, y, w) {
 prs {
 	x		-> @z-
 	y		-> @z-

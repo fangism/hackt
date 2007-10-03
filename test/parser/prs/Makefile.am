@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4.2.2 2007/10/02 00:17:57 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.3 2007/10/03 06:44:27 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	loop-05 loop-07 \
 	cond-01 \
 	top-level-02 top-level-03 \
-	precharge-01
+	precharge-01 \
+	internal-node-01 internal-node-02 internal-node-03
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -57,8 +58,14 @@ HACKT_PARSE_TEST_PASSES = \
 #	internal-node-00 ...
 
 EXTRA_DIST += \
-	internal-node-00.hac internal-node-01.hac internal-node-02.hac \
-	internal-node-03.hac internal-node-04.hac internal-node-05.hac
+	internal-node-00.hac internal-node-07.hac \
+	internal-node-04.hac internal-node-05.hac \
+	internal-node-06.hac
+# -05 needs yacc/bison stderr
+
+
+# pending create tests on: internal-node-*
+# create-fail: internal-node-07
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \

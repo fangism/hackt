@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.6 2006/08/08 05:46:36 fang Exp $
+	$Id: bool_literal.cc,v 1.6.68.1 2007/10/03 06:44:08 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -106,6 +106,9 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_literal::collect_transient_info_base(persistent_object_manager& m) const {
+#if PRS_INTERNAL_NODES
+	if (var)
+#endif
 	var->collect_transient_info(m);
 }
 

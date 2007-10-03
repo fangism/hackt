@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.2 2007/10/02 16:12:43 fang Exp $
+	$Id: PRS.cc,v 1.24.6.3 2007/10/03 06:44:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -21,6 +21,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
+#if PRS_INTERNAL_NODES
+#include "Object/traits/node_traits.h"
+#include "Object/ref/simple_meta_dummy_reference.h"
+#endif
 
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
@@ -1748,7 +1752,16 @@ literal::literal() : prs_expr(), base_type(), params()
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
 		prs_expr(), base_type(l), params()
+#if PRS_INTERNAL_NODES
+		, int_node()
+#endif
 		{ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_INTERNAL_NODES
+literal::literal(const node_literal_ptr_type& l) :
+		prs_expr(), base_type(), params(), int_node(l) { }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -1799,8 +1812,17 @@ literal::check(void) const {
 prs_expr_ptr_type
 literal::negate(void) const {
 	STACKTRACE("literal::negate()");
+#if PRS_INTERNAL_NODES
+if (int_node) {
+	FINISH_ME_EXIT(Fang);
+	return prs_expr_ptr_type(NULL);
+} else {
+#endif
 	return prs_expr_ptr_type(new not_expr(
 		prs_expr_ptr_type(new literal(*this))));
+#if PRS_INTERNAL_NODES
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1810,7 +1832,16 @@ literal::negate(void) const {
 prs_expr_ptr_type
 literal::negation_normalize(void) {
 	STACKTRACE("literal::negation_normalize()");
+#if PRS_INTERNAL_NODES
+if (int_node) {
+	FINISH_ME_EXIT(Fang);
 	return prs_expr_ptr_type(NULL);
+} else {
+#endif
+	return prs_expr_ptr_type(NULL);
+#if PRS_INTERNAL_NODES
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1824,6 +1855,7 @@ literal::unroll_node(const unroll_context& c) const {
 #if PRS_INTERNAL_NODES
 if (int_node) {
 	FINISH_ME(Fang);
+	// TODO: expression lookup
 	return 0;
 } else {
 #endif
@@ -1850,6 +1882,12 @@ if (int_node) {
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+#if PRS_INTERNAL_NODES
+if (int_node) {
+	FINISH_ME(Fang);
+	return 0;
+} else {
+#endif
 	const size_t node_index = unroll_node(c);
 	if (!node_index) {
 		// already have error message
@@ -1867,6 +1905,9 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 	}
 	INVARIANT(new_expr.get_params().size() <= 2);
 	return pfp.current_expr_index();
+#if PRS_INTERNAL_NODES
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1879,6 +1920,11 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
 	m.collect_pointer_list(params);
+#if PRS_INTERNAL_NODES
+	if (!var) {
+		int_node->collect_transient_info(m);
+	}
+#endif
 }
 }
 
@@ -1893,7 +1939,7 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 		NEVER_NULL(int_node);
 		m.write_pointer(o, int_node);
 	} else {
-		ALWAYS_NULL(int_node);
+		MUST_BE_NULL(int_node);
 	}
 #endif
 }

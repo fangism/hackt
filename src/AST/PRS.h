@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.6.6.1 2007/10/01 03:57:48 fang Exp $
+	$Id: PRS.h,v 1.6.6.2 2007/10/03 06:43:49 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -143,7 +143,7 @@ public:
 	check_prs_literal(const context&) const;
 
 	prs_literal_ptr_type
-	check_prs_rhs(const context&) const;
+	check_prs_rhs(context&) const;
 
 	// no need to override the following, because they all defer to
 	// the above two (pure virtual) methods.  

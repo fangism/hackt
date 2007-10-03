@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.28 2007/08/15 02:48:50 fang Exp $
+	$Id: expr.cc,v 1.28.10.1 2007/10/03 06:43:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1532,6 +1532,17 @@ index_expr::leftmost(void) const {
 line_position
 index_expr::rightmost(void) const {
 	return ranges->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the number of dimensions of the referenced instance's
+		collection, based on the number of indices, 
+		which assumes that this is a scalar reference.  
+ */
+size_t
+index_expr::implicit_dimensions(void) const {
+	return ranges ? ranges->size() : 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

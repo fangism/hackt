@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/node_traits.h"
 	Traits and policies for internal nodes.  
-	$Id: node_traits.h,v 1.1.2.1 2007/10/02 05:15:13 fang Exp $
+	$Id: node_traits.h,v 1.1.2.2 2007/10/03 06:44:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_NODE_TRAITS_H__
@@ -77,17 +77,19 @@ struct class_traits<node_tag> {
 	typedef	bool_value_type			data_value_type;
 	typedef	bool_expr			data_expr_base_type;
 	typedef	meta_traits_type::const_expr_type	const_expr_type;
-#endif
 	typedef	simple_nonmeta_instance_reference<node_tag>
 					simple_nonmeta_instance_reference_type;
-	typedef	simple_meta_instance_reference<node_tag>
+#endif
+	typedef	simple_node_meta_instance_reference
 					simple_meta_instance_reference_type;
+#if 0
 	typedef	meta_instance_reference<node_tag>
 				meta_instance_reference_parent_type;
 	typedef	data_nonmeta_instance_reference
 					nonmeta_instance_reference_base_type;
 	typedef	member_meta_instance_reference<node_tag>
 				member_simple_meta_instance_reference_type;
+#endif
 #if 0
 	typedef	packed_array_generic<pint_value_type,
 			never_ptr<instance_alias_info_type> >
