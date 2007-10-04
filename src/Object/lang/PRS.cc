@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.4 2007/10/04 05:52:19 fang Exp $
+	$Id: PRS.cc,v 1.24.6.5 2007/10/04 19:44:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -373,9 +373,6 @@ attribute::load_object(const persistent_object_manager& m, istream& i) {
 // class pull_base method definitions
 
 pull_base::pull_base() : rule(), guard(), output(), 
-#if PRS_INTERNAL_NODES
-		int_node_output(), 
-#endif
 		cmpl(false), 
 		attributes() { }
 
@@ -383,9 +380,6 @@ pull_base::pull_base() : rule(), guard(), output(),
 pull_base::pull_base(const prs_expr_ptr_type& g, 
 		const bool_literal& o, const bool c) :
 		rule(), guard(g), output(o), 
-#if PRS_INTERNAL_NODES
-		int_node_output(), 
-#endif
 		cmpl(c), attributes() {
 	NEVER_NULL(guard);
 }
@@ -394,33 +388,9 @@ pull_base::pull_base(const prs_expr_ptr_type& g,
 pull_base::pull_base(const prs_expr_ptr_type& g, 
 		const bool_literal& o, const rule_attribute_list_type& l) :
 		rule(), guard(g), output(o), 
-#if PRS_INTERNAL_NODES
-		int_node_output(), 
-#endif
 		cmpl(false), attributes(l) {
 	NEVER_NULL(guard);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
-pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const node_literal_ptr_type& o, const bool c) :
-		rule(), guard(g), output(), 
-		int_node_output(o), 
-		cmpl(c), attributes() {
-	NEVER_NULL(guard);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const node_literal_ptr_type& o, 
-		const rule_attribute_list_type& l) :
-		rule(), guard(g), output(), 
-		int_node_output(o), 
-		cmpl(false), attributes(l) {
-	NEVER_NULL(guard);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::~pull_base() { }
@@ -432,16 +402,7 @@ pull_base::dump_base(ostream& o, const rule_dump_context& c,
 	static const char* const norm_arrow = " -> ";
 	static const char* const comp_arrow = " => ";
 	guard->dump(o, c) << ((cmpl) ? comp_arrow : norm_arrow);
-#if PRS_INTERNAL_NODES
-if (output) {
-#endif
 	output.dump(o, c);
-#if PRS_INTERNAL_NODES
-} else {
-	INVARIANT(int_node_output);
-	int_node_output->dump(o << '@', expr_dump_context(c));
-}
-#endif
 	o << dir;
 	if (!attributes.empty()) {
 		o << " [";
@@ -487,13 +448,6 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		// dump context too?
 		return good_bool(false);
 	}
-#if PRS_INTERNAL_NODES
-if (int_node_output) {
-	FINISH_ME(Fang);
-	return good_bool(false);
-} else {
-	INVARIANT(output);
-#endif
 	const size_t output_node_index = output.unroll_base(c);
 	if (!output_node_index) {
 		output.dump(cerr <<
@@ -534,9 +488,6 @@ if (int_node_output) {
 		r.push_back(footprint_rule_attribute(key, att_vals));
 	}
 }
-#if PRS_INTERNAL_NODES
-}
-#endif
 	return good_bool(true);
 }
 
@@ -544,16 +495,7 @@ if (int_node_output) {
 void
 pull_base::collect_transient_info_base(persistent_object_manager& m) const {
 	guard->collect_transient_info(m);
-#if PRS_INTERNAL_NODES
-if (output) {
-#endif
 	output.collect_transient_info_base(m);
-#if PRS_INTERNAL_NODES
-} else {
-	NEVER_NULL(int_node_output);
-	int_node_output->collect_transient_info(m);
-}
-#endif
 	for_each(attributes.begin(), attributes.end(),
 		util::persistent_collector_ref(m)
 	);
@@ -565,11 +507,6 @@ pull_base::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	m.write_pointer(o, guard);
 	output.write_object_base(m, o);
-#if PRS_INTERNAL_NODES
-if (!output) {
-	m.write_pointer(o, int_node_output);
-}
-#endif
 	write_value(o, cmpl);
 	util::write_persistent_sequence(m, o, attributes);
 }
@@ -579,11 +516,6 @@ void
 pull_base::load_object_base(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
 	output.load_object_base(m, i);
-#if PRS_INTERNAL_NODES
-if (!output) {
-	m.read_pointer(i, int_node_output);
-}
-#endif
 	read_value(i, cmpl);
 	util::read_persistent_sequence_resize(m, i, attributes);
 }
@@ -604,20 +536,6 @@ pull_up::pull_up(const prs_expr_ptr_type& g, const bool_literal& o,
 		const rule_attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
-pull_up::pull_up(const prs_expr_ptr_type& g, 
-		const node_literal_ptr_type& o, const bool c) :
-		pull_base(g, o, c) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const prs_expr_ptr_type& g, const node_literal_ptr_type& o,
-		const rule_attribute_list_type& l) :
-		pull_base(g, o, l) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_up::~pull_up() { }
@@ -703,20 +621,6 @@ pull_dn::pull_dn(const prs_expr_ptr_type& g, const bool_literal& o,
 		const rule_attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
-pull_dn::pull_dn(const prs_expr_ptr_type& g, 
-		const node_literal_ptr_type& o, const bool c) :
-		pull_base(g, o, c) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const prs_expr_ptr_type& g, const node_literal_ptr_type& o,
-		const rule_attribute_list_type& l) :
-		pull_base(g, o, l) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_dn::~pull_dn() { }
@@ -1844,24 +1748,17 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class literal method definitions
 
-literal::literal() : prs_expr(), base_type(), params()
-#if PRS_INTERNAL_NODES
-		, int_node()
-#endif
-	{ }
+literal::literal() : prs_expr(), base_type(), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
 		prs_expr(), base_type(l), params()
-#if PRS_INTERNAL_NODES
-		, int_node()
-#endif
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRS_INTERNAL_NODES
 literal::literal(const node_literal_ptr_type& l) :
-		prs_expr(), base_type(), params(), int_node(l) { }
+		prs_expr(), base_type(l), params() { }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1880,16 +1777,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-#if PRS_INTERNAL_NODES
-	if (int_node) {
-		o << '@';
-		int_node->dump(o, c);
-	} else {
-		base_type::dump(o, c);
-	}
-#else
 	base_type::dump(o, c);
-#endif
 	directive_source::dump_params(params, o, c);
 	return o;
 }
@@ -1918,6 +1806,7 @@ if (int_node) {
 	FINISH_ME_EXIT(Fang);
 	return prs_expr_ptr_type(NULL);
 } else {
+	// is this acceptable for internal_nodes?
 #endif
 	return prs_expr_ptr_type(new not_expr(
 		prs_expr_ptr_type(new literal(*this))));
@@ -1986,6 +1875,7 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 #if PRS_INTERNAL_NODES
 if (int_node) {
 	FINISH_ME(Fang);
+	// TODO: expression lookup
 	return 0;
 } else {
 #endif
@@ -2021,11 +1911,6 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
 	m.collect_pointer_list(params);
-#if PRS_INTERNAL_NODES
-	if (!var) {
-		int_node->collect_transient_info(m);
-	}
-#endif
 }
 }
 
@@ -2035,14 +1920,6 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
 	write_object_base(m, o);		// saves var
 	m.write_pointer_list(o, params);
-#if PRS_INTERNAL_NODES
-	if (!var) {
-		NEVER_NULL(int_node);
-		m.write_pointer(o, int_node);
-	} else {
-		MUST_BE_NULL(int_node);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2051,12 +1928,6 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
 	load_object_base(m, i);			// restores var
 	m.read_pointer_list(i, params);
-#if PRS_INTERNAL_NODES
-	if (!var) {
-		m.read_pointer(i, int_node);
-		NEVER_NULL(int_node);
-	}
-#endif
 }
 
 //=============================================================================

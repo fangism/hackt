@@ -1,13 +1,12 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.19.6.3 2007/10/04 05:52:19 fang Exp $
+	$Id: PRS.h,v 1.19.6.4 2007/10/04 19:44:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
 #define	__HAC_OBJECT_LANG_PRS_H__
 
-#include "Object/ref/references_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/bool_literal.h"
@@ -38,10 +37,6 @@ using std::string;
  */
 typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
 typedef	directive_source_params_type		literal_params_type;
-#if PRS_INTERNAL_NODES
-typedef	count_ptr<const simple_node_meta_instance_reference>
-						node_literal_ptr_type;
-#endif
 
 //=============================================================================
 /**
@@ -63,14 +58,6 @@ private:
 		not the RHS of a rule.  
 	 */
 	params_type				params;
-#if PRS_INTERNAL_NODES
-	/**
-		This pointer is mutually exclusive with 
-		bool_literal's reference pointer.
-		Really, they could go in a tagged union.  
-	 */
-	node_literal_ptr_type			int_node;
-#endif
 public:
 	literal();
 
@@ -94,14 +81,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const { return dump(o, expr_dump_context()); }
-
-#if PRS_INTERNAL_NODES
-	bool
-	is_internal(void) const { return int_node; }
-
-	const node_literal_ptr_type&
-	internal_node(void) const { return int_node; }
-#endif
 
 	params_type&
 	get_params(void) { return params; }
@@ -195,15 +174,6 @@ protected:
 		Only used if RHS is not an internal node, mutually exclusive.  
 	 */
 	bool_literal			output;
-#if PRS_INTERNAL_NODES
-	/**
-		Represent an internal node.
-		This pointer is mutually exclusive with 
-		bool_literal's reference pointer.
-		Possibly fuse this into bool_literal?
-	 */
-	node_literal_ptr_type		int_node_output;
-#endif
 	/**
 		Whether or not complement is implicit.
 	 */
@@ -220,14 +190,6 @@ protected:
 
 	pull_base(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
-
-#if PRS_INTERNAL_NODES
-	pull_base(const prs_expr_ptr_type&, const node_literal_ptr_type&,
-		const bool);
-
-	pull_base(const prs_expr_ptr_type&, const node_literal_ptr_type&, 
-		const rule_attribute_list_type&);
-#endif
 
 public:
 	// because we go through an intermediate count_ptr, dtor needs to 
@@ -279,14 +241,6 @@ public:
 	pull_up(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
  
-#if PRS_INTERNAL_NODES
-	pull_up(const prs_expr_ptr_type&, const node_literal_ptr_type&, 
-		const bool);
-
-	pull_up(const prs_expr_ptr_type&, const node_literal_ptr_type&, 
-		const rule_attribute_list_type&);
-#endif
- 
 	~pull_up();
 
 	ostream&
@@ -322,14 +276,6 @@ public:
 
 	pull_dn(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
-
-#if PRS_INTERNAL_NODES
-	pull_dn(const prs_expr_ptr_type&, const node_literal_ptr_type&, 
-		const bool);
-
-	pull_dn(const prs_expr_ptr_type&, const node_literal_ptr_type&, 
-		const rule_attribute_list_type&);
-#endif
 
 	~pull_dn();
 

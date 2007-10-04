@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4.84.1 2007/10/04 05:52:20 fang Exp $
+	$Id: bool_literal.h,v 1.4.84.2 2007/10/04 19:44:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include "Object/ref/references_fwd.h"
+#include "Object/lang/PRS_base.h"		// for PRS_INTERNAL_NODES
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 #include "util/size_t.h"
@@ -35,6 +36,11 @@ namespace PRS {
 typedef	count_ptr<simple_bool_meta_instance_reference>	
 						bool_literal_base_ptr_type;
 
+#if PRS_INTERNAL_NODES
+typedef	count_ptr<const simple_node_meta_instance_reference>
+						node_literal_ptr_type;
+#endif
+
 //=============================================================================
 /**
 	Base class with minimal functionality for boolean literal reference.  
@@ -43,8 +49,20 @@ struct bool_literal {
 public:
 	typedef	std::default_vector<size_t>::type	group_type;
 protected:
-	bool_literal_base_ptr_type				var;
-
+	/**
+		The underlying reference to bool, must be scalar for 
+		production rule literals, but may be aggregate for
+		macros and spec directives.
+	 */
+	bool_literal_base_ptr_type			var;
+#if PRS_INTERNAL_NODES
+	/**
+		This pointer is mutually exclusive with the 
+		var bool-ref member.
+		Really, they could go in a tagged union.  
+	 */
+	node_literal_ptr_type			int_node;
+#endif
 public:
 	bool_literal();
 
@@ -54,6 +72,19 @@ public:
 
 	explicit
 	bool_literal(const bool_literal_base_ptr_type&);
+
+#if PRS_INTERNAL_NODES
+	explicit
+	bool_literal(const node_literal_ptr_type&);
+#endif
+
+#if PRS_INTERNAL_NODES
+	// copy-ctor
+	bool_literal(const bool_literal&);
+
+	bool_literal&
+	operator = (const bool_literal&);
+#endif
 
 	~bool_literal();
 
@@ -66,7 +97,18 @@ public:
 	ostream&
 	dump(ostream&, const PRS::expr_dump_context&) const;
 
+
+#if PRS_INTERNAL_NODES
+	bool
+	is_internal(void) const { return int_node; }
+
+	const node_literal_ptr_type&
+	internal_node(void) const { return int_node; }
+#endif
+
+#if 0
 	operator bool () const { return var; }
+#endif
 
 	size_t
 	unroll_base(const unroll_context&) const;

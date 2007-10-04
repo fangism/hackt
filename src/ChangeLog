@@ -3,7 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
-2007-10-02	David Fang		<fangism@users.sourceforge.net>
+2007-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-06:
+	  Moved internal_node pointer into bool_literal, to reduce code mess.
+		Macros and spec directives don't use internal-nodes, 
+		but this allows the possibility in the future.
+
+
+2007-10-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-05:
 	  AST/PRS.cc: check_rule supports internal_node r.h.s.

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.6.68.2 2007/10/04 05:52:20 fang Exp $
+	$Id: bool_literal.cc,v 1.6.68.3 2007/10/04 19:44:54 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -11,6 +11,10 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/lang/PRS.h"	// for PRS::literal, PRS::expr_dump_context
 #include "Object/expr/expr_dump_context.h"
+#if PRS_INTERNAL_NODES
+#include "Object/traits/node_traits.h"
+#include "Object/ref/simple_meta_dummy_reference.h"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.h"
@@ -21,22 +25,61 @@ namespace entity {
 //=============================================================================
 // class bool_literal method definitions
 
-bool_literal::bool_literal() : var(NULL) { }
+bool_literal::bool_literal() : var(NULL)
+#if PRS_INTERNAL_NODES
+		, int_node(NULL)
+#endif
+	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_literal::bool_literal(const bool_literal_base_ptr_type& l) : var(l) {
+bool_literal::bool_literal(const bool_literal_base_ptr_type& l) : var(l)
+#if PRS_INTERNAL_NODES
+		, int_node(NULL)
+#endif
+		{
 	NEVER_NULL(var);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_INTERNAL_NODES
+bool_literal::bool_literal(const node_literal_ptr_type& l) :
+		var(), int_node(l) {
+	NEVER_NULL(int_node);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::bool_literal(const count_ptr<const PRS::literal>& l) :
-		var(l->get_bool_var()) {
+		var(l->get_bool_var())
+#if PRS_INTERNAL_NODES
+		, int_node(l->internal_node())
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::bool_literal(const count_ptr<PRS::literal>& l) :
-		var(l->get_bool_var()) {
+		var(l->get_bool_var())
+#if PRS_INTERNAL_NODES
+		, int_node(l->internal_node())
+#endif
+		{
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_INTERNAL_NODES
+bool_literal::bool_literal(const bool_literal& b) :
+		var(b.var), int_node(b.int_node) {
+}
+
+
+bool_literal&
+bool_literal::operator = (const bool_literal& b) {
+	var = b.var;
+	int_node = b.int_node;
+	return *this;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::~bool_literal() { }
@@ -44,8 +87,16 @@ bool_literal::~bool_literal() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 bool_literal::dump(ostream& o, const expr_dump_context& c) const {
-	NEVER_NULL(var);
+#if PRS_INTERNAL_NODES
+if (var) {
+#endif
 	return var->dump(o, c);
+#if PRS_INTERNAL_NODES
+} else {
+	NEVER_NULL(int_node);
+	return int_node->dump(o << '@', c);
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -57,6 +108,7 @@ bool_literal::dump(ostream& o, const PRS::expr_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This does NOT print any error message.  
+	\pre this refers to bool variable, not an internal node.
 	\return ID number of the referenced scalar bool, or 0 if not found.  
  */
 size_t
@@ -81,6 +133,7 @@ bool_literal::unroll_base(const unroll_context& c) const {
 	Unroll resolves a collection of bool references (group) into
 	an array/set.  
 	\param g the resulting array/set.  
+	\pre this refers to bool variable, not an internal node.
 	\return bad to signal an error.
  */
 good_bool
@@ -110,9 +163,15 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 void
 bool_literal::collect_transient_info_base(persistent_object_manager& m) const {
 #if PRS_INTERNAL_NODES
-	if (var)
+if (var) {
 #endif
 	var->collect_transient_info(m);
+#if PRS_INTERNAL_NODES
+} else {
+	NEVER_NULL(int_node);
+	int_node->collect_transient_info(m);
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -120,6 +179,11 @@ void
 bool_literal::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	m.write_pointer(o, var);
+#if PRS_INTERNAL_NODES
+	if (!var) {
+		m.write_pointer(o, int_node);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,6 +191,11 @@ void
 bool_literal::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	m.read_pointer(i, var);
+#if PRS_INTERNAL_NODES
+	if (!var) {
+		m.read_pointer(i, int_node);
+	}
+#endif
 }
 
 //=============================================================================

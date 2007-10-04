@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3.2.5 2007/10/04 05:52:17 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.6 2007/10/04 19:44:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -379,22 +379,12 @@ rule::check_rule(context& c) const {
 		THROW_EXIT;
 	}
 	const bool arrow_type = (arrow->text[0] == '=');
-	count_ptr<entity::PRS::pull_base> ret;
-	if (o->is_internal()) {
-		ret = count_ptr<entity::PRS::pull_base>((dir->text[0] == '+') ?
-			AS_A(entity::PRS::pull_base*,
-				new entity::PRS::pull_up(g,
-					o->internal_node(), arrow_type)) :
-			AS_A(entity::PRS::pull_base*,
-				new entity::PRS::pull_dn(g,
-					o->internal_node(), arrow_type)));
-	} else {
-		ret = count_ptr<entity::PRS::pull_base>((dir->text[0] == '+') ?
+	const count_ptr<entity::PRS::pull_base>
+		ret((dir->text[0] == '+') ?
 			AS_A(entity::PRS::pull_base*,
 				new entity::PRS::pull_up(g, *o, arrow_type)) :
 			AS_A(entity::PRS::pull_base*,
 				new entity::PRS::pull_dn(g, *o, arrow_type)));
-	}
 	NEVER_NULL(ret);
 	if (attribs) {
 		entity::PRS::rule_attribute_list_type&
