@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.6.68.1 2007/10/03 06:44:08 fang Exp $
+	$Id: bool_literal.cc,v 1.6.68.2 2007/10/04 05:52:20 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -44,6 +44,7 @@ bool_literal::~bool_literal() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 bool_literal::dump(ostream& o, const expr_dump_context& c) const {
+	NEVER_NULL(var);
 	return var->dump(o, c);
 }
 
@@ -64,6 +65,7 @@ bool_literal::unroll_base(const unroll_context& c) const {
 			bool_instance_alias_collection_type;
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
+	NEVER_NULL(var);
 	if (var->unroll_references_packed(c, bc).bad) {
 		return 0;		// INVALID_NODE_INDEX
 	}
@@ -87,6 +89,7 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 			bool_instance_alias_collection_type;
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
+	NEVER_NULL(var);
 	if (var->unroll_references_packed(c, bc).bad) {
 		return good_bool(false);
 	}

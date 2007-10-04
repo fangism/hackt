@@ -2,6 +2,7 @@
 // copy-modified from "internal-node-02.hac"
 // expect fail: internal pull can only be defined once
 // i.e. no OR-disjunction.
+// catch during create phase
 
 defproc bogus(bool x, y, w) {
 prs {

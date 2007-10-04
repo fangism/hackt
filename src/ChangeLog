@@ -5,6 +5,18 @@
 
 2007-10-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-05:
+	  AST/PRS.cc: check_rule supports internal_node r.h.s.
+	  node_traits.h: added built-in type pointers for internal node.
+	  Object/lang/PRS.cc: pull_base supports internal node on r.h.s.
+	  Enabled a few compile-pass test cases.  
+	  Consider fusing pull_dn/pull_up into pull_base.  
+	  Consider fusing internal_node into bool_literal.
+	  TODO: register internal node expression maps.
+
+
+2007-10-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-04:
 	  Implemented dummy internal_node_reference class.
 	  AST/PRS.cc: literal::check_prs_literal, check_prs_rhs, 

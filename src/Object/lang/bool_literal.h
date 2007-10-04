@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4 2006/04/12 08:53:16 fang Exp $
+	$Id: bool_literal.h,v 1.4.84.1 2007/10/04 05:52:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -65,6 +65,8 @@ public:
 
 	ostream&
 	dump(ostream&, const PRS::expr_dump_context&) const;
+
+	operator bool () const { return var; }
 
 	size_t
 	unroll_base(const unroll_context&) const;

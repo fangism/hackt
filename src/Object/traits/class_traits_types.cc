@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.20 2007/08/28 04:54:18 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.20.8.1 2007/10/04 05:52:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -37,6 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/string_traits.h"
+#include "Object/traits/node_traits.h"
 
 #if DEBUG_TRAITS_CLASS_TRAITS_TYPES
 #define	ENABLE_STACKTRACE		DEBUG_TRAITS_CLASS_TRAITS_TYPES
@@ -185,6 +186,7 @@ static const int check = (assert(int_def_width_ref), assert(int_def_width), 0);
 // This problem doesn't occur on OSX/FreeBSD, AFAICT.
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const bool_traits::type_ref_ptr_type
 bool_traits::built_in_type_ptr(new data_type_reference(
 	never_ptr<const built_in_datatype_def>(&built_in_definition)));
@@ -202,6 +204,15 @@ int_traits::magic_int_type_ptr(data_type_reference::make_quick_int_type_ref(0));
 
 const count_ptr<const data_type_reference>&
 int_traits::nonmeta_data_type_ptr(magic_int_type_ptr);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const built_in_datatype_def
+node_traits::built_in_definition = built_in_datatype_def(
+	never_ptr<const name_space>(&built_in_namespace), "-node-");
+
+const node_traits::type_ref_ptr_type
+node_traits::built_in_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&built_in_definition)));
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const built_in_datatype_def

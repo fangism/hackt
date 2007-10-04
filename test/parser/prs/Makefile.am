@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4.2.3 2007/10/03 06:44:27 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.4 2007/10/04 05:52:25 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -52,13 +52,12 @@ HACKT_PARSE_TEST_PASSES = \
 	unstab-01 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
-	act-006 act-007 act-010
+	act-006 act-007 act-010 \
+	internal-node-00 internal-node-07
 # pending: act-008 act-009
 # in progress:
-#	internal-node-00 ...
 
 EXTRA_DIST += \
-	internal-node-00.hac internal-node-07.hac \
 	internal-node-04.hac internal-node-05.hac \
 	internal-node-06.hac
 # -05 needs yacc/bison stderr

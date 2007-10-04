@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/dummy_placeholder.tcc"
-	$Id: dummy_placeholder.tcc,v 1.1.2.1 2007/10/02 05:15:04 fang Exp $
+	$Id: dummy_placeholder.tcc,v 1.1.2.2 2007/10/04 05:52:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -158,8 +158,7 @@ DUMMY_PLACEHOLDER_CLASS::get_unresolved_type_ref(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_type_ref();
 #else
-	ICE_NEVER_CALL(cerr);
-	return count_ptr<const fundamental_type_reference>(NULL);
+	return traits_type::built_in_type_ptr;
 #endif
 }
 

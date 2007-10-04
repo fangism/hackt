@@ -1,7 +1,7 @@
 /**
 	\file "Object/traits/node_traits.h"
 	Traits and policies for internal nodes.  
-	$Id: node_traits.h,v 1.1.2.2 2007/10/03 06:44:23 fang Exp $
+	$Id: node_traits.h,v 1.1.2.3 2007/10/04 05:52:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_NODE_TRAITS_H__
@@ -108,7 +108,6 @@ struct class_traits<node_tag> {
 #endif
 	enum { print_cflat_leaf = false };	// maybe?
 
-#if 0
 	/**
 		Built-in static definition. 
 	 */
@@ -119,6 +118,7 @@ struct class_traits<node_tag> {
 		"Object/traits/class_traits_types.cc"
 	 */
 	static const type_ref_ptr_type		built_in_type_ptr;
+#if 0
 	static const type_ref_ptr_type&		nonmeta_data_type_ptr;
 #endif
 };	// end struct class_traits<bool_tag>
