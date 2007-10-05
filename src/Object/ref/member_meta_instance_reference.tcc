@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.25.6.1 2007/10/05 05:21:18 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.25.6.2 2007/10/05 17:51:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -273,7 +273,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::__unroll_resolve_copy(
 	}
 	if (this->array_indices) {
 		const count_ptr<const const_index_list>
-			resolved_indices(unroll_resolve_indices(c));
+			resolved_indices(this->unroll_resolve_indices(c));
 		if (!resolved_indices) {
 			cerr << "Error resolving meta indices." << endl;
 			return return_type(NULL);
