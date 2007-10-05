@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4.84.2 2007/10/04 19:44:54 fang Exp $
+	$Id: bool_literal.h,v 1.4.84.3 2007/10/05 05:21:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -32,8 +32,7 @@ namespace PRS {
 	class literal;
 }
 
-// const?
-typedef	count_ptr<simple_bool_meta_instance_reference>	
+typedef	count_ptr<const simple_bool_meta_instance_reference>	
 						bool_literal_base_ptr_type;
 
 #if PRS_INTERNAL_NODES
@@ -84,6 +83,12 @@ public:
 
 	bool_literal&
 	operator = (const bool_literal&);
+
+	bool
+	operator == (const bool_literal&) const;
+
+	bool
+	valid(void) const { return var || int_node; }
 #endif
 
 	~bool_literal();
@@ -97,14 +102,19 @@ public:
 	ostream&
 	dump(ostream&, const PRS::expr_dump_context&) const;
 
-
 #if PRS_INTERNAL_NODES
 	bool
 	is_internal(void) const { return int_node; }
 
 	const node_literal_ptr_type&
 	internal_node(void) const { return int_node; }
+
+	node_literal_ptr_type
+	unroll_node_reference(const unroll_context&) const;
 #endif
+
+	bool_literal
+	unroll_reference(const unroll_context&) const;
 
 #if 0
 	operator bool () const { return var; }

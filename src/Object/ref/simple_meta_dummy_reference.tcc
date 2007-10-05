@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.1.2.1 2007/10/03 06:44:22 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.1.2.2 2007/10/05 05:21:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -13,7 +13,7 @@
 
 #include "Object/ref/simple_meta_dummy_reference.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/expr/meta_index_list.h"
+#include "Object/expr/const_index_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/expr_visitor.h"
 #include "Object/common/dump_flags.h"
@@ -235,6 +235,44 @@ void
 SIMPLE_META_DUMMY_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
 	ICE_NEVER_CALL(cerr);
 //	v.visit(*this);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const SIMPLE_META_DUMMY_REFERENCE_CLASS>
+SIMPLE_META_DUMMY_REFERENCE_CLASS::__unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const this_type>& p) const {
+	typedef	count_ptr<this_type>	return_type;
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	if (this->array_indices) {
+		const count_ptr<const const_index_list>
+			resolved_indices(unroll_resolve_indices(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving meta indices." << endl;
+			return return_type(NULL);
+		}
+		const return_type
+			ret(new this_type(this->inst_collection_ref));
+		ret->attach_indices(resolved_indices);
+		return ret;
+	} else {
+		return p;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Covariant wrapper.  
+ */
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const meta_instance_reference_base>
+SIMPLE_META_DUMMY_REFERENCE_CLASS::unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const meta_instance_reference_base>& p) const {
+	return __unroll_resolve_copy(c, p.template is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

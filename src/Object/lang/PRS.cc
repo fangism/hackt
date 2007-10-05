@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.5 2007/10/04 19:44:53 fang Exp $
+	$Id: PRS.cc,v 1.24.6.6 2007/10/05 05:21:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -195,6 +195,22 @@ struct prs_expr::unroller {
 	operator () (const prs_expr_ptr_type& e) const {
 		NEVER_NULL(e);
 		return e->unroll(_context, _node_pool, _fpf);
+	}
+
+};	// end struct unroller
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct prs_expr::unroll_copier {
+	const unroll_context& _context;
+
+	unroll_copier(const unroll_context& c) : 
+		_context(c) {
+	}
+
+	prs_expr_ptr_type
+	operator () (const prs_expr_ptr_type& e) const {
+		NEVER_NULL(e);
+		return e->unroll_copy(_context, e);
 	}
 
 };	// end struct unroller
@@ -441,6 +457,36 @@ good_bool
 pull_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp, const bool dir) const {
 	STACKTRACE_VERBOSE;
+#if PRS_INTERNAL_NODES
+if (output.is_internal()) {
+	// we have an internal-node definition
+	// rule-attributes are ignored for internal-node definitions
+	if (attributes.size()) {
+		cerr <<
+	"Warning: internal node definitions ignore rule attributes.  "
+			<< endl;
+	}
+	// resolve indices (if any) to constant.
+	const node_literal_ptr_type
+		nref(output.unroll_node_reference(c));
+	if (!nref) {
+		cerr << "Error resolving internal node reference: ";
+		output.dump(cerr, rule_dump_context()) << endl;
+		return good_bool(false);
+	}
+	// resolve guard expression
+	const prs_expr_ptr_type ex(guard->unroll_copy(c, guard));
+	if (!ex) {
+		cerr << "Error unrolling internal node expression: ";
+		guard->dump(cerr) << endl;
+		return good_bool(false);
+	}
+	// register guard expression
+	FINISH_ME(Fang);
+	return good_bool(false);
+} else {
+	// rule is a standard pull-up/dn
+#endif
 	size_t guard_expr_index = guard->unroll(c, np, pfp);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling production rule: "
@@ -488,6 +534,9 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		r.push_back(footprint_rule_attribute(key, att_vals));
 	}
 }
+#if PRS_INTERNAL_NODES
+}
+#endif
 	return good_bool(true);
 }
 
@@ -1290,6 +1339,33 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves into an expression with resolved local references.  
+	\return copy of self resolved (may be same)
+ */
+prs_expr_ptr_type
+and_expr::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(e == this);
+	const count_ptr<this_type> ret(new this_type);
+	transform(begin(), end(), back_inserter(*ret), 
+		prs_expr::unroll_copier(c));
+	// find index of first error (1-indexed), if any
+	if (find(ret->begin(), ret->end(), prs_expr_ptr_type(NULL))
+			!= ret->end()) {
+		cerr << "Error resolving production rule expression: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	if (std::equal(begin(), end(), ret->begin())) {
+		return e;
+	} else {
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 and_expr::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
@@ -1397,6 +1473,14 @@ and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
 	return expr_loop_base::unroll_base(c, np, pfp, PRS_AND_EXPR_TYPE_ENUM);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+and_expr_loop::unroll_copy(const unroll_context&, 
+		const prs_expr_ptr_type&) const {
+	FINISH_ME(Fang);
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1513,6 +1597,33 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves into an expression with resolved local references.  
+	\return copy of self resolved (may be same)
+ */
+prs_expr_ptr_type
+or_expr::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(e == this);
+	const count_ptr<this_type> ret(new this_type);
+	transform(begin(), end(), back_inserter(*ret), 
+		prs_expr::unroll_copier(c));
+	// find index of first error (1-indexed), if any
+	if (find(ret->begin(), ret->end(), prs_expr_ptr_type(NULL))
+			!= ret->end()) {
+		cerr << "Error resolving production rule expression: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	if (std::equal(begin(), end(), ret->begin())) {
+		return e;
+	} else {
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 or_expr::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
@@ -1617,6 +1728,14 @@ or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
 	return expr_loop_base::unroll_base(c, np, pfp, PRS_OR_EXPR_TYPE_ENUM);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+or_expr_loop::unroll_copy(const unroll_context&, 
+		const prs_expr_ptr_type&) const {
+	FINISH_ME(Fang);
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1725,6 +1844,29 @@ not_expr::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves into an expression with resolved local references.  
+	\return copy of self resolved (may be same)
+ */
+prs_expr_ptr_type
+not_expr::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(e == this);
+	const prs_expr_ptr_type arg(var->unroll_copy(c, var));
+	if (!arg) {
+		cerr << "Error resolving production rule expression: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	if (arg == var) {
+		return e;
+	} else {
+		return prs_expr_ptr_type(new this_type(arg));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 not_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1749,6 +1891,11 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 // class literal method definitions
 
 literal::literal() : prs_expr(), base_type(), params() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+literal::literal(const bool_literal& l, const params_type& p) :
+		prs_expr(), base_type(l), params(p)
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
@@ -1899,6 +2046,35 @@ if (int_node) {
 #if PRS_INTERNAL_NODES
 }
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+literal::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	INVARIANT(e == this);
+	const bool_literal lref(unroll_reference(c));
+	if (!lref.valid()) {
+		cerr << "Error resolving prs literal: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	// copied from above
+	directive_base_params_type crpar;
+	literal_params_type rpar;
+	const size_t perr = directive_source::unroll_params(params, c, crpar);
+	if (perr) {
+		cerr << "Error resolving rule literal parameter " << perr
+			<< " in rule." << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	copy(crpar.begin(), crpar.end(), back_inserter(rpar));
+	if ((lref == *this) &&
+		std::equal(params.begin(), params.end(), rpar.begin())) {
+		return e;
+	} else {
+		return prs_expr_ptr_type(new literal(lref, rpar));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

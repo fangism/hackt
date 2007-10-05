@@ -5,6 +5,22 @@
 
 2007-10-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-07:
+	  meta_instance_reference_base: added unroll_resolve_copy
+		which is a collection-independent resolver that just
+		substitutes meta parameters and variables, 
+		resulting in constant-indexed references.  
+		Implemented in simple_meta- and member_meta-.  
+	  Object/lang/PRS_base.h: added/implement prs_expr::unroll_copy so
+		internal_node definitions may store pre-resolved
+		LHS expressions.  
+	  Object/lang/bool_literal.{h,cc}: unroll resolve routines, 
+		bool_literal_base_ptr_type now const.
+	  Object/ref/simple_meta_indexed_reference_base:
+		implemented unroll_resolve_indices (it's about time!)
+	  TODO: register internal node expression maps (pull_base::unroll).
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-06:
 	  Moved internal_node pointer into bool_literal, to reduce code mess.
 		Macros and spec directives don't use internal-nodes, 
@@ -20,7 +36,6 @@
 	  Enabled a few compile-pass test cases.  
 	  Consider fusing pull_dn/pull_up into pull_base.  
 	  Consider fusing internal_node into bool_literal.
-	  TODO: register internal node expression maps.
 
 
 2007-10-02	David Fang		<fangism@users.sourceforge.net>

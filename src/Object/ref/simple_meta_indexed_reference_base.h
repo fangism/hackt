@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/simple_meta_indexed_reference_base.h"
 	Base implementation class for meta-indexed references in HAC.  
-	$Id: simple_meta_indexed_reference_base.h,v 1.7 2007/01/21 05:59:35 fang Exp $
+	$Id: simple_meta_indexed_reference_base.h,v 1.7.36.1 2007/10/05 05:21:27 fang Exp $
 	This file was "Object/simple_meta_instance_reference_base.h"
 		in a previous life.  
 	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
@@ -30,6 +30,7 @@ class fundamental_type_reference;
 class instance_collection_base;
 struct expr_dump_context;
 class const_range_list;
+class unroll_context;
 using std::ostream;
 using std::istream;
 using util::good_bool;
@@ -86,6 +87,9 @@ virtual	good_bool
 
 	const indices_ptr_type&
 	get_indices(void) const { return array_indices; }
+
+	count_ptr<const const_index_list>
+	unroll_resolve_indices(const unroll_context&) const;
 
 protected:		// for children only
 	// persistent object IO helper methods

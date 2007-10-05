@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.21 2007/01/21 05:59:25 fang Exp $
+ 	$Id: instance_reference.cc,v 1.21.36.1 2007/10/05 05:21:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -215,6 +215,32 @@ simple_meta_indexed_reference_base::attach_indices(indices_ptr_arg_type i) {
 	**/
 	array_indices = i;
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Forwarded call to resolve indices (independent of collection).
+	\returns null of there are no indices, or unrolling fails.  
+	So don't use null to diagnose an error without checking
+		this->array_indices first.  
+ */
+count_ptr<const const_index_list>
+simple_meta_indexed_reference_base::unroll_resolve_indices(
+		const unroll_context& c) const {
+	typedef	count_ptr<const const_index_list>	return_type;
+if (array_indices) {
+	const return_type
+		resolved_indices(meta_index_list::unroll_resolve_indices(
+			array_indices, c));
+	if (!resolved_indices) {
+		cerr << "Error resolving meta indices: ";
+		dump_indices(cerr, expr_dump_context::default_value) << endl;
+		return return_type(NULL);
+	}
+	return resolved_indices;
+} else {
+	return return_type(NULL);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

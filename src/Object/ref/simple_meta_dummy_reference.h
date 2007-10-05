@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_dummy_reference.h,v 1.1.2.1 2007/10/03 06:44:16 fang Exp $
+	$Id: simple_meta_dummy_reference.h,v 1.1.2.2 2007/10/05 05:21:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_H__
@@ -118,6 +118,11 @@ public:
 	accept(nonmeta_expr_visitor&) const;
 #endif
 
+	count_ptr<const this_type>
+	__unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const this_type>&) const;
+
+	UNROLL_RESOLVE_COPY_REFERENCE_PROTO;
 
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 

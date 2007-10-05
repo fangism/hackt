@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.19.6.4 2007/10/04 19:44:54 fang Exp $
+	$Id: PRS.h,v 1.19.6.5 2007/10/05 05:21:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -69,6 +69,8 @@ public:
 	literal(const node_literal_ptr_type&);
 #endif
 
+	literal(const bool_literal&, const params_type&);
+
 	// default copy constructor (is copy-constructible)
 
 	~literal();
@@ -98,6 +100,7 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 protected:
 	size_t
@@ -544,6 +547,7 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 protected:
 	void
@@ -589,6 +593,7 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -623,6 +628,7 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 protected:
 	void
@@ -668,6 +674,7 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -706,6 +713,7 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)

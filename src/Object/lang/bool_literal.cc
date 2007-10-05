@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.6.68.3 2007/10/04 19:44:54 fang Exp $
+	$Id: bool_literal.cc,v 1.6.68.4 2007/10/05 05:21:08 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -49,6 +49,9 @@ bool_literal::bool_literal(const node_literal_ptr_type& l) :
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This seems redundant... gimme delegating ctors!
+ */
 bool_literal::bool_literal(const count_ptr<const PRS::literal>& l) :
 		var(l->get_bool_var())
 #if PRS_INTERNAL_NODES
@@ -72,12 +75,17 @@ bool_literal::bool_literal(const bool_literal& b) :
 		var(b.var), int_node(b.int_node) {
 }
 
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal&
 bool_literal::operator = (const bool_literal& b) {
 	var = b.var;
 	int_node = b.int_node;
 	return *this;
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+bool_literal::operator == (const bool_literal& r) const {
+	return (var == r.var) && (int_node == r.int_node);
 }
 #endif
 
@@ -126,6 +134,35 @@ bool_literal::unroll_base(const unroll_context& c) const {
 	const size_t node_index = bi.instance_index;
 	INVARIANT(node_index);
 	return node_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRS_INTERNAL_NODES
+node_literal_ptr_type
+bool_literal::unroll_node_reference(const unroll_context& c) const {
+	// substitute parameters for constants
+	NEVER_NULL(int_node);
+	return int_node->__unroll_resolve_copy(c, int_node);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Diagnostic?
+ */
+bool_literal
+bool_literal::unroll_reference(const unroll_context& c) const {
+#if PRS_INTERNAL_NODES
+if (var) {
+#endif
+	const count_ptr<const simple_bool_meta_instance_reference>	
+		p(var->__unroll_resolve_copy(c, var));
+	return bool_literal(p);
+#if PRS_INTERNAL_NODES
+} else {
+	return bool_literal(unroll_node_reference(c));
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
