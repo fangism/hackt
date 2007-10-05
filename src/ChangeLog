@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-08:
+	  Object/lang/PRS_footprint.{h,cc}: implemented internal node
+		expression map.  Map storage results in increase in 
+		footprint object binary size, 
+		so all affected create test dumps updated (~600).  
+	  Object/lang/PRS_enum.h: added PRS_NODE_TYPE_ENUM.  
+	  Next: negation of internal nodes on LHS needs to bind to the
+		literal, instead of a conventional NOT expression, so when it
+		appears on LHS the negatedness determines whether to 
+		lookup the pull-up or pull-dn internal node definition.
+		Adjustment may be kludgy...
+
+
 2007-10-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-07:

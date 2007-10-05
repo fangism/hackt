@@ -18,13 +18,13 @@ Persistent Object Manager text dump:
 	14	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	282
-	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	334
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
 	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	367
+	23	##ADDR##	footprnt	0	#HEAD#	#TAIL#	371
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

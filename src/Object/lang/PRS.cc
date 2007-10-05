@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.6 2007/10/05 05:21:07 fang Exp $
+	$Id: PRS.cc,v 1.24.6.7 2007/10/05 21:13:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -22,6 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #if PRS_INTERNAL_NODES
+#include <sstream>
 #include "Object/traits/node_traits.h"
 #include "Object/ref/simple_meta_dummy_reference.h"
 #endif
@@ -457,6 +458,14 @@ good_bool
 pull_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp, const bool dir) const {
 	STACKTRACE_VERBOSE;
+	// resolve guard expression
+	const size_t guard_expr_index = guard->unroll(c, np, pfp);
+	if (!guard_expr_index) {
+		this->dump(cerr << "Error unrolling production rule guard: "
+			<< endl << '\t', rule_dump_context()) << endl;
+		// dump context too?
+		return good_bool(false);
+	}
 #if PRS_INTERNAL_NODES
 if (output.is_internal()) {
 	// we have an internal-node definition
@@ -474,26 +483,14 @@ if (output.is_internal()) {
 		output.dump(cerr, rule_dump_context()) << endl;
 		return good_bool(false);
 	}
-	// resolve guard expression
-	const prs_expr_ptr_type ex(guard->unroll_copy(c, guard));
-	if (!ex) {
-		cerr << "Error unrolling internal node expression: ";
-		guard->dump(cerr) << endl;
-		return good_bool(false);
-	}
 	// register guard expression
-	FINISH_ME(Fang);
-	return good_bool(false);
+	std::ostringstream oss;
+	nref->dump(oss, entity::expr_dump_context::default_value);
+	oss << (dir ? '+' : '-');
+	return pfp.register_internal_node_expr(oss.str(), guard_expr_index);
 } else {
 	// rule is a standard pull-up/dn
 #endif
-	size_t guard_expr_index = guard->unroll(c, np, pfp);
-	if (!guard_expr_index) {
-		this->dump(cerr << "Error unrolling production rule: "
-			<< endl << '\t', rule_dump_context()) << endl;
-		// dump context too?
-		return good_bool(false);
-	}
 	const size_t output_node_index = output.unroll_base(c);
 	if (!output_node_index) {
 		output.dump(cerr <<
@@ -2019,11 +2016,30 @@ if (int_node) {
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	PRS::footprint::expr_node* new_expr = NULL;
 #if PRS_INTERNAL_NODES
 if (int_node) {
-	FINISH_ME(Fang);
-	// TODO: expression lookup
-	return 0;
+	const node_literal_ptr_type
+		nref(unroll_node_reference(c));
+	if (!nref) {
+		cerr << "Error resolving internal node reference: ";
+		dump(cerr, rule_dump_context()) << endl;
+		return 0;
+	}
+	std::ostringstream oss;
+	nref->dump(oss, entity::expr_dump_context::default_value);
+{	FINISH_ME(Fang); return 0;	}
+//	oss << (dir ? '+' : '-');	// direction flag???
+	size_t guard_index;
+	try {
+		guard_index = pfp.lookup_internal_node_expr(oss.str());
+	} catch (...) {
+		cerr << "Error: undefined internal node rule: "
+			<< oss.str() << endl;
+		return 0;
+	}
+	new_expr = &(pfp.push_back_expr(PRS_NODE_TYPE_ENUM, 1));
+	(*new_expr)[1] = guard_index;
 } else {
 #endif
 	const size_t node_index = unroll_node(c);
@@ -2031,21 +2047,21 @@ if (int_node) {
 		// already have error message
 		return 0;
 	}
-	PRS::footprint::expr_node&
-		new_expr(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
-	new_expr[1] = node_index;
+	new_expr = &(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
+	(*new_expr)[1] = node_index;
+#if PRS_INTERNAL_NODES
+}
+#endif
+	// should attributes even apply to internal nodes?
 	const size_t perr = directive_source::unroll_params(params, c,
-			new_expr.get_params());
+			new_expr->get_params());
 	if (perr) {
 		cerr << "Error resolving rule literal parameter " << perr
 			<< " in rule." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr.get_params().size() <= 2);
+	INVARIANT(new_expr->get_params().size() <= 2);
 	return pfp.current_expr_index();
-#if PRS_INTERNAL_NODES
-}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	25	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	340
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	344
 	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)

@@ -67,7 +67,7 @@ Persistent Object Manager text dump:
 	63	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	64	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	522
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	526
 	67	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
 	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	69	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
@@ -149,7 +149,7 @@ Persistent Object Manager text dump:
 	145	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
 	146	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	147	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	148	##ADDR##	footprnt	0	#HEAD#	#TAIL#	305
+	148	##ADDR##	footprnt	0	#HEAD#	#TAIL#	309
 	149	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	150	##ADDR##	procdefn	0	#HEAD#	#TAIL#	108
 	151	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
@@ -216,7 +216,7 @@ Persistent Object Manager text dump:
 	212	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	213	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	214	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	25
-	215	##ADDR##	footprnt	0	#HEAD#	#TAIL#	324
+	215	##ADDR##	footprnt	0	#HEAD#	#TAIL#	328
 	216	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	217	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	218	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
@@ -224,7 +224,7 @@ Persistent Object Manager text dump:
 	220	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	221	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	222	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	27
-	223	##ADDR##	footprnt	0	#HEAD#	#TAIL#	366
+	223	##ADDR##	footprnt	0	#HEAD#	#TAIL#	370
 	224	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	225	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	226	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
@@ -236,7 +236,7 @@ Persistent Object Manager text dump:
 	232	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	233	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	234	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	28
-	235	##ADDR##	footprnt	0	#HEAD#	#TAIL#	387
+	235	##ADDR##	footprnt	0	#HEAD#	#TAIL#	391
 	236	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	237	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	238	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	32
@@ -377,7 +377,7 @@ Persistent Object Manager text dump:
 	373	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	374	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	375	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	376	##ADDR##	footprnt	0	#HEAD#	#TAIL#	708
+	376	##ADDR##	footprnt	0	#HEAD#	#TAIL#	712
 	377	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	378	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	379	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20

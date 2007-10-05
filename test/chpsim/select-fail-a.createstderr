@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	6	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
+	8	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
 	9	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)

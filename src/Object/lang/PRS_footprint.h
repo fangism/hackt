@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.9.72.1 2007/10/01 03:57:53 fang Exp $
+	$Id: PRS_footprint.h,v 1.9.72.2 2007/10/05 21:13:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -43,6 +43,7 @@ using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
 #if PRS_INTERNAL_NODES
+using util::good_bool;
 using std::map;
 using std::string;
 #endif
@@ -71,8 +72,11 @@ public:
 		terms of one-sided guard expressions.  
 		String should be of the form: x[...]+.
 		Each pull may only be defined once.  
+		value_type is index into expression pool.  
+		TODO: Is there a way to store refrence object instead
+		of their string representations?  (yes, but not critical now)
 	 */
-	typedef	map<string, expr_node>		internal_node_expr_map_type;
+	typedef	map<string, size_t>		internal_node_expr_map_type;
 #endif
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
@@ -117,6 +121,11 @@ private:
 public:
 #if PRS_INTERNAL_NODES
 	// a method for registering internal nodes and expressions
+	good_bool
+	register_internal_node_expr(const string&, const size_t);
+
+	size_t
+	lookup_internal_node_expr(const string&) const;
 #endif
 
 	// returns reference to new expression node

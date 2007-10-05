@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	406
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	410
 	40	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
