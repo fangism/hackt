@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.15 2007/01/21 05:59:28 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.15.32.1 2007/10/06 22:11:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -156,6 +156,13 @@ virtual	COLLECT_ALIASES_PROTO = 0;
 	collect_subentries(const module&, entry_collection&) const
 
 virtual	COLLECT_SUBENTRIES_PROTO = 0;
+
+#define	UNROLL_RESOLVE_COPY_REFERENCE_PROTO				\
+	count_ptr<const meta_instance_reference_base>			\
+	unroll_resolve_copy(const unroll_context&, 			\
+		const count_ptr<const meta_instance_reference_base>&) const
+
+virtual	UNROLL_RESOLVE_COPY_REFERENCE_PROTO = 0;
 
 virtual	void
 	accept(nonmeta_expr_visitor&) const = 0;

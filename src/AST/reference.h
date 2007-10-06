@@ -1,7 +1,7 @@
 /**
 	\file "AST/reference.h"
 	Reference-related parser classes for HAC.
-	$Id: reference.h,v 1.2 2007/07/18 23:28:24 fang Exp $
+	$Id: reference.h,v 1.2.10.1 2007/10/06 22:10:30 fang Exp $
  */
 
 #ifndef __HAC_AST_REFERENCE_H__
@@ -139,6 +139,15 @@ public:
 
 	line_position
 	rightmost(void) const;
+
+	never_ptr<const inst_ref_expr>
+	get_base(void) const { return base; }
+
+	never_ptr<const range_list>
+	get_indices(void) const { return ranges; }
+
+	size_t
+	implicit_dimensions(void) const;
 
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;

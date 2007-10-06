@@ -1,0 +1,15 @@
+// "internal-node-01.hac"
+// testing grammatic extensions to language
+// z should not be found as a bool
+// expect pass
+
+defproc bogus(bool x, y, z, w) {
+prs {
+	x & y		-> @z-
+	~@z & w		-> w-
+}
+	z = w;		// error: z is not a bool
+}
+
+bogus A;
+

@@ -1,0 +1,162 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	158
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	7	##ADDR##	nodeplch	0	#HEAD#	#TAIL#	21
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	nodeplch	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
+	29	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	49	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	58	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	footprnt	0	#HEAD#	#TAIL#	604
+	63	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	406
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    bogus = process-definition (defined) bogus(
+        bool<> x
+        bool<> y
+        bool<> e[0..1]
+        bool<> w
+      )
+      In definition "bogus", we have: {
+      Instances:
+        e = bool<> bogus::e^1
+        en = bool<> bogus::en
+        q = -node-<> bogus::q^1
+        w = bool<> bogus::w
+        x = bool<> bogus::x
+        y = bool<> bogus::y
+        z = -node-<> bogus::z
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        bool<> e[0..1]
+        bool<> w
+        bool<> en
+      prs:
+        en -> @z-
+        (:i:[0..1]:
+          ~@z & e[$i] -> @q[$i]-
+        )
+        ~@q[0] & x -> w-
+        ~@q[1] & y -> w-
+        ~en -> w+
+      footprint: {
+        e = bool^1
+          {
+            [0] = bogus::e[0] (5) 
+            [1] = bogus::e[1] (6) 
+          }
+        en = bool^0 = bogus::en (4) 
+        w = bool^0 = bogus::w (3) 
+        x = bool^0 = bogus::x (1) 
+        y = bool^0 = bogus::y (2) 
+        Created state:
+        bool instance pool:
+        1	bogus::x
+        2	bogus::y
+        3	bogus::w
+        4	bogus::en
+        5	bogus::e[0]
+        6	bogus::e[1]
+        resolved prs:
+        (en & e[0]) & x -> w-
+        (en & e[1]) & y -> w-
+        ~en -> w+
+        internal node exprs: 
+        @q[0]- <- en & e[0]
+        @q[1]- <- en & e[1]
+        @z- <- en
+      }
+      }
+
+  Instances:
+    A = bogus<> A
+}
+
+footprint: {
+  A = process bogus<>^0 = A (1) (
+    x = bool^0 = A.x (1) 
+    y = bool^0 = A.y (2) 
+    e = bool^1
+      {
+        [0] = A.e[0] (3) 
+        [1] = A.e[1] (4) 
+      }
+    w = bool^0 = A.w (5) 
+  )
+  Created state:
+  process instance pool:
+  1	A
+  bool instance pool:
+  1	A.x
+  2	A.y
+  3	A.e[0]
+  4	A.e[1]
+  5	A.w
+}

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24 2007/09/13 20:37:15 fang Exp $
+	$Id: PRS.cc,v 1.24.2.1 2007/10/06 22:10:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -12,6 +12,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE		0
 
+#include <sstream>
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
@@ -21,6 +22,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/traits/node_traits.h"
+#include "Object/ref/simple_meta_dummy_reference.h"
 
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
@@ -191,6 +194,22 @@ struct prs_expr::unroller {
 	operator () (const prs_expr_ptr_type& e) const {
 		NEVER_NULL(e);
 		return e->unroll(_context, _node_pool, _fpf);
+	}
+
+};	// end struct unroller
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct prs_expr::unroll_copier {
+	const unroll_context& _context;
+
+	unroll_copier(const unroll_context& c) : 
+		_context(c) {
+	}
+
+	prs_expr_ptr_type
+	operator () (const prs_expr_ptr_type& e) const {
+		NEVER_NULL(e);
+		return e->unroll_copy(_context, e);
 	}
 
 };	// end struct unroller
@@ -368,20 +387,23 @@ attribute::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class pull_base method definitions
 
-pull_base::pull_base() : rule(), guard(), output(), cmpl(false), 
-	attributes() { }
+pull_base::pull_base() : rule(), guard(), output(), 
+		cmpl(false), 
+		attributes() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
 		const bool_literal& o, const bool c) :
-		rule(), guard(g), output(o), cmpl(c), attributes() {
+		rule(), guard(g), output(o), 
+		cmpl(c), attributes() {
 	NEVER_NULL(guard);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
 		const bool_literal& o, const rule_attribute_list_type& l) :
-		rule(), guard(g), output(o), cmpl(false), attributes(l) {
+		rule(), guard(g), output(o), 
+		cmpl(false), attributes(l) {
 	NEVER_NULL(guard);
 }
 
@@ -394,9 +416,9 @@ pull_base::dump_base(ostream& o, const rule_dump_context& c,
 		const char dir) const {
 	static const char* const norm_arrow = " -> ";
 	static const char* const comp_arrow = " => ";
-	output.dump(
-		guard->dump(o, c) <<
-			((cmpl) ? comp_arrow : norm_arrow), c) << dir;
+	guard->dump(o, c) << ((cmpl) ? comp_arrow : norm_arrow);
+	output.dump(o, c);
+	o << dir;
 	if (!attributes.empty()) {
 		o << " [";
 		typedef	rule_attribute_list_type::const_iterator
@@ -434,13 +456,37 @@ good_bool
 pull_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp, const bool dir) const {
 	STACKTRACE_VERBOSE;
-	size_t guard_expr_index = guard->unroll(c, np, pfp);
+	// resolve guard expression
+	const size_t guard_expr_index = guard->unroll(c, np, pfp);
 	if (!guard_expr_index) {
-		this->dump(cerr << "Error unrolling production rule: "
+		this->dump(cerr << "Error unrolling production rule guard: "
 			<< endl << '\t', rule_dump_context()) << endl;
 		// dump context too?
 		return good_bool(false);
 	}
+if (output.is_internal()) {
+	// we have an internal-node definition
+	// rule-attributes are ignored for internal-node definitions
+	if (attributes.size()) {
+		cerr <<
+	"Warning: internal node definitions ignore rule attributes.  "
+			<< endl;
+	}
+	// resolve indices (if any) to constant.
+	const node_literal_ptr_type
+		nref(output.unroll_node_reference(c));
+	if (!nref) {
+		cerr << "Error resolving internal node reference: ";
+		output.dump(cerr, rule_dump_context()) << endl;
+		return good_bool(false);
+	}
+	// register guard expression
+	std::ostringstream oss;
+	nref->dump_local(oss);
+	return pfp.register_internal_node_expr(
+		oss.str(), guard_expr_index, dir);
+} else {
+	// rule is a standard pull-up/dn
 	const size_t output_node_index = output.unroll_base(c);
 	if (!output_node_index) {
 		output.dump(cerr <<
@@ -481,6 +527,7 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		r.push_back(footprint_rule_attribute(key, att_vals));
 	}
 }
+}	// end if output.is_internal()
 	return good_bool(true);
 }
 
@@ -557,6 +604,7 @@ pull_up::expand_complement(void) {
 		cmpl = false;
 		return excl_ptr<rule>(
 			new pull_dn(guard->negate(), output, attributes));
+		// also do the same for internal_nodes?
 	} else	return excl_ptr<rule>(NULL);
 }
 
@@ -636,6 +684,7 @@ pull_dn::expand_complement(void) {
 		cmpl = false;
 		return excl_ptr<rule>(
 			new pull_up(guard->negate(), output, attributes));
+		// also do the same for internal_nodes?
 	} else	return excl_ptr<rule>(NULL);
 }
 
@@ -1281,6 +1330,33 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves into an expression with resolved local references.  
+	\return copy of self resolved (may be same)
+ */
+prs_expr_ptr_type
+and_expr::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(e == this);
+	const count_ptr<this_type> ret(new this_type);
+	transform(begin(), end(), back_inserter(*ret), 
+		prs_expr::unroll_copier(c));
+	// find index of first error (1-indexed), if any
+	if (find(ret->begin(), ret->end(), prs_expr_ptr_type(NULL))
+			!= ret->end()) {
+		cerr << "Error resolving production rule expression: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	if (std::equal(begin(), end(), ret->begin())) {
+		return e;
+	} else {
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 and_expr::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
@@ -1388,6 +1464,14 @@ and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
 	return expr_loop_base::unroll_base(c, np, pfp, PRS_AND_EXPR_TYPE_ENUM);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+and_expr_loop::unroll_copy(const unroll_context&, 
+		const prs_expr_ptr_type&) const {
+	FINISH_ME(Fang);
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1504,6 +1588,33 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves into an expression with resolved local references.  
+	\return copy of self resolved (may be same)
+ */
+prs_expr_ptr_type
+or_expr::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(e == this);
+	const count_ptr<this_type> ret(new this_type);
+	transform(begin(), end(), back_inserter(*ret), 
+		prs_expr::unroll_copier(c));
+	// find index of first error (1-indexed), if any
+	if (find(ret->begin(), ret->end(), prs_expr_ptr_type(NULL))
+			!= ret->end()) {
+		cerr << "Error resolving production rule expression: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	if (std::equal(begin(), end(), ret->begin())) {
+		return e;
+	} else {
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 or_expr::collect_transient_info_base(persistent_object_manager& m) const {
 	m.collect_pointer_list(*this);
@@ -1608,6 +1719,14 @@ or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
 	return expr_loop_base::unroll_base(c, np, pfp, PRS_OR_EXPR_TYPE_ENUM);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+or_expr_loop::unroll_copy(const unroll_context&, 
+		const prs_expr_ptr_type&) const {
+	FINISH_ME(Fang);
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1716,6 +1835,29 @@ not_expr::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves into an expression with resolved local references.  
+	\return copy of self resolved (may be same)
+ */
+prs_expr_ptr_type
+not_expr::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(e == this);
+	const prs_expr_ptr_type arg(var->unroll_copy(c, var));
+	if (!arg) {
+		cerr << "Error resolving production rule expression: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	if (arg == var) {
+		return e;
+	} else {
+		return prs_expr_ptr_type(new this_type(arg));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 not_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1742,7 +1884,17 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 literal::literal() : prs_expr(), base_type(), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+literal::literal(const bool_literal& l, const params_type& p) :
+		prs_expr(), base_type(l), params(p)
+		{ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::literal(const literal_base_ptr_type& l) :
+		prs_expr(), base_type(l), params()
+		{ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+literal::literal(const node_literal_ptr_type& l) :
 		prs_expr(), base_type(l), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1770,8 +1922,7 @@ literal::dump(ostream& o, const expr_dump_context& c) const {
 void
 literal::check(void) const {
 	STACKTRACE("literal::check()");
-	assert(var);
-	// var->check();
+	assert(var || int_node);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1781,8 +1932,15 @@ literal::check(void) const {
 prs_expr_ptr_type
 literal::negate(void) const {
 	STACKTRACE("literal::negate()");
+if (int_node) {
+	const count_ptr<this_type> ret(new this_type(*this));
+	ret->toggle_negate_node();	// retain everything else
+	return ret;
+} else {
+	// is this acceptable for internal_nodes?
 	return prs_expr_ptr_type(new not_expr(
-		prs_expr_ptr_type(new literal(*this))));
+		prs_expr_ptr_type(new this_type(*this))));
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1792,17 +1950,24 @@ literal::negate(void) const {
 prs_expr_ptr_type
 literal::negation_normalize(void) {
 	STACKTRACE("literal::negation_normalize()");
+if (int_node) {
+//	FINISH_ME_EXIT(Fang);
 	return prs_expr_ptr_type(NULL);
+} else {
+	return prs_expr_ptr_type(NULL);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper around unroll_base that provide error message.  
+	\pre this literal must refer to a bool, not an internal node.
 	\return index of the node referenced, local to this definition only, 
 		NOT the globally allocated one.  
  */
 size_t
 literal::unroll_node(const unroll_context& c) const {
+	NEVER_NULL(var);
 	const size_t ret = unroll_base(c);
 	if (!ret) {
 		base_type::dump(
@@ -1815,31 +1980,83 @@ literal::unroll_node(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: check parameters!
 	Has code in common with pull_up/pull_dn...
 	\return the index of the new expression represented by this
 		literal reference, else 0 if error occurs.  
+	TODO: adjust for internal node
  */
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	PRS::footprint::expr_node* new_expr = NULL;
+if (is_internal()) {
+	const node_literal_ptr_type
+		nref(unroll_node_reference(c));
+	if (!nref) {
+		cerr << "Error resolving internal node reference: ";
+		dump(cerr, rule_dump_context()) << endl;
+		return 0;
+	}
+	std::ostringstream oss;
+	nref->dump_local(oss);
+	size_t guard_index;
+	try {
+		guard_index = pfp.lookup_internal_node_expr(
+			oss.str(), !is_negated());
+	} catch (...) {
+		// already have error message
+		return 0;
+	}
+	new_expr = &(pfp.push_back_expr(PRS_NODE_TYPE_ENUM, 1));
+	(*new_expr)[1] = guard_index;
+} else {
 	const size_t node_index = unroll_node(c);
 	if (!node_index) {
 		// already have error message
 		return 0;
 	}
-	PRS::footprint::expr_node&
-		new_expr(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
-	new_expr[1] = node_index;
+	new_expr = &(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
+	(*new_expr)[1] = node_index;
+}	// end if int_node
+	// should attributes even apply to internal nodes?
 	const size_t perr = directive_source::unroll_params(params, c,
-			new_expr.get_params());
+			new_expr->get_params());
 	if (perr) {
 		cerr << "Error resolving rule literal parameter " << perr
 			<< " in rule." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr.get_params().size() <= 2);
+	INVARIANT(new_expr->get_params().size() <= 2);
 	return pfp.current_expr_index();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+literal::unroll_copy(const unroll_context& c,
+		const prs_expr_ptr_type& e) const {
+	INVARIANT(e == this);
+	const bool_literal lref(unroll_reference(c));
+	if (!lref.valid()) {
+		cerr << "Error resolving prs literal: ";
+		this->dump(cerr, expr_dump_context()) << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	// copied from above
+	directive_base_params_type crpar;
+	literal_params_type rpar;
+	const size_t perr = directive_source::unroll_params(params, c, crpar);
+	if (perr) {
+		cerr << "Error resolving rule literal parameter " << perr
+			<< " in rule." << endl;
+		return prs_expr_ptr_type(NULL);
+	}
+	copy(crpar.begin(), crpar.end(), back_inserter(rpar));
+	if ((lref == *this) &&
+		std::equal(params.begin(), params.end(), rpar.begin())) {
+		return e;
+	} else {
+		return prs_expr_ptr_type(new literal(lref, rpar));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1859,7 +2076,7 @@ if (!m.register_transient_object(this,
 void
 literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
-	write_object_base(m, o);
+	write_object_base(m, o);		// saves var
 	m.write_pointer_list(o, params);
 }
 
@@ -1867,7 +2084,7 @@ literal::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
-	load_object_base(m, i);
+	load_object_base(m, i);			// restores var
 	m.read_pointer_list(i, params);
 }
 

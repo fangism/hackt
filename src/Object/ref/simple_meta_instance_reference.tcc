@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.31 2007/09/11 06:52:53 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.31.2.1 2007/10/06 22:11:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -285,6 +285,43 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
 	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const SIMPLE_META_INSTANCE_REFERENCE_CLASS>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const this_type>& p) const {
+	typedef	count_ptr<this_type>	return_type;
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	if (this->array_indices) {
+		const count_ptr<const const_index_list>
+			resolved_indices(unroll_resolve_indices(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving meta indices." << endl;
+			return return_type(NULL);
+		}
+		const return_type
+			ret(new this_type(this->inst_collection_ref));
+		ret->attach_indices(resolved_indices);
+		return ret;
+	} else {
+		return p;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Covariant wrapper.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const meta_instance_reference_base>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const meta_instance_reference_base>& p) const {
+	return __unroll_resolve_copy(c, p.template is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

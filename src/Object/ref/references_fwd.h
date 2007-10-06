@@ -2,7 +2,7 @@
 	\file "Object/ref/references_fwd.h"
 	Foward declarations of all reference related classes, 
 	instances, values, meta, nonmeta, simple, member, aggregate...
-	$Id: references_fwd.h,v 1.5 2007/08/15 02:49:05 fang Exp $
+	$Id: references_fwd.h,v 1.5.6.1 2007/10/06 22:11:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCES_FWD_H__
@@ -61,6 +61,8 @@ typedef meta_value_reference<preal_tag>
 template <class>
 class simple_meta_instance_reference;
 template <class>
+class simple_meta_dummy_reference;
+template <class>
 class aggregate_meta_instance_reference;
 template <class>
 class aggregate_meta_value_reference;
@@ -111,6 +113,8 @@ typedef simple_meta_instance_reference<process_tag>
 	simple_process_meta_instance_reference;
 typedef simple_meta_instance_reference<bool_tag>
 	simple_bool_meta_instance_reference;
+typedef simple_meta_dummy_reference<node_tag>
+	simple_node_meta_instance_reference;
 typedef simple_meta_instance_reference<int_tag>
 	simple_int_meta_instance_reference;
 typedef simple_meta_instance_reference<enum_tag>

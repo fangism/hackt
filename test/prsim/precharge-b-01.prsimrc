@@ -1,0 +1,12 @@
+# "precharge-b-01.prsimrc"
+#	$Id: precharge-b-01.prsimrc,v 1.1.4.1 2007/10/06 22:17:32 fang Exp $
+# @haco@ precharge-b.haco-a
+# testing getall
+
+echo fanin o:
+fanin o
+
+echo fanout P.en:
+fanout P.en
+
+

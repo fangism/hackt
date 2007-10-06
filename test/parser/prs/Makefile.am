@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4 2007/09/29 19:44:29 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.5 2007/10/06 22:15:48 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,10 @@ HACKT_PARSE_TEST_FAILURES = \
 	loop-05 loop-07 \
 	cond-01 \
 	top-level-02 top-level-03 \
-	precharge-01
+	precharge-01 \
+	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
+	internal-node-05 internal-node-08 \
+	internal-node-11
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -47,12 +50,14 @@ HACKT_PARSE_TEST_PASSES = \
 	subckt-02 subckt-03 \
 	subckt-04 subckt-05 \
 	subckt-06 \
-	internal-node-00 \
 	precharge-00 \
 	unstab-01 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
-	act-006 act-007 act-010
+	act-006 act-007 act-010 \
+	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
+	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
+	internal-node-15
 # pending: act-008 act-009
 
 HACKT_CREATE_TEST_PASSES = \
@@ -81,6 +86,8 @@ HACKT_CREATE_TEST_PASSES = \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
 	unstab-01 \
+	internal-node-00 internal-node-06 \
+	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	act-001 act-002 act-006 act-007 act-010
 
 # TODO: precharge-00 etc. to middle and back-end tests
@@ -88,7 +95,8 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
-	null-01
+	null-01 \
+	internal-node-07 internal-node-09 internal-node-10
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...
@@ -116,6 +124,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	tree-02 tree-03 \
 	subckt-01 \
 	unstab-01 \
+	internal-node-00 internal-node-06 \
+	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	act-001 act-002 act-006 act-007 act-010
 # pending: act-003 act-004 act-005
 
@@ -159,7 +169,8 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	cond-01 \
 	loop-05 loop-07 \
 	top-level-03 \
-	precharge-01
+	precharge-01 \
+	internal-node-05
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac

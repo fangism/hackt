@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.14 2007/01/21 05:59:21 fang Exp $
+	$Id: cflat_printer.cc,v 1.14.32.1 2007/10/06 22:10:52 fang Exp $
  */
 
 #include <iostream>
@@ -203,6 +203,12 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			if (paren) os << ')';
 			break;
 		}
+		case PRS_NODE_TYPE_ENUM:
+			// we've already matched the direction of the rule
+			// so we should just be able to print the expression.
+			INVARIANT(sz == 1);
+			(*expr_pool)[e.only()].accept(*this);
+			break;
 		default:
 			ICE(cerr,
 			cerr << "Invalid PRS expr type enumeration: "

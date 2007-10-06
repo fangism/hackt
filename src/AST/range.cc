@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.10 2007/07/18 23:28:23 fang Exp $
+	$Id: range.cc,v 1.10.10.1 2007/10/06 22:10:28 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.10 2007/07/18 23:28:23 fang Exp $
+	$Id: range.cc,v 1.10.10.1 2007/10/06 22:10:28 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -72,8 +72,25 @@ using std::ptr_fun;
 //=============================================================================
 // class range method definitions
 
+/**
+	Allocate construct a range from an expr (pointers).  
+ */
+struct range::copy_allocator {
+	typedef	count_ptr<const range>			return_type;
+	return_type
+	operator () (const count_ptr<const expr>& l) {
+		return return_type(new range(l));
+	}
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONSTRUCTOR_INLINE
 range::range(const expr* l) : lower(l), upper(NULL) {
+	NEVER_NULL(lower); 
+}
+
+CONSTRUCTOR_INLINE
+range::range(const count_ptr<const expr>& l) : lower(l), upper(NULL) {
 	NEVER_NULL(lower); 
 }
 
@@ -257,6 +274,11 @@ range::check_nonmeta_index(const context& c) const {
 // class range_list method definitions
 
 range_list::range_list() : parent_type() { }
+
+range_list::range_list(const dense_range_list& r) : parent_type() {
+	transform(r.begin(), r.end(), back_inserter(*this), 
+		range::copy_allocator());
+}
 
 range_list::range_list(const range* r) : parent_type(r) { }
 

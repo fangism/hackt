@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_fwd.h"
 	Forward declarations for all instance and value collection classes.  
-	$Id: collection_fwd.h,v 1.7 2007/08/15 02:49:03 fang Exp $
+	$Id: collection_fwd.h,v 1.7.6.1 2007/10/06 22:10:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_FWD_H__
@@ -27,6 +27,11 @@ template <class>
 class instance_collection;
 template <class>
 class instance_placeholder;
+
+template <class>
+class dummy_collection;
+template <class>
+class dummy_placeholder;
 
 template <class, size_t>
 class instance_array;
@@ -63,6 +68,8 @@ typedef instance_collection<channel_tag>
 	channel_instance_collection;
 typedef instance_collection<process_tag>
 	process_instance_collection;
+typedef dummy_collection<node_tag>
+	node_instance_collection;
 
 typedef instance_placeholder<bool_tag>
 	bool_instance_placeholder;
@@ -78,6 +85,8 @@ typedef instance_placeholder<channel_tag>
 	channel_instance_placeholder;
 typedef instance_placeholder<process_tag>
 	process_instance_placeholder;
+typedef dummy_placeholder<node_tag>
+	node_instance_placeholder;
 
 typedef port_formal_array<bool_tag>
 	bool_port_formal_array;

@@ -1,0 +1,13 @@
+// "internal-node-03.hac"
+// copy-modified from "internal-node-00.hac"
+// expect fail
+
+defproc bogus(bool x, y, z, w) {
+prs {
+	x & y		-> @z-		// should not be able to use port 'z'
+	~@z & w		-> w-
+}
+}
+
+bogus A;
+

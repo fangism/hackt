@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.14.10.3 2007/09/29 06:39:36 fang Exp $
+	$Id: parse_context.h,v 1.14.10.4 2007/10/06 22:10:27 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -45,6 +45,8 @@ namespace entity {
 	class loop_scope;
 	class conditional_scope;
 	struct pint_tag;
+	struct node_tag;
+	template <class> class dummy_placeholder;
 }	// end namespace entity
 
 namespace parser {
@@ -81,6 +83,7 @@ using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
 using entity::loop_scope;
 using entity::conditional_scope;
+using entity::node_tag;
 
 //=============================================================================
 // forward declarations
@@ -88,6 +91,8 @@ class qualified_id;
 class token_identifier;
 class token_datatype;
 class token_paramtype;
+
+typedef	entity::dummy_placeholder<node_tag>	node_instance_placeholder;
 
 //=============================================================================
 // what is a context object?
@@ -121,6 +126,8 @@ public:
 	typedef list<string>			file_name_stack_type;
 	typedef	never_ptr<const instance_placeholder_base>
 						placeholder_ptr_type;
+	typedef	never_ptr<const node_instance_placeholder>
+						node_placeholder_ptr_type;
 private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
@@ -431,6 +438,9 @@ public:
 	placeholder_ptr_type
 	lookup_instance(const qualified_id& id) const;
 
+	never_ptr<const node_instance_placeholder>
+	lookup_internal_node(const token_identifier& id) const;
+
 	placeholder_ptr_type
 	add_instance(const token_identifier& id 
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
@@ -443,7 +453,7 @@ public:
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_args_ptr_type&, 
 #endif
-		index_collection_item_ptr_type dim);
+		const index_collection_item_ptr_type dim);
 
 	// should be param_value_placeholder
 	placeholder_ptr_type
@@ -453,7 +463,7 @@ public:
 	// should be param_value_placeholder
 	placeholder_ptr_type
 	add_template_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim, 
+		const index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d);
 
 	// port formals are not allowed to have instance-relaxed actuals.  
@@ -464,7 +474,10 @@ public:
 	// port formals are not allowed to have instance-relaxed actuals.  
 	placeholder_ptr_type
 	add_port_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim);
+		const index_collection_item_ptr_type dim);
+
+	node_placeholder_ptr_type
+	add_internal_node(const token_identifier& id, const size_t);
 
 	void
 	commit_definition_arity(void);

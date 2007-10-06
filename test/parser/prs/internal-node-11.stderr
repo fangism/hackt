@@ -1,0 +1,3 @@
+Error: creating explicit reference to node 0-D (placeholder) is not allowed.
+ERROR: invalid instance reference at position 2 of alias list.
+HALT: at least one error in connection list.  [11:2..6]

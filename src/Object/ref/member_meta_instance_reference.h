@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.17 2007/01/21 05:59:27 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.17.32.1 2007/10/06 22:11:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -96,6 +96,11 @@ public:
 	// overrides simple_meta...
 	instance_alias_info_ptr_type
 	unroll_generic_scalar_reference(const unroll_context&) const;
+
+	// overrides simple_meta...
+	count_ptr<const parent_type>
+	__unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const parent_type>&) const;
 
 	using parent_type::connect_port;
 

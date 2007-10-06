@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.17.10.3 2007/09/29 06:39:35 fang Exp $
+ 	$Id: parse_context.cc,v 1.17.10.4 2007/10/06 22:10:24 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -37,6 +37,9 @@
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/inst/collection_fwd.h"
+#include "Object/inst/dummy_placeholder.h"
+#include "Object/traits/node_traits.h"
 #include "Object/module.h"
 
 #include "common/ICE.h"
@@ -707,6 +710,19 @@ context::lookup_instance(const qualified_id& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Lookup name of internal node.  
+	This lookup does not go though the usual generic object lookup.  
+	lookup_member
+ */
+never_ptr<const node_instance_placeholder>
+context::lookup_internal_node(const token_identifier& id) const {
+	return get_current_open_definition()
+		.is_a<const process_definition>()->lookup_member(id)
+		.is_a<const node_instance_placeholder>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return the current scope, be it namespace, or definition.  
 	Namespaces are kept on a stack, 
 	Definitions may not be nested, but loops and conditionals
@@ -833,7 +849,7 @@ context::add_instance(const token_identifier& id,
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_args_ptr_type& a, 
 #endif
-		index_collection_item_ptr_type dim) {
+		const index_collection_item_ptr_type dim) {
 	typedef	placeholder_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
 	if (reject_nonglobal_instance_management()) {
@@ -891,6 +907,23 @@ context::add_instance(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Registers an internal node (declaration) implicitly to the
+	current open definition's scope.  
+	Performs a lookup to make sure name doesn't shadow another name.
+	\return reference to instance placeholder in scope.  
+ */
+context::node_placeholder_ptr_type
+context::add_internal_node(const token_identifier& id, const size_t dim) {
+	// top-level is also considered a definition
+	const never_ptr<process_definition>
+		pd(get_current_open_definition().is_a<process_definition>());
+	NEVER_NULL(pd);
+	// forward call
+	return pd->add_node_instance_idempotent(id, dim);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Using the current_type_reference, adds a template formal parameter.  
 	Is like add_instance, above.  
 	If already exists, then checks against previous formal declaration.  
@@ -902,7 +935,7 @@ context::add_instance(const token_identifier& id,
  */
 context::placeholder_ptr_type
 context::add_template_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim, 
+		const index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(current_prototype);	// valid definition_base
@@ -992,7 +1025,7 @@ context::add_template_formal(const token_identifier& id,
  */
 context::placeholder_ptr_type
 context::add_port_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim) {
+		const index_collection_item_ptr_type dim) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());

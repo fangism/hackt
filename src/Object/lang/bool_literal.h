@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4 2006/04/12 08:53:16 fang Exp $
+	$Id: bool_literal.h,v 1.4.80.1 2007/10/06 22:10:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -31,9 +31,11 @@ namespace PRS {
 	class literal;
 }
 
-// const?
-typedef	count_ptr<simple_bool_meta_instance_reference>	
+typedef	count_ptr<const simple_bool_meta_instance_reference>	
 						bool_literal_base_ptr_type;
+
+typedef	count_ptr<const simple_node_meta_instance_reference>
+						node_literal_ptr_type;
 
 //=============================================================================
 /**
@@ -43,8 +45,24 @@ struct bool_literal {
 public:
 	typedef	std::default_vector<size_t>::type	group_type;
 protected:
-	bool_literal_base_ptr_type				var;
-
+	/**
+		The underlying reference to bool, must be scalar for 
+		production rule literals, but may be aggregate for
+		macros and spec directives.
+	 */
+	bool_literal_base_ptr_type			var;
+	/**
+		This pointer is mutually exclusive with the 
+		var bool-ref member.
+		Really, they could go in a tagged union.  
+	 */
+	node_literal_ptr_type			int_node;
+	/**
+		Only applicable to int_node.
+		If true, internal node references the pull-down
+		variant expression, else references the pull-up.
+	 */
+	bool					negated;
 public:
 	bool_literal();
 
@@ -54,6 +72,24 @@ public:
 
 	explicit
 	bool_literal(const bool_literal_base_ptr_type&);
+
+	explicit
+	bool_literal(const node_literal_ptr_type&);
+
+	// The following are un-inlined to not have to require complete type
+	// on simple_node_meta_instance_reference:
+
+	// copy-ctor
+	bool_literal(const bool_literal&);
+
+	bool_literal&
+	operator = (const bool_literal&);
+
+	bool
+	operator == (const bool_literal&) const;
+
+	bool
+	valid(void) const { return var || int_node; }
 
 	~bool_literal();
 
@@ -65,6 +101,30 @@ public:
 
 	ostream&
 	dump(ostream&, const PRS::expr_dump_context&) const;
+
+	bool
+	is_internal(void) const { return int_node; }
+
+	const node_literal_ptr_type&
+	internal_node(void) const { return int_node; }
+
+	void
+	negate_node(void) { negated = true; }
+
+	void
+	unnegate_node(void) { negated = false; }
+
+	void
+	toggle_negate_node(void) { negated = !negated; }
+
+	bool
+	is_negated(void) const { return negated; }
+
+	node_literal_ptr_type
+	unroll_node_reference(const unroll_context&) const;
+
+	bool_literal
+	unroll_reference(const unroll_context&) const;
 
 	size_t
 	unroll_base(const unroll_context&) const;

@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.17.2.1 2007/09/29 06:13:02 fang Exp $
+	$Id: compile.cc,v 1.17.2.2 2007/10/06 22:11:18 fang Exp $
  */
 
 #include <iostream>
@@ -149,6 +149,7 @@ __compile_om_no_dump_object_header("no-dump-object-header",
 
 //-----------------------------------------------------------------------------
 // dialect flags
+// texinfo documentation is below under option-f
 
 static
 good_bool
@@ -202,9 +203,35 @@ __compile_om_no_namespace_instances("no-namespace-instances",
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 good_bool
+__compile_array_internal_nodes(compile::options& o) {
+	o.parse_opts.array_internal_nodes = true;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_array_internal_nodes("array-internal-nodes", 
+	&__compile_array_internal_nodes,
+	"allow implicit arrays of internal nodes in PRS (default)");
+
+static
+good_bool
+__compile_no_array_internal_nodes(compile::options& o) {
+	o.parse_opts.array_internal_nodes = false;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_no_array_internal_nodes("no-array-internal-nodes", 
+	&__compile_no_array_internal_nodes,
+	"reject implicit arrays of internal nodes in PRS (ACT)");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
 __compile_ACT(compile::options& o) {
 	__compile_export_strict(o);
 	__compile_no_namespace_instances(o);
+	__compile_no_array_internal_nodes(o);
 	return good_bool(true);
 }
 
@@ -350,6 +377,10 @@ Dialect flags (for ACT-compatbility):
 	Allow instance management outside global namespace (default).
 	Negatable with @t{no-} prefixed.
 	ACT mode: @option{no-namespace-instances}.
+@item @option{array-internal-nodes}
+	Allow implicit arrays of internal nodes in PRS (default).
+	Negatable with @t{no-} prefixed.
+	ACT mode: @option{no-array-internal-nodes}.
 @end itemize
 @option{ACT} is a preset that activates all ACT-mode flags for compatibility.
 @end defopt

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.28 2007/08/15 02:48:50 fang Exp $
+	$Id: expr.cc,v 1.28.6.1 2007/10/06 22:10:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1321,6 +1321,8 @@ prefix_expr::check_nonmeta_expr(const context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks for logical-NOT for PRS.  
+	Hack: if argument is a literal, bind the negation to the literal
+	and return it instead.  
  */
 prs_expr_return_type
 prefix_expr::check_prs_expr(context& c) const {
@@ -1336,6 +1338,16 @@ prefix_expr::check_prs_expr(context& c) const {
 			op->text[0] << "\' at " << where(*op) <<
 			".  Aborting... have a nice day." << endl;
 		);
+	}
+	// intercept internal node
+	typedef	entity::PRS::literal		literal_type;
+	const count_ptr<literal_type>
+		lit(pe.is_a<literal_type>());
+	if (lit) {
+		if (lit->is_internal()) {
+			lit->negate_node();
+			return lit;
+		}
 	}
 	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
@@ -1532,6 +1544,17 @@ index_expr::leftmost(void) const {
 line_position
 index_expr::rightmost(void) const {
 	return ranges->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the number of dimensions of the referenced instance's
+		collection, based on the number of indices, 
+		which assumes that this is a scalar reference.  
+ */
+size_t
+index_expr::implicit_dimensions(void) const {
+	return ranges ? ranges->size() : 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
+	26	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
 	27	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)

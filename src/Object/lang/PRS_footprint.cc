@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.16 2006/11/07 06:35:10 fang Exp $
+	$Id: PRS_footprint.cc,v 1.16.44.1 2007/10/06 22:10:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -89,7 +89,8 @@ footprint_rule_attribute::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class footprint method definitions
 
-footprint::footprint() : rule_pool(), expr_pool(), macro_pool() {
+footprint::footprint() : rule_pool(), expr_pool(), macro_pool(), 
+		internal_node_expr_map() {
 	rule_pool.set_chunk_size(8);
 	expr_pool.set_chunk_size(16);
 	macro_pool.set_chunk_size(8);
@@ -157,6 +158,11 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			if (paren) o << ')';
 			break;
 		}
+		case PRS_NODE_TYPE_ENUM:
+			STACKTRACE_DUMP_PRINT("Node ");
+			INVARIANT(one == 1);
+			dump_expr(ep[e.only()], o, np, ep, type);
+			break;
 		default:
 			ICE(cerr, 
 			cerr << "Invalid PRS expr type enumeration: "
@@ -168,7 +174,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: attributes
+	Print a rule.
  */
 ostream&
 footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np, 
@@ -244,6 +250,20 @@ if (macro_pool.size()) {
 		dump_macro(*i, o << auto_indent, bpool) << endl;
 	}
 }
+if (internal_node_expr_map.size()) {
+	o << auto_indent << "internal node exprs: " << endl;
+	typedef	internal_node_expr_map_type::const_iterator
+					const_map_iterator;
+	const_map_iterator i(internal_node_expr_map.begin());
+	const const_map_iterator e(internal_node_expr_map.end());
+	for ( ; i!=e; ++i) {
+		// is this dump format acceptable?
+		o << auto_indent << '@' << i->first;
+		o << (i->second.second ? '+' : '-') << " <- ";
+		dump_expr(expr_pool[i->second.first],
+			o, bpool, expr_pool, PRS_LITERAL_TYPE_ENUM) << endl;
+	}
+}
 	return o;
 }
 
@@ -281,6 +301,48 @@ footprint::push_back_macro(const string& s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+footprint::register_internal_node_expr(const string& k, const size_t eid, 
+		const bool dir) {
+	typedef	internal_node_expr_map_type::const_iterator
+						const_iterator;
+	const_iterator f(internal_node_expr_map.find(k));
+	if (f != internal_node_expr_map.end()) {
+		cerr << "Error: internal node rule for `" << k <<
+			"\' already registered." << endl;
+		return good_bool(false);
+	} else {
+		internal_node_expr_map[k] = std::make_pair(eid, dir);
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return index of expression representing internal node, 
+		or throw exception to signal error or not found.
+ */
+size_t
+footprint::lookup_internal_node_expr(const string& k, const bool dir) const {
+	typedef	internal_node_expr_map_type::const_iterator
+						const_iterator;
+	const_iterator f(internal_node_expr_map.find(k));
+	if (f != internal_node_expr_map.end()) {
+		if (f->second.second == dir) {
+			return f->second.first;
+		} else {
+			cerr << "Error: internal node `" << k <<
+				"\' is used in the wrong sense." << endl;
+			THROW_EXIT;	// no return
+		}
+	} else {
+		cerr << "Error: undefined internal node rule: " << k << endl;
+		THROW_EXIT;	// no return
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 {
@@ -306,6 +368,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	}
 }
 	// the expr_pool doesn't need persistence management yet
+	// the internal_node_expr_map doesn't contain pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -345,6 +408,17 @@ footprint::write_object_base(const persistent_object_manager& m,
 		i->write_object_base(m, o);
 	}
 }
+{
+	typedef internal_node_expr_map_type::const_iterator	const_iterator;
+	write_value(o, internal_node_expr_map.size());
+	const_iterator i(internal_node_expr_map.begin());
+	const const_iterator e(internal_node_expr_map.end());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->first);	// string
+		write_value(o, i->second.first);	// expr index
+		write_value(o, i->second.second);	// direction
+	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -380,6 +454,17 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	for ( ; j<s; j++) {
 		macro_pool.push_back(macro());
 		macro_pool.back().load_object_base(m, i);
+	}
+}{
+	size_t s;
+	read_value(i, s);
+	size_t j = 0;
+	for ( ; j<s; ++j) {
+		string k;
+		read_value(i, k);	// string
+		node_expr_type& n(internal_node_expr_map[k]);
+		read_value(i, n.first);		// expr index
+		read_value(i, n.second);	// direction
 	}
 }
 }

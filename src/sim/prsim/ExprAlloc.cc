@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.20 2007/09/13 20:37:25 fang Exp $
+	$Id: ExprAlloc.cc,v 1.20.2.1 2007/10/06 22:11:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -657,6 +657,12 @@ switch (type) {
 			denormalize_negation(last);
 		}	// end if is_denormalize_negations()
 		ret_ex_index = last;
+		break;
+	}
+	case entity::PRS::PRS_NODE_TYPE_ENUM: {
+		STACKTRACE_INDENT_PRINT("node" << endl);
+		INVARIANT(sz == 1);
+		(*expr_pool)[e.only()].accept(*this);
 		break;
 	}
 	default:

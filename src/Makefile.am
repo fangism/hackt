@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.184.2.1 2007/09/27 05:17:55 fang Exp $
+#	$Id: Makefile.am,v 1.184.2.2 2007/10/06 22:10:14 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -410,6 +410,7 @@ OBJECT_INST_CC_FILES = \
 	Object/inst/pint_value_collection.cc \
 	Object/inst/preal_value_collection.cc \
 	Object/inst/bool_instance_collection.cc \
+	Object/inst/node_instance_collection.cc \
 	Object/inst/int_instance_collection.cc \
 	Object/inst/enum_instance_collection.cc \
 	Object/inst/struct_instance_collection.cc \
@@ -440,6 +441,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \
 	Object/inst/value_placeholder.tcc \
+	Object/inst/dummy_placeholder.tcc \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc
 
@@ -472,6 +474,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/instance_placeholder_base.h \
 	Object/inst/instance_placeholder.h \
 	Object/inst/value_placeholder.h \
+	Object/inst/dummy_placeholder.h \
 	Object/inst/physical_instance_placeholder.h \
 	Object/inst/datatype_instance_placeholder.h \
 	Object/inst/param_value_placeholder.h \
@@ -499,6 +502,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 OBJECT_REF_CC_FILES = \
 	Object/ref/instance_reference.cc \
 	Object/ref/instance_reference_datatype.cc \
+	Object/ref/instance_reference_node.cc \
 	Object/expr/nonmeta_param_value_reference.cc \
 	Object/ref/reference_set.cc
 
@@ -509,6 +513,7 @@ OBJECT_REF_TCC_FILES = \
 	Object/ref/meta_instance_reference_subtypes.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
+	Object/ref/simple_meta_dummy_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
 	Object/ref/simple_meta_value_reference.tcc \
 	Object/ref/simple_nonmeta_value_reference.tcc \
@@ -533,6 +538,7 @@ OBJECT_REF_H_FILES = \
 	Object/ref/nonmeta_instance_reference_base.h \
 	Object/ref/nonmeta_instance_reference_subtypes.h \
 	Object/ref/data_nonmeta_instance_reference.h \
+	Object/ref/simple_meta_dummy_reference.h \
 	Object/ref/simple_meta_instance_reference.h \
 	Object/ref/simple_meta_indexed_reference_base.h \
 	Object/ref/simple_meta_value_reference.h \
@@ -685,6 +691,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/int_traits.h \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
+	Object/traits/node_traits.h \
 	Object/traits/real_traits.h \
 	Object/traits/string_traits.h \
 	Object/traits/struct_traits.h \

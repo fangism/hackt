@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.12 2007/01/21 05:59:22 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.12.32.1 2007/10/06 22:10:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -122,6 +122,17 @@ AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
 	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const meta_instance_reference_base>
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const meta_instance_reference_base>& p) const {
+	INVARIANT(p == this);
+	FINISH_ME(Fang);
+	return count_ptr<const meta_instance_reference_base>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

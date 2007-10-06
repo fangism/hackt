@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.10 2007/04/20 18:25:49 fang Exp $
+	$Id: class_traits.cc,v 1.10.20.1 2007/10/06 22:11:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -14,6 +14,7 @@
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/preal_traits.h"
+#include "Object/traits/node_traits.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 
@@ -55,6 +56,10 @@ class_traits<preal_tag>::tag_name[] = "preal";
 
 const char
 class_traits<preal_tag>::value_type_name[] = "real-value";
+
+const char
+class_traits<node_tag>::tag_name[] = "node";
+
 
 //=============================================================================
 #if 0

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.25 2007/09/11 06:52:52 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.25.2.1 2007/10/06 22:11:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -254,6 +254,47 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
 MEMBER_INSTANCE_REFERENCE_CLASS::accept(nonmeta_expr_visitor& v) const {
 	v.visit(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const typename MEMBER_INSTANCE_REFERENCE_CLASS::parent_type>
+MEMBER_INSTANCE_REFERENCE_CLASS::__unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<const parent_type>& p) const {
+	typedef	count_ptr<this_type>	return_type;
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const base_inst_ptr_type
+		rb(base_inst_ref->unroll_resolve_copy(c, base_inst_ref));
+	if (!rb) {
+		cerr << "Errpr resolving parent reference." << endl;
+		return return_type(NULL);
+	}
+	if (this->array_indices) {
+		const count_ptr<const const_index_list>
+			resolved_indices(this->unroll_resolve_indices(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving meta indices." << endl;
+			return return_type(NULL);
+		}
+		if ((rb == base_inst_ref) &&
+				(resolved_indices == this->array_indices)) {
+			return p;
+		} else {
+			const return_type ret(new this_type(
+				rb, this->get_inst_base_subtype()));
+			ret->attach_indices(resolved_indices);
+			return ret;
+		} 
+	} else {
+		if (rb == base_inst_ref) {
+			return p;
+		} else {
+			return return_type(new this_type(
+				rb, this->get_inst_base_subtype()));
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

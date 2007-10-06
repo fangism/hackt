@@ -10,9 +10,11 @@ state	value
 #STATE#	{ [6:5]
 #STATE#	(prs-literal) [8:3]
 #STATE#	| [8:5]
-#STATE#	(unknown)
 #STATE#	{ [8:6]
 in state #STATE#, possible rules are:
-	prs_literal_base: prs_internal_optional . relative_member_index_expr  (#RULE#)
+	prs_or: prs_or '|' . prs_and  (#RULE#)
 acceptable tokens are: 
+	'(' (shift)
+	'~' (shift)
+	'@' (shift)
 	ID (shift)

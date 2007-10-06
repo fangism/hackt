@@ -1,0 +1,3 @@
+Error: `z' is already declared as bool 0-D (placeholder)
+Error implicitly declaring internal node.  [8:13]
+ERROR in the output node reference at [8:13].

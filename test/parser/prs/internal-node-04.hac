@@ -1,0 +1,16 @@
+// "internal-node-04.hac"
+// copy-modified from "internal-node-01.hac"
+// z should not be found as a bool
+// expect fail
+
+defproc bogus(bool x, y, w) {
+prs {
+	x & y		-> @z-
+	~@z & w		-> w-
+}
+	z = w;		// error: z is not a bool, 
+			// should not be found outside of prs context
+}
+
+bogus A;
+

@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.6 2007/09/13 20:37:13 fang Exp $
+	$Id: PRS.h,v 1.6.2.1 2007/10/06 22:10:20 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -83,22 +83,34 @@ typedef	default_vector<body_item::return_type>::type	checked_rules_type;
 	use as parts of expression trees.  
  */
 class literal : public inst_ref_expr {
+	typedef	inst_ref_expr::meta_return_type		meta_return_type;
+//	typedef	inst_ref_expr::nonmeta_return_type	nonmeta_return_type;
 	/// not const, b/c we may wish to transfer it to macro
 	excl_ptr<inst_ref_expr>				ref;
 	/// not const, b/c we may wish to transfer it to macro
 	excl_ptr<const expr_list>			params;
+	/**
+		If true this refers to an internal node, 
+		and should use a different lookup.  
+	 */
+	bool						internal;
 public:
 	explicit
 	literal(inst_ref_expr*);
+
+	explicit
+	literal(excl_ptr<inst_ref_expr>&);
 
 	literal(inst_ref_expr*, const expr_list*);
 
 	~literal();
 
+#if 0
 	excl_ptr<inst_ref_expr>&
 	release_reference(void) {
 		return ref;
 	}
+#endif
 
 	excl_ptr<const token_identifier>
 	extract_identifier(void);
@@ -108,6 +120,9 @@ public:
 
 	void
 	attach_parameters(const expr_list*);
+
+	void
+	mark_internal(void) { internal = true; }
 
 	ostream&
 	what(ostream&) const;
@@ -127,6 +142,9 @@ public:
 	prs_literal_ptr_type
 	check_prs_literal(const context&) const;
 
+	prs_literal_ptr_type
+	check_prs_rhs(context&) const;
+
 	// no need to override the following, because they all defer to
 	// the above two (pure virtual) methods.  
 	// CHECK_META_EXPR_PROTO
@@ -145,7 +163,7 @@ protected:
 	const excl_ptr<const attribute_list>		attribs;
 	const excl_ptr<const expr>		guard;
 	const excl_ptr<const char_punctuation_type>	arrow;
-	const excl_ptr<const inst_ref_expr>		r;
+	const excl_ptr<const literal>		r;
 	const excl_ptr<const char_punctuation_type>	dir;
 public:
 	rule(const attribute_list*, const expr* g, 

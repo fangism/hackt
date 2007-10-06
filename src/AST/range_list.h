@@ -1,9 +1,9 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range_list.h,v 1.4 2007/07/18 23:28:24 fang Exp $
+	$Id: range_list.h,v 1.4.10.1 2007/10/06 22:10:29 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range_list.h,v 1.4 2007/07/18 23:28:24 fang Exp $
+	$Id: range_list.h,v 1.4.10.1 2007/10/06 22:10:29 fang Exp $
  */
 
 #ifndef __HAC_AST_RANGE_LIST_H__
@@ -24,6 +24,7 @@ namespace entity {
 namespace parser {
 using util::good_bool;
 using std::default_vector;
+class dense_range_list;
 
 //=============================================================================
 /// base class for range_list
@@ -52,6 +53,8 @@ public:
 
 	explicit
 	range_list(const range* r);
+
+	range_list(const dense_range_list&);
 
 	~range_list();
 

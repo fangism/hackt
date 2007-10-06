@@ -38,11 +38,11 @@ Persistent Object Manager text dump:
 	34	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
 	35	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	37	##ADDR##	footprnt	0	#HEAD#	#TAIL#	430
 	38	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	41	##ADDR##	footprnt	0	#HEAD#	#TAIL#	288
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
