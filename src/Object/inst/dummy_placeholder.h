@@ -2,7 +2,7 @@
 	\file "Object/inst/dummy_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: dummy_placeholder.h,v 1.1.2.1 2007/10/02 05:15:02 fang Exp $
+	$Id: dummy_placeholder.h,v 1.1.2.2 2007/10/06 04:20:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DUMMY_PLACEHOLDER_H__
@@ -53,11 +53,11 @@ private:
 //	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-#if 0
 public:
 	// placeholders need not know about instance aliases
 	typedef	typename traits_type::simple_meta_instance_reference_type
 					simple_meta_instance_reference_type;
+#if 0
 	typedef	typename traits_type::simple_nonmeta_instance_reference_type
 					simple_nonmeta_instance_reference_type;
 	typedef	typename traits_type::member_simple_meta_instance_reference_type

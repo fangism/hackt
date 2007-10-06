@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.22 2007/07/18 23:28:16 fang Exp $
+	$Id: instance.cc,v 1.22.14.1 2007/10/06 04:20:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -339,8 +339,8 @@ if (size() > 0) {		// non-empty
 	postorder_check_meta_generic(temp, c);
 	const checked_meta_generic_type::const_iterator first_obj(temp.begin());
 	if (!first_obj->first && !first_obj->second) {
-		cerr << endl << "ERROR in the first item in alias-list."
-			<< endl;
+		cerr << endl << "ERROR in the first item in alias-list.  "
+			<< where(*this) << endl;
 		THROW_EXIT;
 	} else if (first_obj->first) {
 		checked_meta_exprs_type checked_exprs;

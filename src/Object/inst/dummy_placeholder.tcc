@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/dummy_placeholder.tcc"
-	$Id: dummy_placeholder.tcc,v 1.1.2.2 2007/10/04 05:52:18 fang Exp $
+	$Id: dummy_placeholder.tcc,v 1.1.2.3 2007/10/06 04:20:12 fang Exp $
 	TODO: trim includes
  */
 
@@ -37,7 +37,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/nonmeta_instance_reference_base.h"
 // #include "Object/ref/simple_nonmeta_instance_reference.h"
-// #include "Object/ref/simple_meta_instance_reference.h"
+// #include "Object/ref/simple_meta_dummy_reference.h"
 // #include "Object/unroll/instantiation_statement_base.h"
 // #include "Object/unroll/instantiation_statement.h"
 // #include "Object/unroll/unroll_context.h"
@@ -233,11 +233,10 @@ DUMMY_PLACEHOLDER_CLASS::make_meta_instance_reference(void) const {
 	typedef	count_ptr<meta_instance_reference_base>	ptr_return_type;
 #if 0
 	return ptr_return_type(new simple_meta_instance_reference_type(
-			never_ptr<const this_type>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
+		never_ptr<const this_type>(this)));
 #else
-	FINISH_ME(Fang);
+	this->what(cerr << "Error: creating explicit reference to ") <<
+		" is not allowed." << endl;
 	return ptr_return_type(NULL);
 #endif
 }

@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4.2.7 2007/10/06 02:49:59 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.8 2007/10/06 04:20:15 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -17,8 +17,9 @@ HACKT_PARSE_TEST_FAILURES = \
 	cond-01 \
 	top-level-02 top-level-03 \
 	precharge-01 \
-	internal-node-01 internal-node-02 internal-node-03 \
-	internal-node-05 internal-node-08
+	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
+	internal-node-05 internal-node-08 \
+	internal-node-11
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -54,12 +55,11 @@ HACKT_PARSE_TEST_PASSES = \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-010 \
-	internal-node-00 internal-node-07 internal-node-09
+	internal-node-00 internal-node-07 internal-node-09 internal-node-10
 # pending: act-008 act-009
 # in progress:
 
 EXTRA_DIST += \
-	internal-node-04.hac \
 	internal-node-06.hac
 
 HACKT_CREATE_TEST_PASSES = \
@@ -97,7 +97,7 @@ HACKT_CREATE_TEST_PASSES = \
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
 	null-01 \
-	internal-node-07 internal-node-09
+	internal-node-07 internal-node-09 internal-node-10
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...

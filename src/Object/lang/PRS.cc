@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.9 2007/10/06 02:49:58 fang Exp $
+	$Id: PRS.cc,v 1.24.6.10 2007/10/06 04:20:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1947,13 +1947,14 @@ literal::negate(void) const {
 	STACKTRACE("literal::negate()");
 #if PRS_INTERNAL_NODES
 if (int_node) {
-	FINISH_ME_EXIT(Fang);
-	return prs_expr_ptr_type(NULL);
+	const count_ptr<this_type> ret(new this_type(*this));
+	ret->unnegate_node();	// retain everything else
+	return ret;
 } else {
 	// is this acceptable for internal_nodes?
 #endif
 	return prs_expr_ptr_type(new not_expr(
-		prs_expr_ptr_type(new literal(*this))));
+		prs_expr_ptr_type(new this_type(*this))));
 #if PRS_INTERNAL_NODES
 }
 #endif

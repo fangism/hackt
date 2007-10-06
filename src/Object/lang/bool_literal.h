@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4.84.4 2007/10/06 00:05:53 fang Exp $
+	$Id: bool_literal.h,v 1.4.84.5 2007/10/06 04:20:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -117,6 +117,9 @@ public:
 
 	void
 	negate_node(void) { negated = true; }
+
+	void
+	unnegate_node(void) { negated = false; }
 
 	bool
 	is_negated(void) const { return negated; }

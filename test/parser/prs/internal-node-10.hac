@@ -1,0 +1,14 @@
+// "internal-node-10.hac"
+// copy-modified from "internal-node-09.hac"
+// expect create fail
+
+defproc bogus(bool x, y, w) {
+bool en;
+prs {
+	en		-> @z-
+	~@z & x & y	=> w-		// complement rule is wrong sense
+}
+}
+
+bogus A;
+
