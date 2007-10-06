@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.7 2007/10/05 21:13:48 fang Exp $
+	$Id: PRS.cc,v 1.24.6.8 2007/10/06 00:05:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -485,7 +485,7 @@ if (output.is_internal()) {
 	}
 	// register guard expression
 	std::ostringstream oss;
-	nref->dump(oss, entity::expr_dump_context::default_value);
+	nref->dump_local(oss);
 	oss << (dir ? '+' : '-');
 	return pfp.register_internal_node_expr(oss.str(), guard_expr_index);
 } else {
@@ -2027,9 +2027,8 @@ if (int_node) {
 		return 0;
 	}
 	std::ostringstream oss;
-	nref->dump(oss, entity::expr_dump_context::default_value);
-{	FINISH_ME(Fang); return 0;	}
-//	oss << (dir ? '+' : '-');	// direction flag???
+	nref->dump_local(oss);
+	oss << (is_negated() ? '-' : '+');
 	size_t guard_index;
 	try {
 		guard_index = pfp.lookup_internal_node_expr(oss.str());

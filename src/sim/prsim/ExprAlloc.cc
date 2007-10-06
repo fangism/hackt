@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.20 2007/09/13 20:37:25 fang Exp $
+	$Id: ExprAlloc.cc,v 1.20.6.1 2007/10/06 00:05:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/State-prsim.h"
 #include "Object/lang/PRS_enum.h"
+#include "Object/lang/PRS_base.h"	// only for PRS_INTERNAL_NODES
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_macro.h"
@@ -659,6 +660,14 @@ switch (type) {
 		ret_ex_index = last;
 		break;
 	}
+#if PRS_INTERNAL_NODES
+	case entity::PRS::PRS_NODE_TYPE_ENUM: {
+		STACKTRACE_INDENT_PRINT("node" << endl);
+		INVARIANT(sz == 1);
+		(*expr_pool)[e.only()].accept(*this);
+		break;
+	}
+#endif
 	default:
 		THROW_EXIT;
 		break;

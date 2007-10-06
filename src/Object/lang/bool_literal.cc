@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.6.68.4 2007/10/05 05:21:08 fang Exp $
+	$Id: bool_literal.cc,v 1.6.68.5 2007/10/06 00:05:53 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -9,6 +9,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+// #include "Object/ref/member_meta_instance_reference.h"	// for parent
 #include "Object/lang/PRS.h"	// for PRS::literal, PRS::expr_dump_context
 #include "Object/expr/expr_dump_context.h"
 #if PRS_INTERNAL_NODES
@@ -22,19 +23,22 @@
 
 namespace HAC {
 namespace entity {
+using util::write_value;
+using util::read_value;
+
 //=============================================================================
 // class bool_literal method definitions
 
 bool_literal::bool_literal() : var(NULL)
 #if PRS_INTERNAL_NODES
-		, int_node(NULL)
+		, int_node(NULL), negated(false)
 #endif
 	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::bool_literal(const bool_literal_base_ptr_type& l) : var(l)
 #if PRS_INTERNAL_NODES
-		, int_node(NULL)
+		, int_node(NULL), negated(false)
 #endif
 		{
 	NEVER_NULL(var);
@@ -43,7 +47,7 @@ bool_literal::bool_literal(const bool_literal_base_ptr_type& l) : var(l)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRS_INTERNAL_NODES
 bool_literal::bool_literal(const node_literal_ptr_type& l) :
-		var(), int_node(l) {
+		var(), int_node(l), negated(false) {
 	NEVER_NULL(int_node);
 }
 #endif
@@ -55,7 +59,7 @@ bool_literal::bool_literal(const node_literal_ptr_type& l) :
 bool_literal::bool_literal(const count_ptr<const PRS::literal>& l) :
 		var(l->get_bool_var())
 #if PRS_INTERNAL_NODES
-		, int_node(l->internal_node())
+		, int_node(l->internal_node()), negated(false)
 #endif
 		{
 }
@@ -64,7 +68,7 @@ bool_literal::bool_literal(const count_ptr<const PRS::literal>& l) :
 bool_literal::bool_literal(const count_ptr<PRS::literal>& l) :
 		var(l->get_bool_var())
 #if PRS_INTERNAL_NODES
-		, int_node(l->internal_node())
+		, int_node(l->internal_node()), negated(false)
 #endif
 		{
 }
@@ -72,7 +76,7 @@ bool_literal::bool_literal(const count_ptr<PRS::literal>& l) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRS_INTERNAL_NODES
 bool_literal::bool_literal(const bool_literal& b) :
-		var(b.var), int_node(b.int_node) {
+		var(b.var), int_node(b.int_node), negated(b.negated) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,12 +84,14 @@ bool_literal&
 bool_literal::operator = (const bool_literal& b) {
 	var = b.var;
 	int_node = b.int_node;
+	negated = b.negated;
 	return *this;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 bool_literal::operator == (const bool_literal& r) const {
-	return (var == r.var) && (int_node == r.int_node);
+	return (var == r.var) && (int_node == r.int_node)
+		&& (negated == r.negated);
 }
 #endif
 
@@ -102,6 +108,7 @@ if (var) {
 #if PRS_INTERNAL_NODES
 } else {
 	NEVER_NULL(int_node);
+	if (negated) o << '~';
 	return int_node->dump(o << '@', c);
 }
 #endif
@@ -138,6 +145,9 @@ bool_literal::unroll_base(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRS_INTERNAL_NODES
+/**
+	Negatedness is irrelevant here.
+ */
 node_literal_ptr_type
 bool_literal::unroll_node_reference(const unroll_context& c) const {
 	// substitute parameters for constants
@@ -148,7 +158,8 @@ bool_literal::unroll_node_reference(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Diagnostic?
+	Negatedness is irrelevant here.
+	Diagnostic on failure?
  */
 bool_literal
 bool_literal::unroll_reference(const unroll_context& c) const {
@@ -219,6 +230,7 @@ bool_literal::write_object_base(const persistent_object_manager& m,
 #if PRS_INTERNAL_NODES
 	if (!var) {
 		m.write_pointer(o, int_node);
+		write_value(o, negated);
 	}
 #endif
 }
@@ -231,6 +243,7 @@ bool_literal::load_object_base(const persistent_object_manager& m,
 #if PRS_INTERNAL_NODES
 	if (!var) {
 		m.read_pointer(i, int_node);
+		read_value(i, negated);
 	}
 #endif
 }

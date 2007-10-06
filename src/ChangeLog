@@ -5,6 +5,19 @@
 
 2007-10-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-09:
+	  First working draft of internal nodes for cflat and hacprsim.
+	  AST/expr.cc: prefix_expr::check_prs_expr():
+		intercept negated internal node and flag accordingly.
+	  Object/ref/simple_meta_dummy_reference.{h,tcc}:
+		added dump_local to automatically infer owner scopespace
+	  Object/lang/bool_literal.h: added negated member, only
+		applicable to internal_nodes for direction.  
+	  Added switch cases for PRS_NODE_TYPE_ENUM to cflat_printer and 
+		hacprsim's ExprAlloc.
+	  Let us celebrate with a round of adding test cases!
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-08:
 	  Object/lang/PRS_footprint.{h,cc}: implemented internal node
 		expression map.  Map storage results in increase in 

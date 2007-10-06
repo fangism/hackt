@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4.84.3 2007/10/05 05:21:09 fang Exp $
+	$Id: bool_literal.h,v 1.4.84.4 2007/10/06 00:05:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -61,6 +61,12 @@ protected:
 		Really, they could go in a tagged union.  
 	 */
 	node_literal_ptr_type			int_node;
+	/**
+		Only applicable to int_node.
+		If true, internal node references the pull-down
+		variant expression, else references the pull-up.
+	 */
+	bool					negated;
 #endif
 public:
 	bool_literal();
@@ -108,6 +114,12 @@ public:
 
 	const node_literal_ptr_type&
 	internal_node(void) const { return int_node; }
+
+	void
+	negate_node(void) { negated = true; }
+
+	bool
+	is_negated(void) const { return negated; }
 
 	node_literal_ptr_type
 	unroll_node_reference(const unroll_context&) const;

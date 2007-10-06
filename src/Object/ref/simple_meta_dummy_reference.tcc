@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.cc"
 	Method definitions for the meta_dummy_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_dummy_reference.tcc,v 1.1.2.2 2007/10/05 05:21:25 fang Exp $
+ 	$Id: simple_meta_dummy_reference.tcc,v 1.1.2.3 2007/10/06 00:05:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_TCC__
@@ -130,6 +130,14 @@ SIMPLE_META_DUMMY_REFERENCE_CLASS::dump(ostream& o,
 			dump_flags::default_value);
 	}
 	return simple_meta_indexed_reference_base::dump_indices(o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_DUMMY_REFERENCE_TEMPLATE_SIGNATURE
+ostream&
+SIMPLE_META_DUMMY_REFERENCE_CLASS::dump_local(ostream& o) const {
+	const expr_dump_context edc(&*this->get_inst_base()->get_owner());
+	return dump(o, edc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

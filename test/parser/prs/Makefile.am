@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4.2.5 2007/10/04 19:24:15 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.6 2007/10/06 00:05:55 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -61,11 +61,6 @@ HACKT_PARSE_TEST_PASSES = \
 EXTRA_DIST += \
 	internal-node-04.hac \
 	internal-node-06.hac
-# -05 needs yacc/bison stderr
-
-
-# pending create tests on: internal-node-*
-# create-fail: internal-node-07
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \
@@ -93,6 +88,7 @@ HACKT_CREATE_TEST_PASSES = \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
 	unstab-01 \
+	internal-node-00 \
 	act-001 act-002 act-006 act-007 act-010
 
 # TODO: precharge-00 etc. to middle and back-end tests
@@ -100,7 +96,8 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
-	null-01
+	null-01 \
+	internal-node-07
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...
@@ -128,6 +125,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	tree-02 tree-03 \
 	subckt-01 \
 	unstab-01 \
+	internal-node-00 \
 	act-001 act-002 act-006 act-007 act-010
 # pending: act-003 act-004 act-005
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_dummy_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_dummy_reference.h,v 1.1.2.2 2007/10/05 05:21:23 fang Exp $
+	$Id: simple_meta_dummy_reference.h,v 1.1.2.3 2007/10/06 00:05:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_DUMMY_REFERENCE_H__
@@ -72,6 +72,9 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
+	dump_local(ostream&) const;
 
 	never_ptr<const instance_placeholder_base>
 	get_inst_base(void) const;
