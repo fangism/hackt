@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.9.72.3 2007/10/06 02:49:59 fang Exp $
+	$Id: PRS_footprint.h,v 1.9.72.4 2007/10/06 21:14:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -8,6 +8,8 @@
 
 #include <iosfwd>
 #include <vector>
+#include <map>
+#include <string>
 #include "Object/inst/instance_pool_fwd.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
@@ -18,11 +20,6 @@
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
 
-#include "Object/lang/PRS_base.h"	// just for PRS_INTERNAL_NODES switch
-#if PRS_INTERNAL_NODES
-#include <map>
-#include <string>
-#endif
 
 namespace HAC {
 struct cflat_options;
@@ -42,11 +39,9 @@ namespace PRS {
 using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
-#if PRS_INTERNAL_NODES
 using util::good_bool;
 using std::map;
 using std::string;
-#endif
 
 //=============================================================================
 /**
@@ -66,7 +61,6 @@ public:
 	typedef	footprint_expr_node		expr_node;
 	typedef	footprint_rule			rule;
 	typedef	footprint_macro			macro;
-#if PRS_INTERNAL_NODES
 	/**
 		Expression pull direction for internal node.
 		pull-up is true, pull-down if false.
@@ -82,7 +76,6 @@ public:
 		of their string representations?  (yes, but not critical now)
 	 */
 	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
-#endif
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
@@ -94,9 +87,7 @@ private:
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
 	macro_pool_type				macro_pool;
-#if PRS_INTERNAL_NODES
 	internal_node_expr_map_type		internal_node_expr_map;
-#endif
 
 public:
 	footprint();
@@ -124,14 +115,12 @@ private:
 	dump_macro(const macro&, ostream&, const node_pool_type&);
 
 public:
-#if PRS_INTERNAL_NODES
 	// a method for registering internal nodes and expressions
 	good_bool
 	register_internal_node_expr(const string&, const size_t, const bool);
 
 	size_t
 	lookup_internal_node_expr(const string&, const bool) const;
-#endif
 
 	// returns reference to new expression node
 	expr_node&

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.19.6.5 2007/10/05 05:21:07 fang Exp $
+	$Id: PRS.h,v 1.19.6.6 2007/10/06 21:14:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -64,10 +64,8 @@ public:
 	explicit
 	literal(const literal_base_ptr_type&);
 
-#if PRS_INTERNAL_NODES
 	explicit
 	literal(const node_literal_ptr_type&);
-#endif
 
 	literal(const bool_literal&, const params_type&);
 

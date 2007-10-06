@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.10 2007/10/06 04:20:13 fang Exp $
+	$Id: PRS.cc,v 1.24.6.11 2007/10/06 21:14:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -12,6 +12,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE		0
 
+#include <sstream>
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
@@ -21,11 +22,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
-#if PRS_INTERNAL_NODES
-#include <sstream>
 #include "Object/traits/node_traits.h"
 #include "Object/ref/simple_meta_dummy_reference.h"
-#endif
 
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
@@ -466,7 +464,6 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		// dump context too?
 		return good_bool(false);
 	}
-#if PRS_INTERNAL_NODES
 if (output.is_internal()) {
 	// we have an internal-node definition
 	// rule-attributes are ignored for internal-node definitions
@@ -490,7 +487,6 @@ if (output.is_internal()) {
 		oss.str(), guard_expr_index, dir);
 } else {
 	// rule is a standard pull-up/dn
-#endif
 	const size_t output_node_index = output.unroll_base(c);
 	if (!output_node_index) {
 		output.dump(cerr <<
@@ -531,9 +527,7 @@ if (output.is_internal()) {
 		r.push_back(footprint_rule_attribute(key, att_vals));
 	}
 }
-#if PRS_INTERNAL_NODES
-}
-#endif
+}	// end if output.is_internal()
 	return good_bool(true);
 }
 
@@ -1900,10 +1894,8 @@ literal::literal(const literal_base_ptr_type& l) :
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
 literal::literal(const node_literal_ptr_type& l) :
 		prs_expr(), base_type(l), params() { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -1930,12 +1922,7 @@ literal::dump(ostream& o, const expr_dump_context& c) const {
 void
 literal::check(void) const {
 	STACKTRACE("literal::check()");
-#if PRS_INTERNAL_NODES
 	assert(var || int_node);
-#else
-	assert(var);
-	// var->check();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1945,19 +1932,15 @@ literal::check(void) const {
 prs_expr_ptr_type
 literal::negate(void) const {
 	STACKTRACE("literal::negate()");
-#if PRS_INTERNAL_NODES
 if (int_node) {
 	const count_ptr<this_type> ret(new this_type(*this));
-	ret->unnegate_node();	// retain everything else
+	ret->toggle_negate_node();	// retain everything else
 	return ret;
 } else {
 	// is this acceptable for internal_nodes?
-#endif
 	return prs_expr_ptr_type(new not_expr(
 		prs_expr_ptr_type(new this_type(*this))));
-#if PRS_INTERNAL_NODES
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1967,33 +1950,24 @@ if (int_node) {
 prs_expr_ptr_type
 literal::negation_normalize(void) {
 	STACKTRACE("literal::negation_normalize()");
-#if PRS_INTERNAL_NODES
 if (int_node) {
-	FINISH_ME_EXIT(Fang);
+//	FINISH_ME_EXIT(Fang);
 	return prs_expr_ptr_type(NULL);
 } else {
-#endif
 	return prs_expr_ptr_type(NULL);
-#if PRS_INTERNAL_NODES
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper around unroll_base that provide error message.  
+	\pre this literal must refer to a bool, not an internal node.
 	\return index of the node referenced, local to this definition only, 
 		NOT the globally allocated one.  
  */
 size_t
 literal::unroll_node(const unroll_context& c) const {
-#if PRS_INTERNAL_NODES
-if (int_node) {
-	FINISH_ME(Fang);
-	// TODO: expression lookup
-	return 0;
-} else {
-#endif
+	NEVER_NULL(var);
 	const size_t ret = unroll_base(c);
 	if (!ret) {
 		base_type::dump(
@@ -2002,9 +1976,6 @@ if (int_node) {
 			<< endl;
 	}
 	return ret;
-#if PRS_INTERNAL_NODES
-}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2018,8 +1989,7 @@ size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 	PRS::footprint::expr_node* new_expr = NULL;
-#if PRS_INTERNAL_NODES
-if (int_node) {
+if (is_internal()) {
 	const node_literal_ptr_type
 		nref(unroll_node_reference(c));
 	if (!nref) {
@@ -2040,7 +2010,6 @@ if (int_node) {
 	new_expr = &(pfp.push_back_expr(PRS_NODE_TYPE_ENUM, 1));
 	(*new_expr)[1] = guard_index;
 } else {
-#endif
 	const size_t node_index = unroll_node(c);
 	if (!node_index) {
 		// already have error message
@@ -2048,9 +2017,7 @@ if (int_node) {
 	}
 	new_expr = &(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
 	(*new_expr)[1] = node_index;
-#if PRS_INTERNAL_NODES
-}
-#endif
+}	// end if int_node
 	// should attributes even apply to internal nodes?
 	const size_t perr = directive_source::unroll_params(params, c,
 			new_expr->get_params());

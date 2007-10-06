@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.8.68.3 2007/10/05 05:21:08 fang Exp $
+	$Id: PRS_base.h,v 1.8.68.4 2007/10/06 21:14:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -17,10 +17,10 @@
 /**
 	Define to 1 to support internal nodes.
 	Goal: 1
-	Priority: med (for ACT compatbility)
-	Status: in progress
-**/
+	Priority: med (for ACT compatibility)
+	Status: perm'd on branch ACT-00-01-04-main-00-81-74-ACT-01-11-PRS-08
 #define	PRS_INTERNAL_NODES			1
+**/
 
 namespace HAC {
 namespace entity {

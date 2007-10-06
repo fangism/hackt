@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.6.68.5 2007/10/06 00:05:53 fang Exp $
+	$Id: bool_literal.cc,v 1.6.68.6 2007/10/06 21:14:23 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -9,13 +9,10 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-// #include "Object/ref/member_meta_instance_reference.h"	// for parent
 #include "Object/lang/PRS.h"	// for PRS::literal, PRS::expr_dump_context
 #include "Object/expr/expr_dump_context.h"
-#if PRS_INTERNAL_NODES
 #include "Object/traits/node_traits.h"
 #include "Object/ref/simple_meta_dummy_reference.h"
-#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.h"
@@ -29,52 +26,39 @@ using util::read_value;
 //=============================================================================
 // class bool_literal method definitions
 
-bool_literal::bool_literal() : var(NULL)
-#if PRS_INTERNAL_NODES
-		, int_node(NULL), negated(false)
-#endif
+bool_literal::bool_literal() : var(NULL), int_node(NULL), negated(false)
 	{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_literal::bool_literal(const bool_literal_base_ptr_type& l) : var(l)
-#if PRS_INTERNAL_NODES
-		, int_node(NULL), negated(false)
-#endif
-		{
+bool_literal::bool_literal(const bool_literal_base_ptr_type& l) :
+		var(l), int_node(NULL), negated(false) {
 	NEVER_NULL(var);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
 bool_literal::bool_literal(const node_literal_ptr_type& l) :
 		var(), int_node(l), negated(false) {
 	NEVER_NULL(int_node);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This seems redundant... gimme delegating ctors!
  */
 bool_literal::bool_literal(const count_ptr<const PRS::literal>& l) :
-		var(l->get_bool_var())
-#if PRS_INTERNAL_NODES
-		, int_node(l->internal_node()), negated(false)
-#endif
+		var(l->get_bool_var()), 
+		int_node(l->internal_node()), negated(false)
 		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::bool_literal(const count_ptr<PRS::literal>& l) :
-		var(l->get_bool_var())
-#if PRS_INTERNAL_NODES
-		, int_node(l->internal_node()), negated(false)
-#endif
+		var(l->get_bool_var()), 
+		int_node(l->internal_node()), negated(false)
 		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
 bool_literal::bool_literal(const bool_literal& b) :
 		var(b.var), int_node(b.int_node), negated(b.negated) {
 }
@@ -93,7 +77,6 @@ bool_literal::operator == (const bool_literal& r) const {
 	return (var == r.var) && (int_node == r.int_node)
 		&& (negated == r.negated);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::~bool_literal() { }
@@ -101,17 +84,13 @@ bool_literal::~bool_literal() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 bool_literal::dump(ostream& o, const expr_dump_context& c) const {
-#if PRS_INTERNAL_NODES
 if (var) {
-#endif
 	return var->dump(o, c);
-#if PRS_INTERNAL_NODES
 } else {
 	NEVER_NULL(int_node);
 	if (negated) o << '~';
 	return int_node->dump(o << '@', c);
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,7 +123,6 @@ bool_literal::unroll_base(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRS_INTERNAL_NODES
 /**
 	Negatedness is irrelevant here.
  */
@@ -154,7 +132,6 @@ bool_literal::unroll_node_reference(const unroll_context& c) const {
 	NEVER_NULL(int_node);
 	return int_node->__unroll_resolve_copy(c, int_node);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -163,17 +140,13 @@ bool_literal::unroll_node_reference(const unroll_context& c) const {
  */
 bool_literal
 bool_literal::unroll_reference(const unroll_context& c) const {
-#if PRS_INTERNAL_NODES
 if (var) {
-#endif
 	const count_ptr<const simple_bool_meta_instance_reference>	
 		p(var->__unroll_resolve_copy(c, var));
 	return bool_literal(p);
-#if PRS_INTERNAL_NODES
 } else {
 	return bool_literal(unroll_node_reference(c));
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -210,29 +183,26 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_literal::collect_transient_info_base(persistent_object_manager& m) const {
-#if PRS_INTERNAL_NODES
 if (var) {
-#endif
 	var->collect_transient_info(m);
-#if PRS_INTERNAL_NODES
 } else {
 	NEVER_NULL(int_node);
 	int_node->collect_transient_info(m);
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reminder: var is exclusive with int_node.
+ */
 void
 bool_literal::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	m.write_pointer(o, var);
-#if PRS_INTERNAL_NODES
 	if (!var) {
 		m.write_pointer(o, int_node);
 		write_value(o, negated);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -240,12 +210,10 @@ void
 bool_literal::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	m.read_pointer(i, var);
-#if PRS_INTERNAL_NODES
 	if (!var) {
 		m.read_pointer(i, int_node);
 		read_value(i, negated);
 	}
-#endif
 }
 
 //=============================================================================

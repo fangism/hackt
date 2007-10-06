@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.28.10.2 2007/10/06 00:05:52 fang Exp $
+	$Id: expr.cc,v 1.28.10.3 2007/10/06 21:14:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1339,7 +1339,7 @@ prefix_expr::check_prs_expr(context& c) const {
 			".  Aborting... have a nice day." << endl;
 		);
 	}
-#if PRS_INTERNAL_NODES
+	// intercept internal node
 	typedef	entity::PRS::literal		literal_type;
 	const count_ptr<literal_type>
 		lit(pe.is_a<literal_type>());
@@ -1349,7 +1349,6 @@ prefix_expr::check_prs_expr(context& c) const {
 			return lit;
 		}
 	}
-#endif
 	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
 

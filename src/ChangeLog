@@ -5,6 +5,11 @@
 
 2007-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-14:
+	  Perm'd PRS_INTERNAL_NODES.  
+	  End of branch.
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-13:
 	  AST/parse_options.h: option to reject internal-node arrays
 		for ACT compatiblity mode.

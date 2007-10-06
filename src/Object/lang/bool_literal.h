@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.4.84.5 2007/10/06 04:20:14 fang Exp $
+	$Id: bool_literal.h,v 1.4.84.6 2007/10/06 21:14:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -9,7 +9,6 @@
 
 #include <iosfwd>
 #include "Object/ref/references_fwd.h"
-#include "Object/lang/PRS_base.h"		// for PRS_INTERNAL_NODES
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 #include "util/size_t.h"
@@ -35,10 +34,8 @@ namespace PRS {
 typedef	count_ptr<const simple_bool_meta_instance_reference>	
 						bool_literal_base_ptr_type;
 
-#if PRS_INTERNAL_NODES
 typedef	count_ptr<const simple_node_meta_instance_reference>
 						node_literal_ptr_type;
-#endif
 
 //=============================================================================
 /**
@@ -54,7 +51,6 @@ protected:
 		macros and spec directives.
 	 */
 	bool_literal_base_ptr_type			var;
-#if PRS_INTERNAL_NODES
 	/**
 		This pointer is mutually exclusive with the 
 		var bool-ref member.
@@ -67,7 +63,6 @@ protected:
 		variant expression, else references the pull-up.
 	 */
 	bool					negated;
-#endif
 public:
 	bool_literal();
 
@@ -78,12 +73,12 @@ public:
 	explicit
 	bool_literal(const bool_literal_base_ptr_type&);
 
-#if PRS_INTERNAL_NODES
 	explicit
 	bool_literal(const node_literal_ptr_type&);
-#endif
 
-#if PRS_INTERNAL_NODES
+	// The following are un-inlined to not have to require complete type
+	// on simple_node_meta_instance_reference:
+
 	// copy-ctor
 	bool_literal(const bool_literal&);
 
@@ -95,7 +90,6 @@ public:
 
 	bool
 	valid(void) const { return var || int_node; }
-#endif
 
 	~bool_literal();
 
@@ -108,7 +102,6 @@ public:
 	ostream&
 	dump(ostream&, const PRS::expr_dump_context&) const;
 
-#if PRS_INTERNAL_NODES
 	bool
 	is_internal(void) const { return int_node; }
 
@@ -121,19 +114,17 @@ public:
 	void
 	unnegate_node(void) { negated = false; }
 
+	void
+	toggle_negate_node(void) { negated = !negated; }
+
 	bool
 	is_negated(void) const { return negated; }
 
 	node_literal_ptr_type
 	unroll_node_reference(const unroll_context&) const;
-#endif
 
 	bool_literal
 	unroll_reference(const unroll_context&) const;
-
-#if 0
-	operator bool () const { return var; }
-#endif
 
 	size_t
 	unroll_base(const unroll_context&) const;
