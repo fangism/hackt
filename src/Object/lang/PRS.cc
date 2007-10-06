@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.6.8 2007/10/06 00:05:53 fang Exp $
+	$Id: PRS.cc,v 1.24.6.9 2007/10/06 02:49:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -486,8 +486,8 @@ if (output.is_internal()) {
 	// register guard expression
 	std::ostringstream oss;
 	nref->dump_local(oss);
-	oss << (dir ? '+' : '-');
-	return pfp.register_internal_node_expr(oss.str(), guard_expr_index);
+	return pfp.register_internal_node_expr(
+		oss.str(), guard_expr_index, dir);
 } else {
 	// rule is a standard pull-up/dn
 #endif
@@ -2028,13 +2028,12 @@ if (int_node) {
 	}
 	std::ostringstream oss;
 	nref->dump_local(oss);
-	oss << (is_negated() ? '-' : '+');
 	size_t guard_index;
 	try {
-		guard_index = pfp.lookup_internal_node_expr(oss.str());
+		guard_index = pfp.lookup_internal_node_expr(
+			oss.str(), !is_negated());
 	} catch (...) {
-		cerr << "Error: undefined internal node rule: "
-			<< oss.str() << endl;
+		// already have error message
 		return 0;
 	}
 	new_expr = &(pfp.push_back_expr(PRS_NODE_TYPE_ENUM, 1));

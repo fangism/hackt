@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.9.72.2 2007/10/05 21:13:49 fang Exp $
+	$Id: PRS_footprint.h,v 1.9.72.3 2007/10/06 02:49:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -68,6 +68,11 @@ public:
 	typedef	footprint_macro			macro;
 #if PRS_INTERNAL_NODES
 	/**
+		Expression pull direction for internal node.
+		pull-up is true, pull-down if false.
+	 */
+	typedef	std::pair<size_t, bool>		node_expr_type;
+	/**
 		This map keeps track of internal nodes defined in 
 		terms of one-sided guard expressions.  
 		String should be of the form: x[...]+.
@@ -76,7 +81,7 @@ public:
 		TODO: Is there a way to store refrence object instead
 		of their string representations?  (yes, but not critical now)
 	 */
-	typedef	map<string, size_t>		internal_node_expr_map_type;
+	typedef	map<string, node_expr_type>	internal_node_expr_map_type;
 #endif
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
@@ -122,10 +127,10 @@ public:
 #if PRS_INTERNAL_NODES
 	// a method for registering internal nodes and expressions
 	good_bool
-	register_internal_node_expr(const string&, const size_t);
+	register_internal_node_expr(const string&, const size_t, const bool);
 
 	size_t
-	lookup_internal_node_expr(const string&) const;
+	lookup_internal_node_expr(const string&, const bool) const;
 #endif
 
 	// returns reference to new expression node

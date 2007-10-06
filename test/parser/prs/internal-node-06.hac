@@ -4,7 +4,7 @@
 defproc bogus(bool x, y, w) {
 prs {
 	x & y		-> @z[0]-		// dies on ACT's cflat
-	// however, ew will try to support in HAC to make internal
+	// however, we will try to support in HAC to make internal
 	// nodes array-able...
 	~@z[0] & w	-> w-
 }

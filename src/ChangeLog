@@ -5,6 +5,13 @@
 
 2007-10-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-10:
+	  AST/expr.cc: => is not allowed with internal node definitions.
+	  PRS_footprint's node-expr map restructured to encode direction, 
+		so each unique node may be pulled in only one direction.
+	  Added some tests, more pending test cases coming...
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-09:
 	  First working draft of internal nodes for cflat and hacprsim.
 	  AST/expr.cc: prefix_expr::check_prs_expr():
