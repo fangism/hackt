@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3.2.8 2007/10/06 05:36:06 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.9 2007/10/06 20:12:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -192,6 +192,11 @@ if (internal) {
 	never_ptr<const token_identifier> dr;
 	never_ptr<const range_list> ind;
 	if (ir) {
+		if (!c.parse_opts.array_internal_nodes) {
+			cerr << "Error: internal node arrays are unsupported "
+				"in ACT mode.  " << where(*this) << endl;
+			return prs_literal_ptr_type(NULL);
+		}
 		const never_ptr<const inst_ref_expr> b(ir->get_base());
 		dr = b.is_a<const token_identifier>();
 		NEVER_NULL(b && dr);
@@ -268,38 +273,43 @@ if (ret && params) {
 prs_literal_ptr_type
 literal::check_prs_rhs(context& c) const {
 	STACKTRACE_VERBOSE;
-	if (internal) {
-		STACKTRACE_INDENT_PRINT("internal node setup" << endl);
-		// inject an implicit internal node declaration
-		const never_ptr<const index_expr>
-			ir(ref.is_a<const index_expr>());
-		const never_ptr<const id_expr>
-			dr(ref.is_a<const id_expr>());
-		never_ptr<const node_instance_placeholder> nd;
-		if (ir) {
-			// extract base and index dimensions
-			const never_ptr<const inst_ref_expr> b(ir->get_base());
-			const never_ptr<const token_identifier>
-				bd(b.is_a<const token_identifier>());
-			NEVER_NULL(b && bd);
-			nd = c.add_internal_node(*bd, 
-				ir->implicit_dimensions());
-			// only care about dimensions, not indices
-		} else if (dr) {
-			// is a scalar
-			nd = c.add_internal_node(*dr->get_id()->front(), 0);
-		} else {
-			cerr << "Unexpected prs-literal type: "
-				<< where(*ref) << endl;
+if (internal) {
+	STACKTRACE_INDENT_PRINT("internal node setup" << endl);
+	// inject an implicit internal node declaration
+	const never_ptr<const index_expr>
+		ir(ref.is_a<const index_expr>());
+	const never_ptr<const id_expr>
+		dr(ref.is_a<const id_expr>());
+	never_ptr<const node_instance_placeholder> nd;
+	if (ir) {
+		if (!c.parse_opts.array_internal_nodes) {
+			cerr << "Error: internal node arrays are unsupported "
+				"in ACT mode.  " << where(*this) << endl;
 			return prs_literal_ptr_type(NULL);
 		}
-		if (!nd) {
-			cerr << "Error implicitly declaring internal node.  "
-				<< where(*ref) << endl;
-			return prs_literal_ptr_type(NULL);
-		}
-		// now return to normal lookup
+		// extract base and index dimensions
+		const never_ptr<const inst_ref_expr> b(ir->get_base());
+		const never_ptr<const token_identifier>
+			bd(b.is_a<const token_identifier>());
+		NEVER_NULL(b && bd);
+		nd = c.add_internal_node(*bd, 
+			ir->implicit_dimensions());
+		// only care about dimensions, not indices
+	} else if (dr) {
+		// is a scalar
+		nd = c.add_internal_node(*dr->get_id()->front(), 0);
+	} else {
+		cerr << "Unexpected prs-literal type: "
+			<< where(*ref) << endl;
+		return prs_literal_ptr_type(NULL);
 	}
+	if (!nd) {
+		cerr << "Error implicitly declaring internal node.  "
+			<< where(*ref) << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	// now return to normal lookup
+}
 	return check_prs_literal(c);
 }
 

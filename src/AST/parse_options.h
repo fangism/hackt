@@ -1,6 +1,6 @@
 /**
 	\file "AST/parse_options.h"
-	$Id: parse_options.h,v 1.1.2.2 2007/09/29 06:13:00 fang Exp $
+	$Id: parse_options.h,v 1.1.2.2.2.1 2007/10/06 20:12:34 fang Exp $
  */
 
 #ifndef	__HAC_AST_PARSE_OPTIONS_H__
@@ -29,6 +29,11 @@ struct parse_options {
 		Default true.  (ACT-mode: false)
 	 */
 	bool		namespace_instances;
+	/**
+		Set to true to allow implicit arrays of internal nodes.  
+		Default true  (ACT-mode: false).
+	 */
+	bool		array_internal_nodes;
 
 	parse_options() : 
 #if REQUIRE_DEFINITION_EXPORT
@@ -36,7 +41,8 @@ struct parse_options {
 #else
 		export_all(true),
 #endif
-		namespace_instances(true)
+		namespace_instances(true), 
+		array_internal_nodes(true)
 		{ }
 
 };	// end class parse_options

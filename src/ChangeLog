@@ -5,6 +5,15 @@
 
 2007-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-13:
+	  AST/parse_options.h: option to reject internal-node arrays
+		for ACT compatiblity mode.
+	  sim/prsim/State-prsim.cc: (dump_node_fanout)
+		eliminate duplicate fanout rules.
+	  Next: Perm PRS_INTERNAL_NODES in Object/lang/PRS_base.h
+		and merge to parent branch.
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-12:
 	  AST/PRS.cc: fixed base ID extraction in internal_node array refs.
 	  Enabled bunch more (realistic) test cases to test/parser/prs.

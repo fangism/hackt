@@ -1,0 +1,22 @@
+// "precharge-a.hac"
+// copied modified from "parser/prs/internal-node-12.hac"
+// expect pass
+
+// resembles a precharge stage
+template <pint N>
+defproc precharger(bool x[N], y[N], w) {
+bool en;
+prs {
+	en			-> @z-
+(:i:N:
+	~@z & x[i] & y[i]	-> w-
+)
+	~en			-> w+
+}
+}
+
+precharger<2> A;
+
+bool x[2], y[2], o;
+precharger<2> P(x, y, o);
+
