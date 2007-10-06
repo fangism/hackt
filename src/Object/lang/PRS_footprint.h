@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.9.72.4 2007/10/06 21:14:22 fang Exp $
+	$Id: PRS_footprint.h,v 1.9.72.5 2007/10/06 21:25:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -16,6 +16,7 @@
 #include "Object/lang/PRS_footprint_macro.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "util/macros.h"
+#include "util/boolean_types.h"
 #include "util/list_vector.h"
 #include "util/offset_array.h"
 #include "util/persistent_fwd.h"
