@@ -5,6 +5,13 @@
 
 2007-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-12:
+	  AST/PRS.cc: fixed base ID extraction in internal_node array refs.
+	  Enabled bunch more (realistic) test cases to test/parser/prs.
+	  Branch nearly ripe for merge (to parent branch).  
+		No known problems, but would be nice to test prsim as well.
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-11-PRS-08-11:
 	  Tackled some FINISH_ME's:
 	  AST/instance.cc: added position of error in alias list.

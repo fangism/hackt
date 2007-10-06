@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.3.2.7 2007/10/06 02:49:58 fang Exp $
+	$Id: PRS.cc,v 1.25.2.3.2.8 2007/10/06 05:36:06 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -189,22 +189,25 @@ if (internal) {
 	STACKTRACE_INDENT_PRINT("internal node setup" << endl);
 	const never_ptr<const index_expr>
 		ir(ref.is_a<const index_expr>());
-	never_ptr<const id_expr> dr;
+	never_ptr<const token_identifier> dr;
 	never_ptr<const range_list> ind;
 	if (ir) {
 		const never_ptr<const inst_ref_expr> b(ir->get_base());
-		dr = b.is_a<const id_expr>();
+		dr = b.is_a<const token_identifier>();
 		NEVER_NULL(b && dr);
 		ind = ir->get_indices();
 	} else {
-		dr = ref.is_a<const id_expr>();
+		const never_ptr<const id_expr>
+			b(ref.is_a<const id_expr>());
+		NEVER_NULL(b);
+		dr = never_ptr<const token_identifier>(&*b->get_id()->front());
 		if (!dr) {
 			cerr << "Unexpected prs-literal type: "
 				<< where(*ref) << endl;
 			return prs_literal_ptr_type(NULL);
 		}
 	}
-	const token_identifier& id(*dr->get_id()->front());
+	const token_identifier& id(*dr);
 	const never_ptr<const node_instance_placeholder>
 		np(c.lookup_internal_node(id));
 	if (!np) {
@@ -276,10 +279,10 @@ literal::check_prs_rhs(context& c) const {
 		if (ir) {
 			// extract base and index dimensions
 			const never_ptr<const inst_ref_expr> b(ir->get_base());
-			const never_ptr<const id_expr>
-				bd(b.is_a<const id_expr>());
+			const never_ptr<const token_identifier>
+				bd(b.is_a<const token_identifier>());
 			NEVER_NULL(b && bd);
-			nd = c.add_internal_node(*bd->get_id()->front(), 
+			nd = c.add_internal_node(*bd, 
 				ir->implicit_dimensions());
 			// only care about dimensions, not indices
 		} else if (dr) {

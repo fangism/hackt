@@ -1,0 +1,21 @@
+// "internal-node-15.hac"
+// copy-modified from "internal-node-12.hac"
+// expect pass
+
+// resembles a precharge stage
+defproc bogus(bool x, y, e[2], w) {
+bool en;
+prs {
+	en			-> @z-
+(:i:2:
+	// internal node defining another internal node
+	~@z & e[i]		-> @q[i]-
+)
+	~@q[0] & x		-> w-
+	~@q[1] & y		-> w-
+	~en			-> w+
+}
+}
+
+bogus A;
+

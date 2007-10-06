@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.4.2.8 2007/10/06 04:20:15 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.4.2.9 2007/10/06 05:36:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -55,12 +55,10 @@ HACKT_PARSE_TEST_PASSES = \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-010 \
-	internal-node-00 internal-node-07 internal-node-09 internal-node-10
+	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
+	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
+	internal-node-15
 # pending: act-008 act-009
-# in progress:
-
-EXTRA_DIST += \
-	internal-node-06.hac
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \
@@ -88,7 +86,8 @@ HACKT_CREATE_TEST_PASSES = \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
 	unstab-01 \
-	internal-node-00 \
+	internal-node-00 internal-node-06 \
+	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	act-001 act-002 act-006 act-007 act-010
 
 # TODO: precharge-00 etc. to middle and back-end tests
@@ -125,7 +124,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	tree-02 tree-03 \
 	subckt-01 \
 	unstab-01 \
-	internal-node-00 \
+	internal-node-00 internal-node-06 \
+	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	act-001 act-002 act-006 act-007 act-010
 # pending: act-003 act-004 act-005
 
