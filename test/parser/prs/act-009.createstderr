@@ -1,0 +1,9 @@
+Error: internal node `l' is used in the wrong sense.
+Error in sub-expression 0.
+Error resolving production rule expression at:
+Error unrolling production rule guard: 
+	~@foo::l & foo::e -> foo::d-
+Error instantiating process footprint: 
+From canonical type: foo<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

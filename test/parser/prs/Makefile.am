@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.6 2007/10/07 02:22:04 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.7 2007/10/07 04:27:29 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -54,14 +54,14 @@ HACKT_PARSE_TEST_PASSES = \
 	unstab-01 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
-	act-006 act-007 act-010 \
+	act-006 act-007 act-009 act-010 \
 	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
 	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
-	internal-node-15 \
+	internal-node-15 internal-node-17 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
-# pending: act-008 act-009
+# pending: act-008
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \
@@ -91,6 +91,7 @@ HACKT_CREATE_TEST_PASSES = \
 	unstab-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
+	internal-node-17 \
 	act-001 act-002 act-006 act-007 act-010 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
@@ -102,6 +103,7 @@ HACKT_CREATE_TEST_PASSES = \
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
 	null-01 \
+	act-009 \
 	internal-node-07 internal-node-09 internal-node-10
 
 # known defect reports: unresolved language issues
@@ -132,6 +134,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	unstab-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
+	internal-node-17 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \

@@ -1,0 +1,8 @@
+"bar.w[0]" -> "bar.x"-
+"bar.w[0]" -> "bar.x"-
+"bar.w[1]" -> "bar.x"-
+"bar.w[2]" -> "bar.x"-
+"bar.w[3]" -> "bar.x"-
+"bar.a" & "bar.b" -> "bar.c"-
+"bar.d" & "bar.e" -> "bar.d"-
+after 0	"bar.x" & ~"bar.x" -> "bar.y"-
