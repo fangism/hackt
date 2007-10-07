@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.3.2.2 2007/10/07 02:21:36 fang Exp $
+@c $Id: PRS.texi,v 1.3.2.3 2007/10/07 03:32:46 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -47,7 +47,7 @@ and the @prsand{} operator has higher precedence than the @prsor{} operator.)
 
 @cindex shorthand PRS arrow
 @cindex arrow, PRS shorthand
-The rule arrow @prsarrow{} can be substituted with one of its shorthand forms.
+The rule arrow @prsrarrow{} can be substituted with one of its shorthand forms.
 The @prscarrow{} arrow automatically generates the complementary rule 
 (pulling on opposite direction) using the DeMorgan inverse of the guard.
 The @prsfarrow{} arrow mirrors the rule pulling in the opposite direction
