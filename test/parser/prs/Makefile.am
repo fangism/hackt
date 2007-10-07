@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.7 2007/10/07 04:27:29 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.8 2007/10/07 22:58:13 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -52,6 +52,8 @@ HACKT_PARSE_TEST_PASSES = \
 	subckt-06 \
 	precharge-00 \
 	unstab-01 \
+	comb-01 \
+	keeper-01 \
 	prs-param-01 \
 	act-001 act-002 act-003 act-004 act-005 \
 	act-006 act-007 act-009 act-010 \
@@ -61,7 +63,12 @@ HACKT_PARSE_TEST_PASSES = \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
-# pending: act-008
+# pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
+
+srcdir_EXTRA_DIST += \
+	act-008.hac \
+	rule-type-01.hac rule-type-02.hac rule-type-03.hac rule-type-04.hac \
+	rule-type-05.hac rule-type-06.hac
 
 HACKT_CREATE_TEST_PASSES = \
 	inv-01 \
@@ -89,10 +96,12 @@ HACKT_CREATE_TEST_PASSES = \
 	tree-02 tree-03 tree-04 \
 	subckt-01 subckt-03 subckt-05 subckt-06 \
 	unstab-01 \
+	comb-01 \
+	keeper-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
-	act-001 act-002 act-006 act-007 act-010 \
+	act-001 act-002 act-005 act-006 act-007 act-010 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
@@ -132,14 +141,16 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	tree-02 tree-03 \
 	subckt-01 \
 	unstab-01 \
+	comb-01 \
+	keeper-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
 	internal-node-17 \
 	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
 	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
 	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
-	act-001 act-002 act-006 act-007 act-010
-# pending: act-003 act-004 act-005
+	act-001 act-002 act-005 act-006 act-007 act-010
+# pending: act-003 act-004
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
@@ -160,8 +171,8 @@ HACKT_ALLOC_TEST_PASSES = \
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
 	size-01 size-03 size-04 size-05 \
-	act-010
-# pending: act-004.hac act-005
+	act-005 act-010
+# pending: act-004
 
 # subset of HACKT_CFLAT_TEST_SUBJECTS
 HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \

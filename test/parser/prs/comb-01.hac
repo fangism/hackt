@@ -1,0 +1,9 @@
+// "comb-01.hac"
+// combinational feedback attribute
+
+bool x, y, z;
+prs {
+[comb=1]	x & y	#> z-
+}
+
+

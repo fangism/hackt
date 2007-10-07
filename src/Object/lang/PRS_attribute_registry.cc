@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.11 2007/09/13 23:53:01 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.11.2.1 2007/10/07 22:58:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -15,6 +15,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS_attribute_common.h"
 #include "main/cflat_options.h"
+#include "common/TODO.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
@@ -22,7 +23,6 @@ namespace HAC {
 namespace entity {
 namespace PRS {
 #include "util/using_ostream.h"
-using util::qmap;
 
 //-----------------------------------------------------------------------------
 // global initializers
@@ -95,6 +95,7 @@ DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(After, "after")
 
 /**
 	Prints out "after x" before a rule in cflat.  
+	TODO: allow real-values.
  */
 void
 After::main(visitor_type& p, const values_type& v) {
@@ -110,7 +111,7 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 /***
 @texinfo prs/attribute-weak.texi
 @defmac weak b
-If @var{b} is true, rule is considered weak, e.g. feedback, 
+If @var{b} is true (1), rule is considered weak, e.g. feedback, 
 and may be overpowered by non-weak rules.  
 @end defmac
 @end texinfo
@@ -135,7 +136,7 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 /***
 @texinfo prs/attribute-unstab.texi
 @defmac unstab b
-If @var{b} is true, rule is allowed to be unstable, as an exception.
+If @var{b} is true (1), rule is allowed to be unstable, as an exception.
 @end defmac
 @end texinfo
 ***/
@@ -154,6 +155,121 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
       }
 }
 }
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-comb.texi
+@defmac comb b
+If @var{b} is true (1), use combinational feedback.
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Comb, "comb")
+
+/**
+      Prints out "comb" before a rule in cflat.  
+ */
+void
+Comb::main(visitor_type& p, const values_type& v) {
+#if 0
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+      const pint_const& pi(*v[0].is_a<const pint_const>());
+      if (pi.static_constant_value()) {
+              ostream& o(p.os);
+              o << "comb\t";
+      }
+}
+#else
+	// do nothing yet
+#endif
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-keeper.texi
+@defmac keeper b
+If @var{b} is true (1), staticize (explicitly).
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Keeper, "keeper")
+
+/**
+      Prints out "comb" before a rule in cflat.  
+ */
+void
+Keeper::main(visitor_type& p, const values_type& v) {
+#if 0
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+      const pint_const& pi(*v[0].is_a<const pint_const>());
+      if (pi.static_constant_value()) {
+              ostream& o(p.os);
+              o << "keeper\t";
+      }
+}
+#else
+	// do nothing yet
+#endif
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-output.texi
+@defmac keeper b
+If @var{b} is true (1), staticize (explicitly).
+Q: should this really be a rule-attribute? better off as node-attribute?
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Output, "output")
+
+/**
+      Prints out "comb" before a rule in cflat.  
+ */
+void
+Output::main(visitor_type& p, const values_type& v) {
+#if 0
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+      const pint_const& pi(*v[0].is_a<const pint_const>());
+      if (pi.static_constant_value()) {
+              ostream& o(p.os);
+              o << "output\t";
+      }
+}
+#else
+	FINISH_ME(Fang);
+#endif
+}
+
+//-----------------------------------------------------------------------------
+/***
+@texinfo prs/attribute-loadcap.texi
+@defmac loadcap C
+Use @var{C} as load capacitance instead of inferring from configuration. 
+@end defmac
+@end texinfo
+***/
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(LoadCap, "loadcap")
+
+/**
+      Prints out "comb" before a rule in cflat.  
+ */
+void
+LoadCap::main(visitor_type& p, const values_type& v) {
+#if 0
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+	// use real-value
+      const pint_const& pi(*v[0].is_a<const pint_const>());
+      if (pi.static_constant_value()) {
+              ostream& o(p.os);
+              o << "keeper\t";
+      }
+}
+#else
+	FINISH_ME(Fang);
+#endif
+}
+
 
 #undef	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS
 //=============================================================================

@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.3.2.3 2007/10/07 03:32:46 fang Exp $
+@c $Id: PRS.texi,v 1.3.2.4 2007/10/07 22:58:04 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -240,6 +240,10 @@ Some existing attributes:
 @include prs/attribute-after.texi
 @include prs/attribute-weak.texi
 @include prs/attribute-unstab.texi
+@include prs/attribute-comb.texi
+@include prs/attribute-keeper.texi
+@include prs/attribute-output.texi
+@include prs/attribute-loadcap.texi
 
 @c ----------------------------------------------------------------------------
 @node PRS Literal attributes

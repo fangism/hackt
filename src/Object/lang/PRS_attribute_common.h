@@ -2,7 +2,7 @@
 	\file "Object/lang/PRS_attribute_common.h"
 	Contains base classes for all tool-independent implementations
 	of PRS rule attribute classes.  
-	$Id: PRS_attribute_common.h,v 1.4 2007/09/13 20:37:17 fang Exp $
+	$Id: PRS_attribute_common.h,v 1.4.2.1 2007/10/07 22:58:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_COMMON_H__
@@ -25,6 +25,7 @@ using util::good_bool;
 /**
 	Convenience macro for repetitive definitions.  
 	Consider using type tags to name these base classes?
+	Contains an argument-checking member function.  
  */
 #define	DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(class_name)			\
 struct class_name {							\
@@ -50,6 +51,22 @@ DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Weak)
 	Unstable attribute.  
  */
 DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Unstab)
+
+//-----------------------------------------------------------------------------
+// inherited attributes from ACT toolchain
+// source: http://vlsi.cornell.edu/wiki/doku.php?id=designtools:netgen
+
+/// for automatic combinational-feedback configuration
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Comb)
+
+/// for explicit staticizer
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Keeper)
+
+/// label terminals of pass transistors as output
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(Output)
+
+/// specify load capacitance, overriding default assumptions
+DECLARE_PRS_ATTRIBUTE_COMMON_STRUCT(LoadCap)
 
 //=============================================================================
 }	// end namespace attributes

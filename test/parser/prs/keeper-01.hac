@@ -1,0 +1,9 @@
+// "keeper-01.hac"
+// testing keeper attribute
+
+bool x, y, z;
+prs {
+[keeper=1]	x & y	#> z-
+}
+
+

@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-15:
+	  Added PRS rule attributes: comb, keeper, output, loadcap, 
+		some of which remain unimplemented as placeholders.  
+		Files: Object/lang/PRS_attribute_{common,registry}.cc, 
+			sim/prsim/ExprAlloc.cc
+		Also documented, with minimal tests.  
+	  Declaring this branch done, no major blockers left, unresolved
+		issues have workarounds.  Some untested test cases added, 
+		but flagged as pending on issues.  
+	  Ready to merge to trunk.
+
+
 2007-10-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74-ACT-01-14:
