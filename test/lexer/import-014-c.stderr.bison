@@ -16,3 +16,4 @@ in state #STATE#, possible rules are:
 acceptable tokens are: 
 	IMPLIES (shift)
 	RARROW (shift)
+	HASH_ARROW (shift)
