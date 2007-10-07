@@ -5,6 +5,11 @@
 
 2007-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-13:
+	  No source revision.
+	  PRS internal nodes documentation only.  
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-12-merged-PRS-08-14:
 	  Merged -PRS-08 child branch (rev. 14).
 	  Language has full support for internal nodes in PRS now.  
