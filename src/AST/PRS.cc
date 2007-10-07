@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25.2.4 2007/10/06 22:10:16 fang Exp $
+	$Id: PRS.cc,v 1.25.2.5 2007/10/07 02:21:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -91,6 +91,7 @@ using entity::pint_scalar;
 using entity::pbool_expr;
 using entity::meta_range_expr;
 using entity::meta_loop_base;
+using entity::PRS::pull_base;
 using std::find;
 using std::find_if;
 using std::mem_fun_ref;
@@ -391,17 +392,22 @@ rule::check_rule(context& c) const {
 			where(*r) << "." << endl;
 		THROW_EXIT;
 	}
-	const bool arrow_type = (arrow->text[0] == '=');
+	char arrow_type = pull_base::ARROW_NORMAL;
+	switch (arrow->text[0]) {
+	case '=': arrow_type = pull_base::ARROW_COMPLEMENT; break;
+	case '#': arrow_type = pull_base::ARROW_FLIP; break;
+	default: {}
+	}
 	if (arrow_type && o->is_internal()) {
 		cerr << "ERROR: internal nodes may only be defined with -> .  "
 			<< where(*this) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<entity::PRS::pull_base>
+	const count_ptr<pull_base>
 		ret((dir->text[0] == '+') ?
-			AS_A(entity::PRS::pull_base*,
+			AS_A(pull_base*,
 				new entity::PRS::pull_up(g, *o, arrow_type)) :
-			AS_A(entity::PRS::pull_base*,
+			AS_A(pull_base*,
 				new entity::PRS::pull_dn(g, *o, arrow_type)));
 	NEVER_NULL(ret);
 	if (attribs) {

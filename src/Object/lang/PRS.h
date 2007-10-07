@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.19.2.1 2007/10/06 22:10:45 fang Exp $
+	$Id: PRS.h,v 1.19.2.2 2007/10/07 02:21:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -95,6 +95,9 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
@@ -165,6 +168,12 @@ typedef	std::vector<attribute>		rule_attribute_list_type;
 
 //=============================================================================
 class pull_base : public rule {
+public:
+	enum arrow_type {
+		ARROW_NORMAL, 		// ->
+		ARROW_COMPLEMENT, 	// =>
+		ARROW_FLIP		// #>
+	};
 protected:
 	/**
 		Guard expression.  
@@ -177,8 +186,9 @@ protected:
 	bool_literal			output;
 	/**
 		Whether or not complement is implicit.
+		Uses arrow_type member enumeration.  
 	 */
-	bool				cmpl;
+	char				arrow_type;
 	/**
 		Attribute list.  
 		Want to make this a pointer for efficient duplication?
@@ -187,7 +197,7 @@ protected:
 
 	pull_base();
 
-	pull_base(const prs_expr_ptr_type&, const bool_literal&, const bool);
+	pull_base(const prs_expr_ptr_type&, const bool_literal&, const char);
 
 	pull_base(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
@@ -237,7 +247,7 @@ class pull_up : public pull_base {
 public:
 	pull_up();
 
-	pull_up(const prs_expr_ptr_type&, const bool_literal&, const bool);
+	pull_up(const prs_expr_ptr_type&, const bool_literal&, const char);
 
 	pull_up(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
@@ -273,7 +283,7 @@ class pull_dn : public pull_base {
 public:
 	pull_dn();
 
-	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const bool);
+	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const char);
 
 	pull_dn(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
@@ -542,6 +552,9 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
@@ -588,6 +601,9 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
@@ -621,6 +637,9 @@ public:
 
 	prs_expr_ptr_type
 	negate(void) const;
+
+	prs_expr_ptr_type
+	flip_literals(void) const;
 
 	prs_expr_ptr_type
 	negation_normalize(void);
@@ -669,6 +688,9 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
@@ -706,6 +728,9 @@ public:
 
 	prs_expr_ptr_type
 	negate(void) const;
+
+	prs_expr_ptr_type
+	flip_literals(void) const;
 
 	prs_expr_ptr_type
 	negation_normalize(void);

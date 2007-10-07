@@ -1,0 +1,8 @@
+// "auto-celem-00.hac"
+// testing #> syntax
+
+bool x, y, z;
+prs {
+x #> z-
+}
+

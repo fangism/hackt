@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.25.2.2 2007/09/25 22:42:54 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.25.2.3 2007/10/07 02:21:54 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -366,14 +366,11 @@ WS		{WHITESPACE}
 
 POSITIONTOKEN	[][(){}<>*%/=:;|!?~&^.,@#$+-]
 
-/* AT		"@"	*/
-/* POUND		"#"	*/
-/* DOLLAR		"$"	*/
-
 PLUSPLUS	"++"
 MINUSMINUS	"--"
 LARROW		"<-"
 RARROW		"->"
+HASH_ARROW	"#>"
 EQUAL		"=="
 NOTEQUAL	"!="
 LE		"<="
@@ -483,6 +480,7 @@ EMBEDFILE	^#FILE
 {NOTEQUAL}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return NOTEQUAL; }
 {IMPLIES}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return IMPLIES; }
 {RARROW}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return RARROW; }
+{HASH_ARROW}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return HASH_ARROW; }
 {PLUSPLUS}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return PLUSPLUS; }
 {MINUSMINUS}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return MINUSMINUS; }
 {LOGICAL_AND}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return LOGICAL_AND; }

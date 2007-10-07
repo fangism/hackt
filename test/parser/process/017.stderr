@@ -31,3 +31,4 @@ acceptable tokens are:
 	'}' (reduce)
 	IMPLIES (reduce)
 	RARROW (reduce)
+	HASH_ARROW (reduce)

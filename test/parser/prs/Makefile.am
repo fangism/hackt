@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33.2.5 2007/10/06 22:15:48 fang Exp $
+#	$Id: Makefile.am,v 1.33.2.6 2007/10/07 02:22:04 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -19,7 +19,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	precharge-01 \
 	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
 	internal-node-05 internal-node-08 \
-	internal-node-11
+	internal-node-11 internal-node-16
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
@@ -57,7 +57,10 @@ HACKT_PARSE_TEST_PASSES = \
 	act-006 act-007 act-010 \
 	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
 	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
-	internal-node-15
+	internal-node-15 \
+	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
+	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
 # pending: act-008 act-009
 
 HACKT_CREATE_TEST_PASSES = \
@@ -88,7 +91,10 @@ HACKT_CREATE_TEST_PASSES = \
 	unstab-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
-	act-001 act-002 act-006 act-007 act-010
+	act-001 act-002 act-006 act-007 act-010 \
+	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
+	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
 
 # TODO: precharge-00 etc. to middle and back-end tests
 # pending: act-003 act-004 act-005
@@ -126,6 +132,9 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	unstab-01 \
 	internal-node-00 internal-node-06 \
 	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
+	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
+	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
 	act-001 act-002 act-006 act-007 act-010
 # pending: act-003 act-004 act-005
 

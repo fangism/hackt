@@ -5,6 +5,14 @@
 
 2007-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-74-ACT-01-14:
+	  Added support for #> (flip-literals) PRS arrow, mimicking ACT-cflat.  
+		files: AST/PRS.cc, Object/lang/PRS.{h,cc}
+		new vfunction: prs_expr::flip_literals(), 
+		pull_base now uses enumeral arrow_type field.
+	  Includes test cases and documentation.  
+
+
 	* HACKT-00-01-04-main-00-81-74-ACT-01-13:
 	  No source revision.
 	  PRS internal nodes documentation only.  

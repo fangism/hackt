@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.30.2.6 2007/10/06 22:11:20 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.30.2.7 2007/10/07 02:21:55 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -501,7 +501,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* _token_string */
 %token	<_node_position>	LE GE EQUAL NOTEQUAL
-%token	<_node_position>	IMPLIES RARROW
+%token	<_node_position>	IMPLIES RARROW HASH_ARROW
 %token	<_node_position>	LOGICAL_AND LOGICAL_OR
 %token	<_node_position>	INSERT EXTRACT
 %token	<_node_position>	PLUSPLUS MINUSMINUS
@@ -2337,7 +2337,8 @@ prs_arrow
 	: RARROW 
 	/* generates combinatorial inverse */
 	| IMPLIES
-	/* what about #> for c-element? */
+	/* flips sense of all literals (mostly for C-elements) */
+	| HASH_ARROW
 	;
 
 dir

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.24.2.1 2007/10/06 22:10:43 fang Exp $
+	$Id: PRS.cc,v 1.24.2.2 2007/10/07 02:21:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -156,7 +156,17 @@ struct prs_expr::negater {
 		NEVER_NULL(e);
 		return e->negate();
 	}
-};	// end struct negation_normalizer
+};	// end struct negater
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct prs_expr::literal_flipper {
+	prs_expr_ptr_type
+	operator () (const const_prs_expr_ptr_type& e) const {
+		STACKTRACE("prs_expr::literal_flipper::operator ()");
+		NEVER_NULL(e);
+		return e->flip_literals();
+	}
+};	// end struct literal_flipper
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct prs_expr::negation_normalizer {
@@ -388,14 +398,14 @@ attribute::load_object(const persistent_object_manager& m, istream& i) {
 // class pull_base method definitions
 
 pull_base::pull_base() : rule(), guard(), output(), 
-		cmpl(false), 
+		arrow_type(ARROW_NORMAL), 
 		attributes() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const bool_literal& o, const bool c) :
+		const bool_literal& o, const char c) :
 		rule(), guard(g), output(o), 
-		cmpl(c), attributes() {
+		arrow_type(c), attributes() {
 	NEVER_NULL(guard);
 }
 
@@ -403,7 +413,7 @@ pull_base::pull_base(const prs_expr_ptr_type& g,
 pull_base::pull_base(const prs_expr_ptr_type& g, 
 		const bool_literal& o, const rule_attribute_list_type& l) :
 		rule(), guard(g), output(o), 
-		cmpl(false), attributes(l) {
+		arrow_type(ARROW_NORMAL), attributes(l) {
 	NEVER_NULL(guard);
 }
 
@@ -416,7 +426,14 @@ pull_base::dump_base(ostream& o, const rule_dump_context& c,
 		const char dir) const {
 	static const char* const norm_arrow = " -> ";
 	static const char* const comp_arrow = " => ";
-	guard->dump(o, c) << ((cmpl) ? comp_arrow : norm_arrow);
+	static const char* const flip_arrow = " #> ";
+	guard->dump(o, c);
+	switch (arrow_type) {
+	case ARROW_NORMAL: o << norm_arrow; break;
+	case ARROW_COMPLEMENT: o << comp_arrow; break;
+	case ARROW_FLIP: o << flip_arrow; break;
+	default: o << " ?> ";
+	}
 	output.dump(o, c);
 	o << dir;
 	if (!attributes.empty()) {
@@ -547,7 +564,7 @@ pull_base::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	m.write_pointer(o, guard);
 	output.write_object_base(m, o);
-	write_value(o, cmpl);
+	write_value(o, arrow_type);
 	util::write_persistent_sequence(m, o, attributes);
 }
 
@@ -556,7 +573,7 @@ void
 pull_base::load_object_base(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
 	output.load_object_base(m, i);
-	read_value(i, cmpl);
+	read_value(i, arrow_type);
 	util::read_persistent_sequence_resize(m, i, attributes);
 }
 
@@ -567,7 +584,7 @@ pull_up::pull_up() : pull_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_up::pull_up(const prs_expr_ptr_type& g, 
-		const bool_literal& o, const bool c) :
+		const bool_literal& o, const char c) :
 		pull_base(g, o, c) {
 }
 
@@ -594,18 +611,26 @@ pull_up::dump(ostream& o, const rule_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Expands this rule into its complement if the cmpl bit is set.  
+	Expands this rule into its complement arrow_type is COMPLEMENT.
 	The call to negate will result in negation-normal form.  
-	\return complement rule if the cmple bit is set, else NULL.  
+	\return expanded rule if appropriate, else NULL.  
  */
 excl_ptr<rule>
 pull_up::expand_complement(void) {
-	if (cmpl) {
-		cmpl = false;
+	switch (arrow_type) {
+	case ARROW_COMPLEMENT:
+		arrow_type = ARROW_NORMAL;	// un-flag this rule
 		return excl_ptr<rule>(
 			new pull_dn(guard->negate(), output, attributes));
 		// also do the same for internal_nodes?
-	} else	return excl_ptr<rule>(NULL);
+	case ARROW_FLIP:
+		arrow_type = ARROW_NORMAL;	// un-flag this rule
+		return excl_ptr<rule>(
+			new pull_dn(guard->flip_literals(), output, attributes));
+		break;
+	default: {}
+	}
+	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -652,7 +677,7 @@ pull_dn::pull_dn() : pull_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_dn::pull_dn(const prs_expr_ptr_type& g, 
-		const bool_literal& o, const bool c) :
+		const bool_literal& o, const char c) :
 		pull_base(g, o, c) {
 }
 
@@ -680,12 +705,20 @@ pull_dn::dump(ostream& o, const rule_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<rule>
 pull_dn::expand_complement(void) {
-	if (cmpl) {
-		cmpl = false;
+	switch (arrow_type) {
+	case ARROW_COMPLEMENT:
+		arrow_type = ARROW_NORMAL;	// un-flag this rule
 		return excl_ptr<rule>(
 			new pull_up(guard->negate(), output, attributes));
 		// also do the same for internal_nodes?
-	} else	return excl_ptr<rule>(NULL);
+	case ARROW_FLIP:
+		arrow_type = ARROW_NORMAL;	// un-flag this rule
+		return excl_ptr<rule>(
+			new pull_up(guard->flip_literals(), output, attributes));
+		break;
+	default: {}
+	}
+	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1282,6 +1315,16 @@ and_expr::negate(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+and_expr::flip_literals(void) const {
+	STACKTRACE("and_expr::flip_literals()");
+	count_ptr<this_type> ret(new this_type);
+	transform(begin(), end(), back_inserter(*ret),
+		prs_expr::literal_flipper());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modifies itself in-place!
 	NOTE: this is also usable for and_expr_loop, and hence, 
@@ -1441,6 +1484,14 @@ and_expr_loop::negate(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+and_expr_loop::flip_literals(void) const {
+	STACKTRACE("and_expr_loop::flip_literals()");
+	return count_ptr<this_type>(
+		new this_type(ind_var, range, body_expr->flip_literals()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modifies itself in-place!
 	NOTE: this is also usable for and_expr_loop, and hence, 
@@ -1542,6 +1593,16 @@ or_expr::negate(void) const {
 	STACKTRACE("or_expr::negate()");
 	const count_ptr<and_expr> ret(new and_expr);
 	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+or_expr::flip_literals(void) const {
+	STACKTRACE("or_expr::flip_literals()");
+	const count_ptr<this_type> ret(new this_type);
+	transform(begin(), end(), back_inserter(*ret),
+		prs_expr::literal_flipper());
 	return ret;
 }
 
@@ -1696,6 +1757,14 @@ or_expr_loop::negate(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+or_expr_loop::flip_literals(void) const {
+	STACKTRACE("or_expr_loop::flip_literals()");
+	return count_ptr<this_type>(
+		new this_type(ind_var, range, body_expr->flip_literals()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modifies itself in-place!
 	NOTE: this is also usable for or_expr_loop, and hence, 
@@ -1793,6 +1862,16 @@ not_expr::negate(void) const {
 	STACKTRACE("not_expr::negate()");
 	const prs_expr_ptr_type temp(var->negation_normalize());
 	return (temp ? temp : var);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+not_expr::flip_literals(void) const {
+	STACKTRACE("not_expr::flip_literals()");
+	const prs_expr_ptr_type temp(var->flip_literals());
+	count_ptr<not_expr> nt(temp.is_a<not_expr>());
+	// cancel out not-not bottom-up
+	return (nt ? nt->var : prs_expr_ptr_type(new this_type(temp)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1932,15 +2011,20 @@ literal::check(void) const {
 prs_expr_ptr_type
 literal::negate(void) const {
 	STACKTRACE("literal::negate()");
+	const count_ptr<this_type> copy(new this_type(*this));
 if (int_node) {
-	const count_ptr<this_type> ret(new this_type(*this));
-	ret->toggle_negate_node();	// retain everything else
-	return ret;
+	copy->toggle_negate_node();	// retain everything else
+	return copy;
 } else {
 	// is this acceptable for internal_nodes?
-	return prs_expr_ptr_type(new not_expr(
-		prs_expr_ptr_type(new this_type(*this))));
+	return prs_expr_ptr_type(new not_expr(copy));
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+literal::flip_literals(void) const {
+	return negate();	// well THAT was easy
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

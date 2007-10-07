@@ -1,0 +1,9 @@
+// "auto-celem-13.hac"
+// copy-modified from "auto-celem-12.hac"
+// testing #> syntax with loops
+
+bool x[4], z;
+prs {
+(|:i:4: x[i] ) #> z-
+}
+

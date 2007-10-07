@@ -1,0 +1,81 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	footprnt	0	#HEAD#	#TAIL#	572
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  5 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    a = bool<> a
+    b = bool<> b
+    x = bool<> x
+    y = bool<> y
+    z = bool<> z
+}
+
+top-level prs:
+  (~x & ~y) | (~a & ~b) -> z+
+  (x & y) | (a & b) -> z-
+
+footprint: {
+  a = bool^0 = a (3) 
+  b = bool^0 = b (4) 
+  x = bool^0 = x (1) 
+  y = bool^0 = y (2) 
+  z = bool^0 = z (5) 
+  Created state:
+  bool instance pool:
+  1	x
+  2	y
+  3	a
+  4	b
+  5	z
+  resolved prs:
+  (~x & ~y) | (~a & ~b) -> z+
+  (x & y) | (a & b) -> z-
+}

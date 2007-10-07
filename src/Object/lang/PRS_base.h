@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.8.64.1 2007/10/06 22:10:46 fang Exp $
+	$Id: PRS_base.h,v 1.8.64.2 2007/10/07 02:21:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -197,6 +197,9 @@ virtual	prs_expr_ptr_type
 	negate(void) const = 0;
 
 virtual	prs_expr_ptr_type
+	flip_literals(void) const = 0;
+
+virtual	prs_expr_ptr_type
 	negation_normalize(void) = 0;
 
 virtual	void
@@ -218,6 +221,7 @@ virtual	PRS_UNROLL_COPY_PROTO = 0;
 protected:
 	struct checker;
 	struct negater;
+	struct literal_flipper;
 	struct negation_normalizer;
 	struct unroller;
 	struct unroll_copier;
