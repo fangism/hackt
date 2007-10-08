@@ -1,0 +1,9 @@
+// "rule-type-01.hac"
+// experimental 3rd literal parameter
+
+bool x, y;
+prs {
+	x<5,2,lvt>	-> y-
+}
+
+

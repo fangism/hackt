@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.47 2007/09/15 18:56:42 fang Exp $
+	$Id: devel_switches.h,v 1.48 2007/10/08 01:21:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -209,6 +209,18 @@
 	This still feels dirty, but that's the way some like it.
  */
 #define	DEFTYPE_LIKE_PROCESS			1
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// ACT compatbility switches
+/**
+	Define to 1 to require definitions to be exported to 
+	be usable outside their home namespace.  
+	Note: does not apply to typedefs.  
+	Goal: 1
+	Rationale: ACT-compatibility
+	Status: in progress
+ */
+#define	REQUIRE_DEFINITION_EXPORT		1
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // the below flags are done, revisit and perm them later

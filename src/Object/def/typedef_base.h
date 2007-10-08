@@ -2,7 +2,7 @@
 	\file "Object/def/typedef_base.h"
 	Definition-related HAC object classes.  
 	This file originated from "Object/art_object_definition.h",  
-	$Id: typedef_base.h,v 1.6 2006/01/22 18:19:38 fang Exp $
+	$Id: typedef_base.h,v 1.7 2007/10/08 01:21:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TYPEDEF_BASE_H__
@@ -91,8 +91,17 @@ virtual	bool
 	excl_ptr<const fundamental_type_reference>
 	resolve_complete_type(never_ptr<const param_expr_list> p) const;
 #endif
+#if REQUIRE_DEFINITION_EXPORT
+	// overrides's definition_base
+	bool
+	is_exported(void) const;
+#endif
 
 private:
+#if REQUIRE_DEFINITION_EXPORT
+	using definition_base::mark_export;
+#endif
+
 virtual	void
 	load_used_id_map_object(excl_ptr<persistent>& o) = 0;
 };	// end class typedef_base

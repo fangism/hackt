@@ -1,0 +1,12 @@
+// "act-010.hac"
+// copy-modified from "act-001.hac"
+// added disambiguating parens
+
+template<pint x>
+defproc foo (bool b)
+{
+  [ (x > 0) -> foo w; ]
+  [ (x > 0) -> foo w; ]
+}
+
+

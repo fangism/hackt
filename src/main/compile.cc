@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.17 2007/09/14 04:29:56 fang Exp $
+	$Id: compile.cc,v 1.18 2007/10/08 01:21:48 fang Exp $
  */
 
 #include <iostream>
@@ -94,6 +94,7 @@ public:
 
 //=============================================================================
 // compile::options_modifier declarations and definitions
+// Texinfo documentation is below, under -f option.  
 
 static
 good_bool
@@ -145,6 +146,98 @@ static const compile::register_options_modifier
 __compile_om_no_dump_object_header("no-dump-object-header",
 	&__compile_no_dump_object_header,
 	"suppress persistent object header dump");
+
+//-----------------------------------------------------------------------------
+// dialect flags
+// texinfo documentation is below under option-f
+
+static
+good_bool
+__compile_export_all(compile::options& o) {
+	o.parse_opts.export_all = true;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_export_all("export-all", 
+	&__compile_export_all,
+	"treat all definitions as exported");
+
+static
+good_bool
+__compile_export_strict(compile::options& o) {
+	o.parse_opts.export_all = false;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_export_strict("export-strict", 
+	&__compile_export_strict,
+	"only export definitions that are marked as such (default, ACT)");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__compile_namespace_instances(compile::options& o) {
+	o.parse_opts.namespace_instances = true;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_namespace_instances("namespace-instances", 
+	&__compile_namespace_instances,
+	"allow instance management outside global namespace (default)");
+
+static
+good_bool
+__compile_no_namespace_instances(compile::options& o) {
+	o.parse_opts.namespace_instances = false;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_no_namespace_instances("no-namespace-instances", 
+	&__compile_no_namespace_instances,
+	"forbid instance management outside global namespace (ACT)");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__compile_array_internal_nodes(compile::options& o) {
+	o.parse_opts.array_internal_nodes = true;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_array_internal_nodes("array-internal-nodes", 
+	&__compile_array_internal_nodes,
+	"allow implicit arrays of internal nodes in PRS (default)");
+
+static
+good_bool
+__compile_no_array_internal_nodes(compile::options& o) {
+	o.parse_opts.array_internal_nodes = false;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_no_array_internal_nodes("no-array-internal-nodes", 
+	&__compile_no_array_internal_nodes,
+	"reject implicit arrays of internal nodes in PRS (ACT)");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__compile_ACT(compile::options& o) {
+	__compile_export_strict(o);
+	__compile_no_namespace_instances(o);
+	__compile_no_array_internal_nodes(o);
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_ACT("ACT", &__compile_ACT,
+	"preset: all ACT-mode flags maximum compatibility");
 
 //=============================================================================
 // class compile method definitions
@@ -272,6 +365,24 @@ general compile flags (repeatable) where @var{optname} is one of the following:
 @item @option{no-dump-object-header}:
         suppress persistent object header dump
 @end itemize
+
+Dialect flags (for ACT-compatbility):
+@itemize
+@item @option{export-all}:
+	Treat all definitions as exported, i.e. no export checking.
+@item @option{export-strict}:
+	Check that definitions are exported for use outside their
+	respective home namespaces (default, ACT).
+@item @option{namespace-instances}
+	Allow instance management outside global namespace (default).
+	Negatable with @t{no-} prefixed.
+	ACT mode: @option{no-namespace-instances}.
+@item @option{array-internal-nodes}
+	Allow implicit arrays of internal nodes in PRS (default).
+	Negatable with @t{no-} prefixed.
+	ACT mode: @option{no-array-internal-nodes}.
+@end itemize
+@option{ACT} is a preset that activates all ACT-mode flags for compatibility.
 @end defopt
 @end texinfo
 ***/

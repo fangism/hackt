@@ -1,10 +1,10 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.33 2007/09/13 20:37:56 fang Exp $
+#	$Id: Makefile.am,v 1.34 2007/10/08 01:28:00 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
-	inv-01 inv-04 inv-05 inv-10 inv-11 \
+	inv-04 inv-05 inv-10 inv-11 \
 	celem-07 celem-08 \
 	echo-02 echo-03 echo-04 \
 	after-01 \
@@ -16,11 +16,14 @@ HACKT_PARSE_TEST_FAILURES = \
 	loop-05 loop-07 \
 	cond-01 \
 	top-level-02 top-level-03 \
-	precharge-01
+	precharge-01 \
+	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
+	internal-node-05 internal-node-08 \
+	internal-node-11 internal-node-16
 
 HACKT_PARSE_TEST_PASSES = \
-	inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
-	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
+	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
+	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 inv-18 \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
@@ -42,16 +45,34 @@ HACKT_PARSE_TEST_PASSES = \
 	top-level-01\
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
-	tree-00 tree-01 tree-02 tree-03 \
+	tree-00 tree-01 tree-02 tree-03 tree-04 \
 	subckt-00 subckt-01 \
 	subckt-02 subckt-03 \
 	subckt-04 subckt-05 \
-	internal-node-00 \
+	subckt-06 \
 	precharge-00 \
-	unstab-01
+	unstab-01 \
+	comb-01 \
+	keeper-01 \
+	prs-param-01 \
+	act-001 act-002 act-003 act-004 act-005 \
+	act-006 act-007 act-009 act-010 \
+	internal-node-00 internal-node-06 internal-node-07 internal-node-09 \
+	internal-node-10 internal-node-12 internal-node-13 internal-node-14 \
+	internal-node-15 internal-node-17 \
+	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
+	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
+# pending (transistor type param): act-008 rule-type{01,02,03,04,05,06}
+
+srcdir_EXTRA_DIST += \
+	act-008.hac \
+	rule-type-01.hac rule-type-02.hac rule-type-03.hac rule-type-04.hac \
+	rule-type-05.hac rule-type-06.hac
 
 HACKT_CREATE_TEST_PASSES = \
-	inv-14 inv-15 inv-16 inv-17 \
+	inv-01 \
+	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
@@ -72,22 +93,35 @@ HACKT_CREATE_TEST_PASSES = \
 	top-level-01 \
 	lvs-order-01 lvs-order-02 lvs-order-03 \
 	lvs-xcpl-inv-01 \
-	tree-02 tree-03 \
-	subckt-01 subckt-03 subckt-05 \
-	unstab-01
+	tree-02 tree-03 tree-04 \
+	subckt-01 subckt-03 subckt-05 subckt-06 \
+	unstab-01 \
+	comb-01 \
+	keeper-01 \
+	internal-node-00 internal-node-06 \
+	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
+	internal-node-17 \
+	act-001 act-002 act-005 act-006 act-007 act-010 \
+	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
+	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13
 
 # TODO: precharge-00 etc. to middle and back-end tests
+# pending: act-003 act-004 act-005
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
-	null-01
+	null-01 \
+	act-009 \
+	internal-node-07 internal-node-09 internal-node-10
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...
 # null-01: waiting for null-expression resolution
 # loop-01: (same)
 
-HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
+HACKT_CFLAT_TEST_SUBJECTS = \
+	inv-14 inv-15 inv-16 inv-17 inv-18 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
@@ -106,7 +140,17 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	top-level-01 \
 	tree-02 tree-03 \
 	subckt-01 \
-	unstab-01
+	unstab-01 \
+	comb-01 \
+	keeper-01 \
+	internal-node-00 internal-node-06 \
+	internal-node-12 internal-node-13 internal-node-14 internal-node-15 \
+	internal-node-17 \
+	auto-celem-00 auto-celem-01 auto-celem-02 auto-celem-03 auto-celem-04 \
+	auto-celem-05 auto-celem-06 auto-celem-07 auto-celem-08 auto-celem-09 \
+	auto-celem-10 auto-celem-11 auto-celem-12 auto-celem-13 \
+	act-001 act-002 act-005 act-006 act-007 act-010
+# pending: act-003 act-004
 
 HACKT_CFLAT_LVS_TEST_PASSES = \
 	nand-04 nand-08 nand-09 \
@@ -126,7 +170,9 @@ HACKT_ALLOC_TEST_PASSES = \
 #	$(HACKT_CFLAT_LVS_TEST_PASSES)
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \
-	size-01 size-03 size-04 size-05
+	size-01 size-03 size-04 size-05 \
+	act-005 act-010
+# pending: act-004
 
 # subset of HACKT_CFLAT_TEST_SUBJECTS
 HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
@@ -134,7 +180,8 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 	short-01 short-02 short-03 short-04 short-05
 
 # expecting empty .prs
-EMPTY_CFLAT_PRS_TESTS += null-00 loop-00 \
+EMPTY_CFLAT_PRS_TESTS += \
+	null-00 loop-00 \
 	cond-05 \
 	macro-pass-01
 
@@ -145,7 +192,8 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	cond-01 \
 	loop-05 loop-07 \
 	top-level-03 \
-	precharge-01
+	precharge-01 \
+	internal-node-05
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 srcdir_EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac

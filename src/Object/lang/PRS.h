@@ -1,13 +1,12 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.19 2007/09/13 20:37:16 fang Exp $
+	$Id: PRS.h,v 1.20 2007/10/08 01:21:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
 #define	__HAC_OBJECT_LANG_PRS_H__
 
-#include "Object/ref/references_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/bool_literal.h"
@@ -41,7 +40,10 @@ typedef	directive_source_params_type		literal_params_type;
 
 //=============================================================================
 /**
-	Literal expression.  
+	Literal expression, which can appear on LHS or RHS of any rule.  
+	Re: internal nodes: we've decided to add support here instead of
+	in bool_literal, because only production rules should ever touch
+	internal nodes.  
  */
 class literal : public prs_expr, public bool_literal {
 	typedef	literal				this_type;
@@ -51,12 +53,21 @@ public:
 	typedef	literal_params_type		params_type;
 private:
 	enum { print_stamp = PRS_LITERAL_TYPE_ENUM };
+	/**
+		Parameters are only applicable to expression literals, 
+		not the RHS of a rule.  
+	 */
 	params_type				params;
 public:
 	literal();
 
 	explicit
 	literal(const literal_base_ptr_type&);
+
+	explicit
+	literal(const node_literal_ptr_type&);
+
+	literal(const bool_literal&, const params_type&);
 
 	// default copy constructor (is copy-constructible)
 
@@ -84,9 +95,13 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 protected:
 	size_t
@@ -153,6 +168,12 @@ typedef	std::vector<attribute>		rule_attribute_list_type;
 
 //=============================================================================
 class pull_base : public rule {
+public:
+	enum arrow_type {
+		ARROW_NORMAL, 		// ->
+		ARROW_COMPLEMENT, 	// =>
+		ARROW_FLIP		// #>
+	};
 protected:
 	/**
 		Guard expression.  
@@ -160,12 +181,14 @@ protected:
 	prs_expr_ptr_type		guard;
 	/**
 		Output node.  
+		Only used if RHS is not an internal node, mutually exclusive.  
 	 */
 	bool_literal			output;
 	/**
 		Whether or not complement is implicit.
+		Uses arrow_type member enumeration.  
 	 */
-	bool				cmpl;
+	char				arrow_type;
 	/**
 		Attribute list.  
 		Want to make this a pointer for efficient duplication?
@@ -174,7 +197,7 @@ protected:
 
 	pull_base();
 
-	pull_base(const prs_expr_ptr_type&, const bool_literal&, const bool);
+	pull_base(const prs_expr_ptr_type&, const bool_literal&, const char);
 
 	pull_base(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
@@ -224,11 +247,11 @@ class pull_up : public pull_base {
 public:
 	pull_up();
 
-	pull_up(const prs_expr_ptr_type&, const bool_literal&, const bool);
+	pull_up(const prs_expr_ptr_type&, const bool_literal&, const char);
 
 	pull_up(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
-
+ 
 	~pull_up();
 
 	ostream&
@@ -260,7 +283,7 @@ class pull_dn : public pull_base {
 public:
 	pull_dn();
 
-	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const bool);
+	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const char);
 
 	pull_dn(const prs_expr_ptr_type&, const bool_literal&, 
 		const rule_attribute_list_type&);
@@ -529,9 +552,13 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 protected:
 	void
@@ -574,9 +601,13 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -608,9 +639,13 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 protected:
 	void
@@ -653,9 +688,13 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -691,9 +730,13 @@ public:
 	negate(void) const;
 
 	prs_expr_ptr_type
+	flip_literals(void) const;
+
+	prs_expr_ptr_type
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+	PRS_UNROLL_COPY_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)

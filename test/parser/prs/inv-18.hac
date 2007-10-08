@@ -1,0 +1,7 @@
+// "inv-18.hac"
+// instantiate "inv-01.hac"
+
+import "inv-01.hac";
+
+inv erse;
+

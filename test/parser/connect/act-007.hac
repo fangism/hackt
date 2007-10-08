@@ -1,0 +1,11 @@
+// "act-007.hac"
+// stolen from "act/tests/inst/4.act"
+// expect fail: can't pass ports to array
+
+defproc foo(bool a, b) ;
+ 
+bool p, s;
+
+foo f[3](p,s);
+
+

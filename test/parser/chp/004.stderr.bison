@@ -3,16 +3,13 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	(null) 
-#STATE#	keyword: defproc [3:1..7]
-#STATE#	identifier: empty [3:9..13]
-#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [3:14..43]
+#STATE#	(process-prototype) [3:1..43]
 #STATE#	{ [3:45]
 #STATE#	keyword: chp [4:1..3]
 #STATE#	{ [4:5]
 #STATE#	list<(chp-statement)>: list<(chp-statement)>: (chp-send) ... ... [5:2..3]
 #STATE#	bool: false [5:4..8]
 in state #STATE#, possible rules are:
-	language_body: CHP_LANG '{' chp_body . '}'  (#RULE#)
+	language_body: CHP_LANG '{' chp_body_optional . '}'  (#RULE#)
 acceptable tokens are: 
 	'}' (shift)

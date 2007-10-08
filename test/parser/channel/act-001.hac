@@ -1,0 +1,25 @@
+// "act-001.hac"
+// stolen from "act/tests/types/5.act"
+// pending: set/get should be required
+
+defchan dualrail <: chan(bool) (bool d0,d1,de; bool d[2])
+{
+  d0 = d[0];  
+  d1 = d[1];
+  spec {
+
+  }
+}
+
+defproc foo (dualrail l, r)
+{
+
+}
+
+defproc bar (foo p, q)
+{
+
+}
+
+
+

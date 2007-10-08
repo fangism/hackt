@@ -1,0 +1,7 @@
+// "058.hac"
+// top-level instance accepted in hac, not in act
+
+namespace foo {
+pbool bar[4];
+}
+

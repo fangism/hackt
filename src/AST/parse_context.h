@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.14 2007/07/18 23:28:23 fang Exp $
+	$Id: parse_context.h,v 1.15 2007/10/08 01:21:01 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -16,6 +16,7 @@
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "AST/parse_options.h"
 #include "Object/common/util_types.h"
 #include "Object/devel_switches.h"
 #include "util/boolean_types.h"
@@ -44,10 +45,8 @@ namespace entity {
 	class loop_scope;
 	class conditional_scope;
 	struct pint_tag;
-namespace PRS {
-	class rule;
-	class rule_set;
-}
+	struct node_tag;
+	template <class> class dummy_placeholder;
 }	// end namespace entity
 
 namespace parser {
@@ -84,6 +83,7 @@ using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
 using entity::loop_scope;
 using entity::conditional_scope;
+using entity::node_tag;
 
 //=============================================================================
 // forward declarations
@@ -91,6 +91,8 @@ class qualified_id;
 class token_identifier;
 class token_datatype;
 class token_paramtype;
+
+typedef	entity::dummy_placeholder<node_tag>	node_instance_placeholder;
 
 //=============================================================================
 // what is a context object?
@@ -124,6 +126,8 @@ public:
 	typedef list<string>			file_name_stack_type;
 	typedef	never_ptr<const instance_placeholder_base>
 						placeholder_ptr_type;
+	typedef	never_ptr<const node_instance_placeholder>
+						node_placeholder_ptr_type;
 private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
@@ -184,11 +188,6 @@ private:
 	 */
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
 
-	/**
-		TODO: should just contain reference to module...
-	 */
-	entity::PRS::rule_set&			top_prs;
-
 	typedef	value_placeholder<pint_tag>	loop_var_placeholder_type;
 	typedef	list<count_ptr<const loop_var_placeholder_type> >
 						loop_var_stack_type;
@@ -235,13 +234,17 @@ private:
 		Default: false, enforcing port visibility only.  
 	 */
 	bool					view_all_publicly;
-
+public:
+	/**
+		User-controlled parse-check options.
+	 */
+	const parse_options&			parse_opts;
 public:
 	explicit
-	context(module& m);
+	context(module&, const parse_options&);
 
 	explicit
-	context(const module& m, const bool _public);
+	context(const module&, const parse_options&, const bool _public);
 
 private:
 	// private undefined copy-constructor
@@ -355,6 +358,15 @@ public:
 	get_current_namespace(void) const
 		{ return namespace_stack.top(); }
 
+	bool
+	in_nonglobal_namespace(void) const;
+
+	bool
+	reject_namespace_lang_body(void) const;
+
+	bool
+	reject_nonglobal_instance_management(void) const;
+
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
 // void	reset_current_prototype(void);
@@ -398,6 +410,9 @@ private:
 	void
 	reset_current_fundamental_type(void);
 
+	never_ptr<const definition_base>
+	__lookup_definition_return(const never_ptr<const object>) const;
+
 public:
 // never_ptr<const fundamental_type_reference>
 	count_ptr<const fundamental_type_reference>
@@ -423,6 +438,9 @@ public:
 	placeholder_ptr_type
 	lookup_instance(const qualified_id& id) const;
 
+	never_ptr<const node_instance_placeholder>
+	lookup_internal_node(const token_identifier& id) const;
+
 	placeholder_ptr_type
 	add_instance(const token_identifier& id 
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
@@ -435,7 +453,7 @@ public:
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_args_ptr_type&, 
 #endif
-		index_collection_item_ptr_type dim);
+		const index_collection_item_ptr_type dim);
 
 	// should be param_value_placeholder
 	placeholder_ptr_type
@@ -445,7 +463,7 @@ public:
 	// should be param_value_placeholder
 	placeholder_ptr_type
 	add_template_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim, 
+		const index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d);
 
 	// port formals are not allowed to have instance-relaxed actuals.  
@@ -456,13 +474,13 @@ public:
 	// port formals are not allowed to have instance-relaxed actuals.  
 	placeholder_ptr_type
 	add_port_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim);
+		const index_collection_item_ptr_type dim);
+
+	node_placeholder_ptr_type
+	add_internal_node(const token_identifier& id, const size_t);
 
 	void
 	commit_definition_arity(void);
-
-	void
-	add_top_level_production_rule(excl_ptr<entity::PRS::rule>&);
 
 private:
 	// TODO:

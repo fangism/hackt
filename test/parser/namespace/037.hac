@@ -1,0 +1,11 @@
+// "037.hac"
+// copy-modified from "032.hac"
+// child namespace can exported definition in parent namespace
+
+export
+defproc foo() { }
+
+namespace earth {
+	foo bar;
+}
+

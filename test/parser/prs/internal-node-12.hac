@@ -1,0 +1,19 @@
+// "internal-node-12.hac"
+// copy-modified from "internal-node-06.hac"
+// expect pass
+
+// resembles a precharge stage
+template <pint N>
+defproc bogus(bool x[N], y[N], w) {
+bool en;
+prs {
+	en			-> @z-
+(:i:N:
+	~@z & x[i] & y[i]	-> w-
+)
+	~en			-> w+
+}
+}
+
+bogus<3> A;
+

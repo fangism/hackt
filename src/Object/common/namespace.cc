@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.27 2007/06/13 21:28:34 fang Exp $
+ 	$Id: namespace.cc,v 1.28 2007/10/08 01:21:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -47,6 +47,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/typedef_base.h"
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/param_value_placeholder.h"
+#include "Object/inst/node_instance_collection.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -326,7 +327,48 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers a ndoe into the scopespace if it is new, 
+	otherwise returns previously registered placeholder, as long as
+	implicit dimensions match.  
+ */
+never_ptr<const node_instance_placeholder>
+scopespace::add_node_instance_idempotent(const token_identifier& id,
+		const size_t dim) {
+	typedef	never_ptr<const node_instance_placeholder>	return_type;
+	const never_ptr<const object> probe(lookup_member(id));
+	if (probe) {
+		// is it the same type or a different type?
+		const never_ptr<const node_instance_placeholder>
+			np(probe.is_a<const node_instance_placeholder>());
+		if (!np) {
+			probe->what(cerr << "Error: `" << id <<
+				"\' is already declared as ") << endl;
+			return return_type(NULL);
+		}
+		// do dimensions match?
+		const size_t nd = np->get_dimensions();
+		if (nd != dim) {
+			cerr << "Error: internal node was previously declared "
+				<< nd << "-dimensional, cannot re-declare as "
+				<< dim << "-dimensional." << endl;
+			return return_type(NULL);
+		}
+		return np;
+	} else {
+		// just add it, this establishes the dimensionality
+		excl_ptr<node_instance_placeholder>
+			np(new node_instance_placeholder(*this, id, dim));
+		const return_type ret(np);
+		excl_ptr<instance_placeholder_base>
+			npx = np.is_a_xfer<instance_placeholder_base>();
+		add_instance(npx);
+		INVARIANT(!np && !npx);
+		return ret;
+	}
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Registers a new instance of some type in the used_id_map.  
 	Need to check for collisions, with previously declared instances.  

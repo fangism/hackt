@@ -1,0 +1,10 @@
+// "auto-celem-08.hac"
+// copy-modified from "auto-celem-01.hac"
+// testing #> syntax
+
+bool x, y, w, z;
+prs {
+	w	-> z-
+	x & y #> z-
+}
+

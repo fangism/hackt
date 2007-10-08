@@ -1,19 +1,21 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2007/09/13 20:37:55 fang Exp $
+#	$Id: Makefile.am,v 1.19 2007/10/08 01:26:00 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	    003 004 005 009 \
 	010 011 012 014 015 017 018 019 \
-	020 024 025
+	020 024 025 \
+	033 034 035
 # NOTE: 034 035 were moved to expect pass, since deftypes are now 'processes'
 
 HACKT_PARSE_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
 	021 022 023 026 027 028 029 \
-	030 031 033 034 035 037 038
+	030 031 037 038 039
+# pending: act-00{1,2,3,4,5}
 
 # HACKT_UNROLL_TEST_PASSES = \
 #	001 002 006 007 008 \
@@ -28,7 +30,7 @@ HACKT_CREATE_TEST_FAILURES = \
 HACKT_CREATE_TEST_PASSES = \
 	001 002 006 007 008 \
 	023 026 029 \
-	030 031 033 038
+	030 031 038 039
 
 # REGRESSION (parse, unroll, create): 032 036 
 # (instantiations of 031 033, respectively)
@@ -44,7 +46,12 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	038
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS += 015 017 018 019 020
+BISON_OUTPUTS += 015 017 018 019 020 \
+	033 034 035
+
+EXTRA_DIST += \
+	act-001.hac act-002.hac act-003.hac act-004.hac act-005.hac
+# some of these tests pending update in ACT tests...
 
 include $(top_srcdir)/test/Make.test-tail
 

@@ -1,0 +1,2 @@
+Error: top-level SPEC is only supported in the global namespace.
+	got: spec { ... } [5:1--7:1]

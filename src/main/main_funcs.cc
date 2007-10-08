@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.18 2007/09/13 01:14:17 fang Exp $
+	$Id: main_funcs.cc,v 1.19 2007/10/08 01:21:49 fang Exp $
  */
 
 #include <iostream>
@@ -76,6 +76,7 @@ namespace HAC {
 using std::ifstream;
 using std::ofstream;
 using std::ios_base;
+using parser::parse_options;
 using parser::root_body;
 using parser::concrete_type_ref;
 using util::persistent;
@@ -244,12 +245,12 @@ parse_to_AST(const char* c, const compile_options& opt) {
  */
 static
 count_ptr<module>
-check_AST(const root_body& r, const char* name) {
+check_AST(const root_body& r, const char* name, const parse_options& po) {
 	typedef	count_ptr<module>	return_type;
 	STACKTRACE_VERBOSE;
 	return_type mod(new module(name));
 	NEVER_NULL(mod);
-	parse_context pc(*mod);
+	parse_context pc(*mod, po);
 	try {
 		r.check_build(pc);
 	} catch (...) {
@@ -331,7 +332,7 @@ parse_and_check(const char* name, const compile_options& opt) {
 	const count_ptr<root_body> AST(parse_to_AST(name, opt));
 	if (!AST) return return_type(NULL);
 	// error message would be nice
-	return check_AST(*AST, name ? name : dflt);
+	return check_AST(*AST, name ? name : dflt, opt.parse_opts);
 }
 #endif
 

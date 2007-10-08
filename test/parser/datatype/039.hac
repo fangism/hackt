@@ -1,0 +1,13 @@
+// "039.hac"
+// copy-modified from "038.hac"
+
+deftype ch1of2 <: bool (bool d[2]; bool t, f) {
+spec { exclhi(f,t) }
+d[0] = f;
+d[1] = t;
+set {}
+get {}
+}
+
+ch1of2 FOO;
+

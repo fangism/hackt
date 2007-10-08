@@ -1,0 +1,147 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	112
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	11	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	26	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	27	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	footprnt	0	#HEAD#	#TAIL#	565
+	45	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	footprnt	0	#HEAD#	#TAIL#	402
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> i
+      >(
+        bool<> x[0..i-1]
+        bool<> y[0..i-1]
+      )
+      In definition "foo", we have: {
+      Parameters:
+        i = pint<> foo::i
+      Instances:
+        x = bool<> foo::x^1
+        y = bool<> foo::y^1
+      unroll sequence: 
+        bool<> x[0..i-1]
+        bool<> y[0..i-1]
+      prs:
+        (:k:[0..i-1]:
+          ~x[$k] -> y[$k]+
+          x[$k] -> y[$k]-
+        )
+      footprint collection: {
+        <3> {
+          i = pint^0 value: 3
+          x = bool^1
+            {
+              [0] = foo::x[0] (1) 
+              [1] = foo::x[1] (2) 
+              [2] = foo::x[2] (3) 
+            }
+          y = bool^1
+            {
+              [0] = foo::y[0] (4) 
+              [1] = foo::y[1] (5) 
+              [2] = foo::y[2] (6) 
+            }
+          Created state:
+          bool instance pool:
+          1	foo::x[0]
+          2	foo::x[1]
+          3	foo::x[2]
+          4	foo::y[0]
+          5	foo::y[1]
+          6	foo::y[2]
+          resolved prs:
+          ~x[0] -> y[0]+
+          x[0] -> y[0]-
+          ~x[1] -> y[1]+
+          x[1] -> y[1]-
+          ~x[2] -> y[2]+
+          x[2] -> y[2]-
+        }
+      }
+      }
+
+  Instances:
+    x = foo<3> x
+}
+
+footprint: {
+  x = process foo<3>^0 = x (1) (
+    x = bool^1
+      {
+        [0] = x.x[0] (1) 
+        [1] = x.x[1] (2) 
+        [2] = x.x[2] (3) 
+      }
+    y = bool^1
+      {
+        [0] = x.y[0] (4) 
+        [1] = x.y[1] (5) 
+        [2] = x.y[2] (6) 
+      }
+  )
+  Created state:
+  process instance pool:
+  1	x
+  bool instance pool:
+  1	x.x[0]
+  2	x.x[1]
+  3	x.x[2]
+  4	x.y[0]
+  5	x.y[1]
+  6	x.y[2]
+}

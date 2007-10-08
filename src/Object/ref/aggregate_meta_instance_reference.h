@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.8 2007/01/21 05:59:21 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.9 2007/10/08 01:21:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -88,6 +88,8 @@ public:
 
 	bad_bool
 	unroll_references_packed(const unroll_context&, alias_collection_type&) const;
+
+	UNROLL_RESOLVE_COPY_REFERENCE_PROTO;
 
 	void
 	accept(nonmeta_expr_visitor&) const;

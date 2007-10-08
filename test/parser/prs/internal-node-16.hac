@@ -1,0 +1,14 @@
+// "internal-node-16.hac"
+// copy-modified from "internal-node-08.hac"
+// expect fail: restrict arrow type
+
+defproc bogus(bool x, y, w) {
+bool en;
+prs {
+	en		#> @z-	// should not use #>
+	~@z & x & y	-> w-
+}
+}
+
+bogus A;
+

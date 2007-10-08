@@ -1,6 +1,6 @@
 # "Make.test-cflat"
 #	vi: ft=automake
-#	$Id: Make.test-cflat,v 1.13 2007/09/13 20:37:27 fang Exp $
+#	$Id: Make.test-cflat,v 1.14 2007/10/08 01:22:03 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -91,8 +91,9 @@ DEFAULT_SORT_SCRIPT = $(SORT) $< > $@
 .expect-prs.expect-prs-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
+CFLATPRS_DIFF_COMMAND = $(DIFF) -bu $< $$out
 if VERBOSE_CHECK
-ECHO_CFLATPRS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+ECHO_CFLATPRS_DIFF_COMMAND = $(ECHO) "$(CFLATPRS_DIFF_COMMAND)"
 else
 ECHO_CFLATPRS_DIFF_COMMAND = :
 endif
@@ -101,7 +102,7 @@ endif
 	@out=`$(ECHO) $@ | $(SED) 's/\.prsdiff-sort$$/.prs-sort/g'` ; \
 	if test -f "$$out" ; then \
 	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
-	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  $(CFLATPRS_DIFF_COMMAND) > $@ ; \
 	  if test ! -s $@ ; then \
 	    $(ECHO) "Only re-ordering differences found.  (OK)" ; \
 	  fi ; \
@@ -114,7 +115,7 @@ endif
 	$(RM) $@ ; \
 	if test -f "$$out" ; then \
 	  $(ECHO_CFLATPRS_DIFF_COMMAND) ; \
-	  $(DIFF) -bu $< "$$out" > $@ ; \
+	  $(CFLATPRS_DIFF_COMMAND) > $@ ; \
 	  if test -s $@ ; then \
 	    $(ECHO) "$@ is non-empty!" ; \
 	    $(MAKE) $@-sort ; \
@@ -334,8 +335,9 @@ cflatprsseutest.autodepend: Makefile
 .expect-sprs.expect-sprs-sort:
 	$(DEFAULT_SORT_SCRIPT)
 
+SPRS_DIFF_COMMAND = $(DIFF) -bu $< $$out
 if VERBOSE_CHECK
-ECHO_SPRS_DIFF_COMMAND = $(ECHO) "$(DIFF) -bu $< $$out"
+ECHO_SPRS_DIFF_COMMAND = $(ECHO) "$(SPRS_DIFF_COMMAND)"
 else
 ECHO_SPRS_DIFF_COMMAND = :
 endif
@@ -344,7 +346,7 @@ endif
 	@out=`$(ECHO) $@ | $(SED) 's/\.sprsdiff-sort$$/.sprs-sort/g'` ; \
 	if test -f "$$out" ; then \
 	    $(ECHO_SPRS_DIFF_COMMAND) ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    $(SPRS_DIFF_COMMAND) > $@ ; \
 	    if test ! -s $@ ; then \
 	      $(ECHO) "Only re-ordering differences found.  (OK)" ; \
 	    fi ; \
@@ -357,7 +359,7 @@ endif
 	$(RM) $@ ; \
 	if test -f "$$out" ; then \
 	    $(ECHO_SPRS_DIFF_COMMAND) ; \
-	    $(DIFF) -bu $< "$$out" > $@ ; \
+	    $(SPRS_DIFF_COMMAND) > $@ ; \
 	    if test -s $@ ; then \
 	      $(ECHO) "$@ is non-empty!" ; \
 	    fi ; \

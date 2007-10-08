@@ -1,0 +1,10 @@
+// "act-007.hac"
+// stolen from "act/tests/other/1.act"
+// won't create b/c incomplete type
+
+template <pint x>
+defproc foo(bool a, b);
+
+
+foo<4> x;
+

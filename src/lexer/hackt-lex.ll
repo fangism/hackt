@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.25 2007/09/13 20:37:21 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.26 2007/10/08 01:21:47 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -217,8 +217,12 @@ KEYWORD_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 
 static inline void
 LINKAGE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+#if 0
 	hackt_lval._token_keyword = new token_keyword(yytext);
 	TOKEN_UPDATE(foo);
+#else
+	KEYWORD_UPDATE(hackt_lval, foo);
+#endif
 }
 
 static inline void
@@ -362,14 +366,11 @@ WS		{WHITESPACE}
 
 POSITIONTOKEN	[][(){}<>*%/=:;|!?~&^.,@#$+-]
 
-/* AT		"@"	*/
-/* POUND		"#"	*/
-/* DOLLAR		"$"	*/
-
 PLUSPLUS	"++"
 MINUSMINUS	"--"
 LARROW		"<-"
 RARROW		"->"
+HASH_ARROW	"#>"
 EQUAL		"=="
 NOTEQUAL	"!="
 LE		"<="
@@ -479,6 +480,7 @@ EMBEDFILE	^#FILE
 {NOTEQUAL}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return NOTEQUAL; }
 {IMPLIES}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return IMPLIES; }
 {RARROW}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return RARROW; }
+{HASH_ARROW}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return HASH_ARROW; }
 {PLUSPLUS}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return PLUSPLUS; }
 {MINUSMINUS}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return MINUSMINUS; }
 {LOGICAL_AND}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return LOGICAL_AND; }
@@ -650,7 +652,12 @@ EMBEDFILE	^#FILE
 
 {NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(*hackt_lval, foo); return OPEN; }
-{AS}		{ KEYWORD_UPDATE(*hackt_lval, foo); return AS; }
+{AS}		{ // KEYWORD_UPDATE(*hackt_lval, foo); return AS;
+	cerr << "WARNING: \'as\' is a deprecated keyword.  "
+		"Assuming you want \'->\' instead..." << endl;
+	cerr << "(Eventually, this keyword will be removed.)" << endl;
+	NODE_POSITION_UPDATE(*hackt_lval, foo); return RARROW;
+	}
 {TEMPLATE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return TEMPLATE; }
 {DEFINE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return DEFINE; }
 {DEFCHAN}	{ KEYWORD_UPDATE(*hackt_lval, foo); return DEFCHAN; }

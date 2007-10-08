@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.5 2007/07/31 23:23:30 fang Exp $
+	$Id: command_common.tcc,v 1.6 2007/10/08 01:21:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -734,14 +734,12 @@ if (a.size() < 2) {
 	bool good = true;
 	string_list::const_iterator i(++a.begin()), e(a.end());
 	for ( ; i!=e; ++i) {
-		cout << "function `" << *i << "\': ";
 		if (entity::lookup_chpsim_function(*i)) {
-			cout << "bound";
+			cout << "function `" << *i << "\': bound." << endl;
 		} else {
-			cout << "unbound";
+			cout << "function `" << *i << "\': unbound." << endl;
 			good = false;
 		}
-		cout << "." << endl;
 	}
 	return good ? command_type::NORMAL : command_type::BADARG;
 }

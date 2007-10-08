@@ -1,5 +1,5 @@
 ERROR: size of prs expression exceeded limit: 66665 > 65535
-Error unrolling production rule: 
+Error unrolling production rule guard: 
 	(&:i:[0..foobar::N-1]: foobar::r[$i].e1of2::e) -> foobar::re+
 Error instantiating process footprint: 
 From canonical type: foobar<66666>

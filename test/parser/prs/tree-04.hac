@@ -1,0 +1,13 @@
+// "tree-04.hac"
+// testing grammatic extensions to language
+
+defproc bogus(bool x, y, z) {
+prs {
+tree<2> {
+	// empty tree body
+}
+}
+}
+
+bogus money;
+

@@ -1,0 +1,9 @@
+// "act-002.hac"
+// stolen from "act/tests/types/8.act"
+// shouldn't error until attempting instantiation (undefined rvalue)
+
+pint x;
+
+defchan foo <: chan(int<x>) (bool b) ;
+
+

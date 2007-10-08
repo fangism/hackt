@@ -3,10 +3,7 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	(null) 
-#STATE#	keyword: defproc [3:1..7]
-#STATE#	identifier: myinverter [3:9..18]
-#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [3:19..34]
+#STATE#	(process-prototype) [3:1..34]
 #STATE#	{ [3:36]
 #STATE#	list<(def-body-item)>: (prs-body) ... [4:1--7:1]
 #STATE#	(array-concatenation) [8:1..11]

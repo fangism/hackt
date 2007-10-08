@@ -1,0 +1,18 @@
+// "act-003.hac"
+// stolen from "act/tests/ns/{8,14}.act"
+// related to "act-002.hac" (export)
+
+namespace baz {
+
+defproc foo(bool a, b) ;
+  
+export defproc bar(bool p, q);
+
+}
+
+
+baz::bar q;
+
+baz::foo f;
+
+

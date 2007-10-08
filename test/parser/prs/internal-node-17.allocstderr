@@ -1,0 +1,22 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	bar	foo<>
+	bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
+[global bool entries]
+1	(top)	-	1	bar.x	
+2	(top)	-	2	bar.y	
+3	process	1	3	bar.a	
+4	process	1	4	bar.b	
+5	process	1	5	bar.c	
+6	process	1	6	bar.d	
+7	process	1	7	bar.e	
+8	process	1	8	bar.w[0]	
+9	process	1	9	bar.w[1]	
+10	process	1	10	bar.w[2]	
+11	process	1	11	bar.w[3]	
+12	process	1	12	bar.w[4]	
+13	process	1	13	bar.w[5]	
+14	process	1	14	bar.w[6]	
+15	process	1	15	bar.w[7]	
+16	process	1	16	bar.w[8]	
+17	process	1	17	bar.w[9]	

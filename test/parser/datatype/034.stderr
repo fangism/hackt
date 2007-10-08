@@ -1,3 +1,28 @@
-User-defined datatypes may only contain other data types and parameter values.
-	got: e1of2<>
-ERROR with BAD at [12:8..10]
+At: "034.hac":13:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (process-definition) ... [7:1--10:1]
+#STATE#	(process-prototype) [12:1..44]
+#STATE#	{ [12:46]
+#STATE#	datatype: bool [13:2..5]
+in state #STATE#, possible rules are:
+	defdatatype : declare_datatype_proto '{' . optional_datatype_body set_body get_body '}'  (#RULE#)
+	optional_datatype_body : .  (#RULE#)
+acceptable tokens are: 
+	'!' (shift)
+	'(' (shift)
+	'-' (shift)
+	'[' (shift)
+	'{' (shift)
+	'~' (shift)
+	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
+	SCOPE (shift)
+	SPEC_LANG (shift)
+	SET (reduce)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)

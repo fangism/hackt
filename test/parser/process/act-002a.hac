@@ -1,0 +1,12 @@
+// "act-002a.hac"
+// stolen from "act/tests/ns/9.ai"
+// NOTE: uses 'export'
+
+namespace baz {
+
+defproc foo(bool a, b) ;
+
+export defproc bar(bool p, q);
+
+}
+

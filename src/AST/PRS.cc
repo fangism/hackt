@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.25 2007/09/13 20:37:13 fang Exp $
+	$Id: PRS.cc,v 1.26 2007/10/08 01:20:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -20,6 +20,7 @@
 #include "AST/reference.h"	// for id_expr
 #include "AST/expr_list.h"	// for attributes
 #include "AST/range.h"
+#include "AST/range_list.h"
 #include "AST/token.h"
 #include "AST/token_char.h"
 #include "AST/token_string.h"
@@ -33,6 +34,7 @@
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
 #include "Object/expr/meta_range_expr.h"
+#include "Object/expr/meta_index_list.h"
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
@@ -46,6 +48,9 @@
 #if SUPPORT_NESTED_DEFINITIONS
 #include "Object/module.h"
 #endif
+#include "Object/ref/simple_meta_dummy_reference.h"
+#include "Object/ref/references_fwd.h"
+#include "Object/traits/node_traits.h"
 
 #include "common/TODO.h"
 
@@ -86,6 +91,7 @@ using entity::pint_scalar;
 using entity::pbool_expr;
 using entity::meta_range_expr;
 using entity::meta_loop_base;
+using entity::PRS::pull_base;
 using std::find;
 using std::find_if;
 using std::mem_fun_ref;
@@ -101,13 +107,13 @@ body_item::~body_item() { }
 // class literal method definitions
 
 literal::literal(inst_ref_expr* r, const expr_list* p) :
-		ref(r), params(p) {
+		ref(r), params(p), internal(false) {
 	NEVER_NULL(ref);
 	// params are optional
 }
 
 literal::literal(inst_ref_expr* r) :
-		ref(r), params(NULL) {
+		ref(r), params(NULL), internal(false) {
 	NEVER_NULL(ref);
 	// params are optional
 }
@@ -173,11 +179,68 @@ literal::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use different lookup for internal nodes
+ */
 prs_literal_ptr_type
 literal::check_prs_literal(const context& c) const {
-	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
+	STACKTRACE_VERBOSE;
+	prs_literal_ptr_type ret;
+if (internal) {
+	STACKTRACE_INDENT_PRINT("internal node setup" << endl);
+	const never_ptr<const index_expr>
+		ir(ref.is_a<const index_expr>());
+	never_ptr<const token_identifier> dr;
+	never_ptr<const range_list> ind;
+	if (ir) {
+		if (!c.parse_opts.array_internal_nodes) {
+			cerr << "Error: internal node arrays are unsupported "
+				"in ACT mode.  " << where(*this) << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+		const never_ptr<const inst_ref_expr> b(ir->get_base());
+		dr = b.is_a<const token_identifier>();
+		NEVER_NULL(b && dr);
+		ind = ir->get_indices();
+	} else {
+		const never_ptr<const id_expr>
+			b(ref.is_a<const id_expr>());
+		NEVER_NULL(b);
+		dr = never_ptr<const token_identifier>(&*b->get_id()->front());
+		if (!dr) {
+			cerr << "Unexpected prs-literal type: "
+				<< where(*ref) << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+	}
+	const token_identifier& id(*dr);
+	const never_ptr<const node_instance_placeholder>
+		np(c.lookup_internal_node(id));
+	if (!np) {
+		cerr << "Internal node `" << id << "\' not found." << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	const count_ptr<entity::simple_node_meta_instance_reference>
+		nref(new entity::simple_node_meta_instance_reference(np));
+	if (ind) {
+		const range_list::checked_meta_indices_type
+			checked_indices(ind->check_meta_indices(c));
+		if (!checked_indices) {
+			cerr << "Error in internal node reference." << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+		nref->attach_indices(checked_indices);
+	}
+	ret = prs_literal_ptr_type(new entity::PRS::literal(
+		nref.as_a<const entity::simple_node_meta_instance_reference>()));
+	NEVER_NULL(ret);
+} else {
+	ret = ref->check_prs_literal(c);
+}
 if (ret && params) {
+	// NOTE: parameters are not applicable to RHS or rules
 	if (params->size() > 2) {
+		// TODO: update me to take a transistor type [ACT]
 		cerr << "Error: rule literals can take a maximum of 2 "
 			"(width, length) parameters.  " << where(*params)
 			<< endl;
@@ -199,6 +262,56 @@ if (ret && params) {
 	copy(i, e, back_inserter(ret->get_params()));
 }
 	return ret;
+}	// end literal::check_prs_literal
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called to check a literal on the RHS of a rule.
+	Special case needed when literal is marked as internal node, 
+	in which case this is a *declaration* of an internal node.  
+	Signal to caller that this is internal (flag the created IR literal).
+ */
+prs_literal_ptr_type
+literal::check_prs_rhs(context& c) const {
+	STACKTRACE_VERBOSE;
+if (internal) {
+	STACKTRACE_INDENT_PRINT("internal node setup" << endl);
+	// inject an implicit internal node declaration
+	const never_ptr<const index_expr>
+		ir(ref.is_a<const index_expr>());
+	const never_ptr<const id_expr>
+		dr(ref.is_a<const id_expr>());
+	never_ptr<const node_instance_placeholder> nd;
+	if (ir) {
+		if (!c.parse_opts.array_internal_nodes) {
+			cerr << "Error: internal node arrays are unsupported "
+				"in ACT mode.  " << where(*this) << endl;
+			return prs_literal_ptr_type(NULL);
+		}
+		// extract base and index dimensions
+		const never_ptr<const inst_ref_expr> b(ir->get_base());
+		const never_ptr<const token_identifier>
+			bd(b.is_a<const token_identifier>());
+		NEVER_NULL(b && bd);
+		nd = c.add_internal_node(*bd, 
+			ir->implicit_dimensions());
+		// only care about dimensions, not indices
+	} else if (dr) {
+		// is a scalar
+		nd = c.add_internal_node(*dr->get_id()->front(), 0);
+	} else {
+		cerr << "Unexpected prs-literal type: "
+			<< where(*ref) << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	if (!nd) {
+		cerr << "Error implicitly declaring internal node.  "
+			<< where(*ref) << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	// now return to normal lookup
+}
+	return check_prs_literal(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -234,7 +347,7 @@ rule::rule(const attribute_list* atts, const expr* g,
 		const char_punctuation_type* a,
 		literal* rhs, const char_punctuation_type* d) :
 		body_item(), attribs(atts), guard(g), arrow(a),
-		r(rhs->release_reference()), dir(d) {
+		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
 }
 
@@ -273,18 +386,28 @@ rule::check_rule(context& c) const {
 		THROW_EXIT;
 	}
 //	g->check();	// paranoia
-	prs_literal_ptr_type o(r->check_prs_literal(c));
+	prs_literal_ptr_type o(r->check_prs_rhs(c));
 	if (!o) {
 		cerr << "ERROR in the output node reference at " <<
 			where(*r) << "." << endl;
 		THROW_EXIT;
 	}
-	const bool arrow_type = (arrow->text[0] == '=');
-	const count_ptr<entity::PRS::pull_base>
+	char arrow_type = pull_base::ARROW_NORMAL;
+	switch (arrow->text[0]) {
+	case '=': arrow_type = pull_base::ARROW_COMPLEMENT; break;
+	case '#': arrow_type = pull_base::ARROW_FLIP; break;
+	default: {}
+	}
+	if (arrow_type && o->is_internal()) {
+		cerr << "ERROR: internal nodes may only be defined with -> .  "
+			<< where(*this) << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<pull_base>
 		ret((dir->text[0] == '+') ?
-			AS_A(entity::PRS::pull_base*,
+			AS_A(pull_base*,
 				new entity::PRS::pull_up(g, *o, arrow_type)) :
-			AS_A(entity::PRS::pull_base*,
+			AS_A(pull_base*,
 				new entity::PRS::pull_dn(g, *o, arrow_type)));
 	NEVER_NULL(ret);
 	if (attribs) {
@@ -559,7 +682,7 @@ body::__check_rules(context& c, checked_rules_type& checked_rules) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
-	STACKTRACE("PRS::body::check_build()");
+	STACKTRACE_VERBOSE;
 if (rules) {
 	// check context's current open definition
 	const never_ptr<definition_base> d(c.get_current_open_definition());
@@ -570,32 +693,20 @@ if (rules) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-#if SUPPORT_NESTED_DEFINITIONS
-		if (pd && !pd.is_a<module>())
-#else
-		if (pd)
-#endif
-		{
-			for ( ; i!=e; i++) {
-				excl_ptr<entity::PRS::rule>
-					xfer(i->exclusive_release());
-//				xfer->check();		// paranoia
-				pd->add_production_rule(xfer);
-			}
-		} else {
-			if (c.get_current_namespace() != c.global_namespace) {
-				cerr << "Error: top-level PRS is only supported "
-					"in the global namespace." << endl;
-				cerr << "\tgot: prs { ... } " << where(*this)
-					<< endl;
-				THROW_EXIT;
-			}
-			for ( ; i!=e; i++) {
-				excl_ptr<entity::PRS::rule>
-					xfer(i->exclusive_release());
-//				xfer->check();		// paranoia
-				c.add_top_level_production_rule(xfer);
-			}
+		if (c.reject_namespace_lang_body()) {
+			cerr << "Error: top-level PRS is only supported "
+				"in the global namespace." << endl;
+			cerr << "\tgot: prs { ... } " << where(*this)
+				<< endl;
+			THROW_EXIT;
+		}
+		for ( ; i!=e; i++) {
+			excl_ptr<entity::PRS::rule>
+				xfer(i->exclusive_release());
+//			xfer->check();		// paranoia
+			pd->add_production_rule(xfer);
+			// now also works on top-level module
+			// b/c it is also a process_definition.
 		}
 	} else {
 		cerr << "ERROR: at least one error in PRS body."
@@ -917,6 +1028,9 @@ attribute::check(context& c) const {
 
 #if 1
 // This is temporary, until node_list::check_build is overhauled.  
+template
+node_list<const PRS::body_item>::node_list();
+
 template
 node_list<const PRS::body_item>::node_list(const PRS::body_item*);
 

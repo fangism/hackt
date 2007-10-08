@@ -1,0 +1,2 @@
+Error: definition `std::bar' is not exported from its home namespace.
+concrete_type_ref: bad definition reference "bar"!  ERROR! [15:2..4]

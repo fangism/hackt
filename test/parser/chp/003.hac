@@ -1,4 +1,5 @@
-// "003.hac" rejects empty CHP body
+// "003.hac"
+// accepts empty CHP body
 
 defproc empty(chan?(bool) L; chan!(bool) R) {
 chp {

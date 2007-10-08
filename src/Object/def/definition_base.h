@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.12 2007/04/15 05:52:12 fang Exp $
+	$Id: definition_base.h,v 1.13 2007/10/08 01:21:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -19,7 +19,7 @@
 #include "util/memory/count_ptr.h"
 
 #include "Object/def/template_formals_manager.h"
-
+#include "Object/devel_switches.h"
 
 namespace HAC {
 // forward declarations from outside namespaces
@@ -88,6 +88,16 @@ protected:
 		to allow self-recursive template definitions.  
 	 */
 	bool				defined;
+#if REQUIRE_DEFINITION_EXPORT
+	/**
+		If true, then this definition is eligible for use
+		outside its namespace.  
+		This is not really applicable to typedefs, as their
+		exportedness depends strictly on the underlying definition.
+		Does this need to be kept persistently?
+	 */
+	bool				exported;
+#endif
 protected:
 	definition_base();
 public:
@@ -125,6 +135,15 @@ virtual	never_ptr<const scopespace>
 
 	void
 	mark_defined(void) { assert(!defined); defined = true; }
+
+#if REQUIRE_DEFINITION_EXPORT
+// typedefs invoke base-definition's ::is_exported
+virtual	bool
+	is_exported(void) const;
+
+	void
+	mark_export(void) { exported = true; }
+#endif
 
 /// overridden by definitions that contain footprint_managers
 virtual	void

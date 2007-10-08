@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.91 2007/09/28 18:34:03 fang Exp $
+#	$Id: ChangeLog,v 1.92 2007/10/08 01:21:55 fang Exp $
+
+2007-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-80-merged-ACT-01-15:
+	  Branch merge.
+
 
 2007-09-28	David Fang		<fangism@users.sourceforge.net>
 
@@ -7,6 +13,12 @@
 	  util/numeric/inttype_traits.h: check whether or not
 		unit32_t is the same as unsigned long before specializing.
 		Problem was first exhibited on cygwin-g++3.4.
+
+
+2007-09-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-05:
+	  Added util/convert.h: converting functor, using explicit construction
 
 
 2007-09-19	David Fang		<fangism@users.sourceforge.net>

@@ -3,10 +3,7 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	(null) 
-#STATE#	keyword: defproc [3:1..7]
-#STATE#	identifier: foo [3:9..11]
-#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [3:12..47]
+#STATE#	(process-prototype) [3:1..47]
 #STATE#	{ [3:49]
 #STATE#	list<(def-body-item)>: (instance-decl) ... [4:1..12]
 #STATE#	keyword: chp [5:1..3]

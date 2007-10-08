@@ -1,0 +1,10 @@
+// "act-006.hac"
+// stolen from "act/tests/inst/3.act"
+// expect fail: wrong number of ports
+
+defproc foo(bool a, b) ;
+ 
+bool p;
+
+foo f(p);
+

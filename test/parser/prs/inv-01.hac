@@ -1,4 +1,5 @@
-// "inv-01.hac" should fail, rejecting empty prs body
+// "inv-01.hac" 
+// should fail, accepts empty prs body
 
 defproc inv(bool a, b) {
 prs {

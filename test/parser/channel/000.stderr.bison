@@ -4,6 +4,7 @@ parser stacks:
 state	value
 #STATE#	(null) 
 #STATE#	(null) 
+#STATE#	(null) 
 #STATE#	keyword: defchan [3:1..7]
 #STATE#	identifier: mychan [3:9..14]
 #STATE#	<: [3:16]

@@ -1,0 +1,7 @@
+// "act-001.hac"
+// stolen from "act/test/connect/1.act"
+
+int a;
+
+int N[4], M = a;
+

@@ -1,0 +1,8 @@
+// "act-003.hac"
+// stolen from "act/tests/inst/8.act"
+
+pint N[4];
+
+pint N[4..7];
+
+

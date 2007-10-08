@@ -1,7 +1,8 @@
 // "027.hac"
-// testing lookup of typedef in namespace
+// testing lookup of definition in namespace
 
 namespace foo {
+export
 defproc bar() { }
 }
 

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.86 2007/09/14 04:29:56 fang Exp $
+#	$Id: Make.test-tail,v 1.87 2007/10/08 01:22:05 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -91,6 +91,10 @@ endif
 # Each run-commands script should include the command to invoke
 # for loading the object, e.g.: hackt prsim foo.haco-a
 # This rule should deduce the input object from the source script.  
+
+# to apply different compile flags to the same source file
+EXTRACT_HACO_FLAGS_PIPE = $(GREP) "@haco-flags@" | $(HEAD) -n1 | \
+	$(SED) 's/^.*@haco-flags@[ ]*//g'
 
 # useful for extracting object file name from a source script
 # EXTRACT_HACO_PIPE = $(GREP) "^\#" ...

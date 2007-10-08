@@ -1,0 +1,2 @@
+Error: definition `baz::foo' is not exported from its home namespace.
+concrete_type_ref: bad definition reference "baz::foo"!  ERROR! [16:1..8]

@@ -1,0 +1,10 @@
+// "rule-type-04.hac"
+// copy-modified from "rule-type-03.hac"
+// experimental 3rd literal parameter
+
+bool x, y;
+prs {
+	x<XXX>	-> y-
+}
+
+

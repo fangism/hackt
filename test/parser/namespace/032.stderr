@@ -1,0 +1,2 @@
+Error: definition `foo' is not exported from its home namespace.
+concrete_type_ref: bad definition reference "foo"!  ERROR! [8:2..4]

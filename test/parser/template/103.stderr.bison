@@ -4,6 +4,7 @@ parser stacks:
 state	value
 #STATE#	(null) 
 #STATE#	list<(root_item)>: (process-definition) ... [6:1..17]
+#STATE#	(null) 
 #STATE#	(template-formal-decl-list-pair) [8:10..17]
 #STATE#	keyword: defproc [9:1..7]
 #STATE#	identifier: bar [9:9..11]

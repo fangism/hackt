@@ -1,0 +1,18 @@
+// "031.hac"
+// copy-modified from "029.hac"
+// reduced bug test-case
+// expect fail on unexported definition
+
+namespace std {
+defproc bar() { }
+}
+
+open std;
+open std;			// bombs
+
+defproc foo() {
+	// std::bar x;		// works
+	bar x;			// bombs
+}
+
+

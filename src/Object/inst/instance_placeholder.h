@@ -2,60 +2,30 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.5 2006/11/07 06:34:49 fang Exp $
+	$Id: instance_placeholder.h,v 1.6 2007/10/08 01:21:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
 #define	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
 
-#include <iosfwd>
-#include <set>
-
+#include "Object/inst/physical_instance_placeholder.h"	// for macros
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/inst/physical_instance_placeholder.h"	// for macros
-#include "Object/common/multikey_index.h"
-#include "util/STL/list_fwd.h"
-#include "util/memory/excl_ptr.h"
-#include "util/memory/count_ptr.h"
-#include "util/persistent.h"
-#include "util/multikey_set.h"
-#include "util/boolean_types.h"
-#include "util/memory/chunk_map_pool_fwd.h"
+// #include "util/memory/chunk_map_pool_fwd.h"
 #include "util/inttypes.h"
 
 /**
 	Define to 1 if you want instance_arrays and scalars pool-allocated.  
-	Causes regression in one strange test case, needs debugging.  
+	Hasn't been applied to placeholders yet.
  */
 #define	POOL_ALLOCATE_INSTANCE_PLACEHOLDERS		1
 
 namespace HAC {
 namespace entity {
 using std::list;
-using std::default_list;
-using std::istream;
-using std::ostream;
-using std::set;
-using std::string;
-using util::memory::count_ptr;
-using util::memory::never_ptr;
-using util::good_bool;
-using util::bad_bool;
-using util::default_multikey_set;
-using util::multikey_set_element_derived;
-using util::persistent;
-using util::persistent_object_manager;
 
-class scopespace;
-class footprint;
-class physical_instance_placeholder;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
-class const_index_list;
-class const_range_list;
-class const_param_expr_list;
-class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
@@ -85,7 +55,7 @@ private:
 	typedef	INSTANCE_PLACEHOLDER_CLASS		this_type;
 	FRIEND_PERSISTENT_TRAITS
 public:
-	typedef	typename traits_type::type_ref_type	type_ref_type;
+//	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
 	// placeholders need not know about instance aliases
 	typedef	typename traits_type::simple_meta_instance_reference_type

@@ -1,0 +1,8 @@
+// "act-003.hac"
+// instantiate a channel
+// expect-fail, type incomplete
+
+import "act-002.hac";
+
+foo bar;
+

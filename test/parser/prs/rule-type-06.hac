@@ -1,0 +1,12 @@
+// "rule-type-06.hac"
+// copy-modified from "rule-type-05.hac"
+// experimental 3rd literal parameter
+
+pint lvt = 6;	// intentional collision with fet type
+pint W = 5;
+bool x, y;
+prs {
+	x<W,lvt>	-> y-
+}
+
+

@@ -1,0 +1,11 @@
+// "033.hac"
+
+namespace deepspace {
+	defproc foo() { }
+}
+
+// close and re-open
+namespace deepspace {
+	foo bar;
+}
+

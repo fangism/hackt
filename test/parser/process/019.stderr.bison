@@ -3,14 +3,11 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	(template-formal-decl-list-pair) [3:10..41]
-#STATE#	keyword: defproc [4:1..7]
-#STATE#	identifier: barbar [4:9..14]
-#STATE#	list<(port-formal-decl)>: ... [4:15..16]
+#STATE#	(process-prototype) [4:1..16]
 #STATE#	$end
 in state #STATE#, possible rules are:
-	declare_proc_proto: optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens . ';'  (#RULE#)
-	defproc: optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens . '{' optional_definition_body '}'  (#RULE#)
+	prototype_declaration: declare_proc_proto . ';'  (#RULE#)
+	defproc: declare_proc_proto . '{' optional_definition_body '}'  (#RULE#)
 acceptable tokens are: 
 	'{' (shift)
 	';' (shift)

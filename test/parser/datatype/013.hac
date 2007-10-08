@@ -4,6 +4,6 @@ int x;
 namespace A { }
 
 namespace B {
-	open A as x;
+	open A -> x;
 }
 

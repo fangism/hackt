@@ -10,7 +10,7 @@ state	value
 in state #STATE#, possible rules are:
 	namespace_management : NAMESPACE ID '{' . top_root '}'  (#RULE#)
 	top_root : .  (#RULE#)
-	optional_template_specification : .  (#RULE#)
+	optional_export : .  (#RULE#)
 acceptable tokens are: 
 	'!' (shift)
 	'(' (shift)
@@ -36,8 +36,9 @@ acceptable tokens are:
 	DEFTYPE (reduce)
 	TYPEDEF (reduce)
 	CHANNEL (shift)
-	TEMPLATE (shift)
+	TEMPLATE (reduce)
 	ENUM (shift)
+	EXPORT (shift)
 	BOOL_TRUE (shift)
 	BOOL_FALSE (shift)
 	INT_TYPE (shift)

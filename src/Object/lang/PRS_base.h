@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.8 2006/07/31 22:22:36 fang Exp $
+	$Id: PRS_base.h,v 1.9 2007/10/08 01:21:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -13,6 +13,14 @@
 #include "util/persistent.h"
 #include "util/boolean_types.h"
 #include "Object/inst/instance_pool_fwd.h"
+
+/**
+	Define to 1 to support internal nodes.
+	Goal: 1
+	Priority: med (for ACT compatibility)
+	Status: perm'd on branch ACT-00-01-04-main-00-81-74-ACT-01-11-PRS-08
+#define	PRS_INTERNAL_NODES			1
+**/
 
 namespace HAC {
 namespace entity {
@@ -141,6 +149,7 @@ public:
 //=============================================================================
 /**
 	Abstract base class for a production rule.  
+	TODO: parent link for upward structure?
  */
 class rule : public persistent {
 public:
@@ -188,6 +197,9 @@ virtual	prs_expr_ptr_type
 	negate(void) const = 0;
 
 virtual	prs_expr_ptr_type
+	flip_literals(void) const = 0;
+
+virtual	prs_expr_ptr_type
 	negation_normalize(void) = 0;
 
 virtual	void
@@ -200,11 +212,19 @@ virtual	void
 
 virtual	PRS_UNROLL_EXPR_PROTO = 0;
 
+#define	PRS_UNROLL_COPY_PROTO						\
+	prs_expr_ptr_type						\
+	unroll_copy(const unroll_context&, const prs_expr_ptr_type&) const
+
+virtual	PRS_UNROLL_COPY_PROTO = 0;
+
 protected:
 	struct checker;
 	struct negater;
+	struct literal_flipper;
 	struct negation_normalizer;
 	struct unroller;
+	struct unroll_copier;
 
 };	// end class prs_expr
 

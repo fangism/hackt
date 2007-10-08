@@ -1,0 +1,7 @@
+// "054.hac"
+// top-level instance accepted in hac, not in act
+
+namespace foo {
+pint bar = 3;
+}
+

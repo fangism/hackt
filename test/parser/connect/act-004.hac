@@ -1,0 +1,12 @@
+// "act-004.hac"
+// stolen from "act/test/connect/4.act"
+// NOTE: HAC performs shape analysis in connecting arrays
+// while ACT doesn't (yet) -- known difference
+
+int x[4][4][4];
+int x[4][2][7..8];
+
+int y[5][4][4];
+
+x = y;
+

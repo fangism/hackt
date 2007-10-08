@@ -1,0 +1,9 @@
+// "046.hac"
+// expect fail: chp forbidden outside global namespace
+
+namespace foo {
+chp {
+
+}
+}	// end namespace foo
+

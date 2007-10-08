@@ -1,6 +1,7 @@
 // "033.hac"
 // copy-modified from "031.hac"
-// testing declarations in datatypes, should pass
+// testing declarations in datatypes
+// should reject: no local instances in deftype
 
 deftype my_data <: int<4> (int<8> x; bool y) {
 	bool fee, fi, fo, fum[2];

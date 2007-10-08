@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.4 2007/09/13 20:37:26 fang Exp $
+	$Id: State-prsim.cc,v 1.5 2007/10/08 01:21:53 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2778,19 +2778,20 @@ State::dump_node_value(ostream& o, const node_index_type ni) const {
 /**
 	Prints out nodes affected by the node argument.  
 	Note: this only requires structural information, no stateful info.  
-	TODO: check for replications.  
 	TODO: including all OR combinations, or just the paths that
-		include this node conjunctively?
+		include this node directly?  (just the paths that include)
  */
 ostream&
 State::dump_node_fanout(ostream& o, const node_index_type ni) const {
 	typedef	fanout_array_type::const_iterator	const_iterator;
+	typedef	std::set<expr_index_type>		rule_set_type;
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
 	DEBUG_FANOUT_PRINT("ni = " << ni << endl);
 #endif
 	const node_type& n(get_node(ni));
 	const fanout_array_type& foa(n.fanout);
+	rule_set_type fanout_rules;
 	const_iterator fi(foa.begin()), fe(foa.end());
 	for ( ; fi!=fe; ++fi) {
 		// for each leaf expression in the fanout list, 
@@ -2803,14 +2804,20 @@ State::dump_node_fanout(ostream& o, const node_index_type ni) const {
 			e = &expr_pool[ei];
 		}
 		DEBUG_FANOUT_PRINT("ei = " << ei << endl);
-		// ei is an index to the expression whose parent is *node*.
+		fanout_rules.insert(ei);	// ignore duplicates
+	}
+	typedef	rule_set_type::const_iterator		rule_iterator;
+	rule_iterator ri(fanout_rules.begin()), re(fanout_rules.end());
+	for ( ; ri!=re; ++ri) {
+		const expr_type* const e = &expr_pool[*ri];
+		// ei (*ri) is index to expression whose parent is *node*.
 		const node_index_type nr = e->parent;
 		// nr is an index to the root *node*.
 		DEBUG_FANOUT_PRINT("nr = " << nr << endl);
 		const node_type& no(get_node(nr));
 		// track the direction of propagation (pull-up/dn)
 		const bool dir = e->direction();
-		// then print the entire fanin rule for that node, 
+		// then print the *entire* fanin rule for that node, 
 		const expr_index_type pi =
 			(dir ? no.pull_up_index : no.pull_dn_index);
 		DEBUG_FANOUT_PRINT("pi = " << pi << endl);

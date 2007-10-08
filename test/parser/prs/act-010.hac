@@ -1,0 +1,11 @@
+// "act-010.hac"
+// stolen from "act/tests/lang/2.act"
+
+bool a, b, c;
+pint w;
+  
+prs {
+  
+ (:i:0..3:a<i> & b -> c-)
+}
+

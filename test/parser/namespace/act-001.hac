@@ -1,0 +1,35 @@
+// "act-001.hac"
+// stolen from "act/test/ns/2.act"
+
+namespace foo {
+
+  namespace bar { 
+  
+  }
+
+  namespace baz {
+
+  }
+
+  namespace bar {
+    namespace xyq {
+ 
+    }
+    namespace pqrt {
+
+   }
+  }
+
+  namespace four {
+
+  }
+
+}
+
+
+namespace bazz {
+
+
+}
+
+

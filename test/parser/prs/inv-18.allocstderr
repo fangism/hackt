@@ -1,0 +1,7 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	erse	inv<>
+	bool: 1,2
+[global bool entries]
+1	(top)	-	1	erse.a	
+2	(top)	-	2	erse.b	

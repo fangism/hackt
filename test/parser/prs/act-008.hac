@@ -1,0 +1,17 @@
+// "act-008.hac"
+// stolen from "act/tests/lang/0.act"
+// NOTE: uses prs-macro and 3rd prs-literal parameter
+
+defproc foo(bool x, y)
+{
+  bool w;
+  prs {
+   x <5,3,lvt> -> x-
+   w -> x-
+
+   passn(x,x,y)
+  }
+}
+
+foo bar;
+

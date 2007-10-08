@@ -1,6 +1,14 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.77 2007/09/13 20:37:26 fang Exp $
+#	$Id: ChangeLog,v 1.78 2007/10/08 01:22:01 fang Exp $
 # ChangeLog for test directory.
+
+2007-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-74-ACT-01-09:
+	  Make.test-tail, Make.test-compile: added support to embed
+		per-test-input flags in-source with @haco-flags@, 
+		extracted and used in test compiles.
+
 
 2007-08-25	David Fang		<fangism@users.sourceforge.net>
 

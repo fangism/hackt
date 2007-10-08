@@ -1,0 +1,17 @@
+// "122.hac"
+// copy-modified from "066.hac"
+// should fail, non-exported definition
+
+namespace bar {
+pint Q;
+Q = 13;
+
+defproc foo() {
+pint N[Q];	// reference to global parameter Q
+N[0] = 11;
+}
+
+}	// end namespace bar
+
+bar::foo f;	// error bar::foo not exported
+

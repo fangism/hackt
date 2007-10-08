@@ -2,6 +2,7 @@
 // reduced bug test-case
 
 namespace std {
+export
 defproc bar() { }
 }
 

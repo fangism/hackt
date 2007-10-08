@@ -1,0 +1,12 @@
+// "059.hac"
+// copy-modified from "056.hac"
+// top-level instance accepted in hac, not in act
+
+pint bar[2];
+
+namespace foo {
+	bar[1] = 3;
+}
+
+// should this be allowed? assigning value out-of-namespace?
+

@@ -1,0 +1,13 @@
+// "internal-node-09.hac"
+// copy-modified from "internal-node-08.hac"
+
+defproc bogus(bool x, y, w) {
+bool en;
+prs {
+	en		-> @z-
+	@z & x & y	-> w-		// wrong sense, undefined
+}
+}
+
+bogus A;
+

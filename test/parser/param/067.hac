@@ -8,6 +8,7 @@ Q = 13;
 
 namespace bar {
 
+export
 defproc foo() {
 pint N[Q];	// reference to global parameter Q
 N[0] = 11;

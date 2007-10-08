@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.17 2007/07/18 23:28:22 fang Exp $
+ 	$Id: parse_context.cc,v 1.18 2007/10/08 01:21:00 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -22,6 +22,7 @@
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/def/enum_datatype_def.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
@@ -36,6 +37,9 @@
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/inst/collection_fwd.h"
+#include "Object/inst/dummy_placeholder.h"
+#include "Object/traits/node_traits.h"
 #include "Object/module.h"
 
 #include "common/ICE.h"
@@ -56,6 +60,7 @@ using entity::process_definition;
 using entity::user_def_chan;
 using entity::user_def_datatype;
 using entity::pint_scalar;
+using entity::expr_dump_context;
 
 //=============================================================================
 // class context method definition
@@ -68,7 +73,7 @@ using entity::pint_scalar;
 	built-in types.  
 	\param g pointer to global namespace.
  */
-context::context(module& m) :
+context::context(module& m, const parse_options& o) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -80,12 +85,12 @@ context::context(module& m) :
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
-		top_prs(m.prs), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
-		view_all_publicly(false)
+		view_all_publicly(false), 
+		parse_opts(o)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -119,7 +124,7 @@ context::context(module& m) :
 	\param _pub pass true to be able to view all members publicly, 
 		lifting port-visibility restriction.  
  */
-context::context(const module& m, const bool _pub) :
+context::context(const module& m, const parse_options& o, const bool _pub) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
@@ -131,12 +136,12 @@ context::context(const module& m, const bool _pub) :
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
-		top_prs(const_cast<entity::PRS::rule_set&>(m.prs)), // :S
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
-		view_all_publicly(_pub)
+		view_all_publicly(_pub), 
+		parse_opts(o)
 		{
 	namespace_stack.push(global_namespace);
 #if SUPPORT_NESTED_DEFINITIONS
@@ -219,6 +224,59 @@ context::close_namespace(void) {
 	//	types, definitions...
 	namespace_stack.pop();
 	INVARIANT(get_current_namespace() == new_top);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if in a definition scope or not in global namespace.
+	NOTE: this is not affected by parse_opts.namespace_instances
+ */
+bool
+context::in_nonglobal_namespace(void) const {
+	const never_ptr<const definition_base> d(get_current_open_definition());
+	return
+#if SUPPORT_NESTED_DEFINITIONS
+		!d.is_a<const module>() ||	// is a non-module definition
+#else
+		d ||		// UNTESTED
+#endif
+		(get_current_namespace() != global_namespace);
+		// else in non-global namespace
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if not in a definition scope and not in global namespace.
+	NOTE: this is not affected by parse_opts.namespace_instances
+ */
+bool
+context::reject_namespace_lang_body(void) const {
+	const never_ptr<const definition_base> d(get_current_open_definition());
+	return
+#if SUPPORT_NESTED_DEFINITIONS
+		d.is_a<const module>() &&	// is a non-module definition
+#else
+		!d &&		// UNTESTED
+#endif
+		(get_current_namespace() != global_namespace);
+		// else in non-global namespace
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if trying to add an instance to a non-global namespace.
+	This check can be disabled by parse_opts.namespace_instances.
+ */
+bool
+context::reject_nonglobal_instance_management(void) const {
+	const bool ret =
+		!parse_opts.namespace_instances && in_nonglobal_namespace();
+	if (ret) {
+cerr << "Error: instance management statements are forbidden "
+	"in non-global namespaces outside definitions." << endl;
+cerr << "To allow them, pass -f namespace-instances to the compiler." << endl;
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -530,6 +588,11 @@ context::alias_definition(const never_ptr<const definition_base> d,
 void
 context::add_instance_management(
 		const count_ptr<const instance_management_base>& c) {
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
+		THROW_EXIT;
+	}
 	get_current_sequential_scope()->append_instance_management(c);
 }
 
@@ -543,6 +606,11 @@ void
 context::add_connection(
 		const count_ptr<const meta_instance_reference_connection>& c
 		) {
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
+		THROW_EXIT;
+	}
 	get_current_sequential_scope()->append_instance_management(c);
 }
 
@@ -558,9 +626,36 @@ void
 context::add_assignment(
 		const count_ptr<const param_expression_assignment>& c
 		) {
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
+		THROW_EXIT;
+	}
 	get_current_sequential_scope()->append_instance_management(c);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const definition_base>
+context::__lookup_definition_return(const never_ptr<const object> o) const {
+#if REQUIRE_DEFINITION_EXPORT
+	const never_ptr<const definition_base>
+		ret(o.is_a<const definition_base>());
+	if (ret) {
+		if (!parse_opts.export_all && 
+				(get_current_namespace() != ret->get_parent())
+				&& !ret->is_exported()) {
+			cerr << "Error: definition `" <<
+				ret->get_qualified_name() <<
+				"\' is not exported from its home namespace."
+				<< endl;
+			return never_ptr<const definition_base>();
+		}
+	}
+	return ret;
+#else
+	return o.is_a<const definition_base>();
+#endif
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Ok to start search in namespace, because definitions
@@ -570,7 +665,7 @@ never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
-	return o.is_a<const definition_base>();
+	return __lookup_definition_return(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -584,8 +679,10 @@ never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
-	return o.is_a<const definition_base>();
+	return __lookup_definition_return(o);
 }
+
+#undef	LOOKUP_DEFINITION_RETURN
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -609,6 +706,19 @@ context::lookup_instance(const qualified_id& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return o.is_a<const instance_placeholder_base>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Lookup name of internal node.  
+	This lookup does not go though the usual generic object lookup.  
+	lookup_member
+ */
+never_ptr<const node_instance_placeholder>
+context::lookup_internal_node(const token_identifier& id) const {
+	return get_current_open_definition()
+		.is_a<const process_definition>()->lookup_member(id)
+		.is_a<const node_instance_placeholder>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -739,9 +849,14 @@ context::add_instance(const token_identifier& id,
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
 		const relaxed_args_ptr_type& a, 
 #endif
-		index_collection_item_ptr_type dim) {
+		const index_collection_item_ptr_type dim) {
 	typedef	placeholder_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
+	if (reject_nonglobal_instance_management()) {
+		// already have error message
+		cerr << "got instance name: " << id << endl;
+		return return_type(NULL);
+	}
 	NEVER_NULL(current_fundamental_type);
 	const never_ptr<scopespace>
 		current_named_scope(get_current_named_scope());
@@ -792,6 +907,23 @@ context::add_instance(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Registers an internal node (declaration) implicitly to the
+	current open definition's scope.  
+	Performs a lookup to make sure name doesn't shadow another name.
+	\return reference to instance placeholder in scope.  
+ */
+context::node_placeholder_ptr_type
+context::add_internal_node(const token_identifier& id, const size_t dim) {
+	// top-level is also considered a definition
+	const never_ptr<process_definition>
+		pd(get_current_open_definition().is_a<process_definition>());
+	NEVER_NULL(pd);
+	// forward call
+	return pd->add_node_instance_idempotent(id, dim);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Using the current_type_reference, adds a template formal parameter.  
 	Is like add_instance, above.  
 	If already exists, then checks against previous formal declaration.  
@@ -803,7 +935,7 @@ context::add_instance(const token_identifier& id,
  */
 context::placeholder_ptr_type
 context::add_template_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim, 
+		const index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(current_prototype);	// valid definition_base
@@ -893,7 +1025,7 @@ context::add_template_formal(const token_identifier& id,
  */
 context::placeholder_ptr_type
 context::add_port_formal(const token_identifier& id, 
-		index_collection_item_ptr_type dim) {
+		const index_collection_item_ptr_type dim) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
@@ -935,12 +1067,6 @@ void
 context::commit_definition_arity(void) {
 	INVARIANT(current_prototype);
 	current_prototype->commit_arity();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-context::add_top_level_production_rule(excl_ptr<entity::PRS::rule>& r) {
-	top_prs.append_rule(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

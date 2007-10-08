@@ -1,0 +1,10 @@
+// "032.hac"
+// child namespace cannot see un-exported definition in parent namespace
+// expect fail
+
+defproc foo() { }
+
+namespace earth {
+	foo bar;
+}
+

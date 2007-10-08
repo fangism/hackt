@@ -1,0 +1,27 @@
+At: "033.hac":7:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	(process-prototype) [6:1..44]
+#STATE#	{ [6:46]
+#STATE#	datatype: bool [7:2..5]
+in state #STATE#, possible rules are:
+	defdatatype : declare_datatype_proto '{' . optional_datatype_body set_body get_body '}'  (#RULE#)
+	optional_datatype_body : .  (#RULE#)
+acceptable tokens are: 
+	'!' (shift)
+	'(' (shift)
+	'-' (shift)
+	'[' (shift)
+	'{' (shift)
+	'~' (shift)
+	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
+	SCOPE (shift)
+	SPEC_LANG (shift)
+	SET (reduce)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)

@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.30 2007/09/13 20:37:24 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.31 2007/10/08 01:21:49 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -20,6 +20,8 @@
 
 %{
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 
 #include "config.h"
 #include "AST/AST.h"		// should be first
@@ -31,6 +33,7 @@
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
 #include "Object/devel_switches.h"	// for DEFCHAN_LIKE_PROCESS
+#include "util/convert.h"
 
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
@@ -231,7 +234,7 @@ extern const char* const yyrule[];
 	terminal*		_terminal;
 	node_position*		_node_position;
 	keyword_position*	_keyword_position;
-	token_keyword*		_token_keyword;
+/*	token_keyword*		_token_keyword;	*/
 /*	token_string*		_token_string;	*/
 /*	token_char*		_token_char;	*/
 	token_int*		_token_int;
@@ -498,16 +501,17 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* _token_string */
 %token	<_node_position>	LE GE EQUAL NOTEQUAL
-%token	<_node_position>	IMPLIES RARROW
+%token	<_node_position>	IMPLIES RARROW HASH_ARROW
 %token	<_node_position>	LOGICAL_AND LOGICAL_OR
 %token	<_node_position>	INSERT EXTRACT
 %token	<_node_position>	PLUSPLUS MINUSMINUS
 %token	<_node_position>	ASSIGN
 %type	<_node_position>	loop_assoc_op
 
-/* _token_keyword: covert most of these to _keyword_position */
+/* _token_keyword: convert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
-%token	<_keyword_position>	OPEN AS
+%token	<_keyword_position>	OPEN
+%token	<_keyword_position>	AS
 %token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG SPEC_LANG
 %token	<_keyword_position>	TREE_LANG SUBCKT_LANG
 %token	<_keyword_position>	SKIP LOG
@@ -521,7 +525,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_imported_root>	EMBEDFILE
 
 /* linkage modifiers */
-%token	<_token_keyword>	EXTERN STATIC EXPORT
+%token	<_keyword_position>	EXTERN STATIC EXPORT
 
 %token	<_token_else>		ELSE
 
@@ -555,6 +559,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_definition>	definition
 %type	<_process_def>	defproc
 %type	<_keyword_position>	def_or_proc
+%type	<_keyword_position>	optional_export
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
 /* for DEFTYPE_LIKE_PROCESS */
@@ -605,12 +610,20 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_data_param_id>	data_param_id
 ***/
 %type	<_definition_body>	definition_body optional_definition_body
+%type	<_definition_body>	datatype_body optional_datatype_body
+/* %type	<_instance_management_list>	optional_connection_body */
+%type	<_instance_management_list>	connection_body
 %type	<_instance_management_list>	instance_management_list
+%type	<_instance_management>	connection_body_item_base
+%type	<_instance_management>	connection_body_item
 %type	<_def_body_item>	definition_body_item
+%type	<_def_body_item>	datatype_body_item
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
 %type	<_conditional_instantiation>	conditional_instantiation
+%type	<_loop_instantiation>	loop_connections
+%type	<_conditional_instantiation>	conditional_connections
 %type	<_instance_id_list>	instance_id_list
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
@@ -623,6 +636,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_guarded_instance_management_list>	guarded_instance_management_list_unmatched
 %type	<_guarded_instance_management>	guarded_instance_management
 %type	<_guarded_instance_management>	instance_management_else_clause
+%type	<_guarded_instance_management_list>	guarded_connection_body
+%type	<_guarded_instance_management_list>	guarded_connection_body_unmatched
+%type	<_guarded_instance_management>	guarded_connection_body_clause
+%type	<_guarded_instance_management>	connection_body_else_clause
 %type	<_language_body>	language_body
 %type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
@@ -661,6 +678,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_expr>		chp_xor_expr */
 %type	<_expr>		chp_bitwise_and_expr chp_bitwise_xor_expr
 %type	<_expr>		chp_bitwise_or_expr
+%type	<_hse_stmt_list>	hse_body_optional
 %type	<_hse_stmt_list>	hse_body
 %type	<_hse_stmt_list>	full_hse_body_item_list
 %type	<_hse_stmt>	full_hse_body_item hse_body_item
@@ -674,6 +692,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_hse_det_selection>	hse_matched_det_guarded_command_list
 %type	<_hse_det_selection>	hse_unmatched_det_guarded_command_list
 %type	<_hse_assignment>	hse_assignment
+%type	<_prs_rule_list>	prs_body_optional
 %type	<_prs_rule_list>	prs_body
 %type	<_prs_body_item>	prs_body_item
 %type	<_prs_rule>	single_prs
@@ -691,6 +710,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr> prs_and_loop prs_or_loop
 %type	<_node_position>	prs_arrow
 %type	<_node_position>	dir
+%type	<_spec_body>		lang_spec
+%type	<_spec_directive_list>	spec_body_optional
 %type	<_spec_directive_list>	spec_body
 %type	<_spec_directive>	spec_item spec_directive
 %type	<_expr>	paren_expr expr
@@ -714,6 +735,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_inst_ref_expr>	type_completion_reference */
 %type	<_prs_literal>	prs_literal_base
 %type	<_prs_literal>	prs_literal
+/* %type	<_node_position>	prs_internal_optional */
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
 %type	<_member_expr>	member_expr local_member_expr
@@ -867,7 +889,8 @@ namespace_management
 		  WRAP_LIST($3, $4, $5);
 		  $$ = new namespace_body($1, $2, $4); }
 	/* or C++ style: using namespace blah; */
-	| OPEN namespace_id AS ID ';'
+	/* | OPEN namespace_id AS ID ';' */
+	| OPEN namespace_id RARROW ID ';'
 		{ $$ = new using_namespace($1, $2, $4);
 		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
 	| OPEN namespace_id ';'
@@ -891,18 +914,26 @@ definition
 
 /* declaration prototypes, like forward declarations */
 prototype_declaration
-	: declare_proc_proto { $$ = $1; }
-	| declare_datatype_proto { $$ = $1; }
-	| declare_chan_proto { $$ = $1; }
-	| declare_enum { $$ = $1; }
+	: declare_proc_proto ';' { $$ = $1; DELETE_TOKEN($2); }
+	| declare_datatype_proto ';' { $$ = $1; DELETE_TOKEN($2); }
+	| declare_chan_proto ';' { $$ = $1; DELETE_TOKEN($2); }
+	| declare_enum ';' { $$ = $1; DELETE_TOKEN($2); }
 	;
 
 /** type_id is either physical_type_ref or base_param_type */
 type_alias
 /* C-style typedef, but allowing templates */
-	: optional_template_specification TYPEDEF physical_type_ref ID ';'
-		{ $$ = new typedef_alias($1, $2, $3, $4);
-		  DELETE_TOKEN($5); }
+/* export is ignored for typedefs, added here to simplify grammar */
+	: optional_export
+	  optional_template_specification TYPEDEF physical_type_ref ID ';'
+		{ $$ = new typedef_alias($2, $3, $4, $5);
+		  if ($1) {
+			cerr <<
+			"Warning: \'export\' has no effect on typedefs; "
+			"the canonical definition is respected." << endl;
+			DELETE_TOKEN($1);
+		  }
+		  DELETE_TOKEN($6); }
 /*	other proposal, use {deftype,defchan,defproc} new<> = old<> */
 	;
 
@@ -918,8 +949,14 @@ template_specification
 		  $$ = new template_formal_decl_list_pair($2, $3); }
 	;
 
+/* to avoid some S/R conflicts on optional_export, prefix some rules with it */
 optional_template_specification
 	: template_specification
+	| { $$ = NULL; }
+	;
+
+optional_export
+	: EXPORT { $$ = $1; }
 	| { $$ = NULL; }
 	;
 
@@ -942,20 +979,28 @@ def_or_proc
 	;
 
 declare_proc_proto
-	: optional_template_specification def_or_proc ID
-	  optional_port_formal_decl_list_in_parens ';'
-		{ $$ = new process_prototype($1, $2, $3, $4);
-		  DELETE_TOKEN($5); }
+	: optional_export
+	  optional_template_specification def_or_proc ID
+	  optional_port_formal_decl_list_in_parens
+		{ $$ = new process_prototype($1, $2, $3, $4, $5); }
 	;
 
 defproc
 	/* C++ style template declaration */
+/**
 	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens
+**/
+	: declare_proc_proto
 	  '{' optional_definition_body '}'
 	/* optional_definition_body will always be valid, sometimes empty */
-		{ WRAP_LIST($5, $6, $7);
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new process_def(*$1, $3);
+		  DELETE_TOKEN($1);	/* transferred ownership */
+/**
+		  WRAP_LIST($5, $6, $7);
 		  $$ = new process_def($1, $2, $3, $4, $6);
+**/
 		}
 	;
 
@@ -1214,40 +1259,44 @@ base_data_type
 
 /* definition types */
 declare_datatype_proto
-	: optional_template_specification DEFTYPE ID DEFINEOP
+	: optional_export
+	  optional_template_specification DEFTYPE ID DEFINEOP
 /*	  base_data_type */
 	  data_type_ref		/* base? */
 	/* DEFTYPE_LIKE_PROCESS */
-	  optional_port_formal_decl_list_in_parens ';'
+	  optional_port_formal_decl_list_in_parens
 /*	  data_param_decl_list_in_parens ';'	*/
 		{
 #if DEFTYPE_LIKE_PROCESS
-		$$ = new process_prototype($1, $2, $3, $6);
-		  DELETE_TOKEN($4); DELETE_TOKEN($5); DELETE_TOKEN($7);
+		$$ = new process_prototype($1, $2, $3, $4, $7);
+		  DELETE_TOKEN($5); DELETE_TOKEN($6);
+		/* eventually use data_type_ref */
 #else
-		$$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
-		  DELETE_TOKEN($7);
+		$$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6, $7);
 #endif
 		}
 	;
 
 defdatatype
-	: optional_template_specification DEFTYPE ID DEFINEOP
-/*	  base_data_type */
-	  data_type_ref		/* base? */
-	/* DEFTYPE_LIKE_PROCESS */
-	  optional_port_formal_decl_list_in_parens
-/*	  data_param_decl_list_in_parens */
-	  '{' optional_definition_body set_body get_body '}'
+	: declare_datatype_proto
+	  '{' optional_datatype_body set_body get_body '}'
 		{
 #if DEFTYPE_LIKE_PROCESS
+/**
 		WRAP_LIST($7, $8, $11);
 		$$ = new process_def($1, $2, $3, $6, $8);
 		DELETE_TOKEN($4); DELETE_TOKEN($5);
 		DELETE_TOKEN($9); DELETE_TOKEN($10);
+**/
+		WRAP_LIST($2, $3, $6);
+		$$ = new process_def(*$1, $3);
+		DELETE_TOKEN($4); DELETE_TOKEN($5);
 #else
+/**
 		$$ = new user_data_type_def(
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+**/
+		$$ = new user_data_type_def($1, $2, $3, $4, $5);
 #endif
 		}
 	;
@@ -1265,8 +1314,8 @@ get_body
 	;
 
 declare_enum
-	: ENUM ID ';'
-		{ $$ = new enum_prototype($1, $2); DELETE_TOKEN($3); }
+	: ENUM ID
+		{ $$ = new enum_prototype($1, $2); }
 	;
 
 defenum
@@ -1287,36 +1336,41 @@ enum_member_list
 **/
 
 declare_chan_proto
-	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
+	: optional_export
+	  optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
 	/* for DEFCHAN_LIKE_PROCESS */
-	  optional_port_formal_decl_list_in_parens ';'
+	  optional_port_formal_decl_list_in_parens
 /*	  data_param_decl_list_in_parens ';'	*/
 		{
 #if DEFCHAN_LIKE_PROCESS
-		$$ = new process_prototype($1, $2, $3, $6);
-		  DELETE_TOKEN($4); DELETE_TOKEN($5); DELETE_TOKEN($7);
+		$$ = new process_prototype($1, $2, $3, $4, $7);
+		  DELETE_TOKEN($5); DELETE_TOKEN($6);
 #else
-		$$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
-		  DELETE_TOKEN($7);
+		$$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6, $7);
 #endif
 		}
 	;
 	
 defchan
-	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
-	/* for DEFCHAN_LIKE_PROCESS */
-	  optional_port_formal_decl_list_in_parens
-/*	  data_param_decl_list_in_parens	*/
-	  '{' optional_definition_body send_body recv_body '}'
+	: declare_chan_proto
+	  '{' optional_datatype_body send_body recv_body '}'
 		{
 #if DEFCHAN_LIKE_PROCESS
+/**
 		WRAP_LIST($7, $8, $11);
 		$$ = new process_def($1, $2, $3, $6, $8);
 		DELETE_TOKEN($4); DELETE_TOKEN($5);
 		DELETE_TOKEN($9); DELETE_TOKEN($10);
+**/
+		WRAP_LIST($2, $3, $6);
+		$$ = new process_def(*$1, $3);
+		DELETE_TOKEN($4); DELETE_TOKEN($5);
 #else
+/**
 		$$ = new user_chan_type_def(
 			$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+**/
+		$$ = new user_chan_type_def($1, $2, $3, $4, $5, $6);
 #endif
 		}
 	;
@@ -1393,6 +1447,62 @@ optional_definition_body
 			because it needs to be wrapped in braces */
 	;
 
+optional_datatype_body
+	: datatype_body { $$ = $1; }
+	| { $$ = new definition_body(); }
+	;
+
+datatype_body
+	: datatype_body datatype_body_item
+		{ $$ = $1; $$->push_back($2); }
+	| datatype_body_item
+		{ $$ = new definition_body($1); }
+	;
+
+datatype_body_item
+/***
+	: connection_body
+		{ $$ = new definition_body();
+		  std::transform($1->begin(), $1->end(), 
+			std::back_inserter(*$$), 
+			util::auto_converter<definition_body::value_type>()
+		  );
+		  DELETE_TOKEN($1);
+		}
+***/
+	: connection_body_item { $$ = $1; }
+	| lang_spec { $$ = $1; }
+	;
+
+/**
+optional_connection_body
+	: connection_body { $$ = $1; }
+	| { $$ = new definition_body(); }
+	;
+**/
+
+connection_body
+	: connection_body connection_body_item
+		{ $$ = $1; $$->push_back($2); }
+	| connection_body_item
+		{ $$ = new instance_management_list($1); }
+	;
+
+/* connection_body_item is a limited item, confined to connection statements */
+connection_body_item_base
+	: connection_statement { $$ = $1; }	/* connection of ports */
+	/* covers alias connection and parameter assignments */
+	| nonempty_alias_list ';'
+		{ $$ = $1; DELETE_TOKEN($2); }
+	| instance_type_completion_statement { $$ = $1; }
+	| instance_type_completion_connection_statement { $$ = $1; }
+
+connection_body_item
+	: connection_body_item_base { $$ = $1; }
+	| loop_connections { $$ = $1; }
+	| conditional_connections { $$ = $1; }
+	;
+
 /* subset of definition body items allowed inside loop/conditional scopes
  * Type-wise, this is identical to definition_body.  
  */
@@ -1417,12 +1527,14 @@ instance_management_list
 
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
-	| connection_statement { $$ = $1; }	/* connection of ports */
+	| connection_body_item_base { $$ = $1; }
+/***
+	| connection_statement { $$ = $1; }
 	| instance_type_completion_statement { $$ = $1; }
 	| instance_type_completion_connection_statement { $$ = $1; }
-	/* covers alias connection and parameter assignments */
 	| nonempty_alias_list ';'
 		{ $$ = $1; DELETE_TOKEN($2); }
+***/
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
 	;
@@ -1435,6 +1547,17 @@ loop_instantiation
 
 conditional_instantiation
 	: '[' guarded_instance_management_list ']'
+		{ WRAP_LIST($1, $2, $3);
+		  $$ = new conditional_instantiation($2); }
+	;
+loop_connections
+	: '(' ';' ID ':' range ':' connection_body ')'
+		{ $$ = new loop_instantiation($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
+	;
+
+conditional_connections
+	: '[' guarded_connection_body ']'
 		{ WRAP_LIST($1, $2, $3);
 		  $$ = new conditional_instantiation($2); }
 	;
@@ -1561,19 +1684,56 @@ instance_management_else_clause
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
+/* connection lists */
+guarded_connection_body
+	: guarded_connection_body_unmatched THICKBAR connection_body_else_clause
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| guarded_connection_body_unmatched
+		{ $$ = $1; }
+	;
+
+guarded_connection_body_unmatched
+	: guarded_connection_body_unmatched
+		THICKBAR guarded_connection_body_clause
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| guarded_connection_body_clause
+		{ $$ = new guarded_instance_management_list($1); }
+	;
+
+guarded_connection_body_clause
+	: expr RARROW connection_body
+		{ $$ = new guarded_instance_management($1, $2, $3); }
+	;
+
+connection_body_else_clause
+	: ELSE RARROW connection_body
+		{ $$ = new guarded_instance_management($1, $2, $3); }
+	;
+
 
 /******************************************************************************
 //	Supported Languages
 ******************************************************************************/
 
 language_body
-	: CHP_LANG '{' chp_body '}'
+	: CHP_LANG '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new CHP::body($1, $3); }
-	| HSE_LANG '{' hse_body '}'
+	| HSE_LANG '{' hse_body_optional '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new HSE::body($1, $3); }
-	| PRS_LANG '{' prs_body '}'
-		{ WRAP_LIST($2, $3, $4); $$ = new PRS::body($1, $3); }
-	| SPEC_LANG '{' spec_body '}'
+	| PRS_LANG optional_template_arguments_in_angles 
+		'{' prs_body_optional '}'
+		{ WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); 
+		  DELETE_TOKEN($2); }
+	/**
+		TODO: optional parameters are Vdd and GND replacements.
+		They won't be conventional template parameters, since
+		they reference bool instances, rather than values.
+	**/
+	| lang_spec { $$ = $1; }
+	;
+
+lang_spec
+	: SPEC_LANG '{' spec_body_optional '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new SPEC::body($1, $3); }
 	;
 
@@ -1955,6 +2115,11 @@ chp_peek
 
 /* --- Language: HSE --- */
 
+hse_body_optional
+	: hse_body { $$ = $1; }
+	| { $$ = new HSE::stmt_list(); }
+	;
+
 hse_body
 	: full_hse_body_item_list { $$ = $1; }
 	;
@@ -2052,6 +2217,11 @@ hse_assignment
 // for power/ground isolation, and other tricks, pass gating... <-> <+> <=>
 */
 
+prs_body_optional
+	: prs_body { $$ = $1; }
+	| { $$ = new PRS::rule_list(); }
+	;
+
 prs_body
 	: prs_body prs_body_item
 		{ $$ = $1; $$->push_back($2); }
@@ -2066,10 +2236,10 @@ prs_body_item
 	| prs_macro { $$ = $1; }
 	/* extensions requested by Clint for forked tool-chain */
 	/* actions here are provisional dummy actions, not real impl. */
-	| TREE_LANG optional_template_arguments_in_angles '{' prs_body '}'
+	| TREE_LANG optional_template_arguments_in_angles '{' prs_body_optional '}'
 		{ DELETE_TOKEN($2);
 		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
-	| SUBCKT_LANG optional_template_arguments_in_angles '{' prs_body '}'
+	| SUBCKT_LANG optional_template_arguments_in_angles '{' prs_body_optional '}'
 		{ DELETE_TOKEN($2);
 		  WRAP_LIST($3, $4, $5); $$ = new PRS::body($1, $4); }
 	;
@@ -2167,7 +2337,8 @@ prs_arrow
 	: RARROW 
 	/* generates combinatorial inverse */
 	| IMPLIES
-	/* what about #> for c-element? */
+	/* flips sense of all literals (mostly for C-elements) */
+	| HASH_ARROW
 	;
 
 dir
@@ -2189,8 +2360,32 @@ prs_paren_expr
 
 /* internal node annotation, just parsed and ignored for now */
 prs_literal_base
+/***
 	: prs_internal_optional relative_member_index_expr
-		{ $$ = new PRS::literal($2); }
+		{ $$ = new PRS::literal($2); 
+		  if ($1) {
+			$$->mark_internal();
+			DELETE_TOKEN($1);
+		  }
+		}
+***/
+	: relative_member_index_expr
+		{ $$ = new PRS::literal($1); }
+/* internal node annotation, just parsed and ignored for now */
+	| '@' ID optional_dense_range_list
+		{ if ($3) {
+			$$ = new PRS::literal(
+				new index_expr($2, new range_list(*$3)));
+			DELETE_TOKEN($3);
+		  } else {
+			$$ = new PRS::literal(
+				new id_expr(new qualified_id($2)));
+		  }
+		  if ($1) {
+			$$->mark_internal();
+			DELETE_TOKEN($1);
+		  }
+		}
 	;
 
 /* the optional expr-list are transistor sizes */
@@ -2199,11 +2394,12 @@ prs_literal
 		{ $$ = $1; $$->attach_parameters($2); }
 	;
 
-/* internal node annotation, just parsed and ignored for now */
+/***
 prs_internal_optional
-	: '@' { DELETE_TOKEN($1); }
-	|
+	: '@' { $$ = $1; }
+	| { $$ = NULL; }
 	;
+***/
 
 prs_unary_expr
 	/* TODO: process optional size arguments */
@@ -2259,6 +2455,11 @@ prs_or_loop
 	;
 
 /* end of PRS language */
+
+spec_body_optional
+	: spec_body { $$ = $1; }
+	| { $$ = new SPEC::directive_list(); }
+	;
 
 spec_body
 	: spec_body spec_item

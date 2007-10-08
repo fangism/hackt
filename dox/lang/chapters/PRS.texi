@@ -1,5 +1,5 @@
 @c "chapters/PRS.texi"
-@c $Id: PRS.texi,v 1.4 2007/09/28 19:30:36 fang Exp $
+@c $Id: PRS.texi,v 1.5 2007/10/08 01:20:48 fang Exp $
 
 @node PRS
 @chapter Production Rule Set (PRS)
@@ -45,11 +45,36 @@ operators @prsnot{}, @prsand{}, @prsor{}, and literals.
 (The unary @prsnot{} operator has the highest precedence, 
 and the @prsand{} operator has higher precedence than the @prsor{} operator.)
 
+@cindex shorthand PRS arrow
+@cindex arrow, PRS shorthand
+The rule arrow @prsrarrow{} can be substituted with one of its shorthand forms.
+The @prscarrow{} arrow automatically generates the complementary rule 
+(pulling on opposite direction) using the DeMorgan inverse of the guard.
+The @prsfarrow{} arrow mirrors the rule pulling in the opposite direction
+with the same topology but @emph{inverted} literals, mostly useful for
+writing C-elements.  For example:
+@example
+x & y & z    => w-
+x & y & z    #> c-
+@end example
+@noindent
+expands to
+@example
+x & y & z    -> w-
+~x | ~y | ~z -> w+
+x & y & z    -> c-
+~x & ~y & ~z -> c+
+@end example
+
+Rules involving internal nodes may only use the plain @prsrarrow{}
+notation @ref{PRS Internal Nodes}.
+
 @cindex CMOS-implementable PRS
 Since production rules are an abstract description of logic, 
 the rules themselves need not be CMOS-implementable.  
 Enforcement of CMOS-implementability can be introduced by later tools
 or compiler phases where desired.  
+(@strong{TODO}: write a CMOS checking pass.)
 
 @menu
 * PRS Sizing::
@@ -82,21 +107,81 @@ Actually, literal parameters may be any generalized list of expressions.
 A literal may be optionally prefixed with @samp{@@} to indicate that
 it is only an internal node, and is not declared as a normal bool.  
 Internal nodes are useful for specifying more general 
-circuit topologies.  
+circuit topologies that share common foot transistors.  
+Internal nodes may appear on the left-hand-side of production rules
+arbitrarily many times.  
+@cindex shared transistors
+@cindex shared nodes
 
 @example
 en -> @@_en_int-         @r{// defines an internal node}
 ~@@_en_int & Ld -> _rd-  @r{// uses internal node as foot transistor}
+~@@_en_int & Hd -> _md-
 @end example
 
 Above, @t{_en_int} is not declared as a bool, but the first rule that
-drives it effectively declares it.  
+drives it effectively declares it -- an implicit declaration.  
 An internal node may only be referenced as the leftmost literal
 of any conjunctive (and) term.  
+(@strong{TODO}: position is not yet checked, currently performs 
+straightforward expression substitution.)
 
-@strong{Status}: parsed, but not yet implemented in the front-end.  
+The effective production rules are obtained by substituting
+the internal nodes' associated expressions wherever they are used.
+With the above example, the effective production rules are:
+@example
+en & Ld -> _rd-
+en & Hd -> _md-
+@end example
 
-TODO: should this work with arrays or in loops?
+Internal nodes are implicitly declared in the scope of the enclosing 
+definition (or top-level) so their names cannot conflict with
+existing declarations.  
+Likewise, subsequent declarations cannot re-use names of existing
+internal nodes.  
+
+Internal nodes can also be used in arrays, where the dimensions are 
+implied by the indexing.  
+(@strong{Warning}: node arrays are not supported in ACT.)
+One can declare arrays of internal nodes in loops, for example:
+
+@example
+(:i:N:
+  en & x[i] -> @@_en_i[i]-
+  ~@@_en_i[i] & y[i] -> _z[i]-
+)
+@end example
+
+Each unique internal node may only be defined once in one direction, 
+pull-up or pull-down.  
+Using an internal node in the wrong sense constitutes an error, e.g.:
+
+@example
+x -> @@y-
+@@y & z -> w-
+@end example
+
+@noindent
+is an error because @t{@@y} is defined as a pull-down only expression, 
+but is being evaluated active-high in the rule for @t{w-}.  
+Negations of internal nodes are @emph{bound to the referenced node}
+and dictate the sense in which the node is pulled, 
+unlike regular boolean expressions.  
+
+The following is an erroroneous attempt to define the same
+internal node in two directions:
+@example
+x -> @@y-
+~x -> @@y+
+@end example
+
+Rules involving internal nodes may only use the plain @prsrarrow{} notation.  
+
+Since internal nodes just define re-usable subexpressions, 
+production rule attributes are not applicable to them; 
+they are simply ignored.  
+
+@strong{Status}: implemented and tested.
 
 @c ----------------------------------------------------------------------------
 @node PRS Attributes
@@ -155,6 +240,10 @@ Some existing attributes:
 @include prs/attribute-after.texi
 @include prs/attribute-weak.texi
 @include prs/attribute-unstab.texi
+@include prs/attribute-comb.texi
+@include prs/attribute-keeper.texi
+@include prs/attribute-output.texi
+@include prs/attribute-loadcap.texi
 
 @c ----------------------------------------------------------------------------
 @node PRS Literal attributes

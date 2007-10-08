@@ -1,6 +1,6 @@
 # "Make.test-compile"
 #	vi: ft=automake
-#	$Id: Make.test-compile,v 1.18 2007/09/13 20:37:27 fang Exp $
+#	$Id: Make.test-compile,v 1.19 2007/10/08 01:22:04 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -51,8 +51,9 @@ HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 .hac.haco:
 	@depbase=`$(ECHO) $@ | $(SED) 's/\.haco$$//g'` ; \
 	log="$$depbase.compiledump" ; \
-	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $$depbase.depend $< $@" ; \
-	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ > "$$log" 2>&1 ; \
+	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)` ; \
+	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M $$depbase.depend $< $@" ; \
+	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags -M "$$depbase.tmpd" $< $@ > "$$log" 2>&1 ; \
 	then $(CAT) "$$depbase.tmpd" | \
 		$(HAC_DEPEND_FILTER) > "$$depbase.depend" ; \
 		$(RM) "$$depbase.tmpd" ; \
@@ -104,7 +105,8 @@ endif
 .hac.compiledump:
 	-@obj=`$(ECHO) $@ | $(SED) 's/\.compiledump$$/.haco/g'` ; \
 	$(ECHO_COMPILEDUMP_COMMAND) ; \
-	cmd="$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $$obj" ; \
+	flags=`$(CAT) $< | $(EXTRACT_HACO_FLAGS_PIPE)` ; \
+	cmd="$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $$flags $< $$obj" ; \
 	$(ECHO) "$$cmd" ; \
 	$$cmd > $@ 2>&1
 

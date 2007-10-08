@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.16 2006/10/18 20:57:44 fang Exp $
+	$Id: scopespace.h,v 1.17 2007/10/08 01:21:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -37,6 +37,8 @@ class definition_base;
 class typedef_base;
 class instance_placeholder_base;
 class param_value_placeholder;
+struct node_tag;
+template <class> class dummy_placeholder;
 using std::list;
 using std::string;
 using std::istream;
@@ -267,6 +269,10 @@ virtual	never_ptr<const object>
 
 virtual	never_ptr<const scopespace>
 	lookup_namespace(const qualified_id_slice& id) const;
+
+protected:
+	never_ptr<const dummy_placeholder<node_tag> >
+	add_node_instance_idempotent(const token_identifier&, const size_t);
 
 protected:
 	never_ptr<const instance_placeholder_base>

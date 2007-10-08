@@ -1,0 +1,9 @@
+// "act-006.hac"
+// stolen from "act/tests/types/0.act"
+// expect fail: too many template arguments
+
+template <pint x>
+defproc foo(bool a, b);
+
+foo<4,3> x;
+

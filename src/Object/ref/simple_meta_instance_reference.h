@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.21 2007/01/21 05:59:35 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.22 2007/10/08 01:21:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -146,6 +146,12 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 virtual	instance_alias_info_ptr_type
 	unroll_generic_scalar_reference(const unroll_context&) const;
+
+virtual	count_ptr<const this_type>
+	__unroll_resolve_copy(const unroll_context&,
+		const count_ptr<const this_type>&) const;
+
+	UNROLL_RESOLVE_COPY_REFERENCE_PROTO;
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 

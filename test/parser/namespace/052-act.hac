@@ -1,0 +1,5 @@
+// "052-act.hac"
+// @haco-flags@ -f ACT
+
+import "052.hac";
+

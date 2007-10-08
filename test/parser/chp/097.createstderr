@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	394
+	25	##ADDR##	footprnt	0	#HEAD#	#TAIL#	398
 	26	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	24
@@ -34,7 +34,7 @@ Persistent Object Manager text dump:
 	30	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	33	##ADDR##	footprnt	0	#HEAD#	#TAIL#	288
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)

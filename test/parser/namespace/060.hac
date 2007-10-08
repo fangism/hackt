@@ -1,0 +1,12 @@
+// "060.hac"
+// copy-modified from "046.hac"
+// expect pass
+
+namespace foo {
+defproc bar() {
+chp {
+
+}
+}
+}	// end namespace foo
+

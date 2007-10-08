@@ -1,0 +1,4 @@
+ERROR: cannot unroll incomplete process type foo
+Instantiated from: foo<>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

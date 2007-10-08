@@ -3,6 +3,7 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
+#STATE#	(null) 
 #STATE#	keyword: template [3:1..8]
 #STATE#	list<(template-formal-decl)>: ... [3:10..11]
 #STATE#	keyword: defproc [4:1..7]

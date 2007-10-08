@@ -1,0 +1,12 @@
+// "act-005.hac"
+// stolen from "act/tests/types/4.act"
+
+template <pint x | pbool y>
+deftype foo <: 
+              int<5>
+  (bool b)
+{ }
+
+
+foo<4,7+3> x;
+

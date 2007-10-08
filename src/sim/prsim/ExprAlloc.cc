@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.20 2007/09/13 20:37:25 fang Exp $
+	$Id: ExprAlloc.cc,v 1.21 2007/10/08 01:21:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -659,6 +659,12 @@ switch (type) {
 		ret_ex_index = last;
 		break;
 	}
+	case entity::PRS::PRS_NODE_TYPE_ENUM: {
+		STACKTRACE_INDENT_PRINT("node" << endl);
+		INVARIANT(sz == 1);
+		(*expr_pool)[e.only()].accept(*this);
+		break;
+	}
 	default:
 		THROW_EXIT;
 		break;
@@ -856,6 +862,51 @@ Unstab::main(visitor_type& v, const values_type& a) {
 	if (w.is_a<const pint_const>()->static_constant_value())
 		r.set_unstable();
 	else	r.clear_unstable();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Keeper, "keeper")
+
+/**
+	No effect in prsim, since nodes are implicitly state holding, 
+	so ignored.  
+ */
+void
+Keeper::main(visitor_type& v, const values_type& a) {
+	// do nothing
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Comb, "comb")
+
+/**
+	No effect in prsim, since nodes are implicitly state holding, 
+	so ignored.  
+ */
+void
+Comb::main(visitor_type& v, const values_type& a) {
+	// do nothing
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Output, "output")
+
+/**
+	No effect in prsim.  
+ */
+void
+Output::main(visitor_type& v, const values_type& a) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(LoadCap, "loadcap")
+
+/**
+	No effect in prsim.  
+	Eventually will have effect in more realistic sprsim.  
+ */
+void
+LoadCap::main(visitor_type& v, const values_type& a) {
 }
 
 #undef	DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS

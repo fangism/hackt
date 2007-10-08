@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2007/09/28 19:30:40 fang Exp $
+#	$Id: Makefile.am,v 1.20 2007/10/08 01:29:54 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -10,7 +10,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = celem inv oscillator half-celem deep tree \
 	pass-gates-def pass-gates excl-rings-def excl-rings \
 	check-excl-rings-def check-excl-rings \
 	logic-defs and nand or nor array \
-	expr-limit-a
+	expr-limit-a \
+	precharge-a precharge-b
 
 HACKT_PARSE_TEST_PASSES = \
 	expr-limit-b
@@ -36,7 +37,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	after-celem-base after-celem-01 after-celem-02 \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
-	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05
+	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
+	precharge-a-01 precharge-b-01
 
 # NOTE: expr-limit-a-01 should fail before limit was increased beyond 255
 

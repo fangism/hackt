@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.3 2007/02/26 22:01:05 fang Exp $
+#	$Id: TODO,v 1.4 2007/10/08 01:21:54 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -56,6 +56,15 @@ prsim:
 		fix: collect unique-list (or set), then print
 
 	trace recording, playback, and analysis (like chpsim)
+
+state-allocation:
+	consider alternative to re-allocating every rule for every
+	instance, when the footprint can be reused, by adding
+	one additional lookup through the parent process' footprint-frame.  
+	Trade-off performance for memory (scalability).  
+	This is similar to the idea behind chpsim's CHP footprints.  
+	Instead of event-ids, we'll have expanded rule-ids.  
+	Will be interesting to benchmark.  
 
 sprsim:
 	size-based timing prsim

@@ -1,0 +1,2 @@
+ERROR: missing template actual at position 1 where no default value is given.
+definition expecting template arguments where none were given!  [8:16..18]

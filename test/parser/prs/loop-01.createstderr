@@ -1,5 +1,5 @@
 Sorry, empty expression loops are not yet supported.  Currently waiting for resolution on language defect report.
-Error unrolling production rule: 
+Error unrolling production rule guard: 
 	(&:j:[0..$i-1]: ~nandN::in[$j]) -> nandN::_out+
 Error resolving production rule in loop:
 $i = 0

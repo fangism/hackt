@@ -1,0 +1,13 @@
+// "internal-node-05.hac"
+// copy-modified from "internal-node-00.hac"
+// expect fail, no hierarchical names in @
+
+defproc bogus(bool x, y, w) {
+prs {
+	x & y		-> @z.f-
+	~@z.f & w	-> w-
+}
+}
+
+bogus A;
+
