@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.13 2007/08/21 00:50:35 fang Exp $
+#	$Id: Make.dox-tail,v 1.14 2007/10/08 21:49:55 fang Exp $
 #	vim: ft=automake
 
 if AUTO_CVSIGNORE
@@ -18,7 +18,7 @@ install-data-hook: $(HTML_HOOKS)
 	$(mkdir_p) $(DESTDIR)$(htmldir) && \
 	for d in '$^' ; do \
 	  test -z "$$d" || \
-	    $(CP) -r $$d $(DESTDIR)$(htmldir)/$$d ; \
+	    $(CP) -r $$d $(DESTDIR)$(htmldir) ; \
 	done
 
 uninstall-hook:

@@ -1,7 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.30 2007/10/08 19:09:34 fang Exp $
+#	$Id: ChangeLog,v 1.31 2007/10/08 21:49:55 fang Exp $
 
 2007-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-83:
+	  Minor install fix in Make.dox-tail (install-html)
+
 
 	* HACKT-00-01-04-main-00-81-82:
 	  Added directory entries for .texi (info) files.  
