@@ -8,7 +8,12 @@
 @c %**end of header
 
 @c "prsim.texi"
-@c $Id: hacprsim.texi,v 1.1 2007/08/20 21:12:32 fang Exp $
+@c $Id: hacprsim.texi,v 1.2 2007/10/08 19:09:36 fang Exp $
+
+@dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
+@direntry
+* HAC PRSIM: (hacprsim).    HAC PRS Simulator.
+@end direntry
 
 @copying
 This manual describes the usage and operation of HACKT's @command{prsim} 

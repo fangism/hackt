@@ -8,7 +8,12 @@
 @c %**end of header
 
 @c "cast2hac.texi"
-@c $Id: cast2hac.texi,v 1.1 2007/08/16 23:48:08 fang Exp $
+@c $Id: cast2hac.texi,v 1.2 2007/10/08 19:09:36 fang Exp $
+
+@dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
+@direntry
+* CAST to HAC Migration: (cast2hac).    CAST to HAC Migration Guide.
+@end direntry
 
 @copying
 This document describes language and tool migration from old CAST to

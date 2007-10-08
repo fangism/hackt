@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.29 2007/09/14 04:29:51 fang Exp $
+#	$Id: ChangeLog,v 1.30 2007/10/08 19:09:34 fang Exp $
+
+2007-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-82:
+	  Added directory entries for .texi (info) files.  
+
 
 2007-09-13	David Fang		<fangism@users.sourceforge.net>
 
