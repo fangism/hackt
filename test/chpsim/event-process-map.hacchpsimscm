@@ -2,7 +2,7 @@
 !#
 ;; "event-process-map.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: event-process-map.hacchpsimscm,v 1.2 2007/09/28 05:38:09 fang Exp $
+;;	$Id: event-process-map.hacchpsimscm,v 1.3 2007/10/08 17:41:42 fang Exp $
 
 (use-modules (hackt hackt))
 (use-modules (hackt chpsim-primitives))
@@ -18,7 +18,7 @@
     (let ((pid (hac:chpsim-event-process-id (cdr x))))
       (display (cons (car x)
           (cons pid (process-id->string pid)
-	# process-id->string defined in "scm/hackt/hackt.scm"
+	; process-id->string defined in "scm/hackt/hackt.scm"
         )) ; end cons
       ) ; end display
     ) ; end let
