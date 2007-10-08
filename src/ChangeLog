@@ -5,6 +5,10 @@
 
 2007-10-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-83:
+	  Tweaked header deps checking to be even smarter.  
+
+
 	* HACKT-00-01-04-main-00-81-82:
 	  No source revision, documentation only: sorted .info into direntries.
 

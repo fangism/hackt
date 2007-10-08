@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "promote_header_deps.awk"
-#	$Id: promote_header_deps.awk,v 1.5 2007/08/31 21:02:35 fang Exp $
+#	$Id: promote_header_deps.awk,v 1.6 2007/10/08 21:09:11 fang Exp $
 
 # Description:
 #	Takes a make-dependence file produced by gcc -MD
@@ -8,6 +8,7 @@
 #	checked header target, like .hchk and .tccchk
 
 # Usage:
+#	-v src=<file> -- the input source file, should NOT be transformed
 #	-v srcdir=<paths> -- the path to srcdir, may be left blank
 #		Multiple paths may be space-delimited, 
 #		e.g., -v srcdir=".. ../.."
@@ -20,6 +21,10 @@ BEGIN {
 	for (i=1; i<=num_paths; ++i) {
 		srcdirs[i] = toks[i];
 		strip_dir_regex[i] = literal_string_to_regex(toks[i]);
+	}
+	if (!length(src)) {
+		print "Error: -v src=<file> is required.";
+		exit 1;
 	}
 	# what is assumed if no srcdirs are given? '.'?
 	primary_srcdir = srcdirs[1];
@@ -65,8 +70,11 @@ function literal_string_to_regex(str) {
 			print " \\";
 		} else if (!index(toks[i], current_target)) {
 			# need to point to build directory, not srcdir!
+			if (!match(toks[i], src)) {
+			# omit src file
 			printf(" %s", srcdir_to_builddir( \
 				promote_header_dep(toks[i])));
+			}
 		} else if (!match(toks[i], "\\.cc$")) {
 			# ignore .cc (non-header source) files
 			printf(" %s", toks[i]);
@@ -76,6 +84,7 @@ function literal_string_to_regex(str) {
 	# if (!n) print "";
 }
 
+# \pre do not transform the source file name
 # transforms * .h, .hh, .tcc : appends "chk"
 function promote_header_dep(f) {
 	if (match(f, "\\.h$") || match(f, "\\.tcc$") || match(f, "\\.hh$"))

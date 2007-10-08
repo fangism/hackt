@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.187 2007/10/08 01:20:50 fang Exp $
+#	$Id: Makefile.am,v 1.188 2007/10/08 21:09:07 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1574,8 +1574,8 @@ sim/prsim/devel_switches.hchk: sim/prsim/devel_switches.h
 
 CLEANFILES += ../libltdl/ltdl.hchk
 
-__config__.hchk: __config__.h
-	@$(TOUCH) $@
+# __config__.hchk: __config__.h
+#	@$(TOUCH) $@
 
 EXTRA_DIST += local.cvsignore \
 	parser/local.cvsignore \
