@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.48 2007/10/08 01:21:05 fang Exp $
+	$Id: devel_switches.h,v 1.49 2007/10/08 03:09:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -73,9 +73,9 @@
 	definition, where module <= process_definition.  
 	Also allows future support for nested definitions. 
 	Goal: 1
-	Status: complete, basically tested.
- */
+	Status: perm'd (00-01-04-main-00-81-81)
 #define	SUPPORT_NESTED_DEFINITIONS	1
+ */
 
 /**
 	Define to 1 to introduce and use dense formal value collections.
@@ -218,7 +218,7 @@
 	Note: does not apply to typedefs.  
 	Goal: 1
 	Rationale: ACT-compatibility
-	Status: in progress
+	Status: completed, tested
  */
 #define	REQUIRE_DEFINITION_EXPORT		1
 

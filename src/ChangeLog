@@ -5,6 +5,10 @@
 
 2007-10-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-81:
+	  cleanup: Perm'd SUPPORT_NESTED_DEFINITION (stack in parse_context).
+
+
 	* HACKT-00-01-04-main-00-81-80-merged-ACT-01-15:
 	  Branch merge: -ACT-01 (rev. 15).  Summary:
 	  First round of patches compatibility for ACT compatibility.

@@ -3,7 +3,7 @@
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.tcc" in a previous life.
- 	$Id: parse_context.tcc,v 1.6 2006/10/18 01:19:00 fang Exp $
+ 	$Id: parse_context.tcc,v 1.7 2007/10/08 03:09:38 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_TCC__
@@ -49,12 +49,7 @@ context::open_definition(const token_identifier& pname) {
 				"redefinition at " << where(pname) << endl;
 			THROW_EXIT;
 		}
-#if SUPPORT_NESTED_DEFINITIONS
 		open_definition_stack.push(def);
-#else
-		INVARIANT(!current_open_definition);	// sanity check
-		current_open_definition = def;
-#endif
 		sequential_scope_stack.push(
 			def.template as_a<sequential_scope>());
 		def->mark_defined();

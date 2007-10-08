@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.26 2007/10/08 01:20:52 fang Exp $
+	$Id: PRS.cc,v 1.27 2007/10/08 03:09:36 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -45,9 +45,7 @@
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"	// for conversion
 #include "Object/ref/meta_reference_union.h"
-#if SUPPORT_NESTED_DEFINITIONS
 #include "Object/module.h"
-#endif
 #include "Object/ref/simple_meta_dummy_reference.h"
 #include "Object/ref/references_fwd.h"
 #include "Object/traits/node_traits.h"

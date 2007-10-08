@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.18 2007/10/08 01:21:00 fang Exp $
+ 	$Id: parse_context.cc,v 1.19 2007/10/08 03:09:37 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -77,11 +77,7 @@ context::context(module& m, const parse_options& o) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
-#if SUPPORT_NESTED_DEFINITIONS
 		open_definition_stack(), 
-#else
-		current_open_definition(NULL), 
-#endif
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
@@ -95,10 +91,8 @@ context::context(module& m, const parse_options& o) :
 
 	// perhaps verify that g is indeed global?  can't be any namespace
 	namespace_stack.push(global_namespace);
-#if SUPPORT_NESTED_DEFINITIONS
 	// now using top-level as a process definition!
 	open_definition_stack.push(never_ptr<definition_base>(&m));
-#endif
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
@@ -128,11 +122,7 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
-#if SUPPORT_NESTED_DEFINITIONS
 		open_definition_stack(), 
-#else
-		current_open_definition(NULL), 
-#endif
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
@@ -144,11 +134,9 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		parse_opts(o)
 		{
 	namespace_stack.push(global_namespace);
-#if SUPPORT_NESTED_DEFINITIONS
 	// now using top-level as a process definition!
 	// load NULL because this is a read-only use of the module
 	open_definition_stack.push(never_ptr<definition_base>(NULL));
-#endif
 	// NOTE: we don't bother loading the module's sequential scope
 	// because it should not be used in a read-only context.  
 	NEVER_NULL(get_current_namespace());	// make sure allocated properly
@@ -234,12 +222,7 @@ context::close_namespace(void) {
 bool
 context::in_nonglobal_namespace(void) const {
 	const never_ptr<const definition_base> d(get_current_open_definition());
-	return
-#if SUPPORT_NESTED_DEFINITIONS
-		!d.is_a<const module>() ||	// is a non-module definition
-#else
-		d ||		// UNTESTED
-#endif
+	return !d.is_a<const module>() ||	// is a non-module definition
 		(get_current_namespace() != global_namespace);
 		// else in non-global namespace
 }
@@ -252,12 +235,7 @@ context::in_nonglobal_namespace(void) const {
 bool
 context::reject_namespace_lang_body(void) const {
 	const never_ptr<const definition_base> d(get_current_open_definition());
-	return
-#if SUPPORT_NESTED_DEFINITIONS
-		d.is_a<const module>() &&	// is a non-module definition
-#else
-		!d &&		// UNTESTED
-#endif
+	return d.is_a<const module>() &&	// is a non-module definition
 		(get_current_namespace() != global_namespace);
 		// else in non-global namespace
 }
@@ -375,12 +353,7 @@ context::open_enum_definition(const token_identifier& ename) {
 				"redefinition at " << where(ename) << endl;
 			THROW_EXIT;
 		}
-#if SUPPORT_NESTED_DEFINITIONS
 		open_definition_stack.push(ed);
-#else
-		INVARIANT(!get_current_open_definition());	// sanity check
-		current_open_definition = ed;
-#endif
 		ed->mark_defined();
 		indent++;
 	} else {
@@ -425,11 +398,7 @@ context::add_enum_member(const token_identifier& em) {
  */
 void
 context::close_enum_definition(void) {
-#if SUPPORT_NESTED_DEFINITIONS
 	open_definition_stack.pop();
-#else
-	current_open_definition = never_ptr<definition_base>(NULL);
-#endif
 	indent--;
 }
 
@@ -442,11 +411,7 @@ context::close_enum_definition(void) {
 inline
 void
 context::close_current_definition(void) {
-#if SUPPORT_NESTED_DEFINITIONS
 	open_definition_stack.pop();
-#else
-	current_open_definition = never_ptr<definition_base>(NULL);
-#endif
 	indent--;
 }
 
@@ -743,22 +708,16 @@ context::get_current_named_scope(void) const {
 			ret(get_current_open_definition()
 				.is_a<const scopespace>());
 		INVARIANT(ret);
-#if SUPPORT_NESTED_DEFINITIONS
 		if (ret.is_a<const module>()) {
 			// top-level module does not count as a named scope
 			return namespace_stack.top().as_a<scopespace>();
 		} else {
 			return ret;
 		}
-#else
-		return ret;
-#endif
 	} else {
-#if SUPPORT_NESTED_DEFINITIONS
 		// This code can be reached only when calling parser
 		// using a read-only parse-context.  
 		// ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
-#endif
 		return namespace_stack.top().as_a<scopespace>();
 	}
 }
@@ -780,20 +739,14 @@ context::get_current_named_scope(void) {
 		const never_ptr<scopespace>
 			ret(get_current_open_definition().is_a<scopespace>());
 		INVARIANT(ret);
-#if SUPPORT_NESTED_DEFINITIONS
 		if (ret.is_a<module>()) {
 			// top-level module does not count as a named scope
 			return namespace_stack.top().as_a<scopespace>();
 		} else {
 			return ret;
 		}
-#else
-		return ret;
-#endif
 	} else {
-#if SUPPORT_NESTED_DEFINITIONS
 		ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
-#endif
 		return namespace_stack.top().as_a<scopespace>();
 	}
 }

@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.15 2007/10/08 01:21:01 fang Exp $
+	$Id: parse_context.h,v 1.16 2007/10/08 03:09:37 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -157,11 +157,7 @@ private:
 		been registered to some scopespace that owns it.  
 		Q: is this made redundant by current_scope?
 	 */
-#if SUPPORT_NESTED_DEFINITIONS
 	stack<never_ptr<definition_base> >	open_definition_stack;
-#else
-	never_ptr<definition_base>	current_open_definition;
-#endif
 
 	/**
 		This pointer is the scratch space for constructing
@@ -384,11 +380,7 @@ public:
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {
-#if SUPPORT_NESTED_DEFINITIONS
 		return open_definition_stack.top();
-#else
-		return current_open_definition;
-#endif
 	}
 
 	/**
