@@ -1,0 +1,4 @@
+ERROR: number of relaxed template actuals doesn't match the number of formal parameters.
+	got: 2, expected: 4
+ERROR: failed to make process_type_reference because template argument types do not match.
+ERROR making complete type reference.  [9:1..10]

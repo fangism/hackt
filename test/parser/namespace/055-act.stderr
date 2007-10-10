@@ -2,3 +2,4 @@ Error: instance management statements are forbidden in non-global namespaces out
 To allow them, pass -f namespace-instances to the compiler.
 got instance name: bar
 ERROR with bar at [5:7..9]
+From: "055.hac"

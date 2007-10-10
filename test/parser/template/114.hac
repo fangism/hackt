@@ -1,0 +1,10 @@
+// "114.hac"
+// copy-modified from "113.hac"
+// expect fail
+
+template <><pint M, N, d[M][N]; preal D>
+defproc foo(chan?() Cin; chan!() Cout; chan!(int) R) { }
+
+// error: wrong number of relaxed parameters
+foo<><2,7> A;
+

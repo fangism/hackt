@@ -1,0 +1,2 @@
+Error: base definition `foo' expects 4 relaxed parameters, but got 3.  
+Error in type completion at [8:5..26]

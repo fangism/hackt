@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2007/10/08 01:29:37 fang Exp $
+#	$Id: Makefile.am,v 1.29 2007/10/10 06:04:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,6 +12,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	060 065 066 069 \
 	085 \
 	103 104 \
+	112 113 114 \
 	env_source_typedef-01a \
 	env_source_typedef-01d \
 	env_source_typedef-03 \

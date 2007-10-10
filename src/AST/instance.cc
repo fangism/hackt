@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.23 2007/10/08 01:20:59 fang Exp $
+	$Id: instance.cc,v 1.24 2007/10/10 06:04:31 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -503,6 +503,7 @@ instance_base::check_build(context& c) const {
 				"require relaxed template actuals " <<
 				where(*relaxed_args) <<
 				" in this instance declaration.  " << endl;
+			THROW_EXIT;
 			return never_ptr<const object>(NULL);
 		}
 #if !ENABLE_RELAXED_TEMPLATE_PARAMETERS
@@ -541,6 +542,7 @@ instance_base::check_build(context& c) const {
 			));
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
+		THROW_EXIT;
 		return never_ptr<const object>(NULL);
 	}
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
@@ -551,9 +553,15 @@ instance_base::check_build(context& c) const {
 		NEVER_NULL(ref);	// we just created it!
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
-		c.add_instance_management(
-			type_completion_statement::create_type_completion(
+		const count_ptr<const instance_management_base>
+			nr(type_completion_statement::create_type_completion(
 				ref, temp));
+		if (!nr) {
+			cerr << "Error in type completion at " <<
+				where(*this) << endl;
+			THROW_EXIT;
+		}
+		c.add_instance_management(nr);
 		// error handling?
 	}
 #endif
@@ -671,9 +679,15 @@ if (ranges) {
 		NEVER_NULL(ref);	// we just created it!
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
-		c.add_instance_management(
-			type_completion_statement::create_type_completion(
+		const count_ptr<const instance_management_base>
+			nr(type_completion_statement::create_type_completion(
 				ref, temp));
+		if (!nr) {
+			cerr << "Error in type completion at " <<
+				where(*this) << endl;
+			THROW_EXIT;
+		}
+		c.add_instance_management(nr);
 		// error handling?
 	}
 #endif
@@ -1205,6 +1219,7 @@ type_completion_statement::rightmost(void) const {
 never_ptr<const object>
 type_completion_statement::check_build(context& c) const {
 #if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	STACKTRACE_VERBOSE;
 	// add an auxiliary type_completion statement
 	const inst_ref_expr::meta_return_type
 		ref(inst_ref->check_meta_reference(c));
@@ -1216,7 +1231,13 @@ type_completion_statement::check_build(context& c) const {
 	expr_list::checked_meta_exprs_type temp;
 	args->postorder_check_meta_exprs(temp, c);
 	// should throw on error
-	c.add_instance_management(create_type_completion(ref, temp));
+	const count_ptr<const instance_management_base>
+		nr(create_type_completion(ref, temp));
+	if (!nr) {
+		cerr << "Error in type completion at " << where(*this) << endl;
+		THROW_EXIT;
+	}
+	c.add_instance_management(nr);
 	// additional error handling?
 	return c.top_namespace();
 #else
@@ -1235,10 +1256,20 @@ type_completion_statement::create_type_completion(
 		const inst_ref_expr::meta_return_type& r, 
 		const expr_list::checked_meta_exprs_type& a) {
 	typedef	template_type_completion<process_tag>	return_type;
-	count_ptr<dynamic_param_expr_list> p(new dynamic_param_expr_list);
+	STACKTRACE_VERBOSE;
+	const count_ptr<dynamic_param_expr_list> p(new dynamic_param_expr_list);
 	copy(a.begin(), a.end(), back_inserter(*p));
-	count_ptr<const entity::process_meta_instance_reference_base>
+	const count_ptr<const entity::process_meta_instance_reference_base>
 		pr(r.inst_ref().is_a<const entity::process_meta_instance_reference_base>());
+	const never_ptr<const definition_base> d(pr->get_base_def());
+	const size_t drf = d->num_relaxed_formals();
+	if (drf != a.size()) {
+		cerr << "Error: base definition `" << d->get_qualified_name()
+			<< "\' expects " << drf <<
+			" relaxed parameters, but got " << a.size() <<
+			".  " << endl;
+		return count_ptr<const return_type>(NULL);
+	}
 	const count_ptr<const return_type> ret(new return_type(pr, p));
 	return ret;
 }

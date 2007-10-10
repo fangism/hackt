@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.19 2007/10/08 03:09:37 fang Exp $
+ 	$Id: parse_context.cc,v 1.20 2007/10/10 06:04:32 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -553,6 +553,7 @@ context::alias_definition(const never_ptr<const definition_base> d,
 void
 context::add_instance_management(
 		const count_ptr<const instance_management_base>& c) {
+	NEVER_NULL(c);
 	if (reject_nonglobal_instance_management()) {
 		// already have error message
 		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;

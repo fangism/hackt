@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84:
+	  Fixed ICE-on-invalid/accepts-invalid bug: reject mismatch
+		number of relaxed template parameters earlier.  
+		Files: AST/instance.cc
+	  Includes newly fixed test cases in test/parser/template.
+
+
 2007-10-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-83:
