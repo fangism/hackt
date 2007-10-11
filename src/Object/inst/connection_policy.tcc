@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/connection_policy.tcc"
-	$Id: connection_policy.tcc,v 1.4.38.1 2007/10/11 02:52:02 fang Exp $
+	$Id: connection_policy.tcc,v 1.4.38.2 2007/10/11 19:30:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CONNECTION_POLICY_TCC__
@@ -53,8 +53,10 @@ directional_connect_policy<true>::synchronize_flags(
 	const connection_flags_type& lld(ll.direction_flags);
 	const connection_flags_type& rrd(rr.direction_flags);
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("ll.flags = " << size_t(lld) << endl);
-	STACKTRACE_INDENT_PRINT("rr.flags = " << size_t(rrd) << endl);
+	STACKTRACE_INDENT_PRINT("ll.flags = 0x" <<
+		std::hex << size_t(lld) << endl);
+	STACKTRACE_INDENT_PRINT("rr.flags = 0x" <<
+		std::hex << size_t(rrd) << endl);
 	l.dump_hierarchical_name(STACKTRACE_INDENT << "l: ") << endl;
 	r.dump_hierarchical_name(STACKTRACE_INDENT << "r: ") << endl;
 #endif
@@ -132,29 +134,48 @@ directional_connect_policy<true>::initialize_direction(
 	STACKTRACE_VERBOSE;
 	const bool f = p.is_formal();
 	const instance_collection_type& c(p.get_canonical_collection());
-	const char d = c.__get_raw_type().get_direction();
+	const direction_type d = c.__get_raw_type().get_direction();
 	switch (d) {
 	case CHANNEL_TYPE_BIDIRECTIONAL: break;
 		// leave as initial value
-	case CHANNEL_TYPE_RECEIVE:
 #if ENABLE_SHARED_CHANNELS
 	case CHANNEL_TYPE_RECEIVE_SHARED:
+		if (f) {
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
+		} else {
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+		}
+		break;
 #endif
+	case CHANNEL_TYPE_RECEIVE:
 		if (f) {
 			direction_flags |= CONNECTED_PORT_FORMAL_PRODUCER;
 		}
 		break;
-	case CHANNEL_TYPE_SEND:
 #if ENABLE_SHARED_CHANNELS
 	case CHANNEL_TYPE_SEND_SHARED:
+		if (f) {
+			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
+			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
+		} else {
+			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
+		}
+		break;
 #endif
+	case CHANNEL_TYPE_SEND:
 		if (f) {
 			direction_flags |= CONNECTED_PORT_FORMAL_CONSUMER;
 		}
 		break;
 	default:
-		ICE(cerr, cerr << "Invalid direction." << endl;)
+		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
 	}
+#if ENABLE_STACKTRACE
+	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ") << endl;
+	STACKTRACE_INDENT_PRINT("direction_flags = 0x" <<
+		std::hex << size_t(direction_flags) << endl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,12 +199,13 @@ directional_connect_policy<true>::initialize_actual_direction(
 					traits_type;
 	typedef	typename traits_type::tag_type		tag_type;
 	typedef	instance_collection<tag_type>	instance_collection_type;
-
+	STACKTRACE_VERBOSE;
 	// const bool f = p.is_formal();
 	// const instance_collection_type& c(p.get_canonical_collection());
 	const instance_collection_type&
 		c(a.container->get_canonical_collection());
 	const char d = c.__get_raw_type().get_direction();
+	// with bit fields, could just twiddle the consumer/producer halves...
 	switch (d) {
 	case CHANNEL_TYPE_BIDIRECTIONAL:
 		direction_flags = a.direction_flags;
@@ -208,7 +230,8 @@ directional_connect_policy<true>::initialize_actual_direction(
 	case CHANNEL_TYPE_RECEIVE_SHARED:
 		// note: this clears out the META flag as well
 		direction_flags =
-			(a.direction_flags & ~CONNECTED_PORT_FORMAL_PRODUCER);
+			(a.direction_flags &
+				~(CONNECTED_PORT_FORMAL_PRODUCER | CONNECTED_PRODUCER_IS_SHARED));
 		if (a.direction_flags & CONNECTED_TO_ANY_CONSUMER) {
 			direction_flags |= CONNECTED_TO_SUBSTRUCT_CONSUMER;
 			direction_flags |= CONNECTED_CONSUMER_IS_SHARED;
@@ -217,7 +240,8 @@ directional_connect_policy<true>::initialize_actual_direction(
 	case CHANNEL_TYPE_SEND_SHARED:
 		// note: this clears out the META flag as well
 		direction_flags =
-			(a.direction_flags & ~CONNECTED_PORT_FORMAL_CONSUMER);
+			(a.direction_flags &
+				~(CONNECTED_PORT_FORMAL_CONSUMER | CONNECTED_CONSUMER_IS_SHARED));
 		if (a.direction_flags & CONNECTED_TO_ANY_PRODUCER) {
 			direction_flags |= CONNECTED_TO_SUBSTRUCT_PRODUCER;
 			direction_flags |= CONNECTED_PRODUCER_IS_SHARED;
@@ -225,8 +249,15 @@ directional_connect_policy<true>::initialize_actual_direction(
 		break;
 #endif
 	default:
-		ICE(cerr, cerr << "Invalid direction." << endl;)
+		ICE(cerr, cerr << "Invalid direction: " << d << endl;)
 	}
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("a.direction_flags = 0x" <<
+		std::hex << size_t(a.direction_flags) << endl);
+	c.dump_hierarchical_name(STACKTRACE_INDENT << "collection: ") << endl;
+	STACKTRACE_INDENT_PRINT("direction_flags = 0x" <<
+		std::hex << size_t(direction_flags) << endl);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

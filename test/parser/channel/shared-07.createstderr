@@ -1,0 +1,95 @@
+WARNING: channel B lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	12	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	291
+	16	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	393
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    source = process-definition (defined) source(
+        chan!!(bool<>) X
+      )
+      In definition "source", we have: {
+      Instances:
+        X = chan!!(bool<>) source::X
+      unroll sequence: 
+        chan!!(bool<>) X
+      chp:
+        concurrent: {
+          X!(true)
+        }
+      footprint: {
+        X = channel chan!!(bool<>)^0 = source::X (1) 
+        Created state:
+        channel instance pool:
+        1	source::X
+        resolved concurrent actions:
+          X!(true)
+        chp events: {
+          event[0]: send: X!(true), #pred: 1, succ: 
+        }
+      }
+      }
+
+  Instances:
+    B = chan(bool<>) B
+    S = source<> S
+    T = source<> T
+}
+
+footprint: {
+  B = channel chan(bool<>)^0 = B (1) 
+  S = process source<>^0 = S (1) (
+    X = channel chan!!(bool<>)^0 = B (1) 
+  )
+  T = process source<>^0 = T (2) (
+    X = channel chan!!(bool<>)^0 = B (1) 
+  )
+  Created state:
+  process instance pool:
+  1	S
+  2	T
+  channel instance pool:
+  1	B
+}

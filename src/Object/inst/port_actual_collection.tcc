@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_actual_collection.tcc"
-	$Id: port_actual_collection.tcc,v 1.8 2007/07/18 23:28:44 fang Exp $
+	$Id: port_actual_collection.tcc,v 1.8.16.1 2007/10/11 19:30:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ACTUAL_COLLECTION_TCC__
@@ -231,7 +231,7 @@ PORT_ACTUAL_COLLECTION_CLASS::type_dump(ostream& o) const {
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 PORT_ACTUAL_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	return this->formal_collection->get_unresolved_type_ref();
 }
 
@@ -239,7 +239,7 @@ PORT_ACTUAL_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 typename PORT_ACTUAL_COLLECTION_CLASS::instance_placeholder_ptr_type
 PORT_ACTUAL_COLLECTION_CLASS::get_placeholder(void) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	return this->formal_collection->get_placeholder();
 }
 
@@ -247,7 +247,7 @@ PORT_ACTUAL_COLLECTION_CLASS::get_placeholder(void) const {
 PORT_ACTUAL_COLLECTION_TEMPLATE_SIGNATURE
 never_ptr<const physical_instance_placeholder>
 PORT_ACTUAL_COLLECTION_CLASS::get_placeholder_base(void) const {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	return this->formal_collection->get_placeholder_base();
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.10.16.1 2007/10/11 02:51:57 fang Exp $
+	$Id: type.cc,v 1.10.16.2 2007/10/11 19:30:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -66,6 +66,7 @@ using util::auto_indent;
 
 //=============================================================================
 /**
+	Second character is used to flag a channel as shared.  
 	\return enumeration in "Object/type/channel_direction_enum.h"
  */
 static
@@ -81,7 +82,7 @@ case '!':
 	return entity::CHANNEL_TYPE_SEND;
 case '?':
 #if ENABLE_SHARED_CHANNELS
-	if (c2 == '!')
+	if (c2 == '?')
 		return entity::CHANNEL_TYPE_RECEIVE_SHARED;
 	else
 #endif

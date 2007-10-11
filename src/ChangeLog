@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-02:
+	  Fixed and enabled shared channels in connection checking
+		switch: Object/devel_switches.h: ENABLE_SHARED_CHANNELS
+	  Using ?? and !! to denote shared senders/receivers in 
+		port-formal declarations.  
+	  Added set of basic accept-valid test cases test/parser/channel, 
+		next batch will include reject-invalid.  
+
+
 2007-10-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-84-channel-03-01:

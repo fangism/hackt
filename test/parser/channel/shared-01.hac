@@ -1,0 +1,11 @@
+// "shared-01.hac"
+// testing shared channels
+
+defproc sink(chan??(bool) X) {
+chp {
+X?
+}
+}
+
+sink Y;
+
