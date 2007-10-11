@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.24 2007/10/10 06:04:31 fang Exp $
+	$Id: instance.cc,v 1.24.2.1 2007/10/11 02:51:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -739,7 +739,7 @@ instance_declaration::check_build(context& c) const {
 {
 	const count_ptr<const channel_type_reference_base>
 		ctr(ftr.is_a<const channel_type_reference_base>());
-	if (ctr && ctr->get_direction()) {
+	if (ctr && (ctr->get_direction() != entity::CHANNEL_TYPE_BIDIRECTIONAL)) {
 		cerr << "Error: channel types cannot be declared with "
 			"directionality in a non-formal context.  "
 			<< where(*type) << endl;
