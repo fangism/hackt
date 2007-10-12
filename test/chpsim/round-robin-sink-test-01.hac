@@ -1,0 +1,13 @@
+// "round-robin-sink-test-01.hac"
+
+import "testlib/round-robin.hac";
+import "testlib/bool-source.hac";
+import "testlib/bool-sink.hac";
+
+chan() Rstart, Rfb;
+chan(bool) B;
+
+round_robin_source RS(Rfb, Rstart);
+bool_source BS<4,{true,false,false,true}>(B);
+bool_sink_shared BZ(Rstart, Rfb, B);
+

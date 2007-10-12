@@ -1,0 +1,12 @@
+# "round-robin-source-test-02-a.chpsimrc"
+#	$Id: round-robin-source-test-02-a.chpsimrc,v 1.1.2.1 2007/10/12 21:07:18 fang Exp $
+# @haco@ round-robin-source-test-02.haco-a
+
+echo running with random timing...
+timing random
+# watchall-events
+# watch-value B
+step 10000
+assert-queue
+echo done.
+

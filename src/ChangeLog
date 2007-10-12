@@ -5,6 +5,12 @@
 
 2007-10-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-84-channel-03-05:
+	  No source revision, added chpsim test cases using sequentially
+		accessed shared channels.  
+	  End of branch, merge to trunk.  
+
+
 	* HACKT-00-01-04-main-00-81-84-channel-03-04:
 	  Bug fix: ICE-on-invalid (should've been applied to trunk first)
 	  Object/inst/substructure_alias_base.cc: verify that alias

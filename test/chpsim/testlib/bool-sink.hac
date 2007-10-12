@@ -1,5 +1,5 @@
 // "bool-sink.hac"
-//	$Id: bool-sink.hac,v 1.4 2007/02/26 22:01:45 fang Exp $
+//	$Id: bool-sink.hac,v 1.4.32.1 2007/10/12 21:07:20 fang Exp $
 // bool buckets
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -52,4 +52,14 @@ defproc bool_assert_sink_once (chan?(bool) B) {
 ...
 }
 ***/
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Tokn-controlled sink, suitable for shared channel.  
+ */
+defproc bool_sink_shared(chan?() Cin; chan!() Cout; chan??(bool) B) {
+chp {
+*[ Cin?; B?; Cout! ]
+}
+}
 
