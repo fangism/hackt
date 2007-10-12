@@ -1,0 +1,9 @@
+// "115.hac"
+// expect create fail
+// relaxed template parameters unbound
+
+template <><pint Q>
+defproc foo(bool b) { }
+
+foo bar();
+

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-04:
+	  Bug fix: ICE-on-invalid (should've been applied to trunk first)
+	  Object/inst/substructure_alias_base.cc: verify that alias
+		has complete type before connecting its ports.  
+	  new test case: parser/template/115.
+
+
 2007-10-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-84-channel-03-03:

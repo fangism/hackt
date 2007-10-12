@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.29 2007/10/10 06:04:41 fang Exp $
+#	$Id: Makefile.am,v 1.29.2.1 2007/10/12 19:51:29 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -33,7 +33,7 @@ HACKT_PARSE_TEST_PASSES = \
 	080 081 082 083 084 086 087 088 089 \
 	090 091 092 093 094 095 096 097 098 099 \
 	100 101 102 105 106 107 108 109 \
-	110 111 \
+	110 111 115 \
 	env_source \
 	env_source-01 env_source-01a env_source-01b \
 	env_source-02 env_source-03 env_source-04 \
@@ -143,6 +143,7 @@ HACKT_CREATE_TEST_FAILURES += \
 	087 089 \
 	094 098 \
 	108 109 \
+	115 \
 	env_source-01b env_source-04 env_source-07 \
 	env_source-09 env_source-10 \
 	env_source-17 \
