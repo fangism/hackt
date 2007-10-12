@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	64
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	68
 	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -160,44 +160,83 @@ Persistent Object Manager text dump:
 	154	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
 	155	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	156	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	157	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	158	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	159	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	160	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	161	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
-	162	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	163	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	164	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	165	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	166	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	167	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	168	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	169	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	170	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	171	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
-	172	##ADDR##	chanprob	0	#HEAD#	#TAIL#	12
-	173	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	174	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	175	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	176	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	177	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
-	178	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	179	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	180	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
-	181	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	182	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	183	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	184	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	185	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
-	186	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
-	187	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	157	##ADDR##	procdefn	0	#HEAD#	#TAIL#	135
+	158	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	159	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	160	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	162	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	163	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	164	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	165	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	166	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	167	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	168	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	169	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
+	170	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	171	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	172	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	173	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	175	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	176	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	177	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	178	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	179	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	180	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	181	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	183	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	184	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	185	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	186	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	187	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	188	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	189	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	190	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	191	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	192	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	193	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	194	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	195	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	196	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	197	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	198	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	199	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	200	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	201	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	202	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	203	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	204	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	205	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	206	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	207	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	208	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	209	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	210	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	chanprob	0	#HEAD#	#TAIL#	12
+	212	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	214	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	215	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	216	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	217	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	218	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	219	##ADDR##	footprnt	0	#HEAD#	#TAIL#	419
+	220	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	221	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	222	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	224	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	16
+	225	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	25
+	226	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
   0 parameter-collections
   4 instantiation-collections
   0 sub-namespaces
-  7 definitions
+  8 definitions
   0 typedefs
   Definitions:
     bool_sink = process-definition (defined) bool_sink(
@@ -371,6 +410,41 @@ In namespace "", we have: {
           concurrent i:[0..N-1]: {
             S!(B[$i])
           }
+        }
+      }
+
+    bool_source_shared = process-definition (defined) bool_source_shared<>
+<
+      pint<> N
+      pbool<> B[0..N-1]
+      >(
+        chan?() Cin
+        chan!() Cout
+        chan!!(bool<>) S
+      )
+      In definition "bool_source_shared", we have: {
+      Parameters:
+        B = pbool<> bool_source_shared::B^1
+        N = pint<> bool_source_shared::N
+      Instances:
+        Cin = chan?() bool_source_shared::Cin
+        Cout = chan!() bool_source_shared::Cout
+        S = chan!!(bool<>) bool_source_shared::S
+      unroll sequence: 
+        chan?() Cin
+        chan!() Cout
+        chan!!(bool<>) S
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              Cin?
+              concurrent i:[0..N-1]: {
+                S!(B[$i])
+              }
+              Cout!
+            }
+          ]
         }
       }
 

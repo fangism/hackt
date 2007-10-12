@@ -1,5 +1,5 @@
 # "test/chpsim/testlib/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2007/07/31 23:24:33 fang Exp $
+#	$Id: Makefile.am,v 1.10.16.1 2007/10/12 06:06:45 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -22,12 +22,14 @@ HACKT_PARSE_TEST_PASSES = \
 	int-arith \
 	channel-sync channel-desync \
 	fibonacci \
-	void-sink void-source
+	void-sink void-source void-buf \
+	round-robin round-robin-test
 
 HACKT_CREATE_TEST_PASSES = \
 	bool-copy-test \
 	bool-peekbuf-test \
-	bool-sink-alt-test
+	bool-sink-alt-test \
+	round-robin-test
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 

@@ -1,0 +1,20 @@
+// "shared-11.hac"
+// copy-modified "shared-09.hac"
+// testing shared channels
+
+defproc sink_shared(chan??(bool) X) {
+chp {
+X?
+}
+}
+
+chan(bool) B;
+
+chp {
+B?
+}
+
+sink_shared Y(B);
+
+// expect connect fail, cannot mix shared with CHP directly
+

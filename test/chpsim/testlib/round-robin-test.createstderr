@@ -1,0 +1,213 @@
+WARNING: channel RR1.Cin lacks connection to a producer.
+WARNING: channel RR1.Cout lacks connection to a consumer.
+WARNING: channel RR2.Cin lacks connection to a producer.
+WARNING: channel RR2.Cout lacks connection to a consumer.
+---- END CREATE WARNINGS ---
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	115
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	12	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	footprnt	0	#HEAD#	#TAIL#	332
+	19	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	26	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	27	##ADDR##	chanplch	0	#HEAD#	#TAIL#	28
+	28	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	29	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	CHPlopac	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	36	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	45	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	footprnt	0	#HEAD#	#TAIL#	408
+	48	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	50	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	53	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	56	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	proctpcp	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	footprnt	0	#HEAD#	#TAIL#	426
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    round_robin_source = process-definition (defined) round_robin_source(
+        chan?() Cin
+        chan!() Cout
+      )
+      In definition "round_robin_source", we have: {
+      Instances:
+        Cin = chan?() round_robin_source::Cin
+        Cout = chan!() round_robin_source::Cout
+      unroll sequence: 
+        chan?() Cin
+        chan!() Cout
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              Cout!
+              Cin?
+            }
+          ]
+        }
+      footprint: {
+        Cin = channel chan?()^0 = round_robin_source::Cin (1) 
+        Cout = channel chan!()^0 = round_robin_source::Cout (2) 
+        Created state:
+        channel instance pool:
+        1	round_robin_source::Cin
+        2	round_robin_source::Cout
+        resolved concurrent actions:
+          *[
+            sequential: {
+              Cout!
+              Cin?
+            }
+          ]
+        chp events: {
+          event[0]: send: Cout!, #pred: 1, succ: 1 
+          event[1]: receive: Cin?, #pred: 1, succ: 0 
+        }
+      }
+      }
+
+    round_robin_source_finite = process-definition (defined) round_robin_source_finite<>
+<
+      pint<> N
+      >(
+        chan?() Cin
+        chan!() Cout
+      )
+      In definition "round_robin_source_finite", we have: {
+      Parameters:
+        N = pint<> round_robin_source_finite::N
+      Instances:
+        Cin = chan?() round_robin_source_finite::Cin
+        Cout = chan!() round_robin_source_finite::Cout
+      unroll sequence: 
+        chan?() Cin
+        chan!() Cout
+      chp:
+        concurrent: {
+          concurrent i:[0..N-1]: {
+            sequential: {
+              Cout!
+              Cin?
+            }
+          }
+        }
+      footprint collection: {
+        <3> {
+          Cin = channel chan?()^0 = round_robin_source_finite::Cin (1) 
+          Cout = channel chan!()^0 = round_robin_source_finite::Cout (2) 
+          N = pint^0 value: 3
+          Created state:
+          channel instance pool:
+          1	round_robin_source_finite::Cin
+          2	round_robin_source_finite::Cout
+          resolved concurrent actions:
+            sequential: {
+              sequential: {
+                Cout!
+                Cin?
+              }
+              sequential: {
+                Cout!
+                Cin?
+              }
+              sequential: {
+                Cout!
+                Cin?
+              }
+            }
+          chp events: {
+            event[0]: send: Cout!, #pred: 1, succ: 4 
+            event[1]: send: Cout!, #pred: 1, succ: 5 
+            event[2]: receive: Cin?, #pred: 1, succ: 1 
+            event[3]: send: Cout!, #pred: 1, succ: 2 
+            event[4]: receive: Cin?, #pred: 1, succ: 3 
+            event[5]: receive: Cin?, #pred: 1, succ: 
+          }
+        }
+      }
+      }
+
+  Instances:
+    RR1 = round_robin_source<> RR1
+    RR2 = round_robin_source_finite<> RR2
+}
+
+footprint: {
+  RR1 = process round_robin_source<>^0 = RR1 (1) (
+    Cin = channel chan?()^0 = RR1.Cin (1) 
+    Cout = channel chan!()^0 = RR1.Cout (2) 
+  )
+  RR2 = process round_robin_source_finite<>^0<3> = RR2 (2) (
+    Cin = channel chan?()^0 = RR2.Cin (3) 
+    Cout = channel chan!()^0 = RR2.Cout (4) 
+  )
+  Created state:
+  process instance pool:
+  1	RR1
+  2	RR2<3>
+  channel instance pool:
+  1	RR1.Cin
+  2	RR1.Cout
+  3	RR2.Cin
+  4	RR2.Cout
+}

@@ -1,5 +1,5 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.18.2.1 2007/10/11 19:30:26 fang Exp $
+#	$Id: Makefile.am,v 1.18.2.2 2007/10/12 06:06:52 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -7,7 +7,8 @@ HACKT_PARSE_TEST_FAILURES = 000 003 004 006 007 \
 	013 \
 	022 023 \
 	local-01 local-02 local-03 local-04 \
-	dataless-06
+	dataless-06 \
+	shared-16 shared-17
 
 HACKT_PARSE_TEST_PASSES = \
 	001 002 005 008 009 010 \
@@ -29,6 +30,8 @@ HACKT_PARSE_TEST_PASSES = \
 	dataless-01 dataless-02 dataless-03 dataless-04 dataless-05 \
 	shared-01 shared-02 shared-03 shared-04 \
 	shared-05 shared-06 shared-07 shared-08 \
+	shared-09 shared-10 shared-11 shared-12 \
+	shared-13 shared-14 shared-15 \
 	act-002 act-003
 # pending: act-001
 # set/get should be rejected
@@ -61,7 +64,7 @@ HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = \
 HACKT_CREATE_TEST_PASSES = $(HACKT_CHPSIM_ALLOC_TEST_SUBJECTS) \
 	027 \
 	shared-01 shared-02 shared-03 shared-04 \
-	shared-05 shared-06 shared-07 shared-08
+	shared-05 shared-06 shared-07 shared-08 shared-13
 # pending: act-003
 # pending: 018 -- faking user-defined channel as a process now
 
@@ -78,6 +81,8 @@ HACKT_CREATE_TEST_FAILURES = \
 	connect-043 connect-044 \
 	connect-046 connect-047 connect-049 connect-050 \
 	dataless-04 \
+	shared-09 shared-10 shared-11 shared-12 \
+	shared-14 shared-15 \
 	act-003
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)

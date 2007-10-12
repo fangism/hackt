@@ -1,0 +1,12 @@
+// "shared-16.hac"
+// copy-modified from "shared-01.hac"
+// testing shared channels
+
+defproc sink_shared(chan??(bool) X) {
+chp {
+X?; X!(false)		// error: still can't send to a read-only channel
+}
+}
+
+sink_shared Y;
+

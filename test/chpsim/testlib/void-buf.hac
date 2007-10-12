@@ -1,0 +1,13 @@
+/**
+	\file "void-buf.hac"
+	$Id: void-buf.hac,v 1.1.2.1 2007/10/12 06:06:51 fang Exp $
+	Also known as 1of1 placeholder buffers.  
+ */
+
+defproc void_buf(chan?() L; chan!() R) {
+chp {
+*[ L?; R! ]
+}
+}
+
+

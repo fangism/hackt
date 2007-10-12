@@ -1,0 +1,8 @@
+// "round-robin-test.hac"
+// just instantiate round robin structures
+
+import "round-robin.hac";
+
+round_robin_source RR1;
+round_robin_source_finite RR2<3>;
+

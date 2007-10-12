@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.49.2.2 2007/10/11 19:30:16 fang Exp $
+	$Id: devel_switches.h,v 1.49.2.3 2007/10/12 06:06:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -153,7 +153,7 @@
 	uses of channels to connect to the same channel.  
 	Defect: how do we annotate bidirectional shared?  Omit for now.
 	Goal: 1
-	Status: begun
+	Status: done, tested, perm later
 	Priority: med-high
  */
 #define ENABLE_SHARED_CHANNELS			1
