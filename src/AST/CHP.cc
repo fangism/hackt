@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.19 2007/10/08 01:20:51 fang Exp $
+	$Id: CHP.cc,v 1.20 2007/10/12 22:43:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -928,7 +928,7 @@ communication::check_channel(const inst_ref_expr& chan, context& c) {
 	\param c reference to resolved channel instance reference.  
 	\return channel type direction (char).  
  */
-char
+entity::direction_type
 communication::get_channel_direction(
 		const checked_channel_type::element_type& c) {
 	typedef	checked_channel_type::element_type	ret_chan_type;
@@ -976,7 +976,8 @@ send::__check_action(context& c) const {
 	if (!sender) {
 		return statement::return_type(NULL);
 	}
-	if (get_channel_direction(*sender) == '?') {
+	if (!(get_channel_direction(*sender) & 
+			entity::CHANNEL_TYPE_SEND)) {
 		cerr << "ERROR: cannot send on a receive-only channel, at " <<
 			where(*chan) << endl;
 		return statement::return_type(NULL);
@@ -1047,7 +1048,8 @@ receive::__check_action(context& c) const {
 	if (!receiver) {
 		return return_type(NULL);
 	}
-	if (get_channel_direction(*receiver) == '!') {
+	if (!(get_channel_direction(*receiver) &
+			entity::CHANNEL_TYPE_RECEIVE)) {
 		cerr << "ERROR: cannot receive/peek on a send-only channel, at " <<
 			where(*chan) << endl;
 		return return_type(NULL);

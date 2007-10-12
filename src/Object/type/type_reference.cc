@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.29 2007/09/11 06:52:56 fang Exp $
+ 	$Id: type_reference.cc,v 1.30 2007/10/12 22:43:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -876,15 +876,25 @@ data_type_reference::intercept_builtin_definition_hack(
 // inline
 channel_type_reference_base::channel_type_reference_base(
 		const template_actuals& pl) :
-		parent_type(pl), direction('\0') {
+		parent_type(pl), direction(CHANNEL_TYPE_BIDIRECTIONAL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-channel_type_reference_base::dump_direction(ostream& o, const char d) {
-	if (d == '!' || d == '?')
-		o << d;
-	// else no direction
+channel_type_reference_base::dump_direction(ostream& o, 
+		const direction_type d) {
+switch (d) {
+case CHANNEL_TYPE_BIDIRECTIONAL:	break;
+case CHANNEL_TYPE_SEND:			return o << '!';
+case CHANNEL_TYPE_RECEIVE:		return o << '?';
+#if ENABLE_SHARED_CHANNELS
+case CHANNEL_TYPE_SEND_SHARED:		return o << "!!";
+case CHANNEL_TYPE_RECEIVE_SHARED:	return o << "??";
+#endif
+default:
+	ICE(cerr, cerr << "Unknown channel-direction enum: " <<
+		size_t(d) << endl;)
+}
 	return o;
 }
 
@@ -905,7 +915,9 @@ void
 channel_type_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
-	write_value(o, direction);
+	const char d = direction;
+	write_value(o, d);
+	// enum?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -913,7 +925,10 @@ void
 channel_type_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
-	read_value(i, direction);
+	char d;
+	read_value(i, d);
+	direction = direction_type(d);	// coerce conversion
+	// enum?
 }
 
 //=============================================================================

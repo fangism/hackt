@@ -3,6 +3,65 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-merged-channel-03-05:
+	  Branch merge.  Summary:
+	  Enabled shared channel notation !! and ??to explicitly declare
+		when a channel is allowed to be connected to multiple
+		consumers/producers.  However, it is still the user's
+		responsibility to guarantee that access to such channels
+		is still exclusive.  
+	  Also includes one bug fix: trying to port-connect incomplete type.
+
+
+2007-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-05:
+	  No source revision, added chpsim test cases using sequentially
+		accessed shared channels.  
+	  End of branch, merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-04:
+	  Bug fix: ICE-on-invalid (should've been applied to trunk first)
+	  Object/inst/substructure_alias_base.cc: verify that alias
+		has complete type before connecting its ports.  
+	  new test case: parser/template/115.
+
+
+2007-10-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-03:
+	  No source revision, just test cases for expect fail and
+		some chpsim test library additions, using shared channels. 
+	  One more batch of chpsim test cases, then merge.
+
+
+2007-10-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-02:
+	  Fixed and enabled shared channels in connection checking
+		switch: Object/devel_switches.h: ENABLE_SHARED_CHANNELS
+	  Using ?? and !! to denote shared senders/receivers in 
+		port-formal declarations.  
+	  Added set of basic accept-valid test cases test/parser/channel, 
+		next batch will include reject-invalid.  
+
+
+2007-10-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-84-channel-03-01:
+	  Quick branch for enabling shared channels.  
+		Need this to share channels across token-ring elements
+		mutually exclusively.  
+	  Only changed encoding of channel type from char to enum to better
+		accommodate shared channel types.  
+		Enum defined in Object/type/channel_direction_enum.h
+	  No regressions.
+	  Next: front-end support (middle-end already in-place, untested).
+
+
 2007-10-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-84:

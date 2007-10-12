@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.11 2006/12/01 23:28:56 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.12 2007/10/12 22:43:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -9,6 +9,7 @@
 #include "Object/type/canonical_type_fwd.h"
 #include <vector>
 #include "Object/type/canonical_type_base.h"
+#include "Object/type/channel_direction_enum.h"	// enum type_direction
 #include "Object/def/channel_definition_base.h"
 #include "util/memory/excl_ptr.h"
 
@@ -64,7 +65,7 @@ private:
 	 */
 	datatype_list_type			datatype_list;
 	/// the channel direction
-	char					direction;
+	direction_type				direction;
 public:
 	/// only called to signal an error
 	canonical_type();
@@ -72,7 +73,7 @@ public:
 public:
 	explicit
 	canonical_type(const canonical_definition_ptr_type, 
-		const char dir);
+		const direction_type dir);
 
 	// dummy prototype, not supposed to be used (never relaxed!)
 	// called from "Object/inst/general_collection_type_manager.h"
@@ -80,10 +81,10 @@ public:
 		const const_param_list_ptr_type&);
 
 	canonical_type(const canonical_definition_ptr_type, 
-		const param_list_ptr_type&, const char dir);
+		const param_list_ptr_type&, const direction_type dir);
 
 	canonical_type(const canonical_definition_ptr_type, 
-		const template_actuals&, const char dir);
+		const template_actuals&, const direction_type dir);
 
 	// default copy-constructor suffices
 
@@ -107,9 +108,9 @@ public:
 
 	/// \param d is '!' or '?' or other
 	void
-	set_direction(const char d) { direction = d; }
+	set_direction(const direction_type d) { direction = d; }
 
-	char
+	direction_type
 	get_direction(void) const { return direction; }
 
 	count_ptr<const type_reference_type>

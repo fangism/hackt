@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.10 2007/07/31 23:23:03 fang Exp $
+	$Id: type.cc,v 1.11 2007/10/12 22:43:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -63,6 +63,37 @@ using entity::user_def_chan;
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
+
+//=============================================================================
+/**
+	Second character is used to flag a channel as shared.  
+	\return enumeration in "Object/type/channel_direction_enum.h"
+ */
+static
+entity::direction_type
+token_to_direction_type(const char c1, const char c2) {
+switch (c1) {
+case '!':
+#if ENABLE_SHARED_CHANNELS
+	if (c2 == '!')
+		return entity::CHANNEL_TYPE_SEND_SHARED;
+	else
+#endif
+	return entity::CHANNEL_TYPE_SEND;
+case '?':
+#if ENABLE_SHARED_CHANNELS
+	if (c2 == '?')
+		return entity::CHANNEL_TYPE_RECEIVE_SHARED;
+	else
+#endif
+	return entity::CHANNEL_TYPE_RECEIVE;
+default: {}
+}
+	cerr << "Unknown channel type token." << endl;
+	THROW_EXIT;
+	return entity::CHANNEL_TYPE_NULL;
+}
+
 
 //=============================================================================
 // class type_id method definitions
@@ -195,7 +226,8 @@ chan_type::check_type(const context& c) const {
 	const data_type_ref_list::return_type
 		ret(dtypes->check_builtin_channel_type(c));
 	if (dir)
-		ret->set_direction(dir->text[0]);
+		ret->set_direction(
+			token_to_direction_type(dir->text[0], dir->text[1]));
 	return ret;
 }
 
@@ -298,14 +330,15 @@ generic_type_ref::check_type(const context& c) const {
 		}
 		const char dir(chan_dir->text[0]);
 		INVARIANT(dir == '!' || dir == '?');
-		ctr->set_direction(dir);
+		ctr->set_direction(
+			token_to_direction_type(dir, chan_dir->text[1]));
 	}
 	if (!type_ref) {
 		cerr << "ERROR making complete type reference.  "
 			<< where(*this) << endl;
 		return return_type(NULL);
 	} else	return type_ref;
-}
+}	// generic_type_ref::check_type()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

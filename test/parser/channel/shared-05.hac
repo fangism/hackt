@@ -1,0 +1,12 @@
+// "shared-05.hac"
+// copy-reduced from "shared-06.hac"
+// testing shared channels
+
+defproc source(chan!!(bool) X) {
+chp {
+X!(true)
+}
+}
+
+source S;
+

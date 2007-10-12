@@ -1,0 +1,13 @@
+// "shared-15.hac"
+// copy-reduced from "shared-08.hac"
+// testing shared channels
+
+defproc source(chan(bool) X) {
+chp {
+X!(true)
+}
+}
+
+chan(bool) Y;
+source S(Y), T(Y);	// error: non-directional channel not shared
+

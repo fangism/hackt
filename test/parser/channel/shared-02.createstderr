@@ -1,0 +1,140 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	13	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	291
+	16	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
+	21	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	291
+	29	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	footprnt	0	#HEAD#	#TAIL#	450
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    sink = process-definition (defined) sink(
+        chan??(bool<>) X
+      )
+      In definition "sink", we have: {
+      Instances:
+        X = chan??(bool<>) sink::X
+      unroll sequence: 
+        chan??(bool<>) X
+      chp:
+        concurrent: {
+          X?
+        }
+      footprint: {
+        X = channel chan??(bool<>)^0 = sink::X (1) 
+        Created state:
+        channel instance pool:
+        1	sink::X
+        resolved concurrent actions:
+          X?
+        chp events: {
+          event[0]: receive: X?, #pred: 1, succ: 
+        }
+      }
+      }
+
+    source = process-definition (defined) source(
+        chan!(bool<>) X
+      )
+      In definition "source", we have: {
+      Instances:
+        X = chan!(bool<>) source::X
+      unroll sequence: 
+        chan!(bool<>) X
+      chp:
+        concurrent: {
+          X!(true)
+        }
+      footprint: {
+        X = channel chan!(bool<>)^0 = source::X (1) 
+        Created state:
+        channel instance pool:
+        1	source::X
+        resolved concurrent actions:
+          X!(true)
+        chp events: {
+          event[0]: send: X!(true), #pred: 1, succ: 
+        }
+      }
+      }
+
+  Instances:
+    B = chan(bool<>) B
+    S = source<> S
+    Y = sink<> Y
+    Z = sink<> Z
+}
+
+footprint: {
+  B = channel chan(bool<>)^0 = B (1) 
+  S = process source<>^0 = S (1) (
+    X = channel chan!(bool<>)^0 = B (1) 
+  )
+  Y = process sink<>^0 = Y (2) (
+    X = channel chan??(bool<>)^0 = B (1) 
+  )
+  Z = process sink<>^0 = Z (3) (
+    X = channel chan??(bool<>)^0 = B (1) 
+  )
+  Created state:
+  process instance pool:
+  1	S
+  2	Y
+  3	Z
+  channel instance pool:
+  1	B
+}

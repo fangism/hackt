@@ -1,0 +1,22 @@
+// "shared-09.hac"
+// copy-modified "shared-04.hac"
+// testing shared channels
+
+defproc sink_shared(chan??(bool) X) {
+chp {
+X?
+}
+}
+
+defproc sink_excl(chan?(bool) Y) {
+chp {
+Y?
+}
+}
+
+chan(bool) B;
+sink_shared Y(B);
+sink_excl Z(B);
+
+// expect connect fail, cannot mix shared and non-shared
+

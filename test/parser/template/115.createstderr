@@ -1,0 +1,4 @@
+Error: instance alias `bar' has incomplete type: foo<>
+Error trying to connect ports: incomplete type for `bar'.
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

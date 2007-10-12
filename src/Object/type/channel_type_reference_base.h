@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.9 2007/01/21 05:59:50 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.10 2007/10/12 22:43:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
@@ -13,6 +13,7 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/devel_switches.h"
+#include "Object/type/channel_direction_enum.h"
 
 namespace HAC {
 namespace entity {
@@ -30,21 +31,14 @@ class channel_type_reference_base : public fundamental_type_reference {
 protected:
 	typedef	fundamental_type_reference		parent_type;
 public:
-#if 0
-	typedef	enum {
-		BIDIRECTIONAL, 
-		SEND, 
-		RECEIVE
-	}	direction_type;
-#endif
 protected:
 	/**
-		Three possible values: '\0' means bidirections (unspecified), 
-		'!' means send-only, '?' means receive-only.
+		Meaning is defined by the direction_type enumeration.  
 	 */
-	char						direction;
+	direction_type					direction;
 protected:
-	channel_type_reference_base() : parent_type(), direction('\0') { }
+	channel_type_reference_base() : 
+		parent_type(), direction(CHANNEL_TYPE_BIDIRECTIONAL) { }
 
 	explicit
 	channel_type_reference_base(const template_actuals&);
@@ -56,14 +50,14 @@ virtual	ostream&
 	dump(ostream&) const = 0;
 
 	void
-	set_direction(const char c) { direction = c; }
+	set_direction(const direction_type c) { direction = c; }
 
-	char
+	direction_type
 	get_direction(void) const { return direction; }
 
 	static
 	ostream&
-	dump_direction(ostream&, const char);
+	dump_direction(ostream&, const direction_type);
 
 	bool
 	is_accepted_in_datatype(void) const;

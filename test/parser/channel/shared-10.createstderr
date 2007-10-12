@@ -1,0 +1,5 @@
+Error: cannot alias two non-sharing producers of type channel.
+	got: S.X
+	and: T.X
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

@@ -1,0 +1,27 @@
+/**
+	\file "round-robin.hac"
+	$Id: round-robin.hac,v 1.2 2007/10/12 22:44:24 fang Exp $
+	Control processes for round-robin structures.  
+ */
+
+/**
+	Infinite source of round robin tokens.  
+	Each round-robin ring should have one token circulating. 
+	Useful for controlling shared resources.  
+ */
+defproc round_robin_source(chan?() Cin; chan!() Cout) {
+chp {
+*[ Cout!; Cin? ]
+}
+}
+
+/**
+	Source of finite tokens for round-robin dispatch.  
+ */
+template <><pint N>
+defproc round_robin_source_finite(chan?() Cin; chan!() Cout) {
+chp {
+{;i:N: Cout!; Cin? }
+}
+}
+

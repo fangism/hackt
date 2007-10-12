@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.14 2006/11/27 08:29:18 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.15 2007/10/12 22:43:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,9 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/port_context.h"
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+#include "Object/common/dump_flags.h"
+#endif
 #include "common/ICE.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
@@ -78,6 +81,16 @@ substructure_alias::__trace_alias_base(const this_type&) const {
 good_bool
 substructure_alias::connect_ports(const connection_references_type& cr, 
 		const unroll_context& c) {
+#if ENABLE_RELAXED_TEMPLATE_PARAMETERS
+	try {
+		this->finalize_find(c);
+	} catch (...) {
+		cerr << "Error trying to connect ports: incomplete type for `";
+		this->dump_hierarchical_name(cerr, dump_flags::default_value);
+		cerr << "\'." << endl;
+		return good_bool(false);
+	}
+#endif
 	return subinstances.connect_ports(cr, c);
 }
 

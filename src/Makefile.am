@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.188 2007/10/08 21:09:07 fang Exp $
+#	$Id: Makefile.am,v 1.189 2007/10/12 22:43:46 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -786,6 +786,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/lang/PRS_footprint_rule.h \
 	Object/type/type_fwd.h \
 	Object/type/builtin_channel_type_reference.h \
+	Object/type/channel_direction_enum.h \
 	Object/type/channel_type_reference.h \
 	Object/type/channel_type_reference_base.h \
 	Object/type/data_type_reference.h \

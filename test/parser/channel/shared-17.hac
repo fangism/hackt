@@ -1,0 +1,12 @@
+// "shared-17.hac"
+// copy-modified from "shared-16.hac"
+// testing shared channels
+
+defproc source_shared(chan!!(bool) X) {
+chp {
+X?; X!(false)		// error: still can't receive from a send-only channel
+}
+}
+
+source_shared Y;
+

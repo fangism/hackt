@@ -1,0 +1,12 @@
+# "round-robin-sink-test-01-a.chpsimrc"
+#	$Id: round-robin-sink-test-01-a.chpsimrc,v 1.2 2007/10/12 22:44:15 fang Exp $
+# @haco@ round-robin-sink-test-01.haco-a
+
+echo running with random timing...
+timing random
+# watchall-events
+# watch-value B
+step 10000
+assert-queue
+echo done.
+

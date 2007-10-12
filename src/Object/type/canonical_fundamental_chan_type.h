@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.h"
-	$Id: canonical_fundamental_chan_type.h,v 1.2 2007/01/21 05:59:49 fang Exp $
+	$Id: canonical_fundamental_chan_type.h,v 1.3 2007/10/12 22:43:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_FUNDAMENTAL_CHAN_TYPE_H__
@@ -10,6 +10,7 @@
 #include <vector>
 #include <set>
 #include "Object/def/channel_definition_base.h"
+#include "Object/type/channel_direction_enum.h"	// enum type_direction
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
@@ -107,7 +108,7 @@ public:
 	dump(ostream&) const;
 
 	ostream&
-	dump(ostream&, const char) const;
+	dump(ostream&, const direction_type) const;
 
 	static
 	count_ptr<const this_type>
@@ -203,7 +204,7 @@ class canonical_fundamental_chan_type {
 protected:
 	typedef	count_ptr<const base_type>	base_chan_ptr_type;
 	base_chan_ptr_type	base_chan_type;
-	char			direction;
+	direction_type			direction;
 public:
 	canonical_fundamental_chan_type();
 	// implicit
@@ -215,9 +216,9 @@ public:
 
 	/// \param d is '!' or '?' or other
 	void
-	set_direction(const char d) { direction = d; }
+	set_direction(const direction_type d) { direction = d; }
 
-	char
+	direction_type
 	get_direction(void) const { return direction; }
 
 	ostream&

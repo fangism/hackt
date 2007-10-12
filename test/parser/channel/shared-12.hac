@@ -1,0 +1,20 @@
+// "shared-12.hac"
+// copy-modified from "shared-10.hac"
+// testing shared channels
+
+defproc source_shared(chan!!(bool) X) {
+chp {
+X!(true)
+}
+}
+
+chan(bool) B;
+
+chp {
+B!(false)
+}
+
+source_shared S(B);
+
+// expect to fail on connection shared to CHP
+

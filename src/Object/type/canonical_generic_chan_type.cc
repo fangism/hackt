@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.9 2006/12/01 23:28:54 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.10 2007/10/12 22:43:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -46,7 +46,8 @@ canonical_generic_chan_type::canonical_type() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
-		const canonical_definition_ptr_type d, const char dir) :
+		const canonical_definition_ptr_type d, 
+		const direction_type dir) :
 		base_type(), canonical_definition_ptr(d), datatype_list(), 
 		direction(dir) {
 	NEVER_NULL(canonical_definition_ptr);
@@ -57,7 +58,7 @@ canonical_generic_chan_type::canonical_type(
 canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d,
 		const param_list_ptr_type& p, 
-		const char dir) :
+		const direction_type dir) :
 		base_type(p), canonical_definition_ptr(d), datatype_list(), 
 		direction(dir) {
 	NEVER_NULL(canonical_definition_ptr);
@@ -77,7 +78,7 @@ canonical_generic_chan_type::canonical_type(
 canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d,
 		const template_actuals& p,
-		const char dir) :
+		const direction_type dir) :
 		base_type(p.make_const_param_list()),
 		canonical_definition_ptr(d),
 		datatype_list(), direction(dir) {
@@ -412,7 +413,8 @@ canonical_generic_chan_type::write_object_base(
 	m.write_pointer(o, canonical_definition_ptr);
 	m.write_pointer(o, param_list_ptr);
 {
-	write_value(o, direction);
+	const char d = direction;
+	write_value(o, d);
 	typedef	datatype_list_type::const_iterator	const_iterator;
 	write_value(o, datatype_list.size());
 	const_iterator i(datatype_list.begin());
@@ -430,7 +432,9 @@ canonical_generic_chan_type::load_object_base(
 	m.read_pointer(i, canonical_definition_ptr);
 	m.read_pointer(i, param_list_ptr);
 {
-	read_value(i, direction);
+	char d;
+	read_value(i, d);
+	direction = direction_type(d);
 	typedef	datatype_list_type::iterator	iterator;
 	size_t size;
 	read_value(i, size);

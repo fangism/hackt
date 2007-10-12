@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.42 2007/10/08 01:21:09 fang Exp $
+ 	$Id: definition.cc,v 1.43 2007/10/12 22:43:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -981,7 +981,8 @@ user_def_chan::certify_port_actuals(const checked_refs_type& cr) const {
 canonical_generic_chan_type
 user_def_chan::make_canonical_type(const template_actuals& a) const {
 	typedef	canonical_generic_chan_type	return_type;
-	return return_type(never_ptr<const this_type>(this), a);
+	return return_type(never_ptr<const this_type>(this), a,
+		CHANNEL_TYPE_BIDIRECTIONAL);	// default direction
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

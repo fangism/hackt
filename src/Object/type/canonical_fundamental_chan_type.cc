@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.3 2007/07/31 23:23:27 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.4 2007/10/12 22:43:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -151,7 +151,8 @@ canonical_fundamental_chan_type_base::what(ostream& o) const {
 	ripped from canonical_generic_chan_type::dump()
  */
 ostream&
-canonical_fundamental_chan_type_base::dump(ostream& o, const char d) const {
+canonical_fundamental_chan_type_base::dump(ostream& o, 
+		const direction_type d) const {
 	typedef	datatype_list_type::const_iterator	const_iterator;
 	o << "chan";
 	channel_type_reference_base::dump_direction(o, d);
@@ -173,7 +174,7 @@ if (i!=e) {
  */
 ostream&
 canonical_fundamental_chan_type_base::dump(ostream& o) const {
-	return dump(o, '\0');
+	return dump(o, CHANNEL_TYPE_BIDIRECTIONAL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -405,14 +406,14 @@ canonical_fundamental_chan_type_base::load_object(
 // class canonical_fundamental_chan_type method definitions
 
 canonical_fundamental_chan_type::canonical_fundamental_chan_type() :
-		base_chan_type(), direction('\0') {
+		base_chan_type(), direction(CHANNEL_TYPE_BIDIRECTIONAL) {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_fundamental_chan_type::canonical_fundamental_chan_type(
 		const base_chan_ptr_type& c) :
-		base_chan_type(c), direction('\0') {
+		base_chan_type(c), direction(CHANNEL_TYPE_BIDIRECTIONAL) {
 	STACKTRACE_CTOR_VERBOSE;
 	NEVER_NULL(base_chan_type);
 }
@@ -486,7 +487,8 @@ canonical_fundamental_chan_type::write_object_base(
 	// TODO: verify that pointer is a member of global registry, 
 	// and not a stray!
 	base_type::write_pointer(m, o, base_chan_type);
-	util::write_value(o, direction);
+	const char d = direction;	// from enum
+	util::write_value(o, d);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -495,7 +497,9 @@ canonical_fundamental_chan_type::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_VERBOSE;
 	base_chan_type = base_type::read_pointer(m, i);	// special!
-	util::read_value(i, direction);
+	char d;
+	util::read_value(i, d);		// to enum
+	direction = direction_type(d);
 }
 
 //=============================================================================

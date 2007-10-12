@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.9 2007/07/31 23:22:55 fang Exp $
+	$Id: CHP.h,v 1.10 2007/10/12 22:43:47 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -14,6 +14,7 @@
 #include "AST/statement.h"
 #include "AST/definition_item.h"
 #include "AST/expr_base.h"
+#include "Object/type/channel_direction_enum.h"
 #include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
@@ -355,7 +356,7 @@ virtual	line_position
 
 protected:
 	static
-	char
+	entity::direction_type
 	get_channel_direction(const checked_channel_type::element_type&);
 
 };	// end class communication

@@ -1,5 +1,5 @@
 // "bool-source.hac"
-//	$Id: bool-source.hac,v 1.6 2007/08/09 05:49:51 fang Exp $
+//	$Id: bool-source.hac,v 1.7 2007/10/12 22:44:21 fang Exp $
 // cyclic and non-cyclic sources of bool tokens
 
 
@@ -53,3 +53,20 @@ chp {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Shared output channel, whose access is granted by control token
+	on void channel.  
+ */
+template <><pint N; pbool B[N]>
+defproc bool_source_shared(chan?() Cin; chan!() Cout; chan!!(bool) S) {
+chp {
+*[
+	Cin?;
+	{;i:N: S!(B[i]) };
+	Cout!
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+

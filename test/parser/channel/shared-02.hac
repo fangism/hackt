@@ -1,0 +1,22 @@
+// "shared-02.hac"
+// copy-modified from "shared-04.hac"
+// testing shared channels
+
+defproc source(chan!(bool) X) {
+chp {
+X!(true)
+}
+}
+
+defproc sink(chan??(bool) X) {
+chp {
+X?
+}
+}
+
+chan(bool) B;
+source S(B);
+sink Y(B), Z(B);
+
+// won't actually run because exclusion is violated
+
