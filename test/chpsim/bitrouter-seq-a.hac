@@ -1,0 +1,7 @@
+// "bitrouter-seq-a.hac"
+
+import "bitrouter-seq-test-channels.hac";
+import "testlib/bitrouter.hac";
+
+bit_router B(L, R);
+

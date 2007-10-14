@@ -1,0 +1,46 @@
+// "bitrouter-seq-test-env-01.hac"
+// input characteristics: 
+// lots of short packets
+// short delay in between
+// destination contention: high
+
+import "bitrouter-seq-test-channels.hac";
+import "testlib/int-sink.hac";
+import "testlib/void-sink.hac";
+import "testlib/round-robin.hac";
+
+// chan(int) LL[2], RR[2];
+chan() LSCin[2], LSCout[2];
+packet_source_slice_array LS[2];
+// control token finite sources
+round_robin_source_finite A[2];		// generate N token iterations
+
+// output buckets
+int_sink RS[2];
+RS[0](RR[0]);
+RS[1](RR[1]);
+
+LS[0]<8, 3,
+	{{0,0,2},
+	{0,0,2},
+	{0,0,3},
+	{0,0,2},
+	{1,1,2},
+	{1,1,3},
+	{1,1,3},
+	{1,1,3}}, 10.0>
+(LSCin[0], LSCout[0], LL[0]);
+A[0]<5>(LSCout[0], LSCin[0]);
+
+LS[1]<8, 3,
+	{{0,0,2},
+	{0,0,2},
+	{0,0,3},
+	{0,0,2},
+	{1,1,3},
+	{1,1,3},
+	{1,1,2},
+	{1,1,3}}, 10.0>
+(LSCin[1], LSCout[1], LL[1]);
+A[1]<5>(LSCout[1], LSCin[1]);
+

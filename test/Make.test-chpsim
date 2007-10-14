@@ -1,6 +1,6 @@
 # "Make.test-chpsim"
 #	vi: ft=automake
-#	$Id: Make.test-chpsim,v 1.17 2007/09/11 06:53:19 fang Exp $
+#	$Id: Make.test-chpsim,v 1.17.10.1 2007/10/14 20:36:03 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -271,6 +271,7 @@ chpsimrc-out.autodepend: Makefile
 	      $(ECHO) "$$mktrc: $$d.chpsimrc-out" ; \
 	      $(ECHO) "	@test -f $$""@" ; \
 	      $(ECHO) "CLEANFILES += $$mktrc" ; \
+	      $(ECHO) "$$mktrc: $$""(HACKT_CHPSIM_EXE)" ; \
             fi ; \
 	  fi ; \
 	  if test "$$antideps" ; then \

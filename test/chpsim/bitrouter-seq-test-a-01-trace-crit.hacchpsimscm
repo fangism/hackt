@@ -1,0 +1,13 @@
+#!hacchpsimguile -b
+!#
+;; "bitrouter-seq-test-a-01-trace-crit"
+;; vi: ft=scheme
+;;	$Id: bitrouter-seq-test-a-01-trace-crit.hacchpsimscm,v 1.1.2.1 2007/10/14 20:36:08 fang Exp $
+;; @haco@ bitrouter-seq-test-a-01.haco-a
+;; @chpsimtrace@ bitrouter-seq-test-a-01.chpsimtrace
+
+(define trace-name "bitrouter-seq-test-a-01.chpsimtrace")
+
+; (load-from-path "basic-trace-analysis.hacchpsimscm")
+(load-from-path "critical-path-verbose.hacchpsimscm")
+

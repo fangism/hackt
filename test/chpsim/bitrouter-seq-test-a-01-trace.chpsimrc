@@ -1,0 +1,16 @@
+# "bitrouter-seq-test-a-01-trace.chpsimrc"
+#	$Id: bitrouter-seq-test-a-01-trace.chpsimrc,v 1.1.2.1 2007/10/14 20:36:09 fang Exp $
+# @haco@ bitrouter-seq-test-a-01.haco-a
+# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @deps@ ../../lib/stdchpfn.la
+
+# timing after
+trace bitrouter-seq-test-a-01.chpsimtrace
+echo running (traced) ...
+run
+# due to arbitration, time *may* be different (pseudo-random)
+time
+echo done.
+# really, is automatic
+trace-close
+

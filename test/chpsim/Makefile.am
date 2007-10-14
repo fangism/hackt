@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/10/12 22:44:00 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.1 2007/10/14 20:36:05 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -11,6 +11,7 @@ SUBDIRS = testlib .
 HACO_FLAGS += -I$(srcdir)/testlib
 CHPSIM_LIB_PATH = ../../lib
 
+# list tests here only if they are also intended for create/alloc tests
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \
 	countdown-successor \
@@ -48,6 +49,7 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 # temporary for now:
 HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
+# list files here that are HAC sources used in chpsim testing
 # NOTE: tests related to the CHP standard library should be prefixed 'lib-'
 # TODO: eventually generate object test cases for all of these:
 HACKT_CHPSIMRC_TEST_SUBJECTS = \
@@ -117,7 +119,11 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	lib-fxzscan-test-a \
 	lib-fxzscan_loop-test-a \
 	round-robin-source-test-01 round-robin-source-test-02 \
-	round-robin-sink-test-01 round-robin-sink-test-02
+	round-robin-sink-test-01 round-robin-sink-test-02 \
+	bitrouter-seq-test-channels \
+	bitrouter-seq-a \
+	bitrouter-seq-test-env-01 \
+	bitrouter-seq-test-a-01
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -263,7 +269,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	lib-fxzscan-test-a-01 \
 	lib-fxzscan_loop-test-a-01 \
 	round-robin-source-test-01-a round-robin-source-test-02-a \
-	round-robin-sink-test-01-a round-robin-sink-test-02-a
+	round-robin-sink-test-01-a round-robin-sink-test-02-a \
+	bitrouter-seq-test-a-01-trace
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -361,52 +368,25 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bool-and-test-a-01 \
 	channel-probe-a-01 \
 	gcd-nested-a-01 \
-	select-block-a-01 select-block-a-02
+	select-block-a-01 select-block-a-02 \
+	bitrouter-seq-test-a-01-trace-crit
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
+# custom hacchpimscm tests and post-processing
+bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \
+		bitrouter-seq-test-a-01-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	mv $@ $@.tmp ; \
+	$(GREP) "^process" $@.tmp > $@
+# keep .tmp file for reference
+
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
 
-KEEP_CHPSIM_TRACE_FILES = \
-	channel-sync-desync-a-04.chpsimtrace \
-	channel-sync-desync-a-05.chpsimtrace \
-	select-nested-loop-a-03.chpsimtrace \
-	select-nested-loop-b-03.chpsimtrace \
-	bool-split-select-a-02.chpsimtrace \
-	countdown-loop-a-02.chpsimtrace \
-	countdown-nested-a-03.chpsimtrace \
-	countdown-nested-b-03.chpsimtrace \
-	countdown-nested-c-03.chpsimtrace \
-	countdown-nested-d-03.chpsimtrace \
-	token-ring-a-01.chpsimtrace \
-	bubble-ring-a-01.chpsimtrace \
-	timed-fifo-a-01.chpsimtrace \
-	timed-fifo-b-01.chpsimtrace \
-	timed-fifo-c-01.chpsimtrace \
-	timed-fifo-d-01.chpsimtrace \
-	timed-fifo-e-01.chpsimtrace \
-	timed-token-ring-a-01.chpsimtrace \
-	timed-token-ring-a-02.chpsimtrace \
-	timed-token-ring-b-01.chpsimtrace \
-	timed-token-ring-c-01.chpsimtrace \
-	timed-bubble-ring-a-01.chpsimtrace \
-	timed-bubble-ring-b-01.chpsimtrace \
-	timed-bubble-ring-c-01.chpsimtrace \
-	fib-test-a-01.chpsimtrace \
-	fib-test-b-01.chpsimtrace \
-	fib-test-c-01.chpsimtrace \
-	bool-split-alternator-a-01.chpsimtrace \
-	bool-merge-alternator-a-01.chpsimtrace \
-	source-sink-peekbuf-a-02.chpsimtrace \
-	source-sink-peekbuf-b-02.chpsimtrace
-
 # NOTE: tracefiles produced as side effects are already detected and
 # produce automatic dependencies in chpsimrc-out.autodepend
-
-# this should be redundant with chpsimrc-out dependence...
-$(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
 
 # generate input file in build directory for scan tests
 fzscan-01.txt: Makefile
