@@ -1,5 +1,5 @@
 # "test/chpsim/testlib/Makefile.am"
-#	$Id: Makefile.am,v 1.11.2.1 2007/10/14 20:36:15 fang Exp $
+#	$Id: Makefile.am,v 1.11.2.2 2007/10/15 02:48:17 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -24,7 +24,8 @@ HACKT_PARSE_TEST_PASSES = \
 	fibonacci \
 	void-sink void-source void-buf \
 	round-robin round-robin-test \
-	bitrouter bitrouter-env bitrouter-test
+	bitrouter bitrouter-dec \
+	bitrouter-env bitrouter-test
 
 HACKT_CREATE_TEST_PASSES = \
 	bool-copy-test \

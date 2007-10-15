@@ -5,6 +5,10 @@
 
 2007-10-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-85-router-02:
+	  No source revision, more bit-router tests.  
+
+
 	* HACKT-00-01-04-main-00-81-85-router-01:
 	  No source revision intended on this branch, which is meant for
 		developing a set of bitrouter CHP tests and benchmarks

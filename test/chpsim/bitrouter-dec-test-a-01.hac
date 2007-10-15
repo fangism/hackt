@@ -1,5 +1,5 @@
 // "bitrouter-seq-test-a-01.hac"
 
-import "bitrouter-seq-a.hac";
+import "bitrouter-dec-a.hac";
 import "bitrouter-seq-test-env-01.hac";
 

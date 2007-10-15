@@ -1,0 +1,100 @@
+// "bitrouter-dec.hac"
+// copy-revised from "bitrouter.hac"
+//	$Id: bitrouter-dec.hac,v 1.1.2.1 2007/10/15 02:48:18 fang Exp $
+// see "bitrouter-env.hac" for test environment
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Routes a bit-stream to one of two output channels, 
+	and beheads the first bit of each packet.  
+ */
+defproc bit_router_split(chan?(bool, bool) L; chan!(bool, bool) R[2]) {
+bool lc, ld, dir;
+int<1> d;
+chp {
+*[ L?(lc, dir);
+	d := zcond(dir, 1, 0);
+	*[ ~lc -> L?(lc, ld); R[d]!(lc, ld) ]
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Route an arbitrated input until a stop-bit is seen.  
+ */
+defproc bit_router_merge(chan?(bool, bool) L[2]; chan!(bool, bool) R) {
+bool lc, ld;
+chp {
+// initialize: not stopped
+*[
+$(after=3)
+lc-;	// use variable to be able to express do-while loop
+[ #L[0] ->
+	*[ ~lc -> L[0]?(lc, ld); R!(lc, ld) ]
+  : #L[1] ->
+	*[ ~lc -> L[1]?(lc, ld); R!(lc, ld) ]
+]
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Plain buffer for chan(bool, bool).
+ */
+defproc boolx2_buf(chan?(bool, bool) L; chan!(bool, bool) R) {
+bool a, b;
+chp {
+*[ L?(a, b); R!(a, b) ]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Decomposed bit-router with non-deterministic selection.
+	Not slack-matched.
+ */
+defproc bit_router_dec(
+	chan?(bool, bool) L[2]; 
+	chan!(bool, bool) R[2]
+) {
+chan(bool, bool) M;
+bit_router_merge RM(L, M);
+bit_router_split RS(M, R);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Decomposed bit-router with non-deterministic selection.
+	Buffered (slack-matched) intermediate channel for performance.  
+ */
+defproc bit_router_dec_sm(
+	chan?(bool, bool) L[2]; 
+	chan!(bool, bool) R[2]
+) {
+chan(bool, bool) M, N;
+bit_router_merge RM(L, M);
+boolx2_buf B(M, N);
+bit_router_split RS(N, R);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Decomposed twin bit-router with non-deterministic selection.
+	Not slack-matched.  
+ */
+defproc twin_bit_router(
+	chan?(bool, bool) L[2]; 
+	chan!(bool, bool) R[2]
+) {
+chan(bool, bool) M[2][2];
+bit_router_merge RM[2];
+bit_router_split RS[2];
+(;i:2:
+RS[i](L[i], M[i]);
+RM[i](M[0..1][i], R[i]);
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

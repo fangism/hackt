@@ -51,109 +51,95 @@ Persistent Object Manager text dump:
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	nexplist	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	61	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	64	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
-	67	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	70	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	73	##ADDR##	chanprob	0	#HEAD#	#TAIL#	12
-	74	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	77	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	78	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	79	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	80	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	82	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	84	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
-	85	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	86	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	87	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	90	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	91	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	92	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	94	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
-	95	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	96	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	58	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
+	64	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	chanprob	0	#HEAD#	#TAIL#	12
+	71	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	75	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	76	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	83	##ADDR##	nfuncexp	0	#HEAD#	#TAIL#	21
+	84	##ADDR##	nexplist	0	#HEAD#	#TAIL#	24
+	85	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	94	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	97	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	98	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	99	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	98	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	99	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
 	100	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	101	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	102	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	103	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	104	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	105	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
-	106	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	107	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
-	108	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	109	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	110	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
-	111	##ADDR##	footprnt	0	#HEAD#	#TAIL#	724
-	112	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	28
-	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	114	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	115	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
-	116	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
-	117	##ADDR##	CHPndtsl	0	#HEAD#	#TAIL#	24
-	118	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	119	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	120	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	121	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
-	122	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	123	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	124	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	125	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	126	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
-	127	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	128	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	129	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	130	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
-	131	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	132	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
-	133	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	134	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	24
-	135	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	136	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	137	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	138	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
-	139	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
-	140	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	141	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
-	142	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
-	143	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
-	144	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	145	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	146	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
-	147	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	footprnt	0	#HEAD#	#TAIL#	620
+	106	##ADDR##	fndchntp	0	#HEAD#	#TAIL#	28
+	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	108	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	109	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	110	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	16
+	111	##ADDR##	CHPndtsl	0	#HEAD#	#TAIL#	24
+	112	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	113	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	114	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	115	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	116	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	118	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	119	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	120	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
+	121	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	122	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	28
+	123	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	124	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	20
+	125	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	20
+	126	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	127	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	128	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	29
+	129	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	28
+	130	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	131	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	132	##ADDR##	footprnt	0	#HEAD#	#TAIL#	382
+	133	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -188,10 +174,7 @@ In namespace "", we have: {
             nondeterministic: {
               #L[0] -> sequential: {
                 L[0]?(lc,dir)
-                deterministic: {
-                  dir -> d := 1
-                  else -> d := 0
-                }
+                d := zcond(dir,1,0)
                 *[
                   ~lc -> sequential: {
                     L[0]?(lc,ld)
@@ -201,10 +184,7 @@ In namespace "", we have: {
               }
               #L[1] -> sequential: {
                 L[1]?(lc,dir)
-                deterministic: {
-                  dir -> d := 1
-                  else -> d := 0
-                }
+                d := zcond(dir,1,0)
                 *[
                   ~lc -> sequential: {
                     L[1]?(lc,ld)
@@ -247,10 +227,7 @@ In namespace "", we have: {
             nondeterministic: {
               #L[0] -> sequential: {
                 L[0]?(lc,dir)
-                deterministic: {
-                  dir -> d := 1
-                  else -> d := 0
-                }
+                d := zcond(dir,1,0)
                 *[
                   ~lc -> sequential: {
                     L[0]?(lc,ld)
@@ -260,10 +237,7 @@ In namespace "", we have: {
               }
               #L[1] -> sequential: {
                 L[1]?(lc,dir)
-                deterministic: {
-                  dir -> d := 1
-                  else -> d := 0
-                }
+                d := zcond(dir,1,0)
                 *[
                   ~lc -> sequential: {
                     L[1]?(lc,ld)
@@ -274,24 +248,18 @@ In namespace "", we have: {
             }
           ]
         chp events: {
-          event[0]: select: [ #L[0] -> ... : #L[1] -> ... ], #pred: 1, succ: 9 17 
+          event[0]: select: [ #L[0] -> ... : #L[1] -> ... ], #pred: 1, succ: 6 11 
           event[1]: null: null, #pred: 1, succ: 0 
           event[2]: select: *[ ~lc -> ... ], #pred: 1, succ: 4 1 
           event[3]: send: R[d]!(lc,ld), #pred: 1, succ: 2 
           event[4]: receive: L[0]?(lc,ld), #pred: 1, succ: 3 
-          event[5]: null: null, #pred: 1, succ: 2 
-          event[6]: assign: d := 1, #pred: 1, succ: 5 
-          event[7]: assign: d := 0, #pred: 1, succ: 5 
-          event[8]: select: [ dir -> ... [] else -> ... ], #pred: 1, succ: 6 7 
-          event[9]: receive: L[0]?(lc,dir), #pred: 1, succ: 8 
-          event[10]: select: *[ ~lc -> ... ], #pred: 1, succ: 12 1 
-          event[11]: send: R[d]!(lc,ld), #pred: 1, succ: 10 
-          event[12]: receive: L[1]?(lc,ld), #pred: 1, succ: 11 
-          event[13]: null: null, #pred: 1, succ: 10 
-          event[14]: assign: d := 1, #pred: 1, succ: 13 
-          event[15]: assign: d := 0, #pred: 1, succ: 13 
-          event[16]: select: [ dir -> ... [] else -> ... ], #pred: 1, succ: 14 15 
-          event[17]: receive: L[1]?(lc,dir), #pred: 1, succ: 16 
+          event[5]: assign: d := zcond(dir,1,0), #pred: 1, succ: 2 
+          event[6]: receive: L[0]?(lc,dir), #pred: 1, succ: 5 
+          event[7]: select: *[ ~lc -> ... ], #pred: 1, succ: 9 1 
+          event[8]: send: R[d]!(lc,ld), #pred: 1, succ: 7 
+          event[9]: receive: L[1]?(lc,ld), #pred: 1, succ: 8 
+          event[10]: assign: d := zcond(dir,1,0), #pred: 1, succ: 7 
+          event[11]: receive: L[1]?(lc,dir), #pred: 1, succ: 10 
         }
       }
       }

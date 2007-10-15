@@ -1,8 +1,0 @@
-// "bitrouter-seq-test-a.hac"
-//	$Id: bitrouter-seq-test-a.hac,v 1.1.2.1 2007/10/14 20:36:12 fang Exp $
-
-import "testlib/bitrouter.hac";
-import "bitrouter-seq-test-channels.hac";
-
-bit_router BR(L, R);
-

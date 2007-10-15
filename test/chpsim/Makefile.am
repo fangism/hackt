@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27.2.1 2007/10/14 20:36:05 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.2 2007/10/15 02:47:59 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -122,8 +122,11 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	round-robin-sink-test-01 round-robin-sink-test-02 \
 	bitrouter-seq-test-channels \
 	bitrouter-seq-a \
+	bitrouter-dec-a \
 	bitrouter-seq-test-env-01 \
-	bitrouter-seq-test-a-01
+	bitrouter-seq-test-env-02 \
+	bitrouter-seq-test-a-01 bitrouter-seq-test-a-02 \
+	bitrouter-dec-test-a-01 bitrouter-dec-test-a-02
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -270,7 +273,8 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	lib-fxzscan_loop-test-a-01 \
 	round-robin-source-test-01-a round-robin-source-test-02-a \
 	round-robin-sink-test-01-a round-robin-sink-test-02-a \
-	bitrouter-seq-test-a-01-trace
+	bitrouter-seq-test-a-01-trace bitrouter-seq-test-a-02-trace \
+	bitrouter-dec-test-a-01-trace bitrouter-dec-test-a-02-trace
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -369,18 +373,37 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	channel-probe-a-01 \
 	gcd-nested-a-01 \
 	select-block-a-01 select-block-a-02 \
-	bitrouter-seq-test-a-01-trace-crit
+	bitrouter-seq-test-a-01-trace-crit bitrouter-seq-test-a-02-trace-crit \
+	bitrouter-dec-test-a-01-trace-crit bitrouter-dec-test-a-02-trace-crit
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
 # custom hacchpimscm tests and post-processing
-bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \
-		bitrouter-seq-test-a-01-trace-crit.hacchpsimscm
-	@$(HACCHPSIMSCM_TEST_SCRIPT)
+BITROUTER_HACCHPSIMSCM_TEST_SCRIPT = \
 	mv $@ $@.tmp ; \
 	$(GREP) "^process" $@.tmp > $@
 # keep .tmp file for reference
+
+bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \
+		bitrouter-seq-test-a-01-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TEST_SCRIPT)
+
+bitrouter-seq-test-a-02-trace-crit.hacchpsimscm-out: \
+		bitrouter-seq-test-a-02-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TEST_SCRIPT)
+
+bitrouter-dec-test-a-01-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-01-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TEST_SCRIPT)
+
+bitrouter-dec-test-a-02-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-02-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TEST_SCRIPT)
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
@@ -389,7 +412,7 @@ bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \
 # produce automatic dependencies in chpsimrc-out.autodepend
 
 # generate input file in build directory for scan tests
-fzscan-01.txt: Makefile
+fzscan-01.txt: Makefile.am
 	{ $(ECHO) "5" ; \
 	$(ECHO) "4" ; \
 	$(ECHO) "3" ; \
@@ -397,7 +420,7 @@ fzscan-01.txt: Makefile
 	$(ECHO) "1" ; \
 	$(ECHO) "0" ;} > $@
 
-fxzscan-01.txt: Makefile
+fxzscan-01.txt: Makefile.am
 	{ $(ECHO) "0001" ; \
 	$(ECHO) "C0De" ; \
 	$(ECHO) "DEAD" ; \
@@ -418,7 +441,8 @@ srcdir_EXTRA_DIST += \
 	event-process-map.hacchpsimscm \
 	basic-trace-analysis.hacchpsimscm \
 	critical-path-verbose.hacchpsimscm \
-	trace-reference-cycle.hacchpsimscm
+	trace-reference-cycle.hacchpsimscm \
+	bitrouter-test-template.chpsimrc
 
 AM_CPPFLAGS = -I $(top_srcdir)/src -DBUILT_HACKT -UHAVE_CONFIG_H
 
