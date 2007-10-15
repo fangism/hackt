@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.61 2007/09/26 16:51:35 fang Exp $
+#	$Id: Makefile.am,v 1.62 2007/10/15 20:07:39 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -12,6 +12,10 @@ AUTOMAKE_OPTIONS += subdir-objects
 
 SUFFIXES = .test .ii .i .hii .hhii .tccii \
 	.out .out-filter .stderr .stderr-filter .diff
+
+CPREPROCESS = $(COMPILE) -E
+CXXPREPROCESS = $(CXXCOMPILE) -E
+
 # TEST_EXPECT_SH = test-expect.sh
 ADDRESS_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
 
