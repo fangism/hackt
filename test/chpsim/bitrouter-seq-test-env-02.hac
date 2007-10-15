@@ -3,7 +3,7 @@
 // input characteristics: 
 // lots of short packets
 // short delay in between
-// destination contention: high
+// destination contention: low
 
 import "bitrouter-seq-test-channels.hac";
 import "testlib/int-sink.hac";
