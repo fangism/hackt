@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-03:
+	  No source revision, more bit-router tests.  
+	  TODO: more input variations!
+
+
 2007-10-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-85-router-02:
