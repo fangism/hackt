@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.13 2007/09/27 02:03:40 fang Exp $
+dnl	$Id: guile.m4,v 1.13.4.1 2007/10/15 19:47:52 fang Exp $
 dnl Guile-related autoconf macros
 
 
@@ -149,7 +149,7 @@ fi
 fi
 fi dnl test $with_guile_config
 
-AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_boot_guile" = "yes")
+AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_lib_guile_scm_boot_guile" = "yes")
 
 dnl AM_CONDITIONAL(HAVE_LIBGUILE, test "$ac_cv_func_scm_is_pair" = "yes")
 dnl if test "$ac_cv_func_scm_is_pair" != "yes" ; then
