@@ -5,6 +5,12 @@
 
 2007-10-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-85-router-01-04:
+	  No source revision, more bit-router tests with
+		lengthened packet separation.
+	  Next: vary packet length
+
+
 	* HACKT-00-01-04-main-00-81-85-router-01-03:
 	  No source revision, more bit-router tests.  
 	  TODO: more input variations!
