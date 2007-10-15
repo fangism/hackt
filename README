@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.24 2007/09/27 02:03:37 fang Exp $
+	$Id: README,v 1.25 2007/10/15 20:06:57 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -83,6 +83,10 @@ Unsupported versions of flex:
 Other required tools:
 dot (part of the graphviz package)
 	graph figure generator, needed for documentation building.
+fig2dev (usually comes with a 'transfig' package)
+	exports xfig figures, only needed for documentation building.
+texinfo programs: makeinfo, texi2dvi, texi2pdf, texi2html
+	needed for building documentation.  
 latex,pdflatex (part of tetex package)
 	needed for building documentation.
 guile-1.6+
