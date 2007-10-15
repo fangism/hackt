@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27.2.4 2007/10/15 18:40:36 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.5 2007/10/15 19:58:43 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -389,10 +389,13 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
 # custom hacchpimscm tests and post-processing
-BITROUTER_HACCHPSIMSCM_TEST_SCRIPT = \
+# keep .tmp file for reference
+BITROUTER_HACCHPSIMSCM_TEST_SCRIPT =
+if HAVE_LIBGUILE
+BITROUTER_HACCHPSIMSCM_TEST_SCRIPT += \
 	mv $@ $@.tmp ; \
 	$(GREP) "^process" $@.tmp > $@
-# keep .tmp file for reference
+endif
 
 bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \
 		bitrouter-seq-test-a-01-trace-crit.hacchpsimscm
