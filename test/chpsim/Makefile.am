@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27.2.6 2007/10/15 21:42:24 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.7 2007/10/16 21:59:07 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -130,9 +130,13 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bitrouter-seq-test-a-01 bitrouter-seq-test-a-02 \
 	bitrouter-dec-test-a-01 bitrouter-dec-test-a-02 \
 	bitrouter-dec-test-a-03 bitrouter-dec-test-a-04 \
+	bitrouter-dec-test-a-05 bitrouter-dec-test-a-06 \
+	bitrouter-dec-test-a-07 \
 	bitrouter-dec-test-b-01 \
 	bitrouter-twin-test-a-01 bitrouter-twin-test-a-02 \
-	bitrouter-twin-test-a-03 bitrouter-twin-test-a-04
+	bitrouter-twin-test-a-03 bitrouter-twin-test-a-04 \
+	bitrouter-twin-test-a-05 bitrouter-twin-test-a-06 \
+	bitrouter-twin-test-a-07
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -282,9 +286,13 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bitrouter-seq-test-a-01-trace bitrouter-seq-test-a-02-trace \
 	bitrouter-dec-test-a-01-trace bitrouter-dec-test-a-02-trace \
 	bitrouter-dec-test-a-03-trace bitrouter-dec-test-a-04-trace \
+	bitrouter-dec-test-a-05-trace bitrouter-dec-test-a-06-trace \
+	bitrouter-dec-test-a-07-trace \
 	bitrouter-dec-test-b-01-trace \
 	bitrouter-twin-test-a-01-trace bitrouter-twin-test-a-02-trace \
-	bitrouter-twin-test-a-03-trace bitrouter-twin-test-a-04-trace
+	bitrouter-twin-test-a-03-trace bitrouter-twin-test-a-04-trace \
+	bitrouter-twin-test-a-05-trace bitrouter-twin-test-a-06-trace \
+	bitrouter-twin-test-a-07-trace
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -386,11 +394,16 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bitrouter-seq-test-a-01-trace-crit bitrouter-seq-test-a-02-trace-crit \
 	bitrouter-dec-test-a-01-trace-crit bitrouter-dec-test-a-02-trace-crit \
 	bitrouter-dec-test-a-03-trace-crit bitrouter-dec-test-a-04-trace-crit \
+	bitrouter-dec-test-a-05-trace-crit bitrouter-dec-test-a-06-trace-crit \
+	bitrouter-dec-test-a-07-trace-crit \
 	bitrouter-dec-test-b-01-trace-crit \
 	bitrouter-twin-test-a-01-trace-crit \
 	bitrouter-twin-test-a-02-trace-crit \
 	bitrouter-twin-test-a-03-trace-crit \
-	bitrouter-twin-test-a-04-trace-crit
+	bitrouter-twin-test-a-04-trace-crit \
+	bitrouter-twin-test-a-05-trace-crit \
+	bitrouter-twin-test-a-06-trace-crit \
+	bitrouter-twin-test-a-07-trace-crit
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -398,10 +411,15 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 # custom hacchpimscm tests and post-processing
 # keep .tmp file for reference
 BITROUTER_HACCHPSIMSCM_TEST_SCRIPT =
+BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT =
 if HAVE_LIBGUILE
 BITROUTER_HACCHPSIMSCM_TEST_SCRIPT += \
 	mv $@ $@.tmp ; \
 	$(GREP) "^process" $@.tmp > $@
+
+BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT += \
+	mv $@ $@.tmp ; \
+	$(GREP) "^process" $@.tmp | $(TAIL) -n 1000 > $@
 endif
 
 bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \
@@ -434,6 +452,21 @@ bitrouter-dec-test-a-04-trace-crit.hacchpsimscm-out: \
 	@$(HACCHPSIMSCM_TEST_SCRIPT)
 	$(BITROUTER_HACCHPSIMSCM_TEST_SCRIPT)
 
+bitrouter-dec-test-a-05-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-05-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-dec-test-a-06-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-06-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-dec-test-a-07-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-07-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
 bitrouter-dec-test-b-01-trace-crit.hacchpsimscm-out: \
 		bitrouter-dec-test-b-01-trace-crit.hacchpsimscm
 	@$(HACCHPSIMSCM_TEST_SCRIPT)
@@ -458,6 +491,21 @@ bitrouter-twin-test-a-04-trace-crit.hacchpsimscm-out: \
 		bitrouter-twin-test-a-04-trace-crit.hacchpsimscm
 	@$(HACCHPSIMSCM_TEST_SCRIPT)
 	$(BITROUTER_HACCHPSIMSCM_TEST_SCRIPT)
+
+bitrouter-twin-test-a-05-trace-crit.hacchpsimscm-out: \
+		bitrouter-twin-test-a-05-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-twin-test-a-06-trace-crit.hacchpsimscm-out: \
+		bitrouter-twin-test-a-06-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-twin-test-a-07-trace-crit.hacchpsimscm-out: \
+		bitrouter-twin-test-a-07-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
 
 
 # additional sources not already mentioned

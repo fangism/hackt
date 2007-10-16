@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.2 2007/04/20 18:26:06 fang Exp $
+;;	$Id: chpsim.scm,v 1.2.28.1 2007/10/16 21:59:02 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -15,17 +15,22 @@
 ; (use-modules (hackt streams))		; now autoloaded
 ; (use-modules (ice-9 streams))		; now autoloaded
 
+; when we want confirmation:
+; (display "Loading module: (hackt chpsim)") (newline)
+
 (define root-event-id 0)
 
 ; constant: number of allocated events in static event graph
 (define-public chpsim-num-events (hac:chpsim-num-events))
 
+; (display "Enumerating events... ")
 #!
 "Stream of integers from 0 to (num-static-events -1)"
 !#
 (define-public chpsim-static-event-index-stream
   (enumerate-interval-stream 0 (1- chpsim-num-events))
 )
+; (display "done.") (newline)
 
 (define (static-event-stream)
   "Represents the set of all statically allocated events as a stream."
@@ -33,10 +38,12 @@
     chpsim-static-event-index-stream)
 ) ; end define
 
+; (display "Caching all-static-events-stream... ")
 #!
 "global stream variable, lazy evaluated stream, but this is not a delayed obj."
 !#
 (define-public all-static-events-stream (static-event-stream))
+; (display "done.") (newline)
 
 ; this is only defined for chpsim modules, not hackt in general
 (define-public (type-tag->offset t)

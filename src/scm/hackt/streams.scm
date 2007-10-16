@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.2 2007/04/20 18:26:08 fang Exp $
+;;	$Id: streams.scm,v 1.2.28.1 2007/10/16 21:59:03 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -8,9 +8,11 @@
 (define-module (hackt streams))
 
 (use-modules (ice-9 streams))
+(use-modules (hackt algorithm))		; for iterate-template
+
+(display "Loading module: (hackt streams)") (newline)
 
 ;; could also use define-public instead of exporting... same thing
-
 (define-public the-empty-stream '())
 ; (define-public delay-empty-stream (delay the-empty-stream))
 ; doesn't work as expected
@@ -132,16 +134,20 @@ then truncates the stream after the second predicate is satisfied."
 ; finite stream of integers
 (define-public (enumerate-interval-stream low high)
   "Generate a stream of integers from [low,high]."
-  (if (> low high) (delay the-empty-stream)
-    (cons-stream low (enumerate-interval-stream (1+ low) high))
-  ) ; end if
+  (iterate-reverse-default (delay the-empty-stream) cons-stream high low)
+; the following does not translate to a tail-recursive call :S
+;  (if (> low high) (delay the-empty-stream)
+;    (cons-stream low (enumerate-interval-stream (1+ low) high))
+;  ) ; end if
 ) ; end define
 
-; finite stream of integers, decreasing
+; finite stream of integers, decreasing order
 (define-public (enumerate-interval-reverse-stream low high)
   "Generate a stream of integers from [high,low]."
-  (if (> low high) (delay the-empty-stream)
-    (cons-stream high (enumerate-interval-reverse-stream low (1- high)))
-  ) ; end if
+  (iterate-default (delay the-empty-stream) cons-stream low high)
+; the following does not translate to a tail-recursive call :S
+;  (if (> low high) (delay the-empty-stream)
+;    (cons-stream high (enumerate-interval-reverse-stream low (1- high)))
+;  ) ; end if
 ) ; end define
 

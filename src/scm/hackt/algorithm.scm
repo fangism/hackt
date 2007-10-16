@@ -1,5 +1,5 @@
 ;; "hackt/algorithm.scm"
-;;	$Id: algorithm.scm,v 1.3 2007/06/10 02:57:50 fang Exp $
+;;	$Id: algorithm.scm,v 1.3.24.1 2007/10/16 21:59:01 fang Exp $
 ;; Additional handy algorithms not fund in guile scheme libs.
 
 (define-module (hackt algorithm)
@@ -7,7 +7,11 @@
 #:autoload (ice-9 receive) (receive)
 )
 
+; when we want confirmation:
+; (display "Loading module: (hackt algorithm)") (newline)
+
 ; std::accumulate: iteratively applies binary operator over elements (forward)
+; iteratively runs in bounded space
 (define-public (forward-accumulate binop init lst)
   "Runs an accumulator functor from front-to-back.  binop accumulates through
 its second argument"
@@ -117,6 +121,29 @@ In contrast, assoc-ref returns only the value."
 ;  (if (null? alst) #f
 ;    (if (equal? (caar alst) key) (car alst) (assoc-ref-pair (cdr alst) key))
 ;  )
+)
+
+; EXTREMELY USEFUL TOOLS FOR CONVERTING RECURSIVE ALGORITHMS TO ITERATIVE
+; for those pesky non-tail recursive functions...
+(define-public (iterate-template prod op index inc term?)
+"Iteration template, where @var{prod} is a cumulative value (may be object),
+@var{op} is the combining functor operating on (@var{index}, @var{prod}), 
+@var{index} is a counter, @var{inc} is an incrementing procedure, 
+and @var{term?} is a termination predicate."
+  (if (term? index)
+    prod
+    (iterate-template (op index prod) op (inc index) inc term?)
+  ) ; end if
+) ; end define
+
+(define-public (iterate-default prod op index limit)
+"Iterate from @var{index} up to @{limit}, incrementing."
+  (iterate-template prod op index 1+ (lambda (c) (> c limit)))
+)
+
+(define-public (iterate-reverse-default prod op index limit)
+"Iterate from @var{index} down to @{limit}, decrementing."
+  (iterate-template prod op index 1- (lambda (c) (< c limit)))
 )
 
 ; list-find-first: use srfi-1::find

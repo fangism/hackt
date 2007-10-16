@@ -1,5 +1,18 @@
 "scm/ChangeLog"
 
+2007-10-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-05:
+	  hackt/algorithm.scm: new functions for converting from
+		non-tail-recusrive procedures to iterative so
+		processes will take conatant bounded space.  
+	  primitive functions: iterate-template, iterate-default, 
+		and iterate-reverse-default.
+	  hackt/chpsim.scm: commented out load confirmations
+	  hackt/streams.scm: (enumerate-interval-stream)
+		use iterate-template for bounded-space computation.
+
+
 2007-09-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-77-merged-CHP-03-08:
