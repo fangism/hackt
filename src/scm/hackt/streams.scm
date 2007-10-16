@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.2.28.1 2007/10/16 21:59:03 fang Exp $
+;;	$Id: streams.scm,v 1.2.28.2 2007/10/16 22:56:46 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -10,7 +10,8 @@
 (use-modules (ice-9 streams))
 (use-modules (hackt algorithm))		; for iterate-template
 
-(display "Loading module: (hackt streams)") (newline)
+; load confirmation
+; (display "Loading module: (hackt streams)") (newline)
 
 ;; could also use define-public instead of exporting... same thing
 (define-public the-empty-stream '())
