@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27.2.7 2007/10/16 21:59:07 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.8 2007/10/17 04:01:33 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -127,6 +127,8 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bitrouter-twin-a \
 	bitrouter-seq-test-env-01 bitrouter-seq-test-env-02 \
 	bitrouter-seq-test-env-03 bitrouter-seq-test-env-04 \
+	bitrouter-seq-test-env-05 bitrouter-seq-test-env-06 \
+	bitrouter-seq-test-env-07 \
 	bitrouter-seq-test-a-01 bitrouter-seq-test-a-02 \
 	bitrouter-dec-test-a-01 bitrouter-dec-test-a-02 \
 	bitrouter-dec-test-a-03 bitrouter-dec-test-a-04 \
