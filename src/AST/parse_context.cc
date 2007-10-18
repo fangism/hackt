@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.20 2007/10/10 06:04:32 fang Exp $
+ 	$Id: parse_context.cc,v 1.21 2007/10/18 05:33:04 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -222,7 +222,8 @@ context::close_namespace(void) {
 bool
 context::in_nonglobal_namespace(void) const {
 	const never_ptr<const definition_base> d(get_current_open_definition());
-	return !d.is_a<const module>() ||	// is a non-module definition
+	NEVER_NULL(d);	// since top-level module is a process_definition
+	return d.is_a<const module>() &&	// is a non-module definition
 		(get_current_namespace() != global_namespace);
 		// else in non-global namespace
 }
@@ -235,6 +236,7 @@ context::in_nonglobal_namespace(void) const {
 bool
 context::reject_namespace_lang_body(void) const {
 	const never_ptr<const definition_base> d(get_current_open_definition());
+	NEVER_NULL(d);	// since top-level module is a process_definition
 	return d.is_a<const module>() &&	// is a non-module definition
 		(get_current_namespace() != global_namespace);
 		// else in non-global namespace

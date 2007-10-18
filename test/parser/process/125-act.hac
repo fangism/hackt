@@ -1,0 +1,6 @@
+// "125-act.hac"
+// reduced test case from one submitted by Tadeo
+// @haco-flags@ -f ACT
+
+import "125.hac";
+

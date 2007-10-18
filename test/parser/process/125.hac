@@ -1,0 +1,9 @@
+// "125.hac"
+// test-case for minor bug in -f ACT mode
+
+export
+defproc e1of1
+(bool d,i,e) {
+	d=i;		// should accept
+}
+
