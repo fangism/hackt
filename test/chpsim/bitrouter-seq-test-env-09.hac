@@ -1,0 +1,73 @@
+// "bitrouter-seq-test-env-09.hac"
+// copy-modified from "bitrouter-seq-test-env-08.hac"
+// input characteristics: 
+// long packets mixed with short packets on the same channels
+// various delay in between
+// destination contention: medium
+
+import "bitrouter-seq-test-channels.hac";
+import "testlib/int-sink.hac";
+import "testlib/void-sink.hac";
+import "testlib/round-robin.hac";
+
+// chan(int) LL[2], RR[2];
+chan() LSCin[2], LSCout[2], LSCm[2];
+packet_source_slice_array LS[2][2];
+// control token finite sources
+round_robin_source_finite A[2];		// generate N token iterations
+
+// output buckets
+int_sink RS[2];
+RS[0](RR[0]);
+RS[1](RR[1]);
+
+LS[0][0]<8, 10, {
+	{0,0,0,0,0,0,0,0,1,2},
+	{0,0,0,1,1,0,0,0,0,2},
+	{0,0,0,0,0,0,1,0,0,3},
+	{1,0,0,0,0,1,0,0,0,2},
+	{1,0,0,0,0,0,1,0,0,2},
+	{1,0,0,1,1,0,0,1,1,3},
+	{0,0,0,1,0,0,1,0,1,3},
+	{1,1,0,0,0,1,0,0,0,2}
+	}, 40.0>
+(LSCin[0], LSCm[0], LL[0]);
+LS[0][1]<10, 3, {
+	{0,1,2},
+	{0,0,2},
+	{0,0,3},
+	{1,0,2},
+	{0,0,2},
+	{1,0,3},
+	{1,0,2},
+	{1,1,3},
+	{0,1,3},
+	{1,0,2}
+	}, 20.0>
+(LSCm[0], LSCout[0], LL[0]);
+A[0]<5>(LSCout[0], LSCin[0]);
+
+LS[1][0]<8, 4, {
+	{0,1,0,3},
+	{0,0,0,2},
+	{1,0,0,3},
+	{1,0,0,3},
+	{1,0,0,2},
+	{0,1,1,2},
+	{0,1,1,2},
+	{1,0,0,2}
+	}, 20.0>
+(LSCin[1], LSCm[1], LL[1]);
+LS[1][1]<8, 6, {
+	{0,0,0,0,1,2},
+	{0,0,0,0,0,2},
+	{0,0,1,0,0,3},
+	{1,1,0,0,0,2},
+	{1,0,1,0,0,2},
+	{1,0,0,1,1,3},
+	{0,0,1,0,1,3},
+	{1,1,0,0,0,2}
+	}, 20.0>
+(LSCm[1], LSCout[1], LL[1]);
+A[1]<16>(LSCout[1], LSCin[1]);
+

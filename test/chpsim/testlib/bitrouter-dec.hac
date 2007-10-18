@@ -1,6 +1,6 @@
 // "bitrouter-dec.hac"
 // copy-revised from "bitrouter.hac"
-//	$Id: bitrouter-dec.hac,v 1.1.2.1 2007/10/15 02:48:18 fang Exp $
+//	$Id: bitrouter-dec.hac,v 1.1.2.2 2007/10/18 02:35:35 fang Exp $
 // see "bitrouter-env.hac" for test environment
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,6 +54,7 @@ chp {
 /**
 	Decomposed bit-router with non-deterministic selection.
 	Not slack-matched.
+	Uses 1 split, 1 merge.
  */
 defproc bit_router_dec(
 	chan?(bool, bool) L[2]; 
@@ -67,6 +68,7 @@ bit_router_split RS(M, R);
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Decomposed bit-router with non-deterministic selection.
+	Uses 1 split, 1 merge.
 	Buffered (slack-matched) intermediate channel for performance.  
  */
 defproc bit_router_dec_sm(
@@ -82,6 +84,7 @@ bit_router_split RS(N, R);
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Decomposed twin bit-router with non-deterministic selection.
+	Uses 2 split, 2 merge.
 	Not slack-matched.  
  */
 defproc twin_bit_router(

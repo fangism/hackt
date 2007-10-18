@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27.2.8 2007/10/17 04:01:33 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.9 2007/10/18 02:35:19 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -129,16 +129,19 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bitrouter-seq-test-env-03 bitrouter-seq-test-env-04 \
 	bitrouter-seq-test-env-05 bitrouter-seq-test-env-06 \
 	bitrouter-seq-test-env-07 \
+	bitrouter-seq-test-env-08 bitrouter-seq-test-env-09 \
 	bitrouter-seq-test-a-01 bitrouter-seq-test-a-02 \
 	bitrouter-dec-test-a-01 bitrouter-dec-test-a-02 \
 	bitrouter-dec-test-a-03 bitrouter-dec-test-a-04 \
 	bitrouter-dec-test-a-05 bitrouter-dec-test-a-06 \
 	bitrouter-dec-test-a-07 \
+	bitrouter-dec-test-a-08 bitrouter-dec-test-a-09 \
 	bitrouter-dec-test-b-01 \
 	bitrouter-twin-test-a-01 bitrouter-twin-test-a-02 \
 	bitrouter-twin-test-a-03 bitrouter-twin-test-a-04 \
 	bitrouter-twin-test-a-05 bitrouter-twin-test-a-06 \
-	bitrouter-twin-test-a-07
+	bitrouter-twin-test-a-07 \
+	bitrouter-twin-test-a-08 bitrouter-twin-test-a-09
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -290,11 +293,13 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bitrouter-dec-test-a-03-trace bitrouter-dec-test-a-04-trace \
 	bitrouter-dec-test-a-05-trace bitrouter-dec-test-a-06-trace \
 	bitrouter-dec-test-a-07-trace \
+	bitrouter-dec-test-a-08-trace bitrouter-dec-test-a-09-trace \
 	bitrouter-dec-test-b-01-trace \
 	bitrouter-twin-test-a-01-trace bitrouter-twin-test-a-02-trace \
 	bitrouter-twin-test-a-03-trace bitrouter-twin-test-a-04-trace \
 	bitrouter-twin-test-a-05-trace bitrouter-twin-test-a-06-trace \
-	bitrouter-twin-test-a-07-trace
+	bitrouter-twin-test-a-07-trace \
+	bitrouter-twin-test-a-08-trace bitrouter-twin-test-a-09-trace
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
@@ -398,6 +403,7 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bitrouter-dec-test-a-03-trace-crit bitrouter-dec-test-a-04-trace-crit \
 	bitrouter-dec-test-a-05-trace-crit bitrouter-dec-test-a-06-trace-crit \
 	bitrouter-dec-test-a-07-trace-crit \
+	bitrouter-dec-test-a-08-trace-crit bitrouter-dec-test-a-09-trace-crit \
 	bitrouter-dec-test-b-01-trace-crit \
 	bitrouter-twin-test-a-01-trace-crit \
 	bitrouter-twin-test-a-02-trace-crit \
@@ -405,7 +411,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bitrouter-twin-test-a-04-trace-crit \
 	bitrouter-twin-test-a-05-trace-crit \
 	bitrouter-twin-test-a-06-trace-crit \
-	bitrouter-twin-test-a-07-trace-crit
+	bitrouter-twin-test-a-07-trace-crit \
+	bitrouter-twin-test-a-08-trace-crit \
+	bitrouter-twin-test-a-09-trace-crit
 
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
@@ -469,6 +477,16 @@ bitrouter-dec-test-a-07-trace-crit.hacchpsimscm-out: \
 	@$(HACCHPSIMSCM_TEST_SCRIPT)
 	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
 
+bitrouter-dec-test-a-08-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-08-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-dec-test-a-09-trace-crit.hacchpsimscm-out: \
+		bitrouter-dec-test-a-09-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
 bitrouter-dec-test-b-01-trace-crit.hacchpsimscm-out: \
 		bitrouter-dec-test-b-01-trace-crit.hacchpsimscm
 	@$(HACCHPSIMSCM_TEST_SCRIPT)
@@ -506,6 +524,16 @@ bitrouter-twin-test-a-06-trace-crit.hacchpsimscm-out: \
 
 bitrouter-twin-test-a-07-trace-crit.hacchpsimscm-out: \
 		bitrouter-twin-test-a-07-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-twin-test-a-08-trace-crit.hacchpsimscm-out: \
+		bitrouter-twin-test-a-08-trace-crit.hacchpsimscm
+	@$(HACCHPSIMSCM_TEST_SCRIPT)
+	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
+
+bitrouter-twin-test-a-09-trace-crit.hacchpsimscm-out: \
+		bitrouter-twin-test-a-09-trace-crit.hacchpsimscm
 	@$(HACCHPSIMSCM_TEST_SCRIPT)
 	$(BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT)
 
