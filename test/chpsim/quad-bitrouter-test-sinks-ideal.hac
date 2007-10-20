@@ -1,0 +1,14 @@
+// "quad-bitrouter-test-sinks-ideal.hac"
+// perfect sinks, no back-congestion
+
+import "quad-bitrouter-test-channels.hac";
+import "testlib/int-sink.hac";
+
+// chan(int) LL[4], RR[4];
+
+// output buckets
+int_sink RZ[4];
+(;i:4:
+RZ[i](RR[i]);
+)
+

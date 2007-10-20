@@ -1,0 +1,9 @@
+// "quad-bitrouter-mmss.hac"
+//	$Id: quad-bitrouter-mmss.hac,v 1.1.2.1 2007/10/20 21:14:04 fang Exp $
+// testing a decomposed bit-router: concurrent, contention-free routing
+
+import "quad-bitrouter-test-channels.hac";
+import "testlib/quad-bitrouter.hac";
+
+quad_bit_router_mmss BR(L, R);
+

@@ -1,0 +1,89 @@
+// "quad-bitrouter-test-source-lib.hac"
+//	$Id: quad-bitrouter-test-source-lib.hac,v 1.1.2.1 2007/10/20 21:14:18 fang Exp $
+// collection of pre-defined sources
+
+import "testlib/bitrouter-env.hac";
+import "testlib/round-robin.hac";
+
+//=============================================================================
+/**
+	A single destination packet generator.  
+	Data doesn't really matter.  
+	\param Dest the destination index [0..3].  
+	\param Len length of packet payload (doesn't include dest. bits)
+	\param Rep repeat count, for the round-robin control.
+	\param Gap delay time between packets.  
+ */
+template <><pint Dest; pint Len; pint Rep; preal Gap>
+defproc qbr_source_single_dest(chan!(int) C) {
+pint V[Len+2];
+V[0] = (Dest >> 1) & 0x1;
+V[1] = Dest & 0x1;
+(;i:2..Len: V[i] = 0; )
+V[Len+1] = 2;	// stop bit
+// V = {B1, B0, 0, ... 2};
+chan() Cin, Cout;
+packet_source_slice_array S<1, Len+2, {V}, Gap>(Cin, Cout, C);
+round_robin_source_finite RS<Rep>(Cout, Cin);
+}
+
+// qbr_source_single_dest x<0, 4, 6, 10.0>;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dual-destination packet source.  
+	Destination packets come in bursts for each destination.  
+	\param Dest1 first destination [0..3]
+	\param Dest2 second destination [0..3]
+	\param Len1 length of first group of packets
+	\param Len2 length of second group of packets
+	\param Rep number of cycles of bursts
+	\param Gap delay between packets
+ */
+template <><pint Dest1, Dest2; pint Len1, Len2; pint Rep; preal Gap>
+defproc qbr_source_dual_dest_burst(chan!(int) C) {
+pint V[Len1+2], W[Len2+2];
+V[0] = (Dest1 >> 1) & 0x1;
+V[1] = Dest1 & 0x1;
+W[0] = (Dest2 >> 1) & 0x1;
+W[1] = Dest2 & 0x1;
+(;i:2..Len1: V[i] = 0; )
+(;i:2..Len2: W[i] = 0; )
+V[Len1+1] = 2;	// stop bit
+W[Len2+1] = 2;	// stop bit
+// V = {B1, B0, 0, ... 2};
+chan() Cin, Cm, Cout;
+packet_source_slice_array S1<1, Len1+2, {V}, Gap>(Cin, Cm, C);
+packet_source_slice_array S2<1, Len2+2, {W}, Gap>(Cm, Cout, C);
+round_robin_source_finite RS<Rep>(Cout, Cin);
+}
+
+// qbr_source_dual_dest_burst x<1, 2, 6, 5, 8, 10.0>;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Packet source with arbitrarily specifiable sequence of 
+	destinations to route.  
+	\param N the number of packets per iteration
+	\param Dest the destination addresses [0..3]
+	\param Len the length of each packet (not counting address bits).
+	\param Gap the delay between each packet.
+	\param Cin, Cout are the start/finish control channels.
+ */
+template <><pint N; pint Dest[N]; pint Len; preal Gap>
+defproc qbr_source_any_dest(chan?() Cin; chan!() Cout; chan!(int) C) {
+pint V[N][Len+2];
+(;i:N:
+V[i][0] = (Dest[i] >> 1) & 0x1;
+V[i][1] = Dest[i] & 0x1;
+(;j:2..Len:
+	V[i][j] = 0;
+)
+V[i][Len+1] = 2;
+)
+packet_source_slice_array S<N, Len+2, V, Gap>(Cin, Cout, C);
+}
+
+// qbr_source_any_dest x<4, {3,2,1,0}, 8, 20.0>;
+
+//=============================================================================

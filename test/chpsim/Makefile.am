@@ -1,5 +1,5 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27.2.10 2007/10/20 03:13:36 fang Exp $
+#	$Id: Makefile.am,v 1.27.2.11 2007/10/20 21:13:56 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -142,7 +142,16 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	bitrouter-twin-test-a-03 bitrouter-twin-test-a-04 \
 	bitrouter-twin-test-a-05 bitrouter-twin-test-a-06 \
 	bitrouter-twin-test-a-07 \
-	bitrouter-twin-test-a-08 bitrouter-twin-test-a-09
+	bitrouter-twin-test-a-08 bitrouter-twin-test-a-09 \
+	quad-bitrouter-mmss quad-bitrouter-msms quad-bitrouter-mssm \
+	quad-bitrouter-smms quad-bitrouter-smsm quad-bitrouter-ssmm \
+	quad-bitrouter-test-channels \
+	quad-bitrouter-test-source-lib \
+	quad-bitrouter-test-source-01 quad-bitrouter-test-source-02 \
+	quad-bitrouter-test-sinks-ideal \
+	quad-bitrouter-test-env-01 quad-bitrouter-test-env-02 \
+	quad-bitrouter-mmss-test-01 quad-bitrouter-ssmm-test-01 \
+	quad-bitrouter-mmss-test-02 quad-bitrouter-ssmm-test-02
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -300,7 +309,9 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bitrouter-twin-test-a-03-trace bitrouter-twin-test-a-04-trace \
 	bitrouter-twin-test-a-05-trace bitrouter-twin-test-a-06-trace \
 	bitrouter-twin-test-a-07-trace \
-	bitrouter-twin-test-a-08-trace bitrouter-twin-test-a-09-trace
+	bitrouter-twin-test-a-08-trace bitrouter-twin-test-a-09-trace \
+	quad-bitrouter-mmss-test-01-trace quad-bitrouter-ssmm-test-01-trace \
+	quad-bitrouter-mmss-test-02-trace quad-bitrouter-ssmm-test-02-trace
 # accept invalid? -- excess arguments dropped
 #	gcd-func-a-05
 
