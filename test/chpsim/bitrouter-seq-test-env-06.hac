@@ -6,8 +6,7 @@
 // destination contention: high
 
 import "bitrouter-seq-test-channels.hac";
-import "testlib/int-sink.hac";
-import "testlib/void-sink.hac";
+import "bitrouter-seq-test-sinks-ideal.hac";
 import "testlib/round-robin.hac";
 
 // chan(int) LL[2], RR[2];
@@ -15,11 +14,6 @@ chan() LSCin[2], LSCout[2];
 packet_source_slice_array LS[2];
 // control token finite sources
 round_robin_source_finite A[2];		// generate N token iterations
-
-// output buckets
-int_sink RS[2];
-RS[0](RR[0]);
-RS[1](RR[1]);
 
 LS[0]<12, 10, {
 	{0,0,0,0,0,0,0,0,1,2},
