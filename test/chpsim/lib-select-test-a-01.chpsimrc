@@ -1,9 +1,9 @@
 # "lib-select-test-a-01.chpsimrc"
-#	$Id: lib-select-test-a-01.chpsimrc,v 1.2 2007/08/28 04:55:08 fang Exp $
+#	$Id: lib-select-test-a-01.chpsimrc,v 1.2.12.1 2007/10/21 04:39:04 fang Exp $
 # @haco@ lib-select-test-a.haco-a
 # Use the *built* library for this test (as opposed to installed)
 # @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
-# @deps@ ../../lib/stdchpfn.la
+# @deps@ $(top_builddir)/lib/stdchpfn.la
 
 watchall-events
 watch-value Z

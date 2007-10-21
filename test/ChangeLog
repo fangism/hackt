@@ -1,6 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.78.4.1 2007/10/14 20:36:00 fang Exp $
+#	$Id: ChangeLog,v 1.78.4.2 2007/10/21 04:38:03 fang Exp $
 # ChangeLog for test directory.
+
+2007-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-09:
+	  Make.test-guile: improved support for extending GUILE_LOAD_PATH
+		per Makefile/directory.  
+	  *.chpsimrc: (tests that name stdchpfn.la as a dependency)
+		refer to library using $(top_builddir), instead of hard-code.
+
 
 2007-10-14	David Fang		<fangism@users.sourceforge.net>
 

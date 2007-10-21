@@ -5,6 +5,13 @@
 
 2007-10-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-85-router-01-09:
+	  No source revision.
+	  Added more 4-channel tests.
+	  All router tests pushed down to new router/ subdir to unclutter
+		the parent chpsim/ dir.  
+
+
 	* HACKT-00-01-04-main-00-81-85-router-01-08:
 	  No source revision.
 	  First batch of 4-channel bit-router tests in test/chpsim.

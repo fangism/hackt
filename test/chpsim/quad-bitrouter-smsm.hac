@@ -1,9 +1,0 @@
-// "quad-bitrouter-smsm.hac"
-//	$Id: quad-bitrouter-smsm.hac,v 1.1.2.1 2007/10/20 21:14:07 fang Exp $
-// testing a decomposed bit-router: concurrent, contention-free routing
-
-import "quad-bitrouter-test-channels.hac";
-import "testlib/quad-bitrouter.hac";
-
-quad_bit_router_smsm BR(L, R);
-

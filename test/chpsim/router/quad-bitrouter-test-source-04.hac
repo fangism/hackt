@@ -1,0 +1,15 @@
+// "quad-bitrouter-test-source-04.hac"
+// characteristics:
+// contention between two routes at a time
+
+import "quad-bitrouter-test-channels.hac";
+import "quad-bitrouter-test-source-lib.hac";
+
+// <pint Dest1, Dest2; pint Len1, Len2; pint Rep; preal Gap>
+qbr_source_dual_dest_burst QS[4];
+
+QS[0]<0, 2, 5, 5, 4, 15.0>(LL[0]);
+QS[1]<0, 2, 5, 5, 4, 15.0>(LL[1]);
+QS[2]<1, 3, 5, 5, 4, 15.0>(LL[2]);
+QS[3]<1, 3, 5, 5, 4, 15.0>(LL[3]);
+
