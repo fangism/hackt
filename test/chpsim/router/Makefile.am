@@ -1,9 +1,9 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.1 2007/10/21 04:39:19 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.2 2007/10/21 17:46:01 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
-include $(top_srcdir)/installdirs.mk
+# include $(top_srcdir)/installdirs.mk
 # for examplesdir
 
 # SUBDIRS = .
