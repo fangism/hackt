@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-10-21	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-09:
+	  configure.ac: patch Makefile's tar command to use POSIX 
+		compatibility mode to support path/names longer than 99.
+
+
 2007-09-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-78:

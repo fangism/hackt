@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.163.4.1 2007/10/21 04:37:56 fang Exp $
+#	$Id: configure.ac,v 1.163.4.2 2007/10/22 00:09:12 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -506,8 +506,13 @@ ACEOF
 
 # additional patch to Makefile to work around automake shortcoming
 # recursive rm may fail if too many files in particular subdir.
+# sed substitution forces POSIX-mode of tar to not be limited to 99 chars
+# in full path names of files
 AC_CONFIG_FILES([Makefile], 
-	[patch -p0 < $srcdir/config/am__remove_distdir.diff])
+	[patch -p0 < $srcdir/config/am__remove_distdir.diff
+	sed '/^am__tar/s/chof/chf/' Makefile > Makefile.tmp
+	mv Makefile.tmp Makefile
+	])
 dnl ignore errors during attempt to make directories in parallel
 AC_CONFIG_FILES([src/Makefile],
 	[sed '/test.*mkdir.*DESTDIR/s/test/-test/g' src/Makefile > src/Makefile.tmp && mv src/Makefile.tmp src/Makefile])
