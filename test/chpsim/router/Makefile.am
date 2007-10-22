@@ -1,5 +1,5 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.2 2007/10/21 17:46:01 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.3 2007/10/22 04:44:50 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -56,10 +56,16 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	quad-bitrouter-test-source-01 quad-bitrouter-test-source-02 \
 	quad-bitrouter-test-source-03 quad-bitrouter-test-source-04 \
 	quad-bitrouter-test-source-05 \
+	quad-bitrouter-test-source-06 quad-bitrouter-test-source-07 \
+	quad-bitrouter-test-source-08 quad-bitrouter-test-source-09 \
+	quad-bitrouter-test-source-10 \
 	quad-bitrouter-test-sinks-ideal \
 	quad-bitrouter-test-env-01 quad-bitrouter-test-env-02 \
 	quad-bitrouter-test-env-03 quad-bitrouter-test-env-04 \
 	quad-bitrouter-test-env-05 \
+	quad-bitrouter-test-env-06 quad-bitrouter-test-env-07 \
+	quad-bitrouter-test-env-08 quad-bitrouter-test-env-09 \
+	quad-bitrouter-test-env-10 \
 	quad-bitrouter-mmss-test-01 quad-bitrouter-ssmm-test-01 \
 	quad-bitrouter-mmss-test-02 quad-bitrouter-ssmm-test-02 \
 	quad-bitrouter-mmss-test-03 quad-bitrouter-msms-test-03 \
@@ -70,7 +76,22 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 	quad-bitrouter-smsm-test-04 quad-bitrouter-ssmm-test-04 \
 	quad-bitrouter-mmss-test-05 quad-bitrouter-msms-test-05 \
 	quad-bitrouter-mssm-test-05 quad-bitrouter-smms-test-05 \
-	quad-bitrouter-smsm-test-05 quad-bitrouter-ssmm-test-05
+	quad-bitrouter-smsm-test-05 quad-bitrouter-ssmm-test-05 \
+	quad-bitrouter-mmss-test-06 quad-bitrouter-msms-test-06 \
+	quad-bitrouter-mssm-test-06 quad-bitrouter-smms-test-06 \
+	quad-bitrouter-smsm-test-06 quad-bitrouter-ssmm-test-06 \
+	quad-bitrouter-mmss-test-07 quad-bitrouter-msms-test-07 \
+	quad-bitrouter-mssm-test-07 quad-bitrouter-smms-test-07 \
+	quad-bitrouter-smsm-test-07 quad-bitrouter-ssmm-test-07 \
+	quad-bitrouter-mmss-test-08 quad-bitrouter-msms-test-08 \
+	quad-bitrouter-mssm-test-08 quad-bitrouter-smms-test-08 \
+	quad-bitrouter-smsm-test-08 quad-bitrouter-ssmm-test-08 \
+	quad-bitrouter-mmss-test-09 quad-bitrouter-msms-test-09 \
+	quad-bitrouter-mssm-test-09 quad-bitrouter-smms-test-09 \
+	quad-bitrouter-smsm-test-09 quad-bitrouter-ssmm-test-09 \
+	quad-bitrouter-mmss-test-10 quad-bitrouter-msms-test-10 \
+	quad-bitrouter-mssm-test-10 quad-bitrouter-smms-test-10 \
+	quad-bitrouter-smsm-test-10 quad-bitrouter-ssmm-test-10
 
 # consider making .chpsim-event-dot/ps for visualizations
 
@@ -97,7 +118,22 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	quad-bitrouter-smsm-test-04-trace quad-bitrouter-ssmm-test-04-trace \
 	quad-bitrouter-mmss-test-05-trace quad-bitrouter-msms-test-05-trace \
 	quad-bitrouter-mssm-test-05-trace quad-bitrouter-smms-test-05-trace \
-	quad-bitrouter-smsm-test-05-trace quad-bitrouter-ssmm-test-05-trace
+	quad-bitrouter-smsm-test-05-trace quad-bitrouter-ssmm-test-05-trace \
+	quad-bitrouter-mmss-test-06-trace quad-bitrouter-msms-test-06-trace \
+	quad-bitrouter-mssm-test-06-trace quad-bitrouter-smms-test-06-trace \
+	quad-bitrouter-smsm-test-06-trace quad-bitrouter-ssmm-test-06-trace \
+	quad-bitrouter-mmss-test-07-trace quad-bitrouter-msms-test-07-trace \
+	quad-bitrouter-mssm-test-07-trace quad-bitrouter-smms-test-07-trace \
+	quad-bitrouter-smsm-test-07-trace quad-bitrouter-ssmm-test-07-trace \
+	quad-bitrouter-mmss-test-08-trace quad-bitrouter-msms-test-08-trace \
+	quad-bitrouter-mssm-test-08-trace quad-bitrouter-smms-test-08-trace \
+	quad-bitrouter-smsm-test-08-trace quad-bitrouter-ssmm-test-08-trace \
+	quad-bitrouter-mmss-test-09-trace quad-bitrouter-msms-test-09-trace \
+	quad-bitrouter-mssm-test-09-trace quad-bitrouter-smms-test-09-trace \
+	quad-bitrouter-smsm-test-09-trace quad-bitrouter-ssmm-test-09-trace \
+	quad-bitrouter-mmss-test-10-trace quad-bitrouter-msms-test-10-trace \
+	quad-bitrouter-mssm-test-10-trace quad-bitrouter-smms-test-10-trace \
+	quad-bitrouter-smsm-test-10-trace quad-bitrouter-ssmm-test-10-trace
 
 # TODO: parallel-fifo test cases
 

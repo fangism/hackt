@@ -1,7 +1,7 @@
 # "bitrouter-test-template.chpsimrc
-#	$Id: bitrouter-test-template.chpsimrc,v 1.1.2.1 2007/10/21 04:40:06 fang Exp $
+#	$Id: bitrouter-test-template.chpsimrc,v 1.1.2.2 2007/10/22 04:44:57 fang Exp $
 # not really needed:
-# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
 # @deps@ $(top_builddir)/lib/stdchpfn.la
 
 timing per-event

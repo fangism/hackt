@@ -1,8 +1,8 @@
 # "lib-strtoz-test-d-01.chpsimrc"
-#	$Id: lib-strtoz-test-d-01.chpsimrc,v 1.2.12.1 2007/10/21 04:39:09 fang Exp $
+#	$Id: lib-strtoz-test-d-01.chpsimrc,v 1.2.12.2 2007/10/22 04:44:46 fang Exp $
 # @haco@ lib-strtoz-test-d.haco-a
 # Use the *built* library for this test (as opposed to installed)
-# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
 # @deps@ $(top_builddir)/lib/stdchpfn.la
 
 # watchall-events

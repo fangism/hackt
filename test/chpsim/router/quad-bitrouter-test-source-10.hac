@@ -1,0 +1,23 @@
+// "quad-bitrouter-test-source-10.hac"
+// characteristics: just pseudo-random, 
+// roughly uniform distribution of contention
+
+import "quad-bitrouter-test-channels.hac";
+import "quad-bitrouter-test-source-lib.hac";
+
+// <pint N; pint Dest[N]; pint Len; preal Gap>
+qbr_source_any_dest QS[4];
+
+chan() Cin[4], Cout[4];
+
+QS[0]<13, {3,0,3,3,0,1,1,0,3,2,1,3,2}, 8, 10.0>(Cout[0], Cin[0], LL[0]);
+QS[1]<15, {0,0,0,1,3,3,2,1,2,0,1,2,3,1,1}, 6, 25.0>(Cout[1], Cin[1], LL[1]);
+QS[2]<14, {1,1,3,0,2,1,1,3,2,2,0,2,3,0}, 7, 15.0>(Cout[2], Cin[2], LL[2]);
+QS[3]<16, {3,2,3,0,3,3,1,1,2,0,0,3,3,1,1,2}, 5, 35.0>(Cout[3], Cin[3], LL[3]);
+round_robin_source_finite RRS[4];
+(;i:4:
+	RRS[i]<6>(Cin[i], Cout[i]);
+)
+
+// expect initial stalling then pipelined routing
+

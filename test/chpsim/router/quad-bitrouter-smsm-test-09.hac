@@ -1,0 +1,5 @@
+// "quad-bitrouter-smsm-test-09.hac"
+
+import "quad-bitrouter-smsm.hac";
+import "quad-bitrouter-test-env-09.hac";
+
