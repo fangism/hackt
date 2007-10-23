@@ -1,6 +1,13 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.78.4.2 2007/10/21 04:38:03 fang Exp $
+#	$Id: ChangeLog,v 1.78.4.3 2007/10/23 04:11:39 fang Exp $
 # ChangeLog for test directory.
+
+2007-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-11:
+	  chpsim/basic-trace-analysis.hacchpsimscm:
+		Call make-critical-event-histogram.
+
 
 2007-10-20	David Fang		<fangism@users.sourceforge.net>
 

@@ -100,7 +100,9 @@ critical-path:
 (2 14.0 3 . 1)
 (1 10.0 1 . 0)
 (0 0.0 0 . 0)
+
 branch/select histogram:
+
 loop histogram:
 (3 . 9)
 (4 . 9)
@@ -108,6 +110,22 @@ loop histogram:
 (8 . 8)
 (10 . 8)
 (12 . 8)
+
+critical-event histogram:
+(1 . ((0 . 1)))
+(2 . ((13 . 8)))
+(3 . ((1 . 1) (2 . 8)))
+(4 . ((3 . 9)))
+(5 . ((4 . 8)))
+(6 . ((5 . 8)))
+(7 . ((6 . 8)))
+(8 . ((7 . 8)))
+(9 . ((8 . 8)))
+(10 . ((9 . 8)))
+(11 . ((10 . 8)))
+(12 . ((11 . 8)))
+(13 . ((12 . 8)))
+
 "expect cycle time 24 (6 * 4.0), forward-latency is limiting factor."
 tracing reference for cycle time: (channel . 1)
 canonical name: ring.M[5]

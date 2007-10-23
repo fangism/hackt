@@ -20,10 +20,19 @@ critical-path:
 (7 20.0 2 . 1)
 (1 10.0 1 . 0)
 (0 0.0 0 . 0)
+
 branch/select histogram:
+
 loop histogram:
 (1 . 9)
 (3 . 16)
 (4 . 17)
 (6 . 16)
+
+critical-event histogram:
+(1 . ((0 . 1) (2 . 8)))
+(2 . ((1 . 8)))
+(4 . ((1 . 1)))
+(5 . ((4 . 1)))
+
 "expect cycle time 10, source is limiting factor."

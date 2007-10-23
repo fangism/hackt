@@ -1,5 +1,5 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.3 2007/10/22 04:44:50 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.4 2007/10/23 04:11:55 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -170,11 +170,13 @@ BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT =
 if HAVE_LIBGUILE
 BITROUTER_HACCHPSIMSCM_TEST_SCRIPT += \
 	mv $@ $@.tmp ; \
-	$(GREP) "^process" $@.tmp > $@
+	{ $(GREP) "^process" $@.tmp ; \
+	  $(SED) -n '/histogram:/,$$p' $@.tmp ;} > $@
 
 BITROUTER_HACCHPSIMSCM_TRUNCATE_TEST_SCRIPT += \
 	mv $@ $@.tmp ; \
-	$(GREP) "^process" $@.tmp | $(TAIL) -n 1000 > $@
+	{ $(GREP) "^process" $@.tmp | $(TAIL) -n 1000 ; \
+	  $(SED) -n '/histogram:/,$$p' $@.tmp ;} > $@
 endif
 
 bitrouter-seq-test-a-01-trace-crit.hacchpsimscm-out: \

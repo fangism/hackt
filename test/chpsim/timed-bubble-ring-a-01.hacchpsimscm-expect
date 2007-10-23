@@ -23,7 +23,9 @@ critical-path:
 (6 17.0 17 . 5)
 (5 10.0 15 . 0)
 (0 0.0 0 . 0)
+
 branch/select histogram:
+
 loop histogram:
 (1 . 8)
 (5 . 8)
@@ -31,6 +33,22 @@ loop histogram:
 (11 . 8)
 (14 . 8)
 (17 . 8)
+
+critical-event histogram:
+(1 . ((17 . 2)))
+(2 . ((1 . 2)))
+(4 . ((2 . 2)))
+(5 . ((4 . 2) (7 . 1)))
+(7 . ((5 . 2) (8 . 1)))
+(8 . ((7 . 2)))
+(10 . ((8 . 1)))
+(11 . ((10 . 1)))
+(13 . ((11 . 1)))
+(14 . ((13 . 1)))
+(15 . ((0 . 1)))
+(16 . ((14 . 1)))
+(17 . ((15 . 1) (16 . 1)))
+
 "expect cycle time 8 (7 +1), self-throughput is limiting factor."
 tracing reference for cycle time: (channel . 1)
 canonical name: ring.M[5]

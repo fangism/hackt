@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.5 2007/09/28 05:37:02 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.5.4.1 2007/10/23 04:11:36 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -350,9 +350,7 @@ Result is a map of number of times each loop entered (first event executed)."
       (lambda (e)
          (let ((eid (chpsim-trace-entry-event e)))
            (if (chpsim-event-loop-head? eid)
-             (rb-tree/lookup-mutate! loop-histo eid
-               (lambda (x) (1+ x))
-               #f)
+             (rb-tree/lookup-mutate! loop-histo eid 1+ #f)
              ; else ignore
            )
          ) ; end let
@@ -381,4 +379,45 @@ Result is a map of number of times each loop entered (first event executed)."
     loop-histo
   ) ; end let
 ) ; end define
+
+(define-public (make-event-adjacency-histogram crit-stream)
+"Constructs a critical event histogram from the critical path, by counting
+occurrences of critical event pairs.  @var{crit-stream} should be an
+already computed critical path, because this operates on any stream of events.  
+Returns a sorted, two-level tree-of-tree mapping event to critical predecessor 
+and occurrences."
+  (define (init-bin key) ; initialize a tree with pair [key, 1]
+    (let ((tree (make-rb-tree = <)))
+      (rb-tree/insert! tree key 1)
+      tree
+    )
+  )
+  (let ((edge-histo (make-rb-tree = <))
+        (crit-ev (stream-map chpsim-trace-entry-event crit-stream)))
+    (stream-for-each
+      (lambda (event cause)
+	; slow: unnecessary allocation every time
+        (let ((n (rb-tree/insert-if-new! edge-histo event (init-bin cause))))
+          (if (not (unspecified? n)) ; then we found previous entry
+            ; n is a tree: [cause, count]
+            ; TODO: rewrite without using two lookups (common case)
+            (let ((c (rb-tree/insert-if-new! n cause 1)))
+              (if (not (unspecified? c)) ; then we found previous entry
+                (rb-tree/lookup-mutate! n cause 1+ #f) ; increment
+              )
+            ) ; end let
+          ) ; end if
+        ) ; end let
+      ) ; end lambda
+      crit-ev
+      (stream-cdr crit-ev)
+    ) ; end steram-map
+    edge-histo
+  ) ; end let
+) ; end define
+
+;; alias
+(define-public make-critical-event-histogram make-event-adjacency-histogram)
+
+; TODO: 3-level tree
 
