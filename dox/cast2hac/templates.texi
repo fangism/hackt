@@ -1,5 +1,5 @@
 @c "cast2hac/templates.texi"
-@c $Id: templates.texi,v 1.1 2007/08/16 23:48:14 fang Exp $
+@c $Id: templates.texi,v 1.2 2007/10/29 01:02:37 fang Exp $
 
 @node Templates
 @chapter Templates
@@ -31,7 +31,7 @@ template signature@footnote{This originates from C++ template syntax.}.
 In @CAST{}, a parameterized definition might look like this:
 
 @example
-define foo()(int N) (node[N] x) @{ @}
+define foo(int N) (node[N] x) @{ @}
 @end example
 
 The equivalent definition in @HAC{} would be:
@@ -44,7 +44,7 @@ defproc foo (bool x[N]) @{ @}
 @CAST{} and @HAC{} alike support parameter-dependent template parameters.
 
 @example
-define array()(int N, D[N]) () @{ @}
+define array()(int N, D[N]) @{ @}
 @end example
 
 @noindent
