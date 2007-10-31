@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.9 2007/02/08 20:34:26 fang Exp $
+	$Id: libc.h,v 1.10 2007/10/31 23:16:35 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -84,50 +84,43 @@ extern void	unsetenv(const char*);
 #endif
 
 /*-------------------- random number generators -----------------------------*/
-#if	defined(HAVE_DRAND48) && HAVE_DRAND48
-#else
+#if	!defined(HAVE_CXX_RAND48_FAMILY)
+#if	defined(HAVE_DRAND48)
 extern	double	drand48(void);
 #endif
 
-#if	defined(HAVE_ERAND48) && HAVE_ERAND48
-#else
+#if	defined(HAVE_ERAND48)
 extern	double	erand48(unsigned short[3]);
 #endif
 
-#if	defined(HAVE_LRAND48) && HAVE_LRAND48
-#else
+#if	defined(HAVE_LRAND48)
 extern	long	lrand48(void);
 #endif
 
-#if	defined(HAVE_NRAND48) && HAVE_NRAND48
-#else
+#if	defined(HAVE_NRAND48)
 extern	long	nrand48(unsigned short[3]);
 #endif
 
-#if	defined(HAVE_MRAND48) && HAVE_MRAND48
-#else
+#if	defined(HAVE_MRAND48)
 extern	long	mrand48(void);
 #endif
 
-#if	defined(HAVE_JRAND48) && HAVE_JRAND48
-#else
+#if	defined(HAVE_JRAND48)
 extern	long	jrand48(unsigned short[3]);
 #endif
 
-#if	defined(HAVE_SRAND48) && HAVE_SRAND48
-#else
+#if	defined(HAVE_SRAND48)
 extern	void	srand48(long sd);
 #endif
 
-#if	defined(HAVE_SEED48) && HAVE_SEED48
-#else
+#if	defined(HAVE_SEED48)
 extern	unsigned short*	seed48(unsigned short xs[3]);
 #endif
 
-#if	defined(HAVE_LCONG48) && HAVE_LCONG48
-#else
-extern	void	lcong(unsigned short p[7]);
+#if	defined(HAVE_LCONG48)
+extern	void	lcong48(unsigned short p[7]);
 #endif
+#endif	/* HAVE_CXX_RAND48_FAMILY */
 
 END_C_DECLS
 
@@ -241,6 +234,15 @@ extern int	remove(const char*);
 #if	defined(HAVE_RENAME) && HAVE_RENAME
 #else
 extern int	rename(const char*, const char*);
+#endif
+
+/* non-ANSI functions that may be missing in strict-ansi modes */
+#if	defined(HAVE_FDOPEN) && !defined(HAVE_CXX_FDOPEN)
+extern	FILE*	fdopen(int, const char*);
+#endif
+
+#if	defined(HAVE_POPEN) && !defined(HAVE_CXX_POPEN)
+extern	FILE*	popen(const char*, const char*);
 #endif
 
 END_C_DECLS

@@ -1,6 +1,6 @@
 /**
 	\file "lexer/ifstream_manager.cc"
-	$Id: named_ifstream_manager.cc,v 1.2 2006/04/03 05:30:38 fang Exp $
+	$Id: named_ifstream_manager.cc,v 1.3 2007/10/31 23:16:36 fang Exp $
  */
 
 #include <iostream>
@@ -17,7 +17,7 @@ namespace util {
 // class named_ifstream_stack method definitions
 
 const string
-named_ifstream::dev_stdin("/dev/stdin");
+named_ifstream::dev_stdin(DEV_STDIN);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 named_ifstream_stack::named_ifstream_stack() : _registry(), _files() { }

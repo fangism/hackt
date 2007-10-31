@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.92 2007/10/08 01:21:55 fang Exp $
+#	$Id: ChangeLog,v 1.93 2007/10/31 23:16:34 fang Exp $
+
+2007-10-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-88:
+	  util/FILE_fwd.h: portability adjustments
+	  util/libc.h: update check for rand48 function family prototypes, 
+		and also for fdopen and popen.
+	  util/named_ifstream_manager.cc: use configure-determined name
+		of standard file streams.  
+
 
 2007-10-07	David Fang		<fangism@users.sourceforge.net>
 
