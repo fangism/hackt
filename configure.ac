@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.163 2007/10/08 01:20:44 fang Exp $
+#	$Id: configure.ac,v 1.164 2007/10/31 23:15:59 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 dnl also works with autoconf 2.60 now
-AC_INIT(hackt, 0.1.4-devel-20071007, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20071031, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -304,7 +304,9 @@ dnl ignore warnings for function checks
 dnl CONFTEST flags are defined by FANG_CONFTEST_FLAGS from hackt.m4
 CFLAGS="$CONFTEST_CFLAGS -Wno-error"
 CXXFLAGS="$CONFTEST_CXXFLAGS -Wno-error"
-
+dnl temporarily override ac_compile and ac_link to force checking in C++ mode
+dnl language mode doesn't really matter because these test by linking
+AC_LANG_PUSH(C++)
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_TYPES([pid_t])
 dnl AC_CHECK_FUNCS([sqrt])
@@ -312,36 +314,40 @@ FANG_FUNC_SQRT
 dnl AC_CHECK_FUNCS([fmod fmodf])
 FANG_FUNC_FMOD
 FANG_FUNC_FMODF
-AC_CHECK_FUNCS([getopt])
-AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
-AC_CHECK_FUNCS([strdup])
+AC_CHECK_FUNCS([ \
+	getopt \
+	strsep strtok strtok_r \
+dnl strsep is missing on Solaris 2.9
+	strdup \
 dnl <stdio.h>
-AC_CHECK_FUNCS([fgets fputs fputc fgetc fopen fclose fflush])
-AC_CHECK_FUNCS([ferror feof clearerr])
-AC_CHECK_FUNCS([open close])
-AC_CHECK_FUNCS([fseek ftell rewind fgetpos fsetpos])
-AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
-AC_CHECK_FUNCS([mktemp mkstemp mkstemps mkdtemp])
-AC_CHECK_FUNCS([remove rename])
-AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
+	fgets fputs fputc fgetc fopen fdopen fclose fflush \
+	ferror feof clearerr \
+	open close \
+	fseek ftell rewind fgetpos fsetpos \
+	tmpfile tmpnam tempnam \
+	mktemp mkstemp mkstemps mkdtemp \
+	remove rename \
+	setbuf setbuffer setlinebuf setvbuf \
 dnl <ctype.h>
-AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
-AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
-AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
-AC_CHECK_FUNCS([drand48 erand48 lrand48 nrand48])
-AC_CHECK_FUNCS([mrand48 jrand48 srand48 seed48 lcong48])
-AC_CHECK_FUNCS([system exec])
-AC_CHECK_FUNCS([atexit])
-AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
-AC_CHECK_FUNCS([pipe fork vfork popen pclose dup dup2])
+	isascii isspace isdigit isalpha isalnum islower isupper \
+	iscntrl isgraph ishexnumber isideogram isnumber isphonogram \
+	isspecial isprint ispunct isrune isxdigit tolower toupper \
+	drand48 erand48 lrand48 nrand48 \
+	mrand48 jrand48 srand48 seed48 lcong48 \
+	system exec \
+	atexit \
+	getenv setenv putenv unsetenv \
+	pipe fork vfork popen pclose dup dup2 \
 dnl vfork is not always available
-AC_CHECK_FUNCS([wait waitpid wait3 wait4])
+	wait waitpid wait3 wait4 \
 dnl wait3 and wait4 are not specificed by POSIX, avoid using them if possible
-
 dnl the following are expected to be in glibc
-AC_CHECK_FUNCS([fmemopen open_memstream])
-
-
+	fmemopen open_memstream
+])
+FANG_CHECK_CXX_RAND48_FUNCS
+FANG_CHECK_CXX_FDOPEN
+FANG_CHECK_CXX_POPEN
+AC_LANG_POP(C++)
 dnl but keep errors for type checks.  
 CFLAGS="$CONFTEST_CFLAGS"
 CXXFLAGS="$CONFTEST_CXXFLAGS"

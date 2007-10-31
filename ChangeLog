@@ -1,5 +1,22 @@
 "ChangeLog"
 
+2007-10-31	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-88:
+	  configure.ac: call all AC_CHECK_FUNCS together (compressed)
+	  A bunch of cygwin-support:
+		check for rand48 function family in strict C++ mode,
+		check for additional libc functions fdopen, popen.
+		config/cc.m4: check for __FILE for foward decl, 
+			additional check for declaration conflict
+			new tests for non-ansi libc functions rand48 family
+		config/cxx_STL.m4: un-hardcode /dev/std{in,out,err} and take
+			result from other test in ...
+		config/os.m4: check for standard file descriptors, 
+			which are horked on cygwin
+		config/guile.m4: correct the AM_CONDITIONAL HAVE_LIBGUILE test
+
+
 2007-09-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-78:

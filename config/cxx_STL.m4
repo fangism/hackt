@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.8 2007/03/01 19:51:34 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.9 2007/10/31 23:16:04 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -52,6 +52,7 @@ dnl @synopsis FANG_CXX_STD_IFSTREAM_DEV_STDIN
 dnl
 dnl Checks to see if std::ifstream can open "/dev/stdin"
 dnl Defines HAVE_STD_IFSTREAM_DEV_STDIN if successful.  
+dnl This relies on AC_DEFINES from FANG_STD_FILE_DESCRIPTORS.
 dnl
 dnl @category Cxx
 dnl @version 2007-02-27
@@ -60,6 +61,7 @@ dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STD_IFSTREAM_DEV_STDIN],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_STD_FILE_DESCRIPTORS])
 AC_CACHE_CHECK(
 	[whether std::ifstream works with /dev/stdin],
 	[fang_cv_cxx_std_ifstream_dev_stdin],
@@ -72,7 +74,7 @@ AC_LINK_IFELSE(
 		#include <string>
 		using namespace std;
 	]], [[
-		ifstream fcin("/dev/stdin");
+		ifstream fcin(DEV_STDIN);
 		if (fcin) {
 			string line;
 			while (getline(fcin, line)) {
@@ -103,7 +105,7 @@ AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_std_ifstream_dev_stdin" = yes ; then
 AC_DEFINE(HAVE_STD_IFSTREAM_DEV_STDIN, [], 
-	[Define if std::ifstream(/dev/stdin) works])
+	[Define if std::ifstream(DEV_STDIN) works])
 fi
 ])dnl
 
@@ -119,6 +121,7 @@ dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STD_OFSTREAM_DEV_STDOUT],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_STD_FILE_DESCRIPTORS])
 AC_CACHE_CHECK(
 	[whether std::ofstream works with /dev/stdout],
 	[fang_cv_cxx_std_ofstream_dev_stdout],
@@ -131,7 +134,7 @@ AC_LINK_IFELSE(
 		#include <string>
 		using namespace std;
 	]], [[
-		ofstream fcout("/dev/stdout");
+		ofstream fcout(DEV_STDOUT);
 		if (cin) {
 			string line;
 			while (getline(cin, line)) {
@@ -162,7 +165,7 @@ AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_std_ofstream_dev_stdout" = yes ; then
 AC_DEFINE(HAVE_STD_OFSTREAM_DEV_STDOUT, [], 
-	[Define if std::ofstream(/dev/stdout) works])
+	[Define if std::ofstream(DEV_STDOUT) works])
 fi
 ])dnl
 
@@ -178,6 +181,7 @@ dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STD_OFSTREAM_DEV_STDERR],
 [AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_STD_FILE_DESCRIPTORS])
 AC_CACHE_CHECK(
 	[whether std::ofstream works with /dev/stderr],
 	[fang_cv_cxx_std_ofstream_dev_stderr],
@@ -190,7 +194,7 @@ AC_LINK_IFELSE(
 		#include <string>
 		using namespace std;
 	]], [[
-		ofstream fcerr("/dev/stderr");
+		ofstream fcerr(DEV_STDERR);
 		if (cin) {
 			string line;
 			while (getline(cin, line)) {
@@ -221,7 +225,7 @@ AC_LANG_POP(C++)
 ])
 if test "$fang_cv_cxx_std_ofstream_dev_stderr" = yes ; then
 AC_DEFINE(HAVE_STD_OFSTREAM_DEV_STDERR, [], 
-	[Define if std::ofstream(/dev/stderr) works])
+	[Define if std::ofstream(DEV_STDERR) works])
 fi
 ])dnl
 

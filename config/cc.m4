@@ -1,5 +1,5 @@
 dnl "config/cc.m4"
-dnl	$Id: cc.m4,v 1.7 2007/09/28 18:34:02 fang Exp $
+dnl	$Id: cc.m4,v 1.8 2007/10/31 23:16:04 fang Exp $
 dnl General configure macros for detecting characteristics of the C compiler.
 dnl
 
@@ -11,9 +11,12 @@ dnl without having to include <stdio.h>
 dnl In the event that none of the equivalent typedefs are found, 
 dnl the source should just fallback including <stdio.h>.
 dnl Source affected: "util/FILE_fwd.h"
+dnl Note: cygwin's compiler may not like re-declaration of same typedef,
+dnl which is why we check whether or not forward declaration conflicts
+dnl with the definition.  
 dnl
 dnl @category C
-dnl @version 2006-05-08
+dnl @version 2007-10-09
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
@@ -21,10 +24,33 @@ AC_DEFUN([FANG_TYPEDEF_FILE],
 [AC_REQUIRE([AC_PROG_CC])
 AC_LANG_PUSH(C)
 AC_CHECK_HEADER([stdio.h])
+AC_CHECK_TYPES([struct __FILE])		dnl cygwin
 AC_CHECK_TYPES([struct __sFILE])	dnl BSD, Darwin
 AC_CHECK_TYPES([struct _IO_FILE])	dnl linux
 AC_CHECK_TYPES([__FILE_TAG])		dnl Sun (C++)
 AC_CHECK_TYPES([struct __FILE_TAG])	dnl Sun (C)
+dnl perhaps test in C++ mode, or shouldn't matter?
+AC_CACHE_CHECK([whether FILE forward declaration conflicts with definition],
+[fang_cv_c_file_fwd_conflicts],
+[saved_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS -I $srcdir/src"
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		#include "util/FILE_fwd.h"
+		#include <stdio.h>
+	],[]),
+	[fang_cv_c_file_fwd_conflicts=no],
+	[fang_cv_c_file_fwd_conflicts=yes]
+)
+CPPFLAGS="$saved_CPPFLAGS"
+])
+if test $fang_cv_c_file_fwd_conflicts = yes ; then
+	AC_DEFINE(FILE_FWD_CONFLICTS_FWD_DECL, [1], 
+	[Define to 1 if FILE forward declaration conflicts with definition.])
+else
+	AC_DEFINE(FILE_FWD_CONFLICTS_FWD_DECL, [0], 
+	[Define to 1 if FILE forward declaration conflicts with definition.])
+fi
 AC_LANG_POP(C)
 ])dnl
 
@@ -350,4 +376,75 @@ else
 		[Define to 1 if uint32_t is identical to unsigned long (C++).])
 fi
 ])dnl AC_DEFUN
+
+dnl @synopsis RANG_CHECK_CXX_RAND48_FUNCS
+dnl
+dnl Check whether or not rand48 family functions are available at compile-time.
+dnl AC_CHECK_FUNCS checks only linkability, but some system headers may 
+dnl disable the non-ANSI rand48 family of functions in strict ansi mode.
+dnl However, we really want those functions...
+dnl
+AC_DEFUN([FANG_CHECK_CXX_RAND48_FUNCS],
+[AC_CACHE_CHECK([whether rand48 family is available in strict ansi C++],
+[fang_cv_func_cxx_rand48_family],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+#include <cstdlib>
+	],[
+		drand48();
+		lrand48();
+		mrand48();
+	]),
+	[fang_cv_func_cxx_rand48_family=yes],
+	[fang_cv_func_cxx_rand48_family=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_func_cxx_rand48_family" = yes ; then
+	AC_DEFINE(HAVE_CXX_RAND48_FAMILY, 1, [Define if rand48 function family is available in strict C++ mode])
+fi
+])
+
+dnl another cygwin C++ ansi snafu
+AC_DEFUN([FANG_CHECK_CXX_FDOPEN],
+[AC_CACHE_CHECK([whether fdopen is available in strict ansi C++],
+[fang_cv_func_cxx_fdopen],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+#include <cstdio>
+	],[
+		fdopen(0, "foobar");
+	]),
+	[fang_cv_func_cxx_fdopen=yes],
+	[fang_cv_func_cxx_fdopen=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_func_cxx_fdopen" = yes ; then
+	AC_DEFINE(HAVE_CXX_FDOPEN, 1, [Define if fdopen is available in strict C++ mode])
+fi
+])
+
+dnl another cygwin C++ ansi snafu
+AC_DEFUN([FANG_CHECK_CXX_POPEN],
+[AC_CACHE_CHECK([whether popen is available in strict ansi C++],
+[fang_cv_func_cxx_popen],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+#include <cstdio>
+	],[
+		popen(0, "foobar");
+	]),
+	[fang_cv_func_cxx_popen=yes],
+	[fang_cv_func_cxx_popen=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_func_cxx_popen" = yes ; then
+	AC_DEFINE(HAVE_CXX_POPEN, 1, [Define if popen is available in strict C++ mode])
+fi
+])
 
