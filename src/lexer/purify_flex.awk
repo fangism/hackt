@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.8 2007/08/13 23:30:52 fang Exp $
+#	$Id: purify_flex.awk,v 1.9 2007/10/31 18:24:03 cto3 Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -254,13 +254,13 @@ function append_call_args(str, arg) {
 	if (match($0, "static int yy_get_next_buffer(.*)")) {
 		# need to rewrite prototype of this function
 		$0 = replace_proto_params($0, state_decl);
-	} else if (match($0, "yy_get_next_buffer\\(\\)")) {
+	} else if (match($0, "yy_get_next_buffer\\([ ]*\\)")) {
 		# rewrite this function call
 		gsub("buffer\\(.*\\)[^)]", "buffer(" name ")", $0);
 	} else if (match($0, "static yy_state_type yy_get_previous_state(.*)")) {
 		# need to rewrite prototype of this function
 		$0 = replace_proto_params($0, state_decl);
-	} else if (match($0, "yy_get_previous_state\\(\\)")) {
+	} else if (match($0, "yy_get_previous_state\\([ ]*\\)")) {
 		# rewrite this function call
 		$0 = replace_call_args($0, name);
 	} else if (match($0, "static yy_state_type yy_try_NUL_trans(.*)")) {
