@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.189 2007/10/12 22:43:46 fang Exp $
+#	$Id: Makefile.am,v 1.190 2007/11/01 23:59:40 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -844,6 +844,7 @@ PARSER_H_FILES = \
 	lexer/hacflat-yystype.h \
 	lexer/file_manager.h \
 	lexer/input_manager.h \
+	lexer/flex_lexer_state.h \
 	lexer/yyin_manager.h \
 	lexer/hac_lex.h
 
@@ -862,6 +863,7 @@ PARSER_CC_FILES = \
 	lexer/type-lex-real.cc \
 	lexer/hacflat-lex-real.cc \
 	lexer/file_manager.cc \
+	lexer/flex_lexer_state.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
 
@@ -1598,7 +1600,6 @@ EXTRA_DIST += local.cvsignore \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
 	lexer/local.cvsignore \
-	lexer/flex_lexer_state.h \
 	lexer/purify_flex.awk \
 	test/local.cvsignore \
 	test/header_test.cc \

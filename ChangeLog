@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-11-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-89:
+	  config/lexyacc.m4:
+		detect flex lexer characteristic with a few link tests
+
+
 2007-10-31	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-88:

@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.4 2006/08/29 17:56:39 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.5 2007/11/01 23:59:39 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -10,13 +10,99 @@ dnl
 dnl Enables LEX as a configurable variable.  
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2007-11-01
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_VAR_LEX],
 [AC_REQUIRE([AM_PROG_LEX])
 AC_ARG_VAR(LEX, [lexer/scanner, such as [f]lex])
+if test "$LEX"
+then
+dnl now test for lex features
+cat > conftest.l <<ACEOF
+/* line counter, example take from man page */
+%{
+int num_lines = 0, num_chars = 0;
+%}
+%%
+\n	{ ++num_lines; ++num_chars; }
+.	{ ++num_chars; }
+%%
+
+ACEOF
+dnl I need to define an AC_LEX_IFELSE(PROGRAM, [TRUE-ACTION], [FALSE-ACTION])
+dnl ac_lex='$LEX conftest.l'
+ac_compile_lex='$CC -c $CFLAGS $CPPFLAGS $ac_cv_prog_lex_root.c >&5'
+dnl ac_link_lex='$CC ley.yy.$ac_objext -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS >&5'
+if $LEX conftest.l && eval "$ac_compile_lex"
+dnl && eval "$ac_link_lex"
+then
+	dnl perform some more tests...
+	dnl check for lineno
+AC_CACHE_CHECK([whether generated lexer has yylineno],
+[fang_cv_lex_yylineno], [
+	saved_LDFLAGS="$LDFLAGS"
+	LDFLAGS="ac_cv_prog_lex_root.$ac_objext $LDFLAGS"
+	AC_LINK_IFELSE(
+		AC_LANG_PROGRAM([
+			#include <stdio.h>
+			extern int yylineno;
+		], [yylex(); printf("%d\n", yylineno);]),
+		[fang_cv_lex_yylineno=yes],
+		[fang_cv_lex_yylineno=no]
+	)
+	LDFLAGS="$saved_LDFLAGS"
+])
+	if test "$fang_cv_lex_yylineno" = yes
+	then
+	AC_DEFINE(LEXER_HAS_YYLINENO, 1, [Define to 1 of lexer has yylineno.])
+	fi
+dnl check for buffer stack
+AC_CACHE_CHECK([whether generated lexer has yy_buffer_stack],
+[fang_cv_lex_yy_buffer_stack], [
+	saved_LDFLAGS="$LDFLAGS"
+	LDFLAGS="ac_cv_prog_lex_root.$ac_objext $LDFLAGS"
+	AC_LINK_IFELSE(
+		AC_LANG_PROGRAM([
+			#include <stdio.h>
+			extern void* yy_buffer_stack;
+		], [yylex(); printf("%p\n", yy_buffer_stack);]),
+		[fang_cv_lex_yy_buffer_stack=yes],
+		[fang_cv_lex_yy_buffer_stack=no]
+	)
+	LDFLAGS="$saved_LDFLAGS"
+])
+	if test "$fang_cv_lex_yy_buffer_stack" = yes
+	then
+	AC_DEFINE(LEXER_HAS_BUFFER_STACK, 1, [Define to 1 of lexer has buffer-stack.])
+	fi
+dnl check for yylex_destroy
+AC_CACHE_CHECK([whether generated lexer has yylex_destroy],
+[fang_cv_lex_yylex_destroy], [
+	saved_LDFLAGS="$LDFLAGS"
+	LDFLAGS="ac_cv_prog_lex_root.$ac_objext $LDFLAGS"
+	AC_LINK_IFELSE(
+		AC_LANG_PROGRAM([
+			#include <stdio.h>
+			extern void yylex_destroy();
+		], [yylex(); yylex_destroy();]),
+		[fang_cv_lex_yylex_destroy=yes],
+		[fang_cv_lex_yylex_destroy=no]
+	)
+	LDFLAGS="$saved_LDFLAGS"
+])
+	if test "$fang_cv_lex_yylex_destroy" = yes
+	then
+	AC_DEFINE(LEXER_HAS_YYLEX_DESTROY, 1, [Define to 1 of lexer has yylex_destroy.])
+	fi
+else
+	AC_MSG_NOTICE([lex (compile) doesn't seem to work!])
+fi
+dnl end if $LEX conftest.l
+rm -f conftest.l $ac_cv_prog_lex_root.* conftest$ac_exeext
+fi
+dnl end if test $LEX
 ])dnl
 
 dnl @synopsis HACKT_ARG_VAR_YACC

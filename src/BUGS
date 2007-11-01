@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.12 2007/08/09 05:49:25 fang Exp $
+	$Id: BUGS,v 1.13 2007/11/01 23:59:39 fang Exp $
 
 guile: [CRITICAL]
 	This is an issue primarily with guile.
@@ -56,6 +56,17 @@ Relaxed actuals:
 	per value.  This will prevent relaxed parameters from leaking
 	to places where their use is forbidden.  
 	(see test cases: template/056,057)
+
+-------------------------------------------------------------------------------
+NOT BUGS:
+
+memory leak false positives:
+	valgrind will report that memory allocated from hash_map is not
+		deallocated because it is actually managed through a pool.
+		This is not a problem.  See note in Object/common/scopespace.h.
+	memory allocated by readline in history buffer:
+		I have no idea how to reclaim.
+	flex lexers' buffer [one-time leak, not critical, but FIXED anyways]
 
 -------------------------------------------------------------------------------
 CLOSED BUGS:

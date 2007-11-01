@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.17 2007/10/08 01:21:08 fang Exp $
+	$Id: scopespace.h,v 1.18 2007/11/01 23:59:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -108,6 +108,13 @@ protected:	// typedefs -- keep these here for re-use
 		These (redundantly) stored copies of pointers are read-only.  
 		To get the modifiable pointers, you'll need to look them up 
 		in the corresponding type-specific map.  
+
+		NOT a BUG:
+		false-positive memory leak reported by valgrind in libstdc++'s
+		non-standard hash_map using std::allocator.
+		http://gcc.gnu.org/onlinedocs/libstdc++/faq/index.html#4_4_leak
+		Tip (g++-3.3): setenv GLIBCPP_FORCE_NEW 1
+		Tip (g++-3.4+): setenv GLIBCXX_FORCE_NEW 1
 	 */
 	typedef	HASH_MAP_NAMESPACE::default_hash_map<string,
 			some_ptr<object> >::type

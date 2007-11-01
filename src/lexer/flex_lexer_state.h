@@ -1,12 +1,13 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.6 2007/01/23 07:21:18 fang Exp $
+	$Id: flex_lexer_state.h,v 1.7 2007/11/01 23:59:42 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
 #define	__LEXER_FLEX_LEXER_STATE_H__
 
+// #include "config.h"
 #include "util/FILE_fwd.h"
 #include "util/NULL.h"
 #include "util/size_t.h"
@@ -66,10 +67,14 @@ struct lexer_state {
 #endif
 #endif
 // the following appear in flex 2.5.31
+#ifdef LEXER_HAS_YYLINENO
 	int			yylineno;		// = 0;
+#endif
+#ifdef LEXER_HAS_BUFFER_STACK
 	size_t			yy_buffer_stack_top;	// = 0;
 	size_t			yy_buffer_stack_max;	// = 0;
 	YY_BUFFER_STATE*	yy_buffer_stack;	// = NULL;
+#endif
 
 	/**
 		Default constructor initializes the values faithfully
@@ -78,27 +83,37 @@ struct lexer_state {
 	lexer_state() : yyin(NULL), yyout(NULL),
 			yy_current_buffer(NULL), 
 			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
-			yy_more_flag(0), yy_more_len(0), 
-			yylineno(0), 
-			yy_buffer_stack_top(0), 
-			yy_buffer_stack_max(0), 
-			yy_buffer_stack(NULL) { }
+			yy_more_flag(0), yy_more_len(0) 
+#ifdef LEXER_HAS_YYLINENO
+			, yylineno(0) 
+#endif
+#ifdef LEXER_HAS_BUFFER_STACK
+			, yy_buffer_stack_top(0) 
+			, yy_buffer_stack_max(0) 
+			, yy_buffer_stack(NULL)
+#endif
+			{ }
 
 	explicit
 	lexer_state(FILE* _yyin) : yyin(_yyin), yyout(NULL),
 			yy_current_buffer(NULL), 
 			yy_c_buf_p(NULL), yy_init(1), yy_start(0), 
-			yy_more_flag(0), yy_more_len(0), 
-			yylineno(0), 
-			yy_buffer_stack_top(0), 
-			yy_buffer_stack_max(0), 
-			yy_buffer_stack(NULL) { }
+			yy_more_flag(0), yy_more_len(0)
+#ifdef LEXER_HAS_YYLINENO
+			, yylineno(0) 
+#endif
+#ifdef LEXER_HAS_BUFFER_STACK
+			, yy_buffer_stack_top(0) 
+			, yy_buffer_stack_max(0) 
+			, yy_buffer_stack(NULL)
+#endif
+			{ }
 
 	/**
 		For now, default destructor, trusting the lexer
 		to clean itself up on EOF.  
 	 */
-	~lexer_state() { }
+	~lexer_state();
 
 };	// end struct lexer_state
 

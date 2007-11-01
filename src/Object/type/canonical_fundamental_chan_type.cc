@@ -1,11 +1,11 @@
 /**
 	\file "Object/type/canonical_fundamental_chan_type.cc"
-	$Id: canonical_fundamental_chan_type.cc,v 1.4 2007/10/12 22:43:55 fang Exp $
+	$Id: canonical_fundamental_chan_type.cc,v 1.5 2007/11/01 23:59:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_CONSTRUCTORS		0
-#define	STACKTRACE_DESTRUCTORS		0
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN

@@ -3,13 +3,14 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.28 2007/10/08 01:21:07 fang Exp $
+ 	$Id: namespace.cc,v 1.29 2007/11/01 23:59:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
 #define	__HAC_OBJECT_COMMON_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
@@ -60,6 +61,22 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
+
+#define	TRACE_ARG_ADDRESS					\
+	STACKTRACE_VERBOSE;					\
+	STACKTRACE_INDENT_PRINT("namespace @ " << this << endl)
+
+#if STACKTRACE_CONSTRUCTORS
+#define	TRACE_CTOR_THIS_ADDRESS		TRACE_ARG_ADDRESS
+#else
+#define	TRACE_CTOR_THIS_ADDRESS
+#endif
+
+#if STACKTRACE_DESTRUCTORS
+#define	TRACE_DTOR_THIS_ADDRESS		TRACE_ARG_ADDRESS
+#else
+#define	TRACE_DTOR_THIS_ADDRESS
+#endif
 
 //=============================================================================
 // flags
@@ -873,6 +890,7 @@ name_space::name_space() :
 		object(), 
 		scopespace(), key(), parent(),
 		open_spaces(), open_aliases() {
+	TRACE_CTOR_THIS_ADDRESS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -887,6 +905,7 @@ name_space::name_space(const string& n, never_ptr<const name_space> p) :
 		object(), 
 		scopespace(), key(n), parent(p), 
 		open_spaces(), open_aliases() {
+	TRACE_CTOR_THIS_ADDRESS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -903,6 +922,7 @@ name_space::name_space(const string& n) :
 		key(n), 
 		parent(NULL), 
 		open_spaces(), open_aliases() {
+	TRACE_CTOR_THIS_ADDRESS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -914,7 +934,8 @@ name_space::name_space(const string& n) :
  */
 name_space::~name_space() {
 	// default destructors will take care of everything
-	STACKTRACE_DTOR_VERBOSE;
+//	STACKTRACE_DTOR_VERBOSE;
+	TRACE_DTOR_THIS_ADDRESS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
