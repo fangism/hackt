@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.164 2007/10/31 23:15:59 fang Exp $
+#	$Id: configure.ac,v 1.165 2007/11/01 02:49:49 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -314,36 +314,30 @@ FANG_FUNC_SQRT
 dnl AC_CHECK_FUNCS([fmod fmodf])
 FANG_FUNC_FMOD
 FANG_FUNC_FMODF
-AC_CHECK_FUNCS([ \
-	getopt \
-	strsep strtok strtok_r \
+AC_CHECK_FUNCS([getopt strsep strtok strtok_r strdup \]
 dnl strsep is missing on Solaris 2.9
-	strdup \
 dnl <stdio.h>
-	fgets fputs fputc fgetc fopen fdopen fclose fflush \
-	ferror feof clearerr \
-	open close \
-	fseek ftell rewind fgetpos fsetpos \
-	tmpfile tmpnam tempnam \
-	mktemp mkstemp mkstemps mkdtemp \
-	remove rename \
-	setbuf setbuffer setlinebuf setvbuf \
+	[fgets fputs fputc fgetc fopen fdopen fclose fflush ferror \]
+	[feof clearerr open close fseek ftell rewind fgetpos fsetpos \]
+	[tmpfile tmpnam tempnam mktemp mkstemp mkstemps mkdtemp \]
+	[remove rename \]
+	[setbuf setbuffer setlinebuf setvbuf \]
 dnl <ctype.h>
-	isascii isspace isdigit isalpha isalnum islower isupper \
-	iscntrl isgraph ishexnumber isideogram isnumber isphonogram \
-	isspecial isprint ispunct isrune isxdigit tolower toupper \
-	drand48 erand48 lrand48 nrand48 \
-	mrand48 jrand48 srand48 seed48 lcong48 \
-	system exec \
-	atexit \
-	getenv setenv putenv unsetenv \
-	pipe fork vfork popen pclose dup dup2 \
+	[isascii isspace isdigit isalpha isalnum islower isupper \]
+	[iscntrl isgraph ishexnumber isideogram isnumber isphonogram \]
+	[isspecial isprint ispunct isrune isxdigit tolower toupper \]
+	[drand48 erand48 lrand48 nrand48 \]
+	[mrand48 jrand48 srand48 seed48 lcong48 \]
+	[system exec \]
+	[atexit \]
+	[getenv setenv putenv unsetenv \]
+	[pipe fork vfork popen pclose dup dup2 \]
 dnl vfork is not always available
-	wait waitpid wait3 wait4 \
+	[wait waitpid wait3 wait4 \]
 dnl wait3 and wait4 are not specificed by POSIX, avoid using them if possible
 dnl the following are expected to be in glibc
-	fmemopen open_memstream
-])
+	[fmemopen open_memstream]
+)
 FANG_CHECK_CXX_RAND48_FUNCS
 FANG_CHECK_CXX_FDOPEN
 FANG_CHECK_CXX_POPEN
