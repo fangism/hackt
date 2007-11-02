@@ -1,0 +1,16 @@
+# "lib/support/ChangeLog"
+#	$Id: ChangeLog,v 1.1 2007/11/02 22:39:10 cto3 Exp $
+
+2007-11-02	Carlos Tadeo Ortega Otero <cto3@cornell.edu>
+	* HACKT-00-01-04-main-00-81-90:
+	Highlighting on VIM/VI 
+
+	Recognizes the keywords:
+	open
+	export
+	defchan 
+	namespace
+
+2007-06-07	Carlos Tadeo Ortega Otero <cto3@cornell.edu>
+	* HACKT-00-01-04-main-00-81-26:
+	  First checkout of hac.vim to this  project
