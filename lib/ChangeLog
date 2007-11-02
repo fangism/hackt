@@ -1,13 +1,13 @@
 # "lib/ChangeLog"
-#	$Id: ChangeLog,v 1.43 2007/10/08 01:20:48 fang Exp $
+#	$Id: ChangeLog,v 1.44 2007/11/02 23:46:54 fang Exp $
 
-2006-09-26	David Fang	<fangism@users.sourceforce.net>
+2006-09-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-74-ACT-01-07:
 	  logic.hac: explicitly export all definitions
 
 
-2006-08-29	David Fang	<fangism@users.sourceforce.net>
+2006-08-29	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-67:
 	  libchpfn/io.{h,cc}: added new hexedecimal and binary integer
@@ -24,14 +24,14 @@
 	  libchpfn/bitmanip.{h,cc}: new, bit manipulation functions.
 
 
-2006-08-27	David Fang	<fangism@users.sourceforce.net>
+2006-08-27	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-09:
 	  libchpfn/string.cc: forgot to *return* the value...
 		Test cases added for remaining new functions.
 
 
-2006-08-25	David Fang	<fangism@users.sourceforce.net>
+2006-08-25	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-08:
 	  libchpfn/io.cc: scan now tests for .eof() before .fail().
@@ -54,7 +54,7 @@
 		Also called tostring, which may be a more intuitive name.  
 
 
-2006-08-24	David Fang	<fangism@users.sourceforce.net>
+2006-08-24	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-05:
 	  libchpfn/io.cc: Minor fix -- specialize scan for strings to
@@ -64,7 +64,7 @@
 		wrapper script, which screws up stdin redirection.
 
 
-2006-08-23	David Fang	<fangism@users.sourceforce.net>
+2006-08-23	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-61-chpsim-08-04:
 	  libchpfn/: conditional.cc: fix select()
@@ -80,25 +80,25 @@
 		through stdio and file streams.  Untested.
 
 
-2006-08-22	David Fang	<fangism@users.sourceforce.net>
+2006-08-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-62:
 	  mk/Makefile.am: forgot dependence on hackt-stddef.mk
 
 
-2006-08-15	David Fang	<fangism@users.sourceforce.net>
+2006-08-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-51:
 	  mux.hac: pchb multiplexers that unconditionally consume all inputs.
 
 
-2006-08-12	David Fang	<fangism@users.sourceforce.net>
+2006-08-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-46-chpsim-07-06:
 	  Added chpsim function library to libchpfn subdir.
 
 
-2006-08-01	David Fang	<fangism@users.sourceforce.net>
+2006-08-01	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-42:
 	  Added buffer_init.hac: a few WCHB buffer pairs with initial value,
@@ -106,25 +106,25 @@
 		Test cases included in test/lib.
 
 
-2006-07-31	David Fang	<fangism@users.sourceforce.net>
+2006-07-31	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-41-merged-chpsim-06-26:
 	  Branch merge: mk/ template makefiles support chpsim +libtool.
 
 
-2006-07-30	David Fang	<fangism@users.sourceforce.net>
+2006-07-30	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-25:
 	  mk/hackt-lt-progs.mk: define CHPSIM_OBJECT_CPPFLAGS
 
 
-2006-07-27	David Fang	<fangism@users.sourceforce.net>
+2006-07-27	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-chpsim-06-18:
 	  Added -lt versions of Makefile template for libtool build support.
 
 
-2006-07-17	David Fang	<fangism@users.sourceforce.net>
+2006-07-17	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-39-template-02-26:
 	  env.hac: sources rewritten with relaxed template parameters
@@ -133,13 +133,13 @@
 	  test/lib: test cases updated accordingly (and trivially).
 
 
-2006-06-12	David Fang	<fangism@users.sourceforce.net>
+2006-06-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-31:
 	  Added Makefile rules for chpsim event graph generation.
 
 
-2006-06-07	David Fang	<fangism@users.sourceforce.net>
+2006-06-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-26:
 	  Added vim syntax highlighter, courtesy of Carlos Tadeo Ortega Otero.
@@ -148,27 +148,27 @@
 		in $(pkgdatadir)/vim/
 
 
-2006-10-17	David Fang	<fangism@users.sourceforce.net>
+2006-10-17	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-28:
 	  alternator.hac: added missing literal in a cross-couple feedback term,
 		replaced dynamic drive of an acknowledge with inverter pair.
 
 
-2006-09-27	David Fang	<fangism@users.sourceforce.net>
+2006-09-27	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-24:
 	  Alternating buckets generalized to Nxe1of1,
 		and token eaters generalized to e1ofN channels.  
 
 
-2006-09-19	David Fang	<fangism@users.sourceforce.net>
+2006-09-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-23:
 	  Generalized alternator splits/merge/tree-fifos to e1ofN channels.
 
 
-2006-09-18	David Fang	<fangism@users.sourceforce.net>
+2006-09-18	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-22:
 	  alternator.hac: definitions for token repeaters, 2-for-1 producers, 
@@ -179,7 +179,7 @@
 	  Also started mpl/ directory for template metaprogramming constructs.  
 
 
-2006-09-17	David Fang	<fangism@users.sourceforce.net>
+2006-09-17	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-21:
 	  Detected and fixed potential one-time instabilities on
@@ -189,7 +189,7 @@
 		now called by old tests and will appear in all new tests.  
 
 
-2006-09-16	David Fang	<fangism@users.sourceforce.net>
+2006-09-16	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-20:
 	  merge.hac: (new) basic wchb merges, tested.
@@ -203,7 +203,7 @@
 		All new tests passed.  
 
 
-2006-09-15	David Fang	<fangism@users.sourceforce.net>
+2006-09-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-18:
 	  alternator.hac: onehot_stage reduced a pull-up rule,
@@ -214,13 +214,13 @@
 		horrendous as is).
 
 
-2006-09-14	David Fang	<fangism@users.sourceforce.net>
+2006-09-14	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-17:
 	  alternator.hac: Working, but slow, merge alternator, tested.
 
 
-2006-09-13	David Fang	<fangism@users.sourceforce.net>
+2006-09-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-16:
 	  Added an alternator-lock that passes one of several
@@ -239,7 +239,7 @@
 	  Added more test cases, and removed some useless ones.  
 
 
-2006-09-12	David Fang	<fangism@users.sourceforce.net>
+2006-09-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-14:
 	  New alternator cells, many tested.
@@ -251,7 +251,7 @@
 	  alternator.hac: Added draft of alternating token-eater 'alt'.
 
 
-2006-09-06	David Fang	<fangism@users.sourceforce.net>
+2006-09-06	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-10:
 	  Added: "alternator.hac" base definitions for template cells to 
@@ -262,7 +262,7 @@
 	  New and revised definitions have been tested in test/lib.
 
 
-2006-09-02	David Fang	<fangism@users.sourceforce.net>
+2006-09-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-07:
 	  Added copy.hac: unbuffered wire-copies.
@@ -271,13 +271,13 @@
 	  None are tested yet.  
 
 
-2006-08-09	David Fang	<fangism@users.sourceforce.net>
+2006-08-09	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-54:
 	  mk/ Makefiles now have hackt cflat-lvs (.lvsprs) rules.
 
 
-2006-08-07	David Fang	<fangism@users.sourceforce.net>
+2006-08-07	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-53:
 	  Fixed acknowledge of inactive_reset_bitbucket_a1ofN.
@@ -289,7 +289,7 @@
 	  Added renv.hac to the library.  
 
 
-2006-08-02	David Fang	<fangism@users.sourceforce.net>
+2006-08-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-46:
 	  Ton of comments and comment-placeholders (TODO markers).  
@@ -297,25 +297,25 @@
 	  Added some buffers for other used protocols and channel types.  
 
 
-2006-08-02	David Fang	<fangism@users.sourceforce.net>
+2006-08-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-45:
 	  Fixed/simplified the exclhi/lo directives in "channel.hac".
 
 
-2006-07-28	David Fang	<fangism@users.sourceforce.net>
+2006-07-28	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-40:
 	  Makefile support for graphviz-generated PostScript targets.
 
 
-2006-07-27	David Fang	<fangism@users.sourceforce.net>
+2006-07-27	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-37:
 	  Added automatic dependency generators to mk/ Makefile rules.  
 
 
-2006-07-26	David Fang	<fangism@users.sourceforce.net>
+2006-07-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-35:
 	  Added "logic.hac" for standard logic gates.  
@@ -329,7 +329,7 @@
 		in template appear in the order they are added.
 
 
-2006-06-02	David Fang	<fangism@users.sourceforce.net>
+2006-06-02	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-14:
 	  Replaced definitions of width-specific buckets and sources
@@ -337,13 +337,13 @@
 		Test cases in test/lib updated accordingly.  
 
 
-2006-05-31	David Fang	<fangism@users.sourceforce.net>
+2006-05-31	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-13:
 	  Fixed typo in channel's exclhi/lo spec-directives.
 
 
-2006-05-31	David Fang	<fangism@users.sourceforce.net>
+2006-05-31	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-09:
 	  Added ev (shared validity) style channels to "channel.hac".
