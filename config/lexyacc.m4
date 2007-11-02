@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.6 2007/11/02 01:02:03 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.7 2007/11/02 01:15:05 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -59,7 +59,7 @@ AC_CACHE_CHECK([whether generated lexer has yylineno],
 	then
 	AC_DEFINE(LEXER_HAS_YYLINENO, 1, [Define to 1 of lexer has yylineno.])
 	fi
-dnl check for buffer stack
+dnl check for buffer stack (function yypop_buffer_state)
 AC_CACHE_CHECK([whether generated lexer has yy_buffer_stack],
 [fang_cv_lex_yy_buffer_stack], [
 	saved_LDFLAGS="$LDFLAGS"
@@ -67,8 +67,8 @@ AC_CACHE_CHECK([whether generated lexer has yy_buffer_stack],
 	AC_LINK_IFELSE(
 		AC_LANG_PROGRAM([
 			#include <stdio.h>
-			extern void* yy_buffer_stack;
-		], [yylex(); printf("%p\n", yy_buffer_stack);]),
+			extern void yypop_buffer_state();
+		], [yylex(); yypop_buffer_state();]),
 		[fang_cv_lex_yy_buffer_stack=yes],
 		[fang_cv_lex_yy_buffer_stack=no]
 	)
