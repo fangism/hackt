@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.3 2007/08/15 01:08:18 fang Exp $
+ *	$Id: hacflat-lex.ll,v 1.4 2007/11/02 21:42:56 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -57,6 +57,19 @@ yy_union_lookup_dump(const YYSTYPE&, const int, std::ostream&);
 
 namespace HAC {
 namespace lexer {
+
+//=============================================================================
+// global variable (flag)
+
+/**
+	Set to true to print with "#FILE { ... } // #FILE" 
+	hierarchy wrappers.
+	Set to false to suppress.  
+ */
+bool
+flatten_with_file_wrappers = true;
+
+//=============================================================================
 
 // defined in here, at the end of file
 extern
@@ -320,6 +333,9 @@ IMPORT		"import"
 		// EMBEDFILE STRING '{' module '}'
 		// TODO: maintain consistency with
 		//	"$(top_srcdir)/test/vpath_file_filter.awk"
+	if (!flatten_with_file_wrappers) {
+		cout << "// ";		// just comment out
+	}
 		cout << "#FILE \"" << pstr << "\" {" << endl;
 		// cout << "// enter: \"" << pstr << "\"" << endl;
 		if (!__flatten_source(ym.get_file()).good) {
@@ -330,7 +346,10 @@ IMPORT		"import"
 #endif
 			THROW_EXIT;
 		}
-		cout << "}\t// \"" << pstr << "\"" << endl;
+	if (!flatten_with_file_wrappers) {
+		cout << "// ";		// just comment out
+	}
+		cout << "}\t// #FILE \"" << pstr << "\"" << endl;
 		// cout << "// leave: \"" << pstr << "\"" << endl;
 		return HF_IMPORT;
 	}

@@ -14,10 +14,10 @@ bool Q;
 int N;
 
 
-}	// "001.hac"
+}	// #FILE "001.hac"
 
 
-}	// "017.hac"
+}	// #FILE "017.hac"
 
 
 

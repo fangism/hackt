@@ -8,7 +8,7 @@
 int N;
 
 
-}	// "001.hac"
+}	// #FILE "001.hac"
 
 #FILE "003.hac" {
 // "003.hac" this should pass
@@ -17,7 +17,7 @@ namespace rajit {
 int parser;
 }
 
-}	// "003.hac"
+}	// #FILE "003.hac"
 
 
 bool Q;

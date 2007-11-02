@@ -7,7 +7,7 @@
 int N;
 
 
-}	// "022.hac"
+}	// #FILE "022.hac"
 
 #FILE "001.hac" {
 /* "001.hac" this should pass */
@@ -15,7 +15,7 @@ int N;
 int N;
 
 
-}	// "001.hac"
+}	// #FILE "001.hac"
 		// death
 
 int fail;

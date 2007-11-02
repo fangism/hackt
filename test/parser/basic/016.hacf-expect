@@ -6,7 +6,7 @@
 int N;
 
 
-}	// "001.hac"
+}	// #FILE "001.hac"
 
 
 bool Q;

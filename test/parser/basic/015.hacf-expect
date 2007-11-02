@@ -4,6 +4,6 @@
 #FILE "000.hac" {
 // "000.hac" empty file should pass
 
-}	// "000.hac"
+}	// #FILE "000.hac"
 
 

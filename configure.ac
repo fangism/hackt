@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.165 2007/11/01 02:49:49 fang Exp $
+#	$Id: configure.ac,v 1.166 2007/11/02 21:42:46 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -145,6 +145,7 @@ AC_SUBST(LIBLTDL)
 AC_LIB_LTDL
 AC_LIBTOOL_DLOPEN
 dnl to support dlopen plug-ins and module shared objects/libraries
+dnl AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 AC_CONFIG_SUBDIRS(libltdl)
 dnl now, always use verbose libtool script, instead of --silent
