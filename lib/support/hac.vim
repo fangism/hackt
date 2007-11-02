@@ -1,12 +1,12 @@
 " Vim syntax file
 " Language:	HACTK
 " Maintainer:	CARLOS TADEO ORTEGA OTERO
-" Last Change:	JUNE 06, 07
+" Last Change:	NOV 02, 07 
 
 
 " A bunch of useful C keywords
-syn keyword	cStatement  	template
-syn keyword	cLabel		case default defproc chp 
+syn keyword	cStatement  	template export open 
+syn keyword	cLabel		case default defproc chp defchan namespace
 "syn keyword	cConditional	if else switch
 "syn keyword	cRepeat	  	for while	
 
