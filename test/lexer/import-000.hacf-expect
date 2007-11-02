@@ -5,5 +5,5 @@
 #FILE "badid-000.hac" {
 1bad_identifier
 
-}	// "badid-000.hac"
+}	// #FILE "badid-000.hac"
 

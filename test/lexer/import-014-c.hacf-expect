@@ -28,7 +28,7 @@ defproc e1of2 (bool d[2]; bool t,f,e)
 }
 
 
-}	// "import-014-a.hac"
+}	// #FILE "import-014-a.hac"
 
 #FILE "import-014-b.hac" {
 /**
@@ -49,7 +49,7 @@ defproc srambit (pbit pb; ch1of2 b, w)
 	}
 }
 
-}	// "import-014-b.hac"
+}	// #FILE "import-014-b.hac"
 
 
 defproc problem (e1of2 Din; e1of2 Dout; pbit pb)

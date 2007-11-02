@@ -3,7 +3,7 @@
 #FILE "import-015-c.hac" {
 //
 // channel.hac placeholder.
-}	// "import-015-c.hac"
+}	// #FILE "import-015-c.hac"
 
 #FILE "import-015-b.hac" {
 // buffers.hac placeholder
@@ -13,17 +13,17 @@
 // programming.hac placeholder
 
 
-}	// "import-015-p.hac"
+}	// #FILE "import-015-p.hac"
 
 #FILE "import-015-g.hac" {
 // globals.hac placehodler
-}	// "import-015-g.hac"
+}	// #FILE "import-015-g.hac"
 
-}	// "import-015-b.hac"
+}	// #FILE "import-015-b.hac"
 
 #FILE "import-015-e.hac" {
 
 
-}	// "import-015-e.hac"
+}	// #FILE "import-015-e.hac"
 
 

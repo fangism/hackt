@@ -4,6 +4,6 @@
 #FILE "empty.hac" {
 // "empty.hac" -- empty
 
-}	// "empty.hac"
+}	// #FILE "empty.hac"
     
 

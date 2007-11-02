@@ -7,16 +7,16 @@
 #FILE "empty.hac" {
 // "empty.hac" -- empty
 
-}	// "empty.hac"
+}	// #FILE "empty.hac"
 
 
-}	// "import-012.hac"
+}	// #FILE "import-012.hac"
 
 #FILE "import-004.hac" {
 // "import-004.hac"
 // imports valid empty file
 
 
-}	// "import-004.hac"
+}	// #FILE "import-004.hac"
 
 

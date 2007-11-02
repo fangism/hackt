@@ -5,6 +5,6 @@
 #FILE "empty.hac" {
 // "empty.hac" -- empty
 
-}	// "empty.hac"
+}	// #FILE "empty.hac"
 Expecting "file" after import.
 From: "import-019.hac":5:
