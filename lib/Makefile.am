@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2007/11/02 23:46:54 fang Exp $
+#	$Id: Makefile.am,v 1.27 2007/11/03 00:21:07 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -46,7 +46,7 @@ EXTRA_DIST += README \
 	support/hac.vim \
 	support/ChangeLog
 
-hac.vimrc:
+hac.vimrc: Makefile
 	{ $(ECHO) "\" source this from $$HOME/.vimrc to autoload hac syntax." ; \
 	$(ECHO) "au BufRead,BufNewFile *.hac set filetype=hac" ; \
 	$(ECHO) "au BufRead,BufNewFile *.hacf set filetype=hac" ; \
