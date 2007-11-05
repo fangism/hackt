@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.4 2007/11/02 21:42:56 fang Exp $
+ *	$Id: hacflat-lex.ll,v 1.5 2007/11/05 00:25:03 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -236,6 +236,13 @@ MORESTRING	[^\\\"\n]+
 CLOSESTRING	"\""
 FILESTRING	"\"[^\"]+\""
 
+/* need to catch ID to prevent matching of keywords in substrings */
+/* also allow pass bad identifiers through */
+IDHEAD		[a-zA-Z_]
+IDBODY		[a-zA-Z0-9_]
+ID		{IDHEAD}{IDBODY}*
+FAKEID		{IDBODY}*
+
 OCTAL_ESCAPE	"\\"[0-7]{1,3}
 BAD_ESCAPE	"\\"[0-9]+
 
@@ -375,6 +382,12 @@ IMPORT		"import"
 		abort();
 	}
 #undef	DUMP_FILE_NAME_STACK
+}
+
+{FAKEID}	{
+	STACKTRACE("got FAKEID");
+	TEXT_FINISH(hacflat_lval, foo);
+	return HF_OTHER_TEXT;
 }
 
 {NEWLINE}	{ NEWLINE_UPDATE(); hacflat_lval = ""; return HF_TEXT_NEWLINE; }

@@ -1,0 +1,5 @@
+// "flat-import-02.hac"
+// caught 'import' inside string...
+
+bool important;		// note: 'import' substring
+

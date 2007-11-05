@@ -1,0 +1,5 @@
+// "flat-import-01.hac"
+// caught 'import' inside string...
+
+bool this_should_not_catch_import_keyword;
+
