@@ -1,6 +1,6 @@
 # "Make.test-flatten"
 #	vi: ft=automake
-#	$Id: Make.test-flatten,v 1.9 2007/08/16 06:11:05 fang Exp $
+#	$Id: Make.test-flatten,v 1.10 2007/11/06 21:40:00 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -50,8 +50,11 @@ AUTO_IGNORE += $(HACKT_FLATTEN_CLEAN_IGNORE_PATTERNS)
 ###############################################################################
 # dependency tracking enabled by default
 .hac.hacf:
-	$(HACKT_FLATTEN_EXE) $(HACO_FLAGS) $< > $@
-	@$(TOUCH) $@
+	@flags=`$(CAT) $< | $(EXTRACT_HACPP_FLAGS_PIPE)` && \
+	cmd="$(HACKT_FLATTEN_EXE) $$flags $(HACO_FLAGS) $<" && \
+	$(ECHO) "$$cmd > $@" && \
+	$$cmd > $@ && \
+	$(TOUCH) $@
 #	@depbase=`$(ECHO) $@ | $(SED) 's/\.haco$$//g'` ; \
 #	log="$$depbase.compiledump" ; \
 #	$(ECHO) "$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $$depbase.depend $< $@" ; \

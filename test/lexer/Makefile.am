@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2007/11/05 00:25:03 fang Exp $
+#	$Id: Makefile.am,v 1.22 2007/11/06 21:40:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -83,6 +83,34 @@ HACKT_FLATTEN_TEST_FAILURES = \
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 # HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)
 
+HACKT_CREATE_TEST_PASSES =
+
+###############################################################################
+# test for include path ordering
+
+HACKT_PARSE_TEST_PASSES += include-path-01
+HACKT_FLATTEN_TEST_PASSES += include-path-01
+HACKT_FLATTEN_PARSE_TEST_PASSES += include-path-01
+# and to confirm correct compilation
+HACKT_CREATE_TEST_PASSES += include-path-01
+# these files are *built*, but not distributed
+INCLUDE_FIRST_TEST_FILES = me_first.hac include/me_first.hac
+# extra deps
+include-path-01.depend include-path-01.haco include-path-01.hacf: \
+	$(INCLUDE_FIRST_TEST_FILES)
+
+include/me_first.hac: Makefile
+	$(mkdir_p) include && \
+	$(ECHO) "bool subdir;" > $@
+
+me_first.hac: Makefile
+	$(ECHO) "bool localdir;" > $@
+
+CLEANFILES += $(INCLUDE_FIRST_TEST_FILES)
+DISTHOOK_CLEANFILES += $(INCLUDE_FIRST_TEST_FILES)
+# DISTCLEANDIRS += include
+
+###############################################################################
 # additional sources included by other test cases
 srcdir_EXTRA_DIST += empty.hac \
 	import-014-a.hac import-014-b.hac \

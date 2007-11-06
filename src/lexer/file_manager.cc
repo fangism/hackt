@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.8 2007/08/15 01:08:16 fang Exp $
+	$Id: file_manager.cc,v 1.9 2007/11/06 21:39:59 fang Exp $
  */
 
 #include <iostream>
@@ -131,23 +131,17 @@ file_manager::add_path(const string& p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param fs the name of the included file (relative path).  
-		This method will always try the local directory first.
-		TODO: some research about the ordering rules used
-		by cpp/gcc, since that's what we're trying to imitate. 
+	NB: traditional cpp will always try the local directory first, 
+		we use the local directory as the final fallback path.
+	Rationale: the user can always specify where '.' should be placed
+		in the search order, but not if it is always searched first.
 	\return pointer to opened file if successful, else NULL.  
  */
 file_manager::return_type
 file_manager::open_FILE(const char* fs) {
 	STACKTRACE_VERBOSE;
+	// check search paths first!
 {
-	FILE* ret = fopen(fs, "r");
-	if (ret) {
-		return open_FILE(fs, ret);
-	}
-	// else didn't find, continue searching include paths
-}
-{
-	// else check search paths one-by-one
 	search_paths::const_iterator i(_paths.begin());
 	const search_paths::const_iterator e(_paths.end());
 	for ( ; i!=e; i++) {
@@ -162,6 +156,14 @@ file_manager::open_FILE(const char* fs) {
 		}
 		// else continue searching
 	}
+}
+	// then check 'here' as a fallback path
+{
+	FILE* ret = fopen(fs, "r");
+	if (ret) {
+		return open_FILE(fs, ret);
+	}
+	// else didn't find, continue searching include paths
 }
 	// else not found
 	return return_type(NULL, file_status::NOT_FOUND);

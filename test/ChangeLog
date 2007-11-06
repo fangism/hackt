@@ -1,6 +1,15 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.79 2007/11/02 21:43:00 fang Exp $
+#	$Id: ChangeLog,v 1.80 2007/11/06 21:39:59 fang Exp $
 # ChangeLog for test directory.
+
+2007-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-92:
+	  hacpp flatten test now checks for @hacpp-flags@ in source file
+		and applies to test command.
+	  .outdump rule now uses @haco-flags@ for consistency checking
+		against .indump (compileobjtest).  
+
 
 2007-11-02	David Fang		<fangism@users.sourceforge.net>
 
