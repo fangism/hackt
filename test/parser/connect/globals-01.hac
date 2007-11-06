@@ -1,0 +1,13 @@
+// "globals-01.hac"
+// reduced from test case submitted by Carlos Tadeo Ortega Otero
+
+bool _pReset;
+namespace imerge {
+	export
+	defproc select (bool ae){
+	prs {
+	~_pReset -> ae+
+  	}
+	}
+}
+imerge::select sel;

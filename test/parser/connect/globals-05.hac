@@ -1,0 +1,19 @@
+// "globals-05.hac"
+// copy-modified from "globals-03.hac"
+
+namespace global_stuff {
+bool _pReset;
+}
+
+open global_stuff;
+defproc select (bool ae){
+prs {
+~_pReset -> ae+
+// the following parse-fail:
+// prs can only reference unqialified local-ids
+// ~global_stuff::_pReset -> ae+
+// ~::global_stuff::_pReset -> ae+
+}
+}
+
+select sel;

@@ -1,0 +1,1 @@
+Error: cannot reference top-level instance from within a definition!  [11:2..8]

@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2007/10/08 01:24:58 fang Exp $
+#	$Id: Makefile.am,v 1.32 2007/11/06 23:53:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,6 +15,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	080 081 082 \
 	090 \
 	138 \
+	globals-01 globals-02 globals-03 globals-04 globals-05 globals-06 \
 	act-006 act-007 act-009 act-010 act-011
 
 # The following tests now pass parsing since we've disabled static 

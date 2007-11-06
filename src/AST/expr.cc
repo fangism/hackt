@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.29 2007/10/08 01:20:58 fang Exp $
+	$Id: expr.cc,v 1.30 2007/11/06 23:53:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -63,6 +63,7 @@
 #include "Object/expr/nonmeta_func_call.h"
 #include "Object/expr/nonmeta_cast_expr.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/common/namespace.h"
 #include "Object/lang/PRS.h"
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
@@ -1046,6 +1047,16 @@ id_expr::check_meta_reference(const context& c) const {
 				pinst(inst.is_a<const physical_instance_placeholder>());
 			if (pinst) {
 				// physical instance collection
+				// verify that definition doesn't reference
+				// global!
+				if (!c.at_top_level() &&
+					pinst->get_owner()
+					.is_a<const entity::name_space>()) {
+					cerr <<
+	"Error: cannot reference top-level instance from within a definition!  "
+						<< where(*qid) << endl;
+					THROW_EXIT;
+				}
 				return pinst->make_meta_instance_reference();
 			} else {
 				// then must be a value collection

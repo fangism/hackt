@@ -5,6 +5,13 @@
 
 2007-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-93:
+	  BUG FIX (accept-invalid): referencing global instance from
+		definition scope was not caught, 
+		causing ICE during create phase... now fixed.  
+	  test cases added to parser/connect/globals-*
+
+
 	* HACKT-00-01-04-main-00-81-92:
 	  lexer/file_manager.cc: fallback to searching local directory LAST, 
 		which is contrary to traditional cpp, which searches
@@ -127,7 +134,7 @@
 2007-10-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-84:
-	  Fixed ICE-on-invalid/accepts-invalid bug: reject mismatch
+	  Fixed ICE-on-invalid/accept-invalid bug: reject mismatch
 		number of relaxed template parameters earlier.  
 		Files: AST/instance.cc
 	  Includes newly fixed test cases in test/parser/template.

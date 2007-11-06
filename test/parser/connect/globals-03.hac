@@ -1,0 +1,17 @@
+// "globals-03.hac"
+// copy-modified from "globals-01.hac"
+
+namespace global_stuff {
+bool _pReset;
+}
+
+namespace imerge {
+	open global_stuff;
+	export
+	defproc select (bool ae){
+	prs {
+	~_pReset -> ae+
+  	}
+	}
+}
+imerge::select sel;

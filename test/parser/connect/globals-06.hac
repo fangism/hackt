@@ -1,0 +1,12 @@
+// "globals-06.hac"
+// copy-modified from "globals-04.hac"
+
+namespace global_stuff {
+bool _pReset;
+}
+
+defproc select (bool ae){
+global_stuff::_pReset = ae;
+}
+
+select sel;

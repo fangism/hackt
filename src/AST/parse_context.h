@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.17 2007/10/18 05:33:04 fang Exp $
+	$Id: parse_context.h,v 1.18 2007/11/06 23:53:46 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -385,6 +385,9 @@ public:
 	get_current_open_definition(void) const {
 		return open_definition_stack.top();
 	}
+
+	bool
+	at_top_level(void) const;
 
 	/**
 		Manages current type of instantiation on stack.  

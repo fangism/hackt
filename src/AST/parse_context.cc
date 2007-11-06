@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.21 2007/10/18 05:33:04 fang Exp $
+ 	$Id: parse_context.cc,v 1.22 2007/11/06 23:53:45 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -212,6 +212,18 @@ context::close_namespace(void) {
 	//	types, definitions...
 	namespace_stack.pop();
 	INVARIANT(get_current_namespace() == new_top);
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	current_open_definition can be NULL when module is opened in
+	read-only mode, in which case we say we are at the top-level.  
+ */
+bool
+context::at_top_level(void) const {
+	const never_ptr<const definition_base> d(get_current_open_definition());
+	return !d || d.is_a<const module>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
