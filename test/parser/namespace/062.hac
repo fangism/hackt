@@ -1,0 +1,8 @@
+// "062.hac"
+
+defproc foo() { }
+
+namespace lib {
+defproc foo(bool a) { }
+}
+

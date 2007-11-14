@@ -1,0 +1,12 @@
+// "064.hac"
+// copy-modified from "063.hac"
+
+namespace lib {
+defproc foo(bool a) { }
+}
+
+open lib;
+
+defproc foo() { }
+
+

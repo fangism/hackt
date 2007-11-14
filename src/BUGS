@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.13 2007/11/01 23:59:39 fang Exp $
+	$Id: BUGS,v 1.14 2007/11/14 17:35:04 fang Exp $
 
 guile: [CRITICAL]
 	This is an issue primarily with guile.
@@ -38,6 +38,11 @@ Global references from with definition-scopes:
 	Example case: param/049
 
 DEFECT:
+lookup:
+	Since global namespace is anonymous, there no way of 'open'-ing
+		it from a sub-namespace, e.g. when wanting to change
+		lookup precedence.  
+
 expression-lists with optional rvalues (e.g. function/template arguments)
 	potentially ambiguous interpretation of foo<>:
 		0 template arguments vs. 

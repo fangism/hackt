@@ -1,0 +1,13 @@
+// "066.hac"
+// testing for shadowing
+// contributed by Carlos Tadeo Ortega Otero
+
+import "065.hac";
+
+open a;
+
+export defproc c( bool a ) { }
+
+bool variable;
+c process(variable);
+

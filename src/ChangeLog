@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-11-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-94:
+	  BUG FIX (reject-valid?): Object/common/namespace.cc (add_definition)
+		shadowing: if found definition belongs to other namespace,
+		warn that the new definition will overshadow those imported.
+		These lookup rules need to be resolved at some point.
+		Added new test cases to parser/namespace, no regressions.  
+	
+
 2007-11-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-93:

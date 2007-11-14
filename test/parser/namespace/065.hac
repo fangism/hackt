@@ -1,0 +1,13 @@
+// "065.hac"
+// testing for shadowing
+// contributed by Carlos Tadeo Ortega Otero
+
+export defproc b( bool a ) { }
+
+namespace a {
+        export defproc b(bool b) { }
+	// b will not shadow because parent namespace is not open
+        export defproc c(bool b) { }
+}
+
+

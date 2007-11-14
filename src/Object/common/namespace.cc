@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.29 2007/11/01 23:59:41 fang Exp $
+ 	$Id: namespace.cc,v 1.30 2007/11/14 17:35:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -1650,7 +1650,29 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 		const never_ptr<const definition_base>
 			probe_def(probe.is_a<const definition_base>());
 		if (probe_def) {
+			// the found definition may belong to another namespace
+			// if this is the case, adding a local definition
+			// will *shadow* the old one, so definition references
+			// before and after this one will refer to different
+			// definitions!
 			INVARIANT(k == probe_def->get_name());	// consistency
+			const never_ptr<const scopespace>
+				dp(probe_def->get_parent());
+			NEVER_NULL(dp);
+			if (dp != this) {
+				// then we found a definition belonging to
+				// another namespace, warn about shadowing, 
+				// then overwrite this entry in map.  
+				cerr << "WARNING: new definition `" <<
+					this->get_qualified_name() << "::" <<
+					k << "\' will overshadow `" <<
+					probe_def->get_qualified_name() <<
+					"\'." << endl;
+				const never_ptr<definition_base> ret(db);
+				used_id_map[k] = db;
+				INVARIANT(!db);
+				return ret;
+			} else
 			if (probe_def->require_signature_match(db).good) {
 				// definition signatures match
 				// can discard new declaration
