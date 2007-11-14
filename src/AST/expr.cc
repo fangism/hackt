@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.30 2007/11/06 23:53:45 fang Exp $
+	$Id: expr.cc,v 1.31 2007/11/14 20:50:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1102,6 +1102,14 @@ id_expr::check_nonmeta_reference(const context& c) const {
 			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
+			if (!c.at_top_level() &&
+				inst->get_owner()
+				.is_a<const entity::name_space>()) {
+				cerr <<
+	"Error: cannot reference top-level instance from within a definition!  "
+					<< where(*qid) << endl;
+				return return_type(NULL);
+			}
 			return inst->make_nonmeta_instance_reference();
 		} else {
 			cerr << "object \"" << *qid <<

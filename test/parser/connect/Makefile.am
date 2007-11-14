@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.32 2007/11/06 23:53:47 fang Exp $
+#	$Id: Makefile.am,v 1.33 2007/11/14 20:50:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,11 @@ HACKT_PARSE_TEST_FAILURES = \
 	090 \
 	138 \
 	globals-01 globals-02 globals-03 globals-04 globals-05 globals-06 \
+	globals-07 globals-08 globals-11 globals-12 \
 	act-006 act-007 act-009 act-010 act-011
+
+# pending: member_nonmeta_instance_references: globals-09 globals-10
+srcdir_EXTRA_DIST += globals-09.hac globals-10.hac
 
 # The following tests now pass parsing since we've disabled static 
 # compile-time checks:

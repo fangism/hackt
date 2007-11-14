@@ -1,0 +1,12 @@
+// "globals-07.hac"
+defproc globals (bool x) { }
+
+globals g;
+
+defproc foo() {
+bool y;
+prs {
+	g.x -> y-
+}
+}
+

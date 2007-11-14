@@ -1,0 +1,4 @@
+Error: cannot reference top-level instance from within a definition!  [12:4]
+Error resolving lvalue of assignment at [12:4]
+ERROR in one of the actions in [12:2..10]
+ERROR: at least one error in CHP body.

@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.11 2007/08/28 04:53:58 fang Exp $
+	$Id: token.cc,v 1.12 2007/11/14 20:50:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/ref/nonmeta_instance_reference_base.h"
+#include "Object/common/namespace.h"	// for dynamic_cast
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -328,7 +329,7 @@ token_identifier::rightmost(void) const {
 inst_ref_expr::meta_return_type
 token_identifier::check_meta_reference(const context& c) const {
 	typedef	inst_ref_expr::meta_return_type		return_type;
-	STACKTRACE("token_identifier::check_meta_expr()");
+	STACKTRACE_VERBOSE;
 
 	// don't look up, instantiate (checked) in the context's current scope!
 	const context::placeholder_ptr_type
@@ -340,6 +341,16 @@ token_identifier::check_meta_reference(const context& c) const {
 		const never_ptr<const physical_instance_placeholder>
 			pinst(inst.is_a<const physical_instance_placeholder>());
 		if (pinst) {
+			// catch references to 
+			if (!c.at_top_level() &&
+				pinst->get_owner()
+				.is_a<const entity::name_space>()) {
+				cerr <<
+	"Error: cannot reference top-level instance from within a definition!  "
+					<< where(*this) << endl;
+				return return_type(NULL);
+				// THROW_EXIT
+			} else
 			return pinst->make_meta_instance_reference();
 		} else {
 			return inst.is_a<const param_value_placeholder>()
@@ -363,13 +374,22 @@ token_identifier::check_meta_reference(const context& c) const {
 inst_ref_expr::nonmeta_return_type
 token_identifier::check_nonmeta_reference(const context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
-	STACKTRACE("token_identifier::check_nonmeta_expr()");
+	STACKTRACE_VERBOSE;
 
 	// don't look up, instantiate (checked) in the context's current scope!
 	const context::placeholder_ptr_type
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
+		if (!c.at_top_level() &&
+			inst->get_owner()
+			.is_a<const entity::name_space>()) {
+			cerr <<
+	"Error: cannot reference top-level instance from within a definition!  "
+				<< where(*this) << endl;
+			return return_type(NULL);
+			// THROW_EXIT
+		} else
 		return inst->make_nonmeta_instance_reference();
 	} else {
 		// better error handling later...

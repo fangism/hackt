@@ -1,0 +1,15 @@
+// "globals-11.hac"
+// copy-modified from "globals-09.hac"
+
+// defproc globals (bool x) { }
+// globals g;
+
+bool x;
+
+defproc foo() {
+bool y;
+chp {
+	*[x := y]
+}
+}
+

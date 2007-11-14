@@ -5,6 +5,13 @@
 
 2007-11-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-95:
+	  BUG FIX (accept-invalid): AST/token.cc, AST/expr.cc
+		more incorrect global references rejected in lookups
+		for token_identifier/id_expr's check_meta/nonmeta_reference.
+		Added new test cases to parser/connect.
+
+
 	* HACKT-00-01-04-main-00-81-94:
 	  BUG FIX (reject-valid?): Object/common/namespace.cc (add_definition)
 		shadowing: if found definition belongs to other namespace,
