@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.7 2007/10/08 01:20:54 fang Exp $
+	$Id: PRS.h,v 1.7.6.1 2007/11/15 23:48:23 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -12,7 +12,7 @@
 #include "AST/common.h"
 #include "AST/PRS_fwd.h"
 #include "AST/expr_base.h"
-#include "AST/definition_item.h"
+#include "AST/lang.h"
 #include "util/STL/vector_fwd.h"
 #include "util/STL/pair_fwd.h"
 #include "util/memory/count_ptr.h"

@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition_item.h"
 	Base set of classes for the HAC parser.  
-	$Id: definition_item.h,v 1.5 2006/11/02 22:01:45 fang Exp $
+	$Id: definition_item.h,v 1.5.54.1 2007/11/15 23:48:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition_item.h,v 1.7.48.1 2005/12/11 00:45:04 fang Exp
  */
@@ -36,38 +36,6 @@ virtual	line_position
 
 virtual	ROOT_CHECK_PROTO = 0;
 };	// end class def_body_item
-
-//=============================================================================
-/**
-	Abstract base class for language bodies.  
-	language_body is the only subclass of def_body_item that is 
-	not also a subclass of root_item.  
-	Language bodies cannot syntactically or semantically appear
-	outside of a definition.  
- */
-class language_body : public def_body_item {
-protected:
-	excl_ptr<const generic_keyword_type>	tag;	///< what language
-public:
-	explicit
-	language_body(const generic_keyword_type* t);
-
-virtual	~language_body();
-
-virtual language_body*
-	attach_tag(generic_keyword_type* t);
-
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-virtual	line_position
-	leftmost(void) const;
-
-virtual	line_position
-	rightmost(void) const = 0;
-
-virtual	ROOT_CHECK_PROTO = 0;
-};	// end class language_body
 
 //=============================================================================
 }	// end namespace parser

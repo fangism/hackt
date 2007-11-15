@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.27 2007/10/08 03:09:36 fang Exp $
+	$Id: PRS.cc,v 1.27.6.1 2007/11/15 23:48:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -677,11 +677,28 @@ body::__check_rules(context& c, checked_rules_type& checked_rules) const {
 /**
 	NOTE: remember to update return type with ROOT_CHECK_PROTO.
 	Currently, exits upon error.  
+	\pre context has already set the current_prs_body.
  */
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
 if (rules) {
+#if 1
+	if (c.inside_conditional() || c.inside_loop()) {
+		FINISH_ME(Fang);
+		cerr <<
+		"WARNING: Ignoring PRS inside loops/conditionals for now."
+			<< endl;
+		return never_ptr<const object>(NULL);
+	}
+#endif
+	if (c.reject_namespace_lang_body()) {
+		cerr << "Error: top-level PRS is only supported "
+			"in the global namespace." << endl;
+		cerr << "\tgot: prs { ... } " << where(*this)
+			<< endl;
+		THROW_EXIT;
+	}
 	// check context's current open definition
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
@@ -691,18 +708,13 @@ if (rules) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-		if (c.reject_namespace_lang_body()) {
-			cerr << "Error: top-level PRS is only supported "
-				"in the global namespace." << endl;
-			cerr << "\tgot: prs { ... } " << where(*this)
-				<< endl;
-			THROW_EXIT;
-		}
+		entity::PRS::rule_set& rs(c.get_current_prs_body());
 		for ( ; i!=e; i++) {
 			excl_ptr<entity::PRS::rule>
 				xfer(i->exclusive_release());
 //			xfer->check();		// paranoia
-			pd->add_production_rule(xfer);
+//			pd->add_production_rule(xfer);
+			rs.append_rule(xfer);
 			// now also works on top-level module
 			// b/c it is also a process_definition.
 		}

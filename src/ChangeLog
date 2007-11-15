@@ -5,6 +5,26 @@
 
 2007-11-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-95-ACT-02-02:
+	  parser/hackt-parse.yy.in: new non-terminal
+		instance_item_extended now includes language_body,
+		requires parser::language_body to derive from 
+		instance_management (base), now in "AST/instance_base.h".  
+	  entity::process_definition: ditched add_production_rules in favor
+		of accsesing the PRS rule_set directly through...
+	  AST/parse_context.{h,cc}: new member current_prs_body
+		will be the place to append rules as the PRS trees are 
+		walked, which opens the doors to supporting prs inside
+		of conditional and loops in the instance management.  
+	  Split out new header files: AST/instance_base.h, AST/lang.h
+	  currently 3 transient compile-fail test regressions related
+		to prs within loops and conditionals.  
+	  TODO: generalize conditionals to accommodate cascaded else-if
+		for instance-management and prs alike.  
+		AST: conditional/loop instantiation to accommodate prs,
+		and also delete if empty.
+
+
 	* HACKT-00-01-04-main-00-81-95-ACT-02-01:
 	  Round 2 of ACT-compatibility patches.
 	  Object/lang/PRS*.{h,cc}: deleted redundant class nested_rules

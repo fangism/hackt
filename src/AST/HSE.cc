@@ -1,7 +1,7 @@
 /**
 	\file "AST/HSE.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: HSE.cc,v 1.4 2007/03/11 16:34:14 fang Exp $
+	$Id: HSE.cc,v 1.4.34.1 2007/11/15 23:48:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_hse.cc,v 1.14.48.1 2005/12/11 00:45:07 fang Exp
  */
@@ -15,6 +15,8 @@
 #include "AST/token.h"
 #include "AST/token_char.h"
 #include "AST/node_list.tcc"
+#include "AST/parse_context.h"
+#include "common/TODO.h"
 
 #include "util/what.h"
 #include "util/memory/count_ptr.tcc"
@@ -84,7 +86,15 @@ body::rightmost(void) const {
 
 never_ptr<const object>
 body::check_build(context& c) const {
-	cerr << "Fang, finish HSE::body::check_build()!" << endl;
+	FINISH_ME(Fang);
+#if 1
+	if (c.inside_conditional() || c.inside_loop()) {
+		cerr <<
+		"WARNING: Ignoring SPEC inside loops/conditionals for now."
+			<< endl;
+		return never_ptr<const object>(NULL);
+	}
+#endif
 	return never_ptr<const object>(NULL);
 }
 
@@ -120,7 +130,7 @@ guarded_command::rightmost(void) const {
 
 never_ptr<const object>
 guarded_command::check_build(context& c) const {
-	cerr << "Fang, finish HSE::guarded_command::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -166,7 +176,7 @@ skip::rightmost(void) const {
 
 never_ptr<const object>
 skip::check_build(context& c) const {
-	cerr << "Fang, finish HSE::skip::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -196,7 +206,7 @@ wait::rightmost(void) const {
 
 never_ptr<const object>
 wait::check_build(context& c) const {
-	cerr << "Fang, finish HSE::wait::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -227,7 +237,7 @@ assignment::rightmost(void) const {
 
 never_ptr<const object>
 assignment::check_build(context& c) const {
-	cerr << "Fang, finish HSE::assignment::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -265,7 +275,7 @@ det_selection::rightmost(void) const {
 
 never_ptr<const object>
 det_selection::check_build(context& c) const {
-	cerr << "Fang, finish HSE::det_selection::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -294,7 +304,7 @@ nondet_selection::rightmost(void) const {
 
 never_ptr<const object>
 nondet_selection::check_build(context& c) const {
-	cerr << "Fang, finish HSE::nondet_selection::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -347,7 +357,7 @@ loop::rightmost(void) const {
 
 never_ptr<const object>
 loop::check_build(context& c) const {
-	cerr << "Fang, finish HSE::loop::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -375,7 +385,7 @@ do_until::rightmost(void) const {
 
 never_ptr<const object>
 do_until::check_build(context& c) const {
-	cerr << "Fang, finish HSE::do_until::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 

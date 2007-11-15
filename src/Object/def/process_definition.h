@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.13 2007/10/08 01:21:10 fang Exp $
+	$Id: process_definition.h,v 1.13.6.1 2007/11/15 23:48:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -102,8 +102,8 @@ public:
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
-	void
-	add_production_rule(excl_ptr<PRS::rule>&);
+	PRS::rule_set&
+	get_prs(void) { return prs; }
 
 	void
 	expand_prs_complements(void);

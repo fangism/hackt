@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.10 2007/10/08 01:20:55 fang Exp $
+	$Id: SPEC.cc,v 1.10.6.1 2007/11/15 23:48:25 fang Exp $
  */
 
 #include <iostream>
@@ -170,6 +170,15 @@ body::rightmost(void) const { return directives->rightmost(); }
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
+#if 1
+	if (c.inside_conditional() || c.inside_loop()) {
+		FINISH_ME(Fang);
+		cerr <<
+		"WARNING: Ignoring SPEC inside loops/conditionals for now."
+			<< endl;
+		return never_ptr<const object>(NULL);
+	}
+#endif
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	entity::SPEC::directives_set* dss;
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());

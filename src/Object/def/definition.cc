@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.43 2007/10/12 22:43:52 fang Exp $
+ 	$Id: definition.cc,v 1.43.4.1 2007/11/15 23:48:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3121,33 +3121,6 @@ process_definition::require_signature_match(
 		return good_bool(false);
 	}
 	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Registers a production rule with this process definition.  
-	Automatically expands complements.  
-	\param r pointer to newly created and checked production rule.  
-		Transfers ownership to the definition.  
-	\post r is NULL, no longer owned by the passer.  
- */
-void
-process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
-#if 0
-	NEVER_NULL(r);
-	r->check();		// paranoia
-	excl_ptr<PRS::rule> cmpl = r->expand_complement();
-	prs.push_back(PRS::rule_set::value_type());
-	prs.back() = r;
-	INVARIANT(!r);
-	if (cmpl) {
-		prs.push_back(PRS::rule_set::value_type());
-		prs.back() = cmpl;
-		INVARIANT(!cmpl);
-	}
-#else
-	prs.append_rule(r);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

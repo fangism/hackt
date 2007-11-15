@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.32 2007/10/12 22:43:58 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.32.4.1 2007/11/15 23:48:47 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -618,6 +618,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_instance_management>	connection_body_item
 %type	<_def_body_item>	definition_body_item
 %type	<_def_body_item>	datatype_body_item
+/* %type	<_def_body_item>	instance_item_extended	*/
+%type	<_instance_management>	instance_item_extended
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
@@ -874,10 +876,11 @@ namespace_item
 /* proposed change: forbid nested namespacs, only allow in root_item */
 	: namespace_management { $$ = $1; }
 /* instance_item already includes semicolon where needed */
-	| instance_item { $$ = $1; }
+	| instance_item_extended { $$ = $1; }
 	| type_alias { $$ = $1; }
-/* new: top-level prs, chp, hse */
+/* new: top-level prs, chp, hse (moved to instance_item_extended)
 	| language_body { $$ = $1; }
+*/
 	;
 
 namespace_management
@@ -1438,8 +1441,10 @@ definition_body
 	;
 
 definition_body_item
-	: instance_item { $$ = $1; }
+	: instance_item_extended { $$ = $1; }
+/** (moved to instance_item_extended)
 	| language_body { $$ = $1; }
+ */
 	| type_alias { $$ = $1; }
 	;
 
@@ -1508,11 +1513,13 @@ connection_body_item
 
 /* subset of definition body items allowed inside loop/conditional scopes
  * Type-wise, this is identical to definition_body.  
+ * new: upgraded to instance_item_extended to support language bodies
+ * inside instance_management_lists
  */
 instance_management_list
-	: instance_management_list instance_item
+	: instance_management_list instance_item_extended
 		{ $$ = $1; $$->push_back($2); }
-	| instance_item
+	| instance_item_extended
 		{ $$ = new instance_management_list($1); }
 	;
 
@@ -1527,6 +1534,11 @@ instance_management_list
 // myprocesstype<X,Y> foo;			// declare without connection
 // foo(port-actuals);				// then connect
 */
+
+instance_item_extended
+	: instance_item { $$ = $1; }
+	| language_body { $$ = $1; }
+	;
 
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.10 2007/10/12 22:43:47 fang Exp $
+	$Id: CHP.h,v 1.10.4.1 2007/11/15 23:48:21 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -12,7 +12,7 @@
 #include "AST/CHP_fwd.h"
 #include "AST/token_string.h"
 #include "AST/statement.h"
-#include "AST/definition_item.h"
+#include "AST/lang.h"
 #include "AST/expr_base.h"
 #include "Object/type/channel_direction_enum.h"
 #include "util/memory/count_ptr.h"

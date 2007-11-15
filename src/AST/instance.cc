@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.25 2007/10/12 22:43:47 fang Exp $
+	$Id: instance.cc,v 1.25.4.1 2007/11/15 23:48:36 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1178,15 +1178,16 @@ conditional_instantiation::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: make sure condition does NOT depend on relaxed formal parameter.  
+	Is that restriction really necessary?  (don't think so)
  */
 never_ptr<const object>
 conditional_instantiation::check_build(context& c) const {
-#if 0
-	FINISH_ME(Fang);
-	return never_ptr<const object>(NULL);
-#else
+	// ALERT: check_build may throw!
+	// to accommodate prs bodies inside conditionals, 
+	// we first create an empty conditional_prs, 
+	// then let each guarded body append clauses.
+	// TODO: FINISH_ME
 	return gd->check_build(c);
-#endif
 }
 
 //=============================================================================
