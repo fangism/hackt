@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.9 2007/10/08 01:21:22 fang Exp $
+	$Id: PRS_base.h,v 1.9.6.1 2007/11/15 19:13:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -101,53 +101,6 @@ struct expr_dump_context : public rule_dump_context {
 
 //=============================================================================
 /**
-	A collection or production rules.  
- */
-class rule_set : public list<sticky_ptr<rule> > {
-	typedef	rule_set			this_type;
-protected:
-	typedef	list<sticky_ptr<rule> >		parent_type;
-public:
-	typedef	parent_type::value_type		value_type;
-public:
-	rule_set();
-	~rule_set();
-
-	ostream&
-	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;
-
-	void
-	expand_complements(void);
-
-	void
-	compact_references(void);
-
-	void
-	append_rule(excl_ptr<rule>&);
-
-/**
-	Prototype for unroll visiting.  
- */
-#define	PRS_UNROLL_RULE_PROTO						\
-	good_bool							\
-	unroll(const unroll_context&, const node_pool_type&, 		\
-		PRS::footprint&) const
-
-	PRS_UNROLL_RULE_PROTO;
-
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-
-};	// end class rule_set
-
-//=============================================================================
-/**
 	Abstract base class for a production rule.  
 	TODO: parent link for upward structure?
  */
@@ -162,6 +115,14 @@ virtual	ostream&
 virtual	excl_ptr<rule>
 	expand_complement(void) = 0;
 
+/**
+	Prototype for unroll visiting.  
+ */
+#define	PRS_UNROLL_RULE_PROTO						\
+	good_bool							\
+	unroll(const unroll_context&, const node_pool_type&, 		\
+		PRS::footprint&) const
+
 virtual	PRS_UNROLL_RULE_PROTO = 0;
 
 virtual	void
@@ -170,6 +131,65 @@ virtual	void
 	struct checker;
 	struct dumper;
 };	// end class rule
+
+//=============================================================================
+/**
+	A collection or production rules.  
+ */
+class rule_set : public rule, 
+		public list<sticky_ptr<rule> > {
+	typedef	rule_set			this_type;
+protected:
+	typedef	list<sticky_ptr<rule> >		parent_type;
+public:
+	typedef	parent_type::value_type		value_type;
+public:
+	rule_set();
+	~rule_set();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;
+
+	void
+	check(void) const;
+
+	excl_ptr<rule>
+	expand_complement(void);
+
+	void
+	expand_complements(void);
+
+	void
+	compact_references(void);
+
+	void
+	append_rule(excl_ptr<rule>&);
+
+	PRS_UNROLL_RULE_PROTO;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+protected:
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+
+};	// end class rule_set
 
 //=============================================================================
 /**

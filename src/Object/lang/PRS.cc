@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.26 2007/10/08 01:21:18 fang Exp $
+	$Id: PRS.cc,v 1.26.6.1 2007/11/15 19:13:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -227,10 +227,16 @@ struct prs_expr::unroll_copier {
 //=============================================================================
 // class rule_set method definitions
 
-rule_set::rule_set() : parent_type() { }
+rule_set::rule_set() : rule(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_set::~rule_set() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+rule_set::what(ostream& o) const {
+	return o << "PRS::rule_set";
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -263,6 +269,19 @@ rule_set::append_rule(excl_ptr<rule>& r) {
 void
 rule_set::compact_references(void) {
 	cerr << "Fang, write PRS::rule_set::compact_references()!" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::check(void) const {
+	for_each(begin(), end(), rule::checker());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+rule_set::expand_complement(void) {
+	expand_complements();
+	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,6 +329,15 @@ rule_set::collect_transient_info_base(persistent_object_manager& m) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+rule_set::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 rule_set::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	m.write_pointer_list(o, *this);
@@ -317,9 +345,23 @@ rule_set::write_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+rule_set::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 rule_set::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer_list(i, *this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	load_object_base(m, i);
 }
 
 //=============================================================================
@@ -948,85 +990,6 @@ rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
 	meta_conditional_base::load_object_base(m, i);
 	if_rules.load_object_base(m, i);
 	else_rules.load_object_base(m, i);
-}
-
-//=============================================================================
-// class nested_rules method definitions
-
-nested_rules::nested_rules() : rule(), rules() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-nested_rules::~nested_rules() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nested_rules)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-nested_rules::dump(ostream& o, const rule_dump_context& c) const {
-	// don't even bother indenting
-	return rules.dump(o, c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::check(void) const {
-	for_each(rules.begin(), rules.end(), rule::checker());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<rule>
-nested_rules::expand_complement(void) {
-	rules.expand_complements();
-	return excl_ptr<rule>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::push_back(excl_ptr<rule>& r) {
-	NEVER_NULL(r);
-	rules.push_back(value_type());
-	rules.back() = r;
-	MUST_BE_NULL(r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Unrolls a set of loop-dependent production rules.  
- */
-good_bool
-nested_rules::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
-	return rules.unroll(c, np, pfp);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::collect_transient_info_base(persistent_object_manager& m) const {
-	rules.collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	rules.write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	rules.load_object_base(m, i);
 }
 
 //=============================================================================

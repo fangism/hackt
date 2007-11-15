@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.20 2007/10/08 01:21:19 fang Exp $
+	$Id: PRS.h,v 1.20.6.1 2007/11/15 19:13:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -350,53 +350,8 @@ public:
 };	// and class pass
 
 //=============================================================================
-/**
-	Just a set of rules that were wrapped in a nested scope.
-	For all practical purposes, these should just be treated as a 
-	continuation list of rules, nothing special about them.  
- */
-class nested_rules : public rule {
-	typedef	nested_rules			this_type;
-	typedef	rule_set::value_type		value_type;
-private:
-	rule_set				rules;
-public:
-	nested_rules();
-	~nested_rules();
-
-	ostream&
-	what(ostream&) const;
-
-	ostream&
-	dump(ostream&, const rule_dump_context&) const;
-
-	PRS_UNROLL_RULE_PROTO;
-
-	void
-	check(void) const;
-
-	excl_ptr<rule>
-	expand_complement(void);
-
-	void
-	push_back(excl_ptr<rule>&);
-
-protected:
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-private:
-	void
-	collect_transient_info(persistent_object_manager&) const;
-
-protected:
-	// these are also used by rule_loop
-	void
-	write_object(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object(const persistent_object_manager&, istream&);
-};	// end class nested_rules
+// This used to be its own class, just replaced with typedef...
+typedef	rule_set		nested_rules;
 
 //=============================================================================
 /**
@@ -406,8 +361,6 @@ protected:
 class rule_loop : public nested_rules, private meta_loop_base {
 	typedef	rule_loop			this_type;
 	typedef	rule_set::value_type		value_type;
-private:
-	rule_set				rules;
 public:
 	rule_loop();
 	rule_loop(const ind_var_ptr_type&, const range_ptr_type&);

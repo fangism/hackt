@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-11-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-01:
+	  Round 2 of ACT-compatibility patches.
+	  Object/lang/PRS*.{h,cc}: deleted redundant class nested_rules
+		in favor of already existing rule_set.
+		PRS_base.h: rule_set now derives from rule.
+		class rule_loop: deleted unused member `rules'.
+		This change is appropriate for trunk as well.  
+
+
 2007-11-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-95:
