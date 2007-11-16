@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2007/10/08 01:28:00 fang Exp $
+#	$Id: Makefile.am,v 1.34.6.1 2007/11/16 04:21:58 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -13,7 +13,6 @@ HACKT_PARSE_TEST_FAILURES = \
 	macro-param-01 macro-param-02 macro-param-03 \
 	size-02 size-06 \
 	spec_min_sep-02 spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
-	loop-05 loop-07 \
 	cond-01 \
 	top-level-02 top-level-03 \
 	precharge-01 \
@@ -30,7 +29,9 @@ HACKT_PARSE_TEST_PASSES = \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 loop-09 \
+	loop-00 loop-01 loop-02 loop-03 loop-04 loop-05 loop-06 loop-07 \
+	loop-08 loop-09 loop-10 loop-11 loop-12 loop-13 loop-14 loop-15 \
+	loop-16 loop-17 loop-18 loop-19 loop-20 \
 	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
@@ -78,7 +79,8 @@ HACKT_CREATE_TEST_PASSES = \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-04 loop-06 loop-08 loop-09 \
+	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
+	loop-10 loop-14 loop-15 loop-16 loop-18 loop-19 loop-20 \
 	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
@@ -111,6 +113,7 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
+	loop-11 loop-12 loop-13 loop-17 \
 	null-01 \
 	act-009 \
 	internal-node-07 internal-node-09 internal-node-10
@@ -127,7 +130,8 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-04 loop-06 loop-08 loop-09 \
+	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
+	loop-10 loop-14 loop-15 loop-16 loop-18 loop-19 loop-20 \
 	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
@@ -190,7 +194,6 @@ BISON_OUTPUTS += inv-01 inv-11 \
 	echo-02 after-01 size-02 \
 	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
 	cond-01 \
-	loop-05 loop-07 \
 	top-level-03 \
 	precharge-01 \
 	internal-node-05

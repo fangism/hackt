@@ -1,0 +1,16 @@
+// "loop-16.hac"
+// copy-modified from "loop-08.hac"
+// should pass, and produce inverters
+
+template <pint N>
+defproc null() {
+bool x, y;
+(;i:N:
+prs {
+[after=10+3*i]	x	=> y-
+}
+)
+}
+
+null<3> foo;	// should produce redundant prs with different delays
+

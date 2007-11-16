@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.25.4.1 2007/11/15 23:48:36 fang Exp $
+	$Id: instance.cc,v 1.25.4.2 2007/11/16 04:21:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -34,6 +34,7 @@
 #include "Object/type/channel_type_reference_base.h"	// reject directions
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/ref/meta_value_reference_base.h"
+#include "Object/lang/PRS.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
@@ -1082,11 +1083,29 @@ loop_instantiation::check_build(context& c) const {
 	}
 	const count_ptr<loop_scope>
 		ls(new loop_scope(loop_ind, loop_range));
+	excl_ptr<entity::PRS::rule_loop>
+		prl(new entity::PRS::rule_loop(loop_ind, loop_range));
 	NEVER_NULL(ls);
+	NEVER_NULL(prl);
 {
 	const context::loop_scope_frame _lsf(c, ls);
+	const context::prs_body_frame
+		prlf(c, never_ptr<entity::PRS::rule_loop>(&*prl));
 	body->check_build(c);
+	// unwind frames upon end of scope
 }
+	if (ls->empty()) {
+		// don't bother keeping empty loop?
+		c.get_current_sequential_scope()->pop_back();
+	}
+	if (!prl->empty()) {
+		excl_ptr<entity::PRS::rule>
+			pprl = prl.as_a_xfer<entity::PRS::rule>();
+		c.get_current_prs_body().append_rule(pprl);
+		INVARIANT(!prl);
+		INVARIANT(!pprl);
+	}
+	// otherwise just omit empty loop, is pointless
 }
 	return return_type(NULL);
 }

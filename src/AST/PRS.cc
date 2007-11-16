@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.27.6.1 2007/11/15 23:48:22 fang Exp $
+	$Id: PRS.cc,v 1.27.6.2 2007/11/16 04:21:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -684,10 +684,11 @@ body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
 if (rules) {
 #if 1
-	if (c.inside_conditional() || c.inside_loop()) {
+	// we added loop support
+	if (c.inside_conditional()) {
 		FINISH_ME(Fang);
 		cerr <<
-		"WARNING: Ignoring PRS inside loops/conditionals for now."
+		"WARNING: Ignoring PRS inside conditionals for now."
 			<< endl;
 		return never_ptr<const object>(NULL);
 	}

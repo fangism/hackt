@@ -1,0 +1,6 @@
+after 10	"foo.x" -> "foo.y"-
+after 10	~"foo.x" -> "foo.y"+
+after 13	"foo.x" -> "foo.y"-
+after 13	~"foo.x" -> "foo.y"+
+after 16	"foo.x" -> "foo.y"-
+after 16	~"foo.x" -> "foo.y"+

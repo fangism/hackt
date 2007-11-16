@@ -1,0 +1,11 @@
+Sorry, empty expression loops are not yet supported.  Currently waiting for resolution on language defect report.
+Error unrolling production rule guard: 
+	(&:j:[0..$i-1]: ~nandN::in[($i+$k+1)%nandN::N]) -> nandN::_out+
+Error resolving production rule in loop:
+$i = 0
+Error resolving production rule in loop:
+$k = 0
+Error instantiating process footprint: 
+From canonical type: nandN<4>
+Error encountered during module::unroll.
+ERROR in creating.  Aborting.

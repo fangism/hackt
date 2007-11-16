@@ -5,6 +5,14 @@
 
 2007-11-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-95-ACT-02-03:
+	  AST/instance.cc (loop_instantiation::check_build): 
+		enabled prs inside loops, in addition to loops inside prs -- 
+		does the right thing, even removes empty loops.
+	  Two fistfuls of test cases added parser/prs.
+	  Next: conditionals rework.  Down to 1 transient regression.
+
+
 	* HACKT-00-01-04-main-00-81-95-ACT-02-02:
 	  parser/hackt-parse.yy.in: new non-terminal
 		instance_item_extended now includes language_body,

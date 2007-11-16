@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.12 2006/10/18 05:33:03 fang Exp $
+	$Id: sequential_scope.h,v 1.12.58.1 2007/11/16 04:21:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -72,6 +72,14 @@ public:
 	append_instance_management(
 		const instance_management_list_type::value_type&);
 
+	bool
+	empty(void) const { return instance_management_list.empty(); }
+
+	// to undo the last item
+	void
+	pop_back(void) {
+		instance_management_list.pop_back();
+	}
 protected:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;

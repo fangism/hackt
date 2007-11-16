@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.22.2.1 2007/11/15 23:48:39 fang Exp $
+ 	$Id: parse_context.cc,v 1.22.2.2 2007/11/16 04:21:53 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -1158,7 +1158,7 @@ context::loop_var_frame::~loop_var_frame() {
 // struct context::loop_scope_frame method definitions
 
 /**
-	Adde the new loop scope to the current sequential scope, 
+	Add the new loop scope to the current sequential scope, 
 	then pushes it onto the sequential scope stack.  
  */
 context::loop_scope_frame::loop_scope_frame(context& c, 
