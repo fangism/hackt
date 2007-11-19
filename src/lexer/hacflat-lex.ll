@@ -3,7 +3,7 @@
  *	vi: ft=lex
  *	Will flattens a HAC source file into a single file by dumping
  *	imported files (visit-once only).  
- *	$Id: hacflat-lex.ll,v 1.5 2007/11/05 00:25:03 fang Exp $
+ *	$Id: hacflat-lex.ll,v 1.6 2007/11/19 18:58:15 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -65,9 +65,14 @@ namespace lexer {
 	Set to true to print with "#FILE { ... } // #FILE" 
 	hierarchy wrappers.
 	Set to false to suppress.  
+	NOTE: The caller is responsible for properly initializing this!
+	ubuntu6-x86-linux-gcc-4.0.3:
+		if initialized with value here, gets placed into 
+		initialized data section, but doesn't get properly linked
+		with undefined reference error, so we do NOT initialize here.
  */
 bool
-flatten_with_file_wrappers = true;
+flatten_with_file_wrappers;	// = true;
 
 //=============================================================================
 

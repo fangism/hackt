@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.4 2007/11/02 21:42:58 fang Exp $
+	$Id: flatten.cc,v 1.5 2007/11/19 18:58:18 fang Exp $
  */
 
 #include <iostream>
@@ -209,7 +209,8 @@ flatten::main(const int argc, char* argv[], const global_options&) {
  */
 int
 flatten::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+hI:M:w";
+	static const char* optstring = "+hI:M:P";
+	lexer::flatten_with_file_wrappers = true;	// initialize here!
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -223,7 +224,7 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
 		opt.make_depend = true;
 		opt.make_depend_target = optarg;
 		break;
-	case 'w':
+	case 'P':
 		// doesn't have complement or undo...
 		lexer::flatten_with_file_wrappers = false;
 		break;
@@ -264,7 +265,7 @@ flatten::usage(void) {
 	cerr << "\t-h : gives this usage messsage" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
-	cerr << "\t-w : suppress #FILE hierarchical wrappers in output" << endl;
+	cerr << "\t-P : suppress #FILE hierarchical wrappers in output" << endl;
 	cerr << "\tIf no output object file is given, flattend module will not be saved."
 		<< endl;
 }

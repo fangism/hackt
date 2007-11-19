@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-11-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-97:
+	  lexer/hacflat-lex.ll (flatten_with_file_wrappers) don't
+		initialize in declaration, because compilation puts it into
+		the initialized data section, which may cause problems
+		with shared libraries on certain platforms.  
+	  main/flatten.cc (hacpp): changed -w flag to -P to resemble cpp -P.
+
+
 2007-11-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-96:
