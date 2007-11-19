@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.18 2007/10/08 21:09:07 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.19 2007/11/19 07:49:17 fang Exp $
 #	vi: ft=automake
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
@@ -60,7 +60,7 @@ H_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 H_CHECK_TEST_SCRIPT += \
 	$(SED_srcdir_strip_setup) ; \
-	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
 	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
 	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
@@ -72,7 +72,7 @@ H_CHECK_TEST_SCRIPT += \
 else
 H_CHECK_TEST_SCRIPT += \
 	$(SED_srcdir_strip_setup) ; \
-	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
 	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_SOURCE) -o $@
 endif
 
@@ -84,7 +84,7 @@ HH_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 HH_CHECK_TEST_SCRIPT += \
 	$(SED_srcdir_strip_setup) ; \
-	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
 	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hhchk$$||'`; \
 	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thhd" \
@@ -96,7 +96,7 @@ HH_CHECK_TEST_SCRIPT += \
 else
 HH_CHECK_TEST_SCRIPT += \
 	$(SED_srcdir_strip_setup) ; \
-	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
 	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_SOURCE) -o $@
 endif
 .hh.hhchk:
@@ -107,7 +107,7 @@ TCC_CHECK_TEST_SCRIPT =
 if am__fastdepCXX
 TCC_CHECK_TEST_SCRIPT += \
 	$(SED_srcdir_strip_setup) ; \
-	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
 	depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
 	if $(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
@@ -119,7 +119,7 @@ TCC_CHECK_TEST_SCRIPT += \
 else
 TCC_CHECK_TEST_SCRIPT += \
 	$(SED_srcdir_strip_setup) ; \
-	src=`echo $< | $(SED_srcdir_strip_fast)` ; \
+	src=`$(ECHO) $< | $(SED_srcdir_strip_fast)` ; \
 	$(CXXCOMPILE) -I$(srcdir) $$more_hchk_flags -include $$src -c $(EMPTY_SOURCE) -o $@
 endif
 .tcc.tccchk:

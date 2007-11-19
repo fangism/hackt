@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-11-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-96:
+	  Header validation VPATH fix.
+	  Make.hchk-tail: $(ECHO) over echo
+	  scripts/promote_header_deps.awk:
+		use simpler index() function for prefix substring match.
+		solves problem of emitting bad dependencies when VPATH
+		build dir is *outside* of srcdir (not a subdir).
+	  lexer/flex_lexer_state.cc: #ifdef typo fix LEXER_HAS_YYLEX_DESTROY, 
+		thanks Tadeo for testing.  
+
+
 2007-11-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-95:

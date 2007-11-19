@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "promote_header_deps.awk"
-#	$Id: promote_header_deps.awk,v 1.6 2007/10/08 21:09:11 fang Exp $
+#	$Id: promote_header_deps.awk,v 1.7 2007/11/19 07:49:18 fang Exp $
 
 # Description:
 #	Takes a make-dependence file produced by gcc -MD
@@ -20,7 +20,6 @@ BEGIN {
 	num_paths = split(srcdir, toks);
 	for (i=1; i<=num_paths; ++i) {
 		srcdirs[i] = toks[i];
-		strip_dir_regex[i] = literal_string_to_regex(toks[i]);
 	}
 	if (!length(src)) {
 		print "Error: -v src=<file> is required.";
@@ -28,25 +27,6 @@ BEGIN {
 	}
 	# what is assumed if no srcdirs are given? '.'?
 	primary_srcdir = srcdirs[1];
-#	strip_dir = srcdir;
-#	strip_dir_regex = literal_string_to_regex(strip_dir);
-#	strip_length = length(srcdir) +1;
-#	print "# strip_dir = " strip_dir;
-#	print "# strip_dir_regex = " strip_dir_regex;
-}
-
-# converts a literal string into a regular expression for that exact string
-function literal_string_to_regex(str) {
-	gsub("\\\\", "\\\\", str);
-	gsub("\\.", "\\.", str);
-# some of these are wacky, hope not to find these in any path name
-#	gsub("\\[", "\\[", str);
-#	gsub("\\]", "\\]", str);
-#	gsub("\\^", "\\^", str);
-#	gsub("\\$", "\\$", str);
-#	gsub("\\?", "\\?", str);
-#	gsub("\\&", "\\&", str);
-	return str;
 }
 
 # main:
@@ -104,19 +84,10 @@ function demote_header_dep(f) {
 function srcdir_to_builddir(f, 
 # local vars
 	i) {
-#	if (match(f, "^" strip_dir_regex)) {
-#		# just decapitate the $(srcdir)/ part of the path name
-#		# same effect as substitution
-#		i = length(f);
-#		return substr(f, strip_length +1, i -strip_length +1);
-#	} else	return f;
-#	sub("^" strip_dir_regex "/", "", f);
-
 	for (i=1; i<=num_paths; ++i) {
-		rm_prefix = "^" strip_dir_regex[i] "/";
-		if (match(f, rm_prefix)) {
-			sub(rm_prefix, "", f);
-			return f;	# break as soon as one prefix is removed
+		# exact substring match
+		if (index(f, srcdirs[i] "/")) {
+			return substr(f, length(srcdirs[i])+2);
 		}
 		# else continue to check next one
 	}

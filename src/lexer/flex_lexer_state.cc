@@ -1,6 +1,6 @@
 /**
 	\file "lexer/flex_lexer_state.cc"
-	$Id: flex_lexer_state.cc,v 1.1 2007/11/01 23:59:41 fang Exp $
+	$Id: flex_lexer_state.cc,v 1.2 2007/11/19 07:49:17 fang Exp $
  */
 
 #include "lexer/flex_lexer_state.h"
@@ -28,7 +28,7 @@ http://flex.sourceforge.net/manual/Memory-leak-_002d-16386-bytes-allocated-by-ma
 	like valgrind.
  */
 lexer_state::~lexer_state() {
-#ifdef	LEX_HAS_YYLEX_DESTROY
+#ifdef	LEXER_HAS_YYLEX_DESTROY
 	// flex 2.5.31
 	// newer flex supports stack of buffers
 	yylex_destroy(*this);
