@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: flatten.cc,v 1.5 2007/11/19 18:58:18 fang Exp $
+	$Id: flatten.cc,v 1.6 2007/11/20 01:31:17 cto3 Exp $
  */
 
 #include <iostream>
@@ -33,7 +33,7 @@ using util::good_bool;
 
 namespace lexer {
 // from "lexer/hacflat-lex.ll" (and .cc derivatives, of course)
-extern	bool	flatten_with_file_wrappers;
+extern	void	flatten_with_wrappers(const bool);
 }
 
 //=============================================================================
@@ -210,7 +210,6 @@ flatten::main(const int argc, char* argv[], const global_options&) {
 int
 flatten::parse_command_options(const int argc, char* argv[], options& opt) {
 	static const char* optstring = "+hI:M:P";
-	lexer::flatten_with_file_wrappers = true;	// initialize here!
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -226,7 +225,7 @@ flatten::parse_command_options(const int argc, char* argv[], options& opt) {
 		break;
 	case 'P':
 		// doesn't have complement or undo...
-		lexer::flatten_with_file_wrappers = false;
+		lexer::flatten_with_wrappers(false);
 		break;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;

@@ -10,6 +10,7 @@
 		initialize in declaration, because compilation puts it into
 		the initialized data section, which may cause problems
 		with shared libraries on certain platforms.  
+	  	Privatized global variable, exposed through function instead.
 	  main/flatten.cc (hacpp): changed -w flag to -P to resemble cpp -P.
 
 
