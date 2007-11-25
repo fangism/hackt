@@ -1,0 +1,18 @@
+// "cond-15.hac"
+// testing else-if in prs
+
+pint N = 3;
+pint M = 4;
+
+bool x,y;
+
+prs {
+[ N == 2 ->
+	x -> y-
+[] N == 4 ->
+	~x -> y-
+[] M == 3 ->
+	y -> x-
+]
+}
+

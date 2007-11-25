@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.34.6.3 2007/11/25 10:03:00 fang Exp $
+#	$Id: Makefile.am,v 1.34.6.4 2007/11/25 22:06:32 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -33,6 +33,7 @@ HACKT_PARSE_TEST_PASSES = \
 	loop-16 loop-17 loop-18 loop-19 loop-20 \
 	cond-01 cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
+	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
@@ -83,6 +84,7 @@ HACKT_CREATE_TEST_PASSES = \
 	loop-10 loop-14 loop-15 loop-16 loop-18 loop-19 loop-20 \
 	cond-01 cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
+	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
@@ -135,6 +137,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	loop-10 loop-14 loop-15 loop-16 loop-18 loop-19 loop-20 \
 	cond-01 cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
+	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
@@ -188,7 +191,7 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += \
 	null-00 loop-00 \
-	cond-05 cond-08 cond-10 cond-11 \
+	cond-05 cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
 
 # more output expectation files for when bison is used

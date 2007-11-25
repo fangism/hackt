@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.32.4.2 2007/11/25 10:02:57 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.32.4.3 2007/11/25 22:06:32 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -390,6 +390,7 @@ extern const char* const yyrule[];
 	PRS::loop*		_prs_loop;
 	PRS::conditional*	_prs_conditional;
 	PRS::guarded_body*	_prs_guarded_body;
+	PRS::guarded_prs_list*	_prs_guarded_list;
 	PRS::macro*		_prs_macro;
 	PRS::attribute*		_prs_attribute;
 	PRS::attribute_list*	_prs_attribute_list;
@@ -703,9 +704,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prs_attribute_list>	prs_rule_attribute_list_in_brackets
 %type	<_prs_loop>	prs_loop
 %type	<_prs_conditional>	prs_conditional
+%type	<_prs_guarded_list>	prs_guarded_list prs_guarded_list_unmatched
 %type	<_prs_guarded_body>	prs_guarded_body
 %type	<_prs_guarded_body>	prs_else_clause
-%type	<_prs_guarded_body>	prs_else_clause_optional
+/* %type	<_prs_guarded_body>	prs_else_clause_optional	*/
 %type	<_prs_macro>	prs_macro
 %type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
 %type	<_expr> prs_not prs_and prs_or
@@ -2291,8 +2293,23 @@ prs_loop
 	;
 
 prs_conditional
-	: '[' prs_guarded_body prs_else_clause_optional ']'
-		{ $$ = new PRS::conditional($1, $2, $3, $4); }
+	: '[' prs_guarded_list ']'
+		{ WRAP_LIST($1, $2, $3);
+		  $$ = new PRS::conditional($2); }
+	;
+
+prs_guarded_list
+	: prs_guarded_list_unmatched THICKBAR prs_else_clause
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| prs_guarded_list_unmatched
+		{ $$ = $1; }
+	;
+
+prs_guarded_list_unmatched
+	: prs_guarded_list_unmatched THICKBAR prs_guarded_body
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| prs_guarded_body
+		{ $$ = new PRS::guarded_prs_list($1); }
 	;
 
 prs_guarded_body
@@ -2300,14 +2317,16 @@ prs_guarded_body
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 
+/**
 prs_else_clause_optional
 	: prs_else_clause { $$ = $1; }
 	|	{ $$ = NULL; }
 	;
+**/
 
 prs_else_clause
-	: THICKBAR ELSE RARROW prs_body
-		{ $$ = new PRS::guarded_body($2, $3, $4); DELETE_TOKEN($1); }
+	: ELSE RARROW prs_body
+		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 
 single_prs

@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.7.6.3 2007/11/25 10:02:50 fang Exp $
+	$Id: PRS.h,v 1.7.6.4 2007/11/25 22:06:30 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -242,14 +242,10 @@ public:
 	Class for wrapping production rules inside conditionals.  
  */
 class conditional : public body_item {
-	const excl_ptr<const char_punctuation_type>	lb;
-	const excl_ptr<const guarded_body>	if_then;
-	const excl_ptr<const guarded_body>	else_clause;
-	const excl_ptr<const char_punctuation_type>	rb;
+	const excl_ptr<const guarded_prs_list>		gp;
 public:
-	conditional(const char_punctuation_type*,
-		const guarded_body*, const guarded_body*,
-		const char_punctuation_type*);
+	// explicit
+	conditional(const guarded_prs_list*);
 	~conditional();
 
 	ostream&

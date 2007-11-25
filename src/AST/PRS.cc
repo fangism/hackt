@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.27.6.4 2007/11/25 10:02:49 fang Exp $
+	$Id: PRS.cc,v 1.27.6.5 2007/11/25 22:06:29 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -574,12 +574,8 @@ try {
 //=============================================================================
 // class conditional method definitions
 
-conditional::conditional(const char_punctuation_type* l, 
-		const guarded_body* i, const guarded_body* e, 
-		const char_punctuation_type* r) :
-		lb(l), if_then(i), else_clause(e), rb(r) {
-	NEVER_NULL(if_then);
-	// else clause is optional
+conditional::conditional(const guarded_prs_list* p) : gp(p) {
+	NEVER_NULL(gp);
 }
 
 conditional::~conditional() { }
@@ -588,16 +584,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(conditional)
 
 line_position
 conditional::leftmost(void) const {
-	if (lb)	return lb->leftmost();
-	else	return if_then->leftmost();
+	return gp->leftmost();
 }
 
 line_position
 conditional::rightmost(void) const {
-	if (rb)	return rb->rightmost();
-	else if (else_clause)
-		return else_clause->rightmost();
-	else	return if_then->rightmost();
+	return gp->leftmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -610,13 +602,10 @@ conditional::check_rule(context& c) const {
 	// see also conditional_instantiation::check_build()
 	excl_ptr<entity::PRS::rule_conditional>
 		rs(new entity::PRS::rule_conditional());
-	never_ptr<const entity::PRS::rule_conditional> crs(rs);
+	const never_ptr<const entity::PRS::rule_conditional> crs(rs);
 	c.get_current_prs_body().append_rule(rs);	// xfer ownership
 	MUST_BE_NULL(rs);
-	if_then->check_clause(c);
-	if (else_clause) {
-		else_clause->check_clause(c);
-	}
+	gp->check_list_void(&guarded_body::check_clause, c);
         if (crs->empty()) {
                 c.get_current_prs_body().pop_back();
         } 
@@ -1001,6 +990,28 @@ node_list<const PRS::body_item>::leftmost(void) const;
 template
 line_position
 node_list<const PRS::body_item>::rightmost(void) const;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// template
+// node_list<const PRS::guarded_body>::node_list();
+
+template
+node_list<const PRS::guarded_body>::node_list(const PRS::guarded_body*);
+
+template
+node_list<const PRS::guarded_body>::~node_list();
+
+template
+ostream&
+node_list<const PRS::guarded_body>::what(ostream&) const;
+
+template
+line_position
+node_list<const PRS::guarded_body>::leftmost(void) const;
+
+template
+line_position
+node_list<const PRS::guarded_body>::rightmost(void) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // template class node_list<const attribute>;

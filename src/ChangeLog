@@ -5,6 +5,12 @@
 
 2007-11-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-95-ACT-02-06:
+	  Extended PRS to support else-if guarded prs bodies, 
+		updated parser/hackt-parse.yy.in, AST/PRS.{h,cc}.
+	  Added new test cases in parser/prs.
+
+
 	* HACKT-00-01-04-main-00-81-95-ACT-02-05:
 	  Cleaned up conditional switches as promised.
 	  Added new test cases to parser/prs (conditionals).
