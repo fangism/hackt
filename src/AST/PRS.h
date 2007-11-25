@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.7.6.1 2007/11/15 23:48:23 fang Exp $
+	$Id: PRS.h,v 1.7.6.2 2007/11/25 02:28:02 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -16,6 +16,16 @@
 #include "util/STL/vector_fwd.h"
 #include "util/STL/pair_fwd.h"
 #include "util/memory/count_ptr.h"
+
+/**
+	Define to 1 to use void returns on PRS checks, 
+	relying on exceptions instead.  
+	Rationale: prs are being appended as they are checked, 
+	no longer returned.  
+	Goal: 1
+ */
+#define	VOID_AST_GUARDED_PRS_RETURN			1
+#define	VOID_AST_PRS_RETURN				1
 
 namespace HAC {
 namespace entity {
@@ -45,7 +55,11 @@ class body;
 /// a single production rule
 class body_item {
 public:
+#if	VOID_AST_PRS_RETURN
+	typedef	void					return_type;
+#else
 	typedef	count_ptr<entity::PRS::rule>		return_type;
+#endif
 protected:
 	// no members
 public:
@@ -70,10 +84,14 @@ virtual	PRS_ITEM_CHECK_PROTO = 0;
 };	// end class body_item
 
 //-----------------------------------------------------------------------------
+#if !VOID_AST_GUARDED_PRS_RETURN
 typedef	count_ptr<entity::PRS::rule_conditional>
 					guarded_body_return_type;
+#endif
 
+#if !VOID_AST_PRS_RETURN
 typedef	default_vector<body_item::return_type>::type	checked_rules_type;
+#endif
 
 //=============================================================================
 /**
@@ -223,7 +241,11 @@ class guarded_body {
 	const excl_ptr<const char_punctuation_type>	arrow;
 	const excl_ptr<const rule_list>			rules;
 public:
+#if VOID_AST_GUARDED_PRS_RETURN
+	typedef	void					return_type;
+#else
 	typedef	guarded_body_return_type		return_type;
+#endif
 
 	guarded_body(const expr*, const char_punctuation_type*,
 		const rule_list*);
@@ -306,8 +328,10 @@ public:
 	Now is also a body_item because of nested bodies.  
  */
 class body : public language_body, public body_item {
+#if !VOID_AST_PRS_RETURN
 	typedef	default_vector<body_item::return_type>::type
 				checked_rules_type;
+#endif
 protected:
 	const excl_ptr<const rule_list>		rules;
 public:
@@ -331,7 +355,11 @@ public:
 
 protected:
 	bool
-	__check_rules(context&, checked_rules_type&) const;
+	__check_rules(context&
+#if !VOID_AST_PRS_RETURN
+		, checked_rules_type&
+#endif
+		) const;
 
 };	// end class body
 

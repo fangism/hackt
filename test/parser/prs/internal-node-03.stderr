@@ -1,3 +1,4 @@
 Error: `z' is already declared as bool 0-D (placeholder)
 Error implicitly declaring internal node.  [7:13]
 ERROR in the output node reference at [7:13].
+ERROR: at least one error in PRS body.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.9.6.1 2007/11/15 19:13:07 fang Exp $
+	$Id: PRS_base.h,v 1.9.6.2 2007/11/25 02:28:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -147,6 +147,14 @@ public:
 	rule_set();
 	~rule_set();
 
+#if 0
+private:
+	// not copy-constructible, or should be restricted with run-time check
+	explicit
+	rule_set(const rule_set&);
+#endif
+
+public:
 	ostream&
 	what(ostream&) const;
 
@@ -168,6 +176,13 @@ public:
 	void
 	append_rule(excl_ptr<rule>&);
 
+	template <class R>
+	void
+	append_rule(excl_ptr<R>& r) {
+		excl_ptr<rule> tr = r.template as_a_xfer<rule>();
+		this->append_rule(tr);
+	}
+
 	PRS_UNROLL_RULE_PROTO;
 
 	void
@@ -178,6 +193,10 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+private:
+	// hide this from user
+	using parent_type::push_back;
 
 protected:
 	void

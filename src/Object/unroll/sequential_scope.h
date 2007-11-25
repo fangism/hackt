@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.12.58.1 2007/11/16 04:21:56 fang Exp $
+	$Id: sequential_scope.h,v 1.12.58.2 2007/11/25 02:28:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -34,53 +34,49 @@ using parser::context;
 class unroll_context;
 class instance_management_base;
 
+/**
+	The unified list of sequential instance management actions, 
+	including parameters, instantiations, assignments, 
+	and connections.  
+	Used for maintaining actions in source order.  
+	NOTE: production rules are are maintained separately
+	in Object/lang/PRS.h:rule_set.
+	We removed const because conditional_scopes need to 
+	be extended during parse-tree walking.
+	(Really, all other uses should be const!)
+	Screw it, it's worth const_cast-ing in one place...
+ */
+typedef list<count_ptr<const instance_management_base> >
+				instance_management_list_type;
 //=============================================================================
 /**
 	Abstract interface for scopes with sequential 
 	instance management actions.
+	Defined in "Object/unroll/instance_management_base.cc".
  */
-class sequential_scope {
-public:
-	/**
-		By using sticky_ptr, this is not copy-constructible.
-	 */
-	typedef list<count_ptr<const instance_management_base> >
-					instance_management_list_type;
-	typedef	instance_management_list_type::const_iterator
-							const_iterator;
-protected:
-	/**
-		The unified list of sequential instance management actions, 
-		including parameters, instantiations, assignments, 
-		and connections.  
-		Used for maintaining actions in source order.  
-	 */
-	instance_management_list_type   instance_management_list;
+class sequential_scope : public instance_management_list_type {
+	typedef	instance_management_list_type		parent_type;
 public:
 	sequential_scope();
-virtual ~sequential_scope();
 
-private:
-	/// Intentionally undefined private copy-constructor
-	sequential_scope(const sequential_scope&);
+// does this really need to be virtual? shouldn't be...
+virtual ~sequential_scope();
 
 public:
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
 
+#if 0
+	// should be alias to push_back
 	void
 	append_instance_management(
 		const instance_management_list_type::value_type&);
+#endif
 
-	bool
-	empty(void) const { return instance_management_list.empty(); }
+	using parent_type::empty;
+	using parent_type::pop_back;
+	using parent_type::back;
 
-	// to undo the last item
-	void
-	pop_back(void) {
-		instance_management_list.pop_back();
-	}
-protected:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
 
@@ -95,8 +91,6 @@ public:
 	void
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
-protected:
-// need not be virtual?
 	good_bool
 	unroll(const unroll_context& ) const;
 

@@ -1,2 +1,2 @@
-~"foo.x" -> "foo.y"+
 "foo.x" -> "foo.y"-
+~"foo.x" -> "foo.y"+

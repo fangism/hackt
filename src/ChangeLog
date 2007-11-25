@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-11-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-04:
+	  Major rework of conditional scopes.
+	  This revision adds full support for prs bodies inside
+		loops and conditionals.  
+	  class meta_conditional_base: now supports arbitrary number of
+		guard expressions, used by rule_conditional, and 
+		conditional_scope. 
+	  AST/PRS.cc; rule now return void instead of rules, and now just
+		append rules to the current active prs body, which is...
+	  AST/parse_context.h: a new member in this class.
+	  TODO: else-if constructs in parser and AST (already supported
+		in the middle-end and IR)
+	  TODO: clean-up flags VOID_AST_PRS_RETURN, 
+		VOID_AST_GUARDED_PRS_RETURN (in AST/PRS.h),
+		AST/instance.cc, GENERALIZED_META_CONDITIONAL, 
+		EXTENDED_CONDITIONAL_SCOPE_FRAME (parse_context)
+
+
 2007-11-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-95-ACT-02-03:

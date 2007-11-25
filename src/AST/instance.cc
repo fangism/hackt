@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.25.4.2 2007/11/16 04:21:50 fang Exp $
+	$Id: instance.cc,v 1.25.4.3 2007/11/25 02:28:03 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1087,23 +1087,24 @@ loop_instantiation::check_build(context& c) const {
 		prl(new entity::PRS::rule_loop(loop_ind, loop_range));
 	NEVER_NULL(ls);
 	NEVER_NULL(prl);
+	never_ptr<entity::PRS::rule_loop> prlc(prl);
+	c.get_current_prs_body().append_rule(prl);
 {
 	const context::loop_scope_frame _lsf(c, ls);
-	const context::prs_body_frame
-		prlf(c, never_ptr<entity::PRS::rule_loop>(&*prl));
+	const context::prs_body_frame prlf(c, prlc);
 	body->check_build(c);
 	// unwind frames upon end of scope
 }
-	if (ls->empty()) {
-		// don't bother keeping empty loop?
-		c.get_current_sequential_scope()->pop_back();
-	}
-	if (!prl->empty()) {
+	if (prlc->empty()) {
+#if 0
 		excl_ptr<entity::PRS::rule>
 			pprl = prl.as_a_xfer<entity::PRS::rule>();
 		c.get_current_prs_body().append_rule(pprl);
 		INVARIANT(!prl);
 		INVARIANT(!pprl);
+#else
+		c.get_current_prs_body().pop_back();
+#endif
 	}
 	// otherwise just omit empty loop, is pointless
 }
@@ -1154,15 +1155,37 @@ if (guard && !guard.is_a<const token_else>()) {
 		THROW_EXIT;
 	}
 } else {
-	// trailing else clause is always evaluated true
-	guard_expr = count_ptr<const pbool_expr>(new pbool_const(true));
+	// trailing else clause is always evaluated true (share it)
+	static const count_ptr<const pbool_const> _true(new pbool_const(true));
+	guard_expr = _true;
 }
 	NEVER_NULL(guard_expr);
+#if GENERALIZED_META_CONDITIONAL
+	// don't forget to open up guarded PRS as well (may be empty).
+	const count_ptr<const conditional_scope>
+		ls(c.get_current_sequential_scope()->back()
+			.is_a<const conditional_scope>());
+	const never_ptr<entity::PRS::rule_conditional>
+		rs(IS_A(entity::PRS::rule_conditional*, 
+			&*c.get_current_prs_body().back()));
+	NEVER_NULL(ls);
+	NEVER_NULL(rs);
+	const_cast<conditional_scope&>(*ls)	// kludge
+		.append_guarded_clause(guard_expr);	// instance management
+	rs->append_guarded_clause(guard_expr);	// PRS
+#else
 	count_ptr<conditional_scope>
 		ls(new conditional_scope(guard_expr));
 	NEVER_NULL(ls);
+#endif
 {
+#if EXTENDED_CONDITIONAL_SCOPE_FRAME
+	const context::conditional_scope_frame _csf(c);
+#else
 	const context::conditional_scope_frame _csf(c, ls);
+#endif
+	const context::prs_body_frame _pbf(c, 
+		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
 	body->check_build(c);
 }
 	return return_type(NULL);
@@ -1205,8 +1228,21 @@ conditional_instantiation::check_build(context& c) const {
 	// to accommodate prs bodies inside conditionals, 
 	// we first create an empty conditional_prs, 
 	// then let each guarded body append clauses.
-	// TODO: FINISH_ME
-	return gd->check_build(c);
+#if GENERALIZED_META_CONDITIONAL
+	const count_ptr<conditional_scope> ls(new conditional_scope());
+	excl_ptr<entity::PRS::rule_conditional>
+		rs(new entity::PRS::rule_conditional());
+	never_ptr<const entity::PRS::rule_conditional> crs(rs);
+	c.get_current_sequential_scope()->push_back(ls);
+	c.get_current_prs_body().append_rule(rs);	// xfer ownership
+	MUST_BE_NULL(rs);
+#endif
+	const never_ptr<const object> ret(gd->check_build(c));
+	// empty conditional PRS can be removed
+	if (crs->empty()) {
+		c.get_current_prs_body().pop_back();
+	}
+	return ret;
 }
 
 //=============================================================================
