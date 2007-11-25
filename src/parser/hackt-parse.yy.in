@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.32.4.1 2007/11/15 23:48:47 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.32.4.2 2007/11/25 10:02:57 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2296,7 +2296,7 @@ prs_conditional
 	;
 
 prs_guarded_body
-	: expr RARROW prs_body
+	: expr RARROW prs_body_optional
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 

@@ -1,0 +1,14 @@
+// "cond-12.hac"
+// copy-modified from "cond-10.hac"
+// testing prs inside conditional, and nested
+
+
+bool z, d;
+[ true ->
+prs {
+[true ->
+	d => z-
+]
+}
+]
+

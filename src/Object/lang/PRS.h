@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.20.6.2 2007/11/25 02:28:15 fang Exp $
+	$Id: PRS.h,v 1.20.6.3 2007/11/25 10:02:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -396,25 +396,14 @@ class rule_conditional : public rule, private meta_conditional_base {
 	typedef	rule_conditional		this_type;
 	typedef	rule_set::value_type		value_type;
 private:
-#if GENERALIZED_META_CONDITIONAL
 	/**
 		DO NOT use vector unless size is pre-reserved, 
 		because of underlying list of sticky_ptrs.
 	 */
 	typedef	std::list<rule_set>		clause_list_type;
 	clause_list_type			clauses;
-#else
-	rule_set				if_rules;
-	// meta_conditional_base		// no else condition needed
-	rule_set				else_rules;
-#endif
 public:
 	rule_conditional();
-
-#if !GENERALIZED_META_CONDITIONAL
-	explicit
-	rule_conditional(const guard_ptr_type&);
-#endif
 
 	~rule_conditional();
 
@@ -435,19 +424,11 @@ public:
 	excl_ptr<rule>
 	expand_complement(void);
 
-#if GENERALIZED_META_CONDITIONAL
 	void
 	append_guarded_clause(const guard_ptr_type&);
 
 	rule_set&
 	get_last_clause(void) { return clauses.back(); }
-#else
-	void
-	push_back_if_clause(excl_ptr<rule>&);
-
-	void
-	import_else_clause(this_type&);
-#endif
 
 	void
 	collect_transient_info(persistent_object_manager&) const;

@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.22.2.3 2007/11/25 02:28:05 fang Exp $
+ 	$Id: parse_context.cc,v 1.22.2.4 2007/11/25 10:02:50 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -1194,24 +1194,14 @@ context::loop_scope_frame::~loop_scope_frame() {
 	then pushes it onto the sequential scope stack.  
 	Also saves status of the in_conditional_scope flag.
  */
-context::conditional_scope_frame::conditional_scope_frame(context& c 
-#if !EXTENDED_CONDITIONAL_SCOPE_FRAME
-		, const count_ptr<conditional_scope>& l
-#endif
-		) :
+context::conditional_scope_frame::conditional_scope_frame(context& c) :
 		_context(c), parent_cond(c.in_conditional_scope) {
-#if EXTENDED_CONDITIONAL_SCOPE_FRAME
 	_context.sequential_scope_stack.push(
 		never_ptr<sequential_scope>(
 			&(const_cast<conditional_scope&>(
 				*_context.sequential_scope_stack.top()->back()
 				.is_a<const conditional_scope>()))
 			.get_last_clause()));
-#else
-	NEVER_NULL(l);
-	_context.get_current_sequential_scope()->push_back(l);
-	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
-#endif
 	_context.in_conditional_scope = true;
 }
 

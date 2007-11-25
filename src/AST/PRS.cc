@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.27.6.3 2007/11/25 02:28:01 fang Exp $
+	$Id: PRS.cc,v 1.27.6.4 2007/11/25 10:02:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -96,6 +96,9 @@ using std::mem_fun_ref;
 
 //=============================================================================
 // class body_item method definitions
+
+#define	CHECK_RULE_THROW	THROW_EXIT
+#define	GUARDED_PRS_THROW	THROW_EXIT
 
 body_item::body_item() { }
 
@@ -401,11 +404,7 @@ rule::check_rule(context& c) const {
 			<< where(*this) << endl;
 		THROW_EXIT;
 	}
-#if VOID_AST_PRS_RETURN
 	excl_ptr<pull_base>
-#else
-	const count_ptr<pull_base>
-#endif
 		ret((dir->text[0] == '+') ?
 			AS_A(pull_base*,
 				new entity::PRS::pull_up(g, *o, arrow_type)) :
@@ -421,11 +420,7 @@ rule::check_rule(context& c) const {
 			THROW_EXIT;
 		}
 	}
-#if VOID_AST_PRS_RETURN
 	c.get_current_prs_body().append_rule(ret);
-#else
-	return ret;
-#endif
 }
 
 //=============================================================================
@@ -458,11 +453,6 @@ loop::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if VOID_AST_PRS_RETURN
-#define	CHECK_RULE_THROW	THROW_EXIT
-#else
-#define	CHECK_RULE_THROW	return body_item::return_type()
-#endif
 /**
 	TODO: have PRS::rule return a entity::PRS::rule.
  */
@@ -493,17 +483,12 @@ loop::check_rule(context& c) const {
 			" at " << where(*index) << endl;
 		return return_type(NULL);
 	}
-#if VOID_AST_PRS_RETURN
 	excl_ptr<entity::PRS::rule_loop>
-#else
-	const count_ptr<entity::PRS::rule_loop>
-#endif
 		ret(new entity::PRS::rule_loop(loop_ind, loop_range));
 	NEVER_NULL(ret);
 
 	// copied from body::check_rule
 	// const never_ptr<definition_base> d(c.get_current_open_definition());
-#if VOID_AST_PRS_RETURN
 	never_ptr<entity::PRS::rule_loop> retc(ret);
 	c.get_current_prs_body().append_rule(ret);
 try {
@@ -517,31 +502,6 @@ try {
 	if (retc->empty()) {
 		c.get_current_prs_body().pop_back();
 	}
-#else
-	checked_rules_type checked_rules;
-	rules->check_list(checked_rules, &body_item::check_rule, c);
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	if (null_iter == checked_rules.end()) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; ++i) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			ret->push_back(xfer);
-			MUST_BE_NULL(xfer);
-		}
-		return ret;
-	} else {
-		cerr << "ERROR: at least one error in PRS rule-loop.  "
-			<< where(*rules) << endl;
-		// THROW_EXIT;
-		return body_item::return_type();
-	}
-#endif	// VOID_AST_PRS_RETURN
 }	// end method loop::check_rule
 
 //=============================================================================
@@ -572,12 +532,6 @@ guarded_body::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if VOID_AST_GUARDED_PRS_RETURN
-#define	GUARDED_PRS_THROW		THROW_EXIT
-#else
-#define	GUARDED_PRS_THROW		return return_type()
-#endif
-
 guarded_body::return_type
 guarded_body::check_clause(context& c) const {
 	STACKTRACE_VERBOSE;
@@ -598,7 +552,6 @@ guarded_body::check_clause(context& c) const {
 		}
 		}
 	}
-#if GENERALIZED_META_CONDITIONAL
 	// see also guarded_instance_management::check_build()
 	const never_ptr<entity::PRS::rule_conditional>
 		rs(IS_A(entity::PRS::rule_conditional*,
@@ -609,49 +562,13 @@ guarded_body::check_clause(context& c) const {
 		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
 	STACKTRACE_INDENT_PRINT("current rule set: " <<
 		&rs->get_last_clause() << endl);
-#else
-	const return_type ret(new entity::PRS::rule_conditional(bg));
-#endif
 	// code below mostly ripped from loop::check_rule()
-#if VOID_AST_PRS_RETURN
 try {
 	rules->check_list_void(&body_item::check_rule, c);
 } catch (...) {
 	cerr << "ERROR: at least one error in conditional PRS rules.  "
 		<< where(*rules) << endl;
 }
-#else	// VOID_AST_PRS_RETURN
-	checked_rules_type checked_rules;
-	rules->check_list(checked_rules, &body_item::check_rule, c);
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	if (null_iter == checked_rules.end()) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		entity::PRS::rule_set& crs(c.get_current_prs_body());
-		for ( ; i!=e; ++i) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-#if GENERALIZED_META_CONDITIONAL
-			crs.append_rule(xfer);
-#else
-//			xfer->check();		// paranoia
-			ret->push_back_if_clause(xfer);
-			// can transfer to else clause later...
-#endif
-			MUST_BE_NULL(xfer);
-		}
-#if !GENERALIZED_META_CONDITIONAL
-		return ret;
-#endif
-	} else {
-		cerr << "ERROR: at least one error in conditional PRS rules.  "
-			<< where(*rules) << endl;
-		GUARDED_PRS_THROW;
-	}
-#endif	// VOID_AST_PRS_RETURN
 }	// end guarded_body::check_clause
 
 //=============================================================================
@@ -690,15 +607,12 @@ conditional::rightmost(void) const {
 body_item::return_type
 conditional::check_rule(context& c) const {
 	STACKTRACE_VERBOSE;
-#if GENERALIZED_META_CONDITIONAL
 	// see also conditional_instantiation::check_build()
 	excl_ptr<entity::PRS::rule_conditional>
 		rs(new entity::PRS::rule_conditional());
 	never_ptr<const entity::PRS::rule_conditional> crs(rs);
 	c.get_current_prs_body().append_rule(rs);	// xfer ownership
 	MUST_BE_NULL(rs);
-#endif
-#if GENERALIZED_META_CONDITIONAL && VOID_AST_GUARDED_PRS_RETURN
 	if_then->check_clause(c);
 	if (else_clause) {
 		else_clause->check_clause(c);
@@ -706,24 +620,6 @@ conditional::check_rule(context& c) const {
         if (crs->empty()) {
                 c.get_current_prs_body().pop_back();
         } 
-#else
-	const guarded_body::return_type ic(if_then->check_clause(c));
-	if (!ic) {
-		// already have error message
-		return return_type(NULL);
-	}
-	if (else_clause) {
-		const guarded_body::return_type
-			ec(else_clause->check_clause(c));
-		if (!ec) {
-			// already have an error message
-			return return_type(NULL);
-		}
-		// transfer from one list to another
-		ic->import_else_clause(*ec);
-	}
-	return ic;
-#endif
 }	// end conditional::check_rule
 
 //=============================================================================
@@ -755,29 +651,15 @@ body::rightmost(void) const {
 	\return false on error.
  */
 bool
-body::__check_rules(context& c
-#if !VOID_AST_PRS_RETURN
-		, checked_rules_type& checked_rules
-#endif
-		) const {
-#if VOID_AST_PRS_RETURN
-try {
-	if (rules) {
+body::__check_rules(context& c) const {
+if (rules) {
+	try {
 		rules->check_list_void(&body_item::check_rule, c);
+	} catch (...) {
+		return false;
 	}
-} catch (...) {
-	return false;
 }
 	return true;
-#else	// VOID_AST_PRS_RETURN
-	NEVER_NULL(rules);
-	rules->check_list_omit_null(checked_rules, &body_item::check_rule, c);
-		// optional: now allow NULLs from ignored language extensions
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	return null_iter == checked_rules.end();
-#endif	// VOID_AST_PRS_RETURN
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -792,16 +674,6 @@ never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
 if (rules) {
-#if 0
-	// we added loop support
-	if (c.inside_conditional()) {
-		FINISH_ME(Fang);
-		cerr <<
-		"WARNING: Ignoring PRS inside conditionals for now."
-			<< endl;
-		return never_ptr<const object>(NULL);
-	}
-#endif
 	if (c.reject_namespace_lang_body()) {
 		cerr << "Error: top-level PRS is only supported "
 			"in the global namespace." << endl;
@@ -813,27 +685,7 @@ if (rules) {
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	// if !pd, then prs is in a top-level scope (outside definition)
-#if VOID_AST_PRS_RETURN
-	if (!__check_rules(c))
-#else
-	checked_rules_type checked_rules;
-	if (__check_rules(c, checked_rules)) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		entity::PRS::rule_set& rs(c.get_current_prs_body());
-		for ( ; i!=e; i++) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-//			pd->add_production_rule(xfer);
-			rs.append_rule(xfer);
-			// now also works on top-level module
-			// b/c it is also a process_definition.
-		}
-	} else
-#endif
-	{
+	if (!__check_rules(c)) {
 		cerr << "ERROR: at least one error in PRS body."
 			<< endl;
 		THROW_EXIT;
@@ -850,43 +702,11 @@ if (rules) {
  */
 body_item::return_type
 body::check_rule(context& c) const {
-if (rules) {
-#if VOID_AST_PRS_RETURN
-	if (!__check_rules(c))
-#else
-	const count_ptr<entity::PRS::nested_rules>
-		ret(new entity::PRS::nested_rules());
-	NEVER_NULL(ret);
-	// copied from body::check_rule
-	// const never_ptr<definition_base> d(c.get_current_open_definition());
-	checked_rules_type checked_rules;
-	if (__check_rules(c, checked_rules)) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; ++i) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			ret->push_back(xfer);
-			MUST_BE_NULL(xfer);
-		}
-		return ret;
-	} else
-#endif
-	{
+	if (!__check_rules(c)) {
 		cerr << "ERROR: at least one error in PRS rule-nest.  "
 			<< where(*rules) << endl;
-		// THROW_EXIT;
-		return body_item::return_type();
+		CHECK_RULE_THROW;
 	}
-} else {
-#if !VOID_AST_PRS_RETURN
-	// is this ok? is am empty body acceptable?
-	// grammar requires a non-empty body, by construction
-	return return_type(NULL);
-#endif
-}
 }
 
 //=============================================================================
@@ -1048,11 +868,7 @@ macro::check_rule(context& c) const {
 		CHECK_RULE_THROW;
 	}
 
-#if VOID_AST_PRS_RETURN
 	excl_ptr<entity::PRS::macro>
-#else
-	const count_ptr<entity::PRS::macro>
-#endif
 		ret(new entity::PRS::macro(*name));
 if (params) {
 	if (!mde.check_num_params(params->size()).good) {
@@ -1103,11 +919,7 @@ if (params) {
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
-#if VOID_AST_PRS_RETURN
 	c.get_current_prs_body().append_rule(ret);
-#else
-	return ret;
-#endif
 }	// end macro::check_rule
 
 //=============================================================================

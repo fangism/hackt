@@ -1,8 +1,12 @@
-// "cond-08.hac"
+// "cond-10.hac"
+// copy-modified from "cond-08.hac"
 // testing prs inside conditional
 // expect empty case to be optimized away
 
 [ true ->
+prs {
+}
+[] else ->
 prs {
 }
 ]

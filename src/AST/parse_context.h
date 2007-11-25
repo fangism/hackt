@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.18.2.2 2007/11/25 02:28:07 fang Exp $
+	$Id: parse_context.h,v 1.18.2.3 2007/11/25 10:02:51 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -525,25 +525,13 @@ public:
 		~loop_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 
-/**
-	Define to 1 to have scope frame manage PRS and other language
-	bodies as well as instance management.  
-	Also the loop/conditional body should be already pushed back
-	into the current scope.
-	Goal: 1 (for simplicity)
- */
-#define	EXTENDED_CONDITIONAL_SCOPE_FRAME		1
 	/**
 		Conditional scope frame for unroll-related instance management.
 	 */
 	struct conditional_scope_frame {
 		context&			_context;
 		const bool			parent_cond;
-		conditional_scope_frame(context&
-#if !EXTENDED_CONDITIONAL_SCOPE_FRAME
-			, const count_ptr<conditional_scope>&
-#endif
-			);
+		conditional_scope_frame(context&);
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 

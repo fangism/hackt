@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.26.6.2 2007/11/25 02:28:11 fang Exp $
+	$Id: PRS.cc,v 1.26.6.3 2007/11/25 10:02:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -869,21 +869,8 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 // class rule_conditional method definitions
 
 rule_conditional::rule_conditional() : rule(), 
-		meta_conditional_base(), 
-#if GENERALIZED_META_CONDITIONAL
-		clauses()
-#else
-		if_rules(), else_rules()
-#endif
-		{
+		meta_conditional_base(), clauses() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !GENERALIZED_META_CONDITIONAL
-rule_conditional::rule_conditional(const guard_ptr_type& g) : rule(), 
-		meta_conditional_base(g), if_rules(), else_rules() {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_conditional::~rule_conditional() { }
@@ -909,7 +896,6 @@ rule_conditional::empty(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
-#if GENERALIZED_META_CONDITIONAL
 	INVARIANT(guards.size());
 	INVARIANT(guards.size() == clauses.size());
 	typedef	clause_list_type::const_iterator	clause_iterator;
@@ -934,21 +920,6 @@ rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
 		INDENT_SECTION(o);
 		ci->dump(o, c);
 	}
-#else
-	NEVER_NULL(guard);
-	guard->dump(o << "[ ", entity::expr_dump_context(c))
-		<< " ->" << endl;
-	{
-		INDENT_SECTION(o);
-		if_rules.dump(o, c);
-	}
-	if (!else_rules.empty()) {
-		o << auto_indent << "[] else ->" << endl;
-	{
-		INDENT_SECTION(o);
-		else_rules.dump(o, c);
-	}}
-#endif
 	return o << auto_indent << ']';
 }
 
@@ -959,7 +930,6 @@ rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 rule_conditional::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-#if GENERALIZED_META_CONDITIONAL
 	typedef	clause_list_type::const_iterator	clause_iterator;
 	typedef	meta_conditional_base::const_iterator	guard_iterator;
 	clause_iterator ci(clauses.begin()), ce(clauses.end());
@@ -974,7 +944,6 @@ for ( ; ci!=ce; ++ci, ++gi) {
 		}
 		return good_bool(true);
 	}
-#endif
 	const count_ptr<const pbool_const>
 		g(guard->__unroll_resolve_rvalue(c, guard));
 	if (!g) {
@@ -984,27 +953,14 @@ for ( ; ci!=ce; ++ci, ++gi) {
 	}
 	// no change in context necessary
 	if (g->static_constant_value()) {
-#if GENERALIZED_META_CONDITIONAL
 		const rule_set& if_rules(*ci);
-#endif
 		if (!if_rules.unroll(c, np, pfp).good) {
 			cerr << "Error encountered in conditional PRS if-clause." << endl;
 			return good_bool(false);
 		}
-#if GENERALIZED_META_CONDITIONAL
 		return good_bool(true);
-#endif
 	}
-#if !GENERALIZED_META_CONDITIONAL
-	else {
-		if (!else_rules.unroll(c, np, pfp).good) {
-			cerr << "Error encountered in conditional PRS else-clause." << endl;
-			return good_bool(false);
-		}
-	}
-#else
 }	// end for
-#endif
 	return good_bool(true);
 }
 
@@ -1014,56 +970,27 @@ for ( ; ci!=ce; ++ci, ++gi) {
  */
 void
 rule_conditional::check(void) const {
-#if GENERALIZED_META_CONDITIONAL
 	typedef	clause_list_type::const_iterator	clause_iterator;
 	clause_iterator ci(clauses.begin()), ce(clauses.end());
 	for ( ; ci!=ce; ++ci) {
 		for_each(ci->begin(), ci->end(), rule::checker());
 	}
-#else
-	for_each(if_rules.begin(), if_rules.end(), rule::checker());
-	for_each(else_rules.begin(), else_rules.end(), rule::checker());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<rule>
 rule_conditional::expand_complement(void) {
-#if GENERALIZED_META_CONDITIONAL
 	for_each(clauses.begin(), clauses.end(), 
 		mem_fun_ref(&rule_set::expand_complements));
-#else
-	if_rules.expand_complements();
-	else_rules.expand_complements();
-#endif
 	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GENERALIZED_META_CONDITIONAL
 void
 rule_conditional::append_guarded_clause(const guard_ptr_type& g) {
 	guards.push_back(g);
 	clauses.push_back(rule_set());
 }
-#else
-void
-rule_conditional::push_back_if_clause(excl_ptr<rule>& r) {
-	NEVER_NULL(r);
-	if_rules.push_back(value_type());
-	if_rules.back() = r;
-	MUST_BE_NULL(r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Voila!  Efficient transfer of rules.  
- */
-void
-rule_conditional::import_else_clause(this_type& t) {
-	else_rules.swap(t.if_rules);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1071,13 +998,8 @@ rule_conditional::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	meta_conditional_base::collect_transient_info_base(m);
-#if GENERALIZED_META_CONDITIONAL
 	for_each(clauses.begin(), clauses.end(),
 		util::persistent_collector_ref(m));
-#else
-	if_rules.collect_transient_info_base(m);
-	else_rules.collect_transient_info_base(m);
-#endif
 }
 }
 
@@ -1086,33 +1008,23 @@ void
 rule_conditional::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	meta_conditional_base::write_object_base(m, o);
-#if GENERALIZED_META_CONDITIONAL
 	const size_t s = clauses.size();
 	util::write_value(o, s);
 	for_each(clauses.begin(), clauses.end(),
 		util::persistent_writer<rule_set>(
 			&rule_set::write_object_base, m, o));
-#else
-	if_rules.write_object_base(m, o);
-	else_rules.write_object_base(m, o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
 	meta_conditional_base::load_object_base(m, i);
-#if GENERALIZED_META_CONDITIONAL
 	size_t s;
 	util::read_value(i, s);
 	clauses.resize(s);
 	for_each(clauses.begin(), clauses.end(),
 		util::persistent_loader<rule_set>(
 			&rule_set::load_object_base, m, i));
-#else
-	if_rules.load_object_base(m, i);
-	else_rules.load_object_base(m, i);
-#endif
 }
 
 //=============================================================================
