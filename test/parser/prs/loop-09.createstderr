@@ -22,12 +22,12 @@ Persistent Object Manager text dump:
 	18	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	22	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	302
@@ -66,8 +66,8 @@ In namespace "", we have: {
         bool<> y
       prs:
         (:i:[0..N-1]:
-          ~x -> y+
           x -> y-
+          ~x -> y+
         )
       footprint collection: {
         <0> {
@@ -88,12 +88,12 @@ In namespace "", we have: {
           1	null::x
           2	null::y
           resolved prs:
-          ~x -> y+
           x -> y-
           ~x -> y+
           x -> y-
           ~x -> y+
           x -> y-
+          ~x -> y+
         }
       }
       }

@@ -1,5 +1,6 @@
 // "cond-01.hac"
-// should fail: prs forbidden inside instance_management scope
+// now passes: prs inside instance_management scope
+// accepted on HACKT-00-01-04-main-00-81-95-ACT-02 branch
 
 template <pint N>
 defproc ass() {
@@ -10,3 +11,8 @@ defproc ass() {
 		}
 	]
 }
+
+ass<0> a0;
+ass<1> a1;
+ass<2> a2;
+

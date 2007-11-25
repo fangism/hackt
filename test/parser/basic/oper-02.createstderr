@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
 	13	##ADDR##	pblgcexp	0	#HEAD#	#TAIL#	22
 	14	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
 	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
@@ -61,7 +61,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> x
         bool<> a
-        [ N!=0&&N!=1 ->
+        [ N!=0&&N!=1 -> 
           x = a;
         ]
       footprint collection: {

@@ -1,0 +1,15 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	a0	ass<0>
+	bool: 1,2
+2	(top)	-	2	a1	ass<1>
+	bool: 3,4
+3	(top)	-	3	a2	ass<2>
+	bool: 5,6
+[global bool entries]
+1	process	1	1	a0.x	
+2	process	1	2	a0.a	
+3	process	2	1	a1.x	
+4	process	2	2	a1.a	
+5	process	3	1	a2.x	
+6	process	3	2	a2.a	

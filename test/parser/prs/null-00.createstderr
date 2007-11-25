@@ -15,12 +15,12 @@ Persistent Object Manager text dump:
 	11	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
 	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	13	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	footprnt	0	#HEAD#	#TAIL#	286
 	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
@@ -47,8 +47,8 @@ In namespace "", we have: {
         bool<> y
       prs:
         (:i:[0..-1]:
-          ~x -> y+
           x -> y-
+          ~x -> y+
         )
       footprint: {
         x = bool^0 = null::x (1) 

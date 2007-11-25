@@ -48,7 +48,7 @@ Persistent Object Manager text dump:
 	44	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
 	48	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
 	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12

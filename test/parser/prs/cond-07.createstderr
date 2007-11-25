@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	condscop	0	#HEAD#	#TAIL#	36
 	20	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -89,7 +89,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> x
         bool<> y
-        [ N ->
+        [ N -> 
           bar<> b[0..1]
           b[0] (x);
           b[1] (y);

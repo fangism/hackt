@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -43,34 +43,33 @@ Persistent Object Manager text dump:
 	39	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	44	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	43	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
-	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
-	57	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	26
+	50	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	54	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	21
+	56	##ADDR##	spndiref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	60	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	footprnt	0	#HEAD#	#TAIL#	838
-	66	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	68	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	footprnt	0	#HEAD#	#TAIL#	838
+	65	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	footprnt	0	#HEAD#	#TAIL#	338
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -109,10 +108,9 @@ In namespace "", we have: {
         (:i:[0..3]:
           w[$i] -> x-
         )
-                a & b -> c-
+        a & b -> c-
         d -> @l-
         ~@l & e -> d-
-
         passn(x,x,y)
       footprint: {
         a = bool^0 = foo::a (3) 
