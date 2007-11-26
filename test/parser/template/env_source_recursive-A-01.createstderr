@@ -44,7 +44,7 @@ Persistent Object Manager text dump:
 	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
+	43	##ADDR##	condscop	0	#HEAD#	#TAIL#	36
 	44	##ADDR##	pireltex	0	#HEAD#	#TAIL#	21
 	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -179,7 +179,7 @@ In namespace "", we have: {
       unroll sequence: 
         e1of<source_e::M> rr
         bool<> _Reset
-        [ N>1 ->
+        [ N>1 -> 
           source_e<source_e::M> S
           S<N-1, d[1..N-1]>
           S (rr, _Reset);

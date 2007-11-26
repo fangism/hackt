@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.34 2007/10/08 01:28:00 fang Exp $
+#	$Id: Makefile.am,v 1.35 2007/11/26 08:28:19 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -13,8 +13,6 @@ HACKT_PARSE_TEST_FAILURES = \
 	macro-param-01 macro-param-02 macro-param-03 \
 	size-02 size-06 \
 	spec_min_sep-02 spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
-	loop-05 loop-07 \
-	cond-01 \
 	top-level-02 top-level-03 \
 	precharge-01 \
 	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
@@ -30,8 +28,12 @@ HACKT_PARSE_TEST_PASSES = \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 loop-09 \
-	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
+	loop-00 loop-01 loop-02 loop-03 loop-04 loop-05 loop-06 loop-07 \
+	loop-08 loop-09 loop-10 loop-11 loop-12 loop-13 loop-14 loop-15 \
+	loop-16 loop-17 loop-18 loop-19 loop-20 \
+	cond-01 cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
+	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
+	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
@@ -78,8 +80,11 @@ HACKT_CREATE_TEST_PASSES = \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-04 loop-06 loop-08 loop-09 \
-	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
+	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
+	loop-10 loop-14 loop-15 loop-16 loop-18 loop-19 loop-20 \
+	cond-01 cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
+	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
+	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
@@ -111,6 +116,7 @@ HACKT_CREATE_TEST_PASSES = \
 
 HACKT_CREATE_TEST_FAILURES = \
 	loop-01 loop-02 loop-03 \
+	loop-11 loop-12 loop-13 loop-17 \
 	null-01 \
 	act-009 \
 	internal-node-07 internal-node-09 internal-node-10
@@ -127,8 +133,11 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-04 loop-06 loop-08 loop-09 \
-	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
+	loop-00 loop-04 loop-05 loop-06 loop-07 loop-08 loop-09 \
+	loop-10 loop-14 loop-15 loop-16 loop-18 loop-19 loop-20 \
+	cond-01 cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
+	cond-08 cond-09 cond-10 cond-11 cond-12 cond-13 cond-14 \
+	cond-15 cond-16 cond-17 cond-18 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 macro-pass-03 macro-pass-05 macro-pass-07 \
@@ -182,15 +191,13 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += \
 	null-00 loop-00 \
-	cond-05 \
+	cond-05 cond-08 cond-10 cond-11 cond-15 \
 	macro-pass-01
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += inv-01 inv-11 \
 	echo-02 after-01 size-02 \
 	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
-	cond-01 \
-	loop-05 loop-07 \
 	top-level-03 \
 	precharge-01 \
 	internal-node-05

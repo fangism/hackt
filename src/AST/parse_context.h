@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.18 2007/11/06 23:53:46 fang Exp $
+	$Id: parse_context.h,v 1.19 2007/11/26 08:27:32 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -20,6 +20,7 @@
 #include "Object/common/util_types.h"
 #include "Object/devel_switches.h"
 #include "util/boolean_types.h"
+#include "util/member_saver.h"
 #include "util/attributes.h"
 
 namespace HAC {
@@ -47,6 +48,9 @@ namespace entity {
 	struct pint_tag;
 	struct node_tag;
 	template <class> class dummy_placeholder;
+namespace PRS {
+	class rule_set;
+}
 }	// end namespace entity
 
 namespace parser {
@@ -208,6 +212,11 @@ public:
 
 
 private:
+	/**
+		The current scope of the production rules to add, 
+		which can be top-level, or in conditional or loop. 
+	 */
+	never_ptr<entity::PRS::rule_set>	current_prs_body;
 	/**
 		Stupid implementation of switching between
 		strict and relaxed template parameters. 
@@ -378,8 +387,10 @@ public:
 	get_current_prototype(void) const;
 
 	template <class D>
-	never_ptr<const D>
-	get_current_definition(void) const;
+	never_ptr<D>
+	get_current_definition(void) const {
+		return open_definition_stack.top().template is_a<D>();
+	}
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {
@@ -520,10 +531,31 @@ public:
 	struct conditional_scope_frame {
 		context&			_context;
 		const bool			parent_cond;
-		conditional_scope_frame(context&, 
-			const count_ptr<conditional_scope>&);
+		conditional_scope_frame(context&);
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
+
+	/**
+		Pushes PRS list onto stack.  
+	 */
+	typedef	util::member_saver<context, 
+		never_ptr<entity::PRS::rule_set>, &context::current_prs_body>
+						prs_body_frame;
+	bool
+	inside_conditional(void) const {
+		return in_conditional_scope;
+	}
+
+	bool
+	inside_loop(void) const {
+		return !loop_var_stack.empty();
+	}
+
+	entity::PRS::rule_set&
+	get_current_prs_body(void) const {
+		// NEVER_NULL(current_prs_body);
+		return *current_prs_body;
+	}
 
 	struct file_stack_frame {
 		context&			_context;

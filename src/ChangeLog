@@ -3,6 +3,57 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-98-merged-ACT-02-07:
+	  Branch merge for ACT compatibility.
+	  Improved flow-control support for conditionals and loops around
+		PRS language bodies, generalized else-if constructs.
+	  Also operator '=' (equals) support added.
+
+
+2007-11-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-07:
+	  grammar: allow '=' for '==' if wrapped in parens, 
+		for ACT-compatbility, includes test parser/basic/oper-{04,05}.  
+	  Updated cast2hac documentation.
+	  end of branch, merge to trunk
+
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-06:
+	  Extended PRS to support else-if guarded prs bodies, 
+		updated parser/hackt-parse.yy.in, AST/PRS.{h,cc}.
+	  Added new test cases in parser/prs.
+
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-05:
+	  Cleaned up conditional switches as promised.
+	  Added new test cases to parser/prs (conditionals).
+	  Next: extend grammar/AST for else-if.
+	  Later: syntactic-only support for bool directions (!?)
+
+
+2007-11-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-04:
+	  Major rework of conditional scopes.
+	  This revision adds full support for prs bodies inside
+		loops and conditionals.  
+	  class meta_conditional_base: now supports arbitrary number of
+		guard expressions, used by rule_conditional, and 
+		conditional_scope. 
+	  AST/PRS.cc; rule now return void instead of rules, and now just
+		append rules to the current active prs body, which is...
+	  AST/parse_context.h: a new member in this class.
+	  TODO: else-if constructs in parser and AST (already supported
+		in the middle-end and IR)
+	  TODO: clean-up flags VOID_AST_PRS_RETURN, 
+		VOID_AST_GUARDED_PRS_RETURN (in AST/PRS.h),
+		AST/instance.cc, GENERALIZED_META_CONDITIONAL, 
+		EXTENDED_CONDITIONAL_SCOPE_FRAME (parse_context)
+
+
 2007-11-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-97:
@@ -27,6 +78,45 @@
 		build dir is *outside* of srcdir (not a subdir).
 	  lexer/flex_lexer_state.cc: #ifdef typo fix LEXER_HAS_YYLEX_DESTROY, 
 		thanks Tadeo for testing.  
+
+
+2007-11-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-03:
+	  AST/instance.cc (loop_instantiation::check_build): 
+		enabled prs inside loops, in addition to loops inside prs -- 
+		does the right thing, even removes empty loops.
+	  Two fistfuls of test cases added parser/prs.
+	  Next: conditionals rework.  Down to 1 transient regression.
+
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-02:
+	  parser/hackt-parse.yy.in: new non-terminal
+		instance_item_extended now includes language_body,
+		requires parser::language_body to derive from 
+		instance_management (base), now in "AST/instance_base.h".  
+	  entity::process_definition: ditched add_production_rules in favor
+		of accsesing the PRS rule_set directly through...
+	  AST/parse_context.{h,cc}: new member current_prs_body
+		will be the place to append rules as the PRS trees are 
+		walked, which opens the doors to supporting prs inside
+		of conditional and loops in the instance management.  
+	  Split out new header files: AST/instance_base.h, AST/lang.h
+	  currently 3 transient compile-fail test regressions related
+		to prs within loops and conditionals.  
+	  TODO: generalize conditionals to accommodate cascaded else-if
+		for instance-management and prs alike.  
+		AST: conditional/loop instantiation to accommodate prs,
+		and also delete if empty.
+
+
+	* HACKT-00-01-04-main-00-81-95-ACT-02-01:
+	  Round 2 of ACT-compatibility patches.
+	  Object/lang/PRS*.{h,cc}: deleted redundant class nested_rules
+		in favor of already existing rule_set.
+		PRS_base.h: rule_set now derives from rule.
+		class rule_loop: deleted unused member `rules'.
+		This change is appropriate for trunk as well.  
 
 
 2007-11-14	David Fang		<fangism@users.sourceforge.net>

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.20 2007/10/08 01:21:19 fang Exp $
+	$Id: PRS.h,v 1.21 2007/11/26 08:27:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -350,53 +350,8 @@ public:
 };	// and class pass
 
 //=============================================================================
-/**
-	Just a set of rules that were wrapped in a nested scope.
-	For all practical purposes, these should just be treated as a 
-	continuation list of rules, nothing special about them.  
- */
-class nested_rules : public rule {
-	typedef	nested_rules			this_type;
-	typedef	rule_set::value_type		value_type;
-private:
-	rule_set				rules;
-public:
-	nested_rules();
-	~nested_rules();
-
-	ostream&
-	what(ostream&) const;
-
-	ostream&
-	dump(ostream&, const rule_dump_context&) const;
-
-	PRS_UNROLL_RULE_PROTO;
-
-	void
-	check(void) const;
-
-	excl_ptr<rule>
-	expand_complement(void);
-
-	void
-	push_back(excl_ptr<rule>&);
-
-protected:
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-private:
-	void
-	collect_transient_info(persistent_object_manager&) const;
-
-protected:
-	// these are also used by rule_loop
-	void
-	write_object(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object(const persistent_object_manager&, istream&);
-};	// end class nested_rules
+// This used to be its own class, just replaced with typedef...
+typedef	rule_set		nested_rules;
 
 //=============================================================================
 /**
@@ -406,8 +361,6 @@ protected:
 class rule_loop : public nested_rules, private meta_loop_base {
 	typedef	rule_loop			this_type;
 	typedef	rule_set::value_type		value_type;
-private:
-	rule_set				rules;
 public:
 	rule_loop();
 	rule_loop(const ind_var_ptr_type&, const range_ptr_type&);
@@ -423,7 +376,7 @@ public:
 
 	using nested_rules::check;
 	using nested_rules::expand_complement;
-	using nested_rules::push_back;
+	using nested_rules::append_rule;
 
 	void
 	collect_transient_info(persistent_object_manager&) const;
@@ -443,14 +396,14 @@ class rule_conditional : public rule, private meta_conditional_base {
 	typedef	rule_conditional		this_type;
 	typedef	rule_set::value_type		value_type;
 private:
-	rule_set				if_rules;
-	// meta_conditional_base		// no else condition needed
-	rule_set				else_rules;
+	/**
+		DO NOT use vector unless size is pre-reserved, 
+		because of underlying list of sticky_ptrs.
+	 */
+	typedef	std::list<rule_set>		clause_list_type;
+	clause_list_type			clauses;
 public:
 	rule_conditional();
-
-	explicit
-	rule_conditional(const guard_ptr_type&);
 
 	~rule_conditional();
 
@@ -459,6 +412,9 @@ public:
 
 	ostream&
 	dump(ostream&, const rule_dump_context&) const;
+
+	bool
+	empty(void) const;
 
 	PRS_UNROLL_RULE_PROTO;
 
@@ -469,10 +425,10 @@ public:
 	expand_complement(void);
 
 	void
-	push_back_if_clause(excl_ptr<rule>&);
+	append_guarded_clause(const guard_ptr_type&);
 
-	void
-	import_else_clause(this_type&);
+	rule_set&
+	get_last_clause(void) { return clauses.back(); }
 
 	void
 	collect_transient_info(persistent_object_manager&) const;

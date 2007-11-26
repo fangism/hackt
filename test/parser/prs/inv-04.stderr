@@ -1,2 +1,3 @@
 ERROR: expression at [5:7] does not reference a bool.
 ERROR in the output node reference at [5:7].
+ERROR: at least one error in PRS body.

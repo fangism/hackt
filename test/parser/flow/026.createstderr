@@ -6,13 +6,13 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
-	5	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
 	6	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
 	12	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20

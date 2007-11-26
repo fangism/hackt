@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.6 2007/09/13 20:37:14 fang Exp $
+	$Id: node_list.tcc,v 1.7 2007/11/26 08:27:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -177,6 +177,24 @@ node_list<T>::check_list(R& r,
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		r.push_back(mem_fun_ref(f)(**i, a));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is basically a visitor.  
+	Null arguments are ignored.
+ */
+NODE_LIST_TEMPLATE_SIGNATURE
+template <class A>
+void
+node_list<T>::check_list_void(void (T::*f)(A&) const, A& a) const {
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		if (*i) {
+			mem_fun_ref(f)(**i, a);
+		}
 	}
 }
 

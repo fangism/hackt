@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	114
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
 	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -13,13 +13,12 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	PRSrnest	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
-	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	363
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	footprnt	0	#HEAD#	#TAIL#	300
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	footprnt	0	#HEAD#	#TAIL#	363
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -43,8 +42,6 @@ In namespace "", we have: {
         bool<> x
         bool<> y
         bool<> z
-      prs:
-        
       footprint: {
         x = bool^0 = bogus::x (1) 
         y = bool^0 = bogus::y (2) 

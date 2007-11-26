@@ -1,0 +1,16 @@
+// "cond-11.hac"
+// copy-modified from "cond-10.hac"
+// testing prs inside conditional
+
+bool a, b;
+
+[ true ->
+prs {
+}
+[] else ->
+prs {
+	b => a-
+}
+]
+
+

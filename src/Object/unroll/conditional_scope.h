@@ -2,7 +2,7 @@
 	\file "Object/unroll/conditional_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the HAC language.  
-	$Id: conditional_scope.h,v 1.7 2006/03/15 04:38:22 fang Exp $
+	$Id: conditional_scope.h,v 1.8 2007/11/26 08:27:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_H__
@@ -19,20 +19,20 @@ namespace entity {
 	Scope of a conditional body.
 	Boolean guard expression is evaluated at unroll-time (and later)
 	and conditionally expanded.  
+	TODO: this *could* be templated to make the parent type
+		and base type parameters... might save duplicate code.
  */
 class conditional_scope : public instance_management_base, 
-		public sequential_scope, 
 		protected meta_conditional_base {
 	typedef	conditional_scope			this_type;
 	typedef	instance_management_base		interface_type;
 	typedef	sequential_scope			parent_type;
 	// inherits a list of sequential instance_management items
 	// boolean meta-expression (inherited)
+	typedef	std::vector<sequential_scope>		clause_list_type;
+	clause_list_type				clauses;
 public:
 	conditional_scope();
-
-	explicit
-	conditional_scope(const guard_ptr_type&);
 
 	~conditional_scope();
 
@@ -41,6 +41,15 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	bool
+	empty(void) const;
+
+	void
+	append_guarded_clause(const guard_ptr_type&);
+
+	sequential_scope&
+	get_last_clause(void) { return clauses.back(); }
 
 	good_bool
 	unroll(const unroll_context&) const;

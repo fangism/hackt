@@ -1,2 +1,3 @@
 ERROR: expression at [21:8] does not reference a bool.
 ERROR building PRS-expr at [21:8]
+ERROR: at least one error in PRS body.

@@ -1,0 +1,16 @@
+// "loop-10.hac"
+// copy-modified from "loop-00.hac"
+// testing support for prs inside conditionals
+
+template <pint N>
+defproc null() {
+bool x, y;
+(;i:N:
+prs {
+	x	=> y-
+}
+)
+}
+
+null<0> foo;
+

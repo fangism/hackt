@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.3 2006/02/10 21:50:34 fang Exp $
+	$Id: SPEC.h,v 1.4 2007/11/26 08:27:22 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -8,7 +8,7 @@
 
 #include "AST/common.h"
 #include "AST/SPEC_fwd.h"
-#include "AST/definition_item.h"
+#include "AST/lang.h"
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {

@@ -14,5 +14,5 @@ Fanins of node `R.x[6]':
 [after 10]	~R.x[5] -> R.x[6]+
 [after 10]	R.x[5] -> R.x[6]-
 Fanouts of node `R.x[6]':
-[after 10]	~R.x[6] -> R.x[7]+
 [after 10]	R.x[6] -> R.x[7]-
+[after 10]	~R.x[6] -> R.x[7]+

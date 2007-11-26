@@ -7,9 +7,9 @@ Persistent Object Manager text dump:
 	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
 	7	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	8	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20

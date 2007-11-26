@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.32 2007/10/12 22:43:58 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.33 2007/11/26 08:27:48 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -390,6 +390,7 @@ extern const char* const yyrule[];
 	PRS::loop*		_prs_loop;
 	PRS::conditional*	_prs_conditional;
 	PRS::guarded_body*	_prs_guarded_body;
+	PRS::guarded_prs_list*	_prs_guarded_list;
 	PRS::macro*		_prs_macro;
 	PRS::attribute*		_prs_attribute;
 	PRS::attribute_list*	_prs_attribute_list;
@@ -618,6 +619,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_instance_management>	connection_body_item
 %type	<_def_body_item>	definition_body_item
 %type	<_def_body_item>	datatype_body_item
+/* %type	<_def_body_item>	instance_item_extended	*/
+%type	<_instance_management>	instance_item_extended
 %type	<_instance_management>	instance_item
 %type	<_instance_declaration>	type_instance_declaration 
 %type	<_loop_instantiation>	loop_instantiation
@@ -701,9 +704,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prs_attribute_list>	prs_rule_attribute_list_in_brackets
 %type	<_prs_loop>	prs_loop
 %type	<_prs_conditional>	prs_conditional
+%type	<_prs_guarded_list>	prs_guarded_list prs_guarded_list_unmatched
 %type	<_prs_guarded_body>	prs_guarded_body
 %type	<_prs_guarded_body>	prs_else_clause
-%type	<_prs_guarded_body>	prs_else_clause_optional
+/* %type	<_prs_guarded_body>	prs_else_clause_optional	*/
 %type	<_prs_macro>	prs_macro
 %type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
 %type	<_expr> prs_not prs_and prs_or
@@ -874,10 +878,11 @@ namespace_item
 /* proposed change: forbid nested namespacs, only allow in root_item */
 	: namespace_management { $$ = $1; }
 /* instance_item already includes semicolon where needed */
-	| instance_item { $$ = $1; }
+	| instance_item_extended { $$ = $1; }
 	| type_alias { $$ = $1; }
-/* new: top-level prs, chp, hse */
+/* new: top-level prs, chp, hse (moved to instance_item_extended)
 	| language_body { $$ = $1; }
+*/
 	;
 
 namespace_management
@@ -1438,8 +1443,10 @@ definition_body
 	;
 
 definition_body_item
-	: instance_item { $$ = $1; }
+	: instance_item_extended { $$ = $1; }
+/** (moved to instance_item_extended)
 	| language_body { $$ = $1; }
+ */
 	| type_alias { $$ = $1; }
 	;
 
@@ -1508,11 +1515,13 @@ connection_body_item
 
 /* subset of definition body items allowed inside loop/conditional scopes
  * Type-wise, this is identical to definition_body.  
+ * new: upgraded to instance_item_extended to support language bodies
+ * inside instance_management_lists
  */
 instance_management_list
-	: instance_management_list instance_item
+	: instance_management_list instance_item_extended
 		{ $$ = $1; $$->push_back($2); }
-	| instance_item
+	| instance_item_extended
 		{ $$ = new instance_management_list($1); }
 	;
 
@@ -1527,6 +1536,11 @@ instance_management_list
 // myprocesstype<X,Y> foo;			// declare without connection
 // foo(port-actuals);				// then connect
 */
+
+instance_item_extended
+	: instance_item { $$ = $1; }
+	| language_body { $$ = $1; }
+	;
 
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
@@ -2279,23 +2293,40 @@ prs_loop
 	;
 
 prs_conditional
-	: '[' prs_guarded_body prs_else_clause_optional ']'
-		{ $$ = new PRS::conditional($1, $2, $3, $4); }
+	: '[' prs_guarded_list ']'
+		{ WRAP_LIST($1, $2, $3);
+		  $$ = new PRS::conditional($2); }
+	;
+
+prs_guarded_list
+	: prs_guarded_list_unmatched THICKBAR prs_else_clause
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| prs_guarded_list_unmatched
+		{ $$ = $1; }
+	;
+
+prs_guarded_list_unmatched
+	: prs_guarded_list_unmatched THICKBAR prs_guarded_body
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| prs_guarded_body
+		{ $$ = new PRS::guarded_prs_list($1); }
 	;
 
 prs_guarded_body
-	: expr RARROW prs_body
+	: expr RARROW prs_body_optional
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 
+/**
 prs_else_clause_optional
 	: prs_else_clause { $$ = $1; }
 	|	{ $$ = NULL; }
 	;
+**/
 
 prs_else_clause
-	: THICKBAR ELSE RARROW prs_body
-		{ $$ = new PRS::guarded_body($2, $3, $4); DELETE_TOKEN($1); }
+	: ELSE RARROW prs_body
+		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 
 single_prs
@@ -2719,6 +2750,11 @@ relational_equality_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 	| relational_equality_expr NOTEQUAL shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
+	/* extension: allow deprecated '=' for comparison, only with parens */
+	| '(' relational_equality_expr '=' shift_expr ')'
+		{ $$ = new relational_expr($2, $3, $4);
+			$3->text[1] = '=';	/* fudge it */
+			DELETE_TOKEN($1); DELETE_TOKEN($5); }
 /*
 // can't cascade relational_expr
 //	| relational_expr GE shift_expr

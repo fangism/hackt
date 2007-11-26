@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.19 2007/02/21 17:00:24 fang Exp $
+	$Id: pbool_const.h,v 1.20 2007/11/26 08:27:36 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -23,6 +23,7 @@ USING_CONSTRUCT
 //=============================================================================
 /**
 	Constant boolean parameters, true or false.  
+	TODO: static const count_ptrs to be shared *everywhere*.
  */
 class pbool_const : public pbool_expr, public const_param {
 private:

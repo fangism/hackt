@@ -75,16 +75,16 @@ Persistent Object Manager text dump:
 	71	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	72	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	74	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	75	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	77	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	78	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	79	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	80	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	81	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	82	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	83	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	74	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	75	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	83	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	84	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	86	##ADDR##	footprnt	0	#HEAD#	#TAIL#	748
@@ -169,8 +169,8 @@ In namespace "", we have: {
         bar<2+foo::i> b
       prs:
         (:k:[0..i-1]:
-          ~x[$k] -> y[$k]+
           x[$k] -> y[$k]-
+          ~x[$k] -> y[$k]+
         )
       footprint collection: {
         <3> {
@@ -224,12 +224,12 @@ In namespace "", we have: {
           14	foo::z[2]
           15	foo::z[3]
           resolved prs:
-          ~x[0] -> y[0]+
           x[0] -> y[0]-
-          ~x[1] -> y[1]+
+          ~x[0] -> y[0]+
           x[1] -> y[1]-
-          ~x[2] -> y[2]+
+          ~x[1] -> y[1]+
           x[2] -> y[2]-
+          ~x[2] -> y[2]+
         }
       }
       }

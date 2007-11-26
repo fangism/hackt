@@ -1,0 +1,56 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	11	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	32
+	12	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	347
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    d = bool<> d
+    z = bool<> z
+}
+
+top-level prs:
+  [ true ->
+    [ true ->
+      d -> z-
+      ~d -> z+
+    ]
+  ]
+
+footprint: {
+  d = bool^0 = d (2) 
+  z = bool^0 = z (1) 
+  Created state:
+  bool instance pool:
+  1	z
+  2	d
+  resolved prs:
+  d -> z-
+  ~d -> z+
+}

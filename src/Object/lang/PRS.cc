@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.26 2007/10/08 01:21:18 fang Exp $
+	$Id: PRS.cc,v 1.27 2007/11/26 08:27:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -227,10 +227,16 @@ struct prs_expr::unroll_copier {
 //=============================================================================
 // class rule_set method definitions
 
-rule_set::rule_set() : parent_type() { }
+rule_set::rule_set() : rule(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_set::~rule_set() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+rule_set::what(ostream& o) const {
+	return o << "PRS::rule_set";
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -249,11 +255,11 @@ rule_set::append_rule(excl_ptr<rule>& r) {
 	NEVER_NULL(r);
 	r->check();             // paranoia
 	excl_ptr<rule> cmpl = r->expand_complement();
-	push_back(value_type());
+	parent_type::push_back(value_type());
 	back() = r;
 	INVARIANT(!r);
 	if (cmpl) {
-		push_back(value_type());
+		parent_type::push_back(value_type());
 		back() = cmpl;
 		INVARIANT(!cmpl);
 	}
@@ -263,6 +269,19 @@ rule_set::append_rule(excl_ptr<rule>& r) {
 void
 rule_set::compact_references(void) {
 	cerr << "Fang, write PRS::rule_set::compact_references()!" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::check(void) const {
+	for_each(begin(), end(), rule::checker());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+rule_set::expand_complement(void) {
+	expand_complements();
+	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,6 +329,15 @@ rule_set::collect_transient_info_base(persistent_object_manager& m) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+rule_set::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 rule_set::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	m.write_pointer_list(o, *this);
@@ -317,9 +345,23 @@ rule_set::write_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+rule_set::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 rule_set::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	m.read_pointer_list(i, *this);
+	m.read_pointer_list(i, AS_A(parent_type&, *this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	load_object_base(m, i);
 }
 
 //=============================================================================
@@ -827,12 +869,7 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 // class rule_conditional method definitions
 
 rule_conditional::rule_conditional() : rule(), 
-		meta_conditional_base(), if_rules(), else_rules() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-rule_conditional::rule_conditional(const guard_ptr_type& g) : rule(), 
-		meta_conditional_base(g), if_rules(), else_rules() {
+		meta_conditional_base(), clauses() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -842,21 +879,47 @@ rule_conditional::~rule_conditional() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_conditional)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if ALL clauses are empty.  
+ */
+bool
+rule_conditional::empty(void) const {
+	typedef	clause_list_type::const_iterator	clause_iterator;
+	clause_iterator ci(clauses.begin()), ce(clauses.end());
+	for ( ; ci!=ce; ++ci) {
+		if (!ci->empty())
+			return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
-	NEVER_NULL(guard);
-	guard->dump(o << "[ ", entity::expr_dump_context(c))
-		<< " ->" << endl;
+	INVARIANT(guards.size());
+	INVARIANT(guards.size() == clauses.size());
+	typedef	clause_list_type::const_iterator	clause_iterator;
+	typedef	meta_conditional_base::const_iterator	guard_iterator;
+	clause_iterator ci(clauses.begin()), ce(clauses.end());
+	guard_iterator gi(guards.begin()), ge(guards.end());
+	entity::expr_dump_context edc(c);
+	NEVER_NULL(*gi);
+	(*gi)->dump(o << "[ ", edc) << " ->" << endl;
 	{
 		INDENT_SECTION(o);
-		if_rules.dump(o, c);
+		ci->dump(o, c);
 	}
-	if (!else_rules.empty()) {
-		o << auto_indent << "[] else ->" << endl;
-	{
+	for (++gi, ++ci; ci!=ce; ++gi, ++ci) {
+		o << auto_indent << "[] ";
+		if (*gi) {
+			(*gi)->dump(o, edc);
+		} else {
+			o << "else";
+		}
+		o << " ->" << endl;
 		INDENT_SECTION(o);
-		else_rules.dump(o, c);
-	}}
+		ci->dump(o, c);
+	}
 	return o << auto_indent << ']';
 }
 
@@ -867,6 +930,20 @@ rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 rule_conditional::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	typedef	clause_list_type::const_iterator	clause_iterator;
+	typedef	meta_conditional_base::const_iterator	guard_iterator;
+	clause_iterator ci(clauses.begin()), ce(clauses.end());
+	guard_iterator gi(guards.begin()), ge(guards.end());
+for ( ; ci!=ce; ++ci, ++gi) {
+	const guard_ptr_type& guard(*gi);
+	// guards may be NULL-terminated with else clause
+	if (!guard) {
+		if (!ci->unroll(c, np, pfp).good) {
+			cerr << "Error encountered in conditional PRS else-clause." << endl;
+			return good_bool(false);
+		}
+		return good_bool(true);
+	}
 	const count_ptr<const pbool_const>
 		g(guard->__unroll_resolve_rvalue(c, guard));
 	if (!g) {
@@ -876,50 +953,43 @@ rule_conditional::unroll(const unroll_context& c, const node_pool_type& np,
 	}
 	// no change in context necessary
 	if (g->static_constant_value()) {
+		const rule_set& if_rules(*ci);
 		if (!if_rules.unroll(c, np, pfp).good) {
 			cerr << "Error encountered in conditional PRS if-clause." << endl;
 			return good_bool(false);
 		}
-	} else {
-		if (!else_rules.unroll(c, np, pfp).good) {
-			cerr << "Error encountered in conditional PRS else-clause." << endl;
-			return good_bool(false);
-		}
+		return good_bool(true);
 	}
+}	// end for
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is a static check, so every clause is visited.
+ */
 void
 rule_conditional::check(void) const {
-	for_each(if_rules.begin(), if_rules.end(), rule::checker());
-	for_each(else_rules.begin(), else_rules.end(), rule::checker());
+	typedef	clause_list_type::const_iterator	clause_iterator;
+	clause_iterator ci(clauses.begin()), ce(clauses.end());
+	for ( ; ci!=ce; ++ci) {
+		for_each(ci->begin(), ci->end(), rule::checker());
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<rule>
 rule_conditional::expand_complement(void) {
-	if_rules.expand_complements();
-	else_rules.expand_complements();
+	for_each(clauses.begin(), clauses.end(), 
+		mem_fun_ref(&rule_set::expand_complements));
 	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-rule_conditional::push_back_if_clause(excl_ptr<rule>& r) {
-	NEVER_NULL(r);
-	if_rules.push_back(value_type());
-	if_rules.back() = r;
-	MUST_BE_NULL(r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Voila!  Efficient transfer of rules.  
- */
-void
-rule_conditional::import_else_clause(this_type& t) {
-	else_rules.swap(t.if_rules);
+rule_conditional::append_guarded_clause(const guard_ptr_type& g) {
+	guards.push_back(g);
+	clauses.push_back(rule_set());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -928,8 +998,8 @@ rule_conditional::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	meta_conditional_base::collect_transient_info_base(m);
-	if_rules.collect_transient_info_base(m);
-	else_rules.collect_transient_info_base(m);
+	for_each(clauses.begin(), clauses.end(),
+		util::persistent_collector_ref(m));
 }
 }
 
@@ -938,95 +1008,23 @@ void
 rule_conditional::write_object(const persistent_object_manager& m,
 		ostream& o) const {
 	meta_conditional_base::write_object_base(m, o);
-	if_rules.write_object_base(m, o);
-	else_rules.write_object_base(m, o);
+	const size_t s = clauses.size();
+	util::write_value(o, s);
+	for_each(clauses.begin(), clauses.end(),
+		util::persistent_writer<rule_set>(
+			&rule_set::write_object_base, m, o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
 	meta_conditional_base::load_object_base(m, i);
-	if_rules.load_object_base(m, i);
-	else_rules.load_object_base(m, i);
-}
-
-//=============================================================================
-// class nested_rules method definitions
-
-nested_rules::nested_rules() : rule(), rules() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-nested_rules::~nested_rules() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nested_rules)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-nested_rules::dump(ostream& o, const rule_dump_context& c) const {
-	// don't even bother indenting
-	return rules.dump(o, c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::check(void) const {
-	for_each(rules.begin(), rules.end(), rule::checker());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<rule>
-nested_rules::expand_complement(void) {
-	rules.expand_complements();
-	return excl_ptr<rule>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::push_back(excl_ptr<rule>& r) {
-	NEVER_NULL(r);
-	rules.push_back(value_type());
-	rules.back() = r;
-	MUST_BE_NULL(r);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Unrolls a set of loop-dependent production rules.  
- */
-good_bool
-nested_rules::unroll(const unroll_context& c, const node_pool_type& np, 
-		PRS::footprint& pfp) const {
-	return rules.unroll(c, np, pfp);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::collect_transient_info_base(persistent_object_manager& m) const {
-	rules.collect_transient_info_base(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	rules.write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-nested_rules::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	rules.load_object_base(m, i);
+	size_t s;
+	util::read_value(i, s);
+	clauses.resize(s);
+	for_each(clauses.begin(), clauses.end(),
+		util::persistent_loader<rule_set>(
+			&rule_set::load_object_base, m, i));
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.20 2007/10/12 22:43:47 fang Exp $
+	$Id: CHP.cc,v 1.21 2007/11/26 08:27:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -403,6 +403,15 @@ body::check_build(context& c) const {
 	if (!stmts)
 		return never_ptr<const object>(NULL);
 	// else proceed to check body
+#if 1
+	if (c.inside_conditional() || c.inside_loop()) {
+		FINISH_ME(Fang);
+		cerr <<
+		"WARNING: Ignoring CHP inside loops/conditionals for now."
+			<< endl;
+		return never_ptr<const object>(NULL);
+	}
+#endif
 	checked_stmts_type checked_stmts;
 	if (check_CHP(checked_stmts, c).good) {
 		const never_ptr<definition_base>

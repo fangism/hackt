@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/meta_conditional_base.cc"
 	Base for guarded bodies in meta language.  
-	$Id: meta_conditional_base.cc,v 1.5 2006/07/17 02:53:38 fang Exp $
+	$Id: meta_conditional_base.cc,v 1.6 2007/11/26 08:27:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_BASE_CC__
@@ -25,13 +25,7 @@ namespace entity {
 //=============================================================================
 // class meta_conditional_base method definitions
 
-meta_conditional_base::meta_conditional_base() : guard() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-meta_conditional_base::meta_conditional_base(const guard_ptr_type& g) :
-		guard(g) {
-	// may be NULL to represent else clause
-}
+meta_conditional_base::meta_conditional_base() : guards() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_conditional_base::~meta_conditional_base() { }
@@ -40,22 +34,21 @@ meta_conditional_base::~meta_conditional_base() { }
 void
 meta_conditional_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	if (guard)
-		guard->collect_transient_info(m);
+	m.collect_pointer_list(guards);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 meta_conditional_base::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	m.write_pointer(o, guard);
+	m.write_pointer_list(o, guards);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 meta_conditional_base::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	m.read_pointer(i, guard);
+	m.read_pointer_list(i, guards);
 }
 
 //=============================================================================

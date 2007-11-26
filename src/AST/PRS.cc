@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.27 2007/10/08 03:09:36 fang Exp $
+	$Id: PRS.cc,v 1.28 2007/11/26 08:27:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -96,6 +96,9 @@ using std::mem_fun_ref;
 
 //=============================================================================
 // class body_item method definitions
+
+#define	CHECK_RULE_THROW	THROW_EXIT
+#define	GUARDED_PRS_THROW	THROW_EXIT
 
 body_item::body_item() { }
 
@@ -376,7 +379,7 @@ rule::rightmost(void) const {
  */
 body_item::return_type
 rule::check_rule(context& c) const {
-	STACKTRACE("parser::PRS::rule::check_rule()");
+	STACKTRACE_VERBOSE;
 	prs_expr_return_type g(guard->check_prs_expr(c));
 	if (!g) {
 		cerr << "ERROR in production rule guard at " <<
@@ -401,7 +404,7 @@ rule::check_rule(context& c) const {
 			<< where(*this) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<pull_base>
+	excl_ptr<pull_base>
 		ret((dir->text[0] == '+') ?
 			AS_A(pull_base*,
 				new entity::PRS::pull_up(g, *o, arrow_type)) :
@@ -417,7 +420,7 @@ rule::check_rule(context& c) const {
 			THROW_EXIT;
 		}
 	}
-	return ret;
+	c.get_current_prs_body().append_rule(ret);
 }
 
 //=============================================================================
@@ -455,6 +458,7 @@ loop::rightmost(void) const {
  */
 body_item::return_type
 loop::check_rule(context& c) const {
+	STACKTRACE_VERBOSE;
 	// declare induction variable using token_identifier
 	// check for shadowing by looking up
 	// extend/modify the parse context with token_identifier on stack
@@ -479,34 +483,24 @@ loop::check_rule(context& c) const {
 			" at " << where(*index) << endl;
 		return return_type(NULL);
 	}
-	const count_ptr<entity::PRS::rule_loop>
+	excl_ptr<entity::PRS::rule_loop>
 		ret(new entity::PRS::rule_loop(loop_ind, loop_range));
 	NEVER_NULL(ret);
 
 	// copied from body::check_rule
 	// const never_ptr<definition_base> d(c.get_current_open_definition());
-	checked_rules_type checked_rules;
-	rules->check_list(checked_rules, &body_item::check_rule, c);
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	if (null_iter == checked_rules.end()) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; ++i) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			ret->push_back(xfer);
-			MUST_BE_NULL(xfer);
-		}
-		return ret;
-	} else {
-		cerr << "ERROR: at least one error in PRS rule-loop.  "
-			<< where(*rules) << endl;
-		// THROW_EXIT;
-		return body_item::return_type();
+	never_ptr<entity::PRS::rule_loop> retc(ret);
+	c.get_current_prs_body().append_rule(ret);
+try {
+	const context::prs_body_frame prlf(c, retc);
+	rules->check_list_void(&body_item::check_rule, c);
+} catch (...) {
+	cerr << "ERROR: at least one error in PRS rule-loop.  "
+		<< where(*rules) << endl;
+	throw;		// re-throw
+}
+	if (retc->empty()) {
+		c.get_current_prs_body().pop_back();
 	}
 }	// end method loop::check_rule
 
@@ -540,6 +534,7 @@ guarded_body::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 guarded_body::return_type
 guarded_body::check_clause(context& c) const {
+	STACKTRACE_VERBOSE;
 	expr::meta_return_type _g(NULL);
 	entity::meta_conditional_base::guard_ptr_type bg(NULL);
 	if (guard && !guard.is_a<const token_else>()) {
@@ -547,52 +542,40 @@ guarded_body::check_clause(context& c) const {
 		if (!_g) {
 			cerr << "Error checking guard expression of "
 				"conditional PRS.  " << where(*guard) << endl;
-			return return_type();
+			GUARDED_PRS_THROW;
 		} else {
 		bg = _g.is_a<const pbool_expr>();
 		if (!bg) {
 			cerr << "Error: guard expression is not boolean.  " <<
 				where(*guard) << endl;
-			return return_type();
+			GUARDED_PRS_THROW;
 		}
 		}
 	}
-	const return_type ret(new entity::PRS::rule_conditional(bg));
+	// see also guarded_instance_management::check_build()
+	const never_ptr<entity::PRS::rule_conditional>
+		rs(IS_A(entity::PRS::rule_conditional*,
+			&*c.get_current_prs_body().back()));
+	NEVER_NULL(rs);
+	rs->append_guarded_clause(bg);
+	const context::prs_body_frame _pbf(c, 
+		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
+	STACKTRACE_INDENT_PRINT("current rule set: " <<
+		&rs->get_last_clause() << endl);
 	// code below mostly ripped from loop::check_rule()
-	checked_rules_type checked_rules;
-	rules->check_list(checked_rules, &body_item::check_rule, c);
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	if (null_iter == checked_rules.end()) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; ++i) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			ret->push_back_if_clause(xfer);
-			// can transfer to else clause later...
-			MUST_BE_NULL(xfer);
-		}
-		return ret;
-	} else {
-		cerr << "ERROR: at least one error in conditional PRS rules.  "
-			<< where(*rules) << endl;
-		return return_type(NULL);
-	}
+try {
+	rules->check_list_void(&body_item::check_rule, c);
+} catch (...) {
+	cerr << "ERROR: at least one error in conditional PRS rules.  "
+		<< where(*rules) << endl;
+}
 }	// end guarded_body::check_clause
 
 //=============================================================================
 // class conditional method definitions
 
-conditional::conditional(const char_punctuation_type* l, 
-		const guarded_body* i, const guarded_body* e, 
-		const char_punctuation_type* r) :
-		lb(l), if_then(i), else_clause(e), rb(r) {
-	NEVER_NULL(if_then);
-	// else clause is optional
+conditional::conditional(const guarded_prs_list* p) : gp(p) {
+	NEVER_NULL(gp);
 }
 
 conditional::~conditional() { }
@@ -601,37 +584,31 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(conditional)
 
 line_position
 conditional::leftmost(void) const {
-	if (lb)	return lb->leftmost();
-	else	return if_then->leftmost();
+	return gp->leftmost();
 }
 
 line_position
 conditional::rightmost(void) const {
-	if (rb)	return rb->rightmost();
-	else if (else_clause)
-		return else_clause->rightmost();
-	else	return if_then->rightmost();
+	return gp->leftmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: generalize to multiple else-if clauses.
+ */
 body_item::return_type
 conditional::check_rule(context& c) const {
-	const guarded_body::return_type ic(if_then->check_clause(c));
-	if (!ic) {
-		// already have error message
-		return return_type(NULL);
-	}
-	if (else_clause) {
-		const guarded_body::return_type
-			ec(else_clause->check_clause(c));
-		if (!ec) {
-			// already have an error message
-			return return_type(NULL);
-		}
-		// transfer from one list to another
-		ic->import_else_clause(*ec);
-	}
-	return ic;
+	STACKTRACE_VERBOSE;
+	// see also conditional_instantiation::check_build()
+	excl_ptr<entity::PRS::rule_conditional>
+		rs(new entity::PRS::rule_conditional());
+	const never_ptr<const entity::PRS::rule_conditional> crs(rs);
+	c.get_current_prs_body().append_rule(rs);	// xfer ownership
+	MUST_BE_NULL(rs);
+	gp->check_list_void(&guarded_body::check_clause, c);
+        if (crs->empty()) {
+                c.get_current_prs_body().pop_back();
+        } 
 }	// end conditional::check_rule
 
 //=============================================================================
@@ -663,50 +640,41 @@ body::rightmost(void) const {
 	\return false on error.
  */
 bool
-body::__check_rules(context& c, checked_rules_type& checked_rules) const {
-	NEVER_NULL(rules);
-	rules->check_list_omit_null(checked_rules, &body_item::check_rule, c);
-		// optional: now allow NULLs from ignored language extensions
-	const checked_rules_type::const_iterator
-		null_iter(find(checked_rules.begin(), checked_rules.end(), 
-			body_item::return_type()));
-	return null_iter == checked_rules.end();
+body::__check_rules(context& c) const {
+if (rules) {
+	try {
+		rules->check_list_void(&body_item::check_rule, c);
+	} catch (...) {
+		return false;
+	}
+}
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: remember to update return type with ROOT_CHECK_PROTO.
 	Currently, exits upon error.  
+	Added support for prs inside conditionals and loops from the
+	instance management scope.  
+	\pre context has already set the current_prs_body.
  */
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
 if (rules) {
+	if (c.reject_namespace_lang_body()) {
+		cerr << "Error: top-level PRS is only supported "
+			"in the global namespace." << endl;
+		cerr << "\tgot: prs { ... } " << where(*this)
+			<< endl;
+		THROW_EXIT;
+	}
 	// check context's current open definition
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
 	// if !pd, then prs is in a top-level scope (outside definition)
-	checked_rules_type checked_rules;
-	if (__check_rules(c, checked_rules)) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		if (c.reject_namespace_lang_body()) {
-			cerr << "Error: top-level PRS is only supported "
-				"in the global namespace." << endl;
-			cerr << "\tgot: prs { ... } " << where(*this)
-				<< endl;
-			THROW_EXIT;
-		}
-		for ( ; i!=e; i++) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			pd->add_production_rule(xfer);
-			// now also works on top-level module
-			// b/c it is also a process_definition.
-		}
-	} else {
+	if (!__check_rules(c)) {
 		cerr << "ERROR: at least one error in PRS body."
 			<< endl;
 		THROW_EXIT;
@@ -723,36 +691,11 @@ if (rules) {
  */
 body_item::return_type
 body::check_rule(context& c) const {
-if (rules) {
-	const count_ptr<entity::PRS::nested_rules>
-		ret(new entity::PRS::nested_rules());
-	NEVER_NULL(ret);
-	// copied from body::check_rule
-	// const never_ptr<definition_base> d(c.get_current_open_definition());
-	checked_rules_type checked_rules;
-	if (__check_rules(c, checked_rules)) {
-		// no errors found, add them too the process definition
-		checked_rules_type::iterator i(checked_rules.begin());
-		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; ++i) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			ret->push_back(xfer);
-			MUST_BE_NULL(xfer);
-		}
-		return ret;
-	} else {
+	if (!__check_rules(c)) {
 		cerr << "ERROR: at least one error in PRS rule-nest.  "
 			<< where(*rules) << endl;
-		// THROW_EXIT;
-		return body_item::return_type();
+		CHECK_RULE_THROW;
 	}
-} else {
-	// is this ok? is am empty body acceptable?
-	// grammar requires a non-empty body, by construction
-	return return_type(NULL);
-}
 }
 
 //=============================================================================
@@ -904,22 +847,23 @@ macro::check_rule(context& c) const {
 		cerr << "Error parsing macro name before " << where(*args)
 			<< endl;
 		cerr << "Expected: prs_macro : ID . [ \'<\' shift_exprs \'>\' ] \'(\' inst_ref_exprs \')\'" << endl;
-		return return_type(NULL);
+		CHECK_RULE_THROW;
 	}
 	const entity::PRS::cflat_macro_definition_entry
 		mde(entity::PRS::cflat_macro_registry[*name]);
 	if (!mde) {
 		cerr << "Error: unrecognized PRS macro \"" << *name << "\" at "
 			<< where(*name) << endl;
-		return return_type(NULL);
+		CHECK_RULE_THROW;
 	}
 
-	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
+	excl_ptr<entity::PRS::macro>
+		ret(new entity::PRS::macro(*name));
 if (params) {
 	if (!mde.check_num_params(params->size()).good) {
 		// already have error message
 		cerr << "\tat " << where(*params) << endl;
-		return return_type(NULL);
+		CHECK_RULE_THROW;
 	}
 	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef checked_exprs_type::const_iterator	const_iterator;
@@ -930,7 +874,7 @@ if (params) {
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking macro parameters in " << where(*args)
 			<< endl;
-		return return_type(NULL);
+		CHECK_RULE_THROW;
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
@@ -938,7 +882,7 @@ if (params) {
 } else if (!mde.check_num_params(0).good) {
 	// no params given where required and already have error message
 	cerr << "\tat " << where(*this) << endl;
-	return return_type(NULL);
+	CHECK_RULE_THROW;
 }
 {
 	typedef	inst_ref_expr_list::checked_bool_groups_type
@@ -947,7 +891,7 @@ if (params) {
 	if (!mde.check_num_nodes(args->size()).good) {
 		// already have error message
 		cerr << "\tat " << where(*args) << endl;
-		return return_type(NULL);
+		CHECK_RULE_THROW;
 	}
 	typedef checked_bools_type::const_iterator	const_iterator;
 	typedef checked_bools_type::value_type		value_type;
@@ -958,13 +902,13 @@ if (params) {
 	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
 		cerr << "Error checking macro arguments in " << where(*args)
 			<< endl;
-		return return_type(NULL);
+		CHECK_RULE_THROW;
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
-	return ret;
+	c.get_current_prs_body().append_rule(ret);
 }	// end macro::check_rule
 
 //=============================================================================
@@ -1046,6 +990,28 @@ node_list<const PRS::body_item>::leftmost(void) const;
 template
 line_position
 node_list<const PRS::body_item>::rightmost(void) const;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// template
+// node_list<const PRS::guarded_body>::node_list();
+
+template
+node_list<const PRS::guarded_body>::node_list(const PRS::guarded_body*);
+
+template
+node_list<const PRS::guarded_body>::~node_list();
+
+template
+ostream&
+node_list<const PRS::guarded_body>::what(ostream&) const;
+
+template
+line_position
+node_list<const PRS::guarded_body>::leftmost(void) const;
+
+template
+line_position
+node_list<const PRS::guarded_body>::rightmost(void) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // template class node_list<const attribute>;

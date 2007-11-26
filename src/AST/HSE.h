@@ -1,7 +1,7 @@
 /**
 	\file "AST/HSE.h"
 	HSE-specific syntax tree classes.
-	$Id: HSE.h,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: HSE.h,v 1.3 2007/11/26 08:27:21 fang Exp $
 	This file used to be the following before renamed:
 	Id: art_parser_hse.h,v 1.12.48.1 2005/12/11 00:45:07 fang Exp
  */
@@ -10,7 +10,7 @@
 #define	__HAC_AST_HSE_H__
 
 #include "AST/HSE_fwd.h"
-#include "AST/definition_item.h"
+#include "AST/lang.h"
 #include "AST/token_string.h"
 #include "AST/statement.h"
 

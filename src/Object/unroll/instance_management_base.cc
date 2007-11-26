@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.16 2006/10/18 05:33:02 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.17 2007/11/26 08:27:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -50,7 +50,9 @@ USING_UTIL_COMPOSE
 //=============================================================================
 // class sequential_scope method definitions
 
-sequential_scope::sequential_scope() : instance_management_list() {
+sequential_scope::sequential_scope() : 
+		parent_type()
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,19 +63,18 @@ sequential_scope::~sequential_scope() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 sequential_scope::dump(ostream& o, const expr_dump_context& dc) const {
-	for_each(instance_management_list.begin(), 
-		instance_management_list.end(), 
-		instance_management_base::dumper(o, dc)
-	);
+	for_each(begin(), end(), instance_management_base::dumper(o, dc));
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 sequential_scope::append_instance_management(
 		const count_ptr<const instance_management_base>& i) {
-	instance_management_list.push_back(i);
+	push_back(i);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -92,8 +93,8 @@ sequential_scope::unroll(const unroll_context& c) const {
 	)
 	);
 #else
-	const_iterator i(instance_management_list.begin());
-	const const_iterator e(instance_management_list.end());
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		if (!(*i)->unroll(c).good) {
 			return good_bool(false);
@@ -109,8 +110,7 @@ sequential_scope::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT(
 		"sequential_scope::collect_transient_info_base()");
-//	collect_object_pointer_list(m);
-	m.collect_pointer_list(instance_management_list);
+	m.collect_pointer_list(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -127,8 +127,7 @@ void
 sequential_scope::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("sequential_scope::write_object_base()");
-//	write_object_pointer_list(m, f);
-	m.write_pointer_list(f, instance_management_list);
+	m.write_pointer_list(f, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -136,8 +135,7 @@ void
 sequential_scope::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("sequential_scope::load_object_base()");
-//	load_object_pointer_list(m, f);
-	m.read_pointer_list(f, instance_management_list);
+	m.read_pointer_list(f, *this);
 }
 
 //=============================================================================
@@ -156,7 +154,7 @@ template <class P>
 ostream&
 instance_management_base::dumper::operator () (const P& i) const {
 	typedef	is_same<typename P::element_type,
-			const instance_management_base>
+			instance_management_list_type::value_type::element_type>
 					__type_constraint1;
 	UTIL_STATIC_ASSERT_DEPENDENT(__type_constraint1::value);
 	return i->dump(os << auto_indent, edc) << endl;

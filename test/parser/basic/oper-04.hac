@@ -1,0 +1,11 @@
+// "oper-04.hac"
+// testing = operator
+
+pint N = 4;
+pint K = 4;
+
+[ (N=K) ->	// '=' for "==" is OK only inside parens
+bool b;
+]
+
+

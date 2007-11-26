@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.22 2007/11/06 23:53:45 fang Exp $
+ 	$Id: parse_context.cc,v 1.23 2007/11/26 08:27:31 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -83,6 +83,7 @@ context::context(module& m, const parse_options& o) :
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
+		current_prs_body(&m.get_prs()),
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
 		view_all_publicly(false), 
@@ -128,6 +129,7 @@ context::context(const module& m, const parse_options& o, const bool _pub) :
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
+		current_prs_body(NULL),	// not adding any PRS
 		strict_template_mode(true), 
 		in_conditional_scope(false), 
 		view_all_publicly(_pub), 
@@ -573,7 +575,7 @@ context::add_instance_management(
 		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
 		THROW_EXIT;
 	}
-	get_current_sequential_scope()->append_instance_management(c);
+	get_current_sequential_scope()->push_back(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -591,7 +593,7 @@ context::add_connection(
 		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
 		THROW_EXIT;
 	}
-	get_current_sequential_scope()->append_instance_management(c);
+	get_current_sequential_scope()->push_back(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -611,7 +613,7 @@ context::add_assignment(
 		c->dump(cerr << "got: ", expr_dump_context::default_value) << endl;
 		THROW_EXIT;
 	}
-	get_current_sequential_scope()->append_instance_management(c);
+	get_current_sequential_scope()->push_back(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -869,7 +871,7 @@ context::add_instance(const token_identifier& id,
 	}
 
 	NEVER_NULL(get_current_sequential_scope());
-	get_current_sequential_scope()->append_instance_management(inst_stmt);
+	get_current_sequential_scope()->push_back(inst_stmt);
 	return inst_base;
 }
 
@@ -965,7 +967,7 @@ context::add_template_formal(const token_identifier& id,
 	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 	NEVER_NULL(seq_scope);
-	seq_scope->append_instance_management(inst_stmt);
+	seq_scope->push_back(inst_stmt);
 #endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	return inst_base;
 }	// end context::add_template_formal()
@@ -1016,7 +1018,7 @@ context::add_port_formal(const token_identifier& id,
 	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 	NEVER_NULL(seq_scope);
-	seq_scope->append_instance_management(inst_stmt);
+	seq_scope->push_back(inst_stmt);
 #endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	return inst_base;
 }	// end context::add_port_formal()
@@ -1156,23 +1158,32 @@ context::loop_var_frame::~loop_var_frame() {
 // struct context::loop_scope_frame method definitions
 
 /**
-	Adde the new loop scope to the current sequential scope, 
+	Add the new loop scope to the current sequential scope, 
 	then pushes it onto the sequential scope stack.  
  */
 context::loop_scope_frame::loop_scope_frame(context& c, 
 		const count_ptr<loop_scope>& l
 		) : _context(c) {
 	NEVER_NULL(l);
-	_context.get_current_sequential_scope()->append_instance_management(l);
+	_context.get_current_sequential_scope()->push_back(l);
 	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sequential scope stack balancing destructor.  
+	Also automatically removes empty loops.
  */
 context::loop_scope_frame::~loop_scope_frame() {
 	_context.sequential_scope_stack.pop();
+	const never_ptr<sequential_scope>
+		last(_context.get_current_sequential_scope());
+	const count_ptr<const loop_scope>
+		ls(last->back().is_a<const loop_scope>());
+	NEVER_NULL(ls);
+	if (ls->empty()) {
+		last->pop_back();
+	}
 }
 
 //=============================================================================
@@ -1183,12 +1194,14 @@ context::loop_scope_frame::~loop_scope_frame() {
 	then pushes it onto the sequential scope stack.  
 	Also saves status of the in_conditional_scope flag.
  */
-context::conditional_scope_frame::conditional_scope_frame(context& c, 
-		const count_ptr<conditional_scope>& l) :
+context::conditional_scope_frame::conditional_scope_frame(context& c) :
 		_context(c), parent_cond(c.in_conditional_scope) {
-	NEVER_NULL(l);
-	_context.get_current_sequential_scope()->append_instance_management(l);
-	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
+	_context.sequential_scope_stack.push(
+		never_ptr<sequential_scope>(
+			&(const_cast<conditional_scope&>(
+				*_context.sequential_scope_stack.top()->back()
+				.is_a<const conditional_scope>()))
+			.get_last_clause()));
 	_context.in_conditional_scope = true;
 }
 

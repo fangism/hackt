@@ -1,0 +1,16 @@
+// "loop-13.hac"
+// copy-modified from "loop-03.hac"
+// should pass, though example is disgusting
+
+template <pint N>
+defproc triangle(bool in[N][N][N]; bool _out) {
+(;i:N:
+prs {
+		(|:j:i:	(&:k:j:	in[i][j][k] ) )		-> _out-
+		(&:j:i:	(|:k:j:	~in[N-i][N-j][N-k] ) )	-> _out+
+}
+)
+}
+
+triangle<3>	foo;
+

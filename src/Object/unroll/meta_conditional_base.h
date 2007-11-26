@@ -1,14 +1,16 @@
 /**
 	\file "Object/unroll/meta_conditional_base.h"
-	$Id: meta_conditional_base.h,v 1.5 2006/07/17 02:53:38 fang Exp $
+	$Id: meta_conditional_base.h,v 1.6 2007/11/26 08:27:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_BASE_H__
 #define	__HAC_OBJECT_UNROLL_META_CONDITIONAL_BASE_H__
 
 #include <iosfwd>
+#include <vector>
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
+
 
 namespace HAC {
 namespace entity {
@@ -25,14 +27,12 @@ using util::persistent_object_manager;
 class meta_conditional_base {
 public:
 	typedef	count_ptr<const pbool_expr>		guard_ptr_type;
-
+	typedef	std::vector<guard_ptr_type>		guard_list_type;
+	typedef	guard_list_type::const_iterator		const_iterator;
 protected:
-	guard_ptr_type				guard;
+	guard_list_type				guards;
 
 	meta_conditional_base();
-
-	explicit
-	meta_conditional_base(const guard_ptr_type&);
 
 	~meta_conditional_base();
 

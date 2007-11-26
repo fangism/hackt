@@ -1,0 +1,16 @@
+// "loop-15.hac"
+// copy-modified from "loop-06.hac"
+// should pass, and produce inverters
+
+template <pint N>
+defproc null() {
+bool x, y;
+(;i:N:
+prs {
+	x	=> y-
+}
+)
+}
+
+null<3> foo;	// should produce redundant prs
+

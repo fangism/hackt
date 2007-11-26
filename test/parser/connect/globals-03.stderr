@@ -1,1 +1,2 @@
 Error: cannot reference top-level instance from within a definition!  [13:3..9]
+ERROR: at least one error in PRS body.

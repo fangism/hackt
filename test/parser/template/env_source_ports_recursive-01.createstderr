@@ -115,7 +115,7 @@ Persistent Object Manager text dump:
 	111	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	112	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	113	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	114	##ADDR##	condscop	0	#HEAD#	#TAIL#	28
+	114	##ADDR##	condscop	0	#HEAD#	#TAIL#	36
 	115	##ADDR##	pireltex	0	#HEAD#	#TAIL#	21
 	116	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	117	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -373,7 +373,7 @@ In namespace "", we have: {
       unroll sequence: 
         source_e<source_pack_port_test::M> Src[0..N-1]
         Src[0]<1, { d[0] }>
-        [ N>1 ->
+        [ N>1 -> 
           source_pack_port_test<source_pack_port_test::M, source_pack_port_test::N-1> rec
           rec<d[1..N-1]>
           rec (Src[1..N-1]);

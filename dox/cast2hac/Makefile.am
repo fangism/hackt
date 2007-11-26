@@ -1,5 +1,5 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2007/09/14 04:29:52 fang Exp $
+#	$Id: Makefile.am,v 1.15 2007/11/26 08:27:17 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -18,6 +18,7 @@ cast2hac_info_INCLUDES = \
 	instances.texi \
 	arrays.texi \
 	connections.texi \
+	expressions.texi \
 	loops.texi \
 	templates.texi \
 	typedefs.texi \

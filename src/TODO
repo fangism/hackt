@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.57 2007/10/31 21:27:12 fang Exp $
+#	$Id: TODO,v 1.58 2007/11/26 08:27:20 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -9,13 +9,14 @@ NOTE: see also sim/chpsim/TODO
 ===============================================================================
 ACT-compatibility:
 	option to reject processes in ports in ACT-mode (don't agree)
-	support prs { } inside conditional constructs (?)
 	PRS: transistor type arguments (needs resolution)
 	port qualifiers for non-channels: (everything may read)
 		'?' for read-only
 		<blank> for may-write
 		'!' for must-write
 		* need to resolve aliases semantics ...
+		?? What about structures, and bool members?
+	shadow identifier conflict checking and diagnostics
 
 ===============================================================================
 language expression related tasks:

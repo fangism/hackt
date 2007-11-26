@@ -1,7 +1,7 @@
 /**
 	\file "AST/namespace.cc"
 	Class method definitions for namespace and other root item classes.
-	$Id: definition_item.cc,v 1.6 2007/03/11 16:34:15 fang Exp $
+	$Id: definition_item.cc,v 1.7 2007/11/26 08:27:23 fang Exp $
  */
 
 #ifndef	__HAC_AST_DEFINITION_ITEM_CC__
@@ -13,6 +13,7 @@
 #include <iostream>
 
 #include "AST/definition_item.h"
+#include "AST/lang.h"
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 
@@ -52,7 +53,12 @@ using util::auto_indent;
 
 CONSTRUCTOR_INLINE
 language_body::language_body(const generic_keyword_type* t) :
-		def_body_item(), tag(t) {
+#if INSTANCE_MANAGEMENT_LANG
+		instance_management(), 
+#else
+		def_body_item(), 
+#endif
+		tag(t) {
 }
 
 DESTRUCTOR_INLINE

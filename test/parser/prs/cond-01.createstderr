@@ -1,0 +1,124 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	pblgcexp	0	#HEAD#	#TAIL#	22
+	17	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	302
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	footprnt	0	#HEAD#	#TAIL#	302
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	328
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	footprnt	0	#HEAD#	#TAIL#	348
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    ass = process-definition (defined) ass<
+      pint<> N
+      >(
+      )
+      In definition "ass", we have: {
+      Parameters:
+        N = pint<> ass::N
+      Instances:
+        a = bool<> ass::a
+        x = bool<> ass::x
+      unroll sequence: 
+        bool<> x
+        bool<> a
+      prs:
+        [ N!=0&&N!=1 ->
+          x -> a-
+        ]
+      footprint collection: {
+        <0> {
+          N = pint^0 value: 0
+          a = bool^0 = ass::a (2) 
+          x = bool^0 = ass::x (1) 
+          Created state:
+          bool instance pool:
+          1	ass::x
+          2	ass::a
+        }
+        <1> {
+          N = pint^0 value: 1
+          a = bool^0 = ass::a (2) 
+          x = bool^0 = ass::x (1) 
+          Created state:
+          bool instance pool:
+          1	ass::x
+          2	ass::a
+        }
+        <2> {
+          N = pint^0 value: 2
+          a = bool^0 = ass::a (2) 
+          x = bool^0 = ass::x (1) 
+          Created state:
+          bool instance pool:
+          1	ass::x
+          2	ass::a
+          resolved prs:
+          x -> a-
+        }
+      }
+      }
+
+  Instances:
+    a0 = ass<0> a0
+    a1 = ass<1> a1
+    a2 = ass<2> a2
+}
+
+footprint: {
+  a0 = process ass<0>^0 = a0 (1) 
+  a1 = process ass<1>^0 = a1 (2) 
+  a2 = process ass<2>^0 = a2 (3) 
+  Created state:
+  process instance pool:
+  1	a0
+  2	a1
+  3	a2
+}
