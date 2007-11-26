@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.19 2007/07/31 23:23:21 fang Exp $
+ 	$Id: meta_range.cc,v 1.20 2007/11/26 20:11:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -536,6 +536,12 @@ const_range::must_be_formal_size_equivalent(const meta_range_expr& re) const {
 bool
 const_range::is_sane(void) const {
 	return !empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+const_range::negative(void) const {
+	return (first < 0) || (second < 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

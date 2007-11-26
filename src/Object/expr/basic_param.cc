@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.28 2007/08/28 04:53:59 fang Exp $
+ 	$Id: basic_param.cc,v 1.29 2007/11/26 20:11:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -709,6 +709,12 @@ pint_const::static_constant_param(void) const {
 bool
 pint_const::is_true(void) const {
 	return val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_const::negative(void) const {
+	return val < 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.20 2007/01/21 05:58:54 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.21 2007/11/26 20:11:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -168,7 +168,7 @@ ostream&
 const_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
 	const const_iterator e(end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		NEVER_NULL(*i);
 		const count_ptr<const pint_expr>
 			b(i->is_a<const pint_expr>());
@@ -200,7 +200,7 @@ const_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
 	const_iterator i(begin());
 	const const_iterator e(end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		if (i->is_a<const pint_const>())
 			ret++;
 		else INVARIANT(i->is_a<const const_range>());
@@ -221,7 +221,7 @@ const_index_list::collapsed_dimension_ranges(void) const {
 	const_range_list ret;
 	const_iterator i(begin());
 	const const_iterator e(end());
-	for ( ; i!=e; i++) {
+	for ( ; i!=e; ++i) {
 		const count_ptr<const const_range>
 			cr(i->is_a<const const_range>());
 		if (cr)
@@ -230,6 +230,25 @@ const_index_list::collapsed_dimension_ranges(void) const {
 		// continue
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Error diagnostic.  
+	\return true if any of the indices are negative.  
+ */
+bool
+const_index_list::negative(void) const {
+	// TODO: find_if algorithm?
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		if ((*i)->negative()) {
+			return true;
+		}
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

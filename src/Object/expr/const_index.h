@@ -3,7 +3,7 @@
 	Classes related to constant index expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index.h,v 1.6 2006/10/18 20:57:51 fang Exp $
+	$Id: const_index.h,v 1.7 2007/11/26 20:11:10 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_H__
@@ -28,6 +28,8 @@ public:
 virtual	~const_index() { }
 
 // same pure virtual functions, and more...
+virtual	bool
+	negative(void) const = 0;
 
 virtual	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const = 0;

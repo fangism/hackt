@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.192 2007/11/26 08:27:19 fang Exp $
+#	$Id: Makefile.am,v 1.193 2007/11/26 20:11:05 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -113,11 +113,12 @@ hacobjdump_LDADD = libhacktlib.la
 
 hacpp_SOURCES = main/flatten.cc
 hacpp_CPPFLAGS = -DWITH_MAIN
-hacpp_LDADD = libhacktlib.la libhacktparsers.la
+hacpp_LDADD = libhacktlib.la
 # libhacktparsers.la should be redundant because libhacktlib.la
 # depends on it, but gcc-4.1.2-0ubuntu4 with
 # GNU ld version 2.17.50 20070103 Ubuntu
 # doesn't link properly without it, (all other configurations work) WTF?
+# suspect binutils bug...
 
 haccreate_SOURCES = main/create.cc
 haccreate_CPPFLAGS = -DWITH_MAIN

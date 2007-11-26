@@ -5,6 +5,14 @@
 
 2007-11-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-81-99:
+	  BUG fix (ICE-on-invalid):
+		forgot to reject negative array indices, now checked
+		prior to passing into unroll_aliases, in
+		Object/ref/meta_instance_reference_subtypes.tcc.  
+	  Reverted hacc_LDADD libhacktparsers.la, suspecting binutils bug.
+
+
 	* HACKT-00-01-04-main-00-81-98-merged-ACT-02-07:
 	  Branch merge for ACT compatibility.
 	  Improved flow-control support for conditionals and loops around
@@ -63,7 +71,7 @@
 		with shared libraries on certain platforms.  
 	  	Privatized global variable, exposed through function instead.
 	  main/flatten.cc (hacpp): changed -w flag to -P to resemble cpp -P.
-	  Makefile.am: hacpp_LIBADD libhacktparsers.la only needed for
+	  Makefile.am: hacpp_LDADD libhacktparsers.la only needed for
 	  	ubuntu-gcc-4.1.2 (WTF?) suspect miscompile/binutils bug.
 
 

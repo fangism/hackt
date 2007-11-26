@@ -1,0 +1,15 @@
+// "062.hac"
+// reduced and contributed by Carlos Tadeo Ortega Otero
+// should fail unroll/create phase
+
+defproc dualrail() { }
+
+template<pint N, rot>
+defproc rotate_right_N_fb ( dualrail in[N], out[N]) {
+	(;i:N: out[ (i-rot)%N ] = in[i]; )
+	// will trigger negative index error
+}
+// dualrail a[32], b[32];
+
+// rotate_right_N_fb<32, 4> rota(a,b);
+rotate_right_N_fb<32, 4> rota;

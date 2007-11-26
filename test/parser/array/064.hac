@@ -1,0 +1,13 @@
+// "064.hac"
+// copy-modified from "063.hac"
+// should fail unroll/create phase
+
+template<pint N, rot>
+defproc rotate_right_N_fb ( ) {
+	pint K[N];
+	// (;i:N: K[i] = i; )
+	(;i:N: K[i] = K[ (i-rot)%N ]; )
+	// will trigger negative index error
+}
+
+rotate_right_N_fb<32, 4> rota;

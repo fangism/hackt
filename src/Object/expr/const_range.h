@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.15 2007/01/21 05:58:44 fang Exp $
+	$Id: const_range.h,v 1.16 2007/11/26 20:11:12 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
@@ -79,6 +79,9 @@ public:
 	/** use this to query whether or not range is valid */
 	bool
 	empty(void) const { return first > second; }
+
+	bool
+	negative(void) const;
 
 	pint_value_type
 	lower(void) const {

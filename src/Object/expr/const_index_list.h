@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.15 2007/01/21 05:58:43 fang Exp $
+	$Id: const_index_list.h,v 1.16 2007/11/26 20:11:11 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -79,6 +79,9 @@ public:
 
 	const_range_list
 	collapsed_dimension_ranges(void) const;
+
+	bool
+	negative(void) const;
 
 	using parent_type::empty;
 	using parent_type::clear;

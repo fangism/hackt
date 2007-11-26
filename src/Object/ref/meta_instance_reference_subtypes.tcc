@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.22 2007/07/18 23:28:50 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.23 2007/11/26 20:11:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -210,6 +210,14 @@ if (inst.get_dimensions()) {
 		inst.dump(cerr << "\tcollection state: ", dump_flags::verbose)
 			<< endl;
 		// inst.dump_unrolled_instances(cerr, dump_flags::verbose);
+		return bad_bool(true);
+	}
+	if (full_indices.negative()) {
+		cerr << "ERROR: detected negative array indices: ";
+		full_indices.dump(cerr, expr_dump_context::default_value)
+			<< endl;
+		inst.dump(cerr << "\twith collection: ", dump_flags::verbose)
+			<< endl;
 		return bad_bool(true);
 	}
 #if ENABLE_STACKTRACE

@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2007/10/08 01:22:42 fang Exp $
+#	$Id: Makefile.am,v 1.22 2007/11/26 20:11:32 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -21,8 +21,8 @@ HACKT_PARSE_TEST_PASSES = \
 	020 021 022 023 024 025 026 027 028 029 \
 	030 031 033 034 035 036 037 038 039 \
 	040 041 043 044 046 047 \
-	054 055 056 058 059 \
-	060 \
+	050 054 055 056 058 059 \
+	060 061 062 063 064 \
 	act-001 act-002 act-003
 
 HACKT_CREATE_TEST_FAILURES = \
@@ -30,11 +30,10 @@ HACKT_CREATE_TEST_FAILURES = \
 	020 021 022 023 024 025 026 027 028 \
 	030 031 033 034 035 036 \
 	041 \
-	055 058 059 \
+	050 055 058 059 \
+	062 063 064 \
 	act-002
 
-# The following fail during unrolling:
-# 041
 # Many other tests are just uninteresting beyond unrolling.
 HACKT_CREATE_TEST_PASSES = \
 	001 002 007 \
@@ -43,7 +42,7 @@ HACKT_CREATE_TEST_PASSES = \
 	037 038 039 \
 	040 043 044 046 \
 	054 \
-	060 \
+	060 061 \
 	act-001 act-003
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
@@ -51,14 +50,8 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 HACKT_CFLAT_TEST_SUBJECTS = \
 	043 046
 
-# test-cases to process
-# many of these are pending construction of higher dimension arrays
-srcdir_EXTRA_DIST += \
-	050.hac
-
-# the following test cases should pass everything, 
-# just need to update expected outputs at earliest convenience
-srcdir_EXTRA_DIST += 061.hac
+# pending tests:
+srcdir_EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 
