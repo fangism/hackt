@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2007/10/08 01:22:55 fang Exp $
+#	$Id: Makefile.am,v 1.26.6.1 2007/11/26 02:11:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -7,14 +7,14 @@ HACKT_PARSE_TEST_FAILURES = \
 	004 005 008 009 \
 	010 011 012 013 017 018 \
 	020 021 023 024 \
-	oper-03 \
+	oper-03 oper-05 \
 	act-002
 
 HACKT_PARSE_TEST_PASSES = \
 	000 001 002 003 006 007 \
 	014 015 016 019 \
 	022 \
-	oper-02 \
+	oper-02 oper-04 \
 	act-001
 
 HACKT_FLATTEN_TEST_PASSES = \
@@ -43,7 +43,8 @@ HACKT_CREATE_TEST_FAILURES =
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 004 005 008 010 017 018 \
-	020 021
+	020 021 \
+	oper-05
 
 srcdir_EXTRA_DIST += TODO
 

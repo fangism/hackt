@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.57.2.1 2007/11/25 10:02:47 fang Exp $
+#	$Id: TODO,v 1.57.2.2 2007/11/26 02:10:46 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -15,6 +15,8 @@ ACT-compatibility:
 		<blank> for may-write
 		'!' for must-write
 		* need to resolve aliases semantics ...
+		?? What about structures, and bool members?
+	shadow identifier conflict checking and diagnostics
 
 ===============================================================================
 language expression related tasks:

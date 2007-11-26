@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.32.4.3 2007/11/25 22:06:32 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.32.4.4 2007/11/26 02:11:00 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2750,6 +2750,11 @@ relational_equality_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 	| relational_equality_expr NOTEQUAL shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
+	/* extension: allow deprecated '=' for comparison, only with parens */
+	| '(' relational_equality_expr '=' shift_expr ')'
+		{ $$ = new relational_expr($2, $3, $4);
+			$3->text[1] = '=';	/* fudge it */
+			DELETE_TOKEN($1); DELETE_TOKEN($5); }
 /*
 // can't cascade relational_expr
 //	| relational_expr GE shift_expr
