@@ -1,5 +1,5 @@
 ;; "streams.scm"
-;;	$Id: streams.scm,v 1.2.28.2 2007/10/16 22:56:46 fang Exp $
+;;	$Id: streams.scm,v 1.2.28.3 2007/11/26 22:57:54 fang Exp $
 ;; Extensions to guile's stream module.
 ;; e.g. this supplies a 'filter' interface
 ;; This file should be installed in $(pkgdatadir)/scm/hackt.
@@ -34,26 +34,26 @@
 (define-public stream-ref nth-stream)
 
 ;; produces a stream as a filtered subset of the argument stream
-(define-public (stream-filter pred stream)
+(define-public (stream-filter pred? stream)
   "Like the filter algorithm (subset that satisfied predicate), 
 but operating on a stream."
   (cond ((stream-null? stream) (delay the-empty-stream))
-	((pred (stream-car stream))
+	((pred? (stream-car stream))
 	  (cons-stream (stream-car stream)
-		(stream-filter pred (stream-cdr stream))))
-	(else (stream-filter pred (stream-cdr stream)))
+		(stream-filter pred? (stream-cdr stream))))
+	(else (stream-filter pred? (stream-cdr stream)))
   ) ; end cond
 ) ; end define
 
 ; returns a pair of streams, satisfying the predicate, and unsatisfied
-(define-public (stream-filter-split pred stream)
+(define-public (stream-filter-split pred? stream)
   "Like stream filter, but forks into a pair of streams, the first of which
 is the substream that satisfies the predicate, and the second, which fails."
   (if (stream-null? stream)
     (cons (delay the-empty-stream) (delay the-empty-stream))
     (let ((head (stream-car stream))
-	  (rem (stream-filter-split pred (stream-cdr stream))))
-	(if (pred head)
+	  (rem (stream-filter-split pred? (stream-cdr stream))))
+	(if (pred? head)
 	  (cons (cons-stream head (car rem)) (cdr rem))
 	  (cons (car rem) (cons-stream head (cdr rem)))
 	) ; end if
@@ -61,27 +61,28 @@ is the substream that satisfies the predicate, and the second, which fails."
   ) ; end if
 ) ; end define
 
-; forward the stream from the point at which pred is satisfied
-; pred is basically a start trigger, this beheads the stream until pred is true
-(define-public (stream-start pred stream)
+; forward the stream from the point at which pred? is satisfied
+; pred? is basically a start trigger, this beheads the stream 
+; until pred? is true
+(define-public (stream-start pred? stream)
   "Truncates the stream until the first element that satisfies the predicate."
   (cond ((stream-null? stream) (delay the-empty-stream))
-	((pred (stream-car stream)) stream) ; pass the remainder of the stream
-	(else (stream-start pred (stream-cdr stream)))
+	((pred? (stream-car stream)) stream) ; pass the remainder of the stream
+	(else (stream-start pred? (stream-cdr stream)))
   ) ; end cond
 ) ; end define
 
 ; cuts the stream once the predicate is satisfied (inclusive)
-(define-public (stream-stop pred stream)
+(define-public (stream-stop pred? stream)
   "Truncates the stream after the first element that satisfies the predicate."
   (cond ((stream-null? stream) (delay the-empty-stream))
-	((pred (stream-car stream))
+	((pred? (stream-car stream))
 	  (delay the-empty-stream)
 	  ; (cons-stream (stream-car stream) (delay the-empty-stream))
 	)
 	; drop the remainder of the stream
 	(else (cons-stream (stream-car stream)
-	  (stream-stop pred (stream-cdr stream))))
+	  (stream-stop pred? (stream-cdr stream))))
   ) ; end cond
 ) ; end define
 

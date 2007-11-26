@@ -1,6 +1,6 @@
 /**
 	\file "guile/scm_chpsim_event_node.cc"
-	$Id: scm_chpsim_event_node.cc,v 1.6 2007/09/28 05:37:00 fang Exp $
+	$Id: scm_chpsim_event_node.cc,v 1.6.4.1 2007/11/26 22:57:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -469,6 +469,7 @@ HAC_GUILE_DEFINE(wrap_chpsim_event_source, FUNC_NAME, 1, 0, 0, (SCM obj),
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: this is a duplicate of the above!?
 	Prints the full source (with context) of the event.  
 	\param SMOB of the scm chpsim-event.
 	\return integer value of the process index for this event

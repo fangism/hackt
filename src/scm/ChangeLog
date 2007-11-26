@@ -1,5 +1,12 @@
 "scm/ChangeLog"
 
+2007-11-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-12:
+	  Cleaned up some scm code, s/pred/pred?/ for clarity (predicates),
+		and refactored a reusable event stream function.  
+
+
 2007-10-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-85-router-01-11:

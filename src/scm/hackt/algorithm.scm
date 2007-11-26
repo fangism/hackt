@@ -1,5 +1,5 @@
 ;; "hackt/algorithm.scm"
-;;	$Id: algorithm.scm,v 1.3.24.1 2007/10/16 21:59:01 fang Exp $
+;;	$Id: algorithm.scm,v 1.3.24.2 2007/11/26 22:57:51 fang Exp $
 ;; Additional handy algorithms not fund in guile scheme libs.
 
 (define-module (hackt algorithm)
@@ -48,17 +48,17 @@ its second argument"
 
 ;; NOTE: filter algorithm will construct result lists reversed from source
 ;; could also define this in terms of accumulate
-(define-public (filter-split pred lst)
+(define-public (filter-split pred? lst)
   "Partitions a list into a pair of lists, the first of which satisfied the 
 predicate, the second of which failed the predicate."
   (receive (sat unsat) ; to capture multi-valued return
-    (partition pred lst)
+    (partition pred? lst)
     (cons sat unsat)
   )
 ;  (if (null? lst) (cons '() '() ) ; return pair of empty lists (true, false)
 ;  (let ((head (car lst))
-;      (rem (filter-split pred (cdr lst)))) ; yuck, not tail-recursive...
-;    (if (pred head)
+;      (rem (filter-split pred? (cdr lst)))) ; yuck, not tail-recursive...
+;    (if (pred? head)
 ;      (cons (cons head (car rem)) (cdr rem))
 ;      (cons (car rem) (cons head (cdr rem)))
 ;    ) ; end if
@@ -70,29 +70,29 @@ predicate, the second of which failed the predicate."
 ;; map == transform
 
 #!
-(define-public (find-first-sublist pred lst)
+(define-public (find-first-sublist pred? lst)
 "Finds the sublist of list @var{lst} for which the first element satisfies 
 the predicate, using a plain linear search.  Similar to the 
 srfi-1 `member' procedure.  Returns #f if none found, like assoc-ref."
-  (find-tail pred lst)
+  (find-tail pred? lst)
 ; (if (null? lst)
 ;   #f
 ;   (let ((this (car lst)))
-;     (if (pred this) lst (find-first pred (cdr lst)))
+;     (if (pred? this) lst (find-first pred? (cdr lst)))
 ;   ) ; end let
 ; )
 ) ; end define
 !#
 
 #!
-(define-public (find-first pred lst)
+(define-public (find-first pred? lst)
 "Finds the first element of the list @var{lst} that satisfies the predicate, 
 using a plain linear search.  Returns #f if none found, like assoc-ref."
-  (find pred lst)
+  (find pred? lst)
 ; (if (null? lst)
 ;   #f
 ;   (let ((this (car lst)))
-;     (if (pred this) this (find-first pred (cdr lst)))
+;     (if (pred? this) this (find-first pred? (cdr lst)))
 ;   ) ; end let
 ; )
 ) ; end define
@@ -100,15 +100,15 @@ using a plain linear search.  Returns #f if none found, like assoc-ref."
 
 #!
 ;; searching algorithms (using predicates)
-(define-public (list-contains? pred lst)
+(define-public (list-contains? pred? lst)
 "Predicate is true if list contains at least one element that satisfies 
 the predicate.  Implemented as short-circuit: return as soon as true."
-  (any pred lst)
+  (any pred? lst)
 ; (if (null? lst)
 ;   #f
-;  (if (pred (car lst))
+;  (if (pred? (car lst))
 ;     #t
-;     (list-contains? pred (cdr lst))
+;     (list-contains? pred? (cdr lst))
 ;   ) ; end if
 ; )
 ) ; end if, end define

@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.2.28.1 2007/10/16 21:59:02 fang Exp $
+;;	$Id: chpsim.scm,v 1.2.28.2 2007/11/26 22:57:53 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -107,14 +107,21 @@ Primitive implementations *should* adhere to this ordering."
 (define-public static-event-node-index car)
 (define-public static-event-raw-entry cdr)
 
+; generic event filter, takes an arbitrary event predicate
+(define-public (chpsim-filter-static-events pred? static-events-stream)
+"Select only selection events out of static event stream.  
+Argument is a stream of static events.
+NOTE: this should really be a map, not a stream."
+  (stream-filter (lambda (e) (pred? (static-event-raw-entry e)))
+    static-events-stream)
+) ; end define
+
 ; filters all selection events, deterministic and nondeterministic
 (define-public (chpsim-filter-static-events-select static-events-stream)
 "Select only selection events out of static event stream.  
 Argument is a stream of static events.
 NOTE: this should really be a map, not a stream."
-  (stream-filter (lambda (e)
-      (hac:chpsim-event-select? (static-event-raw-entry e)))
-    static-events-stream)
+  (chpsim-filter-static-events hac:chpsim-event-select? static-events-stream)
 ) ; end define
 
 #!
@@ -257,7 +264,7 @@ Delayed object is accessed using (force) and is memoized."
 ) ; end delay
 ) ; end define
 
-(define-public (static-events-depth-first-walk-predicated thunk pred)
+(define-public (static-events-depth-first-walk-predicated thunk pred?)
 "Predicated depth-first walk over static event nodes reachable from the root.
 Predicate is tested on the current node to recurse conditionally."
   (let ((visited (make-rb-tree = <))
@@ -267,7 +274,7 @@ Predicate is tested on the current node to recurse conditionally."
         (begin
           (rb-tree/insert! visited n '()) ; mark
           (thunk n) ; apply
-          (if (pred n)
+          (if (pred? n)
             (for-each (lambda (s) (loop s)) (rb-tree/lookup succs-map n #f))
           ) ; end if
         ) ; end begin
