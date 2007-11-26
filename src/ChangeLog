@@ -12,6 +12,8 @@
 		with shared libraries on certain platforms.  
 	  	Privatized global variable, exposed through function instead.
 	  main/flatten.cc (hacpp): changed -w flag to -P to resemble cpp -P.
+	  Makefile.am: hacpp_LIBADD libhacktparsers.la only needed for
+	  	ubuntu-gcc-4.1.2 (WTF?) suspect miscompile/binutils bug.
 
 
 2007-11-18	David Fang		<fangism@users.sourceforge.net>
