@@ -8,6 +8,7 @@
 	* HACKT-00-01-04-main-00-81-95-ACT-02-07:
 	  grammar: allow '=' for '==' if wrapped in parens, 
 		for ACT-compatbility, includes test parser/basic/oper-{04,05}.  
+	  Updated cast2hac documentation.
 	  end of branch, merge to trunk
 
 
