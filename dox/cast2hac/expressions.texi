@@ -1,0 +1,42 @@
+@c "cast2hac/definitions.texi"
+@c $Id: expressions.texi,v 1.1.2.1 2007/11/26 03:40:56 fang Exp $
+
+@node Expressions
+@chapter Expressions
+@cindex expressions
+
+Expressions in @HAC{} depart somewhat from @CAST{} style and
+follow from ANSI C grammar more closely.  
+Here we list a few differences.  
+
+The equality operator in @CAST{} was @t{=}, 
+but C and @HAC{} use @t{==}.
+However, use of the deprecated @t{=} operator is allowed
+if the expression is wrapped in parentheses, e.g. @code{(x=y)}.
+
+Less-than '<' and greater-than '>' operators now need to be parenthesized
+to dismbiguate them from template parameter delimiters, @xref{Templates}.  
+For example, in @CAST{}, 
+@code{[ X<Y -> ... ]}
+would need to be re-written in @HAC{}
+@code{[ (X<Y) -> ... ]}.
+
+Logical operators in @CAST{} were @t{&} and @t{|}, but
+in C and @HAC{}, they are respectively @t{&&} and @t{||}.
+This makes way for bitwise operators (on integers) @t{&} and @t{|}.  
+
+XOR (bitwise integer) is @t{^} in @HAC{}.
+
+Logical XOR (for booleans) current uses @t{!=} instead of @t{^}, 
+however, overloading @t{^} might be added back at some point.  
+
+The standard boolean and integer operations are strictly type-checked.
+At compile-time, there is no implicit conversion between @pbool{}
+and @pint{} values.
+For example, one cannot use an integer expression as a boolean, 
+whereas in C, the integer is implicitly compared against 0.  
+
+Explicit casting operators may be added in the future.  
+
+Function expressions may be added in the future.  
+

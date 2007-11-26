@@ -8,7 +8,7 @@
 @c %**end of header
 
 @c "cast2hac.texi"
-@c $Id: cast2hac.texi,v 1.2 2007/10/08 19:09:36 fang Exp $
+@c $Id: cast2hac.texi,v 1.2.6.1 2007/11/26 03:40:56 fang Exp $
 
 @dircategory Hierarchical Asynchronous Circuit Kompiler Toolkit (HACKT)
 @direntry
@@ -61,6 +61,7 @@ Permission is hereby granted to ...
 * Instances:: Type instances.
 * Arrays:: instance and value arrays.
 * Connections:: connection statements.
+* Expressions:: expressions.
 * Loops:: repetition constructs.
 * Templates:: definition re-use.
 * Typedefs:: definition aliases.
@@ -78,6 +79,7 @@ Permission is hereby granted to ...
 @include instances.texi
 @include arrays.texi
 @include connections.texi
+@include expressions.texi
 @include loops.texi
 @include templates.texi
 @include typedefs.texi

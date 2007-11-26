@@ -1,5 +1,5 @@
 @c "cast2hac/PRS.texi"
-@c $Id: PRS.texi,v 1.1 2007/08/16 23:48:04 fang Exp $
+@c $Id: PRS.texi,v 1.1.16.1 2007/11/26 03:40:55 fang Exp $
 
 @node PRS
 @chapter PRS
@@ -48,6 +48,16 @@ The above example would be re-written as:
 Again, rule loops may be nested arbitrarily deep.  
 The notation @t{:N:} is also equivalent to @t{:0..N-1:}.  
 
+PRS-bodies may now appear inside instance-scope loops.  
+The previous example could also be written as:
+@example
+(;i:N:
+prs @{
+  ~x[i] | ~z -> y[i]+
+@}
+)
+@end example
+
 @c ----------------------------------------------------------------------------
 @node PRS Conditional Rules
 @section Conditional Rules
@@ -83,7 +93,8 @@ PRS expressions in the predicate.
 where in @CAST{}, one had to explicitly write the predicates complement
 in a separate conditional to achieve else-semantics.  
 
-In @CAST{}, conditional PRS bodies could appear inside instance-level 
+In @CAST{} and @HAC{}, 
+conditional PRS bodies could appear inside instance-level 
 conditionals and loops, such as:
 
 @example
@@ -95,10 +106,24 @@ conditionals and loops, such as:
 @end example
 
 @noindent
-however, in @HAC{}, language bodies including PRS are forbidden
-inside loops and conditionals.  
-Use the loop and conditional constructs native to the PRS sub-language.  
-Conditional bodies and loops in the PRS may be nested inside each other.  
+@c Use the loop and conditional constructs native to the PRS sub-language.  
+Conditional bodies and loops in the PRS may be nested inside each other
+arbitrarily deep.  
+
+@HAC{} conditionals also support sequential else-if constructs
+and else-clauses.  For example,
+@example
+[ expr1 ->
+[] expr2 ->
+[] expr3 ->
+[] else ->
+]
+@end example
+
+Only the first clause in the sequence with a true guard will 
+be unrolled and expanded.  
+If none are true, then all clauses are skipped.  
+The @t{else} clause is optional.  
 
 @c ----------------------------------------------------------------------------
 @node PRS Loop Expressions
@@ -121,7 +146,10 @@ The LHS expression is the conjunction (AND) of nodes
 (&:i:N: x[i] )  -> y-
 @end example
 
-The other operator which may be used in a loop expression is \prsor\ (OR).
+The other operator which may be used in a loop expression is @prsor{} (OR).
+
+NOTE: expression loops whose range is empty (e.g. i:0:) are yet undefined, 
+and the current compiler implementation rejects them at unroll time.  
 
 @c ----------------------------------------------------------------------------
 @node PRS Rule Macros
