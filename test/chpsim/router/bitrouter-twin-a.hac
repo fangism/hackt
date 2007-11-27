@@ -1,0 +1,8 @@
+// "bitrouter-twin-a.hac"
+// testing a decomposed bit-router: concurrent, contention-free routing
+
+import "bitrouter-seq-test-channels.hac";
+import "testlib/bitrouter-dec.hac";
+
+twin_bit_router BR(L, R);
+

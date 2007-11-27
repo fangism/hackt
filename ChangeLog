@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2007-11-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-00-merged-router-01-12:
+	  Branch merge of chpsim bitrouter case study.
+
+
 2007-11-01	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-89:
@@ -22,6 +28,13 @@
 		config/os.m4: check for standard file descriptors, 
 			which are horked on cygwin
 		config/guile.m4: correct the AM_CONDITIONAL HAVE_LIBGUILE test
+
+
+2007-10-21	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-09:
+	  configure.ac: patch Makefile's tar command to use POSIX 
+		compatibility mode to support path/names longer than 99.
 
 
 2007-09-28	David Fang	<fangism@users.sourceforge.net>

@@ -2,7 +2,7 @@
 !#
 ;; "bool-merge-alternator-a-01.hacchpsimscm"
 ;; vi: ft=scheme
-;;	$Id: bool-merge-alternator-a-01.hacchpsimscm,v 1.1 2007/05/26 05:34:24 fang Exp $
+;;	$Id: bool-merge-alternator-a-01.hacchpsimscm,v 1.2 2007/11/27 06:10:23 fang Exp $
 ;; @haco@ bool-merge-alternator-a.haco-a
 ;; @chpsimtrace@ bool-merge-alternator-a-01.chpsimtrace
 
@@ -15,7 +15,6 @@
 (define trace-name "bool-merge-alternator-a-01.chpsimtrace")
 
 (load-from-path "basic-trace-analysis.hacchpsimscm")
-
 "expect cycle time 7 (2 +5), self-throughput is limiting factor."
 
 (define cycle-reference '(channel . 1))

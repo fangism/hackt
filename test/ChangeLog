@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.80 2007/11/06 21:39:59 fang Exp $
+#	$Id: ChangeLog,v 1.81 2007/11/27 06:10:16 fang Exp $
 # ChangeLog for test directory.
+
+2007-11-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-00-merged-router-01-12:
+	  Branch merge.
+
 
 2007-11-06	David Fang		<fangism@users.sourceforge.net>
 
@@ -15,6 +21,29 @@
 
 	* HACKT-00-01-04-main-00-81-90:
 	  vpath-file-filter.awk: update to detect new comment for #FILE close.
+
+
+2007-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-11:
+	  chpsim/basic-trace-analysis.hacchpsimscm:
+		Call make-critical-event-histogram.
+
+
+2007-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-09:
+	  Make.test-guile: improved support for extending GUILE_LOAD_PATH
+		per Makefile/directory.  
+	  *.chpsimrc: (tests that name stdchpfn.la as a dependency)
+		refer to library using $(top_builddir), instead of hard-code.
+
+
+2007-10-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-81-85-router-01-01:
+	  chpsimrc-out.autodepend: automatically have tracefiles depend
+		on $(HACKT_CHPSIM_EXE)
 
 
 2007-09-29	David Fang		<fangism@users.sourceforge.net>

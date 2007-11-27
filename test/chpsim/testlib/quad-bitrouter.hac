@@ -1,0 +1,131 @@
+// "testlib/quad-bitrouter.hac"
+// 6 functionally equivalent 4-channel routers
+//	$Id: quad-bitrouter.hac,v 1.2 2007/11/27 06:15:18 fang Exp $
+
+import "bitrouter-dec.hac";
+// needs: bit_router_split, bit_router_merge,
+// bit_router_dec, twin_bit_router
+
+//-----------------------------------------------------------------------------
+/**
+	merge-merge-split-split architecture 4-channel router.  
+	Yes, that creates a horrible bottleneck, but is very compact. 
+	Uses 3 splitters and 3 mergers.
+ */
+defproc quad_bit_router_mmss(
+	chan?(bool, bool) L[4];
+	chan!(bool, bool) R[4]
+	) {
+chan(bool, bool) X[2], Y[2];
+bit_router_merge M[2];
+bit_router_split Q[2];
+(;i:2:
+M[i](L[2*i..2*i+1], X[i]);
+Q[i](Y[i], R[2*i..2*i+1]);
+)
+bit_router_dec CR(X, Y);
+}
+
+//-----------------------------------------------------------------------------
+/**
+	merge-split-merge-split architecture 4-channel router.  
+	Uses 4 split and 4 merge.
+ */
+defproc quad_bit_router_msms(
+	chan?(bool, bool) L[4];
+	chan!(bool, bool) R[4]
+	) {
+chan(bool, bool) O[2][2];
+bit_router_dec T[2], S[2];
+(;i:2:
+T[i](L[2*i..2*i+1], O[i]);
+S[i](O[0..1][i], R[2*i..2*i+1]);
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	merge-split-split-merge architecture 4-channel router.  
+	Uses 6 split and 6 merge.
+ */
+defproc quad_bit_router_mssm(
+	chan?(bool, bool) L[4];
+	chan!(bool, bool) R[4]
+	) {
+chan(bool, bool) O[2][2];
+bit_router_dec T[2];
+twin_bit_router S[2];
+(;i:2:
+T[i](L[2*i..2*i+1], O[i]);
+S[i](O[0..1][i], R[2*i..2*i+1]);
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	split-merge-merge-split architecture 4-channel router.  
+	Uses 6 split and 6 merge.
+ */
+defproc quad_bit_router_smms(
+	chan?(bool, bool) L[4];
+	chan!(bool, bool) R[4]
+	) {
+chan(bool, bool) O[2][2];
+twin_bit_router T[2];
+bit_router_dec S[2];
+(;i:2:
+T[i](L[2*i..2*i+1], O[0..1][i]);
+S[i](O[i], R[2*i..2*i+1]);
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	split-merge-split-merge architecture 4-channel router.  
+	Uses 8 split and 8 merge.
+ */
+defproc quad_bit_router_smsm(
+	chan?(bool, bool) L[4];
+	chan!(bool, bool) R[4]
+	) {
+chan(bool, bool) O[2][2];
+twin_bit_router T[2], S[2];
+(;i:2:
+T[i](L[2*i..2*i+1], O[0..1][i]);
+S[i](O[i], R[2*i..2*i+1]);
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	split-split-merge-merge architecture 4-channel router.  
+	Uses 12 split and 12 merge.
+ */
+defproc quad_bit_router_ssmm(
+	chan?(bool, bool) L[4];
+	chan!(bool, bool) R[4]
+	) {
+chan(bool, bool) O[4][4], X[4][2], Y[4][2];
+bit_router_split S[4], S2[4][2];
+bit_router_merge T[4], T2[4][2];
+(;i:4:
+S[i](L[i], X[i]);
+T[i](Y[i], R[i]);
+(;j:2:
+// transpose O
+S2[i][j](X[i][j], O[i][2*j..2*j+1]);
+T2[i][j](O[2*j..2*j+1][i], Y[i][j]);
+)
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+food for thought:
+Could a restructuring CHP compiler ever infer these transformations?
+Basically need interprocedural flow-restructuring infrastructure.
+**/
+//-----------------------------------------------------------------------------
+
+
+

@@ -1,0 +1,31 @@
+// "bitrouter.hac"
+//	$Id: bitrouter.hac,v 1.2 2007/11/27 06:15:17 fang Exp $
+// see "bitrouter-env.hac" for test environment
+
+/**
+	Bit-router with non-deterministic selection.
+	chan(bool, bool) -- first bit is a start/stop marker, 
+		the second bit is the direction for the start/stop marker, 
+		the rest of the payload is data.
+		Each router truncates the start/stop token.
+	Requires std chp lib function zcond.
+ */
+defproc bit_router(
+	chan?(bool, bool) L[2]; 
+	chan!(bool, bool) R[2]
+) {
+bool lc, ld, dir;
+int<1> d;
+chp {
+*[[ #L[0] -> L[0]?(lc, dir);
+//	[ dir -> d := 1 [] else -> d := 0 ];
+	d := zcond(dir, 1, 0);
+	*[ ~lc -> L[0]?(lc, ld); R[d]!(lc, ld) ]
+  : #L[1] -> L[1]?(lc, dir);
+//	[ dir -> d := 1 [] else -> d := 0 ];
+	d := zcond(dir, 1, 0);
+	*[ ~lc -> L[1]?(lc, ld); R[d]!(lc, ld) ]
+]]
+}
+}
+

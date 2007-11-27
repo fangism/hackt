@@ -1,7 +1,7 @@
 ; "hackt/rb-tree.scm"
 ; Adapted from MIT-Scheme-7.7.1 implementation "rbtree.scm".  
 
-; $Id: rb-tree.scm,v 1.3 2007/06/10 02:57:50 fang Exp $
+; $Id: rb-tree.scm,v 1.4 2007/11/27 06:10:16 fang Exp $
 
 ; Copyright (c) 1993-2000 Massachusetts Institute of Technology
 
@@ -140,9 +140,9 @@
 (define (red! n) (set-node-color! n 'RED))
 (define (black! n) (set-node-color! n 'BLACK))
 
-(define-public (rb-tree/insert! tree key value)
-"Associate @arg{value} with @arg{key}, creating a new entry or 
-replacing old one."
+(define (inserter! tree key value mutator!)
+"@var{mutator!} is a function that operates on a (node, value), 
+e.g. set-node-value!."
   (guarantee-rb-tree tree 'RB-TREE/INSERT!)
   (let ((key=? (tree-key=? tree))
 	(key<? (tree-key<? tree)))
@@ -157,9 +157,23 @@ replacing old one."
 			(else (set-node-right! y z)))
 		  (red! z)
 		  (insert-fixup! tree z)))))
-	    ((key=? key (node-key x)) (set-node-value! x value))
+	    ((key=? key (node-key x)) (mutator! x value))
 	    ((key<? key (node-key x)) (loop (node-left x) x 'LEFT))
 	    (else (loop (node-right x) x 'RIGHT))))))
+
+(define-public (rb-tree/insert! tree key value)
+"Associate @arg{value} with @arg{key}, creating a new entry or 
+replacing/overwriting old one.  Returns no value."
+  (inserter! tree key value set-node-value!)
+) ; end define
+
+(define-public (rb-tree/insert-if-new! tree key value)
+"Associate @arg{value} with @arg{key} only if creating a new entry, else
+keep old one.  Read that again: old entries are NOT overwritten.  
+Returns a value if it was found in lookup, but not if it was newly added, 
+otherwise returns void (unspecified)."
+  (inserter! tree key value (lambda (n v) (node-value n)))
+)
 
 (define (insert-fixup! tree x)
   ;; Assumptions: X is red, and the only possible violation of the

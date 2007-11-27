@@ -1,0 +1,12 @@
+// "bitrouter-seq-test-sinks-ideal.hac"
+// input characteristics: 
+// perfect sinks
+
+import "bitrouter-seq-test-channels.hac";
+import "testlib/int-sink.hac";
+
+// output buckets
+int_sink RS[2];
+RS[0](RR[0]);
+RS[1](RR[1]);
+

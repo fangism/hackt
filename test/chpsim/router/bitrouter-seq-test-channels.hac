@@ -1,0 +1,18 @@
+// "bitrouter-seq-test-channels.hac"
+// common testing environment for sequential bitrouter
+// other files should hook-up source or test instances  
+
+import "testlib/bitrouter-env.hac";
+
+chan(bool, bool) L[2], R[2];	// connect to router
+chan(int) LL[2], RR[2];		// connect to environment
+
+bit_router_source_converter LC[2];
+bit_router_sink_converter RC[2];
+
+(;i:2:
+LC[i](LL[i], L[i]);
+RC[i](R[i], RR[i]);
+)
+
+

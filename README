@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.26 2007/10/19 18:30:50 fang Exp $
+	$Id: README,v 1.27 2007/11/27 06:10:10 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -95,6 +95,10 @@ latex,pdflatex (part of tetex package)
 guile-1.6+
 	Guile is a scheme environment for extensible languages.  
 	known to work API: 1.8 (preferred)
+	known to work: 1.8.0+
+	known to work: 1.6.7+
+	known to fail: 1.6.4
+		(some bug with force evaluation, affects stream-for-each (many))
 
 The following guile (scheme) modules are used and required by HACKT:
 	ice-9 streams

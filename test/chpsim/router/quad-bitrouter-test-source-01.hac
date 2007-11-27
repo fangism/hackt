@@ -1,0 +1,14 @@
+// "quad-bitrouter-test-source-01.hac"
+// characteristics:
+// 100% contention for the same destination, short packets
+
+import "quad-bitrouter-test-channels.hac";
+import "quad-bitrouter-test-source-lib.hac";
+
+qbr_source_single_dest QS[4];
+QS[0]<0, 2, 8, 10.0>(LL[0]);
+QS[1]<0, 2, 8, 10.0>(LL[1]);
+QS[2]<0, 2, 8, 10.0>(LL[2]);
+QS[3]<0, 2, 8, 10.0>(LL[3]);
+// all router to destination port 2
+

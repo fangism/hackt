@@ -1,9 +1,9 @@
 # "lib-bscan-test-a-01.chpsimrc"
-#	$Id: lib-bscan-test-a-02.chpsimrc,v 1.2 2007/08/28 04:54:48 fang Exp $
+#	$Id: lib-bscan-test-a-02.chpsimrc,v 1.3 2007/11/27 06:10:35 fang Exp $
 # @haco@ lib-bscan-test-a.haco-a
 # Use the *built* library for this test (as opposed to installed)
-# @module@ -fno-ack-loaded-fns -L../../lib -lstdchpfn
-# @deps@ ../../lib/stdchpfn.la
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+# @deps@ $(top_builddir)/lib/stdchpfn.la
 
 # NOTE: run this as a fail-test to avoid sourcing this script indirectly
 # because the stdin becomes redicrected incorrectly.

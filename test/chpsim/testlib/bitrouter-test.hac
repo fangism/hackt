@@ -1,0 +1,7 @@
+// "bitrouter-test.hac"
+//	$Id: bitrouter-test.hac,v 1.2 2007/11/27 06:15:16 fang Exp $
+
+import "bitrouter.hac";
+
+bit_router B;
+

@@ -1,0 +1,11 @@
+# "quad-bitrouter-smms-test-10-trace.chpsimrc"
+#	$Id: quad-bitrouter-smms-test-10-trace.chpsimrc,v 1.2 2007/11/27 06:14:19 fang Exp $
+# @haco@ quad-bitrouter-smms-test-10.haco-a
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+# @deps@ $(top_builddir)/lib/stdchpfn.la
+
+# timing after
+trace quad-bitrouter-smms-test-10.chpsimtrace
+source bitrouter-test-template.chpsimrc
+trace-close
+

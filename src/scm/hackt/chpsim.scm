@@ -1,5 +1,5 @@
 ;; "hackt/chpsim.scm"
-;;	$Id: chpsim.scm,v 1.2 2007/04/20 18:26:06 fang Exp $
+;;	$Id: chpsim.scm,v 1.3 2007/11/27 06:10:15 fang Exp $
 ;; Scheme module for chpsim-specific functions (without trace file)
 ;; hackt-generic functions belong in hackt.scm, and
 ;; chpsim-trace specific functions belong in chpsim-trace.scm.
@@ -15,17 +15,22 @@
 ; (use-modules (hackt streams))		; now autoloaded
 ; (use-modules (ice-9 streams))		; now autoloaded
 
+; when we want confirmation:
+; (display "Loading module: (hackt chpsim)") (newline)
+
 (define root-event-id 0)
 
 ; constant: number of allocated events in static event graph
 (define-public chpsim-num-events (hac:chpsim-num-events))
 
+; (display "Enumerating events... ")
 #!
 "Stream of integers from 0 to (num-static-events -1)"
 !#
 (define-public chpsim-static-event-index-stream
   (enumerate-interval-stream 0 (1- chpsim-num-events))
 )
+; (display "done.") (newline)
 
 (define (static-event-stream)
   "Represents the set of all statically allocated events as a stream."
@@ -33,10 +38,12 @@
     chpsim-static-event-index-stream)
 ) ; end define
 
+; (display "Caching all-static-events-stream... ")
 #!
 "global stream variable, lazy evaluated stream, but this is not a delayed obj."
 !#
 (define-public all-static-events-stream (static-event-stream))
+; (display "done.") (newline)
 
 ; this is only defined for chpsim modules, not hackt in general
 (define-public (type-tag->offset t)
@@ -100,14 +107,21 @@ Primitive implementations *should* adhere to this ordering."
 (define-public static-event-node-index car)
 (define-public static-event-raw-entry cdr)
 
+; generic event filter, takes an arbitrary event predicate
+(define-public (chpsim-filter-static-events pred? static-events-stream)
+"Select only selection events out of static event stream.  
+Argument is a stream of static events.
+NOTE: this should really be a map, not a stream."
+  (stream-filter (lambda (e) (pred? (static-event-raw-entry e)))
+    static-events-stream)
+) ; end define
+
 ; filters all selection events, deterministic and nondeterministic
 (define-public (chpsim-filter-static-events-select static-events-stream)
 "Select only selection events out of static event stream.  
 Argument is a stream of static events.
 NOTE: this should really be a map, not a stream."
-  (stream-filter (lambda (e)
-      (hac:chpsim-event-select? (static-event-raw-entry e)))
-    static-events-stream)
+  (chpsim-filter-static-events hac:chpsim-event-select? static-events-stream)
 ) ; end define
 
 #!
@@ -250,7 +264,7 @@ Delayed object is accessed using (force) and is memoized."
 ) ; end delay
 ) ; end define
 
-(define-public (static-events-depth-first-walk-predicated thunk pred)
+(define-public (static-events-depth-first-walk-predicated thunk pred?)
 "Predicated depth-first walk over static event nodes reachable from the root.
 Predicate is tested on the current node to recurse conditionally."
   (let ((visited (make-rb-tree = <))
@@ -260,7 +274,7 @@ Predicate is tested on the current node to recurse conditionally."
         (begin
           (rb-tree/insert! visited n '()) ; mark
           (thunk n) ; apply
-          (if (pred n)
+          (if (pred? n)
             (for-each (lambda (s) (loop s)) (rb-tree/lookup succs-map n #f))
           ) ; end if
         ) ; end begin

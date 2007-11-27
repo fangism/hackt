@@ -1,16 +1,17 @@
 # "test/chpsim/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2007/10/12 22:44:00 fang Exp $
+#	$Id: Makefile.am,v 1.28 2007/11/27 06:10:20 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
 include $(top_srcdir)/installdirs.mk
 # for examplesdir
 
-SUBDIRS = testlib .
+SUBDIRS = testlib . router
 
 HACO_FLAGS += -I$(srcdir)/testlib
 CHPSIM_LIB_PATH = ../../lib
 
+# list tests here only if they are also intended for create/alloc tests
 HACKT_PARSE_TEST_PASSES = \
 	do-while-countdown \
 	countdown-successor \
@@ -48,6 +49,7 @@ HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 # temporary for now:
 HACKT_CHPSIM_ALLOC_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_PASSES)
 
+# list files here that are HAC sources used in chpsim testing
 # NOTE: tests related to the CHP standard library should be prefixed 'lib-'
 # TODO: eventually generate object test cases for all of these:
 HACKT_CHPSIMRC_TEST_SUBJECTS = \
@@ -363,53 +365,16 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	gcd-nested-a-01 \
 	select-block-a-01 select-block-a-02
 
-
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 
 # additional sources not already mentioned
 # srcdir_EXTRA_DIST +=
 
-KEEP_CHPSIM_TRACE_FILES = \
-	channel-sync-desync-a-04.chpsimtrace \
-	channel-sync-desync-a-05.chpsimtrace \
-	select-nested-loop-a-03.chpsimtrace \
-	select-nested-loop-b-03.chpsimtrace \
-	bool-split-select-a-02.chpsimtrace \
-	countdown-loop-a-02.chpsimtrace \
-	countdown-nested-a-03.chpsimtrace \
-	countdown-nested-b-03.chpsimtrace \
-	countdown-nested-c-03.chpsimtrace \
-	countdown-nested-d-03.chpsimtrace \
-	token-ring-a-01.chpsimtrace \
-	bubble-ring-a-01.chpsimtrace \
-	timed-fifo-a-01.chpsimtrace \
-	timed-fifo-b-01.chpsimtrace \
-	timed-fifo-c-01.chpsimtrace \
-	timed-fifo-d-01.chpsimtrace \
-	timed-fifo-e-01.chpsimtrace \
-	timed-token-ring-a-01.chpsimtrace \
-	timed-token-ring-a-02.chpsimtrace \
-	timed-token-ring-b-01.chpsimtrace \
-	timed-token-ring-c-01.chpsimtrace \
-	timed-bubble-ring-a-01.chpsimtrace \
-	timed-bubble-ring-b-01.chpsimtrace \
-	timed-bubble-ring-c-01.chpsimtrace \
-	fib-test-a-01.chpsimtrace \
-	fib-test-b-01.chpsimtrace \
-	fib-test-c-01.chpsimtrace \
-	bool-split-alternator-a-01.chpsimtrace \
-	bool-merge-alternator-a-01.chpsimtrace \
-	source-sink-peekbuf-a-02.chpsimtrace \
-	source-sink-peekbuf-b-02.chpsimtrace
-
 # NOTE: tracefiles produced as side effects are already detected and
 # produce automatic dependencies in chpsimrc-out.autodepend
 
-# this should be redundant with chpsimrc-out dependence...
-$(KEEP_CHPSIM_TRACE_FILES): $(HACKT_CHPSIM_EXE)
-
 # generate input file in build directory for scan tests
-fzscan-01.txt: Makefile
+fzscan-01.txt: Makefile.am
 	{ $(ECHO) "5" ; \
 	$(ECHO) "4" ; \
 	$(ECHO) "3" ; \
@@ -417,7 +382,7 @@ fzscan-01.txt: Makefile
 	$(ECHO) "1" ; \
 	$(ECHO) "0" ;} > $@
 
-fxzscan-01.txt: Makefile
+fxzscan-01.txt: Makefile.am
 	{ $(ECHO) "0001" ; \
 	$(ECHO) "C0De" ; \
 	$(ECHO) "DEAD" ; \

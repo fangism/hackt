@@ -37,10 +37,20 @@ critical-path:
 (2 5.0 4 . 1)
 (1 5.0 1 . 0)
 (0 0.0 0 . 0)
+
 branch/select histogram:
+
 loop histogram:
 (1 . 9)
 (3 . 16)
 (4 . 17)
 (6 . 17)
+
+critical-event histogram:
+(1 . ((0 . 1)))
+(4 . ((1 . 1)))
+(5 . ((4 . 1)))
+(6 . ((5 . 1) (7 . 16)))
+(7 . ((6 . 16)))
+
 "expect cycle time 10 (8 +2), FIFO is limiting factor."

@@ -4,7 +4,7 @@
 	This relies on the executable being built with -export-dynamic
 	for proper dynamic linking.  
 	TODO: binary I/O modes
-	$Id: io.cc,v 1.3 2007/08/30 00:20:28 fang Exp $
+	$Id: io.cc,v 1.4 2007/11/27 06:10:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -296,7 +296,7 @@ zscan_prompt(const string_value_type& str) {
 
 /***
 @texinfo fn/bzscan_prompt.texi
-@deffn Function bzscan_prompt.texi
+@deffn Function bzscan_prompt str
 Prompts use to enter an integer in binary.
 @end deffn
 @end texinfo
@@ -309,7 +309,7 @@ bzscan_prompt(const string_value_type& str) {
 
 /***
 @texinfo fn/xzscan_prompt.texi
-@deffn Function xzscan_prompt.texi
+@deffn Function xzscan_prompt str
 Prompts use to enter an integer in hexadecimal.
 @end deffn
 @end texinfo

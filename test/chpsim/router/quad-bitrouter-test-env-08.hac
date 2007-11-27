@@ -1,0 +1,7 @@
+// "quad-bitrouter-test-env-08.hac"
+
+// set of sources
+import "quad-bitrouter-test-source-08.hac";
+// set of sinks
+import "quad-bitrouter-test-sinks-ideal.hac";
+

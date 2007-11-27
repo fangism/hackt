@@ -1,0 +1,8 @@
+// "bitrouter-dec-b.hac"
+// testing a decomposed bit-router (slack-matched)
+
+import "bitrouter-seq-test-channels.hac";
+import "testlib/bitrouter-dec.hac";
+
+bit_router_dec_sm BR(L, R);
+

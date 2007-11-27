@@ -1,0 +1,14 @@
+# "bitrouter-test-template.chpsimrc
+#	$Id: bitrouter-test-template.chpsimrc,v 1.2 2007/11/27 06:12:46 fang Exp $
+# not really needed:
+# @module@ -fno-ack-loaded-fns -L$(top_builddir)/lib -lstdchpfn
+# @deps@ $(top_builddir)/lib/stdchpfn.la
+
+timing per-event
+echo running (traced) ...
+run
+# due to arbitration, time *may* be different (pseudo-random)
+time
+echo done.
+# really, is automatic
+

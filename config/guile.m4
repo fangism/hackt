@@ -1,6 +1,6 @@
 dnl
 dnl "config/guile.m4"
-dnl	$Id: guile.m4,v 1.14 2007/10/31 23:16:04 fang Exp $
+dnl	$Id: guile.m4,v 1.15 2007/11/27 06:10:13 fang Exp $
 dnl Guile-related autoconf macros
 
 

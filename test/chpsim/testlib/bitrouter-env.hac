@@ -1,0 +1,78 @@
+// "bitrouter-env.hac"
+//	$Id: bitrouter-env.hac,v 1.2 2007/11/27 06:15:15 fang Exp $
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convert integer value to pair of bools.  
+ */
+defproc bit_router_source_converter(
+	chan?(int) L; 
+	chan!(bool, bool) R
+) {
+int x;
+chp {
+*[L?(x); R!((x & 0x2) != 0, (x & 0x1) != 0)]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convert pair of bools to integer value.
+	Requires std chp lib function zcond.
+ */
+defproc bit_router_sink_converter(
+	chan?(bool, bool) L; 
+	chan!(int) R
+) {
+bool x, y;
+// int z0, z1;
+chp {
+*[L?(x,y); 
+R!(zcond(x,2,0) +zcond(y,1,0))
+/**
+[x -> z1 := 0x2 [] else -> z1 :=0],
+[y -> z0 := 0x1 [] else -> z0 :=0];
+R!(z1 +z0)
+***/
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Source element that operates on a shared channel when the
+	token (ring) visits this element.  
+	This fires as often as it receives start tokens.  
+	Applies a postfix delay after the sequence.  
+	\param d all values must be in [0..3]
+	The MSB of the last value must be high to signal a stop.  
+ */
+template <><pint N, d[N]; preal Delay>
+defproc packet_source_slice(chan?() Cin; chan!() Cout; chan!!(int) R) {
+chp {
+*[ Cin?;
+{;i:N: R!(d[i]) };
+$(after=Delay)
+Cout!
+]
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Flattens array of strings into one string.  
+ */
+template <><pint M, N, d[M][N]; preal Delay>
+defproc packet_source_slice_array(chan?() Cin; chan!() Cout; chan!!(int) R) {
+chan() C[M+1];
+C[0] = Cin;
+C[M] = Cout;
+packet_source_slice S[M];
+(;i:M:
+	S[i]<N, d[i], Delay>(C[i], C[i+1], R);		// sharing R!
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// just use "int-sink.hac":int_sink for buckets
+
