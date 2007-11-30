@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.12 2007/08/17 00:36:17 fang Exp $
+dnl	$Id: hackt.m4,v 1.13 2007/11/30 05:49:44 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -458,6 +458,30 @@ AC_ARG_ENABLE(verbose_check,
 	AC_MSG_RESULT([no (default)])
 )
 AM_CONDITIONAL(VERBOSE_CHECK, test x"$enable_verbose_check" = "xyes")
+])dnl
+
+dnl @synopsis HACKT_ARG_ENABLE_RANDOM_TESTS
+dnl
+dnl Enable to run tests with nondeterminism, randomness.
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-11-10
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_ENABLE_RANDOM_TESTS],
+[AC_MSG_CHECKING([for requested nondeterminstic tests])
+AC_ARG_ENABLE(random_tests,
+	AS_HELP_STRING([--enable-random-tests],
+		[Tests with nondeterminism. (default=disabled)]),
+	[if test "$enable_random_tests" = "yes"
+	then    AC_MSG_RESULT([yes])
+	else    AC_MSG_RESULT([no])
+	fi
+	],
+	AC_MSG_RESULT([no (default)])
+)
+AM_CONDITIONAL(RANDOM_TESTS, test x"$enable_random_tests" = "xyes")
 ])dnl
 
 dnl @synopsis HACKT_ARG_ENABLE_MULTILIB

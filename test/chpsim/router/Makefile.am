@@ -1,5 +1,5 @@
 # "test/chpsim/router/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2007/11/27 06:11:01 fang Exp $
+#	$Id: Makefile.am,v 1.3 2007/11/30 05:49:47 fang Exp $
 # Test auto-Makefile for chpsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -95,6 +95,18 @@ HACKT_CHPSIMRC_TEST_SUBJECTS = \
 
 # consider making .chpsim-event-dot/ps for visualizations
 
+HACKT_CHPSIMRC_RANDOM_TEST_SCRIPTS_PASSES = \
+	quad-bitrouter-msms-test-03-trace \
+	quad-bitrouter-msms-test-06-trace \
+	quad-bitrouter-msms-test-08-trace \
+	quad-bitrouter-msms-test-09-trace \
+	quad-bitrouter-msms-test-10-trace \
+	quad-bitrouter-mssm-test-05-trace \
+	quad-bitrouter-mssm-test-06-trace \
+	quad-bitrouter-mssm-test-08-trace \
+	quad-bitrouter-mssm-test-09-trace \
+	quad-bitrouter-mssm-test-10-trace
+
 HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bitrouter-seq-test-a-01-trace bitrouter-seq-test-a-02-trace \
 	bitrouter-dec-test-a-01-trace bitrouter-dec-test-a-02-trace \
@@ -110,29 +122,29 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES = \
 	bitrouter-twin-test-a-08-trace bitrouter-twin-test-a-09-trace \
 	quad-bitrouter-mmss-test-01-trace quad-bitrouter-ssmm-test-01-trace \
 	quad-bitrouter-mmss-test-02-trace quad-bitrouter-ssmm-test-02-trace \
-	quad-bitrouter-mmss-test-03-trace quad-bitrouter-msms-test-03-trace \
+	quad-bitrouter-mmss-test-03-trace \
 	quad-bitrouter-mssm-test-03-trace quad-bitrouter-smms-test-03-trace \
 	quad-bitrouter-smsm-test-03-trace quad-bitrouter-ssmm-test-03-trace \
 	quad-bitrouter-mmss-test-04-trace quad-bitrouter-msms-test-04-trace \
 	quad-bitrouter-mssm-test-04-trace quad-bitrouter-smms-test-04-trace \
 	quad-bitrouter-smsm-test-04-trace quad-bitrouter-ssmm-test-04-trace \
 	quad-bitrouter-mmss-test-05-trace quad-bitrouter-msms-test-05-trace \
-	quad-bitrouter-mssm-test-05-trace quad-bitrouter-smms-test-05-trace \
+	quad-bitrouter-smms-test-05-trace \
 	quad-bitrouter-smsm-test-05-trace quad-bitrouter-ssmm-test-05-trace \
-	quad-bitrouter-mmss-test-06-trace quad-bitrouter-msms-test-06-trace \
-	quad-bitrouter-mssm-test-06-trace quad-bitrouter-smms-test-06-trace \
+	quad-bitrouter-mmss-test-06-trace \
+	quad-bitrouter-smms-test-06-trace \
 	quad-bitrouter-smsm-test-06-trace quad-bitrouter-ssmm-test-06-trace \
 	quad-bitrouter-mmss-test-07-trace quad-bitrouter-msms-test-07-trace \
 	quad-bitrouter-mssm-test-07-trace quad-bitrouter-smms-test-07-trace \
 	quad-bitrouter-smsm-test-07-trace quad-bitrouter-ssmm-test-07-trace \
-	quad-bitrouter-mmss-test-08-trace quad-bitrouter-msms-test-08-trace \
-	quad-bitrouter-mssm-test-08-trace quad-bitrouter-smms-test-08-trace \
+	quad-bitrouter-mmss-test-08-trace \
+	quad-bitrouter-smms-test-08-trace \
 	quad-bitrouter-smsm-test-08-trace quad-bitrouter-ssmm-test-08-trace \
-	quad-bitrouter-mmss-test-09-trace quad-bitrouter-msms-test-09-trace \
-	quad-bitrouter-mssm-test-09-trace quad-bitrouter-smms-test-09-trace \
+	quad-bitrouter-mmss-test-09-trace \
+	quad-bitrouter-smms-test-09-trace \
 	quad-bitrouter-smsm-test-09-trace quad-bitrouter-ssmm-test-09-trace \
-	quad-bitrouter-mmss-test-10-trace quad-bitrouter-msms-test-10-trace \
-	quad-bitrouter-mssm-test-10-trace quad-bitrouter-smms-test-10-trace \
+	quad-bitrouter-mmss-test-10-trace \
+	quad-bitrouter-smms-test-10-trace \
 	quad-bitrouter-smsm-test-10-trace quad-bitrouter-ssmm-test-10-trace
 
 # TODO: parallel-fifo test cases
@@ -142,14 +154,17 @@ HACKT_CHPSIMRC_TEST_SCRIPTS_FAILURES =
 # not yet, three tests report checkpoint diffs due to queue-reorderings
 HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_CHPSIMRC_TEST_SCRIPTS_PASSES)
 
+if RANDOM_TESTS
+HACKT_CHPSIM_CKPT_TEST_SCRIPTS_BASES += \
+	$(HACKT_CHPSIMRC_RANDOM_TEST_SCRIPTS_PASSES)
+endif
+
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bitrouter-seq-test-a-01-trace-crit bitrouter-seq-test-a-02-trace-crit \
 	bitrouter-dec-test-a-01-trace-crit bitrouter-dec-test-a-02-trace-crit \
 	bitrouter-dec-test-a-03-trace-crit bitrouter-dec-test-a-04-trace-crit \
 	bitrouter-dec-test-a-05-trace-crit bitrouter-dec-test-a-06-trace-crit \
 	bitrouter-dec-test-a-07-trace-crit \
-	bitrouter-dec-test-a-08-trace-crit bitrouter-dec-test-a-09-trace-crit \
-	bitrouter-dec-test-b-01-trace-crit \
 	bitrouter-twin-test-a-01-trace-crit \
 	bitrouter-twin-test-a-02-trace-crit \
 	bitrouter-twin-test-a-03-trace-crit \
@@ -160,6 +175,9 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES = \
 	bitrouter-twin-test-a-08-trace-crit \
 	bitrouter-twin-test-a-09-trace-crit
 
+HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES = \
+	bitrouter-dec-test-a-08-trace-crit bitrouter-dec-test-a-09-trace-crit \
+	bitrouter-dec-test-b-01-trace-crit
 
 HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES =
 

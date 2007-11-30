@@ -1,6 +1,6 @@
 # "Make.test-guile"
 #	vi: ft=automake
-#	$Id: Make.test-guile,v 1.13 2007/11/27 06:10:19 fang Exp $
+#	$Id: Make.test-guile,v 1.14 2007/11/30 05:49:46 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -424,12 +424,17 @@ HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES = \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES)
 
+HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_BASES = \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES) \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_FAILURES)
+
 srcdir_EXTRA_DIST += \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm) \
 	$(HACKT_GUILE_TEST_SCRIPTS_BASES:=.hacscm-expect) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscm) \
-	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscm-expect)
-
+	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_BASES:=.hacchpsimscm-expect) \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_BASES:=.hacchpsimscm) \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_BASES:=.hacchpsimscm-expect)
 
 if CHECK_TESTS
 TESTS += \
@@ -437,6 +442,12 @@ TESTS += \
 	$(HACKT_GUILE_TEST_SCRIPTS_FAILURES:=.hacscmfailtest) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscmtest) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfailtest)
+
+if RANDOM_TESTS
+TESTS += \
+	$(HACKT_CHPSIM_RANDOM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscmtest) \
+	$(HACKT_CHPSIM_RANDOM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfailtest)
+endif
 endif
 
 HAC_COMPILE_OBJECT_TARGETS += \
@@ -450,6 +461,15 @@ HAC_ALLOC_OBJECT_TARGETS += \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_CHPSIM_GUILE_TEST_SUBJECTS:=.haco-a)
 
+GUILE_RANDOM_BUILD_CHECK_LOCAL =
+if RANDOM_TESTS
+GUILE_RANDOM_BUILD_CHECK_LOCAL += \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES:=.hacchpsimscm-out) \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_PASSES:=.hacchpsimscm-diff) \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-out) \
+	$(HACKT_CHPSIM_GUILE_RANDOM_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-diff)
+endif
+
 build-check-local: \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.haco-a) \
 	$(HACKT_GUILE_TEST_SCRIPTS_PASSES:=.hacscm-out) \
@@ -460,7 +480,8 @@ build-check-local: \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscm-out) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_PASSES:=.hacchpsimscm-diff) \
 	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-out) \
-	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-diff)
+	$(HACKT_CHPSIM_GUILE_TEST_SCRIPTS_FAILURES:=.hacchpsimscmfail-diff) \
+	$(GUILE_RANDOM_BUILD_CHECK_LOCAL)
 
 HACKT_GUILE_OUT = \
 	$(HACKT_GUILE_TEST_SUBJECTS:=.hacscm-out) \
