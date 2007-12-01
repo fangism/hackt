@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.5 2007/10/08 01:21:53 fang Exp $
+	$Id: State-prsim.cc,v 1.6 2007/12/01 04:25:31 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2780,9 +2780,11 @@ State::dump_node_value(ostream& o, const node_index_type ni) const {
 	Note: this only requires structural information, no stateful info.  
 	TODO: including all OR combinations, or just the paths that
 		include this node directly?  (just the paths that include)
+	\param v true if literals should be printed with current values.
  */
 ostream&
-State::dump_node_fanout(ostream& o, const node_index_type ni) const {
+State::dump_node_fanout(ostream& o, const node_index_type ni, 
+		const bool v) const {
 	typedef	fanout_array_type::const_iterator	const_iterator;
 	typedef	std::set<expr_index_type>		rule_set_type;
 #if DEBUG_FANOUT
@@ -2821,8 +2823,12 @@ State::dump_node_fanout(ostream& o, const node_index_type ni) const {
 		const expr_index_type pi =
 			(dir ? no.pull_up_index : no.pull_dn_index);
 		DEBUG_FANOUT_PRINT("pi = " << pi << endl);
-		dump_subexpr(o, pi) << " -> ";
-		o << get_node_canonical_name(nr) << (dir ? '+' : '-') << endl;
+		dump_subexpr(o, pi, v) << " -> ";
+		o << get_node_canonical_name(nr) << (dir ? '+' : '-');
+		if (v) {
+			n.dump_value(o << ':');
+		}
+		o << endl;
 	}
 	return o;
 }
@@ -2830,30 +2836,43 @@ State::dump_node_fanout(ostream& o, const node_index_type ni) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: OR-combinations on separate lines?
+	\param v true if literal should be printed with its value.  
  */
 ostream&
-State::dump_node_fanin(ostream& o, const node_index_type ni) const {
+State::dump_node_fanin(ostream& o, const node_index_type ni, 
+		const bool v) const {
 	const node_type& n(get_node(ni));
 	const string cn(get_node_canonical_name(ni));
 	if (n.pull_up_index) {
-		dump_subexpr(o, n.pull_up_index) << " -> " << cn << '+' << endl;
+		dump_subexpr(o, n.pull_up_index, v)
+			<< " -> " << cn << '+';
+		if (v) {
+			n.dump_value(o << ':');
+		}
+		o << endl;
 	}
 	if (n.pull_dn_index) {
-		dump_subexpr(o, n.pull_dn_index) << " -> " << cn << '-' << endl;
+		dump_subexpr(o, n.pull_dn_index, v)
+			<< " -> " << cn << '-';
+		if (v) {
+			n.dump_value(o << ':');
+		}
 	}
-	return o;
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursive expression printer.  
 	Should be modeled after cflat's expression printer.  
+	\param v true if literal should be printed with its value.  
 	\param ptype the parent's expression type, only used if cp is true.
 	\param pr whether or not parent is root
 		(if so, ignore type comparison for parenthesization).  
  */
 ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
+		const bool v, 
 		const uchar ptype, const bool pr) const {
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
@@ -2886,21 +2905,27 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	// peel out first iteration for infix printing
 	if (ci->first) {
 		o << get_node_canonical_name(ci->second);
+		if (v) {
+			get_node(ci->second).dump_value(o << ':');
+		}
 	} else {
-		dump_subexpr(o, ci->second, _type);
+		dump_subexpr(o, ci->second, v, _type);
 	}
 	if (g.children.size() >= 1) {
 	for (++ci; ci!=ce; ++ci) {
 		o << op;
 		if (ci->first) {
 			o << get_node_canonical_name(ci->second);
+			if (v) {
+				get_node(ci->second).dump_value(o << ':');
+			}
 		} else {
 			if (e.is_or() &&
 				rule_map.find(ci->second) != rule_map.end()) {
 				// to place each 'rule' on its own line
 				o << endl;
 			}
-			dump_subexpr(o, ci->second, _type);
+			dump_subexpr(o, ci->second, v, _type);
 		}
 	}
 	}

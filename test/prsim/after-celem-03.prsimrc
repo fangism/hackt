@@ -1,5 +1,5 @@
-# "after-celem-02.prsimrc"
-#	$Id: after-celem-02.prsimrc,v 1.3 2007/12/01 04:25:31 fang Exp $
+# "after-celem-03.prsimrc"
+#	$Id: after-celem-03.prsimrc,v 1.1 2007/12/01 04:25:32 fang Exp $
 # @haco@ after-celem-more.haco-a
 # testing different delays on rules
 
@@ -11,7 +11,7 @@ what x
 what y
 what z
 
-fanin c
+fanin-get c
 
 set a[0] 0
 set a[1] 0
@@ -24,11 +24,13 @@ set b[3] 1
 cycle
 
 assert c X
+fanin-get c
 
 set a[3] 1
 cycle
 
 assert c 0
+fanin-get c
 time
 
 getall w

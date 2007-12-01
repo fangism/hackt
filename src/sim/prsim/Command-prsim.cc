@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.3 2007/08/20 21:12:41 fang Exp $
+	$Id: Command-prsim.cc,v 1.4 2007/12/01 04:25:31 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1307,7 +1307,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanins of node `" << objname << "\':" << endl;
-		s.dump_node_fanin(cout, ni);
+		s.dump_node_fanin(cout, ni, false);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1320,6 +1320,47 @@ void
 Fanin::usage(ostream& o) {
 	o << "fanin <node>" << endl;
 	o << "print all rules and expressions that can affect this node"
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/fanin-get.texi
+@deffn Command fanin-get node
+Print all production rules that can fire @var{NODE}.  
+Also prints current values of all expression literals.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FaninGet, "fanin-get", info, 
+	"print rules that influence a node, with values")
+
+int
+FaninGet::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// const State::node_type& n(s.get_node(ni));
+		cout << "Fanins of node `" << objname << "\':" << endl;
+		s.dump_node_fanin(cout, ni, true);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+FaninGet::usage(ostream& o) {
+	o << "fanin-get <node>" << endl;
+	o << "print all rules and expressions that can affect this node, "
+		<< endl
+	<< "also shows current values of expression literals."
 		<< endl;
 }
 
@@ -1345,7 +1386,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// const State::node_type& n(s.get_node(ni));
 		cout << "Fanouts of node `" << objname << "\':" << endl;
-		s.dump_node_fanout(cout, ni);
+		s.dump_node_fanout(cout, ni, false);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1358,6 +1399,47 @@ void
 Fanout::usage(ostream& o) {
 	o << "fanout <node>" << endl;
 	o << "print all rules affected by this node" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/fanout-get.texi
+@deffn Command fanout-get node
+Print all production rules that @var{NODE} participates in.  
+Also prints current values of all expression literals.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(FanoutGet, "fanout-get", info, 
+	"print rules that a node influences, with values")
+
+int
+FanoutGet::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// const State::node_type& n(s.get_node(ni));
+		cout << "Fanouts of node `" << objname << "\':" << endl;
+		s.dump_node_fanout(cout, ni, true);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+FanoutGet::usage(ostream& o) {
+	o << "fanout-get <node>" << endl;
+	o << "print all rules affected by this node, " 
+		<< endl
+	<< "also shows current values of expression literals."
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

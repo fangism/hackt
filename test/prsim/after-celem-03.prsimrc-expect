@@ -1,0 +1,58 @@
+w refers to process-inst-ref after_celem<10>
+x refers to process-inst-ref after_celem<15>
+y refers to process-inst-ref after_celem<35>
+z refers to process-inst-ref after_celem<50>
+Fanins of node `c':
+[after 30]	(~a[0]:X & ~b[0]:X) | 
+[after 45]	(~a[1]:X & ~b[1]:X) | 
+[after 105]	(~a[2]:X & ~b[2]:X) | 
+[after 150]	(~a[3]:X & ~b[3]:X) -> c+:X
+[after 20]	(a[0]:X & b[0]:X) | 
+[after 30]	(a[1]:X & b[1]:X) | 
+[after 70]	(a[2]:X & b[2]:X) | 
+[after 100]	(a[3]:X & b[3]:X) -> c-:X
+	0	a[0] : 0
+	0	a[2] : 0
+	0	b[2] : 1
+	0	b[1] : 1
+	0	b[3] : 1
+	0	b[0] : 1
+	0	a[1] : 0
+	0	a[3] : 0
+Fanins of node `c':
+[after 30]	(~a[0]:0 & ~b[0]:1) | 
+[after 45]	(~a[1]:0 & ~b[1]:1) | 
+[after 105]	(~a[2]:0 & ~b[2]:1) | 
+[after 150]	(~a[3]:0 & ~b[3]:1) -> c+:X
+[after 20]	(a[0]:0 & b[0]:1) | 
+[after 30]	(a[1]:0 & b[1]:1) | 
+[after 70]	(a[2]:0 & b[2]:1) | 
+[after 100]	(a[3]:0 & b[3]:1) -> c-:X
+	0	a[3] : 1
+	100	c : 0	[by a[3]:=1]
+Fanins of node `c':
+[after 30]	(~a[0]:0 & ~b[0]:1) | 
+[after 45]	(~a[1]:0 & ~b[1]:1) | 
+[after 105]	(~a[2]:0 & ~b[2]:1) | 
+[after 150]	(~a[3]:1 & ~b[3]:1) -> c+:0
+[after 20]	(a[0]:0 & b[0]:1) | 
+[after 30]	(a[1]:0 & b[1]:1) | 
+[after 70]	(a[2]:0 & b[2]:1) | 
+[after 100]	(a[3]:1 & b[3]:1) -> c-:0
+time: 100
+All subnodes of 'w':
+a[0] : 0
+b[0] : 1
+c : 0
+All subnodes of 'x':
+c : 0
+a[1] : 0
+b[1] : 1
+All subnodes of 'y':
+c : 0
+a[2] : 0
+b[2] : 1
+All subnodes of 'z':
+c : 0
+a[3] : 1
+b[3] : 1

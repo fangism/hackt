@@ -5,6 +5,12 @@
 
 2007-11-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02:
+	  prsim: added fanin-get and fanout-get commands that print
+		rules with current values of literals.
+		Includes test cases, and updated documentation.  
+
+
 	* HACKT-00-01-04-main-00-82-01:
 	  No source revision.  Test support update only.
 

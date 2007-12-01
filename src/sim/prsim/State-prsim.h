@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.1 2007/02/27 02:28:06 fang Exp $
+	$Id: State-prsim.h,v 1.2 2007/12/01 04:25:31 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -940,19 +940,21 @@ public:
 	dump_node_value(ostream&, const node_index_type) const;
 
 	ostream&
-	dump_node_fanout(ostream&, const node_index_type) const;
+	dump_node_fanout(ostream&, const node_index_type, const bool) const;
 
 	ostream&
-	dump_node_fanin(ostream&, const node_index_type) const;
+	dump_node_fanin(ostream&, const node_index_type, const bool) const;
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
-		const uchar p, const bool cp = false) const;
+		const bool v, const uchar p, 
+		const bool cp = false) const;
 
 	ostream&
-	dump_subexpr(ostream& o, const expr_index_type ei) const {
+	dump_subexpr(ostream& o, const expr_index_type ei, 
+		const bool v) const {
 		// really don't care what kind of expr, is ignored
-		return dump_subexpr(o, ei, expr_type::EXPR_ROOT, true);
+		return dump_subexpr(o, ei, v, expr_type::EXPR_ROOT, true);
 	}
 
 	bool
