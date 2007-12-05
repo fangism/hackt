@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.6 2006/09/09 06:59:15 fang Exp $
+	$Id: SPEC_common.cc,v 1.6.60.1 2007/12/05 17:27:42 fang Exp $
  */
 
 #include <iostream>
@@ -408,6 +408,30 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(layout_min_sep)
  */
 good_bool
 layout_min_sep::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Namespace for layout directives.  
+ */
+good_bool
+supply_x::__check_num_params(const char* name, const size_t s) {
+	return exact_num_params(name, 0, s);
+}
+
+good_bool
+supply_x::__check_num_nodes(const char* name, const size_t s) {
+	return exact_num_nodes(name, 2, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(supply_x)
+
+/**
+	TODO: check?
+ */
+good_bool
+supply_x::__check_node_args(const char* name, const node_args_type& a) {
 	return good_bool(true);
 }
 

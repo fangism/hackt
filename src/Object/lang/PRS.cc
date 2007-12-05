@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.27 2007/11/26 08:27:38 fang Exp $
+	$Id: PRS.cc,v 1.27.2.1 2007/12/05 17:27:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -2113,7 +2113,8 @@ if (is_internal()) {
 			<< " in rule." << endl;
 		return 0;
 	}
-	INVARIANT(new_expr->get_params().size() <= 2);
+	INVARIANT(new_expr->get_params().size() <= 3);
+	// NEW [ACT]: optional 3rd parameter is transistor type
 	return pfp.current_expr_index();
 }
 

@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01:
+	  Branch for another round of ACT compatibility.  
+	  First revision:
+		Object/lang/PRS.cc AST/PRS.cc: allow literals to take 
+			optional 3rd parameter for transistor 
+			type (ignored in middle-end).
+		AST/SPEC.cc: loop/conditionals warning with 'where'
+		Object/lang/PRS_macro_common.cc: 
+			allow optional 3rd (type) parameter for passn/passp
+		Object/lang/SPEC_common.{cc,h}, SPEC_registry.cc:
+			new directive 'supply_x': currently does nothing.
+		parser/hackt-parse.yy.in:
+			allow optional send/recv/set/get bodies (ignored)
+
+
 2007-11-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02:

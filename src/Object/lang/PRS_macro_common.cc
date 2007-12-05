@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_common.cc"
 	Definition of tool-independent parts of PRS macro classes.  
-	$Id: PRS_macro_common.cc,v 1.3 2006/10/04 23:18:27 fang Exp $
+	$Id: PRS_macro_common.cc,v 1.3.60.1 2007/12/05 17:27:41 fang Exp $
  */
 
 #include <iostream>
@@ -47,6 +47,8 @@ __no_grouped_node_args(const char* name, const node_args_type& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// current unused
 static
 good_bool
 __optional_width_length_params(const char* m, const size_t s) {
@@ -58,6 +60,20 @@ __optional_width_length_params(const char* m, const size_t s) {
 		return good_bool(true);
 	}
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__optional_width_length_type_params(const char* m, const size_t s) {
+	if (s > 3) {
+		cerr << "Error: the \'" << m <<
+			"\' macro takes 0-3 parameters." << endl;
+		return good_bool(false);
+	} else {
+		return good_bool(true);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
@@ -195,12 +211,12 @@ DEFINE_DEFAULT_PRS_MACRO_CHECK_NODES(Echo)
 
 good_bool
 PassN::__check_num_params(const char* name, const size_t n) {
-	return __optional_width_length_params(name, n);
+	return __optional_width_length_type_params(name, n);
 }
 
 good_bool
 PassP::__check_num_params(const char* name, const size_t n) {
-	return __optional_width_length_params(name, n);
+	return __optional_width_length_type_params(name, n);
 }
 
 good_bool

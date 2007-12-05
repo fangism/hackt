@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.28 2007/11/26 08:27:21 fang Exp $
+	$Id: PRS.cc,v 1.28.2.1 2007/12/05 17:27:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -240,10 +240,10 @@ if (internal) {
 }
 if (ret && params) {
 	// NOTE: parameters are not applicable to RHS or rules
-	if (params->size() > 2) {
-		// TODO: update me to take a transistor type [ACT]
-		cerr << "Error: rule literals can take a maximum of 2 "
-			"(width, length) parameters.  " << where(*params)
+	if (params->size() > 3) {
+		// third optional parameter is transistor type [ACT]
+		cerr << "Error: rule literals can take a maximum of 3 "
+			"(width, length, type) parameters.  " << where(*params)
 			<< endl;
 		return prs_literal_ptr_type(NULL);
 	}

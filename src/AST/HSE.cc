@@ -1,7 +1,7 @@
 /**
 	\file "AST/HSE.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: HSE.cc,v 1.5 2007/11/26 08:27:20 fang Exp $
+	$Id: HSE.cc,v 1.5.2.1 2007/12/05 17:27:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_hse.cc,v 1.14.48.1 2005/12/11 00:45:07 fang Exp
  */
@@ -91,7 +91,7 @@ body::check_build(context& c) const {
 	if (c.inside_conditional() || c.inside_loop()) {
 		cerr <<
 		"WARNING: Ignoring SPEC inside loops/conditionals for now."
-			<< endl;
+			<< where(*this) << endl;
 		return never_ptr<const object>(NULL);
 	}
 #endif

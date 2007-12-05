@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.11 2007/11/26 08:27:22 fang Exp $
+	$Id: SPEC.cc,v 1.11.2.1 2007/12/05 17:27:37 fang Exp $
  */
 
 #include <iostream>
@@ -174,8 +174,8 @@ body::check_build(context& c) const {
 	if (c.inside_conditional() || c.inside_loop()) {
 		FINISH_ME(Fang);
 		cerr <<
-		"WARNING: Ignoring SPEC inside loops/conditionals for now."
-			<< endl;
+		"WARNING: Ignoring SPEC inside loops/conditionals for now.  "
+			<< where(*this) << endl;
 		return never_ptr<const object>(NULL);
 	}
 #endif
