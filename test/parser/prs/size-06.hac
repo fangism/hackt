@@ -3,7 +3,7 @@
 
 defproc size_test (bool a, b) {
 prs {
-	a<3,2,1> => b-		// should parse-fail (up to 2 parameters)
+	a<3,2,1,0> => b-	// should parse-fail (up to 3 parameters)
 }
 }
 

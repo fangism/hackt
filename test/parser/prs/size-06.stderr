@@ -1,3 +1,3 @@
-Error: rule literals can take a maximum of 2 (width, length) parameters.  [6:3..9]
-ERROR in production rule guard at [6:2..9].
+Error: rule literals can take a maximum of 3 (width, length, type) parameters.  [6:3..11]
+ERROR in production rule guard at [6:2..11].
 ERROR: at least one error in PRS body.

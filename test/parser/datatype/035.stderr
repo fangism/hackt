@@ -8,7 +8,7 @@ state	value
 #STATE#	{ [9:46]
 #STATE#	datatype: bool [10:2..5]
 in state #STATE#, possible rules are:
-	defdatatype : declare_datatype_proto '{' . optional_datatype_body set_body get_body '}'  (#RULE#)
+	defdatatype : declare_datatype_proto '{' . optional_datatype_body set_body_optional get_body_optional '}'  (#RULE#)
 	optional_datatype_body : .  (#RULE#)
 acceptable tokens are: 
 	'!' (shift)
@@ -16,6 +16,7 @@ acceptable tokens are:
 	'-' (shift)
 	'[' (shift)
 	'{' (shift)
+	'}' (reduce)
 	'~' (shift)
 	ID (shift)
 	FLOAT (shift)
@@ -24,5 +25,6 @@ acceptable tokens are:
 	SCOPE (shift)
 	SPEC_LANG (shift)
 	SET (reduce)
+	GET (reduce)
 	BOOL_TRUE (shift)
 	BOOL_FALSE (shift)
