@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-01:
+	  Grandchild branch for 'weak' prsim rules.
+		Switch: PRSIM_WEAK_RULES (currently disabled)
+		Initial revision setting up for easy modifications.
+		Had to re-order prs attribute handling before
+		rule allocation in the rule map to pave way for
+		attribute-based rule connections.
+		Passes regression tests.  
+
+
 2007-12-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01:

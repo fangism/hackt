@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6 2007/12/01 04:25:31 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.1 2007/12/11 12:02:20 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1893,9 +1893,17 @@ if (eval_ordering_is_random()) {
 	***/
 	if (force && n.get_event()) {
 		DEBUG_STEP_PRINT("detected a forced event vs. pending event" << endl);
-		if (n.pull_up_index && 
-			get_event(n.pull_up_index).val == node_type::LOGIC_HIGH
-				&& next != node_type::LOGIC_HIGH) {
+		const event_type* up_rule = n.pull_up_index ?
+			&get_event(n.pull_up_index) : NULL;
+		const event_type* dn_rule = n.pull_dn_index ?
+			&get_event(n.pull_dn_index) : NULL;
+		const bool possible_up = up_rule &&
+			up_rule->val == node_type::LOGIC_HIGH
+				&& next != node_type::LOGIC_HIGH;
+		const bool possible_dn = dn_rule &&
+			dn_rule->val == node_type::LOGIC_LOW
+				&& next != node_type::LOGIC_LOW;
+		if (possible_up) {
 			DEBUG_STEP_PRINT("force pull-up" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
@@ -1903,9 +1911,7 @@ if (eval_ordering_is_random()) {
 					node_type::LOGIC_HIGH);
 			enqueue_pending(_ne);
 		}
-		else if (n.pull_dn_index && 
-			get_event(n.pull_dn_index).val == node_type::LOGIC_LOW
-				&& next != node_type::LOGIC_LOW) {
+		else if (possible_dn) {
 			DEBUG_STEP_PRINT("force pull-dn" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, EMPTY_CAUSE, 
@@ -1913,7 +1919,11 @@ if (eval_ordering_is_random()) {
 					node_type::LOGIC_LOW);
 			enqueue_pending(_ne);
 		}
+#if PRSIM_WEAK_RULES
+		// above strong pulls take precedence over weak pulls
+#else
 		// no weak events yet
+#endif
 	}
 
 	// exclhi ring enforcement
@@ -2836,6 +2846,8 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: OR-combinations on separate lines?
+	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
+		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
  */
 ostream&

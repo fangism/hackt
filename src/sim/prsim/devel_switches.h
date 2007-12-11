@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.4 2006/08/12 00:36:35 fang Exp $
+	$Id: devel_switches.h,v 1.4.76.1 2007/12/11 12:02:21 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -38,6 +38,7 @@
 	Consequence: more memory per node, due to increased structure size.  
 	Status: done and tested, save for new dependent features.
 	Goal: 1
+	Status: completed, stable, tested for a long time, perm-ready
  */
 #define	PRSIM_SEPARATE_CAUSE_NODE_DIRECTION		1
 
@@ -47,6 +48,18 @@
 	Goal: ?
  */
 #define	PRSIM_TRACK_CAUSE_TIME				0
+
+/**
+	Define to 1 to support 'weak' flavored rules in prsim.
+	Generally speaking, weak rules are overpowered by non-weak rules, 
+	and can also drive rules that are otherwise not driven.  
+	Goal: 1
+	Rationale: explicit staticizers
+	Note: this should not cause any regressions on previous simulations
+	that were never aware of the weak attribute.  
+	Status: in development
+ */
+#define	PRSIM_WEAK_RULES				0
 
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below
@@ -58,6 +71,7 @@
 	Fortunately, cause_rule is only used in delay calculations.  
 	Relocate this comment once it is committed.  
 	Goal: 0
+	Status: been this way for a while, perm-ready
  */
 #define	PRSIM_CHECKPOINT_CAUSE_RULE		0
 
