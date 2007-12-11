@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.13 2007/09/13 20:37:28 fang Exp $
+#	$Id: Make.test-prsim,v 1.13.16.1 2007/12/11 12:03:15 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -456,6 +456,15 @@ HAC_COMPILE_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco)
 HAC_CREATE_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-c)
 HAC_ALLOC_OBJECT_TARGETS += $(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a)
 
+HACKT_PRSIM_PRODUCTS = \
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out) \
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimckpt) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
+	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prsimexpr-O1) \
+	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prs-dot-O1)
+
+$(HACKT_PRSIM_PRODUCTS): $(HACKT_PRSIM_EXE)
 
 build-check-local: \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.haco-a) \
