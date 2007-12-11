@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.4.76.1 2007/12/11 12:02:21 fang Exp $
+	$Id: devel_switches.h,v 1.4.76.2 2007/12/11 22:39:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -59,7 +59,7 @@
 	that were never aware of the weak attribute.  
 	Status: in development
  */
-#define	PRSIM_WEAK_RULES				0
+#define	PRSIM_WEAK_RULES				1
 
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below

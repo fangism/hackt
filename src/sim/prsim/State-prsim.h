@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2 2007/12/01 04:25:31 fang Exp $
+	$Id: State-prsim.h,v 1.2.4.1 2007/12/11 22:39:38 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -792,13 +792,21 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const uchar);
+		const rule_index_type, const uchar
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		);
 
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const uchar);
+		const uchar
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		);
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);

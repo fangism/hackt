@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1 2007/02/27 02:28:05 fang Exp $
+	$Id: Event-prsim.h,v 1.1.40.1 2007/12/11 22:39:34 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -115,6 +115,12 @@ protected:
 			Coerced events may require special handling.  
 		 */
 		EVENT_FLAG_FORCED = 0x04,
+#if PRSIM_WEAK_RULES
+		/**
+			True if event was attributed to a weak rule.
+		 */
+		EVENT_WEAK_RULE = 0x08,
+#endif
 		// add more as seen fit
 		EVENT_FLAGS_DEFAULT_VALUE = 0x00
 	};
@@ -138,6 +144,7 @@ public:
 	/**
 		The rule index is allowed to be NULL (invalid), 
 		to indicate an external (perhaps user) cause.  
+		\param w true for weak rules
 	 */
 	Event(const node_index_type n,
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
@@ -146,7 +153,11 @@ public:
 		const node_index_type c, 
 #endif
 		const rule_index_type r, 
-		const uchar v) :
+		const uchar v
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		) :
 		node(n),
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		cause(c), 
@@ -155,7 +166,12 @@ public:
 #endif
 		cause_rule(r),
 		val(v),
-		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
+		flags(
+#if PRSIM_WEAK_RULES
+			w ? EVENT_WEAK_RULE : 
+#endif
+			EVENT_FLAGS_DEFAULT_VALUE
+			) { }
 
 	void
 	kill(void) { flags |= EVENT_FLAG_KILLED; }
@@ -171,6 +187,11 @@ public:
 
 	bool
 	forced(void) const { return flags & EVENT_FLAG_FORCED; }
+
+#if PRSIM_WEAK_RULES
+	bool
+	is_weak(void) const { return flags & EVENT_WEAK_RULE; }
+#endif
 
 	void
 	save_state(ostream&) const;

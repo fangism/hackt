@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.21.10.1 2007/12/11 12:02:12 fang Exp $
+	$Id: ExprAlloc.cc,v 1.21.10.2 2007/12/11 22:39:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -376,8 +376,11 @@ try {
 	}
 	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
 	// following order matters b/c of rule_map access
-	link_node_to_root_expr(ni, top_ex_index, r.dir);
-		// dummy_rule.is_weak()
+	link_node_to_root_expr(ni, top_ex_index, r.dir
+#if PRSIM_WEAK_RULES
+		, rule_strength(dummy_rule.is_weak())
+#endif
+		);
 	st_rule_map[ret_ex_index] = dummy_rule;	// copy over temporary
 }
 } catch (...) {
@@ -741,7 +744,11 @@ if (d) {
  */
 void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
-		const expr_index_type top_ex_index, const bool dir) {
+		const expr_index_type top_ex_index, const bool dir
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
 		" to node " << ni << (dir ? '+' : '-') << endl);
@@ -758,6 +765,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	// be careful to keep root expr consistent
 	expr_index_type& dir_index(output.get_pull_expr(dir
 #if PRSIM_WEAK_RULES
+		, w
 #endif
 		));
 	if (dir_index) {
@@ -974,7 +982,11 @@ PassN::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
 	v.link_child_expr(pe, g, 0);
 	v.link_child_expr(pe, ns, 1);
-	v.link_node_to_root_expr(d, pe, false);	// pull-down
+	v.link_node_to_root_expr(d, pe, false
+#if PRSIM_WEAK_RULES
+		, NORMAL_RULE
+#endif
+		);	// pull-down
 
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.st_rule_map[pe]);
@@ -1007,7 +1019,11 @@ PassP::main(visitor_type& v, const param_args_type& params,
 		v.allocate_new_Nary_expr(entity::PRS::PRS_AND_EXPR_TYPE_ENUM,2);
 	v.link_child_expr(pe, ng, 0);
 	v.link_child_expr(pe, s, 1);
-	v.link_node_to_root_expr(d, pe, true);	// pull-up
+	v.link_node_to_root_expr(d, pe, true
+#if PRSIM_WEAK_RULES
+		, NORMAL_RULE
+#endif
+		);	// pull-up
 
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.st_rule_map[pe]);
