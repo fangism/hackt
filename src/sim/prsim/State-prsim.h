@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.4.1 2007/12/11 22:39:38 fang Exp $
+	$Id: State-prsim.h,v 1.2.4.2 2007/12/12 09:44:00 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -897,7 +897,11 @@ private:
 	__diagnose_violation(ostream&, const uchar next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
-		cause_arg_type, const bool dir);
+		cause_arg_type, const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		);
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 

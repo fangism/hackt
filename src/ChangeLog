@@ -5,6 +5,13 @@
 
 2007-12-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-04:
+	  Some fixes for pending-queue insertion, w.r.t. weak rules.  
+	  No regressions, still not perfect... investigating.
+
+
+2007-12-11	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-03:
 	  First round of test cases, discovered some discrepancies with
 		reference version of prsim (some disagreeable).

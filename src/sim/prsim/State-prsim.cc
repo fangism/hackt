@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.3 2007/12/12 02:15:10 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.4 2007/12/12 09:43:59 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2279,7 +2279,8 @@ if (!n.pending_event()) {
 			// insert into exclhi queue
 			enqueue_exclhi(get_delay_up(e), pe);
 		} else {
-			if (n.pull_dn_index) {
+			// not sure why: checking against non-weak only:
+			if (n.pull_dn_index STR_INDEX(NORMAL_RULE)) {
 				enqueue_pending(pe);
 			} else {
 				enqueue_event(get_delay_up(e), pe);
@@ -2289,9 +2290,9 @@ if (!n.pending_event()) {
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
 	else if (next == expr_type::PULL_OFF && 
-		n.pull_dn_index STR_INDEX(is_weak) &&
+		n.pull_dn_index STR_INDEX(NORMAL_RULE) &&
 		// n->dn->val == PRS_VAL_T
-		expr_pool[n.pull_dn_index STR_INDEX(is_weak)].pull_state()
+		expr_pool[n.pull_dn_index STR_INDEX(NORMAL_RULE)].pull_state()
 			== expr_type::PULL_ON) {
 		/***
 			if (PULL_OFF and opposing pull-down is ON)
@@ -2320,8 +2321,8 @@ if (!n.pending_event()) {
 	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(ei));
 	if (next == expr_type::PULL_OFF && 
-		n.pull_dn_index STR_INDEX(is_weak) &&
-		expr_pool[n.pull_dn_index STR_INDEX(is_weak)].pull_state() ==
+		n.pull_dn_index STR_INDEX(NORMAL_RULE) &&
+		expr_pool[n.pull_dn_index STR_INDEX(NORMAL_RULE)].pull_state() ==
 			expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_LOW) {
@@ -2343,7 +2344,11 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
 		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
-			c, u->direction());
+			c, u->direction()
+#if PRSIM_WEAK_RULES
+			, is_weak
+#endif
+			);
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
 } else {
@@ -2375,7 +2380,7 @@ if (!n.pending_event()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
 		} else {
-			if (n.pull_up_index) {
+			if (n.pull_up_index STR_INDEX(NORMAL_RULE)) {
 				enqueue_pending(pe);
 			} else {
 				enqueue_event(get_delay_dn(e), pe);
@@ -2385,9 +2390,9 @@ if (!n.pending_event()) {
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
 	else if (next == expr_type::PULL_OFF && 
-		n.pull_up_index STR_INDEX(is_weak) &&
+		n.pull_up_index STR_INDEX(NORMAL_RULE) &&
 		// n->up->val == PRS_VAL_T
-		expr_pool[n.pull_up_index STR_INDEX(is_weak)].pull_state() ==
+		expr_pool[n.pull_up_index STR_INDEX(NORMAL_RULE)].pull_state() ==
 			expr_type::PULL_ON) {
 		/***
 			if (PULL_OFF and opposing pull-up is ON)
@@ -2415,8 +2420,8 @@ if (!n.pending_event()) {
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
 	if (next == node_type::LOGIC_LOW && 
-		n.pull_up_index STR_INDEX(is_weak) &&
-		expr_pool[n.pull_up_index STR_INDEX(is_weak)].pull_state() ==
+		n.pull_up_index STR_INDEX(NORMAL_RULE) &&
+		expr_pool[n.pull_up_index STR_INDEX(NORMAL_RULE)].pull_state() ==
 			expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_HIGH) {
@@ -2439,7 +2444,11 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
 		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
-			c, u->direction());
+			c, u->direction()
+#if PRSIM_WEAK_RULES
+			, is_weak
+#endif
+			);
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
@@ -2526,6 +2535,7 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	\param n the node that fired
 	\param ni the node involved in event e
 	\param dir the direction of pull of the causing rule
+	\param weak true if rule was pulling rule is weak
 	\return true if error causes break.
  */
 State::break_type
@@ -2533,7 +2543,11 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type c, 
-		const bool dir) {
+		const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
@@ -2613,9 +2627,29 @@ State::__diagnose_violation(ostream& o, const uchar next,
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
+#if PRSIM_WEAK_RULES
+			bool b = !weak;
+			if (!b) {
+			if (dir) {
+				const expr_index_type up =
+					n.pull_up_index STR_INDEX(NORMAL_RULE);
+				b = !(up && (expr_pool[up].pull_state()
+					== expr_type::PULL_ON));
+			} else {
+				const expr_index_type dn =
+					n.pull_dn_index STR_INDEX(NORMAL_RULE);
+				b = !(dn && (expr_pool[dn].pull_state()
+					== expr_type::PULL_ON));
+			}
+			}
+			if (b) {
+#endif
 			err |=
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
 				dir, ui, e);
+#if PRSIM_WEAK_RULES
+			}
+#endif
 		}	// end if unstable
 	}	// end if !vacuous
 	// else vacuous is OK
@@ -2896,7 +2930,7 @@ State::dump_event(ostream& o, const event_index_type ei,
 			node_type::value_to_char[ev.cause.val] << "]";
 		}
 #endif
-			'\t' << "(killed)";
+		o << '\t' << "(killed)";
 		o << endl;
 	}
 #endif
