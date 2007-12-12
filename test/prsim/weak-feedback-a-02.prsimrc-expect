@@ -1,0 +1,14 @@
+Fanins of node `b':
+[after 10]	~a -> b+
+[after 10]	a -> b-
+Fanins of node `a':
+[after 10, weak]	~b -> a+
+[after 10, weak]	b -> a-
+event queue:
+	10	b : 1	[from a:=0]
+event queue:
+	5	a : 1
+	10	b : 1	[from a:=0]
+expect usual instability to be reported 
+WARNING: unstable `b'+
+>> cause: `a' (val: 1)

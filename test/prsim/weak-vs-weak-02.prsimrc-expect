@@ -1,0 +1,7 @@
+c: still unknown value 
+testing for instability 
+event queue:
+	10	c : 1	[from a:=0]
+unstable guard, expect unstable 
+WARNING: unstable `c'+
+>> cause: `a' (val: 1)

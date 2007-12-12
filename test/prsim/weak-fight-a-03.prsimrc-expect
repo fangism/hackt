@@ -1,0 +1,17 @@
+both off 
+event queue:
+	0	a : 1
+	0	b : 0
+time: 0
+pull with strong first 
+event queue:
+	10	c : 0	[from b:=1]
+weak pull should lose fight 
+expect instability to be suppressed 
+event queue:
+	10	c : 0	[from b:=1]
+time: 10
+de-assert weak 
+time: 10
+de-assert strong 
+time: 10

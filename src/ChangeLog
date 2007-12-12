@@ -5,6 +5,13 @@
 
 2007-12-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-03:
+	  First round of test cases, discovered some discrepancies with
+		reference version of prsim (some disagreeable).
+	  Removed a failing assertion: State-prsim.cc:flush_pending_queue.
+	  Still dies on a large test, hard to reduce. 
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-02:
 	  Completed first draft of weak rule/events.
 		Enabled PRSIM_WEAK_RULES switch.

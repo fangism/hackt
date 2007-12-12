@@ -1,0 +1,5 @@
+Fanins of node `c':
+[after 10, weak]	~a -> c+
+[after 10, weak]	b -> c-
+c: still unknown value 
+works. 

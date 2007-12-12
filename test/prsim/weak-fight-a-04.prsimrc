@@ -1,0 +1,44 @@
+# "weak-fight-a-04.prsimrc"
+# @haco@ weak-fight-a.haco-a
+
+# weak ~a -> c+
+# b -> c-
+
+timing uniform 10
+# fanin c
+
+echo both off
+set a 1
+set b 0
+queue
+cycle
+assert c X
+time
+
+echo pull with weak
+set a 0
+queue
+cycle
+assert c 1
+time
+echo after firing ...
+
+echo overpower with strong
+set b 1
+advance 5
+echo expect over power event
+queue
+cycle
+# CURRENTLY FAILS ASSERT (consistent with prsim)
+assert c 0
+time
+
+echo de-assert strong rule
+set b 0
+advance 5
+queue
+echo should be empty
+cycle
+echo even though weak rule is on, c stays low
+echo weak rule does not re-fire after overpower goes away
+

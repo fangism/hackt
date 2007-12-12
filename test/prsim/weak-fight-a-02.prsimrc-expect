@@ -1,0 +1,13 @@
+both off 
+event queue:
+	0	a : 1
+	0	b : 0
+time: 0
+pull with weak 
+event queue:
+	10	c : 1	[from a:=0]
+overpower with strong 
+expect unstable overpower 
+event queue:
+	10	c : 1	[from a:=0]
+assert failed: expecting node `c' at 0, but got 1.

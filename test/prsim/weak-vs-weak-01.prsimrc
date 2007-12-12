@@ -1,0 +1,32 @@
+# "weak-vs-weak-01.prsimrc"
+# @haco@ weak-vs-weak.haco-a
+
+# [weak] ~a -> c+
+# [weak] b  -> c-
+
+timing uniform 10
+fanin c
+
+set a 1
+set b 0
+cycle
+assert c X
+echo c: still unknown value
+
+set a 0
+cycle
+assert c 1
+
+set a 1
+cycle
+assert c 1
+
+set b 1
+cycle
+assert c 0
+
+set b 0
+assert c 0
+
+echo works.
+

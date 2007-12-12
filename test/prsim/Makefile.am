@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2007/12/01 04:25:31 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.1 2007/12/12 02:15:11 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -12,7 +12,11 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	check-excl-rings-def check-excl-rings \
 	logic-defs and nand or nor array \
 	expr-limit-a \
-	precharge-a precharge-b
+	precharge-a precharge-b \
+	weak-fight-a \
+	weak-vs-weak \
+	weak-feedback-a weak-feedback-b \
+	celem-fb
 
 HACKT_PARSE_TEST_PASSES = \
 	expr-limit-b
@@ -40,7 +44,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
-	precharge-a-01 precharge-b-01
+	precharge-a-01 precharge-b-01 \
+	weak-fight-a-01 weak-fight-a-03 weak-fight-a-04 \
+	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
+	weak-feedback-a-01 weak-feedback-b-01 \
+	celem-fb-01
+
+# all weak-* tests added (pass AND fail) are consistent with Rajit's prsim
+# Fail tests (below) need to be revisited to "do the right thing".
 
 # NOTE: expr-limit-a-01 should fail before limit was increased beyond 255
 
@@ -52,7 +63,12 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	cycle-source-a cycle-source-b \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
-	check-excl-rings-01 check-excl-rings-03
+	check-excl-rings-01 check-excl-rings-03 \
+	weak-fight-a-02 \
+	weak-vs-weak-04 \
+	weak-feedback-a-02 weak-feedback-b-02 \
+	celem-fb-02
+
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 

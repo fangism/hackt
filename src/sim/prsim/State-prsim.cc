@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.2 2007/12/11 22:39:37 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.3 2007/12/12 02:15:10 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1270,9 +1270,9 @@ for ( ; i!=e; ++i) {
 		get_node_canonical_name(_ni) << endl);
 	node_type& _n(get_node(_ni));
 #if PRSIM_WEAK_RULES
-	// no weak events are ever inserted into the pending queue
+	// are weak events ever inserted into the pending queue?
 	const bool is_weak = ev.is_weak();
-	INVARIANT(!is_weak);
+//	INVARIANT(!is_weak);
 	const uchar pull_up_state =
 		expr_pool[_n.pull_up_index[is_weak]].pull_state();
 	const uchar pull_dn_state =
