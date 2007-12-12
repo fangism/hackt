@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.4 2007/12/12 09:43:59 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.5 2007/12/12 21:49:25 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1269,17 +1269,17 @@ for ( ; i!=e; ++i) {
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
 	node_type& _n(get_node(_ni));
+	const expr_index_type up_ex = _n.pull_up_index STR_INDEX(NORMAL_RULE);
+	const expr_index_type dn_ex = _n.pull_dn_index STR_INDEX(NORMAL_RULE);
 #if PRSIM_WEAK_RULES
 	// are weak events ever inserted into the pending queue?
-	const bool is_weak = ev.is_weak();
-//	INVARIANT(!is_weak);
-	const uchar pull_up_state =
-		expr_pool[_n.pull_up_index[is_weak]].pull_state();
-	const uchar pull_dn_state =
-		expr_pool[_n.pull_dn_index[is_weak]].pull_state();
+	const uchar pull_up_state = (up_ex ?
+		expr_pool[up_ex].pull_state() : uchar(expr_type::PULL_OFF));
+	const uchar pull_dn_state = (dn_ex ?
+		expr_pool[dn_ex].pull_state() : uchar(expr_type::PULL_OFF));
 #else
-	const uchar pull_up_state = expr_pool[_n.pull_up_index].pull_state();
-	const uchar pull_dn_state = expr_pool[_n.pull_dn_index].pull_state();
+	const uchar pull_up_state = expr_pool[up_ex].pull_state();
+	const uchar pull_dn_state = expr_pool[dn_ex].pull_state();
 #endif
 	DEBUG_STEP_PRINT("current pull-states: up=" <<
 		size_t(pull_up_state) << ", dn=" <<
@@ -1394,15 +1394,45 @@ State::__flush_pending_event_with_interference(node_type& _n,
 void
 State::__flush_pending_event_no_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	// if event is weak rule, require the opposing pull to be off
 	if (_n.current_value() != ev.val) {
+#if PRSIM_WEAK_RULES
+		const bool w = ev.is_weak();
+#endif
 		if (ev.val == node_type::LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+#if PRSIM_WEAK_RULES
+			// the opposing strong pull:
+			const expr_index_type opp =
+				_n.pull_dn_index[NORMAL_RULE];
+			if (!w || !opp ||
+				expr_pool[opp].pull_state() ==
+					expr_type::PULL_OFF) {
+#endif
 			enqueue_event(get_delay_up(ev), ne);
+			return;
+#if PRSIM_WEAK_RULES
+			}
+#endif
 		} else {
 		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+#if PRSIM_WEAK_RULES
+			// the opposing strong pull:
+			const expr_index_type opp =
+				_n.pull_up_index[NORMAL_RULE];
+			if (!w || !opp ||
+				expr_pool[opp].pull_state() ==
+					expr_type::PULL_OFF) {
+#endif
 			enqueue_event(get_delay_dn(ev), ne);
+			return;
+#if PRSIM_WEAK_RULES
+			}
+#endif
 		}
-	} else {
+	}
+	// fall-through
+	{
 		DEBUG_STEP_PRINT("cancelling event" << endl);
 		// no change in value, just cancel
 		_n.clear_excl_queue();
