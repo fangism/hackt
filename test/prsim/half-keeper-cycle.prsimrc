@@ -1,0 +1,16 @@
+# "half-keeper-cycle.prsimrc"
+
+echo writing bitline
+set w 1
+cycle
+assert _bl 0
+set w 0
+cycle
+
+echo precharging bitline
+set _p 0
+cycle
+assert _bl 1
+set _p 1
+cycle
+

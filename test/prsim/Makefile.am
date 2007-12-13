@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.1 2007/12/12 02:15:11 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.2 2007/12/13 21:16:36 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -16,7 +16,10 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	weak-fight-a \
 	weak-vs-weak \
 	weak-feedback-a weak-feedback-b \
-	celem-fb
+	celem-fb \
+	half-keeper-a \
+	cross-coupled cross-coupled-weak \
+	cbit_test_stat
 
 HACKT_PARSE_TEST_PASSES = \
 	expr-limit-b
@@ -48,7 +51,22 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	weak-fight-a-01 weak-fight-a-03 weak-fight-a-04 \
 	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
 	weak-feedback-a-01 weak-feedback-b-01 \
-	celem-fb-01
+	celem-fb-01 \
+	half-keeper-a-01 half-keeper-a-02 \
+	cross-coupled-01 cross-coupled-weak-01 \
+	cbit_test_stat-01
+
+$(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
+	{ $(ECHO) "# $@" ; \
+	$(ECHO) "# @haco@ cbit_test_stat.haco-a" ; \
+	$(AWK) -f $< ;} > $@
+
+# extra dep
+cbit_test_stat-01.prsimrc-out: cbit_test_stat.haco-a
+
+CLEANFILES += cbit_test_stat-01.prsimrc
+AUTO_IGNORE += cbit_test_stat-01.prsimrc
+EXTRA_DIST += cbit_test_stat-01.prsimrc gen_cbit_test.awk
 
 # all weak-* tests added (pass AND fail) are consistent with Rajit's prsim
 # Fail tests (below) need to be revisited to "do the right thing".
@@ -64,7 +82,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
-	weak-fight-a-02 \
+	weak-fight-a-02 weak-fight-a-05 \
 	weak-vs-weak-04 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02
@@ -76,6 +94,7 @@ HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 srcdir_EXTRA_DIST += array-b.hac
 # array-b.hac is pending BUG fix
+srcdir_EXTRA_DIST += half-keeper-cycle.prsimrc
 
 include $(top_srcdir)/test/Make.test-tail
 

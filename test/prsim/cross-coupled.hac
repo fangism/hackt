@@ -1,0 +1,8 @@
+// "cross-coupled.hac"
+
+bool t, f;
+prs {
+	t => f-
+	f => t-
+}
+

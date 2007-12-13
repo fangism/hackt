@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-06:
+	  prsim: fanin-get: also print the pull state of the memoized
+		subexpression for convenient debugging.  
+		Prints <1> for pull-on, <0> for pull-off, 
+		and <X> for pull-unknown.  Updated few test cases.
+	  Added bunch more small test cases for weak rules.
+		Still seeing some suspicious behavior, marked as expect-fail.
+
+
 2007-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-05:

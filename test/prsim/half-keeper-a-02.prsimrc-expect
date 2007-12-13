@@ -1,0 +1,28 @@
+	0	_p : 0
+	0	w : 0
+	10	_bl : 1	[by w:=0]
+	20	h.bl_stat : 0	[by _bl:=1]
+	20	_p : 1
+causing weak interference 
+	20	w : X
+WARNING: weak-interference `h.bl_stat'
+>> cause: `_bl' (val: X)
+	30	_bl : X	[by w:=X]
+	40	h.bl_stat : X	[by _bl:=X]
+restoring... 
+	40	w : 1
+	50	_bl : 0	[by w:=1]
+	60	h.bl_stat : 1	[by _bl:=0]
+pull-dn off 
+	60	w : 0
+unknown precharge 
+	60	_p : X
+WARNING: weak-interference `h.bl_stat'
+>> cause: `_bl' (val: X)
+	70	_bl : X	[by _p:=X]
+	80	h.bl_stat : X	[by _bl:=X]
+on precharge 
+	80	_p : 0
+	90	_bl : 1	[by _p:=0]
+	100	h.bl_stat : 0	[by _bl:=1]
+time: 100

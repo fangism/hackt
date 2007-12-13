@@ -1,0 +1,38 @@
+# "weak-fight-a-05.prsimrc"
+# @haco@ weak-fight-a.haco-a
+
+fanin c
+watchall
+echo weak pull-up
+set b 0
+set a 0
+cycle
+assert c 1
+
+echo a -> X
+set a X
+echo do not expect weak-interference
+cycle
+assert c 1
+
+echo restoring a -> 0
+set a 0
+cycle
+
+echo fighting strong unknown pull-dn
+set b X
+cycle
+echo do not expect weak-interference, but c -> X
+assert c X
+
+echo restoring b -> 0
+set b 0
+set a 0
+echo expect weak pull up to restore
+advance 5
+queue
+echo HUH, expected c+ in queue, from weak pull-up!
+cycle
+assert c 1
+
+

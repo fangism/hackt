@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.5 2007/12/12 21:49:25 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.6 2007/12/13 21:16:35 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3075,6 +3075,7 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 	TODO: Rajit's prsim suppreses weak rule fanins (copy?)
 		For now, we print those as well.
 	\param v true if literal should be printed with its value.  
+		also print expression with pull-state.
  */
 ostream&
 State::dump_node_fanin(ostream& o, const node_index_type ni, 
@@ -3179,6 +3180,12 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	}
 	if (need_parens) {
 		o << ')';
+	}
+	if (v && (e.size > 1)) {
+		// if verbose, and expression has more than one subexpr
+		// print pull-state
+		o << '<' << node_type::value_to_char[size_t(e.pull_state())]
+			<< '>';
 	}
 	return o;
 }
