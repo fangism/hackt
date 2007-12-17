@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.2 2007/12/13 21:16:36 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.3 2007/12/17 17:56:06 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -19,7 +19,12 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	celem-fb \
 	half-keeper-a \
 	cross-coupled cross-coupled-weak \
-	cbit_test_stat
+	cbit_test_stat \
+	cross-pull-a
+
+# TODO: more cross-coupled test cases
+# SRAM cell
+# register with read/write ports, cross-coupled
 
 HACKT_PARSE_TEST_PASSES = \
 	expr-limit-b
@@ -54,7 +59,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-fb-01 \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
-	cbit_test_stat-01
+	cbit_test_stat-01 \
+	cross-pull-a-01 cross-pull-a-02
 
 $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.6 2007/12/13 21:16:35 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.7 2007/12/17 17:56:03 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -762,6 +762,7 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 void
 State::enqueue_exclhi(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
+	// FAILED ONCE! (no test case) 20071213 after weak rules added
 	DEBUG_STEP_PRINT("enqueuing exclhi ID " << ei <<
 		" at time " << t << endl);
 	exclhi_queue.push_back(event_placeholder_type(t, ei));
@@ -1950,6 +1951,8 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	} else {
 		// vacuous event is allowed if set was forced by user
 		ISE_INVARIANT(prev != pe.val || n.is_unstab() || force);
+		// FAILED ONCE! (test case?)
+		// occurred on 20071214 after adding weak rules
 	}
 	// saved previous value above already
 	if (checking_excl()) {

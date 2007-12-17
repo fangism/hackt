@@ -1,0 +1,51 @@
+# "cross-pull-a-02.prsimrc"
+# @haco@ cross-pull-a.haco-a
+
+# default mode
+echo unstable-dequeue
+unstable-dequeue
+watchall
+
+echo pulling both rails down simultaneously
+set t 0
+set f 0
+cycle
+echo instability?
+cycle
+get t
+get f
+
+set t X
+set f X
+cycle
+echo pulling one down first (slight time separation)
+set t 0
+advance 5
+set f 0
+cycle
+assert t 0
+assert f 0
+
+set t X
+set f X
+cycle
+echo pulling one up
+set t 1
+cycle
+set t 0
+cycle
+assert t 0
+assert f 0
+
+set t X
+set f X
+cycle
+echo glitching one up
+set t 1
+advance 5
+set t 0
+echo expect usual instability
+cycle
+assert t 0
+assert f X
+

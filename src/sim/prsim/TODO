@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4 2007/10/08 01:21:54 fang Exp $
+#	$Id: TODO,v 1.4.10.1 2007/12/17 17:56:04 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -20,6 +20,11 @@ prsim:
 
 	direction-specific breakpoints
 
+	breakpoint policies *per-node*
+	breakpoint options: halt or error-out
+
+	timestamp last causes -- automatic cycle time
+
 	deadlock diagnosis, akin to backtrace, but using fanin state analysis
 
 	interpreter commands:
@@ -34,6 +39,7 @@ prsim:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
+		fix 'getall' to work with arrays (getall x, where x is array)
 
 	concept of environment variables?
 
@@ -56,6 +62,14 @@ prsim:
 		fix: collect unique-list (or set), then print
 
 	trace recording, playback, and analysis (like chpsim)
+
+graph-dumping:
+	after restructuring rule maps by process (like chpsim),
+	print out graph node in process clusters
+
+execution model:
+	weak rules (drive floating nodes, overpowered by normal rules)
+
 
 state-allocation:
 	consider alternative to re-allocating every rule for every
