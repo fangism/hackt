@@ -1,6 +1,19 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93 2007/10/31 23:16:34 fang Exp $
+#	$Id: ChangeLog,v 1.93.6.1 2007/12/19 07:14:55 fang Exp $
 
+2007-12-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-08:
+	  Latent BUG FIX in tokenize.cc, somehow memory was not being 
+		allocated properly with old call to basic_string(Iter, Iter),
+		now replaced with simpler code.  (Still can't explain old
+		failure, and is difficult to reproduce, only exposed
+		during test in module, and no test-case, unfortunately.)
+		Very mysterious indeed.
+	  util/strings.h: eat whitespace now works with iterators.  
+	  Bug seems critical and should go to trunk ASAP.
+
+	
 2007-10-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-81-88:
