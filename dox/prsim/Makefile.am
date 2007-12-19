@@ -1,5 +1,5 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2007/09/14 04:29:53 fang Exp $
+#	$Id: Makefile.am,v 1.6.16.1 2007/12/19 08:52:14 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -10,10 +10,17 @@ PSS = $(PDFS:.pdf=.ps)
 info_TEXINFOS += hacprsim.texi
 INFOS = $(TEXINFOS:.texi=.info)
 
+AM_MAKEINFOFLAGS = -I$(srcdir)/../common -I../common
+hacmacros.texi: $(srcdir)/../common/hacmacros.texi
+	$(LN_S) $< $@
+
+CLEANFILES += hacmacros.texi
+
 # html_DATA = hacprsim.html
 HTML_HOOKS += hacprsim.html
 
 hacprsim_INCLUDES = \
+	hacmacros.texi \
 	intro.texi \
 	usage.texi \
 	commands.texi \

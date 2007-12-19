@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2 2007/12/01 04:25:26 fang Exp $
+@c $Id: commands.texi,v 1.2.4.1 2007/12/19 08:52:15 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -158,6 +158,8 @@ Timing mode.
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  
+These are particularly useful for simulating circuits that expect to
+glitch, such as synchronous (clocked) circuits.  
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi

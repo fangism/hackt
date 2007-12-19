@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.13 2007/11/30 05:49:44 fang Exp $
+dnl	$Id: hackt.m4,v 1.13.4.1 2007/12/19 08:52:13 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -318,6 +318,38 @@ AC_SUBST(GMP_LDPATH)
 AC_SUBST(GMP_LIB)
 ])dnl
 
+dnl @synopsis HACKT_ARG_WITH_VPI
+dnl
+dnl Support for Verilog HDL co-simulation through the Programming 
+dnl Language Interface.
+dnl Argument is the base path where include and lib can be found 
+dnl (without include/).
+dnl e.g. /usr/local/cad/synopsys/vcs/linux
+dnl which is expected to contain subdirs include/, lib/
+dnl
+dnl @category ProjectSpecific
+dnl @version 2007-12-17
+dnl @author David Fang
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_ARG_WITH_VPI],
+[AC_ARG_WITH(vpi,
+[[  --with-vpi[=PATH]       Verilog HDL PLI library]])
+vpi_include="-I$with_vpi/include"
+vpi_ldpath="-L$with_vpi/lib"
+saved_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $vpi_include"
+AC_CHECK_HEADERS(vpi_user.h)
+CPPFLAGS="$saved_CPPFLAGS"
+if test x"$ac_cv_header_vpi_user_h" = "xyes"
+then
+	VPI_INCLUDE="$vpi_include"
+	VPI_LDPATH="$vpi_ldpath"
+fi
+AM_CONDITIONAL(HAVE_VPI, test "$VPI_INCLUDE")
+AC_SUBST(VPI_INCLUDE)
+AC_SUBST(VPI_LDPATH)
+])dnl
 
 dnl @synopsis HACKT_ARG_ENABLE_OBJECT_ALIGN_CHECKING
 dnl

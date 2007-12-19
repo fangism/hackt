@@ -5,6 +5,20 @@
 
 2007-12-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-09:
+	  First draft of VPI plug-in, based on reference vpi_prsim.c.
+	  Makefile.am: build vpihacprsim.la as a shared-library module.
+	  sim/prsim/vpi-prsim.cc: ported from reference code.
+		Successfully loads as a plug-in! automatically bringing
+		in dependent shared libraries.
+		Doesn't fully work yet, still debugging callbacks, 
+		and timing, and mystery return values.
+	  Documented in dox/prsim/cosim.texi (of hacprsim.texi.info)
+	  TODO: somehow test-case?
+
+
+2007-12-18	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-08:
 	  util/ChangeLog: critical tokenize bug fix, memory-related.  
 
@@ -13,7 +27,6 @@
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-07:
 	  No source revision, added TODO notes and a few test cases.
-	  Merge to parent branch.
 
 
 2007-12-13	David Fang		<fangism@users.sourceforge.net>
