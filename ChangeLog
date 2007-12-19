@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2007-12-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-09:
+	  config/hackt.m4: check for vpi_user.h support for prsim.
+	  configure.ac: use it
+
+
 2007-11-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-00-merged-router-01-12:
