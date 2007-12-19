@@ -1,7 +1,7 @@
 c: still unknown value 
 testing for instability 
 event queue:
-	10	c : 0	[from b:=1]
+	10	c : 0	[from b:=1]	(weak)
 unstable guard, expect unstable 
 WARNING: unstable `c'-
 >> cause: `b' (val: 0)

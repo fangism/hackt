@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.7 2007/12/17 17:56:03 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.8 2007/12/19 21:17:18 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1339,7 +1339,16 @@ for ( ; i!=e; ++i) {
 				// new behavior: cancel the original event
 				// which was updated to X
 				_n.clear_event();
+#if 1
+				if (UNLIKELY(!pv.killed())) {
+				cerr << "former event: (pe)" << endl;
+				dump_event(cerr, pe, 0.0) << endl;
+				cerr << "new event: (ne)" << endl;
+				dump_event(cerr, ne, 0.0) << endl;
+				}
+#endif
 				ISE_INVARIANT(pv.killed());
+				// FAILED ONCE: 20071217, since weak rules
 				_n.set_event(ne);
 				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
@@ -2030,12 +2039,31 @@ if (eval_ordering_is_random()) {
 		const event_index_type di = n.pull_dn_index STR_INDEX(w);
 		const event_type* up_rule = ui ? &get_event(ui) : NULL;
 		const event_type* dn_rule = di ? &get_event(di) : NULL;
+#if PRSIM_WEAK_RULES
+		// the opposing strong pull:
+		const expr_index_type nup = n.pull_up_index[NORMAL_RULE];
+		const expr_index_type ndn = n.pull_dn_index[NORMAL_RULE];
+#endif
 		const bool possible_up = up_rule &&
 			up_rule->val == node_type::LOGIC_HIGH
-				&& next != node_type::LOGIC_HIGH;
+				&& next != node_type::LOGIC_HIGH
+#if PRSIM_WEAK_RULES
+				// check opposition
+				&& (!w || !ndn ||
+					expr_pool[ndn].pull_state() ==
+						expr_type::PULL_OFF)
+#endif
+				;
 		const bool possible_dn = dn_rule &&
 			dn_rule->val == node_type::LOGIC_LOW
-				&& next != node_type::LOGIC_LOW;
+				&& next != node_type::LOGIC_LOW
+#if PRSIM_WEAK_RULES
+				// check opposition
+				&& (!w || !nup ||
+					expr_pool[nup].pull_state() ==
+						expr_type::PULL_OFF)
+#endif
+				;
 		if (possible_up) {
 			DEBUG_STEP_PRINT("force pull-up" << endl);
 			const event_index_type _ne =
@@ -2533,6 +2561,7 @@ State::__report_interference(ostream& o, const bool weak,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return true if error causes break in events.  
+	If node is flagged unstable, 
  */
 State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
@@ -2949,6 +2978,9 @@ State::dump_event(ostream& o, const event_index_type ei,
 			node_type::value_to_char[ev.cause.val] << "]";
 		}
 #endif
+#if PRSIM_WEAK_RULES
+		if (ev.is_weak()) { o << '\t' << "(weak)"; }
+#endif
 		o << endl;
 	}
 #if DEBUG_STEP
@@ -2962,6 +2994,9 @@ State::dump_event(ostream& o, const event_index_type ei,
 			get_node_canonical_name(ev.cause.node) << ":=" <<
 			node_type::value_to_char[ev.cause.val] << "]";
 		}
+#endif
+#if PRSIM_WEAK_RULES
+		if (ev.is_weak()) { o << '\t' << "(weak)"; }
 #endif
 		o << '\t' << "(killed)";
 		o << endl;

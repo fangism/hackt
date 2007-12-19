@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.10.1 2007/12/17 17:56:04 fang Exp $
+#	$Id: TODO,v 1.4.10.2 2007/12/19 21:17:20 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -24,8 +24,17 @@ prsim:
 	breakpoint options: halt or error-out
 
 	timestamp last causes -- automatic cycle time
+		Will cost some more memory per node.
+		Difficulty: easy (hour)
 
 	deadlock diagnosis, akin to backtrace, but using fanin state analysis
+		commands 'why' and 'whynot'.
+		Difficulty: easy (few hours)
+
+	unstab attribute: is checked on nodes, but only applied to rules
+		so this needs to be fixed to check for rules.  
+		Should wipe it from node attributes.
+		Difficulty: easy (an hour)
 
 	interpreter commands:
 		interp key [value]
