@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/vpi-prsim.cc"
-	$Id: vpi-prsim.cc,v 1.1.2.1 2007/12/19 08:52:26 fang Exp $
+	$Id: vpi-prsim.cc,v 1.1.2.2 2007/12/20 18:35:51 fang Exp $
 	Thanks to Rajit for figuring out how to do this and providing
 	a reference implementation, which was yanked from:
  */
@@ -16,8 +16,11 @@
 	Do we need to worry about static global initializers ordering?
  */
 
-#define	ENABLE_STACKTRACE			0
-#define	ENABLE_STATIC_TRACE			0
+// for desparate times...
+#define	DEBUG_MAX				0
+
+#define	ENABLE_STACKTRACE			(0 || DEBUG_MAX)
+#define	ENABLE_STATIC_TRACE			(0 || DEBUG_MAX)
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
@@ -27,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <sstream>
 #include "sim/prsim/State-prsim.h"
+#include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/Command-prsim.h"
 #include "parser/instref.h"
@@ -47,8 +51,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 /**
 	Debugging switches
  */
-#define	VERBOSE_DEBUG		0
-#define	TRACE_VCS_TIME		0
+#define	VERBOSE_DEBUG		(0 || DEBUG_MAX)
+#define	TRACE_VCS_TIME		(0 || DEBUG_MAX)
 
 #if TRACE_VCS_TIME
 #define	SHOW_VCS_TIME(x)	cout << "vcstime: " << x << endl
@@ -201,6 +205,11 @@ static void register_self_callback (Time_t vcstime)
   
   if (scheduled == 1) return;
 
+	STACKTRACE_INDENT_PRINT("not scheduled" << endl);
+#if VERBOSE_DEBUG
+	prsim_state->dump_event_queue(cout);
+	cout << "end of event queue." << endl;
+#endif
 #if 0
   if (heap_peek_min (P->eventQueue) == NULL)
 #else
@@ -211,6 +220,8 @@ static void register_self_callback (Time_t vcstime)
     return;
   }
 
+	STACKTRACE_INDENT_PRINT("have event to do" << endl);
+
   cb_data.reason = cbAfterDelay;
   cb_data.cb_rtn = _run_prsim_callback;
   cb_data.obj = NULL;
@@ -220,9 +231,11 @@ static void register_self_callback (Time_t vcstime)
   if (heap_peek_minkey (P->eventQueue) > vcstime)
 #else
   const Time_t next_time = prsim_state->next_event_time();
+	STACKTRACE_INDENT_PRINT("next_time: " << next_time << endl);
   if (next_time > vcstime)
 #endif
   {
+	STACKTRACE_INDENT_PRINT("next_time > vcstime" << endl);
 #if 0
     vcstime = heap_peek_minkey (P->eventQueue) - vcstime;
 #else
@@ -231,6 +244,7 @@ static void register_self_callback (Time_t vcstime)
 #endif
   }
   else {
+	STACKTRACE_INDENT_PRINT("next_time <= vcstime" << endl);
     vcstime = 1;
     SHOW_VCS_TIME(vcstime);
   }
@@ -244,44 +258,21 @@ static void register_self_callback (Time_t vcstime)
   scheduled = 1;
 }
 
-// utilities copied from "sim/prsim/Command-prsim.cc"
-static
-inline
-node_index_type
-GET_NODE(const State::step_return_type& x) {
-	return x.first;
-}
-
-static
-inline
-node_index_type
-GET_CAUSE(const State::step_return_type& x) {
-	return x.second;
-}
-
 /**
 	What is context for?
+	Should be like "advance-until" behavior.  
  */
 static void _run_prsim (const Time_t& vcstime, const int context)
 {
   STACKTRACE_VERBOSE;
-#if 0
-  // int gap;
-  PrsNode *n;
-  PrsNode *m;
-  // int seu;
-#else
   State::step_return_type nr;
-#endif
   Time_t prsdiff;
   SHOW_VCS_TIME(vcstime);
 
 #if VERBOSE_DEBUG
-#if 0
-  vpi_printf ("Running prsim @ time %lu\n", (unsigned long)(vcstime & 0xffffffff));
-#else
   cout << "Running prsim @ time " << vcstime << endl;
-#endif
+	prsim_state->dump_event_queue(cout);
+	cout << "end of event queue." << endl;
 #endif
 
   /* run for at most 1ps */
@@ -302,9 +293,17 @@ static void _run_prsim (const Time_t& vcstime, const int context)
 	n_space(vpiHandleMap.find(ni)),
 	n_end(vpiHandleMap.end());
     // "n_space" in honor of the abuse of a certain void* PrsNode::*space
+#if VERBOSE_DEBUG
+	prsim_state->dump_event_queue(cout);
+	cout << "end of event queue." << endl;
+#endif
 #if TRACE_VCS_TIME
 	cout << "prsim time: " << prsim_time << endl;
 #endif
+	if (prsim_state->watching_all_nodes()) {
+		print_watched_node(cout << "prsim: \t" << prsim_time << '\t', 
+			*prsim_state, nr);
+	}
     if (n.is_breakpoint() && (n_space != n_end)) {
 	STACKTRACE("breakpt && registered");
       s_vpi_value v;
@@ -319,8 +318,7 @@ static void _run_prsim (const Time_t& vcstime, const int context)
       v.format = vpiScalarVal;
       INVARIANT(net);
 #if VERBOSE_DEBUG
-	const string name(prsim_state->
-		get_node_canonical_name(ni));
+	const string name(prsim_state->get_node_canonical_name(ni));
 	const char* const nodename = name.c_str();
 #endif
       switch (n.current_value()) {
@@ -346,48 +344,27 @@ static void _run_prsim (const Time_t& vcstime, const int context)
 	DIE;
       }
 #if VERBOSE_DEBUG
-#if 0
-	// TODO: avoid format strings!!!
-      vpi_printf ("[tovcs] signal %s changed @ time %d, val = %d\n",
-		  nodename,
-		  uint32(prsim_state->time()),
-		  v.value.scalar);
-#else
 	ostringstream oss;
 	oss << "[tovcs] signal " << name << " changed @ time " <<
 		  prsim_time << ", val = " << v.value.scalar;
 	vpi_printf("%s\n", oss.str().c_str());
 #endif
-#endif
       vpi_free_object (vpi_put_value (net, &v, &tm, vpiPureTransportDelay));
     }
     else if (n.is_breakpoint() && (n_space == n_end)) {
 	STACKTRACE("breakpt && unregistered");
-#if 0
-      vpi_printf ("\t%10llu %s : %c", 
-	      P->time,
-	      prs_nodename (P,n),
-	      prs_nodechar(prs_nodeval(n)));
-#else
 	const string name(prsim_state->
 		get_node_canonical_name(ni));
 	ostringstream oss;
 	oss << "\t" << prsim_time << " " << name << " : ";
 	n.dump_value(oss);
 	vpi_printf("%s", oss.str().c_str());
-#endif
       if (m) {
-#if 0
-	vpi_printf ("  [by %s:=%c%s]", prs_nodename (P,m), 
-		prs_nodechar (prs_nodeval (m)),
-		seu ? " *seu*" : "");
-#else
 	ostringstream oss2;
 	oss2 << "  [by " << prsim_state->get_node_canonical_name(m) << ":=";
 	prsim_state->get_node(m).dump_value(oss2);
 	oss2 << "]";
 	vpi_printf("%s", oss2.str().c_str());
-#endif
       }
       vpi_printf ("\n");
     }
@@ -436,21 +413,21 @@ PLI_INT32 prsim_callback (s_cb_data *p)
   vcs_to_prstime(p->time, &vcstime);
   SHOW_VCS_TIME(vcstime);
 #endif
-
+static const bool force = true;
   switch (p->value->value.scalar) {
 // NOTE: for now, set_node_time is not "forced", hence false argument
   case vpi0:
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_F, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_LOW, vcstime, false);
+    prsim_state->set_node_time(n, node_type::LOGIC_LOW, vcstime, force);
 #endif
     break;
   case vpi1:
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_T, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_HIGH, vcstime, false);
+    prsim_state->set_node_time(n, node_type::LOGIC_HIGH, vcstime, force);
 #endif
     break;
   case vpiZ:
@@ -460,13 +437,17 @@ PLI_INT32 prsim_callback (s_cb_data *p)
 #if 0
     prs_set_nodetime (P, n, PRS_VAL_X, vcstime);
 #else
-    prsim_state->set_node_time(n, node_type::LOGIC_OTHER, vcstime, false);
+    prsim_state->set_node_time(n, node_type::LOGIC_OTHER, vcstime, force);
 #endif
     break;
   default:
     DIE;
     break;
   }
+#if VERBOSE_DEBUG
+	prsim_state->dump_event_queue(cout);
+	cout << "end of event queue." << endl;
+#endif
   _run_prsim (vcstime, 0);
 // TODO: don't know what should be returned, was missing/void before
 	return 0;
@@ -526,7 +507,6 @@ void register_from_prsim (const char *vcs_name, const char *prsim_name)
 
   /* this is the handle to the verilog net name */
   const vpiHandle net = lookup_vcs_name(vcs_name);
-
   const node_index_type ni = lookup_prsim_name(prsim_name);
   /* set a breakpoint! */
 #if 0
@@ -622,7 +602,7 @@ static PLI_INT32 to_prsim (PLI_BYTE8 *args)
   arg.format = vpiStringVal;
   vpi_get_value (net2, &arg);
 
-#if 0
+#if VERBOSE_DEBUG
   vpi_printf ("setup %s (vcs) -> %s (prsim)\n", arg1,
 	      arg.value.str);
 #endif
@@ -698,17 +678,6 @@ require_prsim_state(__FUNCTION__);
     return 0;
   }
 
-#if 0
-  const string cmd(arg.value.str);
-	cout << "command: " << cmd << endl;
-	{
-		util::string_list foo;
-		util::tokenize("the quick brown fox", foo);
-		std::copy(foo.begin(), foo.end(),
-			std::ostream_iterator<string>(cout, "+"));
-		cout << endl;
-	}
-#endif
   if (CommandRegistry::interpret_line (*prsim_state, arg.value.str)) {
 	// return on first error
 	return 0;
@@ -745,11 +714,6 @@ static PLI_INT32 prsim_watch (PLI_BYTE8* args)
 static PLI_INT32 prsim_file (PLI_BYTE8* args)
 {
   STACKTRACE_VERBOSE;
-#if 0
-	cout << "cout: hello world!" << endl;
-	printf("printf: hello world!\n");
-	vpi_printf("vpi_printf: hello world!\n");
-#endif
   s_vpi_value arg;
   const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
   const vpiHandle h = vpi_iterate (vpiArgument, task_call);
@@ -778,56 +742,12 @@ if (HAC_module) {
 	}
 	prsim_state = count_ptr<State>(
 		new State(*HAC_module, ExprAllocFlags()));
-#if 0
-	// temporary: default mode
-	if (prsim_state) {
-		prsim_state->dequeue_unstable_events();
-		prsim_state->set_unstable_policy(State::ERROR_WARN);
-	}
-#endif
+	prsim_state->initialize();
 }
 #endif
 
   return prsim_state ? 1 : 0;
 }
-
-#if 0
-static PLI_INT32 prsim_packfile (PLI_BYTE8* args)
-{
-  s_vpi_value arg;
-  char *s;
-
-  const vpiHandle task_call = vpi_handle (vpiSysTfCall, NULL);
-  const vpiHandle h = vpi_iterate (vpiArgument, task_call);
-  const vpiHandle fname = vpi_scan (h);
-  if (!fname) {
-    vpi_printf ("Usage: $packprsim(filename,names)\n");
-    return 0;
-  }
-  arg.format = vpiStringVal;
-  vpi_get_value (fname, &arg);
-  s = strdup (arg.value.str);
-
-  fname = vpi_scan (h);
-  if (!fname) {
-    vpi_printf ("Usage: $packprsim(filename,names)\n");
-    return 0;
-  }
-  arg.format = vpiStringVal;
-  vpi_get_value (fname, &arg);
-
-  if (vpi_scan (h)) {
-    vpi_printf ("Usage: $packprsim(filename,names)\n");
-    return 0;
-  }
-
-  P = prs_packfopen (s,arg.value.str);
-
-  return 0;
-}
-#else
-// file decompression, not needed, hopefully ever
-#endif
 
 static PLI_INT32 prsim_random (PLI_BYTE8 *args)
 {
@@ -922,12 +842,6 @@ static struct funcs f[] = {
   { "$prsim_watch", prsim_watch }
 };
 
-#if 0
-// does this allocate properly?
-static const vector<string> bogus_vector(8);
-static std::list<string> bogus_list;
-#endif
-  
 /*
   Register prsim tasks
 */
@@ -935,36 +849,6 @@ static
 void register_prsim (void)
 {
   STACKTRACE_VERBOSE;
-#if 0
-	bogus_list.push_back("666");
-	bogus_list.push_back("666");
-	bogus_list.push_back("666");
-	bogus_list.push_back("666");
-	bogus_list.push_back("666");
-	bogus_list.push_back("666");
-#endif
-#if 0
-	{
-		util::string_list foo;
-#if 1
-		util::tokenize(
-		"the quick brown fox jumped over the lazy dogs", foo);
-		std::copy(foo.begin(), foo.end(),
-			std::ostream_iterator<string>(cout, "+"));
-#else
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		foo.push_back("alsdkasdgfsdfsdfsdfsd");
-		cout << foo.front() << endl;
-#endif
-		cout << endl;
-	}
-#endif
   s_vpi_systf_data s;
   size_t i;
 

@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-11:
+	  VPI-hacprsim works on basic test case (hurray!)
+		Lesson: call initialize first!
+		TODO: compose some basic test case with vcs -> simv
+	  Factored out some useful functions from sim/prsim/Command-prsim.cc
+		into Command-prsim-export.cc (for lack of better name).
+
+
 2007-12-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-10:
