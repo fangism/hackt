@@ -1,0 +1,13 @@
+// "bitline-a.hac"
+// bug test case
+
+bool pb, wl, wlx, pbx, _bl, blst, _pchg;
+
+prs {
+		~_pchg			-> _bl+
+[weak=1;after=20]	wl & pb			-> _bl-
+[weak=1;after=20]	wlx & pbx		-> _bl-
+		_bl			=> blst-
+[weak=1;after=20]	~blst			-> _bl+
+}
+
