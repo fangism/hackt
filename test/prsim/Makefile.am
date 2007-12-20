@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.4 2007/12/19 21:17:23 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.5 2007/12/20 03:03:26 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -93,7 +93,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	weak-vs-weak-04 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02 \
-	bitline-a-01 bitline-a-02
+	bitline-a-01
 
 # bitline tests are inconsistent with reference prsim!
 

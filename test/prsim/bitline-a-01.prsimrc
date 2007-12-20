@@ -1,0 +1,47 @@
+# "bitline-a-01.prsimrc"
+# @haco@ bitline-a.haco-a
+
+unstable-dequeue
+unstable warn
+watchall
+
+set pb 1
+set pbx X
+set wl 0
+set wlx 0
+cycle
+echo precharge
+set _pchg 0
+cycle
+set _pchg 1
+cycle
+assert _bl 1
+
+echo experimenting...
+time
+set wlx 1
+advance 4
+queue
+echo
+echo expect _bl -> X queued
+time
+echo setting another pull-down rule on to overtake X
+set wl 1
+advance 4
+queue
+fanin-get _bl
+time
+get _bl
+get blst
+
+echo step: expect pull-down to overtake previous pull down
+step
+queue
+fanin-get _bl
+time
+
+echo step
+step
+time
+
+
