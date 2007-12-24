@@ -1,8 +1,8 @@
-# "bitline-a-01.prsimrc"
+# "bitline-a-02.prsimrc"
 # @haco@ bitline-a.haco-a
 
-# unstable-dequeue
-# unstable warn
+unstable-dequeue
+unstable warn
 watchall
 
 set pb 1

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.8 2007/12/19 21:17:18 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.9 2007/12/24 04:07:58 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2381,14 +2381,14 @@ if (!n.pending_event()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(ei));
-	if (next == expr_type::PULL_OFF && 
-		n.pull_dn_index STR_INDEX(NORMAL_RULE) &&
-		expr_pool[n.pull_dn_index STR_INDEX(NORMAL_RULE)].pull_state() ==
-			expr_type::PULL_ON &&
+	const expr_index_type ndn_ind = n.pull_dn_index STR_INDEX(NORMAL_RULE);
+	// TODO: probable bug fix: account for opposing weak rule!
+	if (next == expr_type::PULL_OFF && ndn_ind &&
+		expr_pool[ndn_ind].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_LOW) {
 		/***
-			if (PULL_OFF and opposing pull-down is ON and
+			if (pull-up is PULL_OFF, opposing pull-down is ON and
 			the pending event's value is X and
 			the current node value is NOT LOW)
 			The pending X should be cancelled and replaced
@@ -2401,6 +2401,33 @@ if (!n.pending_event()) {
 #else
 		e.cause_node = ni;
 #endif
+#if PRSIM_ALLOW_OVERTAKE_EVENTS
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_ON && ndn_ind &&
+		expr_pool[ndn_ind].pull_state() == expr_type::PULL_OFF &&
+		e.val == node_type::LOGIC_OTHER &&
+		n.current_value() == node_type::LOGIC_LOW
+		// n.current_value() != node_type::LOGIC_HIGH
+		) {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-up is ON, opposing pull-dn is OFF, 
+			and pending event's value is X, 
+			and node's current value is low, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
+		e.val = node_type::LOGIC_HIGH;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		e.cause.node = ni;
+#else
+		e.cause_node = ni;
+#endif
+#endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -2478,29 +2505,56 @@ if (!n.pending_event()) {
 		}
 	}
 } else if (!n.in_excl_queue()) {
+	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
-	if (next == node_type::LOGIC_LOW && 
-		n.pull_up_index STR_INDEX(NORMAL_RULE) &&
-		expr_pool[n.pull_up_index STR_INDEX(NORMAL_RULE)].pull_state() ==
-			expr_type::PULL_ON &&
+	const expr_index_type nup_ind = n.pull_up_index STR_INDEX(NORMAL_RULE);
+	// TODO: probable bug fix: account for opposing weak rule!
+	if (next == expr_type::PULL_OFF && nup_ind &&
+		expr_pool[nup_ind].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_HIGH) {
 		/***
-			if (PULL_OFF and opposing pull-up is ON and
+			if (pull-dn is PULL_OFF, opposing pull-up is ON and
 			the pending event's value is X and
 			the current node value is NOT HIGH)
 			The pending X should be cancelled and replaced
 			with a pending HIGH (keeping the same time).
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
-		// there is a pending 'X' in the queue
 		e.val = node_type::LOGIC_HIGH;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		e.cause.node = ni;
 #else
 		e.cause_node = ni;
 #endif
+#if PRSIM_ALLOW_OVERTAKE_EVENTS
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_ON && nup_ind &&
+		expr_pool[nup_ind].pull_state() == expr_type::PULL_OFF &&
+		e.val == node_type::LOGIC_OTHER &&
+		n.current_value() == node_type::LOGIC_HIGH
+		// n.current_value() != node_type::LOGIC_LOW
+		) {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-dn is ON, opposing pull-up is OFF, 
+			and pending event's value is X, 
+			and node's current value is HIGH, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
+		e.val = node_type::LOGIC_LOW;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		e.cause.node = ni;
+#else
+		e.cause_node = ni;
+#endif
+#endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);

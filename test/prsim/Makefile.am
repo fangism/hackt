@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.5 2007/12/20 03:03:26 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.6 2007/12/24 04:08:02 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -21,7 +21,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	cross-coupled cross-coupled-weak \
 	cbit_test_stat \
 	cross-pull-a \
-	bitline-a
+	bitline-a bitline-b
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -61,7 +61,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	half-keeper-a-01 half-keeper-a-02 \
 	cross-coupled-01 cross-coupled-weak-01 \
 	cbit_test_stat-01 \
-	cross-pull-a-01 cross-pull-a-02
+	cross-pull-a-01 cross-pull-a-02 \
+	bitline-a-01 bitline-a-02 \
+	bitline-b-01 bitline-b-02
 
 $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \
@@ -92,10 +94,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	weak-fight-a-02 weak-fight-a-05 \
 	weak-vs-weak-04 \
 	weak-feedback-a-02 weak-feedback-b-02 \
-	celem-fb-02 \
-	bitline-a-01
-
-# bitline tests are inconsistent with reference prsim!
+	celem-fb-02
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES)
 
