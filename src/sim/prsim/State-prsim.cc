@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.9 2007/12/24 04:07:58 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.10 2007/12/28 06:26:43 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -12,6 +12,7 @@
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
 #define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_CHECK			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <algorithm>
@@ -51,6 +52,14 @@
 #else
 #define	DEBUG_STEP_PRINT(x)
 #define	STACKTRACE_VERBOSE_STEP
+#endif
+
+#if	DEBUG_CHECK
+#define	DEBUG_CHECK_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_CHECK		STACKTRACE_VERBOSE
+#else
+#define	DEBUG_CHECK_PRINT(x)
+#define	STACKTRACE_VERBOSE_CHECK
 #endif
 
 #if	DEBUG_FANOUT
@@ -430,7 +439,7 @@ State::void_expr(const expr_index_type ei) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::check_node(const node_index_type i) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_CHECK;
 	const node_type& n(node_pool[i]);
 	// check pull-up/dn if applicable
 #if PRSIM_WEAK_RULES
@@ -470,7 +479,7 @@ for ( ; k<2; ++k) {
  */
 void
 State::check_expr(const expr_index_type i) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_CHECK;
 	const expr_type& e(expr_pool[i]);
 	const graph_node_type& g(expr_graph_node_pool[i]);
 if (!e.wiped()) {
@@ -927,10 +936,10 @@ for ( ; w<2; ++w) {
 	const expr_index_type u = n.pull_up_index STR_INDEX(w);
 	const expr_index_type d = n.pull_dn_index STR_INDEX(w);
 	// if there is no pull-*, it's as good as off!
-	const uchar pu =
-		(u ? expr_pool[u].pull_state() : char(expr_type::PULL_OFF));
-	const uchar pd =
-		(d ? expr_pool[d].pull_state() : char(expr_type::PULL_OFF));
+	const pull_enum pu =
+		(u ? expr_pool[u].pull_state() : expr_type::PULL_OFF);
+	const pull_enum pd =
+		(d ? expr_pool[d].pull_state() : expr_type::PULL_OFF);
 if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 	const uchar new_val = pull_to_value[size_t(pu)][size_t(pd)];
 	if (pending) {
@@ -1274,13 +1283,13 @@ for ( ; i!=e; ++i) {
 	const expr_index_type dn_ex = _n.pull_dn_index STR_INDEX(NORMAL_RULE);
 #if PRSIM_WEAK_RULES
 	// are weak events ever inserted into the pending queue?
-	const uchar pull_up_state = (up_ex ?
-		expr_pool[up_ex].pull_state() : uchar(expr_type::PULL_OFF));
-	const uchar pull_dn_state = (dn_ex ?
-		expr_pool[dn_ex].pull_state() : uchar(expr_type::PULL_OFF));
+	const pull_enum pull_up_state = (up_ex ?
+		expr_pool[up_ex].pull_state() : expr_type::PULL_OFF);
+	const pull_enum pull_dn_state = (dn_ex ?
+		expr_pool[dn_ex].pull_state() : expr_type::PULL_OFF);
 #else
-	const uchar pull_up_state = expr_pool[up_ex].pull_state();
-	const uchar pull_dn_state = expr_pool[dn_ex].pull_state();
+	const pull_enum pull_up_state = expr_pool[up_ex].pull_state();
+	const pull_enum pull_dn_state = expr_pool[dn_ex].pull_state();
 #endif
 	DEBUG_STEP_PRINT("current pull-states: up=" <<
 		size_t(pull_up_state) << ", dn=" <<
@@ -2382,9 +2391,17 @@ if (!n.pending_event()) {
 	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(ei));
 	const expr_index_type ndn_ind = n.pull_dn_index STR_INDEX(NORMAL_RULE);
-	// TODO: probable bug fix: account for opposing weak rule!
-	if (next == expr_type::PULL_OFF && ndn_ind &&
-		expr_pool[ndn_ind].pull_state() == expr_type::PULL_ON &&
+	const char ndn_pull = ndn_ind ? expr_pool[ndn_ind].pull_state() : expr_type::PULL_OFF;
+#if PRSIM_WEAK_RULES
+	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const char wndn_pull = wndn_ind ? expr_pool[wndn_ind].pull_state() : expr_type::PULL_OFF;
+#endif
+	if (next == expr_type::PULL_OFF && 
+		((ndn_pull == expr_type::PULL_ON)
+#if PRSIM_WEAK_RULES
+		|| (wndn_pull == expr_type::PULL_ON)
+#endif
+		) &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_LOW) {
 		/***
@@ -2401,6 +2418,9 @@ if (!n.pending_event()) {
 #else
 		e.cause_node = ni;
 #endif
+#if PRSIM_WEAK_RULES
+		e.set_weak(wndn_pull != expr_type::PULL_OFF && ndn_pull == expr_type::PULL_OFF);
+#endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
 		next == expr_type::PULL_ON && ndn_ind &&
@@ -2408,6 +2428,7 @@ if (!n.pending_event()) {
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() == node_type::LOGIC_LOW
 		// n.current_value() != node_type::LOGIC_HIGH
+		// TODO: acount for weak rules
 		) {
 		/***
 			Terrible overload of the dequeue-unstable mode.
@@ -2509,9 +2530,17 @@ if (!n.pending_event()) {
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
 	const expr_index_type nup_ind = n.pull_up_index STR_INDEX(NORMAL_RULE);
-	// TODO: probable bug fix: account for opposing weak rule!
-	if (next == expr_type::PULL_OFF && nup_ind &&
-		expr_pool[nup_ind].pull_state() == expr_type::PULL_ON &&
+	const char nup_pull = nup_ind ? expr_pool[nup_ind].pull_state() : expr_type::PULL_OFF;
+#if PRSIM_WEAK_RULES
+	const expr_index_type wnup_ind = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const char wnup_pull = wnup_ind ? expr_pool[wnup_ind].pull_state() : expr_type::PULL_OFF;
+#endif
+	if (next == expr_type::PULL_OFF && 
+		((nup_pull == expr_type::PULL_ON)
+#if PRSIM_WEAK_RULES
+		|| (wnup_pull == expr_type::PULL_ON)
+#endif
+		) &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_HIGH) {
 		/***
@@ -2528,6 +2557,9 @@ if (!n.pending_event()) {
 #else
 		e.cause_node = ni;
 #endif
+#if PRSIM_WEAK_RULES
+		e.set_weak(wnup_pull != expr_type::PULL_OFF && nup_pull == expr_type::PULL_OFF);
+#endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
 		next == expr_type::PULL_ON && nup_ind &&
@@ -2535,6 +2567,7 @@ if (!n.pending_event()) {
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() == node_type::LOGIC_HIGH
 		// n.current_value() != node_type::LOGIC_LOW
+		// TODO: account for weak rules in overtakes...
 		) {
 		/***
 			Terrible overload of the dequeue-unstable mode.
@@ -2896,7 +2929,7 @@ State::check_structure(void) const {
 	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
-		STACKTRACE_INDENT_PRINT("checking Expr " << i << ":" << endl);
+		DEBUG_CHECK_PRINT("checking Expr " << i << ":" << endl);
 		check_expr(i);
 	}
 }
@@ -2904,7 +2937,7 @@ State::check_structure(void) const {
 	const node_index_type nodes = node_pool.size();
 	node_index_type j = FIRST_VALID_NODE;
 	for ( ; j<nodes; ++j) {
-		STACKTRACE_INDENT_PRINT("checking Node " << j << ":" << endl);
+		DEBUG_CHECK_PRINT("checking Node " << j << ":" << endl);
 		check_node(j);
 	}
 }

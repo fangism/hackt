@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1.40.1 2007/12/11 22:39:34 fang Exp $
+	$Id: Event-prsim.h,v 1.1.40.2 2007/12/28 06:26:41 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -191,6 +191,12 @@ public:
 #if PRSIM_WEAK_RULES
 	bool
 	is_weak(void) const { return flags & EVENT_WEAK_RULE; }
+
+	void
+	set_weak(const bool w) {
+		if (w)	flags |= EVENT_WEAK_RULE;
+		else	flags &= ~EVENT_WEAK_RULE;
+	}
 #endif
 
 	void

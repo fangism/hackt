@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-13:
+	  sim/prsim/Expr.h: pul_enum made a true enum, not uchar typedef.
+	  sim/prsim/State-prsim.cc: propagate_evaluate():
+		when !in_excl_q, and pull turns off, check both the 
+		normal AND weak rules of the opposing pull.
+		I'm certain this is bug fixed, but have no test case to
+		trigger or prove it, unfortunately.  It seems obvious.
+		Now updated event reflects strength of pull.
+	  Known issue: can get into a state where a node is inconsistent
+		with its fanins, i.e. not right value and not
+		enqueued with firing to correct value.
+
+
 2007-12-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-12:
