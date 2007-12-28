@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.10 2007/12/28 06:26:43 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.11 2007/12/28 18:44:55 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1279,21 +1279,29 @@ for ( ; i!=e; ++i) {
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
 	node_type& _n(get_node(_ni));
+
+	// are weak events ever inserted into the pending queue?
 	const expr_index_type up_ex = _n.pull_up_index STR_INDEX(NORMAL_RULE);
 	const expr_index_type dn_ex = _n.pull_dn_index STR_INDEX(NORMAL_RULE);
-#if PRSIM_WEAK_RULES
-	// are weak events ever inserted into the pending queue?
 	const pull_enum pull_up_state = (up_ex ?
 		expr_pool[up_ex].pull_state() : expr_type::PULL_OFF);
 	const pull_enum pull_dn_state = (dn_ex ?
 		expr_pool[dn_ex].pull_state() : expr_type::PULL_OFF);
-#else
-	const pull_enum pull_up_state = expr_pool[up_ex].pull_state();
-	const pull_enum pull_dn_state = expr_pool[dn_ex].pull_state();
-#endif
 	DEBUG_STEP_PRINT("current pull-states: up=" <<
 		size_t(pull_up_state) << ", dn=" <<
 		size_t(pull_dn_state) << endl);
+#if PRSIM_WEAK_RULES
+	// TODO: FIXME: XXX: interference check must account for weak rules
+	const expr_index_type wup_ex = _n.pull_up_index STR_INDEX(WEAK_RULE);
+	const expr_index_type wdn_ex = _n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const pull_enum wpull_up_state = (wup_ex ?
+		expr_pool[wup_ex].pull_state() : expr_type::PULL_OFF);
+	const pull_enum wpull_dn_state = (wdn_ex ?
+		expr_pool[wdn_ex].pull_state() : expr_type::PULL_OFF);
+	DEBUG_STEP_PRINT("weak pull-states:    up=" <<
+		size_t(wpull_up_state) << ", dn=" <<
+		size_t(wpull_dn_state) << endl);
+#endif
 	if ((pull_up_state != expr_type::PULL_OFF) &&
 		(pull_dn_state != expr_type::PULL_OFF)) {
 	/***
@@ -1313,6 +1321,7 @@ for ( ; i!=e; ++i) {
 			__report_interference(cout, pending_weak, _ni, ev);
 		}
 		if (ev.pending_interference()) {
+			DEBUG_STEP_PRINT("immediate -> X." << endl);
 			ISE_INVARIANT(_n.pending_event());
 			// always set the cause and new value together
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
@@ -1324,10 +1333,50 @@ for ( ; i!=e; ++i) {
 #endif
 			__deallocate_pending_interference_event(ne);
 		} else {
+			DEBUG_STEP_PRINT("overwrite to X." << endl);
 			ev.val = node_type::LOGIC_OTHER;
 			__flush_pending_event_with_interference(_n, ne, ev);
 		}	// end if pending_interference
+#if PRSIM_WEAK_RULES
+	} else if ((pull_up_state == expr_type::PULL_OFF) &&
+		(pull_dn_state == expr_type::PULL_OFF) &&
+		(wpull_up_state != expr_type::PULL_OFF) &&
+			(wpull_dn_state != expr_type::PULL_OFF)) {
+	/***
+		There is interference between weak rules. 
+		Rest of the code in this clause is copied from above.
+	***/
+		DEBUG_STEP_PRINT("some interference (weak rules)." << endl);
+		const bool pending_weak =
+			(wpull_up_state == expr_type::PULL_WEAK) ||
+			(wpull_dn_state == expr_type::PULL_WEAK);
+			// not XOR (^), see pending_weak table in prs.c
+		// issue diagnostic
+		if ((weak_interference_policy != ERROR_IGNORE) ||
+				!pending_weak) {
+			err |=
+			__report_interference(cout, pending_weak, _ni, ev);
+		}
+		if (ev.pending_interference()) {
+			DEBUG_STEP_PRINT("immediate -> X." << endl);
+			ISE_INVARIANT(_n.pending_event());
+			// always set the cause and new value together
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			_n.set_value_and_cause(node_type::LOGIC_OTHER, 
+				ev.cause);
+#else
+			_n.set_cause_node(ev.cause_node);
+			_n.set_value(node_type::LOGIC_OTHER);
+#endif
+			__deallocate_pending_interference_event(ne);
+		} else {
+			DEBUG_STEP_PRINT("overwrite to X." << endl);
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
+		}	// end if pending_interference
+#endif	// PRSIM_WEAK_RULES
 	} else {
+		// should also cover overpowered weak-rules
 		DEBUG_STEP_PRINT("no interference." << endl);
 		const event_index_type pe = _n.get_event();
 		DEBUG_STEP_PRINT("prior enqueued event on this node (possibly killed): " <<
@@ -2022,12 +2071,15 @@ if (eval_ordering_is_random()) {
 	e = n.fanout.end();
 }
 	for ( ; i!=e; ++i) {
+		// when evaluating a node as an expression, 
+		// is appropriate to interpret node value
+		// as a pull-value
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		if (UNLIKELY(propagate_evaluation(new_cause, *i, prev))) {
+		if (UNLIKELY(propagate_evaluation(new_cause, *i, pull_enum(prev)))) {
 			stop();
 		}
 #else
-		if (UNLIKELY(propagate_evaluation(ni, *i, prev, next))) {
+		if (UNLIKELY(propagate_evaluation(ni, *i, prev, pull_enum(next)))) {
 			stop();
 		}
 #endif
@@ -2193,7 +2245,7 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
 // inline
 State::evaluate_return_type
 State::evaluate(const node_index_type ni, expr_index_type ui, 
-		uchar prev, uchar next) {
+		pull_enum prev, pull_enum next) {
 	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
 		node_type::value_to_char[size_t(prev)] << " -> " <<
@@ -2201,7 +2253,7 @@ State::evaluate(const node_index_type ni, expr_index_type ui,
 	expr_type* u;
 	__scratch_expr_trace.clear();
 do {
-	uchar old_pull, new_pull;	// pulling state of the subexpression
+	pull_enum old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
 	__scratch_expr_trace.push_back(ui);
 #if DEBUG_STEP
@@ -2269,20 +2321,21 @@ State::break_type
 State::propagate_evaluation(
 		cause_arg_type c, 
 		expr_index_type ui, 
-		uchar prev
+		pull_enum prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, uchar next
+		, pull_enum next
 #endif 
 		) {
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
-	uchar next;	// just local variable
+	pull_enum next;	// just local variable
 #else
 	const node_index_type& ni(c);
 #endif
+	// when evaluating node as expression, interpret value as pull
 	const evaluate_return_type
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		ev_result(evaluate(ni, ui, prev, c.val));
+		ev_result(evaluate(ni, ui, prev, pull_enum(c.val)));
 #else
 		ev_result(evaluate(ni, ui, prev, next));
 #endif
@@ -3670,7 +3723,9 @@ try {
 		if (next != prev) {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
-				evaluate(nj, *fi, prev, next);
+				// interpret node value as pull-value
+				evaluate(nj, *fi,
+					pull_enum(prev), pull_enum(next));
 				// evaluate does not modify any queues
 				// just updates expression states
 			}

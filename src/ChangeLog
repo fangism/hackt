@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-14:
+	  Interference checking now distinguishes between weak rule flavors.
+		Only applicable when both strong up/dn rules are off. 
+		Results in fixing some expect-fail test cases.
+	  More explicit typing and conversions of node_type and expr_type's
+		pull_enum.  Seems more clear now.
+	
+
 2007-12-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-13:

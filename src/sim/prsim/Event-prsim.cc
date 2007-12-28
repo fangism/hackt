@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event-prsim.cc,v 1.1 2007/02/27 02:28:05 fang Exp $
+	$Id: Event-prsim.cc,v 1.1.40.1 2007/12/28 18:44:54 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
@@ -37,6 +37,9 @@ using util::read_value;
 /**
 	First index is the guard's pulling state (F = OFF, T = ON, X = WEAK),
 	second index is the pending event state.
+	NOTE: the ordering of these tables must be kept consistent
+		with the enumeration values for node_type::value and
+		expr_type::pull_enum.
  */
 const uchar
 Event::upguard[3][3] = {

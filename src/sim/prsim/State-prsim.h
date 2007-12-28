@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.4.3 2007/12/28 06:26:45 fang Exp $
+	$Id: State-prsim.h,v 1.2.4.4 2007/12/28 18:44:57 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -137,12 +137,12 @@ private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
 		expr_type*			root_ex;
-		uchar				root_pull;
+		pull_enum			root_pull;
 
 		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
 
 		evaluate_return_type(const node_index_type ni,
-			expr_type* const e, const uchar p) :
+			expr_type* const e, const pull_enum p) :
 			node_index(ni), root_ex(e), root_pull(p) { }
 	};	// end struct evaluate_return_type
 private:
@@ -879,12 +879,12 @@ private:
 
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
-		uchar prev, uchar next);
+		pull_enum prev, pull_enum next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, uchar prev
+	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, uchar next
+		, pull_enum next
 #endif
 		);
 
