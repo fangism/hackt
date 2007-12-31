@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.11 2007/12/28 18:44:55 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.12 2007/12/31 06:18:32 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1291,7 +1291,6 @@ for ( ; i!=e; ++i) {
 		size_t(pull_up_state) << ", dn=" <<
 		size_t(pull_dn_state) << endl);
 #if PRSIM_WEAK_RULES
-	// TODO: FIXME: XXX: interference check must account for weak rules
 	const expr_index_type wup_ex = _n.pull_up_index STR_INDEX(WEAK_RULE);
 	const expr_index_type wdn_ex = _n.pull_dn_index STR_INDEX(WEAK_RULE);
 	const pull_enum wpull_up_state = (wup_ex ?
@@ -1302,6 +1301,7 @@ for ( ; i!=e; ++i) {
 		size_t(wpull_up_state) << ", dn=" <<
 		size_t(wpull_dn_state) << endl);
 #endif
+	// check strong (normal) rules first
 	if ((pull_up_state != expr_type::PULL_OFF) &&
 		(pull_dn_state != expr_type::PULL_OFF)) {
 	/***
@@ -2365,8 +2365,39 @@ State::propagate_evaluation(
 	DEBUG_STEP_PRINT("propagated to output node: " <<
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
+#if PRSIM_WEAK_RULES
+	DEBUG_STEP_PRINT("root is " << (is_weak ? "" : "not") << " weak" << endl);
+#endif
 	const event_index_type ei = n.get_event();
+#if DEBUG_STEP
+	if (ei) dump_event(cerr << "pending:\t", ei, 0.0) << endl;
+#endif
 	break_type err = false;
+#if PRSIM_WEAK_RULES
+	// weak rule pre-filtering
+if (n.pending_event()) {
+	event_type& e(get_event(ei));	// previous scheduled event
+	if (e.is_weak() && !is_weak && next != expr_type::PULL_OFF) {
+		DEBUG_STEP_PRINT("old weak event killed" << endl);
+		// it was weak, and should be overtaken
+		// what if new event is weak-off?
+		e.kill();
+		n.clear_event();
+		// ei = 0;
+	} else if (!e.is_weak() && is_weak
+			// && previous-pull != expr_type::PULL_OFF
+			// since vacuous events are dropped, events 
+			// must be enqueued by some value-changing pull
+			// assert: that pull was not OFF
+			) {
+		DEBUG_STEP_PRINT("new weak event dropped" << endl);
+		// previous event was strong and not off, overriding any
+		// new weak events -- just drop weak events
+		// HERE: is event already in main event queue? flush?
+		return err;	// no error
+	}
+}
+#endif	// PRSIM_WEAK_RULES
 if (u->direction()) {
 	// pull-up
 /***
@@ -2444,11 +2475,13 @@ if (!n.pending_event()) {
 	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(ei));
 	const expr_index_type ndn_ind = n.pull_dn_index STR_INDEX(NORMAL_RULE);
-	const char ndn_pull = ndn_ind ? expr_pool[ndn_ind].pull_state() : expr_type::PULL_OFF;
+	const char ndn_pull = ndn_ind ?
+		expr_pool[ndn_ind].pull_state() : expr_type::PULL_OFF;
 #if PRSIM_WEAK_RULES
 	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const char wndn_pull = wndn_ind ? expr_pool[wndn_ind].pull_state() : expr_type::PULL_OFF;
-#endif
+	const char wndn_pull = wndn_ind ?
+		expr_pool[wndn_ind].pull_state() : expr_type::PULL_OFF;
+#endif	// PRSIM_WEAK_RULES
 	if (next == expr_type::PULL_OFF && 
 		((ndn_pull == expr_type::PULL_ON)
 #if PRSIM_WEAK_RULES
@@ -2481,7 +2514,7 @@ if (!n.pending_event()) {
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() == node_type::LOGIC_LOW
 		// n.current_value() != node_type::LOGIC_HIGH
-		// TODO: acount for weak rules
+		// NOTE: weak rules accounted for by pre-filter above
 		) {
 		/***
 			Terrible overload of the dequeue-unstable mode.
@@ -2620,7 +2653,7 @@ if (!n.pending_event()) {
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() == node_type::LOGIC_HIGH
 		// n.current_value() != node_type::LOGIC_LOW
-		// TODO: account for weak rules in overtakes...
+		// NOTE: weak rules accounted for by pre-filter above
 		) {
 		/***
 			Terrible overload of the dequeue-unstable mode.
@@ -2751,6 +2784,9 @@ State::__diagnose_violation(ostream& o, const uchar next,
 #endif
 		) {
 	STACKTRACE_VERBOSE;
+#if PRSIM_WEAK_RULES
+	DEBUG_STEP_PRINT("is " << (weak ? "" : "not") << " weak" << endl);
+#endif
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
 #else

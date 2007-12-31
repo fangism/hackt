@@ -29,7 +29,7 @@ advance 5
 echo expect over power event
 queue
 cycle
-# CURRENTLY FAILS ASSERT (consistent with prsim)
+# reference prsim FAILS ASSERT
 assert c 0
 time
 
@@ -41,4 +41,5 @@ echo should be empty
 cycle
 echo even though weak rule is on, c stays low
 echo weak rule does not re-fire after overpower goes away
+# assert c 1
 

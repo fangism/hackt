@@ -1,0 +1,13 @@
+// "SRAM-a.hac"
+//	$Id: SRAM-a.hac,v 1.1.2.1 2007/12/31 06:18:50 fang Exp $
+
+import "SRAM.hac";
+
+bool _pchg;
+bool bl, _bl, wl[2], we, wv;
+cell c[2];
+c[0](bl, _bl, wl[0]);
+c[1](bl, _bl, wl[1]);
+writer w(we, wv, bl, _bl);
+pc p(_pchg, bl, _bl);
+

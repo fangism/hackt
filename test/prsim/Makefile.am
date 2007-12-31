@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.7 2007/12/28 18:44:59 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.8 2007/12/31 06:18:35 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -21,7 +21,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	cross-coupled cross-coupled-weak \
 	cbit_test_stat \
 	cross-pull-a \
-	bitline-a bitline-b
+	bitline-a bitline-b \
+	SRAM SRAM-a
 
 # TODO: more cross-coupled test cases
 # SRAM cell
@@ -54,7 +55,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
 	precharge-a-01 precharge-b-01 \
-	weak-fight-a-01 weak-fight-a-03 weak-fight-a-04 \
+	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
 	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
 	weak-vs-weak-04 \
 	weak-feedback-a-01 weak-feedback-b-01 \
@@ -64,7 +65,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	cbit_test_stat-01 \
 	cross-pull-a-01 cross-pull-a-02 \
 	bitline-a-01 bitline-a-02 \
-	bitline-b-01 bitline-b-02
+	bitline-b-01 bitline-b-02 \
+	SRAM-a-01 SRAM-a-02 SRAM-a-03 SRAM-a-04
 
 $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \
@@ -92,7 +94,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
-	weak-fight-a-02 weak-fight-a-05 \
+	weak-fight-a-05 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02
 
