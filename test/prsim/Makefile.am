@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.8 2007/12/31 06:18:35 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.9 2007/12/31 23:24:21 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -13,7 +13,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	logic-defs and nand or nor array \
 	expr-limit-a \
 	precharge-a precharge-b \
-	weak-fight-a \
+	weak-fight-a weak-fight-b \
 	weak-vs-weak \
 	weak-feedback-a weak-feedback-b \
 	celem-fb \
@@ -56,6 +56,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
 	precharge-a-01 precharge-b-01 \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
+	weak-fight-a-05 \
+	weak-fight-b-01 \
 	weak-vs-weak-01 weak-vs-weak-02 weak-vs-weak-03 \
 	weak-vs-weak-04 \
 	weak-feedback-a-01 weak-feedback-b-01 \
@@ -94,7 +96,6 @@ HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
 	check-excl-rings-01 check-excl-rings-03 \
-	weak-fight-a-05 \
 	weak-feedback-a-02 weak-feedback-b-02 \
 	celem-fb-02
 

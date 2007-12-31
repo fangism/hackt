@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.12 2007/12/31 06:18:32 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.13 2007/12/31 23:24:20 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2443,18 +2443,31 @@ if (!n.pending_event()) {
 	}
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
-	else if (next == expr_type::PULL_OFF && 
-		n.pull_dn_index STR_INDEX(NORMAL_RULE) &&
+	else if (next == expr_type::PULL_OFF) {
+	DEBUG_STEP_PRINT("pull-up turned off" << endl);
+	const expr_index_type dn_index = n.pull_dn_index STR_INDEX(NORMAL_RULE);
+	const pull_enum dn_pull = dn_index ? expr_pool[dn_index].pull_state()
+		: expr_type::PULL_OFF;
+#if PRSIM_WEAK_RULES
+	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const pull_enum wdn_pull = wdn_index ? expr_pool[wdn_index].pull_state()
+		: expr_type::PULL_OFF;
+	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const pull_enum wup_pull = wup_index ? expr_pool[wup_index].pull_state()
+		: expr_type::PULL_OFF;
+#endif
+	if (dn_pull == expr_type::PULL_ON
+#if PRSIM_WEAK_RULES
+		|| (!is_weak && wdn_pull == expr_type::PULL_ON &&
+			wup_pull == expr_type::PULL_OFF)
+#endif
+		) {
 		// n->dn->val == PRS_VAL_T
-		expr_pool[n.pull_dn_index STR_INDEX(NORMAL_RULE)].pull_state()
-			== expr_type::PULL_ON) {
 		/***
 			if (PULL_OFF and opposing pull-down is ON)
 			then enqueue the pull-down event.  
 		***/
-		DEBUG_STEP_PRINT(
-			"pull-up turned off, yielding to opposing pull-down."
-			<< endl);
+		DEBUG_STEP_PRINT("yielding to opposing pull-down." << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
 				root_rule, node_type::LOGIC_LOW 
@@ -2469,6 +2482,7 @@ if (!n.pending_event()) {
 		} else {
 			enqueue_pending(pe);
 		}
+	}
 	}
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
@@ -2584,18 +2598,31 @@ if (!n.pending_event()) {
 	}
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
-	else if (next == expr_type::PULL_OFF && 
-		n.pull_up_index STR_INDEX(NORMAL_RULE) &&
+	else if (next == expr_type::PULL_OFF) {
+	DEBUG_STEP_PRINT("pull-down turned off" << endl);
+	const expr_index_type up_index = n.pull_up_index STR_INDEX(NORMAL_RULE);
+	const pull_enum up_pull = up_index ? expr_pool[up_index].pull_state()
+		: expr_type::PULL_OFF;
+#if PRSIM_WEAK_RULES
+	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const pull_enum wdn_pull = wdn_index ? expr_pool[wdn_index].pull_state()
+		: expr_type::PULL_OFF;
+	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const pull_enum wup_pull = wup_index ? expr_pool[wup_index].pull_state()
+		: expr_type::PULL_OFF;
+#endif
+	if (up_pull == expr_type::PULL_ON
+#if PRSIM_WEAK_RULES
+		|| (!is_weak && wup_pull == expr_type::PULL_ON &&
+			wdn_pull == expr_type::PULL_OFF)
+#endif
+		) {
 		// n->up->val == PRS_VAL_T
-		expr_pool[n.pull_up_index STR_INDEX(NORMAL_RULE)].pull_state() ==
-			expr_type::PULL_ON) {
 		/***
 			if (PULL_OFF and opposing pull-up is ON)
 			then enqueue the pull-up event.  
 		***/
-		DEBUG_STEP_PRINT(
-			"pull-down turned off, yielding to opposing pull-up."
-			<< endl);
+		DEBUG_STEP_PRINT("yielding to opposing pull-up." << endl);
 		const event_index_type pe =
 			__allocate_event(n, ui, c,
 				root_rule, node_type::LOGIC_HIGH
@@ -2610,6 +2637,7 @@ if (!n.pending_event()) {
 		} else {
 			enqueue_pending(pe);
 		}
+	}
 	}
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);

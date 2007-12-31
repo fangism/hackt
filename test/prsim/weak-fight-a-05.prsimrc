@@ -31,7 +31,7 @@ set a 0
 echo expect weak pull up to restore
 advance 5
 queue
-echo HUH, expected c+ in queue, from weak pull-up!
+echo expected c+ in queue, from weak pull-up
 cycle
 assert c 1
 

@@ -1,0 +1,12 @@
+// "weak-fight-b.hac"
+// testing weak event scenarios
+
+bool pup, ndn, wpup, wndn, out;
+
+prs {
+	~pup		-> out+
+	ndn		-> out-
+[weak=1]	~wpup	-> out+
+[weak=1]	wndn	-> out-
+}
+

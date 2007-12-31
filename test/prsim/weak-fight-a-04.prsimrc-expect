@@ -15,6 +15,6 @@ event queue:
 time: 20
 de-assert strong rule 
 event queue:
+	30	c : 1	[from b:=0]
 should be empty 
-even though weak rule is on, c stays low 
-weak rule does not re-fire after overpower goes away 
+weak rule re-fires after overpower goes away 

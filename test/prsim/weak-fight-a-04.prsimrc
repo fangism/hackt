@@ -39,7 +39,6 @@ advance 5
 queue
 echo should be empty
 cycle
-echo even though weak rule is on, c stays low
-echo weak rule does not re-fire after overpower goes away
-# assert c 1
+echo weak rule re-fires after overpower goes away
+assert c 1
 

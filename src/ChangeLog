@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2007-12-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-16:
+	  prsim: check for weak-rules that are pulling as strong rules
+		are turned off, which fixes many cases of nodes being
+		stuck with weak-pulls on (inconsistency).
+		New test case added.
+		Opinion: wake up event processing needs to be completely
+			re-written with weak rule model.
+
+
 2007-12-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-15:

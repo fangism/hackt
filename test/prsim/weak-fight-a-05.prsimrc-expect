@@ -18,5 +18,6 @@ restoring b -> 0
 expect weak pull up to restore 
 	20	b : 0
 event queue:
-HUH, expected c+ in queue, from weak pull-up! 
-assert failed: expecting node `c' at 1, but got X.
+	30	c : 1	[from b:=0]
+expected c+ in queue, from weak pull-up 
+	30	c : 1	[by b:=0]
