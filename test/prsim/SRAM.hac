@@ -1,0 +1,59 @@
+// "SRAM.hac"
+//	$Id: SRAM.hac,v 1.1.2.1 2007/12/31 06:20:09 fang Exp $
+
+defproc c1of2(bool d[2], f, t) {
+	f = d[0];
+	t = d[1];
+}
+
+defproc cell(bool bl, _bl, wl) {
+c1of2 r;
+prs {
+	// [keeper=0]
+	[weak=1] r.f		-> r.t-
+	[weak=1] r.t		-> r.f-
+	[weak=1] ~r.f		-> r.t+
+	[weak=1] ~r.t		-> r.f+
+	/*
+	passn(wl,bl,r.f)
+	passn(wl,_bl,r.t)
+	*/
+	wl & ~_bl		-> r.t-
+	wl & ~bl		-> r.f-
+	[weak=1] r.t & wl	-> bl-
+	[weak=1] r.f & wl	-> _bl-
+}
+}
+
+/**
+	Write control.
+ */
+defproc writer(bool we, wv, bl, _bl) {
+	bool we_, wv_;
+prs {
+	we		=> we_-
+	wv		=> wv_-
+
+	we & wv_	-> bl-
+	~we_ & ~wv_	-> bl+
+
+	we & wv		-> _bl-
+	~we_ & ~wv	-> _bl+
+}
+}
+
+/**
+	Bitline precharge. 
+ */
+defproc pc(bool _pchg, bl, _bl) {
+bool bls, _bls;
+prs {
+	~_pchg		-> _bl+
+	~_pchg		-> bl+
+	bl		=> bls-
+	_bl		=> _bls-
+[weak=1]	~bls	-> bl+
+[weak=1]	~_bls	-> _bl+
+}
+}
+
