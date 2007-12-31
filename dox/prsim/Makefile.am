@@ -1,5 +1,5 @@
 # "dox/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.6.16.1 2007/12/19 08:52:14 fang Exp $
+#	$Id: Makefile.am,v 1.6.16.2 2007/12/31 15:54:20 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -24,7 +24,8 @@ hacprsim_INCLUDES = \
 	intro.texi \
 	usage.texi \
 	commands.texi \
-	execution.texi
+	execution.texi \
+	cosim.texi
 
 $(srcdir)/options.mk: usage.texi
 	{ $(ECHO) -n "HACPRSIM_OPTIONS_TEXI = " ; \
