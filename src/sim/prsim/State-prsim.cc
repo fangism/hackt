@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.13 2007/12/31 23:24:20 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.14 2008/01/01 22:40:52 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -952,6 +952,9 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 				", keeping the same event time." << endl;
 			e.val = new_val;
 		}
+#if PRSIM_WEAK_RULES
+		e.set_weak(w);
+#endif
 		e.unforce();
 		// else do nothing, correct value already pending
 	} else {
@@ -990,7 +993,8 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 				t = get_delay_up(e); break;
 			case node_type::LOGIC_LOW:
 				t = get_delay_dn(e); break;
-			default: t = delay_policy<time_type>::zero;
+			default: t = current_time;
+				// +delay_policy<time_type>::zero;
 			}
 			enqueue_event(t, ei);
 		}

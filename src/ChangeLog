@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-17:
+	  Fixed unset_node() to apply correct delay on X nodes.
+	  Still stuck on X error, not yet reproduced, worked around
+		using 'unsetall' command.  (GAG)
+
+
 2007-12-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-16:
