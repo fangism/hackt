@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.21.10.2 2007/12/11 22:39:35 fang Exp $
+	$Id: ExprAlloc.cc,v 1.21.10.3 2008/01/03 21:05:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1217,6 +1217,15 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // layout_min_sep -- reserved for SEU prsim... later
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(supply_x, "supply_x")
+
+void
+supply_x::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	// TODO: nothing?
+}
 
 #undef	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS
 }	// end namespace prsim_spec_directives
