@@ -4,6 +4,7 @@
 # weak ~a -> c+
 # b -> c-
 
+weak-rules on
 timing uniform 10
 # fanin c
 

@@ -1,6 +1,7 @@
 # "SRAM-a-04.prsimrc"
 # @haco@ SRAM-a.haco-a
 
+weak-rules on
 fanin bl
 fanin _bl
 watchall

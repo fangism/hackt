@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.10.2 2007/12/19 21:17:20 fang Exp $
+#	$Id: TODO,v 1.4.10.3 2008/01/05 04:33:36 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -78,7 +78,8 @@ graph-dumping:
 
 execution model:
 	weak rules (drive floating nodes, overpowered by normal rules)
-
+		[status: drafted]
+	TODO: interaction with coerced exclusive hi/lo rings?
 
 state-allocation:
 	consider alternative to re-allocating every rule for every

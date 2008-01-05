@@ -2,7 +2,7 @@
 # @haco@ SRAM-a.haco-a
 
 # trying different control signal ordering
-
+weak-rules on
 fanin bl
 fanin _bl
 watchall

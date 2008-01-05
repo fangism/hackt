@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.4.4 2007/12/28 18:44:57 fang Exp $
+	$Id: State-prsim.h,v 1.2.4.5 2008/01/05 04:33:34 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -224,6 +224,13 @@ private:
 			the primary event queue.  
 		 */
 		FLAG_WATCH_QUEUE = 0x100,
+#if PRSIM_WEAK_RULES
+		/**
+			Global flag to heed or ignore weak rules.  
+			Default off.  
+		 */
+		FLAG_WEAK_RULES = 0x200,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -520,6 +527,23 @@ public:
 	set_eval_ordering_inorder(void) {
 		flags &= ~FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
 	}
+
+#if PRSIM_WEAK_RULES
+	void
+	enable_weak_rules(void) {
+		flags |= FLAG_WEAK_RULES;
+	}
+
+	void
+	disable_weak_rules(void) {
+		flags &= ~FLAG_WEAK_RULES;
+	}
+
+	bool
+	weak_rules_enabled(void) const {
+		return flags & FLAG_WEAK_RULES;
+	}
+#endif	// PRSIM_WEAK_RULES
 
 	void
 	reset_tcounts(void);

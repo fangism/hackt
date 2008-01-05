@@ -1,5 +1,11 @@
 # "dox/ChangeLog"
-#	$Id: ChangeLog,v 1.31 2007/10/08 21:49:55 fang Exp $
+#	$Id: ChangeLog,v 1.31.10.1 2008/01/05 04:33:26 fang Exp $
+
+2008-01-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-19:
+	  prsim/commands.texi: include cmd/weak-rules.texi (generated)
+
 
 2007-10-08	David Fang		<fangism@users.sourceforge.net>
 

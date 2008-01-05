@@ -1,0 +1,145 @@
+// "keeper-a.hac"
+//	$Id: keeper-a.hac,v 1.1.2.1 2008/01/05 04:33:53 fang Exp $
+// contributed by Clint Kelly
+// purpose: without weak-rules off, staticizer on WCHB data rail inverter
+// causes instability when forward delay is slow.
+// MUST use weak-rule off
+
+deftype globals <: int<5>(bool Vdd, GND, _pReset, _sReset) {
+	set {}
+	get{}
+}
+
+
+defchan e1of2 <: chan(bool)(bool d[2]; bool t, f, e) {
+	d[0] = f;
+	d[1] = t;
+	spec { exclhi(f,t) }
+	send {}
+	recv{}
+}
+
+deftype _1of2 <: bool (bool d[2]; bool t, f) {
+	d[0] = f;
+	d[1] = t;
+	spec { excllo(f,t) }
+	set{}
+	get{}
+}
+
+template <pint N>
+defchan e1of <: chan(int<N>)(bool d[N], e) { send{} recv{}}
+
+template <pint N>
+defchan ch1of <: chan(int<N>)(bool d[N]) { send{} recv{} }
+
+template <pint N>
+deftype _1of <: int<N> (bool d[N]) { set{} get{}}
+
+defproc source_cell (globals g; bool l, le, s, se, r, re)
+{
+	bool _pReset = g._pReset;
+	bool _sReset = g._sReset;
+	bool x, y;
+	s = r;
+	prs {
+		_pReset & ~x & ~y & l -> le-
+		_pReset &  ~y & ~le -> x+
+		~ _pReset | x & ~y & ~l -> le+
+		_pReset & x & le -> y+
+		_pReset & x & y & se & re -> s+
+		~_pReset | y & s -> x-
+		 ~_pReset | ~x & y & ~se & ~re -> s-
+		~_pReset | ~x & ~s -> y-
+	}
+}
+
+defproc start_cell (globals g; bool l, le, r, re)
+{
+	bool x, y;
+	bool _pReset = g._pReset;
+	bool _sReset = g._sReset;
+	prs {
+		_pReset & ~x & ~y & re -> r+
+		_pReset & ~y & r -> x+
+		~_pReset | x & ~y & ~re -> r-
+		_pReset & x & ~r -> y+
+		_pReset & x & y & l -> le-
+		~_pReset | y & ~le -> x-
+		~_pReset | ~x & y & ~l -> le+
+		~_pReset | ~x & le -> y-
+	}
+}
+
+template <pint N, M; pint d[N]>
+define source_e(globals g; e1of<M> rr)
+{
+	bool _pReset = g._pReset;
+	bool _sReset = g._sReset;
+	ch1of<M> r;
+	e1of<N> s;
+	s.e = rr.e;
+	bool l[N+1], le[N+1];
+	source_cell sc[N];
+	(;i:N:
+		sc[i](g, l[i], le[i], s.d[i], s.e, l[i+1], le[i+1]);
+	)
+	start_cell startc(g, l[N], le[N], l[0], le[0]);
+	prs {
+		(:i:N: s.d[i] -> r.d[d[i]]+ )
+		(:i:M: (&:j:N: ~s.d[j] ) -> r.d[i]- )
+		(:i:M: r.d[i] -> rr.d[i]+)
+		(:i:M: ~r.d[i] -> rr.d[i]-)
+	}
+}
+
+defproc rsource_e1of2 (globals g; e1of2 r) {
+	bool _r0, _r1;
+	prs {
+		r.e => _r0-
+		r.e => _r1-
+		_r0 => r.f-
+		_r1 => r.t-
+	}
+	spec {
+		mk_excllo(_r0, _r1)
+	}
+}
+
+defproc bucket_e1of2_rl (globals g; e1of2 l)  {
+	bool _lv, lv;
+	bool _sReset = g._sReset;
+	prs {
+		l.t<20> | l.f<20> -> _lv-
+		~l.t<40> & ~l.f<40> -> _lv+
+		_sReset<50> & _lv<30> -> lv-
+		~_sReset<50> | ~_lv<30> -> lv+
+		~lv<40> -> l.e+
+		lv<80> -> l.e-
+	}
+}
+
+defproc wchb (globals g; e1of2 l, r) {
+	_1of2 _r;
+	bool rv;
+	bool _sReset = g._sReset;
+prs {
+	(:d:2:
+		l.d[d] & r.e -> _r.d[d]-
+		~l.d[d] & ~r.e -> _r.d[d]+
+		_r.d[d] => r.d[d]-
+		[weak=1;after=0] r.d[d] => _r.d[d]-	// problem here
+	)
+
+	_sReset & _r.t & _r.f => rv-
+	rv => l.e-
+
+
+}
+}
+
+e1of2 l, r;
+globals g;
+rsource_e1of2 src(g, l);
+wchb buf(g, l, r);
+bucket_e1of2_rl bkt(g, r);

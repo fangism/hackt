@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.14 2008/01/01 22:40:52 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.15 2008/01/05 04:33:33 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -501,14 +501,8 @@ if (!e.wiped()) {
 		assert(f != rule_map.end());
 #endif
 #if PRSIM_WEAK_RULES
-#if 0
-		const rule_type& ri(f->second);
-		assert(n.get_pull_expr(e.direction(), 
-			rule_strength(ri.is_weak())) == i);
-#else
 		assert(n.get_pull_expr(e.direction(), NORMAL_RULE) == i ||
 			n.get_pull_expr(e.direction(), WEAK_RULE) == i);
-#endif
 #else
 		assert(n.get_pull_expr(e.direction()) == i);
 #endif
@@ -930,7 +924,7 @@ State::unset_node(const node_index_type ni) {
 #if PRSIM_WEAK_RULES
 	// strong events take precedence over weak ones
 size_t w = 0;	// NORMAL_RULE
-for ( ; w<2; ++w) {
+do {
 #endif
 	// evaluate node's pull-up and pull-down
 	const expr_index_type u = n.pull_up_index STR_INDEX(w);
@@ -1005,7 +999,8 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 #endif
 }	// else neither side is pulling, leave node as is
 #if PRSIM_WEAK_RULES
-}	// end for
+	++w;
+} while (weak_rules_enabled() && w<2);
 #endif
 }	// end State::unset_node
 
@@ -1342,7 +1337,8 @@ for ( ; i!=e; ++i) {
 			__flush_pending_event_with_interference(_n, ne, ev);
 		}	// end if pending_interference
 #if PRSIM_WEAK_RULES
-	} else if ((pull_up_state == expr_type::PULL_OFF) &&
+	} else if (weak_rules_enabled() &&
+		(pull_up_state == expr_type::PULL_OFF) &&
 		(pull_dn_state == expr_type::PULL_OFF) &&
 		(wpull_up_state != expr_type::PULL_OFF) &&
 			(wpull_dn_state != expr_type::PULL_OFF)) {
@@ -2097,18 +2093,16 @@ if (eval_ordering_is_random()) {
 	if (force && n.get_event()) {
 		DEBUG_STEP_PRINT("detected a forced event vs. pending event" << endl);
 #if PRSIM_WEAK_RULES
-	size_t w = NORMAL_RULE;
-	for ( ; w<2; ++w) {
+	// the opposing strong pull:
+	const expr_index_type nup = n.pull_up_index[NORMAL_RULE];
+	const expr_index_type ndn = n.pull_dn_index[NORMAL_RULE];
+	size_t w = NORMAL_RULE;		// 0
+	do {
 #endif
 		const event_index_type ui = n.pull_up_index STR_INDEX(w);
 		const event_index_type di = n.pull_dn_index STR_INDEX(w);
 		const event_type* up_rule = ui ? &get_event(ui) : NULL;
 		const event_type* dn_rule = di ? &get_event(di) : NULL;
-#if PRSIM_WEAK_RULES
-		// the opposing strong pull:
-		const expr_index_type nup = n.pull_up_index[NORMAL_RULE];
-		const expr_index_type ndn = n.pull_dn_index[NORMAL_RULE];
-#endif
 		const bool possible_up = up_rule &&
 			up_rule->val == node_type::LOGIC_HIGH
 				&& next != node_type::LOGIC_HIGH
@@ -2161,7 +2155,8 @@ if (eval_ordering_is_random()) {
 		}
 #if PRSIM_WEAK_RULES
 		// above strong pulls take precedence over weak pulls
-	} // end for
+		++w;
+	} while (weak_rules_enabled() && w<2);
 #endif
 	}
 
@@ -2379,7 +2374,7 @@ State::propagate_evaluation(
 	break_type err = false;
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
-if (n.pending_event()) {
+if (weak_rules_enabled() && n.pending_event()) {
 	event_type& e(get_event(ei));	// previous scheduled event
 	if (e.is_weak() && !is_weak && next != expr_type::PULL_OFF) {
 		DEBUG_STEP_PRINT("old weak event killed" << endl);
@@ -2454,10 +2449,12 @@ if (!n.pending_event()) {
 		: expr_type::PULL_OFF;
 #if PRSIM_WEAK_RULES
 	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wdn_pull = wdn_index ? expr_pool[wdn_index].pull_state()
+	const pull_enum wdn_pull = (weak_rules_enabled() && wdn_index)
+		? expr_pool[wdn_index].pull_state()
 		: expr_type::PULL_OFF;
 	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const pull_enum wup_pull = wup_index ? expr_pool[wup_index].pull_state()
+	const pull_enum wup_pull = (weak_rules_enabled() && wup_index)
+		? expr_pool[wup_index].pull_state()
 		: expr_type::PULL_OFF;
 #endif
 	if (dn_pull == expr_type::PULL_ON
@@ -2497,7 +2494,7 @@ if (!n.pending_event()) {
 		expr_pool[ndn_ind].pull_state() : expr_type::PULL_OFF;
 #if PRSIM_WEAK_RULES
 	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const char wndn_pull = wndn_ind ?
+	const char wndn_pull = (weak_rules_enabled() && wndn_ind) ?
 		expr_pool[wndn_ind].pull_state() : expr_type::PULL_OFF;
 #endif	// PRSIM_WEAK_RULES
 	if (next == expr_type::PULL_OFF && 
@@ -2523,7 +2520,8 @@ if (!n.pending_event()) {
 		e.cause_node = ni;
 #endif
 #if PRSIM_WEAK_RULES
-		e.set_weak(wndn_pull != expr_type::PULL_OFF && ndn_pull == expr_type::PULL_OFF);
+		e.set_weak(wndn_pull != expr_type::PULL_OFF
+			&& ndn_pull == expr_type::PULL_OFF);
 #endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
@@ -2609,10 +2607,12 @@ if (!n.pending_event()) {
 		: expr_type::PULL_OFF;
 #if PRSIM_WEAK_RULES
 	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wdn_pull = wdn_index ? expr_pool[wdn_index].pull_state()
+	const pull_enum wdn_pull = (weak_rules_enabled() && wdn_index)
+		? expr_pool[wdn_index].pull_state()
 		: expr_type::PULL_OFF;
 	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const pull_enum wup_pull = wup_index ? expr_pool[wup_index].pull_state()
+	const pull_enum wup_pull = (weak_rules_enabled() && wup_index)
+		? expr_pool[wup_index].pull_state()
 		: expr_type::PULL_OFF;
 #endif
 	if (up_pull == expr_type::PULL_ON
@@ -2651,7 +2651,8 @@ if (!n.pending_event()) {
 	const char nup_pull = nup_ind ? expr_pool[nup_ind].pull_state() : expr_type::PULL_OFF;
 #if PRSIM_WEAK_RULES
 	const expr_index_type wnup_ind = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const char wnup_pull = wnup_ind ? expr_pool[wnup_ind].pull_state() : expr_type::PULL_OFF;
+	const char wnup_pull = (weak_rules_enabled() && wnup_ind) ?
+		expr_pool[wnup_ind].pull_state() : expr_type::PULL_OFF;
 #endif
 	if (next == expr_type::PULL_OFF && 
 		((nup_pull == expr_type::PULL_ON)
@@ -2676,7 +2677,8 @@ if (!n.pending_event()) {
 		e.cause_node = ni;
 #endif
 #if PRSIM_WEAK_RULES
-		e.set_weak(wnup_pull != expr_type::PULL_OFF && nup_pull == expr_type::PULL_OFF);
+		e.set_weak(wnup_pull != expr_type::PULL_OFF
+			&& nup_pull == expr_type::PULL_OFF);
 #endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
@@ -3289,7 +3291,7 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		// then print the *entire* fanin rule for that node, 
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
-	for ( ; w<2; ++w) {
+	do {
 #endif
 		const expr_index_type pi =
 			(dir ? no.pull_up_index STR_INDEX(w) : 
@@ -3309,7 +3311,8 @@ State::dump_node_fanout(ostream& o, const node_index_type ni,
 		}	// end if
 #endif
 #if PRSIM_WEAK_RULES
-	}	// end for
+		++w;
+	} while (w<2);	// even if !weak_rules_enabled()
 #endif
 	}
 	return o;
@@ -3330,7 +3333,7 @@ State::dump_node_fanin(ostream& o, const node_index_type ni,
 	const string cn(get_node_canonical_name(ni));
 #if PRSIM_WEAK_RULES
 	size_t w = NORMAL_RULE;
-for ( ; w<2; ++w) {
+do {
 #endif
 	const node_index_type ui = n.pull_up_index STR_INDEX(w);
 	const node_index_type di = n.pull_dn_index STR_INDEX(w);
@@ -3351,7 +3354,8 @@ for ( ; w<2; ++w) {
 		o << endl;
 	}
 #if PRSIM_WEAK_RULES
-}	// end for weak
+	++w;
+} while (w<2);		// even if !weak_rules_enabled()
 #endif
 	return o;
 }

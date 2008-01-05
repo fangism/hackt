@@ -1,6 +1,7 @@
 # "bitline-a-01.prsimrc"
 # @haco@ bitline-a.haco-a
 
+weak-rules on
 # unstable-dequeue
 # unstable warn
 watchall

@@ -1,6 +1,7 @@
 # "weak-fight-b-01.prsimrc"
 # @haco@ weak-fight-b.haco-a
 
+weak-rules on
 watchall
 set wpup 1
 set wndn 1

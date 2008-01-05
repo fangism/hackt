@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.4.1 2007/12/20 18:35:50 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.4.2 2008/01/05 04:33:31 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2119,6 +2119,61 @@ EvalOrder::usage(ostream& o) {
 "\t\temulating arbitration of forced exclusive rules with the same fanin."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_WEAK_RULES
+/***
+@texinfo cmd/weak-rules.texi
+@deffn Command weak-rules [on|off]
+Simulation mode switch which globally enables or disables (ignores)
+weak-rules.  
+Weak-rules can only take effect when normal rules pulling a node are off.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WeakRules, "weak-rules", modes, 
+	"enable/disable weak rules")
+
+int
+WeakRules::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1: {
+	cout << "weak-rules ";
+	if (s.weak_rules_enabled()) {
+		cout << "on";
+	} else {
+		cout << "off";
+	}
+	cout << endl;
+	return Command::NORMAL;
+}
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		s.enable_weak_rules();
+	} else if (arg == "off") {
+		s.disable_weak_rules();
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+}
+
+void
+WeakRules::usage(ostream& o) {
+	o << "weak-rules [on|off]" << endl;
+	o <<
+"Simulate or ignore weak-rules, which can drive nodes, but are overpowered "
+"by normal rules." << endl;
+}
+#endif	// PRSIM_WEAK_RULES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

@@ -1,6 +1,7 @@
 # "weak-fight-a-05.prsimrc"
 # @haco@ weak-fight-a.haco-a
 
+weak-rules on
 fanin c
 watchall
 echo weak pull-up
