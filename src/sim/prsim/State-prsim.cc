@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.15 2008/01/05 04:33:33 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.16 2008/01/07 06:42:29 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -930,10 +930,8 @@ do {
 	const expr_index_type u = n.pull_up_index STR_INDEX(w);
 	const expr_index_type d = n.pull_dn_index STR_INDEX(w);
 	// if there is no pull-*, it's as good as off!
-	const pull_enum pu =
-		(u ? expr_pool[u].pull_state() : expr_type::PULL_OFF);
-	const pull_enum pd =
-		(d ? expr_pool[d].pull_state() : expr_type::PULL_OFF);
+	const pull_enum pu = get_pull(u);
+	const pull_enum pd = get_pull(d);
 if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 	const uchar new_val = pull_to_value[size_t(pu)][size_t(pd)];
 	if (pending) {
@@ -1282,20 +1280,16 @@ for ( ; i!=e; ++i) {
 	// are weak events ever inserted into the pending queue?
 	const expr_index_type up_ex = _n.pull_up_index STR_INDEX(NORMAL_RULE);
 	const expr_index_type dn_ex = _n.pull_dn_index STR_INDEX(NORMAL_RULE);
-	const pull_enum pull_up_state = (up_ex ?
-		expr_pool[up_ex].pull_state() : expr_type::PULL_OFF);
-	const pull_enum pull_dn_state = (dn_ex ?
-		expr_pool[dn_ex].pull_state() : expr_type::PULL_OFF);
+	const pull_enum pull_up_state = get_pull(up_ex);
+	const pull_enum pull_dn_state = get_pull(dn_ex);
 	DEBUG_STEP_PRINT("current pull-states: up=" <<
 		size_t(pull_up_state) << ", dn=" <<
 		size_t(pull_dn_state) << endl);
 #if PRSIM_WEAK_RULES
 	const expr_index_type wup_ex = _n.pull_up_index STR_INDEX(WEAK_RULE);
 	const expr_index_type wdn_ex = _n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wpull_up_state = (wup_ex ?
-		expr_pool[wup_ex].pull_state() : expr_type::PULL_OFF);
-	const pull_enum wpull_dn_state = (wdn_ex ?
-		expr_pool[wdn_ex].pull_state() : expr_type::PULL_OFF);
+	const pull_enum wpull_up_state = get_pull(wup_ex);
+	const pull_enum wpull_dn_state = get_pull(wdn_ex);
 	DEBUG_STEP_PRINT("weak pull-states:    up=" <<
 		size_t(wpull_up_state) << ", dn=" <<
 		size_t(wpull_dn_state) << endl);
@@ -1473,9 +1467,7 @@ State::__flush_pending_event_no_interference(node_type& _n,
 			// the opposing strong pull:
 			const expr_index_type opp =
 				_n.pull_dn_index[NORMAL_RULE];
-			if (!w || !opp ||
-				expr_pool[opp].pull_state() ==
-					expr_type::PULL_OFF) {
+			if (!w || get_pull(opp) == expr_type::PULL_OFF) {
 #endif
 			enqueue_event(get_delay_up(ev), ne);
 			return;
@@ -1488,9 +1480,7 @@ State::__flush_pending_event_no_interference(node_type& _n,
 			// the opposing strong pull:
 			const expr_index_type opp =
 				_n.pull_up_index[NORMAL_RULE];
-			if (!w || !opp ||
-				expr_pool[opp].pull_state() ==
-					expr_type::PULL_OFF) {
+			if (!w || get_pull(opp) == expr_type::PULL_OFF) {
 #endif
 			enqueue_event(get_delay_dn(ev), ne);
 			return;
@@ -1713,11 +1703,10 @@ for ( ; i!=e; ++i) {
 #else
 				er.pull_up_index;
 #endif
-			if (!er.pending_event() && ei &&
+			if (!er.pending_event() &&
 				// er->n->up->val == PRS_VAL_T
 				// what if is pulling weakly?
-				expr_pool[ei].pull_state()
-					== expr_type::PULL_ON) {
+				get_pull(ei) == expr_type::PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
 				const event_index_type ne =
 					// the pull-up index may not necessarily
@@ -1778,11 +1767,10 @@ for ( ; i!=e; ++i) {
 #else
 				er.pull_dn_index;
 #endif
-			if (!er.pending_event() && ei &&
+			if (!er.pending_event() &&
 				// er->n->dn->val == PRS_VAL_T
 				// what if is pulling weakly?
-				expr_pool[ei].pull_state()
-					== expr_type::PULL_ON) {
+				get_pull(ei) == expr_type::PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
 					// same comment as enforce_exclhi
@@ -2108,9 +2096,7 @@ if (eval_ordering_is_random()) {
 				&& next != node_type::LOGIC_HIGH
 #if PRSIM_WEAK_RULES
 				// check opposition
-				&& (!w || !ndn ||
-					expr_pool[ndn].pull_state() ==
-						expr_type::PULL_OFF)
+				&& (!w || get_pull(ndn) == expr_type::PULL_OFF)
 #endif
 				;
 		const bool possible_dn = dn_rule &&
@@ -2118,9 +2104,7 @@ if (eval_ordering_is_random()) {
 				&& next != node_type::LOGIC_LOW
 #if PRSIM_WEAK_RULES
 				// check opposition
-				&& (!w || !nup ||
-					expr_pool[nup].pull_state() ==
-						expr_type::PULL_OFF)
+				&& (!w || get_pull(nup) == expr_type::PULL_OFF)
 #endif
 				;
 		if (possible_up) {
@@ -2445,17 +2429,14 @@ if (!n.pending_event()) {
 	else if (next == expr_type::PULL_OFF) {
 	DEBUG_STEP_PRINT("pull-up turned off" << endl);
 	const expr_index_type dn_index = n.pull_dn_index STR_INDEX(NORMAL_RULE);
-	const pull_enum dn_pull = dn_index ? expr_pool[dn_index].pull_state()
-		: expr_type::PULL_OFF;
+	const pull_enum dn_pull = get_pull(dn_index);
 #if PRSIM_WEAK_RULES
 	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wdn_pull = (weak_rules_enabled() && wdn_index)
-		? expr_pool[wdn_index].pull_state()
-		: expr_type::PULL_OFF;
+	const pull_enum wdn_pull = weak_rules_enabled()
+		? get_pull(wdn_index) : expr_type::PULL_OFF;
 	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const pull_enum wup_pull = (weak_rules_enabled() && wup_index)
-		? expr_pool[wup_index].pull_state()
-		: expr_type::PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled()
+		? get_pull(wup_index) : expr_type::PULL_OFF;
 #endif
 	if (dn_pull == expr_type::PULL_ON
 #if PRSIM_WEAK_RULES
@@ -2490,12 +2471,11 @@ if (!n.pending_event()) {
 	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(ei));
 	const expr_index_type ndn_ind = n.pull_dn_index STR_INDEX(NORMAL_RULE);
-	const char ndn_pull = ndn_ind ?
-		expr_pool[ndn_ind].pull_state() : expr_type::PULL_OFF;
+	const char ndn_pull = get_pull(ndn_ind);
 #if PRSIM_WEAK_RULES
 	const expr_index_type wndn_ind = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const char wndn_pull = (weak_rules_enabled() && wndn_ind) ?
-		expr_pool[wndn_ind].pull_state() : expr_type::PULL_OFF;
+	const char wndn_pull = weak_rules_enabled() ?
+		get_pull(wndn_ind) : expr_type::PULL_OFF;
 #endif	// PRSIM_WEAK_RULES
 	if (next == expr_type::PULL_OFF && 
 		((ndn_pull == expr_type::PULL_ON)
@@ -2525,8 +2505,8 @@ if (!n.pending_event()) {
 #endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
-		next == expr_type::PULL_ON && ndn_ind &&
-		expr_pool[ndn_ind].pull_state() == expr_type::PULL_OFF &&
+		next == expr_type::PULL_ON && 
+		get_pull(ndn_ind) == expr_type::PULL_OFF &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() == node_type::LOGIC_LOW
 		// n.current_value() != node_type::LOGIC_HIGH
@@ -2603,17 +2583,14 @@ if (!n.pending_event()) {
 	else if (next == expr_type::PULL_OFF) {
 	DEBUG_STEP_PRINT("pull-down turned off" << endl);
 	const expr_index_type up_index = n.pull_up_index STR_INDEX(NORMAL_RULE);
-	const pull_enum up_pull = up_index ? expr_pool[up_index].pull_state()
-		: expr_type::PULL_OFF;
+	const pull_enum up_pull = get_pull(up_index);
 #if PRSIM_WEAK_RULES
 	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wdn_pull = (weak_rules_enabled() && wdn_index)
-		? expr_pool[wdn_index].pull_state()
-		: expr_type::PULL_OFF;
+	const pull_enum wdn_pull = weak_rules_enabled() ?
+		get_pull(wdn_index) : expr_type::PULL_OFF;
 	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const pull_enum wup_pull = (weak_rules_enabled() && wup_index)
-		? expr_pool[wup_index].pull_state()
-		: expr_type::PULL_OFF;
+	const pull_enum wup_pull = weak_rules_enabled() ?
+		get_pull(wup_index) : expr_type::PULL_OFF;
 #endif
 	if (up_pull == expr_type::PULL_ON
 #if PRSIM_WEAK_RULES
@@ -2648,11 +2625,11 @@ if (!n.pending_event()) {
 	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(ei));
 	const expr_index_type nup_ind = n.pull_up_index STR_INDEX(NORMAL_RULE);
-	const char nup_pull = nup_ind ? expr_pool[nup_ind].pull_state() : expr_type::PULL_OFF;
+	const char nup_pull = get_pull(nup_ind);
 #if PRSIM_WEAK_RULES
 	const expr_index_type wnup_ind = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const char wnup_pull = (weak_rules_enabled() && wnup_ind) ?
-		expr_pool[wnup_ind].pull_state() : expr_type::PULL_OFF;
+	const char wnup_pull = weak_rules_enabled() ?
+		get_pull(wnup_ind) : expr_type::PULL_OFF;
 #endif
 	if (next == expr_type::PULL_OFF && 
 		((nup_pull == expr_type::PULL_ON)
@@ -2682,8 +2659,8 @@ if (!n.pending_event()) {
 #endif
 #if PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else if (dequeue_unstable_events() &&
-		next == expr_type::PULL_ON && nup_ind &&
-		expr_pool[nup_ind].pull_state() == expr_type::PULL_OFF &&
+		next == expr_type::PULL_ON &&
+		get_pull(nup_ind) == expr_type::PULL_OFF &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() == node_type::LOGIC_HIGH
 		// n.current_value() != node_type::LOGIC_LOW
@@ -2905,13 +2882,11 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			if (dir) {
 				const expr_index_type up =
 					n.pull_up_index STR_INDEX(NORMAL_RULE);
-				b = !(up && (expr_pool[up].pull_state()
-					== expr_type::PULL_ON));
+				b = get_pull(up) != expr_type::PULL_ON;
 			} else {
 				const expr_index_type dn =
 					n.pull_dn_index STR_INDEX(NORMAL_RULE);
-				b = !(dn && (expr_pool[dn].pull_state()
-					== expr_type::PULL_ON));
+				b = get_pull(dn) != expr_type::PULL_ON;
 			}
 			}
 			if (b) {

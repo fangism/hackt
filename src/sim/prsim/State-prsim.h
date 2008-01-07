@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.4.5 2008/01/05 04:33:34 fang Exp $
+	$Id: State-prsim.h,v 1.2.4.6 2008/01/07 06:42:30 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -900,6 +900,11 @@ private:
 
 	time_type
 	get_delay_dn(const event_type&) const;
+
+	pull_enum
+	get_pull(const expr_index_type ei) const {
+		return ei ? expr_pool[ei].pull_state() : expr_type::PULL_OFF;
+	}
 
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
