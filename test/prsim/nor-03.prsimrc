@@ -1,0 +1,23 @@
+# "nor-03.prsimrc"
+# @haco@ nor.haco-a
+
+# unstable-dequeue
+watchall
+set b 0
+set a 1
+cycle
+
+echo glitch X on A
+set a X
+advance 3
+queue
+set b 1
+advance 3
+queue
+echo expect c -> 0 to overtake X
+cycle
+time
+
+assert c 0
+
+

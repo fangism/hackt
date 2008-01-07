@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.16 2008/01/07 06:42:29 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.17 2008/01/07 20:18:25 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2477,6 +2477,10 @@ if (!n.pending_event()) {
 	const char wndn_pull = weak_rules_enabled() ?
 		get_pull(wndn_ind) : expr_type::PULL_OFF;
 #endif	// PRSIM_WEAK_RULES
+	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
+	DEBUG_STEP_PRINT("pull-dn = " << size_t(get_pull(ndn_ind)) << endl);
+	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
+	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
 	if (next == expr_type::PULL_OFF && 
 		((ndn_pull == expr_type::PULL_ON)
 #if PRSIM_WEAK_RULES
@@ -2518,7 +2522,7 @@ if (!n.pending_event()) {
 			and pending event's value is X, 
 			and node's current value is low, monotonic)
 			Either:
-			1) replace the previous event with new value 0,
+			1) replace the previous event with new value 1,
 				using the same time, or
 			2) cancel previous event, and re-insert new event
 				with new time.
@@ -2530,6 +2534,34 @@ if (!n.pending_event()) {
 #else
 		e.cause_node = ni;
 #endif
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_OFF && 
+		get_pull(ndn_ind) == expr_type::PULL_ON &&
+		e.val == node_type::LOGIC_OTHER) {
+		if (n.current_value() == node_type::LOGIC_LOW) {
+			// already low, just kill pending X
+			e.kill();
+			n.clear_event();
+		} else {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-up is OFF, opposing pull-dn is ON, 
+			and pending event's value is X, 
+			and node's current value is high, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
+		e.val = node_type::LOGIC_LOW;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		e.cause.node = ni;
+#else
+		e.cause_node = ni;
+#endif
+		}
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
@@ -2631,6 +2663,10 @@ if (!n.pending_event()) {
 	const char wnup_pull = weak_rules_enabled() ?
 		get_pull(wnup_ind) : expr_type::PULL_OFF;
 #endif
+	DEBUG_STEP_PRINT("next = " << size_t(next) << endl);
+	DEBUG_STEP_PRINT("pull-up = " << size_t(get_pull(nup_ind)) << endl);
+	DEBUG_STEP_PRINT("e.val = " << size_t(e.val) << endl);
+	DEBUG_STEP_PRINT("n.val = " << size_t(n.current_value()) << endl);
 	if (next == expr_type::PULL_OFF && 
 		((nup_pull == expr_type::PULL_ON)
 #if PRSIM_WEAK_RULES
@@ -2684,6 +2720,34 @@ if (!n.pending_event()) {
 #else
 		e.cause_node = ni;
 #endif
+	} else if (dequeue_unstable_events() &&
+		next == expr_type::PULL_OFF &&
+		get_pull(nup_ind) == expr_type::PULL_ON &&
+		e.val == node_type::LOGIC_OTHER) {
+		if (n.current_value() == node_type::LOGIC_HIGH) {
+			// kill pending X, node is already high
+			e.kill();
+			n.clear_event();
+		} else {
+		/***
+			Terrible overload of the dequeue-unstable mode.
+			If (pull-dn is ON, opposing pull-up is OFF, 
+			and pending event's value is X, 
+			and node's current value is HIGH, monotonic)
+			Either:
+			1) replace the previous event with new value 0,
+				using the same time, or
+			2) cancel previous event, and re-insert new event
+				with new time.
+		***/
+		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
+		e.val = node_type::LOGIC_HIGH;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		e.cause.node = ni;
+#else
+		e.cause_node = ni;
+#endif
+		}
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-21:
+	  hacprsim: fixed stuck-node case, by allowing pending X events
+		to be overridden or killed in the unstable-dequeue mode, 
+		intended for synchronous-mode circuit simulations.  
+	  Added new test case to demonstrate difference between these modes.
+
+
 2008-01-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-20:

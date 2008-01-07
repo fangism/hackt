@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.11 2008/01/05 04:33:39 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.12 2008/01/07 20:18:29 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -36,7 +36,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	celem-01 celem-02 celem-03 celem-04 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-07 inv-08 inv-09 \
 	inv-11 inv-12 inv-13 inv-14 inv-15 inv-16 \
-	and-01 nand-01 nand-02 or-01 nor-01 nor-02 \
+	and-01 nand-01 nand-02 or-01 nor-01 nor-02 nor-04 \
 	expr-limit-a-01 \
 	unstable-01 unstable-02 unstable-03 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
@@ -93,7 +93,7 @@ HACKT_CREATE_TEST_FAILURES = \
 	expr-limit-b
 
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
-	inv-06 inv-10 \
+	inv-06 inv-10 nor-03 \
 	cycle-source-a cycle-source-b \
 	aliases-01 aliases-02 aliases-03 aliases-04 \
 	aliases-05 aliases-06 aliases-07 \
