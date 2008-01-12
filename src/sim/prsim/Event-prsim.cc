@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event-prsim.cc,v 1.1.40.1 2007/12/28 18:44:54 fang Exp $
+	$Id: Event-prsim.cc,v 1.1.40.2 2008/01/12 21:38:26 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
@@ -167,10 +167,14 @@ EventPool::check_valid_empty(void) const {
 		die = true;
 	} else {
 		const size_t s = std::accumulate(
-			free_indices.begin(), free_indices.end(), 0);
-		if (s != m*(m+1)/2) {	// triangular sum
+			free_indices.begin(), free_indices.end(), size_t(0));
+			// explicit type-spec to prevent overflow
+		const size_t expect_sum = m*(m+1)/2; // triangular sum
+		if (s != expect_sum) {
 			cerr << "FATAL: event pool free list sum "
 				"is not what\'s expected!" << endl;
+			cerr << "expected: " << expect_sum << ", but got: " <<
+				s << ", difference: " << expect_sum -s << endl;
 			die = true;
 		}
 	}

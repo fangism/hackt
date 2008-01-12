@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1.40.2 2007/12/28 06:26:41 fang Exp $
+	$Id: Event-prsim.h,v 1.1.40.3 2008/01/12 21:38:27 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -237,6 +237,9 @@ class EventPool {
 public:
 	typedef	Event				event_type;
 	typedef	index_pool<vector<Event> >	event_allocator_type;
+	/**
+		TODO: use a more compact discrete_interval_set
+	 */
 	typedef	vector<event_index_type>	free_list_type;
 private:
 	event_allocator_type			event_pool;
