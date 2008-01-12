@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.4.12 2008/01/07 20:18:29 fang Exp $
+#	$Id: Makefile.am,v 1.21.4.13 2008/01/12 23:00:00 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -93,6 +93,7 @@ HACKT_CREATE_TEST_FAILURES = \
 	expr-limit-b
 
 HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES = \
+	celem-05 \
 	inv-06 inv-10 nor-03 \
 	cycle-source-a cycle-source-b \
 	aliases-01 aliases-02 aliases-03 aliases-04 \

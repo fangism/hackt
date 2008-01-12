@@ -1,0 +1,25 @@
+# echo hello world! 
+hello world! 
+# source celem-01.prsimrc 
+## enter: #FILE#
+# initialize 
+# get a 
+a : X
+# get b 
+b : X
+# get c 
+c : X
+# get C.a 
+C.a : X
+# get C.b 
+C.b : X
+# get C.c 
+C.c : X
+## leave: #FILE#
+# queue 
+event queue:
+# status X 
+X nodes:
+a b c 
+# echo good-by world! 
+good-by world! 

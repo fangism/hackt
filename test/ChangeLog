@@ -1,6 +1,12 @@
 # "test/ChangeLog"
-#	$Id: ChangeLog,v 1.81 2007/11/27 06:10:16 fang Exp $
+#	$Id: ChangeLog,v 1.81.4.1 2008/01/12 22:59:57 fang Exp $
 # ChangeLog for test directory.
+
+2008-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-23:
+	  prsimrc_filter.awk: filter out traced source file comments (vpath)
+
 
 2007-11-26	David Fang		<fangism@users.sourceforge.net>
 

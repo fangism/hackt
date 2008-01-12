@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.4.2 2008/01/05 04:33:31 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.4.3 2008/01/12 22:59:51 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -219,6 +219,20 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/echo-commands.texi
+@deffn Command echo-commands arg
+Enables or disables echoing of each interpreted command and 
+tracing through sourced script files.  
+@var{arg} is either "on" or "off".  
+Default off.
+@end deffn
+@end texinfo
+***/
+typedef	EchoCommands<State>				EchoCommands;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::EchoCommands, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

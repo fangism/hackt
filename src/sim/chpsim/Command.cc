@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13 2007/09/28 05:37:03 fang Exp $
+	$Id: Command.cc,v 1.13.10.1 2008/01/12 22:59:47 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -212,6 +212,20 @@ Print a list of all known aliases registered with the interpreter.
 ***/
 typedef	Aliases<State>				Aliases;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Aliases, CHPSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/echo-commands.texi
+@deffn Command echo-commands arg
+Enables or disables echoing of each interpreted command and 
+tracing through sourced script files.  
+@var{arg} is either "on" or "off".  
+Default off.
+@end deffn
+@end texinfo
+***/
+typedef	EchoCommands<State>				EchoCommands;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::EchoCommands, CHPSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

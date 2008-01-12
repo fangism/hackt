@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6 2007/10/08 01:21:51 fang Exp $
+	$Id: command_common.tcc,v 1.6.10.1 2008/01/12 22:59:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -231,6 +231,45 @@ void
 Aliases<State>::usage(ostream& o) {
 	o << "aliases" << endl;
 	o << "lists all active defined command aliases" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(EchoCommands, "echo-commands",
+	"whether or not each command is echoed back")
+
+template <class State>
+int
+EchoCommands<State>::main(state_type&, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "echo-commands is " <<
+		(command_registry_type::echo_commands ? "on" : "off") << endl;
+	return command_type::NORMAL;
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		command_registry_type::echo_commands = true;
+	} else if (arg == "off") {
+		command_registry_type::echo_commands = false;
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+}
+
+template <class State>
+void
+EchoCommands<State>::usage(ostream& o) {
+	o << "echo-commands [on|off]" << endl;
+	o << "Enable or disable printing of each command as it is interpreted."
+ 		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

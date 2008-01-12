@@ -5,6 +5,14 @@
 
 2008-01-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-23:
+	  by request, prsim mode: echo-commands [on|off]
+		print each line as it is interpreted (with #), 
+		and also traces recursively sourced scripts.  
+	  also added to chpsim
+	  documented (texinfo).
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-22:
 	  Tiny fix: Event-prsim.cc free-list check-sum argument explicitly
 		cast to size_t to avoid overflow problems in 64b mode.  

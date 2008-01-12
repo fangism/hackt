@@ -1,0 +1,16 @@
+# "celem-05.prsimrc"
+# @haco@ celem.haco-a
+#	$Id: celem-05.prsimrc,v 1.1.2.1 2008/01/12 23:00:05 fang Exp $
+# testing get commands
+
+# expect fail this test because checkpoint comparison will not
+# automatically use "echo-commands on"
+
+echo-commands on
+echo hello world!
+source celem-01.prsimrc
+
+queue
+status X
+echo good-by world!
+

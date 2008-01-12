@@ -1,5 +1,5 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.4 2007/09/28 05:36:49 fang Exp $
+@c $Id: commands.texi,v 1.4.10.1 2008/01/12 22:59:31 fang Exp $
 @c TODO: index commands
 
 @node Commands
@@ -75,6 +75,10 @@ and report an error.
 @include cmd/aliases.texi
 @include cmd/unalias.texi
 @include cmd/unaliasall.texi
+
+The following command is useful for showing each executed command.
+
+@include cmd/echo-commands.texi
 
 @c ****************************************************************************
 @node general

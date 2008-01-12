@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.4.2 2008/01/05 04:33:26 fang Exp $
+@c $Id: commands.texi,v 1.2.4.3 2008/01/12 22:59:32 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -31,6 +31,10 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/echo.texi
 @include cmd/comment.texi
 @include cmd/exit.texi
+
+The following command is useful for showing each executed command.
+
+@include cmd/echo-commands.texi
 
 The following commands pertain to command aliases.
 
