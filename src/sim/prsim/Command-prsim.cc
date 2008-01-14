@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.4.3 2008/01/12 22:59:51 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.4.4 2008/01/14 19:38:17 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -435,63 +435,7 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-#if 0
-	State::step_return_type ni;
-	s.resume();
-	try {
-	while (!s.stopped() && s.pending_events() &&
-			(s.next_event_time() < stop_time) &&
-			GET_NODE((ni = s.step()))) {
-		// NB: may need specialization for real-valued (float) time.  
-
-		// honor breakpoints?
-		// tracing stuff here later...
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Step::main().
-			TODO: factor this out for maintainability.  
-		***/
-		if (s.watching_all_nodes()) {
-			print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
-		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " <<
-					stop_time -s.time() <<
-					" time left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-	}	// end while
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
-		return Command::FATAL;
-	}	// no other exceptions
-	if (!s.stopped() && s.time() < stop_time) {
-		s.update_time(stop_time);
-	}
-	// else leave the time at the time as of the last event
-	return Command::NORMAL;
-#else
 	return prsim_advance(s, stop_time, true);
-#endif
 }
 }	// end Advance::main()
 
@@ -1698,7 +1642,6 @@ if (a.size() != 2) {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		// print_watched_node(cout, s, ni, objname);
 		s.backtrace_node(cout, ni);
 		return Command::NORMAL;
 	} else {
@@ -1926,7 +1869,7 @@ Watches::usage(ostream& o) {
 @texinfo cmd/watch-queue.texi
 @deffn Command watch-queue
 @deffnx Command nowatch-queue
-Show changes to the event-queue as events are scheduled.
+Show changes to the event-queue as events on only watched nodes are scheduled.
 Typically only used during debugging or detailed diagnostics.  
 @end deffn
 @end texinfo
@@ -1937,6 +1880,23 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchQueue, PRSIM::view)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall-queue.texi
+@deffn Command watchall-queue
+@deffnx Command nowatchall-queue
+Show changes to the event-queue as @emph{every} event is scheduled.
+Typically only used during debugging or detailed diagnostics.  
+@end deffn
+@end texinfo
+***/
+typedef	WatchAllQueue<State>			WatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchAllQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchAllQueue, PRSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

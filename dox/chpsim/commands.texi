@@ -1,5 +1,5 @@
 @c "commands.texi"
-@c $Id: commands.texi,v 1.4.10.1 2008/01/12 22:59:31 fang Exp $
+@c $Id: commands.texi,v 1.4.10.2 2008/01/14 19:38:01 fang Exp $
 @c TODO: index commands
 
 @node Commands
@@ -227,8 +227,10 @@ printed, but without interrupting simulation.
 @include cmd/nocause.texi
 
 @cindex event queue
-@include cmd/watch-queue.texi
-@include cmd/nowatch-queue.texi
+@c @include cmd/watch-queue.texi
+@c @include cmd/nowatch-queue.texi
+@include cmd/watchall-queue.texi
+@include cmd/nowatchall-queue.texi
 
 @cindex watchpoints
 

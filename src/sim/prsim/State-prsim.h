@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.4.6 2008/01/07 06:42:30 fang Exp $
+	$Id: State-prsim.h,v 1.2.4.7 2008/01/14 19:38:21 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -220,16 +220,21 @@ private:
 		 */
 		FLAG_RANDOM_FANOUT_EVALUATION_ORDERING = 0x80,
 		/**
+			If true, dump events of watched nodes as they
+			are entered into the event queue.  
+		 */
+		FLAG_WATCH_QUEUE = 0x100,
+		/**
 			If true, dump every event as it is enqueued in
 			the primary event queue.  
 		 */
-		FLAG_WATCH_QUEUE = 0x100,
+		FLAG_WATCHALL_QUEUE = 0x200,
 #if PRSIM_WEAK_RULES
 		/**
 			Global flag to heed or ignore weak rules.  
 			Default off.  
 		 */
-		FLAG_WEAK_RULES = 0x200,
+		FLAG_WEAK_RULES = 0x400,
 #endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
@@ -721,6 +726,17 @@ public:
 
 	bool
 	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
+
+	void
+	watchall_event_queue(void) { flags |= FLAG_WATCHALL_QUEUE; }
+
+	void
+	nowatchall_event_queue(void) { flags &= ~FLAG_WATCHALL_QUEUE; }
+
+	bool
+	watching_all_event_queue(void) const {
+		return flags & FLAG_WATCHALL_QUEUE;
+	}
 
 	/// for any user-defined structures from the .hac
 	void

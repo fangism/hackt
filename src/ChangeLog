@@ -5,6 +5,14 @@
 
 2008-01-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-25:
+	  prsim/chpsim command update: 'watch-queue' is renamed 
+		'watchall-queue', new 'watch-queue' replacement command
+		prints events on watched nodes ONLY as they participate
+		in the event queue -- much less mess than watchall-queue.
+	  Documented, and test case updated.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-24:
 	  prsim: bug fix: mistakenly enqueued weak-rules that should've
 		been ignored due to strong rules overpowering.

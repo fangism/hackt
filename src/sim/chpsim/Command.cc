@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13.10.1 2008/01/12 22:59:47 fang Exp $
+	$Id: Command.cc,v 1.13.10.2 2008/01/14 19:38:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2131,10 +2131,13 @@ ShowEventWatches::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: FINISH ME
+#if 0
 /***
 @texinfo cmd/watch-queue.texi
 @deffn Command watch-queue
-Print events as they enter the event queue (either for checking or execution).
+Print events on watched events and values as they enter the event queue 
+(either for checking or execution).
 This is generally recommended for debugging, 
 as it prints @emph{a lot} of information.  
 @end deffn
@@ -2153,6 +2156,31 @@ Disables @command{watch-queue}.
 ***/
 typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchQueue, CHPSIM::view)
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall-queue.texi
+@deffn Command watchall-queue
+Print events as they enter the event queue (either for checking or execution).
+This is generally recommended for debugging, 
+as it prints @emph{a lot} of information.  
+@end deffn
+@end texinfo
+***/
+typedef	WatchAllQueue<State>			WatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::WatchAllQueue, CHPSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/nowatchall-queue.texi
+@deffn Command nowatchall-queue
+Disables @command{watchall-queue}.
+@end deffn
+@end texinfo
+***/
+typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::NoWatchAllQueue, CHPSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

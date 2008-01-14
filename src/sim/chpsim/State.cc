@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.14 2007/09/28 05:37:05 fang Exp $
+	$Id: State.cc,v 1.14.10.1 2008/01/14 19:38:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -256,7 +256,7 @@ struct State::event_enqueuer {
 		const time_type new_time = state.current_time +new_delay;
 		const event_placeholder_type
 			new_event(new_time, ei, cause_event_id, cause_trace_id);
-		if (state.watching_event_queue()) {
+		if (state.watching_all_event_queue()) {
 			// is this a performance hit, rechecking inside loop?
 			// if so, factor this into two versioned loops.
 			state.dump_event(cout << "enqueue: ", ei, new_time)

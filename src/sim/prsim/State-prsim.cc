@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.18 2008/01/14 07:54:41 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.19 2008/01/14 19:38:19 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -731,12 +731,14 @@ State::__deallocate_killed_event(const event_index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// inline
 const State::event_type&
 State::get_event(const event_index_type i) const {
 	return event_pool[i];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// inline
 State::event_type&
 State::get_event(const event_index_type i) {
 	return event_pool[i];
@@ -751,7 +753,9 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
-	if (watching_event_queue()) {
+	if (UNLIKELY(watching_all_event_queue() ||
+		(watching_event_queue() &&
+			is_watching_node(get_event(ei).node)))) {
 		dump_event(cout << "enqueued:", ei, t);
 	}
 	event_queue.push(event_placeholder_type(t, ei));
@@ -769,7 +773,7 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
 	DEBUG_STEP_PRINT("enqueuing exclhi ID " << ei <<
 		" at time " << t << endl);
 	exclhi_queue.push_back(event_placeholder_type(t, ei));
-	get_node(event_pool[ei].node).set_excl_queue();
+	get_node(get_event(ei).node).set_excl_queue();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -783,7 +787,7 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 	DEBUG_STEP_PRINT("enqueuing excllo ID " << ei <<
 		" at time " << t << endl);
 	excllo_queue.push_back(event_placeholder_type(t, ei));
-	get_node(event_pool[ei].node).set_excl_queue();
+	get_node(get_event(ei).node).set_excl_queue();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1569,14 +1573,14 @@ for ( ; i!=e; ++i) {
 			<< endl);
 		if (n.pending_event()) {
 			DEBUG_STEP_PRINT("event.val == " <<
-				size_t(event_pool[n.get_event()].val) << endl);
+				size_t(get_event(n.get_event()).val) << endl);
 			DEBUG_STEP_PRINT("n.in_excl_queue == " <<
 				size_t(n.in_excl_queue()) << endl);
 		}
 #endif
 			if (n.current_value() == node_type::LOGIC_HIGH ||
 				(n.pending_event() && 
-				(event_pool[n.get_event()].val ==
+				(get_event(n.get_event()).val ==
 					node_type::LOGIC_HIGH) &&
 				!n.in_excl_queue())) {
 				DEBUG_STEP_PRINT("++prev" << endl);
@@ -1638,7 +1642,7 @@ for ( ; i!=e; ++i) {
 			const node_type& n(get_node(ni));
 			if (n.current_value() == node_type::LOGIC_LOW ||
 				(n.pending_event() && 
-				(event_pool[n.get_event()].val ==
+				(get_event(n.get_event()).val ==
 					node_type::LOGIC_LOW) &&
 				!n.in_excl_queue())) {
 				++prev;
@@ -3050,6 +3054,7 @@ State::unwatch_all_nodes(void) {
 /**
 	Prints list of explicitly watched nodes.  
 	Doesn't count watchall flag.  
+	TODO: show values
  */
 ostream&
 State::dump_watched_nodes(ostream& o) const {
@@ -3729,7 +3734,7 @@ State::save_checkpoint(ostream& o) const {
 	write_value(o, temp.size());
 	for ( ;i!=e; ++i) {
 		write_value(o, i->time);
-		event_pool[i->event_index].save_state(o);
+		get_event(i->event_index).save_state(o);
 	}
 }
 	WRITE_ALIGN_MARKER

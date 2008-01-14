@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.4.3 2008/01/12 22:59:32 fang Exp $
+@c $Id: commands.texi,v 1.2.4.4 2008/01/14 19:38:02 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -138,6 +138,7 @@ View commands affect what is displayed while the simulation is running.
 @include cmd/tcounts.texi
 @include cmd/zerotcounts.texi
 @include cmd/watch-queue.texi
+@include cmd/watchall-queue.texi
 
 @c ----------------------------------------------------------------------------
 @node Modes Commands

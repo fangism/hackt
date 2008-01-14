@@ -1,6 +1,6 @@
 /**
 	\file "sim/chpsim/State.h"
-	$Id: State.h,v 1.9 2007/09/28 05:37:08 fang Exp $
+	$Id: State.h,v 1.9.10.1 2008/01/14 19:38:16 fang Exp $
 	Structure that contains the state information of chpsim.  
  */
 
@@ -174,16 +174,22 @@ private:
 		 */
 		FLAG_WATCH_QUEUE = 0x0002,
 		/**
+			When true report event-queue activity, i.e.
+			when events are enqueued.  
+			Initially off.  
+		 */
+		FLAG_WATCHALL_QUEUE = 0x0004,
+		/**
 			When true, print each event as it is dequeued and
 			executed.  
 			Initially off.  
 		 */
-		FLAG_WATCH_ALL_EVENTS = 0x0004,
+		FLAG_WATCH_ALL_EVENTS = 0x0008,
 		/**
 			Set to true to show last-arrival event-causality.  
 			Initially off.  
 		 */
-		FLAG_SHOW_CAUSE = 0x0008,
+		FLAG_SHOW_CAUSE = 0x0010,
 		/**
 			Set true if named trace file is opened successfully.  
 			Initially off.  
@@ -538,6 +544,17 @@ public:
 
 	bool
 	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
+
+	void
+	watchall_event_queue(void) { flags |= FLAG_WATCHALL_QUEUE; }
+
+	void
+	nowatchall_event_queue(void) { flags &= ~FLAG_WATCHALL_QUEUE; }
+
+	bool
+	watching_all_event_queue(void) const {
+		return flags & FLAG_WATCHALL_QUEUE;
+	}
 
 	void
 	check_structure(void) const;
