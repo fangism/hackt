@@ -1,13 +1,13 @@
-# "SRAM-b-01.prsimrc"
-# @haco@ SRAM-b.haco-a
+# "SRAM-c-01.prsimrc"
+# @haco@ SRAM-c.haco-a
 
 # echo-commands on
-watchall-queue
 timing after
 weak-rules on
 fanin bl
 fanin _bl
 watchall
+watchall-queue
 unstable warn
 unstable-dequeue
 
@@ -28,6 +28,7 @@ time
 echo enabled write, set zero value, now setting wordline
 set wv 0
 set we 1
+advance 30
 set wl[0] 1
 cycle
 time

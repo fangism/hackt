@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.19 2008/01/14 19:38:19 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.20 2008/01/14 23:43:04 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1521,6 +1521,7 @@ State::__flush_pending_event_replacement(node_type& _n,
 		break;
 	case node_type::LOGIC_OTHER:
 	DEBUG_STEP_PRINT("don't know what to do!" << endl);
+		// should depend on pull up or down...
 		FINISH_ME(Fang);
 		enqueue_event(get_delay_up(ev), ne);
 		// _n.clear_excl_queue();
@@ -2552,7 +2553,8 @@ if (!n.pending_event()) {
 #endif
 	} else if (dequeue_unstable_events() &&
 		next == expr_type::PULL_OFF && 
-		get_pull(ndn_ind) == expr_type::PULL_ON &&
+		(get_pull(ndn_ind) == expr_type::PULL_ON ||
+			n.current_value() == node_type::LOGIC_LOW) &&
 		e.val == node_type::LOGIC_OTHER) {
 		if (n.current_value() == node_type::LOGIC_LOW) {
 			// already low, just kill pending X
@@ -2728,7 +2730,8 @@ if (!n.pending_event()) {
 #endif
 	} else if (dequeue_unstable_events() &&
 		next == expr_type::PULL_OFF &&
-		get_pull(nup_ind) == expr_type::PULL_ON &&
+		(get_pull(nup_ind) == expr_type::PULL_ON ||
+			n.current_value() == node_type::LOGIC_HIGH) &&
 		e.val == node_type::LOGIC_OTHER) {
 		if (n.current_value() == node_type::LOGIC_HIGH) {
 			// kill pending X, node is already high

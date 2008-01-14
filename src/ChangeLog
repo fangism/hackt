@@ -5,6 +5,14 @@
 
 2008-01-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-26:
+	  prsim: bug fix: stuck-node attributed to failure to 'overtake'
+		a firing (by killing it), fixed.
+	  Added new test case: SRAM-c.
+	  Former test case SRAM-b-01 behavior updated, no longer
+		enqueues an X event (is killed while pending).  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-25:
 	  prsim/chpsim command update: 'watch-queue' is renamed 
 		'watchall-queue', new 'watch-queue' replacement command
