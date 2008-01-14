@@ -1,7 +1,5 @@
 expect out to remain X, until strong rules are off 
 	0	wpup : 1
-WARNING: weak-interference `out'
->> cause: `wndn' (val: 1)
 	0	wndn : 1
 turn off strong pull-up... 
 	0	pup : 1

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.17 2008/01/07 20:18:25 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.18 2008/01/14 07:54:41 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -56,7 +56,7 @@
 
 #if	DEBUG_CHECK
 #define	DEBUG_CHECK_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
-#define	STACKTRACE_VERBOSE_CHECK		STACKTRACE_VERBOSE
+#define	STACKTRACE_VERBOSE_CHECK	STACKTRACE_VERBOSE
 #else
 #define	DEBUG_CHECK_PRINT(x)
 #define	STACKTRACE_VERBOSE_CHECK
@@ -2355,10 +2355,15 @@ State::propagate_evaluation(
 #if DEBUG_STEP
 	if (ei) dump_event(cerr << "pending:\t", ei, 0.0) << endl;
 #endif
+	const expr_index_type up_index = n.pull_up_index STR_INDEX(NORMAL_RULE);
+	const pull_enum up_pull = get_pull(up_index);
+	const expr_index_type dn_index = n.pull_dn_index STR_INDEX(NORMAL_RULE);
+	const pull_enum dn_pull = get_pull(dn_index);
 	break_type err = false;
 #if PRSIM_WEAK_RULES
 	// weak rule pre-filtering
-if (weak_rules_enabled() && n.pending_event()) {
+if (weak_rules_enabled()) {
+if (n.pending_event()) {
 	event_type& e(get_event(ei));	// previous scheduled event
 	if (e.is_weak() && !is_weak && next != expr_type::PULL_OFF) {
 		DEBUG_STEP_PRINT("old weak event killed" << endl);
@@ -2379,7 +2384,24 @@ if (weak_rules_enabled() && n.pending_event()) {
 		// HERE: is event already in main event queue? flush?
 		return err;	// no error
 	}
+} else {	// no pending event
+	if (is_weak &&
+			(up_pull != expr_type::PULL_OFF ||
+			dn_pull != expr_type::PULL_OFF)) {
+		DEBUG_STEP_PRINT("weak event suppressed" << endl);
+		// drops weak-firings overpowered by strong on rules
+		// regardless of what 'next' weak pull is
+		return err;	// no error
+	}
 }
+}	// end if weak_rules_enabled
+
+	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
+	const pull_enum wdn_pull = weak_rules_enabled()
+		? get_pull(wdn_index) : expr_type::PULL_OFF;
+	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
+	const pull_enum wup_pull = weak_rules_enabled()
+		? get_pull(wup_index) : expr_type::PULL_OFF;
 #endif	// PRSIM_WEAK_RULES
 if (u->direction()) {
 	// pull-up
@@ -2428,16 +2450,6 @@ if (!n.pending_event()) {
 	// might not have been updated yet...
 	else if (next == expr_type::PULL_OFF) {
 	DEBUG_STEP_PRINT("pull-up turned off" << endl);
-	const expr_index_type dn_index = n.pull_dn_index STR_INDEX(NORMAL_RULE);
-	const pull_enum dn_pull = get_pull(dn_index);
-#if PRSIM_WEAK_RULES
-	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wdn_pull = weak_rules_enabled()
-		? get_pull(wdn_index) : expr_type::PULL_OFF;
-	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const pull_enum wup_pull = weak_rules_enabled()
-		? get_pull(wup_index) : expr_type::PULL_OFF;
-#endif
 	if (dn_pull == expr_type::PULL_ON
 #if PRSIM_WEAK_RULES
 		|| (!is_weak && wdn_pull == expr_type::PULL_ON &&
@@ -2614,16 +2626,6 @@ if (!n.pending_event()) {
 	// might not have been updated yet...
 	else if (next == expr_type::PULL_OFF) {
 	DEBUG_STEP_PRINT("pull-down turned off" << endl);
-	const expr_index_type up_index = n.pull_up_index STR_INDEX(NORMAL_RULE);
-	const pull_enum up_pull = get_pull(up_index);
-#if PRSIM_WEAK_RULES
-	const expr_index_type wdn_index = n.pull_dn_index STR_INDEX(WEAK_RULE);
-	const pull_enum wdn_pull = weak_rules_enabled() ?
-		get_pull(wdn_index) : expr_type::PULL_OFF;
-	const expr_index_type wup_index = n.pull_up_index STR_INDEX(WEAK_RULE);
-	const pull_enum wup_pull = weak_rules_enabled() ?
-		get_pull(wup_index) : expr_type::PULL_OFF;
-#endif
 	if (up_pull == expr_type::PULL_ON
 #if PRSIM_WEAK_RULES
 		|| (!is_weak && wup_pull == expr_type::PULL_ON &&

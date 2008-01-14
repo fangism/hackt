@@ -19,8 +19,6 @@ WARNING: weak-interference `bl'
 	0	_pchg : 0
 	0	wl[1] : 0
 	0	wv : 0
-WARNING: weak-interference `bl'
->> cause: `wl[0]' (val: 0)
 	0	wl[0] : 0
 	0	we : 0
 	10	_bl : 1	[by wv:=0]

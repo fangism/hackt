@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.10.3 2008/01/05 04:33:36 fang Exp $
+#	$Id: TODO,v 1.4.10.4 2008/01/14 07:54:42 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -18,6 +18,9 @@ Simulation:
 prsim:
 	category of 'debug' commands for inspecting state, etc...
 
+	weak vs. possible: rename formerly 'weak' anomalies to 'possible'
+		to avoid confusion with weak-rules.  (poor naming)
+
 	direction-specific breakpoints
 
 	breakpoint policies *per-node*
@@ -34,7 +37,9 @@ prsim:
 	unstab attribute: is checked on nodes, but only applied to rules
 		so this needs to be fixed to check for rules.  
 		Should wipe it from node attributes.
-		Difficulty: easy (an hour)
+		Difficulty: easy (few hours)
+		Q: what should unstable policy do? dequeue? re-queue overtake?
+		This would require events to track which *rule* caused firing.
 
 	interpreter commands:
 		interp key [value]
