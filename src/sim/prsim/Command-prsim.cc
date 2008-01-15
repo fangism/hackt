@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.4.4 2008/01/14 19:38:17 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.4.5 2008/01/15 22:39:10 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1183,6 +1183,35 @@ Status::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/unknown-inputs.texi
+@deffn Command unknown-inputs
+Print all nodes with value X that have no fanins, i.e. input-only nodes.  
+Great for debugging forgotten environment inputs and connections!
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownInputs, "unknown-inputs", info, 
+	"list all nodes at value X with no fanin")
+
+int
+UnknownInputs::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_dangling_unknown_nodes(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownInputs::usage(ostream& o) {
+	o << name << " -- list all nodes at value X with no fanin." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/fanin.texi
 @deffn Command fanin node
 Print all production rules that can fire @var{NODE}.  
@@ -1598,6 +1627,18 @@ Useful for checking for deadlock.
 ***/
 typedef	AssertQueue<State>			AssertQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assertn-queue.texi
+@deffn Command assertn-queue
+Error out if event queue is not empty.  
+Useful for checking for checking result of cycle.  
+@end deffn
+@end texinfo
+***/
+typedef	AssertNQueue<State>			AssertNQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertNQueue, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

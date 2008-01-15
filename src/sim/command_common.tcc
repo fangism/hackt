@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6.10.2 2008/01/14 19:38:09 fang Exp $
+	$Id: command_common.tcc,v 1.6.10.3 2008/01/15 22:39:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -568,6 +568,34 @@ void
 AssertQueue<State>::usage(ostream& o) {
 	o << "assert-queue" << endl;
 	o << "signal an error if the event queue is empty" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(AssertNQueue, "assertn-queue",
+	"assert that the event queue is empty")
+
+template <class State>
+int
+AssertNQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (!s.pending_events()) {
+		return command_type::NORMAL;
+	} else {
+		cout << "assert failed: expecting empty event queue."
+			<< endl;
+		return command_type::FATAL;
+	}
+}
+}
+
+template <class State>
+void
+AssertNQueue<State>::usage(ostream& o) {
+	o << "assertn-queue" << endl;
+	o << "signal an error if the event queue is not empty" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

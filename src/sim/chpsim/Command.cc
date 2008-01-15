@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13.10.2 2008/01/14 19:38:11 fang Exp $
+	$Id: Command.cc,v 1.13.10.3 2008/01/15 22:39:08 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1738,6 +1738,17 @@ Useful as a quick check for deadlock.
 ***/
 typedef	AssertQueue<State>			AssertQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertQueue, CHPSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/assertn-queue.texi
+@deffn Command assertn-queue
+Error out if the event queue is not empty.
+@end deffn
+@end texinfo
+***/
+typedef	AssertNQueue<State>			AssertNQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::AssertNQueue, CHPSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

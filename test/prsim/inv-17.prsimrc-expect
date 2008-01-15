@@ -1,0 +1,6 @@
+X nodes with no fanin:
+a
+expect first node to be X 
+expect queue initially empty 
+X nodes with no fanin:
+should be not more unknown inputs 

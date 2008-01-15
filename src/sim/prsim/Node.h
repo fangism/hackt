@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.76.1 2007/12/11 12:02:18 fang Exp $
+	$Id: Node.h,v 1.13.76.2 2008/01/15 22:39:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -161,6 +161,17 @@ public:
 		, const rule_strength w
 #endif
 		);
+
+	bool
+	has_fanin(void) const {
+#if PRSIM_WEAK_RULES
+		return pull_up_index[NORMAL_RULE] ||
+			pull_dn_index[NORMAL_RULE] ||
+			pull_up_index[WEAK_RULE] || pull_dn_index[WEAK_RULE];
+#else
+		return pull_up_index || pull_dn_index;
+#endif
+	}
 
 	bool
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }

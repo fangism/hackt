@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.21 2008/01/15 01:16:19 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.22 2008/01/15 22:39:13 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3378,6 +3378,26 @@ do {
 	++w;
 } while (w<2);		// even if !weak_rules_enabled()
 #endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print all X nodes with no fanin.  
+	This won't find X cycles, however.  
+ */
+ostream&
+State::dump_dangling_unknown_nodes(ostream& o) const {
+	const size_t ns = node_pool.size();
+	size_t i = INVALID_NODE_INDEX +1;
+	o << "X nodes with no fanin:" << endl;
+	for ( ; i<ns; ++i) {
+		const node_type& n(node_pool[i]);
+		if (n.current_value() == node_type::LOGIC_OTHER &&
+			!n.has_fanin()) {
+			o << get_node_canonical_name(i) << endl;
+		}
+	}
 	return o;
 }
 
