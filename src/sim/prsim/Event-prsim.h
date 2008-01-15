@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1.40.3 2008/01/12 21:38:27 fang Exp $
+	$Id: Event-prsim.h,v 1.1.40.4 2008/01/15 01:16:18 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -198,6 +198,15 @@ public:
 		else	flags &= ~EVENT_WEAK_RULE;
 	}
 #endif
+
+	void
+	set_cause_node(const node_index_type ni) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		cause.node = ni;
+#else
+		cause_node = ni;
+#endif
+	}
 
 	void
 	save_state(ostream&) const;

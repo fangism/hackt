@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.4.20 2008/01/14 23:43:04 fang Exp $
+	$Id: State-prsim.cc,v 1.6.4.21 2008/01/15 01:16:19 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2515,11 +2515,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
-#endif
+		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
 		e.set_weak(wndn_pull != expr_type::PULL_OFF
 			&& ndn_pull == expr_type::PULL_OFF);
@@ -2546,11 +2542,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
 		e.val = node_type::LOGIC_HIGH;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
-#endif
+		e.set_cause_node(ni);
 	} else if (dequeue_unstable_events() &&
 		next == expr_type::PULL_OFF && 
 		(get_pull(ndn_ind) == expr_type::PULL_ON ||
@@ -2574,11 +2566,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
-#endif
+		e.set_cause_node(ni);
 		}
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
@@ -2692,11 +2680,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
 		e.val = node_type::LOGIC_HIGH;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
-#endif
+		e.set_cause_node(ni);
 #if PRSIM_WEAK_RULES
 		e.set_weak(wnup_pull != expr_type::PULL_OFF
 			&& nup_pull == expr_type::PULL_OFF);
@@ -2723,11 +2707,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
-#endif
+		e.set_cause_node(ni);
 	} else if (dequeue_unstable_events() &&
 		next == expr_type::PULL_OFF &&
 		(get_pull(nup_ind) == expr_type::PULL_ON ||
@@ -2751,11 +2731,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
 		e.val = node_type::LOGIC_HIGH;
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		e.cause.node = ni;
-#else
-		e.cause_node = ni;
-#endif
+		e.set_cause_node(ni);
 		}
 #endif	// PRSIM_ALLOW_OVERTAKE_EVENTS
 	} else {
@@ -2905,11 +2881,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			// check for conflicting/redundant events 
 			// on pending queue (result of instability)
 		if (instability) {
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-			e.cause.node = ni;
-#else
-			e.cause_node = ni;
-#endif
+			e.set_cause_node(ni);
 			if (dequeue_unstable_events()) {
 				// let dequeuer deallocate killed events
 				const size_t pe = n.get_event();
