@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193.4.2 2007/12/20 18:35:46 fang Exp $
+#	$Id: Makefile.am,v 1.193.4.3 2008/01/16 21:35:10 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1494,7 +1494,7 @@ am_cxxflags.h: $(srcdir)/Makefile.am
 	$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" ; \
 	$(ECHO) "#endif	/* AM_LDFLAGS */" ;} > $@
 
-# flags needed to produce .output from yacc/bison
+# flags needed to produce .output and .h from yacc/bison
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 

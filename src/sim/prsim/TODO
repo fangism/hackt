@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.10.4 2008/01/14 07:54:42 fang Exp $
+#	$Id: TODO,v 1.4.10.5 2008/01/16 21:35:13 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -16,6 +16,8 @@ Simulation:
 		counter.  
 
 prsim:
+	Add guile/Scheme interface for static queries and simulation control!
+	
 	category of 'debug' commands for inspecting state, etc...
 
 	weak vs. possible: rename formerly 'weak' anomalies to 'possible'

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.58 2007/11/26 08:27:20 fang Exp $
+#	$Id: TODO,v 1.58.4.1 2008/01/16 21:35:11 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -103,6 +103,10 @@ production rule templates and macro types
 
 interpret the @node semantics (whose syntax came from -PRS-07 branch)
 	for internal nodes
+
+static checking:
+	nodes with no fanin, but with fanout should be propagated to
+		ports as an alias (warning, per process definition)
 
 ===============================================================================
 pie-in-the-sky:

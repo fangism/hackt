@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-29:
+	  Critical util library bug fix in util/packed_array.tcc, 
+		see util/ChangeLog.   Symptom was botched printing of
+		3D array indices, due to bad index_to_key lookup.  
+	  Many test cases added to parser/connect.
+	  This patch is appropriate for main trunk.  
+
+
 2008-01-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-28:

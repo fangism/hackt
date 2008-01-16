@@ -1,0 +1,100 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	64
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	50
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	169
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	50
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	133
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	72
+	11	##ADDR##	footprnt	0	#HEAD#	#TAIL#	686
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	72
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
+	17	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	40
+	18	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	32
+	20	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1011
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    top_type = process-definition (defined) top_type(
+        bool<> co[0..0][0..2][0..1]
+      )
+      In definition "top_type", we have: {
+      Instances:
+        co = bool<> top_type::co^3
+      unroll sequence: 
+        bool<> co[0..0][0..2][0..1]
+      footprint: {
+        co = bool^3
+          {
+            [0][0][0] = top_type::co[0][0][0] (1) 
+            [0][0][1] = top_type::co[0][0][1] (2) 
+            [0][1][0] = top_type::co[0][1][0] (3) 
+            [0][1][1] = top_type::co[0][1][1] (4) 
+            [0][2][0] = top_type::co[0][2][0] (5) 
+            [0][2][1] = top_type::co[0][2][1] (6) 
+          }
+        Created state:
+        bool instance pool:
+        1	top_type::co[0][0][0]
+        2	top_type::co[0][0][1]
+        3	top_type::co[0][1][0]
+        4	top_type::co[0][1][1]
+        5	top_type::co[0][2][0]
+        6	top_type::co[0][2][1]
+      }
+      }
+
+  Instances:
+    co = bool<> co^3
+    top = top_type<> top
+}
+
+footprint: {
+  co = bool^3
+    {
+      [0][0][0] = co[0][0][0] (1) 
+      [0][0][1] = co[0][0][1] (2) 
+      [0][1][0] = co[0][1][0] (3) 
+      [0][1][1] = co[0][1][1] (4) 
+      [0][2][0] = co[0][2][0] (5) 
+      [0][2][1] = co[0][2][1] (6) 
+    }
+  top = process top_type<>^0 = top (1) (
+    co = bool^3
+      {
+        [0][0][0] = co[0][0][0] (1) 
+        [0][0][1] = co[0][0][1] (2) 
+        [0][1][0] = co[0][1][0] (3) 
+        [0][1][1] = co[0][1][1] (4) 
+        [0][2][0] = co[0][2][0] (5) 
+        [0][2][1] = co[0][2][1] (6) 
+      }
+  )
+  Created state:
+  process instance pool:
+  1	top
+  bool instance pool:
+  1	co[0][0][0]
+  2	co[0][0][1]
+  3	co[0][1][0]
+  4	co[0][1][1]
+  5	co[0][2][0]
+  6	co[0][2][1]
+}

@@ -1,0 +1,11 @@
+// "140.hac"
+// bug test case for cflatted connections (.prs)
+// original test from Clint Kelly, dramatically reduced by Fang (and delta)
+
+// defchan e1of1 <: chan(bool)(bool d[1]) { }
+defproc e1of1 (bool d[1]) { }
+defproc top_type (e1of1 co[1][7][3]) { }
+top_type top;
+e1of1 co[1][7][3];
+co = top.co;
+

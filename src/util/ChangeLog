@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
-#	$Id: ChangeLog,v 1.93.6.1 2007/12/19 07:14:55 fang Exp $
+#	$Id: ChangeLog,v 1.93.6.2 2008/01/16 21:35:16 fang Exp $
+
+2008-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-01-prsim-08-29:
+	  CRITICAL bug fix (latent) in packed_array.tcc:
+		index_to_key was borked '/' and '%' operations were swapped,
+		causing incorrect print out of indices.
+		Thanks to Clint for initial unreduced test case.  
+		Test now covers this in test/packed_array_test.cc.  
+
 
 2007-12-18	David Fang		<fangism@users.sourceforge.net>
 
