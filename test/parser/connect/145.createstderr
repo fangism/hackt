@@ -3,20 +3,20 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
-	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	50
-	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	50
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	133
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	72
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
-	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	72
-	12	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	40
-	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	32
-	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	32
-	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1098
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	12	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	footprnt	0	#HEAD#	#TAIL#	586
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

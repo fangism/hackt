@@ -3,35 +3,35 @@ Persistent Object Manager text dump:
 	i	addr		type		arg	head	tail	size
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
-	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	72
-	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	50
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
-	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	49
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	40
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	40
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	133
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	40
-	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	560
-	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	51
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	169
-	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	50
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
-	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
-	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	72
-	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2229
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
-	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	40
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	40
-	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	72
-	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	40
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	26	##ADDR##	mprocref	0	#HEAD#	#TAIL#	40
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	32
-	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	4441
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	86
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	footprnt	0	#HEAD#	#TAIL#	284
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	17	##ADDR##	footprnt	0	#HEAD#	#TAIL#	1357
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	footprnt	0	#HEAD#	#TAIL#	2713
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
