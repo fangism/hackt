@@ -1,0 +1,19 @@
+// "cond-spec-05.hac"
+// copy-modified from "cond-spec-04.hac"
+// testing conditional spec directives
+
+template <pint N, M>
+defproc spec_test() {
+bool z[3];
+[(N > M) ->
+spec { }
+[] else ->
+spec {
+	mk_exclhi(z)
+}
+]
+}
+
+spec_test<2,4> A;
+spec_test<3,1> B;
+

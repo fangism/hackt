@@ -1,0 +1,3 @@
+mk_exclhi("X.x[0][0]", "X.x[0][1]")
+mk_exclhi("X.x[1][0]", "X.x[1][1]")
+mk_exclhi("X.x[2][0]", "X.x[2][1]")

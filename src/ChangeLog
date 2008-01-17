@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-03:
+	  Bug fix: forgot top-level spec-directives in cflat
+	  Added support for loop and conditional spec directives.  
+		Includes several new test cases.  
+	  Next: cleanup, refactor loop/conditional code.
+
+
 2008-01-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-02-merged-prsim-08-29:

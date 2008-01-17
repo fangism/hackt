@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.26 2007/11/26 08:27:24 fang Exp $
+	$Id: instance.cc,v 1.26.2.1 2008/01/17 23:01:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -35,6 +35,7 @@
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/ref/meta_value_reference_base.h"
 #include "Object/lang/PRS.h"
+#include "Object/lang/SPEC.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
@@ -1085,26 +1086,27 @@ loop_instantiation::check_build(context& c) const {
 		ls(new loop_scope(loop_ind, loop_range));
 	excl_ptr<entity::PRS::rule_loop>
 		prl(new entity::PRS::rule_loop(loop_ind, loop_range));
+	const count_ptr<entity::SPEC::directives_loop>
+		srl(new entity::SPEC::directives_loop(loop_ind, loop_range));
 	NEVER_NULL(ls);
 	NEVER_NULL(prl);
-	never_ptr<entity::PRS::rule_loop> prlc(prl);
+	NEVER_NULL(srl);
+	const never_ptr<entity::PRS::rule_loop> prlc(prl);
 	c.get_current_prs_body().append_rule(prl);
+	c.get_current_spec_body().push_back(srl);
 {
 	const context::loop_scope_frame _lsf(c, ls);
 	const context::prs_body_frame prlf(c, prlc);
+	const context::spec_body_frame srlf(c, 
+		never_ptr<entity::SPEC::directives_set>(&*srl));
 	body->check_build(c);
 	// unwind frames upon end of scope
 }
 	if (prlc->empty()) {
-#if 0
-		excl_ptr<entity::PRS::rule>
-			pprl = prl.as_a_xfer<entity::PRS::rule>();
-		c.get_current_prs_body().append_rule(pprl);
-		INVARIANT(!prl);
-		INVARIANT(!pprl);
-#else
 		c.get_current_prs_body().pop_back();
-#endif
+	}
+	if (srl->empty()) {
+		c.get_current_spec_body().pop_back();
 	}
 	// otherwise just omit empty loop, is pointless
 }
@@ -1156,22 +1158,32 @@ if (guard && !guard.is_a<const token_else>()) {
 	}
 }
 // allow guard to be NULL for else clause
-	// don't forget to open up guarded PRS as well (may be empty).
+	// don't forget to open up guarded PRS,SPEC as well (may be empty).
 	const count_ptr<const conditional_scope>
 		ls(c.get_current_sequential_scope()->back()
 			.is_a<const conditional_scope>());
 	const never_ptr<entity::PRS::rule_conditional>
 		rs(&IS_A(entity::PRS::rule_conditional&, 
 			*c.get_current_prs_body().back()));
+	const count_ptr<const entity::SPEC::directives_conditional>
+		ss(c.get_current_spec_body().back()
+			.is_a<const entity::SPEC::directives_conditional>());
 	NEVER_NULL(ls);
 	NEVER_NULL(rs);
+	NEVER_NULL(ss);
 	const_cast<conditional_scope&>(*ls)	// kludge
 		.append_guarded_clause(guard_expr);	// instance management
 	rs->append_guarded_clause(guard_expr);	// PRS
+	entity::SPEC::directives_conditional&
+		css(const_cast<entity::SPEC::directives_conditional&>(*ss));
+	css.append_guarded_clause(guard_expr);	// spec
 {
 	const context::conditional_scope_frame _csf(c);
 	const context::prs_body_frame _pbf(c, 
 		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));
+	const context::spec_body_frame _sbf(c, 
+		never_ptr<entity::SPEC::directives_set>(
+			&css.get_last_clause()));
 	body->check_build(c);
 }
 	return return_type(NULL);
@@ -1217,17 +1229,23 @@ conditional_instantiation::check_build(context& c) const {
 	const count_ptr<conditional_scope> ls(new conditional_scope());
 	excl_ptr<entity::PRS::rule_conditional>
 		rs(new entity::PRS::rule_conditional());
+	const count_ptr<entity::SPEC::directives_conditional>
+		ss(new entity::SPEC::directives_conditional());
 	never_ptr<const entity::PRS::rule_conditional> crs(rs);
 	c.get_current_sequential_scope()->push_back(ls);
 	c.get_current_prs_body().append_rule(rs);	// xfer ownership
+	c.get_current_spec_body().push_back(ss);
 	MUST_BE_NULL(rs);
 	const never_ptr<const object> ret(gd->check_build(c));
-	// empty conditional instance-management and PRS can be removed
+	// empty conditional instance-management and PRS,SPEC can be removed
 	if (ls->empty()) {
 		c.get_current_sequential_scope()->pop_back();
 	}
 	if (crs->empty()) {
 		c.get_current_prs_body().pop_back();
+	}
+	if (ss->empty()) {
+		c.get_current_spec_body().pop_back();
 	}
 	return ret;
 }

@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.8 2007/11/26 08:27:22 fang Exp $
+	$Id: definition.cc,v 1.8.2.1 2008/01/17 23:01:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -804,6 +804,10 @@ process_def::check_build(context& c) const {
 		_pb(c, never_ptr<entity::PRS::rule_set>(
 			&c.get_current_definition<process_definition>()
 			->get_prs()));
+	const context::spec_body_frame
+		_sb(c, never_ptr<entity::SPEC::directives_set>(
+			&c.get_current_definition<process_definition>()
+			->get_spec_directives_set()));
 	body->check_build(c);
 	// useless return value, would've exited upon error already
 

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.33 2007/09/11 06:52:36 fang Exp $
+ 	$Id: module.cc,v 1.33.14.1 2008/01/17 23:01:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -21,6 +21,7 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/type/process_type_reference.h"
@@ -362,6 +363,9 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 			// const top_level_footprint_importer foo(*this);
 			const footprint& _footprint(get_footprint());
 			_footprint.get_prs_footprint().accept(cfp);
+			_footprint.get_spec_footprint().accept(cfp);
+			// no flat CHP yet (hopefully ever)
+			// _footprint.get_chp_footprint().accept(cfp);
 		} catch (...) {
 			cerr << "Caught exception during cflat PRS." << endl;
 			return good_bool(false);

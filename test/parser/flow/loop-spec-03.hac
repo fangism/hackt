@@ -1,0 +1,15 @@
+// "loop-spec-03.hac"
+// copy-modified from "loop-spec-02.hac"
+// testing spec directives inside loops
+
+template <pint N>
+defproc spec_test(bool x[N][2]) {
+(;i:N:
+	spec {
+		mk_exclhi(x[i])	// aggregate reference
+	}
+)
+}
+
+spec_test<3> X;
+

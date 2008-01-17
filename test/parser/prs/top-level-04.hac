@@ -1,0 +1,9 @@
+// "top-level-04.hac"
+// checking top-level spec directives
+
+bool x[3];
+
+spec {
+	mk_exclhi(x)
+}
+

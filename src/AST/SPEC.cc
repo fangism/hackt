@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.11.2.1 2007/12/05 17:27:37 fang Exp $
+	$Id: SPEC.cc,v 1.11.2.2 2008/01/17 23:01:48 fang Exp $
  */
 
 #include <iostream>
@@ -74,6 +74,11 @@ line_position
 directive::rightmost(void) const { return args->rightmost(); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
+#define	SPEC_THROW_ERROR		THROW_EXIT
+#else
+#define	SPEC_THROW_ERROR		return return_type(NULL);
+#endif
 /**
 	Mostly ripped off of PRS::macro::check_rule.
 	Consider factoring out into common code for maintainability.  
@@ -85,7 +90,7 @@ directive::check_spec(context& c) const {
 	if (!sde) {
 		cerr << "Error: unrecognized spec directive \"" << *name <<
 			"\" at " << where(*name) << endl;
-		return return_type(NULL);
+		SPEC_THROW_ERROR;
 	}
 	const count_ptr<entity::SPEC::directive>
 		ret(new entity::SPEC::directive(*name));
@@ -93,7 +98,7 @@ if (params) {
 	if (!sde.check_num_params(params->size()).good) {
 		// already have error message
 		cerr << "\tat " << where(*params) << endl;
-		return return_type(NULL);
+		SPEC_THROW_ERROR;
 	}
 	typedef	expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef	checked_exprs_type::const_iterator	const_iterator;
@@ -104,7 +109,7 @@ if (params) {
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking spec parameters in "
 			<< where(*params) << endl;
-		return return_type(NULL);
+		SPEC_THROW_ERROR;
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
@@ -112,7 +117,7 @@ if (params) {
 } else if (!sde.check_num_params(0).good) {
 	// no params given where required, already have error message
 	cerr << "\tat " << where(*this) << endl;
-	return return_type(NULL);
+	SPEC_THROW_ERROR;
 }
 {
 	typedef	inst_ref_expr_list::checked_bool_groups_type
@@ -123,7 +128,7 @@ if (params) {
 	if (!sde.check_num_nodes(args->size()).good) {
 		// already have error message
 		cerr << "\tat " << where(*args) << endl;
-		return return_type(NULL);
+		SPEC_THROW_ERROR;
 	}
 	checked_bools_type temp;
 	args->postorder_check_grouped_bool_refs(temp, c);
@@ -131,13 +136,17 @@ if (params) {
 	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
-		return return_type(NULL);
+		SPEC_THROW_ERROR;
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
+#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
+	c.get_current_spec_body().push_back(ret);
+#else
 	return ret;
+#endif
 }	// end method directive::check_spec
 
 //=============================================================================
@@ -163,6 +172,19 @@ line_position
 body::rightmost(void) const { return directives->rightmost(); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+body::__check_specs(context& c) const {
+if (directives) {
+	try {
+		directives->check_list_void(&directive::check_spec, c);
+	} catch (...) {
+		return false;
+	}
+}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return NULL always, a useless value.
 	\throw std::exception on error, bare-bones error handling.  
@@ -170,7 +192,7 @@ body::rightmost(void) const { return directives->rightmost(); }
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
-#if 1
+#if !CONDITIONAL_LOOP_SPEC_DIRECTIVES
 	if (c.inside_conditional() || c.inside_loop()) {
 		FINISH_ME(Fang);
 		cerr <<
@@ -201,6 +223,14 @@ body::check_build(context& c) const {
 		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
+#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
+if (directives) {
+	if (!__check_specs(c)) {
+		cerr << "ERROR: at least one error in spec body." << endl;
+		THROW_EXIT;
+	}
+}
+#else
 	typedef	std::vector<directive::return_type>	checked_directives_type;
 	checked_directives_type checked_directives;
 	directives->check_list(checked_directives, &directive::check_spec, c);
@@ -215,6 +245,7 @@ body::check_build(context& c) const {
 		cerr << "ERROR: at least one error in spec body." << endl;
 		THROW_EXIT;
 	}
+#endif	// CONDITIONAL_LOOP_SPEC_DIRECTIVES
 	return never_ptr<const object>(NULL);
 }
 

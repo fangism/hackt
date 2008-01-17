@@ -1,0 +1,16 @@
+// "cond-spec-02.hac"
+// copy-modified from "cond-spec-01.hac"
+// testing conditional spec directives
+
+pint N, M;
+bool z[3];
+N = 2;
+M = 4;
+[(N < M) ->
+spec {
+	mk_exclhi(z)
+}
+[] else ->
+spec { }
+]
+

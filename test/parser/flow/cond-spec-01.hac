@@ -1,0 +1,11 @@
+// "cond-spec-01.hac"
+// testing conditional spec directives
+
+bool z[3];
+
+[(2 < 4) ->
+spec {
+	mk_exclhi(z)
+}
+]
+
