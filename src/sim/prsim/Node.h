@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13 2006/08/12 00:36:34 fang Exp $
+	$Id: Node.h,v 1.13.74.1 2008/01/17 01:32:25 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -24,6 +24,17 @@ namespace PRSIM {
 using std::ostream;
 using std::istream;
 using std::vector;
+
+#if PRSIM_WEAK_RULES
+enum rule_strength {
+	NORMAL_RULE = 0,
+	WEAK_RULE = 1
+};
+#define	STR_INDEX(w)	[w]
+#else
+#define	STR_INDEX(w)
+#endif
+
 
 //=============================================================================
 /**
@@ -72,6 +83,16 @@ struct Node {
 	} struct_flags_enum;
 
 
+#if PRSIM_WEAK_RULES
+	/**
+		Index to the pull-up expression (normal, weak).
+	 */
+	expr_index_type			pull_up_index[2];
+	/**
+		Index to the pull-dn expression (normal, weak).
+	 */
+	expr_index_type			pull_dn_index[2];
+#else
 	/**
 		Index to the pull-up expression.
 	 */
@@ -80,6 +101,7 @@ struct Node {
 		Index to the pull-dn expression.
 	 */
 	expr_index_type			pull_dn_index;
+#endif
 
 	/**
 		List of expression indices to which this node fans out.  
@@ -114,17 +136,42 @@ public:
 	contains_fanout(const expr_index_type) const;
 
 	expr_index_type&
-	get_pull_expr(const bool b) {
-		return b ? pull_up_index : pull_dn_index;
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) {
+		return b ? pull_up_index STR_INDEX(w)
+			: pull_dn_index STR_INDEX(w);
 	}
 
 	const expr_index_type&
-	get_pull_expr(const bool b) const {
-		return b ? pull_up_index : pull_dn_index;
+	get_pull_expr(const bool b
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		) const {
+		return b ? pull_up_index STR_INDEX(w)
+			: pull_dn_index STR_INDEX(w);
 	}
 
 	void
-	replace_pull_index(const bool dir, const expr_index_type);
+	replace_pull_index(const bool dir, const expr_index_type
+#if PRSIM_WEAK_RULES
+		, const rule_strength w
+#endif
+		);
+
+	bool
+	has_fanin(void) const {
+#if PRSIM_WEAK_RULES
+		return pull_up_index[NORMAL_RULE] ||
+			pull_dn_index[NORMAL_RULE] ||
+			pull_up_index[WEAK_RULE] || pull_dn_index[WEAK_RULE];
+#else
+		return pull_up_index || pull_dn_index;
+#endif
+	}
 
 	bool
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }

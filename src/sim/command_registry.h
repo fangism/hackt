@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.2 2007/01/21 06:00:28 fang Exp $
+	$Id: command_registry.h,v 1.2.44.1 2008/01/17 01:31:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -89,6 +89,12 @@ private:
 		Aliases specific to this interpreter.  
 	 */
 	static aliases_map_type		aliases;
+public:
+	/**
+		Switch: whether or not each command is echoed as it is
+		interpreted.  Default off (false).
+	 */
+	static bool			echo_commands;
 public:
 	template <class C>
 	static

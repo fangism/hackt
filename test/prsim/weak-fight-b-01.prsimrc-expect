@@ -1,0 +1,6 @@
+expect out to remain X, until strong rules are off 
+	0	wpup : 1
+	0	wndn : 1
+turn off strong pull-up... 
+	0	pup : 1
+	10	out : 0	[by pup:=1]

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.193 2007/11/26 20:11:05 fang Exp $
+#	$Id: Makefile.am,v 1.193.2.1 2008/01/17 01:31:44 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -227,6 +227,18 @@ libhacktguile_la_LIBADD = libguileutil.la
 # want to break, but have cyclic dependency through qualified_id_slice...
 # libhackt_la_LIBADD = libhacktinstref.la libhacktcommon.la \
 #	$(LIBFANGUTIL)
+
+# VPI (Verilog Programming Language Interface)
+# EXTRA_LTLIBRARIES += vpihacprsim.la
+if HAVE_VPI
+pkglib_LTLIBRARIES += vpihacprsim.la
+endif
+
+# try dynamic library plug-in module first
+vpihacprsim_la_SOURCES = sim/prsim/vpi-prsim.cc
+vpihacprsim_la_CPPFLAGS = $(VPI_INCLUDE)
+vpihacprsim_la_LDFLAGS = -module $(VPI_LDPATH)
+vpihacprsim_la_LIBADD = libhacktsim.la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -885,6 +897,7 @@ SIM_CC_FILES = \
 	sim/state_base.cc \
 	sim/signal_handler.cc \
 	sim/prsim/Command-prsim.cc \
+	sim/prsim/Command-prsim-export.cc \
 	sim/prsim/Cause.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
@@ -1481,7 +1494,7 @@ am_cxxflags.h: $(srcdir)/Makefile.am
 	$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" ; \
 	$(ECHO) "#endif	/* AM_LDFLAGS */" ;} > $@
 
-# flags needed to produce .output from yacc/bison
+# flags needed to produce .output and .h from yacc/bison
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 

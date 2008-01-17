@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2 2007/12/01 04:25:26 fang Exp $
+@c $Id: commands.texi,v 1.2.2.1 2008/01/17 01:31:34 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -31,6 +31,10 @@ The following commands are listed in the @t{builtin} category.
 @include cmd/echo.texi
 @include cmd/comment.texi
 @include cmd/exit.texi
+
+The following command is useful for showing each executed command.
+
+@include cmd/echo-commands.texi
 
 The following commands pertain to command aliases.
 
@@ -117,9 +121,11 @@ simulator and the simulated production rules.
 @include cmd/assertn.texi
 @include cmd/queue.texi
 @include cmd/assert-queue.texi
+@include cmd/assertn-queue.texi
 @include cmd/backtrace.texi
 @include cmd/status.texi
 @include cmd/time.texi
+@include cmd/unknown-inputs.texi
 
 @c ----------------------------------------------------------------------------
 @node View Commands
@@ -134,6 +140,7 @@ View commands affect what is displayed while the simulation is running.
 @include cmd/tcounts.texi
 @include cmd/zerotcounts.texi
 @include cmd/watch-queue.texi
+@include cmd/watchall-queue.texi
 
 @c ----------------------------------------------------------------------------
 @node Modes Commands
@@ -150,6 +157,13 @@ Timing mode.
 @include cmd/random.texi
 @include cmd/norandom.texi
 
+The simulator now supports @emph{weak rules} which can drive un-pulled nodes
+but always yield to normal rules. 
+Weak rules are marked with the @code{[weak=1]} production rule attribute.  
+The use of weak-rules can be globally enabled or disabled.  
+
+@include cmd/weak-rules.texi
+
 @include cmd/diagnostics.texi
 @include cmd/unstable.texi
 @include cmd/weak-unstable.texi
@@ -158,6 +172,8 @@ Timing mode.
 @include cmd/mode.texi
 
 Two additional commands control the behavior of unstable rules.  
+These are particularly useful for simulating circuits that expect to
+glitch, such as synchronous (clocked) circuits.  
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi

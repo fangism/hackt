@@ -1,0 +1,6 @@
+WARNING: weak-interference `_bl'
+>> cause: `_pchg' (val: 0)
+WARNING: weak-interference `bl'
+>> cause: `_pchg' (val: 0)
+event queue:
+queue should be empty after unsetall 

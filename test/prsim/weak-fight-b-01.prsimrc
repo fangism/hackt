@@ -1,0 +1,17 @@
+# "weak-fight-b-01.prsimrc"
+# @haco@ weak-fight-b.haco-a
+
+weak-rules on
+watchall
+set wpup 1
+set wndn 1
+echo expect out to remain X, until strong rules are off
+cycle
+assert out X
+
+echo turn off strong pull-up...
+set pup 1
+cycle
+# fanin-get out
+assert out 0
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.10 2007/09/28 19:30:39 fang Exp $
+	$Id: Expr.h,v 1.10.8.1 2008/01/17 01:32:18 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -229,12 +229,11 @@ public:
 		Consider re-enumerating so that 2-x can be used
 		to invert.  (Will need to recode some tables in this case.)
 	 */
-	enum {
+	enum pull_enum {
 		PULL_OFF = 0x00,
 		PULL_ON = 0x01,
 		PULL_WEAK = 0x02
-	};	// wants to be pull_enum
-	typedef	uchar			pull_enum;
+	};
 
 public:
 	/**
@@ -271,8 +270,8 @@ public:
 		TODO: re-encode pull states so we can use 2-x.
 	 */
 	static
-	char
-	negate_pull(const char p) {
+	pull_enum
+	negate_pull(const pull_enum p) {
 		return (p == PULL_WEAK) ? PULL_WEAK :
 			((p == PULL_OFF) ? PULL_ON : PULL_OFF);
 	}
@@ -285,9 +284,9 @@ public:
 		PULL_WEAK: countdown == 0 && unknowns != 0
 		Negation only affects the ON/OFF states.
 	 */
-	char
+	pull_enum
 	or_pull_state(void) const {
-		const char ret = (countdown ? PULL_ON :
+		const pull_enum ret = (countdown ? PULL_ON :
 			(unknowns ? PULL_WEAK : PULL_OFF));
 		return is_not() ? negate_pull(ret) : ret;
 	}
@@ -300,9 +299,9 @@ public:
 		PULL_WEAK: countdown == 0 && unknowns != 0
 		Negation only affects the ON/OFF states.
 	 */
-	char
+	pull_enum
 	and_pull_state(void) const {
-		const char ret = (countdown ? PULL_OFF :
+		const pull_enum ret = (countdown ? PULL_OFF :
 			(unknowns ? PULL_WEAK : PULL_ON));
 		return is_not() ? negate_pull(ret) : ret;
 	}
@@ -312,7 +311,7 @@ public:
 		NOTE: this does account for negation.  
 		\return 0 if off, 1 if on, 2 if weak (X)
 	 */
-	char
+	pull_enum
 	pull_state(void) const {
 		return is_disjunctive() ? or_pull_state() : and_pull_state();
 	}

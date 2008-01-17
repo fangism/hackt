@@ -1,0 +1,78 @@
+Fanins of node `bl':
+[after 10]	(~w.we_ & ~w.wv_) | 
+[after 10]	~_pchg -> bl+
+[after 10]	we & w.wv_ -> bl-
+[after 10, weak]	(c[0].r.d[1] & wl[0]) | 
+[after 10, weak]	(c[1].r.d[1] & wl[1]) -> bl-
+Fanins of node `_bl':
+[after 10]	(~w.we_ & ~wv) | 
+[after 10]	~_pchg -> _bl+
+[after 10]	we & wv -> _bl-
+[after 50, weak]	(c[0].r.d[0] & wl[0]) | 
+[after 50, weak]	(c[1].r.d[0] & wl[1]) -> _bl-
+enqueued:	0	_pchg : 0
+enqueued:	0	wl[0] : 0
+enqueued:	0	wl[1] : 0
+enqueued:	0	we : 0
+enqueued:	0	wv : 0
+WARNING: weak-interference `_bl'
+>> cause: `_pchg' (val: 0)
+WARNING: weak-interference `bl'
+>> cause: `_pchg' (val: 0)
+	0	_pchg : 0
+	0	wl[1] : 0
+enqueued:	10	w.wv_ : 1	[from wv:=0]
+enqueued:	10	_bl : 1	[from wv:=0]
+	0	wv : 0
+	0	wl[0] : 0
+enqueued:	100	w.we_ : 1	[from we:=0]
+enqueued:	10	bl : 1	[from we:=0]
+	0	we : 0
+	10	_bl : 1	[by wv:=0]
+	10	w.wv_ : 1	[by wv:=0]
+	10	bl : 1	[by we:=0]
+	100	w.we_ : 1	[by we:=0]
+X nodes:
+p.bls c[0].r.d[0] c[0].r.d[1] c[1].r.d[0] c[1].r.d[1] 
+time: 100
+done precharging, now writing... 
+enqueued:	100	_pchg : 1
+	100	_pchg : 1
+time: 100
+enabled write, set zero value, now setting wordline 
+enqueued:	100	we : 1
+enqueued:	100	wl[0] : 1
+enqueued:	200	w.we_ : 0	[from we:=1]
+enqueued:	110	bl : 0	[from we:=1]
+	100	we : 1
+enqueued:	150	_bl : X	[from wl[0]:=1]	(weak)
+	100	wl[0] : 1
+enqueued:	120	c[0].r.d[0] : 0	[from bl:=0]
+	110	bl : 0	[by we:=1]
+enqueued:	130	c[0].r.d[1] : 1	[from c[0].r.d[0]:=0]	(weak)
+	120	c[0].r.d[0] : 0	[by bl:=0]
+	130	c[0].r.d[1] : 1	[by c[0].r.d[0]:=0]
+	200	w.we_ : 0	[by we:=1]
+time: 200
+Fanins of node `c[0].r.t':
+[after 10]	wl[0]:1 & ~_bl:1<0> -> c[0].r.d[1]-:1
+[after 10, weak]	~c[0].r.d[0]:0 -> c[0].r.d[1]+:1
+[after 10, weak]	c[0].r.d[0]:0 -> c[0].r.d[1]-:1
+Fanins of node `c[0].r.f':
+[after 10]	wl[0]:1 & ~bl:0<1> -> c[0].r.d[0]-:0
+[after 10, weak]	~c[0].r.d[1]:1 -> c[0].r.d[0]+:0
+[after 10, weak]	c[0].r.d[1]:1 -> c[0].r.d[0]-:0
+Fanins of node `bl':
+[after 10]	(~w.we_:0 & ~w.wv_:1)<0> | 
+[after 10]	~_pchg:1<0> -> bl+:0
+[after 10]	we:1 & w.wv_:1<1> -> bl-:0
+[after 10, weak]	(c[0].r.d[1]:1 & wl[0]:1)<1> | 
+[after 10, weak]	(c[1].r.d[1]:X & wl[1]:0)<0><1> -> bl-:0
+Fanins of node `_bl':
+[after 10]	(~w.we_:0 & ~wv:0)<1> | 
+[after 10]	~_pchg:1<1> -> _bl+:1
+[after 10]	we:1 & wv:0<0> -> _bl-:1
+[after 50, weak]	(c[0].r.d[0]:0 & wl[0]:1)<0> | 
+[after 50, weak]	(c[1].r.d[0]:X & wl[1]:0)<0><0> -> _bl-:1
+event queue:
+queue should be empty after unsetall 

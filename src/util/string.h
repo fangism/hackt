@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.3 2006/04/03 05:30:39 fang Exp $
+	$Id: string.h,v 1.3.96.1 2008/01/17 01:32:41 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -36,15 +36,16 @@ namespace util {
 namespace strings {
 
 /**
-	\param C is the character type, may be const, may be wchar_t.  
+	\param C is the character pointer/iterator type, 
+	may be const, may be wchar_t.  
  */
 template <class C>
 inline
-C*
-eat_whitespace(C*& s) {
+C
+eat_whitespace(C& s) {
 	if (s) {
 		while (*s && isspace(*s))
-			s++;
+			++s;
 	}
 	return s;
 }

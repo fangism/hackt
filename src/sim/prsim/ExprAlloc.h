@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.8 2007/02/27 02:28:06 fang Exp $
+	$Id: ExprAlloc.h,v 1.8.38.1 2008/01/17 01:32:22 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -51,6 +51,11 @@ protected:
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 	/**
+		Auxiliary temporary placeholder rule, 
+		for applying attributes.  
+	 */
+	rule_type*				temp_rule;
+	/**
 		Set of optimization flags.  
 	 */
 	ExprAllocFlags				flags;
@@ -69,6 +74,9 @@ public:
 
 	expr_index_type
 	last_expr_index(void) const { return ret_ex_index; }
+
+	rule_type&
+	get_temp_rule(void) const { NEVER_NULL(temp_rule); return *temp_rule; }
 
 	State&
 	get_state(void) { return state; }
@@ -101,7 +109,11 @@ public:
 
 	void
 	link_node_to_root_expr(const node_index_type, 
-		const expr_index_type, const bool dir);
+		const expr_index_type, const bool dir
+#if PRSIM_WEAK_RULES
+		, const rule_strength
+#endif
+		);
 
 	expr_index_type
 	allocate_new_literal_expr(const node_index_type);

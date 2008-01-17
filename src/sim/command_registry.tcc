@@ -1,12 +1,13 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.3 2007/02/14 04:57:24 fang Exp $
+	$Id: command_registry.tcc,v 1.3.38.1 2008/01/17 01:32:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
 #define	__HAC_SIM_COMMAND_REGISTRY_TCC__
 
 #include <iostream>
+#include <iterator>
 
 #include "sim/command_registry.h"
 #include "sim/command_base.h"
@@ -20,6 +21,7 @@ namespace HAC {
 namespace SIM {
 using std::cin;
 using std::istream;
+using std::ostream_iterator;
 using util::readline_wrapper;
 using util::ifstream_manager;
 using util::strings::eat_whitespace;
@@ -53,6 +55,13 @@ command_registry<Command>::category_map;
 template <class Command>
 typename command_registry<Command>::aliases_map_type
 command_registry<Command>::aliases;
+
+/**
+	Switch to enable/disable echo-ing each interpreted command.
+ */
+template <class Command>
+bool
+command_registry<Command>::echo_commands = false;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Command>
@@ -342,11 +351,21 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 template <class Command>
 int
 command_registry<Command>::source(state_type& st, const string& f) {
-	ifstream_manager::placeholder p(st.get_stream_manager(), f);
+	ifstream_manager& ifm(st.get_stream_manager());
+	ifstream_manager::placeholder p(ifm, f);
 	// ifstream i(f.c_str());
 if (p) {
-	return __source(p.get_stream(), st);
+	if (echo_commands) {
+		cout << "## enter: \"" << ifm.top_named_ifstream_name() << "\""
+			<< endl;
+	}
+	const int ret = __source(p.get_stream(), st);
 	// return __source(i, st);
+	if (echo_commands) {
+		cout << "## leave: \"" << ifm.top_named_ifstream_name() << "\""
+			<< endl;
+	}
+	return ret;
 } else {
 	cerr << "Error opening file: \"" << f << '\"' << endl;
 	p.error_msg(cerr) << endl;
@@ -368,6 +387,13 @@ if (s) {
 	const typename command_map_type::const_iterator
 		p(command_map.find(*argi));
 	if (p != command_map.end()) {
+		// skip # comments
+		if (echo_commands && (args.front() != "#")) {
+			cout << "# ";
+			copy(argi, args.end(),
+				ostream_iterator<string>(cout, " "));
+			cout << endl;
+		}
 		return p->second.main(st, args);
 	} else {
 		cerr << "Unknown command: " << *argi << endl;

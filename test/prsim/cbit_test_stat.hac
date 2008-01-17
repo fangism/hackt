@@ -1,0 +1,75 @@
+deftype pbit <: bool (bool t,f, d[2]) {
+	t = d[1];
+	f = d[0];
+	set {}
+	get {}
+}
+
+defproc cbit2_type(bool bl, _bl, wl[2]; pbit p[2])
+{
+/**
+	[LAYOUT ->
+	prs {
+		// Bit 0
+
+		(:i:2:
+			subckt {
+				// Access transistors
+				passn<5,hvt> (wl[i], bl, p[i].t)
+				passn<5,hvt> (wl[i], _bl, p[i].f)
+				// The p-pullup
+				passp<5,hvt> (p[i].f, Vdd, p[i].t)
+				passp<5,hvt> (p[i].t, Vdd, p[i].f)
+
+				// The n-pulldown
+				passn<8,hvt> (p[i].f, GND, p[i].t)
+				passn<8,hvt> (p[i].t, GND, p[i].f)
+			}
+		)
+
+	}
+	]
+**/
+//	[PRSIM ->
+	prs {
+		(:i:2:
+			wl[i] & ~_bl -> p[i].f-
+			wl[i] & ~bl -> p[i].t-
+			[weak=1] p[i].f => p[i].t-
+			[weak=1] p[i].t => p[i].f-
+			[weak=1] p[i].t & wl[i] -> _bl-
+			[weak=1] p[i].f & wl[i] -> bl-
+		)
+	}
+//	]
+}
+
+defproc fts (
+	bool bl, _bl, wl[4], din, _pchg, write;
+	pbit p[4]
+	) {
+
+	bool blx, _blx;
+	prs {
+		din & write -> bl+
+		din & write -> _bl-
+		~din & write -> bl-
+		~din & write -> _bl+
+		~_pchg -> bl+
+		~_pchg -> _bl+
+		// half-staticizer
+		[after=0] bl => blx-
+		[after=0] _bl => _blx-
+		[weak=1] ~blx -> bl+
+		[weak=1] ~_blx -> _bl+
+	}
+
+
+	cbit2_type b[2];
+	b[0](bl, _bl, wl[0..1], p[0..1]);
+	b[1](bl, _bl, wl[2..3], p[2..3]);
+}
+
+bool bl, _bl, wl[4], din, _pchg, write;
+pbit p[4];
+fts foo(bl, _bl, wl, din, _pchg, write, p);

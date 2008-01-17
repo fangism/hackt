@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6 2007/10/08 01:21:51 fang Exp $
+	$Id: command_common.tcc,v 1.6.8.1 2008/01/17 01:31:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -231,6 +231,45 @@ void
 Aliases<State>::usage(ostream& o) {
 	o << "aliases" << endl;
 	o << "lists all active defined command aliases" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(EchoCommands, "echo-commands",
+	"whether or not each command is echoed back")
+
+template <class State>
+int
+EchoCommands<State>::main(state_type&, const string_list& a) {
+switch (a.size()) {
+case 1:
+	cout << "echo-commands is " <<
+		(command_registry_type::echo_commands ? "on" : "off") << endl;
+	return command_type::NORMAL;
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		command_registry_type::echo_commands = true;
+	} else if (arg == "off") {
+		command_registry_type::echo_commands = false;
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return command_type::BADARG;
+	}
+	return command_type::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+}
+
+template <class State>
+void
+EchoCommands<State>::usage(ostream& o) {
+	o << "echo-commands [on|off]" << endl;
+	o << "Enable or disable printing of each command as it is interpreted."
+ 		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -532,6 +571,34 @@ AssertQueue<State>::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(AssertNQueue, "assertn-queue",
+	"assert that the event queue is empty")
+
+template <class State>
+int
+AssertNQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	if (!s.pending_events()) {
+		return command_type::NORMAL;
+	} else {
+		cout << "assert failed: expecting empty event queue."
+			<< endl;
+		return command_type::FATAL;
+	}
+}
+}
+
+template <class State>
+void
+AssertNQueue<State>::usage(ostream& o) {
+	o << "assertn-queue" << endl;
+	o << "signal an error if the event queue is not empty" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(Time, "time",
 	"display current simulation time")
 
@@ -581,7 +648,7 @@ template <class State>
 void
 WatchQueue<State>::usage(ostream& o) {
 	o << "watch-queue" << endl;
-	o << "Print events as they are inserted into the event queue."
+	o << "Print events on watched nodes only as they enter the event queue."
 		<< endl;
 }
 
@@ -605,6 +672,54 @@ template <class State>
 void
 NoWatchQueue<State>::usage(ostream& o) {
 	o << "nowatch-queue" << endl;
+	o << "Silence events on watched nodes as they enter the event queue."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(WatchAllQueue, "watchall-queue",
+	"print each event as it is enqueued into the event queue")
+
+template <class State>
+int
+WatchAllQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.watchall_event_queue();
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+WatchAllQueue<State>::usage(ostream& o) {
+	o << "watchall-queue" << endl;
+	o << "Print all events as they are inserted into the event queue."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(NoWatchAllQueue, "nowatchall-queue",
+	"silence enqueuing into the event queue (default)")
+
+template <class State>
+int
+NoWatchAllQueue<State>::main(state_type& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+} else {
+	s.nowatchall_event_queue();
+	return command_type::NORMAL;
+}
+}
+
+template <class State>
+void
+NoWatchAllQueue<State>::usage(ostream& o) {
+	o << "nowatchall-queue" << endl;
 	o << "Silence events as they are inserted into the event queue."
 		<< endl;
 }

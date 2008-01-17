@@ -1,0 +1,22 @@
+# "nor-02.prsimrc"
+# @haco@ nor.haco-a
+
+watchall
+set a 0
+set b 0
+cycle
+assert c 1
+
+set a X
+advance 4
+queue
+set b 1
+advance 4
+queue
+echo expect c -> 0 to overtake X
+cycle
+time
+
+assert c 0
+
+

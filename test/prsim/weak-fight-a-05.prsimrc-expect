@@ -1,0 +1,23 @@
+Fanins of node `c':
+[after 10]	b -> c-
+[after 10, weak]	~a -> c+
+weak pull-up 
+	0	b : 0
+	0	a : 0
+	10	c : 1	[by a:=0]
+a -> X 
+do not expect weak-interference 
+	10	a : X
+restoring a -> 0 
+	10	a : 0
+fighting strong unknown pull-dn 
+	10	b : X
+	20	c : X	[by b:=X]
+do not expect weak-interference, but c -> X 
+restoring b -> 0 
+expect weak pull up to restore 
+	20	b : 0
+event queue:
+	30	c : 1	[from b:=0]
+expected c+ in queue, from weak pull-up 
+	30	c : 1	[by b:=0]

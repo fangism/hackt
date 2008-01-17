@@ -1,0 +1,28 @@
+# "weak-feedback-a-01.prsimrc"
+# @haco@ weak-feedback-a.haco-a
+
+timing uniform 10
+fanin b
+fanin a
+
+set a 0
+advance 5
+queue
+cycle
+assert b 1
+
+set a 1
+advance 5
+queue
+cycle
+echo the *other* version of prsim reports an instability here
+echo workaround: after 0 on all feedback staticizers
+assert b 0
+
+# what should happen when a -> X?
+# I don't think prsim event model can account for that...
+
+cycle
+queue
+time
+

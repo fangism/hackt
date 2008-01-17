@@ -1,0 +1,14 @@
+	0	a : 0
+	0	b : 0
+	10	c : 1	[by b:=0]
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)
+	10	a : X
+event queue:
+	20	c : X	[from a:=X]
+	14	b : 1
+event queue:
+	20	c : 0	[from b:=X]
+expect c -> 0 to overtake X 
+	20	c : 0	[by b:=1]
+time: 20

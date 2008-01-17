@@ -1,0 +1,6 @@
+# "nor-04.prsimrc"
+# @haco@ nor.haco-a
+
+unstable-dequeue
+source nor-03.prsimrc
+

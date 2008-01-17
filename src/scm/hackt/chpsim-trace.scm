@@ -1,5 +1,5 @@
 ;; "hackt/chpsim-trace.h"
-;;	$Id: chpsim-trace.scm,v 1.6 2007/11/27 06:10:15 fang Exp $
+;;	$Id: chpsim-trace.scm,v 1.6.2.1 2008/01/17 01:31:53 fang Exp $
 ;; Interface to low-level chpsim trace file manipulators.  
 ;;
 
@@ -308,22 +308,7 @@ TODO: use memoized structures."
   (let ((f (rb-tree/lookup sorted-assoc-pred x #f)))
     (if f (let ((y (rb-tree/lookup ll-histo f #f)))
 ;      (display (car f)) (display ": ") (display (cdr y))
-      (rb-tree/lookup-mutate! y x
-        (lambda (z) 
-;;         (display "++") (display z) (newline)
-;          "This hack is not needed anymore since we now execute branches 
-;           like any other event."
-;          (let ((p (hac:chpsim-get-event f)))
-;;            (display "p: ") (display p) (newline)
-;            (if (hac:chpsim-event-select? (static-event-raw-entry p))
-;              ; recurse to predecessor because selections are not 'executed'
-;              (count-selects f)
-;            ) ; end if
-;          ) ; end let
-          (1+ z)
-        ) ; end lambda
-        #f
-      ) ; end lookup-mutate
+      (rb-tree/lookup-mutate! y x 1+ #f)
     )) ; end if
   ) ; end let
 ) ; end define

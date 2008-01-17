@@ -1,0 +1,20 @@
+both off 
+event queue:
+	0	a : 1
+	0	b : 0
+time: 0
+pull with weak 
+event queue:
+	0	a : 0
+time: 10
+after firing ... 
+overpower with strong 
+expect over power event 
+event queue:
+	20	c : 0	[from b:=1]
+time: 20
+de-assert strong rule 
+event queue:
+	30	c : 1	[from b:=0]
+should be empty 
+weak rule re-fires after overpower goes away 

@@ -1,0 +1,82 @@
+@c "hacprsim/commands.texi"
+@c $Id: cosim.texi,v 1.1.4.1 2008/01/17 01:31:36 fang Exp $
+
+@node Co-simulation
+@chapter Co-simulation
+
+One may desire to run @command{hacprsim} with another simulator.
+This chapter describes ways in which this can be accomplished.  
+
+@menu
+* Verilog PLI::
+@end menu
+
+@c ----------------------------------------------------------------------------
+@node Verilog PLI
+@section Verilog PLI
+
+Popular commercial tools sometimes provide an interface for
+mixing simulators.  
+In this section, we describe how @command{hacprsim} can be
+integrated with Synopsys' VCS Verilog Simulator.  
+The interface they provide is called VPI for Verilog PLI 
+(Programming Language Interface).  
+
+All of the functionality of the @command{hacprsim} is provided
+in the @file{libhacktsim.la} library. 
+If you've built the @HAC{} tools with shared libraries, 
+then all the necessary libraries should already be available
+in your installation path.  
+
+The first step is to enable support for building a plug-in
+to be loaded into the VPI.  
+During the configure step, pass the option:
+@t{--with-vpi=@i{/path/to/vpi/development-files}}
+
+@example
+./configure --with-vpi=/usr/local/cad/synopsys/vcs
+@end example
+
+The path should point to one directory up from 
+where the C headers reside.
+(Basically exclude the @t{/include} from the path argument, 
+as it is automatically appended.)
+@t{configure} checks for @file{vpi_user.h} in the given path.  
+If it is found, then compilation will create a module for VCS's VPI,
+@file{vpihacprsim.la} (which is installed with the actual @t{.so/dll/dylib}
+shared library).  
+
+@strong{Disclaimer}: the following instructions are taken from the
+author's trials, and do not necessary reflect the actual
+documented use.  
+Consult the vendor's VPI documentation for more information.  
+
+To enable VPI in the VCS compiler, pass @option{+vpi} to the @command{vcs}
+command.  
+
+To specify the prsim module, pass: 
+@option{-use_vpiobj} @file{/prefix/lib/hackt/vpihacprsim.so}
+and @option{-L/prefix/lib/hackt}.
+The @option{-L} flag is forwarded to the linker used by VCS
+in the final stage of compilation, and is @emph{also required} 
+at run-time for finding dependent shared libraries.  
+The method described here uses a dynamic library (plug-in module), 
+however a static library could also suffice, as long as 
+all symbols were resolved at link time.
+Dependent libraries should be linked with the @option{-l} option
+which is forwarded to the linker.  
+
+VCS produces an executable @file{simv} which is dynamically
+linked to @file{vpihacprsim.so}.  
+If the @HAC{} libraries do not already reside in one
+of the default run-time library search paths
+(searched by @command{ld.so}), then you must help @command{simv}
+find dependent libraries by passing the same linker flags
+through @code{LD_LIBRARY_PATH}.
+
+@example
+sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
+
+csh% env sh$ LD_LIBRARY_PATH=/prefix/lib/hackt:$LD_LIBRARY_PATH ./simv
+@end example
+

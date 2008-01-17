@@ -1,0 +1,87 @@
+WARNING: weak-interference `_bl'
+>> cause: `_p' (val: 0)
+	0	_p : 0
+	0	w : 0
+	10	_bl : 1	[by w:=0]
+	20	h.bl_stat : 0	[by _bl:=1]
+	20	_p : 1
+writing bitline 
+	20	w : 1
+	30	_bl : 0	[by w:=1]
+	40	h.bl_stat : 1	[by _bl:=0]
+	40	w : 0
+precharging bitline 
+	40	_p : 0
+	50	_bl : 1	[by _p:=0]
+	60	h.bl_stat : 0	[by _bl:=1]
+	60	_p : 1
+writing bitline 
+	60	w : 1
+	70	_bl : 0	[by w:=1]
+	80	h.bl_stat : 1	[by _bl:=0]
+	80	w : 0
+precharging bitline 
+	80	_p : 0
+	90	_bl : 1	[by _p:=0]
+	100	h.bl_stat : 0	[by _bl:=1]
+	100	_p : 1
+writing bitline 
+	100	w : 1
+	110	_bl : 0	[by w:=1]
+	120	h.bl_stat : 1	[by _bl:=0]
+	120	w : 0
+precharging bitline 
+	120	_p : 0
+	130	_bl : 1	[by _p:=0]
+	140	h.bl_stat : 0	[by _bl:=1]
+	140	_p : 1
+writing bitline 
+	140	w : 1
+	150	_bl : 0	[by w:=1]
+	160	h.bl_stat : 1	[by _bl:=0]
+	160	w : 0
+precharging bitline 
+	160	_p : 0
+	170	_bl : 1	[by _p:=0]
+	180	h.bl_stat : 0	[by _bl:=1]
+	180	_p : 1
+writing bitline 
+	180	w : 1
+	190	_bl : 0	[by w:=1]
+	200	h.bl_stat : 1	[by _bl:=0]
+	200	w : 0
+precharging bitline 
+	200	_p : 0
+	210	_bl : 1	[by _p:=0]
+	220	h.bl_stat : 0	[by _bl:=1]
+	220	_p : 1
+writing bitline 
+	220	w : 1
+	230	_bl : 0	[by w:=1]
+	240	h.bl_stat : 1	[by _bl:=0]
+	240	w : 0
+precharging bitline 
+	240	_p : 0
+	250	_bl : 1	[by _p:=0]
+	260	h.bl_stat : 0	[by _bl:=1]
+	260	_p : 1
+writing bitline 
+	260	w : 1
+	270	_bl : 0	[by w:=1]
+	280	h.bl_stat : 1	[by _bl:=0]
+	280	w : 0
+precharging bitline 
+	280	_p : 0
+	290	_bl : 1	[by _p:=0]
+	300	h.bl_stat : 0	[by _bl:=1]
+	300	_p : 1
+writing bitline 
+	300	w : 1
+	310	_bl : 0	[by w:=1]
+	320	h.bl_stat : 1	[by _bl:=0]
+	320	w : 0
+precharging bitline 
+	320	_p : 0
+	330	_bl : 1	[by _p:=0]
+	340	h.bl_stat : 0	[by _bl:=1]
+	340	_p : 1

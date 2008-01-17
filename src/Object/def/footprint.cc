@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.36 2007/09/15 18:56:43 fang Exp $
+	$Id: footprint.cc,v 1.36.10.1 2008/01/17 01:31:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -787,6 +787,7 @@ if (chp_footprint) {
 void
 footprint::cflat_aliases(ostream& o, const state_manager& sm, 
 		const cflat_options& cf) const {
+	STACKTRACE_VERBOSE;
 	wire_alias_set wires;
 	const global_entry_pool<bool_tag>& gbp(sm.get_pool<bool_tag>());
 	const size_t s = gbp.size();

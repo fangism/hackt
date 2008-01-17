@@ -3,7 +3,7 @@
 	Traditional production rule simulator. 
 	This source file is processed by extract_texinfo.awk for 
 	command-line option documentation.  
-	$Id: prsim.cc,v 1.14 2007/09/13 01:14:17 fang Exp $
+	$Id: prsim.cc,v 1.14.14.1 2008/01/17 01:31:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -350,6 +350,8 @@ prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
 	cerr << "options:" << endl;
 	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
+	cerr << "\t-c : input file is source, not object, compile it" << endl;
+	cerr << "\t-C <opts> : forward options to compile driver" << endl;
 	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
 	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;

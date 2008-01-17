@@ -1,0 +1,38 @@
+# "half-keeper-a-02.prsimrc"
+# @haco@ half-keeper-a.haco-a
+
+watchall
+mode reset
+set _p 0
+set w 0
+cycle
+mode run
+set _p 1
+cycle
+
+echo causing weak interference
+set w x
+cycle
+assert _bl X
+
+echo restoring...
+set w 1
+cycle
+assert _bl 0
+
+echo pull-dn off
+set w 0
+cycle
+
+echo unknown precharge
+set _p X
+cycle
+assert _bl X
+
+echo on precharge
+set _p 0
+cycle
+assert _bl 1
+
+time
+

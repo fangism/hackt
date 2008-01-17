@@ -1,0 +1,8 @@
+// "weak-vs-weak.hac"
+
+bool a, b, c;
+prs {
+[weak=1]	~a	-> c+
+[weak=1]	b	-> c-
+}
+

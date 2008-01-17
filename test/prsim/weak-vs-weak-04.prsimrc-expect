@@ -1,0 +1,8 @@
+c: still unknown value 
+testing for interference 
+event queue:
+	10	c : 1	[from a:=0]	(weak)
+expecting interference from weak guard 
+WARNING: interference `c'
+>> cause: `b' (val: 1)
+FAILED TO CATCH INTERFERENCE 

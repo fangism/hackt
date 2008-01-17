@@ -1,0 +1,22 @@
+// "half-keeper-a.hac"
+
+defproc half_stat(bool _bl)
+{
+	bool bl_stat;
+	prs {
+		_bl	-> bl_stat-
+		~_bl	-> bl_stat+
+		// half-keeper, pull-up only
+		[weak=1]	~bl_stat -> _bl+
+	}
+}
+
+bool _p, w, _bl;
+
+half_stat h(_bl);
+
+prs {
+	~_p	-> _bl+
+	w	-> _bl-
+}
+

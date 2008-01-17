@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4 2007/12/01 04:25:31 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.1 2008/01/17 01:32:13 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iterator>
 
 #include "sim/prsim/Command-prsim.h"
+#include "sim/prsim/Command-prsim-export.h"
 #include "sim/prsim/State-prsim.h"
 #include "sim/command_base.tcc"
 #include "sim/command_category.tcc"
@@ -221,6 +222,20 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Aliases, PRSIM::builtin)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/echo-commands.texi
+@deffn Command echo-commands arg
+Enables or disables echoing of each interpreted command and 
+tracing through sourced script files.  
+@var{arg} is either "on" or "off".  
+Default off.
+@end deffn
+@end texinfo
+***/
+typedef	EchoCommands<State>				EchoCommands;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::EchoCommands, PRSIM::builtin)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/source.texi
 @deffn Command source script
 @anchor{command-source}
@@ -292,6 +307,7 @@ Without @var{n}, takes only a single step.
 @end deffn
 @end texinfo
  */
+#if 0
 struct Step {
 public:
 	static const char               name[];
@@ -299,81 +315,13 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const node_index_type, const string&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&);
-	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&, const string&);
 private:
 	static const size_t             receipt_id;
 };      // end class Step
+#endif
 
-INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 	"step through event")
-
-static
-inline
-node_index_type
-GET_NODE(const State::step_return_type& x) {
-	return x.first;
-}
-
-static
-inline
-node_index_type
-GET_CAUSE(const State::step_return_type& x) {
-	return x.second;
-}
-
-/**
-	Yeah, I know looking up already looked up node, but we don't
-	care because printing and diagnostics are not performance-critical.  
-	\param nodename the name to use for reporting, which need not be
-		the canonical name of the node, but some equivalent.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r, const string& nodename) {
-	const node_index_type ni = GET_NODE(r);
-	// const string nodename(s.get_node_canonical_name(ni));
-	const State::node_type& n(s.get_node(ni));
-	n.dump_value(o << nodename << " : ");
-	const node_index_type ci = GET_CAUSE(r);
-	if (ci) {
-		const string causename(s.get_node_canonical_name(ci));
-		const State::node_type& c(s.get_node(ci));
-		c.dump_value(o << "\t[by " << causename << ":=") << ']';
-	}
-	if (s.show_tcounts()) {
-		o << "\t(" << n.tcount << " T)";
-	}
-	return o << endl;
-}
-
-/**
-	This automatically uses the canonical name.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r) {
-	const node_index_type ni = GET_NODE(r);
-	const string nodename(s.get_node_canonical_name(ni));
-	return print_watched_node(o, s, r, nodename);
-}
-
-/**
-	This variation deduces the cause of the given node's last transition,
-	the last arriving input to a firing rule.  
-	\param nodename the name to use for reporting.  
- */
-ostream&
-Step::print_watched_node(ostream& o, const State& s, 
-		const node_index_type ni, const string& nodename) {
-	return print_watched_node(o, s,
-		State::step_return_type(ni, s.get_node(ni).get_cause_node()), 
-		nodename);
-}
 
 /**
 	Like process_step() from original prsim.  
@@ -487,59 +435,7 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-	State::step_return_type ni;
-	s.resume();
-	try {
-	while (!s.stopped() && s.pending_events() &&
-			(s.next_event_time() < stop_time) &&
-			GET_NODE((ni = s.step()))) {
-		// NB: may need specialization for real-valued (float) time.  
-
-		// honor breakpoints?
-		// tracing stuff here later...
-		const node_type& n(s.get_node(GET_NODE(ni)));
-		/***
-			The following code should be consistent with
-			Cycle::main() and Step::main().
-			TODO: factor this out for maintainability.  
-		***/
-		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
-				'\t', s, ni);
-		}
-		if (n.is_breakpoint()) {
-			// this includes watchpoints
-			const bool w = s.is_watching_node(GET_NODE(ni));
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			if (w) {
-			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
-					s.time() << '\t', s, ni);
-			}	// else already have message from before
-			}
-			// channel support
-			if (!w) {
-				// node is plain breakpoint
-				cout << "\t*** break, " <<
-					stop_time -s.time() <<
-					" time left: `" << nodename <<
-					"\' became ";
-				n.dump_value(cout) << endl;
-				return Command::NORMAL;
-				// or Command::BREAK; ?
-			}
-		}
-	}	// end while
-	} catch (const State::excl_exception& exex) {
-		s.inspect_excl_exception(exex, cerr);
-		return Command::FATAL;
-	}	// no other exceptions
-	if (!s.stopped() && s.time() < stop_time) {
-		s.update_time(stop_time);
-	}
-	// else leave the time at the time as of the last event
-	return Command::NORMAL;
+	return prsim_advance(s, stop_time, true);
 }
 }	// end Advance::main()
 
@@ -588,7 +484,7 @@ if (a.size() != 1) {
 			Step::main() and Advance::main().
 		***/
 		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t' << s.time() <<
+			print_watched_node(cout << '\t' << s.time() <<
 				'\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
@@ -598,7 +494,7 @@ if (a.size() != 1) {
 				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t' <<
+				print_watched_node(cout << '\t' <<
 					s.time() << '\t', s, ni);
 			}	// else already have message from before
 			}
@@ -1185,7 +1081,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// we have ni = the canonically allocated index of the bool node
 		// just look it up in the node_pool
-		Step::print_watched_node(cout, s, ni, objname);
+		print_watched_node(cout, s, ni, objname);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1283,6 +1179,35 @@ void
 Status::usage(ostream& o) {
 	o << "status <[0fF1tTxXuU]>" << endl;
 	o << "list all nodes with the matching current value" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/unknown-inputs.texi
+@deffn Command unknown-inputs
+Print all nodes with value X that have no fanins, i.e. input-only nodes.  
+Great for debugging forgotten environment inputs and connections!
+@end deffn
+@end texinfo
+***/
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnknownInputs, "unknown-inputs", info, 
+	"list all nodes at value X with no fanin")
+
+int
+UnknownInputs::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_dangling_unknown_nodes(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+UnknownInputs::usage(ostream& o) {
+	o << name << " -- list all nodes at value X with no fanin." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1705,6 +1630,18 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertQueue, PRSIM::info)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
+@texinfo cmd/assertn-queue.texi
+@deffn Command assertn-queue
+Error out if event queue is not empty.  
+Useful for checking for checking result of cycle.  
+@end deffn
+@end texinfo
+***/
+typedef	AssertNQueue<State>			AssertNQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::AssertNQueue, PRSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
 @texinfo cmd/time.texi
 @deffn Command time
 What time is it (in the simulator)?
@@ -1746,7 +1683,6 @@ if (a.size() != 2) {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		// Step::print_watched_node(cout, s, ni, objname);
 		s.backtrace_node(cout, ni);
 		return Command::NORMAL;
 	} else {
@@ -1974,7 +1910,7 @@ Watches::usage(ostream& o) {
 @texinfo cmd/watch-queue.texi
 @deffn Command watch-queue
 @deffnx Command nowatch-queue
-Show changes to the event-queue as events are scheduled.
+Show changes to the event-queue as events on only watched nodes are scheduled.
 Typically only used during debugging or detailed diagnostics.  
 @end deffn
 @end texinfo
@@ -1985,6 +1921,23 @@ CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchQueue, PRSIM::view)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef	NoWatchQueue<State>			NoWatchQueue;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/watchall-queue.texi
+@deffn Command watchall-queue
+@deffnx Command nowatchall-queue
+Show changes to the event-queue as @emph{every} event is scheduled.
+Typically only used during debugging or detailed diagnostics.  
+@end deffn
+@end texinfo
+***/
+typedef	WatchAllQueue<State>			WatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::WatchAllQueue, PRSIM::view)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef	NoWatchAllQueue<State>			NoWatchAllQueue;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::NoWatchAllQueue, PRSIM::view)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
@@ -2181,6 +2134,61 @@ EvalOrder::usage(ostream& o) {
 "\t\temulating arbitration of forced exclusive rules with the same fanin."
 	<< endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_WEAK_RULES
+/***
+@texinfo cmd/weak-rules.texi
+@deffn Command weak-rules [on|off]
+Simulation mode switch which globally enables or disables (ignores)
+weak-rules.  
+Weak-rules can only take effect when normal rules pulling a node are off.
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WeakRules, "weak-rules", modes, 
+	"enable/disable weak rules")
+
+int
+WeakRules::main(State& s, const string_list& a) {
+switch (a.size()) {
+case 1: {
+	cout << "weak-rules ";
+	if (s.weak_rules_enabled()) {
+		cout << "on";
+	} else {
+		cout << "off";
+	}
+	cout << endl;
+	return Command::NORMAL;
+}
+case 2: {
+	const string& arg(a.back());
+	if (arg == "on") {
+		s.enable_weak_rules();
+	} else if (arg == "off") {
+		s.disable_weak_rules();
+	} else {
+		cerr << "Bad argument." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+default:
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+}
+
+void
+WeakRules::usage(ostream& o) {
+	o << "weak-rules [on|off]" << endl;
+	o <<
+"Simulate or ignore weak-rules, which can drive nodes, but are overpowered "
+"by normal rules." << endl;
+}
+#endif	// PRSIM_WEAK_RULES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

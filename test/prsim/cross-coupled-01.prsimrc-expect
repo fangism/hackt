@@ -1,0 +1,29 @@
+Fanins of node `t':
+[after 10]	~f -> t+
+[after 10]	f -> t-
+Fanins of node `f':
+[after 10]	~t -> f+
+[after 10]	t -> f-
+setting X -> 1 
+	0	t : 1
+	10	f : 0	[by t:=1]
+setting 1 -> 0 
+	10	t : 0
+	20	f : 1	[by t:=0]
+setting 0 -> X 
+WARNING: weak-interference `f'
+>> cause: `t' (val: X)
+	20	t : X
+	30	f : X	[by t:=X]
+setting X -> 0 
+	30	t : 0
+	40	f : 1	[by t:=0]
+setting 0 -> 1 
+	40	t : 1
+	50	f : 0	[by t:=1]
+setting 1 -> X 
+WARNING: weak-interference `f'
+>> cause: `t' (val: X)
+	50	t : X
+	60	f : X	[by t:=X]
+how did we do? 

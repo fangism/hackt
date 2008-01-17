@@ -1,0 +1,38 @@
+# "SRAM-c-02.prsimrc"
+# @haco@ SRAM-c.haco-a
+
+initialize
+# echo-commands on
+timing random
+weak-rules on
+# watchall
+# watchall-queue
+unstable warn
+unstable-dequeue
+
+set _pchg 0
+set wl[0] 0
+set wl[1] 0
+set we 0
+set wv 0
+cycle
+# status U
+# echo done precharging, now writing...
+
+set _pchg 1
+cycle
+
+# echo enabled write, set zero value, now setting wordline
+set wv 0
+set we 1
+advance 30
+set wl[0] 1
+cycle
+
+# getall c[0]
+# getall c[1]
+
+unsetall
+queue
+echo queue should be empty after unsetall
+

@@ -1,0 +1,8 @@
+// "weak-fight-a.hac"
+
+bool a, b, c;
+prs {
+		b	-> c-
+[weak=1]	~a	-> c+
+}
+

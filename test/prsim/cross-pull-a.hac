@@ -1,0 +1,12 @@
+// "cross-pull-a.hac"
+// dual-rail that pull each other down for cross-talk stabilization
+
+bool t, f;
+spec {
+	exclhi(t, f)
+}
+prs {
+	t	-> f-
+	f	-> t-
+}
+

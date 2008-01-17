@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event-prsim.cc,v 1.1 2007/02/27 02:28:05 fang Exp $
+	$Id: Event-prsim.cc,v 1.1.38.1 2008/01/17 01:32:15 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
@@ -37,6 +37,9 @@ using util::read_value;
 /**
 	First index is the guard's pulling state (F = OFF, T = ON, X = WEAK),
 	second index is the pending event state.
+	NOTE: the ordering of these tables must be kept consistent
+		with the enumeration values for node_type::value and
+		expr_type::pull_enum.
  */
 const uchar
 Event::upguard[3][3] = {
@@ -164,10 +167,14 @@ EventPool::check_valid_empty(void) const {
 		die = true;
 	} else {
 		const size_t s = std::accumulate(
-			free_indices.begin(), free_indices.end(), 0);
-		if (s != m*(m+1)/2) {	// triangular sum
+			free_indices.begin(), free_indices.end(), size_t(0));
+			// explicit type-spec to prevent overflow
+		const size_t expect_sum = m*(m+1)/2; // triangular sum
+		if (s != expect_sum) {
 			cerr << "FATAL: event pool free list sum "
 				"is not what\'s expected!" << endl;
+			cerr << "expected: " << expect_sum << ", but got: " <<
+				s << ", difference: " << expect_sum -s << endl;
 			die = true;
 		}
 	}

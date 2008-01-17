@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2 2007/12/01 04:25:31 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.1 2008/01/17 01:32:29 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -103,6 +103,7 @@ public:
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<expr_type>		expr_pool_type;
+	typedef	expr_type::pull_enum		pull_enum;
 	typedef	RuleState<time_type>		rule_type;
 	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
 
@@ -136,12 +137,12 @@ private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
 		expr_type*			root_ex;
-		uchar				root_pull;
+		pull_enum			root_pull;
 
 		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
 
 		evaluate_return_type(const node_index_type ni,
-			expr_type* const e, const uchar p) :
+			expr_type* const e, const pull_enum p) :
 			node_index(ni), root_ex(e), root_pull(p) { }
 	};	// end struct evaluate_return_type
 private:
@@ -219,10 +220,22 @@ private:
 		 */
 		FLAG_RANDOM_FANOUT_EVALUATION_ORDERING = 0x80,
 		/**
+			If true, dump events of watched nodes as they
+			are entered into the event queue.  
+		 */
+		FLAG_WATCH_QUEUE = 0x100,
+		/**
 			If true, dump every event as it is enqueued in
 			the primary event queue.  
 		 */
-		FLAG_WATCH_QUEUE = 0x100,
+		FLAG_WATCHALL_QUEUE = 0x200,
+#if PRSIM_WEAK_RULES
+		/**
+			Global flag to heed or ignore weak rules.  
+			Default off.  
+		 */
+		FLAG_WEAK_RULES = 0x400,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -520,6 +533,23 @@ public:
 		flags &= ~FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
 	}
 
+#if PRSIM_WEAK_RULES
+	void
+	enable_weak_rules(void) {
+		flags |= FLAG_WEAK_RULES;
+	}
+
+	void
+	disable_weak_rules(void) {
+		flags &= ~FLAG_WEAK_RULES;
+	}
+
+	bool
+	weak_rules_enabled(void) const {
+		return flags & FLAG_WEAK_RULES;
+	}
+#endif	// PRSIM_WEAK_RULES
+
 	void
 	reset_tcounts(void);
 
@@ -697,6 +727,17 @@ public:
 	bool
 	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
 
+	void
+	watchall_event_queue(void) { flags |= FLAG_WATCHALL_QUEUE; }
+
+	void
+	nowatchall_event_queue(void) { flags &= ~FLAG_WATCHALL_QUEUE; }
+
+	bool
+	watching_all_event_queue(void) const {
+		return flags & FLAG_WATCHALL_QUEUE;
+	}
+
 	/// for any user-defined structures from the .hac
 	void
 	watch_structure(void);
@@ -792,13 +833,21 @@ private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const rule_index_type, const uchar);
+		const rule_index_type, const uchar
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		);
 
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
 		cause_arg_type,	// this is the causing node/event
-		const uchar);
+		const uchar
+#if PRSIM_WEAK_RULES
+		, const bool weak
+#endif
+		);
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);
@@ -868,14 +917,19 @@ private:
 	time_type
 	get_delay_dn(const event_type&) const;
 
+	pull_enum
+	get_pull(const expr_index_type ei) const {
+		return ei ? expr_pool[ei].pull_state() : expr_type::PULL_OFF;
+	}
+
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
-		uchar prev, uchar next);
+		pull_enum prev, pull_enum next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, uchar prev
+	propagate_evaluation(cause_arg_type, expr_index_type, pull_enum prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, uchar next
+		, pull_enum next
 #endif
 		);
 
@@ -889,7 +943,11 @@ private:
 	__diagnose_violation(ostream&, const uchar next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
-		cause_arg_type, const bool dir);
+		cause_arg_type, const bool dir
+#if PRSIM_WEAK_RULES
+		, const bool w
+#endif
+		);
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 
@@ -944,6 +1002,9 @@ public:
 
 	ostream&
 	dump_node_fanin(ostream&, const node_index_type, const bool) const;
+
+	ostream&
+	dump_dangling_unknown_nodes(ostream&) const;
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 

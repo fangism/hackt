@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4 2007/10/08 01:21:54 fang Exp $
+#	$Id: TODO,v 1.4.8.1 2008/01/17 01:32:30 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -16,11 +16,32 @@ Simulation:
 		counter.  
 
 prsim:
+	Add guile/Scheme interface for static queries and simulation control!
+	
 	category of 'debug' commands for inspecting state, etc...
+
+	weak vs. possible: rename formerly 'weak' anomalies to 'possible'
+		to avoid confusion with weak-rules.  (poor naming)
 
 	direction-specific breakpoints
 
+	breakpoint policies *per-node*
+	breakpoint options: halt or error-out
+
+	timestamp last causes -- automatic cycle time
+		Will cost some more memory per node.
+		Difficulty: easy (hour)
+
 	deadlock diagnosis, akin to backtrace, but using fanin state analysis
+		commands 'why' and 'whynot'.
+		Difficulty: easy (few hours)
+
+	unstab attribute: is checked on nodes, but only applied to rules
+		so this needs to be fixed to check for rules.  
+		Should wipe it from node attributes.
+		Difficulty: easy (few hours)
+		Q: what should unstable policy do? dequeue? re-queue overtake?
+		This would require events to track which *rule* caused firing.
 
 	interpreter commands:
 		interp key [value]
@@ -34,6 +55,7 @@ prsim:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
+		fix 'getall' to work with arrays (getall x, where x is array)
 
 	concept of environment variables?
 
@@ -56,6 +78,15 @@ prsim:
 		fix: collect unique-list (or set), then print
 
 	trace recording, playback, and analysis (like chpsim)
+
+graph-dumping:
+	after restructuring rule maps by process (like chpsim),
+	print out graph node in process clusters
+
+execution model:
+	weak rules (drive floating nodes, overpowered by normal rules)
+		[status: drafted]
+	TODO: interaction with coerced exclusive hi/lo rings?
 
 state-allocation:
 	consider alternative to re-allocating every rule for every
