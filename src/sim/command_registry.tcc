@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.3.38.1 2008/01/17 01:32:00 fang Exp $
+	$Id: command_registry.tcc,v 1.3.38.2 2008/01/18 18:14:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -235,6 +235,7 @@ command_registry<Command>::expand_aliases(string_list& c) {
 	Interprets a single command line.  
 	Capable of executing shell commands with '!' prefix.  
 	Now capable of expanding alias commands.  
+	TODO: pass '$' lines to Scheme interpreter, or support Scheme mode
 	\pre there are no cyclic aliases.  
  */
 template <class Command>
@@ -250,6 +251,9 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 		if (es) {
 			cerr << "*** Exit " << es << endl;
 		}
+		return Command::NORMAL;
+	} else if (*cursor == '#') {
+		// this catches lines like "#blah"
 		return Command::NORMAL;
 	} else {
 		string_list toks;

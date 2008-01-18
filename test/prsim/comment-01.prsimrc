@@ -1,0 +1,12 @@
+# "comment-01.prsimrc"
+# @haco@ inv.haco-a
+
+# this is a comment
+comment is also a comment
+#me too now!
+## double comment
+###extreme comment
+
+echo How much time have we wasted on comments?
+time
+

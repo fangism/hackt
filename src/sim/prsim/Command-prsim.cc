@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.1 2008/01/17 01:32:13 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.2 2008/01/18 18:14:36 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -77,6 +77,7 @@ using parser::parse_name_to_get_subnodes;
 static CommandCategory
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
+	debug("debug", "debugging internals"),
 	simulation("simulation", "simulation commands"),
 	channel("channel", "channel commands"),
 	info("info", "information about simulated circuit"),
@@ -1055,6 +1056,74 @@ Print all equivalent aliases of instance @var{name}.
 ***/
 typedef	Who<State>				Who;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Who, PRSIM::info)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/pending.texi
+@deffn Command pending node
+@deffnx Command pending-debug node
+Shows pending event on node (if any).
+The debug variant shows the internal event index number, 
+which should really never be exposed to the public API.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Pending, "pending", info,
+	"print any pending event on node")
+
+int
+Pending::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// we have ni = the canonically allocated index of the bool node
+		// just look it up in the node_pool
+		s.dump_node_pending(cout, ni, false);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Pending::usage(ostream& o) {
+	o << "pending <node>" << endl;
+	o << "prints pending even on node if there is one" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(PendingDebug, "pending-debug", debug,
+	"print any pending event on node (with index)")
+
+int
+PendingDebug::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_pending(cout, ni, true);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+PendingDebug::usage(ostream& o) {
+	o << "pending-debug <node>" << endl;
+	o << "prints pending even on node if there is one" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

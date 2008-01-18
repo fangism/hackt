@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6.8.1 2008/01/17 01:31:57 fang Exp $
+	$Id: command_common.tcc,v 1.6.8.2 2008/01/18 18:14:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -630,7 +630,7 @@ Time<State>::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(WatchQueue, "watch-queue",
-	"print each event as it is enqueued into the event queue")
+	"print each event on watched nodes as it is enqueued")
 
 template <class State>
 int
@@ -678,7 +678,7 @@ NoWatchQueue<State>::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INITIALIZE_COMMON_COMMAND_CLASS(WatchAllQueue, "watchall-queue",
-	"print each event as it is enqueued into the event queue")
+	"print each event on all nodes as it is enqueued")
 
 template <class State>
 int

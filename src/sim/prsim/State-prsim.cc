@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.1 2008/01/17 01:32:27 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.2 2008/01/18 18:14:39 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3249,6 +3249,47 @@ State::dump_event_queue(ostream& o) const {
 	o << "event queue:" << endl;
 	for ( ; i!=e; ++i) {
 		dump_event(o, i->event_index, i->time);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Shows pending event on node if any.  
+	\param ni node index.  
+	\param dbg whether or not to show internal event index.
+ */
+ostream&
+State::dump_node_pending(ostream& o, const node_index_type ni, 
+		const bool dbg) const {
+	const node_type& n(get_node(ni));
+	const event_index_type pending = n.get_event();
+	if (pending) {
+		if (dbg) {
+			o << "pending event index = " << pending << endl;
+		}
+		// find event in queue: O(N) search
+		typedef	temp_queue_type::const_iterator		const_iterator;
+		temp_queue_type temp;
+		event_queue.copy_to(temp);
+		const_iterator i(temp.begin()), e(temp.end());
+		time_type t = 0;
+		while (i!=e) {
+			if (i->event_index == pending) {
+				t = i->time;
+				break;
+			}
+			++i;
+		}
+		o << "queue:";
+		dump_event(o, pending, t);
+		if (t == 0) {
+			cerr << "Internal error: pending event was not found "
+				"in event queue!" << endl;
+		}
+	} else {
+		o << "No event pending on `" << get_node_canonical_name(ni)
+			<< "\'." << endl;
 	}
 	return o;
 }
