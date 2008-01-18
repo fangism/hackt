@@ -5,6 +5,13 @@
 
 2008-01-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-06:
+	  prsim: Correction to pending consistency check.
+	  sim/prsim/Event-prsim.h: for now use slower more paranoid unique-set 
+		for event free-list to catch inconsistencies sooner.
+	  TODO: more debugging diagnostics
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-05:
 	  prsim: 'pending' command to check if event is already
 		pending on node.  Also comes with debug mode.  Tested.

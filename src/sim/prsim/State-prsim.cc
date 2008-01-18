@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.2 2008/01/18 18:14:39 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.3 2008/01/18 21:12:32 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -812,6 +812,7 @@ State::event_placeholder_type
 State::dequeue_event(void) {
 	STACKTRACE_VERBOSE_STEP;
 	event_placeholder_type ret(event_queue.pop());
+//	n.clear_event();	???
 	while (get_event(ret.event_index).killed()) {
 		__deallocate_killed_event(ret.event_index);
 		if (event_queue.empty()) {
@@ -3273,7 +3274,8 @@ State::dump_node_pending(ostream& o, const node_index_type ni,
 		temp_queue_type temp;
 		event_queue.copy_to(temp);
 		const_iterator i(temp.begin()), e(temp.end());
-		time_type t = 0;
+		// this only works for signed types, such as floating point
+		time_type t = delay_policy<time_type>::invalid_value;
 		while (i!=e) {
 			if (i->event_index == pending) {
 				t = i->time;
@@ -3283,7 +3285,7 @@ State::dump_node_pending(ostream& o, const node_index_type ni,
 		}
 		o << "queue:";
 		dump_event(o, pending, t);
-		if (t == 0) {
+		if (t == delay_policy<time_type>::invalid_value) {
 			cerr << "Internal error: pending event was not found "
 				"in event queue!" << endl;
 		}

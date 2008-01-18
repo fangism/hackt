@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1.38.1 2008/01/17 01:32:17 fang Exp $
+	$Id: Event-prsim.h,v 1.1.38.2 2008/01/18 21:12:32 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -24,7 +24,20 @@
 #include "sim/prsim/devel_switches.h"
 #include "sim/prsim/Cause.h"
 
+/**
+	Verbosely trace each item added and removed from pool free list.
+ */
 #define	DEBUG_EVENT_POOL_ALLOC				0
+/**
+	Use a set for free-list to check for uniqueness.
+	I think a set<> (unpooled) will be slower than vector<>.
+	TODO: use a discrete_interval_set for efficiency.
+ */
+#define	PARANOID_EVENT_FREE_LIST			1
+
+#if PARANOID_EVENT_FREE_LIST
+#include <set>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -249,7 +262,11 @@ public:
 	/**
 		TODO: use a more compact discrete_interval_set
 	 */
+#if PARANOID_EVENT_FREE_LIST
+	typedef	std::set<event_index_type>	free_list_type;
+#else
 	typedef	vector<event_index_type>	free_list_type;
+#endif
 private:
 	event_allocator_type			event_pool;
 	free_list_type				free_indices;

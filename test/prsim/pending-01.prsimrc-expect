@@ -3,7 +3,6 @@ No event pending on `b'.
 No event pending on `c'.
 expect pending event on a, not b 
 queue:	0	a : 0
-Internal error: pending event was not found in event queue!
 No event pending on `b'.
 time: 0
 	0	a : 0

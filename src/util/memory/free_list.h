@@ -3,7 +3,8 @@
 	Container-based free-list implementations.  
 	Technically, this need not be in the memory namespace, 
 	but this is used so frequently in memory management.  
-	$Id: free_list.h,v 1.4 2007/01/21 06:01:23 fang Exp $
+	TODO: bitfield implementation for integers
+	$Id: free_list.h,v 1.4.44.1 2008/01/18 21:12:44 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_FREE_LIST_H__
@@ -192,6 +193,7 @@ struct free_list<set<T, C, A> > {
 	static
 	value_type
 	acquire(container_type& c) {
+		// could also use end() -1
 		const iterator b(c.begin());
 		const value_type ret = *b;
 		c.erase(b);
@@ -201,16 +203,15 @@ struct free_list<set<T, C, A> > {
 	/**
 		Consider using <algorithm> binary_search?
 		Only appropriate for a sorted list.  
-		This *can* check for uniqueness.  
+		This *WILL* check for uniqueness.  
 	 */
 	static
 	void
 	release(container_type& c, const value_type& v) {
-#ifndef	DISABLE_INVARIANT
-		const const_iterator e(c.find(v));
-		INVARIANT(e == c.end());
-#endif
-		c.insert(v);
+		const std::pair<iterator, bool> i(c.insert(v));
+		// true i.second indicates that element was uniquely inserted
+		// an already existing element would be rejected
+		INVARIANT(i.second);
 	}
 };	// end class free_list (specialization)
 
