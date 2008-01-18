@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.17.18.1 2008/01/17 23:01:58 fang Exp $
+#	$Id: Makefile.am,v 1.17.18.2 2008/01/18 01:02:30 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -21,7 +21,9 @@ HACKT_PARSE_TEST_PASSES = \
 	loop-expr-01 loop-expr-02 loop-expr-04 loop-expr-05 \
 	loop-expr-07 loop-expr-08 loop-expr-09 \
 	loop-spec-01 loop-spec-02 loop-spec-03 loop-spec-04 \
-	cond-spec-01 cond-spec-02 cond-spec-03 cond-spec-04 cond-spec-05
+	cond-inst-01 cond-inst-02 cond-inst-03 \
+	cond-spec-01 cond-spec-02 cond-spec-03 cond-spec-04 cond-spec-05 \
+	cond-spec-02b cond-spec-03b cond-spec-04b cond-spec-05b
 
 # TODO: more meta-programming library test cases
 
@@ -43,7 +45,9 @@ HACKT_CREATE_TEST_PASSES = \
 	loop-expr-01 loop-expr-02 loop-expr-04 loop-expr-05 \
 	loop-expr-07 loop-expr-08 loop-expr-09 \
 	loop-spec-01 loop-spec-02 loop-spec-03 loop-spec-04 \
-	cond-spec-01 cond-spec-02 cond-spec-03 cond-spec-04 cond-spec-05
+	cond-inst-01 cond-inst-02 cond-inst-03 \
+	cond-spec-01 cond-spec-02 cond-spec-03 cond-spec-04 cond-spec-05 \
+	cond-spec-02b cond-spec-03b cond-spec-04b cond-spec-05b
 
 HACKT_ALLOC_TEST_PASSES = $(HACKT_CREATE_TEST_PASSES)
 

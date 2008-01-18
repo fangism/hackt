@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.33.2.1 2007/12/05 17:27:46 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.33.2.2 2008/01/18 01:02:28 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -614,9 +614,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 ***/
 %type	<_definition_body>	definition_body optional_definition_body
 %type	<_definition_body>	datatype_body optional_datatype_body
-/* %type	<_instance_management_list>	optional_connection_body */
+%type	<_instance_management_list>	connection_body_optional
 %type	<_instance_management_list>	connection_body
 %type	<_instance_management_list>	instance_management_list
+%type	<_instance_management_list>	instance_management_list_optional
 %type	<_instance_management>	connection_body_item_base
 %type	<_instance_management>	connection_body_item
 %type	<_def_body_item>	definition_body_item
@@ -1508,12 +1509,10 @@ datatype_body_item
 	| lang_spec { $$ = $1; }
 	;
 
-/**
-optional_connection_body
+connection_body_optional
 	: connection_body { $$ = $1; }
-	| { $$ = new definition_body(); }
+	| { $$ = NULL; }
 	;
-**/
 
 connection_body
 	: connection_body connection_body_item
@@ -1535,6 +1534,11 @@ connection_body_item
 	: connection_body_item_base { $$ = $1; }
 	| loop_connections { $$ = $1; }
 	| conditional_connections { $$ = $1; }
+	;
+
+instance_management_list_optional
+	: instance_management_list { $$ = $1; }
+	| { $$ = NULL; }
 	;
 
 /* subset of definition body items allowed inside loop/conditional scopes
@@ -1716,12 +1720,12 @@ guarded_instance_management_list_unmatched
 /* semantics: must guards be mutually exclusive? */
 /* sequential else-if semantics? */
 guarded_instance_management
-	: expr RARROW instance_management_list
+	: expr RARROW instance_management_list_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
 instance_management_else_clause
-	: ELSE RARROW instance_management_list
+	: ELSE RARROW instance_management_list_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
@@ -1742,12 +1746,12 @@ guarded_connection_body_unmatched
 	;
 
 guarded_connection_body_clause
-	: expr RARROW connection_body
+	: expr RARROW connection_body_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
 connection_body_else_clause
-	: ELSE RARROW connection_body
+	: ELSE RARROW connection_body_optional
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 
@@ -2341,15 +2345,8 @@ prs_guarded_body
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 
-/**
-prs_else_clause_optional
-	: prs_else_clause { $$ = $1; }
-	|	{ $$ = NULL; }
-	;
-**/
-
 prs_else_clause
-	: ELSE RARROW prs_body
+	: ELSE RARROW prs_body_optional
 		{ $$ = new PRS::guarded_body($1, $2, $3); }
 	;
 

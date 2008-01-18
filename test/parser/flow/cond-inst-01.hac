@@ -1,0 +1,13 @@
+// "cond-inst-01.hac"
+// testing conditional instantiations
+
+pint N, M;
+N = 2;
+M = 4;
+[(N < M) ->
+	bool z[3];
+	bool y = z[0];
+[] else ->
+	// empty clause OK
+]
+

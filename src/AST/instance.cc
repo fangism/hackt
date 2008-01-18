@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.26.2.1 2008/01/17 23:01:49 fang Exp $
+	$Id: instance.cc,v 1.26.2.2 2008/01/18 01:02:27 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -1121,7 +1121,8 @@ guarded_instance_management::guarded_instance_management(const expr* e,
 		const string_punctuation_type* a,
 		const instance_management_list* b) :
 		instance_management(), guard(e), arrow(a), body(b) {
-	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(body);
+	NEVER_NULL(guard); NEVER_NULL(arrow);
+	// NEVER_NULL(body);
 }   
 
 DESTRUCTOR_INLINE
@@ -1137,7 +1138,9 @@ guarded_instance_management::leftmost(void) const {
 
 line_position
 guarded_instance_management::rightmost(void) const {
-	return body->rightmost();
+	if (body)
+		return body->rightmost();
+	else	return arrow->rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1177,7 +1180,7 @@ if (guard && !guard.is_a<const token_else>()) {
 	entity::SPEC::directives_conditional&
 		css(const_cast<entity::SPEC::directives_conditional&>(*ss));
 	css.append_guarded_clause(guard_expr);	// spec
-{
+if (body) {
 	const context::conditional_scope_frame _csf(c);
 	const context::prs_body_frame _pbf(c, 
 		never_ptr<entity::PRS::rule_set>(&rs->get_last_clause()));

@@ -1,0 +1,111 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	condscop	0	#HEAD#	#TAIL#	44
+	13	##ADDR##	pireltex	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	69
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	footprnt	0	#HEAD#	#TAIL#	362
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	footprnt	0	#HEAD#	#TAIL#	290
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	footprnt	0	#HEAD#	#TAIL#	318
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    spec_test = process-definition (defined) spec_test<
+      pint<> N
+      pint<> M
+      >(
+      )
+      In definition "spec_test", we have: {
+      Parameters:
+        M = pint<> spec_test::M
+        N = pint<> spec_test::N
+      Instances:
+        y = bool<> spec_test::y
+        z = bool<> spec_test::z^1
+      unroll sequence: 
+        [ N>M -> 
+        [] else -> 
+          bool<> z[0..2]
+          bool<> y
+          y = z[2];
+        ]
+      footprint collection: {
+        <2, 4> {
+          M = pint^0 value: 4
+          N = pint^0 value: 2
+          y = bool^0 = spec_test::y (1) 
+          z = bool^1
+            {
+              [0] = spec_test::z[0] (2) 
+              [1] = spec_test::z[1] (3) 
+              [2] = spec_test::y (1) 
+            }
+          Created state:
+          bool instance pool:
+          1	spec_test::y
+          2	spec_test::z[0]
+          3	spec_test::z[1]
+        }
+        <3, 1> {
+          M = pint^0 value: 1
+          N = pint^0 value: 3
+          Created state:
+        }
+      }
+      }
+
+  Instances:
+    A = spec_test<2, 4> A
+    B = spec_test<3, 1> B
+}
+
+footprint: {
+  A = process spec_test<2, 4>^0 = A (1) 
+  B = process spec_test<3, 1>^0 = B (2) 
+  Created state:
+  process instance pool:
+  1	A
+  2	B
+}

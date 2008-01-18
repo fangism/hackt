@@ -1,0 +1,13 @@
+// "cond-inst-02.hac"
+// copy-modified from "cond-inst-01.hac"
+
+pint N, M;
+N = 2;
+M = 4;
+[(N > M) ->
+	// empty clause OK
+[] else ->
+	bool z[3];
+	bool y = z[1];
+]
+

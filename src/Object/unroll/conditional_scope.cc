@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.8 2007/11/26 08:27:43 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.8.2.1 2008/01/18 01:02:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
@@ -119,9 +119,10 @@ conditional_scope::unroll(const unroll_context& c) const {
 	guard_iterator gi(guards.begin()), ge(guards.end());
 for ( ; ci!=ce; ++ci, ++gi) {
 	const guard_ptr_type& guard(*gi);
-	NEVER_NULL(guard);
 	bool b;
-	if (!guard->unroll_resolve_value(c, b).good) {
+	if (!guard) {
+		b = true;
+	} else if (!guard->unroll_resolve_value(c, b).good) {
 		cerr << "Error resolving guard expression: ";
 		guard->dump(cerr, expr_dump_context::default_value) << endl;
 		return good_bool(false);
