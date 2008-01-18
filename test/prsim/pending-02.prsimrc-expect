@@ -1,0 +1,32 @@
+testing pending state of node 
+No event pending on `a'.
+enqueued:	0	a : 0
+queue:	0	a : 0
+	0	a : 0
+a : 0
+No event pending on `a'.
+setting to same value as current 
+event queue:
+No event pending on `a'.
+setting to new value 
+enqueued:	20	a : 1
+event queue:
+	20	a : 1
+queue:	20	a : 1
+	20	a : 1
+event queue:
+No event pending on `a'.
+setting to same value 
+event queue:
+No event pending on `a'.
+event queue:
+No event pending on `a'.
+setting to new value 
+enqueued:	40	a : 0
+event queue:
+	40	a : 0
+queue:	40	a : 0
+	40	a : 0
+event queue:
+No event pending on `a'.
+time: 60
