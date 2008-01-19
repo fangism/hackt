@@ -5,6 +5,18 @@
 
 2008-01-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-08:
+	  prsim: critical bug fix:
+		failed to keep n.pending_event consistent with events
+		that entered the queue.  this fix set_event's properly
+		when flushing events from the pending queue (no interference)
+		to the main event queue.
+		Interestingly, only one test case (unstab-03) caught this.
+		Suspect bug is present in original prsim as well...
+	  Patch is appropriate for trunk, merge ASAP.
+	  No new test cases, no regressions.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-07:
 	  As promised from ACT-03-03, re-factored loop and conditional
 		class code into template implementation class.  

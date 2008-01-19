@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.3 2008/01/18 21:12:32 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.4 2008/01/19 07:54:55 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -671,7 +671,8 @@ State::__allocate_pending_interference_event(node_type& n,
 #endif
 		));
 	get_event(ne).pending_interference(true);
-	// n.set_event(ne);
+	// not yet because hasn't been committed to event queue yet
+	// n.set_event(ne);		// for consistency?
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return ne;
 }
@@ -1406,7 +1407,6 @@ for ( ; i!=e; ++i) {
 #endif
 				ISE_INVARIANT(pv.killed());
 				// FAILED ONCE: 20071217, since weak rules
-				_n.set_event(ne);
 				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
 			DEBUG_STEP_PRINT("keeping original event" << endl);
@@ -1432,6 +1432,18 @@ for ( ; i!=e; ++i) {
 void
 State::__flush_pending_event_with_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	STACKTRACE_VERBOSE_STEP;
+	// TODO: research me!
+#if 0
+	// not necessarily linked yet
+	if (!_n.pending_event()) {
+		_n.set_event(ne);
+	} else {
+		// except when overtaken! (dequeue_unstable_events???)
+		INVARIANT(_n.get_event() == ne);
+	}
+	// stronger guarantees above?
+#endif
 	switch (_n.current_value()) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
@@ -1461,11 +1473,18 @@ State::__flush_pending_event_with_interference(node_type& _n,
 void
 State::__flush_pending_event_no_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	STACKTRACE_VERBOSE_STEP;
 	// if event is weak rule, require the opposing pull to be off
 	if (_n.current_value() != ev.val) {
 #if PRSIM_WEAK_RULES
 		const bool w = ev.is_weak();
 #endif
+		// not necessarily linked yet
+		if (!_n.pending_event()) {
+			_n.set_event(ne);
+		} else {
+			INVARIANT(_n.get_event() == ne);
+		}
 		if (ev.val == node_type::LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
 #if PRSIM_WEAK_RULES
@@ -1511,6 +1530,8 @@ State::__flush_pending_event_no_interference(node_type& _n,
 void
 State::__flush_pending_event_replacement(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
+	STACKTRACE_VERBOSE_STEP;
+	_n.set_event(ne);
 	switch (ev.val) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
@@ -1982,6 +2003,8 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	_ci = ci;
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
+	INVARIANT(n.pending_event());	// must have been pending
+	INVARIANT(n.get_event() == ei);	// must be consistent!
 {
 	// event-deallocation scope (optional)
 	// const event_deallocator __d(*this, n, ei);	// auto-deallocate?
@@ -2039,7 +2062,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	if (pe.val != node_type::LOGIC_OTHER) {
 		++n.tcount;
 	}
-	 __deallocate_event(n, ei);
+	__deallocate_event(n, ei);
 }
 }
 	// note: pe is invalid, deallocated beyond this point, could scope it
