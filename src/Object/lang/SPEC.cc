@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.3.108.1 2008/01/17 23:01:52 fang Exp $
+	$Id: SPEC.cc,v 1.3.108.2 2008/01/19 06:46:12 fang Exp $
  */
 
 #include <iostream>
@@ -9,26 +9,13 @@
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
-#include "Object/def/footprint.h"
-#include "Object/expr/param_expr.h"
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/expr/const_range.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/inst/value_scalar.h"
 #include "Object/persistent_type_hash.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/traits/pint_traits.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/unroll/unroll_context.h"
-#include "Object/common/dump_flags.h"
+#include "Object/unroll/meta_conditional.tcc"
+#include "Object/unroll/meta_loop.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/persistent_object_manager.tcc"
-#include "util/persistent_functor.tcc"
 #include "util/memory/chunk_map_pool.tcc"	// for memory pool
-#include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
@@ -232,15 +219,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directives_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 directives_loop::dump(ostream& o, const rule_dump_context& c) const {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	o << "(:" << ind_var->get_name() << ':';
-	range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
-	{
-		INDENT_SECTION(o);
-		directives_set::dump(o, c);
-	}
-	return o << auto_indent << ')';
+	return meta_loop::dump(*this, o, c, ':');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -250,71 +229,27 @@ directives_loop::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 directives_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		footprint& sfp) const {
-	// most of this copied from expr_loop_base::unroll...
-	// STACKTRACE_VERBOSE;
-	// first, resolve bounds of the loop range, using current context
-	const_range cr;
-	if (!range->unroll_resolve_range(c, cr).good) {
-		cerr << "Error resolving range expression: ";
-		range->dump(cerr, entity::expr_dump_context::default_value)
-			<< endl;
-		return good_bool(false);
-	}
-	const pint_value_type min = cr.lower();
-	const pint_value_type max = cr.upper();
-	// if range is empty or backwards, then ignore
-	if (min > max) {
-		return good_bool(true);
-	}
-	// range gives us upper and lower bound of loop
-	// in a loop:
-	// create context chain of lookup
-	//	using unroll_context's template_formal/actual mechanism.  
-	// copied from loop_scope::unroll()
-	entity::footprint f;
-	const never_ptr<pint_scalar>
-		var(initialize_footprint(f));
-	// create a temporary by unrolling the placeholder 
-	// induction variable into the footprint as an actual variable
-	pint_value_type& p(var->get_instance().value);  
-		// acquire direct reference
-	const unroll_context cc(&f, c);
-	for (p = min; p <= max; ++p) {
-		if (!directives_set::unroll(cc, np, sfp).good) {
-			cerr << "Error resolving spec directive in loop:"
-				<< endl;
-			ind_var->dump_qualified_name(cerr, dump_flags::verbose)
-				<< " = " << p << endl;
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
+	return meta_loop::unroll(*this, c, np, sfp, "spec directive");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_loop::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		util::persistent_traits<this_type>::type_key)) {
-	meta_loop_base::collect_transient_info_base(m);
-	directives_set::collect_transient_info_base(m);
-}
+	meta_loop::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
-	meta_loop_base::write_object_base(m, o);
-	directives_set::write_object_base(m, o);
+	meta_loop::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
-	meta_loop_base::load_object_base(m, i);
-	directives_set::load_object_base(m, i);
+	meta_loop::load_object(*this, m, i);
 }
 
 //=============================================================================
@@ -337,13 +272,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directives_conditional)
  */
 bool
 directives_conditional::empty(void) const {
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	for ( ; ci!=ce; ++ci) {
-		if (!ci->empty())
-			return false;
-	}
-	return true;
+	return meta_conditional::empty(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -351,29 +280,7 @@ ostream&
 directives_conditional::dump(ostream& o, const rule_dump_context& c) const {
 	INVARIANT(guards.size());
 	INVARIANT(guards.size() == clauses.size());
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	typedef	meta_conditional_base::const_iterator	guard_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	guard_iterator gi(guards.begin()), ge(guards.end());
-	entity::expr_dump_context edc(c);
-	NEVER_NULL(*gi);
-	(*gi)->dump(o << "[ ", edc) << " ->" << endl;
-	{
-		INDENT_SECTION(o);
-		ci->dump(o, c);
-	}
-	for (++gi, ++ci; ci!=ce; ++gi, ++ci) {
-		o << auto_indent << "[] ";
-		if (*gi) {
-			(*gi)->dump(o, edc);
-		} else {
-			o << "else";
-		}
-		o << " ->" << endl;
-		INDENT_SECTION(o);
-		ci->dump(o, c);
-	}
-	return o << auto_indent << ']';
+	return meta_conditional::dump(*this, o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -383,81 +290,34 @@ directives_conditional::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 directives_conditional::unroll(const unroll_context& c,
 		const node_pool_type& np, footprint& sfp) const {
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	typedef	meta_conditional_base::const_iterator	guard_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	guard_iterator gi(guards.begin()), ge(guards.end());
-for ( ; ci!=ce; ++ci, ++gi) {
-	const guard_ptr_type& guard(*gi);
-	// guards may be NULL-terminated with else clause
-	if (!guard) {
-		if (!ci->unroll(c, np, sfp).good) {
-			cerr << "Error encountered in conditional SPEC else-clause." << endl;
-			return good_bool(false);
-		}
-		return good_bool(true);
-	}
-	const count_ptr<const pbool_const>
-		g(guard->__unroll_resolve_rvalue(c, guard));
-	if (!g) {
-		cerr << "Error evaluating guard expression of conditional SPEC."
-			<< endl;
-		return good_bool(false);
-	}
-	// no change in context necessary
-	if (g->static_constant_value()) {
-		const directives_set& if_specs(*ci);
-		if (!if_specs.unroll(c, np, sfp).good) {
-			cerr << "Error encountered in conditional SPEC if-clause." << endl;
-			return good_bool(false);
-		}
-		return good_bool(true);
-	}
-}	// end for
-	return good_bool(true);
+	return meta_conditional::unroll(*this, c, np, sfp, "SPEC");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::append_guarded_clause(const guard_ptr_type& g) {
-	guards.push_back(g);
-	clauses.push_back(directives_set());
+	meta_conditional::append_guarded_clause(*this, g);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		util::persistent_traits<this_type>::type_key)) {
-	meta_conditional_base::collect_transient_info_base(m);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_collector_ref(m));
-}
+	meta_conditional::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directives_conditional::write_object(const persistent_object_manager& m,
 		ostream& o) const {
-	meta_conditional_base::write_object_base(m, o);
-	const size_t s = clauses.size();
-	util::write_value(o, s);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_writer<directives_set>(
-			&directives_set::write_object_base, m, o));
+	meta_conditional::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-directives_conditional::load_object(const persistent_object_manager& m, istream& i) {
-	meta_conditional_base::load_object_base(m, i);
-	size_t s;
-	util::read_value(i, s);
-	clauses.resize(s);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_loader<directives_set>(
-			&directives_set::load_object_base, m, i));
+directives_conditional::load_object(const persistent_object_manager& m,
+		istream& i) {
+	meta_conditional::load_object(*this, m, i);
 }
 
 //=============================================================================

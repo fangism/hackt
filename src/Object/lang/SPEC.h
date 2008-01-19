@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.5.84.1 2008/01/17 23:01:54 fang Exp $
+	$Id: SPEC.h,v 1.5.84.2 2008/01/19 06:46:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -116,7 +116,10 @@ public:
 class directives_loop : public directive_abstract,
 		public directives_set, private meta_loop_base {
 	typedef	directives_loop			this_type;
+	typedef directives_set			implementation_type;
 	typedef	directives_set::value_type	value_type;
+	friend struct meta_loop<this_type>;
+	typedef	meta_loop<this_type>		meta_loop;
 public:
 	directives_loop();
 	directives_loop(const ind_var_ptr_type&, const range_ptr_type&);
@@ -147,8 +150,12 @@ public:
 class directives_conditional :
 		public directive_abstract, private meta_conditional_base {
 	typedef	directives_conditional		this_type;
-private:
+public:
 	typedef	std::vector<directives_set>	clause_list_type;
+	typedef	clause_list_type::const_iterator	clause_iterator;
+private:
+	friend struct meta_conditional<this_type>;
+	typedef	meta_conditional<this_type>	meta_conditional;
 	clause_list_type			clauses;
 public:
 	directives_conditional();

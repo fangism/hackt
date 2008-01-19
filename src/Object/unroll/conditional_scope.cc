@@ -1,23 +1,18 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.8.2.1 2008/01/18 01:02:28 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.8.2.2 2008/01/19 06:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
 #define	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
 
 #include "Object/unroll/conditional_scope.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/unroll/meta_conditional.tcc"
 #include "Object/def/template_formals_manager.h"
-#include "Object/expr/pbool_expr.h"
-#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
-#include "util/persistent_object_manager.tcc"
-#include "util/persistent_functor.tcc"
-#include "util/indent.h"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::conditional_scope,
@@ -57,31 +52,7 @@ if (guards.empty()) {
 	// should only occur during debugging
 	return o << "[EMPTY]";
 }
-	INVARIANT(guards.size() == clauses.size());
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	typedef	meta_conditional_base::const_iterator	guard_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	guard_iterator gi(guards.begin()), ge(guards.end());
-	NEVER_NULL(*gi);
-	(*gi)->dump(o << "[ ", dc) << " -> " << endl;
-	{
-		INDENT_SECTION(o);
-		ci->dump(o, dc);	// << endl;
-	}
-	for (++ci, ++gi; ci!=ce; ++ci, ++gi) {
-		o << auto_indent << "[] ";
-		if (*gi) {
-			(*gi)->dump(o, dc);
-		} else {
-			o << "else";
-		}
-		o << " -> " << endl;
-		{
-			INDENT_SECTION(o);
-			ci->dump(o, dc);	// << endl;
-		}
-	}
-	return o << auto_indent << ']';
+	return meta_conditional::dump(*this, o, dc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -90,20 +61,13 @@ if (guards.empty()) {
  */
 bool
 conditional_scope::empty(void) const {
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	for ( ; ci!=ce; ++ci) {
-		if (!ci->empty())
-			return false;
-	}
-	return true;
+	return meta_conditional::empty(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::append_guarded_clause(const guard_ptr_type& g) {
-	guards.push_back(g);
-	clauses.push_back(sequential_scope());
+	meta_conditional::append_guarded_clause(*this, g);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -143,36 +107,20 @@ if (b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key)) {
-	meta_conditional_base::collect_transient_info_base(m);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_collector_ref(m));
-}
+	meta_conditional::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::write_object(const persistent_object_manager& m,
 		ostream& o) const {
-	meta_conditional_base::write_object_base(m, o);
-	const size_t s = clauses.size();
-	util::write_value(o, s);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_writer<parent_type>(
-			&parent_type::write_object_base, m, o));
+	meta_conditional::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 conditional_scope::load_object(const persistent_object_manager& m, istream& i) {
-	meta_conditional_base::load_object_base(m, i);
-	size_t s;
-	util::read_value(i, s);
-	clauses.resize(s);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_loader<parent_type>(
-			&parent_type::load_object_base, m, i));
+	meta_conditional::load_object(*this, m, i);
 }
 
 //=============================================================================

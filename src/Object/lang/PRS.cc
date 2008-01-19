@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.27.2.1 2007/12/05 17:27:39 fang Exp $
+	$Id: PRS.cc,v 1.27.2.2 2008/01/19 06:46:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -18,6 +18,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/PRS_literal_unroller.h"
+#include "Object/unroll/meta_conditional.tcc"
+#include "Object/unroll/meta_loop.tcc"
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -25,28 +27,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/node_traits.h"
 #include "Object/ref/simple_meta_dummy_reference.h"
 
-#include "Object/expr/pbool_const.h"
-#include "Object/expr/meta_range_expr.h"
-#include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/expr/expr_dump_context.h"
-#include "Object/inst/pint_value_collection.h"
-#include "Object/inst/value_scalar.h"
-#include "Object/inst/value_placeholder.h"
-#include "Object/traits/bool_traits.h"
-#include "Object/def/footprint.h"
 #include "Object/def/template_formals_manager.h"
-#include "Object/common/dump_flags.h"
 #include "Object/type/template_actuals.h"
-#include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
 
 #include "common/TODO.h"
-#include "util/persistent_functor.tcc"
-#include "util/persistent_object_manager.tcc"
 #include "util/IO_utils.h"
-#include "util/indent.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/packed_array.h"	// for bool_alias_collection_type
@@ -884,43 +872,13 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_conditional)
  */
 bool
 rule_conditional::empty(void) const {
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	for ( ; ci!=ce; ++ci) {
-		if (!ci->empty())
-			return false;
-	}
-	return true;
+	return meta_conditional::empty(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
-	INVARIANT(guards.size());
-	INVARIANT(guards.size() == clauses.size());
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	typedef	meta_conditional_base::const_iterator	guard_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	guard_iterator gi(guards.begin()), ge(guards.end());
-	entity::expr_dump_context edc(c);
-	NEVER_NULL(*gi);
-	(*gi)->dump(o << "[ ", edc) << " ->" << endl;
-	{
-		INDENT_SECTION(o);
-		ci->dump(o, c);
-	}
-	for (++gi, ++ci; ci!=ce; ++gi, ++ci) {
-		o << auto_indent << "[] ";
-		if (*gi) {
-			(*gi)->dump(o, edc);
-		} else {
-			o << "else";
-		}
-		o << " ->" << endl;
-		INDENT_SECTION(o);
-		ci->dump(o, c);
-	}
-	return o << auto_indent << ']';
+	return meta_conditional::dump(*this, o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -930,38 +888,7 @@ rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 rule_conditional::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-	typedef	clause_list_type::const_iterator	clause_iterator;
-	typedef	meta_conditional_base::const_iterator	guard_iterator;
-	clause_iterator ci(clauses.begin()), ce(clauses.end());
-	guard_iterator gi(guards.begin()), ge(guards.end());
-for ( ; ci!=ce; ++ci, ++gi) {
-	const guard_ptr_type& guard(*gi);
-	// guards may be NULL-terminated with else clause
-	if (!guard) {
-		if (!ci->unroll(c, np, pfp).good) {
-			cerr << "Error encountered in conditional PRS else-clause." << endl;
-			return good_bool(false);
-		}
-		return good_bool(true);
-	}
-	const count_ptr<const pbool_const>
-		g(guard->__unroll_resolve_rvalue(c, guard));
-	if (!g) {
-		cerr << "Error evaluating guard expression of conditional PRS."
-			<< endl;
-		return good_bool(false);
-	}
-	// no change in context necessary
-	if (g->static_constant_value()) {
-		const rule_set& if_rules(*ci);
-		if (!if_rules.unroll(c, np, pfp).good) {
-			cerr << "Error encountered in conditional PRS if-clause." << endl;
-			return good_bool(false);
-		}
-		return good_bool(true);
-	}
-}	// end for
-	return good_bool(true);
+	return meta_conditional::unroll(*this, c, np, pfp, "PRS");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -988,43 +915,26 @@ rule_conditional::expand_complement(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::append_guarded_clause(const guard_ptr_type& g) {
-	guards.push_back(g);
-	clauses.push_back(rule_set());
+	meta_conditional::append_guarded_clause(*this, g);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	meta_conditional_base::collect_transient_info_base(m);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_collector_ref(m));
-}
+	meta_conditional::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::write_object(const persistent_object_manager& m,
 		ostream& o) const {
-	meta_conditional_base::write_object_base(m, o);
-	const size_t s = clauses.size();
-	util::write_value(o, s);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_writer<rule_set>(
-			&rule_set::write_object_base, m, o));
+	meta_conditional::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
-	meta_conditional_base::load_object_base(m, i);
-	size_t s;
-	util::read_value(i, s);
-	clauses.resize(s);
-	for_each(clauses.begin(), clauses.end(),
-		util::persistent_loader<rule_set>(
-			&rule_set::load_object_base, m, i));
+	meta_conditional::load_object(*this, m, i);
 }
 
 //=============================================================================
@@ -1047,15 +957,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 rule_loop::dump(ostream& o, const rule_dump_context& c) const {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	o << "(:" << ind_var->get_name() << ':';
-	range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
-	{
-		INDENT_SECTION(o);
-		nested_rules::dump(o, c);
-	}
-	return o << auto_indent << ')';
+	return meta_loop::dump(*this, o, c, ':');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1065,71 +967,27 @@ rule_loop::dump(ostream& o, const rule_dump_context& c) const {
 good_bool
 rule_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-	// most of this copied from expr_loop_base::unroll...
-	// STACKTRACE_VERBOSE;
-	// first, resolve bounds of the loop range, using current context
-	const_range cr;
-	if (!range->unroll_resolve_range(c, cr).good) {
-		cerr << "Error resolving range expression: ";
-		range->dump(cerr, entity::expr_dump_context::default_value)
-			<< endl;
-		return good_bool(false);
-	}
-	const pint_value_type min = cr.lower();
-	const pint_value_type max = cr.upper();
-	// if range is empty or backwards, then ignore
-	if (min > max) {
-		return good_bool(true);
-	}
-	// range gives us upper and lower bound of loop
-	// in a loop:
-	// create context chain of lookup
-	//	using unroll_context's template_formal/actual mechanism.  
-	// copied from loop_scope::unroll()
-	entity::footprint f;
-	const never_ptr<pint_scalar>
-		var(initialize_footprint(f));
-	// create a temporary by unrolling the placeholder 
-	// induction variable into the footprint as an actual variable
-	pint_value_type& p(var->get_instance().value);  
-		// acquire direct reference
-	const unroll_context cc(&f, c);
-	for (p = min; p <= max; ++p) {
-		if (!nested_rules::unroll(cc, np, pfp).good) {
-			cerr << "Error resolving production rule in loop:"
-				<< endl;
-			ind_var->dump_qualified_name(cerr, dump_flags::verbose)
-				<< " = " << p << endl;
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
+	return meta_loop::unroll(*this, c, np, pfp, "production rule");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	meta_loop_base::collect_transient_info_base(m);
-	nested_rules::collect_transient_info_base(m);
-}
+	meta_loop::collect_transient_info(*this, m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
-	meta_loop_base::write_object_base(m, o);
-	nested_rules::write_object(m, o);
+	meta_loop::write_object(*this, m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 rule_loop::load_object(const persistent_object_manager& m, 
 		istream& i) {
-	meta_loop_base::load_object_base(m, i);
-	nested_rules::load_object(m, i);
+	meta_loop::load_object(*this, m, i);
 }
 
 //=============================================================================
@@ -1197,9 +1055,6 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	static const size_t lim = std::numeric_limits<expr_count_type>::max();
 	const pint_value_type min = cr.lower();
 	const pint_value_type max = cr.upper();
-#if 0
-	INVARIANT(min <= max);
-#else
 	if (min > max) {
 		cerr << "Sorry, empty expression loops are not yet supported.  "
 			"Currently waiting for resolution on language "
@@ -1210,7 +1065,6 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 			max -min << " > " << lim << endl;
 		return 0;
 	}
-#endif
 	// range gives us upper and lower bound of loop
 	// in a loop:
 	// create context chain of lookup

@@ -5,6 +5,13 @@
 
 2008-01-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-07:
+	  As promised from ACT-03-03, re-factored loop and conditional
+		class code into template implementation class.  
+		new: Object/unroll/meta_{loop,conditional}.{h,tcc}
+	  Net loss of 500 LoC!  much easier to maintain, with less duplication
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-06:
 	  prsim: Correction to pending consistency check.
 	  sim/prsim/Event-prsim.h: for now use slower more paranoid unique-set 

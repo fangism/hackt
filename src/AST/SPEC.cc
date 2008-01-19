@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.11.2.2 2008/01/17 23:01:48 fang Exp $
+	$Id: SPEC.cc,v 1.11.2.3 2008/01/19 06:46:10 fang Exp $
  */
 
 #include <iostream>
@@ -74,11 +74,7 @@ line_position
 directive::rightmost(void) const { return args->rightmost(); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
 #define	SPEC_THROW_ERROR		THROW_EXIT
-#else
-#define	SPEC_THROW_ERROR		return return_type(NULL);
-#endif
 /**
 	Mostly ripped off of PRS::macro::check_rule.
 	Consider factoring out into common code for maintainability.  
@@ -142,11 +138,7 @@ if (params) {
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
-#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
 	c.get_current_spec_body().push_back(ret);
-#else
-	return ret;
-#endif
 }	// end method directive::check_spec
 
 //=============================================================================
@@ -192,15 +184,6 @@ if (directives) {
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
-#if !CONDITIONAL_LOOP_SPEC_DIRECTIVES
-	if (c.inside_conditional() || c.inside_loop()) {
-		FINISH_ME(Fang);
-		cerr <<
-		"WARNING: Ignoring SPEC inside loops/conditionals for now.  "
-			<< where(*this) << endl;
-		return never_ptr<const object>(NULL);
-	}
-#endif
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	entity::SPEC::directives_set* dss;
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
@@ -223,29 +206,12 @@ body::check_build(context& c) const {
 		cerr << where(*this) << endl;
 		THROW_EXIT;
 	}
-#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
 if (directives) {
 	if (!__check_specs(c)) {
 		cerr << "ERROR: at least one error in spec body." << endl;
 		THROW_EXIT;
 	}
 }
-#else
-	typedef	std::vector<directive::return_type>	checked_directives_type;
-	checked_directives_type checked_directives;
-	directives->check_list(checked_directives, &directive::check_spec, c);
-	checked_directives_type::const_iterator i(checked_directives.begin());
-	checked_directives_type::const_iterator e(checked_directives.end());
-	const checked_directives_type::const_iterator
-		null_iter(find(i, e, directive::return_type()));
-	if (null_iter == e) {
-		// transfer over to process_definition's spec set
-		copy(i, e, back_inserter(*dss));
-	} else {
-		cerr << "ERROR: at least one error in spec body." << endl;
-		THROW_EXIT;
-	}
-#endif	// CONDITIONAL_LOOP_SPEC_DIRECTIVES
 	return never_ptr<const object>(NULL);
 }
 

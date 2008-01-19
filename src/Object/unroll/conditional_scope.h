@@ -2,7 +2,7 @@
 	\file "Object/unroll/conditional_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the HAC language.  
-	$Id: conditional_scope.h,v 1.8 2007/11/26 08:27:43 fang Exp $
+	$Id: conditional_scope.h,v 1.8.2.1 2008/01/19 06:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_H__
@@ -27,6 +27,8 @@ class conditional_scope : public instance_management_base,
 	typedef	conditional_scope			this_type;
 	typedef	instance_management_base		interface_type;
 	typedef	sequential_scope			parent_type;
+	friend struct meta_conditional<this_type>;
+	typedef	meta_conditional<this_type>		meta_conditional;
 	// inherits a list of sequential instance_management items
 	// boolean meta-expression (inherited)
 	typedef	std::vector<sequential_scope>		clause_list_type;

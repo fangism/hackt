@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.4.2.1 2008/01/17 23:01:48 fang Exp $
+	$Id: SPEC.h,v 1.4.2.2 2008/01/19 06:46:10 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -10,11 +10,6 @@
 #include "AST/SPEC_fwd.h"
 #include "AST/lang.h"
 #include "util/STL/vector_fwd.h"
-
-/**
-	Define to 1 to support conditional and loop spec directives.  
- */
-#define	CONDITIONAL_LOOP_SPEC_DIRECTIVES		1
 
 namespace HAC {
 namespace entity {
@@ -32,11 +27,7 @@ namespace SPEC {
  */
 class directive {
 public:
-#if CONDITIONAL_LOOP_SPEC_DIRECTIVES
 	typedef	void					return_type;
-#else
-	typedef	count_ptr<const entity::SPEC::directive>	return_type;
-#endif
 private:
 	const excl_ptr<const token_identifier>		name;
 	const excl_ptr<const expr_list>			params;
