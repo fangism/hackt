@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop.tcc"
-	$Id: meta_loop.tcc,v 1.1.2.1 2008/01/19 06:46:26 fang Exp $
+	$Id: meta_loop.tcc,v 1.1.2.2 2008/01/19 07:39:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_TCC__
@@ -12,6 +12,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/def/footprint.h"
 #include "Object/expr/const_range.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/value_scalar.h"
