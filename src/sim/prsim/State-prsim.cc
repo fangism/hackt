@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.4 2008/01/19 07:54:55 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.5 2008/01/19 21:58:06 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -754,12 +754,16 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
+	const event_type& e(get_event(ei));
 	if (UNLIKELY(watching_all_event_queue() ||
 		(watching_event_queue() &&
-			is_watching_node(get_event(ei).node)))) {
+			is_watching_node(e.node)))) {
 		dump_event(cout << "enqueued:", ei, t);
 	}
 	event_queue.push(event_placeholder_type(t, ei));
+	const node_type& n(get_node(e.node));
+	ISE_INVARIANT(n.pending_event());
+	ISE_INVARIANT(n.get_event() == ei);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2003,8 +2007,8 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	_ci = ci;
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
-	INVARIANT(n.pending_event());	// must have been pending
-	INVARIANT(n.get_event() == ei);	// must be consistent!
+	ISE_INVARIANT(n.pending_event());	// must have been pending
+	ISE_INVARIANT(n.get_event() == ei);	// must be consistent!
 {
 	// event-deallocation scope (optional)
 	// const event_deallocator __d(*this, n, ei);	// auto-deallocate?
