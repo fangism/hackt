@@ -5,6 +5,14 @@
 
 2008-01-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-10:
+	  prsim: continuation of previous patch, applied to pending event
+		with AND without interference.
+		Fixes a large test case in working project that was
+		unabled to be reduced.  
+	  Would be nice to have a small test case to trigger this fix/bug.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-09:
 	  prsim: continued critical bug fixed!
 		Added more consistency checks: check_event_queue()

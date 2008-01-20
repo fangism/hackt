@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.1 2008/01/17 01:31:34 fang Exp $
+@c $Id: commands.texi,v 1.2.2.2 2008/01/20 08:00:08 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -19,6 +19,7 @@ source file @file{sim/prsim/Command-prsim.cc}.
 * Info Commands::
 * View Commands::
 * Modes Commands::
+* Debug Commands::
 @end menu
 
 @c ----------------------------------------------------------------------------
@@ -177,4 +178,16 @@ glitch, such as synchronous (clocked) circuits.
 
 @include cmd/unstable-unknown.texi
 @include cmd/unstable-dequeue.texi
+
+@c ----------------------------------------------------------------------------
+@node Debug Commands
+@section @t{debug} Commands
+
+This section is reserved for commands that are only useful for debugging
+the simulator.  
+Some commands that end in @t{-debug} have already been mentioned
+in the other sections.  
+
+@include cmd/check-structure.texi
+@include cmd/check-queue.texi
 

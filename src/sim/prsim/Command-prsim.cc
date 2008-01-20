@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.2 2008/01/18 18:14:36 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.3 2008/01/20 08:00:11 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -1123,6 +1123,76 @@ void
 PendingDebug::usage(ostream& o) {
 	o << "pending-debug <node>" << endl;
 	o << "prints pending even on node if there is one" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/check-structure.texi
+@deffn Command check-structure
+Check internal graph/tree/map data structures for consistency and coherence.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckStructure, "check-structure", debug,
+	"check internal data structures")
+
+int
+CheckStructure::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	try {
+		s.check_structure();
+		// will ISE (crash) on inconsistency (intentional)
+	} catch (...) {
+		return Command::FATAL;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+CheckStructure::usage(ostream& o) {
+	o << "check-structure" << endl;
+	o << "Halt on error if any internal data structure "
+		"inconsistencies are found." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/check-queue.texi
+@deffn Command check-queue
+Check internal event queue (as seen by @command{queue}) for
+inconsistencies, such as missing back-links, multiply referenced nodes...
+(Because the simulator was not perfect.)
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckQueue, "check-queue", debug,
+	"check for inconsistencies in event-queue")
+
+int
+CheckQueue::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	try {
+		s.check_event_queue();
+		// will ISE (crash) on inconsistency (intentional)
+	} catch (...) {
+		return Command::FATAL;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+CheckQueue::usage(ostream& o) {
+	o << "check-queue" << endl;
+	o << "Halt on error if any event-node inconsistencies are found."
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

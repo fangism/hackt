@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.6 2008/01/20 01:27:28 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.7 2008/01/20 08:00:12 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1516,7 +1516,14 @@ State::__flush_pending_event_no_interference(node_type& _n,
 		DEBUG_STEP_PRINT("cancelling event" << endl);
 		// no change in value, just cancel
 		_n.clear_excl_queue();
+	// fixed? copied from above, with interference
+	// TODO: need test case to reach this code
+	if (_n.get_event() == ne) {
 		__deallocate_event(_n, ne);
+	} else {
+		__deallocate_pending_interference_event(ne);
+	}
+		// difference: n.clear_event()
 	}	// end switch
 }
 
