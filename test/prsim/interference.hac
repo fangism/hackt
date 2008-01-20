@@ -1,0 +1,9 @@
+// "interference.hac"
+// inspired by "weak-vs-weak.hac"
+
+bool a, b, c;
+prs {
+	~a	-> c+
+	b	-> c-
+}
+

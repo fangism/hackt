@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.5 2008/01/19 21:58:06 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.6 2008/01/20 01:27:28 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1437,17 +1437,6 @@ void
 State::__flush_pending_event_with_interference(node_type& _n, 
 		const event_index_type ne, event_type& ev) {
 	STACKTRACE_VERBOSE_STEP;
-	// TODO: research me!
-#if 0
-	// not necessarily linked yet
-	if (!_n.pending_event()) {
-		_n.set_event(ne);
-	} else {
-		// except when overtaken! (dequeue_unstable_events???)
-		INVARIANT(_n.get_event() == ne);
-	}
-	// stronger guarantees above?
-#endif
 	switch (_n.current_value()) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
@@ -1458,9 +1447,14 @@ State::__flush_pending_event_with_interference(node_type& _n,
 		enqueue_event(get_delay_up(ev), ne);
 		break;
 	case node_type::LOGIC_OTHER:
-	DEBUG_STEP_PRINT("cancelling event" << endl);
+	DEBUG_STEP_PRINT("cancelling new event" << endl);
 		_n.clear_excl_queue();
-		__deallocate_event(_n, ne);
+		if (_n.get_event() == ne) {
+			__deallocate_event(_n, ne);
+		} else {
+			__deallocate_pending_interference_event(ne);
+		}
+		// difference: n.clear_event()
 		break;
 	default:
 		ISE(cerr, 
@@ -2205,6 +2199,11 @@ if (eval_ordering_is_random()) {
 	// check and flush pending queue against exclhi/lo events
 	flush_exclhi_queue();
 	flush_excllo_queue();
+
+#if 0
+	// very slow, but terrific for debugging!!!
+	check_event_queue();
+#endif
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
@@ -3086,6 +3085,52 @@ State::status_nodes(ostream& o, const uchar val) const {
 		}
 	}
 	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Verify event-to-node consistency.
+	invariant: every node can be referenced at most once 
+		by events in the event queue.  
+	invariant: every node referenced in the event queue
+		points back to the event which affects it.  
+ */
+void
+State::check_event_queue(void) const {
+	typedef	temp_queue_type::const_iterator		const_iterator;
+	typedef	std::map<node_index_type, event_index_type>	node_map_type;
+	typedef	node_map_type::value_type			value_type;
+	typedef	std::pair<node_map_type::iterator, bool>	check_type;
+	node_map_type unique_nodes;
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+	const_iterator qi(temp.begin()), qe(temp.end());
+	for ( ; qi!=qe; ++qi) {
+		const event_type& e(get_event(qi->event_index));
+		const node_type& n(get_node(e.node));
+		const event_index_type ne = n.get_event();
+	if (e.killed()) {
+		ISE_INVARIANT(!ne || (ne != qi->event_index));
+		// should have been dissociated when it was killed
+	} else {
+		const check_type p(unique_nodes.insert(
+			value_type(e.node, qi->event_index)));
+		const bool tru = (ne &&		// is linked back
+			ne == qi->event_index &&	// is consistent
+			p.second);	// was inserted uniquely
+		if (!tru) {
+			cerr << "Event queue corrupted!" << endl;
+			cerr << "n.event_index = " << ne << endl;
+			cerr << "queue:event   = " << qi->event_index << endl;
+			cerr << "insert unique = " << p.second << endl;
+			if (!p.second) {
+				cerr << "\talready set by: " <<
+					unique_nodes[e.node] << endl;
+			}
+			ISE_INVARIANT(tru);
+		}
+	}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,4 +1,5 @@
 // "weak-vs-weak.hac"
+// see also "interference.hac"
 
 bool a, b, c;
 prs {

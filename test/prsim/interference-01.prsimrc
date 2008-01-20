@@ -1,10 +1,9 @@
-# "weak-vs-weak-04.prsimrc"
-# @haco@ weak-vs-weak.haco-a
+# "interference-01.prsimrc"
+# @haco@ interference.haco-a
 
-# [weak] ~a -> c+
-# [weak] b  -> c-
+# ~a -> c+
+# b  -> c-
 
-weak-rules on
 timing uniform 10
 
 set a 1
@@ -21,7 +20,7 @@ queue
 assert c X
 
 set b 1
-echo expecting interference from weak guard
+echo expecting interference from guard
 cycle
 assert c X
 

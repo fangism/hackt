@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.2 2008/01/18 18:14:43 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.3 2008/01/20 01:27:29 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -963,6 +963,9 @@ private:
 public:
 	void
 	check_expr(const expr_index_type) const;
+
+	void
+	check_event_queue(void) const;
 
 	/// run-time check of invariants in Node/Expr structures.  
 	void
