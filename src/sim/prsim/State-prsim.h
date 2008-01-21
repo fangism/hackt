@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.3 2008/01/20 01:27:29 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.4 2008/01/21 00:58:08 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -10,6 +10,14 @@
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
 #define	__HAC_SIM_PRSIM_STATE_H__
+
+// enable additional sanity checking in "sim/event.h" for event queue
+// can be disabled when not debugging
+#define	CHECK_UNIQUE_EVENTS			1
+
+// use a unique container for coerced excl queue
+// REQUIRED: this fixes critical bug
+#define	UNIQUE_EXCL_QUEUE			1
 
 #include <iosfwd>
 #include <map>
@@ -323,7 +331,14 @@ public:
 protected:
 	typedef	vector<ring_set_type>
 						mk_excl_ring_map_type;
+#if UNIQUE_EXCL_QUEUE
+	// TODO: pool allocate?
+	// pair is just a backwards event placeholder
+	typedef	std::map<event_index_type, time_type>
+						mk_excl_queue_type;
+#else
 	typedef	vector<event_placeholder_type>	mk_excl_queue_type;
+#endif
 	typedef	vector<event_index_type>	pending_queue_type;
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;

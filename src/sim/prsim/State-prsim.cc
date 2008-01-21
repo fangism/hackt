@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.7 2008/01/20 08:00:12 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.8 2008/01/21 00:58:07 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -90,6 +90,12 @@
  */
 #define	EXTRA_ALIGN_MARKERS			0
 
+/**
+	For trying to reproduce bug...
+ */
+#define	FIX_EXCL_QUEUE			(1 && UNIQUE_EXCL_QUEUE)
+
+
 namespace HAC {
 namespace entity { }
 
@@ -116,6 +122,7 @@ using entity::global_entry_pool;
 using entity::bool_tag;
 using entity::process_tag;
 #include "util/using_ostream.h"
+
 //=============================================================================
 // class State::event_deallocator definition
 
@@ -777,7 +784,15 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
 	// FAILED ONCE! (no test case) 20071213 after weak rules added
 	DEBUG_STEP_PRINT("enqueuing exclhi ID " << ei <<
 		" at time " << t << endl);
+#if UNIQUE_EXCL_QUEUE
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
+	const pair<iterator, bool> i(exclhi_queue.insert(value_type(ei, t)));
+	// eliminate duplicates, check time consistency
+	ISE_INVARIANT(i.second || (t == i.first->second));
+#else
 	exclhi_queue.push_back(event_placeholder_type(t, ei));
+#endif
 	get_node(get_event(ei).node).set_excl_queue();
 }
 
@@ -791,7 +806,15 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing excllo ID " << ei <<
 		" at time " << t << endl);
+#if UNIQUE_EXCL_QUEUE
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
+	const pair<iterator, bool> i(excllo_queue.insert(value_type(ei, t)));
+	// eliminate duplicates, check time consistency
+	ISE_INVARIANT(i.second || (t == i.first->second));
+#else
 	excllo_queue.push_back(event_placeholder_type(t, ei));
+#endif
 	get_node(get_event(ei).node).set_excl_queue();
 }
 
@@ -1569,11 +1592,21 @@ State::__flush_pending_event_replacement(node_type& _n,
  */
 void
 State::flush_exclhi_queue(void) {
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+#if FIX_EXCL_QUEUE
+	// where graduating events are collected, and made unique
+	mk_excl_queue_type staging_q;
+#endif
 	const_iterator i(exclhi_queue.begin()), e(exclhi_queue.end());
 for ( ; i!=e; ++i) {
+#if UNIQUE_EXCL_QUEUE
+	const event_placeholder_type ep(i->second, i->first);
+#else
 	const event_placeholder_type& ep(*i);
+#endif
 	const node_index_type epni = get_event(ep.event_index).node;
 	node_type& epn(get_node(epni));
 	/***
@@ -1623,7 +1656,15 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("enqueuing event" << endl);
 			// then insert event into primary queue
 			// keep the same event_index
+#if FIX_EXCL_QUEUE
+			const pair<iterator, bool>
+				r(staging_q.insert(value_type(
+					ep.event_index, ep.time)));
+			ISE_INVARIANT(r.second || r.first->second == ep.time);
+#else
 			enqueue_event(ep.time, ep.event_index);
+#endif
+			// not sure whether or not this should be delayed
 			epn.clear_excl_queue();
 		}
 	}	// end for all excl ring nodes
@@ -1634,6 +1675,14 @@ for ( ; i!=e; ++i) {
 		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all exclhi_queue events
+#if FIX_EXCL_QUEUE
+	// now we've guaranteed uniqueness
+	const_iterator si(staging_q.begin()), se(staging_q.end());
+	for ( ; si!=se; ++si) {
+		enqueue_event(si->second, si->first);
+		// get_node(get_event(si->first).node).clear_excl_queue();
+	}
+#endif
 	exclhi_queue.clear();
 }	// end method flush_exclhi_queue
 
@@ -1643,11 +1692,21 @@ for ( ; i!=e; ++i) {
  */
 void
 State::flush_excllo_queue(void) {
+	typedef	mk_excl_queue_type::value_type		value_type;
+	typedef	mk_excl_queue_type::iterator		iterator;
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+#if FIX_EXCL_QUEUE
+	// where graduating events are collected, and made unique
+	mk_excl_queue_type staging_q;
+#endif
 	const_iterator i(excllo_queue.begin()), e(excllo_queue.end());
 for ( ; i!=e; ++i) {
+#if UNIQUE_EXCL_QUEUE
+	const event_placeholder_type ep(i->second, i->first);
+#else
 	const event_placeholder_type& ep(*i);
+#endif
 	const node_index_type epni = get_event(ep.event_index).node;
 	node_type& epn(get_node(epni));
 	/***
@@ -1679,11 +1738,20 @@ for ( ; i!=e; ++i) {
 				flag = true;
 			}
 		}
+		// alert: can belong to more than one ring!
 		if (flag && !prev) {
 			DEBUG_STEP_PRINT("enqueuing event" << endl);
 			// then insert event into primary queue
 			// keep the same event_index
+#if FIX_EXCL_QUEUE
+			const pair<iterator, bool>
+				r(staging_q.insert(value_type(
+					ep.event_index, ep.time)));
+			ISE_INVARIANT(r.second || r.first->second == ep.time);
+#else
 			enqueue_event(ep.time, ep.event_index);
+#endif
+			// not sure whether or not this should be delayed
 			epn.clear_excl_queue();
 		}
 	}	// end for all excl ring nodes
@@ -1694,6 +1762,14 @@ for ( ; i!=e; ++i) {
 		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all excllo_queue events
+#if FIX_EXCL_QUEUE
+	// now we've guaranteed uniqueness
+	const_iterator si(staging_q.begin()), se(staging_q.end());
+	for ( ; si!=se; ++si) {
+		enqueue_event(si->second, si->first);
+		// get_node(get_event(si->first).node).clear_excl_queue();
+	}
+#endif
 	excllo_queue.clear();
 }	// end method flush_excllo_queue
 
@@ -3278,6 +3354,9 @@ State::dump_event(ostream& o, const event_index_type ei,
 		const time_type t) const {
 	DEBUG_STEP_PRINT(ei);
 	const event_type& ev(get_event(ei));
+#if 0
+	o << '[' << ei << ']';		// for debugging
+#endif
 	if (!ev.killed()) {
 		o << '\t' << t << '\t' <<
 			get_node_canonical_name(ev.node) << " : " <<

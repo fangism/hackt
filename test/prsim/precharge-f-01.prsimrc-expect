@@ -1,0 +1,102 @@
+forced exclhi rings:
+forced excllo rings:
+{ _o[0], _o[1] }
+{ _o[0], _o[1] }
+Fanins of node `_o[0]':
+[after 10]	~en:X | 
+[after 10]	~en:X<X> -> _o[0]+:X
+[after 10]	(en:X & x[0]:X)<X> | 
+[after 10]	(en:X & x[0]:X)<X><X> -> _o[0]-:X
+Fanins of node `_o[1]':
+[after 10]	~en:X | 
+[after 10]	~en:X<X> -> _o[1]+:X
+[after 10]	(en:X & x[1]:X)<X> | 
+[after 10]	(en:X & x[1]:X)<X><X> -> _o[1]-:X
+en -> X 
+event queue:
+	10	en : X
+time: 10
+advance 
+event queue:
+	20	_o[0] : X	[from en:=X]
+time: 20
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
+event queue:
+	40	_o[0] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	60	_o[0] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
+event queue:
+	80	_o[0] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	100	_o[0] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
+event queue:
+	120	_o[0] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	140	_o[0] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[0]'
+>> cause: `en' (val: X)
+event queue:
+	160	_o[0] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	180	_o[0] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
+event queue:
+	200	_o[1] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	220	_o[1] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
+event queue:
+	240	_o[1] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	260	_o[1] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
+event queue:
+	280	_o[1] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	300	_o[1] : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o[1]'
+>> cause: `en' (val: X)
+event queue:
+	320	_o[1] : X	[from en:=X]
+en -> 0 
+en -> X 
+event queue:
+	340	_o[1] : X	[from en:=X]

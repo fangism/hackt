@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.2 2007/01/21 06:00:29 fang Exp $
+	$Id: event.h,v 1.2.44.1 2008/01/21 00:58:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
@@ -14,7 +14,17 @@
 #include "util/macros.h"
 #include "util/utypes.h"
 
-#define	DEBUG_EVENT_POOL_ALLOC				0
+/**
+	invariant: each event-id is in the queue at most once.  
+	Has to be really messed up for this sanity check to fail.
+ */
+#ifndef	CHECK_UNIQUE_EVENTS
+#define	CHECK_UNIQUE_EVENTS		0
+#endif
+
+#if CHECK_UNIQUE_EVENTS
+#include <set>
+#endif
 
 namespace HAC {
 namespace SIM {
@@ -34,6 +44,7 @@ private:
 	typedef	EventPlaceholder<T>	this_type;
 public:
 	typedef	T			time_type;
+	typedef	event_index_type	index_type;
 	/**
 		The time at which the event should occur.  
 		This is also the Key.  
@@ -95,7 +106,21 @@ private:
 	 */
 	typedef	priority_queue<value_type, vector<value_type> >
 						queue_type;
+#if CHECK_UNIQUE_EVENTS
+	typedef	typename value_type::index_type	index_type;
+	typedef	std::set<index_type>		index_set_type;
+	typedef	typename index_set_type::iterator	index_iterator;
+	/**
+		Optional: side data structure for tracking event uniqueness.
+	 */
+	index_set_type				index_set;
+#endif
 private:
+	/**
+		Internal event queue.
+		invariant: placeholders' event_index must be unique, 
+			i.e., no duplicates.  
+	 */
 	queue_type				equeue;
 
 public:
@@ -111,6 +136,11 @@ public:
 	void
 	push(const value_type& p) {
 		equeue.push(p);
+#if CHECK_UNIQUE_EVENTS
+		const std::pair<index_iterator, bool>
+			i(index_set.insert(p.event_index));
+		INVARIANT(i.second);
+#endif
 	}
 
 	size_t
@@ -123,6 +153,11 @@ public:
 	pop(void) {
 		const value_type ret(equeue.top());
 		equeue.pop();
+#if CHECK_UNIQUE_EVENTS
+		const index_iterator f(index_set.find(ret.event_index));
+		INVARIANT(f != index_set.end());
+		index_set.erase(f);
+#endif
 		return ret;
 	}
 
@@ -130,6 +165,11 @@ public:
 	void
 	pop(value_type& v) {
 		v = equeue.top();
+#if CHECK_UNIQUE_EVENTS
+		const index_iterator f(index_set.find(v.event_index));
+		INVARIANT(f != index_set.end());
+		index_set.erase(f);
+#endif
 		equeue.pop();
 	}
 

@@ -1,0 +1,56 @@
+# "precharge-f-01.prsimrc"
+# @haco@ precharge-f.haco-a
+
+# trying to reproduce internal queue consistency bug
+# reminder interference sets output immediately!
+
+# echo-commands on
+
+# unstable-dequeue
+# watch _o
+# watch en
+allrings-mk
+
+fanin-get _o[0]
+fanin-get _o[1]
+set x[0] 1
+set x[1] 0
+set en 0
+cycle
+assert _o[0] 1
+assert _o[1] 1
+
+# timing random
+eval-order random
+
+echo en -> X
+set en X
+queue
+time
+echo advance
+advance 5
+queue
+check-queue
+cycle
+# assert _o[0] X
+# assert _o[1] 1
+time
+
+check-queue
+cycle
+
+# repeat
+source precharge-f-repeat.prsimrc
+source precharge-f-repeat.prsimrc
+source precharge-f-repeat.prsimrc
+source precharge-f-repeat.prsimrc
+
+
+set x[0] 0
+set x[1] 1
+
+source precharge-f-repeat.prsimrc
+source precharge-f-repeat.prsimrc
+source precharge-f-repeat.prsimrc
+source precharge-f-repeat.prsimrc
+

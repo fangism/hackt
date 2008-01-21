@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.1 2008/01/17 01:32:30 fang Exp $
+#	$Id: TODO,v 1.4.8.2 2008/01/21 00:58:10 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -88,6 +88,14 @@ execution model:
 		[status: drafted]
 	TODO: interaction with coerced exclusive hi/lo rings?
 
+mk and check rings:
+	sort/order rings to eliminate duplicates which arise from
+		poor hierarchy in the source.  
+		e.g. use lexicograpichal ordering.  
+		[difficulty: easy]
+	filter rings that are strict subsets of others (redundancy)
+		[difficulty: more difficult, got algorithm?]
+
 state-allocation:
 	consider alternative to re-allocating every rule for every
 	instance, when the footprint can be reused, by adding
@@ -104,5 +112,12 @@ sprsim:
 
 grusim (pronounced 'gruesome')
 	the GRand Unified SIMulator, haha.
+
+parallelization:
+	be able to run multiple instances of a manually partitioned
+		hacprsim, by connecting their top-level instances
+		through an interface, and managing through a 
+		meta simulator (one simulator to combine them).  
+		Might be able to multi-thread this way?
 
 ===============================================================================

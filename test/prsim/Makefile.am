@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.4 2008/01/20 01:27:29 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.5 2008/01/21 00:58:12 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -12,7 +12,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	check-excl-rings-def check-excl-rings \
 	logic-defs and nand or nor array \
 	expr-limit-a \
-	precharge-a precharge-b \
+	precharge-a precharge-b precharge-c precharge-d \
+	precharge-e precharge-f \
 	weak-fight-a weak-fight-b \
 	weak-vs-weak \
 	weak-feedback-a weak-feedback-b \
@@ -59,6 +60,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	excl-rings-01 excl-rings-02 excl-rings-03 \
 	check-excl-rings-02 check-excl-rings-04 check-excl-rings-05 \
 	precharge-a-01 precharge-b-01 \
+	precharge-c-01 precharge-d-01 \
+	precharge-e-01 precharge-f-01 \
 	weak-fight-a-01 weak-fight-a-02 weak-fight-a-03 weak-fight-a-04 \
 	weak-fight-a-05 \
 	weak-fight-b-01 \
@@ -113,7 +116,12 @@ HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 srcdir_EXTRA_DIST += array-b.hac
 # array-b.hac is pending BUG fix
-srcdir_EXTRA_DIST += half-keeper-cycle.prsimrc
+srcdir_EXTRA_DIST += \
+	half-keeper-cycle.prsimrc \
+	precharge-c-repeat.prsimrc \
+	precharge-d-repeat.prsimrc \
+	precharge-e-repeat.prsimrc \
+	precharge-f-repeat.prsimrc
 
 include $(top_srcdir)/test/Make.test-tail
 

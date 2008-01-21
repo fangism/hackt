@@ -1,0 +1,64 @@
+Fanins of node `_o':
+[after 10]	~en:X -> _o+:X
+[after 10]	(en:X & x[0]:X)<X> | 
+[after 10]	(en:X & x[1]:X)<X> | 
+[after 10]	(en:X & x[2]:X)<X> | 
+[after 10]	(en:X & x[3]:X)<X><X> -> _o-:X
+en -> X 
+event queue:
+	10	en : X
+time: 10
+advance 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	20	_o : X	[from en:=X]
+time: 20
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	40	_o : X	[from en:=X]
+en -> 0 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	60	_o : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	80	_o : X	[from en:=X]
+en -> 0 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	100	_o : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	120	_o : X	[from en:=X]
+en -> 0 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	140	_o : X	[from en:=X]
+en -> 1 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	160	_o : X	[from en:=X]
+en -> 0 
+en -> X 
+WARNING: weak-interference `_o'
+>> cause: `en' (val: X)
+event queue:
+	180	_o : X	[from en:=X]

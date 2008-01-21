@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-11:
+	  prsim: another CRITICAL bug fix (crash/assert-fail)
+		graduation of events from exclusive queues to main
+		event queue failed to check for uniqueness of events
+		which resulted in duplicate events in the queue.  
+		Now using a map data-structure for the exclusive queues.  
+	  sim/event.h: added optional uniqueness checking
+	  Finallly able to add reduced test case prsim/precharge-f-01.prismrc
+
+
 2008-01-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-10:
@@ -11,6 +23,7 @@
 		Fixes a large test case in working project that was
 		unabled to be reduced.  
 	  Would be nice to have a small test case to trigger this fix/bug.  
+	  Added a few more debugging commands to interpreter.  
 
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-09:
