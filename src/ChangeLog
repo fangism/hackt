@@ -5,6 +5,10 @@
 
 2008-01-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-12:
+	  Cleaned up some of #if mess from previous patch.  Less eye-sore.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-11:
 	  prsim: another CRITICAL bug fix (crash/assert-fail)
 		graduation of events from exclusive queues to main

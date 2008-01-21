@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.8 2008/01/21 00:58:07 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.9 2008/01/21 01:19:54 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -89,11 +89,6 @@
 	For debugging only.  To clearly see section breaks.  
  */
 #define	EXTRA_ALIGN_MARKERS			0
-
-/**
-	For trying to reproduce bug...
- */
-#define	FIX_EXCL_QUEUE			(1 && UNIQUE_EXCL_QUEUE)
 
 
 namespace HAC {
@@ -784,15 +779,11 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
 	// FAILED ONCE! (no test case) 20071213 after weak rules added
 	DEBUG_STEP_PRINT("enqueuing exclhi ID " << ei <<
 		" at time " << t << endl);
-#if UNIQUE_EXCL_QUEUE
 	typedef	mk_excl_queue_type::value_type		value_type;
 	typedef	mk_excl_queue_type::iterator		iterator;
 	const pair<iterator, bool> i(exclhi_queue.insert(value_type(ei, t)));
 	// eliminate duplicates, check time consistency
 	ISE_INVARIANT(i.second || (t == i.first->second));
-#else
-	exclhi_queue.push_back(event_placeholder_type(t, ei));
-#endif
 	get_node(get_event(ei).node).set_excl_queue();
 }
 
@@ -806,15 +797,11 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing excllo ID " << ei <<
 		" at time " << t << endl);
-#if UNIQUE_EXCL_QUEUE
 	typedef	mk_excl_queue_type::value_type		value_type;
 	typedef	mk_excl_queue_type::iterator		iterator;
 	const pair<iterator, bool> i(excllo_queue.insert(value_type(ei, t)));
 	// eliminate duplicates, check time consistency
 	ISE_INVARIANT(i.second || (t == i.first->second));
-#else
-	excllo_queue.push_back(event_placeholder_type(t, ei));
-#endif
 	get_node(get_event(ei).node).set_excl_queue();
 }
 
@@ -1596,17 +1583,11 @@ State::flush_exclhi_queue(void) {
 	typedef	mk_excl_queue_type::iterator		iterator;
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-#if FIX_EXCL_QUEUE
 	// where graduating events are collected, and made unique
 	mk_excl_queue_type staging_q;
-#endif
 	const_iterator i(exclhi_queue.begin()), e(exclhi_queue.end());
 for ( ; i!=e; ++i) {
-#if UNIQUE_EXCL_QUEUE
 	const event_placeholder_type ep(i->second, i->first);
-#else
-	const event_placeholder_type& ep(*i);
-#endif
 	const node_index_type epni = get_event(ep.event_index).node;
 	node_type& epn(get_node(epni));
 	/***
@@ -1627,18 +1608,6 @@ for ( ; i!=e; ++i) {
 		for ( ; ii!=ie; ++ii) {
 			const node_index_type ni = *ii;
 			const node_type& n(get_node(ni));
-#if DEBUG_STEP
-		DEBUG_STEP_PRINT("examining node: " <<
-			get_node_canonical_name(ni) << endl);
-		DEBUG_STEP_PRINT("n.val == " << size_t(n.current_value())
-			<< endl);
-		if (n.pending_event()) {
-			DEBUG_STEP_PRINT("event.val == " <<
-				size_t(get_event(n.get_event()).val) << endl);
-			DEBUG_STEP_PRINT("n.in_excl_queue == " <<
-				size_t(n.in_excl_queue()) << endl);
-		}
-#endif
 			if (n.current_value() == node_type::LOGIC_HIGH ||
 				(n.pending_event() && 
 				(get_event(n.get_event()).val ==
@@ -1656,14 +1625,10 @@ for ( ; i!=e; ++i) {
 		DEBUG_STEP_PRINT("enqueuing event" << endl);
 			// then insert event into primary queue
 			// keep the same event_index
-#if FIX_EXCL_QUEUE
 			const pair<iterator, bool>
 				r(staging_q.insert(value_type(
 					ep.event_index, ep.time)));
 			ISE_INVARIANT(r.second || r.first->second == ep.time);
-#else
-			enqueue_event(ep.time, ep.event_index);
-#endif
 			// not sure whether or not this should be delayed
 			epn.clear_excl_queue();
 		}
@@ -1675,14 +1640,12 @@ for ( ; i!=e; ++i) {
 		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all exclhi_queue events
-#if FIX_EXCL_QUEUE
 	// now we've guaranteed uniqueness
 	const_iterator si(staging_q.begin()), se(staging_q.end());
 	for ( ; si!=se; ++si) {
 		enqueue_event(si->second, si->first);
 		// get_node(get_event(si->first).node).clear_excl_queue();
 	}
-#endif
 	exclhi_queue.clear();
 }	// end method flush_exclhi_queue
 
@@ -1696,17 +1659,11 @@ State::flush_excllo_queue(void) {
 	typedef	mk_excl_queue_type::iterator		iterator;
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-#if FIX_EXCL_QUEUE
 	// where graduating events are collected, and made unique
 	mk_excl_queue_type staging_q;
-#endif
 	const_iterator i(excllo_queue.begin()), e(excllo_queue.end());
 for ( ; i!=e; ++i) {
-#if UNIQUE_EXCL_QUEUE
 	const event_placeholder_type ep(i->second, i->first);
-#else
-	const event_placeholder_type& ep(*i);
-#endif
 	const node_index_type epni = get_event(ep.event_index).node;
 	node_type& epn(get_node(epni));
 	/***
@@ -1743,14 +1700,10 @@ for ( ; i!=e; ++i) {
 			DEBUG_STEP_PRINT("enqueuing event" << endl);
 			// then insert event into primary queue
 			// keep the same event_index
-#if FIX_EXCL_QUEUE
 			const pair<iterator, bool>
 				r(staging_q.insert(value_type(
 					ep.event_index, ep.time)));
 			ISE_INVARIANT(r.second || r.first->second == ep.time);
-#else
-			enqueue_event(ep.time, ep.event_index);
-#endif
 			// not sure whether or not this should be delayed
 			epn.clear_excl_queue();
 		}
@@ -1762,14 +1715,12 @@ for ( ; i!=e; ++i) {
 		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all excllo_queue events
-#if FIX_EXCL_QUEUE
 	// now we've guaranteed uniqueness
 	const_iterator si(staging_q.begin()), se(staging_q.end());
 	for ( ; si!=se; ++si) {
 		enqueue_event(si->second, si->first);
 		// get_node(get_event(si->first).node).clear_excl_queue();
 	}
-#endif
 	excllo_queue.clear();
 }	// end method flush_excllo_queue
 

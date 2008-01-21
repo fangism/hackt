@@ -1,7 +1,7 @@
 /**
 	\file "sim/event.h"
 	Generic event placeholder type.  
-	$Id: event.h,v 1.2.44.1 2008/01/21 00:58:06 fang Exp $
+	$Id: event.h,v 1.2.44.2 2008/01/21 01:19:52 fang Exp $
  */
 
 #ifndef	__HAC_SIM_EVENT_H__
@@ -17,6 +17,7 @@
 /**
 	invariant: each event-id is in the queue at most once.  
 	Has to be really messed up for this sanity check to fail.
+	Default: off (0)
  */
 #ifndef	CHECK_UNIQUE_EVENTS
 #define	CHECK_UNIQUE_EVENTS		0
