@@ -1,0 +1,7 @@
+How much time have we wasted on comments? 
+time: 0
+How much time have we wasted on comments? 
+time: 0
+end-of-comment outside comment block is bad 
+this is ignored */ 
+continues fine 

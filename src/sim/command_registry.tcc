@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.3.38.2 2008/01/18 18:14:35 fang Exp $
+	$Id: command_registry.tcc,v 1.3.38.3 2008/01/21 22:04:56 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -55,6 +55,13 @@ command_registry<Command>::category_map;
 template <class Command>
 typename command_registry<Command>::aliases_map_type
 command_registry<Command>::aliases;
+
+/**
+	For block style comments. 
+ */
+template <class Command>
+int
+command_registry<Command>::comment_level = 0;
 
 /**
 	Switch to enable/disable echo-ing each interpreted command.
@@ -256,14 +263,37 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 		// this catches lines like "#blah"
 		return Command::NORMAL;
 	} else {
+		// static const char begin_comment[] = "/*";
+		// static const char end_comment[] = "*/";
 		string_list toks;
 		tokenize(line, toks);
+	if (!toks.empty()) {
+		// check for block comments
+		const string& front(toks.front());
+		const string& back(toks.back());
+		const size_t fl = front.size();
+		const size_t bl = back.size();
+		if (fl >= 2 && front[0] == '/' && front[1] == '*') {
+			++comment_level;
+		}
+	if (!comment_level) {
 		// check if command is aliased :)
 		if (expand_aliases(toks) != Command::NORMAL) {
 			return Command::BADARG;
 		} else {
 			return execute(s, toks);
 		}
+	}
+		if (bl >= 2 && back[bl-2] == '*' && back[bl-1] == '/')  {
+			if (comment_level) {
+				--comment_level;
+			} else {
+cerr << "Error: encountered end-comment outside of comment block." << endl;
+				return Command::FATAL;
+			}
+		}
+	}	// end if !empty
+		return Command::NORMAL;
 	}
 }
 
@@ -338,6 +368,10 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 		status = interpret_line(s, line);
 	}	// end if
 	} while (i && continue_interpreter(status, false));
+	if ((status == Command::NORMAL) && comment_level) {
+		cerr << "Error: unterminated block comment in source." << endl;
+		return Command::FATAL;
+	}
 	return status;
 }
 

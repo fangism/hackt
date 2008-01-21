@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.2.44.1 2008/01/17 01:31:58 fang Exp $
+	$Id: command_registry.h,v 1.2.44.2 2008/01/21 22:04:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -61,6 +61,7 @@ public:
 	Static global map of commands.  
 	Any compelling reason why this should be a purely static class?
 	Consider Singleton class?
+	What if need multiple instances?
  */
 template <class Command>
 class command_registry : public command_aliases_base {
@@ -89,6 +90,10 @@ private:
 		Aliases specific to this interpreter.  
 	 */
 	static aliases_map_type		aliases;
+	/**
+		For nested comment blocks, pseudo C-style.
+	 */
+	static int			comment_level;
 public:
 	/**
 		Switch: whether or not each command is echoed as it is

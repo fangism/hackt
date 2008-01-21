@@ -1,0 +1,8 @@
+# "comment-03.prsimrc"
+# @haco@ inv.haco-a
+# testing bad comments
+
+echo end-of-comment outside comment block is bad
+*/
+# will be mis-interpreted as a command
+

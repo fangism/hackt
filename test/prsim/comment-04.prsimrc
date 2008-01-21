@@ -1,0 +1,9 @@
+# "comment-04.prsimrc"
+# @haco@ inv.haco-a
+# testing bad comments
+
+echo end-of-comment outside comment block is bad
+echo this is ignored */
+
+echo continues fine
+

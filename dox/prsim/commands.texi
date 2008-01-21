@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.2 2008/01/20 08:00:08 fang Exp $
+@c $Id: commands.texi,v 1.2.2.3 2008/01/21 22:04:52 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -46,6 +46,15 @@ The following commands pertain to command aliases.
 
 Shell commands may be executed by prefixing a line with '!'.  
 For example, @samp{!whoami}.  
+
+@strong{New}:
+Block comments are pseudo C-style, using @t{/*} and @t{*/} to enclose comments.
+It is recommended to start use block-comment delimiters on their own lines
+to avoid confusion.  
+The line parser is very crude.
+Nested comments are supported.  
+Files with unterminated comments will be reported as errors.  
+@t{#}-comments are allowed within block comments.  
 
 @c ----------------------------------------------------------------------------
 @node General Commands

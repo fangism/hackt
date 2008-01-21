@@ -1,0 +1,13 @@
+# "comment-06.prsimrc"
+# @haco@ inv.haco-a
+# testing bad comments
+
+source comment-01.prsimrc
+source comment-01.prsimrc
+/**
+# error files
+source comment-03.prsimrc
+source comment-05.prsimrc
+**/
+source comment-04.prsimrc
+

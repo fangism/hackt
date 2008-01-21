@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-13:
+	  prsim, chpsim: added support for pseudo C-style block comments in
+		input scripts.  Tests cases added to prsim/comment-0*.
+		Useful for quickly disabling sections in scripts.  
+
+
 2008-01-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-12:
