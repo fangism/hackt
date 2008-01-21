@@ -1,2 +1,4 @@
 assert failed: expecting non-empty event queue.
+... at line 23
 Error encountered during source #FILE#.
+... at line 6
