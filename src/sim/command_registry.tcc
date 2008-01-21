@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.tcc"
-	$Id: command_registry.tcc,v 1.3.38.3 2008/01/21 22:04:56 fang Exp $
+	$Id: command_registry.tcc,v 1.3.38.4 2008/01/21 23:02:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_TCC__
@@ -62,6 +62,10 @@ command_registry<Command>::aliases;
 template <class Command>
 int
 command_registry<Command>::comment_level = 0;
+
+template <class Command>
+int
+command_registry<Command>::begin_outermost_comment = 0;
 
 /**
 	Switch to enable/disable echo-ing each interpreted command.
@@ -275,6 +279,11 @@ command_registry<Command>::interpret_line(state_type& s, const string& line) {
 		const size_t bl = back.size();
 		if (fl >= 2 && front[0] == '/' && front[1] == '*') {
 			++comment_level;
+#if 0
+			if (comment_level == 1) {
+				begin_outermost_comment = lineno;
+			}
+#endif
 		}
 	if (!comment_level) {
 		// check if command is aliased :)
@@ -322,6 +331,7 @@ if (interactive) {
 	int status = Command::NORMAL;
 	size_t lineno = 0;
 	do {
+		++lineno;
 		line = rl.gets();	// already eaten leading whitespace
 		// GOTCHA: readline eats '\t' characters!?
 	if (line) {
@@ -329,7 +339,9 @@ if (interactive) {
 		cout << "echo: " << line << endl;
 #endif
 		status = interpret_line(s, line);
-		++lineno;
+		if (status != Command::NORMAL && status != Command::END) {
+			cerr << "error at line " << lineno << endl;
+		}
 	}
 	} while (line && continue_interpreter(status, interactive));
 	// end-line for neatness
@@ -341,6 +353,7 @@ if (interactive) {
 			", aborting commands." << endl;
 		return status;
 	} else	return Command::NORMAL;
+	// TODO: catch unterminated block comments?
 } else {
 	// non interactive, skip readline, preserves tab-characters
 	return __source(cin, s);
@@ -356,10 +369,12 @@ if (interactive) {
 template <class Command>
 int
 command_registry<Command>::__source(istream& i, state_type& s) {
+	size_t lineno = 0;
 	int status = Command::NORMAL;
 	// const interactive_mode tmp(false);
 	string line;
 	do {
+		++lineno;
 		std::getline(i, line);
 	if (i) {
 #if 0
@@ -370,7 +385,14 @@ command_registry<Command>::__source(istream& i, state_type& s) {
 	} while (i && continue_interpreter(status, false));
 	if ((status == Command::NORMAL) && comment_level) {
 		cerr << "Error: unterminated block comment in source." << endl;
-		return Command::FATAL;
+#if 0
+		cerr << "(comment block began at line " <<
+			begin_outermost_comment << ")" << endl;
+#endif
+		status = Command::FATAL;
+	}
+	if (status != Command::NORMAL && status != Command::END) {
+		cerr << "... at line " << lineno << endl;
 	}
 	return status;
 }

@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.2 2008/01/21 00:58:10 fang Exp $
+#	$Id: TODO,v 1.4.8.3 2008/01/21 23:02:51 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -56,11 +56,14 @@ prsim:
 				current state of old prsims cannot.
 		use getopt-style interpretation?
 		fix 'getall' to work with arrays (getall x, where x is array)
+			dies on member arrays, but not top-level arrays
+		line-continuation with '\'
 
 	concept of environment variables?
 
 	far future: expression evaluation! variable expansion!
 		make use of existing interpreter functions in parser/
+		better yet: attach guile Scheme interpreter (gprsim)
 
 	Q: should initialize clear the watching state?
 		in the old prsim, watch/break points are preserved

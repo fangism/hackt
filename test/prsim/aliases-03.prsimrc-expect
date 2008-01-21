@@ -1,2 +1,3 @@
 should fail: can't override existing alias unless undefined first 
 'foo' is already an alias; you must unalias it before redefining it.
+... at line 9

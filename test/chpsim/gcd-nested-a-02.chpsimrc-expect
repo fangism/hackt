@@ -16,3 +16,4 @@ Run-time error writing channel: X.G!(int(my_gcd(X.a,X.b))+int(my_gcd(X.c,X.d)))
 Run-time error while checking event.
 event[2]:	40	2	1	X.G!(int(my_gcd(X.a,X.b))+int(my_gcd(X.c,X.d)))	[by:3]
 Caught run-time exception during execution.  Halting.
+... at line 9

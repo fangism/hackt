@@ -5,6 +5,12 @@
 
 2008-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-14:
+	  prsim, chpsim: print line number of current source/input on any
+		error condition, easier to find position in files!
+	  Updated all expect-fail test cases (expects) accordingly.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-13:
 	  prsim, chpsim: added support for pseudo C-style block comments in
 		input scripts.  Tests cases added to prsim/comment-0*.

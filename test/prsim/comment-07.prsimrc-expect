@@ -1,4 +1,6 @@
 expect source to die... 
 terminate your comments please! 
 Error: unterminated block comment in source.
+... at line 14
 Error encountered during source #FILE#.
+... at line 5

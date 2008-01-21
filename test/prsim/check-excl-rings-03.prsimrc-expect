@@ -20,4 +20,6 @@ ring-state:
 but node `y' tried to become 1.
 The simulator's excl-check-lock state is no longer coherent; do not bother trying to continue the simulation, but you may further inspect the state.
 You probably want to disable excl-checking with `nocheckexcl' if you wish to continue the simulation.
+... at line 15
 Error encountered during source #FILE#.
+... at line 10

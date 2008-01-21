@@ -36,3 +36,4 @@ at: bool_split::O[bool_split::c]
 Run-time error while checking event.
 event[7]:	160	7	3	split.O[split.c]!(split.x)	[by:8]
 Caught run-time exception during execution.  Halting.
+... at line 6

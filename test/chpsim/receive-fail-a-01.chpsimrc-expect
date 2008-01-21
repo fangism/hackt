@@ -34,3 +34,4 @@ ERROR: detected attempt to receive on channel that is already blocked waiting to
 Run-time error while checking event.
 event[3]:	30	3	0	X?(x)	[by:3]
 Caught run-time exception during execution.  Halting.
+... at line 19

@@ -1,6 +1,6 @@
 /**
 	\file "sim/command_registry.h"
-	$Id: command_registry.h,v 1.2.44.2 2008/01/21 22:04:55 fang Exp $
+	$Id: command_registry.h,v 1.2.44.3 2008/01/21 23:02:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_REGISTRY_H__
@@ -94,6 +94,10 @@ private:
 		For nested comment blocks, pseudo C-style.
 	 */
 	static int			comment_level;
+	/**
+		For error reporting, where the outer-most comment began.
+	 */
+	static int			begin_outermost_comment;
 public:
 	/**
 		Switch: whether or not each command is echoed as it is

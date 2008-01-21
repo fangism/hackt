@@ -32,3 +32,4 @@ Run-time error executing event 4.
 Run-time error while checking event.
 event[4]:	210	4	0	print(fzscan("fzscan-01.txt"))	[by:5]
 Caught run-time exception during execution.  Halting.
+... at line 9

@@ -54,3 +54,4 @@ Run-time error writing channel: brom.Read!(brom.data[brom.a])
 Run-time error while checking event.
 event[9]:	180	9	2	brom.Read!(brom.data[brom.a])	[by:10]
 Caught run-time exception during execution.  Halting.
+... at line 7

@@ -14,3 +14,4 @@ expect c -> 0 to overtake X
 	20	c : X	[by a:=X]
 time: 20
 assert failed: expecting node `c' at 0, but got X.
+... at line 21
