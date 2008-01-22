@@ -2,7 +2,7 @@
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
 	NOTE: EventQueue and EventPlaceholder have moved to "sim/event.h"
-	$Id: Event-prsim.h,v 1.1.38.2 2008/01/18 21:12:32 fang Exp $
+	$Id: Event-prsim.h,v 1.1.38.3 2008/01/22 23:05:22 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.h,v 1.8 2007/01/21 06:00:59 fang Exp
@@ -322,6 +322,9 @@ public:
 
 	void
 	clear(void);
+
+	ostream&
+	dump_memory_usage(ostream&) const;
 
 };	// end class EventPool
 

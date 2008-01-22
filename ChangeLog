@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2008-01-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-15:
+	  config/cxx_STL.m4: check for <set> <map> _Rb_tree implementation.
+	  configure.ac: use it
+
+
 2008-01-16	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-02-merged-prsim-08-29:

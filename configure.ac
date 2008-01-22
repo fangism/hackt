@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.169.2.1 2008/01/17 01:31:27 fang Exp $
+#	$Id: configure.ac,v 1.169.2.2 2008/01/22 23:05:09 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -248,6 +248,7 @@ FANG_HASH_MAP_NAMESPACE
 FANG_HASH_MAP_STYLE
 FANG_CXX_STL_FUNCTIONAL_SELECT
 FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+FANG_CXX_STL_TREE
 FANG_CXX_STD_IFSTREAM_DEV_STDIN
 FANG_CXX_STD_OFSTREAM_DEV_STDOUT
 FANG_CXX_STD_OFSTREAM_DEV_STDERR

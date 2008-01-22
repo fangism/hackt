@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.10.8.1 2008/01/17 01:32:18 fang Exp $
+	$Id: Expr.h,v 1.10.8.2 2008/01/22 23:05:23 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -434,6 +434,11 @@ public:
 		return children.empty();
 	}
 
+	static
+	size_t
+	add_children_size(const size_t s, const ExprGraphNode& g) {
+		return s +g.children.size();
+	}
 };	// end struct ExprGraphNode
 
 //=============================================================================

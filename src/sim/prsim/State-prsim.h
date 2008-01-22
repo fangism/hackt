@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.5 2008/01/21 01:19:55 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.6 2008/01/22 23:05:26 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -335,6 +335,9 @@ protected:
 	 */
 	typedef	std::map<event_index_type, time_type>
 						mk_excl_queue_type;
+	/**
+		invariant: no event should be in pending queue more than once.
+	 */
 	typedef	vector<event_index_type>	pending_queue_type;
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
@@ -1034,6 +1037,9 @@ public:
 		// really don't care what kind of expr, is ignored
 		return dump_subexpr(o, ei, v, expr_type::EXPR_ROOT, true);
 	}
+
+	ostream&
+	dump_memory_usage(ostream&) const;
 
 	bool
 	save_checkpoint(ostream&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.9 2008/01/21 01:19:54 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.10 2008/01/22 23:05:24 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3831,6 +3831,165 @@ State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
 			dump_mk_excl_ring(o, i->second) << endl;
 		}
 	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
+/**
+	Got lambda?
+ */
+template <class E, class M, M E::*member>
+static
+size_t
+member_size_plus(const size_t sum, const E& n) {
+	return sum +n.*member.size();
+}
+
+template <class E>
+static
+size_t
+add_size(const size_t sum, const E& s) {
+	return sum +s.size();
+}
+
+template <class P>
+static
+size_t
+add_second_capacity(const size_t sum, const P& s) {
+	return sum +s.second.capacity();
+}
+#endif
+
+/**
+	Print memory usage statistics.
+ */
+ostream&
+State::dump_memory_usage(ostream& o) const {
+#ifdef HAVE_STL_TREE
+#define	sizeof_tree_node(type)	sizeof(std::_Rb_tree_node<type>)
+#else
+	// assume tree/set/map nodes have 3 pointers +enum color
+	static const size_t tree_node_base_size = (3*(sizeof(void*)) +1);
+#define	sizeof_tree_node(type)	(sizeof(type) +tree_node_base_size)
+#endif
+{
+	const size_t ns = node_pool.size();
+	o << "node-state: ("  << ns << " * " << sizeof(node_type) <<
+		" B/node) = " << ns * sizeof(node_type) << " B" << endl;
+	// give me boost::lambda!!!
+	const size_t fo = std::accumulate(
+		node_pool.begin(), node_pool.end(), size_t(0),
+		&node_type::add_fanout_size);
+	o << "node::fanout: (" << fo << " * " << sizeof(expr_index_type) <<
+		" B/FO) = " << fo * sizeof(expr_index_type) << " B" << endl;
+}{
+	const size_t es = expr_pool.size();
+	o << "expr-state: ("  << es << " * " << sizeof(expr_type) <<
+		" B/expr) = " << es * sizeof(expr_type) << " B" << endl;
+}{
+	const size_t es = expr_graph_node_pool.size();
+	o << "expr-graph: ("  << es << " * " << sizeof(graph_node_type) <<
+		" B/expr) = " << es * sizeof(graph_node_type) << " B" << endl;
+	const size_t gs = std::accumulate(
+		node_pool.begin(), node_pool.end(), size_t(0),
+		&node_type::add_fanout_size);
+	o << "expr::children: (" << gs << " * " << sizeof(expr_index_type) <<
+		" B/child) = " << gs * sizeof(expr_index_type) << " B" << endl;
+}
+	event_pool.dump_memory_usage(o);
+{
+	const size_t es = event_queue.size();
+	o << "event-queue: ("  << es << " * " << sizeof(event_placeholder_type)
+		<< " B/event) = " << es * sizeof(event_placeholder_type)
+		<< " B" << endl;
+	// may be bigger due to reserved capacity
+}
+{
+	typedef	mk_excl_queue_type::const_iterator::value_type	value_type;
+	const size_t hs = exclhi_queue.size();
+	o << "exclhi-queue: ("  << hs << " * " << sizeof_tree_node(value_type)
+		<< " B/event) = " << hs * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	const size_t ls = excllo_queue.size();
+	o << "excllo-queue: ("  << ls << " * " << sizeof_tree_node(value_type)
+		<< " B/event) = " << ls * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	const size_t ps = pending_queue.capacity();	// reserved
+	o << "pending-queue: ("  << ps << " * " << sizeof(event_index_type) <<
+		" B/event) = " << ps * sizeof(event_index_type)
+		<< " B" << endl;
+}
+{
+	// hashtable iterator value-types
+	typedef	rule_map_type::iterator::value_type	value_type;
+	const size_t rs = rule_map.size();
+	o << "expr-rule-map: ("  << rs << " * " << sizeof_tree_node(value_type)
+		<< " B/rule) = " << rs * sizeof_tree_node(value_type) << " B"
+		<< endl;
+}{
+	// rings
+	const size_t rs = mk_exhi.size();
+	o << "mk-exclhi-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
+		" B/ring) = " << rs * sizeof(ring_set_type) << " B" << endl;
+	const size_t rr = std::accumulate(mk_exhi.begin(), mk_exhi.end(), 
+		size_t(0), &add_size<ring_set_type>);
+	typedef	ring_set_type::iterator::value_type	value_type;
+	o << "mk-exclhi::nodes: (" << rr << " * " <<
+		sizeof_tree_node(value_type) <<
+		" B/node) = " << rr * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	// alternative to set: sorted valarray/vector
+}{
+	// rings
+	const size_t rs = mk_exlo.size();
+	o << "mk-excllo-rings: ("  << rs << " * " << sizeof(ring_set_type) <<
+		" B/ring) = " << rs * sizeof(ring_set_type) << " B" << endl;
+	const size_t rr = std::accumulate(mk_exlo.begin(), mk_exlo.end(), 
+		size_t(0), &add_size<ring_set_type>);
+	typedef	ring_set_type::iterator::value_type	value_type;
+	o << "mk-excllo::nodes: (" << rr << " * " <<
+		sizeof_tree_node(value_type) <<
+		" B/node) = " << rr * sizeof_tree_node(value_type)
+		<< " B" << endl;
+	// alternative to set: sorted valarray/vector
+}{
+	const size_t ch = check_exhi_ring_pool.capacity();
+	o << "chk-exclhi-rings: ("  << ch << " / 8 lock/B) >= "
+		<< ((ch +7)>>3) << " B" << endl;	// round-up
+	const size_t cl = check_exlo_ring_pool.capacity();
+	o << "chk-excllo-rings: ("  << cl << " / 8 lock/B) >= "
+		<< ((cl +7)>>3) << " B" << endl;	// round-up
+}{
+	typedef	check_excl_ring_map_type::const_iterator::value_type
+						value_type;
+	const size_t hs = check_exhi.size();
+	o << "chk-exclhi-rings: ("  << hs << " * " <<
+		sizeof_tree_node(value_type) << " B/ring) = " <<
+		hs * sizeof_tree_node(value_type) << " B" << endl;
+	const size_t hc = std::accumulate(check_exhi.begin(), check_exhi.end(), 
+		size_t(0), &add_second_capacity<value_type>);
+	o << "chk-exclhi::nodes: (" << hc << " * " << sizeof(node_index_type) <<
+		" B/node) = " << hc * sizeof(node_index_type) << " B" << endl;
+	const size_t ls = check_exhi.size();
+	o << "chk-excllo-rings: ("  << ls << " * " <<
+		sizeof_tree_node(value_type) << " B/ring) = " <<
+		ls * sizeof_tree_node(value_type) << " B" << endl;
+	const size_t lc = std::accumulate(check_exhi.begin(), check_exhi.end(), 
+		size_t(0), &add_second_capacity<value_type>);
+	o << "chk-excllo::nodes: (" << lc << " * " << sizeof(node_index_type) <<
+		" B/node) = " << lc * sizeof(node_index_type) << " B" << endl;
+}{
+	typedef	watch_list_type::value_type		value_type;
+	const size_t ws = watch_list.size();
+	o << "watch-list: ("  << ws << " * " <<
+		sizeof_tree_node(value_type) << " B/node) = " <<
+		ws * sizeof_tree_node(value_type) << " B" << endl;
+}{
+	// smaller stuff
+	// expr_trace_type __scratch_expr_trace
+	// fanout_array_type __shuffle_indices
 }
 	return o;
 }

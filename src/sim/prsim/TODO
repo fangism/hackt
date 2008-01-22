@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.3 2008/01/21 23:02:51 fang Exp $
+#	$Id: TODO,v 1.4.8.4 2008/01/22 23:05:27 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -19,6 +19,7 @@ prsim:
 	Add guile/Scheme interface for static queries and simulation control!
 	
 	category of 'debug' commands for inspecting state, etc...
+		memory analysis, invariant checking
 
 	weak vs. possible: rename formerly 'weak' anomalies to 'possible'
 		to avoid confusion with weak-rules.  (poor naming)
@@ -28,13 +29,23 @@ prsim:
 	breakpoint policies *per-node*
 	breakpoint options: halt or error-out
 
+	breakpoint might want to return to interaction with user
+		momentarily (fix and continue), and let a 'continue'
+		command return to the previous point in the script.  
+		In batch-mode, will just continue.  
+
 	timestamp last causes -- automatic cycle time
 		Will cost some more memory per node.
 		Difficulty: easy (hour)
 
+	'backtrace' add optional starting value argument, 
+		default uses current value.
+
+
 	deadlock diagnosis, akin to backtrace, but using fanin state analysis
-		commands 'why' and 'whynot'.
+		commands 'why' [01X] and 'whynot' [01].
 		Difficulty: easy (few hours)
+		Must make sure to detect cycles.  
 
 	unstab attribute: is checked on nodes, but only applied to rules
 		so this needs to be fixed to check for rules.  

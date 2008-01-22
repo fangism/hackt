@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.3 2008/01/21 22:04:52 fang Exp $
+@c $Id: commands.texi,v 1.2.2.4 2008/01/22 23:05:11 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -199,4 +199,5 @@ in the other sections.
 
 @include cmd/check-structure.texi
 @include cmd/check-queue.texi
+@include cmd/memstats.texi
 

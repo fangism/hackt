@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.3 2008/01/20 08:00:11 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.4 2008/01/22 23:05:18 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2661,6 +2661,34 @@ SetMode::usage(ostream& o) {
 	o <<
 "Instabilities and interferences still cause simulations to halt, while \n"
 "weak-instabilities trigger warnings." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/memstats.texi
+@deffn Command memstats
+Show memory usage breakdown of the simulator.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(MemStats, "memstats", 
+	debug, "show memory usage statistics")
+
+int
+MemStats::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_memory_usage(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+MemStats::usage(ostream& o) {
+	o << "memstats" << endl;
+	o << "show memory usage details of simulator state" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

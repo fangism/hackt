@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.74.1 2008/01/17 01:32:25 fang Exp $
+	$Id: Node.h,v 1.13.74.2 2008/01/22 23:05:23 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -204,6 +204,12 @@ public:
 	void
 	check_excllo(void) { struct_flags |= NODE_CHECK_EXCLLO; }
 
+	static
+	size_t
+	add_fanout_size(size_t sum, const Node& n) {
+		return sum + n.fanout.size();
+	}
+
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;
 
@@ -223,6 +229,7 @@ private:
 	typedef	NodeState			this_type;
 public:
 	typedef	Node				parent_type;
+	typedef	parent_type::fanout_array_type	fanout_array_type;
 	typedef	LastCause::event_cause_type	event_cause_type;
 
 	typedef	enum {

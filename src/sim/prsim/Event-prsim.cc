@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event-prsim.cc"
 	Implementation of prsim event structures.  
-	$Id: Event-prsim.cc,v 1.1.38.1 2008/01/17 01:32:15 fang Exp $
+	$Id: Event-prsim.cc,v 1.1.38.2 2008/01/22 23:05:20 fang Exp $
 
 	NOTE: file was renamed from:
 	Id: Event.cc,v 1.8 2007/01/21 06:00:58 fang Exp
@@ -229,7 +229,35 @@ EventPool::deallocate(const event_index_type i) {
 	free_list_release(free_indices, i);
 }
 #endif  
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+EventPool::dump_memory_usage(ostream& o) const {
+#ifdef HAVE_STL_TREE
+#define	sizeof_tree_node(type)	sizeof(std::_Rb_tree_node<type>)
+#else
+	// assume tree/set/map nodes have 3 pointers +enum color
+	static const size_t tree_node_base_size = (3*(sizeof(void*)) +1);
+#define	sizeof_tree_node(type)	(sizeof(type) +tree_node_base_size)
+#endif
+	const size_t s = event_pool.size();
+	o << "event-pool: (" << s << " * " << sizeof(event_type) <<
+		" B/event) = " << s * sizeof(event_type) << " B" << endl;
+#if PARANOID_EVENT_FREE_LIST
+	typedef	free_list_type::const_iterator::value_type	value_type;
+	const size_t l = free_indices.size();
+#define	SIZEOF(type)		sizeof_tree_node(type)
+#else
+	typedef	free_list_type::value_type			value_type;
+	const size_t l = free_indices.capacity();
+#define	SIZEOF(type)		sizeof(type)
+#endif
+	o << "event-free-list: (" << l << " * " << SIZEOF(value_type) <<
+		" B/free) = " << l * SIZEOF(value_type) << " B" << endl;
+	// is actually bigger in the case of std::_Rb_tree...
+	return o;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace PRSIM
 
 //=============================================================================
