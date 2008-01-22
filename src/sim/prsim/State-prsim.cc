@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.10 2008/01/22 23:05:24 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.11 2008/01/22 23:12:19 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -3956,10 +3956,10 @@ State::dump_memory_usage(ostream& o) const {
 	// alternative to set: sorted valarray/vector
 }{
 	const size_t ch = check_exhi_ring_pool.capacity();
-	o << "chk-exclhi-rings: ("  << ch << " / 8 lock/B) >= "
+	o << "chk-exclhi-locks: ("  << ch << " / 8 lock/B) >= "
 		<< ((ch +7)>>3) << " B" << endl;	// round-up
 	const size_t cl = check_exlo_ring_pool.capacity();
-	o << "chk-excllo-rings: ("  << cl << " / 8 lock/B) >= "
+	o << "chk-excllo-locks: ("  << cl << " / 8 lock/B) >= "
 		<< ((cl +7)>>3) << " B" << endl;	// round-up
 }{
 	typedef	check_excl_ring_map_type::const_iterator::value_type
