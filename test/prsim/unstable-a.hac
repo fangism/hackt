@@ -1,0 +1,43 @@
+// "unstable-a.hac"
+// testing bug fix with reduced test case
+
+defproc globals(bool Vdd, GND) { }
+
+defproc break_me(globals g, ghi; bool in, out)
+{
+  bool GND = g.GND = ghi.GND;
+  bool in_, lout, rout, _out;
+
+/**
+  spec{
+    supply_x(in,in_)
+  }
+**/
+
+  prs<ghi.Vdd>{
+    passn(in_,ghi.Vdd,lout)
+    passn(in, ghi.Vdd,rout)
+
+    ~rout & ~in -> lout+
+    in          -> lout-
+
+    ~lout & ~in_ -> rout+
+    in_          -> rout-
+
+    ~rout<20> -> _out+
+     rout<10> -> _out-
+
+    ~_out<80> -> out+
+     _out<40> -> out-
+  }
+
+  prs{
+    [after=0] ~in<20> -> in_+
+    [after=0]  in<10> -> in_-
+  }
+}
+
+globals g, ghi;
+bool in, out;
+break_me shake_me(g, ghi, in, out);
+

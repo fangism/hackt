@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.7 2008/01/23 04:59:03 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.8 2008/01/23 08:02:37 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -12,6 +12,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	check-excl-rings-def check-excl-rings \
 	logic-defs and nand or nor array \
 	expr-limit-a \
+	unstable-a unstable-b \
 	precharge-a precharge-b precharge-c precharge-d \
 	precharge-e precharge-f \
 	weak-fight-a weak-fight-b \
@@ -43,6 +44,7 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	interference-01 interference-02 \
 	killed-01 \
 	unstable-01 unstable-02 unstable-03 \
+	unstable-a-01 unstable-b-01 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
 	oscil-random-01 oscil-what-01 oscil-what-02 \
 	oscil-unset-01 oscil-unset-02 oscil-unset-03 \

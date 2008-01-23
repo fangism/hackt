@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.12 2008/01/23 04:59:00 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.13 2008/01/23 08:02:33 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1474,14 +1474,12 @@ State::__flush_pending_event_with_interference(node_type& _n,
 	switch (_n.current_value()) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
-// FIXME:
-//		_n.set_event_consistent(ne);	// not necessarily linked yet
+		_n.set_event_consistent(ne);	// not necessarily linked yet
 		enqueue_event(get_delay_dn(ev), ne);
 		break;
 	case node_type::LOGIC_HIGH:
 	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
-// FIXME:
-//		_n.set_event_consistent(ne);	// not necessarily linked yet
+		_n.set_event_consistent(ne);	// not necessarily linked yet
 		enqueue_event(get_delay_up(ev), ne);
 		break;
 	case node_type::LOGIC_OTHER:

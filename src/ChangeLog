@@ -5,6 +5,13 @@
 
 2008-01-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-17:
+	  prsim: major bug fixed, related to that patched by -09, -10.
+		enqueued events resulting from instabilities (overtake)
+		we're not synchronized with nodes for consistency.
+	  Test cases added: prsim/unstable-{a,b}-01
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-16:
 	  prsim: bug fixed: checkpoint reconstruction failed to properly
 		account for killed events in the event queue.

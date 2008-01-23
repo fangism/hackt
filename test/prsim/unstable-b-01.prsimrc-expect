@@ -1,0 +1,8 @@
+event queue:
+	20	c : 0	[from a:=1]
+should be c- in queue 
+time: 12
+WARNING: weak-unstable `c'-
+>> cause: `a' (val: X)
+WARNING: weak-interference `c'
+>> cause: `a' (val: X)

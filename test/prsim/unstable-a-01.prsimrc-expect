@@ -1,0 +1,6 @@
+WARNING: weak-unstable `shake_me.lout'-
+>> cause: `in' (val: X)
+WARNING: weak-interference `shake_me.lout'
+>> cause: `in' (val: X)
+WARNING: weak-interference `shake_me.in_'
+>> cause: `in' (val: X)
