@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.h"
 	The state of the prsim simulator.  
-	$Id: State-prsim.h,v 1.2.2.6 2008/01/22 23:05:26 fang Exp $
+	$Id: State-prsim.h,v 1.2.2.7 2008/01/23 04:59:02 fang Exp $
 
 	This file was renamed from:
 	Id: State.h,v 1.17 2007/01/21 06:01:02 fang Exp
@@ -14,6 +14,9 @@
 // enable additional sanity checking in "sim/event.h" for event queue
 // can be disabled when not debugging
 #define	CHECK_UNIQUE_EVENTS			0
+
+// define to 1 to use a unique-set container for pending queue
+#define	UNIQUE_PENDING_QUEUE			1
 
 #include <iosfwd>
 #include <map>
@@ -338,7 +341,11 @@ protected:
 	/**
 		invariant: no event should be in pending queue more than once.
 	 */
+#if UNIQUE_PENDING_QUEUE
+	typedef	std::set<event_index_type>	pending_queue_type;
+#else
 	typedef	vector<event_index_type>	pending_queue_type;
+#endif
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
 	typedef	vector<expr_index_type>		expr_trace_type;
@@ -882,6 +889,9 @@ private:
 
 	event_type&
 	get_event(const event_index_type);
+
+	node_index_type
+	load_enqueue_event(const time_type, const event_index_type);
 
 	void
 	enqueue_event(const time_type, const event_index_type);

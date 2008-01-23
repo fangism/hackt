@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.11 2008/01/22 23:12:19 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.12 2008/01/23 04:59:00 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -688,8 +688,11 @@ State::__allocate_pending_interference_event(node_type& n,
 event_index_type
 State::__load_allocate_event(const event_type& ev) {
 	node_type& n(get_node(ev.node));
-	n.load_event(event_pool.allocate(ev));
-	return n.get_event();
+	const size_t ne = event_pool.allocate(ev);
+	if (!ev.killed()) {
+		n.load_event(ne);
+	}
+	return ne;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -750,20 +753,35 @@ State::get_event(const event_index_type i) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Registers event in the primary event queue.  
+	Only this is allowed to load killed events.  
  */
-void
-State::enqueue_event(const time_type t, const event_index_type ei) {
+// inline
+node_index_type
+State::load_enqueue_event(const time_type t, const event_index_type ei) {
+	INVARIANT(ei);
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
 	const event_type& e(get_event(ei));
+	const node_index_type ni = e.node;
 	if (UNLIKELY(watching_all_event_queue() ||
 		(watching_event_queue() &&
 			is_watching_node(e.node)))) {
 		dump_event(cout << "enqueued:", ei, t);
 	}
 	event_queue.push(event_placeholder_type(t, ei));
-	const node_type& n(get_node(e.node));
+	return ni;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers event in the primary event queue.  
+	\pre corresponding node must back-reference event ei
+ */
+void
+State::enqueue_event(const time_type t, const event_index_type ei) {
+	const node_index_type ni = load_enqueue_event(t, ei);
+	const node_type& n(get_node(ni));
 	ISE_INVARIANT(n.pending_event());
 	ISE_INVARIANT(n.get_event() == ei);
 }
@@ -813,7 +831,13 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
 void
 State::enqueue_pending(const event_index_type ei) {
 	DEBUG_STEP_PRINT("enqueuing pending ID " << ei << endl);
+#if UNIQUE_PENDING_QUEUE
+	typedef	pending_queue_type::iterator	iterator;
+	const pair<iterator, bool> p(pending_queue.insert(ei));
+	INVARIANT(p.second);		// was inserted uniquely
+#else
 	pending_queue.push_back(ei);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1450,10 +1474,14 @@ State::__flush_pending_event_with_interference(node_type& _n,
 	switch (_n.current_value()) {
 	case node_type::LOGIC_LOW:
 	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+// FIXME:
+//		_n.set_event_consistent(ne);	// not necessarily linked yet
 		enqueue_event(get_delay_dn(ev), ne);
 		break;
 	case node_type::LOGIC_HIGH:
 	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+// FIXME:
+//		_n.set_event_consistent(ne);	// not necessarily linked yet
 		enqueue_event(get_delay_up(ev), ne);
 		break;
 	case node_type::LOGIC_OTHER:
@@ -1488,11 +1516,7 @@ State::__flush_pending_event_no_interference(node_type& _n,
 		const bool w = ev.is_weak();
 #endif
 		// not necessarily linked yet
-		if (!_n.pending_event()) {
-			_n.set_event(ne);
-		} else {
-			INVARIANT(_n.get_event() == ne);
-		}
+		_n.set_event_consistent(ne);
 		if (ev.val == node_type::LOGIC_HIGH) {
 		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
 #if PRSIM_WEAK_RULES
@@ -2375,6 +2399,7 @@ State::propagate_evaluation(
 		, pull_enum next
 #endif 
 		) {
+	STACKTRACE_VERBOSE_STEP;
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
 	pull_enum next;	// just local variable
@@ -3916,10 +3941,17 @@ State::dump_memory_usage(ostream& o) const {
 	o << "excllo-queue: ("  << ls << " * " << sizeof_tree_node(value_type)
 		<< " B/event) = " << ls * sizeof_tree_node(value_type)
 		<< " B" << endl;
+#if UNIQUE_PENDING_QUEUE
+	const size_t ps = pending_queue.size();
+	o << "pending-queue: ("  << ps << " * " <<
+		sizeof_tree_node(event_index_type) << " B/event) = " <<
+		ps * sizeof_tree_node(event_index_type) << " B" << endl;
+#else
 	const size_t ps = pending_queue.capacity();	// reserved
 	o << "pending-queue: ("  << ps << " * " << sizeof(event_index_type) <<
 		" B/event) = " << ps * sizeof(event_index_type)
 		<< " B" << endl;
+#endif
 }
 {
 	// hashtable iterator value-types
@@ -4009,6 +4041,7 @@ State::save_checkpoint(ostream& o) const {
 #else
 #define	WRITE_ALIGN_MARKER		{}
 #endif
+	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
 {
 	// node_pool
@@ -4193,8 +4226,11 @@ try {
 		read_value(i, t);
 		event_type ev;
 		ev.load_state(i);
-		enqueue_event(t, __load_allocate_event(ev));
+		// can enqueue a killed event
+		load_enqueue_event(t, __load_allocate_event(ev));
 	}
+	// nodes and events should be consistent by now
+	check_event_queue();
 }
 	READ_ALIGN_MARKER		// sanity alignment check
 	// excl_rings -- structural only

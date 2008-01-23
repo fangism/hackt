@@ -5,6 +5,14 @@
 
 2008-01-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-16:
+	  prsim: bug fixed: checkpoint reconstruction failed to properly
+		account for killed events in the event queue.
+		Also related issue with loading affected nodes, fixed. 
+		Test case added: prsim/killed-01.prsimrc
+	  extra sanity check: pending-queue uses std::set to assert uniqueness
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-15:
 	  prsim: new command 'memstats' to report detailed memory usage 
 		by simulator state.

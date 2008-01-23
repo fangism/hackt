@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.13.74.2 2008/01/22 23:05:23 fang Exp $
+	$Id: Node.h,v 1.13.74.3 2008/01/23 04:58:59 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -355,6 +355,19 @@ public:
 		INVARIANT(event_index == INVALID_EVENT_INDEX);
 		INVARIANT(i != INVALID_EVENT_INDEX);
 		event_index = i;
+	}
+
+	/**
+		Use this version to set-if-unset, else assert
+		that is already set consistently.
+	 */
+	void
+	set_event_consistent(const event_index_type i) {
+		if (!pending_event()) {
+			set_event(i);
+		} else {
+			INVARIANT(event_index == i);
+		}
 	}
 
 	/**
