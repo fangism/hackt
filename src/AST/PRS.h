@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.8 2007/11/26 08:27:21 fang Exp $
+	$Id: PRS.h,v 1.8.2.1 2008/01/23 21:42:14 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -267,15 +267,12 @@ public:
 	The programmer can design these to do whatever.  
  */
 class macro : public body_item {
+	const excl_ptr<const attribute_list>		attribs;
 	excl_ptr<const token_identifier>		name;
 	excl_ptr<const expr_list>			params;
 	const excl_ptr<const inst_ref_expr_list>	args;
 public:
-#if 0
-	macro(const token_identifier*, const inst_ref_expr_list*);
-	macro(excl_ptr<const token_identifier>&, const inst_ref_expr_list*);
-#endif
-	macro(literal*, const inst_ref_expr_list*);
+	macro(const attribute_list*, literal*, const inst_ref_expr_list*);
 	~macro();
 
 	ostream&

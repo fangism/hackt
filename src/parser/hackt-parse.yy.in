@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.33.2.2 2008/01/18 01:02:28 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.33.2.3 2008/01/23 21:42:17 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2310,8 +2310,12 @@ prs_macro
 		 * reduction step.  
 		 */
 			/* do parse-checking during next pass */
-			$$ = new PRS::macro($1, $2);
+			$$ = new PRS::macro(NULL, $1, $2);
 		}
+	/* optional, tentatively ignored */
+	| prs_rule_attribute_list_in_brackets
+	  prs_literal mandatory_member_index_expr_list_in_parens
+		{ $$ = new PRS::macro($1, $2, $3); }
 	;
 
 prs_loop

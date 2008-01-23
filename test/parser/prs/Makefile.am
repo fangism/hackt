@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.35.2.1 2008/01/17 23:02:35 fang Exp $
+#	$Id: Makefile.am,v 1.35.2.2 2008/01/23 21:42:20 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -19,6 +19,9 @@ HACKT_PARSE_TEST_FAILURES = \
 	internal-node-01 internal-node-02 internal-node-03 internal-node-04 \
 	internal-node-05 internal-node-08 \
 	internal-node-11 internal-node-16
+
+HACKT_PARSE_TEST_WARNINGS = \
+	macro-attrib-01
 
 HACKT_PARSE_TEST_PASSES = \
 	inv-01 inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
