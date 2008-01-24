@@ -1,0 +1,17 @@
+	0	a : 1
+	10	b : 0	[by a:=1]
+	20	c : 1	[by b:=0]
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	20	a : X
+WARNING: weak-interference `c'
+>> cause: `b' (val: X)
+	30	b : X	[by a:=X]
+	40	c : X	[by b:=X]
+	40	a : 1
+WARNING: weak-unstable `b'-
+>> cause: `a' (val: X)
+WARNING: weak-interference `b'
+>> cause: `a' (val: X)
+	44	a : X
+event queue:

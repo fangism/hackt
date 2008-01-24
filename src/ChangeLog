@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2008-01-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-82-02-ACT-03-21:
+	  prsim: CRITICAL bug fix: nodes stuck, failing to enqueue X
+		events during interference.  bug was sensitive to
+		production rule ordering (e.g. inverter) but now symmetrized.
+	  Test cases added: inv-{20,21}, inv-alt-{03,04}.
+
+
 2008-01-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-82-02-ACT-03-20:

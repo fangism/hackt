@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.16 2008/01/24 04:26:02 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.17 2008/01/24 19:42:14 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -2515,10 +2515,12 @@ if (!n.pending_event()) {
 	if ((next == expr_type::PULL_ON &&
 			n.current_value() != node_type::LOGIC_HIGH) ||
 		(next == expr_type::PULL_WEAK &&
-			n.current_value() == node_type::LOGIC_LOW)) {
+			(n.current_value() == node_type::LOGIC_LOW
+			|| dn_pull != expr_type::PULL_OFF))) {
 		/***
 			if (PULL_ON and wasn't already HIGH ||
-				PULL_WEAK and was LOW before)
+				PULL_WEAK and was LOW before ||
+				weak-interference)
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
@@ -2681,10 +2683,12 @@ if (!n.pending_event()) {
 	if ((next == expr_type::PULL_ON &&
 			n.current_value() != node_type::LOGIC_LOW) ||
 		(next == expr_type::PULL_WEAK &&
-			n.current_value() == node_type::LOGIC_HIGH)) {
+			(n.current_value() == node_type::LOGIC_HIGH
+			|| up_pull != expr_type::PULL_OFF))) {
 		/***
 			if (PULL_ON and wasn't already LOW ||
-				PULL_WEAK and was HIGH before)
+				PULL_WEAK and was HIGH before ||
+				weak-interference)
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
@@ -2957,7 +2961,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 			(eu & event_type::EVENT_UNSTABLE) &&
 			!n.is_unstab();
 		/***
-			This last condition !unstab violates exact exclution 
+			This last condition !unstab violates exact exclusion 
 			between unstable and interference!
 			Do not use this undocumented feature, it is not 
 			expected to work as presently coded.  
