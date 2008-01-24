@@ -1,12 +1,13 @@
 timing [mode [args]]
 if no mode is given, just reports the current mode.
 available timing modes:
-	random [seed]
+	random
 	uniform [delay]
 	after
 Random mode uses a heavy-tailed distribution random-variable for delay, *except* where a delay is marked with [after=0].
 Uniform mode ignores all after-delay annotations and uses a fixed delay for all events, which can be used to count transitions.
 After mode uses fixed after-annotated delays for timing, and assumes default delays where none are given.
+Use 'seed48' to set a random number seed.
 timing: uniform (10)
 	0	a : 1
 	10	b : 0	[by a:=1]
