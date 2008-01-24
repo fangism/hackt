@@ -5,6 +5,11 @@
 
 2008-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-20:
+	  prsim: bug fix: 'unset' was incorrectly setting some nodes to X
+		in the event queue.  Test cases added: prsim/interference-*.
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-19:
 	  prsim, chpsim: added support to save/restore random number seed
 		through libc's seed48.  Checkpointing now preserves seed.

@@ -1,0 +1,5 @@
+	0	b : 0
+	0	a : 0
+	10	c : 1	[by a:=0]
+	10	a : X
+event queue:

@@ -1,0 +1,6 @@
+	0	c : 0
+	0	b : 0
+event queue:
+	0	c : X
+expect c -> X 
+	0	c : X

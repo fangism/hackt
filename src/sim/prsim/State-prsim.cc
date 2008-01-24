@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.15 2008/01/24 03:24:31 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.16 2008/01/24 04:26:02 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -997,7 +997,15 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 	} else {
 		// no event pending, can make one
 		const uchar current = n.current_value();
-		if (current != new_val) {
+		if (current == node_type::LOGIC_LOW &&
+				pu == expr_type::PULL_OFF) {
+			// nothing pulling up, no change
+			return;
+		} else if (current == node_type::LOGIC_HIGH &&
+				pd == expr_type::PULL_OFF) {
+			// nothing pulling down, no change
+			return;
+		} else if (current != new_val) {
 #if 0
 			rule_index_type ri;
 			// not true, rule index may be from OR-combination...
