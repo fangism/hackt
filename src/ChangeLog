@@ -5,6 +5,13 @@
 
 2008-01-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-22:
+	  prsim: 'step-event' command to advance by step count, 
+		as opposed to time increments (old 'step'). 
+		Sometime, you only want ONE event.
+	  Documented, not tested.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-21:
 	  prsim: CRITICAL bug fix: nodes stuck, failing to enqueue X
 		events during interference.  bug was sensitive to

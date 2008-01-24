@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.5 2008/01/24 01:23:06 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.6 2008/01/24 23:39:35 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -298,16 +298,18 @@ typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Reset, PRSIM::simulation)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Command class for stepping through one event at a time from
+/***
+	Command class for stepping through one time-step at a time from
 	the event queue. 
 @texinfo cmd/step.texi
 @deffn Command step [n]
-Advances the simulation by @var{n} steps (events).  
+Advances the simulation by @var{n} time steps.  
 Without @var{n}, takes only a single step.  
+Time steps may cover multiple events if they are at the exact same time.
+To step by events count, use @command{step-event}.  
 @end deffn
 @end texinfo
- */
+***/
 #if 0
 struct Step {
 public:
@@ -322,7 +324,7 @@ private:
 #endif
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
-	"step through event")
+	"step through event(s), by time increments")
 
 /**
 	Like process_step() from original prsim.  
@@ -401,10 +403,106 @@ if (a.size() > 2) {
 
 void
 Step::usage(ostream& o) {
-	o << "step [#steps]" << endl;
+	o << "step [#timesteps]" << endl;
 	o <<
 "Advances the simulation by a number of steps (default: 1).\n"
-"Simulation will stop prematurely if any event violations are encountered."
+"Simulation will stop prematurely if any event violations are encountered.\n"
+"Note: the argument is the number of time *increments* to simulate, not the\n"
+"number of events (see step-event)."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+	Command class for stepping through one event at a time from
+	the event queue. 
+@texinfo cmd/step-event.texi
+@deffn Command step-event [n]
+Advances the simulation by @var{n} events.  
+Without @var{n}, takes only a single event.  
+A single event is not necessarily guaranteed to advance the time, 
+if multiple events are enqueued at the same time.  
+@end deffn
+@end texinfo
+***/
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(StepEvent, "step-event", simulation,
+	"step through event(s), by event count")
+
+int
+StepEvent::main(State& s, const string_list& a) {
+if (a.size() > 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	typedef	State::time_type		time_type;
+	typedef	State::node_type		node_type;
+	size_t i;		// the number of discrete time steps
+		// not necessarily == the number of discrete events
+	State::step_return_type ni;	// also stores the cause of the event
+	if (a.size() == 2) {
+		if (string_to_num(a.back(), i)) {
+			cerr << "Error parsing #steps." << endl;
+			// usage()?
+			return Command::BADARG;
+		}
+	} else {
+		i = 1;
+	}
+	s.resume();
+	// could check s.pending_events()
+	try {
+	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
+		--i;
+		// NB: may need specialization for real-valued (float) time.  
+		const time_type ct(s.time());
+		const node_type& n(s.get_node(GET_NODE(ni)));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Advance::main().
+			tracing stuff here later...
+		***/
+		if (s.watching_all_nodes()) {
+			print_watched_node(cout << '\t' << ct << '\t', s, ni);
+		}
+		if (n.is_breakpoint()) {
+			// this includes watchpoints
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(
+				s.get_node_canonical_name(GET_NODE(ni)));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				print_watched_node(cout << '\t' << ct << '\t',
+					s, ni);
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, " << i <<
+					" steps left: `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
+		}
+	}	// end while
+	} catch (const State::excl_exception& exex) {
+		s.inspect_excl_exception(exex, cerr);
+		return Command::FATAL;
+	}	// no other exceptions
+	return Command::NORMAL;
+}
+}	// end StepEvent::main
+
+void
+StepEvent::usage(ostream& o) {
+	o << "step-event [#events]" << endl;
+	o <<
+"Advances the simulation by a number of events (default: 1).\n"
+"Simulation will stop prematurely if any event violations are encountered.\n"
+"Note: the argument is the number of discrete events to simulate, not the\n"
+"number of time steps (see step)."
 	<< endl;
 }
 

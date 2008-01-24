@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.5 2008/01/24 01:22:58 fang Exp $
+@c $Id: commands.texi,v 1.2.2.6 2008/01/24 23:39:31 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -76,6 +76,7 @@ The following commands are listed in the @t{general} category.
 Running the simulation.  
 
 @include cmd/step.texi
+@include cmd/step-event.texi
 @include cmd/advance.texi
 @include cmd/cycle.texi
 

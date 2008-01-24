@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.17 2008/01/24 19:42:14 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.18 2008/01/24 23:39:36 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1158,9 +1158,13 @@ State::string_to_error_policy(const string& s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print the current mode.  
+ */
 ostream&
 State::dump_mode(ostream& o) const {
 	o << "mode: ";
+	o << "\tweak rules " << (weak_rules_enabled() ? "on" : "off") << endl;
 	o << "\tunstable events " <<
 		(dequeue_unstable_events() ? "are dequeued" : "propagate Xs")
 			<< endl;
@@ -1176,6 +1180,10 @@ State::dump_mode(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Show current timing mode.
+	Show random seed?
+ */
 ostream&
 State::dump_timing(ostream& o) const {
 	o << "timing: ";
