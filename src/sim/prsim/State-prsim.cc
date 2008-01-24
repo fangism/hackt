@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.14 2008/01/24 01:23:08 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.15 2008/01/24 03:24:31 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -1186,7 +1186,6 @@ switch (timing_mode) {
 /**
 	\return true if there is a syntax error.  
 	TODO: use a map to parsers.  
-	TODO: use random seed.  
  */
 bool
 State::set_timing(const string& m, const string_list& a) {
@@ -1195,11 +1194,10 @@ State::set_timing(const string& m, const string_list& a) {
 	static const string __after("after");
 	if (m == __random) {
 		timing_mode = TIMING_RANDOM;
-		// TODO: use random seed
 		switch (a.size()) {
 		case 0:	return false;
-		case 1:	FINISH_ME(Fang);
-			cerr << "TODO: plant random seed." << endl;
+		case 1:	cerr << "use \'seed48' to set random number seed"
+			<< endl;
 			return false;
 		default:	return true;
 		}
@@ -1225,7 +1223,7 @@ State::set_timing(const string& m, const string_list& a) {
 ostream&
 State::help_timing(ostream& o) {
 	o << "available timing modes:" << endl;
-	o << "\trandom [seed]" << endl;
+	o << "\trandom" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
 	o <<
@@ -1234,7 +1232,8 @@ State::help_timing(ostream& o) {
 "Uniform mode ignores all after-delay annotations and uses a fixed delay "
 "for all events, which can be used to count transitions.\n"
 "After mode uses fixed after-annotated delays for timing, and assumes "
-"default delays where none are given." << endl;
+"default delays where none are given.\n"
+"Use \'seed48\' to set a random number seed." << endl;
 	return o;
 }
 
@@ -4325,7 +4324,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, header_check);
 	o << "header string: " << header_check << endl;
 {
-	// restore random seed
+	// show random seed
 	ushort seed[3];
 	read_value(i, seed[0]);
 	read_value(i, seed[1]);

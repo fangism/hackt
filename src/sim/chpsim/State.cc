@@ -1,7 +1,7 @@
 /**
 	\file "sim/chpsim/State.cc"
 	Implementation of CHPSIM's state and general operation.  
-	$Id: State.cc,v 1.14.8.1 2008/01/17 01:32:03 fang Exp $
+	$Id: State.cc,v 1.14.8.2 2008/01/24 03:24:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -42,6 +42,7 @@
 #include "util/IO_utils.h"
 #include "util/binders.h"
 #include "util/discrete_interval_set.tcc"
+#include "util/utypes.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -1805,7 +1806,20 @@ State::print_all_subscriptions(ostream& o) const {
  */
 bool
 State::save_checkpoint(ostream& o) const {
-	// save some flags?
+{
+	// save the random seed
+	ushort seed[3] = {0, 0, 0};
+	const ushort* old_seed = seed48(seed);	// libc
+	seed[0] = old_seed[0];
+	seed[1] = old_seed[1];
+	seed[2] = old_seed[2];
+	// put it back
+	seed48(seed);
+	write_value(o, seed[0]);
+	write_value(o, seed[1]);
+	write_value(o, seed[2]);
+}
+// save some flags?
 	// save the state of all instances
 	if (instances.save_checkpoint(o)) {
 		return true;
@@ -1856,6 +1870,14 @@ State::save_checkpoint(ostream& o) const {
  */
 bool
 State::load_checkpoint(istream& i) {
+{
+	// restore random seed
+	ushort seed[3];
+	read_value(i, seed[0]);
+	read_value(i, seed[1]);
+	read_value(i, seed[2]);
+	seed48(seed);
+}
 	// restore data/channel/variable state
 	if (instances.load_checkpoint(i)) {
 		return true;
@@ -1989,6 +2011,17 @@ if (state.load_checkpoint(i)) {
 ostream&
 State::dump_state(ostream& o) const {
 	// dump all the information in the checkpoint
+{
+	// save the random seed
+	ushort seed[3] = {0, 0, 0};
+	const ushort* old_seed = seed48(seed);	// libc
+	seed[0] = old_seed[0];
+	seed[1] = old_seed[1];
+	seed[2] = old_seed[2];
+	// put it back
+	seed48(seed);
+	o << "seed48: " << seed[0] << ' ' << seed[1] << ' ' << seed[2] << endl;
+}
 	o << "variable states:" << endl;
 	instances.dump_state(o);
 {
