@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13.8.1 2008/01/17 01:32:01 fang Exp $
+	$Id: Command.cc,v 1.13.8.2 2008/01/24 01:23:05 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -368,6 +368,20 @@ default values.
 ***/
 typedef	Reset<State>				Reset;
 CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Reset, CHPSIM::simulation)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/seed48.texi
+@deffn Command seed48 [int int int]
+Corresponds to libc's seed48 function.  
+With no argument, print the current values of the internal random number seed.
+With three (unsigned short) integers, sets the random number seed.
+Note: the seed is automatically saved and restored in checkpoints.  
+@end deffn
+@end texinfo
+***/
+typedef	Seed48<State>			Seed48;
+CATEGORIZE_COMMON_COMMAND_CLASS(CHPSIM::Seed48, CHPSIM::modes)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

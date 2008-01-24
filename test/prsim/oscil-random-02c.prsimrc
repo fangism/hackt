@@ -1,0 +1,5 @@
+# "oscil-random-02c.prsimrc"
+# @haco@ oscillator.haco-a
+# bogus test script
+# Makefile.am just runs diff between -02a and -02b's .prsimrc-out
+

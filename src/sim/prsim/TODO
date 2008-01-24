@@ -1,5 +1,5 @@
 "sim/prsim/TODO"
-#	$Id: TODO,v 1.4.8.4 2008/01/22 23:05:27 fang Exp $
+#	$Id: TODO,v 1.4.8.5 2008/01/24 01:23:08 fang Exp $
 
 ===============================================================================
 Simulation:
@@ -24,6 +24,9 @@ prsim:
 	weak vs. possible: rename formerly 'weak' anomalies to 'possible'
 		to avoid confusion with weak-rules.  (poor naming)
 
+	random: seed48 [int int int] command to set/get libc::seed48
+		already save/restore seed in checkpoint
+
 	direction-specific breakpoints
 
 	breakpoint policies *per-node*
@@ -33,10 +36,13 @@ prsim:
 		momentarily (fix and continue), and let a 'continue'
 		command return to the previous point in the script.  
 		In batch-mode, will just continue.  
+		Also needs a 'where' command to show file-stack and 
+			line positions for reference.
 
 	timestamp last causes -- automatic cycle time
 		Will cost some more memory per node.
 		Difficulty: easy (hour)
+		Consider the cost of increased memory! 'memstats'
 
 	'backtrace' add optional starting value argument, 
 		default uses current value.

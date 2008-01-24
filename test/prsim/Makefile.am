@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.21.2.8 2008/01/23 08:02:37 fang Exp $
+#	$Id: Makefile.am,v 1.21.2.9 2008/01/24 01:23:14 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -46,7 +46,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	unstable-01 unstable-02 unstable-03 \
 	unstable-a-01 unstable-b-01 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \
-	oscil-random-01 oscil-what-01 oscil-what-02 \
+	oscil-random-01 oscil-random-01a \
+	oscil-random-02 oscil-random-02a oscil-random-02b oscil-random-02c \
+	oscil-what-01 oscil-what-02 \
 	oscil-unset-01 oscil-unset-02 oscil-unset-03 \
 	oscil-backtrace-01 \
 	half-celem-01 \
@@ -82,6 +84,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_PASSES = \
 	SRAM-b-01 SRAM-b-02 SRAM-b-03 \
 	SRAM-c-01 SRAM-c-02 SRAM-c-03 \
 	keeper-a-01
+
+# positive different test:
+# oscil-random-01 and oscil-random-01a are *supposed* to differ (seeds)
+
+# different custom test: just compare two existing output dumps (unfiltered!)
+oscil-random-02c.prsimrc-diff: \
+		oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out
+	$(DIFF) oscil-random-02a.prsimrc-out oscil-random-02b.prsimrc-out > $@
 
 $(srcdir)/cbit_test_stat-01.prsimrc: gen_cbit_test.awk
 	{ $(ECHO) "# $@" ; \

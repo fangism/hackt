@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State-prsim.cc"
 	Implementation of prsim simulator state.  
-	$Id: State-prsim.cc,v 1.6.2.13 2008/01/23 08:02:33 fang Exp $
+	$Id: State-prsim.cc,v 1.6.2.14 2008/01/24 01:23:08 fang Exp $
 
 	This module was renamed from:
 	Id: State.cc,v 1.32 2007/02/05 06:39:55 fang Exp
@@ -45,6 +45,7 @@
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
+#include "util/utypes.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -4042,6 +4043,19 @@ State::save_checkpoint(ostream& o) const {
 	check_event_queue();		// internal structure consistency
 	write_value(o, magic_string);
 {
+	// save the random seed
+	ushort seed[3] = {0, 0, 0};
+	const ushort* old_seed = seed48(seed);	// libc
+	seed[0] = old_seed[0];
+	seed[1] = old_seed[1];
+	seed[2] = old_seed[2];
+	// put it back
+	seed48(seed);
+	write_value(o, seed[0]);
+	write_value(o, seed[1]);
+	write_value(o, seed[2]);
+}
+{
 	// node_pool
 	write_value(o, node_pool.size());
 	for_each(node_pool.begin() +1, node_pool.end(), 
@@ -4138,8 +4152,14 @@ try {
 } catch (...) {
 	cerr << bad_ckpt << endl;
 	return true;
-}
-{
+}{
+	// restore random seed
+	ushort seed[3];
+	read_value(i, seed[0]);
+	read_value(i, seed[1]);
+	read_value(i, seed[2]);
+	seed48(seed);
+}{
 	// node_pool
 	size_t s;
 	read_value(i, s);
@@ -4305,6 +4325,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, header_check);
 	o << "header string: " << header_check << endl;
 {
+	// restore random seed
+	ushort seed[3];
+	read_value(i, seed[0]);
+	read_value(i, seed[1]);
+	read_value(i, seed[2]);
+	o << "seed48: " << seed[0] << ' ' << seed[1] << ' ' << seed[2] << endl;
+}{
 	// node_pool
 	size_t s;
 	read_value(i, s);

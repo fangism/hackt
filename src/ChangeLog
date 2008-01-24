@@ -5,6 +5,12 @@
 
 2008-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-82-02-ACT-03-19:
+	  prsim, chpsim: added support to save/restore random number seed
+		through libc's seed48.  Checkpointing now preserves seed.
+	  Documented, added new test cases, prsim/oscil-random-*.  
+
+
 	* HACKT-00-01-04-main-00-82-02-ACT-03-18:
 	  parser: parse but ignore attributes on PRS macros.
 		TODO: Actually process them later...

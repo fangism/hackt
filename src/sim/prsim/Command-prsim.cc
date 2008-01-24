@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command-prsim.cc,v 1.4.2.4 2008/01/22 23:05:18 fang Exp $
+	$Id: Command-prsim.cc,v 1.4.2.5 2008/01/24 01:23:06 fang Exp $
 
 	NOTE: earlier version of this file was:
 	Id: Command.cc,v 1.23 2007/02/14 04:57:25 fang Exp
@@ -2370,6 +2370,20 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/***
+@texinfo cmd/seed48.texi
+@deffn Command seed48 [int int int]
+Corresponds to libc's seed48 function.  
+With no argument, print the current values of the internal random number seed.
+With three (unsigned short) integers, sets the random number seed.
+Note: the seed is automatically saved and restored in checkpoints.  
+@end deffn
+@end texinfo
+***/
+typedef	Seed48<State>			Seed48;
+CATEGORIZE_COMMON_COMMAND_CLASS(PRSIM::Seed48, PRSIM::modes)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***

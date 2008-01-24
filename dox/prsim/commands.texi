@@ -1,5 +1,5 @@
 @c "hacprsim/commands.texi"
-@c $Id: commands.texi,v 1.2.2.4 2008/01/22 23:05:11 fang Exp $
+@c $Id: commands.texi,v 1.2.2.5 2008/01/24 01:22:58 fang Exp $
 
 @node Commands
 @chapter Commands
@@ -166,6 +166,7 @@ Timing mode.
 @include cmd/timing.texi
 @include cmd/random.texi
 @include cmd/norandom.texi
+@include cmd/seed48.texi
 
 The simulator now supports @emph{weak rules} which can drive un-pulled nodes
 but always yield to normal rules. 

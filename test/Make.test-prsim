@@ -1,6 +1,6 @@
 # "Make.test-prsim"
 #	vi: ft=automake
-#	$Id: Make.test-prsim,v 1.13.14.1 2008/01/17 01:32:51 fang Exp $
+#	$Id: Make.test-prsim,v 1.13.14.2 2008/01/24 01:23:13 fang Exp $
 # This is just a portion of the Make.test-tail template included by
 # Makefile.am's in the test/ directory subtree.  
 # This depends on variables defined in Make.test-tail, and thus, 
@@ -156,11 +156,12 @@ prsimrc-out.autodepend: Makefile
 	for d in $$list ; do \
 	  src=$(srcdir)/$$d.prsimrc ; \
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
 	  for e in $$exts ; do \
 	    target=$$d.$$e ; \
 	    $(ECHO) -n "$$target " ; \
 	  done ; \
-	  $(ECHO) ": $$obj" ; \
+	  $(ECHO) ": $$obj $$deps" ; \
 	done ;} > $@ ; \
 	$(TOUCH) $@
 
@@ -173,7 +174,8 @@ prsimrcfail-out.autodepend: Makefile
 	  src=$(srcdir)/$$d.prsimrc ; \
 	  target=$$d.prsimrcfail-out ; \
 	  obj=`$(CAT) "$$src" | $(EXTRACT_HACO_PIPE)` ; \
-	  $(ECHO) "$$target: $$obj" ; \
+	  deps=`$(CAT) "$$src" | $(EXTRACT_DEPS_PIPE)` ; \
+	  $(ECHO) "$$target: $$obj $$deps" ; \
 	done ;} > $@ ; \
 	$(TOUCH) $@
 
@@ -460,7 +462,10 @@ HACKT_PRSIM_PRODUCTS = \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimrc-out) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_PASSES:=.prsimckpt) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_FAILURES:=.prsimrcfail-out) \
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt) \
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpt-outdump) \
 	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimckpt-O1-err) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
 	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prsimexpr-O1) \
 	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.prs-dot-O1)

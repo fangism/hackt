@@ -2,7 +2,7 @@
 	\file "sim/command_common.tcc"
 	Library of template command implementations, re-usable with
 	different state types.  
-	$Id: command_common.tcc,v 1.6.8.2 2008/01/18 18:14:34 fang Exp $
+	$Id: command_common.tcc,v 1.6.8.3 2008/01/24 01:23:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMAND_COMMON_TCC__
@@ -24,6 +24,8 @@
 #include "common/TODO.h"
 #include "common/ltdl-wrap.h"
 #include "util/compose.h"
+#include "util/string.tcc"
+#include "util/utypes.h"
 
 namespace HAC {
 namespace SIM {
@@ -32,6 +34,7 @@ using std::ofstream;
 using std::for_each;
 using std::ptr_fun;
 using std::mem_fun_ref;
+using util::strings::string_to_num;
 #include "util/using_ostream.h"
 using parser::parse_name_to_what;
 using parser::parse_name_to_aliases;
@@ -415,6 +418,55 @@ void
 Queue<State>::usage(ostream& o) {
 	o << "queue: " << brief << endl;
 	o << "prints events pending in the event queue" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INITIALIZE_COMMON_COMMAND_CLASS(Seed48, "seed48", "set/get random number seed")
+
+template <class State>
+int
+Seed48<State>::main(State&, const string_list& a) {
+const size_t sz = a.size();
+switch (sz) {
+case 1: {
+	ushort sd[3] = {0, 0, 0};
+	// grab seed (destructive)
+	const ushort* tmp = seed48(sd);
+	sd[0] = tmp[0];
+	sd[1] = tmp[1];
+	sd[2] = tmp[2];
+	cout << "seed48 = " << sd[0] << ' ' << sd[1] << ' ' << sd[2] << endl;
+	// restore it
+	seed48(sd);
+	break;
+}
+case 4: {
+	ushort sd[3];
+	string_list::const_iterator i(a.begin());
+	// pre-increment to skip first command token
+	if (string_to_num(*++i, sd[0]) ||
+		string_to_num(*++i, sd[1]) ||
+		string_to_num(*++i, sd[2])) {
+		usage(cerr << "usage: ");
+		return command_type::BADARG;
+	}
+	seed48(sd);
+	break;
+}
+default:
+	usage(cerr << "usage: ");
+	return command_type::SYNTAX;
+}
+	return command_type::NORMAL;
+}
+
+template <class State>
+void
+Seed48<State>::usage(ostream& o) {
+	o << "seed48 [int int int]" << endl;
+	o <<
+"Shows the current seed values used by the random number generator.\n"
+"Setting the seed requires 3 (unsigned short) integers." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
